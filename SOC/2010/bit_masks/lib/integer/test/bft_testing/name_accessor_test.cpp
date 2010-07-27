@@ -5,7 +5,7 @@
 
 
 #include <boost/integer/bitfield_tuple.hpp>
-#include <boost/assert.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
 
 using namespace boost;
@@ -40,13 +40,13 @@ int main() {
         >
     >::type                         temp_located;
 
-    BOOST_MPL_ASSERT_NOT((
+    BOOST_TEST((!
         is_same<
             temp_located,
             mpl::end<
                 test_vect
             >::type
-        >
+        >::type::value
     ));
-    return 0;
+    return boost::report_errors();
 }

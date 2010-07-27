@@ -5,8 +5,8 @@
 
 
 #include <boost/integer/bitfield_tuple.hpp>
-#include <boost/assert.hpp>
-#include <iostream>
+#include <boost/detail/lightweight_test.hpp>
+
 
 using namespace boost;
 using namespace boost::bitfields;
@@ -29,12 +29,12 @@ typedef bitfield_tuple<
 int main() {
     {       
         test_tuple bft = make_bitfield_tuple<test_tuple>(1,2,4,true);
-        BOOST_ASSERT(( bft.get<red>() == 1 ));
-        BOOST_ASSERT(( bft.get<green>() == 2 ));
-        BOOST_ASSERT(( bft.get<salmon>() == 4 ));
-        BOOST_ASSERT(( bft.get<blue>() ));
+        BOOST_TEST(( bft.get<red>() == 1 ));
+        BOOST_TEST(( bft.get<green>() == 2 ));
+        BOOST_TEST(( bft.get<salmon>() == 4 ));
+        BOOST_TEST(( bft.get<blue>() ));
     }
-    return 0;
+    return boost::report_errors();
 }
 
 

@@ -5,9 +5,9 @@
 
 
 #include <boost/integer/bitfield_tuple.hpp>
-#include <boost/assert.hpp>
+#include <boost/detail/lightweight_test.hpp>
 #include <boost/mpl/assert.hpp>
-#include <boost/integer/detail/fusion_ext_includes.hpp>
+
 
 using namespace boost;
 using namespace boost::bitfields;
@@ -42,7 +42,7 @@ int main() {
         test_tuple temp;
         temp.get<red>() = 3;
         Iter it(temp);
-        BOOST_ASSERT(( fusion::deref(it) == 3 ));
+        BOOST_TEST(( fusion::deref(it) == 3 ));
     }
 
     // iterator next
@@ -51,7 +51,7 @@ int main() {
         test_tuple temp;
         temp.get<green>() = 3;
         Iter it(temp);
-        BOOST_ASSERT(( fusion::deref(fusion::next(it)) == 3 ));
+        BOOST_TEST(( fusion::deref(fusion::next(it)) == 3 ));
     }
 
     // prior
@@ -61,7 +61,7 @@ int main() {
         temp.get<red>() = 2;
         temp.get<green>() = 3;
         Iter it(temp);
-        BOOST_ASSERT(( fusion::deref(fusion::prior(fusion::next(it))) == 2 ));
+        BOOST_TEST(( fusion::deref(fusion::prior(fusion::next(it))) == 2 ));
     }
     
     // distance tesing
@@ -73,7 +73,7 @@ int main() {
         temp.get<green>() = 3;
         Iter1 it1(temp);
         Iter2 it2(temp);
-        BOOST_ASSERT(( fusion::distance(it2,it1) == 1 ));   
+        BOOST_TEST(( fusion::distance(it2,it1) == 1 ));   
     }
     
     // key_of testing
@@ -101,18 +101,7 @@ int main() {
         test_tuple temp;
         BOOST_MPL_ASSERT((is_same<value_of_data_t::return_type,unsigned char>));
     }
-    
-    // deref_data testing
-    {
-        typedef bitfield_tuple_iterator<test_tuple,1>   Iter;
-        typedef fusion::result_of::deref_data<
-            Iter
-        >::type                             deref_data_t;
-
-        // test_tuple temp;
-        // BOOST_MPL_ASSERT((is_same<deref_data_t::return_type,unsigned char>));
-    }
-
+    return boost::report_errors();    
 }
 
 

@@ -5,7 +5,7 @@
 
 
 #include <boost/integer/bitfield_tuple.hpp>
-#include <boost/assert.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
 
 using namespace boost;
@@ -32,11 +32,11 @@ int main() {
         test_1.get<green>()     = 15;
         test_1.get<red>()       = 3;
         test_1.get<salmon>()    = 6;
-        BOOST_ASSERT((test_1.get<green>() == 15));
-        BOOST_ASSERT((test_1.get<red>() == 3));
-        BOOST_ASSERT(( test_1.get<salmon>() == 6));
+        BOOST_TEST((test_1.get<green>() == 15));
+        BOOST_TEST((test_1.get<red>() == 3));
+        BOOST_TEST(( test_1.get<salmon>() == 6));
 
-        BOOST_ASSERT((
+        BOOST_TEST((
             const_cast<
                 test_tuple const&
             >(test_1).get<salmon>() == 6
@@ -49,11 +49,11 @@ int main() {
         test_2.get<0>() = 3;
         test_2.get<1>() = 14;
         test_2.get<2>() = 6;
-        BOOST_ASSERT((test_2.get<0>() == 3));
-        BOOST_ASSERT((test_2.get<1>() == 14));
-        BOOST_ASSERT((test_2.get<2>() == 6));
+        BOOST_TEST((test_2.get<0>() == 3));
+        BOOST_TEST((test_2.get<1>() == 14));
+        BOOST_TEST((test_2.get<2>() == 6));
 
-        BOOST_ASSERT((
+        BOOST_TEST((
             const_cast<
                 test_tuple const&
             >(test_2).get<2>() == 6
@@ -64,9 +64,9 @@ int main() {
     {
         test_tuple test_3;
         test_3.get<0>() = -1;
-        BOOST_ASSERT(( test_3.get<0>() == -1 ));
+        BOOST_TEST(( test_3.get<0>() == -1 ));
     }
-    return 0;
+    return boost::report_errors();
 }
 
 

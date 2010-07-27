@@ -5,9 +5,9 @@
 
 
 #include <boost/integer/bitfield_tuple.hpp>
-#include <boost/assert.hpp>
+#include <boost/detail/lightweight_test.hpp>
 #include <boost/mpl/assert.hpp>
-#include <boost/integer/detail/fusion_ext_includes.hpp>
+
 
 using namespace boost;
 using namespace boost::bitfields;
@@ -39,17 +39,17 @@ int main() {
     {
         test_tuple temp;
         temp.get<green>() =3 ;
-        BOOST_ASSERT((fusion::at_c<1>(temp) == 3));
+        BOOST_TEST(( fusion::at_c<1>(temp) == 3 ));
     }
 
     // is_sequence testing
     {
-        BOOST_ASSERT(( fusion::traits::is_sequence<test_tuple>() ));
+        BOOST_TEST(( fusion::traits::is_sequence<test_tuple>() ));
     }
     
     // is_view testing
     {
-        BOOST_ASSERT(( !fusion::traits::is_view<test_tuple>() ));
+        BOOST_TEST(( !fusion::traits::is_view<test_tuple>() ));
     }
 
     // category_of testing
@@ -68,32 +68,33 @@ int main() {
     {
         test_tuple temp;
         temp.get<red>() = 4;
-        BOOST_ASSERT(( fusion::deref(fusion::begin(temp)) == 4));
+        BOOST_TEST(( fusion::deref(fusion::begin(temp)) == 4));
     }
 
     // size testing
     {
         test_tuple temp;
-        BOOST_ASSERT(( fusion::size(temp) == 3 ));
+        BOOST_TEST(( fusion::size(temp) == 3 ));
     }
     
     // end testing
     {
         test_tuple temp;
         temp.get<salmon>() = 3;
-        BOOST_ASSERT(( fusion::deref(fusion::prior(fusion::end(temp))) == 3 ));
+        BOOST_TEST(( fusion::deref(fusion::prior(fusion::end(temp))) == 3 ));
     }
     
     // at_key testing
     {
         test_tuple temp;
         temp.get<salmon>() = 3;
-        BOOST_ASSERT(( fusion::at_key<salmon>(  temp ) == 3));
+        BOOST_TEST(( fusion::at_key<salmon>(  temp ) == 3));
         fusion::at_key<salmon>(temp) = 4;
-        BOOST_ASSERT(( fusion::at_key<salmon>(  temp ) == 4));
-        BOOST_ASSERT(( temp.get<salmon>() == 4));
-        BOOST_ASSERT(( fusion::at_key<green>(  temp ) == 0));
+        BOOST_TEST(( fusion::at_key<salmon>(  temp ) == 4));
+        BOOST_TEST(( temp.get<salmon>() == 4));
+        BOOST_TEST(( fusion::at_key<green>(  temp ) == 0));
     }
+    return boost::report_errors();
 }
 
 

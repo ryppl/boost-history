@@ -14,21 +14,15 @@ List of TODO's throughout the bitfield_tuple
 1) template_expansion_macros.hpp
 2) reference_builder.hpp
 3) proxy_reference_policy.hpp
-
 4)  pointer_parsing_meta_functions.hpp
-
 5)  pointer_packing_policy.hpp
 6)  name_lookup.hpp
 7)  make_bitfield_tuple.hpp
 8)  bitfield_tuple_impl.hpp
 9)  bitfield_element.hpp
 10) arg_parse_impl.hpp
-
 12) bitfield_iterator.hpp - Fusion Extension
- 
-
 14) bitfield_tuple.hpp
-15) Remove old pointer plus bits stuff
 16) interface_meta_functions.hpp
 
 
@@ -47,46 +41,25 @@ List of TODO's throughout the bitfield_tuple
 
 
 4)  reference_builder_test.cpp
-    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
-
 *) interface_meta_function_test.cpp
-
 5)  pointer_parsing_meta_function_test.cpp
-
 6)  pointer_member_test.cpp
-    a)  .
-    b)  This test is incomplete because the implementation isn't completed yet.
-    c)  I need a macro which will tell me if the test is 32 bit or 64 bit
-        Currently the _LP64 should only work for GCC however I need a more
-        universal one.
-
 7)  name_accessor_test.cpp
-    a)  .
-    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
-
-8)  make_bft_testing.cpp
-    a)  .
-    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
 
 9)  make_bft_testing.cpp
-    a)  .
     b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
     c)  This may need additional test to make sure that the macros are correctly
         generating the code for the correct number of valid parameters.
 
 10) get_interface_test.cpp
-    a)  .
-    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
     c)  Need to do more const interface testing.
 
 11) fusion_iterator_testing.cpp
-    a)  remove testing from name.
-    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
     c)  Not sure just how I should test the iterator. This may be good as it
         however that doesn't mean that it should just stay as is. Look into
         other fusion iterator tests.
-*)  bitfield_iterator.hpp
-    - Make sure that this works in const situation.
+    *)  bitfield_iterator.hpp
+        - Make sure that this works in const situation.
 
 12) fusion_integration_testing.cpp
     a)  remove testing from name.
@@ -187,3 +160,6 @@ reference type.
     good currently.
 --------------------------------------------------------------------------------
 
+
+
+    return boost::report_errors();
