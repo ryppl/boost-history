@@ -149,7 +149,7 @@ private:
             if (valid())
             {
 #if defined(BOOST_POSIX_API)
-                close(native_);
+                ::close(native_);
 #elif defined(BOOST_WINDOWS_API)
                 CloseHandle(native_);
 #endif
@@ -166,7 +166,7 @@ private:
             if (valid())
             {
 #if defined(BOOST_POSIX_API)
-                close(native_);
+                ::close(native_);
 #elif defined(BOOST_WINDOWS_API)
                 CloseHandle(native_);
 #endif
