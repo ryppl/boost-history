@@ -20,7 +20,6 @@
 #include <boost/mpl/not.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/deref.hpp>
-#include <boost/type_traits.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/size.hpp>

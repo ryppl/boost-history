@@ -240,21 +240,21 @@ struct bft_arg_parse_impl <
 
 
 
-/* Specialization for bit_align. */
+/* Specialization for align. */
 template <  std::size_t AlignTo,
             typename StoragePolicy,
             typename FieldVector,
             typename Offset
 >
 struct bft_arg_parse_impl <
-    bitfields::bit_align<
+    bitfields::align<
         AlignTo
     >,
     StoragePolicy,
     FieldVector,
     Offset >
 {
-    typedef bitfields::bit_align<AlignTo> param;
+    typedef bitfields::align<AlignTo> param;
     typedef FieldVector     field_vector;
     typedef StoragePolicy   storage_policy;
 

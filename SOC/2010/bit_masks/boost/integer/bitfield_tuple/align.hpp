@@ -15,7 +15,7 @@ namespace bitfields {
  *  as the as AlignTo specifies relative to the current offset in bits.
  */
 template <std::size_t AlignTo>
-struct bit_align;
+struct align;
 }} // end boost::bitfields
 
 #endif

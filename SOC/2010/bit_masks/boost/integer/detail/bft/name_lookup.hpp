@@ -7,7 +7,7 @@
 #define BOOST_BITFIELD_TUPLE_NAME_LOCATER_HPP
 #include <boost/integer/detail/bft/bft_element.hpp>
 #include <boost/mpl/find_if.hpp>
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace detail {
 

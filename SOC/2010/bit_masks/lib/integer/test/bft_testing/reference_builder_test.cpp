@@ -23,7 +23,7 @@ typedef bitfield_tuple<
     filler<3>,
     member<int, salmon, 16>,
     flag<blue>,
-    bit_align<32>
+    align<32>
 >                  test_tuple_1;
 
 int main() {

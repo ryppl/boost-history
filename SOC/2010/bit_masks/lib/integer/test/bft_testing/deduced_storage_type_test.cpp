@@ -20,17 +20,17 @@ struct salmon;
 
 typedef bitfield_tuple<
     flag<green>,
-    bit_align<16>
+    align<16>
 >       test_16;
 
 typedef bitfield_tuple<
     flag<pink>,
-    bit_align<8>
+    align<8>
 >       test_8;
 
 typedef bitfield_tuple<
     flag<red>,
-    bit_align<32>
+    align<32>
 >       test_32;
 
 

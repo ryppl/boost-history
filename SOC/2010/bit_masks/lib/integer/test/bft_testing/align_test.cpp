@@ -27,7 +27,7 @@ int main() {
             filler<3>,
             member<int, salmon, 16>,
             flag<blue>,
-            bit_align<32>
+            bitfields::align<32>
         >                                       test_tuple_1;
         test_tuple_1 temp;
         BOOST_ASSERT(( test_tuple_1::bits_used::value == 32 ));
@@ -37,7 +37,7 @@ int main() {
     {
         typedef bitfield_tuple<
             storage<std::size_t>,
-            bit_align<32>
+            bitfields::align<32>
         >                                       test_tuple_2;
         test_tuple_2 temp;
         BOOST_ASSERT(( test_tuple_2::bits_used::value == 0 ));
@@ -49,7 +49,7 @@ int main() {
         typedef bitfield_tuple<
             storage<std::size_t>,
             member<int,red,9>,
-            bit_align<8>
+            bitfields::align<8>
         >                                       test_tuple_3;
         test_tuple_3 temp;
         BOOST_ASSERT(( test_tuple_3::bits_used::value == 16));
@@ -58,8 +58,8 @@ int main() {
     // test case calling align 2x times in a row doesn't do anything.
     {
         typedef bitfield_tuple<
-            bit_align<32>,
-            bit_align<32>,
+            bitfields::align<32>,
+            bitfields::align<32>,
             storage<unsigned int>
         >                                       test_tuple_4;
         test_tuple_4 temp;

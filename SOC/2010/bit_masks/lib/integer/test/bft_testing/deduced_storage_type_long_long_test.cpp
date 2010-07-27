@@ -18,7 +18,7 @@ struct salmon;
 
 typedef bitfield_tuple<
     flag<pink>,
-    bit_align<64>
+    align<64>
 >       test_tuple;
 
 
