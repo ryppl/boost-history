@@ -55,10 +55,11 @@ test-suite integer
         [ run bft_testing/pointer_member_test.cpp ]
         [ run bft_testing/pointer_parsing_meta_function_test.cpp ]
         [ run bft_testing/fails_on_64_bit.cpp ]
+
         [ run bft_testing/variadic_sequence_20_test.cpp ]
         [ run bft_testing/variadic_sequence_30_test.cpp ]
         [ run bft_testing/variadic_sequence_40_test.cpp ]
         [ run bft_testing/variadic_sequence_50_test.cpp ]
-
+        [ run bft_testing/interface_meta_function_test.cpp ]
     ;
 

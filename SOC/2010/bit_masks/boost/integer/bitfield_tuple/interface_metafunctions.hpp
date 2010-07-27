@@ -54,8 +54,8 @@ template <typename BitfieldTuple, std::size_t Index>
 struct find_by_element_index {
 
     BOOST_STATIC_ASSERT((
-        mpl::size<typename BitfieldTuple::members>::value
-            >
+        std::size_t(mpl::size<typename BitfieldTuple::members>::value)
+            >=
         Index
     ));
 

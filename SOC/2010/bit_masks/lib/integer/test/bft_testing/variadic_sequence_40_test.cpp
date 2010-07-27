@@ -11,18 +11,51 @@
 
 using namespace boost;
 using namespace boost::bitfields;
-
-struct red;
-struct green;
-struct pink;
 struct blue;
-struct salmon;
 
 typedef bitfield_tuple<
-    member<char,red,4>,
-    member<unsigned char, green,5>,
-    storage<std::size_t>,
-    member<int, salmon, 16>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    // 10
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    // 10
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    // 10
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
+    align<8>,
     flag<blue>
 >                                       test_tuple;
 

@@ -37,61 +37,45 @@ List of TODO's throughout the bitfield_tuple
                                 Test File Review
 --------------------------------------------------------------------------------
 1)  variadic_sequence_testing.cpp
-    a)  Replicate this test all the way up to 50 at intervals of 10.
-    b)  Switch to using <boost/detail/lightweight_test.hpp> framework.
-    c)  Add test to test the limit of the bitfield_tuple so that I can be
-        assured that the limit is working correctly.
-    d)  remove testing from the end of file name.
-
 
 3)  template_expansion_marco_test.cpp
     a)  Make this an actual test to make sure that everything is correctly
         getting expanded.
     b)  Find a better way to test this.
-    c)  remove test from name.
     d)  Change to using the <boost/detail/lightweight_test.hpp> framework.
 
+
+
 4)  reference_builder_test.cpp
-    a)  remove test from name.
     b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
-    c)  test the rest of the reference builder functions
-        I   )   Name exists
-        II  )   find_by_element_name
-        III )   find_by_element_index
-        IV  )   make_reference_type_by_name <-- Maybe, if its actually being 
-                used then I'll make a test for it other wise its going to be
-                removed.
-        V   )   enable_if_reference_type_by_index
-        VI  )   get_reference_type_by_name
-        VII )   get_reference_type_by_index
+
+*) interface_meta_function_test.cpp
 
 5)  pointer_parsing_meta_function_test.cpp
-    a)  Remove test from name.
-    c)  Other then name this is pretty complete.
 
 6)  pointer_member_test.cpp
-    a)  remove test from name.
+    a)  .
     b)  This test is incomplete because the implementation isn't completed yet.
     c)  I need a macro which will tell me if the test is 32 bit or 64 bit
         Currently the _LP64 should only work for GCC however I need a more
         universal one.
 
 7)  name_accessor_test.cpp
-    a)  remove test from name.
+    a)  .
     b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
 
 8)  make_bft_testing.cpp
-    a)  remove test from name.
+    a)  .
     b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
 
 9)  make_bft_testing.cpp
-    a)  remove test from name.
+    a)  .
     b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
     c)  This may need additional test to make sure that the macros are correctly
         generating the code for the correct number of valid parameters.
 
 10) get_interface_test.cpp
-    a)  remove test from name.
+    a)  .
     b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
     c)  Need to do more const interface testing.
 
@@ -109,33 +93,33 @@ List of TODO's throughout the bitfield_tuple
     b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
 
 13) flag_test.cpp
-    a)  remove test from name.
+    a)  .
     b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
 
 14) filler_test.cpp
-    a)  remove test from name.
+    a)  .
     b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
 
 15) deduced_storage_type_test.cpp
-    a)  remove test from name.
+    a)  .
     b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
 
 16) deduced_storage_type_long_long_test.cpp
-    a)  remove test from name.
+    a)  .
     b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
     c)  Maybe merge this with the other storage type.
 
 17) custom_member_test.cpp
-    a)  remove test from name.
+    a)  .
     b)  Implement before testing this.
 
 18) bitfield_tuple_test.hpp
-    a)  remove test from name.
+    a)  .
     b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
     c)  remove previous dependency on test_list_type.hpp
 
 19) align_test.cpp
-    a)  remove test from name.
+    a)  .
     b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
 
 20) fails_on_64_bit.cpp
@@ -147,7 +131,7 @@ List of TODO's throughout the bitfield_tuple
     Test which need to be created as a result of modifications or additions!
 --------------------------------------------------------------------------------
 1)  !DONE! Add interface test for the interface macros. !DONE!
-2)  interface meta-function test suite.
+    2)  interface meta-function test suite.
 3)  Create additional tests for count leading and trailing zero meta-functions.
 4)  Create compile failure test for pointer member mask being 0.
 5)  Create compile failure test for pointer member mask not being same size as
@@ -155,6 +139,14 @@ List of TODO's throughout the bitfield_tuple
 6)  Create compile Failure test for custom member mask being 0.
 7)  Create test for element and element_n
 8)  Create test for get_free_function.
+9)  Create compile failure test for find_by_element_name name does not exist.
+10) Create compile failure test for find_by_element_index index does not exist.
+11) Create compile failure test for get_proxy_reference_type_by_name name does
+    not exist.
+12) Create compile failure test for get_proxy_reference_type_by_index index does
+    not exist.
+
+
 --------------------------------------------------------------------------------
 
 
