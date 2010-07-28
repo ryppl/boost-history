@@ -30,6 +30,7 @@ test-suite integer
 		[ run ilog2_test.cpp ]
 		[ run inc_rev_test.cpp ]
 		[ run isqrt_test.cpp ]
+		[ run find_first_one_string_test.cpp ]
 		[ compile cstdint_include_test.cpp ]
 		[ compile integer_traits_include_test.cpp ]
 		[ compile integer_include_test.cpp ]

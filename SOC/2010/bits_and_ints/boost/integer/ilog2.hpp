@@ -10,7 +10,6 @@
 #ifndef BOOST_ILOG2_INCLUDED
 #define BOOST_ILOG2_INCLUDED
 
-#include <boost/static_assert.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_unsigned.hpp>
 #include <boost/math/policies/policy.hpp>
@@ -28,7 +27,7 @@ namespace boost {
  *
  *	See the math::policies documentation for more details.
  *
- *	`value` must be unsigned.
+ *	`T` must be unsigned.
  */
 template <typename T, typename Policy>
 inline typename enable_if<is_unsigned<T>, int>::type
@@ -37,7 +36,7 @@ ilog2(T value, const Policy& pol)
 	if (value == 0) {
 		return math::policies::raise_indeterminate_result_error(
 			"boost::ilog2(%1%)",
-			"ilog2 is indeterminate for value %1%, retunrning -1",
+			"ilog2 is indeterminate for value %1%, returning -1",
 			0, -1, pol
 		);
 	}

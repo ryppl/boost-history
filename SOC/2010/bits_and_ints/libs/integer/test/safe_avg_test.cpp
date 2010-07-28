@@ -1,5 +1,4 @@
-//  Boost safe_avg_test.hpp test program  --------------------------------------//
-
+//  Boost integer/safe_avg.hpp test program  --------------------//
 //  (C) Copyright Murilo Adriano Vasconcelos 2010.
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at

@@ -1,5 +1,4 @@
-//  Boost count_leading_zeros_test.hpp test program  --------------------------------------//
-
+//  Boost integer/isqrt.hpp test program  -----------------------//
 //  (C) Copyright Murilo Adriano Vasconcelos 2010.
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at
@@ -12,8 +11,6 @@
 #include <boost/cstdint.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/integer/isqrt.hpp>
-
-
 
 int main()
 {
