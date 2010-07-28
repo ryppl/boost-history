@@ -22,4 +22,5 @@ test-suite graph_test
   :
     [ run test.cpp ]
     [ run globalid.cpp ]
+    [ run property_test.cpp ]
   ;
