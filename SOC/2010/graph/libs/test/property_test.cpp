@@ -54,7 +54,9 @@ void auto_label(Graph &g) { // to name vertices and edges
     size_t src, targ;
     src  = g[source(*ei, g)].name - 10;
     targ = g[target(*ei, g)].name - 10;
-    g[*ei].name = 100 + 10 * src + targ;
+    label = 100 + 10 * src + targ;
+    g[*ei].name = label;
+    get_property(g, graph_label).hack->edges[label] = *ei;
   }
 }
 

@@ -43,15 +43,16 @@ namespace boost {
     }
 
     // copy edges from (g1 intersection g2)
-    // not using the vertex name! (but checking with an assert)
+    // *not* using the edge name! (but checking with an assert)
     typename graph_traits < VertexListGraph >::edge_iterator ei, ei_end;
     for (tie(ei, ei_end) = edges(g1); ei != ei_end; ++ei) {
       auto g2_s  = gl2.find( g1[source(*ei, g1)].name );
       auto g2_t  = gl2.find( g1[target(*ei, g1)].name );
-      auto out_s = gl_out.find( g1[source(*ei, g1)].name );
-      auto out_t = gl_out.find( g1[target(*ei, g1)].name );
 
       if ( (g2_s != gl2.end() && g2_t != gl2.end() && edge(g2_s->second, g2_t->second, g2).second) ) {
+        auto out_s = gl_out.find( g1[source(*ei, g1)].name );
+        auto out_t = gl_out.find( g1[target(*ei, g1)].name );
+
         assert(out_s != gl_out.end() && out_t != gl_out.end());
         assert( g1[ *ei ].name == g2[ edge(g2_s->second, g2_t->second, g2).first ].name );
 
@@ -59,8 +60,35 @@ namespace boost {
         bool inserted;
         boost::tie(new_e, inserted) = add_edge(out_s->second, out_t->second, g_out);
         copy_edge(*ei, new_e);
+        // g_out[new_e].name = g1[*ei].name; // copy_edge already did it
+        get_property(g_out, graph_label).hack->edges[ g1[*ei].name ] = new_e;
       }
     }
+
+#if 0
+    // if we use the edge name, the code is the following:
+    // copy edges from (g1 intersection g2)
+    typename graph_traits < VertexListGraph >::edge_iterator ei, ei_end;
+    for (tie(ei, ei_end) = edges(g1); ei != ei_end; ++ei) {
+      auto gl2e = get_property(g2, graph_label).hack->edges;
+
+      if ( gl2e.find( g1[*ei].name ) != gl2e.end() ) {
+        auto out_s = gl_out.find( g1[source(*ei, g1)].name );
+        auto out_t = gl_out.find( g1[target(*ei, g1)].name );
+
+        assert(out_s != gl_out.end() && out_t != gl_out.end());
+        assert( g2[ source(gl2e[g1[*ei].name], g2) ].name == g1[ source(*ei, g1) ].name);
+        assert( g2[ target(gl2e[g1[*ei].name], g2) ].name == g1[ target(*ei, g1) ].name);
+
+        typename graph_traits<MutableGraph>::edge_descriptor new_e;
+        bool inserted;
+        boost::tie(new_e, inserted) = add_edge(out_s->second, out_t->second, g_out);
+        copy_edge(*ei, new_e);
+        // g_out[new_e].name = g1[*ei].name; // copy_edge already did it
+        get_property(g_out, graph_label).hack->edges[ g1[*ei].name ] = new_e;
+      }
+    }
+#endif // if 0
   }
 
 
