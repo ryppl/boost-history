@@ -31,12 +31,12 @@ int main()
 	BOOST_TEST((find_first_one_string((uint32_t)0x0000FFFF, 20) == -1));
 	
 #ifndef BOOST_HAS_NO_INT64_T
-	BOOST_TEST((find_first_one_string((uint64_t)0, 1) == -1));
-	BOOST_TEST((find_first_one_string((uint64_t)0, 20) == -1));
-	BOOST_TEST((find_first_one_string((uint64_t)0xFFFF0000FFFF, 16) == 16));
-	BOOST_TEST((find_first_one_string((uint64_t)0xFFFF0000FF0FFFFF, 17) == 44));
-	BOOST_TEST((find_first_one_string((uint64_t)0xFFFFFFFFFFFFFFFF, 64) == 0));
-	BOOST_TEST((find_first_one_string((uint64_t)0xFFFFFFFFFFFFFFFF, 63) == 0));
+	BOOST_TEST((find_first_one_string((uint64_t)0ULL, 1) == -1));
+	BOOST_TEST((find_first_one_string((uint64_t)0ULL, 20) == -1));
+	BOOST_TEST((find_first_one_string((uint64_t)0xFFFF0000FFFFULL, 16) == 16));
+	BOOST_TEST((find_first_one_string((uint64_t)0xFFFF0000FF0FFFFFULL, 17) == 44));
+	BOOST_TEST((find_first_one_string((uint64_t)0xFFFFFFFFFFFFFFFFULL, 64) == 0));
+	BOOST_TEST((find_first_one_string((uint64_t)0xFFFFFFFFFFFFFFFFULL, 63) == 0));
 #endif
 	
 	return boost::report_errors();
