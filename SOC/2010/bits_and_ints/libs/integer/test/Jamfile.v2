@@ -31,6 +31,7 @@ test-suite integer
 		[ run inc_rev_test.cpp ]
 		[ run isqrt_test.cpp ]
 		[ run find_first_one_string_test.cpp ]
+		[ run rotate_test.cpp ]
 		[ compile cstdint_include_test.cpp ]
 		[ compile integer_traits_include_test.cpp ]
 		[ compile integer_include_test.cpp ]
