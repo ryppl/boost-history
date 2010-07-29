@@ -14,7 +14,7 @@ struct red { };
 // fails because the mask isn't the same size as the pointer.
 typedef bitfield_tuple<
     storage<int>,
-    pointer<int,red,integral_constant<unsigned short, 0> >
+    pointer<int,red,integral_constant<unsigned short, 3> >
 > bft;
 
 

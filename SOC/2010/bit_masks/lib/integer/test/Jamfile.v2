@@ -35,6 +35,7 @@ test-suite integer
         [ compile-fail bft_testing/compile_fail/set_storage_more_then_once.cpp ]
         [ compile-fail bft_testing/compile_fail/one_name_two_members.cpp ]
         [ compile-fail bft_testing/compile_fail/pointer_member_with_zero_mask.cpp ]
+        [ compile-fail bft_testing/compile_fail/pointer_mask_not_same_size_as_pointer.cpp ]
         [ compile bft_testing/compile_pass/bft_member_max_out.cpp ]
         [ run bft_testing/bitfield_tuple_test.cpp ]
         [ run bft_testing/name_accessor_test.cpp ]
