@@ -14,22 +14,22 @@ using namespace boost::bitfields::detail::pointer_member;
 
 typedef bits_mask< int, 2, bit_width<int>::value - 4> mask_1;
 typedef bits_mask< int, 4, bit_width<int>::value - 4> mask_2;
-typedef bits_mask< int, 0, bit_width<int>::value - 4> mask_2;
+typedef bits_mask< int, 0, bit_width<int>::value - 4> mask_3;
 int main() {
     // count leading zeros' test
     {
         // count_leading_zeros
-        BOOST_TEST( count_leading_zeros<mask_1>::value == 2);
-        BOOST_TEST( count_leading_zeros<mask_2>::value == 0);
-        BOOST_TEST( count_leading_zeros<mask_3>::value == 4);
+        BOOST_TEST( count_leading_zeros<mask_1>::type::value == 2);
+        BOOST_TEST( count_leading_zeros<mask_2>::type::value == 0);
+        BOOST_TEST( count_leading_zeros<mask_3>::type::value == 4);
     }
 
     // count trailing zeros' test
     {
         // count_trailing_zeros
-        BOOST_TEST( count_trailing_zeros<mask_1>::value == 2);
-        BOOST_TEST( count_trailing_zeros<mask_2>::value == 4);
-        BOOST_TEST( count_trailing_zeros<mask_3>::value == 0);
+        BOOST_TEST( count_trailing_zeros<mask_1>::type::value == 2);
+        BOOST_TEST( count_trailing_zeros<mask_2>::type::value == 4);
+        BOOST_TEST( count_trailing_zeros<mask_3>::type::value == 0);
 
     }
     return boost::report_errors();

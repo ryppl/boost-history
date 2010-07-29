@@ -45,10 +45,7 @@ List of TODO's throughout the bitfield_tuple
                                 Test File Review
 --------------------------------------------------------------------------------
 1)  variadic_sequence_testing.cpp
-
-
-
-
+3)  template_expansion_marco_test.cpp
 4)  reference_builder_test.cpp
 *) interface_meta_function_test.cpp
 5)  pointer_parsing_meta_function_test.cpp
@@ -65,15 +62,12 @@ List of TODO's throughout the bitfield_tuple
 19) align_test.cpp
 
 
-3)  template_expansion_marco_test.cpp
-    a)  Make this an actual test to make sure that everything is correctly
-        getting expanded.
-    b)  Find a better way to test this.
-    d)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+
 
 9)  make_bft_testing.cpp
     c)  This may need additional test to make sure that the macros are correctly
         generating the code for the correct number of valid parameters.
+
 17) custom_member_test.cpp
     b)  Implement test suite.
 
