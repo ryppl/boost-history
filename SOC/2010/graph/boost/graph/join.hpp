@@ -18,7 +18,7 @@
 namespace boost {
 
   template <class VertexListGraph, class MutableGraph> 
-  void graph_join(const VertexListGraph& G1, const VertexListGraph& G2, MutableGraph& G)
+  void old_graph_join(const VertexListGraph& G1, const VertexListGraph& G2, MutableGraph& G)
   {
     typename graph_traits < MutableGraph >::vertex_iterator vi, vi_end;
     typename graph_traits < MutableGraph >::vertex_iterator ui, ui_end;

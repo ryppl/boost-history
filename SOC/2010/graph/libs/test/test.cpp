@@ -199,7 +199,7 @@ int main(int,char*[])
 
   Graph h_du;
   cout << "Disjoint union: (h1 union h2)" << endl;
-  disjoint_union(h1, h2, h_du);
+  old_graph_union(h1, h2, h_du);
   prt(h_du);
   // is there any way to clear h_du and use the same variable for all?
 
@@ -224,17 +224,17 @@ int main(int,char*[])
   // because x and y are the considered as the same
   Graph h_s;
   cout << "Graph sum: (h1 + h2)" << endl;
-  graph_sum(h1, h2, globalId, h_s);
+  gvm_graph_sum(h1, h2, globalId, h_s);
   prt(h_s);
 
   Graph h_i;
   cout << "Graph intersection: (h1 intersection h2)" << endl;
-  intersection(h1, h2, globalId, h_i);
+  gvm_graph_intersection(h1, h2, globalId, h_i);
   prt(h_i);
 
   Graph h_diff;
   cout << "Graph difference: (h1 - h2)" << endl;
-  difference(h1, h2, globalId, h_diff);
+  gvm_graph_difference(h1, h2, globalId, h_diff);
   prt(h_diff);
 
   return 0;

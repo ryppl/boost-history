@@ -121,17 +121,17 @@ int main(int,char*[])
 
   cout << "g1 + g2:" << endl;
   Graph gs;
-  graph_sum(g1, g2, globalId, gs);
+  gvm_graph_sum(g1, g2, globalId, gs);
   print_graph(gs);
 
   cout << "g1 - g2:" << endl;
   Graph gd;
-  difference(g1, g2, globalId, gd);
+  gvm_graph_difference(g1, g2, globalId, gd);
   print_graph(gd);
 
   cout << "g1 intersection g2:" << endl;
   Graph gi;
-  intersection(g1, g2, globalId, gi);
+  gvm_graph_intersection(g1, g2, globalId, gi);
   print_graph(gi);
 
   return 0;

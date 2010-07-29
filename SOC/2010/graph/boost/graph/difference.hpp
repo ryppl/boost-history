@@ -19,8 +19,9 @@
 
 namespace boost {
 
+  // Version with globalVertexMapping
   template <class VertexListGraph, class MutableGraph, class globalVertexMapping> 
-  void difference(const VertexListGraph& g1, const VertexListGraph& g2, globalVertexMapping m, MutableGraph& g_out)
+  void gvm_graph_difference(const VertexListGraph& g1, const VertexListGraph& g2, globalVertexMapping m, MutableGraph& g_out)
   {
     typedef typename graph_traits<VertexListGraph>::vertex_descriptor InVertex;
     typedef typename graph_traits<MutableGraph>::vertex_descriptor OutVertex;
