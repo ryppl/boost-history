@@ -37,6 +37,12 @@ test-suite integer
         [ compile-fail bft_testing/compile_fail/pointer_member_with_zero_mask.cpp ]
         [ compile-fail bft_testing/compile_fail/pointer_mask_not_same_size_as_pointer.cpp ]
         [ compile-fail bft_testing/compile_fail/custom_member_mask_is_zero.cpp ]
+        [ compile-fail bft_testing/compile_fail/find_by_index_with_indvalid_index.cpp ]
+        [ compile-fail bft_testing/compile_fail/find_by_name_with_missing_name.cpp ]
+        [ compile-fail bft_testing/compile_fail/get_proxy_reference_type_by_name_name_does_not_exist.cpp ]
+        [ compile-fail bft_testing/compile_fail/get_proxy_reference_type_by_index_index_does_not_exist.cpp ]
+        
+
         [ compile bft_testing/compile_pass/bft_member_max_out.cpp ]
         [ run bft_testing/bitfield_tuple_test.cpp ]
         [ run bft_testing/name_accessor_test.cpp ]

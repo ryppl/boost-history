@@ -80,8 +80,7 @@ List of TODO's throughout the bitfield_tuple
 
 7)  Create test for element and element_n
 8)  Create test for get_free_function.
-9)  Create compile failure test for find_by_element_name name does not exist.
-10) Create compile failure test for find_by_element_index index does not exist.
+
 11) Create compile failure test for get_proxy_reference_type_by_name name does
     not exist.
 12) Create compile failure test for get_proxy_reference_type_by_index index does
