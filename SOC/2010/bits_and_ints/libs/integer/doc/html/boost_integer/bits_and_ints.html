@@ -790,7 +790,10 @@
 <a name="boost_integer.bits_and_ints.integer_logarithm_base_2__ilog2_function__"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.integer_logarithm_base_2__ilog2_function__" title="Integer Logarithm Base 2 (ilog2 function)">Integer
       Logarithm Base 2 (ilog2 function) </a>
 </h3></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.integer_logarithm_base_2__ilog2_function__.synopsis">Synopsis</a></span></dt></dl></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.integer_logarithm_base_2__ilog2_function__.synopsis">Synopsis</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.integer_logarithm_base_2__ilog2_function__.examples">Examples</a></span></dt>
+</dl></div>
 <p>
         The header file <a href="../../../../../boost/integer/ilog2.hpp" target="_top">&lt;boost/integer/ilog2.hpp&gt;</a>
         defines <code class="computeroutput"><span class="identifier">ilog2</span></code> function wich
@@ -802,6 +805,9 @@
 </h4></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">inline</span> <span class="identifier">T</span> <span class="identifier">ilog2</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">value</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Policy</span><span class="special">&gt;</span>
+<span class="keyword">inline</span> <span class="identifier">T</span> <span class="identifier">ilog2</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">value</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">Policy</span><span class="special">&amp;</span> <span class="identifier">pol</span><span class="special">);</span>
 </pre>
 </div>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
@@ -815,9 +821,81 @@
         </li>
 <li class="listitem">
 <span class="bold"><strong>Returns: </strong></span> The integer logarithm in base
-          2 of <code class="computeroutput"><span class="identifier">value</span></code> rounded down.
+          2 of <code class="computeroutput"><span class="identifier">value</span></code> rounded down
+          or -1 if <code class="computeroutput"><span class="identifier">value</span></code> is equal
+          to 0.
+        </li>
+<li class="listitem">
+<span class="bold"><strong>Throws: </strong></span><code class="computeroutput"><span class="identifier">ilog2</span></code>
+          raises an <code class="computeroutput"><span class="identifier">undeterminate_result_error</span></code>
+          if <code class="computeroutput"><span class="identifier">value</span></code> is 0, and by default
+          do not throw anything, but is possible to change the behaviour using Boost
+          Math's policies. See section Examples.
         </li>
 </ul></div>
+<div class="section" title="Examples">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.integer_logarithm_base_2__ilog2_function__.examples"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.integer_logarithm_base_2__ilog2_function__.examples" title="Examples">Examples</a>
+</h4></div></div></div>
+<p>
+          <a href="../../../../../libs/integer/example/ilog2_policy_test.cpp" target="_top"><code class="computeroutput"><span class="identifier">ilog2</span></code> policy example</a>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_TEST_MAIN</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cerrno</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">stdexcept</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">test</span><span class="special">/</span><span class="identifier">included</span><span class="special">/</span><span class="identifier">unit_test</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">ilog2</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">math</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">policies</span> <span class="special">{</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">T</span> <span class="identifier">user_indeterminate_result_error</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">function</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">message</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">)</span>
+<span class="special">{</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"User Error on function: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">function</span> 
+		<span class="special">&lt;&lt;</span> <span class="string">" with message: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">message</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+	
+	<span class="special">(</span><span class="keyword">void</span><span class="special">)</span><span class="identifier">val</span><span class="special">;</span>
+	
+	<span class="comment">// Returning a custom value
+</span>	<span class="keyword">return</span> <span class="special">-</span><span class="number">2</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="special">}</span> <span class="special">}</span> <span class="special">}</span>
+	
+<span class="identifier">BOOST_AUTO_TEST_CASE</span><span class="special">(</span> <span class="identifier">test</span> <span class="special">)</span>
+<span class="special">{</span>
+	<span class="comment">// Checking default behavior
+</span>	<span class="identifier">BOOST_CHECK_EQUAL</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ilog2</span><span class="special">(</span><span class="number">0u</span><span class="special">),</span> <span class="special">-</span><span class="number">1</span><span class="special">);</span>
+	
+	<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">math</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
+	<span class="identifier">policy</span><span class="special">&lt;</span> <span class="identifier">indeterminate_result_error</span><span class="special">&lt;</span><span class="identifier">throw_on_error</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">throw_pol</span><span class="special">;</span>
+	<span class="identifier">policy</span><span class="special">&lt;</span> <span class="identifier">indeterminate_result_error</span><span class="special">&lt;</span><span class="identifier">errno_on_error</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">errno_pol</span><span class="special">;</span>
+	<span class="identifier">policy</span><span class="special">&lt;</span> <span class="identifier">indeterminate_result_error</span><span class="special">&lt;</span><span class="identifier">ignore_error</span><span class="special">&gt;</span> <span class="special">&gt;</span>   <span class="identifier">ignore_pol</span><span class="special">;</span>
+	<span class="identifier">policy</span><span class="special">&lt;</span> <span class="identifier">indeterminate_result_error</span><span class="special">&lt;</span><span class="identifier">user_error</span><span class="special">&gt;</span> <span class="special">&gt;</span>     <span class="identifier">user_pol</span><span class="special">;</span>
+	
+	
+	<span class="comment">// Checking throw_on_error policy
+</span>	<span class="identifier">BOOST_CHECK_THROW</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ilog2</span><span class="special">(</span><span class="number">0u</span><span class="special">,</span> <span class="identifier">throw_pol</span><span class="special">)</span> <span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">domain_error</span><span class="special">);</span>
+	
+	<span class="comment">// Checking errno_on_error policy
+</span>	<span class="identifier">errno</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">ilog2</span><span class="special">(</span><span class="number">0u</span><span class="special">,</span> <span class="identifier">errno_pol</span><span class="special">);</span>
+	<span class="identifier">BOOST_CHECK_EQUAL</span><span class="special">(</span><span class="identifier">errno</span><span class="special">,</span> <span class="identifier">EDOM</span><span class="special">);</span>
+	
+	<span class="comment">// Checking ignore_error policy
+</span>	<span class="identifier">BOOST_CHECK_EQUAL</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ilog2</span><span class="special">(</span><span class="number">0u</span><span class="special">,</span> <span class="identifier">ignore_pol</span><span class="special">),</span> <span class="special">-</span><span class="number">1</span><span class="special">);</span>
+	
+	<span class="comment">// Checking user_error policy
+</span>	<span class="identifier">BOOST_CHECK_EQUAL</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ilog2</span><span class="special">(</span><span class="number">0u</span><span class="special">,</span> <span class="identifier">user_pol</span><span class="special">),</span> <span class="special">-</span><span class="number">2</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+</div>
 </div>
 <div class="section" title="is_integral_constant&lt;&gt; metafunction">
 <div class="titlepage"><div><div><h3 class="title">

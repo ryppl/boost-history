@@ -391,11 +391,74 @@ function wich calculates the logarithm in base two of a given integral value.
 	template <typename T>
 	inline T ilog2(T value);
 	
+	template <typename T, typename Policy>
+	inline T ilog2(T value, const Policy& pol);
+	
 [endsect]
 
 *[*Remarks: ] If `value` is 0, the result is [*undefined].
 *[*Requires: ] `T` to be an integral type.
-*[*Returns: ] The integer logarithm in base 2 of `value` rounded down.
+*[*Returns: ] The integer logarithm in base 2 of `value` rounded down or -1 if `value` is equal to 0.
+*[*Throws: ] `ilog2` raises an `undeterminate_result_error` if `value` is 0, and by default do not throw anything, but is 
+possible to change the behaviour using Boost Math's policies. See section Examples.
+
+[section Examples]
+
+[@../../../../libs/integer/example/ilog2_policy_test.cpp `ilog2` policy example]
+
+``
+#define BOOST_TEST_MAIN
+#include <cerrno>
+#include <iostream>
+#include <stdexcept>
+#include <boost/test/included/unit_test.hpp>
+#include <boost/integer/ilog2.hpp>
+
+namespace boost { namespace math { namespace policies {
+
+template <class T>
+T user_indeterminate_result_error(const char* function, const char* message, const T& val)
+{
+	std::cout << "User Error on function: " << function 
+		<< " with message: " << message << std::endl;
+	
+	(void)val;
+	
+	// Returning a custom value
+	return -2;
+}
+
+} } }
+	
+BOOST_AUTO_TEST_CASE( test )
+{
+	// Checking default behavior
+	BOOST_CHECK_EQUAL(boost::ilog2(0u), -1);
+	
+	using namespace boost::math::policies;
+	policy< indeterminate_result_error<throw_on_error> > throw_pol;
+	policy< indeterminate_result_error<errno_on_error> > errno_pol;
+	policy< indeterminate_result_error<ignore_error> >   ignore_pol;
+	policy< indeterminate_result_error<user_error> >     user_pol;
+	
+	
+	// Checking throw_on_error policy
+	BOOST_CHECK_THROW(boost::ilog2(0u, throw_pol) , std::domain_error);
+	
+	// Checking errno_on_error policy
+	errno = 0;
+	boost::ilog2(0u, errno_pol);
+	BOOST_CHECK_EQUAL(errno, EDOM);
+	
+	// Checking ignore_error policy
+	BOOST_CHECK_EQUAL(boost::ilog2(0u, ignore_pol), -1);
+	
+	// Checking user_error policy
+	BOOST_CHECK_EQUAL(boost::ilog2(0u, user_pol), -2);
+}
+``
+
+[endsect] 
 
 [endsect]
 
