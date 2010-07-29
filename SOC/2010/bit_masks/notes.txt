@@ -76,17 +76,8 @@ List of TODO's throughout the bitfield_tuple
                         TO BE ADDED TO TESTS SECTION
     Test which need to be created as a result of modifications or additions!
 --------------------------------------------------------------------------------
-
-
 7)  Create test for element and element_n
 8)  Create test for get_free_function.
-
-11) Create compile failure test for get_proxy_reference_type_by_name name does
-    not exist.
-12) Create compile failure test for get_proxy_reference_type_by_index index does
-    not exist.
-
-
 --------------------------------------------------------------------------------
 
 
