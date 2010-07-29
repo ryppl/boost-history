@@ -5,7 +5,7 @@
 
 
 #include <boost/integer/bitfield_tuple.hpp>
-#include <boost/assert.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
 
 using namespace boost;
@@ -30,7 +30,7 @@ int main() {
             bitfields::align<32>
         >                                       test_tuple_1;
         test_tuple_1 temp;
-        BOOST_ASSERT(( test_tuple_1::bits_used::value == 32 ));
+        BOOST_TEST(( test_tuple_1::bits_used::value == 32 ));
     }
 
     // test case where alignment is 32 and bit align attempts to set it to 32
@@ -40,7 +40,7 @@ int main() {
             bitfields::align<32>
         >                                       test_tuple_2;
         test_tuple_2 temp;
-        BOOST_ASSERT(( test_tuple_2::bits_used::value == 0 ));
+        BOOST_TEST(( test_tuple_2::bits_used::value == 0 ));
     }
 
     // test case where user has a field that extends past the first 8 bits
@@ -52,7 +52,7 @@ int main() {
             bitfields::align<8>
         >                                       test_tuple_3;
         test_tuple_3 temp;
-        BOOST_ASSERT(( test_tuple_3::bits_used::value == 16));
+        BOOST_TEST(( test_tuple_3::bits_used::value == 16));
     }
 
     // test case calling align 2x times in a row doesn't do anything.
@@ -63,7 +63,7 @@ int main() {
             storage<unsigned int>
         >                                       test_tuple_4;
         test_tuple_4 temp;
-        BOOST_ASSERT(( test_tuple_4::bits_used::value == 0 ));
+        BOOST_TEST(( test_tuple_4::bits_used::value == 0 ));
     }
-    return 0;
+    return boost::report_errors();
 }

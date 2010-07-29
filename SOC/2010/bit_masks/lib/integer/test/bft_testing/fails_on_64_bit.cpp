@@ -1,3 +1,8 @@
+//  Copyright 2010 Brian Bartman.
+//  Distributed under the Boost Software License, Version 1.0.
+//  (See accompanying file LICENSE_1_0.txt or copy at 
+//  http://www.boost.org/LICENSE_1_0.txt)
+
 #include <boost/integer/endian.hpp>
 #include <boost/integer/endian_binary_stream.hpp>
 #include <boost/binary_stream.hpp>
@@ -5,18 +10,8 @@
 #include <boost/integer/bitfield_tuple.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
-// used for working with the special conversion tools for creating 
-// specific endianed storage.
-#include <boost/type_traits/is_convertible.hpp>
 
-#include <boost/mpl/bitwise.hpp>
-#include <boost/mpl/arithmetic.hpp>
-#include <climits>
 
-#include <boost/assert.hpp>
-#include <iostream>
-#include <typeinfo>
-#include <cstdio>
 
 
 struct red;

@@ -8,6 +8,20 @@ TODO From Email Responses
     "Ensures the offset of the next bit field is divisible by the supplied value."
 
 -> 6) consider renaming member to field or bitfield
+7) Consider moving everything from bitfield_tuple into its own library.
+
+8) begin relocating all parts of the interface into the bitfield_tuple file.
+    Things which I know need to eventually move.
+    I   )   Fusion extension .
+        A)  Basically the entire ext directory.
+    II  )   make_bitfield_tuple
+        A)  relocate the single macro which actually generates all of the
+            functions into its own file.
+        B)  Rename the file which previously held the make_bitfield_tuple into
+            make_bitfield_tuple_impl
+
+
+9) Create a VIEW version of the bitfield_tuple.
 --------------------------------------------------------------------------------
 List of TODO's throughout the bitfield_tuple
 
@@ -47,64 +61,32 @@ List of TODO's throughout the bitfield_tuple
 7)  name_accessor_test.cpp
 
 9)  make_bft_testing.cpp
-    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
     c)  This may need additional test to make sure that the macros are correctly
         generating the code for the correct number of valid parameters.
 
 10) get_interface_test.cpp
-    c)  Need to do more const interface testing.
-
 11) fusion_iterator_testing.cpp
-    c)  Not sure just how I should test the iterator. This may be good as it
-        however that doesn't mean that it should just stay as is. Look into
-        other fusion iterator tests.
-    *)  bitfield_iterator.hpp
-        - Make sure that this works in const situation.
-
 12) fusion_integration_testing.cpp
-    a)  remove testing from name.
-    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
-
 13) flag_test.cpp
-    a)  .
-    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
-
 14) filler_test.cpp
-    a)  .
-    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
-
 15) deduced_storage_type_test.cpp
-    a)  .
-    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
-
 16) deduced_storage_type_long_long_test.cpp
-    a)  .
-    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
-    c)  Maybe merge this with the other storage type.
+
 
 17) custom_member_test.cpp
-    a)  .
-    b)  Implement before testing this.
+    b)  Implement test suite.
 
 18) bitfield_tuple_test.hpp
-    a)  .
-    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
-    c)  remove previous dependency on test_list_type.hpp
-
 19) align_test.cpp
-    a)  .
-    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+
 
 20) fails_on_64_bit.cpp
     a) Move the contents into boost_endian_integration_test.cpp
 
-21) Remove the ppb_testing folder and tests from the jam file.
 
                         TO BE ADDED TO TESTS SECTION
     Test which need to be created as a result of modifications or additions!
 --------------------------------------------------------------------------------
-1)  !DONE! Add interface test for the interface macros. !DONE!
-    2)  interface meta-function test suite.
 3)  Create additional tests for count leading and trailing zero meta-functions.
 4)  Create compile failure test for pointer member mask being 0.
 5)  Create compile failure test for pointer member mask not being same size as
@@ -162,4 +144,10 @@ reference type.
 
 
 
+                          Future Testing Work
+--------------------------------------------------------------------------------
+
+*   make_bitfield_tuple - Do testing similar to the variadic template parameter 
+    tests, testing to make sure that this works for all cases.
+--------------------------------------------------------------------------------
     return boost::report_errors();

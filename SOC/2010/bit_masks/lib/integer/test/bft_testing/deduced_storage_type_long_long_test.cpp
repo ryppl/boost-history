@@ -5,7 +5,7 @@
 
 
 #include <boost/integer/bitfield_tuple.hpp>
-#include <boost/assert.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
 
 using namespace boost;
@@ -24,6 +24,6 @@ typedef bitfield_tuple<
 
 int main() {
 
-    BOOST_ASSERT(( is_same<test_tuple::storage_type,uint_least64_t>::value ));
-    return 0;
+    BOOST_TEST(( is_same<test_tuple::storage_type,uint_least64_t>::value ));
+    return boost::report_errors();
 }

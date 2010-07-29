@@ -3,7 +3,7 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at 
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-
+#define BOOST_BFT_PARAM_COUNT 50
 #include <boost/integer/bitfield_tuple.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
@@ -25,6 +25,7 @@ typedef bitfield_tuple<
     member<int, salmon, 16>,
     flag<blue>
 >                                       test_tuple;
+
 
 int main() {
     {       

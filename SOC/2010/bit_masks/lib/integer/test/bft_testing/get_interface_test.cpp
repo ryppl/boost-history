@@ -41,6 +41,16 @@ int main() {
                 test_tuple const&
             >(test_1).get<salmon>() == 6
         ));
+        BOOST_TEST((
+            const_cast<
+                test_tuple const&
+            >(test_1).get<green>() == 15
+        ));
+        BOOST_TEST((
+            const_cast<
+                test_tuple const&
+            >(test_1).get<red>() == 3
+        ));
     }
 
     // get using an index.
@@ -57,6 +67,16 @@ int main() {
             const_cast<
                 test_tuple const&
             >(test_2).get<2>() == 6
+        ));
+        BOOST_TEST((
+            const_cast<
+                test_tuple const&
+            >(test_2).get<0>() == 3
+        ));
+        BOOST_TEST((
+            const_cast<
+                test_tuple const&
+            >(test_2).get<1>() == 14
         ));
     }
 

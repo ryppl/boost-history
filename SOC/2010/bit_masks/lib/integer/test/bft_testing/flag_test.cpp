@@ -5,7 +5,7 @@
 
 
 #include <boost/integer/bitfield_tuple.hpp>
-#include <boost/assert.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
 
 using namespace boost;
@@ -30,8 +30,8 @@ int main() {
     test_tuple temp;
 
     temp.get<blue>() = false;
-    BOOST_ASSERT(( temp.get<blue>() == false));
-    return 0;
+    BOOST_TEST(( temp.get<blue>() == false));
+    return boost::report_errors();
 }
 
 
