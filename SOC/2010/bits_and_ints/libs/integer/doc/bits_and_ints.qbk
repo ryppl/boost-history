@@ -365,6 +365,62 @@ In the compile-time versions, the number of consecutive zeros in the `value` sta
 
 [endsect]
 
+[section Find First One String of a Given Length]
+The header file [@../../../../boost/integer/find_first_one_string.hpp <boost/integer/find_first_one_string.hpp>] defines
+`find_first_one_string` function wich returns the index of start position of a consecutive string of ones with 
+at least a given length.
+
+[section Synopsis]
+	template <typename T, typename Policy>
+	int find_first_one_string(T value, unsigned size, const Policy& pol);
+	
+	template <typename T>
+	int find_first_one_string(T value, unsigned size);
+[endsect]
+
+*[*Remarks: ] `size` must be greater than 0 and less than the size in bits of the type `T`. If this constraint is not met,
+a `math::policies::domain_error` is raised.
+*[*Returns: ] The index of the first string of ones with at least `size` length, if this string is not found,
+-1 is returned. The index starts at most significant bit (0). The least significant bit is size of `T` in bits minus one. 
+
+[section Examples]
+``
+#include <iostream>
+#include <boost/assert.hpp>
+#include <boost/integer/find_first_one_string.hpp>
+
+int main()
+{
+	using namespace boost;
+	
+	//           v    
+	// 1111 0000 1111 1111 0000 0000 0000 0000
+	BOOST_ASSERT((find_first_one_string(0xF0FF0000u, 6) == 8));
+	
+	// Not found a string of consecutive ones with legth at least 20
+	BOOST_ASSERT((find_first_one_string(0xF0FF0000u, 20) == -1));
+	
+	//                                      v  
+	// 0000 0000 0000 0000 0000 0000 0000 0010
+	BOOST_ASSERT((find_first_one_string(0x00000002u, 1) == 30));
+
+	//                                      v  
+	// 0000 0000 0000 0000 0000 0000 0000 0011
+	BOOST_ASSERT((find_first_one_string(0x00000003u, 1) == 30));
+
+	//                                       v  
+	// 0000 0000 0000 0000 0000 0000 0000 0001
+	BOOST_ASSERT((find_first_one_string(0x00000001u, 1) == 31));
+	
+	//                      v
+	// 0001 0010 0011 0100 0111 0000 0000 0010
+	BOOST_ASSERT((find_first_one_string(0x12347002u, 3) == 17));
+}
+``
+[endsect]
+
+[endsect]
+
 [section Greatest Common Divisor ]
 The header file [@../../../../boost/integer/static_gcd.hpp <boost/integer/static_gcd.hpp>] defines `mpl::gcd<>` 
 metafunction wich calculates the greatest common divisor of two given `mpl::integral_c<>`.
@@ -396,11 +452,11 @@ function wich calculates the logarithm in base two of a given integral value.
 	
 [endsect]
 
-*[*Remarks: ] If `value` is 0, the result is [*undefined].
+*[*Remarks: ] If `value` is 0, an `math::policy::undefined_result_error` is raised, see section Examples for more information.
 *[*Requires: ] `T` to be an integral type.
 *[*Returns: ] The integer logarithm in base 2 of `value` rounded down or -1 if `value` is equal to 0.
 *[*Throws: ] `ilog2` raises an `undeterminate_result_error` if `value` is 0, and by default do not throw anything, but is 
-possible to change the behaviour using Boost Math's policies. See section Examples.
+possible to change the behavior using Boost Math's policies. See section Examples.
 
 [section Examples]
 
@@ -516,6 +572,48 @@ under the header [@../../../../boost/integer/pop_count.hpp <boost/integer/pop_co
 
 *[*Requires: ] `IC` must be an `mpl::integral_c<>` type.
 *[*Returns: ] The number of bits set in `value`. For the compile-time versions, the result will be on member `value`.
+
+[endsect]
+
+[section Rotate Shifts]
+The header [@../../../../boost/integer/rotate.hpp <boost/integer/rotate.hpp>] defines Rotating shifts 
+or [@http://en.wikipedia.org/wiki/Circular_shift Circular shifts] functions.
+
+[section Synopsis]
+	inline T rotate_left(T value, unsigned length);
+	inline T rotate_right(T value, unsigned length);
+[endsect]
+
+*[*Requires: ] `T` to be an integral type.
+*[*Remarks: ] `length` must be less than the size in bits of `T`.
+*[*Returns: ] `value` rotated `length` bits to the left or to right.
+
+[section Examples]
+[@../../../../libs/integer/example/rotate_example.cpp Rotate functions example]
+
+``
+#include <boost/assert.hpp>
+#include <boost/integer/rotate.hpp>
+
+int main()
+{
+	using boost::rotate_left;
+	using boost::rotate_right;
+	
+	BOOST_ASSERT((rotate_left(0xABCDEF12u, 24) == 0x12ABCDEFu));
+	BOOST_ASSERT((rotate_left(0x12345678u,  4) == 0x23456781u));
+	BOOST_ASSERT((rotate_left(0x0FF00000u,  6) == 0xFC000003u));
+	BOOST_ASSERT((rotate_left(0x00000000u, 31) == 0x00000000u));
+	BOOST_ASSERT((rotate_left(0xF0F0F0F0u,  4) == 0x0F0F0F0Fu));
+	
+	BOOST_ASSERT((rotate_right(0xABCDEF12u,  8) == 0x12ABCDEFu));
+	BOOST_ASSERT((rotate_right(0x0000000Fu,  1) == 0x80000007u));
+	BOOST_ASSERT((rotate_right(0xFF00FF00u,  8) == 0x00FF00FFu));
+	BOOST_ASSERT((rotate_right(0xAABBCCDDu, 16) == 0xCCDDAABBu));
+	BOOST_ASSERT((rotate_right(0xFFFFFFFFu, 31) == 0xFFFFFFFFu));
+}
+``
+[endsect] 
 
 [endsect]
 
@@ -827,6 +925,20 @@ int main()
 ``
 	
 [endsect]
+[endsect]
+
+[section (Integral) Square Root]
+The header file [@../../../../boost/integer/isqrt.hpp <boost/integer/isqrt.hpp>] defines `isqrt` 
+functions wich computes the integral part of square root of integral values.
+
+[section Synopsis]
+	int isqrt(uint8_t value);
+	int isqrt(uint16_t value);
+	int isqrt(uint32_t value);
+[endsect]
+
+*[*Returns: ] The square root of `value` rounded down.
+
 [endsect]
 
 [section Swap without a temporary (in-place) ]

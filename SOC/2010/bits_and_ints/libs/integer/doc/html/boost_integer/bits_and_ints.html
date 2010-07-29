@@ -39,6 +39,8 @@
       Leading Zeros</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.count_trailing_zeros">Count
       Trailing Zeros</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.find_first_one_string_of_a_given_length">Find
+      First One String of a Given Length</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.greatest_common_divisor_">Greatest
       Common Divisor </a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.integer_logarithm_base_2__ilog2_function__">Integer
@@ -49,12 +51,15 @@
       Common Multiple </a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.population_count__count_bits_set_">Population
       Count (count bits set)</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.rotate_shifts">Rotate Shifts</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.round_to_power_of_2_functions">Round
       to Power of 2 functions</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.safe_average">Safe Average</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign"> Same Sign</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend"> Sign Extending</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign"> Sign section</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints._integral__square_root">(Integral)
+      Square Root</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.swap_without_a_temporary__in_place__">Swap
       without a temporary (in-place) </a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.transfer_of_sign__isign__functions_">Transfer
@@ -753,6 +758,99 @@
         </li>
 </ul></div>
 </div>
+<div class="section" title="Find First One String of a Given Length">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints.find_first_one_string_of_a_given_length"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.find_first_one_string_of_a_given_length" title="Find First One String of a Given Length">Find
+      First One String of a Given Length</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.find_first_one_string_of_a_given_length.synopsis">Synopsis</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.find_first_one_string_of_a_given_length.examples">Examples</a></span></dt>
+</dl></div>
+<p>
+        The header file <a href="../../../../../boost/integer/find_first_one_string.hpp" target="_top">&lt;boost/integer/find_first_one_string.hpp&gt;</a>
+        defines <code class="computeroutput"><span class="identifier">find_first_one_string</span></code>
+        function wich returns the index of start position of a consecutive string
+        of ones with at least a given length.
+      </p>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.find_first_one_string_of_a_given_length.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.find_first_one_string_of_a_given_length.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Policy</span><span class="special">&gt;</span>
+<span class="keyword">int</span> <span class="identifier">find_first_one_string</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">value</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="identifier">size</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">Policy</span><span class="special">&amp;</span> <span class="identifier">pol</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">int</span> <span class="identifier">find_first_one_string</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">value</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="identifier">size</span><span class="special">);</span>
+</pre>
+<p>
+          template &lt;typename T, typename Policy&gt; int find_first_one_string(T
+          value, unsigned size, const Policy&amp; pol);
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">int</span> <span class="identifier">find_first_one_string</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">value</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="identifier">size</span><span class="special">);</span>
+</pre>
+<p>
+          template &lt;typename T&gt; int find_first_one_string(T value, unsigned
+          size);
+        </p>
+</div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">size</span></code>
+          must be greater than 0 and less than the size in bits of the type <code class="computeroutput"><span class="identifier">T</span></code>. If this constraint is not met, a
+          <code class="computeroutput"><span class="identifier">math</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">domain_error</span></code> is raised.
+        </li>
+<li class="listitem">
+<span class="bold"><strong>Returns: </strong></span> The index of the first string
+          of ones with at least <code class="computeroutput"><span class="identifier">size</span></code>
+          length, if this string is not found, -1 is returned. The index starts at
+          most significant bit (0). The least significant bit is size of <code class="computeroutput"><span class="identifier">T</span></code> in bits minus one.
+        </li>
+</ul></div>
+<div class="section" title="Examples">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.find_first_one_string_of_a_given_length.examples"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.find_first_one_string_of_a_given_length.examples" title="Examples">Examples</a>
+</h4></div></div></div>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assert</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">find_first_one_string</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+	<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+	
+	<span class="comment">//           v    
+</span>	<span class="comment">// 1111 0000 1111 1111 0000 0000 0000 0000
+</span>	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">find_first_one_string</span><span class="special">(</span><span class="number">0xF0FF0000u</span><span class="special">,</span> <span class="number">6</span><span class="special">)</span> <span class="special">==</span> <span class="number">8</span><span class="special">));</span>
+	
+	<span class="comment">// Not found a string of consecutive ones with legth at least 20
+</span>	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">find_first_one_string</span><span class="special">(</span><span class="number">0xF0FF0000u</span><span class="special">,</span> <span class="number">20</span><span class="special">)</span> <span class="special">==</span> <span class="special">-</span><span class="number">1</span><span class="special">));</span>
+	
+	<span class="comment">//                                      v  
+</span>	<span class="comment">// 0000 0000 0000 0000 0000 0000 0000 0010
+</span>	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">find_first_one_string</span><span class="special">(</span><span class="number">0x00000002u</span><span class="special">,</span> <span class="number">1</span><span class="special">)</span> <span class="special">==</span> <span class="number">30</span><span class="special">));</span>
+
+	<span class="comment">//                                      v  
+</span>	<span class="comment">// 0000 0000 0000 0000 0000 0000 0000 0011
+</span>	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">find_first_one_string</span><span class="special">(</span><span class="number">0x00000003u</span><span class="special">,</span> <span class="number">1</span><span class="special">)</span> <span class="special">==</span> <span class="number">30</span><span class="special">));</span>
+
+	<span class="comment">//                                       v  
+</span>	<span class="comment">// 0000 0000 0000 0000 0000 0000 0000 0001
+</span>	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">find_first_one_string</span><span class="special">(</span><span class="number">0x00000001u</span><span class="special">,</span> <span class="number">1</span><span class="special">)</span> <span class="special">==</span> <span class="number">31</span><span class="special">));</span>
+	
+	<span class="comment">//                      v
+</span>	<span class="comment">// 0001 0010 0011 0100 0111 0000 0000 0010
+</span>	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">find_first_one_string</span><span class="special">(</span><span class="number">0x12347002u</span><span class="special">,</span> <span class="number">3</span><span class="special">)</span> <span class="special">==</span> <span class="number">17</span><span class="special">));</span>
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+</div>
+</div>
 <div class="section" title="Greatest Common Divisor">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_integer.bits_and_ints.greatest_common_divisor_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.greatest_common_divisor_" title="Greatest Common Divisor">Greatest
@@ -813,7 +911,8 @@
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
 <span class="bold"><strong>Remarks: </strong></span> If <code class="computeroutput"><span class="identifier">value</span></code>
-          is 0, the result is <span class="bold"><strong>undefined</strong></span>.
+          is 0, an <code class="computeroutput"><span class="identifier">math</span><span class="special">::</span><span class="identifier">policy</span><span class="special">::</span><span class="identifier">undefined_result_error</span></code> is raised, see
+          section Examples for more information.
         </li>
 <li class="listitem">
 <span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
@@ -829,7 +928,7 @@
 <span class="bold"><strong>Throws: </strong></span><code class="computeroutput"><span class="identifier">ilog2</span></code>
           raises an <code class="computeroutput"><span class="identifier">undeterminate_result_error</span></code>
           if <code class="computeroutput"><span class="identifier">value</span></code> is 0, and by default
-          do not throw anything, but is possible to change the behaviour using Boost
+          do not throw anything, but is possible to change the behavior using Boost
           Math's policies. See section Examples.
         </li>
 </ul></div>
@@ -998,6 +1097,82 @@
           the result will be on member <code class="computeroutput"><span class="identifier">value</span></code>.
         </li>
 </ul></div>
+</div>
+<div class="section" title="Rotate Shifts">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints.rotate_shifts"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.rotate_shifts" title="Rotate Shifts">Rotate Shifts</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.rotate_shifts.synopsis">Synopsis</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.rotate_shifts.examples">Examples</a></span></dt>
+</dl></div>
+<p>
+        The header <a href="../../../../../boost/integer/rotate.hpp" target="_top">&lt;boost/integer/rotate.hpp&gt;</a>
+        defines Rotating shifts or <a href="http://en.wikipedia.org/wiki/Circular_shift" target="_top">Circular
+        shifts</a> functions.
+      </p>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.rotate_shifts.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.rotate_shifts.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">inline</span> <span class="identifier">T</span> <span class="identifier">rotate_left</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">value</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="identifier">length</span><span class="special">);</span>
+<span class="keyword">inline</span> <span class="identifier">T</span> <span class="identifier">rotate_right</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">value</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="identifier">length</span><span class="special">);</span>
+</pre>
+<p>
+          inline T rotate_left(T value, unsigned length); inline T rotate_right(T
+          value, unsigned length);
+        </p>
+</div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+          to be an integral type.
+        </li>
+<li class="listitem">
+<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">length</span></code>
+          must be less than the size in bits of <code class="computeroutput"><span class="identifier">T</span></code>.
+        </li>
+<li class="listitem">
+<span class="bold"><strong>Returns: </strong></span><code class="computeroutput"><span class="identifier">value</span></code>
+          rotated <code class="computeroutput"><span class="identifier">length</span></code> bits to
+          the left or to right.
+        </li>
+</ul></div>
+<div class="section" title="Examples">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.rotate_shifts.examples"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.rotate_shifts.examples" title="Examples">Examples</a>
+</h4></div></div></div>
+<p>
+          <a href="../../../../../libs/integer/example/rotate_example.cpp" target="_top">Rotate
+          functions example</a>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assert</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">rotate</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+	<span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">rotate_left</span><span class="special">;</span>
+	<span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">rotate_right</span><span class="special">;</span>
+	
+	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">rotate_left</span><span class="special">(</span><span class="number">0xABCDEF12u</span><span class="special">,</span> <span class="number">24</span><span class="special">)</span> <span class="special">==</span> <span class="number">0x12ABCDEFu</span><span class="special">));</span>
+	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">rotate_left</span><span class="special">(</span><span class="number">0x12345678u</span><span class="special">,</span>  <span class="number">4</span><span class="special">)</span> <span class="special">==</span> <span class="number">0x23456781u</span><span class="special">));</span>
+	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">rotate_left</span><span class="special">(</span><span class="number">0x0FF00000u</span><span class="special">,</span>  <span class="number">6</span><span class="special">)</span> <span class="special">==</span> <span class="number">0xFC000003u</span><span class="special">));</span>
+	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">rotate_left</span><span class="special">(</span><span class="number">0x00000000u</span><span class="special">,</span> <span class="number">31</span><span class="special">)</span> <span class="special">==</span> <span class="number">0x00000000u</span><span class="special">));</span>
+	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">rotate_left</span><span class="special">(</span><span class="number">0xF0F0F0F0u</span><span class="special">,</span>  <span class="number">4</span><span class="special">)</span> <span class="special">==</span> <span class="number">0x0F0F0F0Fu</span><span class="special">));</span>
+	
+	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">rotate_right</span><span class="special">(</span><span class="number">0xABCDEF12u</span><span class="special">,</span>  <span class="number">8</span><span class="special">)</span> <span class="special">==</span> <span class="number">0x12ABCDEFu</span><span class="special">));</span>
+	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">rotate_right</span><span class="special">(</span><span class="number">0x0000000Fu</span><span class="special">,</span>  <span class="number">1</span><span class="special">)</span> <span class="special">==</span> <span class="number">0x80000007u</span><span class="special">));</span>
+	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">rotate_right</span><span class="special">(</span><span class="number">0xFF00FF00u</span><span class="special">,</span>  <span class="number">8</span><span class="special">)</span> <span class="special">==</span> <span class="number">0x00FF00FFu</span><span class="special">));</span>
+	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">rotate_right</span><span class="special">(</span><span class="number">0xAABBCCDDu</span><span class="special">,</span> <span class="number">16</span><span class="special">)</span> <span class="special">==</span> <span class="number">0xCCDDAABBu</span><span class="special">));</span>
+	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">rotate_right</span><span class="special">(</span><span class="number">0xFFFFFFFFu</span><span class="special">,</span> <span class="number">31</span><span class="special">)</span> <span class="special">==</span> <span class="number">0xFFFFFFFFu</span><span class="special">));</span>
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+</div>
 </div>
 <div class="section" title="Round to Power of 2 functions">
 <div class="titlepage"><div><div><h3 class="title">
@@ -1804,6 +1979,34 @@
 <p>
         </p>
 </div>
+</div>
+<div class="section" title="(Integral) Square Root">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints._integral__square_root"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints._integral__square_root" title="(Integral) Square Root">(Integral)
+      Square Root</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints._integral__square_root.synopsis">Synopsis</a></span></dt></dl></div>
+<p>
+        The header file <a href="../../../../../boost/integer/isqrt.hpp" target="_top">&lt;boost/integer/isqrt.hpp&gt;</a>
+        defines <code class="computeroutput"><span class="identifier">isqrt</span></code> functions wich
+        computes the integral part of square root of integral values.
+      </p>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints._integral__square_root.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints._integral__square_root.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">isqrt</span><span class="special">(</span><span class="identifier">uint8_t</span> <span class="identifier">value</span><span class="special">);</span>
+<span class="keyword">int</span> <span class="identifier">isqrt</span><span class="special">(</span><span class="identifier">uint16_t</span> <span class="identifier">value</span><span class="special">);</span>
+<span class="keyword">int</span> <span class="identifier">isqrt</span><span class="special">(</span><span class="identifier">uint32_t</span> <span class="identifier">value</span><span class="special">);</span>
+</pre>
+<p>
+          int isqrt(uint8_t value); int isqrt(uint16_t value); int isqrt(uint32_t
+          value);
+        </p>
+</div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<span class="bold"><strong>Returns: </strong></span> The square root of <code class="computeroutput"><span class="identifier">value</span></code> rounded down.
+        </li></ul></div>
 </div>
 <div class="section" title="Swap without a temporary (in-place)">
 <div class="titlepage"><div><div><h3 class="title">
