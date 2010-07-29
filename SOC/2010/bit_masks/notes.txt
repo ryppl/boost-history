@@ -8,7 +8,7 @@ TODO From Email Responses
     "Ensures the offset of the next bit field is divisible by the supplied value."
 
 -> 6) consider renaming member to field or bitfield
-7) Consider moving everything from bitfield_tuple into its own library.
+-> 7) Consider moving everything from bitfield_tuple into its own library.
 
 8) begin relocating all parts of the interface into the bitfield_tuple file.
     Things which I know need to eventually move.
@@ -76,7 +76,6 @@ List of TODO's throughout the bitfield_tuple
                         TO BE ADDED TO TESTS SECTION
     Test which need to be created as a result of modifications or additions!
 --------------------------------------------------------------------------------
-3)  Create additional tests for count leading and trailing zero meta-functions.
 4)  Create compile failure test for pointer member mask being 0.
 5)  Create compile failure test for pointer member mask not being same size as
     pointer.

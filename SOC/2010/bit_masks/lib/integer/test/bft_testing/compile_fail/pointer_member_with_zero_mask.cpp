@@ -11,11 +11,10 @@ using namespace boost::bitfields;
 
 struct red { };
 
-// Fails because the members exced the number of bits inside of
-// the storage type.
+// failes because the mask for the pointer has a value of 0.
 typedef bitfield_tuple<
     storage<int>,
-    member<int, red, 33u>
+    pointer<int,red,integral_constant<bitfields::detail::ptr_mask_type, 0> >
 > bft;
 
 
