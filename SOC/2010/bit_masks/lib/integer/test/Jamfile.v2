@@ -61,5 +61,6 @@ test-suite integer
         [ run bft_testing/variadic_sequence_40_test.cpp ]
         [ run bft_testing/variadic_sequence_50_test.cpp ]
         [ run bft_testing/interface_meta_function_test.cpp ]
+        [ run bft_testing/clz_ctz_test.cpp ]
     ;
 
