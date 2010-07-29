@@ -35,16 +35,16 @@ int main()
     cout << "----------------------------------------------------\n";
 
     discrete_interval<int>      int_interval  
-		= construct<discrete_interval<int> >(3, 7, interval_bounds::closed());
+        = construct<discrete_interval<int> >(3, 7, interval_bounds::closed());
     continuous_interval<double> sqrt_interval 
-		= construct<continuous_interval<double> >(1/sqrt(2.0), sqrt(2.0));
-												 //interval_bounds::right_open() is default
+        = construct<continuous_interval<double> >(1/sqrt(2.0), sqrt(2.0));
+                                                 //interval_bounds::right_open() is default
     continuous_interval<string> city_interval 
-		= construct<continuous_interval<string> >("Barcelona", "Boston", interval_bounds::left_open());
+        = construct<continuous_interval<string> >("Barcelona", "Boston", interval_bounds::left_open());
 
     discrete_interval<Time>     time_interval 
-		= construct<discrete_interval<Time> >(Time(monday,8,30), Time(monday,17,20), 
-											  interval_bounds::open());
+        = construct<discrete_interval<Time> >(Time(monday,8,30), Time(monday,17,20), 
+                                              interval_bounds::open());
 
     cout << "  discrete_interval<int>:    " << int_interval  << endl;
     cout << "continuous_interval<double>: " << sqrt_interval << " does " 
@@ -58,7 +58,7 @@ int main()
                                             << " contain 'Berlin'" << endl;
     cout << "  discrete_interval<Time>:   " << time_interval << endl;
 
-	return 0;
+    return 0;
 }
 
 // Program output:

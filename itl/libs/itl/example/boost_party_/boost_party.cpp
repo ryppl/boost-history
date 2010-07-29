@@ -113,7 +113,7 @@ void boost_party()
         rightopen_interval<ptime> when = it->first;
         // Who is at the party within the time interval 'when' ?
         GuestSetT who = (*it++).second;
-		cout << when << ": " << who << endl;
+        cout << when << ": " << who << endl;
     }
 
 }

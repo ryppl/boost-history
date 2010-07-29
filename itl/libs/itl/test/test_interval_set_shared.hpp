@@ -17,6 +17,8 @@ template <template< class T,
           class T>
 void interval_set_fundamentals_4_ordered_types()
 {
+    typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
     typedef typename IntervalSet<T>::size_type       size_T;
     typedef typename IntervalSet<T>::difference_type diff_T;
 
@@ -27,9 +29,9 @@ void interval_set_fundamentals_4_ordered_types()
 
     T v0 = neutron<T>::value();
     T v1 = unon<T>::value();
-    interval<T> I0_0I(v0);
-    interval<T> I1_1I(v1);
-    interval<T> I0_1I(v0,v1);
+    IntervalT I0_0I(v0);
+    IntervalT I1_1I(v1);
+    IntervalT I0_1I(v0, v1, interval_bounds::closed());
 
     //-------------------------------------------------------------------------
     //empty set
@@ -41,8 +43,8 @@ void interval_set_fundamentals_4_ordered_types()
     BOOST_CHECK_EQUAL(IntervalSet<T>().iterative_size(), 0);
     BOOST_CHECK_EQUAL(IntervalSet<T>(), IntervalSet<T>());
 
-    interval<T> mt_interval = neutron<interval<T> >::value();
-    BOOST_CHECK_EQUAL(mt_interval, interval<T>());
+    IntervalT mt_interval = neutron<IntervalT >::value();
+    BOOST_CHECK_EQUAL(mt_interval, IntervalT());
     IntervalSet<T> mt_set = neutron<IntervalSet<T> >::value();
     BOOST_CHECK_EQUAL(mt_set, IntervalSet<T>());
 
@@ -53,7 +55,7 @@ void interval_set_fundamentals_4_ordered_types()
     BOOST_CHECK_EQUAL(mt_set, IntervalSet<T>());
     (mt_set += mt_interval) += mt_interval;
     BOOST_CHECK_EQUAL(mt_set, IntervalSet<T>());
-    BOOST_CHECK_EQUAL(hull(mt_set), neutron<interval<T> >::value());
+    BOOST_CHECK_EQUAL(hull(mt_set), neutron<IntervalT >::value());
 
     //subtracting emptieness
     mt_set.subtract(mt_interval).subtract(mt_interval);
@@ -148,8 +150,11 @@ template <template< class T,
           class T>
 void interval_set_ctor_4_bicremental_types()
 {
+    typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     T v4 = make<T>(4);
-    interval<T> I4_4I(v4);
+    IntervalT I4_4I(v4);
 
     IntervalSet<T> _I4_4I;
     BOOST_CHECK_EQUAL( _I4_4I.empty(), true );
@@ -199,13 +204,16 @@ template <template< class T,
           class T>
 void interval_set_add_sub_4_bicremental_types()
 {
+    typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     T v0 = make<T>(0);
     T v5 = make<T>(5);
     T v6 = make<T>(6);
     T v9 = make<T>(9);
-    interval<T> I5_6I(v5,v6);
-    interval<T> I5_9I(v5,v9);
-    interval<T> I0_9I = interval<T>::closed(v0, v9);
+    IntervalT I5_6I(v5,v6,interval_bounds::closed());
+    IntervalT I5_9I(v5,v9,interval_bounds::closed());
+    IntervalT I0_9I = IntervalT::closed(v0, v9);
 
     BOOST_CHECK_EQUAL( IntervalSet<T>(I5_6I).add(v0).add(v9), 
                        IntervalSet<T>().insert(v9).insert(I5_6I).insert(v0) );
@@ -240,6 +248,8 @@ template <template< class T,
           class T>
 void interval_set_distinct_4_bicremental_types()
 {
+    typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
     typedef typename IntervalSet<T>::size_type       size_T;
     typedef typename IntervalSet<T>::difference_type diff_T;
     T v1 = make<T>(1);
@@ -267,6 +277,8 @@ template <template< class T,
           class T>
 void interval_set_distinct_4_bicremental_continuous_types()
 {
+    typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
     typedef typename IntervalSet<T>::size_type       size_T;
     typedef typename IntervalSet<T>::difference_type diff_T;
     T v1 = make<T>(1);
@@ -290,7 +302,7 @@ void interval_set_distinct_4_bicremental_continuous_types()
 
     IntervalSet<T> is_123_5;
     is_123_5 = is_1_3_5;
-    is_123_5 += interval<T>::open(v1,v3);
+    is_123_5 += IntervalT::open(v1,v3);
 
     BOOST_CHECK_EQUAL( is_123_5.cardinality(),      itl::infinity<size_T>::value() );
     BOOST_CHECK_EQUAL( is_123_5.size(),             itl::infinity<size_T>::value() );
@@ -306,15 +318,17 @@ template <template< class T,
           class T>
 void interval_set_isolate_4_bicremental_continuous_types()
 {
+    typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
     typedef typename IntervalSet<T>::size_type       size_T;
     typedef typename IntervalSet<T>::difference_type diff_T;
 
     T v0 = make<T>(0);
     T v2 = make<T>(2);
     T v4 = make<T>(4);
-    interval<T> I0_4I = interval<T>::closed(v0,v4);
-    interval<T> C0_2D = interval<T>::open(v0,v2);
-    interval<T> C2_4D = interval<T>::open(v2,v4);
+    IntervalT I0_4I = IntervalT::closed(v0,v4);
+    IntervalT C0_2D = IntervalT::open(v0,v2);
+    IntervalT C2_4D = IntervalT::open(v2,v4);
     //   {[0               4]}
     // - {   (0,2)   (2,4)   }
     // = {[0]     [2]     [4]}
@@ -352,6 +366,7 @@ template <template< class T,
 void interval_set_element_compare_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
     typedef IntervalSet<T> ISet;
 
     BOOST_CHECK_EQUAL( is_element_equal( ISet(),         ISet()),         true );    
@@ -396,6 +411,8 @@ template <template< class T,
           class T>
 void interval_set_contains_4_bicremental_types()
 {
+    typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
     //LAW: x.add(e).contains(e);
     //LAW: z = x + y => z.contains(x) && z.contains(y);
     T v1 = make<T>(1);
@@ -410,17 +427,17 @@ void interval_set_contains_4_bicremental_types()
 
     BOOST_CHECK_EQUAL( IntervalSet<T>().add(make<T>(2)).contains(make<T>(2)), true );
     BOOST_CHECK_EQUAL( IntervalSet<T>().insert(make<T>(2)).contains(make<T>(2)), true );
-    BOOST_CHECK_EQUAL( (is += interval<T>(v3,v7)).contains(interval<T>(v3,v7)), true );
+    BOOST_CHECK_EQUAL( (is += IntervalT(v3,v7)).contains(IntervalT(v3,v7)), true );
 
     IntervalSet<T> is0 = is;    
 
-    IntervalSet<T> is2(interval<T>::closed(v5,v8));
+    IntervalSet<T> is2(IntervalT::closed(v5,v8));
     is2.add(v9).add(v11);
     is += is2;
     BOOST_CHECK_EQUAL( is.contains(is2), true );    
 
     is = is0;
-    IntervalSet<T> is3(interval<T>::closed(v5,v8));
+    IntervalSet<T> is3(IntervalT::closed(v5,v8));
     is3.insert(v9).insert(v11);
     is += is3;
     BOOST_CHECK_EQUAL( is.contains(is3), true );    
@@ -435,6 +452,8 @@ template <template< class T,
           class T>
 void interval_set_operators_4_bicremental_types()
 {
+    typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
     T v0 = make<T>(0);
     T v1 = make<T>(1);
     T v3 = make<T>(3);
@@ -442,8 +461,8 @@ void interval_set_operators_4_bicremental_types()
     T v7 = make<T>(7);
     T v8 = make<T>(8);
     IntervalSet<T> left, left2, right, all, all2, section, complement, naught;
-    left.add(interval<T>::closed(v0,v1)).add(interval<T>::closed(v3,v5));
-    (right += interval<T>::closed(v3,v5)) += interval<T>::closed(v7,v8);
+    left.add(IntervalT::closed(v0,v1)).add(IntervalT::closed(v3,v5));
+    (right += IntervalT::closed(v3,v5)) += IntervalT::closed(v7,v8);
 
     BOOST_CHECK_EQUAL( is_disjoint(left, right), false );
 
@@ -479,6 +498,8 @@ template <template< class T,
           class T>
 void interval_set_base_intersect_4_bicremental_types()
 {
+    typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
     T v0 = make<T>(0);
     T v1 = make<T>(1);
     T v2 = make<T>(2);
@@ -488,14 +509,14 @@ void interval_set_base_intersect_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I1_8D = interval<T>::rightopen(v1,v8);
-    interval<T> I2_7D = interval<T>::rightopen(v2,v7);
-    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
-    interval<T> I6_7D = interval<T>::rightopen(v6,v7);
-    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
-    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
+    IntervalT I0_3D = IntervalT::rightopen(v0,v3);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I1_8D = IntervalT::rightopen(v1,v8);
+    IntervalT I2_7D = IntervalT::rightopen(v2,v7);
+    IntervalT I2_3D = IntervalT::rightopen(v2,v3);
+    IntervalT I6_7D = IntervalT::rightopen(v6,v7);
+    IntervalT I6_8D = IntervalT::rightopen(v6,v8);
+    IntervalT I6_9D = IntervalT::rightopen(v6,v9);
 
     //--------------------------------------------------------------------------
     // IntervalSet
@@ -536,9 +557,9 @@ void interval_set_base_intersect_4_bicremental_types()
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    (split_AB &= v1) += interval<T>::open(v1,v7);
+    (split_AB &= v1) += IntervalT::open(v1,v7);
     split_ab2.clear();
-    split_ab2 += interval<T>::rightopen(v1,v7);
+    split_ab2 += IntervalT::rightopen(v1,v7);
 
     BOOST_CHECK_EQUAL( is_element_equal(split_AB, split_ab2), true );
 }
@@ -553,6 +574,7 @@ template <template< class T,
 void interval_set_flip_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
     typedef IntervalSetT ISet;
 
     IntervalSetT set_a, set_b, lhs, rhs;
@@ -592,7 +614,8 @@ template <template< class T,
 void interval_set_infix_plus_overload_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
-    itl::interval<T> itv = I_D(3,5);
+    typedef typename IntervalSetT::interval_type IntervalT;
+    IntervalT itv = I_D(3,5);
 
     IntervalSetT set_a, set_b;
     set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
@@ -614,7 +637,9 @@ template <template< class T,
 void interval_set_infix_pipe_overload_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
-    itl::interval<T> itv = I_D(3,5);
+    typedef typename IntervalSetT::interval_type IntervalT;
+
+    IntervalT itv = I_D(3,5);
 
     IntervalSetT set_a, set_b;
     set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
@@ -637,7 +662,9 @@ template <template< class T,
 void interval_set_infix_minus_overload_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
-    itl::interval<T> itv = I_D(3,5);
+    typedef typename IntervalSetT::interval_type IntervalT;
+
+    IntervalT itv = I_D(3,5);
 
     IntervalSetT set_a, set_b;
     set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
@@ -659,7 +686,9 @@ template <template< class T,
 void interval_set_infix_et_overload_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
-    itl::interval<T> itv = I_D(3,5);
+    typedef typename IntervalSetT::interval_type IntervalT;
+
+    IntervalT itv = I_D(3,5);
 
     IntervalSetT set_a, set_b;
     set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
@@ -682,7 +711,9 @@ template <template< class T,
 void interval_set_infix_caret_overload_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
-    itl::interval<T> itv = I_D(3,5);
+    typedef typename IntervalSetT::interval_type IntervalT;
+
+    IntervalT itv = I_D(3,5);
 
     IntervalSetT set_a, set_b;
     set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
@@ -705,7 +736,9 @@ template <template< class T,
 void interval_set_find_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
-    itl::interval<T> itv = I_D(3,5);
+    typedef typename IntervalSetT::interval_type IntervalT;
+
+    IntervalT itv = I_D(3,5);
 
     IntervalSetT set_a;
     set_a.add(C_D(1,3)).add(I_I(6,11));
@@ -728,6 +761,7 @@ template <template< class T,
 void interval_set_element_iter_4_discrete_types()
 {
     typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
     typedef std::vector<T> VectorT;
 
     IntervalSetT set_a;

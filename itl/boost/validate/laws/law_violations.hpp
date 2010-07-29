@@ -146,8 +146,8 @@ namespace boost{namespace itl
         iterator       end()        { return _violations.end(); }
         const_iterator end()const   { return _violations.begin(); }
 
-        void clear()       { _violations.clear(); }
-        bool empty()const  { return _violations.empty(); }
+        void clear()       { ITL_FUN_CALL(clear, _violations); }
+        bool empty()const  { return ITL_FUN_REN(empty, is_empty, _violations); }
         size_type size()const { return _violations.size(); }
 
         void reportFirst()const

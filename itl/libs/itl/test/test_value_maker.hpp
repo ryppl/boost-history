@@ -83,10 +83,11 @@ struct map_val
     typedef typename ItvMapT::domain_mapping_type domain_mapping_type;
     typedef std::pair<domain_type, codomain_type> std_pair_type; 
 
-    static interval<domain_type> interval_(int lower, int upper, int bounds = 2)
+    static interval_type interval_(int lower, int upper, int bounds = 2)
     {
         return interval_type(test_value<domain_type>::make(lower), 
-                             test_value<domain_type>::make(upper), static_cast<bound_type>(bounds));
+                             test_value<domain_type>::make(upper), interval_bounds(bounds));
+                             //CL test_value<domain_type>::make(upper), static_cast<bound_type>(bounds));
     }
 
     static value_type val_pair(int lower, int upper, int val, int bounds = 2)
@@ -111,13 +112,13 @@ struct map_val
 // Very short value denotation for intervals
 // Assumption typename T existes in scope
 //I_I : [a,b]
-#define I_I(low,up) itl::interval<T>::closed   (make<T>(low), make<T>(up))
+#define I_I(low,up) IntervalT::closed   (make<T>(low), make<T>(up))
 //I_D : [a,b)
-#define I_D(low,up) itl::interval<T>::rightopen(make<T>(low), make<T>(up))
+#define I_D(low,up) IntervalT::rightopen(make<T>(low), make<T>(up))
 //C_I : (a,b]
-#define C_I(low,up) itl::interval<T>::leftopen (make<T>(low), make<T>(up))
+#define C_I(low,up) IntervalT::leftopen (make<T>(low), make<T>(up))
 //C_D : (a,b)
-#define C_D(low,up) itl::interval<T>::open     (make<T>(low), make<T>(up))
+#define C_D(low,up) IntervalT::open     (make<T>(low), make<T>(up))
 
 #define MK_v(key)  make<T>(key)
 #define MK_u(key)  make<U>(key)

@@ -33,7 +33,7 @@ template <class Type> struct is_continuous_asymmetric
             value = (type_traits::ice_and
                     <
                         is_asymmetric_interval<Type>::value
-					,   is_continuous<typename Type::domain_type>::value
+                    ,   is_continuous<typename Type::domain_type>::value
                     >::value)
                 );
 };
@@ -45,7 +45,7 @@ template <class Type> struct is_discrete_asymmetric
             value = (type_traits::ice_and
                     <
                         is_asymmetric_interval<Type>::value
-					,   type_traits::ice_not<is_continuous<typename Type::domain_type>::value>::value
+                    ,   type_traits::ice_not<is_continuous<typename Type::domain_type>::value>::value
                     >::value)
                 );
 };

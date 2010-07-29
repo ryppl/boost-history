@@ -11,6 +11,9 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 template <class T> 
 void interval_set_mixed_ctor_4_ordered_types()
 {         
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     T v0 = neutron<T>::value();
     
     split_interval_set<T>    split_set(v0);
@@ -24,6 +27,9 @@ void interval_set_mixed_ctor_4_ordered_types()
 template <class T> 
 void interval_set_mixed_equal_4_ordered_types()
 {         
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     T v0 = neutron<T>::value();
     
     split_interval_set<T>    split_empty, split_single(v0);
@@ -88,6 +94,9 @@ void interval_set_mixed_equal_4_ordered_types()
 template <class T> 
 void interval_set_mixed_assign_4_ordered_types()
 {         
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     T v0 = neutron<T>::value();
     T v1 = unon<T>::value();
 
@@ -117,15 +126,18 @@ void interval_set_mixed_assign_4_ordered_types()
 template <class T> 
 void interval_set_mixed_ctor_4_bicremental_types()
 {         
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     T v1 = make<T>(1);
     T v2 = make<T>(2);
     T v3 = make<T>(3);
     T v4 = make<T>(4);
     T v5 = make<T>(5);
 
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
-    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I2_4D = IntervalT::rightopen(v2,v4);
+    IntervalT I4_5D = IntervalT::rightopen(v4,v5);
 
     split_interval_set<T> split_set;
     split_set.add(I1_3D).add(I2_4D).add(I4_5D);
@@ -147,15 +159,18 @@ void interval_set_mixed_ctor_4_bicremental_types()
 template <class T> 
 void interval_set_mixed_assign_4_bicremental_types()
 {         
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     T v1 = make<T>(1);
     T v2 = make<T>(2);
     T v3 = make<T>(3);
     T v4 = make<T>(4);
     T v5 = make<T>(5);
 
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
-    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I2_4D = IntervalT::rightopen(v2,v4);
+    IntervalT I4_5D = IntervalT::rightopen(v4,v5);
 
     split_interval_set<T> split_set;
     split_set.add(I1_3D).add(I2_4D).add(I4_5D);
@@ -182,15 +197,18 @@ void interval_set_mixed_assign_4_bicremental_types()
 template <class T> 
 void interval_set_mixed_equal_4_bicremental_types()
 {             
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     T v1 = make<T>(1);
     T v2 = make<T>(2);
     T v3 = make<T>(3);
     T v4 = make<T>(4);
     T v5 = make<T>(5);
 
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
-    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I2_4D = IntervalT::rightopen(v2,v4);
+    IntervalT I4_5D = IntervalT::rightopen(v4,v5);
 
     interval_set<T> join_set;
     join_set.add(I1_3D).add(I2_4D).add(I4_5D);
@@ -222,6 +240,9 @@ void interval_set_mixed_equal_4_bicremental_types()
 template <class T> 
 void interval_set_mixed_contains_4_bicremental_types()
 {
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     split_interval_set<T> split_set;
     split_set.add(I_D(0,4)).add(I_D(4,8));
     BOOST_CHECK_EQUAL( split_set.contains(MK_v(4)), true );
@@ -239,15 +260,18 @@ void interval_set_mixed_contains_4_bicremental_types()
 template <class T> 
 void interval_set_mixed_add_4_bicremental_types()
 {         
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     T v1 = make<T>(1);
     T v2 = make<T>(2);
     T v3 = make<T>(3);
     T v4 = make<T>(4);
     T v5 = make<T>(5);
 
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
-    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I2_4D = IntervalT::rightopen(v2,v4);
+    IntervalT I4_5D = IntervalT::rightopen(v4,v5);
 
     split_interval_set<T> split_set;
     split_set.add(I1_3D).add(I2_4D);
@@ -286,6 +310,9 @@ void interval_set_mixed_add_4_bicremental_types()
 template <class T> 
 void interval_set_mixed_subtract_4_bicremental_types()
 {         
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     T v0 = make<T>(0);
     T v2 = make<T>(2);
     T v3 = make<T>(3);
@@ -296,13 +323,13 @@ void interval_set_mixed_subtract_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_4D = interval<T>::rightopen(v0,v4);
-    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
-    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
-    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
-    interval<T> I7_8D = interval<T>::rightopen(v7,v8);
-    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
-    interval<T> I8_9I =    interval<T>::closed(v8,v9);
+    IntervalT I0_4D = IntervalT::rightopen(v0,v4);
+    IntervalT I2_6D = IntervalT::rightopen(v2,v6);
+    IntervalT I3_6D = IntervalT::rightopen(v3,v6);
+    IntervalT I5_7D = IntervalT::rightopen(v5,v7);
+    IntervalT I7_8D = IntervalT::rightopen(v7,v8);
+    IntervalT I8_9D = IntervalT::rightopen(v8,v9);
+    IntervalT I8_9I =    IntervalT::closed(v8,v9);
 
     split_interval_set<T> split_set;
     split_set.add(I0_4D).add(I2_6D).add(I5_7D).add(I7_8D).add(I8_9I);
@@ -394,6 +421,9 @@ void interval_set_mixed_subtract_4_bicremental_types()
 template <class T> 
 void interval_set_mixed_erase_4_bicremental_types()
 {         
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     T v0 = make<T>(0);
     T v2 = make<T>(2);
     T v3 = make<T>(3);
@@ -404,13 +434,13 @@ void interval_set_mixed_erase_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_4D = interval<T>::rightopen(v0,v4);
-    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
-    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
-    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
-    interval<T> I7_8D = interval<T>::rightopen(v7,v8);
-    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
-    interval<T> I8_9I =    interval<T>::closed(v8,v9);
+    IntervalT I0_4D = IntervalT::rightopen(v0,v4);
+    IntervalT I2_6D = IntervalT::rightopen(v2,v6);
+    IntervalT I3_6D = IntervalT::rightopen(v3,v6);
+    IntervalT I5_7D = IntervalT::rightopen(v5,v7);
+    IntervalT I7_8D = IntervalT::rightopen(v7,v8);
+    IntervalT I8_9D = IntervalT::rightopen(v8,v9);
+    IntervalT I8_9I =    IntervalT::closed(v8,v9);
 
     split_interval_set<T> split_set;
     split_set.add(I0_4D).add(I2_6D).add(I5_7D).add(I7_8D).add(I8_9I);
@@ -501,6 +531,9 @@ void interval_set_mixed_erase_4_bicremental_types()
 template <class T> 
 void interval_set_mixed_basic_intersect_4_bicremental_types()
 {         
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     T v0 = make<T>(0);
     T v1 = make<T>(1);
     T v2 = make<T>(2);
@@ -510,14 +543,14 @@ void interval_set_mixed_basic_intersect_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I1_8D = interval<T>::rightopen(v1,v8);
-    interval<T> I2_7D = interval<T>::rightopen(v2,v7);
-    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
-    interval<T> I6_7D = interval<T>::rightopen(v6,v7);
-    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
-    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
+    IntervalT I0_3D = IntervalT::rightopen(v0,v3);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I1_8D = IntervalT::rightopen(v1,v8);
+    IntervalT I2_7D = IntervalT::rightopen(v2,v7);
+    IntervalT I2_3D = IntervalT::rightopen(v2,v3);
+    IntervalT I6_7D = IntervalT::rightopen(v6,v7);
+    IntervalT I6_8D = IntervalT::rightopen(v6,v8);
+    IntervalT I6_9D = IntervalT::rightopen(v6,v9);
 
     //--------------------------------------------------------------------------
     // split_interval_set
@@ -558,9 +591,9 @@ void interval_set_mixed_basic_intersect_4_bicremental_types()
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    (split_AB &= v1) += interval<T>::open(v1,v7);
+    (split_AB &= v1) += IntervalT::open(v1,v7);
     split_ab2.clear();
-    split_ab2 += interval<T>::rightopen(v1,v7);
+    split_ab2 += IntervalT::rightopen(v1,v7);
 
     BOOST_CHECK_EQUAL( is_element_equal(split_AB, split_ab2), true );
 }
@@ -568,6 +601,9 @@ void interval_set_mixed_basic_intersect_4_bicremental_types()
 template <class T> 
 void interval_set_mixed_intersect_4_bicremental_types()
 {         
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     T v0 = make<T>(0);
     T v1 = make<T>(1);
     T v2 = make<T>(2);
@@ -579,14 +615,14 @@ void interval_set_mixed_intersect_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
-    interval<T> I1_2D = interval<T>::rightopen(v1,v2);
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
-    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
-    interval<T> I5_8D = interval<T>::rightopen(v5,v8);
-    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
-    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
+    IntervalT I0_3D = IntervalT::rightopen(v0,v3);
+    IntervalT I1_2D = IntervalT::rightopen(v1,v2);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I2_3D = IntervalT::rightopen(v2,v3);
+    IntervalT I2_4D = IntervalT::rightopen(v2,v4);
+    IntervalT I5_8D = IntervalT::rightopen(v5,v8);
+    IntervalT I6_8D = IntervalT::rightopen(v6,v8);
+    IntervalT I6_9D = IntervalT::rightopen(v6,v9);
 
     //--------------------------------------------------------------------------
     // split_interval_set
@@ -702,18 +738,21 @@ void interval_set_mixed_intersect_4_bicremental_types()
 template <class T> 
 void interval_set_mixed_disjoint_4_bicremental_types()
 {         
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     T v0 = make<T>(0);    
     T v2 = make<T>(2);
     T v3 = make<T>(3);
     T v4 = make<T>(4);    
     T v6 = make<T>(6);
    
-    interval<T> I0_2D = interval<T>::rightopen(v0,v2);
-    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
-    interval<T> I3_4D = interval<T>::rightopen(v3,v4);
-    interval<T> I4_4I = interval<T>::closed(v4,v4);
-    interval<T> C4_6D = interval<T>::open(v4,v6);
-    interval<T> I6_6I = interval<T>::closed(v6,v6);
+    IntervalT I0_2D = IntervalT::rightopen(v0,v2);
+    IntervalT I2_3D = IntervalT::rightopen(v2,v3);
+    IntervalT I3_4D = IntervalT::rightopen(v3,v4);
+    IntervalT I4_4I = IntervalT::closed(v4,v4);
+    IntervalT C4_6D = IntervalT::open(v4,v6);
+    IntervalT I6_6I = IntervalT::closed(v6,v6);
 
     //--------------------------------------------------------------------------
     //split_A: [0  2)          [4 4]      [6 6]
@@ -742,6 +781,9 @@ void interval_set_mixed_disjoint_4_bicremental_types()
 template <class T> 
 void interval_set_mixed_infix_plus_overload_4_bicremental_types()
 {
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     interval_set<T>          join_a;
     separate_interval_set<T> sep_a;
     split_interval_set<T>    split_a;
@@ -757,6 +799,9 @@ void interval_set_mixed_infix_plus_overload_4_bicremental_types()
 
 template <class T> void interval_set_mixed_infix_pipe_overload_4_bicremental_types()
 {
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     interval_set<T>          join_a;
     separate_interval_set<T> sep_a;
     split_interval_set<T>    split_a;
@@ -773,6 +818,9 @@ template <class T> void interval_set_mixed_infix_pipe_overload_4_bicremental_typ
 template <class T> 
 void interval_set_mixed_infix_minus_overload_4_bicremental_types()
 {
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     interval_set<T>          join_a,  join_b;
     separate_interval_set<T> sep_a,   sep_b;
     split_interval_set<T>    split_a, split_b;
@@ -792,6 +840,9 @@ void interval_set_mixed_infix_minus_overload_4_bicremental_types()
 
 template <class T> void interval_set_mixed_infix_et_overload_4_bicremental_types()
 {
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     interval_set<T>          join_a;
     separate_interval_set<T> sep_a;
     split_interval_set<T>    split_a;
@@ -807,6 +858,9 @@ template <class T> void interval_set_mixed_infix_et_overload_4_bicremental_types
 
 template <class T> void interval_set_mixed_infix_caret_overload_4_bicremental_types()
 {
+    typedef interval_set<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
+
     interval_set<T>          join_a;
     separate_interval_set<T> sep_a;
     split_interval_set<T>    split_a;

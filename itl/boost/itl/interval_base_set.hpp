@@ -164,11 +164,13 @@ public:
     //= Containedness
     //==========================================================================
 
+ITL_BEGIN_COMMON_MEMBER_FUNCTIONS:
     /** sets the container empty */
     void clear() { _set.clear(); }
     /** is the container empty? */
     bool empty()const { return _set.empty(); }
 
+ITL_END_COMMON_MEMBER_FUNCTIONS:
     /** Does the container contain the element \c key ? */
     bool contains(const element_type& key)const
     { return that()->contains(interval_type(key)); }
@@ -186,7 +188,7 @@ public:
         const_iterator last_overlap = prior(exterior.second);
 
         return 
-            hull(*(exterior.first), *last_overlap).contains(sub_interval)
+            itl::contains(hull(*(exterior.first), *last_overlap), sub_interval)
         &&  Interval_Set::is_joinable(*this, exterior.first, last_overlap);
     }
 
@@ -521,7 +523,7 @@ interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::length()const
 {
     difference_type length = neutron<difference_type>::value();
     const_FOR_IMPL(it_)
-        length += (*it_).length();
+        length += itl::length(*it_);
     return length;
 }
 

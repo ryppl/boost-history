@@ -32,8 +32,9 @@ void interval_map_mixed_ctor_4_ordered_types()
 template <class T, class U> 
 void interval_map_mixed_equal_4_ordered_types()
 {         
-    typedef interval_map<T,U>        IntervalMapT;
+    typedef interval_map<T,U>       IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
+    typedef typename IntervalMapT::interval_type IntervalT;
 
     T v0 = neutron<T>::value();
     U u1 = unon<U>::value();
@@ -78,6 +79,7 @@ void interval_map_mixed_assign_4_ordered_types()
 {         
     typedef interval_map<T,U>        IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
+    typedef typename IntervalMapT::interval_type IntervalT;
 
     T v0 = neutron<T>::value();
     T v1 = unon<T>::value();
@@ -110,6 +112,8 @@ void interval_map_mixed_ctor_4_bicremental_types()
 {         
     typedef interval_map<T,U>       IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     U u1 = make<U>(1);
     T v1 = make<T>(1);
     T v2 = make<T>(2);
@@ -118,13 +122,13 @@ void interval_map_mixed_ctor_4_bicremental_types()
     T v5 = make<T>(5);
 
 
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
-    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I2_4D = IntervalT::rightopen(v2,v4);
+    IntervalT I4_5D = IntervalT::rightopen(v4,v5);
 
-    std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
-    std::pair<interval<T>,U> I2_4D_1(I2_4D, u1);
-    std::pair<interval<T>,U> I4_5D_1(I4_5D, u1);
+    std::pair<IntervalT,U> I1_3D_1(I1_3D, u1);
+    std::pair<IntervalT,U> I2_4D_1(I2_4D, u1);
+    std::pair<IntervalT,U> I4_5D_1(I4_5D, u1);
 
     SplitIntervalMapT split_map;
     split_map.add(I1_3D_1).add(I2_4D_1).add(I4_5D_1);
@@ -138,6 +142,8 @@ void interval_map_mixed_assign_4_bicremental_types()
 {         
     typedef interval_map<T,U>       IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     U u1 = make<U>(1);
 
     T v1 = make<T>(1);
@@ -146,13 +152,13 @@ void interval_map_mixed_assign_4_bicremental_types()
     T v4 = make<T>(4);
     T v5 = make<T>(5);
 
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
-    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I2_4D = IntervalT::rightopen(v2,v4);
+    IntervalT I4_5D = IntervalT::rightopen(v4,v5);
 
-    std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
-    std::pair<interval<T>,U> I2_4D_1(I2_4D, u1);
-    std::pair<interval<T>,U> I4_5D_1(I4_5D, u1);
+    std::pair<IntervalT,U> I1_3D_1(I1_3D, u1);
+    std::pair<IntervalT,U> I2_4D_1(I2_4D, u1);
+    std::pair<IntervalT,U> I4_5D_1(I4_5D, u1);
 
     SplitIntervalMapT split_map;
     split_map.add(I1_3D_1).add(I2_4D_1).add(I4_5D_1);
@@ -168,6 +174,8 @@ void interval_map_mixed_equal_4_bicremental_types()
 {         
     typedef interval_map<T,U>       IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     U u1 = make<U>(1);
 
     T v1 = make<T>(1);
@@ -176,13 +184,13 @@ void interval_map_mixed_equal_4_bicremental_types()
     T v4 = make<T>(4);
     T v5 = make<T>(5);
 
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
-    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I2_4D = IntervalT::rightopen(v2,v4);
+    IntervalT I4_5D = IntervalT::rightopen(v4,v5);
 
-    std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
-    std::pair<interval<T>,U> I2_4D_1(I2_4D, u1);
-    std::pair<interval<T>,U> I4_5D_1(I4_5D, u1);
+    std::pair<IntervalT,U> I1_3D_1(I1_3D, u1);
+    std::pair<IntervalT,U> I2_4D_1(I2_4D, u1);
+    std::pair<IntervalT,U> I4_5D_1(I4_5D, u1);
 
     IntervalMapT join_map;
     join_map.add(I1_3D_1).add(I2_4D_1).add(I4_5D_1);
@@ -205,6 +213,8 @@ template <class T, class U, class Trt>
 void partial_interval_map_mixed_inclusion_compare_4_bicremental_types()
 {
     typedef interval_map<T,U,Trt> IntervalMapT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     //--------------------------------------------------------------------------
     // equalities
     // { 0 1  2 3  4 5     8 9 }
@@ -325,6 +335,7 @@ template <class T, class U, class Trt>
 void partial_interval_map_mixed_contains_4_bicremental_types()
 {
     typedef interval_map<T,U,Trt> IntervalMapT;
+    typedef typename IntervalMapT::interval_type IntervalT;
     //--------------------------------------------------------------------------
     // { 0 1  2 3  4 5     8 9 }
     // {[0,2)[2,3](3,6)   (7,9]}
@@ -451,8 +462,9 @@ void partial_interval_map_mixed_contains_4_bicremental_types()
 template <class T, class U>
 void interval_map_mixed_add_4_bicremental_types()
 {         
-    typedef interval_map<T,U>       IntervalMapT;
-    typedef split_interval_map<T,U> SplitIntervalMapT;
+    typedef interval_map<T,U>           IntervalMapT;
+    typedef split_interval_map<T,U>     SplitIntervalMapT;
+    typedef typename IntervalMapT::interval_type IntervalT;
     U u1 = make<U>(1);
 
     T v1 = make<T>(1);
@@ -461,13 +473,13 @@ void interval_map_mixed_add_4_bicremental_types()
     T v4 = make<T>(4);
     T v5 = make<T>(5);
 
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
-    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I2_4D = IntervalT::rightopen(v2,v4);
+    IntervalT I4_5D = IntervalT::rightopen(v4,v5);
 
-    std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
-    std::pair<interval<T>,U> I2_4D_1(I2_4D, u1);
-    std::pair<interval<T>,U> I4_5D_1(I4_5D, u1);
+    std::pair<IntervalT,U> I1_3D_1(I1_3D, u1);
+    std::pair<IntervalT,U> I2_4D_1(I2_4D, u1);
+    std::pair<IntervalT,U> I4_5D_1(I4_5D, u1);
     mapping_pair<T,U> v1_1(v1, u1);
     mapping_pair<T,U> v3_1(v3, u1);
     mapping_pair<T,U> v5_1(v5, u1);
@@ -494,6 +506,8 @@ void interval_map_mixed_add2_4_bicremental_types()
 {         
     typedef interval_map<T,U>        IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     U u1 = make<U>(1);
 
     T v1 = make<T>(1);
@@ -502,13 +516,13 @@ void interval_map_mixed_add2_4_bicremental_types()
     T v4 = make<T>(4);
     T v5 = make<T>(5);
 
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
-    interval<T> I4_5D = interval<T>::rightopen(v4,v5);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I2_4D = IntervalT::rightopen(v2,v4);
+    IntervalT I4_5D = IntervalT::rightopen(v4,v5);
 
-    std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
-    std::pair<interval<T>,U> I2_4D_1(I2_4D, u1);
-    std::pair<interval<T>,U> I4_5D_1(I4_5D, u1);
+    std::pair<IntervalT,U> I1_3D_1(I1_3D, u1);
+    std::pair<IntervalT,U> I2_4D_1(I2_4D, u1);
+    std::pair<IntervalT,U> I4_5D_1(I4_5D, u1);
     mapping_pair<T,U> v1_1(v1, u1);
     mapping_pair<T,U> v3_1(v3, u1);
     mapping_pair<T,U> v5_1(v5, u1);
@@ -534,8 +548,10 @@ void interval_map_mixed_add2_4_bicremental_types()
 template <class T, class U> 
 void interval_map_mixed_subtract_4_bicremental_types()
 {         
-    typedef interval_map<T,U>        IntervalMapT;
+    typedef interval_map<T,U>       IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     U u1 = make<U>(1);
 
     T v0 = make<T>(0);
@@ -548,21 +564,21 @@ void interval_map_mixed_subtract_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_4D = interval<T>::rightopen(v0,v4);
-    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
-    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
-    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
-    interval<T> I7_8D = interval<T>::rightopen(v7,v8);
-    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
-    interval<T> I8_9I =    interval<T>::closed(v8,v9);
+    IntervalT I0_4D = IntervalT::rightopen(v0,v4);
+    IntervalT I2_6D = IntervalT::rightopen(v2,v6);
+    IntervalT I3_6D = IntervalT::rightopen(v3,v6);
+    IntervalT I5_7D = IntervalT::rightopen(v5,v7);
+    IntervalT I7_8D = IntervalT::rightopen(v7,v8);
+    IntervalT I8_9D = IntervalT::rightopen(v8,v9);
+    IntervalT I8_9I =    IntervalT::closed(v8,v9);
 
-    std::pair<interval<T>,U> I0_4D_1(I0_4D, u1);
-    std::pair<interval<T>,U> I2_6D_1(I2_6D, u1);
-    std::pair<interval<T>,U> I3_6D_1(I3_6D, u1);
-    std::pair<interval<T>,U> I5_7D_1(I5_7D, u1);
-    std::pair<interval<T>,U> I7_8D_1(I7_8D, u1);
-    std::pair<interval<T>,U> I8_9D_1(I8_9D, u1);
-    std::pair<interval<T>,U> I8_9I_1(I8_9I, u1);
+    std::pair<IntervalT,U> I0_4D_1(I0_4D, u1);
+    std::pair<IntervalT,U> I2_6D_1(I2_6D, u1);
+    std::pair<IntervalT,U> I3_6D_1(I3_6D, u1);
+    std::pair<IntervalT,U> I5_7D_1(I5_7D, u1);
+    std::pair<IntervalT,U> I7_8D_1(I7_8D, u1);
+    std::pair<IntervalT,U> I8_9D_1(I8_9D, u1);
+    std::pair<IntervalT,U> I8_9I_1(I8_9I, u1);
 
     SplitIntervalMapT split_map;
     split_map.add(I0_4D_1).add(I2_6D_1).add(I5_7D_1).add(I7_8D_1).add(I8_9I_1);
@@ -618,6 +634,8 @@ void interval_map_mixed_erase_4_bicremental_types()
 {         
     typedef interval_map<T,U>        IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     U u1 = make<U>(1);
 
     T v0 = make<T>(0);
@@ -630,21 +648,21 @@ void interval_map_mixed_erase_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_4D = interval<T>::rightopen(v0,v4);
-    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
-    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
-    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
-    interval<T> I7_8D = interval<T>::rightopen(v7,v8);
-    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
-    interval<T> I8_9I =    interval<T>::closed(v8,v9);
+    IntervalT I0_4D = IntervalT::rightopen(v0,v4);
+    IntervalT I2_6D = IntervalT::rightopen(v2,v6);
+    IntervalT I3_6D = IntervalT::rightopen(v3,v6);
+    IntervalT I5_7D = IntervalT::rightopen(v5,v7);
+    IntervalT I7_8D = IntervalT::rightopen(v7,v8);
+    IntervalT I8_9D = IntervalT::rightopen(v8,v9);
+    IntervalT I8_9I =    IntervalT::closed(v8,v9);
 
-    std::pair<interval<T>,U> I0_4D_1(I0_4D, u1);
-    std::pair<interval<T>,U> I2_6D_1(I2_6D, u1);
-    std::pair<interval<T>,U> I3_6D_1(I3_6D, u1);
-    std::pair<interval<T>,U> I5_7D_1(I5_7D, u1);
-    std::pair<interval<T>,U> I7_8D_1(I7_8D, u1);
-    std::pair<interval<T>,U> I8_9D_1(I8_9D, u1);
-    std::pair<interval<T>,U> I8_9I_1(I8_9I, u1);
+    std::pair<IntervalT,U> I0_4D_1(I0_4D, u1);
+    std::pair<IntervalT,U> I2_6D_1(I2_6D, u1);
+    std::pair<IntervalT,U> I3_6D_1(I3_6D, u1);
+    std::pair<IntervalT,U> I5_7D_1(I5_7D, u1);
+    std::pair<IntervalT,U> I7_8D_1(I7_8D, u1);
+    std::pair<IntervalT,U> I8_9D_1(I8_9D, u1);
+    std::pair<IntervalT,U> I8_9I_1(I8_9I, u1);
 
     SplitIntervalMapT split_map;
     split_map.add(I0_4D_1).add(I2_6D_1).add(I5_7D_1).add(I7_8D_1).add(I8_9I_1);
@@ -698,10 +716,12 @@ void interval_map_mixed_erase_4_bicremental_types()
 template <class T, class U> 
 void interval_map_mixed_erase2_4_bicremental_types()
 {         
-    typedef interval_map<T,U>        IntervalMapT;
+    typedef interval_map<T,U>       IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
-    typedef interval_set<T>            IntervalSetT;
-    typedef split_interval_set<T>    SplitIntervalSetT;
+    typedef interval_set<T>         IntervalSetT;
+    typedef split_interval_set<T>   SplitIntervalSetT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     U u1 = make<U>(1);
 
     T v0 = make<T>(0);
@@ -714,21 +734,21 @@ void interval_map_mixed_erase2_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_4D = interval<T>::rightopen(v0,v4);
-    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
-    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
-    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
-    interval<T> I7_8D = interval<T>::rightopen(v7,v8);
-    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
-    interval<T> I8_9I =    interval<T>::closed(v8,v9);
+    IntervalT I0_4D = IntervalT::rightopen(v0,v4);
+    IntervalT I2_6D = IntervalT::rightopen(v2,v6);
+    IntervalT I3_6D = IntervalT::rightopen(v3,v6);
+    IntervalT I5_7D = IntervalT::rightopen(v5,v7);
+    IntervalT I7_8D = IntervalT::rightopen(v7,v8);
+    IntervalT I8_9D = IntervalT::rightopen(v8,v9);
+    IntervalT I8_9I =    IntervalT::closed(v8,v9);
 
-    std::pair<interval<T>,U> I0_4D_1(I0_4D, u1);
-    std::pair<interval<T>,U> I2_6D_1(I2_6D, u1);
-    std::pair<interval<T>,U> I3_6D_1(I3_6D, u1);
-    std::pair<interval<T>,U> I5_7D_1(I5_7D, u1);
-    std::pair<interval<T>,U> I7_8D_1(I7_8D, u1);
-    std::pair<interval<T>,U> I8_9D_1(I8_9D, u1);
-    std::pair<interval<T>,U> I8_9I_1(I8_9I, u1);
+    std::pair<IntervalT,U> I0_4D_1(I0_4D, u1);
+    std::pair<IntervalT,U> I2_6D_1(I2_6D, u1);
+    std::pair<IntervalT,U> I3_6D_1(I3_6D, u1);
+    std::pair<IntervalT,U> I5_7D_1(I5_7D, u1);
+    std::pair<IntervalT,U> I7_8D_1(I7_8D, u1);
+    std::pair<IntervalT,U> I8_9D_1(I8_9D, u1);
+    std::pair<IntervalT,U> I8_9I_1(I8_9I, u1);
 
     SplitIntervalMapT split_map;
     split_map.add(I0_4D_1).add(I2_6D_1).add(I5_7D_1).add(I7_8D_1).add(I8_9I_1);
@@ -808,8 +828,10 @@ void interval_map_mixed_erase2_4_bicremental_types()
 template <class T, class U> 
 void interval_map_mixed_insert_erase_4_bicremental_types()
 {         
-    typedef interval_map<T,U>        IntervalMapT;
+    typedef interval_map<T,U>       IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     U u1 = make<U>(1);
 
     T v0 = make<T>(0);
@@ -822,21 +844,21 @@ void interval_map_mixed_insert_erase_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_4D = interval<T>::rightopen(v0,v4);
-    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
-    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
-    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
-    interval<T> I7_8D = interval<T>::rightopen(v7,v8);
-    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
-    interval<T> I8_9I =    interval<T>::closed(v8,v9);
+    IntervalT I0_4D = IntervalT::rightopen(v0,v4);
+    IntervalT I2_6D = IntervalT::rightopen(v2,v6);
+    IntervalT I3_6D = IntervalT::rightopen(v3,v6);
+    IntervalT I5_7D = IntervalT::rightopen(v5,v7);
+    IntervalT I7_8D = IntervalT::rightopen(v7,v8);
+    IntervalT I8_9D = IntervalT::rightopen(v8,v9);
+    IntervalT I8_9I =    IntervalT::closed(v8,v9);
 
-    std::pair<interval<T>,U> I0_4D_1(I0_4D, u1);
-    std::pair<interval<T>,U> I2_6D_1(I2_6D, u1);
-    std::pair<interval<T>,U> I3_6D_1(I3_6D, u1);
-    std::pair<interval<T>,U> I5_7D_1(I5_7D, u1);
-    std::pair<interval<T>,U> I7_8D_1(I7_8D, u1);
-    std::pair<interval<T>,U> I8_9D_1(I8_9D, u1);
-    std::pair<interval<T>,U> I8_9I_1(I8_9I, u1);
+    std::pair<IntervalT,U> I0_4D_1(I0_4D, u1);
+    std::pair<IntervalT,U> I2_6D_1(I2_6D, u1);
+    std::pair<IntervalT,U> I3_6D_1(I3_6D, u1);
+    std::pair<IntervalT,U> I5_7D_1(I5_7D, u1);
+    std::pair<IntervalT,U> I7_8D_1(I7_8D, u1);
+    std::pair<IntervalT,U> I8_9D_1(I8_9D, u1);
+    std::pair<IntervalT,U> I8_9I_1(I8_9I, u1);
 
     SplitIntervalMapT split_A, split_B, split_all, split_X;
     IntervalMapT      join_A,  join_B,  join_all,  join_X;
@@ -901,8 +923,10 @@ void interval_map_mixed_insert_erase2_4_bicremental_types()
 {         
     typedef interval_map<T,U>       IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
-    typedef interval_set<T>            IntervalSetT;
+    typedef interval_set<T>         IntervalSetT;
     typedef split_interval_set<T>   SplitIntervalSetT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     U u1 = make<U>(1);
 
     T v0 = make<T>(0);
@@ -915,21 +939,21 @@ void interval_map_mixed_insert_erase2_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_4D = interval<T>::rightopen(v0,v4);
-    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
-    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
-    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
-    interval<T> I7_8D = interval<T>::rightopen(v7,v8);
-    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
-    interval<T> I8_9I =    interval<T>::closed(v8,v9);
+    IntervalT I0_4D = IntervalT::rightopen(v0,v4);
+    IntervalT I2_6D = IntervalT::rightopen(v2,v6);
+    IntervalT I3_6D = IntervalT::rightopen(v3,v6);
+    IntervalT I5_7D = IntervalT::rightopen(v5,v7);
+    IntervalT I7_8D = IntervalT::rightopen(v7,v8);
+    IntervalT I8_9D = IntervalT::rightopen(v8,v9);
+    IntervalT I8_9I =    IntervalT::closed(v8,v9);
 
-    std::pair<interval<T>,U> I0_4D_1(I0_4D, u1);
-    std::pair<interval<T>,U> I2_6D_1(I2_6D, u1);
-    std::pair<interval<T>,U> I3_6D_1(I3_6D, u1);
-    std::pair<interval<T>,U> I5_7D_1(I5_7D, u1);
-    std::pair<interval<T>,U> I7_8D_1(I7_8D, u1);
-    std::pair<interval<T>,U> I8_9D_1(I8_9D, u1);
-    std::pair<interval<T>,U> I8_9I_1(I8_9I, u1);
+    std::pair<IntervalT,U> I0_4D_1(I0_4D, u1);
+    std::pair<IntervalT,U> I2_6D_1(I2_6D, u1);
+    std::pair<IntervalT,U> I3_6D_1(I3_6D, u1);
+    std::pair<IntervalT,U> I5_7D_1(I5_7D, u1);
+    std::pair<IntervalT,U> I7_8D_1(I7_8D, u1);
+    std::pair<IntervalT,U> I8_9D_1(I8_9D, u1);
+    std::pair<IntervalT,U> I8_9I_1(I8_9I, u1);
 
     SplitIntervalMapT split_A, split_B, split_all, split_X;
     IntervalMapT      join_A,  join_B,  join_all,  join_X;
@@ -1003,6 +1027,8 @@ void interval_map_mixed_basic_intersect_4_bicremental_types()
     typedef split_interval_map<T,U> SplitIntervalMapT;
     typedef interval_set<T>         IntervalSetT;
     typedef split_interval_set<T>   SplitIntervalSetT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     U u1 = make<U>(1);
     U u2 = make<U>(2);
     U u3 = make<U>(3);
@@ -1018,27 +1044,27 @@ void interval_map_mixed_basic_intersect_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I1_8D = interval<T>::rightopen(v1,v8);
-    interval<T> I2_7D = interval<T>::rightopen(v2,v7);
-    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
-    interval<T> I6_7D = interval<T>::rightopen(v6,v7);
-    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
-    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
+    IntervalT I0_3D = IntervalT::rightopen(v0,v3);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I1_8D = IntervalT::rightopen(v1,v8);
+    IntervalT I2_7D = IntervalT::rightopen(v2,v7);
+    IntervalT I2_3D = IntervalT::rightopen(v2,v3);
+    IntervalT I6_7D = IntervalT::rightopen(v6,v7);
+    IntervalT I6_8D = IntervalT::rightopen(v6,v8);
+    IntervalT I6_9D = IntervalT::rightopen(v6,v9);
 
-    std::pair<interval<T>,U> I0_3D_1(I0_3D, u1);
-    std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
-    std::pair<interval<T>,U> I1_3D_2(I1_3D, u2);
-    std::pair<interval<T>,U> I1_8D_1(I1_8D, u1);
-    std::pair<const interval<T>,U> I2_7D_1(I2_7D, u1);
-    std::pair<interval<T>,U> I2_3D_1(I2_3D, u1);
-    std::pair<interval<T>,U> I2_3D_3(I2_3D, u3);
-    std::pair<interval<T>,U> I6_7D_1(I6_7D, u1);
-    std::pair<interval<T>,U> I6_7D_3(I6_7D, u3);
-    std::pair<interval<T>,U> I6_8D_1(I6_8D, u1);
-    std::pair<interval<T>,U> I6_8D_2(I6_8D, u2);
-    std::pair<interval<T>,U> I6_9D_1(I6_9D, u1);
+    std::pair<IntervalT,U> I0_3D_1(I0_3D, u1);
+    std::pair<IntervalT,U> I1_3D_1(I1_3D, u1);
+    std::pair<IntervalT,U> I1_3D_2(I1_3D, u2);
+    std::pair<IntervalT,U> I1_8D_1(I1_8D, u1);
+    std::pair<const IntervalT,U> I2_7D_1(I2_7D, u1);
+    std::pair<IntervalT,U> I2_3D_1(I2_3D, u1);
+    std::pair<IntervalT,U> I2_3D_3(I2_3D, u3);
+    std::pair<IntervalT,U> I6_7D_1(I6_7D, u1);
+    std::pair<IntervalT,U> I6_7D_3(I6_7D, u3);
+    std::pair<IntervalT,U> I6_8D_1(I6_8D, u1);
+    std::pair<IntervalT,U> I6_8D_2(I6_8D, u2);
+    std::pair<IntervalT,U> I6_9D_1(I6_9D, u1);
 
     //--------------------------------------------------------------------------
     // split_interval_map
@@ -1086,9 +1112,9 @@ void interval_map_mixed_basic_intersect_4_bicremental_types()
 
     split_AB = split_A;
     split_AB &= mapping_pair<T,U>(v1,u1);
-    split_AB += make_pair(interval<T>::open(v1,v7), u2);
+    split_AB += make_pair(IntervalT::open(v1,v7), u2);
     split_ab2.clear();
-    split_ab2 += make_pair(interval<T>::rightopen(v1,v7), u2);
+    split_ab2 += make_pair(IntervalT::rightopen(v1,v7), u2);
 
     BOOST_CHECK_EQUAL( is_element_equal(split_AB, split_ab2), true );
 }
@@ -1101,6 +1127,8 @@ void interval_map_mixed_basic_intersect2_4_bicremental_types()
     typedef split_interval_map<T,U> SplitIntervalMapT;
     typedef interval_set<T>         IntervalSetT;
     typedef split_interval_set<T>   SplitIntervalSetT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     U u1 = make<U>(1);
     U u2 = make<U>(2);
     U u3 = make<U>(3);
@@ -1116,27 +1144,27 @@ void interval_map_mixed_basic_intersect2_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I1_8D = interval<T>::rightopen(v1,v8);
-    interval<T> I2_7D = interval<T>::rightopen(v2,v7);
-    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
-    interval<T> I6_7D = interval<T>::rightopen(v6,v7);
-    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
-    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
+    IntervalT I0_3D = IntervalT::rightopen(v0,v3);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I1_8D = IntervalT::rightopen(v1,v8);
+    IntervalT I2_7D = IntervalT::rightopen(v2,v7);
+    IntervalT I2_3D = IntervalT::rightopen(v2,v3);
+    IntervalT I6_7D = IntervalT::rightopen(v6,v7);
+    IntervalT I6_8D = IntervalT::rightopen(v6,v8);
+    IntervalT I6_9D = IntervalT::rightopen(v6,v9);
 
-    std::pair<interval<T>,U> I0_3D_1(I0_3D, u1);
-    std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
-    std::pair<interval<T>,U> I1_3D_2(I1_3D, u2);
-    std::pair<interval<T>,U> I1_8D_1(I1_8D, u1);
-    std::pair<interval<T>,U> I2_7D_1(I2_7D, u1);
-    std::pair<interval<T>,U> I2_3D_1(I2_3D, u1);
-    std::pair<interval<T>,U> I2_3D_3(I2_3D, u3);
-    std::pair<interval<T>,U> I6_7D_1(I6_7D, u1);
-    std::pair<interval<T>,U> I6_7D_3(I6_7D, u3);
-    std::pair<interval<T>,U> I6_8D_1(I6_8D, u1);
-    std::pair<interval<T>,U> I6_8D_2(I6_8D, u2);
-    std::pair<interval<T>,U> I6_9D_1(I6_9D, u1);
+    std::pair<IntervalT,U> I0_3D_1(I0_3D, u1);
+    std::pair<IntervalT,U> I1_3D_1(I1_3D, u1);
+    std::pair<IntervalT,U> I1_3D_2(I1_3D, u2);
+    std::pair<IntervalT,U> I1_8D_1(I1_8D, u1);
+    std::pair<IntervalT,U> I2_7D_1(I2_7D, u1);
+    std::pair<IntervalT,U> I2_3D_1(I2_3D, u1);
+    std::pair<IntervalT,U> I2_3D_3(I2_3D, u3);
+    std::pair<IntervalT,U> I6_7D_1(I6_7D, u1);
+    std::pair<IntervalT,U> I6_7D_3(I6_7D, u3);
+    std::pair<IntervalT,U> I6_8D_1(I6_8D, u1);
+    std::pair<IntervalT,U> I6_8D_2(I6_8D, u2);
+    std::pair<IntervalT,U> I6_9D_1(I6_9D, u1);
 
     //--------------------------------------------------------------------------
     // split_interval_map
@@ -1182,10 +1210,10 @@ void interval_map_mixed_basic_intersect2_4_bicremental_types()
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    split_AB &= interval<T>(v1);
-    split_AB += make_pair(interval<T>::open(v1,v7), u1);
+    split_AB &= IntervalT(v1);
+    split_AB += make_pair(IntervalT::open(v1,v7), u1);
     split_ab2.clear();
-    split_ab2 += make_pair(interval<T>::rightopen(v1,v7), u1);
+    split_ab2 += make_pair(IntervalT::rightopen(v1,v7), u1);
 
     BOOST_CHECK_EQUAL( is_element_equal(split_AB, split_ab2), true );
 
@@ -1208,7 +1236,9 @@ void interval_map_mixed_intersect_4_bicremental_types()
     typedef interval_map<T,U>       IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
     typedef interval_set<T>         IntervalSetT;
-    typedef split_interval_set<T>    SplitIntervalSetT;
+    typedef split_interval_set<T>   SplitIntervalSetT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     U u1 = make<U>(1);
     U u2 = make<U>(2);
 
@@ -1224,27 +1254,27 @@ void interval_map_mixed_intersect_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
-    interval<T> I1_2D = interval<T>::rightopen(v1,v2);
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
-    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
-    interval<T> I5_8D = interval<T>::rightopen(v5,v8);
-    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
-    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
+    IntervalT I0_3D = IntervalT::rightopen(v0,v3);
+    IntervalT I1_2D = IntervalT::rightopen(v1,v2);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I2_3D = IntervalT::rightopen(v2,v3);
+    IntervalT I2_4D = IntervalT::rightopen(v2,v4);
+    IntervalT I5_8D = IntervalT::rightopen(v5,v8);
+    IntervalT I6_8D = IntervalT::rightopen(v6,v8);
+    IntervalT I6_9D = IntervalT::rightopen(v6,v9);
 
-    std::pair<interval<T>,U> I0_3D_1(I0_3D, u1);
-    std::pair<interval<T>,U> I1_2D_1(I1_2D, u1);
-    std::pair<interval<T>,U> I1_2D_2(I1_2D, u2);
-    std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
-    std::pair<interval<T>,U> I1_3D_2(I1_3D, u2);
-    std::pair<interval<T>,U> I2_3D_1(I2_3D, u1);
-    std::pair<interval<T>,U> I2_3D_2(I2_3D, u2);
-    std::pair<interval<T>,U> I2_4D_1(I2_4D, u1);
-    std::pair<interval<T>,U> I5_8D_1(I5_8D, u1);
-    std::pair<interval<T>,U> I6_8D_1(I6_8D, u1);
-    std::pair<interval<T>,U> I6_8D_2(I6_8D, u2);
-    std::pair<interval<T>,U> I6_9D_1(I6_9D, u1);
+    std::pair<IntervalT,U> I0_3D_1(I0_3D, u1);
+    std::pair<IntervalT,U> I1_2D_1(I1_2D, u1);
+    std::pair<IntervalT,U> I1_2D_2(I1_2D, u2);
+    std::pair<IntervalT,U> I1_3D_1(I1_3D, u1);
+    std::pair<IntervalT,U> I1_3D_2(I1_3D, u2);
+    std::pair<IntervalT,U> I2_3D_1(I2_3D, u1);
+    std::pair<IntervalT,U> I2_3D_2(I2_3D, u2);
+    std::pair<IntervalT,U> I2_4D_1(I2_4D, u1);
+    std::pair<IntervalT,U> I5_8D_1(I5_8D, u1);
+    std::pair<IntervalT,U> I6_8D_1(I6_8D, u1);
+    std::pair<IntervalT,U> I6_8D_2(I6_8D, u2);
+    std::pair<IntervalT,U> I6_9D_1(I6_9D, u1);
 
     //--------------------------------------------------------------------------
     // split_interval_set
@@ -1286,10 +1316,12 @@ void interval_map_mixed_intersect_4_bicremental_types()
 template <class T, class U> 
 void interval_map_mixed_intersect2_4_bicremental_types()
 {         
-    typedef interval_map<T,U>        IntervalMapT;
+    typedef interval_map<T,U>       IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
-    typedef interval_set<T>            IntervalSetT;
-    typedef split_interval_set<T>    SplitIntervalSetT;
+    typedef interval_set<T>         IntervalSetT;
+    typedef split_interval_set<T>   SplitIntervalSetT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     U u1 = make<U>(1);
     U u2 = make<U>(2);
 
@@ -1305,27 +1337,27 @@ void interval_map_mixed_intersect2_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
-    interval<T> I1_2D = interval<T>::rightopen(v1,v2);
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
-    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
-    interval<T> I5_8D = interval<T>::rightopen(v5,v8);
-    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
-    interval<T> I6_9D = interval<T>::rightopen(v6,v9);
+    IntervalT I0_3D = IntervalT::rightopen(v0,v3);
+    IntervalT I1_2D = IntervalT::rightopen(v1,v2);
+    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
+    IntervalT I2_3D = IntervalT::rightopen(v2,v3);
+    IntervalT I2_4D = IntervalT::rightopen(v2,v4);
+    IntervalT I5_8D = IntervalT::rightopen(v5,v8);
+    IntervalT I6_8D = IntervalT::rightopen(v6,v8);
+    IntervalT I6_9D = IntervalT::rightopen(v6,v9);
 
-    std::pair<interval<T>,U> I0_3D_1(I0_3D, u1);
-    std::pair<interval<T>,U> I1_2D_1(I1_2D, u1);
-    std::pair<interval<T>,U> I1_2D_2(I1_2D, u2);
-    std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
-    std::pair<interval<T>,U> I1_3D_2(I1_3D, u2);
-    std::pair<interval<T>,U> I2_3D_1(I2_3D, u1);
-    std::pair<interval<T>,U> I2_3D_2(I2_3D, u2);
-    std::pair<interval<T>,U> I2_4D_1(I2_4D, u1);
-    std::pair<interval<T>,U> I5_8D_1(I5_8D, u1);
-    std::pair<interval<T>,U> I6_8D_1(I6_8D, u1);
-    std::pair<interval<T>,U> I6_8D_2(I6_8D, u2);
-    std::pair<interval<T>,U> I6_9D_1(I6_9D, u1);
+    std::pair<IntervalT,U> I0_3D_1(I0_3D, u1);
+    std::pair<IntervalT,U> I1_2D_1(I1_2D, u1);
+    std::pair<IntervalT,U> I1_2D_2(I1_2D, u2);
+    std::pair<IntervalT,U> I1_3D_1(I1_3D, u1);
+    std::pair<IntervalT,U> I1_3D_2(I1_3D, u2);
+    std::pair<IntervalT,U> I2_3D_1(I2_3D, u1);
+    std::pair<IntervalT,U> I2_3D_2(I2_3D, u2);
+    std::pair<IntervalT,U> I2_4D_1(I2_4D, u1);
+    std::pair<IntervalT,U> I5_8D_1(I5_8D, u1);
+    std::pair<IntervalT,U> I6_8D_1(I6_8D, u1);
+    std::pair<IntervalT,U> I6_8D_2(I6_8D, u2);
+    std::pair<IntervalT,U> I6_9D_1(I6_9D, u1);
 
     //--------------------------------------------------------------------------
     // split_interval_set
@@ -1370,6 +1402,8 @@ void interval_map_mixed_disjoint_4_bicremental_types()
     typedef split_interval_map<T,U> SplitIntervalMapT;
     typedef interval_set<T>         IntervalSetT;
     typedef split_interval_set<T>   SplitIntervalSetT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     U u1 = make<U>(1);
     T v0 = make<T>(0);
     T v2 = make<T>(2);
@@ -1377,19 +1411,19 @@ void interval_map_mixed_disjoint_4_bicremental_types()
     T v4 = make<T>(4);
     T v6 = make<T>(6);
 
-    interval<T> I0_2D = interval<T>::rightopen(v0,v2);
-    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
-    interval<T> I3_4D = interval<T>::rightopen(v3,v4);
-    interval<T> I4_4I = interval<T>::closed(v4,v4);
-    interval<T> C4_6D = interval<T>::open(v4,v6);
-    interval<T> I6_6I = interval<T>::closed(v6,v6);
+    IntervalT I0_2D = IntervalT::rightopen(v0,v2);
+    IntervalT I2_3D = IntervalT::rightopen(v2,v3);
+    IntervalT I3_4D = IntervalT::rightopen(v3,v4);
+    IntervalT I4_4I = IntervalT::closed(v4,v4);
+    IntervalT C4_6D = IntervalT::open(v4,v6);
+    IntervalT I6_6I = IntervalT::closed(v6,v6);
 
-    std::pair<interval<T>,U> I0_2D_1(I0_2D, u1);
-    std::pair<interval<T>,U> I2_3D_1(I2_3D, u1);
-    std::pair<interval<T>,U> I3_4D_1(I3_4D, u1);
-    std::pair<interval<T>,U> I4_4I_1(I4_4I, u1);
-    std::pair<interval<T>,U> C4_6D_1(C4_6D, u1);
-    std::pair<interval<T>,U> I6_6I_1(I6_6I, u1);
+    std::pair<IntervalT,U> I0_2D_1(I0_2D, u1);
+    std::pair<IntervalT,U> I2_3D_1(I2_3D, u1);
+    std::pair<IntervalT,U> I3_4D_1(I3_4D, u1);
+    std::pair<IntervalT,U> I4_4I_1(I4_4I, u1);
+    std::pair<IntervalT,U> C4_6D_1(C4_6D, u1);
+    std::pair<IntervalT,U> I6_6I_1(I6_6I, u1);
 
     //--------------------------------------------------------------------------
     //split_A: [0  2)          [4 4]      [6 6]
@@ -1413,7 +1447,7 @@ struct size_greater_1 : public itl::property<Type>
 {
     bool operator()(const Type& value)const
     {
-        return value.first.size() > 1 ;
+        return itl::size(value.first) > 1 ;
     }
 };
 
@@ -1425,6 +1459,8 @@ void interval_map_mixed_erase_if_4_integral_types()
     typedef split_interval_map<T,U> SplitIntervalMapT;
     typedef interval_set<T>         IntervalSetT;
     typedef split_interval_set<T>   SplitIntervalSetT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     U u1 = make<U>(1);
     T v0 = make<T>(0);
     T v2 = make<T>(2);
@@ -1432,19 +1468,19 @@ void interval_map_mixed_erase_if_4_integral_types()
     T v4 = make<T>(4);
     T v6 = make<T>(6);
 
-    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
-    interval<T> I2_3D = interval<T>::rightopen(v2,v3);
-    interval<T> I3_4D = interval<T>::rightopen(v3,v4);
-    interval<T> I4_4I = interval<T>::closed(v4,v4);
-    interval<T> C4_6D = interval<T>::open(v4,v6);
-    interval<T> I6_6I = interval<T>::closed(v6,v6);
+    IntervalT I0_3D = IntervalT::rightopen(v0,v3);
+    IntervalT I2_3D = IntervalT::rightopen(v2,v3);
+    IntervalT I3_4D = IntervalT::rightopen(v3,v4);
+    IntervalT I4_4I = IntervalT::closed(v4,v4);
+    IntervalT C4_6D = IntervalT::open(v4,v6);
+    IntervalT I6_6I = IntervalT::closed(v6,v6);
 
-    std::pair<interval<T>,U> I0_3D_1(I0_3D, u1);
-    std::pair<interval<T>,U> I2_3D_1(I2_3D, u1);
-    std::pair<interval<T>,U> I3_4D_1(I3_4D, u1);
-    std::pair<interval<T>,U> I4_4I_1(I4_4I, u1);
-    std::pair<interval<T>,U> C4_6D_1(C4_6D, u1);
-    std::pair<interval<T>,U> I6_6I_1(I6_6I, u1);
+    std::pair<IntervalT,U> I0_3D_1(I0_3D, u1);
+    std::pair<IntervalT,U> I2_3D_1(I2_3D, u1);
+    std::pair<IntervalT,U> I3_4D_1(I3_4D, u1);
+    std::pair<IntervalT,U> I4_4I_1(I4_4I, u1);
+    std::pair<IntervalT,U> C4_6D_1(C4_6D, u1);
+    std::pair<IntervalT,U> I6_6I_1(I6_6I, u1);
 
     //--------------------------------------------------------------------------
     //split_A: [0  2)          [4 4]      [6 6]
@@ -1467,6 +1503,8 @@ template <class T, class U>
 void interval_map_mixed_infix_plus_overload_4_bicremental_types()
 {
     typedef interval_map<T,U>  IntervalMapT;
+    typedef typename IntervalMapT::interval_type IntervalT;
+
     interval_map<T,U>          join_a;
     split_interval_map<T,U>    split_a;
 

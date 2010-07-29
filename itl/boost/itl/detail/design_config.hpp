@@ -23,16 +23,47 @@ by setting defines in this file.
 // will be used as default for all interval containers. 
 // ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS should be defined in the application
 // before other includes from the ITL
-//#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+//#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS //JODO comment this out for the final release
 // If ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS is NOT defined, ITL uses intervals
 // with dynamic borders as default.
 
+#ifdef ITL_USE_DYNAMIC_INTERVAL_BORDERS_DEFAULTS //JODO remove this for the final release
+#   undef ITL_USE_STATIC_INTERVAL_BORDERS_DEFAULTS
+#endif
+
+//#define ITL_CONCEPT_ORIENTED
+//#define ITL_PURE_CONCEPTUAL
+
+#ifndef ITL_CONCEPT_ORIENTED
+#define ITL_OBJECT_ORIENTED
+#endif
+
+#ifdef  ITL_CONCEPT_ORIENTED
+#   define ITL_FUN_CALL(func, arg) itl::func(arg)
+#   define ITL_FUN_REN(func_obj, func_conc, arg) itl::func_conc(arg)
+#else //ITL_OBJECT_ORIENTED 
+#   define ITL_FUN_CALL(func,arg) arg.func()
+#   define ITL_FUN_REN(func_obj, func_conc, arg) arg.func_obj()
+#endif
+
+#ifdef  ITL_OBJECT_ORIENTED
+#   define ITL_BEGIN_COMMON_MEMBER_FUNCTIONS public
+#   define ITL_END_COMMON_MEMBER_FUNCTIONS   public
+#else //ITL_CONCEPT_ORIENTED
+#   ifdef ITL_PURE_CONCEPTUAL
+#       define ITL_BEGIN_COMMON_MEMBER_FUNCTIONS private
+#       define ITL_END_COMMON_MEMBER_FUNCTIONS   public
+#   else
+#       define ITL_BEGIN_COMMON_MEMBER_FUNCTIONS public
+#       define ITL_END_COMMON_MEMBER_FUNCTIONS   public
+#   endif
+#endif
 
 //------------------------------------------------------------------------------
 // Auxiliary macros for denoting template signatures.
 // Purpose:
 // (1) Shorten the lenthy and redundant template signatures.
-// (2) Name anonymous template types according to theirs meaning ...
+// (2) Name anonymous template types according to their meaning ...
 // (3) Making easier to refactor by redefinitin of the macros
 // (4) Being able to check template template parameter variants against
 //     template type parameter variants.
@@ -114,7 +145,7 @@ by setting defines in this file.
 //CL #define ITL_INTERVAL_DEFAULT itl::continuous_interval
 
 #ifdef ITL_NEW_INTERVAL_IMPL
-#   define ITL_INTERVAL_DEFAULT itl::interval_type_of
+#   define ITL_INTERVAL_DEFAULT boost::itl::interval_type_of
 #else
 #   define ITL_INTERVAL_DEFAULT boost::itl::interval
 #endif
@@ -122,10 +153,13 @@ by setting defines in this file.
 //------------------------------------------------------------------------------
 //JODO find proper solution here
 #ifdef ITL_NEW_INTERVAL_IMPL
-//#   define ITL_discrt_INTERVAL_DEF itl::discrete_interval
-//#   define ITL_contin_INTERVAL_DEF itl::continuous_interval
-#   define ITL_discrt_INTERVAL_DEF itl::rightopen_interval
-#   define ITL_contin_INTERVAL_DEF itl::rightopen_interval
+#   ifdef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#       define ITL_discrt_INTERVAL_DEF itl::rightopen_interval
+#       define ITL_contin_INTERVAL_DEF itl::rightopen_interval
+#   else
+#       define ITL_discrt_INTERVAL_DEF itl::discrete_interval
+#       define ITL_contin_INTERVAL_DEF itl::continuous_interval
+#   endif
 #else
 #   define ITL_discrt_INTERVAL_DEF itl::interval
 #   define ITL_contin_INTERVAL_DEF itl::interval

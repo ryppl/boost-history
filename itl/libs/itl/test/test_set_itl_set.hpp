@@ -22,6 +22,7 @@ template <class T,
 void itl_set_check_monoid_plus_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
     typedef itl::set<T> SetT;
 
     IntervalSetT itv_set_a, itv_set_b, itv_set_c;
@@ -52,6 +53,7 @@ template <class T,
 void itl_set_check_monoid_et_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
     typedef itl::set<T> SetT;
 
     IntervalSetT itv_set_a, itv_set_b, itv_set_c;
@@ -85,6 +87,7 @@ template <class T,
 void itl_set_check_abelian_monoid_plus_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
     typedef itl::set<T> SetT;
 
     IntervalSetT itv_set_a, itv_set_b, itv_set_c;
@@ -114,6 +117,7 @@ template <class T,
 void itl_set_check_abelian_monoid_et_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
     typedef itl::set<T> SetT;
 
     IntervalSetT itv_set_a, itv_set_b, itv_set_c;
@@ -147,6 +151,7 @@ template <class T,
 void itl_set_check_partial_invertive_monoid_plus_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::interval_type IntervalT;
     typedef itl::set<T> SetT;
 
     IntervalSetT itv_set_a, itv_set_b, itv_set_c;

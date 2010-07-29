@@ -36,7 +36,7 @@ namespace boost{namespace itl
             lwb = x1.end();
             upb = x1.end();
 
-            if(x1.empty() || x2.empty()) 
+            if(ITL_FUN_REN(empty, is_empty, x1) || ITL_FUN_REN(empty, is_empty, x2)) 
                 return false;
 
             IteratorT x1_fst_ = x1.begin();
@@ -115,8 +115,8 @@ namespace boost{namespace itl
         bool contained_in(const SetType& sub, const SetType& super)
         {
             if(&super == &sub)                   return true;
-            if(sub.empty())                      return true;
-            if(super.empty())                    return false;
+            if(ITL_FUN_REN(empty, is_empty, sub))               return true;
+            if(ITL_FUN_REN(empty, is_empty, super))             return false;
             if(*sub.begin()    < *super.begin()) return false;
             if(*super.rbegin() < *sub.rbegin() ) return false;
 

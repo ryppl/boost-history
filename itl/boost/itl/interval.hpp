@@ -502,7 +502,7 @@ struct continuous_interval_
     static typename IntervalT::size_type cardinality(const IntervalT& x) 
     {
         typedef typename IntervalT::size_type SizeT;
-        if(x.empty()) 
+        if(itl::is_empty(x)) 
             return itl::neutron<SizeT>::value();
         else if(x.is(itl::closed_bounded) && IntervalT::domain_equal(x.lower(), x.upper()))
             return itl::unon<SizeT>::value();

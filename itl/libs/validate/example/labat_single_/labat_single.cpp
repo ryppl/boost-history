@@ -75,15 +75,15 @@ void test_LawValidater()
     //LawValidater<TestLawT> test_law;
 
 
-	
-	typedef FunctionEquality
-	<
-		itl::list<std::pair<rightopen_interval<double,std::less>,int> >, //SourceT, 
-		split_interval_map<double,int,partial_absorber>,                 //TargetT, 
-		base_insertion, 
-		hint_insertion
-	>
-	TestLawT;
+    
+    typedef FunctionEquality
+    <
+        itl::list<std::pair<rightopen_interval<double,std::less>,int> >, //SourceT, 
+        split_interval_map<double,int,partial_absorber>,                 //TargetT, 
+        base_insertion, 
+        hint_insertion
+    >
+    TestLawT;
     LawValidater<TestLawT> test_law;
 
 

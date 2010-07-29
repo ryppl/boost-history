@@ -68,6 +68,11 @@ public:
     domain_type     upper()const { return _upb; }
     interval_bounds bounds()const{ return _bounds; }
 
+    static continuous_interval open     (const DomainT& lo, const DomainT& up){ return continuous_interval(lo, up, interval_bounds::open());      }
+    static continuous_interval rightopen(const DomainT& lo, const DomainT& up){ return continuous_interval(lo, up, interval_bounds::right_open());}
+    static continuous_interval leftopen (const DomainT& lo, const DomainT& up){ return continuous_interval(lo, up, interval_bounds::left_open()); }
+    static continuous_interval closed   (const DomainT& lo, const DomainT& up){ return continuous_interval(lo, up, interval_bounds::closed());    }
+
 private:
     domain_type     _lwb;
     domain_type     _upb;

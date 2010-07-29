@@ -148,8 +148,8 @@ public:
     interval_bitset& intersect(const element_type& rhs) {return segment_apply(&interval_bitset::intersect_,interval_type(rhs));}
     interval_bitset& flip     (const element_type& rhs) {return segment_apply(&interval_bitset::flip_,     interval_type(rhs));}
 
-    void clear(){ _map.clear(); }
-    bool empty()const{ return _map.clear(); }
+    void clear(){ ITL_FUN_CALL(clear, _map); }
+    bool empty()const{ return ITL_FUN_REN(empty, is_empty, _map); }
     size_type cardinality()const;
     size_type size()const           { return cardinality(); }
     size_type interval_count()const { return _map.interval_count(); }
@@ -380,7 +380,7 @@ typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::size_type
 {
     size_type cardinality = 0;
     ITL_const_FORALL(typename interval_bitmap_type, it_, _map)
-		cardinality += (it_->second.cardinality() * itl::cardinality(it_->first));
+        cardinality += (it_->second.cardinality() * itl::cardinality(it_->first));
     return cardinality; 
 }
 
@@ -414,6 +414,18 @@ template<class DomainT,    class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_
 bool is_element_equal(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& left, 
                       const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& right)
 { return left == right; }
+
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+void clear(interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object) 
+{ 
+    object.clear(); 
+}
+
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+bool is_empty(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object) 
+{ 
+    return object.empty(); 
+}
 
 
 template<class CharType, class CharTraits, 

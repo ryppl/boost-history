@@ -108,7 +108,7 @@ namespace boost{namespace itl
             if(_info_level >= inform::rarely)
                 reportFrequencies();
 
-            return _violationsCount.empty();
+            return itl::is_empty(_violationsCount);
         }
 
         void validateType()
@@ -162,7 +162,7 @@ namespace boost{namespace itl
                     avg_evaluation_time_per_law, " total avg of atomic evaluation (micro sec)", instance_count, avg_evaluation_time_per_law);
 
             int violation_count = 1;
-            if(!_violations.empty())
+            if(!itl::is_empty(_violations))
             {
                 std::cout << "------------------------------------------------------------------------------" << std::endl;
                 std::cout << "--- Law violations -----------------------------------------------count-------" << std::endl;
@@ -172,14 +172,14 @@ namespace boost{namespace itl
                 printf("%3d %-59s%8d\n", violation_count, it->first.c_str(), it->second.getViolationsCount());
                 violation_count++;
             }
-            if(!_violations.empty())
+            if(!itl::is_empty(_violations))
                 std::cout << "------------------------------------------------------------------------------" << std::endl;
             ITL_FORALL(ViolationMapT, it, _violations)
             {
                 PolyLawViolations violas = it->second;
                 violas.reportFirst();
             }
-            if(!_violations.empty())
+            if(!itl::is_empty(_violations))
                 std::cout << "------------------------------------------------------------------------------" << std::endl;
         }
 

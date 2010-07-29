@@ -63,7 +63,7 @@ public:
     domain_type lower()const{ return _lwb; }
     domain_type upper()const{ return _upb; }
 
-	/*CL
+    /*CL
     domain_type first()const{ return _lwb; }
 
     DomainT last()const
@@ -71,7 +71,7 @@ public:
         BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
         return pred(_upb);
     }
-	*/
+    */
 
 private:
     domain_type _lwb;
@@ -84,7 +84,7 @@ std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits> &stream, 
    rightopen_interval<DomainT,Compare> const& object)
 {
-	if(boost::itl::is_empty(object))
+    if(boost::itl::is_empty(object))
         return stream << "[)";
     else
         return stream << "[" << object.lower() << "," << object.upper()<< ")";

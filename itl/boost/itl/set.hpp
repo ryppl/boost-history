@@ -121,9 +121,11 @@ public:
     set& assign_if(const set& src, const Predicate&);
 
     //==========================================================================
+ITL_BEGIN_COMMON_MEMBER_FUNCTIONS:
     using base_type::empty;
     using base_type::clear;
 
+ITL_END_COMMON_MEMBER_FUNCTIONS:
     using base_type::begin;
     using base_type::end;
     using base_type::rbegin;
@@ -341,6 +343,29 @@ set<DomainT,Compare,Alloc>& set<DomainT,Compare,Alloc>
 //-----------------------------------------------------------------------------
 // non member functions
 //-----------------------------------------------------------------------------
+
+//==========================================================================
+//= Containedness
+//==========================================================================
+//JODO general container concept
+/** All content of the container is dropped. 
+    Complexity: linear. */
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+void clear(itl::set<DomainT,Compare,Alloc>& object) //JODO test
+{
+    //object.clear();
+    object.erase(object.begin(), object.end());
+}
+
+/** Tests if the container is empty. 
+    Complexity: constant. */
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+bool is_empty(const itl::set<DomainT,Compare,Alloc>& object)
+{
+    //return object.empty();
+    return object.begin() == object.end();
+}
+
 //==============================================================================
 //= Equivalences and Orderings
 //==============================================================================

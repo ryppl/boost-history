@@ -124,7 +124,7 @@ private:
         next_bit();
         if(_on_bit == past)
         {   // The current bitset passed the end
-			if(_reptator < pred(itl::length(_saltator->first)))
+            if(_reptator < pred(itl::length(_saltator->first)))
             {
                 ++_reptator; 
                 _on_bit = ante;
@@ -156,7 +156,7 @@ private:
                 --_saltator;
                 // NOW: decrement insecure, because _saltator can (finally) be 
                 // begin here. increment and dereference are secure.
-				_reptator = itl::length(_saltator->first);
+                _reptator = itl::length(_saltator->first);
                 --_reptator;
                 _on_bit = past;
             }
@@ -204,7 +204,7 @@ private:
         if(_on_bit == beyond)
         {
             --_saltator;
-			_reptator = itl::length(_saltator->first);
+            _reptator = itl::length(_saltator->first);
             --_reptator;
             _on_bit   = Proceed::last_bit(_saltator->second.word());
         }

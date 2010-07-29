@@ -125,9 +125,9 @@ void man_power()
 
     // Bodos additional absence times
     discrete_interval<date>      bodos_flu(from_string("2008-09-19"), from_string("2008-09-29"), 
-		                                   interval_bounds::closed());
+                                           interval_bounds::closed());
     discrete_interval<date> bodos_vacation(from_string("2008-08-15"), from_string("2008-09-03"), 
-		                                   interval_bounds::closed());
+                                           interval_bounds::closed());
 
     interval_set<date> bodos_absence_times(bodos_flu);
     bodos_absence_times += bodos_vacation;

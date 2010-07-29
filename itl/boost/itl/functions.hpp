@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Copyright (c) 2008-2009: Joachim Faulhaber
+Copyright (c) 2008-2010: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
@@ -16,6 +16,49 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 
 namespace boost{namespace itl
 {
+
+//==========================================================================
+//= Containedness
+//==========================================================================
+
+/** All content of the container is dropped. 
+    Complexity: linear. */
+template<class ObjectT>
+typename boost::enable_if<is_interval_container<ObjectT>, void>::type
+clear(ObjectT& object) //JODO test
+{
+#ifdef ITL_CONCEPT_ORIENTED //JODO find final decision
+    object.erase(object.begin(), object.end());
+#else //ITL_OBJECT_ORIENTED
+    object.clear();
+#endif
+}
+
+/** Tests if the container is empty. 
+    Complexity: constant. */
+template<class ObjectT>
+typename boost::enable_if<is_interval_container<ObjectT>, bool>::type
+is_empty(const ObjectT& object)
+{
+#ifdef ITL_CONCEPT_ORIENTED //JODO find final decision
+    return object.begin() == object.end();
+#else //ITL_OBJECT_ORIENTED
+    return object.empty();
+#endif
+}
+
+/** Does \c super contain \c sub? 
+    Complexity: linear. */
+//template<class ObjectT>
+//typename boost::enable_if<is_interval_container<ObjectT>, bool>::type
+//contains(const ObjectT& super, const ObjectT& sub)
+//{
+//#ifdef ITL_CONCEPT_ORIENTED
+//    return true; //JODO
+//#else //ITL_OBJECT_ORIENTED
+//    return super.contains(sub);
+//#endif
+//}
 
 //==============================================================================
 //= Equivalences and Orderings
@@ -320,7 +363,7 @@ typename boost::enable_if<combines_right_to_interval_container<ObjectT, OperandT
                           ObjectT>::type&
 erase(ObjectT& object, const OperandT& operand)
 {
-    if(operand.empty())
+    if(ITL_FUN_REN(empty, is_empty, operand))
         return object;
 
     typename OperandT::const_iterator common_lwb;
@@ -402,7 +445,7 @@ intersects(const LeftT& left, const RightT& right)
     while(it_ != right_common_upper_)
     {
         left.add_intersection(intersection, *it_++);
-        if(!intersection.empty())
+        if(!ITL_FUN_REN(empty, is_empty, intersection))
             return true;
     }
 
@@ -421,7 +464,7 @@ intersects(const LeftT& left, const RightT& right)
 {
     LeftT intersection;
 
-    if(left.empty() || right.empty())
+    if(ITL_FUN_REN(empty, is_empty, left) || ITL_FUN_REN(empty, is_empty, right))
         return false;
 
     typename RightT::const_iterator right_common_lower_;
@@ -434,7 +477,7 @@ intersects(const LeftT& left, const RightT& right)
     while(it_ != right_common_upper_)
     {
         left.add_intersection(intersection, RightT::key_value(it_++));
-        if(!intersection.empty())
+        if(!ITL_FUN_REN(empty, is_empty, intersection))
             return true;
     }
 
@@ -528,9 +571,8 @@ typename boost::enable_if<is_interval_container<ObjectT>,
 hull(const ObjectT& object)
 {
     return 
-        object.empty() ? neutron<typename ObjectT::interval_type>::value()
-        : (ObjectT::key_value(object.begin()))
-            .span(ObjectT::key_value(object.rbegin()));
+        ITL_FUN_REN(empty, is_empty, object) ? neutron<typename ObjectT::interval_type>::value()
+        : hull((ObjectT::key_value(object.begin())), ObjectT::key_value(object.rbegin()));
 }
 
 

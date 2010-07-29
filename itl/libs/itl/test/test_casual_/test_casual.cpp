@@ -214,10 +214,17 @@ BOOST_AUTO_TEST_CASE(casual)
 
     */
 
-    //int found;
-    //TargetT::reverse_iterator it = std::find(left.rbegin(), left.rend(), found); //!
+    discrete_interval<int> fst = discrete_interval<int>::open(1,3);
+    discrete_interval<int> itv = discrete_interval<int>::rightopen(0,3);
 
-    bool incl = std::includes(left.rbegin(), left.rend(), right.rbegin(), right.rend(), std::greater<int>());
+    cout << "fst = " << fst << endl;
+    cout << "itv = " << itv << endl;
+    discrete_interval<int> lft = right_subtract(fst,itv);
 
+    cout << "lft = " << lft << endl;
+    if(itl::is_empty(lft))
+        cout << "is MT\n";
+    else
+        cout << "is NOT MT\n"; 
 }
 

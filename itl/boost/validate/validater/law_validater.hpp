@@ -136,9 +136,9 @@ namespace boost{namespace itl
     template <class LawT, template<typename>class GentorT>
     void LawValidater<LawT, GentorT>::init()
     {
-        _frequencies.clear();
+        ITL_FUN_CALL(clear, _frequencies);
         _lawViolations.clear();
-        _violations.clear();
+        ITL_FUN_CALL(clear, _violations);
     }
 
     // Runs law_instance_count * repeat_count validations on the law LawT

@@ -60,7 +60,7 @@ template <class MapTV>
 void MapGentorT<MapTV>::some(MapTV& x)
 {
     NumberGentorT<int> intGentor;
-    x.clear();
+    ITL_FUN_CALL(clear, x);
     m_sample.clear();
     m_sampleSize = intGentor(m_sampleSizeRange);
 

@@ -173,9 +173,11 @@ public:
     void swap(map& src) { base_type::swap(src); }
 
     //==========================================================================
+ITL_BEGIN_COMMON_MEMBER_FUNCTIONS:
     using base_type::empty;
     using base_type::clear;
 
+ITL_END_COMMON_MEMBER_FUNCTIONS:
     using base_type::begin;
     using base_type::end;
     using base_type::rbegin;
@@ -714,6 +716,30 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 //-----------------------------------------------------------------------------
 // non member functions
 //-----------------------------------------------------------------------------
+
+
+//==========================================================================
+//= Containedness
+//==========================================================================
+//JODO general container concept
+/** All content of the container is dropped. 
+    Complexity: linear. */
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+void clear(itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object) //JODO test
+{
+    //object.clear();
+    object.erase(object.begin(), object.end());
+}
+
+/** Tests if the container is empty. 
+    Complexity: constant. */
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+bool is_empty(const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object)
+{
+    //return object.empty();
+    return object.begin() == object.end();
+}
+
 
 //==============================================================================
 //= Equivalences and Orderings

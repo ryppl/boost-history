@@ -28,8 +28,8 @@ template<class MapType>
 bool contained_in(const MapType& sub, const MapType& super)
 {
     if(&super == &sub)                   return true;
-    if(sub.empty())                      return true;
-    if(super.empty())                    return false;
+    if(ITL_FUN_REN(empty, is_empty, sub))               return true;
+    if(ITL_FUN_REN(empty, is_empty, super))             return false;
     if(super.size()    < sub.size()    ) return false;
     if(*sub.begin()    < *super.begin()) return false;
     if(*super.rbegin() < *sub.rbegin() ) return false;
@@ -120,7 +120,7 @@ void flip(MapType& result, const MapType& x2)
 {
     if(mpl::and_<is_total<MapType>, absorbs_neutrons<MapType> >::value)
     {
-        result.clear();
+        ITL_FUN_CALL(clear, result);
         return;
     }
 

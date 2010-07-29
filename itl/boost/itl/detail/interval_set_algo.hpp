@@ -29,7 +29,8 @@ typename IntervalContainerT::size_type continuous_cardinality(const IntervalCont
     size_type interval_size;
     ITL_const_FORALL(typename IntervalContainerT, it, object)
     {
-        interval_size = continuous_interval_<interval_type>::cardinality(IntervalContainerT::key_value(it));
+        //CL interval_size = continuous_interval_<interval_type>::cardinality(IntervalContainerT::key_value(it));
+        interval_size = itl::cardinality(IntervalContainerT::key_value(it));
         if(interval_size == infinity<size_type>::value())
             return interval_size;
         else
@@ -172,13 +173,15 @@ bool is_joinable(const IntervalContainerT& container,
         {
             if(IntervalContainerT::codomain_value(next_) != co_value)
                 return false;
-            if(!IntervalContainerT::key_value(it_++).touches(IntervalContainerT::key_value(next_++)))
+            if(!itl::touches(IntervalContainerT::key_value(it_++),
+                             IntervalContainerT::key_value(next_++)))
                 return false;
         }
     }
     else
         while(next_ != container.end() && it_ != past)
-            if(!IntervalContainerT::key_value(it_++).touches(IntervalContainerT::key_value(next_++)))
+            if(!itl::touches(IntervalContainerT::key_value(it_++),
+                             IntervalContainerT::key_value(next_++)))
                 return false;
 
     return true;
@@ -201,7 +204,8 @@ bool is_dense(const IntervalContainerT& container,
     ++next_;
 
     while(next_ != container.end() && it_ != past)
-        if(!IntervalContainerT::key_value(it_++).touches(IntervalContainerT::key_value(next_++)))
+        if(!itl::touches(IntervalContainerT::key_value(it_++), 
+                         IntervalContainerT::key_value(next_++)))
             return false;
 
     return true;

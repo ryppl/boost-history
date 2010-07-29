@@ -219,13 +219,14 @@ public:
     //==========================================================================
     //= Containedness
     //==========================================================================
-
+ITL_BEGIN_COMMON_MEMBER_FUNCTIONS:
     /** clear the map */
     void clear() { _map.clear(); }
 
     /** is the map empty? */
     bool empty()const { return _map.empty(); }
 
+ITL_END_COMMON_MEMBER_FUNCTIONS:
     //--- contains: set view ---------------------------------------------------
     /** Does the map contain the domain element \c key? */
     bool contains(const domain_type& key)const
@@ -246,7 +247,7 @@ public:
         const_iterator last_overlap = prior(exterior.second);
 
         return 
-            hull(exterior.first->first, last_overlap->first).contains(sub_interval)
+            itl::contains(hull(exterior.first->first, last_overlap->first), sub_interval)
         &&    Interval_Set::is_dense(*this, exterior.first, last_overlap);
     }
 
@@ -492,7 +493,7 @@ public:
     {
         typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> operand_type;
 
-        if(operand.empty())
+        if(ITL_FUN_REN(empty, is_empty, operand))
             return *that();
 
         typename operand_type::const_iterator common_lwb;
@@ -556,7 +557,7 @@ public:
     )const
     {
         typedef IntervalSet<DomainT,Compare,Interval,Alloc> sectant_type;
-        if(sectant.empty()) 
+        if(ITL_FUN_REN(empty, is_empty, sectant)) 
             return;
 
         typename sectant_type::const_iterator common_lwb;
@@ -621,7 +622,7 @@ public:
 
         type intersection;
         add_intersection(intersection, interval_value_pair);
-        return !itl::is_empty(intersection); 
+        return !ITL_FUN_REN(empty, is_empty, intersection); 
     }
 
 
@@ -877,8 +878,8 @@ bool interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
         return false;
 
     return
-        hull(exterior.first->first, last_overlap->first).contains(sub_interval)
-    &&    Interval_Set::is_joinable(*this, exterior.first, last_overlap);
+          itl::contains(hull(exterior.first->first, last_overlap->first), sub_interval)
+      &&  Interval_Set::is_joinable(*this, exterior.first, last_overlap);
 }
 
 
@@ -920,7 +921,7 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,
 {
     difference_type length = neutron<difference_type>::value();
     const_FOR_IMPLMAP(it_)
-        length += it_->first.length();
+        length += itl::length(it_->first);
     return length;
 }
 
@@ -1099,7 +1100,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
     while(it_ != end_  ) 
     {
         const codomain_type& co_value = it_->second;
-        covered = (*it_++).first; 
+        covered = (*it_++).first;
         //[a      ...  : span
         //     [b ...  : covered
         //[a  b)       : left_over

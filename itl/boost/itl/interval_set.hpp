@@ -212,8 +212,8 @@ inline typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
     ::join_on_left(iterator& left_, const iterator& right_)
 {
     // both left and right are in the set and they are neighbours
-    BOOST_ASSERT((*left_).exclusive_less(*right_));
-    BOOST_ASSERT((*left_).touches(*right_));
+    BOOST_ASSERT(exclusive_less(*left_, *right_));
+    BOOST_ASSERT(touches(*left_, *right_));
 
     interval_type right_itv = (*right_);
     this->_set.erase(right_);
@@ -254,7 +254,7 @@ template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval
 typename interval_set<DomainT,Compare,Interval,Alloc>::iterator 
     interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
 {
-	if(boost::itl::is_empty(addend)) 
+    if(boost::itl::is_empty(addend)) 
         return prior_;
 
     iterator insertion = this->_set.insert(prior_, addend);

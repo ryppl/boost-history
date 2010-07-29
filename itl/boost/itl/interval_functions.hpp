@@ -115,7 +115,7 @@ template<class IntervalT>
 typename boost::enable_if<is_discrete_interval<IntervalT>, IntervalT>::type
 construct(const typename IntervalT::domain_type& low,
           const typename IntervalT::domain_type& up,
-		  interval_bounds bounds = interval_bounds::right_open() )
+          interval_bounds bounds = interval_bounds::right_open() )
 {
     return construct_interval<IntervalT>::apply(low, up, bounds);
 }
@@ -158,7 +158,7 @@ inline typename
                      typename IntervalT::domain_type>::type
 first(const IntervalT& object)
 { 
-	return object.lower();
+    return object.lower();
 }
 
 template<class IntervalT>
@@ -167,8 +167,8 @@ inline typename
                      typename IntervalT::domain_type>::type
 first(const IntervalT& object)
 { 
-	return is_left_closed(object.bounds()) ? 
-		object.lower() : succ(object.lower());
+    return is_left_closed(object.bounds()) ? 
+        object.lower() : succ(object.lower());
 }
 
 //- last -----------------------------------------------------------------------
@@ -179,7 +179,7 @@ boost::enable_if<mpl::and_<is_static_rightopen<IntervalT>,
                  typename IntervalT::domain_type>::type
 last(const IntervalT& object)
 { 
-	return pred(object.upper());
+    return pred(object.upper());
 }
 
 template<class IntervalT>
@@ -188,7 +188,7 @@ inline typename
                      typename IntervalT::domain_type>::type
 last(const IntervalT& object)
 { 
-	return is_right_closed(object.bounds()) ? object.upper() : pred(object.upper());
+    return is_right_closed(object.bounds()) ? object.upper() : pred(object.upper());
 }
 
 
@@ -253,7 +253,14 @@ template<class IntervalT>
 typename boost::enable_if<is_discrete_interval<IntervalT>, bool>::type
 is_empty(const IntervalT& object)
 { 
-    return IntervalT::domain_less(last(object), first(object)); 
+    //CL return IntervalT::domain_less(last(object), first(object)); 
+
+    if(object.bounds() == interval_bounds::closed())
+        return IntervalT::domain_less(object.upper(), object.lower()); 
+    else if(object.bounds() == interval_bounds::open())
+        return IntervalT::domain_less_equal(object.upper(), succ(object.lower())); 
+    else
+        return IntervalT::domain_less_equal(object.upper(), object.lower()); 
 }
 
 template<class IntervalT>
@@ -584,7 +591,7 @@ typename boost::enable_if<is_discrete_interval<IntervalT>,
     typename IntervalT::size_type>::type
 cardinality(const IntervalT& object)
 {
-	return (last(object) + itl::unon<IntervalT::size_type>::value()) - first(object);
+    return (last(object) + itl::unon<IntervalT::size_type>::value()) - first(object);
 }
 
 
@@ -605,7 +612,7 @@ typename boost::enable_if<is_discrete_asymmetric<IntervalT>,
     typename IntervalT::size_type>::type
 cardinality(const IntervalT& object)
 {
-	return (last(object) + itl::unon<IntervalT::size_type>::value()) - first(object);
+    return (last(object) + itl::unon<IntervalT::size_type>::value()) - first(object);
 }
 
 
@@ -625,7 +632,7 @@ typename boost::enable_if<is_continuous_interval<IntervalT>,
     typename IntervalT::difference_type>::type
 length(const IntervalT& object)
 {
-	return object.upper() - object.lower();
+    return object.upper() - object.lower();
 }
 
 template<class IntervalT>
@@ -633,7 +640,7 @@ inline typename boost::enable_if<is_discrete_interval<IntervalT>,
     typename IntervalT::difference_type>::type
 length(const IntervalT& object)
 {
-	return    (last(object) + itl::unon<IntervalT::difference_type>::value()) 
+    return    (last(object) + itl::unon<IntervalT::difference_type>::value()) 
             -  first(object);
 }
 
@@ -642,7 +649,7 @@ typename boost::enable_if<is_continuous_asymmetric<IntervalT>,
     typename IntervalT::difference_type>::type
 length(const IntervalT& object)
 {
-	return object.upper() - object.lower();
+    return object.upper() - object.lower();
 }
 
 template<class IntervalT>
@@ -650,7 +657,7 @@ inline typename boost::enable_if<is_discrete_asymmetric<IntervalT>,
     typename IntervalT::difference_type>::type
 length(const IntervalT& object)
 {
-	return    (last(object) + itl::unon<IntervalT::difference_type>::value()) 
+    return    (last(object) + itl::unon<IntervalT::difference_type>::value()) 
             -  first(object);
 }
 

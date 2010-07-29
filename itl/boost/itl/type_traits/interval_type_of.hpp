@@ -23,7 +23,7 @@ namespace boost{ namespace itl
 #ifdef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
         typedef rightopen_interval<DomainT,Compare> type;
 #else
-		typedef
+        typedef
             typename mpl::if_< is_continuous<DomainT> //JODO add Traits to choose between static and dynamic intervals
                              , continuous_interval<DomainT,Compare>
                              ,   discrete_interval<DomainT,Compare> >::type type;
