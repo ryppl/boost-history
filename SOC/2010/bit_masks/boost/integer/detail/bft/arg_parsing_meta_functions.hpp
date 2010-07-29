@@ -120,8 +120,8 @@ struct ctz_helper<Mask,IndexingMask,ZeroCount,true>
             mpl::size_t<
             bit_width< typename Mask::value_type >::value >
         >::type::value ))
-          &&
-        bool( ZeroCount < std::size_t(bit_width< typename Mask::value_type >::value))
+          // &&
+        // bool( ZeroCount != std::size_t(bit_width< typename Mask::value_type >::value))
     >
 { };
 
@@ -145,7 +145,11 @@ struct count_leading_zeros {
 
 template <typename Mask>
 struct count_trailing_zeros {
-    typedef typename ptr_detail::ctz_helper<Mask>::type type;
+    typedef typename mpl::if_c<
+        (Mask::value == 0u),
+        mpl::size_t< bit_width< typename Mask::value_type >::value >,
+        ptr_detail::ctz_helper< Mask>
+    >::type::type                         type;
 };
 
 }}}} // end boost::bitfields::detail::pointer_member
