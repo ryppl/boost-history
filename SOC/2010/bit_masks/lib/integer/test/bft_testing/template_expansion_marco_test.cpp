@@ -5,10 +5,11 @@
 
 
 #include <boost/integer/bitfield_tuple.hpp>
-
-#include <boost/assert.hpp>
 #include <typeinfo>
 #include <iostream>
+
+// This is compile pass test and needs to be moved into
+// the correct location as such I think.
 
 using namespace boost;
 using namespace boost::bitfields;

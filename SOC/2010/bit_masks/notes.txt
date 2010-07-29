@@ -46,11 +46,6 @@ List of TODO's throughout the bitfield_tuple
 --------------------------------------------------------------------------------
 1)  variadic_sequence_testing.cpp
 
-3)  template_expansion_marco_test.cpp
-    a)  Make this an actual test to make sure that everything is correctly
-        getting expanded.
-    b)  Find a better way to test this.
-    d)  Change to using the <boost/detail/lightweight_test.hpp> framework.
 
 
 
@@ -59,11 +54,6 @@ List of TODO's throughout the bitfield_tuple
 5)  pointer_parsing_meta_function_test.cpp
 6)  pointer_member_test.cpp
 7)  name_accessor_test.cpp
-
-9)  make_bft_testing.cpp
-    c)  This may need additional test to make sure that the macros are correctly
-        generating the code for the correct number of valid parameters.
-
 10) get_interface_test.cpp
 11) fusion_iterator_testing.cpp
 12) fusion_integration_testing.cpp
@@ -71,17 +61,22 @@ List of TODO's throughout the bitfield_tuple
 14) filler_test.cpp
 15) deduced_storage_type_test.cpp
 16) deduced_storage_type_long_long_test.cpp
-
-
-17) custom_member_test.cpp
-    b)  Implement test suite.
-
 18) bitfield_tuple_test.hpp
 19) align_test.cpp
 
 
-20) fails_on_64_bit.cpp
-    a) Move the contents into boost_endian_integration_test.cpp
+3)  template_expansion_marco_test.cpp
+    a)  Make this an actual test to make sure that everything is correctly
+        getting expanded.
+    b)  Find a better way to test this.
+    d)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+
+9)  make_bft_testing.cpp
+    c)  This may need additional test to make sure that the macros are correctly
+        generating the code for the correct number of valid parameters.
+17) custom_member_test.cpp
+    b)  Implement test suite.
+
 
 
                         TO BE ADDED TO TESTS SECTION
