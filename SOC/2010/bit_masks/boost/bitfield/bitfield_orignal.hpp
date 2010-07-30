@@ -18,8 +18,6 @@
 
 #include <cassert>
 #include <limits>
-// #include <netinet/in.h>
-
 namespace boost { namespace integer {
     
 
@@ -77,9 +75,9 @@ namespace boost { namespace integer {
         struct bitfield_complete_signed<true, value_type, storage_type, WIDTH, SIGN_MASK> {
             static value_type convert(storage_type val) {
                 if( (val>>(WIDTH-1))!=0) {
-                    return (val | SIGN_MASK);
+                    return value_type(val | SIGN_MASK);
                 } else {
-                    return val;
+                    return value_type(val);
                 }
             }
         };
@@ -87,9 +85,17 @@ namespace boost { namespace integer {
         template <typename value_type, typename storage_type, unsigned int WIDTH, unsigned int SIGN_MASK>
         struct bitfield_complete_signed<false, value_type, storage_type, WIDTH, SIGN_MASK> {
             static value_type convert(storage_type val) {
-                return val;
+                return value_type(val);
             }
         };
+#ifdef BOOST_MSVC
+        template <typename value_type, typename storage_type, unsigned int WIDTH, unsigned int SIGN_MASK>
+        struct bitfield_complete_signed<false, value_type, bool, WIDTH, SIGN_MASK> {
+            static value_type convert(storage_type val) {
+                return value_type(val) > 0;
+            }
+        };
+#endif
     }}
     
     //------------------------------------------------------------------------------
@@ -170,6 +176,10 @@ namespace boost { namespace integer {
 
         static value_type storage_to_value(storage_type field) {
             storage_type val = (field & FIELD_MASK) >> LASTD;
+#ifdef BOOST_MSVC
+#pragma warning(push)
+#pragma warning(disable:4309)
+#endif
             return detail::policy::bitfield_complete_signed<
                 std::numeric_limits<value_type>::is_signed,
                 value_type,
@@ -177,6 +187,9 @@ namespace boost { namespace integer {
                 WIDTH,
                 SIGN_MASK
             >::convert(val);
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
         }
 
         //! private because a reference is nedeed
@@ -193,7 +206,7 @@ namespace boost { namespace integer {
         static const std::size_t WIDTH      = LAST - FIRST + 1;     //!< Width in bits of the bitfield
         static const storage_type VAL_MASK   = (STORAGE_TYPE(1) << WIDTH) - 1;    //!< Mask applied against assigned values
         static const storage_type FIELD_MASK = (STORAGE_TYPE(VAL_MASK) << LASTD); //!< Mask of the field's bit positions
-        static const storage_type SIGN_MASK  = ~VAL_MASK;            //!< Sign mask applied against assigned values
+        static const storage_type SIGN_MASK  = storage_type(~VAL_MASK);            //!< Sign mask applied against assigned values
 
 
         //! explicit constructor from a reference

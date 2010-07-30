@@ -8,6 +8,10 @@
 
 template <typename T>
 void test_function() {
+#ifdef BOOST_MSVC
+#pragma warning(push)
+#pragma warning(disable : 4127)
+#endif
     // making sure that the value type is transfered correctly.
     BOOST_ASSERT((is_same< typename  bits_mask<T, 3>::value_type, T >::value));
 
@@ -23,11 +27,15 @@ void test_function() {
     BOOST_ASSERT(( boost::bits_mask<T,3,2>::value == 24 ));
     BOOST_ASSERT(( boost::bits_mask<T,2,3>::value == 28 ));
 
+
     // assert that type returns the correct typedef.
     BOOST_ASSERT(( is_same< 
                     typename bits_mask<T, 3>::type,
                     bits_mask<T, 3> >::value
               ));
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
 }
 
 

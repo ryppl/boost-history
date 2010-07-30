@@ -6,6 +6,7 @@
 
 #ifndef BOOST_BITS_MASK_HPP
 #define BOOST_BITS_MASK_HPP
+#include <boost/config.hpp>
 #include <boost/integer/high_bits_mask.hpp>
 #include <boost/integer/low_bits_mask.hpp>
 #include <boost/static_assert.hpp>
@@ -29,6 +30,11 @@ namespace boost {
  *  NOTE: This is documented but not enforeced.
  *
  */
+#ifdef BOOST_MSVC
+#pragma warning(push)
+#pragma warning( disable : 4293 )
+#pragma warning( disable : 4307 )
+#endif
 template <typename T, unsigned int Offset, unsigned int Width = 1 >
 struct bits_mask
     :integral_mask<T, (low_bits_mask<T,Width>::value << Offset) >
@@ -46,7 +52,9 @@ struct bits_mask
     BOOST_STATIC_CONSTANT(unsigned int, width  = Width);
 
 };
-
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
 } // namespace boost
 
 

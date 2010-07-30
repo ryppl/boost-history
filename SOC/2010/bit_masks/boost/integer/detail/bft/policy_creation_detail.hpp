@@ -69,6 +69,10 @@ struct apply_impl <Mask,ValueType,StorageType,bit_shift::right<Shift> > {
     typedef StorageType     storage_type;
 
     typedef Mask            get_from_ptr_mask;
+#ifdef BOOST_MSVC
+#pragma warning(push)
+#pragma warning(disable:4309)
+#endif
     typedef typename mpl::shift_right<    
         integral_constant<
             storage_type,
@@ -76,6 +80,10 @@ struct apply_impl <Mask,ValueType,StorageType,bit_shift::right<Shift> > {
         >,
         mpl::size_t<Shift>
     >::type                 get_mask;
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
 
     typedef integral_constant<
         storage_type,

@@ -27,13 +27,13 @@ namespace detail {
     template<typename T, unsigned int Width>
     struct evaluate_for_msvc_08 {
         typedef typename make_unsigned<T>::type unsigned_type;
-        BOOST_STATIC_CONSTANT(unsigned_type, val = (~( unsigned_type(0)))
+        BOOST_STATIC_CONSTANT(unsigned_type, val = unsigned_type((~( unsigned_type(0)))
               &
             (~(mpl::shift_right<
                 mpl::size_t<static_cast<unsigned int>(~(T(0)))>,
                 mpl::size_t<Width>
             >::type::value))
-        );
+        ));
         typedef integral_constant<T, val>       type;
     };
     // long long specialization
