@@ -20,8 +20,8 @@ namespace boost {
 
 #ifdef BOOST_MSVC
 #pragma warning(push)
-#pragma warning(disable : 4309)
-// #pragma warning(disable : 4305)
+#pragma warning(disable : 4309) 
+#pragma warning(disable : 4310) // truncation of constant via cast - this is OK.
 namespace detail {
 
     template<typename T, unsigned int Width>
