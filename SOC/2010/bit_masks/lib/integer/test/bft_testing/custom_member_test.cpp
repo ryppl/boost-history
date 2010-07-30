@@ -17,6 +17,9 @@ struct i2;
 struct b1;
 struct b2;
 
+
+// Most of the testing of this is done inside of pointer test because
+// the are both based on the exact same code.
 int main() {
     {
         typedef bitfield_tuple<

@@ -1,9 +1,6 @@
 TODO From Email Responses
 --------------------------------------------------------------------------------
 
-1) create element metafunction for returning the return type of a field.
-2) Create a get free function which takes a bitfield_tuple.
-
 5) Documentation for align -
     "Ensures the offset of the next bit field is divisible by the supplied value."
 
@@ -61,9 +58,6 @@ List of TODO's throughout the bitfield_tuple
 18) bitfield_tuple_test.hpp
 19) align_test.cpp
 
-
-
-
 9)  make_bft_testing.cpp
     c)  This may need additional test to make sure that the macros are correctly
         generating the code for the correct number of valid parameters.
@@ -76,8 +70,6 @@ List of TODO's throughout the bitfield_tuple
                         TO BE ADDED TO TESTS SECTION
     Test which need to be created as a result of modifications or additions!
 --------------------------------------------------------------------------------
-
-8)  Create test for get_free_function.
 --------------------------------------------------------------------------------
 
 
