@@ -10,6 +10,6 @@ using namespace boost;
 using namespace boost::bitfields;
 
 // Testing to see if the include paths work correctly.
-#include <boost/integer/detail/bft/ext/bitfield_tuple_fusion_includes.hpp>
+#include <boost/integer/bitfield_tuple/ext/bitfield_tuple_fusion_includes.hpp>
 
 int main() { return 0; }

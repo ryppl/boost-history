@@ -7,17 +7,6 @@ TODO From Email Responses
 -> 6) consider renaming member to field or bitfield
 -> 7) Consider moving everything from bitfield_tuple into its own library.
 
-8) begin relocating all parts of the interface into the bitfield_tuple file.
-    Things which I know need to eventually move.
-    I   )   Fusion extension .
-        A)  Basically the entire ext directory.
-    II  )   make_bitfield_tuple
-        A)  relocate the single macro which actually generates all of the
-            functions into its own file.
-        B)  Rename the file which previously held the make_bitfield_tuple into
-            make_bitfield_tuple_impl
-
-
 9) Create a VIEW version of the bitfield_tuple.
 --------------------------------------------------------------------------------
 List of TODO's throughout the bitfield_tuple
