@@ -37,7 +37,7 @@
     template<                                                                   \
         BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(TEMPLATE_PARAMS_SEQ)   \
     >                                                                           \
-    struct class_member_proxy<                                                  \
+    struct access::class_member_proxy<                                          \
         BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)                         \
       , I                                                                       \
     >                                                                           \
@@ -75,7 +75,10 @@
     template<                                                                   \
         BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(TEMPLATE_PARAMS_SEQ)   \
     >                                                                           \
-    struct struct_member<BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ), I>    \
+    struct access::struct_member<                                               \
+        BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)                         \
+      , I                                                                       \
+    >                                                                           \
     {                                                                           \
         typedef BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 0, ATTRIBUTE) lvalue; \
                                                                                 \

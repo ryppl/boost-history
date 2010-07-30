@@ -17,12 +17,12 @@ int
 main()
 {
     {
-        boost::fusion::vector<int, short, double> t(1, 2, 3.3);
+        boost::fusion::vector<int, long, double> t(1, 2, 3.3);
         BOOST_TEST(boost::fusion::count_if(t, boost::lambda::_1 == 2) == 1);
     }
 
     {
-        boost::fusion::vector<int, short, double> t(1, 2, 3.3);
+        boost::fusion::vector<int, long, double> t(1, 2, 3.3);
         BOOST_TEST(boost::fusion::count_if(t, boost::lambda::_1 == 3) == 0);
     }
 

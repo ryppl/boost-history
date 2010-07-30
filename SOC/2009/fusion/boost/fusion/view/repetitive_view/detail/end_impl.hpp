@@ -1,6 +1,6 @@
 /*==============================================================================
     Copyright (c) 2007 Tobias Schwinger
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -13,17 +13,18 @@
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/iterator/advance_c.hpp>
 #include <boost/fusion/support/category_of.hpp>
-
 #include <boost/mpl/modulus.hpp>
 #include <boost/mpl/negate.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/not.hpp>
+#include <boost/utility/addressof.hpp>
 
 namespace boost { namespace fusion
 {
     namespace detail
     {
+        //TODO ref
         template<
             typename Seq
           , typename MaxIndex
@@ -65,7 +66,7 @@ namespace boost { namespace fusion
             static type
             call(Seq seq)
             {
-                return type(seq,fusion::end(seq));
+                return fusion::end(seq);
             }
         };
     }
@@ -103,7 +104,9 @@ namespace boost { namespace fusion
                 static type
                 call(Seq seq)
                 {
-                    return type(seq.seq.get(),gen::call(seq.seq.get()));
+                    return type(
+                        boost::addressof(seq.seq.template get<Seq>()),
+                        gen::call(seq.seq.template get<Seq>()));
                 }
             };
         };

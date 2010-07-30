@@ -1,6 +1,6 @@
 /*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -23,33 +23,38 @@ namespace boost { namespace fusion
         typedef Value value_type;
         typedef ValueRef value_ref_type;
         typedef mpl::bool_<End> end;
+        typedef typename
+            detail::remove_reference<value_ref_type>::type*
+        value_ptr_type;
 
         typedef single_view_iterator_tag fusion_tag;
         typedef random_access_traversal_tag category;
 
-        template<typename OtherIt>
-        single_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
-          : val(BOOST_FUSION_FORWARD(OtherIt,it).val)
-        {
-            BOOST_FUSION_TAG_CHECK(OtherIt,single_view_iterator_tag);
-        }
-
-        explicit
-        single_view_iterator(value_ref_type val)
-          : val(&val)
+        single_view_iterator(value_ptr_type val, int)
+          : val(val)
         {}
 
-        template<typename OtherIt>
-        single_view_iterator&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+        template<typename OtherValueRef>
+        single_view_iterator(
+            single_view_iterator<Value, OtherValueRef, End> const it)
+          : val(it.val)
         {
-            BOOST_FUSION_TAG_CHECK(OtherIt,single_view_iterator_tag);
+            BOOST_FUSION_MPL_ASSERT((
+                is_convertible<OtherValueRef, value_ref_type>));
+        }
 
-            val=BOOST_FUSION_FORWARD(OtherIt,it).val;
+        template<typename OtherValueRef>
+        single_view_iterator&
+        operator=(single_view_iterator<Value, OtherValueRef, End> const& it)
+        {
+            BOOST_FUSION_MPL_ASSERT((
+                is_convertible<OtherValueRef, value_ref_type>));
+
+            val=it.val;
             return *this;
         }
 
-        typename detail::remove_reference<value_ref_type>::type* val;
+        value_ptr_type val;
     };
 }}
 

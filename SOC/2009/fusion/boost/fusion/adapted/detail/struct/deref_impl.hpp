@@ -21,7 +21,7 @@ namespace boost { namespace fusion { namespace extension
         {
            typedef typename detail::remove_reference<It>::type it;
            typedef typename
-               extension::struct_member<
+               extension::access::struct_member<
                    typename detail::identity<typename it::seq_type>::type
                  , it::index::value
                >::template apply<typename it::seq_type>

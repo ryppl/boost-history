@@ -52,21 +52,21 @@ namespace boost { namespace fusion { namespace extension
             type;
 
             static type
-            call_impl(It it, mpl::false_ /*new_iterator*/)
+            call(It it, mpl::false_ /*new_iterator*/)
             {
-                return type(*it.seq,fusion::next(it.it));
+                return type(it.seq,fusion::next(it.it));
             }
 
             static type
-            call_impl(It it, mpl::true_ /*new_iterator*/)
+            call(It it, mpl::true_ /*new_iterator*/)
             {
-                return type(*it.seq,begin(*it.seq));
+                return type(it.seq,begin(*it.seq));
             }
 
             static type
             call(It it)
             {
-                return call_impl(it,new_iterator());
+                return call(it,new_iterator());
             }
         };
     };

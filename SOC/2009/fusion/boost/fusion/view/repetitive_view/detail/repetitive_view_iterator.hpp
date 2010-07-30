@@ -1,6 +1,6 @@
 /*==============================================================================
     Copyright (c) 2007 Tobias Schwinger
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -12,7 +12,6 @@
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
-
 #include <boost/mpl/int.hpp>
 
 namespace boost { namespace fusion
@@ -26,6 +25,7 @@ namespace boost { namespace fusion
         typedef SeqRef seq_type;
         typedef It it_type;
         typedef Index index;
+        typedef typename detail::remove_reference<seq_type>::type* seq_ptr_type;
 
         typedef repetitive_view_iterator_tag fusion_tag;
         typedef typename traits::category_of<It>::type category;
@@ -38,8 +38,8 @@ namespace boost { namespace fusion
             BOOST_FUSION_TAG_CHECK(OtherIt,repetitive_view_iterator_tag);
         }
 
-        repetitive_view_iterator(SeqRef seq, It const& it)
-          : seq(&seq)
+        repetitive_view_iterator(seq_ptr_type seq, It const& it)
+          : seq(seq)
           , it(it)
         {}
 
@@ -54,7 +54,7 @@ namespace boost { namespace fusion
             return *this;
         }
 
-        typename detail::remove_reference<seq_type>::type* seq;
+        seq_ptr_type seq;
         It it;
     };
 }}

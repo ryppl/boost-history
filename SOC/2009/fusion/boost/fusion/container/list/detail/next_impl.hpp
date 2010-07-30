@@ -1,7 +1,7 @@
 /*==============================================================================
     Copyright (c) 2005 Joel de Guzman
     Copyright (c) 2005 Eric Niebler
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,6 +9,11 @@
 
 #ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_NEXT_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_LIST_DETAIL_NEXT_IMPL_HPP
+
+#include <boost/fusion/sequence/intrinsic/empty.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/utility/addressof.hpp>
 
 namespace boost { namespace fusion { namespace extension
 {
@@ -32,13 +37,32 @@ namespace boost { namespace fusion { namespace extension
                     >::type::cdr_type
                 >::type
             cdr_type;
+            typedef typename result_of::empty<cdr_type>::type empty;
 
-            typedef cons_iterator<cdr_type> type;
+            typedef typename
+                mpl::if_<
+                    empty
+                  , nil_iterator
+                  , cons_iterator<cdr_type>
+                >::type
+            type;
+
+            static type
+            call(It, mpl::true_)
+            {
+                return type();
+            }
+
+            static type
+            call(It it, mpl::false_)
+            {
+                return type(boost::addressof(it.cons->cdr),0);
+            }
 
             static type
             call(It it)
             {
-                return type(static_cast<cdr_type>(it.cons->cdr),0);
+                return call(it, empty());
             }
         };
     };

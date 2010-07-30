@@ -38,7 +38,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(Seq seq)
             {
-                return seq.f(fusion::at<N>(seq.seq.get()));
+                return seq.f(fusion::at<N>(seq.seq.template get<Seq>()));
             }
         };
     };
@@ -70,8 +70,8 @@ namespace boost { namespace fusion { namespace extension
             static type call(Seq seq)
             {
                 return seq.f(
-                        fusion::at<N>(seq.seq1.get()),
-                        fusion::at<N>(seq.seq2.get()));
+                    fusion::at<N>(seq.seq1.template get<Seq>()),
+                    fusion::at<N>(seq.seq2.template get<Seq>()));
             }
         };
     };

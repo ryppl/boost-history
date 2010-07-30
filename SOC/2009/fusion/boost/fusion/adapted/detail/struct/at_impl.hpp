@@ -22,7 +22,7 @@ namespace boost { namespace fusion { namespace extension
     {
         template<typename Seq, typename N>
         struct apply
-          : extension::struct_member<
+          : extension::access::struct_member<
                 typename detail::identity<Seq>::type
               , N::value
             >::template apply<Seq>

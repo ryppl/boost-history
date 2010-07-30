@@ -12,7 +12,6 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/iterator/equal_to.hpp>
-
 #include <boost/mpl/if.hpp>
 
 namespace boost { namespace fusion { namespace extension
@@ -64,15 +63,15 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(Seq seq, mpl::true_)
             {
-                return type(fusion::begin(seq.seq2.get()),0);
+                return type(fusion::begin(seq.seq2.template get<Seq>()),0);
             }
 
             static type
             call(Seq seq, mpl::false_)
             {
                 return type(
-                        fusion::begin(seq.seq1.get())
-                      , fusion::begin(seq.seq2.get()));
+                    fusion::begin(seq.seq1.template get<Seq>()),
+                    fusion::begin(seq.seq2.template get<Seq>()));
             }
 
             static type

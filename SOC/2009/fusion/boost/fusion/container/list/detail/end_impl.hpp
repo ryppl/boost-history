@@ -20,9 +20,7 @@ namespace boost { namespace fusion { namespace extension
         template<typename Seq>
         struct apply
         {
-            typedef
-                cons_iterator<typename detail::forward_as<Seq,nil>::type>
-            type;
+            typedef nil_iterator type;
 
             static type
             call(Seq)

@@ -24,13 +24,14 @@ namespace boost { namespace fusion { namespace extension
         struct apply
         {
             typedef typename detail::remove_reference<It>::type it;
+            typedef typename it::transform_type transform_type;
+            typedef typename detail::get_func_base<transform_type>::type func_base;
+            typedef typename result_of::deref<typename it::it_type>::type deref_res;
 
             typedef typename
                 boost::result_of<
-                    typename detail::get_func_base<
-                        typename it::transform_type
-                    >::type(
-                    typename result_of::deref<typename it::it_type>::type)
+                    func_base(
+                    deref_res)
                 >::type
             type;
 

@@ -1,7 +1,7 @@
 /*==============================================================================
     Copyright (c) 2005 Joel de Guzman
     Copyright (c) 2005 Eric Niebler
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -25,14 +25,15 @@ namespace boost { namespace fusion
         typedef cons_iterator_tag fusion_tag;
         typedef forward_traversal_tag category;
         typedef ConsRef cons_type;
+        typedef typename detail::remove_reference<ConsRef>::type* cons_ptr_type;
 
         template<typename OtherConsRef>
         cons_iterator(cons_iterator<OtherConsRef> const& it)
           : cons(it.cons)
         {}
 
-        cons_iterator(cons_type cons, int)
-          : cons(&cons)
+        cons_iterator(cons_ptr_type cons, int)
+          : cons(cons)
         {}
 
         template<typename OtherConsRef>
@@ -43,7 +44,7 @@ namespace boost { namespace fusion
             return *this;
         }
 
-        typename detail::remove_reference<cons_type>::type* cons;
+        cons_ptr_type cons;
     };
 
     struct nil_iterator
@@ -52,42 +53,7 @@ namespace boost { namespace fusion
         typedef forward_traversal_tag category;
         typedef cons_iterator_tag fusion_tag;
         typedef nil cons_type;
-
-        nil_iterator()
-        {}
-
-        nil_iterator(nil const&,int)
-        {}
     };
-
-#define BOOST_FUSION_NIL_ITERATOR(MODIFIER,_)\
-      template<>\
-      struct cons_iterator<nil MODIFIER>\
-        : nil_iterator\
-      {\
-          cons_iterator()\
-          {}\
-          \
-          explicit\
-          cons_iterator(nil MODIFIER, int)\
-          {}\
-      };\
-      \
-      template<>\
-      struct cons_iterator<list<> MODIFIER>\
-        : nil_iterator\
-      {\
-          cons_iterator()\
-          {}\
-          \
-          explicit\
-          cons_iterator(nil MODIFIER, int)\
-          {}\
-      };
-
-    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(BOOST_FUSION_NIL_ITERATOR,_)
-
-#undef BOOST_FUSION_NIL_ITERATOR
 }}
 
 #endif

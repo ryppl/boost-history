@@ -109,7 +109,6 @@ namespace boost { namespace fusion
         detail::view_storage<Seq> seq;
     };
 
-
     namespace result_of
     {
         template<

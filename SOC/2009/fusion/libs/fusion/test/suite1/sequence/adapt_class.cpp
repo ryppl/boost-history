@@ -51,10 +51,34 @@ namespace ns
         int x;
         int y;
     };
+
+    class point_with_private_members
+    {
+        friend class boost::fusion::extension::access;
+
+    public:
+        point_with_private_members() : x(0), y(0) {}
+        point_with_private_members(int x, int y) : x(x), y(y) {}
+
+    private:
+        int get_x() const { return x; }
+        int get_y() const { return y; }
+        void set_x(int x_) { x = x_; }
+        void set_y(int y_) { y = y_; }
+
+        int x;
+        int y;
+    };
 }
 
 BOOST_FUSION_ADAPT_CLASS(
     ns::point,
+    (int, int, obj.get_x(), obj.set_x(val))
+    (int, int, obj.get_y(), obj.set_y(val))
+)
+
+BOOST_FUSION_ADAPT_CLASS(
+    ns::point_with_private_members,
     (int, int, obj.get_x(), obj.set_x(val))
     (int, int, obj.get_y(), obj.set_y(val))
 )
@@ -107,14 +131,14 @@ main()
     {
         // conversion from ns::point to vector
         ns::point p(5, 3);
-        boost::fusion::vector<int, short> v(p);
+        boost::fusion::vector<int, long> v(p);
         v = p;
     }
 
     {
         // conversion from ns::point to list
         ns::point p(5, 3);
-        boost::fusion::list<int, short> l(p);
+        boost::fusion::list<int, long> l(p);
         l = p;
     }
 
@@ -123,6 +147,26 @@ main()
         BOOST_MPL_ASSERT((boost::is_same<
             boost::fusion::result_of::value_at_c<ns::point,0>::type
           , boost::mpl::front<ns::point>::type>));
+    }
+
+    {
+        BOOST_MPL_ASSERT_NOT((traits::is_view<ns::point_with_private_members>));
+        ns::point_with_private_members p(123, 456);
+
+        std::cout << at_c<0>(p) << std::endl;
+        std::cout << at_c<1>(p) << std::endl;
+        std::cout << p << std::endl;
+        BOOST_TEST(p == make_vector(123, 456));
+
+        at_c<0>(p) = 6;
+        at_c<1>(p) = 9;
+        BOOST_TEST(p == make_vector(6, 9));
+
+        BOOST_STATIC_ASSERT(result_of::size<ns::point_with_private_members>::value == 2);
+        BOOST_STATIC_ASSERT(!result_of::empty<ns::point_with_private_members>::value);
+
+        BOOST_TEST(front(p) == 6);
+        BOOST_TEST(back(p) == 9);
     }
 
     return boost::report_errors();

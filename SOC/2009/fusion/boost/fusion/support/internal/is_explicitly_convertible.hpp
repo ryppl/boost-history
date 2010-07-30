@@ -10,7 +10,7 @@
 
 #include <boost/detail/workaround.hpp>
 #include <boost/type_traits/is_convertible.hpp>
-#if BOOST_WORKAROUND(__GNUC__,>=4)
+#if !BOOST_WORKAROUND(__GNUC__,<4) && !defined(BOOST_MSVC)
 #   include <boost/mpl/or.hpp>
 #   include <boost/fusion/support/internal/small_big_type.hpp>
 #   include <boost/mpl/bool.hpp>
@@ -20,6 +20,7 @@
 namespace boost { namespace fusion { namespace detail
 {
 //cschmidt: Fall back due to a defect in gcc 3.x's call_expr...
+//... and a bug in MSVC
 #if BOOST_WORKAROUND(__GNUC__,<4) || defined(BOOST_MSVC)
     template<typename From, typename To>
     struct is_explicitly_convertible

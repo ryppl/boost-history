@@ -19,12 +19,6 @@ namespace boost { namespace fusion
           : identity<T>
         {};
     }
-
-    namespace extension
-    {
-        template<typename T, int N>
-        struct class_member_proxy;
-    }
 }}
 
 #endif

@@ -32,7 +32,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(It it)
             {
-                return type(*it.val);
+                return type(it.val,0);
             }
         };
     };

@@ -69,8 +69,8 @@ namespace boost { namespace fusion { namespace detail
             >::type* =NULL)
         {
             return do_get_pointer(
-                    BOOST_FUSION_FORWARD(T,t),
-                    boost::addressof(BOOST_FUSION_FORWARD(T,t)));
+                BOOST_FUSION_FORWARD(T,t),
+                boost::addressof(t));
         }
     };
 

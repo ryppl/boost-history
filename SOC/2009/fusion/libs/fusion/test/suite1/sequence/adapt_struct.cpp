@@ -35,10 +35,29 @@ namespace ns
         int x;
         int y;
     };
+
+    struct point_with_private_attributes
+    {
+        friend class boost::fusion::extension::access;
+
+    private:
+        int x;
+        int y;
+
+    public:
+        point_with_private_attributes(int x, int y):x(x),y(y)
+        {}
+    };
 }
 
 BOOST_FUSION_ADAPT_STRUCT(
     ns::point,
+    (int, x)
+    (int, y)
+)
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ns::point_with_private_attributes,
     (int, x)
     (int, y)
 )
@@ -93,14 +112,14 @@ main()
     {
         // conversion from ns::point to vector
         ns::point p = {5, 3};
-        vector<int, short> v(p);
+        vector<int, long> v(p);
         v = p;
     }
 
     {
         // conversion from ns::point to list
         ns::point p = {5, 3};
-        list<int, short> l(p);
+        list<int, long> l(p);
         l = p;
     }
 
@@ -111,6 +130,15 @@ main()
         typedef result_of::end<s>::type e;
         // this fails
         BOOST_MPL_ASSERT((boost::is_same<result_of::next<b>::type, e>));
+    }
+
+    {
+        ns::point_with_private_attributes p(123, 456);
+
+        std::cout << at_c<0>(p) << std::endl;
+        std::cout << at_c<1>(p) << std::endl;
+        std::cout << p << std::endl;
+        BOOST_TEST(p == make_vector(123, 456));
     }
 
     return boost::report_errors();

@@ -36,7 +36,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(Seq seq)
             {
-                return type(seq.seq.get(),0);
+                return type(seq.seq.template get<Seq>(),0);
             }
         };
     };

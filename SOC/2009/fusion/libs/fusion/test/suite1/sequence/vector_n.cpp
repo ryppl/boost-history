@@ -1,4 +1,4 @@
-/*==============================================================================
+/*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
@@ -58,7 +58,7 @@ main()
     }
 
     { // testing const vector
-        vector1<short> const vec(999);
+        vector1<short> const vec((short)999);
         BOOST_TEST(at_c<0>(vec) == 999);
 
 #ifdef FUSION_TEST_COMPILE_FAIL
@@ -94,7 +94,7 @@ main()
 
     {
         vector2<int, int> t1(123, 456);
-        vector2<double, float> t2(t1);
+        vector2<double, double> t2(t1);
         (void)t2;
     }
 
@@ -135,8 +135,7 @@ main()
 
     {
         typedef vector7<bool, char, short, int, long, float, double> type;
-        //TODO
-        type vec(false, 'x', 3, 4, 5, 6.0f, 7.0);
+        type vec(false, 'x', (short)3, 4, 5, 6.0f, 7.0);
 
         BOOST_TEST(at_c<0>(vec) == false);
         BOOST_TEST(at_c<1>(vec) == 'x');

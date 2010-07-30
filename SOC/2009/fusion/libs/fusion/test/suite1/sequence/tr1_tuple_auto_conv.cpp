@@ -48,7 +48,7 @@ namespace Core
 } // namespace Core
 
 
-int main(int, char*[])
+int main()
 {
     //TODO
     //std::tr1::tuple<int, int, int, int> test = Core::Demo();

@@ -34,7 +34,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(Seq seq)
             {
-                return at_key<Key>(seq.seq.get());
+                return at_key<Key>(seq.seq.template get<Seq>());
             }
         };
     };

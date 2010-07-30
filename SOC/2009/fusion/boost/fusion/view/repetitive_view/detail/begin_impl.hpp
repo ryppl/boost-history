@@ -1,6 +1,6 @@
 /*==============================================================================
     Copyright (c) 2007 Tobias Schwinger
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,6 +10,7 @@
 #define BOOST_FUSION_VIEW_REPETITIVE_VIEW_DETAIL_BEGIN_IMPL_HPP
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
+#include <boost/utility/addressof.hpp>
 
 namespace boost { namespace fusion { namespace extension
 {
@@ -38,7 +39,9 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(Seq seq)
             {
-                return type(seq.seq.get(),fusion::begin(seq.seq.get()));
+                return type(
+                    boost::addressof(seq.seq.template get<Seq>()),
+                    fusion::begin(seq.seq.template get<Seq>()));
             }
         };
     };

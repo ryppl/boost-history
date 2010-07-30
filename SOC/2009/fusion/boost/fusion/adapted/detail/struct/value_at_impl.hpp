@@ -20,7 +20,10 @@ namespace boost { namespace fusion { namespace extension
     {
         template<typename Seq, typename N>
         struct apply
-          : struct_member<typename detail::identity<Seq>::type, N::value>
+          : access::struct_member<
+                typename detail::identity<Seq>::type
+              , N::value
+            >
         {};
     };
 

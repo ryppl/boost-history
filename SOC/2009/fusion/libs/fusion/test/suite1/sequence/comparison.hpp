@@ -36,7 +36,7 @@ ordering_test()
     using namespace boost::fusion;
 
     FUSION_SEQUENCE<int, float> v1(4, 3.3f);
-    FUSION_SEQUENCE<short, float> v2(5, 3.3f);
+    FUSION_SEQUENCE<long, float> v2(5, 3.3f);
     FUSION_SEQUENCE<long, double> v3(5, 4.4);
     BOOST_TEST(v1 < v2);
     BOOST_TEST(v1 <= v2);
