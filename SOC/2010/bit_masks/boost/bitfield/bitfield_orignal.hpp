@@ -91,7 +91,7 @@ namespace boost { namespace integer {
 #ifdef BOOST_MSVC
         template <typename value_type, unsigned int WIDTH, unsigned int SIGN_MASK>
         struct bitfield_complete_signed<false, value_type, bool, WIDTH, SIGN_MASK> {
-            static value_type convert(storage_type val) {
+            static value_type convert(bool val) {
                 return value_type(val) > 0;
             }
         };
