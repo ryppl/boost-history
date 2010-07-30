@@ -7,13 +7,32 @@
 #ifndef BOOST_BITFIELD_TUPLE_GET_FREE_FUNCTION_HPP
 #define BOOST_BITFIELD_TUPLE_GET_FREE_FUNCTION_HPP
 #include <cstddef>
+#include "element.hpp"
 
+namespace boost { namespace bitfields {
 
-namespace boost {
-namespace bitfields {
+template <std::size_t Index, typename BitfieldTuple>
+inline typename element<BitfieldTuple,Index>::type get(BitfieldTuple& bft) {
+    return bft.get<Index>();
+}
 
-// template <std::size_t Index, typename BitfieldTuple>
-// 
+template <typename Name, typename BitfieldTuple>
+inline typename element_n<BitfieldTuple,Name>::type get(BitfieldTuple& bft) {
+    return bft.get<Name>();
+}
+
+template <std::size_t Index, typename BitfieldTuple>
+inline typename element<const BitfieldTuple,Index>::type
+get(BitfieldTuple const& bft) {
+    return bft.get<Index>();
+}
+
+template <typename Name, typename BitfieldTuple>
+inline typename element_n<const BitfieldTuple,Name>::type
+get(BitfieldTuple const& bft) {
+    return bft.get<Name>();
+}
+
 }} // boost::bitfields
 
 #endif

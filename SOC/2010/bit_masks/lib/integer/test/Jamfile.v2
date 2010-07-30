@@ -69,5 +69,6 @@ test-suite integer
         [ run bft_testing/clz_ctz_test.cpp ]
         [ run bft_testing/element_test.cpp ]
         [ run bft_testing/element_n_test.cpp ]
+        [ run bft_testing/get_free_function_test.cpp ]
     ;
 

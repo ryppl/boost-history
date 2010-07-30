@@ -125,4 +125,24 @@ reference type.
 *   make_bitfield_tuple - Do testing similar to the variadic template parameter 
     tests, testing to make sure that this works for all cases.
 --------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+                                MSVC warnings
+--------------------------------------------------------------------------------
+high_bit_mask_test.cpp(30)      : warning C4127: conditional expression is constant
+bitfield_orignal.hpp(90)        : warning C4244: 'return' : conversion from 'unsigned int' to 'unsigned char', possible loss of data
+bitfield_orignal.hpp(80)        : warning C4244: 'return' : conversion from 'unsigned int' to 'char', possible loss of data
+bitfield_orignal.hpp(82)        : warning C4244: 'return' : conversion from 'unsigned int' to 'char', possible loss of data
+bitfield_orignal.hpp(196)       : warning C4245: 'initializing' : conversion from 'int' to 'const unsigned char', signed/unsigned mismatch
+bits_mask.hpp(34)               : warning C4293: '<<' : shift count negative or too big, undefined behavior
+high_bits_mask.hpp(30)          : warning C4305: 'initializing' : truncation from 'const boost::mpl::size_t<N>::value_type' to 'const unsigned char'
+integral_wrapper.hpp(72)        : warning C4307: '+' : integral constant overflow
+integral_wrapper.hpp(73)        : warning C4307: '-' : integral constant overflow
+bits_mask.hpp(37)               : warning C4307: '+' : integral constant overflow
+policy_creation_detail.hpp(76)  : warning C4309: 'specialization' : truncation of constant value
+bitfield_orignal.hpp(179)       : warning C4309: 'specialization' : truncation of constant value
+bitfield_orignal.hpp(90)        : warning C4800: 'unsigned char' : forcing value to bool 'true' or 'false' (performance warning)
+--------------------------------------------------------------------------------
+
+
     return boost::report_errors();
