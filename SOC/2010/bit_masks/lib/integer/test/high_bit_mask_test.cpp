@@ -13,7 +13,10 @@
 #include <iomanip>
 
 
-
+#ifdef BOOST_MSVC
+#pragma warning( push )
+#pragma warning(disable : 4127) // constant inside of condiditional expression
+#endif
 // tesitng for bit width.
 using namespace boost;
 
@@ -65,24 +68,11 @@ struct type_tester {
 
 
 int main() {
-#ifdef BOOST_MSVC
-#pragma warning( push )
-#pragma warning( disable : 4307 ) // c4307 constant value overflow.
-#pragma warning( disable : 4309 ) // truncation of constant value.
-
-// Look into fixing this! I think i can actually fix this warning.
-#pragma warning( disable : 4305 ) // initializing truncation from const
-                                  // boost::mpl::size_t<N>::value_type to const
-                                  // arg.
-#endif
-
     mpl::for_each< test_types   >( type_tester() ); 
     mpl::for_each< test_types_2 >( type_tester() ); 
     mpl::for_each< test_types_3 >( type_tester() );
-
+    return boost::report_errors();
+}
 #ifdef BOOST_MSVC
 #pragma warning( pop )
 #endif
-
-    return boost::report_errors();
-}
