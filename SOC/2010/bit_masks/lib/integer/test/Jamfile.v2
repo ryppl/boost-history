@@ -12,6 +12,7 @@ project
         <toolset>gcc:<cxxflags>-Wno-long-long
         <toolset>darwin:<cxxflags>-Wextra 
         <toolset>darwin:<cxxflags>-Wno-long-long 
+        <toolset>msvc:<cxxflags>/wd4307
     ;
 
 
