@@ -11,7 +11,6 @@
 #include <boost/graph/sum.hpp>
 #include <boost/graph/intersection.hpp>
 #include <boost/graph/difference.hpp>
-#include <boost/graph/join.hpp>
 
 
 using namespace boost;

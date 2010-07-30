@@ -53,8 +53,8 @@ namespace boost {
     for (tie(ei, ei_end) = edges(g1); ei != ei_end; ++ei) {
       auto src  = g1[source(*ei, g1)].name;
       auto targ = g1[target(*ei, g1)].name;
-      auto g2_s  = gl2.find(src);
-      auto g2_t  = gl2.find(targ);
+      auto g2_s = gl2.find(src);
+      auto g2_t = gl2.find(targ);
 
       if ( (g2_s != gl2.end() && g2_t != gl2.end() && edge(g2_s->second, g2_t->second, g2).second) ) {
         assert( gl_out.find(src)  != gl_out.end() );
