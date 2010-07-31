@@ -5,8 +5,8 @@
 
 #ifndef BOOST_BITFIELD_VECTOR_HPP
 #define BOOST_BITFIELD_VECTOR_HPP
-#include <cstddef>
 #include <memory>
+#include <boost/integer/detail/bitfield_vector/bitfield_vector_base.hpp>
 
 namespace boost {
 
@@ -23,7 +23,6 @@ struct bf_vector_iterator { };
 
 template<typename T, std::size_t Width>
 struct const_bf_vector_iterator { };
-
 
 template<typename T, std::size_t Width>
 struct bf_vector_reverse_iterator { };
