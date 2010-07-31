@@ -71,5 +71,6 @@ test-suite integer
         [ run bft_testing/element_test.cpp ]
         [ run bft_testing/element_n_test.cpp ]
         [ run bft_testing/get_free_function_test.cpp ]
+        [ run bitfield_vector_testing/bitfield_vector_test.cpp ]
     ;
 
