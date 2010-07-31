@@ -50,7 +50,7 @@ private:
     sentence_break::type     sentence_break_kind;
 	bool						unknown_char;
     bool                        sort_variable;
-    sort_type::type             sort_type;
+    sort_type::type             sort_type_;
     uint16_t                    sort_index_or_data1;
     uint16_t                    sort_data2;
 
@@ -61,8 +61,10 @@ private:
 
 	bool						has_complex_case;	
 
-	line_break::type			line_break;
+	line_break::type			line_break_;
+#ifdef BOOST_UNICODE_UCD_BIG
 	join_type::type				joining;
+#endif
 
 	// --- warning --- update data members - 
     //     update the (), has_same_properties, <<, and checksum

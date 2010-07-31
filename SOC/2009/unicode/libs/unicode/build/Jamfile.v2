@@ -17,6 +17,7 @@ lib boost_unicode
 		../src/unicode_properties.cpp
 		../src/unicode_blocks.cpp
 		../src/unicode_graphemes.cpp
+        ../src/ucd/unichar_data.cpp
 		../src/ucd/uni_ucd_interface_impl_data.cpp
 	:
 		<link>shared:<define>BOOST_UNICODE_DYN_LINK=1

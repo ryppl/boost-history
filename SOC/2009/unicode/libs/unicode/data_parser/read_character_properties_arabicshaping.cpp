@@ -34,6 +34,7 @@ namespace boost { namespace unicode { namespace ucd {
 void read_character_properties_arabicshaping
 	(std::map <char32, character_properties> & props, const char* filename, bool required)
 {
+#ifdef BOOST_UNICODE_UCD_BIG
 	std::cout << "+Reading arabicshaping from " << filename << "\n";
 
 	parse_info <file_iterator<> > info;
@@ -119,6 +120,7 @@ void read_character_properties_arabicshaping
     } while (curr != last);
 
 	std::cout << "-Reading arabicshaping from " << filename << "\n";
+#endif
 }
 
 }}}	// namespaces

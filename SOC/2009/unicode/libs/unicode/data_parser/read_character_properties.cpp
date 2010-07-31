@@ -45,12 +45,14 @@ void add_unknown_character(std::map <char32, character_properties> & props)
 	}
 
 	character_properties char_not_present;
-	char_not_present.general_category = category::unknown;
+	char_not_present.general_category = category::other_not_assigned;
 	char_not_present.combining = 0;
 	char_not_present.bidi = bidi_class::strong_left_to_right;
 	char_not_present.decomposition_kind = decomposition_type::none;
-	char_not_present.line_break = line_break::unknown;
+	char_not_present.line_break_ = line_break::unknown;
+#ifdef BOOST_UNICODE_UCD_BIG
 	char_not_present.joining = join_type::none;
+#endif
 	char_not_present.unknown_char = true;
 	props[character_properties::CHARACTER_DOES_NOT_EXIST] = char_not_present;
 }

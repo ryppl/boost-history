@@ -46,15 +46,17 @@ write_entry::write_entry()
     sentence_break_kind = sentence_break::any;
     unknown_char = false;
     sort_variable = false;
-    sort_type = sort_type::default_;
+    sort_type_ = sort_type::default_;
     sort_index_or_data1 = 0;
     sort_data2 = 0;
     uppercase = (char32)0;
     lowercase = (char32)0;
     titlecase = (char32)0;
     has_complex_case = false;
-    line_break = (line_break::type)-1;
+    line_break_ = (line_break::type)-1;
+#ifdef BOOST_UNICODE_UCD_BIG
     joining = (join_type::type)-1;
+#endif
 }
 
 write_entry::write_entry(char32 ch, const character_properties& data)
@@ -71,15 +73,17 @@ write_entry::write_entry(char32 ch, const character_properties& data)
     sentence_break_kind = data.sentence_break_kind;
     unknown_char = data.unknown_char;
     sort_variable = data.sort_variable;
-    sort_type = data.sort_type;
+    sort_type_ = data.sort_type_;
     sort_index_or_data1 = data.sort_index_or_data1;
     sort_data2 = data.sort_data2;
     uppercase = data.uppercase;
     lowercase = data.lowercase;
     titlecase = data.titlecase;
     has_complex_case = (!data.complex_case.empty());
-    line_break = data.line_break;
+    line_break_ = data.line_break_;
+#ifdef BOOST_UNICODE_UCD_BIG
     joining = data.joining;
+#endif
 }
 
 void write_entry::calc_properties_checksum(boost::crc_basic<16>& crc)
@@ -100,7 +104,7 @@ void write_entry::calc_properties_checksum(boost::crc_basic<16>& crc)
     crc.process_bytes(&unknown_char, sizeof(unknown_char) );
 #ifdef BOOST_UNICODE_UCD_BIG    
     crc.process_bytes(&sort_variable, sizeof(sort_variable) );
-    crc.process_bytes(&sort_type, sizeof(sort_type) );
+    crc.process_bytes(&sort_type_, sizeof(sort_type_) );
     crc.process_bytes(&sort_index_or_data1, sizeof(sort_index_or_data1) );
     crc.process_bytes(&sort_data2, sizeof(sort_data2) );
     crc.process_bytes(&uppercase, sizeof(uppercase) );
@@ -108,7 +112,7 @@ void write_entry::calc_properties_checksum(boost::crc_basic<16>& crc)
     crc.process_bytes(&titlecase, sizeof(titlecase) );
     crc.process_bytes(&has_complex_case, sizeof(has_complex_case) );
 #endif
-    crc.process_bytes(&line_break, sizeof(line_break) );
+    crc.process_bytes(&line_break_, sizeof(line_break_) );
 #ifdef BOOST_UNICODE_UCD_BIG
     crc.process_bytes(&joining, sizeof(joining) );
 #endif
@@ -120,23 +124,28 @@ bool write_entry::has_same_properties(const write_entry& other) const
     // character properties, not chr
     // note: as the name comparison is the slowest, 
     // it is also the last item in the statement
-    return general_category == other.general_category && 
-        combining == other.combining && bidi == other.bidi && 
-        decomposition_kind == other.decomposition_kind && 
-        has_decomposition == other.has_decomposition &&
-        grapheme_break == other.grapheme_break &&
-        word_break_kind == other.word_break_kind &&
-        sentence_break_kind == other.sentence_break_kind && 
-        unknown_char == other.unknown_char && 
-        sort_type == other.sort_type &&
-        sort_variable == other.sort_variable &&
-        sort_index_or_data1 == other.sort_index_or_data1 && 
-        uppercase == other.uppercase &&
-        lowercase == other.lowercase && 
-        titlecase == other.titlecase &&
-        has_complex_case == other.has_complex_case && 
-        line_break == other.line_break &&
-        joining == other.joining && name == other.name;
+    return general_category == other.general_category 
+        && combining == other.combining && bidi == other.bidi
+        && decomposition_kind == other.decomposition_kind
+        && has_decomposition == other.has_decomposition
+        && grapheme_break == other.grapheme_break
+        && word_break_kind == other.word_break_kind
+        && sentence_break_kind == other.sentence_break_kind
+        && unknown_char == other.unknown_char
+#ifdef BOOST_UNICODE_UCD_BIG
+        && sort_type_ == other.sort_type_
+        && sort_variable == other.sort_variable
+        && sort_index_or_data1 == other.sort_index_or_data1
+        && uppercase == other.uppercase
+        && lowercase == other.lowercase 
+        && titlecase == other.titlecase
+        && has_complex_case == other.has_complex_case
+#endif
+        && line_break_ == other.line_break_
+#ifdef BOOST_UNICODE_UCD_BIG
+        && joining == other.joining && name == other.name
+#endif
+        ;
 }
 
 /*******************************************************************************************
@@ -181,12 +190,12 @@ std::fstream& operator << (std::fstream& file, const write_entry& data)
 //    ss << "\t\t\t" << std::boolalpha << data.unknown_char << ",\n";
 #ifdef BOOST_UNICODE_UCD_BIG
     ss << "\t\t\t" << std::boolalpha << data.sort_variable << ",\n";
-    ss << "\t\t\tucd::sort_type::" << as_string(data.sort_type) << ",\n";
+    ss << "\t\t\tucd::sort_type::" << as_string(data.sort_type_) << ",\n";
     ss << "\t\t\t" << std::dec << data.sort_data2 << ",\n";
 #endif
     ss << "\t\t\tbidi_class::" << as_string(data.bidi) << ",\n";
     ss << "\t\t\tdecomposition_type::" << as_string(data.decomposition_kind) << ",\n";
-    ss << "\t\t\tline_break::" << as_string(data.line_break) << ",\n";
+    ss << "\t\t\tline_break::" << as_string(data.line_break_) << ",\n";
     ss << "\t\t\t" << std::dec << data.combining << ",\n";
     ss << "\t\t\tsentence_break::" << as_string(data.sentence_break_kind) << ",\n";
     ss << "\t\t\tgrapheme_cluster_break::" << as_string(data.grapheme_break) << ",\n";
@@ -459,7 +468,8 @@ void write_block_tables_and_blocks(const std::vector<read_block>& tbl_block,
     file << "\n\n#define BOOST_UNICODE_SOURCE\n";
     file << "#include <boost/assert.hpp>\n";
     file << "#include <boost/static_assert.hpp>\n";
-    file << "#include <boost/unicode/ucd/properties.hpp>\n";
+    file << "#include <boost/unicode/ucd/compose.hpp>\n";
+    file << "#include \"unichar_data.hpp\"\n";
     size_t n;
     for (n = 0; n < nFiles; n++)
     {
@@ -471,7 +481,7 @@ void write_block_tables_and_blocks(const std::vector<read_block>& tbl_block,
 
     // ---- block table -------------------------------------------------------
 
-    file << "BOOST_UNICODE_DECL const unichar_blocks_internal __uni_block_data[]=\n{\n";
+    file << "const unichar_blocks_internal __uni_block_data[]=\n{\n";
 
     for (n = 0; n < tbl_block.size(); n++)
     {
@@ -485,12 +495,12 @@ void write_block_tables_and_blocks(const std::vector<read_block>& tbl_block,
     terminating_data.name = "";
     file << terminating_data;*/
 
-    file << "};\n\nBOOST_UNICODE_DECL const size_t __uni_block_data_size = sizeof __uni_block_data / sizeof __uni_block_data[0];\n\n";
+    file << "};\n\nconst size_t __uni_block_data_size = sizeof __uni_block_data / sizeof __uni_block_data[0];\n\n";
 
     // ---- block table -------------------------------------------------------
     
     // ---- block refs --------------------------------------------------------
-    file << "BOOST_UNICODE_DECL const unichar_data_internal* __uni_char_data[]=\n{\n";
+    file << "const unichar_data_internal* __uni_char_data[]=\n{\n";
 
     for (n = 0; n < tbl_block_ident.size(); n++)
     {
@@ -530,9 +540,11 @@ void write_block_enum(
     file << "/**** new values to be added to the unicode spec without affecting    ****/\n";
     file << "/**** existing code                                                   ****/\n";
     
-    file << "\n\n#ifndef BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED\n";
+    file << "\n#ifndef BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED\n";
     file << "#define BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED\n";
-    file << "\n\nnamespace boost { namespace unicode { namespace ucd { \n\n";
+    file << "\n#include <boost/unicode/ucd/detail/unicode_decl.hpp>\n";
+    file << "\n#include <boost/config/abi_prefix.hpp> // must be the last #include\n";
+    file << "\nnamespace boost { namespace unicode { namespace ucd { \n\n";
 
     // ---- block table -------------------------------------------------------
 
@@ -566,6 +578,7 @@ void write_block_enum(
     file << "\n\t\tBOOST_UNICODE_DECL const char* as_string(block::type);\n\n";
 
     file << "}}} // namespaces\n\n";
+    file << "#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas\n\n";
     file << "#endif // BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED\n";
     
     file.flush();
@@ -667,7 +680,7 @@ bool decompose_for_sort(const character_properties & props_char,
         }
         else
         {
-            switch (iter_char->second.sort_type)
+            switch (iter_char->second.sort_type_)
             {
             case sort_type::zero_data1_data2_cp:
                 {
@@ -720,7 +733,7 @@ bool decompose_for_sort(const character_properties & props_char,
                 break;
             default:
                 // invalid enum
-                assert(iter_char->second.sort_type == (sort_type::type)-1);
+                assert(iter_char->second.sort_type_ == (sort_type::type)-1);
                 break;
             }
         }
@@ -794,7 +807,7 @@ bool optimise_char_sort_data(const std::map <char32, character_properties> & pro
 void pack_char_sort_data(char32 cp, character_properties & props_char_var)
 {
     // sanity checks
-    assert(props_char_var.sort_type == sort_type::is_index);
+    assert(props_char_var.sort_type_ == sort_type::is_index);
     assert(props_char_var.sort_index_or_data1 == (uint16_t)-1);
 
     if (props_char_var.sort_data.size() == 1 && 
@@ -812,7 +825,7 @@ void pack_char_sort_data(char32 cp, character_properties & props_char_var)
         if (coll.weight1 == 0 && coll.weight4 == cp)
         {
             props_char_var.sort_variable = coll.variable;
-            props_char_var.sort_type = sort_type::zero_data1_data2_cp;
+            props_char_var.sort_type_ = sort_type::zero_data1_data2_cp;
             props_char_var.sort_index_or_data1 = coll.weight2;
             props_char_var.sort_data2 = coll.weight3;
             props_char_var.sort_data.clear();
@@ -820,7 +833,7 @@ void pack_char_sort_data(char32 cp, character_properties & props_char_var)
         else if (coll.weight2 == 0x0020 && coll.weight4 == cp)
         {
             props_char_var.sort_variable = coll.variable;
-            props_char_var.sort_type = sort_type::data1_0x0020_data2_cp;
+            props_char_var.sort_type_ = sort_type::data1_0x0020_data2_cp;
             props_char_var.sort_index_or_data1 = coll.weight1;
             props_char_var.sort_data2 = coll.weight3;
             props_char_var.sort_data.clear();
@@ -840,7 +853,7 @@ void pack_char_sort_data(char32 cp, character_properties & props_char_var)
             {
                 // default
                 props_char_var.sort_variable = coll.variable;
-                props_char_var.sort_type = sort_type::default_;
+                props_char_var.sort_type_ = sort_type::default_;
                 props_char_var.sort_index_or_data1 = 0;
                 props_char_var.sort_data2 = 0;
                 props_char_var.sort_data.clear();
@@ -964,7 +977,7 @@ void prepare(std::map <char32, character_properties> & props,
         }
 
         character_properties& props_char_var = iter_char->second;
-        if (props_char.sort_type == (sort_type::type)-1)
+        if (props_char.sort_type_ == (sort_type::type)-1)
         {
             collation_entry sort_entry;
             get_default_sort_characteristics(cp, sort_entry);
@@ -981,7 +994,7 @@ void prepare(std::map <char32, character_properties> & props,
         }
 
         // write the complex sort data
-        if (props_char.sort_type == sort_type::is_index)
+        if (props_char.sort_type_ == sort_type::is_index)
         {
             character_properties& props_char_upd = iter_char->second;
             props_char_upd.sort_index_or_data1 = (int)data.tbl_sort_entries.size();

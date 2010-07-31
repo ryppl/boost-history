@@ -271,7 +271,7 @@ improve compile times.]
 [section Linking]
 
 As has been stated in [link unicode.introduction_to_unicode.character_properties Introduction to Unicode], several Unicode algorithms require the usage of a large
-database of information which, as of the preview 4 of this library, is 600 KB on x86. Note that at the current stage of development, the database does not contain
+database of information which, as of the preview 4 of this library, is 500 KB on x86 when stripped. Note that at the current stage of development, the database does not contain
 everything one might need to deal with Unicode text, so it may grow in the future.
 
 Features that can avoid dependency on that database do so; so it is not required for UTF conversions for example, that are purely header-only.

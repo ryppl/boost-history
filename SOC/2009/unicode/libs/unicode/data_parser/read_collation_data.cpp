@@ -167,7 +167,7 @@ void read_collation_data (
 
         if (prop->second.sort_data.empty())
         {
-            prop->second.sort_type = sort_type::is_index;
+            prop->second.sort_type_ = sort_type::is_index;
             // we cannot set the index during this pass so we leave it till later
             prop->second.sort_index_or_data1 = (uint16_t)-1;
 

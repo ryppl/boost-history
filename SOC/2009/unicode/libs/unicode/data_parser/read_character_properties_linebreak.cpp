@@ -201,7 +201,7 @@ void read_character_properties_linebreak(
 				throw std::runtime_error (ss.str());
 			} 
 
-			if (prop->second.line_break != (line_break::type)-1)
+			if (prop->second.line_break_ != (line_break::type)-1)
 			{
 				std::stringstream ss;
 				ss << "codepoint " << std::hex << curr_code
@@ -210,7 +210,7 @@ void read_character_properties_linebreak(
 				throw std::runtime_error (ss.str());
 			}
 
-			prop->second.line_break = break_type;
+			prop->second.line_break_ = break_type;
 
             ++ curr_code;
 		}

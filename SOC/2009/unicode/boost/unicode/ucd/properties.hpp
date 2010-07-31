@@ -1,13 +1,15 @@
 #ifndef BOOST_UNICODE_PROPRIETIES_HPP
 #define BOOST_UNICODE_PROPRIETIES_HPP
 
+#include <boost/unicode/ucd/detail/unicode_decl.hpp>
+
 #include <boost/cuchar.hpp>
 #include <boost/unicode/ucd/properties_types.hpp>
 #include <boost/unicode/ucd/block_types.hpp>
 
-#include <boost/unicode/ucd/detail/unichar_data.hpp>
+#include <boost/range/iterator_range.hpp>
 
-#include <boost/range.hpp>
+#include <boost/config/abi_prefix.hpp> // must be the last #include
 
 /** BOOST_UNICODE_UCD_VERSION / 1000 is the major version
  * 
@@ -23,20 +25,12 @@ namespace unicode
 
 /** INTERNAL ONLY **/
 #define BOOST_UNICODE_GET_PROPERTY_DEF(Name)                           \
-inline Name::type get_ ## Name(char32 ch)                              \
-{                                                                      \
-    return (Name::type)ucd::get_data_internal(ch).Name;                \
-}
+BOOST_UNICODE_DECL Name::type get_ ## Name(char32 ch);
 
 namespace ucd
 {
 
 BOOST_UNICODE_GET_PROPERTY_DEF(category)
-
-#ifdef BOOST_UNICODE_UCD_BIG
-BOOST_UNICODE_GET_PROPERTY_DEF(join_type)
-#endif
-
 BOOST_UNICODE_GET_PROPERTY_DEF(bidi_class)
 BOOST_UNICODE_GET_PROPERTY_DEF(line_break)
 BOOST_UNICODE_GET_PROPERTY_DEF(grapheme_cluster_break)
@@ -49,42 +43,25 @@ BOOST_UNICODE_GET_PROPERTY_DEF(sentence_break)
  * See also \c boost::unicode::hangul_decomposer. */
 BOOST_UNICODE_GET_PROPERTY_DEF(decomposition_type)
 
-inline bool is_unknown(char32 ch)
-{
-    return ucd::get_data_internal(ch).category != ucd::category::unknown;
-}
-
-#ifdef BOOST_UNICODE_UCD_BIG
-/** Returns the name of the code point \c ch as a zero-terminated string
- * in ASCII. */
-inline const char* get_name(char32 ch)
-{
-    return ucd::get_data_internal(ch).name;
-}
-#endif
+#undef BOOST_UNICODE_GET_PROPERTY_DEF
 
 /** Returns the Canonical Combining Class associated with \c ch,
  * useful for canonical ordering of combining sequences. */
-inline int get_combining_class(char32 ch)
-{
-    return ucd::get_data_internal(ch).combining;
-}
+BOOST_UNICODE_DECL int get_combining_class(char32 ch);
+
+/** Returns the decomposition associated with \c ch as a range of code
+ * points; an empty range is returned if there is none.
+ * See the \c decomposition_type property to know what kind of decomposition it is. */
+BOOST_UNICODE_DECL iterator_range<const char32*> get_decomposition(char32 ch);
 
 /** Returns the block the code point designated by \c ch is in, or
  * \c block::none if the code point does not lie in any block. */
 BOOST_UNICODE_DECL block::type get_block(char32 ch);
 
-/** Returns the decomposition associated with \c ch as a range of code
- * points; an empty range is returned if there is none.
- * See the \c decomposition_type property to know what kind of decomposition it is. */
-inline iterator_range<const char32*> get_decomposition(char32 ch)
-{
-    const char32* p = ucd::get_data_internal(ch).decomp;
-    return p ? make_iterator_range(p+1, p+1+p[0]) : make_iterator_range(p, p);
-}
-
 } // namespace ucd
 } // namespace unicode
 } // namespace boost
+
+#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif

@@ -1,5 +1,6 @@
 #define BOOST_UNICODE_SOURCE
-#include <boost/unicode/ucd/properties.hpp>
+#include <boost/unicode/ucd/block_types.hpp>
+#include "ucd/unichar_data.hpp"
 #include <algorithm>
 
 using namespace boost::unicode::ucd;

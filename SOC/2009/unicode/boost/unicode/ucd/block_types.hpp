@@ -18,10 +18,12 @@
 /**** new values to be added to the unicode spec without affecting    ****/
 /**** existing code                                                   ****/
 
-
 #ifndef BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED
 #define BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED
 
+#include <boost/unicode/ucd/detail/unicode_decl.hpp>
+
+#include <boost/config/abi_prefix.hpp> // must be the last #include
 
 namespace boost { namespace unicode { namespace ucd { 
 
@@ -208,5 +210,7 @@ namespace boost { namespace unicode { namespace ucd {
 		BOOST_UNICODE_DECL const char* as_string(block::type);
 
 }}} // namespaces
+
+#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif // BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED

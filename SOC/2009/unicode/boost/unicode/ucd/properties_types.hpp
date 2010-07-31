@@ -12,6 +12,8 @@
 
 #include <boost/unicode/ucd/detail/unicode_decl.hpp>
 
+#include <boost/config/abi_prefix.hpp> // must be the last #include
+
 namespace boost
 {
 namespace unicode
@@ -27,7 +29,6 @@ namespace unicode
             /** This is a useful breakdown into various character types which can be used as a default categorization. */
 			enum type
 			{
-                unknown,
 				letter_uppercase,
 				letter_lowercase,
 				letter_titlecase,
@@ -57,8 +58,6 @@ namespace unicode
 				other_format,
 				other_surrogate,
 				other_private_use,
-				// Todo: collapse these values into one?
-				// It seems too subtle a difference.
 				other_not_assigned,
 
 				_count /**< INTERNAL ONLY */
@@ -66,6 +65,7 @@ namespace unicode
 		};
 		BOOST_UNICODE_DECL const char* as_string(category::type);
 
+#ifdef BOOST_UNICODE_UCD_BIG
 		struct join_type
 		{
             /** Basic Arabic and Syriac character shaping properties, such as initial, medial and final shapes. */
@@ -82,6 +82,7 @@ namespace unicode
 			};
 		};
 		BOOST_UNICODE_DECL const char* as_string(join_type::type);
+#endif
 
 		struct bidi_class
 		{
@@ -290,5 +291,7 @@ namespace unicode
 
 }   // namespace unicode
 }	// namespace boost
+
+#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif	// BOOST_UNICODE_CHARACTER_PROPERTIES_HPP_INCLUDED

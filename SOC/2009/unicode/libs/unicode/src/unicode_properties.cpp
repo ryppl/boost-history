@@ -11,7 +11,6 @@
 #include <boost/assert.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/unicode/ucd/properties_types.hpp>
-#include <boost/unicode/ucd/detail/unichar_data.hpp>
 
 using namespace boost::unicode::ucd;
 using namespace boost;
@@ -20,7 +19,6 @@ using namespace boost;
 
 static const char* g_category[] =
 {
-    "unknown",
 	"letter_uppercase",
 	"letter_lowercase",
 	"letter_titlecase",
@@ -63,6 +61,7 @@ BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(boost::unicode::uc
 
 // ----------------------------------------------------------------------------------------
 
+#ifdef BOOST_UNICODE_UCD_BIG
 static const char* g_join_type[] =
 {
 	"none",		
@@ -80,6 +79,7 @@ BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(boost::unicode::uc
 	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::join_type::_count);
 	return g_join_type[type];
 }
+#endif
 
 // ----------------------------------------------------------------------------------------
 
@@ -303,7 +303,7 @@ BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(
 	return g_sentence_break[type];
 }
 
-static const char* g_sort_type[] =
+/*static const char* g_sort_type[] =
 {
 	"default_",
 	"is_index",
@@ -317,4 +317,4 @@ BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(boost::unicode::uc
 {
     BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::sort_type::_count);
 	return g_sort_type[type];
-}
+}*/

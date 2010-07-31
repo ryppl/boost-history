@@ -8,7 +8,6 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 
-#include <boost/unicode/ucd/detail/unichar_data.hpp>
 #include "read_character_properties.hpp"
 #include "read_character_properties_files.hpp"
 #include "write_character_properties.hpp"

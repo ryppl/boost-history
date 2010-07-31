@@ -19,7 +19,8 @@
 #include <iterator>
 #include <boost/spirit/include/classic.hpp>
 
-#include <boost/unicode/ucd/detail/unichar_data.hpp>
+#include <boost/unicode/ucd/properties_types.hpp>
+#include "../src/ucd/unichar_data.hpp"
 
 namespace boost
 {
@@ -98,7 +99,7 @@ namespace boost
 				bool						 written_by_block;
 				bool						 unknown_char;
                 bool                         sort_variable;
-                sort_type::type              sort_type;
+                sort_type::type              sort_type_;
                 uint16_t                     sort_index_or_data1;
                 uint16_t                     sort_data2;
                 // complex sort data is only relevant for sort type indexed
@@ -111,8 +112,10 @@ namespace boost
 
 				std::vector <complex_casing> complex_case;
 
-				line_break::type			line_break;
+				line_break::type			line_break_;
+#ifdef BOOST_UNICODE_UCD_BIG
 				join_type::type				joining;
+#endif
                 
                 bool                        comp_ex;
 
@@ -131,14 +134,16 @@ namespace boost
 					written_by_block (false),
 					unknown_char (false),
                     sort_variable(false),
-                    sort_type(sort_type::default_),
+                    sort_type_(sort_type::default_),
                     sort_index_or_data1(0),
                     sort_data2(0),
 					uppercase (0),
 					lowercase (0),
 					titlecase (0),
-                    line_break (line_break::type (-1)),
+                    line_break_(line_break::type (-1)),
+#ifdef BOOST_UNICODE_UCD_BIG
                     joining (join_type::none),
+#endif
                     comp_ex (false)
 				{}
 			};

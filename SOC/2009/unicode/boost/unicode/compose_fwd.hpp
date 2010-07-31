@@ -2,6 +2,7 @@
 #define BOOST_UNICODE_COMPOSE_FWD_HPP
 
 #include <boost/unicode/ucd/properties.hpp>
+#include <boost/unicode/ucd/compose.hpp>
 #include <boost/unicode/hangul.hpp>
 #include <boost/unicode/combining.hpp>
 
