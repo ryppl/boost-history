@@ -1,12 +1,15 @@
 #ifndef BOOST_UNICODE_COMBINING_HPP
 #define BOOST_UNICODE_COMBINING_HPP
 
-#include <boost/config.hpp>
-#include <boost/iterator/segment_iterator.hpp>
-#include <boost/cuchar.hpp>
-#include <boost/unicode/utf.hpp>
-#include <algorithm>
+#include <boost/unicode/ucd/properties.hpp>
+#include <boost/unicode/utf_codecs.hpp>
 
+#include <boost/unicode/detail/boundary_segment_def.hpp>
+#include <boost/iterator/segment_iterator.hpp>
+#include <boost/iterator/convert_iterator.hpp>
+
+#include <boost/detail/unspecified.hpp>
+#include <algorithm>
 #include <boost/range/adaptor/reversed.hpp>
 
 #include <boost/throw_exception.hpp>
@@ -15,9 +18,6 @@
 #include <sstream>
 #include <ios>
 #endif
-
-#include <boost/type_traits.hpp>
-#include <boost/utility/enable_if.hpp>
 
 namespace boost
 {
@@ -97,26 +97,15 @@ struct combine_boundary
  * that segments combining character sequences. */
 typedef boost::detail::unspecified<
     boost::boundary_segmenter<combine_boundary>
->::type combiner;
+>::type combine_segmenter;
+BOOST_SEGMENTER_DEF(boost::unicode::combine_segmenter, combine_segment)
 
-/** INTERNAL ONLY */
-#define BOOST_UNICODE_COMBINE_DEF(codec)                               \
-typedef boost::detail::unspecified<                                    \
-    boost::multi_boundary<                                             \
-        codec##_boundary,                                              \
-        codec##_decoder,                                               \
-        combine_boundary                                               \
-    >                                                                  \
->::type codec##_combine_boundary;                                      \
-typedef boost::detail::unspecified<                                    \
-    boost::boundary_segmenter<codec##_combine_boundary>                \
->::type codec##_combiner;                                              \
-BOOST_SEGMENTER_DEF(BOOST_UNICODE_CAT(boost::unicode, codec##_combiner), codec##_combine_segment)
+BOOST_UNICODE_BOUNDARY_SEGMENT_DEF(u8, combine)
+BOOST_UNICODE_BOUNDARY_SEGMENT_DEF(u16, combine)
+BOOST_UNICODE_BOUNDARY_SEGMENT_DEF(utf, combine)
 
-BOOST_UNICODE_COMBINE_DEF(u8)
-BOOST_UNICODE_COMBINE_DEF(u16)
-BOOST_UNICODE_COMBINE_DEF(utf)
-
+/** Model of \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly
+ * that canonically sorts a combining character sequence. */
 struct combine_sorter
 {
     typedef char32 input_type;
@@ -128,7 +117,7 @@ struct combine_sorter
     {
         boost::iterator_range<
             In
-        > sequence = *boost::make_segment_iterator(begin, end, begin, combiner());
+        > sequence = *boost::make_segment_iterator(begin, end, begin, combine_segmenter());
         
         out = combine_sort_impl(sequence, out);
         begin = boost::end(sequence);
@@ -142,7 +131,7 @@ struct combine_sorter
             const boost::iterator_range<In>
         > sequence = boost::adaptors::reverse(
             *boost::prior(
-                boost::make_segment_iterator(begin, end, end, combiner())
+                boost::make_segment_iterator(begin, end, end, combine_segmenter())
             )
         );
         
@@ -155,18 +144,11 @@ private:
     template<typename Range, typename Out>
     Out combine_sort_impl(const Range& range, Out out)
     {
-        return combine_sort_impl(boost::begin(range), boost::end(range), out);
+        return combine_sort_impl(boost::begin(range), boost::end(range), out, (typename std::iterator_traits<Out>::iterator_category*)0);
     }
 
     template<typename In, typename Out>
-    typename enable_if<
-        is_base_of<
-            std::random_access_iterator_tag,
-            typename std::iterator_traits<Out>::iterator_category
-        >,
-        Out
-    >::type
-    combine_sort_impl(In begin, In end, Out out)
+    Out combine_sort_impl(In begin, In end, Out out, std::random_access_iterator_tag*)
     {
         Out out_pos = detail::copy_bounded(begin, end, out, out + max_output::value);
         detail::stable_sort_bounded<max_output>(out, out_pos, detail::combining_pred());
@@ -174,14 +156,7 @@ private:
     }
     
     template<typename In, typename Out>
-    typename disable_if<
-        is_base_of<
-            std::random_access_iterator_tag,
-            typename std::iterator_traits<Out>::iterator_category
-        >,
-        Out
-    >::type
-    combine_sort_impl(In begin, In end, Out out)
+    Out combine_sort_impl(In begin, In end, Out out, std::output_iterator_tag*)
     {
         char32 buffer[max_output::value];
         char32* out_pos = detail::copy_bounded(begin, end, buffer, buffer + max_output::value);
@@ -189,9 +164,7 @@ private:
         return std::copy(buffer, out_pos, out);
     }
 };
-
-BOOST_SEGMENTER_DEF(combiner, combine)
-BOOST_SEGMENTER_DEF(combine_sorter, combine_sort)
+BOOST_CONVERTER_DEF(boost::unicode::combine_sorter, combine_sort)
     
 } // namespace unicode
 } // namespace boost

@@ -2,16 +2,12 @@
 #define BOOST_UNICODE_CAT_HPP
 
 #include <boost/unicode/compose.hpp>
-#include <boost/unicode/utf.hpp>
 #include <boost/unicode/combining.hpp>
 
 #include <algorithm>
-#include <boost/utility.hpp>
-
-#include <boost/range/join.hpp>
-
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/tuple/tuple.hpp>
+#include <boost/range/join.hpp>
 
 #include <boost/detail/unspecified.hpp>
 
@@ -60,12 +56,12 @@ cat_limits(cv1 Range1 ref1 range1, cv2 Range2 ref2 range2)             \
         typename range_iterator<cv2 Range2>::type                      \
         new_begin = boost::begin(range2);                              \
                                                                        \
-        combiner().rtl(                                                \
+        combine_segmenter().rtl(                                       \
             boost::begin(range1),                                      \
             new_end                                                    \
         );                                                             \
                                                                        \
-        combiner().ltr(                                                \
+        combine_segmenter().ltr(                                       \
             new_begin,                                                 \
             boost::end(range2)                                         \
         );                                                             \

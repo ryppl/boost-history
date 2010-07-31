@@ -2,13 +2,12 @@
 #define BOOST_UNICODE_GRAPHEMES_HPP
 
 #include <boost/unicode/ucd/properties.hpp>
-#include <boost/utility.hpp>
-#include <boost/detail/unspecified.hpp>
-#include <boost/unicode/detail/cat.hpp>
+#include <boost/unicode/utf_codecs.hpp>
 
+#include <boost/unicode/detail/boundary_segment_def.hpp>
 #include <boost/iterator/segment_iterator.hpp>
 
-#include <boost/unicode/utf_codecs.hpp>
+#include <boost/utility.hpp>
 
 namespace boost
 {
@@ -43,23 +42,9 @@ typedef boost::detail::unspecified<
 >::type grapheme_segmenter;
 BOOST_SEGMENTER_DEF(boost::unicode::grapheme_segmenter, grapheme_segment)
 
-/** INTERNAL ONLY */
-#define BOOST_UNICODE_GRAPHEME_DEF(codec)                              \
-typedef boost::detail::unspecified<                                    \
-    boost::multi_boundary<                                             \
-        codec##_boundary,                                              \
-        codec##_decoder,                                               \
-        grapheme_boundary                                              \
-    >                                                                  \
->::type codec##_grapheme_boundary;                                     \
-typedef boost::detail::unspecified<                                    \
-    boost::boundary_segmenter<codec##_grapheme_boundary>               \
->::type codec##_grapheme_segmenter;                                    \
-BOOST_SEGMENTER_DEF(BOOST_UNICODE_CAT(boost::unicode, codec##_grapheme_segmenter), codec##_grapheme_segment)
-
-BOOST_UNICODE_GRAPHEME_DEF(u8)
-BOOST_UNICODE_GRAPHEME_DEF(u16)
-BOOST_UNICODE_GRAPHEME_DEF(utf)
+BOOST_UNICODE_BOUNDARY_SEGMENT_DEF(u8, grapheme)
+BOOST_UNICODE_BOUNDARY_SEGMENT_DEF(u16, grapheme)
+BOOST_UNICODE_BOUNDARY_SEGMENT_DEF(utf, grapheme)
 
 } // unicode
 } // boost

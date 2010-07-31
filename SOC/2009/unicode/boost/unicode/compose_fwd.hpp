@@ -5,18 +5,13 @@
 #include <boost/unicode/hangul.hpp>
 #include <boost/unicode/combining.hpp>
 
-#include <boost/integer/static_pow.hpp>
-#include <climits>
-
-#include <vector>
-
 #include <boost/detail/unspecified.hpp>
 #include <boost/iterator/convert_iterator.hpp>
 
 #include <boost/range/adaptor/reversed.hpp>
-
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits.hpp>
+#include <boost/integer/static_pow.hpp>
+#include <vector>
+#include <climits>
 
 namespace boost
 {
@@ -52,7 +47,7 @@ struct decomposer
     {
         boost::iterator_range<
             In
-        > sequence = *boost::make_segment_iterator(begin, end, begin, combiner());
+        > sequence = *boost::make_segment_iterator(begin, end, begin, combine_segmenter());
         
         out = decompose_impl(sequence, out);
         begin = boost::end(sequence);
@@ -68,7 +63,7 @@ struct decomposer
             const boost::iterator_range<In>
         > sequence = boost::adaptors::reverse(
             *boost::prior(
-                boost::make_segment_iterator(begin, end, end, combiner())
+                boost::make_segment_iterator(begin, end, end, combine_segmenter())
             )
         );
         
@@ -81,18 +76,11 @@ private:
     template<typename Range, typename Out>
     Out decompose_impl(const Range& range, Out out)
     {
-        return decompose_impl(boost::begin(range), boost::end(range), out);
+        return decompose_impl(boost::begin(range), boost::end(range), out, (typename std::iterator_traits<Out>::iterator_category*)0);
     }
     
     template<typename In, typename Out>
-    typename disable_if<
-        is_base_of<
-            std::random_access_iterator_tag,
-            typename std::iterator_traits<Out>::iterator_category
-        >,
-        Out
-    >::type
-    decompose_impl(In begin, In end, Out out)
+    Out decompose_impl(In begin, In end, Out out, std::output_iterator_tag*)
     {
         char32 buf[max_output::value];
         char32* out_pos = buf;
@@ -137,14 +125,7 @@ private:
     }
     
     template<typename In, typename Out>
-    typename enable_if<
-        is_base_of<
-            std::random_access_iterator_tag,
-            typename std::iterator_traits<Out>::iterator_category
-        >,
-        Out
-    >::type
-    decompose_impl(In begin, In end, Out out)
+    Out decompose_impl(In begin, In end, Out out, std::random_access_iterator_tag*)
     {
         Out out_pos = out;
         

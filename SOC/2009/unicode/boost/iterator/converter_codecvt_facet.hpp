@@ -17,8 +17,8 @@
 namespace boost
 {
 
-/** Builds a codecvt facet from two \xmlonly<conceptname>Converter</conceptname>s\endxmlonly
- * and two \xmlonly<conceptname>BoundaryChecker</conceptname>s\endxmlonly.
+/** Builds a codecvt facet from two \c \xmlonly<conceptname>Converter</conceptname>s\endxmlonly
+ * and two \c \xmlonly<conceptname>BoundaryChecker</conceptname>s\endxmlonly.
  * When writing to a file, \c P1 is applied for segments of data on which \c B1 is true at the beginning and at the end.
  * When reading a file, \c P2 is applied for segments of data on which \c B2 is true at the beginning and at the end. */
 template<typename InternT, typename B1, typename P1, typename B2, typename P2>

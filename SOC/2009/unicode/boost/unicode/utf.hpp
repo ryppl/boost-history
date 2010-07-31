@@ -31,17 +31,8 @@ BOOST_UNICODE_DECODER_DEF(u8)
 BOOST_UNICODE_DECODER_DEF(u16)
 BOOST_UNICODE_DECODER_DEF(utf)
 
-namespace adaptors
-{
-    template<typename ValueType, typename OutputIterator>
-    boost::convert_output_iterator<
-        OutputIterator,
-        boost::unicode::utf_encoder<ValueType>
-    > utf_encode_output(OutputIterator out)
-    {
-        return boost::adaptors::convert_output(out, utf_encoder<ValueType>());
-    }
-}
+BOOST_ONEMANYCONVERTER_TPL_DEF(BOOST_UNICODE_CAT(boost::unicode, utf_encoder<ValueType>), utf_encode)
+BOOST_CONVERTER_TPL_DEF(BOOST_UNICODE_CAT(boost::unicode, utf_transcoder<ValueType>), utf_transcode)
 
 } // namespace unicode
 } // namespace boost

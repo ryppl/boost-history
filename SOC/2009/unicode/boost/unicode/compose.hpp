@@ -8,9 +8,9 @@ namespace boost
 namespace unicode
 {
 
-BOOST_CONVERTER_DEF(composer, compose)
-BOOST_CONVERTER_DEF(decomposer, decompose)
-BOOST_CONVERTER_DEF(normalizer, normalize)
+BOOST_CONVERTER_DEF(boost::unicode::composer, compose)
+BOOST_CONVERTER_DEF(boost::unicode::decomposer, decompose)
+BOOST_CONVERTER_DEF(boost::unicode::normalizer, normalize)
 
 } // namespace unicode
 } // namespace boost

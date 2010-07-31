@@ -19,6 +19,9 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/equal_to.hpp>
 
+#include <boost/preprocessor/punctuation/comma.hpp>
+#include <boost/preprocessor/facilities/empty.hpp>
+
 namespace boost
 {
 
@@ -368,16 +371,12 @@ namespace adaptors
 } // namespace boost
 
 #ifdef BOOST_UNICODE_DOXYGEN_INVOKED
-/** Defines helper functions for usage of a \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly.
- * Helper functions provide a pseudo-variadic interface where they forward all the extra arguments to
- * the constructor of the \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly.
- * \arg \c name Name of the type modelling the \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly.
- * \arg \c n Maximum number of optional arguments. */
-#define BOOST_CONVERTER_DEF(converter_name, convert_name)              \
+/** INTERNAL ONLY */
+#define BOOST_CONVERTER_DEF_I(converter_name, convert_name, tpl)       \
 /** Eagerly evaluates \c converter_name until the whole input
    range \c range has been treated, copying the result to \c out and
    returning the past-the-end output iterator. */                      \
-template<typename Range, typename OutputIterator, typename... T>       \
+template<tpl() typename Range, typename OutputIterator, typename... T> \
 OutputIterator                                                         \
 convert_name(const Range& range, OutputIterator out, const T&... );    \
 namespace adaptors                                                     \
@@ -385,7 +384,7 @@ namespace adaptors                                                     \
    /** Lazily evalutes \c converter_name by returning a range
       adapter that wraps the range \c range and converts it
       step-by-step as the range is advanced. */                        \
-    template<typename Range, typename... T>                            \
+    template<tpl() typename Range, typename... T>                      \
     boost::converted_range<                                            \
         Range,                                                         \
         converter_name                                                 \
@@ -393,13 +392,13 @@ namespace adaptors                                                     \
     convert_name(Range&& range, const T&...);                          \
 }
 #else
-#define BOOST_CONVERTER_DEF(converter_name, convert_name)              \
-template<typename Range, typename OutputIterator>                      \
+#define BOOST_CONVERTER_DEF_I(converter_name, convert_name, tpl)       \
+template<tpl() typename Range, typename OutputIterator>                \
 OutputIterator convert_name(const Range& range, OutputIterator out)    \
 {                                                                      \
     return boost::convert(range, converter_name(), out);               \
 }                                                                      \
-template<typename Range, typename OutputIterator, typename T0>         \
+template<tpl() typename Range, typename OutputIterator, typename T0>   \
 OutputIterator                                                         \
 convert_name(const Range& range, OutputIterator out, const T0& t0)     \
 {                                                                      \
@@ -407,7 +406,7 @@ convert_name(const Range& range, OutputIterator out, const T0& t0)     \
 }                                                                      \
 namespace adaptors                                                     \
 {                                                                      \
-    template<typename Range>                                           \
+    template<tpl() typename Range>                                     \
     boost::converted_range<                                            \
         const Range,                                                   \
         converter_name                                                 \
@@ -417,7 +416,7 @@ namespace adaptors                                                     \
         return boost::adaptors::convert(range, converter_name());      \
     }                                                                  \
                                                                        \
-    template<typename Range>                                           \
+    template<tpl() typename Range>                                     \
     boost::converted_range<                                            \
         Range,                                                         \
         converter_name                                                 \
@@ -427,7 +426,7 @@ namespace adaptors                                                     \
         return boost::adaptors::convert(range, converter_name());      \
     }                                                                  \
                                                                        \
-    template<typename Range, typename T0>                              \
+    template<tpl() typename Range, typename T0>                        \
     boost::converted_range<                                            \
         const Range,                                                   \
         converter_name                                                 \
@@ -437,7 +436,7 @@ namespace adaptors                                                     \
         return boost::adaptors::convert(range, converter_name(t0));    \
     }                                                                  \
                                                                        \
-    template<typename Range, typename T0>                              \
+    template<tpl() typename Range, typename T0>                        \
     boost::converted_range<                                            \
         Range,                                                         \
         converter_name                                                 \
@@ -450,18 +449,14 @@ namespace adaptors                                                     \
 #endif
 
 #ifdef BOOST_UNICODE_DOXYGEN_INVOKED
-/** Defines helper functions for usage of a \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly.
- * Helper functions provide a pseudo-variadic interface where they forward all the extra arguments to
- * the constructor of the \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly.
- * \arg \c name Name of the type modelling the \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly.
- * \arg \c n Maximum number of optional arguments. */
-#define BOOST_ONEMANYCONVERTER_DEF(converter_name, convert_name)       \
-BOOST_CONVERTER_DEF(converter_name, convert_name)                      \
+/** INTERNAL ONLY */
+#define BOOST_ONEMANYCONVERTER_DEF_I(converter_name, convert_name, tpl)\
+BOOST_CONVERTER_DEF_I(converter_name, convert_name, tpl)               \
 namespace adaptors                                                     \
 {                                                                      \
     /** Lazily evalutes \c converter_name by returning an output
       iterator that wraps \c out and converts every pushed element. */ \
-    template<typename OutputIterator, typename... T>                   \
+    template<tpl() typename OutputIterator, typename... T>             \
     boost::convert_output_iterator<                                    \
         OutputIterator,                                                \
         converter_name                                                 \
@@ -469,11 +464,11 @@ namespace adaptors                                                     \
     convert_name##_output(OutputIterator out, const T&...);            \
 }
 #else
-#define BOOST_ONEMANYCONVERTER_DEF(converter_name, convert_name)       \
-BOOST_CONVERTER_DEF(converter_name, convert_name)                      \
+#define BOOST_ONEMANYCONVERTER_DEF_I(converter_name, convert_name, tpl)\
+BOOST_CONVERTER_DEF_I(converter_name, convert_name, tpl)               \
 namespace adaptors                                                     \
 {                                                                      \
-    template<typename OutputIterator>                                  \
+    template<tpl() typename OutputIterator>                            \
     boost::convert_output_iterator<                                    \
         OutputIterator,                                                \
         converter_name                                                 \
@@ -483,7 +478,7 @@ namespace adaptors                                                     \
         return boost::adaptors::convert_output(out, converter_name()); \
     }                                                                  \
                                                                        \
-    template<typename OutputIterator, typename T0>                     \
+    template<tpl() typename OutputIterator, typename T0>               \
     boost::convert_output_iterator<                                    \
         OutputIterator,                                                \
         converter_name                                                 \
@@ -497,6 +492,22 @@ namespace adaptors                                                     \
     }                                                                  \
 }                                                                      
 #endif
+
+/** Defines helper functions for usage of a \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly.
+ * Helper functions provide a pseudo-variadic interface where they forward all the extra arguments to
+ * the constructor of the \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly.
+ * \arg \c converter_name Name of the type modelling the \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly.
+ * \arg \c convert_name Name to use for the helper functions. */
+#define BOOST_CONVERTER_DEF(converter_name, convert_name) BOOST_CONVERTER_DEF_I(converter_name, convert_name, BOOST_PP_EMPTY)
+#define BOOST_CONVERTER_TPL_DEF(converter_name, convert_name) BOOST_CONVERTER_DEF_I(converter_name, convert_name, typename ValueType BOOST_PP_COMMA)
+
+/** Defines helper functions for usage of a \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly.
+ * Helper functions provide a pseudo-variadic interface where they forward all the extra arguments to
+ * the constructor of the \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly.
+ * \arg \c converter_name Name of the type modelling the \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly.
+ * \arg \c convert_name Name to use for the helper functions. */
+#define BOOST_ONEMANYCONVERTER_DEF(converter_name, convert_name) BOOST_ONEMANYCONVERTER_DEF_I(converter_name, convert_name, BOOST_PP_EMPTY)
+#define BOOST_ONEMANYCONVERTER_TPL_DEF(converter_name, convert_name) BOOST_ONEMANYCONVERTER_DEF_I(converter_name, convert_name, typename ValueType BOOST_PP_COMMA)
 
 #endif
 
