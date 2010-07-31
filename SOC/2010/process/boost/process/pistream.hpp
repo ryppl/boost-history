@@ -60,7 +60,7 @@ public:
     /**
      * Creates a new process' output stream.
      */
-    explicit pistream(boost::process::handle &h)
+    explicit pistream(boost::process::handle h)
         : std::istream(0),
           handle_(h),
           systembuf_(handle_.native())

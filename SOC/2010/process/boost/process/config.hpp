@@ -14,8 +14,8 @@
 /**
  * \file boost/process/config.hpp
  *
- * Defines macros that are used by the library's code to determine the
- * operating system it is running under and the features it supports.
+ * Defines macros that are used by the library to determine the operating
+ * system it is running under and the features it supports.
  */
 
 #ifndef BOOST_PROCESS_CONFIG_HPP
@@ -31,24 +31,27 @@
 #   include <errno.h>
 #elif defined(BOOST_WINDOWS_API)
 #   include <windows.h>
-#endif 
+#endif
 
 #if defined(BOOST_POSIX_API) || defined(BOOST_PROCESS_DOXYGEN)
-#   if !defined(BOOST_PROCESS_POSIX_PATH_MAX)
+#   if !defined(BOOST_PROCESS_POSIX_PATH_MAX) || defined(BOOST_PROCESS_DOXYGEN)
 /**
+ * Specifies the system's maximal supported path length.
+ *
  * The macro BOOST_PROCESS_POSIX_PATH_MAX is set to a positive integer
  * value which specifies the system's maximal supported path length.
  * By default it is set to 259. You should set the macro to PATH_MAX
  * which should be defined in limits.h provided by your operating system
  * if you experience problems when calling boost::process::self::get_work_dir().
- * This function tries to find out the maximal supported path length but uses
+ * The function tries to retrieve the maximal supported path length but uses
  * BOOST_PROCESS_POSIX_PATH_MAX if it fails. Please note that the function is
- * also called when you instantiate a context.
+ * also called by the constructor of boost::process::context.
  */
 #       define BOOST_PROCESS_POSIX_PATH_MAX 259
 #   endif
 #endif
 
+/** \cond */
 #define BOOST_PROCESS_SOURCE_LOCATION \
     "in file '" __FILE__ "', line " BOOST_PP_STRINGIZE(__LINE__) ": "
 
@@ -61,7 +64,8 @@
 #define BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(what) \
     boost::throw_exception(boost::system::system_error( \
         boost::system::error_code(BOOST_PROCESS_LAST_ERROR, \
-                                  boost::system::get_system_category()), \
+            boost::system::get_system_category()), \
         BOOST_PROCESS_SOURCE_LOCATION what))
+/** \endcond */
 
 #endif

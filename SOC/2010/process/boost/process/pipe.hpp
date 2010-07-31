@@ -26,11 +26,16 @@
 namespace boost {
 namespace process {
 
+#if defined(BOOST_PROCESS_DOXYGEN)
 /**
- * The pipe class is a type definition for stream-based classes
- * defined by Boost.Asio.
+ * The pipe class is a type definition for stream-based classes defined by
+ * Boost.Asio.
+ *
+ * The type definition is provided for convenience. You can also use Boost.Asio
+ * classes directly for asynchronous I/O operations.
  */
-#if defined(BOOST_POSIX_API)
+typedef BoostAsioPipe pipe;
+#elif defined(BOOST_POSIX_API)
 typedef boost::asio::posix::stream_descriptor pipe;
 #elif defined(BOOST_WINDOWS_API)
 typedef boost::asio::windows::stream_handle pipe;

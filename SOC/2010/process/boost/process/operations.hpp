@@ -175,9 +175,9 @@ inline std::string executable_to_progname(const std::string &exe)
  * Launches a new process based on the binary image specified by the
  * executable, the set of arguments passed to it and the execution context.
  *
- * \remark Blocking remarks: This function may block if the device
- * holding the executable blocks when loading the image. This might
- * happen if, e.g., the binary is being loaded from a network share.
+ * \remark Blocking remarks: This function may block if the device holding the
+ *         executable blocks when loading the image. This might happen if, e.g.,
+ *         the binary is being loaded from a network share.
  *
  * \return A handle to the new child process.
  */
@@ -218,6 +218,12 @@ inline child create_child(const std::string &executable, Arguments args,
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("fork(2) failed");
     else if (pid == 0)
     {
+        if (chdir(ctx.work_dir.c_str()) == -1)
+        {
+            write(STDERR_FILENO, "chdir() failed\n", 15);
+            _exit(127);
+        }
+
         handle hstdin = ctx.stdin_behavior->get_child_end();
         if (hstdin.valid())
         {
@@ -251,19 +257,13 @@ inline child create_child(const std::string &executable, Arguments args,
             closeflags[STDERR_FILENO] = false;
         }
 
-        for (int i = 0; i < maxdescs; ++i)
+        ctx.setup(closeflags);
+
+        for (std::size_t i = 0; i < closeflags.size(); ++i)
         {
             if (closeflags[i])
                 close(i);
         }
-
-        if (chdir(ctx.work_dir.c_str()) == -1)
-        {
-            write(STDERR_FILENO, "chdir() failed\n", 15);
-            _exit(127);
-        }
-
-        ctx.setup();
 
         execve(executable.c_str(), argv.second, envp.second);
 
@@ -332,16 +332,7 @@ inline child create_child(const std::string &executable, Arguments args,
 }
 
 /**
- * Starts a new child process.
- *
- * Launches a new process based on the binary image specified by the
- * executable.
- *
- * \remark Blocking remarks: This function may block if the device
- * holding the executable blocks when loading the image. This might
- * happen if, e.g., the binary is being loaded from a network share.
- *
- * \return A handle to the new child process.
+ * \overload
  */
 inline child create_child(const std::string &executable)
 {
@@ -349,16 +340,7 @@ inline child create_child(const std::string &executable)
 }
 
 /**
- * Starts a new child process.
- *
- * Launches a new process based on the binary image specified by the
- * executable and the set of arguments passed to it.
- *
- * \remark Blocking remarks: This function may block if the device
- * holding the executable blocks when loading the image. This might
- * happen if, e.g., the binary is being loaded from a network share.
- *
- * \return A handle to the new child process.
+ * \overload
  */
 template <typename Arguments>
 inline child create_child(const std::string &executable, Arguments args)
@@ -376,17 +358,16 @@ inline child create_child(const std::string &executable, Arguments args)
  * This function behaves similarly to the system(3) system call. In a
  * POSIX system, the command is fed to /bin/sh whereas under a Windows
  * system, it is fed to cmd.exe. It is difficult to write portable
- * commands as the first parameter, but this function comes in handy in
- * multiple situations.
+ * commands, but this function comes in handy in multiple situations.
  *
- * \remark Blocking remarks: This function may block if the device
- * holding the executable blocks when loading the image. This might
- * happen if, e.g., the binary is being loaded from a network share.
+ * \remark Blocking remarks: This function may block if the device holding the
+ *         executable blocks when loading the image. This might happen if, e.g.,
+ *         the binary is being loaded from a network share.
  *
  * \return A handle to the new child process.
  */
 template <typename Context>
-inline child create_shell(const std::string &command, Context ctx)
+inline child shell(const std::string &command, Context ctx)
 {
 #if defined(BOOST_POSIX_API)
     std::string executable = "/bin/sh";
@@ -405,6 +386,14 @@ inline child create_shell(const std::string &command, Context ctx)
     args.push_back(command);
 #endif
     return create_child(executable, args, ctx);
+}
+
+/**
+ * \overload
+ */
+inline child shell(const std::string &command)
+{
+    return shell(command, context());
 }
 
 }

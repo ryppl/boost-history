@@ -15,7 +15,6 @@
  * \file boost/process/stream_behavior.hpp
  *
  * Includes the declaration of stream behavior classes.
- *
  */
 
 #ifndef BOOST_PROCESS_STREAM_BEHAVIOR_HPP
@@ -61,7 +60,7 @@ public:
      * what a context object expects. The shared pointer guarantees that
      * the object is cleaned up.
      */
-    static boost::shared_ptr<stream> def()
+    static boost::shared_ptr<stream> create()
     {
         return boost::make_shared<stream>(stream());
     }
@@ -113,7 +112,7 @@ public:
 #endif
     }
 
-    static boost::shared_ptr<inherit> def(handle::native_type child_end)
+    static boost::shared_ptr<inherit> create(handle::native_type child_end)
     {
         return boost::make_shared<inherit>(inherit(child_end));
     }
@@ -162,7 +161,7 @@ public:
 #endif
     }
 
-    static boost::shared_ptr<pipe> def(stream_type stream)
+    static boost::shared_ptr<behavior::pipe> create(stream_type stream)
     {
         return boost::make_shared<pipe>(pipe(stream));
     }
@@ -282,7 +281,7 @@ public:
 #endif
     }
 
-    static boost::shared_ptr<named_pipe> def(stream_type stream)
+    static boost::shared_ptr<named_pipe> create(stream_type stream)
     {
         return boost::make_shared<named_pipe>(named_pipe(stream));
     }
@@ -330,7 +329,7 @@ public:
 #endif
     }
 
-    static boost::shared_ptr<dummy> def(stream_type stream)
+    static boost::shared_ptr<dummy> create(stream_type stream)
     {
         return boost::make_shared<dummy>(dummy(stream));
     }

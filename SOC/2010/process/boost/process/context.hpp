@@ -22,10 +22,11 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
+#   include <vector>
 #   include <unistd.h>
 #elif defined(BOOST_WINDOWS_API)
 #   include <windows.h>
-#endif 
+#endif
 
 #include <boost/process/stream_behavior.hpp>
 #include <boost/process/environment.hpp>
@@ -39,10 +40,9 @@ namespace process {
 /**
  * Context class to define how a child process is created.
  *
- * The context class is used to configure standard streams and
- * to set the work directory and environment variables. It is also
- * used to change a process name (the variable commonly known as 
- * argv[0]).
+ * The context class is used to configure standard streams and to set the work
+ * directory and environment variables. It is also used to change a process
+ * name (the variable commonly known as argv[0]).
  */
 struct context
 {
@@ -88,20 +88,23 @@ struct context
      */
     context()
 #if defined(BOOST_POSIX_API)
-        : stdin_behavior(behavior::inherit::def(STDIN_FILENO)),
-        stdout_behavior(behavior::inherit::def(STDOUT_FILENO)),
-        stderr_behavior(behavior::inherit::def(STDERR_FILENO)),
+        : stdin_behavior(behavior::inherit::create(STDIN_FILENO)),
+        stdout_behavior(behavior::inherit::create(STDOUT_FILENO)),
+        stderr_behavior(behavior::inherit::create(STDERR_FILENO)),
 #elif defined(BOOST_WINDOWS_API)
-        : stdin_behavior(behavior::inherit::def(GetStdHandle(STD_INPUT_HANDLE))),
-        stdout_behavior(behavior::inherit::def(GetStdHandle(STD_OUTPUT_HANDLE))),
-        stderr_behavior(behavior::inherit::def(GetStdHandle(STD_ERROR_HANDLE))),
+        : stdin_behavior(behavior::inherit::create(GetStdHandle(
+            STD_INPUT_HANDLE))),
+        stdout_behavior(behavior::inherit::create(GetStdHandle(
+            STD_OUTPUT_HANDLE))),
+        stderr_behavior(behavior::inherit::create(GetStdHandle(
+            STD_ERROR_HANDLE))),
 #endif
         work_dir(self::get_work_dir()),
         environment(self::get_environment())
     {
     }
 
-#if defined(BOOST_PROCESS_DOXYGEN) || defined(BOOST_POSIX_API)
+#if defined(BOOST_PROCESS_DOXYGEN)
     /**
      * Setups a child process.
      *
@@ -111,12 +114,20 @@ struct context
      *
      * On POSIX platforms setup() is called in the child process. That's why in
      * a multithreaded application only async-signal-safe functions must be
-     * called in setup().
+     * called in setup(). A reference to a std::vector<bool> is passed which
+     * is used to decide which file descriptors to close in the child process.
+     * While the std::vector<bool> is automatically setup for standard streams
+     * developers can change flags to avoid the library closing other file
+     * descriptors.
      *
      * On Windows platforms setup() is called in the parent process. A
      * reference to a STARTUPINFOA structure is passed as parameter.
      */
     void setup()
+    {
+    }
+#elif defined(BOOST_POSIX_API)
+    void setup(std::vector<bool> &closeflags)
     {
     }
 #elif defined(BOOST_WINDOWS_API)

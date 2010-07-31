@@ -1,0 +1,28 @@
+[section:context Configuring runtime contexts]
+
+Apart from the executable name and command line options a third parameter can be passed to _create_child_: The _context_ class is used to configure the runtime context of a new process. 
+
+The _context_ class provides only a few member variables. You can set the process name with `context::process_name`, the work directory with `context::work_dir` and environment variables with `context::environment`. 
+
+[import ../example/create_child_context.cpp]
+[create_child_context_configuration]
+
+In practice you are probably more often using the member variables `context::stdin_behavior`, `context::stdout_behavior` and `context::stderr_behavior`. It depends on these settings how the standard streams of a child process will be configured. 
+
+The type of these three member variables is `boost::shared_ptr<boost::process::behavior::stream>`. _behavior_stream_ is the base class of a small hierarchy of behavior classes. Boost.Process provides the following stream behavior classes: 
+
+* _behavior_close_
+* _behavior_inherit_
+* _behavior_pipe_
+* _behavior_named_pipe_
+* _behavior_dummy_
+
+It depends on these classes if and how a standard stream can be used by a child process. As it is a class hierarchy you are free to derive your own classes and [link boost_process.extension_points define new stream behaviors]. 
+
+By default, standard streams are inherited. If you want to configure standard streams differently create an instance of a stream behavior class and assign it. For convenience all behavior classes provide a _behavior_stream_create_ member function which returns an instance of a stream behavior owned by `boost::shared_ptr`. 
+
+[create_child_context_dummy]
+
+In the code above the behavior of the standard output stream is changed. Instead of inheriting the standard output stream data written to it will be discarded. The stream is not closed by _behavior_dummy_ but any data is ignored. 
+
+[endsect]

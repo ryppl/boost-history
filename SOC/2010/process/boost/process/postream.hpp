@@ -60,7 +60,7 @@ public:
     /**
      * Creates a new process' input stream.
      */
-    explicit postream(boost::process::handle &h)
+    explicit postream(boost::process::handle h)
         : std::ostream(0),
           handle_(h),
           systembuf_(handle_.native())

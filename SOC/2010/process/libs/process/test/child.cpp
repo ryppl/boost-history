@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(test_close_stdin)
     args.push_back("is-closed-stdin"); 
 
     bp::context ctx; 
-    ctx.stdin_behavior = bpb::close::def(); 
+    ctx.stdin_behavior = bpb::close::create(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(test_close_stdout)
     args.push_back("is-closed-stdout"); 
 
     bp::context ctx1; 
-    ctx1.stdout_behavior = bpb::close::def(); 
+    ctx1.stdout_behavior = bpb::close::create(); 
 
     bp::child c1 = bp::create_child(get_helpers_path(), args, ctx1); 
 
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(test_close_stdout)
 #endif 
 
     bp::context ctx2; 
-    ctx2.stdout_behavior = bpb::pipe::def(bpb::pipe::output_stream); 
+    ctx2.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
 
     bp::child c2 = bp::create_child(get_helpers_path(), args, ctx2); 
 
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(test_close_stderr)
     args.push_back("is-closed-stderr"); 
 
     bp::context ctx1; 
-    ctx1.stderr_behavior = bpb::close::def(); 
+    ctx1.stderr_behavior = bpb::close::create(); 
 
     bp::child c1 = bp::create_child(get_helpers_path(), args, ctx1); 
 
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(test_close_stderr)
 #endif 
 
     bp::context ctx2; 
-    ctx2.stderr_behavior = bpb::pipe::def(bpb::pipe::output_stream); 
+    ctx2.stderr_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
 
     bp::child c2 = bp::create_child(get_helpers_path(), args, ctx2); 
 
@@ -128,8 +128,8 @@ BOOST_AUTO_TEST_CASE(test_input)
     args.push_back("stdin-to-stdout"); 
 
     bp::context ctx; 
-    ctx.stdin_behavior = bpb::pipe::def(bpb::pipe::input_stream); 
-    ctx.stdout_behavior = bpb::pipe::def(bpb::pipe::output_stream); 
+    ctx.stdin_behavior = bpb::pipe::create(bpb::pipe::input_stream); 
+    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -159,7 +159,7 @@ BOOST_AUTO_TEST_CASE(test_output)
     args.push_back("message-stdout"); 
 
     bp::context ctx; 
-    ctx.stdout_behavior = bpb::pipe::def(bpb::pipe::output_stream); 
+    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE(test_output_error)
     args.push_back("message-stderr"); 
 
     bp::context ctx; 
-    ctx.stderr_behavior = bpb::pipe::def(bpb::pipe::output_stream); 
+    ctx.stderr_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -220,7 +220,7 @@ public:
 #endif 
     } 
 
-    static boost::shared_ptr<redirect_to> def(bp::handle stream_end) 
+    static boost::shared_ptr<redirect_to> create(bp::handle stream_end) 
     { 
         return boost::make_shared<redirect_to>(redirect_to(stream_end)); 
     } 
@@ -241,8 +241,8 @@ BOOST_AUTO_TEST_CASE(test_redirect_err_to_out)
     args.push_back("message-to-two-streams"); 
 
     bp::context ctx; 
-    ctx.stdout_behavior = bpb::pipe::def(bpb::pipe::output_stream); 
-    ctx.stderr_behavior = redirect_to::def( 
+    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+    ctx.stderr_behavior = redirect_to::create( 
         ctx.stdout_behavior->get_child_end()); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
@@ -275,7 +275,7 @@ BOOST_AUTO_TEST_CASE(check_work_directory)
     bp::context ctx; 
     BOOST_CHECK(bfs::equivalent(ctx.work_dir, bfs::current_path().string())); 
 
-    ctx.stdout_behavior = bpb::pipe::def(bpb::pipe::output_stream); 
+    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -309,7 +309,7 @@ BOOST_AUTO_TEST_CASE(check_work_directory2)
     { 
         bp::context ctx; 
         ctx.work_dir = wdir.string(); 
-        ctx.stdout_behavior = bpb::pipe::def(bpb::pipe::output_stream); 
+        ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
 
         bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -344,7 +344,7 @@ std::pair<bool, std::string> get_var_value(bp::context &ctx, const std::string &
     args.push_back("query-env"); 
     args.push_back(var); 
 
-    ctx.stdout_behavior = bpb::pipe::def(bpb::pipe::output_stream); 
+    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
