@@ -140,7 +140,23 @@ public:
 
 protected:
     void check_for_resizing() {
-        // next_allocation_size<Width>
+        size_type size_of_alloc = (this->_impl._end - this->_impl._start);
+        difference_type remaing_bits = ((size_of_alloc*8) - this->_impl._bits_in_use);
+        if(remaing_bits < Width) {
+            std::size_t next_allocation_size =
+                detail::next_allocation_size<Width>()(
+                    size_of_alloc,
+                    this->_impl._bits_in_use
+                );
+            pointer ptr = this->allocate_impl( next_allocation_size );
+
+            std::memcpy(static_cast<void*>(ptr),
+                        static_cast<void*>(this->_impl._start),
+                        size_of_alloc);
+            this->deallocate_impl(this->_impl._start, size_of_alloc);
+            this->_impl._start = ptr;
+            this->_impl._end = ptr + next_allocation_size;
+        }
     }
 };
 
