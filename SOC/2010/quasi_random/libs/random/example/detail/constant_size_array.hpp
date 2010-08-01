@@ -16,20 +16,20 @@ namespace detail {
 template<class T, std::size_t N>
 struct constant_size_array : public boost::array<T, N>
 {
-    constant_size_array(std::size_t m)
-    {
-        // Assert that this array holds exactly the same
-        // size of memory block as requested
-        BOOST_ASSERT(m == N);
-    }
+  constant_size_array(std::size_t m)
+  {
+    // Assert that this array holds exactly the same
+    // size of memory block as requested
+    BOOST_ASSERT(m == N);
+  }
 
-    void resize(std::size_t) {
-        BOOST_ASSERT("Cannot resize a constant sized array." == 0);
-    }
+  void resize(std::size_t) {
+    BOOST_ASSERT("Cannot resize a constant sized array." == 0);
+  }
 
-    void resize(std::size_t size, T init) {
-        BOOST_ASSERT("Cannot resize a constant sized array." == 0);
-    }
+  void resize(std::size_t size, T init) {
+    BOOST_ASSERT("Cannot resize a constant sized array." == 0);
+  }
 };
 
 } // namespace detail

@@ -18,9 +18,9 @@ class list_assignment
 {
 private:
   typedef list_assignment<T, ForwardIterator>
-      self_type;
+    self_type;
   typedef scalar_or_list_assignment<T, ForwardIterator>
-      switch_type;
+    switch_type;
 
   ForwardIterator m_iterator_;
 
@@ -32,8 +32,8 @@ public:
 
   inline self_type operator,(T value)
   {
-      *m_iterator_ = value;
-      return self_type(++m_iterator_);
+    *m_iterator_ = value;
+    return self_type(++m_iterator_);
   }
 };
 
@@ -45,35 +45,35 @@ private:
   friend class list_assignment<T, ForwardIterator>;
 
   typedef scalar_or_list_assignment<T, ForwardIterator>
-      self_t;
+    self_t;
   typedef list_assignment<T, ForwardIterator>
-      assign_from_list;
+    assign_from_list;
 
 public:
   explicit scalar_or_list_assignment(ForwardIterator first, ForwardIterator last, T value)
-      : m_first(first)
-      , m_last(last)
-      , m_value(value)
+    : m_first(first)
+    , m_last(last)
+    , m_value(value)
   {
-      // Immediately initialize the first element
-      // and move iterator position forward.
-      *m_first = value; ++m_first;
+    // Immediately initialize the first element
+    // and move iterator position forward.
+    *m_first = value; ++m_first;
   }
 
   scalar_or_list_assignment(const self_t& rhs)
-      : m_first(rhs.m_first)
-      , m_last(rhs.m_last)
-      , m_value(rhs.m_value)
+    : m_first(rhs.m_first)
+    , m_last(rhs.m_last)
+    , m_value(rhs.m_value)
   {
-      // This is, admitedly, not very pretty, but quite necessary
-      // for optimization purposes; initialization would be O(n^2)
-      // instead of O(n) otherwise.
-      const_cast<self_t *>(&rhs)->disable();
+    // This is, admitedly, not very pretty, but quite necessary
+    // for optimization purposes; initialization would be O(n^2)
+    // instead of O(n) otherwise.
+    const_cast<self_t *>(&rhs)->disable();
   }
 
   ~scalar_or_list_assignment()
   {
-      std::fill(m_first, m_last, m_value);
+    std::fill(m_first, m_last, m_value);
   }
 
   // Continues initialization of [first + 1, last)
@@ -81,13 +81,13 @@ public:
   // to the underlying data structure.
   assign_from_list operator,(T value)
   {
-      *m_first = value; ++m_first;
-      return assign_from_list(*this);
+    *m_first = value; ++m_first;
+    return assign_from_list(*this);
   }
 
 private:
   void disable() {
-      m_first = m_last;
+    m_first = m_last;
   }
 
 private:
@@ -102,7 +102,7 @@ private:
 
 template<class T, typename Iterator>
 inline list_assignment<T, Iterator>::list_assignment(scalar_or_list_assignment<T, Iterator>& rhs)
-   : m_iterator_(rhs.m_first)
+ : m_iterator_(rhs.m_first)
 {
   rhs.disable();
 }
