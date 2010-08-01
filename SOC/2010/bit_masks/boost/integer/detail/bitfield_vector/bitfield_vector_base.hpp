@@ -31,7 +31,7 @@ struct bitfield_vector_base {
             _bits_in_use(0)
         { }
 
-        bitfield_vector_impl(const rebound_alloc_type& alloc)
+        bitfield_vector_impl( rebound_alloc_type const& alloc)
             :rebound_alloc_type(alloc),
             _start(0),
             _end(0),
