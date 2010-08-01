@@ -4,7 +4,13 @@
 #include <boost/assert.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/mpl/int.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/bool.hpp>
+
 #include <stdexcept>
+#include <cstdlib>
+
 #ifndef BOOST_NO_STD_LOCALE
 #include <sstream>
 #include <ios>
@@ -13,9 +19,7 @@
 #include <boost/unicode/surrogates.hpp>
 
 #include <boost/iterator/convert_iterator.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/bool.hpp>
+#include <boost/iterator/codecvt_converter.hpp>
 
 #include <boost/detail/unspecified.hpp>
 
@@ -599,6 +603,92 @@ struct utf_transcoder : boost::converted_converter<
 /** Model of \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly
  * that converts from UTF-32 to ISO-8859-1 alias latin-1. */
 typedef boost::detail::unspecified< cast_converter<char> >::type latin1_encoder;
+
+struct locale_utf_transcoder
+{
+    typedef char input_type;
+    typedef wchar_t output_type;
+    
+    typedef codecvt_out_converter<input_type, output_type>::max_output max_output;
+    
+#ifdef BOOST_WINDOWS
+    locale_utf_transcoder(std::locale loc_ = std::locale()) : loc(loc_)
+#else
+    locale_utf_transcoder(std::locale loc_ = std::locale(getenv("LANG"))) : loc(loc_)
+#endif
+    {
+    }
+    
+private:
+    typedef std::codecvt<output_type, input_type, std::mbstate_t> Codecvt;
+
+public:
+    template<typename In, typename Out>
+    Out ltr(In& begin, In end, Out out)
+    {
+        return codecvt_in_converter<input_type, output_type>(std::use_facet<Codecvt>(loc)).ltr(begin, end, out);
+    }
+    
+    template<typename In, typename Out>
+    Out rtl(In begin, In& end, Out out)
+    {
+         return codecvt_in_converter<input_type, output_type>(std::use_facet<Codecvt>(loc)).rtl(begin, end, out);
+    }
+    
+    std::locale loc;
+};
+
+struct utf_locale_transcoder
+{
+    typedef wchar_t input_type;
+    typedef char output_type;
+    
+    typedef codecvt_out_converter<input_type, output_type>::max_output max_output;
+    
+#ifdef BOOST_WINDOWS
+    utf_locale_transcoder(std::locale loc_ = std::locale()) : loc(loc_)
+#else
+    utf_locale_transcoder(std::locale loc_ = std::locale(getenv("LANG"))) : loc(loc_)
+#endif
+    {
+    }
+    
+private:
+    typedef std::codecvt<input_type, output_type, std::mbstate_t> Codecvt;
+
+public:
+    template<typename In, typename Out>
+    Out ltr(In& begin, In end, Out out)
+    {
+        return codecvt_out_converter<input_type, output_type>(std::use_facet<Codecvt>(loc)).ltr(begin, end, out);
+    }
+    
+    template<typename In, typename Out>
+    Out rtl(In begin, In& end, Out out)
+    {
+        return codecvt_out_converter<input_type, output_type>(std::use_facet<Codecvt>(loc)).rtl(begin, end, out);
+    }
+    
+    std::locale loc;
+};
+
+/** Model of \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly that
+ * converts from the locale narrow character set to UTF-32. */
+typedef boost::detail::unspecified<
+    multi_converter<
+        locale_utf_transcoder,
+        utf_decoder
+    >
+>::type locale_decoder;
+
+/** Model of \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly that
+ * converts from UTF-32 to the locale narrow character set. */
+typedef boost::detail::unspecified<
+    multi_converter<
+        utf_encoder<wchar_t>,
+        utf_locale_transcoder
+    >
+>::type locale_encoder;
 
 } // namespace unicode
 

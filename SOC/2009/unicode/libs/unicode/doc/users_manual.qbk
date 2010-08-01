@@ -244,7 +244,7 @@ The following features are available by linking against the library:
 * a Unicode character database, which, for each Unicode code point, provides many properties,
 * converters for decomposition, composition, and normalization,
 * functions to concatenate normalized ranges,
-* segmenters for graphemes.
+* segmenters for graphemes, and in the close future words, sentences and line breaks.
 
 This library defines the concepts of [conceptref Converter] and [conceptref Segmenter], which are mechanisms to arbitrarily convert or segment ranges of data, expressed as pairs of iterators.
 The Converter and Segmenters framework allows to perform these either eaglery
@@ -505,10 +505,13 @@ as is manipulated by the underlying, =char=-based, filebuf.
 Unfortunately, it appears it is only possible to use this mechanism with codecvt facets that have =char= as external and either
 =char= or =wchar_t= as internal, but C++0x may improve the situation.
 
-To use [classref boost::converter_codecvt_facet], which allows to build a codecvt facet from converters, you will need two [conceptref Converter]s, one for each direction, as well as two [conceptref BoundaryChecker]s.
+To use [classref boost::converter_codecvt], which allows to build a codecvt facet from converters, you will need two [conceptref Converter]s, one for each direction, as well as two [conceptref BoundaryChecker]s.
 Indeed, as codecvt facets are passed arbitrary input buffers, there needs to be a way to tell what is the right boundaries to apply the steps on.
 An alternative would be to try to apply a step and try again if there was an error due to incomplete data. This is however not sufficient for
 converters that are not stable by concatenation.
+
+You may also build converters out of codecvt facets with [classref boost::codecvt_in_converter] or [classref boost::codecvt_out_converter], or
+directly convert locales to UTF-32 with [classref boost::unicode::locale_decoder] or [classref boost::unicode::locale_encoder].
 
 [import ../test/iterator/test_codecvt.cpp]
 [test_codecvt]

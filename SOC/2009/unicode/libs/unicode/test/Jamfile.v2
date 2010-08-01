@@ -29,6 +29,7 @@ test-suite unicode :
     [ run unicode/test_compose.cpp ]
     [ run unicode/test_graphemes.cpp ]
     [ run unicode/test_utf.cpp ]
+    [ run unicode/test_locale.cpp ]
 ;
 
 test-suite example : ../example//unicode-examples ;

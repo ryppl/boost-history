@@ -21,4 +21,6 @@ lib boost_unicode
 		../src/ucd/uni_ucd_interface_impl_data.cpp
 	:
 		<link>shared:<define>BOOST_UNICODE_DYN_LINK=1
+        <debug-symbols>off
+        <strip>on
 	;

@@ -34,6 +34,12 @@ BOOST_UNICODE_DECODER_DEF(utf)
 BOOST_ONEMANYCONVERTER_TPL_DEF(BOOST_UNICODE_CAT(boost::unicode, utf_encoder<ValueType>), utf_encode)
 BOOST_CONVERTER_TPL_DEF(BOOST_UNICODE_CAT(boost::unicode, utf_transcoder<ValueType>), utf_transcode)
 
+BOOST_CONVERTER_DEF(boost::unicode::locale_utf_transcoder, locale_utf_transcode)
+BOOST_CONVERTER_DEF(boost::unicode::utf_locale_transcoder, utf_locale_transcode)
+
+BOOST_CONVERTER_DEF(boost::unicode::locale_decoder, locale_decode)
+BOOST_CONVERTER_DEF(boost::unicode::locale_encoder, locale_encode)
+
 } // namespace unicode
 } // namespace boost
 
