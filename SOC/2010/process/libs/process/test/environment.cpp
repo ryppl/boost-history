@@ -25,7 +25,6 @@
 
 #define BOOST_TEST_MAIN 
 #include "util/boost.hpp" 
-#include "util/use_helpers.hpp" 
 #include <string> 
 
 BOOST_AUTO_TEST_CASE(test_current) 
