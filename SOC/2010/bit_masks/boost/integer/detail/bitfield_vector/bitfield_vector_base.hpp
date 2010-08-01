@@ -9,6 +9,18 @@
 
 namespace boost { namespace detail {
 
+/** bitfield_vector_base
+ *  This a bitfield_vector's base class (if you can't tell by the name) and it
+ *  is used for dealing directly with the allocator's memory allocation
+ *  and is not responsible for the construction of any of the elements wihtin
+ *  with in the bitfield_vector. This achieves 2 things 1) allows me to test
+ *  the data structures interface with the allocator as a policy. 2) Allows
+ *  for better exception handling.
+ *
+ *  This is the base level of the data structure there are 2 or more layers
+ *  on top of this class which are used for dealing with different aspects of
+ *  of the data strutures responsiblities.
+ */
 template <typename T, typename Allocator>
 struct bitfield_vector_base {
     typedef T value_type;
