@@ -7,11 +7,13 @@
 #define BOOST_BITFIELD_VECTOR_HPP
 #include <memory>
 #include <boost/integer/detail/bitfield_vector/bitfield_vector_member_impl.hpp>
+#include <boost/integer/detail/bitfield_vector/bitfield_vector_base.hpp>
+#include <cstring>
 
 namespace boost {
 
-template <typename,typename>
-class vector;
+// template <typename,typename>
+// class vector;
 
 template <typename T,std::size_t>
 struct bits;
@@ -32,55 +34,64 @@ struct const_bf_vector_reverse_iterator { };
 //@}
 
 
-template <typename T, std::size_t Width, typename Allocator >
-class vector< bits<T,Width>, Allocator > {
-    typedef vector< bits<T,Width>, Allocator >  _self;
-public:
-    typedef bf_vector_iterator<T,Width> iterator;
-    typedef const_bf_vector_iterator<T,Width> const_iterator;
-    typedef bf_vector_reverse_iterator<T,Width> reverse_iterator;
-    typedef const_bf_vector_reverse_iterator<T,Width> const_reverse_iterator;
-    typedef T value_type;
+template <  typename T,
+            std::size_t Width,
+            typename Allocator = std::allocator<unsigned char>
+>
+class bitfield_vector
+    :protected detail::bitfield_vector_base<T,Allocator>
+{
+    typedef bitfield_vector< T,Width, Allocator >  _self;
+    typedef detail::bitfield_vector_base<T,Allocator> _base;
 
-    typedef Allocator allocator_type;
-    typedef typename Allocator::size_type size_type;
-    typedef typename Allocator::difference_type difference_type;
-    typedef typename Allocator::pointer pointer;
-    typedef typename Allocator::const_pointer const_pointer;
+public:
+    typedef bf_vector_iterator<T,Width>                 iterator;
+    typedef const_bf_vector_iterator<T,Width>           const_iterator;
+    typedef bf_vector_reverse_iterator<T,Width>         reverse_iterator;
+    typedef const_bf_vector_reverse_iterator<T,Width>   const_reverse_iterator;
+    typedef T                                           value_type;
+    typedef Allocator                                   allocator_type;
+    typedef std::size_t                                 size_type;
+    typedef std::ptrdiff_t                              difference_type;
+    typedef typename _base::storage_type*               pointer;
+    typedef typename _base::storage_type const*         const_pointer;
     
     class reference {
-        friend class vector;
+        friend class bitfield_vector;
         reference();
     public:
         ~reference();
-        operator value_type () const;
-        reference& operator= (const value_type x);
-        reference& operator= (const reference& x);
+        operator value_type() const;
+        reference& operator= (value_type const&  x);
+        reference& operator= (reference const & x);
         void flip();
     };
 
     class const_reference {
-        friend class vector;
+        friend class bitfield_vector;
         const_reference();
     public:
         ~const_reference();
-        // operator value_type () const;
-        const_reference& operator= (const value_type x);
-        const_reference& operator= (const const_reference& x);
+        operator value_type () const;
+        // const_reference& operator=(const value_type x);
+        const_reference& operator=(const_reference const& x);
         void flip();
     };
 
 
-    explicit vector(const Allocator& = Allocator() );
-    explicit vector(size_type n, const T& value= T(),
-        const Allocator& = Allocator() );
-    template <class InputIterator>
-    vector(InputIterator first, InputIterator last,
-        const Allocator& = Allocator());
-    vector( const vector<T,Allocator>& x );
-    ~vector();
+    explicit bitfield_vector(Allocator const& alloc = Allocator() )
+        :_base(alloc)
+    { }
 
-    _self& operator=(const _self& x);
+    explicit bitfield_vector(size_type n, T const& value= T(),
+        Allocator const& = Allocator() );
+    template <class InputIterator>
+    bitfield_vector(InputIterator first, InputIterator last,
+        Allocator const& = Allocator());
+    bitfield_vector(_self const& x );
+    ~bitfield_vector();
+
+    _self& operator=(_self const& x);
 
     iterator    begin();
     iterator    end();
@@ -112,11 +123,11 @@ public:
     template <class InputIterator>
     void assign(InputIterator first, InputIterator last);
 
-    void assign(size_type n, const value_type& u);
-    void push_back(const value_type& x);
+    void assign(size_type n, value_type const& u);
+    void push_back(value_type const& x);
     void pop_back();
-    iterator insert(iterator position, const value_type& x);
-    void insert(iterator position, size_type n, const value_type& x);
+    iterator insert(iterator position, value_type const& x);
+    void insert(iterator position, size_type n, value_type const& x);
 
     template <class InputIterator>
     void insert(iterator position, InputIterator first, InputIterator last);
@@ -126,6 +137,11 @@ public:
     void swap(_self& vec);
     void clear();
     allocator_type get_allocator() const;
+
+protected:
+    void check_for_resizing() {
+        // next_allocation_size<Width>
+    }
 };
 
 } // end boost

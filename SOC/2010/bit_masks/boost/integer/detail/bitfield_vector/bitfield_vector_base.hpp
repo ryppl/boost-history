@@ -23,8 +23,9 @@ namespace boost { namespace detail {
  */
 template <typename T, typename Allocator>
 struct bitfield_vector_base {
+    typedef unsigned char storage_type;
     typedef T value_type;
-    typedef typename Allocator::template rebind<unsigned char>::other
+    typedef typename Allocator::template rebind<storage_type>::other
         rebound_alloc_type;
     typedef Allocator allocator;
 
@@ -109,7 +110,7 @@ struct bitfield_vector_base {
 
     /** Calles allocate unless n = 0. */
     typename rebound_alloc_type::pointer allocate_impl(std::size_t n) {
-        return n != 0 ? _impl.allocate( n ): 0;
+        return n != 0 ? _impl.allocate(n): 0;
     }
 
     /** Calles deallocate unless ptr = 0. */
