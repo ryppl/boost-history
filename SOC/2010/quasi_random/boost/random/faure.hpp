@@ -305,7 +305,7 @@ public:
   {
     this->curr_elem = 0;
     this->seq_count = init;
-    this->lattice.update(this->seq_count, this->quasi_state);
+    this->lattice.update(init, this->quasi_state);
   }
 
   //=========================Doxygen needs this!==============================
@@ -350,8 +350,7 @@ private:
 /** @cond hide_private_members */
   void compute_next_vector()
   {
-    this->seq_count++;
-    this->lattice.update(this->seq_count, this->quasi_state);
+    this->lattice.update(this->seq_count++, this->quasi_state);
   }
 /** @endcond */
 };
