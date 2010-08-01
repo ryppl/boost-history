@@ -95,11 +95,12 @@ struct bitfield_vector_base {
     }
 
 
-
+    /** Calles allocate unless n = 0. */
     typename rebound_alloc_type::pointer allocate_impl(std::size_t n) {
         return n != 0 ? _impl.allocate( n ): 0;
     }
 
+    /** Calles deallocate unless ptr = 0. */
     void
     deallocate_impl(typename rebound_alloc_type::pointer ptr, std::size_t n) {
         if(ptr) {

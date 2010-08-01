@@ -245,7 +245,22 @@ int main() {
     BOOST_TEST( allocate_called );
     BOOST_TEST( deallocate_called );
     reset_allocator_test_variables();
+    // testing for get alloc
     {
+        // Allocator Constructor
+        alloc temp_alloc;
+        vector_base_type allocator_constructed(temp_alloc);
+        reset_allocator_test_variables();
+        alloc t = allocator_constructed.get_allocator();
+        BOOST_TEST( allocation_size == 0 );
+        BOOST_TEST( !allocator_copy_called );
+        BOOST_TEST( !default_constructor_called );
+        BOOST_TEST( copy_other_allocator_called );
+        BOOST_TEST( !destructor_called );
+        BOOST_TEST( ptr_deallocation_address == 0 );
+        BOOST_TEST( deallocation_size == 0 );
+        BOOST_TEST( !allocate_called );
+        BOOST_TEST( !deallocate_called );
     }
     return boost::report_errors();
 }
