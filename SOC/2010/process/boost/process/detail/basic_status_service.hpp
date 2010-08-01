@@ -104,7 +104,7 @@ public:
     int wait(implementation_type &impl, pid_type pid)
     {
         boost::system::error_code ec;
-        int status = impl.wait(pid, ec);
+        int status = impl->wait(pid, ec);
         boost::asio::detail::throw_error(ec);
         return status;
     }

@@ -14,6 +14,9 @@
 alias bfs : /boost//filesystem : : : <link>shared:<source>/boost//system ; 
 explicit bfs ; 
 
+alias bt : /boost//thread ; 
+explicit bt ; 
+
 project : requirements 
         <target-os>windows:<define>WIN32_LEAN_AND_MEAN 
         <target-os>linux:<linkflags>-lpthread ; 
@@ -31,3 +34,4 @@ run child.cpp bfs : : helpers : <dependency>helpers ;
 run executable.cpp bfs : : helpers : <dependency>helpers ; 
 run process.cpp bfs : : helpers : <dependency>helpers ; 
 run status.cpp bfs : : helpers : <dependency>helpers ; 
+run wait.cpp bfs bt : : helpers : <dependency>helpers ; 
