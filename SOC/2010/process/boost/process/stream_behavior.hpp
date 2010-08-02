@@ -210,7 +210,7 @@ public:
 
         if (mkfifo(s.c_str(), S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) == -1)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("mkfifo(3) failed");
-        child_end_ = open(s.c_str(), O_RDONLY);
+        child_end_ = open(s.c_str(), O_RDONLY | O_NONBLOCK);
         if (!child_end_.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
         parent_end_ = open(s.c_str(), O_WRONLY);
@@ -281,9 +281,10 @@ public:
 #endif
     }
 
-    static boost::shared_ptr<named_pipe> create(stream_type stream)
+    static boost::shared_ptr<named_pipe> create(stream_type stream,
+        std::string *name = 0)
     {
-        return boost::make_shared<named_pipe>(named_pipe(stream));
+        return boost::make_shared<named_pipe>(named_pipe(stream, name));
     }
 
     handle get_child_end()

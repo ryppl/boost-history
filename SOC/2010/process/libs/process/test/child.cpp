@@ -442,7 +442,7 @@ void write_handler(const boost::system::error_code &ec,
     std::size_t bytes_transferred) 
 { 
     BOOST_REQUIRE_EQUAL(ec, boost::system::error_code()); 
-    BOOST_CHECK_EQUAL(bytes_transferred, 4); 
+    BOOST_CHECK_EQUAL(bytes_transferred, 4u); 
 } 
 
 void read_handler(const boost::system::error_code &ec, 
