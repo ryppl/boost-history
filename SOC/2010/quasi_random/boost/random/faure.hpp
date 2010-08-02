@@ -72,12 +72,26 @@ inline std::size_t integer_log(std::size_t arg)
   return ilog;
 }
 
-inline std::size_t integer_pow(std::size_t arg, std::size_t p)
+// Implements exponentiation by squaring, for p > ~4 this is computationally
+// more efficient than naïvely multiplying the base with itself repeatedly.
+// In erroneous situations, e.g., integer_pow(0, 0) the function returns 1
+// and does not report the error. This is the intended behavior.
+inline std::size_t integer_pow(std::size_t base, std::size_t p)
 {
-  std::size_t ipow = 1;
-  while( p-- )
-    ipow *= arg;
-  return ipow;
+  std::size_t result = 1;
+  for( ; p != 0; p >>= 1, base *= base )
+  {
+    // A typical way to implement the multiplication
+    // would be something like this:
+    // if( p & 1 )
+    //   result *= base;
+    // Apart from being simple this method, however,
+    // does not have a lot of other advantages, it is not, especially,
+    // friendly to CPU branch prediction routines.
+    std::size_t k = (p & 1); // k in {0,1}
+    result *= (k * base + !k);
+  }
+  return result;
 }
 
 // Computes a table of binomial coefficients modulo qs.
