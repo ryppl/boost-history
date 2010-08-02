@@ -345,7 +345,7 @@ public:
 
 private:
 /** @cond hide_private_members */
-  void compute_next(std::size_t seq)
+  void compute_next(std::size_t)
   {
     this->lattice.update(this->seq_count, this->quasi_state);
   }
