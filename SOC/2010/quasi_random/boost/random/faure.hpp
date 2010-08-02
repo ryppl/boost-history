@@ -302,7 +302,7 @@ public:
   {
     this->curr_elem = 0;
     this->seq_count = init;
-    this->lattice.update(init, this->quasi_state);
+    compute_next(init);
   }
 
   //=========================Doxygen needs this!==============================
