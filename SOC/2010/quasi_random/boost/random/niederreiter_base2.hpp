@@ -358,7 +358,7 @@ public:
   //!\brief Throws: nothing.
   void seed()
   {
-    base_t::reset_state();
+    base_t::seed();
   }
 
   //!Requirements: *this is mutable.

@@ -122,7 +122,7 @@ struct binomial_coefficients
       resize(hisum);
 
     quasi[0] =
-      compute_recip(seq, hisum, ytemp.rbegin(), ytemp.rend());
+      compute_recip(seq, hisum, ytemp.rbegin());
 
     // Find components using the Faure method.
     for( std::size_t k = 1; k < Dimension; ++k )
@@ -164,24 +164,21 @@ private:
   }
 
   template<typename Iterator>
-  inline static RealType compute_recip(std::size_t seq, std::size_t n,
-      Iterator first, Iterator last)
+  inline static RealType compute_recip(std::size_t seq, std::size_t n, Iterator out)
   {
-    //BOOST_ASSERT( std::distance(first, last) == n );
-
     // Here we do
     //   Sum ( 0 <= J <= HISUM ) YTEMP(J) * QS**J
     //   Sum ( 0 <= J <= HISUM ) YTEMP(J) / QS**(J+1)
     // in one go
-    RealType v, r = RealType();
+    RealType r = RealType();
     std::size_t m, k = integer_pow(qs_base, n - 1);
-    for( ; first != last; ++first, seq = m, k /= qs_base )
+    for( ; n != 0; --n, ++out, seq = m, k /= qs_base )
     {
       m  = seq % k;
-      v  = (seq - m) / k;
+      RealType v  = (seq - m) / k; // RealType <- IntType
       r += v;
       r *= inv_qs_base();
-      *first = v; // saves double dereference
+      *out = v; // saves double dereference
     }
     return r;
   }
@@ -348,9 +345,9 @@ public:
 
 private:
 /** @cond hide_private_members */
-  void compute_next_vector()
+  void compute_next(std::size_t seq)
   {
-    this->lattice.update(this->seq_count++, this->quasi_state);
+    this->lattice.update(seq, this->quasi_state);
   }
 /** @endcond */
 };

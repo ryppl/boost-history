@@ -20,6 +20,8 @@
 // These tests compare our results with values produced by the original
 // version of ACM TOMS Algorithm 647, which  is available in the
 // TOMS subdirectory in http://www.netlib.org
+//
+// For independently generated datasets look at http://people.sc.fsu.edu/~jburkardt/datasets/faure/
 
 
 // Spatial dimension: 2

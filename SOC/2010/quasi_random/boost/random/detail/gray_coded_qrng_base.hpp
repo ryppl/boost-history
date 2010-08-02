@@ -60,25 +60,31 @@ public:
   {
     this->curr_elem = rhs.curr_elem;
     this->seq_count = rhs.seq_count;
-    std::copy(rhs.quasi_state, rhs.quasi_state + base_t::dimension_value, this->quasi_state);
+    std::copy(rhs.quasi_state, rhs.quasi_state + base_t::dimension, this->quasi_state);
     // we do not copy lattice here!
     return *this;
   }
 
-protected:
-  void reset_state()
+  //!Requirements: *this is mutable.
+  //!
+  //!Effects: Resets the quasi-random number generator state to
+  //!the one given by the default construction. Equivalent to u.seed(0).
+  //!
+  //!\brief Throws: nothing.
+  void seed()
   {
     this->curr_elem = 0;
     this->seq_count = 0;
-    std::fill(this->quasi_state, this->quasi_state + base_t::dimension_value, 0);
+    this->clear_cached();
   }
 
+protected:
   void seed(std::size_t init, const char *msg)
   {
     this->curr_elem = 0;
     if ( init != this->seq_count )
     {
-      base_t::derived().seed();
+      this->clear_cached(); // clears state
 
       this->seq_count = init;
       init ^= (init / 2);
@@ -92,21 +98,22 @@ protected:
 
 private:
 
-  void compute_next_vector()
-  {
-    update_state(this->seq_count++, "compute_next_vector");
-  }
-
-  void update_state(std::size_t cnt, const char *msg)
+  void compute_next(std::size_t seq)
   {
     // Find the position of the least-significant zero in sequence count.
     // This is the bit that changes in the Gray-code representation as
     // the count is advanced.
     int r = 0;
-    for( ; cnt & 1; cnt >>= 1 ) {
+    for( ; seq & 1; seq >>= 1 ) {
       ++r;
     }
-    update_quasi(r, msg);
+    update_quasi(r, "compute_next");
+  }
+
+  // Initializes currently stored values to zero
+  void clear_cached()
+  {
+    std::fill(this->quasi_state, this->quasi_state + base_t::dimension, result_type());
   }
 
   void update_quasi(int r, const char* msg)
@@ -115,7 +122,7 @@ private:
       boost::throw_exception( std::overflow_error(msg) );
 
     // Calculate the next state.
-    for(std::size_t i = 0; i != base_t::dimension_value; ++i)
+    for(std::size_t i = 0; i != base_t::dimension; ++i)
       this->quasi_state[i] ^= this->lattice(r, i);
   }
 };

@@ -348,7 +348,7 @@ public:
   /** @copydoc boost::random::niederreiter_base2::seed() */
   void seed()
   {
-    base_t::reset_state();
+    base_t::seed();
   }
 
   /** @copydoc boost::random::niederreiter_base2::seed(std::size_t) */

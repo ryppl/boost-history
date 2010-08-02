@@ -29,7 +29,7 @@ class qrng_base
 {
 protected:
 
-  BOOST_STATIC_CONSTANT(std::size_t, dimension_value = LatticeT::dimension_value);
+  BOOST_STATIC_CONSTANT(std::size_t, dimension = LatticeT::dimension_value);
 
 public:
 
@@ -62,7 +62,7 @@ public:
   //!Throws: overflow_error.
   result_type operator()()
   {
-    return curr_elem != dimension_value ? load_saved(): next_state();
+    return curr_elem != dimension ? load_saved(): next_state();
   }
 
   //!Requirements: *this is mutable.
@@ -73,13 +73,13 @@ public:
   //!Throws: overflow_error.
   void discard(std::size_t z)
   {
-    std::size_t vec_n  = z / dimension_value;
-    std::size_t elem_n = z - vec_n * dimension_value; // z % Dimension
-    std::size_t vec_offset = vec_n + (curr_elem + elem_n) / dimension_value;
+    std::size_t vec_n  = z / dimension;
+    std::size_t elem_n = z - vec_n * dimension; // z % Dimension
+    std::size_t vec_offset = vec_n + (curr_elem + elem_n) / dimension;
     // Discards vec_offset consecutive s-dimensional vectors
     discard_vector(vec_offset);
     // Sets up the proper position of the element-to-read
-    curr_elem += (z - dimension_value * vec_offset);
+    curr_elem += (z - dimension * vec_offset);
   }
 
 protected:
@@ -114,10 +114,10 @@ protected:
   bool is_equal(const DerivedT& rhs) const
   {
     // compare normalized sequence position, but without the possible overflow
-    // that would go with seq_count * dimension_value + curr_elem.
-    return (seq_count + (curr_elem / dimension_value) ==
-              rhs.seq_count + (rhs.curr_elem / dimension_value)) &&
-           (curr_elem % dimension_value == rhs.curr_elem % dimension_value);
+    // that would go with seq_count * dimension + curr_elem.
+    return (seq_count + (curr_elem / dimension) ==
+              rhs.seq_count + (rhs.curr_elem / dimension)) &&
+           (curr_elem % dimension == rhs.curr_elem % dimension);
   }
 
 private:
@@ -130,7 +130,7 @@ private:
 
   result_type next_state()
   {
-    derived().compute_next_vector();
+    derived().compute_next(seq_count++);
 
     curr_elem = 0;
     return load_saved();
@@ -159,7 +159,7 @@ protected:
   LatticeT lattice;
   std::size_t curr_elem;
   std::size_t seq_count;
-  result_type quasi_state[dimension_value];
+  result_type quasi_state[dimension];
 };
 
 }} // namespace detail::random
