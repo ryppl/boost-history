@@ -436,3 +436,52 @@ BOOST_AUTO_TEST_CASE(test_set_environment_var)
     BOOST_CHECK_EQUAL(p2.second, "''"); 
 #endif 
 } 
+
+void handler(const boost::system::error_code &ec, std::size_t bytes_transferred) 
+{ 
+} 
+
+ba::io_service ioservice;
+BOOST_AUTO_TEST_CASE(should_write_async)
+{
+
+    std::vector<std::string> args; 
+    args.push_back("read-message"); 
+    args.push_back("my_message"); 
+
+    bp::context ctx; 
+    ctx.stdin_behavior = bp::behavior::named_pipe::create(bp::behavior::named_pipe::input_stream);
+
+    bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
+    bp::postream &os = c.get_stdin(); 
+
+    bp::pipe write_end(ioservice, os.handle().release()); 
+
+    write_end.async_write_some(ba::buffer("my_message\n"), handler); 
+    ioservice.run(); 
+
+    //need to wait for value
+}
+
+BOOST_AUTO_TEST_CASE(should_write_async)
+{
+    std::vector<std::string> args; 
+    args.push_back("echo-stdout"); 
+    args.push_back("my_message"); 
+
+    bp::context ctx; 
+    ctx.stdout_behavior = bp::behavior::named_pipe::create(bp::behavior::named_pipe::output_stream);
+
+    bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
+    bp::pistream &is = c.get_stdout(); 
+
+    bp::pipe read_end(ioservice, is.handle().release()); 
+
+    ba::buffer buff;
+    read_end.async_read_some(buff, handler); 
+    ioservice.run(); 
+
+    //need to wait for value
+    BOOST_CHECK_EQUAL(buff, "my_message");
+
+}

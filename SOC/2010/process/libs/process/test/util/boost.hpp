@@ -25,5 +25,6 @@ namespace bpd = boost::process::detail;
 namespace but = boost::unit_test; 
 namespace butf = boost::unit_test::framework; 
 namespace bfs = boost::filesystem; 
+namespace ba = boost::asio;
 
 #endif 
