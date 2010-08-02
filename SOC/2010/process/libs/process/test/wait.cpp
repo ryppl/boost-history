@@ -24,12 +24,9 @@
 #define BOOST_TEST_MAIN 
 #include "util/boost.hpp" 
 #include "util/use_helpers.hpp" 
-#include <boost/asio.hpp> 
 #include <string> 
 #include <vector> 
 #include <cstdlib> 
-
-namespace ba = boost::asio; 
 
 BOOST_AUTO_TEST_CASE(test_child_wait) 
 { 

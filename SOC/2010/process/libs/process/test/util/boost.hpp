@@ -18,6 +18,9 @@
 #define BOOST_TEST_IGNORE_SIGCHLD 
 #include <boost/test/included/unit_test.hpp> 
 #include <boost/filesystem.hpp> 
+#include <boost/asio.hpp> 
+#include <boost/bind.hpp> 
+#include <boost/ref.hpp> 
 
 namespace bp = boost::process; 
 namespace bpb = boost::process::behavior; 
@@ -25,6 +28,6 @@ namespace bpd = boost::process::detail;
 namespace but = boost::unit_test; 
 namespace butf = boost::unit_test::framework; 
 namespace bfs = boost::filesystem; 
-namespace ba = boost::asio;
+namespace ba = boost::asio; 
 
 #endif 

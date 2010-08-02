@@ -190,16 +190,6 @@ int h_win32_print_startupinfo(int argc, char *argv[])
 } 
 #endif 
 
-int h_read_message(int argc, char *argv[]){
-    std::string buff;
-    std::cin >> buff;
-    if(buff == argv[1])
-        return EXIT_SUCCESS;
-    else
-        return -1;
-}
-
-
 } 
 
 struct helper 
@@ -209,7 +199,6 @@ struct helper
     int min_argc; 
     const char *syntax; 
 } helpers[] = { 
-    { "read-message", h_read_message, 1, "message" }, 
     { "echo-quoted", h_echo_quoted, 2, "word" }, 
     { "echo-stdout", h_echo_stdout, 2, "message" }, 
     { "echo-stderr", h_echo_stderr, 2, "message" }, 
