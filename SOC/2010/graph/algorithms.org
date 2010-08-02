@@ -1,0 +1,430 @@
+* References:
+** http://wiki.sagemath.org/graph_survey
+   Survay on graph libraries
+** http://wiki.sagemath.org/graph
+   Graph library on SAGE
+   Uses a lot of NetworkX behind
+** http://graph-theory-algorithms-book.googlecode.com/files/graph-theory-0.3.pdf
+   Theory using SAGE for examples
+** http://www-cs-faculty.stanford.edu/~uno/sgb.html
+   GraphBase (C)
+** http://igraph.sourceforge.net/doc/R/operators.html
+   igraph (R)
+** http://igraph.sourceforge.net/
+   igraph (C)
+** http://networkx.lanl.gov/reference/algorithms.html
+   NetworkX (python)
+** http://www.jgrapht.org/javadoc/org/jgrapht/graph/GraphUnion.html
+   JGraphT (Java)
+* Algorithms
+** Union (aka Sum)
+*** Methods
+  - void graph_union(g1, g2, g_out)
+  - graph graph_union(g1, g2)
+  - void graph_union_inplace(g1_out, g2)
+*** Input
+    Labeled g1 and g2.
+*** Description
+    Union of vertices and edges.
+    V(g_out) = V(g1) union V(g2)
+    E(g_out) = E(g1) union E(g2)
+*** Algorithm
+    Copy all vertices from g1
+    Copy all vertices from g2 - g1
+    Copy all edges from g1
+    Copy all edges from g2 - g1
+*** Notes
+    Make it clear that this is not graph_disjoint_union
+    A lot of problems with name:
+    - Sum is not used everywhere
+    - Union sometimes means disjoint union
+    - in NetworkX is called compose
+*** Questions
+    - How to copy properties?
+    - Choose the name (make graph_union and graph_sum as alias?)
+*** Links
+    - http://mathworld.wolfram.com/GraphSum.html
+    - http://reference.wolfram.com/mathematica/Combinatorica/ref/GraphSum.html
+    - http://networkx.lanl.gov/reference/generated/networkx.compose.html
+    - http://igraph.sourceforge.net/doc/html/igraph_union.html
+    - http://www.jgrapht.org/javadoc/org/jgrapht/graph/GraphUnion.html
+** Difference
+*** Methods
+  - void graph_difference(g1, g2, g_out)
+  - graph graph_difference(g1, g2)
+  - void graph_difference_inplace(g1_out, g2)
+*** Input
+    Labeled g1 and g2.
+*** Description
+    g1 without the edges in g2
+    V(g_out) = V(g1)
+    E(g_out) = E(g1) - E(g2)
+*** Algorithm
+    Copy all vertices from g1
+    Copy all edges from g1 - g2
+*** Links
+    - http://mathworld.wolfram.com/GraphDifference.html
+    - http://reference.wolfram.com/mathematica/Combinatorica/ref/GraphDifference.html
+    - http://networkx.lanl.gov/reference/generated/networkx.difference.html
+    - http://igraph.sourceforge.net/doc/html/igraph_difference.html
+** Intersection
+*** Methods
+  - void graph_intersection(g1, g2, g_out)
+  - graph graph_intersection(g1, g2)
+  - void graph_intersection_inplace(g1_out, g2)
+*** Input
+    Labeled g1 and g2.
+*** Description
+    Intersection of vertices and edges
+    V(g_out) = V(g1) intersection V(g2)
+    E(g_out) = E(g1) intersection E(g2)
+*** Algorithm
+    Copy all vertices from g1 & g2
+    Copy all edges from g1 & g2
+*** Questions
+    - How to copy properties?
+*** Links
+    - http://graph-theory-algorithms-book.googlecode.com/files/graph-theory-0.3.pdf [page 18]
+    - http://mathworld.wolfram.com/GraphIntersection.html
+    - http://reference.wolfram.com/mathematica/Combinatorica/ref/GraphIntersection.html
+    - http://networkx.lanl.gov/reference/generated/networkx.intersection.html
+    - http://igraph.sourceforge.net/doc/html/igraph_intersection.html
+** Vertex symmetric difference
+*** Methods
+  - void graph_symmetric_difference(g1, g2, g_out)
+  - graph graph_symmetric_difference(g1, g2)
+*** Input
+    Labeled g1 and g2.
+*** Description
+    Symmetric difference (xor) on the vertices.
+    All edges adjacent to vertices in the output appears.
+    Therefore, it is a subset of edge symmetric difference.
+    V(g_out) = V(g1) xor V(g2)
+             = (V(g1) - V(g2)) union (V(g2) - V(g1))
+    E(g_out) = { e=(u,v) \in E(g1) union E(g2) | u, v \in V(g_out) }
+             = { e=(u,v) \in E(g1) xor E(g2) | u, v \in V(g_out) }
+             \subseteq E(g1) xor E(g2)
+*** Algorithm
+    Copy all vertices from g1 & g2
+    Copy all edges from g1 & g2
+*** Notes
+    I created the name "vertex symmetric difference" and "edge symmetric difference".
+    "graph-theory-0.3" defines "vertex symmetric difference", but when V(g1) = V(g2), it changes the definition.
+*** Questions
+    - Does it make sense to have an in-place version?
+*** Links
+    - http://graph-theory-algorithms-book.googlecode.com/files/graph-theory-0.3.pdf [page 18-19]
+    - http://books.google.com/books?id=0ghuqEYf25YC&lpg=PA76&ots=cr4vXOlk5g&dq=symmetric%20difference%20graph&pg=PA76#v=onepage&q=symmetric%20difference%20graph&f=false
+** Edge symmetric difference
+*** Methods
+  - void graph_edge_symmetric_difference(g1, g2, g_out)
+  - graph graph_edge_symmetric_difference(g1, g2)
+*** Input
+    Labeled g1 and g2.
+*** Description
+    Symmetric difference (xor) on the edge sets. All vertices appears in the output.
+    V(g_out) = V(g1) union V(g2)
+    E(g_out) = E(g1) xor E(g2) = (E(g1) - E(g2)) union (E(g2) - E(g1))
+*** Algorithm
+    Copy all vertices from g1
+    Copy all vertices from g2 - g1
+    Copy all edges from g1 - g2
+    Copy all edges from g2 - g1
+*** Notes
+    Is the same as
+    graph_sum(graph_difference(g1,g2), graph_difference(g2,g1))
+    which is the same as
+    graph_union(graph_difference(g1,g2), graph_difference(g2,g1))
+
+    I created the name "vertex symmetric difference" and "edge symmetric difference".
+    "graph-theory-0.3" defines "vertex symmetric difference", but when V(g1) = V(g2), it changes the definition.
+*** Questions
+    - Does it make sense to have an in-place version?
+    - How to copy properties? [only for vertices]
+*** Links
+    - http://graph-theory-algorithms-book.googlecode.com/files/graph-theory-0.3.pdf [page 18-19]
+    - http://networkx.lanl.gov/reference/generated/networkx.symmetric_difference.html
+** Disjoint union
+*** Methods
+  - void graph_disjoint_union(g1, g2, g_out)
+  - graph graph_disjoint_union(g1, g2)
+  - void graph_disjoint_union(g1_out, g2)
+*** Input
+    g1 and g2.
+*** Precondition
+    V(g1) intersection V(g2) = empty
+    [don't appear in the implementation because we don't care about labels here]
+*** Description
+    Disjoint union of vertices and edges.
+    V(g_out) = V(g1) union V(g2)
+    E(g_out) = E(g1) union E(g2)
+    with V(g1) intersection V(g2) = empty
+*** Algorithm
+    Copy all vertices from g1
+    Copy all edges from g1
+    Copy all vertices from g2
+    Copy all edges from g2
+*** Notes
+    - the same as two copies
+    - add a visitor pattern here
+    - sometimes called just as "union"
+*** Links
+    - http://graph-theory-algorithms-book.googlecode.com/files/graph-theory-0.3.pdf [page 18]
+    - http://en.wikipedia.org/wiki/Graph_operations#Binary_operations
+    - http://mathworld.wolfram.com/GraphUnion.html
+    - http://reference.wolfram.com/mathematica/Combinatorica/ref/GraphUnion.html
+    - http://networkx.lanl.gov/reference/generated/networkx.union.html
+    - http://networkx.lanl.gov/reference/generated/networkx.disjoint_union.html
+    - http://igraph.sourceforge.net/doc/html/igraph_disjoint_union.html
+** Join
+*** Methods
+  - void graph_join(g1, g2, g_out)
+  - graph graph_join(g1, g2)
+*** Input
+    g1 and g2.
+*** Precondition
+    V(g1) intersection V(g2) = empty
+    [don't appear in the implementation because we don't care about labels here]
+*** Description
+    The disjoint union of g1 and g2 together with edges joining V(g1) and V(g2).
+    V(g_out) = V(g1 disjoint union g2)
+             = V(g1) union V(g2)
+    E(g_out) = E(g1 disjoint union g2) union { e=(u,v) | (e \in g1 x g2) or (e \in g2 x g1) }
+             = E(g1) union E(g2) union (g1 x g2) union (g2 x g1)
+    with V(g1) intersection V(g2) = empty
+*** Algorithm
+    Copy all vertices from g1
+    Copy all edges from g1
+    Copy all vertices from g2
+    Copy all edges from g2
+    For each pair (u,v) in g1 x g2 do
+      Create edge (u,v) [and edge (v,u) if directed]
+*** Notes
+    - add a visitor pattern here
+    - creates brand new edges (mixed with copies)
+*** Questions
+    - Does it make sense to have an in-place version?
+*** Links
+    - http://graph-theory-algorithms-book.googlecode.com/files/graph-theory-0.3.pdf [page 19]
+    - http://en.wikipedia.org/wiki/Graph_operations
+    - http://mathworld.wolfram.com/GraphJoin.html
+    - http://reference.wolfram.com/mathematica/Combinatorica/ref/GraphJoin.html
+** Copy
+   Already implemented
+*** Links
+    - http://www.boost.org/doc/libs/1_43_0/libs/graph/doc/copy_graph.html
+** Subgraph
+   Already implemented
+*** Links
+    - http://www.boost.org/doc/libs/1_34_1/libs/graph/doc/subgraph.html
+** Transpose
+   Already implemented
+*** Links
+    - http://www.boost.org/doc/libs/1_43_0/libs/graph/doc/transpose_graph.html
+    - http://en.wikipedia.org/wiki/Transpose_graph
+** Complement
+*** Methods
+  - void graph_complement(g_in, g_out)
+  - graph graph_complement(g_in)
+  - void graph_complement_inplace(g_in)
+  - void graph_reflexive_complement(g_in, g_out)
+  - graph graph_reflexive_complement(g_in)
+  - void graph_reflexive_complement_inplace(g_in)
+*** Input
+    g_in
+*** Description
+    The graph with the same vertex set such that two vertices are
+    adjacent if and only if they are not adjacent in the input.
+    V(g_out) = V(g_in)
+    E(g_out) = { e=(u,v) | u,v \in V(g_in), u!=v and e \notin E(g_in) }
+    The reflexive version allows loops:
+    E(g_out) = { e=(u,v) | u,v \in V(g_in) and e \notin E(g_in) }
+*** Algorithm
+    Copy all vertices from g_in
+    For each pair (u,v) in g_in x g_in do
+      if (reflexive or u != v)
+        Create edge (u,v) if !edge( u,v, g_in )
+*** Notes
+    - creates brand new edges (and copy vertices)
+*** Questions
+    - Use graph_inverse as alias? (better not, can make it confusing with transpose_graph)
+    - Does it make sense to have an in-place version?
+*** Links
+    - http://graph-theory-algorithms-book.googlecode.com/files/graph-theory-0.3.pdf [page 21-22]
+    - http://en.wikipedia.org/wiki/Complement_graph
+    - http://mathworld.wolfram.com/GraphComplement.html
+    - http://reference.wolfram.com/mathematica/Combinatorica/ref/GraphComplement.html
+    - http://networkx.lanl.gov/reference/generated/networkx.complement.html
+    - http://igraph.sourceforge.net/doc/html/igraph_complementer.html
+** TODO Transitive Closure
+   Already implemented
+*** Methods
+  - void graph_transitive_closure(g_in, g_out)
+  - graph graph_transitive_closure(g_in)
+  - void graph_transitive_closure_inplace(g_in)
+*** Input
+    g_in
+*** Description
+    V(g_out) = V(g_in)
+    E(g_out) = E(g_in)
+*** Algorithm
+*** Notes
+*** Questions
+    - Does it make sense to have an in-place version?
+*** Links
+    - http://en.wikipedia.org/wiki/Transitive_closure
+    - http://mathworld.wolfram.com/TransitiveClosure.html
+    - http://reference.wolfram.com/mathematica/Combinatorica/ref/TransitiveClosure.html
+    - http://www.cs.hut.fi/~enu/tc.html
+      (why and where is it needed?)
+    - http://www.cs.sunysb.edu/~algorith/files/transitive-closure.shtml
+** TODO Transitive Reduction
+*** Methods
+  - void graph_transitive_reduction(g_in, g_out)
+  - graph graph_transitive_reduction(g_in)
+  - void graph_transitive_reduction_inplace(g_in)
+*** Input
+    g_in
+*** Description
+    V(g_out) = V(g_in)
+    E(g_out) = E(g_in)
+*** Algorithm
+*** Notes
+*** Questions
+    - Does it make sense to have an in-place version?
+*** Links
+    - http://lists.boost.org/Archives/boost/2009/03/149857.php (!!)
+    - http://en.wikipedia.org/wiki/Transitive_reduction
+    - http://mathworld.wolfram.com/TransitiveReduction.html
+    - http://www.cs.sunysb.edu/~algorith/files/transitive-closure.shtml
+** TODO Symmetric Closure
+*** Methods
+  - void graph_symmetric_closure(g_in, g_out)
+  - graph graph_symmetric_closure(g_in)
+  - void graph_symmetric_closure_inplace(g_in)
+*** Input
+    g_in
+*** Description
+    V(g_out) = V(g_in)
+    E(g_out) = E(g_in)
+*** Algorithm
+*** Notes
+*** Questions
+    - Does it make sense to have an in-place version?
+*** Links
+    - http://en.wikipedia.org/wiki/Symmetric_closure
+** TODO Reflexive Closure
+*** Methods
+  - void graph_reflexive_closure(g_in, g_out)
+  - graph graph_reflexive_closure(g_in)
+  - void graph_reflexive_closure_inplace(g_in)
+*** Input
+    g_in
+*** Description
+    V(g_out) = V(g_in)
+    E(g_out) = E(g_in)
+*** Algorithm
+*** Notes
+*** Questions
+    - Does it make sense to have an in-place version?
+*** Links
+    - http://en.wikipedia.org/wiki/Reflexive_closure
+    - http://mathworld.wolfram.com/ReflexiveClosure.html
+** TODO Reflexive Reduction
+*** Methods
+  - void graph_reflexive_reduction(g_in, g_out)
+  - graph graph_reflexive_reduction(g_in)
+  - void graph_reflexive_reduction_inplace(g_in)
+*** Input
+    g_in
+*** Description
+    V(g_out) = V(g_in)
+    E(g_out) = E(g_in)
+*** Algorithm
+*** Notes
+*** Questions
+    - Does it make sense to have an in-place version?
+*** Links
+    - http://en.wikipedia.org/wiki/Reflexive_relation#Related_terms
+    - http://mathworld.wolfram.com/ReflexiveReduction.html
+** k-th power of a graph
+*** Methods
+  - void graph_power(g_in, k, g_out)
+  - graph graph_power(g_in, k)
+  - void graph_power_inplace(g_in, k)
+*** Input
+    g_in
+*** Description
+    The graph formed by adding an edge between all pairs of vertices of G with distance at most k
+    Where distance is the length (number of edges) of the shortest path.
+    V(g_out) = V(g_in)
+    E(g_out) = { e=(u,v) | u,v \in g_in, distance(u,v,g_in) <= k }
+*** Algorithm
+    Copy all vertices to g_out_1
+    If k <= 0 return g_out_1 (without any edge)
+    Copy all edges to g_out_1
+    for (i = 1; i < k; i++)
+      g_out_{i+1} = g_out_{i}
+      for each edge e=(u,v) in g_out_{i} do
+        for each e'=(v,w) in g_in do
+          add edge (u,w) to g_out_{i+1}
+    return g_out_k
+*** Notes
+    - Didn't stop to think or search what is the best/fastest way to do it.
+    - We don't really need all g_out_{i}, only two (maybe one)
+*** Questions
+    - Does it make sense to have an in-place version?
+    - It is wrong to add an edge to g inside a "for (tie(ei, ei_end) = edges(g); ei != ei_end; ++ei)"?
+      What happens?
+*** Links
+    - http://en.wikipedia.org/wiki/Power_of_graph#Distance
+    - http://mathworld.wolfram.com/GraphPower.html
+    - http://reference.wolfram.com/mathematica/Combinatorica/ref/GraphPower.html
+** Cartesian product
+*** Methods
+  - void graph_cartesian_product(g1, g2, g_out)
+  - graph graph_cartesian_product(g1, g2)
+*** Input
+    g1, g2
+*** Description
+    The vertex set is the cartesian product and two vertices (u1,u2)
+    and (v1,v2) are adjacent if and only if either u1=v1 and u2 is
+    adjacent with v2 in g2; or u2=v2 and u1 is adjacent with v1 in g1.
+
+    V(g_out) = V(g1) x V(g2)
+    E(g_out) = { e=((u1,u2),(v1,v2)) | (u1 = v1 and (u2,v2) \in E(g2)) or (u2 = v2 and (u1,v1) \in E(g1)) }
+             = ( V(g1) x E(g2) ) union ( V(g2) x E(g1) )
+*** TODO Algorithm
+*** Notes
+    - Also know as lexicographic product
+*** Questions
+    - Does it make sense to have an in-place version?
+*** Links
+    - http://graph-theory-algorithms-book.googlecode.com/files/graph-theory-0.3.pdf [page 21-22]
+    - http://en.wikipedia.org/wiki/Lexicographic_product_of_graphs
+    - http://mathworld.wolfram.com/GraphComposition.html
+    - http://mathworld.wolfram.com/GraphLexicographicProduct.html
+    - http://networkx.lanl.gov/reference/generated/networkx.cartesian_product.html
+** TODO Graph composition
+   Like composition for relations
+   http://igraph.sourceforge.net/doc/html/igraph_compose.html
+   Or lexicographic product?
+   http://en.wikipedia.org/wiki/Lexicographic_product_of_graphs
+** TODO Line graph
+*** Methods
+  - void graph_(g_in, g_out)
+  - graph graph_(g_in)
+  - void graph__inplace(g_in)
+*** Input
+    g_in
+*** Description
+    V(g_out) = V(g_in)
+    E(g_out) = E(g_in)
+*** Algorithm
+*** Notes
+*** Questions
+    - Does it make sense to have an in-place version?
+*** Links
+    - http://en.wikipedia.org/wiki/Line_graph
+    - http://mathworld.wolfram.com/LineGraph.html
+
