@@ -10,6 +10,10 @@
 #include <boost/mpl/arithmetic.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/equal.hpp>
+#include <boost/type_traits/is_signed.hpp>
+#include <iostream>
+#include <iomanip>
+#include <cstring>
 
 namespace boost { namespace detail {
 
@@ -68,19 +72,74 @@ struct next_allocation_size<Width,false> {
     }
 };
 
+
 /** This is the proxy reference type used by the iterator and by the 
  *  bitfield_tuple for accessing the storage and correctly returning
  *  and setting the values within the bitfield_vector.
  */
-template <typename ReturnType,std::size_t Width>
-class proxy_reference_type {
-    typedef proxy_reference_type<ReturnType,Width> _self;
+
+template <  typename RetType,
+            std::size_t Width,
+            bool = is_signed<RetType>::type::value >
+class proxy_reference_type;
+
+template <typename RetType,std::size_t Width>
+class proxy_reference_type<RetType,Width,true> {
+    typedef proxy_reference_type<RetType,Width,true> _self;
     proxy_reference_type();
 public:
     /** Typedefs and integral static constant values. */
     //@{
     typedef unsigned char       storage_type;
-    typedef ReturnType          value_type;
+    typedef RetType             value_type;
+    typedef std::size_t         offset_type;
+    BOOST_STATIC_CONSTANT( std::size_t, width = Width );
+    /** constructors and destructor for the proxy_reference_type type. */
+    //@{
+
+    /** Copy Constructor. */
+    proxy_reference_type(_self const& x)
+        :_ptr(x._ptr), _offset(x._offset)
+    { }
+
+    /** pointer, offset constructor. */
+    proxy_reference_type(storage_type* ptr, offset_type offset)
+        :_ptr(ptr), _offset(offset)
+    { }
+    //@}
+
+    /** Copy assignment. */
+    _self& operator=(_self const& x) {
+        _ptr = x._ptr;
+        _offset = x._offset;
+        return *this;
+    }
+
+    operator value_type() const;
+    /** value_type storage assignement operator.*/
+    _self& operator=(value_type x);
+
+    bool operator==(_self const& rhs);
+    bool operator!=(_self const& rhs);
+    bool operator<(_self const& rhs);
+
+
+    // private:
+    /** Member variables. */
+    storage_type*    _ptr;
+    offset_type     _offset;
+};
+
+
+template <typename RetType, std::size_t Width>
+class proxy_reference_type<RetType,Width,false> {
+    typedef proxy_reference_type<RetType,Width,false> _self;
+    proxy_reference_type();
+public:
+    /** Typedefs and integral static constant values. */
+    //@{
+    typedef unsigned char       storage_type;
+    typedef RetType             value_type;
     typedef std::size_t         offset_type;
     BOOST_STATIC_CONSTANT( std::size_t, width = Width );
     //@}
@@ -108,53 +167,69 @@ public:
 
     /** Implicit Conversion Operator*/
     operator value_type() const {
-        value_type ret;
-        // std::size_t bit_index = 0;
+        value_type ret = 0;
         storage_type* byte_ptr = _ptr;
-        std::size_t remaining_bits = width;
+        // std::size_t remaining_bits = width;
+        storage_type mask = 0;
 
-        // creating head mask.
-        storage_type mask = ~(~storage_type(0) << (8 - _offset));
-        // keep track of how many bits from the width have been extraced.
-        remaining_bits -= (8 - _offset);
-        // update return type.
-        ret = value_type(mask & *byte_ptr) << (remaining_bits);
-        // make sure to return if we are finished.
-        if(remaining_bits == 0) {
-            return ret;
+        // constructing mask inside of char array.
+        // TODO: Make this correctly deduced! as of right it is the largest
+        // possible size.
+        storage_type mask_array[9];
+        std::memset(mask_array, 0,9);
+
+
+        // this is so that the loop will work correctly the first time through.
+        storage_type* mask_ptr = mask_array;
+        --mask_ptr;
+        mask = 0x80;
+        mask >>= _offset;
+        std::size_t bit_copy_ammount = _offset + width;
+        std::size_t trailing_zeros = 8 - _offset;
+        std::size_t mask_byte_count = 0;
+        for(std::size_t bit_index = _offset;bit_index <= bit_copy_ammount; ++bit_index){
+            if( (bit_index%8) == 0) {
+                ++mask_byte_count;
+                trailing_zeros = 8;
+                mask >>= 1;
+                *mask_ptr |= mask;
+                ++mask_ptr;
+                mask = 0x80;
+                continue;
+            }
+            --trailing_zeros;
+            *mask_ptr |= mask;
+            mask >>= 1;
         }
-        // next loop while the
-        ++byte_ptr;
-        mask = ~storage_type(0);
-        while((remaining_bits / 8) > 0) {
-            ret |= value_type(mask & *byte_ptr) << (remaining_bits);
-            
-            // increment values so that everything is
-            // correctly retrieved.
-            remaining_bits -= 8;
+
+        // mask_ptr = mask_array;
+        // storage_type* mask_array_end = (mask_array) + 9;
+        
+        for( std::size_t mask_index = 0;
+             mask_index < mask_byte_count;
+             ++mask_index)
+        {
+            ret <<= 8;
+            ret += *byte_ptr & mask_array[mask_index];
             ++byte_ptr;
-        }
-        // because the field could have ended on a byte boundry then
-        // I must then check before exiting.
-        if(remaining_bits == 0) {
-            return ret;
-        }
-        // if I reached this point it means that I must now deal with the
-        // trailing bits of the field.
-        mask = ~(~storage_type(0) >> remaining_bits);
-        return ret | (value_type(mask & *byte_ptr)<<(remaining_bits));
+        }       
+        return ret >> trailing_zeros;
     }
 
     /** value_type storage assignement operator.*/
-    _self& operator=(value_type x);
+    _self& operator=(value_type x) {
+        
+    }
 
     bool operator==(_self const& rhs);
     bool operator!=(_self const& rhs);
     bool operator<(_self const& rhs);
-private:
+
+
+// private:
     /** Member variables. */
-    storage_type _ptr;
-    offset_type _offset;
+    storage_type*    _ptr;
+    offset_type     _offset;
 };
 
 }} // end boost::detail
