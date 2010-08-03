@@ -15,29 +15,28 @@
 #include <utility>
 #include <boost/graph/global_vertex_mapping.hpp>
 #include <boost/graph/graph_traits.hpp>
+#include <boost/graph/copy.hpp>
 
 namespace boost {
   namespace detail {
-    template <class VertexListGraph, class MutableGraph> 
-    void graph_complement_impl(const VertexListGraph& g_in, MutableGraph& g_out, bool reflexive)
+    template <class Graph, class MutableGraph,
+              typename CopyVertex,
+              typename Orig2OutVertexIndexMap>
+    void graph_complement_impl(const Graph& g_in, MutableGraph& g_out,
+                               CopyVertex copy_vertex, Orig2OutVertexIndexMap orig2out,
+                               bool reflexive)
     {
-      typedef typename graph_traits<VertexListGraph>::vertex_descriptor InVertex;
+      typedef typename graph_traits<Graph>::vertex_descriptor InVertex;
       typedef typename graph_traits<MutableGraph>::vertex_descriptor OutVertex;
 
-      detail::vertex_copier<VertexListGraph, MutableGraph> copy_vertex = detail::make_vertex_copier(g_in, g_out);
-
-      auto & gl_in  = get_property(g_in,  graph_label).hack->vertices;
-      auto & gl_out = get_property(g_out, graph_label).hack->vertices;
-
-      typename graph_traits < VertexListGraph >::vertex_iterator vi, vi_end;
-      typename graph_traits < VertexListGraph >::vertex_iterator ui, ui_end;
+      typename graph_traits < Graph >::vertex_iterator vi, vi_end;
+      typename graph_traits < Graph >::vertex_iterator ui, ui_end;
 
       // copy vertices from g_in
       for (tie(vi, vi_end) = vertices(g_in); vi != vi_end; ++vi) {
         OutVertex new_v = add_vertex(g_out);
+        put(orig2out, *vi, new_v);
         copy_vertex(*vi, new_v);
-        assert( g_out[new_v].name == g_in[*vi].name); // copy_vertex already did it
-        gl_out[ g_in[*vi].name ] = new_v;
       }
 
       // create edges
@@ -46,7 +45,9 @@ namespace boost {
           if ( (reflexive || ui != vi) && edge(*ui, *vi, g_in).second == false ) {
             typename graph_traits<MutableGraph>::edge_descriptor new_e;
             bool inserted;
-            boost::tie(new_e, inserted) = add_edge(*ui, *vi, g_out);
+            boost::tie(new_e, inserted) = add_edge(get(orig2out, *ui),
+                                                   get(orig2out, *vi),
+                                                   g_out);
             assert(inserted);
           }
         }
@@ -54,17 +55,56 @@ namespace boost {
     }
   }// namespace detail
 
-  template <class VertexListGraph, class MutableGraph> 
-  void graph_complement(const VertexListGraph& g_in, MutableGraph& g_out)
+  template <typename VertexListGraph, typename MutableGraph>
+  void graph_complement(const VertexListGraph& g_in, MutableGraph& g_out, bool reflexive)
   {
-    detail::graph_complement_impl(g_in, g_out, false);
+    typedef typename graph_traits<MutableGraph>::vertex_descriptor vertex_t;
+    std::vector<vertex_t> orig2out(num_vertices(g_in));
+
+    detail::graph_complement_impl
+      (g_in, g_out,
+       detail::make_vertex_copier(g_in, g_out),
+       make_iterator_property_map(orig2out.begin(),
+                                  get(vertex_index, g_in), orig2out[0]),
+       reflexive
+       );
   }
 
-  template <class VertexListGraph, class MutableGraph> 
-  void graph_reflexive_complement(const VertexListGraph& g_in, MutableGraph& g_out)
+  template <typename VertexListGraph, typename MutableGraph,
+    class P, class T, class R>
+  void graph_complement(const VertexListGraph& g_in, MutableGraph& g_out,
+                        const bgl_named_params<P, T, R>& params, bool reflexive)
   {
-    detail::graph_complement_impl(g_in, g_out, true);
+    typename std::vector<T>::size_type n;
+    n = is_default_param(get_param(params, orig_to_copy_t()))
+      ? num_vertices(g_in) : 1;
+    std::vector<BOOST_DEDUCED_TYPENAME graph_traits<MutableGraph>::vertex_descriptor>
+      orig2out(n);
+
+    detail::graph_complement_impl
+      (g_in, g_out,
+       detail::choose_vertex_copier(get_param(params, vertex_copy_t()),
+                                    g_in, g_out),
+       make_iterator_property_map(orig2out.begin(),
+                                  get(vertex_index, g_in), orig2out[0]),
+       reflexive
+       );
   }
+
+//  template <typename VertexListGraph, typename MutableGraph>
+//  void graph_reflexive_complement(const VertexListGraph& g_in, MutableGraph& g_out)
+//  {
+//    typedef typename graph_traits<MutableGraph>::vertex_descriptor vertex_t;
+//    std::vector<vertex_t> orig2out(num_vertices(g_in));
+//
+//    detail::graph_complement_impl
+//      (g_in, g_out,
+//       detail::make_vertex_copier(g_in, g_out),
+//       make_iterator_property_map(orig2out.begin(),
+//                                  get(vertex_index, g_in), orig2out[0]),
+//       true
+//       );
+//  }
 
 } // namespace boost
 

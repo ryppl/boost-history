@@ -42,6 +42,31 @@ struct Graph_Label {
   unordered_map<size_t, Edge> edges;
 };
 
+
+
+// copier that sets the name mapping
+template <typename G1, typename G2>
+struct my_copier {
+  my_copier(const G1& _g1, G2& _g2)
+    : g1(_g1),
+      g2(_g2),
+      vertex_all_map1(get(vertex_all, _g1)), 
+      vertex_all_map2(get(vertex_all, _g2))
+  { }
+  
+  template <typename Vertex1, typename Vertex2>
+  void operator()(const Vertex1& v1, Vertex2& v2) const {
+    auto & gl2 = get_property(g2, graph_label).hack->vertices;
+    put(vertex_all_map2, v2, get(vertex_all_map1, v1));
+    gl2[ g1[v1].name ] = v2;
+  }
+  const G1& g1;
+  G2& g2;
+  typename property_map<G1, vertex_all_t>::const_type vertex_all_map1;
+  mutable typename property_map<G2, vertex_all_t>::type vertex_all_map2;
+};
+
+
 // name vertices and edges
 template <class Graph>
 void auto_label(Graph &g) {
@@ -119,7 +144,7 @@ int main(int,char*[])
   boost::mt19937 gen;
   gen.seed(uint32_t(time(0)));
 
-  Graph g1, g2, g_compl, g_rcompl, g_int, g_sum, g_union, g_join;
+  Graph g1, g2, g_simple_compl, g_compl, g_rcompl, g_int, g_sum, g_union, g_join;
 
   get_property(g1,       graph_label).hack = new(Graph_Label);
   get_property(g2,       graph_label).hack = new(Graph_Label);
@@ -147,15 +172,22 @@ int main(int,char*[])
   cout << endl;
 
   cout << "Complement of g1:" << endl;
-  graph_complement(g1, g_compl);
-  check(g_compl, false); // graph_complement is not setting edge names (yet ?)
+  graph_complement(g1, g_simple_compl, false); // ignore name mapping (but copy vertex properties)
+  print(g_simple_compl);
+  cout << endl;
+
+  cout << "Complement of g1:" << endl;
+  my_copier<Graph, Graph> c(g1, g_compl);
+  graph_complement(g1, g_compl, vertex_copy(c), false);
+  check(g_compl, false); // graph_complement don't set edge names
   print(g_compl);
   cout << endl;
 
   cout << "Reflexive complement of g1:" << endl;
-  graph_reflexive_complement(g1, g_rcompl);
-  check(g_rcompl, false); // graph_reflexive_complement is not setting edge names (yet ?)
+  my_copier<Graph, Graph> cc(g1, g_rcompl);
+  graph_complement(g1, g_rcompl, vertex_copy(cc), true);
   print(g_rcompl);
+  check(g_rcompl, false); // graph_complement don't set edge names
   cout << endl;
 
   cout << "Intersection of g1 and g2:" << endl;

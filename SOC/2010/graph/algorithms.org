@@ -16,6 +16,42 @@
    NetworkX (python)
 ** http://www.jgrapht.org/javadoc/org/jgrapht/graph/GraphUnion.html
    JGraphT (Java)
+* Parameters/Named parameters
+  Some of the algorithms needs a "labeled graph" (e.g. intersection)
+  to identify vertices and edges that appears in two (or more) input
+  graphs.
+** Named Parameters
+*** vertex_copy
+*** edge_copy
+*** vertex_merge_copy
+    Let v1 and v2 be vertices in g1 and g2. 
+    If we identify that v1 == v2 (using the label) and this vertex
+    should be in the output, we should copy this vertex, but there are
+    two inputs.
+    This function will be like vertex_copy but taking two inputs. The
+    default behaviour will be use vertex_copier for the first input
+    and ignore the second.
+*** edge_merge_copy
+    same as above
+*** orig2out (orig_to_copy)
+    For algorithms with one input. The name orig_to_copy is used in
+    copy, transitive closure, transpose... Should we continue using
+    it?
+    To think: How we do with disjoint union and join? They
+    have two disjoint graphs in the input, so they should had two
+    orig_to_copy, one for each input.
+*** vertex_index_map
+    Already in use by copy, transitive closure, etc. I still need to
+    understand exactly why we need it and where we need it.
+*** create_new_edge (edge visitor ?)
+    My suggestion. When we create a brand new edge, we could call this
+    function. The default behaviour would be do nothing. This can be
+    useful in complement (all edges are new), join (which copy all
+    edges from the inputs but also create new ones), cartesian
+    product, k-th power, closures and reductions, etc.
+*** create_new_vertex (vertex visitor ?)
+    Same as above. Probably none of these algorithms creates brand new
+    vertices.
 * Algorithms
 ** Union (aka Sum)
 *** Methods
@@ -279,6 +315,7 @@
       (why and where is it needed?)
     - http://www.cs.sunysb.edu/~algorith/files/transitive-closure.shtml
 ** TODO Transitive Reduction
+   Implemented (sort of beta?)
 *** Methods
   - void graph_transitive_reduction(g_in, g_out)
   - graph graph_transitive_reduction(g_in)
