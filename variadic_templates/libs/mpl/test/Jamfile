@@ -74,6 +74,7 @@
  compile remove.cpp ;
  compile remove_if.cpp ;
  compile replace.cpp ;
+ compile repeat.cpp ;
  compile replace_if.cpp ;
  compile reverse.cpp ;
  compile same_as.cpp ;

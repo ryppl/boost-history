@@ -8,12 +8,12 @@
 // See http://www.boost.org/libs/mpl for documentation.
 
 // $Id$
-// $Date: 2009/08/24 01:37:07 $
-// $Revision: 1.1 $
+// $Date: 2010/07/31 11:52:44 $
+// $Revision: 1.2 $
 
 #include <boost/mpl/logical.hpp>
 #include <boost/mpl/comparison.hpp>
-#include <boost/mpl/lambda.hpp>
+#include <boost/mpl/lambdav.hpp>
 #include <boost/mpl/size_t.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
