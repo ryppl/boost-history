@@ -73,7 +73,7 @@ test-suite integer
         [ run bft_testing/get_free_function_test.cpp ]
         [ run bitfield_vector_testing/bitfield_vector_test.cpp ]
         [ run bitfield_vector_testing/bitfield_vector_base_test.cpp ]
-        [ run bitfield_vector_testing/reference_type_test.cpp ]
+        [ run bitfield_vector_testing/proxy_reference_test.cpp ]
         [ run bitfield_vector_testing/member_impl_test.cpp ]
     ;
 

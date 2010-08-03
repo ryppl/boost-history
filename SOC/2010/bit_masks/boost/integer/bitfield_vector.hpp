@@ -158,6 +158,7 @@ protected:
             this->_impl._end = ptr + next_allocation_size;
         }
     }
+    
 };
 
 } // end boost
