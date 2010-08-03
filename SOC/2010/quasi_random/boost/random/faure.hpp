@@ -12,6 +12,7 @@
 #include <boost/random/detail/qrng_base.hpp>
 #include <boost/random/detail/config.hpp>
 #include <boost/random/detail/operators.hpp>
+#include <boost/random/detail/integer_powers.hpp>
 
 #include <vector>
 #include <cmath>
@@ -54,44 +55,6 @@ struct prime_ge
 
   BOOST_STATIC_CONSTANT(int, value = mpl::deref<iter_t>::type::value);
 };
-
-// Returns the integer part of the logarithm base Base of arg.
-// In erroneous situations, e.g., integer_log<Base>(0) the function
-// returns 0 and does not report the error. This is the intended
-// behavior.
-template<std::size_t Base>
-inline std::size_t integer_log(std::size_t arg)
-{
-  BOOST_STATIC_ASSERT( 2 <= Base );
-
-  std::size_t ilog = 0;
-  while( Base <= arg )
-  {
-    arg /= Base; ++ilog;
-  }
-  return ilog;
-}
-
-// Implements unrolled exponentiation by squaring. For p > ~4 this is computationally
-// more efficient than naively multiplying the base with itself repeatedly.
-// In erroneous situations, e.g., integer_pow(0, 0) the function returns 1
-// and does not report the error. This is the intended behavior.
-inline std::size_t mdelta(std::size_t base, std::size_t p)
-{
-  return (p & 1) * base + !(p & 1); // (p & 1) ? base : 1
-}
-
-inline std::size_t integer_pow(std::size_t base, std::size_t p)
-{
-  std::size_t result = 1;
-  for( ; p != 0; p >>= 1, base *= base ) {
-    result *= mdelta(base, p);
-    result *= mdelta(base *= base, p >>= 1);
-    result *= mdelta(base *= base, p >>= 1);
-    result *= mdelta(base *= base, p >>= 1);
-  }
-  return result;
-}
 
 // Computes a table of binomial coefficients modulo qs.
 template<typename RealType, std::size_t Dimension>
@@ -160,7 +123,7 @@ struct binomial_coefficients
 private:
   inline static std::size_t n_elements(std::size_t seq)
   {
-    return integer_log<qs_base>(seq) + 1;
+    return detail::integer_log<qs_base>(seq) + 1;
   }
 
   inline static std::size_t size_hint(std::size_t n)
@@ -184,7 +147,7 @@ private:
     //   Sum ( 0 <= J <= HISUM ) YTEMP(J) / QS**(J+1)
     // in one go
     RealType r = RealType();
-    std::size_t m, k = integer_pow(qs_base, n - 1);
+    std::size_t m, k = detail::integer_pow<qs_base>(n - 1);
     for( ; n != 0; --n, ++out, seq = m, k /= qs_base )
     {
       m  = seq % k;

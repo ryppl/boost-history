@@ -10,6 +10,7 @@
 #define BOOST_RANDOM_DETAIL_GRAY_CODED_QRNG_BASE_HPP
 
 #include <boost/random/detail/qrng_base.hpp>
+#include <boost/random/detail/integer_powers.hpp>
 
 //!\file
 //!Describes the gray-coded quasi-random number generator base class template.
@@ -88,7 +89,7 @@ protected:
 
       this->seq_count = init;
       init ^= (init / 2);
-      for( int r = 0; init != 0; ++r, init >>= 1 )
+      for( std::size_t r = 0; init != 0; ++r, init >>= 1 )
       {
         if( init & 1 )
           update_quasi(r, msg);
@@ -97,17 +98,18 @@ protected:
   }
 
 private:
+  // Returns the position of the least significant 1 bit
+  inline static std::size_t lsb(std::size_t v)
+  {
+    return detail::integer_log<2>(v & (std::size_t(0)-v));
+  }
 
   void compute_next(std::size_t seq)
   {
     // Find the position of the least-significant zero in sequence count.
     // This is the bit that changes in the Gray-code representation as
     // the count is advanced.
-    int r = 0;
-    for( ; seq & 1; seq >>= 1 ) {
-      ++r;
-    }
-    update_quasi(r, "compute_next");
+    update_quasi(lsb(~seq), "compute_next");
   }
 
   // Initializes currently stored values to zero
@@ -116,9 +118,9 @@ private:
     std::fill(this->quasi_state, this->quasi_state + base_t::dimension, result_type());
   }
 
-  void update_quasi(int r, const char* msg)
+  void update_quasi(std::size_t r, const char* msg)
   {
-    if(r >= LatticeT::bit_count)
+    if(r >= (std::size_t)LatticeT::bit_count)
       boost::throw_exception( std::overflow_error(msg) );
 
     // Calculate the next state.
