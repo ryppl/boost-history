@@ -3,6 +3,7 @@
 
 #include <boost/mpl/fold_null_unit.hpp>
 #include <boost/mpl/converter_bool.hpp>
+#include <boost/mpl/aux_/template_arityv.hpp>
 
 namespace boost
 {
@@ -19,7 +20,8 @@ namespace mpl
       , converter_bool
       , T...
       >
-    {};
+    {
+    };
 
 }//exit mpl namespace
 }//exit boost namespace

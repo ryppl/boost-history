@@ -3,8 +3,7 @@
 
 #include <boost/mpl/fold_null_unit.hpp>
 #include <boost/mpl/converter_bool.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/aux_/template_arity_fwd.hpp>
+#include <boost/mpl/aux_/template_arityv.hpp>
 
 namespace boost
 {
@@ -22,26 +21,8 @@ namespace mpl
       , T...
       >
     {
-            using
-          fold_null_unit
-          < true_
-          , false_
-          , converter_bool
-          , T...
-          >::
-        apply
-        ;
     };
 
-    namespace aux
-    {
-        template < typename... T> 
-      struct template_arity <or_ < T...> >
-      : int_ < sizeof...(T) >
-      {
-      };
-
-    }
 }//exit mpl namespace
 }//exit boost namespace
 #endif
