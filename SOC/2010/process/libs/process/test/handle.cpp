@@ -25,7 +25,7 @@
 #define BOOST_TEST_MAIN 
 #include "util/boost.hpp" 
 
-BOOST_AUTO_TEST_CASE(test_handle) 
+BOOST_AUTO_TEST_CASE(test_handle_readwrite) 
 { 
     bpb::pipe p(bpb::pipe::input_stream); 
 
@@ -70,4 +70,30 @@ BOOST_AUTO_TEST_CASE(test_handle)
 #elif defined(BOOST_WINDOWS_API) 
     BOOST_REQUIRE(!WriteFile(write_end.native(), "test", 4, &written, NULL)); 
 #endif 
+} 
+
+BOOST_AUTO_TEST_CASE(test_handle_methods) 
+{ 
+#if defined(BOOST_POSIX_API) 
+    bp::handle h(STDOUT_FILENO); 
+#elif defined(BOOST_WINDOWS_API) 
+    bp::handle h(GetStdHandle(STD_OUTPUT_HANDLE)); 
+#endif 
+    bp::handle h2 = h; 
+    BOOST_CHECK(h.valid()); 
+    BOOST_CHECK(h2.valid()); 
+#if defined(BOOST_POSIX_API) 
+    BOOST_CHECK_EQUAL(h.native(), STDOUT_FILENO); 
+#elif defined(BOOST_WINDOWS_API) 
+    BOOST_CHECK_EQUAL(h.native(), GetStdHandle(STD_OUTPUT_HANDLE)); 
+#endif 
+    BOOST_CHECK(h.valid()); 
+    BOOST_CHECK(h2.valid()); 
+#if defined(BOOST_POSIX_API) 
+    BOOST_CHECK_EQUAL(h.release(), STDOUT_FILENO); 
+#elif defined(BOOST_WINDOWS_API) 
+    BOOST_CHECK_EQUAL(h.release(), GetStdHandle(STD_OUTPUT_HANDLE)); 
+#endif 
+    BOOST_CHECK(!h.valid()); 
+    BOOST_CHECK(!h2.valid()); 
 } 
