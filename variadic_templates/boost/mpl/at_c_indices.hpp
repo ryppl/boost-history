@@ -23,8 +23,8 @@ namespace boost
       , package_c<Index, Indices...>
       , Seq
       >
+    : Seq<typename Op<Index,Indices>::type...>
     {
-        typedef Seq<typename Op<Index,Indices>::type...> type;
     };
     
   }//exit mpl namespace

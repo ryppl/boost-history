@@ -6,90 +6,6 @@ namespace boost
 {
 namespace mpl
 {
-#if 0
-namespace aux
-{
-      template
-      < class Null
-      , class Unit
-      , template<class C>class Converter
-      , typename... T
-      >
-    struct fold_null_unit_impl
-    ;
-      template
-      < class Null
-      , class Unit
-      , template<class C>class Converter
-      >
-    struct fold_null_unit_impl
-      < Null
-      , Unit
-      , Converter
-      >
-    : Unit //If no args, result is Unit.
-    {};
-    
-      template
-      < class Null
-      , class Unit
-      , template<class C>class Converter
-      , typename Converted
-      , typename... T
-      >
-    struct fold_null_unit_convert
-    : fold_null_unit_impl
-      < Null
-      , Unit
-      , Converter
-      , T... //If Converted is not Null, ignore it.
-      >
-    {
-    };
-      template
-      < class Null
-      , class Unit
-      , template<class C>class Converter
-      , typename... T
-      >
-    struct fold_null_unit_convert
-      < Null
-      , Unit
-      , Converter
-      , Null //If Converted is Null...
-      , T...
-      >
-    : Null //...result is Null.
-    {
-    };
-    
-      template
-      < class Null
-      , class Unit
-      , template<class C>class Converter
-      , typename T0
-      , typename... T
-      >
-    struct fold_null_unit_impl
-      < Null
-      , Unit
-      , Converter
-      , T0
-      , T...
-      >
-    : fold_null_unit_convert
-      < Null
-      , Unit
-      , Converter
-      , typename Converter<T0>::type
-      , T...
-      >
-    {
-    };
-    
-}//exit aux namespace
-#endif
-
       template
       < class Null
       , class Unit
@@ -123,14 +39,14 @@ namespace aux
     : Unit
     {
           template
-          < typename... T
+          < typename... U
           >
         struct apply
         : fold_null_unit
           < Null
           , Unit
           , Converter
-          , T...
+          , U...
           >
         {};
     };
@@ -163,14 +79,14 @@ namespace aux
       >
     {
           template
-          < typename... T
+          < typename... U
           >
         struct apply
         : fold_null_unit
           < Null
           , Unit
           , Converter
-          , T...
+          , U...
           >
         {};
     };
