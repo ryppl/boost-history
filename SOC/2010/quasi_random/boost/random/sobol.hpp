@@ -21,6 +21,9 @@
 
 #include <boost/mpl/vector/vector40_c.hpp>
 #include <boost/mpl/at.hpp>
+#include <boost/mpl/range_c.hpp>
+#include <boost/mpl/for_each.hpp>
+#include <boost/bind.hpp>
 
 //!\file
 //!Describes the quasi-random number generator class template sobol.
@@ -101,7 +104,7 @@ BOOST_SOBOL_PRIM_POLY(39, 299);
 template<std::size_t D>
 struct vinit40;
 
-template<> struct vinit40<1> {
+template<> struct vinit40<0> {
   typedef mpl::vector40_c<int,
     0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -109,7 +112,7 @@ template<> struct vinit40<1> {
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1> type;
 };
 
-template<> struct vinit40<2>
+template<> struct vinit40<1>
 {
   typedef mpl::vector40_c<int,
     0, 0, 1, 3, 1, 3, 1, 3, 3, 1,
@@ -118,7 +121,7 @@ template<> struct vinit40<2>
     3, 1, 1, 3, 1, 3, 1, 3, 1, 3> type;
 };
 
-template<> struct vinit40<3>
+template<> struct vinit40<2>
 {
   typedef mpl::vector40_c<int,
     0, 0, 0, 7, 5, 1, 3, 3, 7, 5,
@@ -127,7 +130,7 @@ template<> struct vinit40<3>
     5, 1, 1, 5, 7, 7, 5, 1, 3, 3> type;
 };
 
-template<> struct vinit40<4>
+template<> struct vinit40<3>
 {
   typedef mpl::vector40_c<int,
     0,  0,  0,  0,  0,  1,  7,  9, 13, 11,
@@ -136,7 +139,7 @@ template<> struct vinit40<4>
     5, 15,  1, 15, 11,  5,  3,  1,  7,  9> type;
 };
 
-template<> struct vinit40<5>
+template<> struct vinit40<4>
 {
   typedef mpl::vector40_c<int,
     0,  0,  0,  0,  0,  0,  0,  9,  3, 27,
@@ -145,7 +148,7 @@ template<> struct vinit40<5>
     21,  5,  1, 17, 13,  7, 15,  9, 31,  9> type;
 };
 
-template<> struct vinit40<6>
+template<> struct vinit40<5>
 {
   typedef mpl::vector40_c<int,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -154,7 +157,7 @@ template<> struct vinit40<6>
     9, 49, 33, 19, 29, 11, 19, 27, 15, 25> type;
 };
 
-template<> struct vinit40<7>
+template<> struct vinit40<6>
 {
   typedef mpl::vector40_c<int,
     0,   0,  0,  0,  0,  0,    0,  0,  0,   0,
@@ -163,7 +166,7 @@ template<> struct vinit40<7>
     7,  59, 65, 21,  3, 113,  61, 89, 45, 107> type;
 };
 
-template<> struct vinit40<8>
+template<> struct vinit40<7>
 {
   typedef mpl::vector40_c<int,
     0, 0, 0, 0, 0, 0, 0, 0,  0,  0,
@@ -173,46 +176,34 @@ template<> struct vinit40<8>
 };
 
 
-template<std::size_t D, std::size_t Iteration>
+template<std::size_t Iteration>
 struct leading_elements
 {
-  template<typename T, int BitCount, std::size_t Dimension>
-  static void assign(T (&cj)[BitCount][Dimension])
+  typedef void result_type;
+  template<typename Int, typename T, std::size_t BitCount, std::size_t Dimension>
+  void operator()(Int, T (&cj)[BitCount][Dimension]) const
   {
-    typedef typename vinit40<D>::type elems_t;
+    typedef typename vinit40<Int::value>::type elems_t;
     typedef typename mpl::at_c<elems_t, Iteration>::type val_t;
-    cj[D - 1][Iteration] = val_t::value;
-    leading_elements<D - 1, Iteration>::assign(cj);
+    cj[Int::value][Iteration] = val_t::value;
   }
 };
 
-template<std::size_t Iteration>
-struct leading_elements<0, Iteration>
-{
-  template<typename T, int BitCount, std::size_t Dimension>
-  static void assign(T (&)[BitCount][Dimension])
-  {}
-};
-
-
-template<std::size_t D>
 struct compute_lattice
 {
-  BOOST_STATIC_ASSERT( D != 0 );
-
-  template<typename T, int BitCount, std::size_t Dimension>
-  void operator()(T (&cj)[BitCount][Dimension]) const
+  typedef void result_type;
+  template<typename Int, typename T, std::size_t BitCount, std::size_t Dimension>
+  void operator()(Int, T (&cj)[BitCount][Dimension]) const
   {
     enum {
-      iteration  = Dimension - D + 1,
+      iteration  = Int::value,
       px_value   = primitive_polynomial<iteration>::value,
       degree_i   = primitive_polynomial<iteration>::degree
     };
 
     // Leading elements for dimension i come from vinit<>.
-    //for(int k = 0; k < degree_i; ++k )
-    //  cj[k][iteration] = v_init[k][iteration];
-    leading_elements<degree_i, iteration>::assign(cj);
+    mpl::for_each< mpl::range_c<std::size_t, 0, degree_i> >(
+        bind(leading_elements<iteration>(), _1, ref(cj)) );
 
     // Expand the polynomial bit pattern to separate
     // components of the logical array includ[].
@@ -223,7 +214,7 @@ struct compute_lattice
 
     // Calculate remaining elements for this dimension,
     // as explained in Bratley+Fox, section 2.
-    for(int j = degree_i; j < BitCount; ++j)
+    for(std::size_t j = degree_i; j < BitCount; ++j)
     {
       T p = 2;
       T w = cj[j - degree_i][iteration];
@@ -232,18 +223,6 @@ struct compute_lattice
           w ^= (cj[j-k-1][iteration] * p);
       cj[j][iteration] = w;
     }
-
-    compute_lattice<D - 1> ncj; ncj(cj);
-  }
-};
-
-template<>
-struct compute_lattice<1>
-{
-  template<typename T, int BitCount, std::size_t Dimension>
-  void operator()(T (&)[BitCount][Dimension]) const
-  {
-    // recursion stop
   }
 };
 
@@ -260,28 +239,28 @@ struct sobol_lattice
 
   typedef IntType result_type;
   BOOST_STATIC_CONSTANT(std::size_t, dimension_value = Dimension);
-
-  BOOST_STATIC_CONSTANT(int, bit_count = std::numeric_limits<IntType>::digits - 1);
+  BOOST_STATIC_CONSTANT(std::size_t, bit_count = std::numeric_limits<IntType>::digits - 1);
 
   // default copy c-tor is fine
 
   sobol_lattice(std::size_t) // c-tor to initialize the lattice
   {
     // Initialize direction table in dimension 0.
-    for( int k = 0; k < bit_count; ++k )
+    for(std::size_t k = 0; k != bit_count; ++k)
       bits[k][0] = 1;
 
     // Initialize in remaining dimensions.
-    sbl::compute_lattice<Dimension> compute; compute(bits);
+    mpl::for_each< mpl::range_c<std::size_t, 1, Dimension> >(
+        bind(sbl::compute_lattice(), _1, ref(bits)) );
 
     // Multiply columns of v by appropriate power of 2.
     IntType p = 2;
     for(int j = bit_count-1-1; j >= 0; --j, p <<= 1)
-      for(std::size_t k = 0; k < Dimension; ++k )
+      for(std::size_t k = 0; k != Dimension; ++k)
         bits[j][k] *= p;
   }
 
-  result_type operator()(int i, int j) const
+  result_type operator()(std::size_t i, std::size_t j) const
   {
     return bits[i][j];
   }

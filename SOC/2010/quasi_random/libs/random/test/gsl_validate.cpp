@@ -5,7 +5,6 @@
 
 #include <boost/random/niederreiter_base2.hpp>
 #include <boost/random/sobol.hpp>
-#include <boost/random/faure.hpp>
 
 #include <gsl/gsl_qrng.h>
 

@@ -15,11 +15,14 @@
 
 #include <limits>
 #include <bitset>
+#include <boost/cstdint.hpp>
 #include <boost/integer/static_log2.hpp>
 
 #include <boost/static_assert.hpp>
 
-#include <boost/cstdint.hpp>
+#include <boost/mpl/range_c.hpp>
+#include <boost/mpl/for_each.hpp>
+#include <boost/bind.hpp>
 
 //!\file
 //!Describes the quasi-random number generator class template niederreiter_base2.
@@ -175,15 +178,15 @@ struct product_degree
   BOOST_STATIC_CONSTANT(int, value = Degree * ( (BitCount / Degree) + 1 ));
 };
 
-template<std::size_t D>
 struct compute_lattice
 {
-  template<typename T, int BitCount, int MaxE, std::size_t Dimension>
-  void operator()(T (&ci)[BitCount][BitCount], T (&v)[MaxE],
-                  T (&cj)[BitCount][Dimension]) const
+  typedef void result_type;
+  template<typename Int, typename T, int BitCount, int MaxE, std::size_t Dimension>
+  void operator()(Int, T (&ci)[BitCount][BitCount], T (&v)[MaxE],
+                       T (&cj)[BitCount][Dimension]) const
   {
     enum {
-      iteration  = Dimension - D,
+      iteration  = Int::value,
       poly_index = iteration + 1,
       px_value   = primitive_polynomial<poly_index>::value,
       px_degree  = primitive_polynomial<poly_index>::degree,
@@ -235,19 +238,6 @@ struct compute_lattice
         term = 2*term + ci[r][j];
       cj[r][iteration] = term;
     }
-
-    compute_lattice<D - 1> ncj; ncj(ci, v, cj);
-  }
-};
-
-template<>
-struct compute_lattice<0>
-{
-  template<typename T, int BitCount, int MaxE, std::size_t Dimension>
-  void operator()(T (&)[BitCount][BitCount], T (&)[MaxE],
-                  T (&)[BitCount][Dimension]) const
-  {
-    // recursion stop
   }
 };
 
@@ -265,8 +255,8 @@ struct niederreiter_base2_lattice
   typedef IntType result_type;
 
   BOOST_STATIC_CONSTANT(std::size_t, dimension_value = Dimension);
+  BOOST_STATIC_CONSTANT(std::size_t, bit_count = std::numeric_limits<IntType>::digits);
 
-  BOOST_STATIC_CONSTANT(int, bit_count = std::numeric_limits<IntType>::digits);
   BOOST_STATIC_CONSTANT(int, prim_degree = nb2::primitive_polynomial<Dimension>::degree);
 
   // Max degree of a polynomial product that will be computed by modulo2_multiply
@@ -279,10 +269,11 @@ struct niederreiter_base2_lattice
     // initial lattice computation
     IntType ci[bit_count][bit_count];
     IntType v[prim_degree + max_degree];
-    nb2::compute_lattice<Dimension> compute; compute(ci, v, bits);
+    mpl::for_each< mpl::range_c<std::size_t, 0, Dimension> >(
+        bind(nb2::compute_lattice(), _1, ref(ci), ref(v), ref(bits)) );
   }
 
-  result_type operator()(int i, int j) const
+  result_type operator()(std::size_t i, std::size_t j) const
   {
     return bits[i][j];
   }
