@@ -29,6 +29,7 @@ using testing ;
 run environment.cpp bfs ; 
 run handle.cpp bfs ; 
 run self.cpp bfs ; 
+run systembuf.cpp bfs ; 
 
 run arguments.cpp bfs : : helpers : <dependency>helpers ; 
 run child.cpp bfs : : helpers : <dependency>helpers ; 
