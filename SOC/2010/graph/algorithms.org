@@ -31,15 +31,13 @@
     This function will be like vertex_copy but taking two inputs. The
     default behaviour will be use vertex_copier for the first input
     and ignore the second.
+    Alternative name: merge_vertices
 *** edge_merge_copy
     same as above
 *** orig2out (orig_to_copy)
     For algorithms with one input. The name orig_to_copy is used in
     copy, transitive closure, transpose... Should we continue using
     it?
-    To think: How we do with disjoint union and join? They
-    have two disjoint graphs in the input, so they should had two
-    orig_to_copy, one for each input.
 *** vertex_index_map
     Already in use by copy, transitive closure, etc. I still need to
     understand exactly why we need it and where we need it.
@@ -49,9 +47,10 @@
     useful in complement (all edges are new), join (which copy all
     edges from the inputs but also create new ones), cartesian
     product, k-th power, closures and reductions, etc.
-*** create_new_vertex (vertex visitor ?)
-    Same as above. Probably none of these algorithms creates brand new
-    vertices.
+** Repeated Named Parameters
+   Some algorithms receives two of the same parameter...
+   For example, disjoint union will have two vertex_copy and two edge_copy.
+   How do we do this? We pass a pair instead of just one?
 * Algorithms
 ** Union (aka Sum)
 *** Methods
@@ -186,7 +185,7 @@
   - graph graph_disjoint_union(g1, g2)
   - void graph_disjoint_union(g1_out, g2)
 *** Input
-    g1 and g2.
+    g1 and g2, and named parameters: two vertex_copy, two edge_copy, two orig_to_copy and two vertex_index_map
 *** Precondition
     V(g1) intersection V(g2) = empty
     [don't appear in the implementation because we don't care about labels here]
@@ -267,7 +266,7 @@
   - graph graph_reflexive_complement(g_in)
   - void graph_reflexive_complement_inplace(g_in)
 *** Input
-    g_in
+    g_in, copy_vertex
 *** Description
     The graph with the same vertex set such that two vertices are
     adjacent if and only if they are not adjacent in the input.

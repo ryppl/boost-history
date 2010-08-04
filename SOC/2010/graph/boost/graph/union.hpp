@@ -36,11 +36,45 @@ namespace boost {
   }
 
   template <class VertexListGraph, class MutableGraph>
-  void old_graph_union(const VertexListGraph& G1, const VertexListGraph& G2, MutableGraph& G)
+  void graph_disjoint_union(const VertexListGraph& g1, const VertexListGraph& g2, MutableGraph &g_out)
   {
-    copy_graph(G1, G);
-    copy_graph(G2, G);
+    copy_graph(g1, g_out);
+    copy_graph(g2, g_out);
   }
+
+  template <class VertexListGraph, class MutableGraph, class P, class T, class R>
+  void graph_disjoint_union(const VertexListGraph& g1, const VertexListGraph& g2, MutableGraph &g_out,
+                            const bgl_named_params<P, T, R>& params)
+  {
+    // still need to do the same with orig_to_copy and vertex_index_map
+    typedef typename detail::vertex_copier<VertexListGraph, MutableGraph> vertex_copier_t;
+    vertex_copier_t vc1 = detail::make_vertex_copier<VertexListGraph, MutableGraph>(g1, g_out);
+    vertex_copier_t vc2 = detail::make_vertex_copier<VertexListGraph, MutableGraph>(g2, g_out);
+    typedef typename detail::edge_copier<VertexListGraph, MutableGraph> edge_copier_t;
+    edge_copier_t ec1 = detail::make_edge_copier<VertexListGraph, MutableGraph>(g1, g_out);
+    edge_copier_t ec2 = detail::make_edge_copier<VertexListGraph, MutableGraph>(g2, g_out);
+
+    auto p = params
+      .vertex_copy (choose_param
+                    (get_param(params, vertex_copy_t()),
+                     std::pair<vertex_copier_t, vertex_copier_t>(vc1, vc2))
+                    )
+      .edge_copy (choose_param
+                  (get_param(params, edge_copy_t()),
+                   std::pair<edge_copier_t, edge_copier_t>(ec1, ec2))
+                  );
+
+    copy_graph
+      (g1, g_out,
+       p.vertex_copy(get_param(p, vertex_copy_t()).first).edge_copy(get_param(p,edge_copy_t()).first)
+       );
+
+    copy_graph
+      (g2, g_out,
+       p.vertex_copy(get_param(p, vertex_copy_t()).second).edge_copy(get_param(p,edge_copy_t()).second)
+       );
+  }
+
 
 } // namespace boost
 

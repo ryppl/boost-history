@@ -198,7 +198,7 @@ int main(int,char*[])
 
   Graph h_du;
   cout << "Disjoint union: (h1 union h2)" << endl;
-  old_graph_union(h1, h2, h_du);
+  graph_disjoint_union(h1, h2, h_du);
   prt(h_du);
   // is there any way to clear h_du and use the same variable for all?
 
