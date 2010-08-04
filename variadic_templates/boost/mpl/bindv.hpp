@@ -38,9 +38,18 @@ namespace boost
           >
         : resolve_bind_arg
           < T
+        #if 1
           #define RESOLVE_BIND_ARG_AT_C_US(z,n,data) , typename at_c<package<U...>,n>::type
           BOOST_PP_REPEAT(BOOST_MPL_LIMIT_METAFUNCTION_ARITY,RESOLVE_BIND_ARG_AT_C_US,~)
           #undef  RESOLVE_BIND_ARG_AT_C_US
+        #else
+          //This branch of #if.#else.#endif causes compile failure
+          //with error message about wrong number of template args.
+          //Apparently U... cannot be passed to a fixed arity
+          //template even if sizeof...(U) == template arity.
+          //
+          , U...
+        #endif
           >
         {};
         
