@@ -120,7 +120,7 @@ private:
 
   void update_quasi(std::size_t r, const char* msg)
   {
-    if(r >= (std::size_t)LatticeT::bit_count)
+    if(r >= LatticeT::bit_count)
       boost::throw_exception( std::overflow_error(msg) );
 
     // Calculate the next state.

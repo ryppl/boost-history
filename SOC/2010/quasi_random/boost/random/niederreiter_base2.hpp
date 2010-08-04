@@ -15,14 +15,11 @@
 
 #include <limits>
 #include <bitset>
-#include <boost/cstdint.hpp>
 #include <boost/integer/static_log2.hpp>
 
 #include <boost/static_assert.hpp>
 
-#include <boost/mpl/range_c.hpp>
-#include <boost/mpl/for_each.hpp>
-#include <boost/bind.hpp>
+#include <boost/cstdint.hpp>
 
 //!\file
 //!Describes the quasi-random number generator class template niederreiter_base2.
@@ -178,15 +175,15 @@ struct product_degree
   BOOST_STATIC_CONSTANT(int, value = Degree * ( (BitCount / Degree) + 1 ));
 };
 
+template<std::size_t Depth>
 struct compute_lattice
 {
-  typedef void result_type;
-  template<typename Int, typename T, int BitCount, int MaxE, std::size_t Dimension>
-  void operator()(Int, T (&ci)[BitCount][BitCount], T (&v)[MaxE],
-                       T (&cj)[BitCount][Dimension]) const
+  template<typename T, int BitCount, int MaxE, std::size_t Dimension>
+  static void apply(T (&ci)[BitCount][BitCount], T (&v)[MaxE],
+                    T (&cj)[BitCount][Dimension])
   {
     enum {
-      iteration  = Int::value,
+      iteration  = Dimension - Depth,
       poly_index = iteration + 1,
       px_value   = primitive_polynomial<poly_index>::value,
       px_degree  = primitive_polynomial<poly_index>::degree,
@@ -238,7 +235,17 @@ struct compute_lattice
         term = 2*term + ci[r][j];
       cj[r][iteration] = term;
     }
+
+    compute_lattice<Depth - 1>::apply(ci, v, cj);
   }
+};
+
+template<>
+struct compute_lattice<0>
+{
+  template<typename T, typename U, typename V>
+  static void apply(const T&, const U&, const V&)
+  { /* recursion stop */ }
 };
 
 } // namespace nb2
@@ -269,8 +276,7 @@ struct niederreiter_base2_lattice
     // initial lattice computation
     IntType ci[bit_count][bit_count];
     IntType v[prim_degree + max_degree];
-    mpl::for_each< mpl::range_c<std::size_t, 0, Dimension> >(
-        bind(nb2::compute_lattice(), _1, ref(ci), ref(v), ref(bits)) );
+    nb2::compute_lattice<Dimension>::apply(ci, v, bits);
   }
 
   result_type operator()(std::size_t i, std::size_t j) const
