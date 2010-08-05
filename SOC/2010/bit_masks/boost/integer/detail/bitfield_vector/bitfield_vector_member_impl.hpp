@@ -187,6 +187,12 @@ public:
         std::size_t bit_copy_ammount = _offset + width;
         std::size_t trailing_zeros = 8 - _offset;
         std::size_t mask_byte_count = 0;
+        std::cout << "Pre-Mask creation Stats" << std::endl;
+        std::cout << "trailing_zero's value: " << trailing_zeros << std::endl;
+        std::cout << "bit_copy_ammount:      " << bit_copy_ammount << std::endl;
+        std::cout << "mask_byte_count:       " << mask_byte_count << std::endl;
+        // std::cout << "Pre-Mask creation Stats" << std::endl;
+        // std::cout << "Pre-Mask creation Stats" << std::endl;
         for(std::size_t bit_index = _offset;bit_index <= bit_copy_ammount; ++bit_index){
             if( (bit_index%8) == 0) {
                 ++mask_byte_count;
@@ -202,18 +208,32 @@ public:
             mask >>= 1;
         }
 
+        std::cout << "Post-Mask creation Stats" << std::endl;
+        std::cout << "trailing_zero's value: " << trailing_zeros << std::endl;
+        std::cout << "bit_copy_ammount:      " << bit_copy_ammount << std::endl;
+        std::cout << "mask_byte_count:       " << mask_byte_count << std::endl;
+
         // mask_ptr = mask_array;
         // storage_type* mask_array_end = (mask_array) + 9;
         
+        for(std::size_t i =0; i < 9; ++i) {
+            std::cout << std::hex << std::size_t(mask_array[i]) << "|";
+        }
+        std::cout << std::endl;
+
         for( std::size_t mask_index = 0;
              mask_index < mask_byte_count;
              ++mask_index)
         {
+            if(!(mask_array[mask_index] & 0x1) ) {
+                ret <<= 8 - ((_offset + width)%8);
+                return ret + (mask_array[mask_index] >> trailing_zeros);
+            }
             ret <<= 8;
             ret += *byte_ptr & mask_array[mask_index];
             ++byte_ptr;
         }       
-        return ret >> trailing_zeros;
+        return ret;
     }
 
     /** value_type storage assignement operator.*/
