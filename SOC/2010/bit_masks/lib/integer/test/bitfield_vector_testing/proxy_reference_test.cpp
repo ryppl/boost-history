@@ -131,30 +131,28 @@ int main() {
     }
     // make_field_mask creates mask used to retrieve or set data.
     {
-        storage_ptr_t manager_ptr;
+        mask_array_info manager_ptr;
         storage_ptr_t ptr;
-        std::size_t size;
 
-        size = get_mask_array_size<3>(6);
-        manager_ptr = ptr = make_field_mask<3>(6, size);
-
+        manager_ptr = make_field_mask<3>(6);
+        ptr = manager_ptr.mask;
         BOOST_TEST(*ptr == 0x3);
         ++ptr;
         BOOST_TEST(*ptr == 0x80);
-        delete manager_ptr;
+        delete manager_ptr.mask;
 
-        size = get_mask_array_size<3>(1);
-        manager_ptr = ptr = make_field_mask<3>(1, size);
+        manager_ptr = make_field_mask<3>(1);
+        ptr = manager_ptr.mask;
         BOOST_TEST( *ptr == 0x70 );
-        delete manager_ptr;
+        delete manager_ptr.mask;
 
-        size = get_mask_array_size<4>(0);
-        manager_ptr = ptr = make_field_mask<4>(0, size);
+        manager_ptr = make_field_mask<4>(0);
+        ptr = (manager_ptr.mask);
         BOOST_TEST( *ptr == 0xf0 );
-        delete manager_ptr;
+        delete manager_ptr.mask;
 
-        size = get_mask_array_size<50>(0);
-        manager_ptr = ptr = make_field_mask<50>(0, size);
+        manager_ptr = make_field_mask<50>(0);
+        ptr = (manager_ptr.mask);
         // 1
         BOOST_TEST( *ptr == 0xFF );
         // 2
@@ -176,10 +174,11 @@ int main() {
         ++ptr;
         BOOST_TEST( *ptr == 0xC0 );
 
-        delete manager_ptr;
+        delete manager_ptr.mask;
 
-        size = get_mask_array_size<50>(2);
-        manager_ptr = ptr = make_field_mask<50>(2, size);
+
+        manager_ptr = make_field_mask<50>(2);
+        ptr = (manager_ptr.mask);
         // 1
         BOOST_TEST( *ptr == 0x3F );
         // 2
@@ -201,7 +200,7 @@ int main() {
         ++ptr;
         BOOST_TEST( *ptr == 0xF0 );
 
-        delete manager_ptr;
+        delete manager_ptr.mask;
 
     }
     /*
