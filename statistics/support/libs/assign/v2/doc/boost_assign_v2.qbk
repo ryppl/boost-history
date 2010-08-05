@@ -1,0 +1,1238 @@
+[library Boost.Assign
+    [quickbook 1.5]
+    [version 2.0]
+    [authors [Thorsten, Ottosen],[Rogard, Erwann]]
+    [copyright 2003-2004 Thorsten Ottosen, 2010 Erwann Rogard]
+    [dirname /libs/assign/v2/doc/]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+    [id boost_assign_v2]
+]
+
+[/ External]
+
+[def __boost__                 	[@http://www.boost.org Boost]]
+[def __mpl__                    [@http://www.boost.org/libs/mpl/index.html MPL]]
+[def __stl__                    [@http://en.wikipedia.org/wiki/Standard_Template_Library STL]]
+[def __user_mailing_list__      [@http://www.boost.org/community/groups.html#users Boost Users Mailing List]]
+
+[def __concept_range__			[@http://www.boost.org/doc/libs/1_35_0/libs/range/doc/range.html Range]]
+[def __header_range__			[@http://www.boost.org/doc/libs/1_35_0/libs/range/doc/range.html #include <boost/range.hpp>]]
+
+[def __boost_lambda__			[@http://www.boost.org/doc/libs/release/libs/lambda boost::lambda]]
+
+[def __header_typeof__			[@http://www.boost.org/doc/libs/1_36_0/doc/html/typeof.html #include <boost/typeof/typeof.hpp>] ]
+[def __header_assert__			[@http://www.boost.org/doc/libs/release/libs/utility/assert.html #include <boost/assert.hpp>] ]
+
+[/ Internal]
+
+[def __boost_assign_v2__        Boost.Assign v2]
+
+[def __lvalue__                 lvalue]
+[def __unspecified__            /unspecified/]
+[def __implementation_defined__ 	'''<replaceable>implementation-defined</replaceable>''']
+
+[def __TO__						[@http://www.boost.org/users/people/thorsten_ottosen.html TO]]
+[def __ER__						[@mailto:er.ci.2020@gmail.com ER]]
+
+[def __local_boost_dir__ 		boost/assign/v2]
+[def __local_libs_dir__ 		libs/assign/v2]
+[def __local_ns__ 				boost::assign::v2]
+
+[/ Templates]
+[def __type_ext__ _]
+[template tpl_join[a b][a][b]]
+[template tpl_typeof[object][tpl_join [object]..__type_ext__]]
+
+[/Use In principle use like this:
+inlined : tpl_typeof[`object`]
+code block: ``tpl_typeof[object]`` <--- TODO causes line breaks!!!
+but in practice define: [def __value___ [tpl_typeof __value__]] and use __value___
+]
+
+[template tpl_seq[index first last] [index] = [first], ..., [last]]
+[template tpl_sub[var index] [var]\[[index]\] ]
+[template tpl_sub_sub[var index1 index2] [var]\[[index1],[index2]\]]
+
+[/ Pertain to input --> fun --> output ]
+
+[def __container__				v]
+[def __container___				[tpl_typeof __container__]]
+[def __value__					t]
+[def __value___					[tpl_typeof __value__]]
+[def __f__						f]
+[def __f___						[tpl_typeof __f__]]
+[def __object__					object]
+[def __object___				[tpl_typeof __object__]]
+[def __range__					r]
+[def __range___					[tpl_typeof __range__]]
+[def __param__					p]
+[def __param___					[tpl_typeof __param__]]
+
+[def __arg__ x]
+[def __arg_0__ a]
+[def __arg_1__ b]
+[def __arg_2__ c]
+
+[/ Containers]
+[def __array__ 					[@http://www.boost.org/doc/html/array/reference.html array]]
+[def __array___					[tpl_typeof __array__]]
+[def __deque__					[@http://www.sgi.com/tech/stl/Deque.html deque]]
+[def __deque___					[tpl_typeof __deque__]]
+[def __list__					[@http://www.sgi.com/tech/stl/List.html list]]
+[def __list___					[tpl_typeof __list__]]
+[def __map__					[@http://www.sgi.com/tech/stl/Map.html map]]
+[def __map___					[tpl_typeof __map__]]
+[def __queue__					[@http://www.sgi.com/tech/stl/queue.html queue]]
+[def __queue___					[tpl_typeof __queue__]]
+[def __set__					[@http://www.sgi.com/tech/stl/set.html set]]
+[def __set___					[tpl_typeof __set__]]
+[def __stack__					[@http://www.sgi.com/tech/stl/stack.html stack]]
+[def __stack___					[tpl_typeof __stack__]]
+[def __tuple__                  [@http://www.boost.org/libs/tuple/doc/tuple_users_guide.html tuple]]
+[def __tuple___					[tpl_typeof __tuple__]]
+[def __vec__                    [@http://www.sgi.com/tech/stl/Vector.html vec]]
+[def __vec___					[tpl_typeof __vec__]]
+
+[/Indexes]
+[def __i__						i]
+[def __n__						n]
+[def __j__						j]
+[def __k__						k]
+
+[/ ---- Library components ---- ]
+
+[def __functor_form__	['functor]]
+[def __csv_form__	    ['csv]]
+
+[def __ref_wrapper__	w]
+[def __ref_wrapper___   [tpl_typeof __ref_wrapper__]]
+[def __AssignCopy__		AssignCopy]
+[def __AssignRebind__	AssignRebind]
+
+[/ PP constants]
+
+[def __pp_arity_bound__ 				BOOST_ASSIGN_V2_ARITY_BOUND]
+[def __pp_lvalue_const_arity_bound__ 	BOOST_ASSIGN_V2_LVALUE_CONST_ARITY_BOUND]
+[def __pp_csv_arity_bound__ 			BOOST_ASSIGN_V2_CSV_ARITY_BOUND]
+
+[/ Headers ]
+
+[def __header_tutorial__ 				#include <libs/assign/v2/example/tutorial.h>]
+[def __header_tutorial__ 				#include <libs/assign/v2/example/tutorial.h>]
+
+[def __header_anon__ 					#include <__local_boost_dir__/anon/anon.hpp>]
+[def __header_chain__ 					#include <__local_boost_dir__/chain/chain.hpp>]
+[def __header_arity_bound__ 			#include <boost/assign/v2/detail/config/arity_bound.hpp>]
+[def __header_functor_crtp__ 			#include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>]
+[def __header_put__ 					#include <__local_boost_dir__/put/put.hpp>]
+[def __header_put_range__ 				#include <__local_boost_dir__/put/range.hpp>]
+[def __header_ref__ 					#include <__local_boost_dir__/ref/ref.hpp>]
+[def __header_keywords__				#include <__local_boost_dir__/detail/keywords/keywords.hpp>]
+
+[/ Tags ]
+
+[def __put_tag__           		'''<replaceable>put-tag</replaceable>''']
+[def __ref_assign_tag__    		'''<replaceable>ref-assign-tag</replaceable>''']
+
+[/ Namespace]
+
+[def __ref__			 ref]
+[def __ref_assign_copy__ ref::assign_copy]
+[def __ref_assign_rebind__ ref::assign_rebind]
+[def __ns_put_tag__		 put_tag]
+
+[/ Functions ]
+
+[def __anon__			anon]
+[def __anon_nil__       anon_nil]
+[def __chain__			chain]
+[def __constructor__ 	constructor]
+[def __convert__		convert]
+[def __csv__			csv]
+[def __csv_anon__		csv_anon]
+[def __put_wrapper__ 	put_wrapper]
+[def __put_range__ 		put_range]
+
+[/ Metafunctions]
+
+[def __result_of__		result_of]
+[def __nth_result_of__	nth_result_of]
+
+[/ Keywords]
+[def __nil__			_nil]
+[def __incr_lookup__	_incr_lookup]
+[def __repeat__			_repeat]
+[def __put_kwd__		_put_tag]
+[def __unwrap__			_unwrap]
+[def __deduce__			_deduce]
+[def __fun__			_fun]
+
+[section _][/ TODO remove this. For now, the formatting sucks w/o it]
+
+Question to QBK authors : Without this dummy enclosing section (_), layout is messy. Why?
+
+[section Introduction]
+
+This library offers a uniform interface for initializing or assigning containers, and working with 
+collections of references. The relevant directory structure is rooted [^boost/assign/v2]. Each 
+directory in this structure contains an [^.hpp] file by the same name which includes all its relevant files. We assume, throughout this documentation, that 
+
+	__header_assert__
+	__header_range__
+	#include <__local_boost_dir__/v2.hpp>
+	using namespace __local_ns__;
+
+precedes all C++ statements. 
+
+[endsect][/Introduction]
+[section Notation]
+
+To represent an `__object__` and its type, we use the convention that is implicit below:
+
+	__object___ __object__;
+
+[table Symbols
+	[[Symbol][Description]]
+	[
+		[`__container__`]
+		[ A container of unspecified type] 
+	]
+	[
+		[`__value__`]
+		[ Element in a container] 
+	]
+	[
+		[`__f__`]
+		[ A function ]
+	]
+	[	
+		[`__object__`]
+		[ An object returned by a function ]
+	]
+	[
+		[`__param__`]
+		[ A parameter to an object ]
+	]
+	[	
+		[`__arg__`]
+		[ An argument to a function ]
+	]
+	[	
+		[`__arg_0__`]
+		[Argument in the first call to a function ]
+	]
+	[
+		[`__arg_1__`]
+		[Argument in the second call to a function ]]
+	[
+		[`__arg_2__`]
+		[Argument in the third call to a function ]
+	]
+]
+
+[table Expressions
+	[ 
+		[ Expression ] 
+		[ Description] 
+	]
+	[ 
+		[ [^[tpl_seq __i__..0..__n__-1]] ] 
+		[Indexes a sequences of `__value__`'s] 
+	]
+	[ 
+		[ [^[tpl_seq __j__..0..__k__-1]] ] 
+		[Indexes arguments in a function call] 
+	]
+	[ 
+		[ [^[tpl_sub __k__..__i__]] ] 
+		[Number of arguments of the __i__ th functional call]
+	]
+	[ 
+		[ [^[tpl_sub_sub `__arg__`..__i__..__j__]] ] 
+		[__j__ th argument of the __i__ th functional call]
+	]
+	[ 
+		[ [^[tpl_sub `__arg_0__`..__j__]] ] 
+		[ [^[tpl_sub_sub `__arg__`..0..__j__]] ]
+	]
+	[ 
+		[ [^[tpl_sub `__arg_1__`..__j__]] ] 
+		[ [^[tpl_sub_sub `__arg__`..1..__j__]] ]
+	]
+	[ 
+		[ [^[tpl_sub `__arg_2__`..__j__]] ] 
+		[ [^[tpl_sub_sub `__arg__`..2..__j__]] ]
+	]
+]
+
+Note that if [^__k__ = 0], in the context of a function call, it means that `f()` is called. In
+the context of constructing `__value__`, `__value___()' is called.
+
+[endsect][/Notation]
+[section Tutorial]
+
+[section Putting elements into to a container]
+All three expressions in each row have the same side effect:
+[table Elementwise
+	[ 
+		[Expression1]
+		[Expression2]
+		[Expression3]
+	]
+	[
+		[``
+			__queue__.push(__arg_0__);
+			__queue__.push( __value___() );
+			__queue__.push( __value__( __arg_2__[0], __arg_2__[1] ) );
+		``] 
+		[``
+			__put_wrapper__( __queue__ ).__csv__( __arg_0__ )( __value___() )( __value__( __arg_2__[0], __arg_2__[1] ) )
+		``]
+		[``
+			__put_wrapper__( __queue__ )( __arg_0__ )()( __arg_2__[0], __arg_2__[1] );
+		``] 
+	]
+	[
+		[``
+			__map__[ __arg_0__ ] +=2 ; ++__map__[ __arg_1__ ];
+		``]
+		[``
+           	( __put_wrapper__( __map__ ) % __incr_lookup__).__csv__( __arg_0__, __arg_1__, __arg_0__ );
+		``]
+		[``
+			( __put_wrapper__( __map__ )( __arg_1__ ) % __incr_lookup__ % ( __repeat__ = 2 ) )( __arg_0__ );
+		``]
+	]
+	[
+		[``
+			__deque__.push_back( __tuple___( __arg_0__[0], __arg_0__[1] ) ); 
+			__deque__.push_back( __tuple___( __arg_1__[0], __arg_0__[1] ) ); 
+			__deque__.push_back( __tuple___( __arg_2__[0], __arg_0__[1]) );
+		``]
+		[``
+			using namespace __boost_lambda__;
+			( __put_wrapper__( __deque__ ) % ( _fun = bind<__tuple___>( 
+				__constructor__<__tuple___>(), _1, __arg_0__[1] ) 
+			) )( __arg_0__[0] )( __arg_1__[0] )( __arg_2__[0] );
+		``]
+		[ __unspecified__ ]
+	]
+	
+]
+
+[important Elements are passed by reference. In the example involving a `__tuple__`, it may have,
+for example,  an __lvalue__ and a `const` reference as its elements.]
+
+To pass a `__concept_range__`, `from`, to an arbitrary container, `to`,
+``
+	__put_range__( from, to );
+``
+To assign a `__concept_range__` to a container,
+``
+	to = __convert__<To>( from );
+``
+
+[endsect][/ Putting elements]
+[section Anonymous container (of values) ]
+
+An anonymous container is created by using the same interface as that of `__put_wrapper__` and 
+has most of the functionality of `__deque___` plus the conversion (to an arbitrary container) 
+capability:
+``
+	to = __anon__( __arg_0__ )( __arg_1__ )( __arg_2__ );
+``
+To copy-construct `to`, 
+``
+	to = __anon__( __arg_0__ )( __arg_1__ )( __arg_2__ ).__convert__<To>();
+``
+To be able to use `operator%`,
+``
+	to = ( __anon__<__value___>( __nil__ ) % (__repeat__ = n ) )( a )( b )( c );
+``
+[endsect][/Anon]
+[section Anonymous container of references]
+
+An anonymous collection of references is created with a function with the same name as its 
+value counterpart (above), `__anon__`, but in the nested `namespace` `__ref__`, and by specifying
+a __ref_assign_tag__ template argument:
+
+	using namespace __ref__;
+	__anon__<__ref_assign_tag__>( __arg_0__ )( __arg_1__ )( __arg_2__ );
+	
+The resulting container holds references to the arguments. Clearly only unary function calls
+are allowed. The template argument __ref_assign_tag__ specifies how references are assigned :
+using copy semantics or rebind semantics. Finally, there is a __csv_form__ form as well. Rather
+than specifying __ref_assign_tag__, it is equivalent to use a dedicated `namespace`, in the 
+example that follows,  `__ref_assign_copy__`:
+
+``
+	using namespace __ref_assign_copy__;
+	boost::copy( v , boost::begin( __anon__( a )( b )( c ) ) );
+	BOOST_ASSERT( a == v[0] );
+	BOOST_ASSERT( c == v[2] );
+``
+
+This example illustrates both the __csv_form__ form and rebind semantics:
+``
+	__header_typeof__
+	using namespace __ref_assign_rebind__;
+	BOOST_AUTO( tmp, __csv_anon__( a , b ) );
+	tmp.assign( c );
+	BOOST_ASSERT( &tmp[ 0 ] == &c );
+	BOOST_ASSERT( &tmp[ 1 ] == &c );
+``
+[endsect][/ Anon refs]
+[section Chaining ranges]
+To assign from chained ranges:
+``
+	to = (r1 && r2 && r3).__convert__<To>();
+``
+Chaining is elementwise-__lvalue__ preserving:
+``
+	__header_typeof__
+	using namespace __ref_assign_copy__;
+	BOOST_AUTO( tmp, __anon__( a )( b ) );
+	copy( v , boost::begin( tmp && __anon__( c ) ) );
+	BOOST_ASSERT( a == __container__[0] );
+	BOOST_ASSERT( b == __container__[1] );
+	BOOST_ASSERT( c == __container__[2] );
+``
+The fact that `__anon__( c )`, above, returns an rvalue should underscore the significance of ['elementwise]
+in our previous statement.
+
+[endsect] [/chain]
+[section Running the code]
+
+The file below contains similar material,
+
+``
+	__header_tutorial__
+``
+
+and is be executed like this:
+
+``
+	__header_tutorial__
+	int main()
+	{
+		using namespace example_assign_v2;
+		xxx_tutorial::run();
+		return 0;
+	}
+``
+[endsect][/Run]
+[endsect][/Tutorial]
+[section Library interface and design]
+
+This section discusses general features of the interface and concerns the `__object__` s returned
+by
+
+* `anon()`
+* `put_wrapper()`
+* `ref::__anon__()`
+* `ref::csv_anon()`
+
+Functions are the primary interface by which the user interacts with the library. However, 
+it is the object that they return that are responsible for performing the desired task. The 
+relationship  between a function and its resulting object can be formalized as follows, where
+both expressions have the same side effect:
+
+[table
+	[ 
+		[Expression1]
+		[Expression2]
+	]
+	[
+		[``
+			fun( __arg_0__ )( __arg_1__ )( __arg_2__ );
+		``]
+		[``
+			result_of::fun_nil<T>::type __object__ = fun<T>( __nil__ ); 
+			__object__( __arg_0__ )( __arg_1__ )( __arg_2__ );
+		``]
+	]
+]	
+
+In `namespace` `__ref__` with `__anon__` as `fun`, this is exactly the representation that is used. 
+In other segments of the library, however, although the interface may not match exactly that above, 
+a similar idea is at work.
+
+To avoid passing to functions many, in fact any, parameters that would confuse the user and cause the developer a headache,
+the library usually deduces the parameters from its input using traits. Considering, for example,
+the `__put_wrapper__` functionality, the library, by default,
+
+* Calls a functor, `__constructor__<__value__>()`, which is overloaded on the number and
+	__lvalue__/`const`-ness of its arguments, and returns the type of the elements in the 
+	destination container.
+* Another traits decides which modifier (such as `push_back()`) to use given certain properties
+	of the container. For example, if the container has `push()` it takes precedence over 
+	`push_back()`. 
+	
+For example, the side effect of
+	`` 
+	put_wrapper( map )( key1, a )( key2, b )( key3, c ) 
+``
+is identical to that of	
+`` 
+	map.insert( make_pair( key1, a ) ); 
+	map.insert( make_pair( key2, b ) ); 
+	map.insert( make_pair( key3, c ) ); 
+``	
+
+The deduced parameters that we have just discussed can be selectively overriden with `operator%` 
+taking as its first argument the result of the function, and a ['keyword]. A keyword is a `const` 
+object defined in an anonymous namespace whose identifier has prefix `_`. Here's the generic form
+``
+	__object__ % _keyword;
+``
+or
+``
+	__object__ % (_keyword = __param__);
+``
+Operators are usually composable e.g.
+``
+	object % _keyword1 % (_keyword2 = __param__);
+``
+In each case, the operation may return a reference to the same `__object__`, but with a different state, 
+or a new object of a different type altogether, thereby modifying the semantics of 
+subequent calls to the object. For example,
+`` 
+	(__put_wrapper__( __map__ ) % __incr_lookup__)( __arg_0__ )( __arg_1__ )( __arg_2__ )
+``
+
+is equivalent to
+
+``
+	++ __map__ [ __arg_0__ ]; 
+	++ __map__ [ __arg_1__ ]; 
+	++ __map__ [ __arg_2__ ]; 
+``				
+[endsect][/ Library interface and design]
+[section Reference]
+[section Overload resolution]
+
+This section concerns the `__object__` s returned by
+
+* `anon()`
+* `put_wrapper()`
+* `ref::__anon__()`
+* `ref::csv_anon()`
+
+[heading Headers]
+	__header_arity_bound__
+	__header_functor_crtp__
+
+[heading __functor_form__ and __csv_form__ forms]
+
+[table The functor and csv forms
+	[ 
+		[Syntax ]
+		[ Designation ]
+	]
+	[ 
+		[``
+			__f__( __arg__[0,0], ..., __arg__[0,__k__(0)-1] ) ... ( __arg__[__n__-1,0], ..., __arg__[__n__-1,__k__(__n__-1)-1]  )
+		``]
+		[ __functor_form__ ]
+	]
+	[ 
+		[``
+			f( __arg__[0], ..., __arg__[__n__-1] )
+		``]
+		[ __csv_form__ ]
+	]
+]
+
+[note The arguments are passed as references. ]
+[important The rules for `ref::__anon__()` are those of the __csv_form__.]
+
+[heading Arity]
+
+Let [^m] designates the constant under consideration in each row below:
+
+[table Preprocessor constants
+	[ 
+		[Name]
+		[ Relevant [br] form ]
+		[ User [br] definable ]
+		[ Implication ]
+	]
+	[ [__pp_arity_bound__][ __functor_form__ ][ Yes ][ [^__k__ < m] ] ]
+	[ [__pp_lvalue_const_arity_bound__][ __functor_form__ ][ No ][ See below ] ]
+	[ [__pp_csv_arity_bound__][ __csv_form__ ][ Yes ][ [^__n__ < m] ] ]
+]
+
+Necessary and sufficient conditions for preserving __lvalue__-ness, for a given [^__j__], are
+[table
+	[ [Function ][ Condition ]]
+	[ [ [^__i__]th call to __functor_form__ ][  [^__k__(__i__) < m] or  all of `__arg__[__i__,0]`,...,`__arg__[__i__,__k__(__i__)-1]` are __lvalue__ s ]]
+	[ [ __csv_form__ ][  All of `__arg__[0]`,...,`__arg__[__n__-1]` are __lvalue__ s ]]
+]
+where [^m] is as previously defined, looking at the second row of the preceding table. If the condition, 
+in each row, is violated, the overload whose arguments are all `const` references is that which is 
+resolved to.
+
+[endsect][/ overload resolution ]
+[section Keywords]
+[section __deduce__]
+[heading Expression Semantics]
+``	
+	__object__ % deduce;
+``
+[*Return type] __implementation_defined__
+
+[*Semantics] __unspecified__
+
+[heading Header]
+``
+	__header_keywords__
+``
+[endsect][/deduce]
+[section __fun__]
+[heading Expression Semantics]
+``	
+	__object__ % ( _fun = f);
+``
+
+[*Return type] __implementation_defined__
+
+[*Semantics] __unspecified__
+
+[heading Header]
+``
+	__header_keywords__
+``
+[endsect][/fun]
+[section __nil__]
+[heading Expression Semantics]
+``	
+	f( _nil );
+``
+
+[*Return type] __implementation_defined__
+
+[*Semantics] __unspecified__
+
+[heading Header]
+``
+	__header_keywords__
+``
+[endsect][/nil ]
+[section __unwrap__]
+[heading Expression Semantics]
+``
+	__unspecified__
+``
+
+[*Return type] __implementation_defined__
+
+[*Semantics] __unspecified__
+
+[heading Header]
+``
+	__header_keywords__
+``
+[endsect][/unwrap ]
+[section __incr_lookup__]
+[heading Expression Semantics]
+``
+	__unspecified__
+``
+[*Return type] __implementation_defined__
+
+[*Semantics] __unspecified__
+
+[heading Header]
+``
+	__header_keywords__
+``
+[endsect][/incr_lookup ]
+[section __repeat__]
+[heading Expression Semantics]
+``
+	__object__ % (__repeat__ = n);
+``
+
+[*Return type] __implementation_defined__
+
+[*Semantics] __unspecified__
+
+[heading Header]
+``
+	__header_keywords__
+``
+[endsect][/repeat ]
+[section __put_kwd__]
+[heading Expression Semantics]
+``
+	__object__ % (__put_kwd__ = __put_tag__());
+``
+
+[*Return type] __implementation_defined__
+
+[*Semantics] Selects a container modifier.
+
+[table Candidate tags.
+	[[Name]]
+	[[`__ns_put_tag__::at_next`]]
+	[[`__ns_put_tag__::insert`]]
+	[[`__ns_put_tag__::push`]]
+	[[`__ns_put_tag__::push_back`]]
+]
+
+[heading Header]
+``
+	__header_put__
+``
+[header Example]
+``
+	__object__ % (__put_kwd__ = __ns_put_tag__::push());
+``
+[endsect][/put_tag ]
+[endsect][/Keywords]
+[section `__anon__`]
+[heading Description]
+
+Creates an anonymous container  
+
+* With the same interface as `__put_wrapper__` 
+* and converts to an arbitrary container
+
+[heading Synopsis]
+
+[table
+	[[Syntax][Designation]]
+	[
+		[``
+			template<typename T>
+			typename __result_of__::__anon__<T>::type
+			anon( keyword_aux::nil const& );
+		``]
+		[ ['(1)] ]
+	]
+	[
+		[``
+
+			template<typename T>
+			typename __result_of__::__anon__<T>::type
+			anon( T& );
+		``]
+		[ ['(2)] ]
+	]
+	[
+		[``
+
+			template<typename T>
+			typename __result_of__::__anon__<T const>::type
+			anon( T const& );
+		``]
+	]
+]
+[heading Parameters]
+
+[table
+    [[Parameter]        [Requirement]                   [Description]]
+    [[T]  				[__unspecified__]  				[Value of argument to `__anon__`]]
+]
+
+[heading Expression Semantics]
+
+[table
+	[[Expression][Designation]]
+	[
+	    [``
+	    	anon<T>( __nil__ );
+	    ``]
+	    [ ['(1) ] ]
+	]
+	[
+		[``
+    			anon( __value__ );
+    	``]
+    	[ ['(2)] and ['(3)] ]
+    ]
+]
+
+[*Return type]: `__result_of__::__anon__<T>::type` for each ['(1)], ['(2)] and ['(3)]
+
+[*Semantics]: Creates an anonymous container.
+
+[heading Header]
+
+	__header_anon__
+
+[heading Example]
+
+[table
+	[[Expression][Designation]]
+	[
+	    [``
+	    	__anon__<int>( __nil__ );
+	    ``]
+	    [ ['(1) ] ]
+	]
+	[
+		[``
+			int __arg_0__; __anon__( __arg_0__ );
+    	``]
+    	[ ['(2)] ]
+    ]
+	[
+		[``
+    		__anon__( 1 );
+    	``]
+    	[ ['(2)] ]
+    ]
+]
+
+[endsect] [/ anon]
+[section __chain__]
+
+Forms a range by chaining two ranges in a way that
+
+* preserves __lvalue__-ness ['elementwise]. If, for example, the two ranges are `const` but
+their elements are __lvalue__--reference wrappers, then the dereference value of the underlying
+iterator is also __lvalue__.
+* is convertible to an arbitrary container.
+
+[heading `namespace`]
+``
+	using namespace adaptor;
+``
+
+[heading Synopsis]
+
+``
+	template<typename R1,typename U2>
+	typename __result_of__::__chain__<R1,R2>::type
+	operator|(U1& r1,chain_aux::adaptor1<U2,boost::use_default>);
+``
+
+[note `U1` = `R1` or `R1 const` and likewise for `U2`. ]
+
+[heading Parameters]
+
+[table
+    [[Parameter]        [Requirement]                   [Description]]
+    [[R1]  				[models __concept_range__]  	[Range to be chained]]
+    [[R2]  				[models __concept_range__]  	[Range to chain to]]
+]
+
+[heading Expression Semantics]
+
+``
+	r1 | _chain( r2 );
+``
+
+[*Return type]: `__result_of__::__chain__<U1,U2>::type` 
+
+[*Semantics]: Chains two ranges to form one.
+
+[heading Header]
+``
+	__header_chain__
+``
+
+[heading Example]
+``
+	using namespace adaptor;
+	std::vector<int> __container__( 2, -1); 
+	boost::array<int,2> __array__; __array__.assign( 1 );
+	__container__ | __chain__( __array__ );
+``
+[heading `operator&&`]
+
+These are two equivalent ways to chain:
+
+[table 
+	[[Expression 1][Expression 2]]
+	[
+		[``
+			r1 | _chain( r2 );
+		``]
+		[``
+			r1 && r2;
+		``]
+	]
+]
+[endsect][/chain]
+[section `__convert__`]
+[heading Description]
+
+Assigns a __concept_range__ to an arbitrary container.
+
+[heading Synopsis]
+
+	template<typename To, typename From>
+	To __convert__( From const& from);
+
+[heading Parameters]
+
+[table
+    [[Parameter]        [Requirement]                   [Description]]
+    [[From]  			[models __concept_range__]  	[The argument to `__convert__`]]
+    [[To]  				[__unspecified__]  				[The return type of `__convert__`]]
+]
+
+[heading Expression Semantics]
+
+``
+    convert<To>( from );
+``
+
+[*Return type]: To
+
+[*Semantics]: Assigns `to` with the elements of `from`
+
+[heading Header]
+
+	__header_put_range__
+
+[heading Example]
+
+``
+    std::vector<int> from; from.push_back( -1 ); from.push_back( 0 );
+    typedef std::queue<int> to_;
+    to_ to = from.convert<to_>();
+``
+
+[endsect] [/ convert]
+[section `__put_range__`]
+[heading Description]
+
+Puts the elements of a __concept_range__ into an arbitrary container.
+
+[heading Synopsis]
+
+``
+	template<typename From,typename To>
+	To& put_range( From const&, To& to );
+``
+
+[heading Parameters]
+
+[table
+    [[Parameter]        [Requirement]                   [Description]]
+    [[From]  			[models __concept_range__]  	[The first argument to `__put_range__`]]
+    [[To]  				[__unspecified__]  				[The second argument to `__put_range__`]]
+]
+
+[heading Expression Semantics]
+
+``
+    put_range( from, to );
+``
+
+[*Return type]: To&
+
+[*Semantics]: Puts the elements in `from` into `to`.
+
+[heading Header]
+
+	__header_put_range__
+
+[heading Example]
+
+    std::vector<int> from; from.push_back( -1 ); from.push_back( 0 );
+    std::queue<int> to;
+    put_range( from, to );
+
+[endsect] [/ put_range]
+[section `__put_wrapper__`]
+[heading Description]
+
+Wraps around a container to be able to put elements into it, with a __functor_form__ or __csv_form__ interface.
+
+[heading Synopsis]
+
+	template<typename V>
+	typename __result_of__::__put_wrapper__<V>::type
+	put_wrapper( V& __container__);
+
+[heading Parameters]
+
+[table
+    [[Parameter]        [Requirement]                   [Description]]
+    [[V]  				[__unspecified__]  				[The argument to `__put_wrapper__`]]
+]
+
+[heading Expression Semantics]
+
+    put_wrapper( v );
+
+[*Return type]: `__result_of__::__put_wrapper__<V>::type`
+
+[*Semantics]: Creates an `object` with a __functor_form__ or __csv_form__ interface.
+
+[heading Header]
+
+	__header_put__
+
+[heading Example]
+
+    std::vector<int> __container__;
+    put_wrapper( __container__ );
+
+[endsect] [/ put_wrapper]
+[section `ref::__anon__`]
+
+[heading Namespace]
+``
+	__header_ref__
+	using namespace ref;
+``
+
+[heading Background on assign semantics]
+
+Let a reference wrapper, `__ref_wrapper__`, bind to some reference `y1` and that it is assigned as follows:
+``
+	__ref_wrapper__ = y2;
+``
+where `y2` is of the same type as `y1`. There are two possible semantics which are captured
+by the concepts below:
+
+[table Concepts
+	[[Name][Requirement]]
+	[[['__AssignCopy__]][ y2 == y1;  ]]
+	[[['__AssignRebind__]][ &y2 == &y1;  ]]
+]
+
+[heading Description]
+
+Creates a collection of references.
+
+[heading Synopsis]
+
+[table 
+	[ [Syntax] [Designation]]
+	[
+		[``
+			template<typename Tag1, typename T>
+    		typename result_of::anon_nil<Tag1, T>::type
+			anon( keyword_aux::nil );
+		``]
+		[ ['(1)] ]
+	]
+	[	
+		[``
+		    template<typename Tag1,typename T>
+			typename result_of::anon<Tag1, T>::type
+		``]
+		[ ['(2)] ]
+	]
+	[
+	    [``
+	    	template<typename Tag1,typename T>
+			typename result_of::anon<Tag1, T const>::type
+	    	anon(T const & t);
+	    ``]
+	    [ ['(3)] ]
+	]
+]
+
+[heading Parameters]
+
+[table
+    [[Parameter]        [Requirement]                   [Description] ]
+    [[Tag1]  			[__unspecified__]  				[Controls assignement semantics] ]
+    [[T]  				[__unspecified__]  				[Value of the element(s) to reference to] ]
+]
+
+[heading Expression Semantics]
+
+[table 
+	[ [Expression] [Designation]]
+    [ 
+    	[`anon<__ref_assign_tag__>( __nil__ );` ]
+    	[ ['(1)] ] 
+    ]
+    [ 
+    	[`anon<__ref_assign_tag__>( __value__ );`]
+    	[ ['(2)] and ['(3)] ] 
+    ]
+]
+
+[*Return type]: 
+
+[table
+
+	[ [Expression] [Designation]]
+    [ 
+    	[`__result_of__::__anon_nil__<__ref_assign_tag__,T>::type`]
+    	[ ['(1)] ] 
+    ]
+    [ 
+    	[`__result_of__::__anon__<__ref_assign_tag__,T>::type`]
+    	[ ['(2)] ] 
+    ]
+    [ 
+    	[`__result_of__::__anon__<__ref_assign_tag__,T const>::type`]
+    	[ ['(3)] ] 
+    ]
+]
+
+[*Semantics]: Creates a collection of references.
+
+[heading Header]
+
+	__header_ref__
+
+[heading Example]
+
+[table
+	[ [Expression] [Designation]]
+    [ 
+    	[ `__anon__<int const>( __nil__ )( 1 )( 2 )( 3 );` ]
+    	[ ['(1)] ] 
+    ]
+    [ 
+    	[`` 
+    		int __arg_0__, __arg_1__, __arg_2__;
+    		__anon__<int>( __arg_0__ )( __arg_1__ )( __arg_2__ ); 
+    	``]
+    	[ ['(2)] ] 
+    ]
+    [ 
+    	[ `__anon__( 1 )( 2 )( 3 )` ]
+    	[ ['(3)] ] 
+    ]
+]
+
+[heading Copy semantics]
+
+The two expresions below are equivalent
+[table 
+	[ [Expression1] [Expression2]]
+    [ 
+    	[``
+    		anon<assign_tag::copy>( __value__ );
+    	``]
+    	[``
+    		using namespace assign_copy;
+    		anon( __value__ );
+    	``]
+    ]
+]
+	
+[heading Rebind semantics]
+
+The two expresions below are equivalent
+[table 
+	[ [Expression1] [Expression2]]
+    [ 
+    	[``
+    		anon<assign_tag::rebind>( __value__ );
+    	``]
+    	[``
+    		using namespace assign_rebind;
+    		anon( __value__ );
+    	``]
+    ]
+]
+	
+[endsect] [/ref::__anon__]
+[endsect] [/Reference]
+[section Portability ] 
+
+[heading Methodology]
+
+For each of a set of containers (see below), ensure
+
+*	At compile time, that the method deduced for modifying the container agrees with one that 
+	is explicitly specified. For example, it verifies that `push()` is the method used for 
+	`std::queue`.
+
+*	At runtime time, that the container returned by
+``
+	convert<To>( from );
+``
+has the same elements as that of `from`, where `To` is the type of the container being tested.
+	
+[table Containers tested
+	[[Container][Result]]
+	[[`boost::array<>`][OK]]
+	[[`std::deque<>`][OK]]
+	[[`std::list<>`][OK]]
+	[[`std::queue<>`][OK]]
+	[[`std::set<>`][OK]]
+	[[`std::set<>`][OK]]
+	[[`std::stack<>`][OK]]
+	[[`std::vector<>`][OK]]	
+]
+
+[table Tests
+	[[OS][Compiler][Date ][Result]]
+	[[Mac OS X v10.6][GCC 4.2][August 2nd, 2010][Passed]]
+]
+
+[heading Dependencies]
+
+A previously avalaible set of files in the Vault, for chaining, by RangeEx,  are made 
+temporarily available [@http://svn.boost.org/svn/boost/sandbox/statistics/support/boost/range/ here]
+and need to be in the search path.
+
+[endsect]
+[section Change log]
+
+[heading Upgrading from Boost. v['1.4x]]
+
+* This upgrade to __boost_assign_v2__ represents a complete overhaul and is completely independent 
+from the previous version. In terms of the directory structure, the  new features are in __local_boost_dir__, 
+and accordingly, a new namespace was created:
+
+``
+	using namespace boost::assign::v2;
+``
+
+* The latest version prior to __boost_assign_v2__ will continue to be supported in __boost__ 
+for backward compatibility purposes, and also because Boost.Assign v2 still needs to be developed 
+in some areas such as pointers.
+
+* The change to __boost_assign_v2__ comes about with the proposal for the addition of two new features, 
+namely chaining ranges and (more advanced) anonymous containers of references. However, it came to
+light during the [@http://lists.boost.org/Archives/boost/2010/06/168028.php mini-review],
+that the new and existing features seemed redundant or lacked homogeneity in their interface
+and therefore called for a little more than a tune up.  
+
+[endsect][/Change log]
+[section Support]
+For questions or feature request, post to the __user_mailing_list__, but also make sure to reach
+__TO__ and __ER__ by CCing them.
+[endsect]
+[section History and acknowledgement]
+
+The idea for an assignment/initialization library is not new. The  functionality of this library 
+resembles Leor Zolman's STL Container Initialization Library a great deal, but it does not rely on 
+string parsing to achieve its goals. 
+
+Special thanks go to 
+
+* Leor Zolman for our many discussion that eventually led to this library.
+* Tom Brinkman for being review manager.
+* Joaquín Muñoz for vc6/vc7 portability.
+* Pavel Vozenilek for his countless suggestions, improvements and  portability fixes. 
+* Rene Rivera for Code Warrior portability.     
+* Manuel Peinado Gallego for identifying the need for anonymous container of references, 
+  his valuable advice throughout their development, and proposing a [@http://gist.github.com/287791 design] 
+  that laid the foundation for chaining. Both features were introduced with Boost.Assign v2.
+
+[endsect] [/Ackowledgement]
+[section Bibliography]
+
+* Scott. Meyers, "More Effective C++", Item 7, Addison Wesley, 1996       
+* K. Czarnecki and U.W. Eisenecker, "Generative programming", Addison-Wesley, 2000        
+* [@http://www.oonumerics.org/blitz/ http://www.oonumerics.org/blitz/]
+* Gabriel Dos Reis and Bjarne Stroustrup, 
+ [@http://anubis.dkuug.dk/jtc1/sc22/wg21/docs/papers/2003/n1509.pdf Generalized Initializer Lists], 2003
+* Abrahams, David and Gurtovoy, Aleksey,
+ [@http://portal.acm.org/citation.cfm?id=1044941# 
+ C++ Template Metaprogramming: Concepts, Tools, and Techniques from Boost and Beyond (C++ in Depth Series)],
+ 2004, Addison-Wesley Professional.
+
+[endsect]
+[endsect] [/ dummy encloser]
+

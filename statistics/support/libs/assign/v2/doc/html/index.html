@@ -1,0 +1,3095 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Chapter&#160;1.&#160;Boost.Assign 2.0</title>
+<link rel="stylesheet" href="/usr/local/trunk/libs/non_parametric/doc/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.html">Home</a></td>
+<td align="center"><a href="../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"></div>
+<div class="chapter" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="boost_assign_v2"></a>Chapter&#160;1.&#160;Boost.Assign 2.0</h2></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Ottosen</span> <span class="surname">Thorsten</span>
+</h3></div></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Erwann</span> <span class="surname">Rogard</span>
+</h3></div></div>
+<div><p class="copyright">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard</p></div>
+<div><div class="legalnotice" title="Legal Notice">
+<a name="id36154309"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#boost_assign_v2._">_</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.introduction">Introduction</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.notation">Notation</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial">Tutorial</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial.putting_elements_into_to_a_container">Putting
+        elements into to a container</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial.anonymous_container__of_values__">Anonymous
+        container (of values) </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial.anonymous_container_of_references">Anonymous
+        container of references</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial.chaining_ranges">Chaining
+        ranges</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial.running_the_code">Running
+        the code</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.library_interface_and_design">Library
+      interface and design</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference">Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.overload_resolution">Overload
+        resolution</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords">Keywords</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__deduce__">_deduce</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__fun__">_fun</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__nil__">_nil</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__unwrap__">_unwrap</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__incr_lookup__">_incr_lookup</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__repeat__">_repeat</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__put_kwd__">_put_tag</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.___anon___"><code class="computeroutput">anon</code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.__chain__">chain</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.___convert___"><code class="computeroutput">convert</code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.___put_range___"><code class="computeroutput">put_range</code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.___put_wrapper___"><code class="computeroutput">put_wrapper</code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference._ref____anon___"><code class="computeroutput"><span class="identifier">ref</span><span class="special">::</span>anon</code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.portability_">Portability </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.change_log">Change log</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.support">Support</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.history_and_acknowledgement">History
+      and acknowledgement</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.bibliography">Bibliography</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="section" title="_">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_assign_v2._"></a><a class="link" href="index.html#boost_assign_v2._" title="_">_</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.introduction">Introduction</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.notation">Notation</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial">Tutorial</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial.putting_elements_into_to_a_container">Putting
+        elements into to a container</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial.anonymous_container__of_values__">Anonymous
+        container (of values) </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial.anonymous_container_of_references">Anonymous
+        container of references</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial.chaining_ranges">Chaining
+        ranges</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial.running_the_code">Running
+        the code</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.library_interface_and_design">Library
+      interface and design</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference">Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.overload_resolution">Overload
+        resolution</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords">Keywords</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__deduce__">_deduce</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__fun__">_fun</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__nil__">_nil</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__unwrap__">_unwrap</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__incr_lookup__">_incr_lookup</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__repeat__">_repeat</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__put_kwd__">_put_tag</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.___anon___"><code class="computeroutput">anon</code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.__chain__">chain</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.___convert___"><code class="computeroutput">convert</code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.___put_range___"><code class="computeroutput">put_range</code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.___put_wrapper___"><code class="computeroutput">put_wrapper</code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference._ref____anon___"><code class="computeroutput"><span class="identifier">ref</span><span class="special">::</span>anon</code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.portability_">Portability </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.change_log">Change log</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.support">Support</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.history_and_acknowledgement">History
+      and acknowledgement</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.bibliography">Bibliography</a></span></dt>
+</dl></div>
+<p>
+      Question to QBK authors : Without this dummy enclosing section (_), layout
+      is messy. Why?
+    </p>
+<div class="section" title="Introduction">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2._.introduction"></a><a class="link" href="index.html#boost_assign_v2._.introduction" title="Introduction">Introduction</a>
+</h3></div></div></div>
+<p>
+        This library offers a uniform interface for initializing or assigning containers,
+        and working with collections of references. The relevant directory structure
+        is rooted <code class="literal">boost/assign/v2</code>. Each directory in this structure
+        contains an <code class="literal">.hpp</code> file by the same name which includes
+        all its relevant files. We assume, throughout this documentation, that
+      </p>
+<pre class="programlisting"><a href="http://www.boost.org/doc/libs/release/libs/utility/assert.html" target="_top">#include &lt;boost/assert.hpp&gt;</a> 
+<a href="http://www.boost.org/doc/libs/1_35_0/libs/range/doc/range.html" target="_top">#include &lt;boost/range.hpp&gt;</a>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span>boost/assign/v2<span class="special">/</span><span class="identifier">v2</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> boost::assign::v2<span class="special">;</span>
+</pre>
+<p>
+        precedes all C++ statements.
+      </p>
+</div>
+<div class="section" title="Notation">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2._.notation"></a><a class="link" href="index.html#boost_assign_v2._.notation" title="Notation">Notation</a>
+</h3></div></div></div>
+<p>
+        To represent an <code class="computeroutput">object</code> and its type, we use the convention that
+        is implicit below:
+      </p>
+<pre class="programlisting">object_ object<span class="special">;</span>
+</pre>
+<div class="table">
+<a name="boost_assign_v2._.notation.symbols"></a><p class="title"><b>Table&#160;1.1.&#160;Symbols</b></p>
+<div class="table-contents"><table class="table" summary="Symbols">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Symbol
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">v</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  A container of unspecified type
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">t</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Element in a container
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">f</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  A function
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">object</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  An object returned by a function
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">p</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  A parameter to an object
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">x</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  An argument to a function
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">a</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Argument in the first call to a function
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">b</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Argument in the second call to a function
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">c</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Argument in the third call to a function
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="boost_assign_v2._.notation.expressions"></a><p class="title"><b>Table&#160;1.2.&#160;Expressions</b></p>
+<div class="table-contents"><table class="table" summary="Expressions">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="literal"> i = 0, ..., n-1</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Indexes a sequences of <code class="computeroutput">t</code>'s
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal"> j = 0, ..., k-1</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Indexes arguments in a function call
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal"> k[i] </code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Number of arguments of the i th functional call
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal"> <code class="computeroutput">x</code>[i,j]</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  j th argument of the i th functional call
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal"> <code class="computeroutput">a</code>[j] </code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal"> <code class="computeroutput">x</code>[0,j]</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal"> <code class="computeroutput">b</code>[j] </code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal"> <code class="computeroutput">x</code>[1,j]</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal"> <code class="computeroutput">c</code>[j] </code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal"> <code class="computeroutput">x</code>[2,j]</code>
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+        Note that if <code class="literal">k = 0</code>, in the context of a function call,
+        it means that <code class="computeroutput"><span class="identifier">f</span><span class="special">()</span></code>
+        is called. In the context of constructing <code class="computeroutput">t</code>, `t_()' is called.
+      </p>
+</div>
+<div class="section" title="Tutorial">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2._.tutorial"></a><a class="link" href="index.html#boost_assign_v2._.tutorial" title="Tutorial">Tutorial</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial.putting_elements_into_to_a_container">Putting
+        elements into to a container</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial.anonymous_container__of_values__">Anonymous
+        container (of values) </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial.anonymous_container_of_references">Anonymous
+        container of references</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial.chaining_ranges">Chaining
+        ranges</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.tutorial.running_the_code">Running
+        the code</a></span></dt>
+</dl></div>
+<div class="section" title="Putting elements into to a container">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2._.tutorial.putting_elements_into_to_a_container"></a><a class="link" href="index.html#boost_assign_v2._.tutorial.putting_elements_into_to_a_container" title="Putting elements into to a container">Putting
+        elements into to a container</a>
+</h4></div></div></div>
+<p>
+          All three expressions in each row have the same side effect:
+        </p>
+<div class="table">
+<a name="boost_assign_v2._.tutorial.putting_elements_into_to_a_container.elementwise"></a><p class="title"><b>Table&#160;1.3.&#160;Elementwise</b></p>
+<div class="table-contents"><table class="table" summary="Elementwise">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression1
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Expression2
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Expression3
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre class="programlisting"><a href="http://www.sgi.com/tech/stl/queue.html" target="_top">queue</a><span class="special">.</span><span class="identifier">push</span><span class="special">(</span>a<span class="special">);</span>
+<a href="http://www.sgi.com/tech/stl/queue.html" target="_top">queue</a><span class="special">.</span><span class="identifier">push</span><span class="special">(</span> t_<span class="special">()</span> <span class="special">);</span>
+<a href="http://www.sgi.com/tech/stl/queue.html" target="_top">queue</a><span class="special">.</span><span class="identifier">push</span><span class="special">(</span> t<span class="special">(</span> c<span class="special">[</span><span class="number">0</span><span class="special">],</span> c<span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span> <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre class="programlisting">put_wrapper<span class="special">(</span> <a href="http://www.sgi.com/tech/stl/queue.html" target="_top">queue</a> <span class="special">).</span>csv<span class="special">(</span> a <span class="special">)(</span> t_<span class="special">()</span> <span class="special">)(</span> t<span class="special">(</span> c<span class="special">[</span><span class="number">0</span><span class="special">],</span> c<span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span> <span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre class="programlisting">put_wrapper<span class="special">(</span> <a href="http://www.sgi.com/tech/stl/queue.html" target="_top">queue</a> <span class="special">)(</span> a <span class="special">)()(</span> c<span class="special">[</span><span class="number">0</span><span class="special">],</span> c<span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre class="programlisting"><a href="http://www.sgi.com/tech/stl/Map.html" target="_top">map</a><span class="special">[</span> a <span class="special">]</span> <span class="special">+=</span><span class="number">2</span> <span class="special">;</span> <span class="special">++</span><a href="http://www.sgi.com/tech/stl/Map.html" target="_top">map</a><span class="special">[</span> b <span class="special">];</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre class="programlisting"><span class="special">(</span> put_wrapper<span class="special">(</span> <a href="http://www.sgi.com/tech/stl/Map.html" target="_top">map</a> <span class="special">)</span> <span class="special">%</span> _incr_lookup<span class="special">).</span>csv<span class="special">(</span> a<span class="special">,</span> b<span class="special">,</span> a <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre class="programlisting"><span class="special">(</span> put_wrapper<span class="special">(</span> <a href="http://www.sgi.com/tech/stl/Map.html" target="_top">map</a> <span class="special">)(</span> b <span class="special">)</span> <span class="special">%</span> _incr_lookup <span class="special">%</span> <span class="special">(</span> _repeat <span class="special">=</span> <span class="number">2</span> <span class="special">)</span> <span class="special">)(</span> a <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre class="programlisting"><a href="http://www.sgi.com/tech/stl/Deque.html" target="_top">deque</a><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> <a href="http://www.boost.org/libs/tuple/doc/tuple_users_guide.html" target="_top">tuple</a>_<span class="special">(</span> a<span class="special">[</span><span class="number">0</span><span class="special">],</span> a<span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span> <span class="special">);</span> 
+<a href="http://www.sgi.com/tech/stl/Deque.html" target="_top">deque</a><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> <a href="http://www.boost.org/libs/tuple/doc/tuple_users_guide.html" target="_top">tuple</a>_<span class="special">(</span> b<span class="special">[</span><span class="number">0</span><span class="special">],</span> a<span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span> <span class="special">);</span> 
+<a href="http://www.sgi.com/tech/stl/Deque.html" target="_top">deque</a><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> <a href="http://www.boost.org/libs/tuple/doc/tuple_users_guide.html" target="_top">tuple</a>_<span class="special">(</span> c<span class="special">[</span><span class="number">0</span><span class="special">],</span> a<span class="special">[</span><span class="number">1</span><span class="special">])</span> <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <a href="http://www.boost.org/doc/libs/release/libs/lambda" target="_top">boost::lambda</a><span class="special">;</span>
+<span class="special">(</span> put_wrapper<span class="special">(</span> <a href="http://www.sgi.com/tech/stl/Deque.html" target="_top">deque</a> <span class="special">)</span> <span class="special">%</span> <span class="special">(</span> <span class="identifier">_fun</span> <span class="special">=</span> <span class="identifier">bind</span><span class="special">&lt;</span><a href="http://www.boost.org/libs/tuple/doc/tuple_users_guide.html" target="_top">tuple</a>_<span class="special">&gt;(</span> 
+	constructor<span class="special">&lt;</span><a href="http://www.boost.org/libs/tuple/doc/tuple_users_guide.html" target="_top">tuple</a>_<span class="special">&gt;(),</span> <span class="identifier">_1</span><span class="special">,</span> a<span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span> 
+<span class="special">)</span> <span class="special">)(</span> a<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)(</span> b<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)(</span> c<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>unspecified</em></span>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="important" title="Important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../doc/html/images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Elements are passed by reference. In the example involving a <code class="computeroutput"><a href="http://www.boost.org/libs/tuple/doc/tuple_users_guide.html" target="_top">tuple</a></code>,
+            it may have, for example, an lvalue and a <code class="computeroutput"><span class="keyword">const</span></code>
+            reference as its elements.
+          </p></td></tr>
+</table></div>
+<p>
+          To pass a <code class="computeroutput"><a href="http://www.boost.org/doc/libs/1_35_0/libs/range/doc/range.html" target="_top">Range</a></code>,
+          <code class="computeroutput"><span class="identifier">from</span></code>, to an arbitrary container,
+          <code class="computeroutput"><span class="identifier">to</span></code>, 
+</p>
+<pre class="programlisting">put_range<span class="special">(</span> <span class="identifier">from</span><span class="special">,</span> <span class="identifier">to</span> <span class="special">);</span>
+</pre>
+<p>
+          To assign a <code class="computeroutput"><a href="http://www.boost.org/doc/libs/1_35_0/libs/range/doc/range.html" target="_top">Range</a></code>
+          to a container, 
+</p>
+<pre class="programlisting"><span class="identifier">to</span> <span class="special">=</span> convert<span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;(</span> <span class="identifier">from</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+</div>
+<div class="section" title="Anonymous container (of values)">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2._.tutorial.anonymous_container__of_values__"></a><a class="link" href="index.html#boost_assign_v2._.tutorial.anonymous_container__of_values__" title="Anonymous container (of values)">Anonymous
+        container (of values) </a>
+</h4></div></div></div>
+<p>
+          An anonymous container is created by using the same interface as that of
+          <code class="computeroutput">put_wrapper</code> and has most of the functionality of <code class="computeroutput"><a href="http://www.sgi.com/tech/stl/Deque.html" target="_top">deque</a>_</code> plus
+          the conversion (to an arbitrary container) capability: 
+</p>
+<pre class="programlisting"><span class="identifier">to</span> <span class="special">=</span> anon<span class="special">(</span> a <span class="special">)(</span> b <span class="special">)(</span> c <span class="special">);</span>
+</pre>
+<p>
+          To copy-construct <code class="computeroutput"><span class="identifier">to</span></code>, 
+</p>
+<pre class="programlisting"><span class="identifier">to</span> <span class="special">=</span> anon<span class="special">(</span> a <span class="special">)(</span> b <span class="special">)(</span> c <span class="special">).</span>convert<span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;();</span>
+</pre>
+<p>
+          To be able to use <code class="computeroutput"><span class="keyword">operator</span><span class="special">%</span></code>, 
+</p>
+<pre class="programlisting"><span class="identifier">to</span> <span class="special">=</span> <span class="special">(</span> anon<span class="special">&lt;</span>t_<span class="special">&gt;(</span> _nil <span class="special">)</span> <span class="special">%</span> <span class="special">(</span>_repeat <span class="special">=</span> <span class="identifier">n</span> <span class="special">)</span> <span class="special">)(</span> <span class="identifier">a</span> <span class="special">)(</span> <span class="identifier">b</span> <span class="special">)(</span> <span class="identifier">c</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+</div>
+<div class="section" title="Anonymous container of references">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2._.tutorial.anonymous_container_of_references"></a><a class="link" href="index.html#boost_assign_v2._.tutorial.anonymous_container_of_references" title="Anonymous container of references">Anonymous
+        container of references</a>
+</h4></div></div></div>
+<p>
+          An anonymous collection of references is created with a function with the
+          same name as its value counterpart (above), <code class="computeroutput">anon</code>, but in the
+          nested <code class="computeroutput"><span class="keyword">namespace</span></code> <code class="computeroutput">ref</code>,
+          and by specifying a <em class="replaceable"><code>ref-assign-tag</code></em> template argument:
+        </p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> ref<span class="special">;</span>
+anon<span class="special">&lt;</span><em class="replaceable"><code>ref-assign-tag</code></em><span class="special">&gt;(</span> a <span class="special">)(</span> b <span class="special">)(</span> c <span class="special">);</span>
+</pre>
+<p>
+          The resulting container holds references to the arguments. Clearly only
+          unary function calls are allowed. The template argument <em class="replaceable"><code>ref-assign-tag</code></em> specifies how references
+          are assigned : using copy semantics or rebind semantics. Finally, there
+          is a <span class="emphasis"><em>csv</em></span> form as well. Rather than specifying <em class="replaceable"><code>ref-assign-tag</code></em>, it
+          is equivalent to use a dedicated <code class="computeroutput"><span class="keyword">namespace</span></code>,
+          in the example that follows, <code class="computeroutput">ref::assign_copy</code>:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> ref::assign_copy<span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">copy</span><span class="special">(</span> <span class="identifier">v</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span><span class="special">(</span> anon<span class="special">(</span> <span class="identifier">a</span> <span class="special">)(</span> <span class="identifier">b</span> <span class="special">)(</span> <span class="identifier">c</span> <span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSERT</span><span class="special">(</span> <span class="identifier">a</span> <span class="special">==</span> <span class="identifier">v</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSERT</span><span class="special">(</span> <span class="identifier">c</span> <span class="special">==</span> <span class="identifier">v</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+          This example illustrates both the <span class="emphasis"><em>csv</em></span> form and rebind
+          semantics: 
+</p>
+<pre class="programlisting"><a href="http://www.boost.org/doc/libs/1_36_0/doc/html/typeof.html" target="_top">#include &lt;boost/typeof/typeof.hpp&gt;</a> 
+<span class="keyword">using</span> <span class="keyword">namespace</span> ref::assign_rebind<span class="special">;</span>
+<span class="identifier">BOOST_AUTO</span><span class="special">(</span> <span class="identifier">tmp</span><span class="special">,</span> csv_anon<span class="special">(</span> <span class="identifier">a</span> <span class="special">,</span> <span class="identifier">b</span> <span class="special">)</span> <span class="special">);</span>
+<span class="identifier">tmp</span><span class="special">.</span><span class="identifier">assign</span><span class="special">(</span> <span class="identifier">c</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSERT</span><span class="special">(</span> <span class="special">&amp;</span><span class="identifier">tmp</span><span class="special">[</span> <span class="number">0</span> <span class="special">]</span> <span class="special">==</span> <span class="special">&amp;</span><span class="identifier">c</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSERT</span><span class="special">(</span> <span class="special">&amp;</span><span class="identifier">tmp</span><span class="special">[</span> <span class="number">1</span> <span class="special">]</span> <span class="special">==</span> <span class="special">&amp;</span><span class="identifier">c</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+</div>
+<div class="section" title="Chaining ranges">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2._.tutorial.chaining_ranges"></a><a class="link" href="index.html#boost_assign_v2._.tutorial.chaining_ranges" title="Chaining ranges">Chaining
+        ranges</a>
+</h4></div></div></div>
+<p>
+          To assign from chained ranges: 
+</p>
+<pre class="programlisting"><span class="identifier">to</span> <span class="special">=</span> <span class="special">(</span><span class="identifier">r1</span> <span class="special">&amp;&amp;</span> <span class="identifier">r2</span> <span class="special">&amp;&amp;</span> <span class="identifier">r3</span><span class="special">).</span>convert<span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;();</span>
+</pre>
+<p>
+          Chaining is elementwise-lvalue preserving: 
+</p>
+<pre class="programlisting"><a href="http://www.boost.org/doc/libs/1_36_0/doc/html/typeof.html" target="_top">#include &lt;boost/typeof/typeof.hpp&gt;</a> 
+<span class="keyword">using</span> <span class="keyword">namespace</span> ref::assign_copy<span class="special">;</span>
+<span class="identifier">BOOST_AUTO</span><span class="special">(</span> <span class="identifier">tmp</span><span class="special">,</span> anon<span class="special">(</span> <span class="identifier">a</span> <span class="special">)(</span> <span class="identifier">b</span> <span class="special">)</span> <span class="special">);</span>
+<span class="identifier">copy</span><span class="special">(</span> <span class="identifier">v</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span><span class="special">(</span> <span class="identifier">tmp</span> <span class="special">&amp;&amp;</span> anon<span class="special">(</span> <span class="identifier">c</span> <span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSERT</span><span class="special">(</span> <span class="identifier">a</span> <span class="special">==</span> v<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSERT</span><span class="special">(</span> <span class="identifier">b</span> <span class="special">==</span> v<span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSERT</span><span class="special">(</span> <span class="identifier">c</span> <span class="special">==</span> v<span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">);</span>
+</pre>
+<p>
+          The fact that <code class="computeroutput">anon<span class="special">(</span> <span class="identifier">c</span>
+          <span class="special">)</span></code>, above, returns an rvalue should
+          underscore the significance of <span class="emphasis"><em>elementwise</em></span> in our
+          previous statement.
+        </p>
+</div>
+<div class="section" title="Running the code">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2._.tutorial.running_the_code"></a><a class="link" href="index.html#boost_assign_v2._.tutorial.running_the_code" title="Running the code">Running
+        the code</a>
+</h4></div></div></div>
+<p>
+          The file below contains similar material,
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting">#include &lt;libs/assign/v2/example/tutorial.h&gt;
+</pre>
+<p>
+        </p>
+<p>
+          and is be executed like this:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting">#include &lt;libs/assign/v2/example/tutorial.h&gt;
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+	<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">example_assign_v2</span><span class="special">;</span>
+	<span class="identifier">xxx_tutorial</span><span class="special">::</span><span class="identifier">run</span><span class="special">();</span>
+	<span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+</div>
+</div>
+<div class="section" title="Library interface and design">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2._.library_interface_and_design"></a><a class="link" href="index.html#boost_assign_v2._.library_interface_and_design" title="Library interface and design">Library
+      interface and design</a>
+</h3></div></div></div>
+<p>
+        This section discusses general features of the interface and concerns the
+        <code class="computeroutput">object</code> s returned by
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem"><code class="computeroutput"><span class="identifier">anon</span><span class="special">()</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">put_wrapper</span><span class="special">()</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">ref</span><span class="special">::</span>anon<span class="special">()</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">ref</span><span class="special">::</span><span class="identifier">csv_anon</span><span class="special">()</span></code></li>
+</ul></div>
+<p>
+        Functions are the primary interface by which the user interacts with the
+        library. However, it is the object that they return that are responsible
+        for performing the desired task. The relationship between a function and
+        its resulting object can be formalized as follows, where both expressions
+        have the same side effect:
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Expression1
+                </p>
+              </th>
+<th>
+                <p>
+                  Expression2
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">fun</span><span class="special">(</span> a <span class="special">)(</span> b <span class="special">)(</span> c <span class="special">);</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">fun_nil</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span> object <span class="special">=</span> <span class="identifier">fun</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span> _nil <span class="special">);</span> 
+object<span class="special">(</span> a <span class="special">)(</span> b <span class="special">)(</span> c <span class="special">);</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+<p>
+        In <code class="computeroutput"><span class="keyword">namespace</span></code> <code class="computeroutput">ref</code>
+        with <code class="computeroutput">anon</code> as <code class="computeroutput"><span class="identifier">fun</span></code>,
+        this is exactly the representation that is used. In other segments of the
+        library, however, although the interface may not match exactly that above,
+        a similar idea is at work.
+      </p>
+<p>
+        To avoid passing to functions many, in fact any, parameters that would confuse
+        the user and cause the developer a headache, the library usually deduces
+        the parameters from its input using traits. Considering, for example, the
+        <code class="computeroutput">put_wrapper</code> functionality, the library, by default,
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          Calls a functor, <code class="computeroutput">constructor<span class="special">&lt;</span>t<span class="special">&gt;()</span></code>, which is overloaded on the number
+          and lvalue/<code class="computeroutput"><span class="keyword">const</span></code>-ness of its
+          arguments, and returns the type of the elements in the destination container.
+        </li>
+<li class="listitem">
+          Another traits decides which modifier (such as <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code>) to use given certain properties of the
+          container. For example, if the container has <code class="computeroutput"><span class="identifier">push</span><span class="special">()</span></code> it takes precedence over <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code>.
+        </li>
+</ul></div>
+<p>
+        For example, the side effect of 
+</p>
+<pre class="programlisting"><span class="identifier">put_wrapper</span><span class="special">(</span> <span class="identifier">map</span> <span class="special">)(</span> <span class="identifier">key1</span><span class="special">,</span> <span class="identifier">a</span> <span class="special">)(</span> <span class="identifier">key2</span><span class="special">,</span> <span class="identifier">b</span> <span class="special">)(</span> <span class="identifier">key3</span><span class="special">,</span> <span class="identifier">c</span> <span class="special">)</span> 
+</pre>
+<p>
+        is identical to that of 
+</p>
+<pre class="programlisting"><span class="identifier">map</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">key1</span><span class="special">,</span> <span class="identifier">a</span> <span class="special">)</span> <span class="special">);</span> 
+<span class="identifier">map</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">key2</span><span class="special">,</span> <span class="identifier">b</span> <span class="special">)</span> <span class="special">);</span> 
+<span class="identifier">map</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">key3</span><span class="special">,</span> <span class="identifier">c</span> <span class="special">)</span> <span class="special">);</span> 
+</pre>
+<p>
+      </p>
+<p>
+        The deduced parameters that we have just discussed can be selectively overriden
+        with <code class="computeroutput"><span class="keyword">operator</span><span class="special">%</span></code>
+        taking as its first argument the result of the function, and a <span class="emphasis"><em>keyword</em></span>.
+        A keyword is a <code class="computeroutput"><span class="keyword">const</span></code> object
+        defined in an anonymous namespace whose identifier has prefix <code class="computeroutput"><span class="identifier">_</span></code>. Here's the generic form 
+</p>
+<pre class="programlisting">object <span class="special">%</span> <span class="identifier">_keyword</span><span class="special">;</span>
+</pre>
+<p>
+        or 
+</p>
+<pre class="programlisting">object <span class="special">%</span> <span class="special">(</span><span class="identifier">_keyword</span> <span class="special">=</span> p<span class="special">);</span>
+</pre>
+<p>
+        Operators are usually composable e.g. 
+</p>
+<pre class="programlisting"><span class="identifier">object</span> <span class="special">%</span> <span class="identifier">_keyword1</span> <span class="special">%</span> <span class="special">(</span><span class="identifier">_keyword2</span> <span class="special">=</span> p<span class="special">);</span>
+</pre>
+<p>
+        In each case, the operation may return a reference to the same <code class="computeroutput">object</code>,
+        but with a different state, or a new object of a different type altogether,
+        thereby modifying the semantics of subequent calls to the object. For example,
+        
+</p>
+<pre class="programlisting"><span class="special">(</span>put_wrapper<span class="special">(</span> <a href="http://www.sgi.com/tech/stl/Map.html" target="_top">map</a> <span class="special">)</span> <span class="special">%</span> _incr_lookup<span class="special">)(</span> a <span class="special">)(</span> b <span class="special">)(</span> c <span class="special">)</span>
+</pre>
+<p>
+      </p>
+<p>
+        is equivalent to
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="special">++</span> <a href="http://www.sgi.com/tech/stl/Map.html" target="_top">map</a> <span class="special">[</span> a <span class="special">];</span> 
+<span class="special">++</span> <a href="http://www.sgi.com/tech/stl/Map.html" target="_top">map</a> <span class="special">[</span> b <span class="special">];</span> 
+<span class="special">++</span> <a href="http://www.sgi.com/tech/stl/Map.html" target="_top">map</a> <span class="special">[</span> c <span class="special">];</span> 
+</pre>
+<p>
+      </p>
+</div>
+<div class="section" title="Reference">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2._.reference"></a><a class="link" href="index.html#boost_assign_v2._.reference" title="Reference">Reference</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.overload_resolution">Overload
+        resolution</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords">Keywords</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__deduce__">_deduce</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__fun__">_fun</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__nil__">_nil</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__unwrap__">_unwrap</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__incr_lookup__">_incr_lookup</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__repeat__">_repeat</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__put_kwd__">_put_tag</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.___anon___"><code class="computeroutput">anon</code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.__chain__">chain</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.___convert___"><code class="computeroutput">convert</code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.___put_range___"><code class="computeroutput">put_range</code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.___put_wrapper___"><code class="computeroutput">put_wrapper</code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference._ref____anon___"><code class="computeroutput"><span class="identifier">ref</span><span class="special">::</span>anon</code></a></span></dt>
+</dl></div>
+<div class="section" title="Overload resolution">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2._.reference.overload_resolution"></a><a class="link" href="index.html#boost_assign_v2._.reference.overload_resolution" title="Overload resolution">Overload
+        resolution</a>
+</h4></div></div></div>
+<p>
+          This section concerns the <code class="computeroutput">object</code> s returned by
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem"><code class="computeroutput"><span class="identifier">anon</span><span class="special">()</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">put_wrapper</span><span class="special">()</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">ref</span><span class="special">::</span>anon<span class="special">()</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">ref</span><span class="special">::</span><span class="identifier">csv_anon</span><span class="special">()</span></code></li>
+</ul></div>
+<a name="boost_assign_v2._.reference.overload_resolution.headers"></a><h6>
+<a name="id36158235"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.overload_resolution.headers">Headers</a>
+        </h6>
+<pre class="programlisting">#include &lt;boost/assign/v2/detail/config/arity_bound.hpp&gt;
+#include &lt;boost/assign/v2/detail/functor/crtp_unary_and_up.hpp&gt;
+</pre>
+<a name="boost_assign_v2._.reference.overload_resolution._emphasis_functor__emphasis__and__emphasis_csv__emphasis__forms"></a><h6>
+<a name="id36158395"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.overload_resolution._emphasis_functor__emphasis__and__emphasis_csv__emphasis__forms"><span class="emphasis"><em>functor</em></span>
+          and <span class="emphasis"><em>csv</em></span> forms</a>
+        </h6>
+<div class="table">
+<a name="boost_assign_v2._.reference.overload_resolution.the_functor_and_csv_forms"></a><p class="title"><b>Table&#160;1.4.&#160;The functor and csv forms</b></p>
+<div class="table-contents"><table class="table" summary="The functor and csv forms">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Designation
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre class="programlisting">f<span class="special">(</span> x<span class="special">[</span><span class="number">0</span><span class="special">,</span><span class="number">0</span><span class="special">],</span> <span class="special">...,</span> x<span class="special">[</span><span class="number">0</span><span class="special">,</span>k<span class="special">(</span><span class="number">0</span><span class="special">)-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span> <span class="special">...</span> <span class="special">(</span> x<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">,</span><span class="number">0</span><span class="special">],</span> <span class="special">...,</span> x<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">,</span>k<span class="special">(</span>n<span class="special">-</span><span class="number">1</span><span class="special">)-</span><span class="number">1</span><span class="special">]</span>  <span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>functor</em></span>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre class="programlisting"><span class="identifier">f</span><span class="special">(</span> x<span class="special">[</span><span class="number">0</span><span class="special">],</span> <span class="special">...,</span> x<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>csv</em></span>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="note" title="Note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            The arguments are passed as references.
+          </p></td></tr>
+</table></div>
+<div class="important" title="Important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../doc/html/images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            The rules for <code class="computeroutput"><span class="identifier">ref</span><span class="special">::</span>anon<span class="special">()</span></code> are those of the <span class="emphasis"><em>csv</em></span>.
+          </p></td></tr>
+</table></div>
+<a name="boost_assign_v2._.reference.overload_resolution.arity"></a><h6>
+<a name="id36158748"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.overload_resolution.arity">Arity</a>
+        </h6>
+<p>
+          Let <code class="literal">m</code> designates the constant under consideration in
+          each row below:
+        </p>
+<div class="table">
+<a name="boost_assign_v2._.reference.overload_resolution.preprocessor_constants"></a><p class="title"><b>Table&#160;1.5.&#160;Preprocessor constants</b></p>
+<div class="table-contents"><table class="table" summary="Preprocessor constants">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Relevant <br> form
+                  </p>
+                </th>
+<th>
+                  <p>
+                    User <br> definable
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Implication
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    BOOST_ASSIGN_V2_ARITY_BOUND
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>functor</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Yes
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">k &lt; m</code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    BOOST_ASSIGN_V2_LVALUE_CONST_ARITY_BOUND
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>functor</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No
+                  </p>
+                </td>
+<td>
+                  <p>
+                    See below
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    BOOST_ASSIGN_V2_CSV_ARITY_BOUND
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>csv</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Yes
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">n &lt; m</code>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+          Necessary and sufficient conditions for preserving lvalue-ness, for a given
+          <code class="literal">j</code>, are
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Function
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Condition
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="literal">i</code>th call to <span class="emphasis"><em>functor</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">k(i) &lt; m</code> or all of <code class="computeroutput">x<span class="special">[</span>i<span class="special">,</span><span class="number">0</span><span class="special">]</span></code>,...,<code class="computeroutput">x<span class="special">[</span>i<span class="special">,</span>k<span class="special">(</span>i<span class="special">)-</span><span class="number">1</span><span class="special">]</span></code> are lvalue s
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <span class="emphasis"><em>csv</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    All of <code class="computeroutput">x<span class="special">[</span><span class="number">0</span><span class="special">]</span></code>,...,<code class="computeroutput">x<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span></code> are lvalue s
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+          where <code class="literal">m</code> is as previously defined, looking at the second
+          row of the preceding table. If the condition, in each row, is violated,
+          the overload whose arguments are all <code class="computeroutput"><span class="keyword">const</span></code>
+          references is that which is resolved to.
+        </p>
+</div>
+<div class="section" title="Keywords">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2._.reference.keywords"></a><a class="link" href="index.html#boost_assign_v2._.reference.keywords" title="Keywords">Keywords</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__deduce__">_deduce</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__fun__">_fun</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__nil__">_nil</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__unwrap__">_unwrap</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__incr_lookup__">_incr_lookup</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__repeat__">_repeat</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_assign_v2._.reference.keywords.__put_kwd__">_put_tag</a></span></dt>
+</dl></div>
+<div class="section" title="_deduce">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign_v2._.reference.keywords.__deduce__"></a><a class="link" href="index.html#boost_assign_v2._.reference.keywords.__deduce__" title="_deduce">_deduce</a>
+</h5></div></div></div>
+<a name="boost_assign_v2._.reference.keywords.__deduce__.expression_semantics"></a><h6>
+<a name="id36159164"></a>
+            <a class="link" href="index.html#boost_assign_v2._.reference.keywords.__deduce__.expression_semantics">Expression
+            Semantics</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting">object <span class="special">%</span> <span class="identifier">deduce</span><span class="special">;</span>
+</pre>
+<p>
+            <span class="bold"><strong>Return type</strong></span> <em class="replaceable"><code>implementation-defined</code></em>
+          </p>
+<p>
+            <span class="bold"><strong>Semantics</strong></span> <span class="emphasis"><em>unspecified</em></span>
+          </p>
+<a name="boost_assign_v2._.reference.keywords.__deduce__.header"></a><h6>
+<a name="id36159223"></a>
+            <a class="link" href="index.html#boost_assign_v2._.reference.keywords.__deduce__.header">Header</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting">#include &lt;boost/assign/v2/detail/keywords/keywords.hpp&gt;
+</pre>
+<p>
+          </p>
+</div>
+<div class="section" title="_fun">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign_v2._.reference.keywords.__fun__"></a><a class="link" href="index.html#boost_assign_v2._.reference.keywords.__fun__" title="_fun">_fun</a>
+</h5></div></div></div>
+<a name="boost_assign_v2._.reference.keywords.__fun__.expression_semantics"></a><h6>
+<a name="id36159261"></a>
+            <a class="link" href="index.html#boost_assign_v2._.reference.keywords.__fun__.expression_semantics">Expression
+            Semantics</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting">object <span class="special">%</span> <span class="special">(</span> <span class="identifier">_fun</span> <span class="special">=</span> <span class="identifier">f</span><span class="special">);</span>
+</pre>
+<p>
+          </p>
+<p>
+            <span class="bold"><strong>Return type</strong></span> <em class="replaceable"><code>implementation-defined</code></em>
+          </p>
+<p>
+            <span class="bold"><strong>Semantics</strong></span> <span class="emphasis"><em>unspecified</em></span>
+          </p>
+<a name="boost_assign_v2._.reference.keywords.__fun__.header"></a><h6>
+<a name="id36159337"></a>
+            <a class="link" href="index.html#boost_assign_v2._.reference.keywords.__fun__.header">Header</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting">#include &lt;boost/assign/v2/detail/keywords/keywords.hpp&gt;
+</pre>
+<p>
+          </p>
+</div>
+<div class="section" title="_nil">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign_v2._.reference.keywords.__nil__"></a><a class="link" href="index.html#boost_assign_v2._.reference.keywords.__nil__" title="_nil">_nil</a>
+</h5></div></div></div>
+<a name="boost_assign_v2._.reference.keywords.__nil__.expression_semantics"></a><h6>
+<a name="id36159375"></a>
+            <a class="link" href="index.html#boost_assign_v2._.reference.keywords.__nil__.expression_semantics">Expression
+            Semantics</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="identifier">f</span><span class="special">(</span> <span class="identifier">_nil</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+<p>
+            <span class="bold"><strong>Return type</strong></span> <em class="replaceable"><code>implementation-defined</code></em>
+          </p>
+<p>
+            <span class="bold"><strong>Semantics</strong></span> <span class="emphasis"><em>unspecified</em></span>
+          </p>
+<a name="boost_assign_v2._.reference.keywords.__nil__.header"></a><h6>
+<a name="id36159440"></a>
+            <a class="link" href="index.html#boost_assign_v2._.reference.keywords.__nil__.header">Header</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting">#include &lt;boost/assign/v2/detail/keywords/keywords.hpp&gt;
+</pre>
+<p>
+          </p>
+</div>
+<div class="section" title="_unwrap">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign_v2._.reference.keywords.__unwrap__"></a><a class="link" href="index.html#boost_assign_v2._.reference.keywords.__unwrap__" title="_unwrap">_unwrap</a>
+</h5></div></div></div>
+<a name="boost_assign_v2._.reference.keywords.__unwrap__.expression_semantics"></a><h6>
+<a name="id36159478"></a>
+            <a class="link" href="index.html#boost_assign_v2._.reference.keywords.__unwrap__.expression_semantics">Expression
+            Semantics</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="emphasis"><em>unspecified</em></span>
+</pre>
+<p>
+          </p>
+<p>
+            <span class="bold"><strong>Return type</strong></span> <em class="replaceable"><code>implementation-defined</code></em>
+          </p>
+<p>
+            <span class="bold"><strong>Semantics</strong></span> <span class="emphasis"><em>unspecified</em></span>
+          </p>
+<a name="boost_assign_v2._.reference.keywords.__unwrap__.header"></a><h6>
+<a name="id36159528"></a>
+            <a class="link" href="index.html#boost_assign_v2._.reference.keywords.__unwrap__.header">Header</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting">#include &lt;boost/assign/v2/detail/keywords/keywords.hpp&gt;
+</pre>
+<p>
+          </p>
+</div>
+<div class="section" title="_incr_lookup">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign_v2._.reference.keywords.__incr_lookup__"></a><a class="link" href="index.html#boost_assign_v2._.reference.keywords.__incr_lookup__" title="_incr_lookup">_incr_lookup</a>
+</h5></div></div></div>
+<a name="boost_assign_v2._.reference.keywords.__incr_lookup__.expression_semantics"></a><h6>
+<a name="id36159568"></a>
+            <a class="link" href="index.html#boost_assign_v2._.reference.keywords.__incr_lookup__.expression_semantics">Expression
+            Semantics</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="emphasis"><em>unspecified</em></span>
+</pre>
+<p>
+            <span class="bold"><strong>Return type</strong></span> <em class="replaceable"><code>implementation-defined</code></em>
+          </p>
+<p>
+            <span class="bold"><strong>Semantics</strong></span> <span class="emphasis"><em>unspecified</em></span>
+          </p>
+<a name="boost_assign_v2._.reference.keywords.__incr_lookup__.header"></a><h6>
+<a name="id36159614"></a>
+            <a class="link" href="index.html#boost_assign_v2._.reference.keywords.__incr_lookup__.header">Header</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting">#include &lt;boost/assign/v2/detail/keywords/keywords.hpp&gt;
+</pre>
+<p>
+          </p>
+</div>
+<div class="section" title="_repeat">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign_v2._.reference.keywords.__repeat__"></a><a class="link" href="index.html#boost_assign_v2._.reference.keywords.__repeat__" title="_repeat">_repeat</a>
+</h5></div></div></div>
+<a name="boost_assign_v2._.reference.keywords.__repeat__.expression_semantics"></a><h6>
+<a name="id36159652"></a>
+            <a class="link" href="index.html#boost_assign_v2._.reference.keywords.__repeat__.expression_semantics">Expression
+            Semantics</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting">object <span class="special">%</span> <span class="special">(</span>_repeat <span class="special">=</span> <span class="identifier">n</span><span class="special">);</span>
+</pre>
+<p>
+          </p>
+<p>
+            <span class="bold"><strong>Return type</strong></span> <em class="replaceable"><code>implementation-defined</code></em>
+          </p>
+<p>
+            <span class="bold"><strong>Semantics</strong></span> <span class="emphasis"><em>unspecified</em></span>
+          </p>
+<a name="boost_assign_v2._.reference.keywords.__repeat__.header"></a><h6>
+<a name="id36159723"></a>
+            <a class="link" href="index.html#boost_assign_v2._.reference.keywords.__repeat__.header">Header</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting">#include &lt;boost/assign/v2/detail/keywords/keywords.hpp&gt;
+</pre>
+<p>
+          </p>
+</div>
+<div class="section" title="_put_tag">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign_v2._.reference.keywords.__put_kwd__"></a><a class="link" href="index.html#boost_assign_v2._.reference.keywords.__put_kwd__" title="_put_tag">_put_tag</a>
+</h5></div></div></div>
+<a name="boost_assign_v2._.reference.keywords.__put_kwd__.expression_semantics"></a><h6>
+<a name="id36159763"></a>
+            <a class="link" href="index.html#boost_assign_v2._.reference.keywords.__put_kwd__.expression_semantics">Expression
+            Semantics</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting">object <span class="special">%</span> <span class="special">(</span>_put_tag <span class="special">=</span> <em class="replaceable"><code>put-tag</code></em><span class="special">());</span>
+</pre>
+<p>
+          </p>
+<p>
+            <span class="bold"><strong>Return type</strong></span> <em class="replaceable"><code>implementation-defined</code></em>
+          </p>
+<p>
+            <span class="bold"><strong>Semantics</strong></span> Selects a container modifier.
+          </p>
+<div class="table">
+<a name="boost_assign_v2._.reference.keywords.__put_kwd__.candidate_tags_"></a><p class="title"><b>Table&#160;1.6.&#160;Candidate tags.</b></p>
+<div class="table-contents"><table class="table" summary="Candidate tags.">
+<colgroup><col></colgroup>
+<thead><tr><th>
+                    <p>
+                      Name
+                    </p>
+                  </th></tr></thead>
+<tbody>
+<tr><td>
+                    <p>
+                      <code class="computeroutput">put_tag<span class="special">::</span><span class="identifier">at_next</span></code>
+                    </p>
+                  </td></tr>
+<tr><td>
+                    <p>
+                      <code class="computeroutput">put_tag<span class="special">::</span><span class="identifier">insert</span></code>
+                    </p>
+                  </td></tr>
+<tr><td>
+                    <p>
+                      <code class="computeroutput">put_tag<span class="special">::</span><span class="identifier">push</span></code>
+                    </p>
+                  </td></tr>
+<tr><td>
+                    <p>
+                      <code class="computeroutput">put_tag<span class="special">::</span><span class="identifier">push_back</span></code>
+                    </p>
+                  </td></tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><a name="boost_assign_v2._.reference.keywords.__put_kwd__.header"></a><h6>
+<a name="id36159953"></a>
+            <a class="link" href="index.html#boost_assign_v2._.reference.keywords.__put_kwd__.header">Header</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting">#include &lt;boost/assign/v2/put/put.hpp&gt;
+</pre>
+<p>
+            [header Example] 
+</p>
+<pre class="programlisting">object <span class="special">%</span> <span class="special">(</span>_put_tag <span class="special">=</span> put_tag<span class="special">::</span><span class="identifier">push</span><span class="special">());</span>
+</pre>
+<p>
+          </p>
+</div>
+</div>
+<div class="section" title="anon">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2._.reference.___anon___"></a><a class="link" href="index.html#boost_assign_v2._.reference.___anon___" title="anon"><code class="computeroutput">anon</code></a>
+</h4></div></div></div>
+<a name="boost_assign_v2._.reference.___anon___.description"></a><h6>
+<a name="id36160027"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___anon___.description">Description</a>
+        </h6>
+<p>
+          Creates an anonymous container
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            With the same interface as <code class="computeroutput">put_wrapper</code>
+</li>
+<li class="listitem">
+            and converts to an arbitrary container
+          </li>
+</ul></div>
+<a name="boost_assign_v2._.reference.___anon___.synopsis"></a><h6>
+<a name="id36160061"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___anon___.synopsis">Synopsis</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Designation
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> result_of<span class="special">::</span>anon<span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="identifier">anon</span><span class="special">(</span> <span class="identifier">keyword_aux</span><span class="special">::</span><span class="identifier">nil</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(1)</em></span>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> result_of<span class="special">::</span>anon<span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="identifier">anon</span><span class="special">(</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(2)</em></span>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> result_of<span class="special">::</span>anon<span class="special">&lt;</span><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="identifier">anon</span><span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td class="auto-generated">&#160;</td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_assign_v2._.reference.___anon___.parameters"></a><h6>
+<a name="id36160410"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___anon___.parameters">Parameters</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    T
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>unspecified</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Value of argument to <code class="computeroutput">anon</code>
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+<a name="boost_assign_v2._.reference.___anon___.expression_semantics"></a><h6>
+<a name="id36160498"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___anon___.expression_semantics">Expression
+          Semantics</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Designation
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">anon</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span> _nil <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(1) </em></span>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">anon</span><span class="special">(</span> t <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(2)</em></span> and <span class="emphasis"><em>(3)</em></span>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+          <span class="bold"><strong>Return type</strong></span>: <code class="computeroutput">result_of<span class="special">::</span>anon<span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+          for each <span class="emphasis"><em>(1)</em></span>, <span class="emphasis"><em>(2)</em></span> and <span class="emphasis"><em>(3)</em></span>
+        </p>
+<p>
+          <span class="bold"><strong>Semantics</strong></span>: Creates an anonymous container.
+        </p>
+<a name="boost_assign_v2._.reference.___anon___.header"></a><h6>
+<a name="id36160684"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___anon___.header">Header</a>
+        </h6>
+<pre class="programlisting">#include &lt;boost/assign/v2/anon/anon.hpp&gt;
+</pre>
+<a name="boost_assign_v2._.reference.___anon___.example"></a><h6>
+<a name="id36160704"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___anon___.example">Example</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Designation
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">anon<span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span> _nil <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(1) </em></span>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">int</span> a<span class="special">;</span> anon<span class="special">(</span> a <span class="special">);</span>
+ 	</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(2)</em></span>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">anon<span class="special">(</span> <span class="number">1</span> <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(2)</em></span>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" title="chain">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2._.reference.__chain__"></a><a class="link" href="index.html#boost_assign_v2._.reference.__chain__" title="chain">chain</a>
+</h4></div></div></div>
+<p>
+          Forms a range by chaining two ranges in a way that
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            preserves lvalue-ness <span class="emphasis"><em>elementwise</em></span>. If, for example,
+            the two ranges are <code class="computeroutput"><span class="keyword">const</span></code>
+            but their elements are lvalue--reference wrappers, then the dereference
+            value of the underlying iterator is also lvalue.
+          </li>
+<li class="listitem">
+            is convertible to an arbitrary container.
+          </li>
+</ul></div>
+<a name="boost_assign_v2._.reference.__chain__._code__phrase_role__keyword__namespace__phrase___code_"></a><h6>
+<a name="id36160918"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.__chain__._code__phrase_role__keyword__namespace__phrase___code_"><code class="computeroutput"><span class="keyword">namespace</span></code></a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">adaptor</span><span class="special">;</span>
+</pre>
+<p>
+        </p>
+<a name="boost_assign_v2._.reference.__chain__.synopsis"></a><h6>
+<a name="id36160965"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.__chain__.synopsis">Synopsis</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R1</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">U2</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> result_of<span class="special">::</span>chain<span class="special">&lt;</span><span class="identifier">R1</span><span class="special">,</span><span class="identifier">R2</span><span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="keyword">operator</span><span class="special">|(</span><span class="identifier">U1</span><span class="special">&amp;</span> <span class="identifier">r1</span><span class="special">,</span><span class="identifier">chain_aux</span><span class="special">::</span><span class="identifier">adaptor1</span><span class="special">&lt;</span><span class="identifier">U2</span><span class="special">,</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">use_default</span><span class="special">&gt;);</span>
+</pre>
+<p>
+        </p>
+<div class="note" title="Note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            <code class="computeroutput"><span class="identifier">U1</span></code> = <code class="computeroutput"><span class="identifier">R1</span></code>
+            or <code class="computeroutput"><span class="identifier">R1</span> <span class="keyword">const</span></code>
+            and likewise for <code class="computeroutput"><span class="identifier">U2</span></code>.
+          </p></td></tr>
+</table></div>
+<a name="boost_assign_v2._.reference.__chain__.parameters"></a><h6>
+<a name="id36161168"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.__chain__.parameters">Parameters</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    R1
+                  </p>
+                </td>
+<td>
+                  <p>
+                    models <a href="http://www.boost.org/doc/libs/1_35_0/libs/range/doc/range.html" target="_top">Range</a>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Range to be chained
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    R2
+                  </p>
+                </td>
+<td>
+                  <p>
+                    models <a href="http://www.boost.org/doc/libs/1_35_0/libs/range/doc/range.html" target="_top">Range</a>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Range to chain to
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_assign_v2._.reference.__chain__.expression_semantics"></a><h6>
+<a name="id36161282"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.__chain__.expression_semantics">Expression
+          Semantics</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="identifier">r1</span> <span class="special">|</span> <span class="identifier">_chain</span><span class="special">(</span> <span class="identifier">r2</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+          <span class="bold"><strong>Return type</strong></span>: <code class="computeroutput">result_of<span class="special">::</span>chain<span class="special">&lt;</span><span class="identifier">U1</span><span class="special">,</span><span class="identifier">U2</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+        </p>
+<p>
+          <span class="bold"><strong>Semantics</strong></span>: Chains two ranges to form one.
+        </p>
+<a name="boost_assign_v2._.reference.__chain__.header"></a><h6>
+<a name="id36161385"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.__chain__.header">Header</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting">#include &lt;boost/assign/v2/chain/chain.hpp&gt;
+</pre>
+<p>
+        </p>
+<a name="boost_assign_v2._.reference.__chain__.example"></a><h6>
+<a name="id36161408"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.__chain__.example">Example</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">adaptor</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> v<span class="special">(</span> <span class="number">2</span><span class="special">,</span> <span class="special">-</span><span class="number">1</span><span class="special">);</span> 
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;</span> <a href="http://www.boost.org/doc/html/array/reference.html" target="_top">array</a><span class="special">;</span> <a href="http://www.boost.org/doc/html/array/reference.html" target="_top">array</a><span class="special">.</span><span class="identifier">assign</span><span class="special">(</span> <span class="number">1</span> <span class="special">);</span>
+v <span class="special">|</span> chain<span class="special">(</span> <a href="http://www.boost.org/doc/html/array/reference.html" target="_top">array</a> <span class="special">);</span>
+</pre>
+<p>
+          [heading <code class="computeroutput"><span class="keyword">operator</span><span class="special">&amp;&amp;</span></code>]
+        </p>
+<p>
+          These are two equivalent ways to chain:
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression 1
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Expression 2
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">r1</span> <span class="special">|</span> <span class="identifier">_chain</span><span class="special">(</span> <span class="identifier">r2</span> <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">r1</span> <span class="special">&amp;&amp;</span> <span class="identifier">r2</span><span class="special">;</span>
+</pre>
+<p>
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="section" title="convert">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2._.reference.___convert___"></a><a class="link" href="index.html#boost_assign_v2._.reference.___convert___" title="convert"><code class="computeroutput">convert</code></a>
+</h4></div></div></div>
+<a name="boost_assign_v2._.reference.___convert___.description"></a><h6>
+<a name="id36161729"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___convert___.description">Description</a>
+        </h6>
+<p>
+          Assigns a <a href="http://www.boost.org/doc/libs/1_35_0/libs/range/doc/range.html" target="_top">Range</a>
+          to an arbitrary container.
+        </p>
+<a name="boost_assign_v2._.reference.___convert___.synopsis"></a><h6>
+<a name="id36161754"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___convert___.synopsis">Synopsis</a>
+        </h6>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">From</span><span class="special">&gt;</span>
+<span class="identifier">To</span> convert<span class="special">(</span> <span class="identifier">From</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">);</span>
+</pre>
+<a name="boost_assign_v2._.reference.___convert___.parameters"></a><h6>
+<a name="id36161844"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___convert___.parameters">Parameters</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    From
+                  </p>
+                </td>
+<td>
+                  <p>
+                    models <a href="http://www.boost.org/doc/libs/1_35_0/libs/range/doc/range.html" target="_top">Range</a>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    The argument to <code class="computeroutput">convert</code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    To
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>unspecified</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    The return type of <code class="computeroutput">convert</code>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_assign_v2._.reference.___convert___.expression_semantics"></a><h6>
+<a name="id36161964"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___convert___.expression_semantics">Expression
+          Semantics</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="identifier">convert</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;(</span> <span class="identifier">from</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+          <span class="bold"><strong>Return type</strong></span>: To
+        </p>
+<p>
+          <span class="bold"><strong>Semantics</strong></span>: Assigns <code class="computeroutput"><span class="identifier">to</span></code>
+          with the elements of <code class="computeroutput"><span class="identifier">from</span></code>
+        </p>
+<a name="boost_assign_v2._.reference.___convert___.header"></a><h6>
+<a name="id36162048"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___convert___.header">Header</a>
+        </h6>
+<pre class="programlisting">#include &lt;boost/assign/v2/put/range.hpp&gt;
+</pre>
+<a name="boost_assign_v2._.reference.___convert___.example"></a><h6>
+<a name="id36162070"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___convert___.example">Example</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">from</span><span class="special">;</span> <span class="identifier">from</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> <span class="special">-</span><span class="number">1</span> <span class="special">);</span> <span class="identifier">from</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> <span class="number">0</span> <span class="special">);</span>
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">queue</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">to_</span><span class="special">;</span>
+<span class="identifier">to_</span> <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">from</span><span class="special">.</span><span class="identifier">convert</span><span class="special">&lt;</span><span class="identifier">to_</span><span class="special">&gt;();</span>
+</pre>
+<p>
+        </p>
+</div>
+<div class="section" title="put_range">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2._.reference.___put_range___"></a><a class="link" href="index.html#boost_assign_v2._.reference.___put_range___" title="put_range"><code class="computeroutput">put_range</code></a>
+</h4></div></div></div>
+<a name="boost_assign_v2._.reference.___put_range___.description"></a><h6>
+<a name="id36162280"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___put_range___.description">Description</a>
+        </h6>
+<p>
+          Puts the elements of a <a href="http://www.boost.org/doc/libs/1_35_0/libs/range/doc/range.html" target="_top">Range</a>
+          into an arbitrary container.
+        </p>
+<a name="boost_assign_v2._.reference.___put_range___.synopsis"></a><h6>
+<a name="id36162305"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___put_range___.synopsis">Synopsis</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">From</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">To</span><span class="special">&gt;</span>
+<span class="identifier">To</span><span class="special">&amp;</span> <span class="identifier">put_range</span><span class="special">(</span> <span class="identifier">From</span> <span class="keyword">const</span><span class="special">&amp;,</span> <span class="identifier">To</span><span class="special">&amp;</span> <span class="identifier">to</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<a name="boost_assign_v2._.reference.___put_range___.parameters"></a><h6>
+<a name="id36162415"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___put_range___.parameters">Parameters</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    From
+                  </p>
+                </td>
+<td>
+                  <p>
+                    models <a href="http://www.boost.org/doc/libs/1_35_0/libs/range/doc/range.html" target="_top">Range</a>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    The first argument to <code class="computeroutput">put_range</code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    To
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>unspecified</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    The second argument to <code class="computeroutput">put_range</code>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_assign_v2._.reference.___put_range___.expression_semantics"></a><h6>
+<a name="id36162536"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___put_range___.expression_semantics">Expression
+          Semantics</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="identifier">put_range</span><span class="special">(</span> <span class="identifier">from</span><span class="special">,</span> <span class="identifier">to</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+          <span class="bold"><strong>Return type</strong></span>: To&amp;
+        </p>
+<p>
+          <span class="bold"><strong>Semantics</strong></span>: Puts the elements in <code class="computeroutput"><span class="identifier">from</span></code> into <code class="computeroutput"><span class="identifier">to</span></code>.
+        </p>
+<a name="boost_assign_v2._.reference.___put_range___.header"></a><h6>
+<a name="id36162621"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___put_range___.header">Header</a>
+        </h6>
+<pre class="programlisting">#include &lt;boost/assign/v2/put/range.hpp&gt;
+</pre>
+<a name="boost_assign_v2._.reference.___put_range___.example"></a><h6>
+<a name="id36162643"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___put_range___.example">Example</a>
+        </h6>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">from</span><span class="special">;</span> <span class="identifier">from</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> <span class="special">-</span><span class="number">1</span> <span class="special">);</span> <span class="identifier">from</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> <span class="number">0</span> <span class="special">);</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">queue</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">to</span><span class="special">;</span>
+<span class="identifier">put_range</span><span class="special">(</span> <span class="identifier">from</span><span class="special">,</span> <span class="identifier">to</span> <span class="special">);</span>
+</pre>
+</div>
+<div class="section" title="put_wrapper">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2._.reference.___put_wrapper___"></a><a class="link" href="index.html#boost_assign_v2._.reference.___put_wrapper___" title="put_wrapper"><code class="computeroutput">put_wrapper</code></a>
+</h4></div></div></div>
+<a name="boost_assign_v2._.reference.___put_wrapper___.description"></a><h6>
+<a name="id36162832"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___put_wrapper___.description">Description</a>
+        </h6>
+<p>
+          Wraps around a container to be able to put elements into it, with a <span class="emphasis"><em>functor</em></span>
+          or <span class="emphasis"><em>csv</em></span> interface.
+        </p>
+<a name="boost_assign_v2._.reference.___put_wrapper___.synopsis"></a><h6>
+<a name="id36162859"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___put_wrapper___.synopsis">Synopsis</a>
+        </h6>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">V</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> result_of<span class="special">::</span>put_wrapper<span class="special">&lt;</span><span class="identifier">V</span><span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="identifier">put_wrapper</span><span class="special">(</span> <span class="identifier">V</span><span class="special">&amp;</span> v<span class="special">);</span>
+</pre>
+<a name="boost_assign_v2._.reference.___put_wrapper___.parameters"></a><h6>
+<a name="id36162952"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___put_wrapper___.parameters">Parameters</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    V
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>unspecified</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    The argument to <code class="computeroutput">put_wrapper</code>
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+<a name="boost_assign_v2._.reference.___put_wrapper___.expression_semantics"></a><h6>
+<a name="id36163040"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___put_wrapper___.expression_semantics">Expression
+          Semantics</a>
+        </h6>
+<pre class="programlisting"><span class="identifier">put_wrapper</span><span class="special">(</span> <span class="identifier">v</span> <span class="special">);</span>
+</pre>
+<p>
+          <span class="bold"><strong>Return type</strong></span>: <code class="computeroutput">result_of<span class="special">::</span>put_wrapper<span class="special">&lt;</span><span class="identifier">V</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+        </p>
+<p>
+          <span class="bold"><strong>Semantics</strong></span>: Creates an <code class="computeroutput"><span class="identifier">object</span></code>
+          with a <span class="emphasis"><em>functor</em></span> or <span class="emphasis"><em>csv</em></span> interface.
+        </p>
+<a name="boost_assign_v2._.reference.___put_wrapper___.header"></a><h6>
+<a name="id36163136"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___put_wrapper___.header">Header</a>
+        </h6>
+<pre class="programlisting">#include &lt;boost/assign/v2/put/put.hpp&gt;
+</pre>
+<a name="boost_assign_v2._.reference.___put_wrapper___.example"></a><h6>
+<a name="id36163159"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference.___put_wrapper___.example">Example</a>
+        </h6>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> v<span class="special">;</span>
+<span class="identifier">put_wrapper</span><span class="special">(</span> v <span class="special">);</span>
+</pre>
+</div>
+<div class="section" title="ref::anon">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2._.reference._ref____anon___"></a><a class="link" href="index.html#boost_assign_v2._.reference._ref____anon___" title="ref::anon"><code class="computeroutput"><span class="identifier">ref</span><span class="special">::</span>anon</code></a>
+</h4></div></div></div>
+<a name="boost_assign_v2._.reference._ref____anon___.namespace"></a><h6>
+<a name="id36163245"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference._ref____anon___.namespace">Namespace</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting">#include &lt;boost/assign/v2/ref/ref.hpp&gt;
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">ref</span><span class="special">;</span>
+</pre>
+<p>
+        </p>
+<a name="boost_assign_v2._.reference._ref____anon___.background_on_assign_semantics"></a><h6>
+<a name="id36163291"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference._ref____anon___.background_on_assign_semantics">Background
+          on assign semantics</a>
+        </h6>
+<p>
+          Let a reference wrapper, <code class="computeroutput">w</code>, bind to some reference <code class="computeroutput"><span class="identifier">y1</span></code> and that it is assigned as follows:
+          
+</p>
+<pre class="programlisting">w <span class="special">=</span> <span class="identifier">y2</span><span class="special">;</span>
+</pre>
+<p>
+          where <code class="computeroutput"><span class="identifier">y2</span></code> is of the same
+          type as <code class="computeroutput"><span class="identifier">y1</span></code>. There are two
+          possible semantics which are captured by the concepts below:
+        </p>
+<div class="table">
+<a name="boost_assign_v2._.reference._ref____anon___.concepts"></a><p class="title"><b>Table&#160;1.7.&#160;Concepts</b></p>
+<div class="table-contents"><table class="table" summary="Concepts">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <span class="emphasis"><em>AssignCopy</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    y2 == y1;
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <span class="emphasis"><em>AssignRebind</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    &amp;y2 == &amp;y1;
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><a name="boost_assign_v2._.reference._ref____anon___.description"></a><h6>
+<a name="id36163439"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference._ref____anon___.description">Description</a>
+        </h6>
+<p>
+          Creates a collection of references.
+        </p>
+<a name="boost_assign_v2._.reference._ref____anon___.synopsis"></a><h6>
+<a name="id36163459"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference._ref____anon___.synopsis">Synopsis</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Designation
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Tag1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+ 		<span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">anon_nil</span><span class="special">&lt;</span><span class="identifier">Tag1</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="identifier">anon</span><span class="special">(</span> <span class="identifier">keyword_aux</span><span class="special">::</span><span class="identifier">nil</span> <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(1)</em></span>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Tag1</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">anon</span><span class="special">&lt;</span><span class="identifier">Tag1</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(2)</em></span>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">  	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Tag1</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">anon</span><span class="special">&lt;</span><span class="identifier">Tag1</span><span class="special">,</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&gt;::</span><span class="identifier">type</span>
+  	<span class="identifier">anon</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">t</span><span class="special">);</span>
+  </pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(3)</em></span>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_assign_v2._.reference._ref____anon___.parameters"></a><h6>
+<a name="id36163881"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference._ref____anon___.parameters">Parameters</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    Tag1
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>unspecified</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Controls assignement semantics
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    T
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>unspecified</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Value of the element(s) to reference to
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_assign_v2._.reference._ref____anon___.expression_semantics"></a><h6>
+<a name="id36163991"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference._ref____anon___.expression_semantics">Expression
+          Semantics</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Designation
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">anon</span><span class="special">&lt;</span><em class="replaceable"><code>ref-assign-tag</code></em><span class="special">&gt;(</span> _nil <span class="special">);</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(1)</em></span>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">anon</span><span class="special">&lt;</span><em class="replaceable"><code>ref-assign-tag</code></em><span class="special">&gt;(</span> t <span class="special">);</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(2)</em></span> and <span class="emphasis"><em>(3)</em></span>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+          <span class="bold"><strong>Return type</strong></span>:
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Designation
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput">result_of<span class="special">::</span>anon_nil<span class="special">&lt;</span><em class="replaceable"><code>ref-assign-tag</code></em><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(1)</em></span>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput">result_of<span class="special">::</span>anon<span class="special">&lt;</span><em class="replaceable"><code>ref-assign-tag</code></em><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(2)</em></span>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput">result_of<span class="special">::</span>anon<span class="special">&lt;</span><em class="replaceable"><code>ref-assign-tag</code></em><span class="special">,</span><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(3)</em></span>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+          <span class="bold"><strong>Semantics</strong></span>: Creates a collection of references.
+        </p>
+<a name="boost_assign_v2._.reference._ref____anon___.header"></a><h6>
+<a name="id36164338"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference._ref____anon___.header">Header</a>
+        </h6>
+<pre class="programlisting">#include &lt;boost/assign/v2/ref/ref.hpp&gt;
+</pre>
+<a name="boost_assign_v2._.reference._ref____anon___.example"></a><h6>
+<a name="id36164361"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference._ref____anon___.example">Example</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Designation
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput">anon<span class="special">&lt;</span><span class="keyword">int</span>
+                    <span class="keyword">const</span><span class="special">&gt;(</span>
+                    _nil <span class="special">)(</span> <span class="number">1</span>
+                    <span class="special">)(</span> <span class="number">2</span>
+                    <span class="special">)(</span> <span class="number">3</span>
+                    <span class="special">);</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(1)</em></span>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">int</span> a<span class="special">,</span> b<span class="special">,</span> c<span class="special">;</span>
+anon<span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span> a <span class="special">)(</span> b <span class="special">)(</span> c <span class="special">);</span> 
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(2)</em></span>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput">anon<span class="special">(</span> <span class="number">1</span>
+                    <span class="special">)(</span> <span class="number">2</span>
+                    <span class="special">)(</span> <span class="number">3</span>
+                    <span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="emphasis"><em>(3)</em></span>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_assign_v2._.reference._ref____anon___.copy_semantics"></a><h6>
+<a name="id36164618"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference._ref____anon___.copy_semantics">Copy
+          semantics</a>
+        </h6>
+<p>
+          The two expresions below are equivalent
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression1
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Expression2
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">anon</span><span class="special">&lt;</span><span class="identifier">assign_tag</span><span class="special">::</span><span class="identifier">copy</span><span class="special">&gt;(</span> t <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">assign_copy</span><span class="special">;</span>
+<span class="identifier">anon</span><span class="special">(</span> t <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+<a name="boost_assign_v2._.reference._ref____anon___.rebind_semantics"></a><h6>
+<a name="id36164759"></a>
+          <a class="link" href="index.html#boost_assign_v2._.reference._ref____anon___.rebind_semantics">Rebind
+          semantics</a>
+        </h6>
+<p>
+          The two expresions below are equivalent
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression1
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Expression2
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">anon</span><span class="special">&lt;</span><span class="identifier">assign_tag</span><span class="special">::</span><span class="identifier">rebind</span><span class="special">&gt;(</span> t <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">assign_rebind</span><span class="special">;</span>
+<span class="identifier">anon</span><span class="special">(</span> t <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<div class="section" title="Portability">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2._.portability_"></a><a class="link" href="index.html#boost_assign_v2._.portability_" title="Portability">Portability </a>
+</h3></div></div></div>
+<a name="boost_assign_v2._.portability_.methodology"></a><h5>
+<a name="id36164910"></a>
+        <a class="link" href="index.html#boost_assign_v2._.portability_.methodology">Methodology</a>
+      </h5>
+<p>
+        For each of a set of containers (see below), ensure
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          At compile time, that the method deduced for modifying the container agrees
+          with one that is explicitly specified. For example, it verifies that <code class="computeroutput"><span class="identifier">push</span><span class="special">()</span></code>
+          is the method used for <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">queue</span></code>.
+        </li>
+<li class="listitem">
+          At runtime time, that the container returned by 
+<pre class="programlisting"><span class="identifier">convert</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;(</span> <span class="identifier">from</span> <span class="special">);</span>
+</pre>
+          has the same elements as that of <code class="computeroutput"><span class="identifier">from</span></code>,
+          where <code class="computeroutput"><span class="identifier">To</span></code> is the type of
+          the container being tested.
+        </li>
+</ul></div>
+<div class="table">
+<a name="boost_assign_v2._.portability_.containers_tested"></a><p class="title"><b>Table&#160;1.8.&#160;Containers tested</b></p>
+<div class="table-contents"><table class="table" summary="Containers tested">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Container
+                </p>
+              </th>
+<th>
+                <p>
+                  Result
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;&gt;</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  OK
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;&gt;</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  OK
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;&gt;</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  OK
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">queue</span><span class="special">&lt;&gt;</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  OK
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">set</span><span class="special">&lt;&gt;</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  OK
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">set</span><span class="special">&lt;&gt;</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  OK
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">stack</span><span class="special">&lt;&gt;</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  OK
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;&gt;</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  OK
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="boost_assign_v2._.portability_.tests"></a><p class="title"><b>Table&#160;1.9.&#160;Tests</b></p>
+<div class="table-contents"><table class="table" summary="Tests">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  OS
+                </p>
+              </th>
+<th>
+                <p>
+                  Compiler
+                </p>
+              </th>
+<th>
+                <p>
+                  Date
+                </p>
+              </th>
+<th>
+                <p>
+                  Result
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  Mac OS X v10.6
+                </p>
+              </td>
+<td>
+                <p>
+                  GCC 4.2
+                </p>
+              </td>
+<td>
+                <p>
+                  August 2nd, 2010
+                </p>
+              </td>
+<td>
+                <p>
+                  Passed
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break"><a name="boost_assign_v2._.portability_.dependencies"></a><h5>
+<a name="id36165423"></a>
+        <a class="link" href="index.html#boost_assign_v2._.portability_.dependencies">Dependencies</a>
+      </h5>
+<p>
+        A previously avalaible set of files in the Vault, for chaining, by RangeEx,
+        are made temporarily available <a href="http://svn.boost.org/svn/boost/sandbox/statistics/support/boost/range/" target="_top">here</a>
+        and need to be in the search path.
+      </p>
+</div>
+<div class="section" title="Change log">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2._.change_log"></a><a class="link" href="index.html#boost_assign_v2._.change_log" title="Change log">Change log</a>
+</h3></div></div></div>
+<a name="boost_assign_v2._.change_log.upgrading_from_boost__v_emphasis_1_4x__emphasis_"></a><h5>
+<a name="id36165461"></a>
+        <a class="link" href="index.html#boost_assign_v2._.change_log.upgrading_from_boost__v_emphasis_1_4x__emphasis_">Upgrading
+        from Boost. v<span class="emphasis"><em>1.4x</em></span></a>
+      </h5>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+          This upgrade to Boost.Assign v2 represents a complete overhaul and is completely
+          independent from the previous version. In terms of the directory structure,
+          the new features are in boost/assign/v2, and accordingly, a new namespace
+          was created:
+        </li></ul></div>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">assign</span><span class="special">::</span><span class="identifier">v2</span><span class="special">;</span>
+</pre>
+<p>
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          The latest version prior to Boost.Assign v2 will continue to be supported
+          in <a href="http://www.boost.org" target="_top">Boost</a> for backward compatibility
+          purposes, and also because Boost.Assign v2 still needs to be developed
+          in some areas such as pointers.
+        </li>
+<li class="listitem">
+          The change to Boost.Assign v2 comes about with the proposal for the addition
+          of two new features, namely chaining ranges and (more advanced) anonymous
+          containers of references. However, it came to light during the <a href="http://lists.boost.org/Archives/boost/2010/06/168028.php" target="_top">mini-review</a>,
+          that the new and existing features seemed redundant or lacked homogeneity
+          in their interface and therefore called for a little more than a tune up.
+        </li>
+</ul></div>
+</div>
+<div class="section" title="Support">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2._.support"></a><a class="link" href="index.html#boost_assign_v2._.support" title="Support">Support</a>
+</h3></div></div></div>
+<p>
+        For questions or feature request, post to the <a href="http://www.boost.org/community/groups.html#users" target="_top">Boost
+        Users Mailing List</a>, but also make sure to reach <a href="http://www.boost.org/users/people/thorsten_ottosen.html" target="_top">TO</a>
+        and <a href="mailto:er.ci.2020@gmail.com" target="_top">ER</a> by CCing them.
+      </p>
+</div>
+<div class="section" title="History and acknowledgement">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2._.history_and_acknowledgement"></a><a class="link" href="index.html#boost_assign_v2._.history_and_acknowledgement" title="History and acknowledgement">History
+      and acknowledgement</a>
+</h3></div></div></div>
+<p>
+        The idea for an assignment/initialization library is not new. The functionality
+        of this library resembles Leor Zolman's STL Container Initialization Library
+        a great deal, but it does not rely on string parsing to achieve its goals.
+      </p>
+<p>
+        Special thanks go to
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          Leor Zolman for our many discussion that eventually led to this library.
+        </li>
+<li class="listitem">
+          Tom Brinkman for being review manager.
+        </li>
+<li class="listitem">
+          Joaqu&#237;n Mu&#241;oz for vc6/vc7 portability.
+        </li>
+<li class="listitem">
+          Pavel Vozenilek for his countless suggestions, improvements and portability
+          fixes.
+        </li>
+<li class="listitem">
+          Rene Rivera for Code Warrior portability.
+        </li>
+<li class="listitem">
+          Manuel Peinado Gallego for identifying the need for anonymous container
+          of references, his valuable advice throughout their development, and proposing
+          a <a href="http://gist.github.com/287791" target="_top">design</a> that laid the
+          foundation for chaining. Both features were introduced with Boost.Assign
+          v2.
+        </li>
+</ul></div>
+</div>
+<div class="section" title="Bibliography">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2._.bibliography"></a><a class="link" href="index.html#boost_assign_v2._.bibliography" title="Bibliography">Bibliography</a>
+</h3></div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          Scott. Meyers, "More Effective C++", Item 7, Addison Wesley,
+          1996
+        </li>
+<li class="listitem">
+          K. Czarnecki and U.W. Eisenecker, "Generative programming", Addison-Wesley,
+          2000
+        </li>
+<li class="listitem"><a href="http://www.oonumerics.org/blitz/" target="_top">http://www.oonumerics.org<span class="emphasis"><em>blitz</em></span></a></li>
+<li class="listitem">
+          Gabriel Dos Reis and Bjarne Stroustrup, <a href="http://anubis.dkuug.dk/jtc1/sc22/wg21/docs/papers/2003/n1509.pdf" target="_top">Generalized
+          Initializer Lists</a>, 2003
+        </li>
+<li class="listitem">
+          Abrahams, David and Gurtovoy, Aleksey, <a href="http://portal.acm.org/citation.cfm?id=1044941#" target="_top">C++
+          Template Metaprogramming: Concepts, Tools, and Techniques from Boost and
+          Beyond (C++ in Depth Series)</a>, 2004, Addison-Wesley Professional.
+        </li>
+</ul></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: August 05, 2010 at 05:05:38 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"></div>
+</body>
+</html>
