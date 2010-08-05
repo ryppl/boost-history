@@ -182,7 +182,7 @@ make_field_mask(std::size_t offset) {
     ret.mask_size = mask_size;
     ret.mask = new storage_t[mask_size];
     ret.last_left_shift = 0;
-
+    std::memset(ret.mask, 0, mask_size);
     storage_ptr_t mask_ptr = ret.mask;
 
     // calculate bit_count for for statement
@@ -257,89 +257,53 @@ public:
 
     /** Copy Constructor. */
     proxy_reference_type(_self const& x)
-        :_ptr(x._ptr), _offset(x._offset)
+        :_ptr(x._ptr),
+        _offset(x._offset),
+        _mask(make_field_mask<Width>(_offset))
     { }
 
     /** pointer, offset constructor. */
     proxy_reference_type(storage_type* ptr, offset_type offset)
-        :_ptr(ptr), _offset(offset)
+        :_ptr(ptr),
+        _offset(offset),
+        _mask(make_field_mask<Width>(_offset))
     { }
+
+    ~proxy_reference_type() {
+        delete _mask.mask;
+    }
     //@}
 
     /** Copy assignment. */
     _self& operator=(_self const& x) {
+        storage_ptr_t mask_ptr = _mask.mask;
         _ptr = x._ptr;
         _offset = x._offset;
+        _mask = make_field_mask<Width>(_offset);
+        delete mask_ptr;
         return *this;
     }
 
     /** Implicit Conversion Operator*/
     operator value_type() const {
         value_type ret = 0;
-        storage_type* byte_ptr = _ptr;
-        // std::size_t remaining_bits = width;
-        storage_type mask = 0;
 
-        // constructing mask inside of char array.
-        // TODO: Make this correctly deduced! as of right it is the largest
-        // possible size.
-        storage_type mask_array[9];
-        std::memset(mask_array, 0,9);
+        storage_ptr_t mask_ptr = _mask.mask;
+        storage_ptr_t end_mask_ptr = _mask.mask + _mask.mask_size - 1 ;
+        storage_ptr_t data_ptr = _ptr;
 
-
-        // this is so that the loop will work correctly the first time through.
-        storage_type* mask_ptr = mask_array;
-        --mask_ptr;
-        mask = 0x80;
-        mask >>= _offset;
-        std::size_t bit_copy_ammount = _offset + width;
-        std::size_t trailing_zeros = 8 - _offset;
-        std::size_t mask_byte_count = 0;
-        std::cout << "Pre-Mask creation Stats" << std::endl;
-        std::cout << "trailing_zero's value: " << trailing_zeros << std::endl;
-        std::cout << "bit_copy_ammount:      " << bit_copy_ammount << std::endl;
-        std::cout << "mask_byte_count:       " << mask_byte_count << std::endl;
-        for(std::size_t bit_index = _offset;bit_index <= bit_copy_ammount; ++bit_index){
-            if( (bit_index%8) == 0) {
-                ++mask_byte_count;
-                trailing_zeros = 8;
-                mask >>= 1;
-                *mask_ptr |= mask;
-                ++mask_ptr;
-                mask = 0x80;
-                continue;
-            }
-            --trailing_zeros;
-            *mask_ptr |= mask;
-            mask >>= 1;
+        if(_mask.mask_size == 1) {
+            return value_type(*data_ptr & *mask_ptr) >> (8-(_offset + width));
         }
-
-        std::cout << "Post-Mask creation Stats" << std::endl;
-        std::cout << "trailing_zero's value: " << trailing_zeros << std::endl;
-        std::cout << "bit_copy_ammount:      " << bit_copy_ammount << std::endl;
-        std::cout << "mask_byte_count:       " << mask_byte_count << std::endl;
-
-        // mask_ptr = mask_array;
-        // storage_type* mask_array_end = (mask_array) + 9;
-        
-        for(std::size_t i =0; i < 9; ++i) {
-            std::cout << std::hex << std::size_t(mask_array[i]) << "|";
-        }
-        std::cout << std::endl;
-
-        for( std::size_t mask_index = 0;
-             mask_index < mask_byte_count;
-             ++mask_index)
-        {
-            if(!(mask_array[mask_index] & 0x1) ) {
-                ret <<= 8 - ((_offset + width)%8);
-                return ret + (mask_array[mask_index] >> trailing_zeros);
-            }
+        for(;mask_ptr < end_mask_ptr;++mask_ptr) {
             ret <<= 8;
-            ret += *byte_ptr & mask_array[mask_index];
-            ++byte_ptr;
-        }       
-        return ret;
+            ret += *data_ptr & *mask_ptr;
+            ++data_ptr;
+        }
+        ret <<= _mask.last_left_shift;
+        ++data_ptr;
+        ++mask_ptr;
+        return ret += *data_ptr & *mask_ptr;
     }
 
     /** value_type storage assignement operator.*/
@@ -356,6 +320,7 @@ public:
     /** Member variables. */
     storage_type*    _ptr;
     offset_type     _offset;
+    mask_array_info _mask;
 };
 
 

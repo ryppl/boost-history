@@ -203,7 +203,7 @@ int main() {
         delete manager_ptr.mask;
 
     }
-    /*
+
     // encoding and decoding tests.
     {
         typedef unsigned char storage_type;
@@ -234,11 +234,10 @@ int main() {
         std::cout << "second use of t2" << std::endl;
         std::cout << "Value returned by t2: "<< std::hex << t2 << std::endl;
         std::cout << "third use of t2" << std::endl;
-        BOOST_TEST(t2 == 6);
+        BOOST_TEST(t2 == 7);
 
         
     }
-*/
     return boost::report_errors();
 }
 
