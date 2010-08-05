@@ -124,12 +124,29 @@ int main() {
         std::cout << "Test type 1. First byte value in hex: " << std::endl;
         std::cout << std::hex << std::size_t(*ptr) << std::endl;
 
-        // this will be access to the first element within the array.
+        // first within the first index.
         test_type_1 t1(ptr,0);
+        std::cout << "fist use of t1" << std::endl;
         test_type_1::value_type x = t1;
-        std::cout << "Value returned by t1: "<< std::hex << x << std::endl;
+        // std::cout << "Value returned by t1: "<< std::hex << x << std::endl;
+
         BOOST_TEST(x == 0x7);
-        test_type_1 t1(ptr,0);
+
+
+        
+        // now trying second index.
+        test_type_1 t2(ptr,3);
+        std::cout << "fist use of t2" << std::endl;
+        BOOST_TEST(t2 == 0);
+        *ptr |= 0x1c;
+        std::cout << "Test type 1. First byte value in hex for test 2: " << std::endl;
+        std::cout << std::hex << std::size_t(*ptr) << std::endl;
+        std::cout << "second use of t2" << std::endl;
+        std::cout << "Value returned by t2: "<< std::hex << t2 << std::endl;
+        std::cout << "third use of t2" << std::endl;
+        BOOST_TEST(t2 == 6);
+
+        
     }
     return boost::report_errors();
 }
