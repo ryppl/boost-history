@@ -54,8 +54,6 @@ template <class Type> struct is_static_closed
     BOOST_STATIC_CONSTANT(bool, value = false); 
 };
 
-
-
 }} // namespace boost itl
 
 #endif

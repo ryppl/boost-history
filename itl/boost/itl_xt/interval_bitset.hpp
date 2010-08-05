@@ -427,6 +427,27 @@ bool is_empty(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& obj
     return object.empty(); 
 }
 
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+bool contains(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& super, 
+     const typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_type& sub  ) 
+{ 
+    return super.contains(sub); 
+}
+
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+bool contains(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& super, 
+     const typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::segment_type& sub  ) 
+{ 
+    return super.contains(sub); 
+}
+
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+bool contains(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& super, 
+              const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& sub  ) 
+{ 
+    return super.contains(sub); 
+}
+
 
 template<class CharType, class CharTraits, 
     class DomainT, class BitSetT, 

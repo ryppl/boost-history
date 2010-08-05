@@ -84,12 +84,15 @@ BOOST_AUTO_TEST_CASE(digits_to_check_numerics) //JODO Proto: properties of infin
 #include <boost/itl/continuous_interval.hpp>
 #include <boost/itl/type_traits/is_continuous_interval.hpp>
 
-
 BOOST_AUTO_TEST_CASE(interval_type_traits)
 {
     BOOST_CHECK_EQUAL(is_interval<continuous_interval<int> >::value, true);
     BOOST_CHECK_EQUAL(is_continuous_interval<continuous_interval<int> >::value, false);
     BOOST_CHECK_EQUAL(is_continuous_interval<continuous_interval<double> >::value, true);
+
+    BOOST_CHECK_EQUAL((is_interval_set<interval_map<int,int> >::value), false);
+    BOOST_CHECK_EQUAL((is_interval_map<interval_map<int,int> >::value), true);
+
 }
 
 /*JODO move to proper tests??
@@ -192,39 +195,17 @@ BOOST_AUTO_TEST_CASE(casual)
 
 BOOST_AUTO_TEST_CASE(casual)
 {
-    typedef itl::set<int> TargetT;
-    TargetT left, right, target;
-    left.insert(1);
-    left.insert(3);
-    right.insert(2);
-    left.insert(3);
+    typedef int T;
+    typedef int U;
+    typedef interval_map<T,U, total_absorber> IntervalMapT;
+    typedef interval_set<T>                   IntervalSetT;
+    typedef IntervalMapT::interval_type       IntervalT;
 
-    /*
-    std::set_union(left.rbegin(), left.rend(), right.rbegin(), right.rend(), 
-                   std::inserter(target,target.end()));
-       std::set_difference(left.rbegin(), left.rend(), right.rbegin(), right.rend(), 
-                        std::inserter(target,target.end()));
+    IntervalMapT map_a;
+    IntervalSetT set_a;
+    set_a.add(I_I(0,0));
 
-    std::set_intersection(left.rbegin(), left.rend(), right.rbegin(), right.rend(), 
-                          std::inserter(target,target.end()));
-    std::set_symmetric_difference(left.rbegin(), left.rend(), right.rbegin(), right.rend(), 
-                                  std::inserter(target,target.end()));
-
-    bool incl = std::includes(left.rbegin(), left.rend(), right.rbegin(), right.rend(), std::greater<int>()); //!
-
-    */
-
-    discrete_interval<int> fst = discrete_interval<int>::open(1,3);
-    discrete_interval<int> itv = discrete_interval<int>::rightopen(0,3);
-
-    cout << "fst = " << fst << endl;
-    cout << "itv = " << itv << endl;
-    discrete_interval<int> lft = right_subtract(fst,itv);
-
-    cout << "lft = " << lft << endl;
-    if(itl::is_empty(lft))
-        cout << "is MT\n";
-    else
-        cout << "is NOT MT\n"; 
+    map_a.contains(set_a);
+    BOOST_CHECK(map_a.contains(set_a));
 }
 

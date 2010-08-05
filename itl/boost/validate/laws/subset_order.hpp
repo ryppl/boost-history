@@ -87,13 +87,13 @@ namespace boost{namespace itl
         : public Law<SubsetDefined<Type>, 
                      LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_2(bool,bool)> 
     {
-        /** is_contained_in(a, b) == a.atomic().contained_in(b.atomic()) 
+        /** within(a, b) == a.atomic().contained_in(b.atomic()) 
         Input  = (a := inVal1, b := inVal2)
         Output = (lhs, rhs)
         */
     public:
         std::string name()const { return "SubsetDefined"; }
-        std::string formula()const { return "is_contained_in(a,b) == a.atomic().contained_in(b.atomic())"; }
+        std::string formula()const { return "within(a,b) == a.atomic().contained_in(b.atomic())"; }
 
         std::string typeString()const
         {
@@ -111,7 +111,7 @@ namespace boost{namespace itl
             segmental::atomize(a_atomic, a);
             segmental::atomize(b_atomic, b);
 
-            bool lhs = is_contained_in(a, b);
+            bool lhs = within(a, b);
             bool rhs = a_atomic.contained_in(b_atomic);
 
             this->template setOutputValue<lhs_result>(lhs);
@@ -132,7 +132,7 @@ namespace boost{namespace itl
             cout << "a: " << a << endl;
             cout << "b: " << b << endl;
 
-            bool lhs = is_contained_in(a, b);
+            bool lhs = within(a, b);
             bool rhs = a_atomic.contained_in(b_atomic);
 
             this->template setOutputValue<lhs_result>(lhs);
@@ -180,7 +180,7 @@ namespace boost{namespace itl
             segmental::atomize(b_atomic, b);
 
             bool lhs = contains(a, b);
-            bool rhs = a_atomic.contains(b_atomic);
+            bool rhs = contains(a_atomic, b_atomic);
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
@@ -198,7 +198,7 @@ namespace boost{namespace itl
             segmental::atomize(b_atomic, b);
 
             bool lhs = contains(a, b);
-            bool rhs = a_atomic.contains(b_atomic);
+            bool rhs = contains(a_atomic, b_atomic);
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);

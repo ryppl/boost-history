@@ -264,12 +264,12 @@ void partial_interval_map_mixed_inclusion_compare_4_bicremental_types()
     //    ->2    ->1    ->1       ->2
     split_interval_map<T,U,Trt> split_sub_map1 = split_map;
     split_sub_map1.erase(MK_v(2));
-    BOOST_CHECK_EQUAL( split_sub_map1.contains(MK_v(2)), false );
+    BOOST_CHECK_EQUAL( contains(split_sub_map1, MK_v(2)), false );
 
     interval_map<T,U,Trt> join_sub_map2;
     join_sub_map2 = split_map;
     join_sub_map2.erase(MK_v(1));
-    BOOST_CHECK_EQUAL( join_sub_map2.contains(MK_v(1)), false );
+    BOOST_CHECK_EQUAL( contains(join_sub_map2, MK_v(1)), false );
 
     split_interval_set<T>    split_sub_set1; 
     separate_interval_set<T> sep_sub_set1; 
@@ -359,33 +359,33 @@ void partial_interval_map_mixed_contains_4_bicremental_types()
     BOOST_CHECK_EQUAL( join_set.iterative_size(),  2 );
 
     // Key types
-    BOOST_CHECK_EQUAL( split_map.contains(MK_v(0)), true );
-    BOOST_CHECK_EQUAL( split_map.contains(MK_v(5)), true );
-    BOOST_CHECK_EQUAL( split_map.contains(MK_v(9)), true );
+    BOOST_CHECK_EQUAL( contains(split_map, MK_v(0)), true );
+    BOOST_CHECK_EQUAL( contains(split_map, MK_v(5)), true );
+    BOOST_CHECK_EQUAL( contains(split_map, MK_v(9)), true );
 
-    BOOST_CHECK_EQUAL( split_map.contains(I_D(2,3)), true );
-    BOOST_CHECK_EQUAL( split_map.contains(I_D(0,6)), true );
-    BOOST_CHECK_EQUAL( split_map.contains(I_D(0,7)), false );
-    BOOST_CHECK_EQUAL(  join_map.contains(I_D(2,3)), true );
-    BOOST_CHECK_EQUAL(  join_map.contains(I_D(0,6)), true );
-    BOOST_CHECK_EQUAL(  join_map.contains(I_D(0,7)), false );
+    BOOST_CHECK_EQUAL( contains(split_map, I_D(2,3)), true );
+    BOOST_CHECK_EQUAL( contains(split_map, I_D(0,6)), true );
+    BOOST_CHECK_EQUAL( contains(split_map, I_D(0,7)), false );
+    BOOST_CHECK_EQUAL(  contains(join_map, I_D(2,3)), true );
+    BOOST_CHECK_EQUAL(  contains(join_map, I_D(0,6)), true );
+    BOOST_CHECK_EQUAL(  contains(join_map, I_D(0,7)), false );
 
     // Map types
-    BOOST_CHECK_EQUAL( join_map.contains(K_v(1,2)), true );
-    BOOST_CHECK_EQUAL( join_map.contains(K_v(5,1)), true );
-    BOOST_CHECK_EQUAL( join_map.contains(K_v(9,2)), true );
+    BOOST_CHECK_EQUAL( contains(join_map, K_v(1,2)), true );
+    BOOST_CHECK_EQUAL( contains(join_map, K_v(5,1)), true );
+    BOOST_CHECK_EQUAL( contains(join_map, K_v(9,2)), true );
 
-    BOOST_CHECK_EQUAL( split_map.contains(IDv(2,6,1)), true );
-    BOOST_CHECK_EQUAL( split_map.contains(IDv(1,6,1)), false );
-    BOOST_CHECK_EQUAL( split_map.contains(IIv(8,9,2)), true );
-    BOOST_CHECK_EQUAL( split_map.contains(IIv(8,9,3)), false );
-    BOOST_CHECK_EQUAL(  join_map.contains(IDv(2,6,1)), true );
-    BOOST_CHECK_EQUAL(  join_map.contains(IDv(1,6,1)), false );
-    BOOST_CHECK_EQUAL(  join_map.contains(IIv(8,9,2)), true );
-    BOOST_CHECK_EQUAL(  join_map.contains(IIv(8,9,3)), false );
+    BOOST_CHECK_EQUAL( contains(split_map, IDv(2,6,1)), true );
+    BOOST_CHECK_EQUAL( contains(split_map, IDv(1,6,1)), false );
+    BOOST_CHECK_EQUAL( contains(split_map, IIv(8,9,2)), true );
+    BOOST_CHECK_EQUAL( contains(split_map, IIv(8,9,3)), false );
+    BOOST_CHECK_EQUAL(  contains(join_map, IDv(2,6,1)), true );
+    BOOST_CHECK_EQUAL(  contains(join_map, IDv(1,6,1)), false );
+    BOOST_CHECK_EQUAL(  contains(join_map, IIv(8,9,2)), true );
+    BOOST_CHECK_EQUAL(  contains(join_map, IIv(8,9,3)), false );
 
-    BOOST_CHECK_EQUAL( split_map.contains(join_map), true );
-    BOOST_CHECK_EQUAL( join_map.contains(split_map), true );
+    BOOST_CHECK_EQUAL( contains(split_map, join_map), true );
+    BOOST_CHECK_EQUAL( contains(join_map, split_map), true );
     BOOST_CHECK_EQUAL( split_map.contained_in(join_map), true );
     BOOST_CHECK_EQUAL( join_map.contained_in(split_map), true );
 
@@ -398,12 +398,12 @@ void partial_interval_map_mixed_contains_4_bicremental_types()
     //    ->2    ->1    ->1       ->2
     split_interval_map<T,U,Trt> split_sub_map1 = split_map;
     split_sub_map1.erase(MK_v(2));
-    BOOST_CHECK_EQUAL( split_sub_map1.contains(MK_v(2)), false );
+    BOOST_CHECK_EQUAL( contains(split_sub_map1, MK_v(2)), false );
 
     interval_map<T,U,Trt> join_sub_map2;
     join_sub_map2 = split_map;
     join_sub_map2.erase(MK_v(1));
-    BOOST_CHECK_EQUAL( join_sub_map2.contains(MK_v(1)), false );
+    BOOST_CHECK_EQUAL( contains(join_sub_map2, MK_v(1)), false );
 
     split_interval_set<T>    split_sub_set1; 
     separate_interval_set<T> sep_sub_set1; 
@@ -418,17 +418,17 @@ void partial_interval_map_mixed_contains_4_bicremental_types()
     BOOST_CHECK_EQUAL( split_sub_map1.contained_in(join_map ), true );
     BOOST_CHECK_EQUAL(  join_sub_map2.contained_in(join_map ), true );
 
-    BOOST_CHECK_EQUAL( split_map.contains(split_sub_map1), true );
-    BOOST_CHECK_EQUAL( split_map.contains( join_sub_map2), true );
-    BOOST_CHECK_EQUAL(  join_map.contains(split_sub_map1), true );
-    BOOST_CHECK_EQUAL(  join_map.contains( join_sub_map2), true );
+    BOOST_CHECK_EQUAL( contains(split_map, split_sub_map1), true );
+    BOOST_CHECK_EQUAL( contains(split_map,  join_sub_map2), true );
+    BOOST_CHECK_EQUAL(  contains(join_map, split_sub_map1), true );
+    BOOST_CHECK_EQUAL(  contains(join_map,  join_sub_map2), true );
 
-    BOOST_CHECK_EQUAL( split_map.contains(split_sub_set1), true );
-    BOOST_CHECK_EQUAL( split_map.contains(  sep_sub_set1), true );
-    BOOST_CHECK_EQUAL( split_map.contains( join_sub_set1), true );
-    BOOST_CHECK_EQUAL(  join_map.contains(split_sub_set1), true );
-    BOOST_CHECK_EQUAL(  join_map.contains(  sep_sub_set1), true );
-    BOOST_CHECK_EQUAL(  join_map.contains( join_sub_set1), true );
+    BOOST_CHECK_EQUAL( contains(split_map, split_sub_set1), true );
+    BOOST_CHECK_EQUAL( contains(split_map,   sep_sub_set1), true );
+    BOOST_CHECK_EQUAL( contains(split_map,  join_sub_set1), true );
+    BOOST_CHECK_EQUAL(  contains(join_map, split_sub_set1), true );
+    BOOST_CHECK_EQUAL(  contains(join_map,   sep_sub_set1), true );
+    BOOST_CHECK_EQUAL(  contains(join_map,  join_sub_set1), true );
 
     split_interval_map<T,U,Trt> split_unrel_map11 = split_sub_map1;
     split_unrel_map11.set(CIv(7,9,1));
@@ -438,20 +438,20 @@ void partial_interval_map_mixed_contains_4_bicremental_types()
     join_unrel_map21.set(K_v(0,1));
     BOOST_CHECK_EQUAL( join_unrel_map21(MK_v(0)), MK_u(1) );
 
-    BOOST_CHECK_EQUAL( split_unrel_map11.contains(split_map), false );
-    BOOST_CHECK_EQUAL(  join_unrel_map21.contains(split_map), false );
-    BOOST_CHECK_EQUAL( split_unrel_map11.contains( join_map), false );
-    BOOST_CHECK_EQUAL(  join_unrel_map21.contains( join_map), false );
+    BOOST_CHECK_EQUAL( contains(split_unrel_map11, split_map), false );
+    BOOST_CHECK_EQUAL(  contains(join_unrel_map21, split_map), false );
+    BOOST_CHECK_EQUAL( contains(split_unrel_map11,  join_map), false );
+    BOOST_CHECK_EQUAL(  contains(join_unrel_map21,  join_map), false );
 
     BOOST_CHECK_EQUAL( split_unrel_map11.contained_in(split_map), false );
     BOOST_CHECK_EQUAL(  join_unrel_map21.contained_in(split_map), false );
     BOOST_CHECK_EQUAL( split_unrel_map11.contained_in( join_map), false );
     BOOST_CHECK_EQUAL(  join_unrel_map21.contained_in( join_map), false );
 
-    BOOST_CHECK_EQUAL( split_map.contains(split_unrel_map11), false );
-    BOOST_CHECK_EQUAL( split_map.contains( join_unrel_map21), false );
-    BOOST_CHECK_EQUAL(  join_map.contains(split_unrel_map11), false );
-    BOOST_CHECK_EQUAL(  join_map.contains( join_unrel_map21), false );
+    BOOST_CHECK_EQUAL( contains(split_map, split_unrel_map11), false );
+    BOOST_CHECK_EQUAL( contains(split_map,  join_unrel_map21), false );
+    BOOST_CHECK_EQUAL(  contains(join_map, split_unrel_map11), false );
+    BOOST_CHECK_EQUAL(  contains(join_map,  join_unrel_map21), false );
 
 }
 

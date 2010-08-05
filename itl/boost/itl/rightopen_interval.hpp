@@ -90,6 +90,25 @@ std::basic_ostream<CharType, CharTraits>& operator <<
         return stream << "[" << object.lower() << "," << object.upper()<< ")";
 }
 
+//==============================================================================
+//= Concept interval: Adaption via trais class
+//==============================================================================
+template<class DomainT, ITL_COMPARE Compare>
+struct intervals< itl::rightopen_interval<DomainT, Compare> >
+{
+    typedef DomainT domain_type;
+    typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
+    typedef itl::rightopen_interval<DomainT, Compare> interval_type;
+
+    static interval_type construct(const domain_type& lo, const domain_type& up)
+    {
+        return interval_type(lo, up);
+    }
+
+    static domain_type lower(const interval_type& inter_val){ return inter_val.lower(); };
+    static domain_type upper(const interval_type& inter_val){ return inter_val.upper(); };
+};
+
 
 //==============================================================================
 //= Type traits
@@ -116,7 +135,7 @@ struct has_asymmetric_bounds<rightopen_interval<DomainT,Compare> >
 };
 
 template <class DomainT, ITL_COMPARE Compare> 
-struct is_static_rightopen<rightopen_interval<DomainT,Compare> >
+struct is_static_rightopen<rightopen_interval<DomainT,Compare> >//JODO replace this predicate static_borders in {open, leftopen, rightopen, cloded}
 {
     typedef is_static_rightopen<rightopen_interval<DomainT,Compare> > type;
     BOOST_STATIC_CONSTANT(bool, value = true);

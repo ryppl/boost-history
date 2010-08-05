@@ -24,7 +24,7 @@ namespace boost{namespace itl
 /** All content of the container is dropped. 
     Complexity: linear. */
 template<class ObjectT>
-typename boost::enable_if<is_interval_container<ObjectT>, void>::type
+typename enable_if<is_interval_container<ObjectT>, void>::type
 clear(ObjectT& object) //JODO test
 {
 #ifdef ITL_CONCEPT_ORIENTED //JODO find final decision
@@ -37,7 +37,7 @@ clear(ObjectT& object) //JODO test
 /** Tests if the container is empty. 
     Complexity: constant. */
 template<class ObjectT>
-typename boost::enable_if<is_interval_container<ObjectT>, bool>::type
+typename enable_if<is_interval_container<ObjectT>, bool>::type
 is_empty(const ObjectT& object)
 {
 #ifdef ITL_CONCEPT_ORIENTED //JODO find final decision
@@ -47,18 +47,73 @@ is_empty(const ObjectT& object)
 #endif
 }
 
-/** Does \c super contain \c sub? 
-    Complexity: linear. */
-//template<class ObjectT>
-//typename boost::enable_if<is_interval_container<ObjectT>, bool>::type
-//contains(const ObjectT& super, const ObjectT& sub)
-//{
-//#ifdef ITL_CONCEPT_ORIENTED
-//    return true; //JODO
-//#else //ITL_OBJECT_ORIENTED
-//    return super.contains(sub);
-//#endif
-//}
+
+//------------------------------------------------------------------------------
+//- contains
+//------------------------------------------------------------------------------
+
+template<class ObjectT, class OperandT>
+typename enable_if<has_same_concept<is_interval_map, ObjectT, OperandT>, 
+                   bool>::type 
+contains(const ObjectT& super, const OperandT& sub)
+{
+    return Interval_Set::contains(super, sub);
+}
+
+template<class ObjectT, class OperandT>
+typename enable_if<has_same_concept<is_interval_set, ObjectT, OperandT>, 
+                   bool>::type 
+contains(const ObjectT& super, const OperandT& sub)
+{
+    return Interval_Set::contains(super, sub);
+}
+
+template<class ObjectT, class OperandT>
+typename enable_if<mpl::and_<is_interval_map<ObjectT>,
+                             is_intra_derivative<ObjectT, OperandT> >, 
+                   bool>::type
+contains(const ObjectT& super, const OperandT& sub)
+{ 
+    return Interval_Map::contains(super, sub);
+}
+
+template<class ObjectT, class OperandT>
+typename enable_if<mpl::and_<is_interval_set<ObjectT>,
+                             is_intra_derivative<ObjectT, OperandT> >, 
+                   bool>::type
+contains(const ObjectT& super, const OperandT& sub)
+{ 
+    return Interval_Set::contains(super, sub);
+}
+
+template<class ObjectT, class OperandT>
+typename enable_if<is_cross_derivative<ObjectT, OperandT>, 
+                   bool>::type
+contains(const ObjectT& super, const OperandT& sub)
+{ 
+    return Interval_Map::contains(super, sub);
+}
+
+template<class ObjectT, class IntervalSetT>
+typename enable_if<mpl::and_<is_interval_map<ObjectT>, 
+                             combines_right_to_interval_set<ObjectT, IntervalSetT> >,
+                   bool>::type
+contains(const ObjectT& super, const IntervalSetT& sub)
+{
+    return Interval_Map::contains(super, sub);
+}
+
+
+//------------------------------------------------------------------------------
+//- within
+//------------------------------------------------------------------------------
+template<class SubT, class SuperT>
+typename enable_if<is_interval_container<SuperT>, bool>::type 
+within(const SubT& sub, const SuperT& super)
+{
+    return contains(super, sub); 
+}
+
 
 //==============================================================================
 //= Equivalences and Orderings
@@ -66,8 +121,7 @@ is_empty(const ObjectT& object)
 /** Returns true, if \c left and \c right contain the same elements. 
     Complexity: linear. */
 template<class LeftT, class RightT>
-typename boost::enable_if<is_intra_combinable<LeftT, RightT>, 
-                          bool>::type
+typename enable_if<is_intra_combinable<LeftT, RightT>, bool>::type
 is_element_equal(const LeftT& left, const RightT& right)
 {
     return Interval_Set::is_element_equal(left, right);
@@ -77,8 +131,7 @@ is_element_equal(const LeftT& left, const RightT& right)
     Intervals are interpreted as sequence of elements.
     Complexity: linear. */
 template<class LeftT, class RightT>
-typename boost::enable_if<is_intra_combinable<LeftT, RightT>, 
-                          bool>::type
+typename enable_if<is_intra_combinable<LeftT, RightT>, bool>::type
 is_element_less(const LeftT& left, const RightT& right)
 {
     return Interval_Set::is_element_less(left, right);
@@ -88,8 +141,7 @@ is_element_less(const LeftT& left, const RightT& right)
     Intervals are interpreted as sequence of elements.
     Complexity: linear. */
 template<class LeftT, class RightT>
-typename boost::enable_if<is_intra_combinable<LeftT, RightT>, 
-                          bool>::type
+typename enable_if<is_intra_combinable<LeftT, RightT>, bool>::type
 is_element_greater(const LeftT& left, const RightT& right)
 {
     return Interval_Set::is_element_greater(left, right);
@@ -97,8 +149,7 @@ is_element_greater(const LeftT& left, const RightT& right)
 
 //------------------------------------------------------------------------------
 template<class LeftT, class RightT>
-typename boost::enable_if<is_inter_combinable<LeftT, RightT>, 
-                          int>::type
+typename enable_if<is_inter_combinable<LeftT, RightT>, int>::type
 inclusion_compare(const LeftT& left, const RightT& right)
 {
     return Interval_Set::subset_compare(left, right, 
@@ -107,8 +158,8 @@ inclusion_compare(const LeftT& left, const RightT& right)
 }
 
 template<class LeftT, class RightT>
-typename boost::enable_if<is_concept_equivalent<is_element_container,LeftT, RightT>, 
-                          int>::type
+typename enable_if<is_concept_equivalent<is_element_container,LeftT, RightT>, 
+                   int>::type
 inclusion_compare(const LeftT& left, const RightT& right)
 {
     return Set::subset_compare(left, right, 
@@ -126,8 +177,7 @@ inclusion_compare(const LeftT& left, const RightT& right)
     \par \b Returns: A reference to \c object.
     \b Complexity: loglinear */
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_intra_combinable<ObjectT, OperandT>, 
-                          ObjectT>::type&
+typename enable_if<is_intra_combinable<ObjectT, OperandT>, ObjectT>::type&
 operator += (ObjectT& object, const OperandT& operand)
 {
     typename ObjectT::iterator prior_ = object.end();
@@ -159,8 +209,7 @@ For \c interval_sets and \c separate_interval_sets addition of segments
 is \b amortized \b logarithmic.
 */
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_intra_derivative<ObjectT, OperandT>, 
-                          ObjectT>::type&
+typename enable_if<is_intra_derivative<ObjectT, OperandT>, ObjectT>::type&
 operator += (ObjectT& object, const OperandT& operand)
 { 
     return object.add(operand); 
@@ -171,7 +220,7 @@ operator += (ObjectT& object, const OperandT& operand)
     \par \b Efficieny: There is one additional copy of 
     \c ObjectT \c object compared to inplace \c operator \c += */
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
+typename enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator + (ObjectT object, const OperandT& operand)
 {
     return object += operand; 
@@ -182,7 +231,7 @@ operator + (ObjectT object, const OperandT& operand)
     \par \b Efficieny: There is one additional copy of 
     \c ObjectT \c object compared to inplace \c operator \c += */
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
+typename enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator + (const OperandT& operand, ObjectT object)
 {
     return object += operand; 
@@ -227,8 +276,7 @@ For \c interval_sets and \c separate_interval_sets addition of segments
 is \b amortized \b logarithmic.
 */
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_right_intra_combinable<ObjectT, OperandT>, 
-                          ObjectT>::type&
+typename enable_if<is_right_intra_combinable<ObjectT, OperandT>, ObjectT>::type&
 operator |= (ObjectT& object, const OperandT& operand)
 { 
     return object += operand; 
@@ -239,7 +287,7 @@ operator |= (ObjectT& object, const OperandT& operand)
     \par \b Efficieny: There is one additional copy of 
     \c ObjectT \c object compared to inplace \c operator \c |= */
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
+typename enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator | (ObjectT object, const OperandT& operand)
 {
     return object += operand; 
@@ -250,7 +298,7 @@ operator | (ObjectT object, const OperandT& operand)
     \par \b Efficieny: There is one additional copy of 
     \c ObjectT \c object compared to inplace \c operator \c |= */
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
+typename enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator | (const OperandT& operand, ObjectT object)
 {
     return object += operand; 
@@ -297,8 +345,8 @@ For interval sets subtraction of segments
 is \b amortized \b logarithmic.
 */
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_concept_equivalent<is_interval_map, ObjectT, OperandT>, 
-                          ObjectT>::type& 
+typename enable_if<is_concept_equivalent<is_interval_map, ObjectT, OperandT>, 
+                   ObjectT>::type& 
 operator -=(ObjectT& object, const OperandT& operand)
 {
     ITL_const_FORALL(typename OperandT, elem_, operand) 
@@ -308,24 +356,22 @@ operator -=(ObjectT& object, const OperandT& operand)
 }
 
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_intra_derivative<ObjectT, OperandT>, 
-                          ObjectT>::type&
+typename enable_if<is_intra_derivative<ObjectT, OperandT>, ObjectT>::type&
 operator -= (ObjectT& object, const OperandT& operand)
 { 
     return object.subtract(operand); 
 }
 
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_cross_derivative<ObjectT, OperandT>, 
-                          ObjectT>::type&
+typename enable_if<is_cross_derivative<ObjectT, OperandT>, ObjectT>::type&
 operator -= (ObjectT& object, const OperandT& operand)
 { 
     return object.erase(operand); 
 }
 
 template<class ObjectT, class IntervalSetT>
-typename boost::enable_if<combines_right_to_interval_set<ObjectT, IntervalSetT>,
-                          ObjectT>::type&
+typename enable_if<combines_right_to_interval_set<ObjectT, IntervalSetT>,
+                   ObjectT>::type&
 operator -= (ObjectT& object, const IntervalSetT& operand)
 {
     return erase(object, operand);
@@ -333,7 +379,7 @@ operator -= (ObjectT& object, const IntervalSetT& operand)
 
 
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_right_inter_combinable<ObjectT, OperandT>, ObjectT>::type
+typename enable_if<is_right_inter_combinable<ObjectT, OperandT>, ObjectT>::type
 operator - (ObjectT object, const OperandT& operand)
 {
     return object -= operand; 
@@ -343,8 +389,7 @@ operator - (ObjectT object, const OperandT& operand)
 //= Insertion
 //==============================================================================
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_intra_combinable<ObjectT, OperandT>, 
-                          ObjectT>::type&
+typename enable_if<is_intra_combinable<ObjectT, OperandT>, ObjectT>::type&
 insert(ObjectT& object, const OperandT& operand)
 {
     typename ObjectT::iterator prior_ = object.end();
@@ -359,8 +404,8 @@ insert(ObjectT& object, const OperandT& operand)
 //= Erasure
 //==============================================================================
 template<class ObjectT, class OperandT>
-typename boost::enable_if<combines_right_to_interval_container<ObjectT, OperandT>,
-                          ObjectT>::type&
+typename enable_if<combines_right_to_interval_container<ObjectT, OperandT>,
+                   ObjectT>::type&
 erase(ObjectT& object, const OperandT& operand)
 {
     if(ITL_FUN_REN(empty, is_empty, operand))
@@ -387,7 +432,7 @@ erase(ObjectT& object, const OperandT& operand)
 //- Intersection &=, &
 //------------------------------------------------------------------------------
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_right_inter_combinable<ObjectT, OperandT>, ObjectT>::type&
+typename enable_if<is_right_inter_combinable<ObjectT, OperandT>, ObjectT>::type&
 operator &= (ObjectT& object, const OperandT& operand)
 {
     ObjectT intersection;
@@ -397,14 +442,14 @@ operator &= (ObjectT& object, const OperandT& operand)
 }
 
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_binary_inter_combinable<ObjectT, OperandT>, ObjectT>::type
+typename enable_if<is_binary_inter_combinable<ObjectT, OperandT>, ObjectT>::type
 operator & (ObjectT object, const OperandT& operand)
 {
     return object &= operand; 
 }
 
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_binary_inter_combinable<ObjectT, OperandT>, ObjectT>::type
+typename enable_if<is_binary_inter_combinable<ObjectT, OperandT>, ObjectT>::type
 operator & (const OperandT& operand, ObjectT object)
 {
     return object &= operand; 
@@ -426,7 +471,7 @@ ObjectT operator & (typename ObjectT::overloadable_type object, const ObjectT& o
 #endif                        
 
 template<class LeftT, class RightT>
-typename boost::enable_if<is_intra_combinable<LeftT, RightT>, 
+typename enable_if<is_intra_combinable<LeftT, RightT>, 
                           bool>::type
 intersects(const LeftT& left, const RightT& right)
 {
@@ -458,7 +503,7 @@ intersects(const LeftT& left, const RightT& right)
 
 
 template<class LeftT, class RightT>
-typename boost::enable_if<is_cross_combinable<LeftT, RightT>, 
+typename enable_if<is_cross_combinable<LeftT, RightT>, 
                           bool>::type
 intersects(const LeftT& left, const RightT& right)
 {
@@ -485,7 +530,7 @@ intersects(const LeftT& left, const RightT& right)
 }
 
 template<class Type, class AssociateT>
-typename boost::enable_if<is_inter_derivative<Type, AssociateT>, 
+typename enable_if<is_inter_derivative<Type, AssociateT>, 
                           bool>::type
 intersects(const Type& left, const AssociateT& right)
 {
@@ -496,7 +541,7 @@ intersects(const Type& left, const AssociateT& right)
     Intervals are interpreted as sequence of elements.
     \b Complexity: loglinear, if \c left and \c right are interval containers. */
 template<class LeftT, class RightT>
-typename boost::enable_if<is_inter_combinable<LeftT, RightT>, 
+typename enable_if<is_inter_combinable<LeftT, RightT>, 
                           bool>::type
 is_disjoint(const LeftT& left, const RightT& right)
 {
@@ -508,7 +553,7 @@ is_disjoint(const LeftT& left, const RightT& right)
     \b Complexity: logarithmic, if \c AssociateT is an element type \c Type::element_type. 
     linear, if \c AssociateT is a segment type \c Type::segment_type. */
 template<class Type, class AssociateT>
-typename boost::enable_if<is_inter_derivative<Type, AssociateT>, 
+typename enable_if<is_inter_derivative<Type, AssociateT>, 
                           bool>::type
 is_disjoint(const Type& left, const AssociateT& right)
 {
@@ -525,7 +570,7 @@ is_disjoint(const Type& left, const AssociateT& right)
 
 
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_intra_combinable<ObjectT, OperandT>, 
+typename enable_if<is_intra_combinable<ObjectT, OperandT>, 
                           ObjectT>::type&
 operator ^= (ObjectT& object, const OperandT& operand)
 { 
@@ -533,7 +578,7 @@ operator ^= (ObjectT& object, const OperandT& operand)
 }
 
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_intra_derivative<ObjectT, OperandT>, 
+typename enable_if<is_intra_derivative<ObjectT, OperandT>, 
                           ObjectT>::type&
 operator ^= (ObjectT& object, const OperandT& operand)
 { 
@@ -541,14 +586,14 @@ operator ^= (ObjectT& object, const OperandT& operand)
 }
 
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
+typename enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator ^ (ObjectT object, const OperandT& operand)
 {
     return object ^= operand; 
 }
 
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
+typename enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator ^ (const OperandT& operand, ObjectT object)
 {
     return object ^= operand; 
@@ -566,7 +611,7 @@ ObjectT operator ^ (typename ObjectT::overloadable_type object, const ObjectT& o
 // hull
 //-----------------------------------------------------------------------------
 template<class ObjectT>
-typename boost::enable_if<is_interval_container<ObjectT>, 
+typename enable_if<is_interval_container<ObjectT>, 
                           typename ObjectT::interval_type>::type
 hull(const ObjectT& object)
 {

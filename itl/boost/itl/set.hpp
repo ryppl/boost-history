@@ -157,10 +157,10 @@ public:
 
     /** Is <tt>*this</tt> contained in <tt>super</tt>? */
     bool contained_in(const set& super)const 
-    { return Set::contained_in(*this, super); }
+    { return Set::within(*this, super); }
 
     /** Does <tt>*this</tt> contain <tt>sub</tt>? */
-    bool contains(const set& sub)const { return Set::contained_in(sub, *this); }
+    bool contains(const set& sub)const { return Set::within(sub, *this); }
 
     /** <tt>*this</tt> and <tt>x2</tt> are disjoint, if their intersection is empty */
     bool is_disjoint(const set& x2)const { return Set::is_disjoint(*this, x2); }
@@ -365,6 +365,28 @@ bool is_empty(const itl::set<DomainT,Compare,Alloc>& object)
     //return object.empty();
     return object.begin() == object.end();
 }
+
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+inline bool contains(const itl::set<DomainT,Compare,Alloc>& super,
+                     const DomainT&                         sub)
+{
+    return !(super.find(sub) == super.end()); 
+}
+
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+inline bool contains(const itl::set<DomainT,Compare,Alloc>& super,
+                     const itl::set<DomainT,Compare,Alloc>& sub)
+{
+    return Set::within(sub, super); //JODO within
+}
+
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+inline bool within(const itl::set<DomainT,Compare,Alloc>& sub,
+                   const itl::set<DomainT,Compare,Alloc>& super)
+{
+    return Set::within(sub, super); //JODO within
+}
+
 
 //==============================================================================
 //= Equivalences and Orderings

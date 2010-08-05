@@ -84,9 +84,9 @@ void interval_map_fundamentals_4_ordered_types()
     BOOST_CHECK_EQUAL(mt_map, IntervalMapT());
 
     //subtracting intervals form emptieness
-    typename IntervalMapT::value_type I0_0I_u1 = make_pair(I0_0I,u1);
-    typename IntervalMapT::value_type I0_1I_u1 = make_pair(I0_1I,u1);
-    typename IntervalMapT::value_type I1_1I_u1 = make_pair(I1_1I,u1);
+    typename IntervalMapT::segment_type I0_0I_u1 = make_pair(I0_0I,u1);
+    typename IntervalMapT::segment_type I0_1I_u1 = make_pair(I0_1I,u1);
+    typename IntervalMapT::segment_type I1_1I_u1 = make_pair(I1_1I,u1);
     mt_map.subtract(I0_1I_u1).subtract(I1_1I_u1);
     BOOST_CHECK_EQUAL(mt_map, IntervalMapT());
     mt_map.erase(I0_1I_u1).erase(I1_1I_u1);
@@ -134,22 +134,22 @@ void interval_map_fundamentals_4_ordered_types()
     BOOST_CHECK_EQUAL(single_I0_1I_u1.upper(), I0_1I.upper());
 
     //contains predicate
-    BOOST_CHECK_EQUAL(single_I0_0I_u1.contains(v0), true);
-    BOOST_CHECK_EQUAL(single_I0_0I_u1.contains(v0_u1), true);
-    BOOST_CHECK_EQUAL(single_I0_0I_u1.contains(I0_0I_u1), true);
+    BOOST_CHECK_EQUAL(contains(single_I0_0I_u1, v0), true);
+    BOOST_CHECK_EQUAL(contains(single_I0_0I_u1, v0_u1), true);
+    BOOST_CHECK_EQUAL(contains(single_I0_0I_u1, I0_0I_u1), true);
 
-    BOOST_CHECK_EQUAL(single_I1_1I_u1.contains(v1), true);
-    BOOST_CHECK_EQUAL(single_I1_1I_u1.contains(v1_u1), true);
-    BOOST_CHECK_EQUAL(single_I1_1I_u1.contains(I1_1I_u1), true);
+    BOOST_CHECK_EQUAL(contains(single_I1_1I_u1, v1), true);
+    BOOST_CHECK_EQUAL(contains(single_I1_1I_u1, v1_u1), true);
+    BOOST_CHECK_EQUAL(contains(single_I1_1I_u1, I1_1I_u1), true);
 
-    BOOST_CHECK_EQUAL(single_I0_1I_u1.contains(v0), true);
-    BOOST_CHECK_EQUAL(single_I0_1I_u1.contains(I0_1I_u1), true);
-    BOOST_CHECK_EQUAL(single_I0_1I_u1.contains(v1), true);
-    BOOST_CHECK_EQUAL(single_I0_1I_u1.contains(I1_1I_u1), true);
+    BOOST_CHECK_EQUAL(contains(single_I0_1I_u1, v0), true);
+    BOOST_CHECK_EQUAL(contains(single_I0_1I_u1, I0_1I_u1), true);
+    BOOST_CHECK_EQUAL(contains(single_I0_1I_u1, v1), true);
+    BOOST_CHECK_EQUAL(contains(single_I0_1I_u1, I1_1I_u1), true);
 
-    BOOST_CHECK_EQUAL(single_I0_1I_u1.contains(single_I0_0I_u1), true);
-    BOOST_CHECK_EQUAL(single_I0_1I_u1.contains(single_I1_1I_u1), true);
-    BOOST_CHECK_EQUAL(single_I0_1I_u1.contains(single_I0_1I_u1), true);
+    BOOST_CHECK_EQUAL(contains(single_I0_1I_u1, single_I0_0I_u1), true);
+    BOOST_CHECK_EQUAL(contains(single_I0_1I_u1, single_I1_1I_u1), true);
+    BOOST_CHECK_EQUAL(contains(single_I0_1I_u1, single_I0_1I_u1), true);
 
     BOOST_CHECK_EQUAL(single_I0_0I_u1.cardinality(), unon<size_T>::value());
     BOOST_CHECK_EQUAL(single_I0_0I_u1.size(), unon<size_T>::value());
@@ -432,21 +432,21 @@ void interval_map_contains_4_bicremental_types()
     typedef typename IntervalMapT::interval_type   IntervalT;
     typedef typename IntervalMapT::set_type IntervalSetT;
     IntervalMapT itv_map; itv_map.add(K_v(3,1));    
-    BOOST_CHECK_EQUAL( itv_map.contains(MK_v(3)), true );
-    BOOST_CHECK_EQUAL( itv_map.contains(K_v(3,1)), true );
+    BOOST_CHECK_EQUAL( contains(itv_map, MK_v(3)), true );
+    BOOST_CHECK_EQUAL( contains(itv_map, K_v(3,1)), true );
 
     BOOST_CHECK_EQUAL( IntervalMapT().add(K_v(3,1)).contains(K_v(3,1)), true );
     BOOST_CHECK_EQUAL( IntervalMapT().add(K_v(3,1)).contains(MK_v(3)), true );
     BOOST_CHECK_EQUAL( IntervalMapT().insert(K_v(3,1)).contains(K_v(3,1)), true );
     itv_map.clear();
     BOOST_CHECK_EQUAL( (itv_map += IIv(3,7,1)).contains(IIv(3,7,1)), true );
-    BOOST_CHECK_EQUAL( itv_map.contains(IIv(3,7,2)), false );
-    BOOST_CHECK_EQUAL( itv_map.contains(I_I(3,7)), true );
-    BOOST_CHECK_EQUAL( itv_map.contains(I_I(4,6)), true );
+    BOOST_CHECK_EQUAL( contains(itv_map, IIv(3,7,2)), false );
+    BOOST_CHECK_EQUAL( contains(itv_map, I_I(3,7)), true );
+    BOOST_CHECK_EQUAL( contains(itv_map, I_I(4,6)), true );
     BOOST_CHECK_EQUAL( (itv_map += CIv(7,9,1)).contains(IIv(3,9,1)), true );
-    BOOST_CHECK_EQUAL( itv_map.contains(I_I(4,8)), true );
+    BOOST_CHECK_EQUAL( contains(itv_map, I_I(4,8)), true );
     BOOST_CHECK_EQUAL( (itv_map += IIv(11,12,1)).contains(IIv(3,12,1)), false );
-    BOOST_CHECK_EQUAL( itv_map.contains(I_I(4,11)), false );
+    BOOST_CHECK_EQUAL( contains(itv_map, I_I(4,11)), false );
 
     IntervalMapT itv_map0 = itv_map;    
 
@@ -454,10 +454,10 @@ void interval_map_contains_4_bicremental_types()
     IntervalMapT itv_map2(IIv(5,8,1));
     itv_map2.add(K_v(9,1)).add(K_v(11,1));
     itv_map += itv_map2;
-    BOOST_CHECK_EQUAL( itv_map.contains(itv_map2), true );    
+    BOOST_CHECK_EQUAL( contains(itv_map, itv_map2), true );    
     IntervalSetT itv_set2;
     itv_map2.domain(itv_set2);
-    BOOST_CHECK_EQUAL( itv_map.contains(itv_set2), true );    
+    BOOST_CHECK_EQUAL( contains(itv_map, itv_set2), true );    
 }
 
 template <template<class T, class U,
@@ -477,26 +477,27 @@ void interval_map_contains_key_objects_4_bicremental_types()
     IntervalMapT itv_map; 
 
     itv_map.add(IDv(1,3,1));
-    BOOST_CHECK_EQUAL( itv_map.contains(MK_v(0)), false );
-    BOOST_CHECK_EQUAL( itv_map.contains(MK_v(2)), true );
-    BOOST_CHECK_EQUAL( itv_map.contains(MK_v(3)), false );
+    BOOST_CHECK_EQUAL( contains(itv_map, MK_v(0)), false );
+    BOOST_CHECK_EQUAL( contains(itv_map, MK_v(2)), true );
+    BOOST_CHECK_EQUAL( contains(itv_map, MK_v(3)), false );
 
     itv_map.add(IDv(3,6,2));
-    BOOST_CHECK_EQUAL( itv_map.contains(I_I(0,0)), false );
-    BOOST_CHECK_EQUAL( itv_map.contains(I_I(2,4)), true );
-    BOOST_CHECK_EQUAL( itv_map.contains(I_I(6,6)), false );
+    BOOST_CHECK_EQUAL( contains(itv_map, I_I(0,0)), false );
+    contains(itv_map, I_I(2,4));
+    BOOST_CHECK_EQUAL( contains(itv_map, I_I(2,4)), true );
+    BOOST_CHECK_EQUAL( contains(itv_map, I_I(6,6)), false );
 
     itv_map.add(IDv(8,9,2));
 
     IntervalSetT itv_set;
     itv_set.add(C_I(1,2)).add(C_D(2,6)).add(I_I(8,8));
-    BOOST_CHECK_EQUAL( itv_map.contains(itv_set), true );
+    BOOST_CHECK_EQUAL( contains(itv_map, itv_set), true );
     itv_set.add(I_I(1,4));
-    BOOST_CHECK_EQUAL( itv_map.contains(itv_set), true );
+    BOOST_CHECK_EQUAL( contains(itv_map, itv_set), true );
     itv_set.add(I_I(1,4));
-    BOOST_CHECK_EQUAL( itv_map.contains(itv_set), true );
+    BOOST_CHECK_EQUAL( contains(itv_map, itv_set), true );
     itv_set.add(I_I(7,7));
-    BOOST_CHECK_EQUAL( itv_map.contains(itv_set), false );
+    BOOST_CHECK_EQUAL( contains(itv_map, itv_set), false );
 
 }
 

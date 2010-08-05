@@ -21,129 +21,88 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 
 namespace boost{namespace itl
 {
+
 typedef unsigned char bound_type; //JODO encapsulation in a small class
+
+//==============================================================================
+//= Construct
+//==============================================================================
+
+class interval_bounds; //JODO separate dynamically and statically bounded interval concepts
+template<class DomainT, ITL_COMPARE Compare> class bounded_value;
+
+//------------------------------------------------------------------------------
+//- Adapter classes
+//------------------------------------------------------------------------------
+template<class IntervalT>
+struct intervals
+{
+    typedef typename IntervalT::domain_type    domain_type;
+    typedef typename IntervalT::domain_compare domain_compare;
+
+    static IntervalT construct(const domain_type& lo, const domain_type& up);
+
+    static domain_type upper(const IntervalT& inter_val);
+    static domain_type lower(const IntervalT& inter_val);
+};
+
+
+template<class IntervalT>
+struct dynamic_intervals
+{
+    typedef typename IntervalT::domain_type    domain_type;
+    typedef typename IntervalT::domain_compare domain_compare;
+
+    static IntervalT construct(const domain_type& lo, const domain_type& up, interval_bounds bounds);
+    static IntervalT construct_bounded(const bounded_value<domain_type,domain_compare>& lo, 
+                                       const bounded_value<domain_type,domain_compare>& up);
+};
+
+
 
 
 //==============================================================================
 //= Construct
 //==============================================================================
 
-//JODO include struktur und deklarationen
-template<class DomainT, ITL_COMPARE Compare> class interval;
-template<class DomainT, ITL_COMPARE Compare> class discrete_interval;
-template<class DomainT, ITL_COMPARE Compare> class continuous_interval;
-
-class interval_bounds;
-template<class DomainT, ITL_COMPARE Compare> class bounded_value;
-
 template<class IntervalT>
-struct construct_interval;
-
-template<class DomainT, ITL_COMPARE Compare>
-struct construct_interval< itl::interval<DomainT,Compare> >
-{
-    static itl::interval<DomainT,Compare> apply(const DomainT& lo, const DomainT& up, interval_bounds bounds)
-    {
-        return boost::itl::interval<DomainT,Compare>(lo, up, bounds.bits());
-    }
-};
-
-template<class DomainT, ITL_COMPARE Compare>
-struct construct_interval<boost::itl::discrete_interval<DomainT,Compare> >
-{
-    static itl::discrete_interval<DomainT,Compare> apply(const DomainT& lo, const DomainT& up, interval_bounds bounds)
-    {
-        return itl::discrete_interval<DomainT,Compare>(lo, up, bounds, 
-            static_cast<itl::discrete_interval<DomainT,Compare>* >(0) );
-    }
-
-    static itl::discrete_interval<DomainT,Compare> bounded(const bounded_value<DomainT,Compare>& lo, 
-                                                           const bounded_value<DomainT,Compare>& up)
-    {
-        return  itl::discrete_interval<DomainT,Compare>
-                (
-                    lo.value(), up.value(),
-                    lo.bound().left() | up.bound().right(),
-                    static_cast<itl::discrete_interval<DomainT,Compare>* >(0) 
-                );
-    }
-};
-
-template<class DomainT, ITL_COMPARE Compare>
-struct construct_interval<boost::itl::continuous_interval<DomainT,Compare> >
-{
-    static itl::continuous_interval<DomainT,Compare> apply(const DomainT& lo, const DomainT& up, interval_bounds bounds)
-    {
-        return itl::continuous_interval<DomainT,Compare>(lo, up, bounds,
-            static_cast<itl::continuous_interval<DomainT,Compare>* >(0) );
-    }
-
-    static itl::continuous_interval<DomainT,Compare> bounded(const bounded_value<DomainT,Compare>& lo, 
-                                                             const bounded_value<DomainT,Compare>& up)
-    {
-        return  itl::continuous_interval<DomainT,Compare>
-                (
-                    lo.value(), up.value(),
-                    lo.bound().left() | up.bound().right(),
-                    static_cast<itl::continuous_interval<DomainT,Compare>* >(0) 
-                );
-    }
-};
-
-
-//- construct(3) ---------------------------------------------------------------
-
-template<class IntervalT>
-typename boost::enable_if<is_asymmetric_interval<IntervalT>, IntervalT>::type
+typename enable_if<is_asymmetric_interval<IntervalT>, IntervalT>::type
 construct(const typename IntervalT::domain_type& low, //JODO Parameter passing DomainP
           const typename IntervalT::domain_type& up,
-          interval_bounds bounds = interval_bounds::right_open())
+          interval_bounds bounds = interval_bounds::right_open()) //JODO separate static intervals to avoid dependency
 {
-    return IntervalT(low, up);
+    return intervals<IntervalT>::construct(low, up);
 }
 
+
 template<class IntervalT>
-typename boost::enable_if<is_universal_interval<IntervalT>, IntervalT>::type
+typename enable_if<is_dynamic_bounded<IntervalT>, IntervalT>::type
 construct(const typename IntervalT::domain_type& low,
           const typename IntervalT::domain_type& up,
           interval_bounds bounds = interval_bounds::right_open())
 {
-    return construct_interval<IntervalT>::apply(low, up, bounds);
+    return dynamic_intervals<IntervalT>::construct(low, up, bounds);
 }
 
-template<class IntervalT>
-typename boost::enable_if<is_discrete_interval<IntervalT>, IntervalT>::type
-construct(const typename IntervalT::domain_type& low,
-          const typename IntervalT::domain_type& up,
-          interval_bounds bounds = interval_bounds::right_open() )
-{
-    return construct_interval<IntervalT>::apply(low, up, bounds);
-}
 
+//- construct form bounded values ----------------------------------------------
 template<class IntervalT>
-typename boost::enable_if<is_continuous_interval<IntervalT>, IntervalT>::type
-construct(const typename IntervalT::domain_type& low,
-          const typename IntervalT::domain_type& up,
-          interval_bounds bounds = interval_bounds::right_open())
-{
-    return construct_interval<IntervalT>::apply(low, up, bounds);
-}
-
-//- construct(2) ---------------------------------------------------------------
-template<class IntervalT>
-typename boost::enable_if<is_discrete_interval<IntervalT>, IntervalT>::type
+typename enable_if<is_dynamic_bounded<IntervalT>, IntervalT>::type
 construct(const typename IntervalT::bounded_domain_type& low,
           const typename IntervalT::bounded_domain_type& up)
 {
-    return construct_interval<IntervalT>::bounded(low, up);
+    return dynamic_intervals<IntervalT>::construct_bounded(low, up);
 }
 
 template<class IntervalT>
-typename boost::enable_if<is_continuous_interval<IntervalT>, IntervalT>::type
-construct(const typename IntervalT::bounded_domain_type& low,
-          const typename IntervalT::bounded_domain_type& up)
+typename enable_if<is_interval<IntervalT>, IntervalT>::type
+span(const typename IntervalT::domain_type& lhs,
+     const typename IntervalT::domain_type& rhs)
 {
-    return construct_interval<IntervalT>::bounded(low, up);
+    if(IntervalT::domain_compare(lhs,rhs))
+        return construct(lhs, rhs);
+    else
+        return construct(rhs, lhs);
 }
 
 
@@ -151,82 +110,102 @@ construct(const typename IntervalT::bounded_domain_type& low,
 //= Selection
 //==============================================================================
 
-//- first ----------------------------------------------------------------------
 template<class IntervalT>
-inline typename 
-    boost::enable_if<is_static_rightopen<IntervalT>, 
-                     typename IntervalT::domain_type>::type
-first(const IntervalT& object)
+inline typename enable_if<is_interval<IntervalT>, 
+                          typename IntervalT::domain_type>::type
+lower(const IntervalT& object)
 { 
-    return object.lower();
+    return intervals<IntervalT>::lower(object);
 }
 
 template<class IntervalT>
-inline typename 
-    boost::enable_if<is_discrete_interval<IntervalT>, 
-                     typename IntervalT::domain_type>::type
+inline typename enable_if<is_interval<IntervalT>, 
+                          typename IntervalT::domain_type>::type
+upper(const IntervalT& object)
+{ 
+    return intervals<IntervalT>::upper(object);
+}
+
+
+//- first ----------------------------------------------------------------------
+template<class IntervalT>
+inline typename enable_if<is_static_rightopen<IntervalT>, 
+                          typename IntervalT::domain_type>::type
+first(const IntervalT& object)
+{ 
+    return lower(object);
+}
+
+template<class IntervalT>
+inline typename enable_if<is_discrete_interval<IntervalT>, 
+                          typename IntervalT::domain_type>::type
 first(const IntervalT& object)
 { 
     return is_left_closed(object.bounds()) ? 
-        object.lower() : succ(object.lower());
+                    lower(object) : 
+               succ(lower(object));
 }
 
 //- last -----------------------------------------------------------------------
 template<class IntervalT>
-inline typename 
-boost::enable_if<mpl::and_<is_static_rightopen<IntervalT>,
-                           is_discrete<typename IntervalT::domain_type> >,
-                 typename IntervalT::domain_type>::type
+inline typename enable_if<mpl::and_<is_static_rightopen<IntervalT>,
+                                    is_discrete<typename IntervalT::domain_type> >,
+                          typename IntervalT::domain_type>::type
 last(const IntervalT& object)
 { 
-    return pred(object.upper());
+    return pred(upper(object));
 }
 
 template<class IntervalT>
-inline typename 
-    boost::enable_if<is_discrete_interval<IntervalT>, 
-                     typename IntervalT::domain_type>::type
+inline typename enable_if<is_discrete_interval<IntervalT>, 
+                          typename IntervalT::domain_type>::type
 last(const IntervalT& object)
 { 
-    return is_right_closed(object.bounds()) ? object.upper() : pred(object.upper());
+    return is_right_closed(object.bounds()) ? 
+                    upper(object) : 
+               pred(upper(object));
 }
 
 
 //------------------------------------------------------------------------------
 template<class IntervalT>
-typename boost::enable_if<has_dynamic_bounds<IntervalT>, 
-                          typename IntervalT::bounded_domain_type>::type
+typename enable_if<is_dynamic_bounded<IntervalT>, 
+                   typename IntervalT::bounded_domain_type>::type
 bounded_lower(const IntervalT& object)
 { 
     return typename 
-        IntervalT::bounded_domain_type(object.lower(), object.bounds().left()); 
+        IntervalT::bounded_domain_type(lower(object), 
+                                       object.bounds().left()); 
 }
 
 template<class IntervalT>
-typename boost::enable_if<has_dynamic_bounds<IntervalT>, 
-                          typename IntervalT::bounded_domain_type>::type
+typename enable_if<is_dynamic_bounded<IntervalT>, 
+                   typename IntervalT::bounded_domain_type>::type
 reverse_bounded_lower(const IntervalT& object)
 { 
     return typename 
-        IntervalT::bounded_domain_type(object.lower(), object.bounds().reverse_left()); 
+        IntervalT::bounded_domain_type(lower(object), 
+                                       object.bounds().reverse_left()); 
 }
 
 template<class IntervalT>
-typename boost::enable_if<has_dynamic_bounds<IntervalT>, 
-                          typename IntervalT::bounded_domain_type>::type
+typename enable_if<is_dynamic_bounded<IntervalT>, 
+                   typename IntervalT::bounded_domain_type>::type
 bounded_upper(const IntervalT& object)
 { 
     return typename 
-        IntervalT::bounded_domain_type(object.upper(), object.bounds().right()); 
+        IntervalT::bounded_domain_type(upper(object), 
+                                       object.bounds().right()); 
 }
 
 template<class IntervalT>
-typename boost::enable_if<has_dynamic_bounds<IntervalT>, 
-                          typename IntervalT::bounded_domain_type>::type
+typename enable_if<is_dynamic_bounded<IntervalT>, 
+                   typename IntervalT::bounded_domain_type>::type
 reverse_bounded_upper(const IntervalT& object)
 { 
     return typename 
-        IntervalT::bounded_domain_type(object.upper(), object.bounds().reverse_right()); 
+        IntervalT::bounded_domain_type(upper(object), 
+                                       object.bounds().reverse_right()); 
 }
 
 
@@ -239,7 +218,8 @@ template<class IntervalT>
 typename boost::enable_if<is_asymmetric_interval<IntervalT>, bool>::type
 is_empty(const IntervalT& object)
 { 
-    return IntervalT::domain_less_equal(object.upper(), object.lower()); 
+    return IntervalT::domain_less_equal(upper(object), 
+                                        lower(object)); 
 }
 
 template<class IntervalT>
@@ -256,19 +236,19 @@ is_empty(const IntervalT& object)
     //CL return IntervalT::domain_less(last(object), first(object)); 
 
     if(object.bounds() == interval_bounds::closed())
-        return IntervalT::domain_less(object.upper(), object.lower()); 
+        return IntervalT::domain_less(upper(object), lower(object)); 
     else if(object.bounds() == interval_bounds::open())
-        return IntervalT::domain_less_equal(object.upper(), succ(object.lower())); 
+        return IntervalT::domain_less_equal(upper(object), succ(lower(object))); 
     else
-        return IntervalT::domain_less_equal(object.upper(), object.lower()); 
+        return IntervalT::domain_less_equal(upper(object), lower(object)); 
 }
 
 template<class IntervalT>
 typename boost::enable_if<is_continuous_interval<IntervalT>, bool>::type
 is_empty(const IntervalT& object)
 {
-    return     IntervalT::domain_less(object.upper(), object.lower())
-        || (   IntervalT::domain_equal(object.upper(), object.lower())
+    return     IntervalT::domain_less(upper(object), lower(object))
+        || (   IntervalT::domain_equal(upper(object), lower(object))
             && object.bounds() != interval_bounds::closed()             );
 }
 
@@ -580,7 +560,7 @@ cardinality(const IntervalT& object)
     if(itl::is_empty(object))
         return itl::neutron<SizeT>::value();
     else if(   object.bounds() == interval_bounds::closed() 
-            && IntervalT::domain_equal(object.lower(), object.upper()))
+            && IntervalT::domain_equal(lower(object), upper(object)))
         return itl::unon<SizeT>::value();
     else 
         return infinity<SizeT>::value();
@@ -632,7 +612,7 @@ typename boost::enable_if<is_continuous_interval<IntervalT>,
     typename IntervalT::difference_type>::type
 length(const IntervalT& object)
 {
-    return object.upper() - object.lower();
+    return upper(object) - lower(object);
 }
 
 template<class IntervalT>
@@ -649,7 +629,7 @@ typename boost::enable_if<is_continuous_asymmetric<IntervalT>,
     typename IntervalT::difference_type>::type
 length(const IntervalT& object)
 {
-    return object.upper() - object.lower();
+    return upper(object) - lower(object);
 }
 
 template<class IntervalT>
@@ -701,7 +681,7 @@ hull(IntervalT left, const IntervalT& right)
         return right;
 
     //JODO return  construct<IntervalT,std::less>
-    return  construct_interval<IntervalT>::bounded
+    return  dynamic_intervals<IntervalT>::construct_bounded
             (
                 lower_min(left, right), 
                 upper_max(left, right)
@@ -744,7 +724,7 @@ left_subtract(IntervalT right, const IntervalT& left_minuend)
 {
     if(exclusive_less(left_minuend, right))
         return right; 
-    return  construct_interval<IntervalT>::bounded
+    return  dynamic_intervals<IntervalT>::construct_bounded
             ( reverse_bounded_upper(left_minuend), bounded_upper(right) );
 }
 
@@ -784,7 +764,7 @@ right_subtract(IntervalT left, const IntervalT& right_minuend)
     if(exclusive_less(left, right_minuend))
         return left; 
     //JODO return construct<IntervalT,std::less>(left.lower(), right_minuend.lower(),
-    return  construct_interval<IntervalT>::bounded
+    return  dynamic_intervals<IntervalT>::construct_bounded
             ( bounded_lower(left), reverse_bounded_lower(right_minuend) );
 }
 
@@ -820,7 +800,7 @@ operator & (IntervalT left, const IntervalT& right)
         return IntervalT(); //JODO return neutron<IntervalT>::value; neutron for new interval_types.
     else 
         //JODO return  construct<IntervalT,std::less>
-        return  construct_interval<IntervalT>::bounded
+        return  dynamic_intervals<IntervalT>::construct_bounded
                 (
                     lower_max(left, right), 
                     upper_min(left, right) 

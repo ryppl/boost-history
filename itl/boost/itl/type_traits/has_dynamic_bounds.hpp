@@ -19,6 +19,14 @@ template <class Type> struct has_dynamic_bounds
     BOOST_STATIC_CONSTANT(bool, value = false);
 };
 
+template <class Type> struct is_dynamic_bounded //JODO rearrange for all those predicates.
+{
+    typedef is_dynamic_bounded<Type> type;
+    BOOST_STATIC_CONSTANT(bool, 
+        value = (mpl::and_<is_interval<Type>, has_dynamic_bounds<Type> >::value)
+        ); 
+};
+
 }} // namespace boost itl
 
 #endif

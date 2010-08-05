@@ -112,7 +112,7 @@ namespace boost{namespace itl
         /** Function template <tt>contained_in</tt> implements the subset relation. 
         <tt>contained_in(sub, super)</tt> is true if <tt>sub</tt> is contained in <tt>super</tt> */
         template<class SetType>
-        bool contained_in(const SetType& sub, const SetType& super)
+        bool within(const SetType& sub, const SetType& super)
         {
             if(&super == &sub)                   return true;
             if(ITL_FUN_REN(empty, is_empty, sub))               return true;

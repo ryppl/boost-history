@@ -13,7 +13,7 @@ Auxiliary functions to reduce redundancies in test case code.
 #define BOOST_ITL_TEST_FUNCTIONS_H_JOFA_091003
 
 #include <boost/itl/detail/notate.hpp>
-#include <boost/itl/type_traits/interval_type_of.hpp>
+#include <boost/itl/type_traits/interval_type_default.hpp>
 #include <boost/itl/discrete_interval.hpp>
 
 #include <boost/itl/type_traits/neutron.hpp>

@@ -80,6 +80,7 @@ struct map_val
     typedef typename ItvMapT::codomain_type     codomain_type;
     typedef typename ItvMapT::interval_type     interval_type;
     typedef typename ItvMapT::value_type        value_type;
+    typedef typename ItvMapT::segment_type      segment_type;
     typedef typename ItvMapT::domain_mapping_type domain_mapping_type;
     typedef std::pair<domain_type, codomain_type> std_pair_type; 
 
@@ -90,10 +91,10 @@ struct map_val
                              //CL test_value<domain_type>::make(upper), static_cast<bound_type>(bounds));
     }
 
-    static value_type val_pair(int lower, int upper, int val, int bounds = 2)
+    static segment_type val_pair(int lower, int upper, int val, int bounds = 2)
     {
-        return value_type( interval_(lower, upper, static_cast<bound_type>(bounds)), 
-                           test_value<codomain_type>::make(val) );
+        return segment_type( interval_(lower, upper, static_cast<bound_type>(bounds)), 
+                             test_value<codomain_type>::make(val) );
     }
 
     static domain_mapping_type map_pair(int key, int val)

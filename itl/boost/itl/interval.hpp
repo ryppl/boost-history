@@ -1138,6 +1138,23 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 }
 
 
+
+//------------------------------------------------------------------------------
+//- dynamic_intervals: Adapt interval class to interval concept
+//------------------------------------------------------------------------------
+template<class DomainT, ITL_COMPARE Compare>
+struct dynamic_intervals< itl::interval<DomainT,Compare> >
+{
+    typedef boost::itl::interval<DomainT,Compare> interval_type;
+
+    static interval_type apply(const DomainT& lo, const DomainT& up, interval_bounds bounds)
+    {
+        return interval_type(lo, up, bounds.bits());
+    }
+};
+
+
+
 //==============================================================================
 //= Type traits
 //==============================================================================

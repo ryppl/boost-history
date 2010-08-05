@@ -57,7 +57,7 @@ struct is_codomain_type_equal
     typedef is_codomain_type_equal<LeftT, RightT> type;
     BOOST_STATIC_CONSTANT(bool, value =
         (mpl::and_<is_domain_compare_equal<LeftT, RightT>, 
-                  is_codomain_equal<LeftT, RightT> >::value)
+                   is_codomain_equal<LeftT, RightT> >::value)
         );
 };
 
@@ -68,9 +68,9 @@ struct is_concept_compatible
 {
     typedef is_concept_compatible<IsConcept, LeftT, RightT> type;
     BOOST_STATIC_CONSTANT(bool, value =
-        (mpl::and_
-        <
-            mpl::and_<IsConcept<LeftT>, IsConcept<RightT> >
+        (mpl::and_<
+            IsConcept<LeftT>
+          , IsConcept<RightT>
           , is_codomain_type_equal<LeftT, RightT>
         >::value)
         );
@@ -83,9 +83,9 @@ struct is_concept_combinable
 {
     typedef is_concept_combinable<LeftConcept, RightConcept, LeftT, RightT> type;
     BOOST_STATIC_CONSTANT(bool, value =
-        (mpl::and_
-        <
-            mpl::and_<LeftConcept<LeftT>, RightConcept<RightT> >
+        (mpl::and_<
+            LeftConcept<LeftT>
+          , RightConcept<RightT>
           , is_domain_compare_equal<LeftT, RightT>
         >::value)
         );
@@ -96,8 +96,7 @@ struct is_intra_combinable
 {
     typedef is_intra_combinable<LeftT, RightT> type;
     BOOST_STATIC_CONSTANT(bool, value =
-        (mpl::or_
-        <
+        (mpl::or_<
             is_concept_compatible<is_interval_set, LeftT, RightT>
           , is_concept_compatible<is_interval_map, LeftT, RightT>
         >::value)
@@ -113,8 +112,7 @@ struct is_cross_combinable
 {
     typedef is_cross_combinable<LeftT, RightT> type;
     BOOST_STATIC_CONSTANT(bool, value =
-        (mpl::or_
-        <
+        (mpl::or_<
             is_concept_combinable<is_interval_set, is_interval_map, LeftT, RightT>
           , is_concept_combinable<is_interval_map, is_interval_set, LeftT, RightT>
         >::value)
@@ -127,7 +125,7 @@ struct is_inter_combinable
     typedef is_inter_combinable<LeftT, RightT> type;
     BOOST_STATIC_CONSTANT(bool, value =
         (mpl::or_<is_intra_combinable<LeftT,RightT>, 
-                 is_cross_combinable<LeftT,RightT> >::value)
+                  is_cross_combinable<LeftT,RightT> >::value)
         );
 };
 
@@ -215,8 +213,7 @@ struct is_cross_derivative
 {
     typedef is_cross_derivative<Type, AssociateT> type;
     BOOST_STATIC_CONSTANT(bool, value =
-        (mpl::and_
-        <
+        (mpl::and_<
             is_interval_map<Type>
           , is_interval_set_derivative<Type, AssociateT>
         >::value)
@@ -228,8 +225,7 @@ struct is_inter_derivative
 {
     typedef is_inter_derivative<Type, AssociateT> type;
     BOOST_STATIC_CONSTANT(bool, value = 
-        (mpl::or_
-        <
+        (mpl::or_<
             is_intra_derivative<Type, AssociateT> 
           , is_cross_derivative<Type, AssociateT>
         >::value)
@@ -265,7 +261,7 @@ struct is_interval_map_right_intra_combinable
         (mpl::and_
         <
             is_interval_map<GuideT>
-          ,    mpl::or_
+          , mpl::or_
             <
                 is_interval_map_derivative<GuideT, CompanionT> 
               , is_concept_compatible<is_interval_map, GuideT, CompanionT>
@@ -282,7 +278,7 @@ struct is_interval_map_right_cross_combinable
         (mpl::and_
         <
             is_interval_map<GuideT>
-          ,    mpl::or_
+          , mpl::or_
             <
                 is_cross_derivative<GuideT, CompanionT> 
               , is_concept_combinable<is_interval_map, is_interval_set, GuideT, CompanionT>
@@ -296,8 +292,7 @@ struct is_interval_map_right_inter_combinable
 {
     typedef is_interval_map_right_inter_combinable<GuideT, CompanionT> type;
     BOOST_STATIC_CONSTANT(bool, value = 
-        (mpl::or_
-        <
+        (mpl::or_<
             is_interval_map_right_intra_combinable<GuideT, CompanionT> 
           , is_interval_map_right_cross_combinable<GuideT, CompanionT> 
         >::value)
@@ -355,7 +350,7 @@ struct combines_right_to_interval_container
     typedef combines_right_to_interval_container<GuideT, IntervalContainerT> type;
     BOOST_STATIC_CONSTANT(bool, value = 
         (mpl::or_<combines_right_to_interval_set<GuideT, IntervalContainerT>,
-                 combines_right_to_interval_map<GuideT, IntervalContainerT> >::value)
+                  combines_right_to_interval_map<GuideT, IntervalContainerT> >::value)
         );
 };
 

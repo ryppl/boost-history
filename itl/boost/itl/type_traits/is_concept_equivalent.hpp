@@ -22,6 +22,15 @@ namespace boost{ namespace itl
             );
     };
 
+    template<template<class>class IsConcept, class LeftT, class RightT>
+    struct has_same_concept
+    {
+        typedef has_same_concept<IsConcept, LeftT, RightT> type;
+        BOOST_STATIC_CONSTANT(bool, value =
+            (mpl::and_<IsConcept<LeftT>, is_concept_equivalent<IsConcept, LeftT, RightT> >::value)
+            );
+    };
+
 }} // namespace boost itl
 
 #endif

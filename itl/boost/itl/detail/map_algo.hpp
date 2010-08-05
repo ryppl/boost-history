@@ -25,7 +25,7 @@ namespace Map
 {
 
 template<class MapType>
-bool contained_in(const MapType& sub, const MapType& super)
+bool within(const MapType& sub, const MapType& super)
 {
     if(&super == &sub)                   return true;
     if(ITL_FUN_REN(empty, is_empty, sub))               return true;
@@ -53,7 +53,7 @@ bool contained_in(const MapType& sub, const MapType& super)
 }
 
 template<class MapType>
-bool contained_in(const typename MapType::set_type& sub, const MapType& super)
+bool within(const typename MapType::set_type& sub, const MapType& super)
 {
     typedef typename MapType::set_type SetType;
 

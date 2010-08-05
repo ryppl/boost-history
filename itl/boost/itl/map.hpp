@@ -216,11 +216,11 @@ public:
 
     /** Is <tt>*this</tt> contained in <tt>super</tt>? */
     bool contained_in(const map& super)const 
-    { return Map::contained_in(*this, super); }
+    { return Map::within(*this, super); }
 
     /** Does <tt>*this</tt> contain <tt>sub</tt>? */
     bool contains(const map& sub)const 
-    { return Map::contained_in(sub, *this); }
+    { return Map::within(sub, *this); }
 
     //==========================================================================
     //= Size
@@ -253,7 +253,11 @@ public:
         value is added to the data value already found in the map. */
     map& add(const value_type& value_pair) 
     { 
-        return _add<codomain_combine>(value_pair); 
+        typedef invertible_maps
+            <type, codomain_combine, absorbs_neutrons<type>::value,
+             adds_inversely<type,codomain_combine>::value > invertible_map_type;  
+        return invertible_map_type::add(*this, value_pair); 
+        //CL? return _add<codomain_combine>(value_pair); 
     }
 
     /** \c add add \c value_pair into the map using \c prior as a hint to
@@ -422,6 +426,123 @@ private:
 
 
 //==============================================================================
+//=+ invertible_maps
+//==============================================================================
+template<class MapT, class Combiner, 
+         bool absorbs_neutrons, bool creates_inverse>
+struct invertible_maps
+{
+    static MapT& add(MapT& object, const typename MapT::value_type& val);
+};
+
+template <class MapT, class Combiner>
+struct invertible_maps<MapT, Combiner, true, true > // absorbs_neutrons, creates_inverse
+{
+    typedef MapT map_type;
+    typedef typename map_type::value_type value_type;
+    typedef typename map_type::iterator iterator;
+
+    static map_type& add(map_type& object, const value_type& val)
+    {
+        if(val.second == Combiner::neutron())
+            return object;
+
+        std::pair<iterator, bool> 
+            insertion = object.insert(value_type(val.first, version<Combiner>()(val.second)));
+
+        if( insertion.second )
+            return object;
+        else
+        {
+            iterator it = insertion.first;
+            Combiner()((*it).second, val.second);
+
+            if((*it).second == Combiner::neutron())
+                object.erase(it);
+
+            return object;
+        }
+
+    }
+};
+
+template <class MapT, class Combiner>
+struct invertible_maps<MapT, Combiner, true, false > // absorbs_neutrons, !creates_inverse
+{
+    typedef MapT map_type;
+    typedef typename map_type::value_type value_type;
+    typedef typename map_type::iterator iterator;
+
+    static map_type& add(map_type& object, const value_type& val)
+    {
+        if(val.second == Combiner::neutron())
+            return object;
+
+        std::pair<iterator, bool> insertion = object.insert(val);
+
+        if( insertion.second )
+            return object;
+        else
+        {
+            iterator it = insertion.first;
+            Combiner()((*it).second, val.second);
+
+            if((*it).second == Combiner::neutron())
+                object.erase(it);
+
+            return object;
+        }
+    }
+};
+
+template <class MapT, class Combiner>
+struct invertible_maps<MapT, Combiner, false, true> // !absorbs_neutrons, creates_inverse
+{
+    typedef MapT map_type;
+    typedef typename map_type::value_type value_type;
+    typedef typename map_type::iterator iterator;
+
+    static map_type& add(map_type& object, const value_type& val)
+    {
+        std::pair<iterator, bool> 
+            insertion = object.insert(value_type(val.first, version<Combiner>()(val.second)));
+
+        if( insertion.second )
+            return object;
+        else
+        {
+            iterator it = insertion.first;
+            Combiner()((*it).second, val.second);
+            return object;
+        }
+    }
+};
+
+template <class MapT, class Combiner>
+struct invertible_maps<MapT, Combiner, false, false> // !absorbs_neutrons, !creates_inverse
+{
+    typedef MapT map_type;
+    typedef typename map_type::value_type value_type;
+    typedef typename map_type::iterator iterator;
+
+    static map_type& add(map_type& object, const value_type& val)
+    {
+        std::pair<iterator, bool> insertion = object.insert(val);
+
+        if( insertion.second )
+            return object;
+        else
+        {
+            iterator it = insertion.first;
+            Combiner()((*it).second, val.second);
+            return object;
+        }
+    }
+};
+
+
+
+//==============================================================================
 //= Addition
 //==============================================================================
 
@@ -430,12 +551,11 @@ template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL
 map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::_add(const value_type& val)
 {
-    using namespace type_traits;
     if(Traits::absorbs_neutrons && val.second == Combiner::neutron())
         return *this;
 
     std::pair<iterator, bool> insertion;
-    if(ice_and<Traits::is_total, has_inverse<codomain_type>::value, is_negative<Combiner>::value>::value)
+    if(mpl::and_<is_total<type>, has_inverse<codomain_type>, is_negative<Combiner> >::value)
         insertion = insert(value_type(val.first, version<Combiner>()(val.second)));
     else // Existential case
         insertion = insert(val);
@@ -507,7 +627,7 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::size_type
 {
     if(Traits::absorbs_neutrons && value_pair.second == codomain_combine::neutron())
         return 0; // neutrons are never contained 'substantially' 
-                  // only 'virually'.
+                  // only 'virtually'.
 
     iterator it_ = find(value_pair.first);
     if(it_ != end() && value_pair.second == it_->second)
@@ -738,6 +858,58 @@ bool is_empty(const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Al
 {
     //return object.empty();
     return object.begin() == object.end();
+}
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+inline bool
+contains(const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& super,
+         const DomainT&                                                          key)
+{ 
+    return !(super.find(key) == super.end());
+}
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+inline bool
+contains(    const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&               super,
+    const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::element_type& key_value_pair)
+{ 
+    const_iterator found_ = super.find(key_value_pair.first);
+    return found_ != super.end() && found_->second == key_value_pair.second;
+}
+
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+inline bool
+contains(const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& super,
+         const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& sub)
+{ 
+    return Map::within(sub, super); 
+}
+
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+inline bool
+within(const DomainT&                                                          key,
+       const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& super)
+{ 
+    return !(super.find(key) == super.end());
+}
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+inline bool
+within(const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::element_type& key_value_pair,
+                const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&               super         )
+{ 
+    const_iterator found_ = super.find(key_value_pair.first);
+    return found_ != super.end() && found_->second == key_value_pair.second;
+}
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+inline bool
+within(const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& sub,
+       const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& super)
+{ 
+    return Map::within(sub, super); 
 }
 
 
@@ -1186,6 +1358,16 @@ struct is_total<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
 { 
     typedef is_total type;
     BOOST_STATIC_CONSTANT(int, value = Traits::is_total); 
+};
+
+template<class MapT, class Combiner>
+struct adds_inversely
+{
+    typedef adds_inversely type;
+    BOOST_STATIC_CONSTANT(bool, 
+        value = (mpl::and_< has_inverse<typename MapT::codomain_type>
+                          , is_negative<Combiner> 
+                          >::value)); 
 };
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>

@@ -10,7 +10,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #define __interval_base_set_h_JOFA_990223__
 
 #include <limits>
-#include <boost/itl/type_traits/interval_type_of.hpp>
+#include <boost/itl/type_traits/interval_type_default.hpp>
 #include <boost/itl/detail/interval_set_algo.hpp>
 #include <boost/itl/set.hpp>
 #include <boost/itl/interval.hpp>
@@ -216,7 +216,7 @@ ITL_END_COMMON_MEMBER_FUNCTIONS:
     >
     bool contained_in(const IntervalSet<DomainT,Compare,Interval,Alloc>& super)const
     {
-        return Interval_Set::is_contained_in(*this, super);
+        return Interval_Set::within(*this, super);
     }
 
     //==========================================================================

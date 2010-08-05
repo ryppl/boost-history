@@ -106,7 +106,7 @@ namespace boost{namespace itl
             is contained in <tt>super</tt> */
         bool operator()(const Type& sub, const Type& super)const
         {
-            return sub.contained_in(super);
+            return contains(super, sub);
         }
     };
 
@@ -123,7 +123,7 @@ namespace boost{namespace itl
             <tt>sub</tt> */
         bool operator()(const Type& super, const Type& sub)const
         {
-            return super.contains(sub);
+            return contains(super, sub);
         }
     };
 

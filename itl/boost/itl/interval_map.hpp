@@ -827,6 +827,7 @@ struct is_total<itl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Secti
     BOOST_STATIC_CONSTANT(bool, value = (Traits::is_total)); 
 };
 
+
 //-----------------------------------------------------------------------------
 // type representation
 //-----------------------------------------------------------------------------

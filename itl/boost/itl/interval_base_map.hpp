@@ -14,10 +14,12 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/not.hpp>
+
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/map.hpp>
 #include <boost/itl/interval_base_set.hpp>
+#include <boost/itl/detail/interval_map_algo.hpp>
 
 
 #define const_FOR_IMPLMAP(iter) for(typename ImplMapT::const_iterator iter=_map.begin(); (iter)!=_map.end(); (iter)++)
@@ -231,34 +233,20 @@ ITL_END_COMMON_MEMBER_FUNCTIONS:
     /** Does the map contain the domain element \c key? */
     bool contains(const domain_type& key)const
     { 
-        return Traits::is_total || _map.find(interval_type(key)) != _map.end(); 
+        return Interval_Map::contains(*this, key);
     }
 
     /** Does the map contain the interval \c sub_interval ? */
     bool contains(const interval_type& sub_interval)const
     {
-        if(Traits::is_total || itl::is_empty(sub_interval)) 
-            return true;
-
-        std::pair<const_iterator, const_iterator> exterior = equal_range(sub_interval);
-        if(exterior.first == exterior.second)
-            return false;
-
-        const_iterator last_overlap = prior(exterior.second);
-
-        return 
-            itl::contains(hull(exterior.first->first, last_overlap->first), sub_interval)
-        &&    Interval_Set::is_dense(*this, exterior.first, last_overlap);
+        return Interval_Map::contains(*this, sub_interval);
     }
 
     /** Does the map contain the key key set \c sub_set ? */
     template<class SetType>
     bool contains(const interval_base_set<SetType,DomainT,Compare,Interval,Alloc>& sub_set)const
-    { 
-        if(Traits::is_total || sub_set.empty()) 
-            return true;
-
-        return Interval_Set::is_contained_in(sub_set, *this); 
+    {
+        return Interval_Set::within(sub_set, *this); 
     }
 
     /** Does the map contain the <tt>key_value_pair = (key,value)</tt>? */
@@ -285,7 +273,7 @@ ITL_END_COMMON_MEMBER_FUNCTIONS:
     bool contained_in(const interval_base_map<MapType,DomainT,CodomainT,Traits,
                                               Compare,Combine,Section,Interval,Alloc>& super)const
     { 
-        return Interval_Set::is_contained_in(*this, super); 
+        return Interval_Set::within(*this, super); 
     }
 
     //==========================================================================
@@ -339,8 +327,7 @@ ITL_END_COMMON_MEMBER_FUNCTIONS:
     /** Find the interval value pair, that contains \c key */
     const_iterator find(const domain_type& key)const
     { 
-        const_iterator it_ = _map.find(interval_type(key)); 
-        return it_; 
+        return _map.find(interval_type(key)); 
     }
 
     /** Total select function. */
@@ -348,7 +335,7 @@ ITL_END_COMMON_MEMBER_FUNCTIONS:
     {
         const_iterator it_ = _map.find(interval_type(key)); 
         return it_==end() ? neutron<codomain_type>::value()
-                         : it_->second;
+                          : it_->second;
     }
 
 
@@ -408,8 +395,7 @@ public:
     /** Subtraction of an interval value pair from the map. */
     SubType& subtract(const segment_type& interval_value_pair)
     {
-        using namespace type_traits;
-        if(ice_and<Traits::is_total, has_inverse<codomain_type>::value>::value)
+        if(mpl::and_<is_total<type>, has_inverse<codomain_type> >::value)
             that()->template add_<inverse_codomain_combine>(interval_value_pair); 
         else 
             that()->template subtract_<inverse_codomain_combine>(interval_value_pair); 
@@ -789,8 +775,7 @@ protected:
     template <class Combiner>
     std::pair<iterator,bool> map_insert(const interval_type& inter_val, const codomain_type& co_val)
     {
-        using namespace type_traits;
-        if(ice_and<Traits::is_total, has_inverse<codomain_type>::value, is_negative<Combiner>::value>::value)
+        if(mpl::and_<is_total<type>, has_inverse<codomain_type>, is_negative<Combiner> >::value)
             return this->_map.insert(value_type(inter_val, version<Combiner>()(co_val)));
         else
             return this->_map.insert(value_type(inter_val, co_val));
@@ -864,23 +849,28 @@ bool interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
     ::contains(const typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
                ::segment_type& sub_segment)const
 {
-    interval_type sub_interval = sub_segment.first;
-    if(itl::is_empty(sub_interval)) 
-        return true;
-
-    std::pair<const_iterator, const_iterator> exterior = equal_range(sub_interval);
-    if(exterior.first == exterior.second)
-        return false;
-
-    const_iterator last_overlap = prior(exterior.second);
-
-    if(!(sub_segment.second == exterior.first->second) )
-        return false;
-
-    return
-          itl::contains(hull(exterior.first->first, last_overlap->first), sub_interval)
-      &&  Interval_Set::is_joinable(*this, exterior.first, last_overlap);
+    return Interval_Map::contains(*this, sub_segment);
 }
+
+//CL
+//{
+//    interval_type sub_interval = sub_segment.first;
+//    if(itl::is_empty(sub_interval)) 
+//        return true;
+//
+//    std::pair<const_iterator, const_iterator> exterior = equal_range(sub_interval);
+//    if(exterior.first == exterior.second)
+//        return false;
+//
+//    const_iterator last_overlap = prior(exterior.second);
+//
+//    if(!(sub_segment.second == exterior.first->second) )
+//        return false;
+//
+//    return
+//          itl::contains(hull(exterior.first->first, last_overlap->first), sub_interval)
+//      &&  Interval_Map::is_joinable(*this, exterior.first, last_overlap);
+//}
 
 
 
@@ -1608,6 +1598,30 @@ struct is_interval_container<itl::interval_base_map<SubType,DomainT,CodomainT,Tr
     typedef is_interval_container<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
+
+template 
+<
+    class SubType,
+    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
+>
+struct absorbs_neutrons<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
+{
+    typedef absorbs_neutrons<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+    BOOST_STATIC_CONSTANT(bool, value = (Traits::absorbs_neutrons)); 
+};
+
+template 
+<
+    class SubType,
+    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
+>
+struct is_total<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
+{
+    typedef is_total<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+    BOOST_STATIC_CONSTANT(bool, value = (Traits::is_total)); 
+};
+
+
 
 #ifdef BOOST_MSVC
 #pragma warning(pop)

@@ -369,7 +369,7 @@ namespace boost{namespace itl
     // neutral element iff it yields the inverse element if it is applied to the 
     // neutron element:
     // 0 - x = -x
-    // For a functor that wraps the inpleace of op-assign verision this is 
+    // For a functor that wraps the inplace of op-assign version this is 
     // equivalent to
     //
     // T x = ..., y;

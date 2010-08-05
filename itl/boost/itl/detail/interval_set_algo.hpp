@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Copyright (c) 2008-2009: Joachim Faulhaber
+Copyright (c) 2008-2010: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
@@ -8,10 +8,12 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifndef BOOST_ITL_INTERVAL_SET_ALGO_HPP_JOFA_081005
 #define BOOST_ITL_INTERVAL_SET_ALGO_HPP_JOFA_081005
 
-#include <boost/itl/type_traits/is_map.hpp>
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/relation_state.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/type_traits/is_map.hpp>
+#include <boost/itl/type_traits/is_total.hpp>
+#include <boost/itl/type_traits/is_combinable.hpp>
 #include <boost/itl/interval.hpp>
 #include <boost/itl/detail/element_comparer.hpp>
 #include <boost/itl/detail/interval_subset_comparer.hpp>
@@ -124,7 +126,20 @@ bool is_inclusion_equal(const LeftT& left, const RightT& right)
 }
 
 template<class LeftT, class RightT>
-bool is_contained_in(const LeftT& sub, const RightT& super)
+typename enable_if<mpl::and_<is_concept_combinable<is_interval_set, is_interval_map, LeftT, RightT>, 
+                             is_total<RightT> >,
+                   bool>::type
+within(const LeftT&, const RightT&)
+{
+    cout << "within\n";
+    return true;
+}
+
+template<class LeftT, class RightT>
+typename enable_if<mpl::not_<mpl::and_<is_concept_combinable<is_interval_set, is_interval_map, LeftT, RightT>, 
+                                       is_total<RightT> > >,
+                   bool>::type
+within(const LeftT& sub, const RightT& super)
 {
     int result =
         subset_compare
@@ -137,7 +152,20 @@ bool is_contained_in(const LeftT& sub, const RightT& super)
 }
 
 template<class LeftT, class RightT>
-bool contains(const LeftT& super, const RightT& sub)
+typename enable_if<mpl::and_<is_concept_combinable<is_interval_map, is_interval_set, LeftT, RightT>, 
+                             is_total<LeftT> >,
+                   bool>::type
+contains(const LeftT&, const RightT&)
+{
+    cout << "contains\n";
+    return true;
+}
+
+template<class LeftT, class RightT>
+typename enable_if<mpl::not_<mpl::and_<is_concept_combinable<is_interval_map, is_interval_set, LeftT, RightT>, 
+                                       is_total<LeftT> > >,
+                   bool>::type
+contains(const LeftT& super, const RightT& sub)
 {
     int result =
         subset_compare
@@ -149,10 +177,31 @@ bool contains(const LeftT& super, const RightT& sub)
     return result == inclusion::superset || result == inclusion::equal;
 }
 
-#ifdef BOOST_MSVC 
-#pragma warning(push)
-#pragma warning(disable:4127) // conditional expression is constant
-#endif                        
+template<class IntervalContainerT>
+bool contains(const IntervalContainerT& super, 
+              const typename IntervalContainerT::element_type& element)
+{
+    return super.contains(element);
+}
+
+template<class IntervalContainerT>
+bool contains(const IntervalContainerT& container, 
+              const typename IntervalContainerT::segment_type& sub_interval)
+{
+    typedef typename IntervalContainerT::const_iterator const_iterator;
+    if(itl::is_empty(sub_interval)) 
+        return true;
+
+    std::pair<const_iterator, const_iterator> exterior = container.equal_range(sub_interval);
+    if(exterior.first == exterior.second)
+        return false;
+
+    const_iterator last_overlap = prior(exterior.second);
+
+    return
+          itl::contains(hull(*(exterior.first), *last_overlap), sub_interval)
+      &&  Interval_Set::is_joinable(container, exterior.first, last_overlap);
+}
 
 template<class IntervalContainerT>
 bool is_joinable(const IntervalContainerT& container, 
@@ -165,31 +214,13 @@ bool is_joinable(const IntervalContainerT& container,
     typename IntervalContainerT::const_iterator it_ = first, next_ = first;
     ++next_;
 
-    if(is_interval_map<IntervalContainerT>::value)
-    {
-        const typename IntervalContainerT::codomain_type& co_value 
-            = IntervalContainerT::codomain_value(first);
-        while(it_ != past)
-        {
-            if(IntervalContainerT::codomain_value(next_) != co_value)
-                return false;
-            if(!itl::touches(IntervalContainerT::key_value(it_++),
-                             IntervalContainerT::key_value(next_++)))
-                return false;
-        }
-    }
-    else
-        while(next_ != container.end() && it_ != past)
-            if(!itl::touches(IntervalContainerT::key_value(it_++),
-                             IntervalContainerT::key_value(next_++)))
-                return false;
+    while(next_ != container.end() && it_ != past)
+        if(!itl::touches(IntervalContainerT::key_value(it_++),
+                         IntervalContainerT::key_value(next_++)))
+            return false;
 
     return true;
 }
-
-#ifdef BOOST_MSVC
-#pragma warning(pop)
-#endif
 
 
 template<class IntervalContainerT>

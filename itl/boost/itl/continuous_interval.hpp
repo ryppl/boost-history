@@ -93,6 +93,34 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 }
 
 
+//------------------------------------------------------------------------------
+//- dynamic_intervals: Adapt interval class to interval concept
+//------------------------------------------------------------------------------
+template<class DomainT, ITL_COMPARE Compare>
+struct dynamic_intervals<boost::itl::continuous_interval<DomainT,Compare> >
+{
+    typedef boost::itl::continuous_interval<DomainT,Compare> interval_type;
+
+    static interval_type construct(const DomainT& lo, const DomainT& up, interval_bounds bounds)
+    {
+        return itl::continuous_interval<DomainT,Compare>(lo, up, bounds,
+            static_cast<itl::continuous_interval<DomainT,Compare>* >(0) );
+    }
+
+    static interval_type construct_bounded(const bounded_value<DomainT,Compare>& lo, 
+                                           const bounded_value<DomainT,Compare>& up)
+    {
+        return  itl::continuous_interval<DomainT,Compare>
+                (
+                    lo.value(), up.value(),
+                    lo.bound().left() | up.bound().right(),
+                    static_cast<itl::continuous_interval<DomainT,Compare>* >(0) 
+                );
+    }
+};
+
+
+
 //==============================================================================
 //= Type traits
 //==============================================================================

@@ -23,7 +23,7 @@ by setting defines in this file.
 // will be used as default for all interval containers. 
 // ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS should be defined in the application
 // before other includes from the ITL
-//#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS //JODO comment this out for the final release
+#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS //JODO comment this out for the final release
 // If ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS is NOT defined, ITL uses intervals
 // with dynamic borders as default.
 
@@ -145,7 +145,7 @@ by setting defines in this file.
 //CL #define ITL_INTERVAL_DEFAULT itl::continuous_interval
 
 #ifdef ITL_NEW_INTERVAL_IMPL
-#   define ITL_INTERVAL_DEFAULT boost::itl::interval_type_of
+#   define ITL_INTERVAL_DEFAULT boost::itl::interval_type_default
 #else
 #   define ITL_INTERVAL_DEFAULT boost::itl::interval
 #endif
