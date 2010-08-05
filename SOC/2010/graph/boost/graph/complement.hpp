@@ -19,11 +19,19 @@
 
 namespace boost {
   namespace detail {
-    template <class Graph, class MutableGraph,
+
+    template <typename EdgeDescriptor, typename Graph>
+    struct default_edge_visitor {
+      void operator()(const EdgeDescriptor &, Graph &) { }
+    };
+
+    template <typename Graph, typename MutableGraph,
               typename CopyVertex,
-              typename Orig2OutVertexIndexMap>
+              typename Orig2OutVertexIndexMap,
+              typename NewEdgeVisitor>
     void graph_complement_impl(const Graph& g_in, MutableGraph& g_out,
                                CopyVertex copy_vertex, Orig2OutVertexIndexMap orig2out,
+                               NewEdgeVisitor edge_visitor,
                                bool reflexive)
     {
       typedef typename graph_traits<Graph>::vertex_descriptor InVertex;
@@ -49,6 +57,7 @@ namespace boost {
                                                    get(orig2out, *vi),
                                                    g_out);
             assert(inserted);
+            edge_visitor(new_e, g_out);
           }
         }
       }
@@ -59,6 +68,7 @@ namespace boost {
   void graph_complement(const VertexListGraph& g_in, MutableGraph& g_out, bool reflexive)
   {
     typedef typename graph_traits<MutableGraph>::vertex_descriptor vertex_t;
+    typedef typename graph_traits<MutableGraph>::edge_descriptor edge_t;
     std::vector<vertex_t> orig2out(num_vertices(g_in));
 
     detail::graph_complement_impl
@@ -66,15 +76,17 @@ namespace boost {
        detail::make_vertex_copier(g_in, g_out),
        make_iterator_property_map(orig2out.begin(),
                                   get(vertex_index, g_in), orig2out[0]),
+       detail::default_edge_visitor<edge_t, MutableGraph>(),
        reflexive
        );
   }
 
   template <typename VertexListGraph, typename MutableGraph,
-    class P, class T, class R>
+            typename P, typename T, typename R>
   void graph_complement(const VertexListGraph& g_in, MutableGraph& g_out,
                         const bgl_named_params<P, T, R>& params, bool reflexive)
   {
+    typedef typename graph_traits<MutableGraph>::edge_descriptor edge_t;
     typename std::vector<T>::size_type n;
     n = is_default_param(get_param(params, orig_to_copy_t()))
       ? num_vertices(g_in) : 1;
@@ -87,6 +99,8 @@ namespace boost {
                                     g_in, g_out),
        make_iterator_property_map(orig2out.begin(),
                                   get(vertex_index, g_in), orig2out[0]),
+       choose_param(get_param(params, edge_visitor_t()),
+                    detail::default_edge_visitor<edge_t, MutableGraph>()),
        reflexive
        );
   }

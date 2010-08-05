@@ -30,6 +30,7 @@ namespace boost {
   struct buffer_param_t { };
   struct edge_copy_t { };
   struct vertex_copy_t { };
+  struct edge_visitor_t { };
   struct vertex_isomorphism_t { };
   struct vertex_invariant_t { };
   struct vertex_invariant1_t { };
@@ -79,6 +80,7 @@ namespace boost {
     BOOST_BGL_ONE_PARAM_CREF(distance_zero, distance_zero) \
     BOOST_BGL_ONE_PARAM_CREF(edge_copy, edge_copy) \
     BOOST_BGL_ONE_PARAM_CREF(vertex_copy, vertex_copy) \
+    BOOST_BGL_ONE_PARAM_CREF(edge_visitor, edge_visitor) \
     BOOST_BGL_ONE_PARAM_REF(buffer, buffer_param) \
     BOOST_BGL_ONE_PARAM_CREF(orig_to_copy, orig_to_copy) \
     BOOST_BGL_ONE_PARAM_CREF(isomorphism_map, vertex_isomorphism) \

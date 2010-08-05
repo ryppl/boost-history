@@ -18,6 +18,7 @@
 
 namespace boost {
 
+  // This is also disjoint! But it uses graph_sum and vertice/edge names
   template <class VertexListGraph, class MutableGraph> 
   void graph_union(const VertexListGraph& g1, const VertexListGraph& g2, MutableGraph& g_out)
   {

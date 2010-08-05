@@ -43,6 +43,8 @@ struct Graph_Label {
 };
 
 
+// First look at main()
+// These are auxiliary functions
 
 // copier that sets the name mapping
 template <typename G1, typename G2>
@@ -66,6 +68,18 @@ struct my_copier {
   mutable typename property_map<G2, vertex_all_t>::type vertex_all_map2;
 };
 
+// edge visitor for new edges
+template <typename EdgeDescriptor, typename Graph>
+struct my_edge_visitor {
+  void operator()(const EdgeDescriptor &e, Graph &g)
+  {
+    typename graph_traits<Graph>::vertex_descriptor u, v;
+    u = source(e, g);
+    v = target(e, g);
+    g[e].name = g[u].name * 100 + g[v].name;
+    get_property(g, graph_label).hack->edges[ g[e].name ] = e;
+  }
+};
 
 // name vertices and edges
 template <class Graph>
@@ -173,21 +187,22 @@ int main(int,char*[])
 
   cout << "Complement of g1:" << endl;
   graph_complement(g1, g_simple_compl, false); // ignore name mapping (but copy vertex properties)
+  // check(g_compl); // graph_complement don't set graph_label
   print(g_simple_compl);
   cout << endl;
 
   cout << "Complement of g1:" << endl;
   my_copier<Graph, Graph> c(g1, g_compl);
   graph_complement(g1, g_compl, vertex_copy(c), false);
-  check(g_compl, false); // graph_complement don't set edge names
+  check(g_compl, false); // graph_complement don't set edge names in graph_label, but my_copier do it for vertices
   print(g_compl);
   cout << endl;
 
   cout << "Reflexive complement of g1:" << endl;
   my_copier<Graph, Graph> cc(g1, g_rcompl);
-  graph_complement(g1, g_rcompl, vertex_copy(cc), true);
+  graph_complement(g1, g_rcompl, vertex_copy(cc).edge_visitor(my_edge_visitor<Edge, Graph>()), true);
   print(g_rcompl);
-  check(g_rcompl, false); // graph_complement don't set edge names
+  check(g_rcompl);
   cout << endl;
 
   cout << "Intersection of g1 and g2:" << endl;
