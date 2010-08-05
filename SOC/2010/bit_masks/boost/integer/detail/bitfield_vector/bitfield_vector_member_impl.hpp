@@ -11,6 +11,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/type_traits/is_signed.hpp>
+#include <boost/assert.hpp>
 #include <iostream>
 #include <iomanip>
 #include <cstring>
@@ -131,6 +132,114 @@ public:
 };
 
 
+
+/** Calculates the size of an array needed to store a particular mask inside of
+ *  of char array.
+ */
+template <std::size_t Width>
+inline std::size_t get_mask_array_size(std::size_t offset) {
+    BOOST_ASSERT(( offset < 8));
+    std::size_t total_bits = Width + offset;
+    std::size_t ret = 0;
+    ret = total_bits / 8;
+    if(total_bits % 8) {
+        ret += 1;
+    }
+    return ret;
+}
+
+
+void print_mask_array(storage_ptr_t start,storage_ptr_t end) {
+    std::cout << "Value Of Mask Array: " ;
+    for(;start != end;++start) {
+        std::cout << std::hex << std::size_t(*start) << "|";
+    }
+    std::cout << std::endl;
+}
+/** Creates a mask the which is used to extract the information from within
+ *  a the storage unsigned char array.
+ */
+template <std::size_t Width>
+inline storage_ptr_t
+make_field_mask(std::size_t offset, std::size_t mask_size) {
+    // std::cout << "Called: " << __FUNCTION__ << std::endl;
+    // I should consider using malloc for something like this shouldn't I.
+    // either way all I need to remember to do is make sure that it gets
+    // deleted.
+    storage_ptr_t mask_array = new storage_t[mask_size];
+    // print_mask_array(mask_array, mask_array + mask_size);
+    storage_ptr_t mask_ptr = mask_array;
+
+    // calculate bit_count for for statement
+    std::size_t bit_count = Width + offset;
+    storage_t mask = 0x80;
+    mask >>= offset;
+
+    // std::cout <<  "Value Of mask before loop: "
+    //   << std::hex << std::size_t(mask) << std::endl;
+    
+    // creating begining mask.
+    for(std::size_t index = offset;
+        index < bit_count && index <= 8;
+        ++index)
+    {
+        *mask_ptr |= mask;
+        mask >>= 1;
+    }
+
+    // std::cout <<  "Value Of mask after loop: "
+    //     << std::hex << std::size_t(mask) << std::endl;
+
+    // print_mask_array(mask_array, mask_array + mask_size);
+
+    // This is a basic condition where if the mask has a size of 1 byte then
+    // it should simply be returned.
+    // this also denotes that the mask is not going to cross char boundries.
+    if(mask_size == 1) {
+        return mask_array;
+    }
+    // std::cout << "Mask greater then 1 byte" << std::endl;
+    // print_mask_array(mask_array, mask_array + mask_size);
+    // fill all but the last block with 0xff
+    storage_ptr_t end_mask_ptr = mask_ptr + mask_size - 1;
+    ++mask_ptr;
+    for(;mask_ptr < end_mask_ptr; ++mask_ptr) {
+        *mask_ptr = 0xff;
+    }
+    // std::cout << "Filled Mask with max byte values (if needed)" << std::endl;
+    // print_mask_array(mask_array, mask_array + mask_size);
+
+    // if both the offset + width is divisible by 8 then that means that
+    // the mask ends on a char boundry and the last byte needs to be set to 0
+    // and the array returned.
+    if(!((offset + Width)%8)) {
+        mask_ptr = mask_array +mask_size - 1;
+        *mask_ptr = 0xFF;
+        // std::cout << "Mask is on char boundry" << std::endl;
+        // print_mask_array(mask_array, mask_array + mask_size);
+        return mask_array;
+    }
+
+
+    // std::cout << "Mask has trailing bits to deal with" << std::endl;
+
+    // filling out the rest of the trailing bits.
+    mask = 0x80;
+
+    // calculate the number of trailing bits which need to be filled out.
+    std::size_t remaining_bits = (Width + offset) % 8;
+
+    // set the mask pointer to the last valid index inside of the array.
+    mask_ptr = mask_array + mask_size - 1;
+    for(std::size_t bit_index = 0; bit_index < remaining_bits; ++bit_index) {
+        *mask_ptr |= mask;
+        mask >>=1;
+    }
+    // print_mask_array(mask_array, mask_array + mask_size);
+    return mask_array;
+}
+
+
 template <typename RetType, std::size_t Width>
 class proxy_reference_type<RetType,Width,false> {
     typedef proxy_reference_type<RetType,Width,false> _self;
@@ -191,8 +300,6 @@ public:
         std::cout << "trailing_zero's value: " << trailing_zeros << std::endl;
         std::cout << "bit_copy_ammount:      " << bit_copy_ammount << std::endl;
         std::cout << "mask_byte_count:       " << mask_byte_count << std::endl;
-        // std::cout << "Pre-Mask creation Stats" << std::endl;
-        // std::cout << "Pre-Mask creation Stats" << std::endl;
         for(std::size_t bit_index = _offset;bit_index <= bit_copy_ammount; ++bit_index){
             if( (bit_index%8) == 0) {
                 ++mask_byte_count;
@@ -251,6 +358,9 @@ public:
     storage_type*    _ptr;
     offset_type     _offset;
 };
+
+
+
 
 }} // end boost::detail
 

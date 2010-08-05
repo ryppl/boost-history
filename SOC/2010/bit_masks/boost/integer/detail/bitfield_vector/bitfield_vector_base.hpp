@@ -9,6 +9,13 @@
 
 namespace boost { namespace detail {
 
+
+/** Typedef's used through out the bitfield_vector.
+ *
+ */
+typedef unsigned char storage_t;
+typedef storage_t* storage_ptr_t;
+
 /** bitfield_vector_base
  *  This a bitfield_vector's base class (if you can't tell by the name) and it
  *  is used for dealing directly with the allocator's memory allocation
@@ -23,7 +30,7 @@ namespace boost { namespace detail {
  */
 template <typename T, typename Allocator>
 struct bitfield_vector_base {
-    typedef unsigned char storage_type;
+    typedef storage_t storage_type;
     typedef T value_type;
     typedef typename Allocator::template rebind<storage_type>::other
         rebound_alloc_type;

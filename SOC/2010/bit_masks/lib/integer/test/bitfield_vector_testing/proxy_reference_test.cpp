@@ -114,6 +114,97 @@ int main() {
 
 #undef TEST_MACRO_COPY_ASSIGNMENT_OPERATOR
     }
+
+    // functions used for constructing the char_array mask.
+    // Testing: get_mask_array_size
+    {
+        std::size_t ret_value = 0;
+
+        ret_value = get_mask_array_size<3>(6);
+        BOOST_TEST(ret_value == 2);
+
+        ret_value = get_mask_array_size<4>(0);
+        BOOST_TEST(ret_value == 1);
+
+        ret_value = get_mask_array_size<50>(0);
+        BOOST_TEST(ret_value == 7);
+    }
+    // make_field_mask creates mask used to retrieve or set data.
+    {
+        storage_ptr_t manager_ptr;
+        storage_ptr_t ptr;
+        std::size_t size;
+
+        size = get_mask_array_size<3>(6);
+        manager_ptr = ptr = make_field_mask<3>(6, size);
+
+        BOOST_TEST(*ptr == 0x3);
+        ++ptr;
+        BOOST_TEST(*ptr == 0x80);
+        delete manager_ptr;
+
+        size = get_mask_array_size<3>(1);
+        manager_ptr = ptr = make_field_mask<3>(1, size);
+        BOOST_TEST( *ptr == 0x70 );
+        delete manager_ptr;
+
+        size = get_mask_array_size<4>(0);
+        manager_ptr = ptr = make_field_mask<4>(0, size);
+        BOOST_TEST( *ptr == 0xf0 );
+        delete manager_ptr;
+
+        size = get_mask_array_size<50>(0);
+        manager_ptr = ptr = make_field_mask<50>(0, size);
+        // 1
+        BOOST_TEST( *ptr == 0xFF );
+        // 2
+        ++ptr;
+        BOOST_TEST( *ptr == 0xFF );
+        // 3
+        ++ptr;
+        BOOST_TEST( *ptr == 0xFF );
+        // 4
+        ++ptr;
+        BOOST_TEST( *ptr == 0xFF );
+        // 5
+        ++ptr;
+        BOOST_TEST( *ptr == 0xFF );
+        // 6
+        ++ptr;
+        BOOST_TEST( *ptr == 0xFF );
+        // 7
+        ++ptr;
+        BOOST_TEST( *ptr == 0xC0 );
+
+        delete manager_ptr;
+
+        size = get_mask_array_size<50>(2);
+        manager_ptr = ptr = make_field_mask<50>(2, size);
+        // 1
+        BOOST_TEST( *ptr == 0x3F );
+        // 2
+        ++ptr;
+        BOOST_TEST( *ptr == 0xFF );
+        // 3
+        ++ptr;
+        BOOST_TEST( *ptr == 0xFF );
+        // 4
+        ++ptr;
+        BOOST_TEST( *ptr == 0xFF );
+        // 5
+        ++ptr;
+        BOOST_TEST( *ptr == 0xFF );
+        // 6
+        ++ptr;
+        BOOST_TEST( *ptr == 0xFF );
+        // 7
+        ++ptr;
+        BOOST_TEST( *ptr == 0xF0 );
+
+        delete manager_ptr;
+
+    }
+    /*
     // encoding and decoding tests.
     {
         typedef unsigned char storage_type;
@@ -148,6 +239,7 @@ int main() {
 
         
     }
+*/
     return boost::report_errors();
 }
 
