@@ -6,10 +6,10 @@
 #include <libs/assign/v2/test/type_traits/has_push.h>
 #include <libs/assign/v2/test/type_traits/has_value_type.h>
 #include <libs/assign/v2/test/type_traits/has_static_size.h>
-#include <libs/assign/v2/test/ref/csv_anon.h>
-#include <libs/assign/v2/test/ref/ext_anon.h>
 #include <libs/assign/v2/test/ref/fusion_list.h>
-#include <libs/assign/v2/test/ref/static_list.h>
+#include <libs/assign/v2/test/ref/generic_anon.h>
+#include <libs/assign/v2/test/ref/csv_anon.h>
+#include <libs/assign/v2/test/ref/anon.h>
 #include <libs/assign/v2/test/ref/wrapper.h>
 
 #include <libs/assign/v2/example/tutorial.h>
@@ -23,8 +23,8 @@ int main (int argc, char * const argv[]) {
     xxx_type_traits::xxx_has_value_type::test();
     xxx_type_traits::xxx_has_static_size::test();
     xxx_ref::xxx_fusion_list::test();
-    xxx_ref::xxx_static_list::test();
-    xxx_ref::xxx_ext_anon::test();
+    xxx_ref::xxx_generic_anon::test();
+    xxx_ref::xxx_anon::test();
     xxx_ref::xxx_csv_anon::test();
     xxx_ref::xxx_wrapper::test();
     xxx_put::xxx_put_wrapper::test();

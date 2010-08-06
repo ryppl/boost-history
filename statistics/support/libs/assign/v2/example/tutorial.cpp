@@ -33,18 +33,17 @@ namespace xxx_tutorial{
             	typedef std::deque<tuple_> cont_;
             	cont_ cont;
             	int a1, a2, b1, c1;
-            	constructor<tuple_>();
-            	( put_wrapper( cont ) % ( _fun = boost::lambda::bind<tuple_>(
+            	( put( cont ) % ( _fun = boost::lambda::bind<tuple_>(
             		constructor<tuple_>(),
             		boost::lambda::_1,
             	    a2 
-           	 ) ) )( a1 )( b1 )( c1 );
+           	 	) ) )( a1 )( b1 )( c1 );
         	}
         	{
             	typedef std::map<const char*, int> cont_;
                 typedef boost::range_value<cont_>::type value_;
                 cont_ cont;
-            	( put_wrapper( cont ) % _incr_lookup).csv( "x", "y", "x" );
+            	( put( cont ) % _incr_lookup).csv( "x", "y", "x" );
                 BOOST_ASSERT( cont["x"] == 2 );
                 BOOST_ASSERT( cont["y"] == 1 );
         	}
@@ -54,8 +53,8 @@ namespace xxx_tutorial{
         	{
             	typedef std::vector<int> cont_;
                 cont_ cont = anon( 1 )( 2 )( 3 ).convert<cont_>();
-                BOOST_ASSERT(cont[0] == 1);
-                BOOST_ASSERT(cont[2] == 3);
+                BOOST_ASSERT( cont[0] == 1 );
+                BOOST_ASSERT( cont[2] == 3 );
         	}
         }
         {

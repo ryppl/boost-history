@@ -32,14 +32,14 @@ namespace xxx_put_wrapper{
             typedef boost::array<int,8> cont_;
             cont_ cont;
             chk_cont::do_check(
-                put_wrapper( cont )
+                put( cont )
                     ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
             );
         }
 		{	// Queue
             typedef std::queue<int> cont_;
             cont_ cont;
-            ( put_wrapper( cont ) % (_repeat = 3 ) ) (-1);
+            ( put( cont ) % (_repeat = 3 ) ) (-1);
             BOOST_ASSIGN_V2_CHECK_EQUAL( cont.front(), -1); cont.pop();
             BOOST_ASSIGN_V2_CHECK_EQUAL( cont.front(), -1); cont.pop();
             BOOST_ASSIGN_V2_CHECK_EQUAL( cont.front(), -1); cont.pop();
@@ -56,7 +56,7 @@ namespace xxx_put_wrapper{
                 typedef std::deque<tuple_> cont_;
                 {
                 	cont_ cont;
-                	put_wrapper( cont )( a1 , b1 )( c1 , d1 );
+                	put( cont )( a1 , b1 )( c1 , d1 );
                 BOOST_ASSIGN_V2_CHECK_EQUAL( &a1, &boost::get<0>( cont[0] ) );
                 BOOST_ASSIGN_V2_CHECK_EQUAL( &b1, &boost::get<1>( cont[0] ) );
                 BOOST_ASSIGN_V2_CHECK_EQUAL( &c1, &boost::get<0>( cont[1] ) );
@@ -67,12 +67,12 @@ namespace xxx_put_wrapper{
             	// Map
                 typedef std::map<const char*, int> cont_;
                 cont_ cont;
-                put_wrapper( cont )( "x", 2 )( "y", 1 );
+                put( cont )( "x", 2 )( "y", 1 );
             }
             {	// Map
                 typedef std::map<const char*, int> cont_;
                 cont_ cont;
-                ( put_wrapper( cont ) % _incr_lookup).csv( "x", "y", "x" );
+                ( put( cont ) % _incr_lookup).csv( "x", "y", "x" );
                 BOOST_ASSIGN_V2_CHECK_EQUAL( 2, cont["x"] );
                 BOOST_ASSIGN_V2_CHECK_EQUAL( 1, cont["y"] );
             }
