@@ -18,7 +18,8 @@
 #include <boost/mpl/has_key.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/integral_c.hpp>
-#include <boost/integer/high_bits_mask.hpp>
+#include <boost/mpl/push_back.hpp>
+#include <boost/mpl/at.hpp>
 #include <cstddef>
 
 namespace boost { namespace detail {
@@ -102,7 +103,7 @@ struct calc_first_byte {
 template<std::size_t Offset, std::size_t Width>
 struct calc_last_byte {
     typedef typename mpl::if_c<
-        bool(mask_size<mpl::size_t<Offset>,mpl::size_t<Width> >::type::value == 1 ),
+        (mask_size<mpl::size_t<Offset>,mpl::size_t<Width> >::type::value == 1 ),
         mpl::size_t<0>,
         typename mpl::if_c<
             (((Offset + Width)%8) == 0),
@@ -113,8 +114,12 @@ struct calc_last_byte {
 };
 
 template<std::size_t Offset, std::size_t Width>
-struct calc_last_left_shift {
-
+struct calc_last_shift {
+    typedef typename mpl::if_c<
+        bool(mask_size<mpl::size_t<Offset>,mpl::size_t<Width> >::type::value==1),
+        mpl::size_t<std::size_t(8-(Width + Offset))>,
+        mpl::size_t<std::size_t(8-((Offset+Width)%8))>
+    >::type                             type;
 };
 
 /** This is responsible for storing information about a perticular
@@ -135,8 +140,10 @@ struct mask_info {
     );
     BOOST_STATIC_CONSTANT(storage_t,
         first_value = (calc_first_byte<offset,width>::type::value));
-    // BOOST_STATIC_CONSTANT( std::size_t,);
-    // BOOST_STATIC_CONSTANT( storage_t, (last_value = LastIndexValue);
+    BOOST_STATIC_CONSTANT( std::size_t,
+        last_shift =(calc_last_shift<Offset,Width>::type::value));
+    BOOST_STATIC_CONSTANT( storage_t,
+        last_value = (calc_last_byte<Offset,Width>::type::value));
 };
 
 
@@ -176,21 +183,104 @@ struct determine_vaild_offsets {
     typedef typename valid_offset_helper<Width>::type type;
 };
 
-
-
 /** This will create some structure which will allow for quick retrieval of a
  *  all masks for a perticular width.
  */
 template <std::size_t Width>
 struct create_masks {
     typedef typename determine_vaild_offsets<Width>::type indices;
-/*
-    typedef typename mpl::if_<
-        has_key<indices,mpl::size_t<0> >::type,
-*/
+    
+    typedef typename mpl::push_back<
+        mpl::vector<>,
+        typename mpl::if_<
+            typename mpl::has_key<
+                indices,
+                mpl::size_t<0>
+            >::type,
+            mask_info<0,Width>,
+            mpl::void_*
+        >::type
+    >::type     step_0;
+    
 
+#define BOOST_BUILD_INDEX_VECTOR( PREVIOUS_STEP,N ) \
+    typedef typename mpl::push_back< \
+        step_##PREVIOUS_STEP,        \
+        typename mpl::if_<           \
+            typename mpl::has_key<   \
+                indices,             \
+                mpl::size_t<N>       \
+            >::type,                 \
+            mask_info<N,Width>,      \
+            mpl::void_*              \
+        >::type                      \
+    >::type     step_##N;
+
+    BOOST_BUILD_INDEX_VECTOR(0,1)
+    BOOST_BUILD_INDEX_VECTOR(1,2)
+    BOOST_BUILD_INDEX_VECTOR(2,3)
+    BOOST_BUILD_INDEX_VECTOR(3,4)
+    BOOST_BUILD_INDEX_VECTOR(4,5)
+    BOOST_BUILD_INDEX_VECTOR(5,6)
+    BOOST_BUILD_INDEX_VECTOR(6,7)
+
+#undef BOOST_BUILD_INDEX_VECTOR
+    typedef step_7 type;
 };
 
+/** This is a type constructed over a single mask_info type and is used to
+ *  relay some information between compile time and runtime data structures.
+ */
+struct mask_detail {
+    mask_detail()
+        :_offset(0),
+        _size(0),
+        _last_shift(0),
+        _first_byte(0),
+        _last_byte(0)
+    { }
+
+    mask_detail(mask_detail const& x)
+        :_offset(x._offset),
+        _size(x._size),
+        _last_shift(x._last_shift),
+        _first_byte(x._first_byte),
+        _last_byte(x._last_byte)
+    { }
+
+    template <typename MaskInfo>
+    mask_detail(MaskInfo)
+        :_offset(MaskInfo::offset),
+        _size(MaskInfo::size),
+        _last_shift(MaskInfo::last_shift),
+        _first_byte(MaskInfo::first_value),
+        _last_byte(MaskInfo::last_value)
+    { }
+
+    explicit mask_detail(mpl::void_* )
+        :_offset(0),
+        _size(0),
+        _last_shift(0),
+        _first_byte(0),
+        _last_byte(0)
+    { }
+
+    mask_detail& operator=(mask_detail const& x) {
+        _offset = x._offset;
+        _size = x._size;
+        _last_shift = x._last_shift;
+        _first_byte = x._first_byte;
+        _last_byte = x._last_byte;
+        return *this;
+    }
+
+
+    std::size_t _offset;
+    std::size_t _size;
+    std::size_t _last_shift;
+    storage_t   _first_byte;
+    storage_t   _last_byte;
+};
 
 }} // end booss::detail
 #endif
