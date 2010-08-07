@@ -12,11 +12,11 @@
 
 namespace test_assign_v2{
 namespace xxx_ref{
-namespace xxx_conversion{
+namespace xxx_convert_traits{
 
     void test();
     
-}// xxx_conversion
+}// xxx_convert_traits
 }// xxx_ref
 }// test_assign
 

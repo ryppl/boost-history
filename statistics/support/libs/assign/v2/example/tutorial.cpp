@@ -61,7 +61,10 @@ namespace xxx_tutorial{
         	// --- REF-ANON-- //
 			using namespace ref;
             {	// -- assign_copy-- //
-            	std::vector<int> v( 3 ); v[ 0 ] = 1; v[ 1 ] = 2; v [ 3 ] = 3;
+            	std::vector<int> v( 3 ); 
+                v[ 0 ] = 1; 
+                v[ 1 ] = 2; 
+                v[ 2 ] = 3;
             	int a, b, c;
 				boost::copy( v , 
                 	boost::begin( assign_copy::anon( a )( b )( c ) ) );
