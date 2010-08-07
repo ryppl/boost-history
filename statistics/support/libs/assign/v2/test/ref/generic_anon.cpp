@@ -23,7 +23,7 @@ namespace xxx_generic_anon{
     	using namespace boost::assign::v2::ref;
         {
         	typedef assign_tag::copy tag1_;
-        	typedef boost::mpl::empty_base tag2_;
+        	typedef boost::use_default tag2_;
         	typedef nth_result_of::generic_anon<2,
                 tag1_, 
                 tag2_,
