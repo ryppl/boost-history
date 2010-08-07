@@ -53,7 +53,7 @@ int main() {
         BOOST_TEST(( mpl::has_key<t1,mpl::size_t<6> >::type::value ));
         BOOST_TEST(( mpl::has_key<t1,mpl::size_t<7> >::type::value ));
 
-        typedef determine_vaild_offsets<4>::type t2;        
+        typedef determine_vaild_offsets<4>::type t2;
         BOOST_TEST(( mpl::has_key<t2,mpl::size_t<0> >::type::value ));
         BOOST_TEST(( !mpl::has_key<t2,mpl::size_t<1> >::type::value ));
         BOOST_TEST(( !mpl::has_key<t2,mpl::size_t<2> >::type::value ));
@@ -61,8 +61,28 @@ int main() {
         BOOST_TEST(( mpl::has_key<t2,mpl::size_t<4> >::type::value ));
         BOOST_TEST(( !mpl::has_key<t2,mpl::size_t<5> >::type::value ));
         BOOST_TEST(( !mpl::has_key<t2,mpl::size_t<6> >::type::value ));
-        BOOST_TEST(( !mpl::has_key<t2,mpl::size_t<7> >::type::value ));        
+        BOOST_TEST(( !mpl::has_key<t2,mpl::size_t<7> >::type::value ));
 
+
+        typedef determine_vaild_offsets<50>::type t3;
+        BOOST_TEST(( mpl::has_key<t3,mpl::size_t<0> >::type::value ));
+        BOOST_TEST(( !mpl::has_key<t3,mpl::size_t<1> >::type::value ));
+        BOOST_TEST(( mpl::has_key<t3,mpl::size_t<2> >::type::value ));
+        BOOST_TEST(( !mpl::has_key<t3,mpl::size_t<3> >::type::value ));
+        BOOST_TEST(( mpl::has_key<t3,mpl::size_t<4> >::type::value ));
+        BOOST_TEST(( !mpl::has_key<t3,mpl::size_t<5> >::type::value ));
+        BOOST_TEST(( mpl::has_key<t3,mpl::size_t<6> >::type::value ));
+        BOOST_TEST(( !mpl::has_key<t3,mpl::size_t<7> >::type::value ));
+
+        typedef determine_vaild_offsets<11>::type t4;
+        BOOST_TEST(( mpl::has_key<t4,mpl::size_t<0> >::type::value ));
+        BOOST_TEST(( mpl::has_key<t4,mpl::size_t<1> >::type::value ));
+        BOOST_TEST(( mpl::has_key<t4,mpl::size_t<2> >::type::value ));
+        BOOST_TEST(( mpl::has_key<t4,mpl::size_t<3> >::type::value ));
+        BOOST_TEST(( mpl::has_key<t4,mpl::size_t<4> >::type::value ));
+        BOOST_TEST(( mpl::has_key<t4,mpl::size_t<5> >::type::value ));
+        BOOST_TEST(( mpl::has_key<t4,mpl::size_t<6> >::type::value ));
+        BOOST_TEST(( mpl::has_key<t4,mpl::size_t<7> >::type::value ));
 
     }
     return boost::report_errors();
