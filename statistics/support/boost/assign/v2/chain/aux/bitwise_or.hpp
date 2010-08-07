@@ -2,6 +2,7 @@
 //  Boost.Assign v2                                                         //
 //                                                                          //
 //  Copyright (C) 2003-2004 Thorsten Ottosen                                //
+//  Copyright (C) 2009 Neil Groves                                          //
 //  Copyright (C) 2010 Manuel Peinado Gallego                               //
 //  Copyright (C) 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
