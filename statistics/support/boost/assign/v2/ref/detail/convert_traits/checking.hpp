@@ -12,6 +12,7 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/config.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/promote.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -73,11 +74,11 @@ namespace arithmetic{
     void do_check_impl(const T1&, const T2& ,const T3&) 
     {
         
-        typedef typename boost::mpl::not_<
-           boost::is_same<T1,T2> 
-        >::type not_same_;
-        
-        BOOST_STATIC_ASSERT(not_same_::value);
+        // Disable for Ubuntu 9.1 - GCC 4.4 (see workaround below).
+        // typedef typename boost::mpl::not_<
+        //   boost::is_same<T1,T2> 
+        // >::type not_same_;
+        // BOOST_STATIC_ASSERT(not_same_::value);
         
         tester<const T1&, const T2&, const T3 >::test(); 
         tester<const T1&,       T2&, const T3 >::test(); 
@@ -102,7 +103,7 @@ namespace arithmetic{
     };
 
 
-#define m(T1,T2)															\
+#define m(T1, T2, T3)													    \
     template<typename T>													\
     void do_check(															\
     	typename boost::enable_if<											\
@@ -110,16 +111,30 @@ namespace arithmetic{
         >::type* = 0														\
     ) 																		\
     {																		\
-        typedef T1 t1_;														\
-        typedef T2 t2_;														\
-        distinct_values::arithmetic::do_check_impl( t1_(), t2_(), t2_() );	\
+        distinct_values::arithmetic::do_check_impl( T1(), T2(), T3() );	    \
     }																		\
 /**/
 
-m(short  , int)
-m(int    , long)
-m(float  , double)
-m(double , long double)
+// Works for Max OSX 10.6 GCC 4.2 but not Ubuntu 9.1 GCC 4.4
+// 	m(short  , long,	int)
+// 	m(int    , long,	long)
+//	m(float  , double,	double)
+//  typedef long double long_double_;
+//	m(double , long_double_, long double)
+
+namespace workaround{
+	typedef boost::numeric::conversion_traits<short, int>::supertype a_;
+	typedef boost::numeric::conversion_traits<int, long>::supertype b_;
+	typedef boost::numeric::conversion_traits<float, double>::supertype c_;
+	typedef boost::numeric::conversion_traits<
+    	double,long double>::supertype d_;
+}// workaround
+
+m(short  , int, 	workaround::a_)
+m(int    , long,	workaround::b_)
+m(float  , double,	workaround::c_)
+typedef long double long_double_;
+m(double , long_double_, workaround::d_)
 
 #undef m
 }// arithmetic

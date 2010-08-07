@@ -39,7 +39,7 @@ namespace unwrap_aux{
     >{
         static void test()
         {
-            BOOST_MPL_ASSERT_NOT( boost::is_reference<T> );
+            BOOST_MPL_ASSERT_NOT(( boost::is_reference<T> ));
         };
     };
 

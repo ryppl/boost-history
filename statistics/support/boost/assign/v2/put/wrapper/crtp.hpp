@@ -164,12 +164,12 @@ BOOST_PP_REPEAT_FROM_TO(
         
         	struct incr_lookup : Traits::template new_fun_tag<
             	functor_aux::identity,
-                put_tag::incr_lookup
+                v2::put_tag::incr_lookup
             >{};
 
 			struct repeat
             {
-    			typedef put_tag::repeat<Tag> new_tag_;
+    			typedef v2::put_tag::repeat<Tag> new_tag_;
         		typedef put_aux::modifier<new_tag_> modifier_;
        		 	typedef typename Traits::template new_tag<new_tag_>::type type;
             };
@@ -207,7 +207,7 @@ BOOST_PP_REPEAT_FROM_TO(
         modulo_incr_lookup()const{
     		return (*this) 
             	% ( _fun = _identity ) 
-                % ( _put_tag = put_tag::incr_lookup() );
+                % ( _put_tag = v2::put_tag::incr_lookup() );
 		}
 
 		template<typename N>
@@ -217,7 +217,7 @@ BOOST_PP_REPEAT_FROM_TO(
         	typedef typename result_of_modulo::repeat traits_;
             typedef typename traits_::modifier_ modifier_;
     		return (
-            	(*this) %  ( _put_tag = put_tag::repeat<Tag>() )
+            	(*this) %  ( _put_tag = v2::put_tag::repeat<Tag>() )
             ).copy_modifier( modifier_( n ) );
 		}
 

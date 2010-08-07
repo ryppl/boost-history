@@ -26,7 +26,7 @@ namespace convert_aux
 	To operator|(From& from, convert_aux::adaptor<To> const& dummy)
     {
     	To to;
-    	return to | adaptor::put_range( from );
+    	return to | v2::adaptor::put_range( from );
     }
 
 }// convert_aux

@@ -63,7 +63,7 @@ namespace unwrap_aux{
         {
             typedef typename boost::iterator_reference<I>::type ref_;
             typedef typename boost::is_convertible<ref_,R>::type is_convertible_;
-            BOOST_MPL_ASSERT(is_convertible_);
+            BOOST_MPL_ASSERT(( is_convertible_ ));
         }
     };
               

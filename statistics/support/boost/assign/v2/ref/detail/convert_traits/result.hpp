@@ -12,6 +12,7 @@
 #include <boost/config.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/or.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_reference.hpp>

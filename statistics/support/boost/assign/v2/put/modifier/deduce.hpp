@@ -46,13 +46,13 @@ namespace mpl{
     template<>
     struct case_<switch_tag::deduce_put,2> :
         v2::mpl::wrap<
-        	put_tag::push,
+        	v2::put_tag::push,
             container_type_traits::has_push_deduced_value
         >{};
 
     template<>
     struct case_<switch_tag::deduce_put,3> : 
-        v2::mpl::wrap<put_tag::push_back>{};
+        v2::mpl::wrap<v2::put_tag::push_back>{};
 
 }// mpl
 namespace put_aux{
