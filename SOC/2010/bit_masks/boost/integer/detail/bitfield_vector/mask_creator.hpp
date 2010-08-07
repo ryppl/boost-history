@@ -5,7 +5,7 @@
 
 #ifndef BOOST_BITFIELD_VECTOR_MASK_CREATOR_HPP
 #define BOOST_BITFIELD_VECTOR_MASK_CREATOR_HPP
-
+#include "bitfield_vector_base.hpp"
 #include <boost/mpl/size_t.hpp>
 #include <boost/mpl/arithmetic.hpp>
 #include <boost/mpl/if.hpp>
@@ -15,6 +15,10 @@
 #include <boost/mpl/size_t.hpp>
 #include <boost/mpl/greater.hpp>
 #include <boost/mpl/insert.hpp>
+#include <boost/mpl/has_key.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/integral_c.hpp>
+#include <boost/integer/high_bits_mask.hpp>
 #include <cstddef>
 
 namespace boost { namespace detail {
@@ -57,10 +61,69 @@ struct mask_size {
     >::type type;
 };
 
+
+
+template <
+    std::size_t Offset,
+    std::size_t Width,
+    std::size_t Index = Offset,
+    storage_t Mask = 0,
+    bool = true
+>
+struct calc_first_byte_helper {
+        typedef mpl::integral_c<storage_t,Mask> type;
+};
+
+template <
+    std::size_t Offset,
+    std::size_t Width,
+    std::size_t Index,
+    storage_t Mask
+>
+struct calc_first_byte_helper< Offset, Width, Index, Mask, true >
+    :calc_first_byte_helper<
+        Offset,
+        Width,
+        Index + 1,
+        storage_t(Mask | (0x80 >> Index)),
+        bool((Index + 1) < (Offset + Width))
+          &&
+        bool((Index + 1) < 8)
+    >
+        
+{ };
+
+template <std::size_t Offset, std::size_t Width>
+struct calc_first_byte {
+    typedef typename calc_first_byte_helper<Offset,Width>::type type;
+};
+
+
+template<std::size_t Offset, std::size_t Width>
+struct calc_last_byte {
+    typedef typename mpl::if_c<
+        bool(mask_size<mpl::size_t<Offset>,mpl::size_t<Width> >::type::value == 1 ),
+        mpl::size_t<0>,
+        typename mpl::if_c<
+            (((Offset + Width)%8) == 0),
+            mpl::integral_c<storage_t,0xFF>,
+            mpl::integral_c<storage_t,( 0xFF << (8-((Offset+Width)%8)))>
+        >::type
+    >::type type;
+};
+
+template<std::size_t Offset, std::size_t Width>
+struct calc_last_left_shift {
+
+};
+
 /** This is responsible for storing information about a perticular
  *  mask but not the mask it self.
  */
-template <std::size_t Offset, std::size_t Width>
+template <
+    std::size_t Offset,
+    std::size_t Width
+>
 struct mask_info {
     BOOST_STATIC_CONSTANT(std::size_t, offset   = Offset);
     BOOST_STATIC_CONSTANT(std::size_t, width    = Width );
@@ -70,6 +133,10 @@ struct mask_info {
             mpl::size_t<Width>
         >::type::value)
     );
+    BOOST_STATIC_CONSTANT(storage_t,
+        first_value = (calc_first_byte<offset,width>::type::value));
+    // BOOST_STATIC_CONSTANT( std::size_t,);
+    // BOOST_STATIC_CONSTANT( storage_t, (last_value = LastIndexValue);
 };
 
 
@@ -107,6 +174,21 @@ struct valid_offset_helper< Width, Index, Set, false > {
 template <std::size_t Width>
 struct determine_vaild_offsets {
     typedef typename valid_offset_helper<Width>::type type;
+};
+
+
+
+/** This will create some structure which will allow for quick retrieval of a
+ *  all masks for a perticular width.
+ */
+template <std::size_t Width>
+struct create_masks {
+    typedef typename determine_vaild_offsets<Width>::type indices;
+/*
+    typedef typename mpl::if_<
+        has_key<indices,mpl::size_t<0> >::type,
+*/
+
 };
 
 

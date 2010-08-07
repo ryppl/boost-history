@@ -8,7 +8,14 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <iostream>
-#include <boost/mpl/has_key.hpp>
+#include <iomanip>
+
+#define BOOST_PRINT_ON_TEST_FAILURE(P1, P2) \
+    if(P1 != P2 ) { \
+        std::cout << #P1 << ": " << std::hex << std::size_t(P1) << std::endl; \
+        std::cout << #P2 << ": " << std::hex << std::size_t(P2) << std::endl; \
+    }\
+    BOOST_TEST( P1 == P2);
 
 struct print_set {
     template<typename T>
@@ -40,7 +47,7 @@ int main() {
         BOOST_TEST( test_3::value == 7 );
     }
 
-    // testing mask info type.
+    // Testing for generation of all valid offsets for a perticular width
     {
         using namespace boost;
         typedef determine_vaild_offsets<3>::type t1;
@@ -84,6 +91,27 @@ int main() {
         BOOST_TEST(( mpl::has_key<t4,mpl::size_t<6> >::type::value ));
         BOOST_TEST(( mpl::has_key<t4,mpl::size_t<7> >::type::value ));
 
+    }
+
+    // testing calc_first_byte
+    {
+        BOOST_PRINT_ON_TEST_FAILURE((calc_first_byte<7,3>::type::value),  0x1 );
+        BOOST_PRINT_ON_TEST_FAILURE((calc_first_byte<2,3>::type::value),  0x38);
+        BOOST_PRINT_ON_TEST_FAILURE((calc_first_byte<6,3>::type::value),  0x3 );
+        BOOST_PRINT_ON_TEST_FAILURE((calc_first_byte<0,3>::type::value),  0xE0);
+        BOOST_PRINT_ON_TEST_FAILURE((calc_first_byte<6,50>::type::value), 0x3 );
+        BOOST_PRINT_ON_TEST_FAILURE((calc_first_byte<0,50>::type::value), 0xFF);
+    }
+    
+    // testing calc_last_byte
+    {
+
+        BOOST_PRINT_ON_TEST_FAILURE((calc_last_byte<7,3>::type::value), 0xC0 );
+        BOOST_PRINT_ON_TEST_FAILURE((calc_last_byte<2,3>::type::value), 0x0);
+        BOOST_PRINT_ON_TEST_FAILURE((calc_last_byte<6,3>::type::value),  0x80);
+        BOOST_PRINT_ON_TEST_FAILURE((calc_last_byte<0,3>::type::value),  0x0);
+        BOOST_PRINT_ON_TEST_FAILURE((calc_last_byte<6,50>::type::value), 0xFF );
+        BOOST_PRINT_ON_TEST_FAILURE((calc_last_byte<0,50>::type::value), 0xC0);
     }
     return boost::report_errors();
 }
