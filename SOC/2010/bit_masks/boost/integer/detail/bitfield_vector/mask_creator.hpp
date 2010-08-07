@@ -20,6 +20,8 @@
 #include <boost/mpl/integral_c.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/at.hpp>
+#include <boost/assert.hpp>
+#include  <boost/type_traits/remove_pointer.hpp>
 #include <cstddef>
 
 namespace boost { namespace detail {
@@ -249,7 +251,7 @@ struct mask_detail {
     { }
 
     template <typename MaskInfo>
-    mask_detail(MaskInfo)
+    explicit mask_detail(MaskInfo const&)
         :_offset(MaskInfo::offset),
         _size(MaskInfo::size),
         _last_shift(MaskInfo::last_shift),
@@ -281,6 +283,36 @@ struct mask_detail {
     storage_t   _first_byte;
     storage_t   _last_byte;
 };
+
+/** This is the function responsible for taking both the width and the offset
+ *  and using them to get the correct constant out of the create_masks function
+ *  then storing that information inside of a mask_detail and returning that
+ *  mask detail.
+ */
+template <std::size_t Width>
+mask_detail get_mask_info(std::size_t offset) {
+    typedef typename create_masks<Width>::type masks;
+    switch(offset){
+        case 0:
+            return mask_detail(typename mpl::at_c<masks,0>::type());
+        case 1:
+            return mask_detail(typename mpl::at_c<masks,1>::type());
+        case 2:
+            return mask_detail(typename mpl::at_c<masks,2>::type());
+        case 3:
+            return mask_detail(typename mpl::at_c<masks,3>::type());
+        case 4:
+            return mask_detail(typename mpl::at_c<masks,4>::type());
+        case 5:
+            return mask_detail(typename mpl::at_c<masks,5>::type());
+        case 6:
+            return mask_detail(typename mpl::at_c<masks,6>::type());
+        case 7:
+            return mask_detail(typename mpl::at_c<masks,7>::type());
+        default:
+        BOOST_ASSERT(false);
+    }
+}
 
 }} // end booss::detail
 #endif

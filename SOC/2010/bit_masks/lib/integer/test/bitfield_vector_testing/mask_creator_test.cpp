@@ -199,5 +199,54 @@ int main() {
             mpl::at< mask_vector, mpl::size_t<7> >::type,
             mask_info<7,3> >::value ));       
     }
+
+    // testing mask_detail type.
+    // this type is used for retrieving details related to a mask from the
+    // integral constants which can't be as easily used within the
+    // bitfield_vector's proxy_reference_type.
+    {
+        // default ctor test.
+        mask_detail t1;
+        BOOST_TEST(t1._offset==0);
+        BOOST_TEST(t1._size==0);
+        BOOST_TEST(t1._last_shift==0);
+        BOOST_TEST(t1._first_byte==0);
+        BOOST_TEST(t1._last_byte==0);
+
+        // copy ctor
+        t1._offset = 3;
+        t1._size = 2;
+        t1._last_shift=1;
+        t1._first_byte=0xf0;
+        t1._last_byte=0x0f;
+        
+        mask_detail t2(t1);
+        BOOST_TEST(t2._offset==3);
+        BOOST_TEST(t2._size==2);
+        BOOST_TEST(t2._last_shift==1);
+        BOOST_TEST(t2._first_byte==0xf0);
+        BOOST_TEST(t2._last_byte==0x0f);
+
+        // assignment operator.
+        mask_detail t3;
+        t3 = t2;
+        BOOST_TEST(t3._offset==3);
+        BOOST_TEST(t3._size==2);
+        BOOST_TEST(t3._last_shift==1);
+        BOOST_TEST(t3._first_byte==0xf0);
+        BOOST_TEST(t3._last_byte==0x0f);
+        using namespace boost;
+        // template ctor
+        typedef create_masks<3>::type masks;
+        typedef mpl::at_c<masks,0>::type info;
+        info inf;
+        mask_detail t4( inf );
+        BOOST_TEST(t4._offset ==0);
+        BOOST_TEST(t4._size==1);
+        BOOST_TEST(t4._last_shift==5);
+        BOOST_TEST(t4._first_byte==0xE0);
+        BOOST_TEST(t4._last_byte==0x0);
+
+    }
     return boost::report_errors();
 }
