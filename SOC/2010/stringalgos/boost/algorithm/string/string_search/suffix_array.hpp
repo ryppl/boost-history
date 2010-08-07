@@ -20,20 +20,15 @@ namespace boost { namespace algorithm {
         //!         parameter for LessThanComparator. Maybe we should pass two comparators, give it some thought.
         template <class Finder,class RandomAccessRange1T,
             class RandomAccessRange2T,class ComparatorT,class AllocatorT>
-        class algorithm
+        class algorithm;
+        template <class Finder, class RandomAccessRange1T,
+            class RandomAccessRange2T, class AllocatorT>
+        class algorithm<Finder,RandomAccessRange1T,RandomAccessRange2T,
+            boost::algorithm::is_equal,AllocatorT>
             : public boost::algorithm::detail::finder_typedefs<
-                RandomAccessRange1T,RandomAccessRange2T,ComparatorT,AllocatorT>
+                RandomAccessRange1T,RandomAccessRange2T,boost::algorithm::is_equal,AllocatorT>
         {
         public:
-            /*typedef RandomAccessIterator1T substring_iterator_type;
-	        typedef RandomAccessIterator2T string_iterator_type;
-            typedef typename
-                std::iterator_traits<substring_iterator_type>::value_type substring_char_type;
-            typedef typename std::iterator_traits<string_iterator_type>::value_type string_char_type;
-            typedef typename boost::iterator_range<substring_iterator_type> substring_range_type;
-            typedef typename boost::iterator_range<string_iterator_type> string_range_type;
-            typedef Comparator comparator_type;
-            typedef Allocator allocator_type;*/
             std::string get_algorithm_name () const { return "Suffix array"; }
         protected:
             algorithm () : found_matches_(false), pos_(), matches_() { }
@@ -214,15 +209,13 @@ namespace boost { namespace algorithm {
 
         };
     };
+    struct suffix_array_search_tag { typedef boost::algorithm::suffix_array_search type; };
 } }
 
 namespace boost
 {
     using boost::algorithm::suffix_array_search;
-    typedef boost::algorithm::finder_t<std::string, std::string,
-        boost::algorithm::suffix_array_search> suffix_array_finder;
-    typedef boost::algorithm::finder_t<std::wstring, std::wstring,
-        boost::algorithm::suffix_array_search> wsuffix_array_finder;
+    using boost::algorithm::suffix_array_search_tag;
 }
 
 #endif

@@ -67,7 +67,7 @@ namespace boost {
             return ::boost::algorithm::iter_find(
                 Result,
                 Input,
-                ::boost::algorithm::first_finder(Search) );        
+                ::boost::algorithm::first_finder(Search) );
         }
 
         //! Find all algorithm ( case insensitive ) 
@@ -146,7 +146,7 @@ namespace boost {
             return ::boost::algorithm::iter_split(
                 Result,
                 Input,
-                ::boost::algorithm::token_finder( Pred, eCompress ) );         
+                ::boost::algorithm::token_finder( Pred, eCompress ) );
         }
 
     } // namespace algorithm

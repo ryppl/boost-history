@@ -24,6 +24,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 
 using namespace std;
@@ -136,6 +137,7 @@ class simplified_finder_t2 :
 //#define BOOST_MPL_LIMIT_METAFUNCTION_ARITY 10
 #include <boost/algorithm/string/benchmark_finder.hpp>
 
+#include <boost/algorithm/string/find.hpp>
 #include <boost/algorithm/string/finder.hpp>
 #include <boost/algorithm/string/string_search.hpp>
 
@@ -171,11 +173,16 @@ class simplified_finder_t2 :
 #include <boost/throw_exception.hpp>
 
 #include <boost/format.hpp>
+#include <ctime>
 
+//replace to a constant to compare multiple benchmarks
+unsigned int get_seed() { return 123; }
 
 unsigned int mrand (unsigned int min, unsigned int max)
 {
     static boost::mt19937 rng;
+    static bool init = false;
+    if (!init) { init = true; rng.seed(static_cast<unsigned int>(get_seed())); }
     assert(min <= max);
     boost::uniform_int<> distrib(min, max);
     boost::variate_generator<boost::mt19937&, boost::uniform_int<> > gen(rng, distrib);
@@ -195,7 +202,7 @@ std::string rand_str (int max)
 std::string rand_substr(std::string const &str)
 {
     unsigned int size = mrand(1,str.size());
-    unsigned int offset = mrand(0, str.size()-size-1);
+    unsigned int offset = mrand(0, str.size()-size);
     return std::string(str.begin()+offset, str.begin()+offset+size);
 }
 
@@ -219,8 +226,8 @@ std::string rand_obfuscate_beginning (std::string const &str)
 char find_most_frequent(std::string const &str)
 {
     static const unsigned int char_range_size =
-        std::numeric_limits<char>::max() -
-        std::numeric_limits<char>::min() + 1;
+        (std::numeric_limits<char>::max)() -
+        (std::numeric_limits<char>::min)() + 1;
     std::vector<unsigned int> freq(char_range_size);
     for (std::string::const_iterator it = str.begin(); it != str.end(); ++it)
     {
@@ -228,12 +235,12 @@ char find_most_frequent(std::string const &str)
         //++freq[*it - std::numeric_limits<char>::min()];
         try
         {
-            ++freq.at((int)*it - std::numeric_limits<char>::min());
+            ++freq.at((int)*it - (std::numeric_limits<char>::min)());
         }
         catch (std::exception const &)
         {
                 BOOST_THROW_EXCEPTION(std::runtime_error(
-                (boost::format("Tried to increment index %1% of the vector") % ((int)*it - std::numeric_limits<char>::min())).str()
+                (boost::format("Tried to increment index %1% of the vector") % ((int)*it - (std::numeric_limits<char>::min)())).str()
                 ));
         }
         
@@ -241,9 +248,18 @@ char find_most_frequent(std::string const &str)
     unsigned int max_idx = 0, max = freq[0];
     for (unsigned int i = 1; i < char_range_size; ++i)
         if (freq[i] > max) { max = freq[i]; max_idx = i; }
-    return max_idx + std::numeric_limits<char>::min();
+    return max_idx + (std::numeric_limits<char>::min)();
 }
 
+unsigned int count_different_chars(std::string const &str, std::string const &str2)
+{
+    assert(str.size() == str2.size());
+    std::string::size_type size = str.size();
+    unsigned int ret = 0;
+    for (unsigned int i = 0; i < size; ++i)
+        if (str[i] != str2[i]) ++ret;
+    return ret;
+}
 
 void unit_test()
 {
@@ -252,6 +268,22 @@ void unit_test()
     assert(find_most_frequent("aaabbccc") != 'b');
     assert(find_most_frequent("aaaaaaaaaaa") == 'a');
     assert(find_most_frequent("abababb") == 'b');
+    std::string str( rand_str(10000));
+    for (unsigned int i = 0; i < 100; ++i)
+    {
+        std::string substr( rand_substr(str) );
+        std::string::difference_type offset = str.find(substr);
+        std::string::iterator begin = boost::begin( boost::algorithm::find_first(str, substr) );
+        assert(begin == str.begin()+offset && begin != str.end());
+    }
+    for (unsigned int i = 0; i < 100; ++i)
+    {
+        std::string str2 = rand_str(10);
+        std::string obfuscate_beginning = rand_obfuscate_beginning(str2),
+            obfuscate_end = rand_obfuscate_end(str2);
+        assert(count_different_chars(str2,obfuscate_beginning)<=1);
+        assert(count_different_chars(str2,obfuscate_end)<=1);
+    }
 }
 
 int main ()
@@ -272,14 +304,17 @@ int main ()
             boost::knuth_morris_pratt,
             boost::boyer_moore,
             //boost::suffix_array_search,
-            boost::rabin_karp32/*,
-            boost::rabin_karp64*/
+            boost::rabin_karp32//,
+            //boost::rabin_karp64
         >,
        boost::is_equal> b;
 
+    unit_test();
+
     b.set_substring(&substr); b.set_string(&str);
     std::cout << "Doing almost no work:" << std::endl;
-    for (unsigned int i=0; i<5000; ++i) b.find_first();
+    //!\todo uncomment
+    //for (unsigned int i=0; i<5000; ++i) b.find_first();
     b.output_stats(std::cout);
 
     b.clear();
@@ -288,21 +323,22 @@ int main ()
 
     std::vector<std::string> benchmark_files = list_of
         ("dblp.xml.200MB") ("dna.200MB") ("english.200MB") ("pitches.50MB")
-        ("proteins.200MB") ("sources.200MB") ("random1.50MB");
+        ("proteins.200MB") ("sources.200MB") ("random1.50MB") ("binary.50MB");
     boost::for_each(benchmark_files, arg1 = benchmark_path + "/" + arg1);
 
-    unit_test();
 
-    //Category 1: The text
+    //Category 1: The substring and string change every iteration
     //  Test 1: Against long nonmatching substring
     //  Test 2: Against almost matching substrings (differing in ending only)
     //  Test 3: Against almost matching substrings (differing in beginning only)
     //  Test 4: Against matching substrings
     //  Test 5: Against the most frequent character
+    //Category 2: The string stays constant, the substrings change
+    //Category 3: The substring changes, the string stays constant
     bool substr_change = false;
     try {
-        //!\todo move back to starting at step 1
-        for (unsigned int test = 1; test <= 5; ++test)
+        //Category 1
+        for (unsigned int test = 0; test <= 5; ++test)
         {
 
             BOOST_FOREACH(std::string fn, benchmark_files)
@@ -317,11 +353,13 @@ int main ()
                 std::ifstream bf(fn, std::ios::binary);
                 if (!bf) { std::cerr << "Error opening " << fn << std::endl; return -1; }
 
-                std::vector<char> buf(1<<20);
-                while (bf.read(&buf[0], mrand(1000,1000000)))
+                const unsigned int MAX_STR_SIZE = 10*1024*1024;//10;//1000000;
+                const unsigned int MIN_STR_SIZE = 10*1024;//1000;
+                std::vector<char> buf(MAX_STR_SIZE+32);
+                while (bf.read(&buf[0], mrand(MIN_STR_SIZE,MAX_STR_SIZE)))
                 {
-                    //Note: Only reading the first 10MB of the file!!
-                    if (bf.tellg() > 10*1024*1024) break;
+                    //Note: Only reading the first x MB of the file!!
+                    //if (bf.tellg() > 30*1024*1024) break;
 
                     try {
                         assert(bf.gcount() <= buf.size());
@@ -356,11 +394,38 @@ int main ()
                         if (substr_change) b.set_substring(&substr);
                         b.set_string(&str);
                     } catch (std::exception const &e) { BOOST_THROW_EXCEPTION(e); }
-                    while (boost::distance(b.find_next()));
+                    //std::cerr << '+';
+                    while (boost::distance(b.find_next())); //std::cerr << "+";
+                    //std::cerr << "+";
                 } // end while (read)
                 b.output_stats(std::cout);
             } // end foreach file
         } // end for(test)
+
+        //Category 2
+        std::vector<std::string> str_list;
+
+        std::string current_str;
+        std::string repeated_substr = rand_str(1000),
+            repeated_substr2 = rand_obfuscate_beginning(repeated_substr),
+            repeated_substr3 = rand_obfuscate_end(repeated_substr);
+        for (unsigned int i=0; i<5000; ++i) current_str += repeated_substr + rand_str(10);
+        str_list.push_back(current_str); current_str.clear();
+        for (unsigned int i=0; i<5000; ++i) current_str += repeated_substr2 + rand_str(10) + repeated_substr;
+        str_list.push_back(current_str); current_str.clear();
+        for (unsigned int i=0; i<5000; ++i) current_str += repeated_substr3 + rand_str(10) + repeated_substr;
+        str_list.push_back(current_str);
+
+        b.set_substring(&repeated_substr);
+        for (unsigned int str_id = 0; str_id < str_list.size(); ++str_id)
+        //for (unsigned int str_id = 0; str_id < 1; ++str_id)
+        {
+            b.clear();
+            std::cout << "Testing against string #" << str_id << ':' << std::endl;
+            b.set_string(&str_list[str_id]);
+            while (boost::distance(b.find_next()));
+            b.output_stats(std::cout);
+        }
     } // end try
     catch (boost::exception const &e)
     {

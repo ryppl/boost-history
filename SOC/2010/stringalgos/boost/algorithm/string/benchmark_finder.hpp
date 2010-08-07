@@ -44,6 +44,10 @@
 #include <boost/spirit/home/phoenix/core/argument.hpp>
 #include <boost/spirit/home/phoenix/core/reference.hpp>
 
+//!\todo pretty messy, Boost.Chrono?
+#ifdef BOOST_WINDOWS
+#include <windows.h>
+#endif
 
 #include <deque>
 #include <string>
@@ -60,9 +64,15 @@
 
 namespace boost { namespace algorithm {
 
-    template <class Range1T, class Range2T, class AlgorithmSequenceT,
-        class ComparatorT/*,
-        template <class,class,class,class,class,class> class AdditionalBehaviorT*/>
+    //! A generic finder type which benchmarks string search algorithms.
+    /** Poseses a similar interface to \ref finder_t and allows to test
+        the performance of various string search algorithms in order to allow easier
+        choice of the right algorithm for a certain data set
+        \tparam Range1T A range representing the type of the substring (the pattern)
+        \tparam Range2T A range representing the type of the string (the text)
+        */
+        template <class Range1T, class Range2T, class AlgorithmSequenceT,
+        class ComparatorT>
     class benchmark_finder :
         public boost::algorithm::detail::finder_typedefs<Range1T, Range2T,
         ComparatorT, std::allocator<std::size_t> >
@@ -188,11 +198,25 @@ namespace boost { namespace algorithm {
             string_range_type operator() (string_range_type correct, Finder &finder) const
             {
                 string_range_type ret;
-                double time;
+                //pray for Boost.Chrono, I don't like this.
+                double elapsed;
                 try {
+#                   ifdef BOOST_WINDOWS
+                    LARGE_INTEGER start, end, freq;
+                    QueryPerformanceFrequency(&freq);
+                    QueryPerformanceCounter(&start);
+#                   else
                     boost::timer t;
+#                   endif
+
                     ret = finder.first.find_next();
-                    time = t.elapsed();
+
+#                   ifdef BOOST_WINDOWS
+                    QueryPerformanceCounter(&end);
+                    elapsed = (double)(end.QuadPart - start.QuadPart)/freq.QuadPart;
+#                   else
+                    elapsed = t.elapsed();
+#                   endif
                 } catch (std::exception const &e) { BOOST_THROW_EXCEPTION(e); }
                 bool is_correct = boost::equal(correct, ret);
                 //assert(is_correct);
@@ -211,7 +235,7 @@ namespace boost { namespace algorithm {
 
                     BOOST_THROW_EXCEPTION( std::runtime_error(ss.str()) );
                 }
-                finder.second.push_back(time);
+                finder.second.push_back(elapsed);
                 return correct;
             }
         };

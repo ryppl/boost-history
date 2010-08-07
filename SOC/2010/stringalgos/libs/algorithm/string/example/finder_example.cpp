@@ -5,6 +5,7 @@
 #include <boost/algorithm/string/string_search.hpp>
 #include <boost/algorithm/string/finder.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
+#include <boost/algorithm/string/finder_aliases.hpp>
 
 #include <boost/range/algorithm/copy.hpp>
 

@@ -67,16 +67,12 @@ namespace boost { namespace algorithm {
 		};
 
 	};
-		
+    struct naive_search_tag { typedef boost::algorithm::naive_search type; };
 } }
 	
 namespace boost
 {
     using boost::algorithm::naive_search;
-    typedef boost::algorithm::finder_t<std::string, std::string,
-        boost::algorithm::naive_search> naive_search_finder;
-    typedef boost::algorithm::finder_t<std::wstring, std::wstring,
-        boost::algorithm::naive_search> wnaive_search_finder;
 }
 
 #endif

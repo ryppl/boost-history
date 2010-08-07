@@ -84,22 +84,16 @@ namespace boost { namespace algorithm {
     //1/150167080229379589 odds of collision. useful with wchar_t
     typedef rabin_karp_algorithm<boost::uint64_t,337515847,373587883,255150899,401959183> rabin_karp64;
 
+    struct rabin_karp32_tag { typedef boost::algorithm::rabin_karp32 type; };
+    struct rabin_karp64_tag { typedef boost::algorithm::rabin_karp64 type; };
 } } // namespace algorithm, namespace boost
 
 namespace boost
 {
     using boost::algorithm::rabin_karp32;
     using boost::algorithm::rabin_karp64;
-    
-    typedef boost::algorithm::finder_t<std::string, std::string,
-        boost::algorithm::rabin_karp32> rabin_karp32_finder;
-    typedef boost::algorithm::finder_t<std::wstring, std::wstring,
-        boost::algorithm::rabin_karp32> wrabin_karp32_finder;
-
-    typedef boost::algorithm::finder_t<std::string, std::string,
-        boost::algorithm::rabin_karp64> rabin_karp64_finder;
-    typedef boost::algorithm::finder_t<std::wstring, std::wstring,
-        boost::algorithm::rabin_karp64> wrabin_karp64_finder;
+    using boost::algorithm::rabin_karp32_tag;
+    using boost::algorithm::rabin_karp64_tag;
 }
 
 #endif

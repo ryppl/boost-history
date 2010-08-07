@@ -29,6 +29,8 @@
     delimiting the substring.
 */
 
+//!\todo update doc here
+
 namespace boost {
     namespace algorithm {
 
@@ -45,6 +47,7 @@ namespace boost {
                 Returned iterator is either \c RangeT::iterator or 
                 \c RangeT::const_iterator, depending on the constness of 
                 the input parameter.
+            \deprecated
         */
         template<typename RangeT, typename FinderT>
         inline iterator_range< 
@@ -53,27 +56,41 @@ namespace boost {
             RangeT& Input, 
             const FinderT& Finder)
         {
+            
             iterator_range<BOOST_STRING_TYPENAME range_iterator<RangeT>::type> lit_input(::boost::as_literal(Input));
-
             return Finder(::boost::begin(lit_input),::boost::end(lit_input));
         }
 
 //  find_first  -----------------------------------------------//
 
-        //! Find first algorithm
+        //! Find first algorithm (not deprecated)
         /*!
             Search for the first occurrence of the substring in the input. 
             
             \param Input A string which will be searched.
             \param Search A substring to be searched for.
             \return 
-                An \c iterator_range delimiting the match. 
-                Returned iterator is either \c RangeT::iterator or 
-                \c RangeT::const_iterator, depending on the constness of 
-                the input parameter.
+            An \c iterator_range delimiting the match. 
+            Returned iterator is either \c RangeT::iterator or 
+            \c RangeT::const_iterator, depending on the constness of 
+            the input parameter.
 
-              \note This function provides the strong exception-safety guarantee
-        */
+            \note This function provides the strong exception-safety guarantee
+            */
+        template<typename Range1T, typename Range2T, typename AlgorithmTagT>
+        inline iterator_range< 
+            BOOST_STRING_TYPENAME range_iterator<Range1T>::type>
+        find_first( 
+            Range1T& Input, 
+            const Range2T& Search,
+            AlgorithmTagT const &algorithm)
+        {
+            boost::algorithm::simplified_finder_t<Range2T, Range1T, typename AlgorithmTagT::type>
+                finder(&Search, &Input);
+            return finder.find_first();
+            //return ::boost::algorithm::find(Input, ::boost::algorithm::first_finder(Search));
+        }
+
         template<typename Range1T, typename Range2T>
         inline iterator_range< 
             BOOST_STRING_TYPENAME range_iterator<Range1T>::type>
@@ -81,8 +98,9 @@ namespace boost {
             Range1T& Input, 
             const Range2T& Search)
         {
-            return ::boost::algorithm::find(Input, ::boost::algorithm::first_finder(Search));
+            return boost::algorithm::find_first(Input, Search, boost::algorithm::default_finder_algorithm_tag());
         }
+
 
         //! Find first algorithm ( case insensitive )
         /*!
@@ -100,16 +118,30 @@ namespace boost {
 
             \note This function provides the strong exception-safety guarantee
         */
-        template<typename Range1T, typename Range2T>
+        template<typename Range1T, typename Range2T, typename AlgorithmTagT>
         inline iterator_range< 
             BOOST_STRING_TYPENAME range_iterator<Range1T>::type>
         ifind_first( 
             Range1T& Input, 
             const Range2T& Search,
+            AlgorithmTagT const &,
             const std::locale& Loc=std::locale())
         {
-            return ::boost::algorithm::find(Input, ::boost::algorithm::first_finder(Search,is_iequal(Loc)));
-            //return ::boost::algorithm::find(Input, ::boost::algorithm::finder_t<
+            boost::algorithm::simplified_finder_t<Range2T, Range1T, typename AlgorithmTagT::type,
+                ::boost::algorithm::is_iequal> finder(&Search, &Input, ::boost::algorithm::is_iequal(Loc));
+            return finder.find_first();
+        }
+
+        template<typename Range1T, typename Range2T>
+        inline iterator_range< 
+            BOOST_STRING_TYPENAME range_iterator<Range1T>::type>
+        ifind_first(
+            Range1T& Input, 
+            const Range2T& Search,
+            const std::locale& Loc=std::locale())
+        {
+            return boost::algorithm::ifind_first(Input, Search,
+                boost::algorithm::default_finder_algorithm_tag(), Loc);
         }
 
 //  find_last  -----------------------------------------------//
@@ -128,14 +160,42 @@ namespace boost {
 
             \note This function provides the strong exception-safety guarantee
         */
-        template<typename Range1T, typename Range2T>
+        template<typename Range1T, typename Range2T, typename AlgorithmTagT>
         inline iterator_range< 
             BOOST_STRING_TYPENAME range_iterator<Range1T>::type>
         find_last( 
             Range1T& Input, 
+            const Range2T& Search,
+            AlgorithmTagT const &)
+        {
+            //!\todo find a way to use rbegin and rend here (via boost::adaptors::reversed)
+            //      if they are available (i.e. if the ranges are bidirectional at least)
+            //!\TODO IMPORTANT FIX this so it works (the final if check does not work properly)
+            simplified_finder_t<Range2T, Range1T, typename AlgorithmTagT::type>
+                finder(&Search, &Input);
+            boost::iterator_range<typename boost::range_iterator<Range1T>::type>
+                crt = make_iterator_range(boost::end(Input), boost::end(Input)),
+                prev;
+            for (;;)
+            {
+                prev=crt;
+                crt=finder.find_next();
+                if (boost::begin(crt) == boost::end(Input)) break;
+            }
+            return prev;
+
+            //return ::boost::algorithm::find(Input, ::boost::algorithm::last_finder(Search));
+        }
+
+        template<typename Range1T, typename Range2T>
+        inline iterator_range< 
+            BOOST_STRING_TYPENAME range_iterator<Range1T>::type>
+            find_last( 
+            Range1T& Input, 
             const Range2T& Search)
         {
-            return ::boost::algorithm::find(Input, ::boost::algorithm::last_finder(Search));
+            return boost::algorithm::find_last(Input, Search,
+                boost::algorithm::default_finder_algorithm_tag());
         }
 
         //! Find last algorithm ( case insensitive )

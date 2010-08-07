@@ -21,6 +21,8 @@
 
 #include <boost/unordered_map.hpp>
 #include <boost/functional/hash.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <locale>
 
 namespace boost { namespace algorithm {
     struct boyer_moore
@@ -62,21 +64,47 @@ namespace boost { namespace algorithm {
             inline void on_string_change()
             { }
         private:
-            struct compute_first_table_functor {
+            struct compute_first_table_functor
+            {
+                //Case 1: ComparatorT=boost::algorithm::is_equal
                 void operator()(typename boost::call_traits<substring_char_type>::param_type c)
+                {
+                    compute_first_table<comparator_type>(c);
+                }
+                compute_first_table_functor (algorithm &alg) : idx_(0), alg_(alg)
+                { alg_.table1.clear(); }
+            private:
+                template <class ComparatorTT>
+                void compute_first_table(typename boost::call_traits<substring_char_type>::param_type c,
+                    typename boost::enable_if<
+                    typename boost::is_same<ComparatorTT, boost::algorithm::is_equal> >::type* =0)
                 {
                     //alg_.table1.insert( std::make_pair(c, alg_.substr_size_ - 1 - idx_) );
                     if (idx_ != 0) alg_.table1.insert(std::make_pair(c, idx_));
 
                     ++idx_;
                 }
-                compute_first_table_functor (algorithm &alg) : idx_(0), alg_(alg)
-                { alg_.table1.clear(); }
-            private:
+
+                //Case 2: ComparatorT=boost::algorithm::is_iequal
+                template <class ComparatorTT>
+                void compute_first_table(typename boost::call_traits<substring_char_type>::param_type c,
+                    typename boost::enable_if<
+                    typename boost::is_same<ComparatorTT, boost::algorithm::is_iequal> >::type* =0)
+                {
+                    //Case insensitive matches are supported properly for char (in case of Boyer-Moore)
+                    BOOST_STATIC_ASSERT((boost::is_same<substring_char_type,char>::value));
+
+                    //!\todo get locale from user?
+                    if (idx_ != 0) alg_.table1.insert(std::make_pair(
+                        std::tolower(c, std::locale()), idx_
+                        ));
+                    ++idx_;
+                }
                 std::size_t idx_;
                 algorithm &alg_;
             };
 
+#if 0
             struct compute_second_table_functor {
                 void operator()(typename boost::call_traits<substring_char_type>::param_type c)
                 {
@@ -88,6 +116,7 @@ namespace boost { namespace algorithm {
                 std::size_t idx_;
                 algorithm &alg_;
             };
+#endif
 
             //precomputation on pattern=bidirectional range
             void on_substring_change(std::bidirectional_iterator_tag)
@@ -102,8 +131,127 @@ namespace boost { namespace algorithm {
                     compute_first_table_functor(*this));
                 
                 //Compute the second table
-                boost::for_each(substr | boost::adaptors::reversed,
-                    compute_second_table_functor(*this));
+               
+                //this is a table similar to the one in the KMP algorithm
+                //failure_func[i]=k means k is the size of the biggest boundary of the string P[i..m-1]
+                //(which is not the string itself)
+                //i.e. P[i..i+k+1] = P[..m-1]
+                std::vector<std::size_t, typename allocator_type::template rebind<std::size_t>::other>
+                    failure_func(substr_size_);
+
+
+                //The second table: delta2(x) = m-1-i + min(d1(x),d2(x)) <= 2m-1-i
+                table2.clear(); table2.reserve(substr_size_);
+                for (unsigned int i = 0; i < substr_size_; ++i)
+                    table2.push_back(2*substr_size_ - 1 - i); // initialize with m-1-i+m=2m-1-i (maximum)
+                    //table2.push_back(substr_size_);
+
+                if (substr_size_ < 2) return;
+
+                substring_iterator_type const &pattern = boost::begin(substr);
+
+                //!\todo find a better solution for this
+                for (unsigned int i = substr_size_-1;i--;)
+                {
+                    if (!comp(pattern[i],pattern[substr_size_-1]))
+                    {
+                        table2[substr_size_-1] = substr_size_ - 1 - i;
+                        break;
+                    }
+                }
+
+                //feel free to refactor if you can find better names heh
+                std::size_t i = substr_size_ - 1,j = substr_size_ - 2;
+                //it's zero-initialized anyway
+                ///failure_func[substr_size_-1] = 0; // the one-character string cannot have boundaries
+
+                //Start computing failure_func, and at the same time use the obtained values
+                //to compute the first part of the second table (d1)
+                while (true) // the condition is j>=0, checked at the end.
+                {
+                    //Invariant: P[i+1..m-1] = P[j+1..m-1]
+                    //try to align with pattern indexed by j (by sliding the pattern indexed by i)
+                    while (i != substr_size_ - 1 && !comp(pattern[i],pattern[j]))
+                        i = substr_size_ - 1 - failure_func[i + 1];
+
+                    //Invariant: Either i=m-1 or P[i..m-1] = P[j..m-1]
+                    while (i == substr_size_-1 && j > 0 && !comp(pattern[substr_size_-1],pattern[j]))
+                    {
+                        //couldn't align the given j with any i
+                        failure_func[j] = 0;
+                        --j;
+                    }
+                    //Invariant: either (j==0 and i=m-1) or P[i..m-1] = P[j..m-1]
+                    if (j == 0 && i == substr_size_-1 && !comp(pattern[0],pattern[substr_size_-1]))
+                    {
+                        failure_func[0] = 0;
+                    }
+                    else failure_func[j] = substr_size_-i;
+
+                    //we only use the newly computed value pi(j)=a if j and a are nonzero.
+                    if (j != 0)
+                    {
+                        //Invariant: P[i..m-1] = P[j..m-1] (i and j are aligned)
+                        /*
+                        Let B_P(i) be the set of all boundary sizes of P[i..m-1]
+                        B_P(i) = { k+1 | (k=-1) OR (P[i..i+k] = P[m-1-k..m-1]) }
+                        (k+1 because P[i..i+k] contains k+1 characters)
+                        (k=-1 because k+1=0 is always a valid boundary size -- the empty boundary)
+                        The set B_P(j) is computed at this point, based on the assignment on
+                        the failure function above.
+
+                        We want to compute:
+                        d1(x) = min { k | (k=m) OR ((P[x+1..m-1] = P[x+1-k..m-1-k]) AND P[i]!=P[i-k]) }
+                         for x<m-1 and k>0
+                        This is equivalent to:
+                        d1(x) = min { k | (k=m) OR (m-1-x \in B_P(x+1-k) AND P[i]!=P[i-k]) }
+                        
+                        Whenever a mismatch occurs whilist matching this pattern against a text,
+                        d1(x) tells us how much the pattern should shift in order for it to be able
+                        to match.
+
+                        */
+
+                        //for all nonzero a \in B_P(j):
+                        
+                        //Using the definition of d1 above:
+                        //a = m-1-x <=> x = m-1-a
+                        //j = x+1-k <=> k = m-a-j
+                        unsigned int a = failure_func[j];
+                        while (a > 0 && !comp(pattern[substr_size_-1-a], pattern[j-1]))
+                        {
+                            assert(substr_size_-1-a >= substr_size_-a-j); // x >= k
+                            if (table2[substr_size_-1-a] > 2*substr_size_-i-1 -a-j)
+                                table2[substr_size_-1-a] = 2*substr_size_-i-1 -a-j;
+                            //if (table2[substr_size_-1-a] > substr_size_-a-j)
+                            //    table2[substr_size_-1-a] = substr_size_-a-j;
+
+                            a = failure_func[substr_size_ - a]; // get the next boundary size in B_P(j)
+                        }
+                    }
+                    if (j > 0) { --j; --i; }
+                    else break;
+                }
+                //We're done computing the reverse KMP function and the first part of the second table
+                //now for the second part:
+                //d2(i) = min { k-1 | (k=m+1) OR (P[0..m-k] = P[k-1..m-1] AND i+2<=k<=m) }
+                //equivalent to:
+                //d2(i) = min { k-1 | (k=m+1) OR (m-k+1 \in B_P(0) AND i+2 <= k <= m) }
+
+                //!\TODO IMPORTANT!! MUST REMOVE THE LOOP BELOW, IT'S ONLY FOR DEBUGGING PURPOSES
+                //for (std::size_t i = 0; i < substr_size_; ++i)
+                //    table2[i] = substr_size_;
+
+                std::size_t boundary = failure_func[0];
+                for (std::size_t i = 0; i < substr_size_-1 && boundary; ++i)
+                {
+                    while (boundary > 0 && i+1>substr_size_-boundary)
+                        boundary = failure_func[substr_size_-boundary];
+                    if (table2[i] > 2*substr_size_-i-1-boundary)
+                        table2[i] = 2*substr_size_-i-1-boundary;
+                    //if (table2[i] > substr_size_-boundary)
+                    //    table2[i] = substr_size_-boundary;
+                }
             }
 
             //finding in text=random access range
@@ -119,7 +267,9 @@ namespace boost { namespace algorithm {
                     return string_range_type(start, start);
 
                 str_size = boost::end(str) - start;
-                for (str_idx = substr_size_ - 1, substr_idx = substr_size_ - 1; str_idx < str_size;)
+                str_idx = substr_size_ - 1; substr_idx = substr_size_ - 1;
+
+                while (str_idx < str_size)
                 {
                     if (comp(start[str_idx],
                         boost::begin(substr)[substr_idx]))
@@ -132,23 +282,29 @@ namespace boost { namespace algorithm {
                     }
                     else
                     {
-                        table1_type::const_iterator iter = table1.find(start[str_idx]);
+                        table1_type::const_iterator iter = table1_find<comparator_type>(start[str_idx]);
+                        std::size_t step = substr_size_ - substr_idx;
                         if (iter == table1.end())
                         {
-                            str_idx += substr_size_ - substr_idx;
-                            substr_idx = substr_size_ - 1;
+                            step = substr_size_;
                         }
-                        //else if (iter->second > substr_idx)
-                        //{
-                        //    str_idx += iter->second;
-                        //    substr_idx = substr_size_ - 1;
-                        //}
-                        else
+                        else if (substr_size_ - 1 - iter->second < substr_idx)
                         {
-                            assert(substr_size_ >= substr_idx);
-                            str_idx += substr_size_-substr_idx;
-                            substr_idx = substr_size_ - 1;
+                            step = iter->second;
                         }
+                                                
+                        if (step < table2[substr_idx]) str_idx += table2[substr_idx];
+                        else str_idx += step;
+                        //start from the end of the substring again.
+                        substr_idx = substr_size_ - 1;
+                        //fast loop. get rid of matches that fail on the first character.
+                        //remove this if it shows no improvement whatsoever. might be useful after adding table2
+                        /*while (str_idx < str_size && !comp(start[str_idx],boost::begin(substr)[substr_idx]))
+                        {
+                            table1_type::const_iterator iter = table1_find<comparator_type>(start[str_idx]);
+                            if (iter == table1.end()) str_idx += substr_size_;
+                            else str_idx += iter->second;
+                        }*/
                     }
                 }
                 return string_range_type(boost::end(str), boost::end(str));
@@ -162,6 +318,28 @@ namespace boost { namespace algorithm {
                     rebind<substring_char_type>::other
             > table1_type;
             table1_type table1;
+            typedef typename std::vector<std::size_t,
+                typename AllocatorT::template rebind<std::size_t>::other
+            > table2_type;
+            table2_type table2;
+
+            //Case 1: ComparatorT=boost::algorithm::is_equal
+            template <class ComparatorTT>
+            typename table1_type::iterator table1_find (string_char_type const &chr,
+            typename boost::enable_if<
+                typename boost::is_same<ComparatorTT, boost::algorithm::is_equal> >::type* = 0)
+            {
+                return table1.find(chr);
+            }
+
+            //Case 2: ComparatorT=boost::algorithm::is_iequal
+            template <class ComparatorTT>
+            typename table1_type::iterator table1_find (string_char_type const &chr,
+                typename boost::enable_if<
+                    typename boost::is_same<ComparatorTT, boost::algorithm::is_iequal> >::type* = 0)
+            {
+                return table1.find(std::tolower(chr, std::locale()));
+            }
             
             //std::vector<std::pair<substring_char_type, std::size_t> > table1;
 
@@ -169,15 +347,13 @@ namespace boost { namespace algorithm {
 
         };
     };
+    struct boyer_moore_tag { typedef boost::algorithm::boyer_moore type; };
 } }
 
 namespace boost
 {
     using boost::algorithm::boyer_moore;
-    typedef boost::algorithm::finder_t<std::string, std::string,
-        boost::algorithm::boyer_moore> boyer_moore_finder;
-    typedef boost::algorithm::finder_t<std::wstring, std::wstring,
-        boost::algorithm::boyer_moore> wboyer_moore_finder;
+    using boost::algorithm::boyer_moore_tag;
 }
 
 #endif

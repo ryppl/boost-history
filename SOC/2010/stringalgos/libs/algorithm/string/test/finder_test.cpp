@@ -292,6 +292,8 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION(test_finders, Algorithm)
     BOOST_CHECK_EQUAL(boost::distance(f.find_first()), 44);
     BOOST_CHECK_EQUAL(boost::distance(f.find_next()), 0);
 
+    //!\todo remove the useless checkpoints 'n stuff
+
     // (0, 1) (1, 2) (2, 3) (3, 4) (4, 5) (5, 6) (6, 7) (7, 8) (8, 9) (9, 10) (10, 11) (11, 12) (12, 13) (13, 14) (14, 15) (15, 16) (16, 17)
     assign_literal(substr,
         "x",1);
@@ -588,13 +590,244 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION(test_finders, Algorithm)
         BOOST_CHECK_EQUAL(f.find_next_index(), i);
 }
 
+void find_test()
+{
+    string str1("123abcxXxabcXxXabc321");
+    string str2("abc");
+    string str3("");
+    const char* pch1="123abcxxxabcXXXabc321";
+    vector<int> vec1( str1.begin(), str1.end() );
+
+    // find results ------------------------------------------------------------//
+    iterator_range<string::iterator> nc_result;
+    iterator_range<string::const_iterator> cv_result;
+    
+    iterator_range<vector<int>::iterator> nc_vresult;
+    iterator_range<vector<int>::const_iterator> cv_vresult;
+
+    iterator_range<const char*> ch_result;
+
+    // basic tests ------------------------------------------------------------//
+
+
+    // find_first
+    BOOST_CHECKPOINT( "find_first" );
+
+    nc_result=find_first( str1, string("abc") );
+    BOOST_CHECK(nc_result.begin()-str1.begin() == 3);
+    BOOST_CHECK(nc_result.end()-str1.begin() == 6);
+
+    cv_result=find_first( const_cast<const string&>(str1), str2 );
+    BOOST_CHECK( 
+        ( (cv_result.begin()-str1.begin()) == 3) &&
+        ( (cv_result.end()-str1.begin()) == 6) );
+
+    cv_result=ifind_first( const_cast<const string&>(str1), "xXX" );
+    BOOST_CHECK( 
+        ( (cv_result.begin()-str1.begin()) == 6) &&
+        ( (cv_result.end()-str1.begin()) == 9) );
+
+    ch_result=find_first( pch1, "abc" );
+    BOOST_CHECK(( (ch_result.begin() - pch1 ) == 3) && ( (ch_result.end() - pch1 ) == 6 ) );
+
+
+    //!\todo uncomment after finishing impl
+    /*
+    // find_last
+    BOOST_CHECKPOINT( "find_last" );
+    
+    nc_result=find_last( str1, string("abc") );
+    BOOST_CHECK( 
+        ( (nc_result.begin()-str1.begin()) == 15) &&
+        ( (nc_result.end()-str1.begin()) == 18) );
+
+    cv_result=find_last( const_cast<const string&>(str1), str2 );
+    BOOST_CHECK( 
+        ( (cv_result.begin()-str1.begin()) == 15) &&
+        ( (cv_result.end()-str1.begin()) == 18) );
+
+    cv_result=ifind_last( const_cast<const string&>(str1), "XXx" );
+    BOOST_CHECK( 
+        ( (cv_result.begin()-str1.begin()) == 12) &&
+        ( (cv_result.end()-str1.begin()) == 15) );
+
+    ch_result=find_last( pch1, "abc" );
+    BOOST_CHECK(( (ch_result.begin() - pch1 ) == 15) && ( (ch_result.end() - pch1 ) == 18 ) );
+
+    // find_nth
+    BOOST_CHECKPOINT( "find_nth" );
+
+    nc_result=find_nth( str1, string("abc"), 1 );
+    BOOST_CHECK( 
+        ( (nc_result.begin()-str1.begin()) == 9) &&
+        ( (nc_result.end()-str1.begin()) == 12) );
+
+    nc_result=find_nth( str1, string("abc"), -1 );
+    BOOST_CHECK( 
+        ( (nc_result.begin()-str1.begin()) == 15) &&
+        ( (nc_result.end()-str1.begin()) == 18) );
+
+
+    cv_result=find_nth( const_cast<const string&>(str1), str2, 1 );
+    BOOST_CHECK( 
+        ( (cv_result.begin()-str1.begin()) == 9) &&
+        ( (cv_result.end()-str1.begin()) == 12) );
+
+    cv_result=find_nth( const_cast<const string&>(str1), str2, -1 );
+    BOOST_CHECK( 
+        ( (cv_result.begin()-str1.begin()) == 15) &&
+        ( (cv_result.end()-str1.begin()) == 18) );
+        
+    cv_result=ifind_nth( const_cast<const string&>(str1), "xxx", 1 );
+    BOOST_CHECK( 
+        ( (cv_result.begin()-str1.begin()) == 12) &&
+        ( (cv_result.end()-str1.begin()) == 15) );
+
+    cv_result=ifind_nth( const_cast<const string&>(str1), "xxx", 1 );
+    BOOST_CHECK( 
+        ( (cv_result.begin()-str1.begin()) == 12) &&
+        ( (cv_result.end()-str1.begin()) == 15) );
+
+
+    ch_result=find_nth( pch1, "abc", 1 );
+    BOOST_CHECK(( (ch_result.begin() - pch1 ) == 9) && ( (ch_result.end() - pch1 ) == 12 ) );
+    */
+
+    // find_head
+    BOOST_CHECKPOINT( "find_head" );
+
+    nc_result=find_head( str1, 6 );
+    BOOST_CHECK( 
+        ( (nc_result.begin()-str1.begin()) == 0) &&
+        ( (nc_result.end()-str1.begin()) == 6) );
+
+    nc_result=find_head( str1, -6 );
+    BOOST_CHECK( 
+        ( (nc_result.begin()-str1.begin()) == 0) &&
+        ( (str1.end()-nc_result.end()) == 6 ) );
+
+    cv_result=find_head( const_cast<const string&>(str1), 6 );
+    BOOST_CHECK( 
+        ( (cv_result.begin()-str1.begin()) == 0) &&
+        ( (cv_result.end()-str1.begin()) == 6) );
+
+    ch_result=find_head( pch1, 6 );
+    BOOST_CHECK( ( (ch_result.begin() - pch1 ) == 0 ) && ( (ch_result.end() - pch1 ) == 6 ) );
+
+    // find_tail
+    BOOST_CHECKPOINT( "find_tail" );
+
+    nc_result=find_tail( str1, 6 );
+    BOOST_CHECK( 
+        ( (nc_result.begin()-str1.begin()) == 15) &&
+        ( (nc_result.end()-str1.begin()) == 21) );
+
+    nc_result=find_tail( str1, -6 );
+    BOOST_CHECK( 
+        ( (nc_result.begin()-str1.begin()) == 6) &&
+        ( (nc_result.end()-str1.begin()) == 21) );
+
+
+    cv_result=find_tail( const_cast<const string&>(str1), 6 );
+    BOOST_CHECK( 
+        ( (cv_result.begin()-str1.begin()) == 15) &&
+        ( (cv_result.end()-str1.begin()) == 21) );
+
+    ch_result=find_tail( pch1, 6 );
+    BOOST_CHECK( ( (ch_result.begin() - pch1 ) == 15 ) && ( (ch_result.end() - pch1 ) == 21 ) );
+
+    // find_token
+    BOOST_CHECKPOINT( "find_token" );
+
+    nc_result=find_token( str1, is_any_of("abc"), token_compress_on );
+    BOOST_CHECK( 
+        ( (nc_result.begin()-str1.begin()) == 3) &&
+        ( (nc_result.end()-str1.begin()) == 6) );
+
+    cv_result=find_token( const_cast<const string&>(str1), is_any_of("abc"), token_compress_on );
+    BOOST_CHECK( 
+        ( (cv_result.begin()-str1.begin()) == 3) &&
+        ( (cv_result.end()-str1.begin()) == 6) );
+
+    nc_result=find_token( str1, is_any_of("abc"), token_compress_off );
+    BOOST_CHECK( 
+        ( (nc_result.begin()-str1.begin()) == 3) &&
+        ( (nc_result.end()-str1.begin()) == 4) );
+
+    cv_result=find_token( const_cast<const string&>(str1), is_any_of("abc"), token_compress_off );
+    BOOST_CHECK( 
+        ( (cv_result.begin()-str1.begin()) == 3) &&
+        ( (cv_result.end()-str1.begin()) == 4) );
+
+    ch_result=find_token( pch1, is_any_of("abc"), token_compress_off );
+    BOOST_CHECK( ( (ch_result.begin() - pch1 ) == 3 ) && ( (ch_result.end() - pch1 ) == 4 ) );
+
+    // generic find
+    BOOST_CHECKPOINT( "generic find" );
+    /*
+    nc_result=find(str1, first_finder(string("abc")));
+    BOOST_CHECK( 
+        ( (nc_result.begin()-str1.begin()) == 3) &&
+        ( (nc_result.end()-str1.begin()) == 6) );
+
+    cv_result=find(const_cast<const string&>(str1), first_finder(str2) );
+    BOOST_CHECK( 
+        ( (cv_result.begin()-str1.begin()) == 3) &&
+        ( (cv_result.end()-str1.begin()) == 6) );
+    */
+    // multi-type comparison test 
+    BOOST_CHECKPOINT( "multi-type" );
+
+    //!\todo fix this in find_test.cpp. find why teh fuck did these tests use to pass.
+    nc_vresult=find_first( vec1, string("abc") );
+    BOOST_CHECK(nc_vresult.begin()-vec1.begin() == 3);
+    BOOST_CHECK(nc_vresult.end()-vec1.begin() == 6);
+
+    cv_vresult=find_first( const_cast<const vector<int>&>(vec1), str2 );
+    BOOST_CHECK( 
+        ( (cv_vresult.begin()-vec1.begin()) == 3) &&
+        ( (cv_vresult.end()-vec1.begin()) == 6) );
+
+    // overflow test
+    BOOST_CHECKPOINT( "overflow" );
+    
+    nc_result=find_first( str2, string("abcd") );
+    BOOST_CHECK( nc_result.begin()==nc_result.end() );
+    cv_result=find_first( const_cast<const string&>(str2), string("abcd") );
+    BOOST_CHECK( cv_result.begin()==cv_result.end() );
+
+    cv_result=find_head( const_cast<const string&>(str2), 4 );
+    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )== string("abc") );
+    cv_result=find_tail( const_cast<const string&>(str2), 4 );
+    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )== string("abc") );
+
+    // Empty string test
+    BOOST_CHECKPOINT( "empty" );
+    
+    nc_result=find_first( str3, string("abcd") );
+    BOOST_CHECK( nc_result.begin()==nc_result.end() );
+    nc_result=find_first( str1, string("") );
+    BOOST_CHECK( nc_result.begin()==nc_result.end() );
+
+    cv_result=find_first( const_cast<const string&>(str3), string("abcd") );
+    BOOST_CHECK( cv_result.begin()==cv_result.end() );
+    cv_result=find_first( const_cast<const string&>(str1), string("") );
+    BOOST_CHECK( cv_result.begin()==cv_result.end() ); 
+
+    // iterator_range specific tests
+    ostringstream osstr;
+    osstr << find_first( str1, "abc" );
+    BOOST_CHECK( osstr.str()=="abc" );
+}
+
+
 boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
 {
 
     /*!\todo test with other allocators and comparators
     \todo test with different iterator types, depending on what each algorithm supports
     \todo test matches of empty substring in nonempty string (should return empty range but iterators with proper offset)
-    \todo test the nonmatch of nonempty substring in empty string
+    \todo test the non-match of nonempty substring in empty string
     \todo test the unique match of empty substring in empty string
     \todo test more strings with consecutive substring matches
     */
@@ -614,5 +847,7 @@ boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
     boost::unit_test::framework::master_test_suite().add(
         BOOST_TEST_CASE(logpow_test)
         );
+    boost::unit_test::framework::master_test_suite().add(
+        BOOST_TEST_CASE(find_test));
     return NULL;
 }
