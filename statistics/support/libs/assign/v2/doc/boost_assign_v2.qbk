@@ -135,7 +135,7 @@ but in practice define: [def __value___ [tpl_typeof __value__]] and use __value_
 [def __concept_containerconvertible__ 	[link boost_assign_v2._.reference.concept.container_convertible ContainerConvertible]]
 
 [def __concept_rangelvalue__			RangeLvalue]
-[def __link_concept_rangelvalue__		[link boost_assign_v2._.reference.concept.range_lvalue RangeLvalue]]
+[def __link_concept_rangelvalue__		[link boost_assign_v2._.reference.concept.range_lvalue RangeLValue]]
 
 [/ PP constants]
 
@@ -447,7 +447,7 @@ The `__array__` returned by
 	__link_anon__<__link_ref_assign_tag__>( __arg_0__ )( __arg_1__ )( __arg_2__ );
 ``
 dereferences to `__arg_0__`, `__arg_1__`, and  `__arg_2__`, respectively. Clearly only [tpl_sec_concept_fun_syntax unary 
-function] calls are allowed, but there is a [tpl_sec_concept_fun_syntax csv counterpart] as well (see below). 
+function] calls are allowed, and there is a [tpl_sec_concept_fun_syntax csv counterpart] as well (see below). 
 The template argument `__ref_assign_tag__` specifies [tpl_sec_ref_assign_semantics reference
 assign semantics]. Rather than specifying `__link_ref_assign_tag__`, it is equivalent to use a dedicated 
 `namespace`. For [tpl_sec_ref_assign_semantics copy semantics],
@@ -473,8 +473,13 @@ For [tpl_sec_ref_assign_semantics rebind semantics],
 [section Chaining ranges]
 To assign from chained ranges:
 ``
-	to = (r1 __link_chain_op__ r2 __link_chain_op__ r3).__link_convert_mf__<To>();
+	to = (r1 __link_chain_op__ r2 __link_chain_op__ r3);
 ``
+To copy-construct from chained ranges: 
+``
+	To to = (r1 __link_chain_op__ r2 __link_chain_op__ r3).__link_convert_mf__<To>();
+``
+
 Chaining is elementwise-__lvalue__ preserving:
 ``
 	__header_typeof__
@@ -487,11 +492,7 @@ Chaining is elementwise-__lvalue__ preserving:
 	BOOST_ASSERT( __arg_2__ == __container__[2] );
 ``
 The fact that `__link_ref_anon__( __arg_2__ )`, above, returns an rvalue should underscore the significance of ['elementwise]
-in our previous statement. See `__link_concept_rangelvalue__`. Continuing our example,
-
-``
-	tmp.__link_convert_mf__<__container___>();
-``
+in our previous statement. See `__link_concept_rangelvalue__`. 
 
 [endsect] [/chain]
 [section Running the code]
@@ -589,7 +590,11 @@ is equivalent to
 [section Concept]
 [section:ref_assign Reference assignment]
 
-Let a reference wrapper, `__ref_wrapper__`, binding to some reference `y1` of type `__value__`. Consider assigning it as follows:
+Let a reference wrapper, `__ref_wrapper__`, binding to some reference `y1` of type `__value__` i.e.
+``
+	&y1 == &__ref_wrapper__.get_ref();
+``
+Consider assigning it as follows:
 ``
 	__ref_wrapper__ = y2;
 ``
@@ -599,7 +604,7 @@ by the concepts below:
 [table
 	[[Name][Requirement][Description]]
 	[[[^__concept_assigncopy__]][ `y1 == y2;` ][The bound reference is assigned a new value]]
-	[[[^__concept_assignrebind__]][ `&__ref_wrapper__ == &y2;` ][The reference wrapper binds to a new reference]]
+	[[[^__concept_assignrebind__]][ `&__ref_wrapper__.get_ref() == &y2;` ][The reference wrapper binds to a new reference]]
 ]
 
 [endsect] [/Assign semantics]
@@ -1405,17 +1410,13 @@ Returns an object of type `__ns_ref__::__link_ref_anon_aux_fast_alloc__<>`.
 
 [*Semantics]: TODO
 
-[heading Header]
-
-	__header_ref__
-
 [heading Alternative syntax]
 
 [table 
 	[ [Expression1] [Expression2]]
     [ 
     	[``
-    		__ns_ref__::__ref_csv_anon__<__ns_ref__::__ref_assign_tag__::copy>( __value__ );
+    		__ns_ref__::__ref_csv_anon__<__ns_ref__::__ns_ref_assign_tag__::copy>( __value__ );
     	``]
     	[``
     		__ns_ref__::__ns_ref_assign_copy__::__ref_csv_anon__( __value__ );
@@ -1423,7 +1424,7 @@ Returns an object of type `__ns_ref__::__link_ref_anon_aux_fast_alloc__<>`.
     ]
     [ 
     	[``
-    		__ns_ref__::__ref_anon__<__ns_ref__::__ref_assign_tag__::assign>( __value__ );
+    		__ns_ref__::__ref_anon__<__ns_ref__::__ns_ref_assign_tag__::assign>( __value__ );
     	``]
     	[``
     		__ns_ref__::__ns_ref_assign_rebind__::__ref_csv_anon__( __value__ );
@@ -1438,27 +1439,35 @@ Returns an object of type `__ns_ref__::__link_ref_anon_aux_fast_alloc__<>`.
 [heading Design]
 
 Recall that `__link_ref_anon__` returns an object with a dual syntax: `__concept_k_ary__` and
-`__concept_csv__`. In the `__ns_ref__` framework, `_ns_ref__::__link_ref_anon__` returns a `__concept_unary__`
+`__concept_csv__`. In the `__ns_ref__` framework, `__ns_ref__::__link_ref_anon__` returns a `__concept_unary__`
 object and `__ns_ref__::__link_ref_csv_anon__`, itself modeling `__concept_csv__`, returns an `__array__` of
-references. This separation of interface achieves better speed in constructing the objects.
+references. This separation of interface, here, achieves higher speed in constructing the objects.
+
+[heading Header]
+
+	__header_ref__
 
 [heading Example]
 
 [table
 	[ [Expression] [Designation]]
     [ 
-    	[ `__ns_ref__::__ref_csv_anon__<int const>( __nil__ )( 1 )( 2 )( 3 );` ]
+    	[``
+    		__ns_ref__::__ns_ref_assign_copy__::__ref_csv_anon__<int const>( __nil__ )( 1 )( 2 )( 3 );
+    	``]
     	[ ['(1)] ] 
     ]
     [ 
     	[`` 
     		int __arg_0__, __arg_1__, __arg_2__;
-    		__ns_ref__::__ref_csv_anon__( __arg_0__ )( __arg_1__ )( __arg_2__ ); 
+    		__ns_ref__::__ns_ref_assign_copy__::__ref_csv_anon__<__ref_assign_tag__>( __arg_0__ )( __arg_1__ )( __arg_2__ ); 
     	``]
     	[ ['(2)] ] 
     ]
     [ 
-    	[ `__ns_ref__::__ref_csv_anon__( 1 )( 2 )( 3 )` ]
+    	[``
+    		__ns_ref__::__ns_ref_assign_copy__::__ref_csv_anon__( 1 )( 2 )( 3 )
+    	``]
     	[ ['(3)] ] 
     ]
 ]
@@ -1620,6 +1629,7 @@ has the same elements as that of `from`, where `To` is the type of the container
 		[OS]
 		[Compiler]
 		[__boost__ version]
+		[ Shell command from [br]  [^\/libs\/assign\/v2\/test\/unit_testing] ]
 		[Date]
 		[Result]
 	]
@@ -1627,6 +1637,7 @@ has the same elements as that of `from`, where `To` is the type of the container
 		[ Mac OS X v10.6]
 		[ GCC 4.2 ]
 		[ [^1.41] ]
+		[ [^sudo bjam \"toolset=darwin\" debug release]]
 		[ August 6th, 2010 ]
 		[ Passed ]
 	]
@@ -1634,33 +1645,9 @@ has the same elements as that of `from`, where `To` is the type of the container
 		[ Ubuntu 9.10 ]
 		[ GCC 4.4 ]
 		[ [^1.43] ]
+		[ [^sudo bjam \"toolset=gcc\" debug release]]
 		[ August 6th, 2010 ]
 		[Passed]
-	]
-]
-
-[heading Executing the tests]
-
-In path [^\/libs\/assign\/v2\/test\/unit_testing],
-
-[table
-	[
-		[OS]
-		[Compiler]
-		[__boost__ version]
-		[Command]
-	]
-	[
-		[Mac OS X v10.6]
-		[GCC 4.2]
-		[ [^1.41] ]
-		[ [^sudo bjam \"toolset=darwin\" debug release]]
-	]
-	[
-		[Ubuntu 9.10]
-		[GCC 4.4]
-		[ [^1.43] ]
-		[ [^sudo bjam \"toolset=gcc\" debug release]]
 	]
 ]
 
