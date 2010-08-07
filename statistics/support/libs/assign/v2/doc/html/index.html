@@ -212,7 +212,7 @@
 <p>
         This library offers a uniform interface for initializing or assigning containers,
         and working with collections of references. The relevant directory structure
-        is rooted <code class="literal">boost/assign/v2</code>. Each directory in this structure
+        is rooted at <code class="literal">boost/assign/v2</code>. Each directory in this structure
         contains an <code class="literal">.hpp</code> file by the same name which includes
         all its relevant files. We assume, throughout this documentation, that
       </p>
@@ -704,11 +704,10 @@
           dereferences to <code class="computeroutput">a</code>, <code class="computeroutput">b</code>, and <code class="computeroutput">c</code>, respectively.
           Clearly only <a class="link" href="index.html#boost_assign_v2._.reference.concept.fun_syntax" title="Function syntax">unary
           function</a> calls are allowed, and there is a <a class="link" href="index.html#boost_assign_v2._.reference.concept.fun_syntax" title="Function syntax">csv
-          counterpart</a> as well (see below). The template argument <code class="computeroutput"><em class="replaceable"><code>ref-assign-tag</code></em></code>
+          counterpart</a> as well (see below). The template argument <code class="computeroutput"><a class="link" href="index.html#boost_assign_v2._.reference.concept.ref_assign" title="Reference assignment"><em class="replaceable"><code>ref-assign-tag</code></em></a></code>
           specifies <a class="link" href="index.html#boost_assign_v2._.reference.concept.ref_assign" title="Reference assignment">reference
-          assign semantics</a>. Rather than specifying <code class="computeroutput"><a class="link" href="index.html#boost_assign_v2._.reference.concept.ref_assign" title="Reference assignment"><em class="replaceable"><code>ref-assign-tag</code></em></a></code>,
-          it is equivalent to use a dedicated <code class="computeroutput"><span class="keyword">namespace</span></code>.
-          For <a class="link" href="index.html#boost_assign_v2._.reference.concept.ref_assign" title="Reference assignment">copy
+          assign semantics</a>, but it can ommitted by using a corresponding
+          <code class="computeroutput"><span class="keyword">namespace</span></code>. For <a class="link" href="index.html#boost_assign_v2._.reference.concept.ref_assign" title="Reference assignment">copy
           semantics</a>,
         </p>
 <p>
@@ -871,7 +870,7 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
         </li>
 </ul></div>
 <p>
-        For example, the side effect of 
+        As a result, for example, the side effect of 
 </p>
 <pre class="programlisting"><span class="identifier">put</span><span class="special">(</span> <span class="identifier">map</span> <span class="special">)(</span> <span class="identifier">key1</span><span class="special">,</span> <span class="identifier">a</span> <span class="special">)(</span> <span class="identifier">key2</span><span class="special">,</span> <span class="identifier">b</span> <span class="special">)(</span> <span class="identifier">key3</span><span class="special">,</span> <span class="identifier">c</span> <span class="special">)</span> 
 </pre>
@@ -1000,12 +999,14 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
           Reference assignment</a>
 </h5></div></div></div>
 <p>
-            Let a reference wrapper, <code class="computeroutput">w</code>, binding to some reference <code class="computeroutput"><span class="identifier">y1</span></code> of type <code class="computeroutput">t</code> i.e. 
+            Consider a reference wrapper, <code class="computeroutput">w</code>, binding to some reference
+            <code class="computeroutput"><span class="identifier">y1</span></code> of type <code class="computeroutput">t</code>
+            i.e. 
 </p>
 <pre class="programlisting"><span class="special">&amp;</span><span class="identifier">y1</span> <span class="special">==</span> <span class="special">&amp;</span>w<span class="special">.</span><span class="identifier">get_ref</span><span class="special">();</span>
 </pre>
 <p>
-            Consider assigning it as follows: 
+            and assigned as follows: 
 </p>
 <pre class="programlisting">w <span class="special">=</span> <span class="identifier">y2</span><span class="special">;</span>
 </pre>
@@ -1109,7 +1110,7 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
 <td>
                     <p>
                       Returns an object of type <code class="computeroutput"><span class="identifier">To</span></code>,
-                      initialized with the same elements
+                      initialized with the elements of <code class="computeroutput"><span class="identifier">object</span></code>
                     </p>
                   </td>
 </tr>
@@ -1180,7 +1181,7 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
                   </td>
 <td>
                     <p>
-                      <a class="link" href="index.html#boost_assign_v2._.reference.concept.fun_syntax" title="Function syntax">K-Ary</a>
+                      <code class="computeroutput"><a class="link" href="index.html#boost_assign_v2._.reference.concept.fun_syntax" title="Function syntax">K-Ary</a></code>
                     </p>
                   </td>
 </tr>
@@ -1201,7 +1202,7 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
                   </td>
 <td>
                     <p>
-                      <a class="link" href="index.html#boost_assign_v2._.reference.concept.fun_syntax" title="Function syntax">Unary</a>
+                      <code class="computeroutput"><a class="link" href="index.html#boost_assign_v2._.reference.concept.fun_syntax" title="Function syntax">Unary</a></code>
                     </p>
                   </td>
 </tr>
@@ -1223,7 +1224,7 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
                   </td>
 <td>
                     <p>
-                      <a class="link" href="index.html#boost_assign_v2._.reference.concept.fun_syntax" title="Function syntax">Csv</a>
+                      <code class="computeroutput"><a class="link" href="index.html#boost_assign_v2._.reference.concept.fun_syntax" title="Function syntax">Csv</a></code>
                     </p>
                   </td>
 </tr>
@@ -1304,8 +1305,8 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
           <code class="computeroutput">RangeLvalue</code></a>
 </h5></div></div></div>
 <p>
-            An function taking as inputs <code class="computeroutput"><a href="http://www.boost.org/doc/libs/1_35_0/libs/range/doc/range.html" target="_top">Range</a></code>
-            s and returning a <code class="computeroutput"><a href="http://www.boost.org/doc/libs/1_35_0/libs/range/doc/range.html" target="_top">Range</a></code>
+            A function taking as inputs <code class="computeroutput"><a href="http://www.boost.org/doc/libs/1_35_0/libs/range/doc/range.html" target="_top">Range</a></code>s
+            and returning a <code class="computeroutput"><a href="http://www.boost.org/doc/libs/1_35_0/libs/range/doc/range.html" target="_top">Range</a></code>
             models <code class="computeroutput">RangeLvalue</code> if, in case the dereference of each input
             is lvalue, then so is that of the returned range.
           </p>
@@ -1417,14 +1418,14 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
 <a name="boost_assign_v2._.reference.class.anon_cont"></a><a class="link" href="index.html#boost_assign_v2._.reference.class.anon_cont" title="anon_aux::cont"> <code class="computeroutput">anon_aux::cont</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.class.anon_cont.description"></a><h6>
-<a name="id36159607"></a>
+<a name="id36159618"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.anon_cont.description">Description</a>
           </h6>
 <p>
             An anynymous container.
           </p>
 <a name="boost_assign_v2._.reference.class.anon_cont.model_of"></a><h6>
-<a name="id36159627"></a>
+<a name="id36159637"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.anon_cont.model_of">Model
             of</a>
           </h6>
@@ -1435,7 +1436,7 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
             with respect to member function <code class="computeroutput">csv<span class="special">()</span></code>.
           </p>
 <a name="boost_assign_v2._.reference.class.anon_cont.parameters"></a><h6>
-<a name="id36159680"></a>
+<a name="id36159691"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.anon_cont.parameters">Parameters</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -1495,7 +1496,7 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.class.anon_cont.header"></a><h6>
-<a name="id36159817"></a>
+<a name="id36159828"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.anon_cont.header">Header</a>
           </h6>
 <p>
@@ -1508,14 +1509,14 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
           <code class="computeroutput">put_aux::put_wrapper</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.class.put_wrapper.description"></a><h6>
-<a name="id36159852"></a>
+<a name="id36159862"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.put_wrapper.description">Description</a>
           </h6>
 <p>
             An object that modifies a container by putting elements into it.
           </p>
 <a name="boost_assign_v2._.reference.class.put_wrapper.model_of"></a><h6>
-<a name="id36159872"></a>
+<a name="id36159882"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.put_wrapper.model_of">Model
             of</a>
           </h6>
@@ -1525,7 +1526,7 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
             with respect to member function <code class="computeroutput">csv<span class="special">()</span></code>.
           </p>
 <a name="boost_assign_v2._.reference.class.put_wrapper.parameters"></a><h6>
-<a name="id36159916"></a>
+<a name="id36159927"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.put_wrapper.parameters">Parameters</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -1585,7 +1586,7 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.class.put_wrapper.header"></a><h6>
-<a name="id36160054"></a>
+<a name="id36160064"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.put_wrapper.header">Header</a>
           </h6>
 <p>
@@ -1598,14 +1599,14 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
           <code class="computeroutput">ref<span class="special">::</span>anon_aux::cont</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.class.ref_anon_cont.description"></a><h6>
-<a name="id36160093"></a>
+<a name="id36160104"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.ref_anon_cont.description">Description</a>
           </h6>
 <p>
             A container of references.
           </p>
 <a name="boost_assign_v2._.reference.class.ref_anon_cont.parameters"></a><h6>
-<a name="id36160113"></a>
+<a name="id36160124"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.ref_anon_cont.parameters">Parameters</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -1678,8 +1679,8 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
 </tbody>
 </table></div>
 <div class="table">
-<a name="boost_assign_v2._.reference.class.ref_anon_cont.base"></a><p class="title"><b>Table&#160;1.6.&#160;Base</b></p>
-<div class="table-contents"><table class="table" summary="Base">
+<a name="boost_assign_v2._.reference.class.ref_anon_cont.structure_selection"></a><p class="title"><b>Table&#160;1.6.&#160;Structure selection</b></p>
+<div class="table-contents"><table class="table" summary="Structure selection">
 <colgroup>
 <col>
 <col>
@@ -1687,16 +1688,29 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
 <thead><tr>
 <th>
                     <p>
-                      if <code class="literal">Tag2</code> equals
+                      <code class="literal">Tag2</code>
                     </p>
                   </th>
 <th>
                     <p>
-                      evaluates to
+                      <code class="computeroutput"><span class="keyword">public</span></code> Base
                     </p>
                   </th>
 </tr></thead>
-<tbody><tr>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput">use_default</code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput">mpl::empty_base</code>
+                    </p>
+                  </td>
+</tr>
+<tr>
 <td>
                     <p>
                       <code class="computeroutput">alloc_tag::lazy_alloc</code>
@@ -1707,11 +1721,12 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
                       <code class="computeroutput"><a class="link" href="index.html#boost_assign_v2._.reference.class.ref_interface" title="ref::anon_aux::interface">anon_aux::interface</a></code>
                     </p>
                   </td>
-</tr></tbody>
+</tr>
+</tbody>
 </table></div>
 </div>
 <br class="table-break"><a name="boost_assign_v2._.reference.class.ref_anon_cont.model_of"></a><h6>
-<a name="id36160331"></a>
+<a name="id36160375"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.ref_anon_cont.model_of">Model
             of</a>
           </h6>
@@ -1728,7 +1743,7 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
             </p></td></tr>
 </table></div>
 <a name="boost_assign_v2._.reference.class.ref_anon_cont.header"></a><h6>
-<a name="id36160366"></a>
+<a name="id36160410"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.ref_anon_cont.header">Header</a>
           </h6>
 <p>
@@ -1741,14 +1756,14 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
           <code class="computeroutput">ref<span class="special">::</span>anon_aux::fast_alloc</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.class.ref_fast_alloc.description"></a><h6>
-<a name="id36160407"></a>
+<a name="id36160452"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.ref_fast_alloc.description">Description</a>
           </h6>
 <p>
             An interface for an array or references.
           </p>
 <a name="boost_assign_v2._.reference.class.ref_fast_alloc.parameters"></a><h6>
-<a name="id36160428"></a>
+<a name="id36160472"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.ref_fast_alloc.parameters">Parameters</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -1809,7 +1824,7 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.class.ref_fast_alloc.derived_of"></a><h6>
-<a name="id36160547"></a>
+<a name="id36160592"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.ref_fast_alloc.derived_of">Derived
             of</a>
           </h6>
@@ -1817,7 +1832,7 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
             <code class="computeroutput"><a class="link" href="index.html#boost_assign_v2._.reference.class.ref_interface" title="ref::anon_aux::interface">anon_aux::interface</a><span class="special">&lt;&gt;</span></code>
           </p>
 <a name="boost_assign_v2._.reference.class.ref_fast_alloc.model_of"></a><h6>
-<a name="id36160579"></a>
+<a name="id36160623"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.ref_fast_alloc.model_of">Model
             of</a>
           </h6>
@@ -1825,7 +1840,7 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
             See the base.
           </p>
 <a name="boost_assign_v2._.reference.class.ref_fast_alloc.header"></a><h6>
-<a name="id36160598"></a>
+<a name="id36160643"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.ref_fast_alloc.header">Header</a>
           </h6>
 <p>
@@ -1838,14 +1853,14 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
           <code class="computeroutput">ref<span class="special">::</span>anon_aux::interface</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.class.ref_interface.description"></a><h6>
-<a name="id36160638"></a>
+<a name="id36160682"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.ref_interface.description">Description</a>
           </h6>
 <p>
             An array or references.
           </p>
 <a name="boost_assign_v2._.reference.class.ref_interface.parameters"></a><h6>
-<a name="id36160657"></a>
+<a name="id36160702"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.ref_interface.parameters">Parameters</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -1918,7 +1933,7 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.class.ref_interface.model_of"></a><h6>
-<a name="id36160799"></a>
+<a name="id36160843"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.ref_interface.model_of">Model
             of</a>
           </h6>
@@ -1927,7 +1942,7 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
             <code class="computeroutput"><a class="link" href="index.html#boost_assign_v2._.reference.concept.container_convertible" title="ContainerConvertible">ContainerConvertible</a></code>
           </p>
 <a name="boost_assign_v2._.reference.class.ref_interface.header"></a><h6>
-<a name="id36160836"></a>
+<a name="id36160880"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.class.ref_interface.header">Header</a>
           </h6>
 <p>
@@ -1958,14 +1973,14 @@ object<span class="special">(</span> a <span class="special">)(</span> b <span c
 <a name="boost_assign_v2._.reference.function.anon"></a><a class="link" href="index.html#boost_assign_v2._.reference.function.anon" title="anon"> <code class="computeroutput">anon</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.function.anon.description"></a><h6>
-<a name="id36160882"></a>
+<a name="id36160926"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.anon.description">Description</a>
           </h6>
 <p>
             Returns an object of type <code class="computeroutput"><a class="link" href="index.html#boost_assign_v2._.reference.class.anon_cont" title="anon_aux::cont">anon_aux::cont</a><span class="special">&lt;&gt;</span></code>.
           </p>
 <a name="boost_assign_v2._.reference.function.anon.synopsis"></a><h6>
-<a name="id36160913"></a>
+<a name="id36160958"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.anon.synopsis">Synopsis</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -2043,7 +2058,7 @@ anon<span class="special">(</span> <span class="identifier">T</span> <span class
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.function.anon.parameters"></a><h6>
-<a name="id36161252"></a>
+<a name="id36161296"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.anon.parameters">Parameters</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -2088,7 +2103,7 @@ anon<span class="special">(</span> <span class="identifier">T</span> <span class
 </tr></tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.function.anon.expression_semantics"></a><h6>
-<a name="id36161340"></a>
+<a name="id36161384"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.anon.expression_semantics">Expression
             Semantics</a>
           </h6>
@@ -2152,13 +2167,13 @@ anon<span class="special">(</span> <span class="identifier">T</span> <span class
             <span class="bold"><strong>Semantics</strong></span>: TODO
           </p>
 <a name="boost_assign_v2._.reference.function.anon.header"></a><h6>
-<a name="id36161522"></a>
+<a name="id36161566"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.anon.header">Header</a>
           </h6>
 <pre class="programlisting">#include &lt;boost/assign/v2/anon/anon.hpp&gt;
 </pre>
 <a name="boost_assign_v2._.reference.function.anon.example"></a><h6>
-<a name="id36161544"></a>
+<a name="id36161589"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.anon.example">Example</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -2235,7 +2250,7 @@ anon<span class="special">(</span> <span class="identifier">T</span> <span class
 <a name="boost_assign_v2._.reference.function.chain"></a><a class="link" href="index.html#boost_assign_v2._.reference.function.chain" title="_chain"> <code class="computeroutput">_chain</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.function.chain.description"></a><h6>
-<a name="id36161734"></a>
+<a name="id36161779"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.chain.description">Description</a>
           </h6>
 <p>
@@ -2245,7 +2260,7 @@ anon<span class="special">(</span> <span class="identifier">T</span> <span class
             and <code class="computeroutput"><a class="link" href="index.html#boost_assign_v2._.reference.concept.range_lvalue" title="RangeLvalue">RangeLValue</a></code>.
           </p>
 <a name="boost_assign_v2._.reference.function.chain.synopsis"></a><h6>
-<a name="id36161789"></a>
+<a name="id36161834"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.chain.synopsis">Synopsis</a>
           </h6>
 <p>
@@ -2279,7 +2294,7 @@ anon<span class="special">(</span> <span class="identifier">T</span> <span class
             </p></td></tr>
 </table></div>
 <a name="boost_assign_v2._.reference.function.chain.parameters"></a><h6>
-<a name="id36162009"></a>
+<a name="id36162053"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.chain.parameters">Parameters</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -2343,7 +2358,7 @@ anon<span class="special">(</span> <span class="identifier">T</span> <span class
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.function.chain.expression_semantics"></a><h6>
-<a name="id36162139"></a>
+<a name="id36162183"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.chain.expression_semantics">Expression
             Semantics</a>
           </h6>
@@ -2361,7 +2376,7 @@ anon<span class="special">(</span> <span class="identifier">T</span> <span class
             <span class="bold"><strong>Semantics</strong></span>: TODO
           </p>
 <a name="boost_assign_v2._.reference.function.chain.header"></a><h6>
-<a name="id36162242"></a>
+<a name="id36162287"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.chain.header">Header</a>
           </h6>
 <p>
@@ -2372,7 +2387,7 @@ anon<span class="special">(</span> <span class="identifier">T</span> <span class
 <p>
           </p>
 <a name="boost_assign_v2._.reference.function.chain.example"></a><h6>
-<a name="id36162268"></a>
+<a name="id36162312"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.chain.example">Example</a>
           </h6>
 <p>
@@ -2385,7 +2400,7 @@ v <span class="special">|</span> _chain<span class="special">(</span> <a href="h
 <p>
           </p>
 <a name="boost_assign_v2._.reference.function.chain.alternative_syntax"></a><h6>
-<a name="id36162436"></a>
+<a name="id36162481"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.chain.alternative_syntax">Alternative
             syntax</a>
           </h6>
@@ -2433,7 +2448,7 @@ v <span class="special">|</span> _chain<span class="special">(</span> <a href="h
 <a name="boost_assign_v2._.reference.function.convert"></a><a class="link" href="index.html#boost_assign_v2._.reference.function.convert" title="convert"> <code class="computeroutput">convert</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.function.convert.description"></a><h6>
-<a name="id36162565"></a>
+<a name="id36162609"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.convert.description">Description</a>
           </h6>
 <p>
@@ -2441,14 +2456,14 @@ v <span class="special">|</span> _chain<span class="special">(</span> <a href="h
             to an arbitrary container.
           </p>
 <a name="boost_assign_v2._.reference.function.convert.synopsis"></a><h6>
-<a name="id36162590"></a>
+<a name="id36162635"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.convert.synopsis">Synopsis</a>
           </h6>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">From</span><span class="special">&gt;</span>
 <span class="identifier">To</span> convert<span class="special">(</span> <span class="identifier">From</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">);</span>
 </pre>
 <a name="boost_assign_v2._.reference.function.convert.parameters"></a><h6>
-<a name="id36162680"></a>
+<a name="id36162725"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.convert.parameters">Parameters</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -2512,7 +2527,7 @@ v <span class="special">|</span> _chain<span class="special">(</span> <a href="h
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.function.convert.expression_semantics"></a><h6>
-<a name="id36162828"></a>
+<a name="id36162873"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.convert.expression_semantics">Expression
             Semantics</a>
           </h6>
@@ -2532,13 +2547,13 @@ v <span class="special">|</span> _chain<span class="special">(</span> <a href="h
             of <code class="computeroutput"><span class="identifier">from</span></code>
           </p>
 <a name="boost_assign_v2._.reference.function.convert.header"></a><h6>
-<a name="id36162909"></a>
+<a name="id36162953"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.convert.header">Header</a>
           </h6>
 <pre class="programlisting">#include &lt;boost/assign/v2/put/range.hpp&gt;
 </pre>
 <a name="boost_assign_v2._.reference.function.convert.example"></a><h6>
-<a name="id36162931"></a>
+<a name="id36162975"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.convert.example">Example</a>
           </h6>
 <p>
@@ -2557,14 +2572,14 @@ v <span class="special">|</span> _chain<span class="special">(</span> <a href="h
           <code class="computeroutput">constructor</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.function.constructor.description"></a><h6>
-<a name="id36163141"></a>
+<a name="id36163185"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.constructor.description">Description</a>
           </h6>
 <p>
             Returns a constructor;
           </p>
 <a name="boost_assign_v2._.reference.function.constructor.syntax"></a><h6>
-<a name="id36163160"></a>
+<a name="id36163205"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.constructor.syntax">Syntax</a>
           </h6>
 <p>
@@ -2577,7 +2592,7 @@ v <span class="special">|</span> _chain<span class="special">(</span> <a href="h
 <p>
           </p>
 <a name="boost_assign_v2._.reference.function.constructor.parameters"></a><h6>
-<a name="id36163238"></a>
+<a name="id36163283"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.constructor.parameters">Parameters</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -2611,7 +2626,7 @@ v <span class="special">|</span> _chain<span class="special">(</span> <a href="h
 </tr></tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.function.constructor.expression_semantics"></a><h6>
-<a name="id36163310"></a>
+<a name="id36163354"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.constructor.expression_semantics">Expression
             Semantics</a>
           </h6>
@@ -2630,7 +2645,7 @@ v <span class="special">|</span> _chain<span class="special">(</span> <a href="h
             <code class="computeroutput"><a class="link" href="index.html#boost_assign_v2._.reference.concept.fun_syntax" title="Function syntax">K-Ary</a></code>.
           </p>
 <a name="boost_assign_v2._.reference.function.constructor.header"></a><h6>
-<a name="id36163398"></a>
+<a name="id36163443"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.constructor.header">Header</a>
           </h6>
 <p>
@@ -2641,7 +2656,7 @@ v <span class="special">|</span> _chain<span class="special">(</span> <a href="h
 <p>
           </p>
 <a name="boost_assign_v2._.reference.function.constructor.example"></a><h6>
-<a name="id36163424"></a>
+<a name="id36163469"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.constructor.example">Example</a>
           </h6>
 <p>
@@ -2658,7 +2673,7 @@ v <span class="special">|</span> _chain<span class="special">(</span> <a href="h
           <code class="computeroutput">put_range</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.function.put_range.description"></a><h6>
-<a name="id36163502"></a>
+<a name="id36163546"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.put_range.description">Description</a>
           </h6>
 <p>
@@ -2666,7 +2681,7 @@ v <span class="special">|</span> _chain<span class="special">(</span> <a href="h
             into an arbitrary container.
           </p>
 <a name="boost_assign_v2._.reference.function.put_range.synopsis"></a><h6>
-<a name="id36163527"></a>
+<a name="id36163572"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.put_range.synopsis">Synopsis</a>
           </h6>
 <p>
@@ -2678,7 +2693,7 @@ v <span class="special">|</span> _chain<span class="special">(</span> <a href="h
 <p>
           </p>
 <a name="boost_assign_v2._.reference.function.put_range.parameters"></a><h6>
-<a name="id36163633"></a>
+<a name="id36163678"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.put_range.parameters">Parameters</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -2742,7 +2757,7 @@ v <span class="special">|</span> _chain<span class="special">(</span> <a href="h
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.function.put_range.expression_semantics"></a><h6>
-<a name="id36163755"></a>
+<a name="id36163799"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.put_range.expression_semantics">Expression
             Semantics</a>
           </h6>
@@ -2760,13 +2775,13 @@ v <span class="special">|</span> _chain<span class="special">(</span> <a href="h
             <span class="bold"><strong>Semantics</strong></span>: Puts the elements in <code class="computeroutput"><span class="identifier">from</span></code> into <code class="computeroutput"><span class="identifier">to</span></code>.
           </p>
 <a name="boost_assign_v2._.reference.function.put_range.header"></a><h6>
-<a name="id36163836"></a>
+<a name="id36163881"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.put_range.header">Header</a>
           </h6>
 <pre class="programlisting">#include &lt;boost/assign/v2/put/range.hpp&gt;
 </pre>
 <a name="boost_assign_v2._.reference.function.put_range.example"></a><h6>
-<a name="id36163859"></a>
+<a name="id36163903"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.put_range.example">Example</a>
           </h6>
 <pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><a href="http://www.sgi.com/tech/stl/Vector.html" target="_top">vector</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">from</span><span class="special">;</span> <span class="identifier">from</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> <span class="special">-</span><span class="number">1</span> <span class="special">);</span> <span class="identifier">from</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> <span class="number">0</span> <span class="special">);</span>
@@ -2779,14 +2794,14 @@ put_range<span class="special">(</span> <span class="identifier">from</span><spa
 <a name="boost_assign_v2._.reference.function.put"></a><a class="link" href="index.html#boost_assign_v2._.reference.function.put" title="put"> <code class="computeroutput">put</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.function.put.description"></a><h6>
-<a name="id36164045"></a>
+<a name="id36164090"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.put.description">Description</a>
           </h6>
 <p>
             Returns an object of type <code class="computeroutput"><a class="link" href="index.html#boost_assign_v2._.reference.class.put_wrapper" title="put_aux::put_wrapper">put_aux::put_wrapper</a><span class="special">&lt;&gt;</span></code>.
           </p>
 <a name="boost_assign_v2._.reference.function.put.synopsis"></a><h6>
-<a name="id36164076"></a>
+<a name="id36164121"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.put.synopsis">Synopsis</a>
           </h6>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">V</span><span class="special">&gt;</span>
@@ -2794,7 +2809,7 @@ put_range<span class="special">(</span> <span class="identifier">from</span><spa
 put<span class="special">(</span> <span class="identifier">V</span><span class="special">&amp;</span> v <span class="special">);</span>
 </pre>
 <a name="boost_assign_v2._.reference.function.put.parameters"></a><h6>
-<a name="id36164165"></a>
+<a name="id36164210"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.put.parameters">Parameters</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -2839,7 +2854,7 @@ put<span class="special">(</span> <span class="identifier">V</span><span class="
 </tr></tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.function.put.expression_semantics"></a><h6>
-<a name="id36164253"></a>
+<a name="id36164297"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.put.expression_semantics">Expression
             Semantics</a>
           </h6>
@@ -2852,13 +2867,13 @@ put<span class="special">(</span> <span class="identifier">V</span><span class="
             <span class="bold"><strong>Semantics</strong></span>: TODO
           </p>
 <a name="boost_assign_v2._.reference.function.put.header"></a><h6>
-<a name="id36164331"></a>
+<a name="id36164375"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.put.header">Header</a>
           </h6>
 <pre class="programlisting">#include &lt;boost/assign/v2/put/put.hpp&gt;
 </pre>
 <a name="boost_assign_v2._.reference.function.put.example"></a><h6>
-<a name="id36164352"></a>
+<a name="id36164397"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.put.example">Example</a>
           </h6>
 <pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><a href="http://www.sgi.com/tech/stl/Vector.html" target="_top">vector</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> v<span class="special">;</span>
@@ -2871,7 +2886,7 @@ put<span class="special">(</span> v <span class="special">);</span>
           <code class="computeroutput">ref<span class="special">::</span>anon</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.function.ref_anon.description"></a><h6>
-<a name="id36164433"></a>
+<a name="id36164477"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_anon.description">Description</a>
           </h6>
 <p>
@@ -2879,7 +2894,7 @@ put<span class="special">(</span> v <span class="special">);</span>
             <span class="special">=</span> ref<span class="special">::</span>alloc_tag::lazy_alloc</code>.
           </p>
 <a name="boost_assign_v2._.reference.function.ref_anon.synopsis"></a><h6>
-<a name="id36164489"></a>
+<a name="id36164533"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_anon.synopsis">Synopsis</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -2954,7 +2969,7 @@ ref<span class="special">::</span>anon<span class="special">(</span> <span class
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.function.ref_anon.parameters"></a><h6>
-<a name="id36164922"></a>
+<a name="id36164966"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_anon.parameters">Parameters</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -3019,7 +3034,7 @@ ref<span class="special">::</span>anon<span class="special">(</span> <span class
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.function.ref_anon.expression_semantics"></a><h6>
-<a name="id36165047"></a>
+<a name="id36165091"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_anon.expression_semantics">Expression
             Semantics</a>
           </h6>
@@ -3131,13 +3146,13 @@ ref<span class="special">::</span>anon<span class="special">(</span> <span class
             <span class="bold"><strong>Semantics</strong></span>: TODO
           </p>
 <a name="boost_assign_v2._.reference.function.ref_anon.header"></a><h6>
-<a name="id36165423"></a>
+<a name="id36165474"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_anon.header">Header</a>
           </h6>
 <pre class="programlisting">#include &lt;boost/assign/v2/ref/ref.hpp&gt;
 </pre>
 <a name="boost_assign_v2._.reference.function.ref_anon.alternative_syntax"></a><h6>
-<a name="id36165449"></a>
+<a name="id36165500"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_anon.alternative_syntax">Alternative
             syntax</a>
           </h6>
@@ -3202,7 +3217,7 @@ ref<span class="special">::</span>anon<span class="special">(</span> <span class
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.function.ref_anon.example"></a><h6>
-<a name="id36165672"></a>
+<a name="id36165722"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_anon.example">Example</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -3279,14 +3294,14 @@ ref<span class="special">::</span>anon<span class="special">(</span> a <span cla
           <code class="computeroutput">ref<span class="special">::</span>csv_anon</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.function.ref_csv_anon.description"></a><h6>
-<a name="id36165971"></a>
+<a name="id36166022"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_csv_anon.description">Description</a>
           </h6>
 <p>
             Returns an object of type <code class="computeroutput">ref<span class="special">::</span><a class="link" href="index.html#boost_assign_v2._.reference.class.ref_fast_alloc" title="ref::anon_aux::fast_alloc">anon_aux::fast_alloc</a><span class="special">&lt;&gt;</span></code>.
           </p>
 <a name="boost_assign_v2._.reference.function.ref_csv_anon.synopsis"></a><h6>
-<a name="id36166014"></a>
+<a name="id36166064"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_csv_anon.synopsis">Synopsis</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -3361,7 +3376,7 @@ ref<span class="special">::</span>csv_anon<span class="special">(</span> <span c
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.function.ref_csv_anon.parameters"></a><h6>
-<a name="id36166468"></a>
+<a name="id36166518"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_csv_anon.parameters">Parameters</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -3426,7 +3441,7 @@ ref<span class="special">::</span>csv_anon<span class="special">(</span> <span c
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.function.ref_csv_anon.expression_semantics"></a><h6>
-<a name="id36166598"></a>
+<a name="id36166648"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_csv_anon.expression_semantics">Expression
             Semantics</a>
           </h6>
@@ -3540,7 +3555,7 @@ ref<span class="special">::</span>csv_anon<span class="special">(</span> <span c
             <span class="bold"><strong>Semantics</strong></span>: TODO
           </p>
 <a name="boost_assign_v2._.reference.function.ref_csv_anon.alternative_syntax"></a><h6>
-<a name="id36166994"></a>
+<a name="id36167180"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_csv_anon.alternative_syntax">Alternative
             syntax</a>
           </h6>
@@ -3605,7 +3620,7 @@ ref<span class="special">::</span>csv_anon<span class="special">(</span> <span c
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.reference.function.ref_csv_anon.model_of"></a><h6>
-<a name="id36167350"></a>
+<a name="id36167400"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_csv_anon.model_of">Model
             of</a>
           </h6>
@@ -3613,7 +3628,7 @@ ref<span class="special">::</span>csv_anon<span class="special">(</span> <span c
             <code class="computeroutput"><a class="link" href="index.html#boost_assign_v2._.reference.concept.fun_syntax" title="Function syntax">Csv</a></code>
           </p>
 <a name="boost_assign_v2._.reference.function.ref_csv_anon.design"></a><h6>
-<a name="id36167382"></a>
+<a name="id36167432"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_csv_anon.design">Design</a>
           </h6>
 <p>
@@ -3629,13 +3644,13 @@ ref<span class="special">::</span>csv_anon<span class="special">(</span> <span c
             in constructing the objects.
           </p>
 <a name="boost_assign_v2._.reference.function.ref_csv_anon.header"></a><h6>
-<a name="id36167507"></a>
+<a name="id36167557"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_csv_anon.header">Header</a>
           </h6>
 <pre class="programlisting">#include &lt;boost/assign/v2/ref/ref.hpp&gt;
 </pre>
 <a name="boost_assign_v2._.reference.function.ref_csv_anon.example"></a><h6>
-<a name="id36167532"></a>
+<a name="id36167583"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.function.ref_csv_anon.example">Example</a>
           </h6>
 <div class="informaltable"><table class="table">
@@ -3728,7 +3743,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
 <a name="boost_assign_v2._.reference.keyword.deduce"></a><a class="link" href="index.html#boost_assign_v2._.reference.keyword.deduce" title="_deduce"> <code class="computeroutput">_deduce</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.keyword.deduce.expression_semantics"></a><h6>
-<a name="id36167867"></a>
+<a name="id36167918"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.keyword.deduce.expression_semantics">Expression
             Semantics</a>
           </h6>
@@ -3744,7 +3759,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
             <span class="bold"><strong>Semantics</strong></span> <span class="emphasis"><em>unspecified</em></span>
           </p>
 <a name="boost_assign_v2._.reference.keyword.deduce.header"></a><h6>
-<a name="id36167927"></a>
+<a name="id36167977"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.keyword.deduce.header">Header</a>
           </h6>
 <p>
@@ -3760,7 +3775,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
 <a name="boost_assign_v2._.reference.keyword.fun"></a><a class="link" href="index.html#boost_assign_v2._.reference.keyword.fun" title="_fun"> <code class="computeroutput">_fun</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.keyword.fun.expression_semantics"></a><h6>
-<a name="id36167975"></a>
+<a name="id36168026"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.keyword.fun.expression_semantics">Expression
             Semantics</a>
           </h6>
@@ -3778,7 +3793,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
             <span class="bold"><strong>Semantics</strong></span> <span class="emphasis"><em>unspecified</em></span>
           </p>
 <a name="boost_assign_v2._.reference.keyword.fun.header"></a><h6>
-<a name="id36168052"></a>
+<a name="id36168103"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.keyword.fun.header">Header</a>
           </h6>
 <p>
@@ -3794,7 +3809,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
 <a name="boost_assign_v2._.reference.keyword.nil"></a><a class="link" href="index.html#boost_assign_v2._.reference.keyword.nil" title="_nil"> <code class="computeroutput">_nil</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.keyword.nil.expression_semantics"></a><h6>
-<a name="id36168101"></a>
+<a name="id36168152"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.keyword.nil.expression_semantics">Expression
             Semantics</a>
           </h6>
@@ -3812,7 +3827,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
             <span class="bold"><strong>Semantics</strong></span> <span class="emphasis"><em>unspecified</em></span>
           </p>
 <a name="boost_assign_v2._.reference.keyword.nil.header"></a><h6>
-<a name="id36168167"></a>
+<a name="id36168218"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.keyword.nil.header">Header</a>
           </h6>
 <p>
@@ -3828,7 +3843,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
 <a name="boost_assign_v2._.reference.keyword.unwrap"></a><a class="link" href="index.html#boost_assign_v2._.reference.keyword.unwrap" title="_unwrap"> <code class="computeroutput">_unwrap</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.keyword.unwrap.expression_semantics"></a><h6>
-<a name="id36168217"></a>
+<a name="id36168268"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.keyword.unwrap.expression_semantics">Expression
             Semantics</a>
           </h6>
@@ -3846,7 +3861,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
             <span class="bold"><strong>Semantics</strong></span> <span class="emphasis"><em>unspecified</em></span>
           </p>
 <a name="boost_assign_v2._.reference.keyword.unwrap.header"></a><h6>
-<a name="id36168272"></a>
+<a name="id36168322"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.keyword.unwrap.header">Header</a>
           </h6>
 <p>
@@ -3863,7 +3878,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
           <code class="computeroutput">_incr_lookup</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.keyword.incr_lookup.expression_semantics"></a><h6>
-<a name="id36168320"></a>
+<a name="id36168371"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.keyword.incr_lookup.expression_semantics">Expression
             Semantics</a>
           </h6>
@@ -3879,7 +3894,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
             <span class="bold"><strong>Semantics</strong></span> <span class="emphasis"><em>unspecified</em></span>
           </p>
 <a name="boost_assign_v2._.reference.keyword.incr_lookup.header"></a><h6>
-<a name="id36168372"></a>
+<a name="id36168422"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.keyword.incr_lookup.header">Header</a>
           </h6>
 <p>
@@ -3895,7 +3910,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
 <a name="boost_assign_v2._.reference.keyword.repeat"></a><a class="link" href="index.html#boost_assign_v2._.reference.keyword.repeat" title="_repeat"> <code class="computeroutput">_repeat</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.keyword.repeat.expression_semantics"></a><h6>
-<a name="id36168420"></a>
+<a name="id36168471"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.keyword.repeat.expression_semantics">Expression
             Semantics</a>
           </h6>
@@ -3913,7 +3928,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
             <span class="bold"><strong>Semantics</strong></span> <span class="emphasis"><em>unspecified</em></span>
           </p>
 <a name="boost_assign_v2._.reference.keyword.repeat.header"></a><h6>
-<a name="id36168498"></a>
+<a name="id36168548"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.keyword.repeat.header">Header</a>
           </h6>
 <p>
@@ -3929,7 +3944,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
 <a name="boost_assign_v2._.reference.keyword.put_kwd"></a><a class="link" href="index.html#boost_assign_v2._.reference.keyword.put_kwd" title="_put_tag"> <code class="computeroutput">_put_tag</code></a>
 </h5></div></div></div>
 <a name="boost_assign_v2._.reference.keyword.put_kwd.expression_semantics"></a><h6>
-<a name="id36168547"></a>
+<a name="id36168597"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.keyword.put_kwd.expression_semantics">Expression
             Semantics</a>
           </h6>
@@ -3980,7 +3995,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
 </table></div>
 </div>
 <br class="table-break"><a name="boost_assign_v2._.reference.keyword.put_kwd.header"></a><h6>
-<a name="id36168749"></a>
+<a name="id36168799"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.keyword.put_kwd.header">Header</a>
           </h6>
 <p>
@@ -3991,7 +4006,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
 <p>
           </p>
 <a name="boost_assign_v2._.reference.keyword.put_kwd.example"></a><h6>
-<a name="id36168777"></a>
+<a name="id36168828"></a>
             <a class="link" href="index.html#boost_assign_v2._.reference.keyword.put_kwd.example">Example</a>
           </h6>
 <p>
@@ -4009,7 +4024,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
 <a name="boost_assign_v2._.portability_"></a><a class="link" href="index.html#boost_assign_v2._.portability_" title="Portability">Portability </a>
 </h3></div></div></div>
 <a name="boost_assign_v2._.portability_.methodology"></a><h5>
-<a name="id36168856"></a>
+<a name="id36168907"></a>
         <a class="link" href="index.html#boost_assign_v2._.portability_.methodology">Methodology</a>
       </h5>
 <p>
@@ -4017,9 +4032,9 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
       </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
-          At compile time, that the method deduced for modifying the container agrees
-          with one that is explicitly specified. For example, it verifies that <code class="computeroutput"><span class="identifier">push</span><span class="special">()</span></code>
-          is the method used for <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><a href="http://www.sgi.com/tech/stl/queue.html" target="_top">queue</a><span class="special">&lt;&gt;</span></code>.
+          At compile time, that the method deduced for <code class="computeroutput"><a class="link" href="index.html#boost_assign_v2._.reference.function.put" title="put">put</a></code>ting
+          elements into a container agrees with one that is explicitly specified.
+          For example, it is asserted that <code class="computeroutput"><span class="identifier">push</span><span class="special">()</span></code> is the method used for <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><a href="http://www.sgi.com/tech/stl/queue.html" target="_top">queue</a><span class="special">&lt;&gt;</span></code>.
         </li>
 <li class="listitem">
           At runtime time, that the container returned by 
@@ -4031,7 +4046,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
         </li>
 </ul></div>
 <a name="boost_assign_v2._.portability_.containers_tested"></a><h5>
-<a name="id36168980"></a>
+<a name="id36169041"></a>
         <a class="link" href="index.html#boost_assign_v2._.portability_.containers_tested">Containers
         tested</a>
       </h5>
@@ -4081,7 +4096,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.portability_.test_results"></a><h5>
-<a name="id36169247"></a>
+<a name="id36169308"></a>
         <a class="link" href="index.html#boost_assign_v2._.portability_.test_results">Test results</a>
       </h5>
 <div class="informaltable"><table class="table">
@@ -4193,7 +4208,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
 </tbody>
 </table></div>
 <a name="boost_assign_v2._.portability_.dependencies"></a><h5>
-<a name="id36169448"></a>
+<a name="id36169509"></a>
         <a class="link" href="index.html#boost_assign_v2._.portability_.dependencies">Dependencies</a>
       </h5>
 <p>
@@ -4230,7 +4245,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
 <a name="boost_assign_v2._.change_log"></a><a class="link" href="index.html#boost_assign_v2._.change_log" title="Change log">Change log</a>
 </h3></div></div></div>
 <a name="boost_assign_v2._.change_log.upgrading_from_boost__v_emphasis_1_4x__emphasis_"></a><h5>
-<a name="id36169590"></a>
+<a name="id36169651"></a>
         <a class="link" href="index.html#boost_assign_v2._.change_log.upgrading_from_boost__v_emphasis_1_4x__emphasis_">Upgrading
         from Boost. v<span class="emphasis"><em>1.4x</em></span></a>
       </h5>
@@ -4339,7 +4354,7 @@ ref<span class="special">::</span>assign_copy<span class="special">::</span>csv_
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: August 07, 2010 at 16:16:02 GMT</small></p></td>
+<td align="left"><p><small>Last revised: August 07, 2010 at 17:48:17 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

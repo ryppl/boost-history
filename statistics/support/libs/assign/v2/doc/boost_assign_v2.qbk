@@ -258,7 +258,7 @@ but in practice define: [def __value___ [tpl_typeof __value__]] and use __value_
 [section Introduction]
 
 This library offers a uniform interface for initializing or assigning containers, and working with 
-collections of references. The relevant directory structure is rooted [^boost/assign/v2]. Each 
+collections of references. The relevant directory structure is rooted at [^boost/assign/v2]. Each 
 directory in this structure contains an [^.hpp] file by the same name which includes all its relevant files. 
 We assume, throughout this documentation, that 
 
@@ -448,9 +448,8 @@ The `__array__` returned by
 ``
 dereferences to `__arg_0__`, `__arg_1__`, and  `__arg_2__`, respectively. Clearly only [tpl_sec_concept_fun_syntax unary 
 function] calls are allowed, and there is a [tpl_sec_concept_fun_syntax csv counterpart] as well (see below). 
-The template argument `__ref_assign_tag__` specifies [tpl_sec_ref_assign_semantics reference
-assign semantics]. Rather than specifying `__link_ref_assign_tag__`, it is equivalent to use a dedicated 
-`namespace`. For [tpl_sec_ref_assign_semantics copy semantics],
+The template argument `__link_ref_assign_tag__` specifies [tpl_sec_ref_assign_semantics reference
+assign semantics], but it can ommitted by using a corresponding `namespace`. For [tpl_sec_ref_assign_semantics copy semantics],
 
 ``
 	using namespace __ns_ref__;
@@ -547,7 +546,7 @@ on the number and __lvalue__/`const`-ness of its arguments (see `__concept_k_ary
 * A traits decides which modifier (such as `push_back()`) to use given certain properties
 of the container. For example, if the container has `push()` it takes precedence over `push_back()`. 
 	
-For example, the side effect of
+As a result, for example, the side effect of
 `` 
 	put( map )( key1, a )( key2, b )( key3, c ) 
 ``
@@ -590,11 +589,11 @@ is equivalent to
 [section Concept]
 [section:ref_assign Reference assignment]
 
-Let a reference wrapper, `__ref_wrapper__`, binding to some reference `y1` of type `__value__` i.e.
+Consider a reference wrapper, `__ref_wrapper__`, binding to some reference `y1` of type `__value__` i.e.
 ``
 	&y1 == &__ref_wrapper__.get_ref();
 ``
-Consider assigning it as follows:
+and assigned as follows:
 ``
 	__ref_wrapper__ = y2;
 ``
@@ -612,7 +611,7 @@ by the concepts below:
 
 [table 
 	[[Expression][Requirement]]
-	[[ `__object__.__convert_mf__<To>();`  ][Returns an object of type `To`, initialized with the same elements ]]
+	[[ `__object__.__convert_mf__<To>();`  ][Returns an object of type `To`, initialized with the elements of `object`]]
 	[[ `To to; to = __object__ `  ][Assigns `to` with the elements of `__object__`]]
 ]
 
@@ -632,21 +631,21 @@ In each case below, arguments are passed by reference to `__f__`.
 			__f__( __arg__[0,0], ..., __arg__[0,__k__(0)-1] ) ... ( __arg__[__n__-1,0], ..., __arg__[__n__-1,__k__(__n__-1)-1]  )
 		``]
 		[  [^ __k__ \[ __i__ \] - 1 < __pp_arity_bound__ ]    ]
-		[  __concept_k_ary__ ]
+		[  `__concept_k_ary__` ]
 	]
 	[ 
 		[``
 			__f__( __arg__[0] ) ... ( __arg__[__n__-1]  )
 		``]
 		[ [^ __j__\[__i__\] =1] ]
-		[ __concept_unary__ ]
+		[ `__concept_unary__` ]
 	]
 	[
 		[``
 			f( __arg__[0], ..., __arg__[__n__-1] )
 		``]
 		[ [^ __n__ - 1 < __pp_csv_arity_bound__ ]]
-		[ __concept_csv__ ]
+		[ `__concept_csv__` ]
 	]
 ]
 
@@ -671,7 +670,7 @@ In each case below, arguments are passed by reference to `__f__`.
 [endsect] [/ Function syntax ]
 [section:range_lvalue `__concept_rangelvalue__`]
 
-An function taking as inputs `__concept_range__` s and returning a `__concept_range__` models `__concept_rangelvalue__`
+A function taking as inputs `__concept_range__`\ s and returning a `__concept_range__` models `__concept_rangelvalue__`
 if, in case the dereference of each input is __lvalue__, then so is that of the returned range.
 
 [endsect] [/ range_lvalue]
@@ -786,8 +785,9 @@ A container of references.
 	]
 ]
 
-[table Base
-	[[if [^Tag2] equals][ evaluates to ]]
+[table Structure selection
+	[[ [^Tag2] ][ `public` Base ]]
+	[[`__use_default__`][ `__mpl_empty_base__` ]]
 	[[`__ref_lazy_alloc_tag__`][ `__link_ref_anon_aux_interface__` ]]
 ]
 
@@ -795,7 +795,7 @@ A container of references.
 
 `__concept_unary__`
 
-[note Make sure to look at those of the interface (see above) as well. ]
+[note Make sure to look at those of the base (see above). ]
 
 [heading Header]
 
@@ -806,7 +806,7 @@ TODO
 
 [heading Description]
 
-An interface for an array or references.
+An array or references.
 
 [heading Parameters]
 
@@ -846,7 +846,7 @@ TODO
 
 [heading Description]
 
-An array or references.
+Interface for an array or references.
 
 [heading Parameters]
 
@@ -1599,8 +1599,8 @@ references. This separation of interface, here, achieves higher speed in constru
 
 For each of a set of containers (see below), ensure
 
-*	At compile time, that the method deduced for modifying the container agrees with one that 
-	is explicitly specified. For example, it verifies that `push()` is the method used for 
+*	At compile time, that the method deduced for `__link_put__`\ ting elements into a container agrees 
+	with one that is explicitly specified. For example, it is asserted that `push()` is the method used for 
 	`std::__queue__<>`.
 
 *	At runtime time, that the container returned by
@@ -1660,7 +1660,7 @@ and need to be in the search path.
 [endsect] [/ Portability]
 [section Bug]
 	
-* Copying to `__link_chain__`\ ed ranges of [tpl_sec_ref_assign_semantics references] works with `__array__<>` as input, but not, for example,
+* Copying to `__link_chain__`\ ed ranges of [tpl_sec_ref_assign_semantics references] compiles for `__array__<>` as input, but not, for example,
 	`__vec__<>`.
 	
 [endsect] [/ Bug]
@@ -1710,9 +1710,9 @@ Special thanks go to
 * Joaquín Muñoz for vc6/vc7 portability.
 * Pavel Vozenilek for his countless suggestions, improvements and  portability fixes. 
 * Rene Rivera for Code Warrior portability.     
-* Manuel Peinado Gallego for identifying the need for anonymous container of references, 
+* Manuel Peinado Gallego for identifying the need for an anonymous container of references, 
   his valuable advice throughout their development, and proposing a [@http://gist.github.com/287791 design] 
-  that laid the foundation for chaining. Both features were introduced with Boost.Assign v2.
+  that laid the foundation for chaining. Both features were introduced with __boost_assign_v2__.
 
 [endsect] [/Ackowledgement]
 [section Bibliography]
