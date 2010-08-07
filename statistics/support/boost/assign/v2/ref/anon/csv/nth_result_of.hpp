@@ -13,11 +13,12 @@
 #include <boost/assign/v2/ref/anon/detail/fast_alloc_fwd.hpp>
 
 namespace boost{
+	struct use_default;
 namespace assign{
 namespace v2{
 namespace ref{
 namespace anon_aux{
-	typedef boost::mpl::empty_base csv_tag2_;
+	typedef boost::use_default csv_tag2_;
 }// anon_aux
 namespace nth_result_of{
 

@@ -15,6 +15,7 @@
 #include <boost/assign/v2/ref/anon/detail/lazy_alloc_fwd.hpp>
 
 namespace boost{
+	struct use_default;
 namespace assign{
 namespace v2{
 namespace ref{
@@ -24,7 +25,7 @@ namespace anon_aux{
     struct policy{};
 
 	template<>
-    struct policy<boost::mpl::empty_base> : boost::mpl::always<
+    struct policy<boost::use_default> : boost::mpl::always<
     	boost::mpl::empty_base
     >{};
 
