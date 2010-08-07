@@ -1616,8 +1616,52 @@ has the same elements as that of `from`, where `To` is the type of the container
 [heading Test results]
 
 [table
-	[[OS][Compiler][__boost__ version][Date ][Result]]
-	[[Mac OS X v10.6][GCC 4.2][[^1.41]][August 2nd, 2010][Passed]]
+	[
+		[OS]
+		[Compiler]
+		[__boost__ version]
+		[Date]
+		[Result]
+	]
+	[
+		[ Mac OS X v10.6]
+		[ GCC 4.2 ]
+		[ [^1.41] ]
+		[ August 6th, 2010 ]
+		[ Passed ]
+	]
+	[
+		[ Ubuntu 9.10 ]
+		[ GCC 4.4 ]
+		[ [^1.43] ]
+		[ August 6th, 2010 ]
+		[Passed]
+	]
+]
+
+[heading Executing the tests]
+
+In path [^\/libs\/assign\/v2\/test\/unit_testing],
+
+[table
+	[
+		[OS]
+		[Compiler]
+		[__boost__ version]
+		[Command]
+	]
+	[
+		[Mac OS X v10.6]
+		[GCC 4.2]
+		[ [^1.41] ]
+		[ [^sudo bjam \"toolset=darwin\" debug release]]
+	]
+	[
+		[Ubuntu 9.10]
+		[GCC 4.4]
+		[ [^1.43] ]
+		[ [^sudo bjam \"toolset=gcc\" debug release]]
+	]
 ]
 
 [heading Dependencies]
