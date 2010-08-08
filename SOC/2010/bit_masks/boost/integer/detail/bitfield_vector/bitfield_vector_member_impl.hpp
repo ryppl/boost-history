@@ -6,6 +6,7 @@
 #ifndef BOOST_BITFIELD_MEMBER_IMPL_HPP
 #define BOOST_BITFIELD_MEMBER_IMPL_HPP
 #include "bitfield_vector_base.hpp"
+#include "mask_creator.hpp"
 #include <boost/mpl/size_t.hpp>
 #include <boost/mpl/arithmetic.hpp>
 #include <boost/mpl/if.hpp>
