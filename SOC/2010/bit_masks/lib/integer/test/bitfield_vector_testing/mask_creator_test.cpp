@@ -5,57 +5,13 @@
 
 
 #include <boost/integer/detail/bitfield_vector/mask_creator.hpp>
-#include <boost/detail/lightweight_test.hpp>
+#include "test_utility.hpp"
 #include <boost/mpl/for_each.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include <string>
-
-#include <typeinfo>
-
-#include <iostream>
-#include <iomanip>
-
-#if defined(__GNUC__)
-#include <cstring>
-#include <cxxabi.h>
-#endif
-
-template <typename T>
-std::string typestr() {
-#if defined(__GNUC__)
-    std::size_t const BUFSIZE = 8192;
-    std::size_t n = BUFSIZE;
-    char buf[BUFSIZE];
-    abi::__cxa_demangle(typeid(T).name(), buf, &n, 0);
-    return std::string(buf, ::strlen(buf));
-#else
-    return std::string(typeid(T).name());
-#endif
-}
-
-template <typename T>
-inline std::string typestr(T const&)
-{ return typestr<T>(); }
-
-
-#define BOOST_PRINT_ON_TEST_FAILURE(P1, P2) \
-    if(P1 != P2 ) { \
-        std::cout << #P1 << ": " << std::hex << std::size_t(P1) << std::endl; \
-        std::cout << #P2 << ": " << std::hex << std::size_t(P2) << std::endl; \
-    }\
-    BOOST_TEST( P1 == P2);
 
 
 
-
-
-struct print_set {
-    template<typename T>
-    void operator()(T x) {
-        std::cout<< x << " ";
-    }
-};
 
 using namespace boost::detail;
 int main() {

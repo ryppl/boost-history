@@ -5,7 +5,7 @@
 
 
 #include <boost/integer/bitfield_vector.hpp>
-#include <boost/detail/lightweight_test.hpp>
+#include "test_utility.hpp"
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 

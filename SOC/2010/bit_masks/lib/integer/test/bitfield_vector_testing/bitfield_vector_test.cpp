@@ -5,7 +5,7 @@
 
 
 #include <boost/integer/bitfield_vector.hpp>
-#include <boost/detail/lightweight_test.hpp>
+#include "test_utility.hpp"
 
 int main() {
     return boost::report_errors();
