@@ -203,7 +203,6 @@ int main() {
         proxy_reference_type<unsigned long long, 48> t6(ptr,0);
         std::memset(ptr,0,4);
 
-        // 0xFFFFFFFFFFFF
         *ptr = 0xFF;
         ++ptr;
         *ptr = 0xFF;
@@ -219,8 +218,47 @@ int main() {
         ptr = storage;
         print_type_and_value(t6);
         print_mask_details(t6);
-        //                 ff ff ff ff ff
         BOOST_TEST(t6 == 0xFFFFFFFFFF);
+
+
+        // testing multi byte > 2 and ending with 0xFF
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << "Multi byte mask > 2 63 bit long long" << std::endl;
+        std::cout << "0 offset" << std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
+        proxy_reference_type<unsigned long long, 63> t7(ptr,0);
+        std::memset(ptr,0,4);
+        // 1
+        *ptr = 0xFF;
+        ++ptr;
+        // 2
+        *ptr = 0xFF;
+        ++ptr;
+        // 3
+        *ptr = 0xFF;
+        ++ptr;
+        // 4
+        *ptr = 0xFF;
+        ++ptr;
+        // 5
+        *ptr = 0xFF;
+        ++ptr;
+        // 6
+        *ptr = 0xFF;
+        ++ptr;
+        // 7
+        *ptr = 0xFF;
+        ++ptr;
+        // 8
+        *ptr = 0xFE;
+        ++ptr;
+        *ptr = 0xFF;
+        ++ptr;
+        *ptr = 0xFF;
+        ptr = storage;
+        print_type_and_value(t7);
+        print_mask_details(t7);
+        BOOST_TEST(t7 == 0x7fffffffffffffff);
     }
     return boost::report_errors();
 }
