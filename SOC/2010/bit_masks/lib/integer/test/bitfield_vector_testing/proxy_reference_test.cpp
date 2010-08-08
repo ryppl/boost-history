@@ -15,8 +15,8 @@ using namespace boost::detail;
 
 // unsigned type testing.
 typedef proxy_reference_type<unsigned int, 3>           test_type_1;
-typedef proxy_reference_type<unsigned char, 9>          test_type_2;
-typedef proxy_reference_type<unsigned long, 7>          test_type_3;
+typedef proxy_reference_type<unsigned char, 7>          test_type_2;
+typedef proxy_reference_type<unsigned long, 9>          test_type_3;
 typedef proxy_reference_type<unsigned long long, 17>    test_type_4;
 typedef proxy_reference_type<unsigned long long, 50>    test_type_5;
 
@@ -171,11 +171,34 @@ int main() {
         *ptr = 0xFF;
         --ptr;
         print_type_and_value(t4);
-        print_mask_details(t4);        
+        print_mask_details(t4);
         BOOST_TEST(t4 == 0x1FF);
 
         // testing multi byte > 2 
-        
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << "Multi byte mask > 2 bytes" << std::endl;
+        std::cout << "0 offset" << std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
+        ptr = storage;
+        test_type_4 t5(ptr,0);
+        print_type_and_value(t5);
+        print_mask_details(t5);
+        std::memset(ptr,0,4);
+        *ptr = 0xFF;
+        std::cout << std::hex<< std::size_t(*ptr) << std::endl;
+        ++ptr;
+        *ptr = 0xFF;
+        std::cout << std::hex<< std::size_t(*ptr) << std::endl;
+        ++ptr;
+        *ptr = 0x80;
+        std::cout << std::hex<< std::size_t(*ptr) << std::endl;
+        ptr = storage;
+
+        // expected mask 
+        // 0xFF 0xFF 0x80
+
+        BOOST_TEST(t5 == 0x1FFFF);
+                
     }
     return boost::report_errors();
 }

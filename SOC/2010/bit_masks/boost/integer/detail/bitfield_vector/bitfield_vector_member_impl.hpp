@@ -131,16 +131,6 @@ public:
     mask_detail     _mask;
 };
 
-
-/** Used for returning information about the mask used to apply the mask to
- *  another char array.
- */
-struct mask_array_info {
-    std::size_t     mask_size;
-    storage_ptr_t   mask;
-    std::size_t     last_left_shift;
-};
-
 /** Proxy reference type for unsigned types. */
 template <typename RetType, std::size_t Width>
 class proxy_reference_type<RetType,Width,false> {
@@ -193,7 +183,8 @@ public:
                  _mask._last_shift;
 
             ++byte_ptr;
-            ret += value_type( _mask._last_byte & *byte_ptr) >> (8 - _mask._last_shift);
+            ret += value_type( _mask._last_byte & *byte_ptr) >>
+                (8 - _mask._last_shift);
             if( _mask._last_byte != 0xFF) {
                 ret >>= _mask._last_shift - 1;
             }
@@ -202,8 +193,10 @@ public:
         
         const storage_t all_bits = 0xFF;
         // gettting first byte.
-        ret = value_type(_mask._first_byte & *byte_ptr) << 8;
+
+        ret = value_type( _mask._first_byte & *byte_ptr);
         ++byte_ptr;
+        
         // getting middle bytes
         for(std::size_t index = 0; index < _mask._size - 2; ++index) {
             ret <<= 8;
@@ -211,9 +204,12 @@ public:
             ++byte_ptr;
         }
         // shifting bits
-        ++byte_ptr;
-        ret <<= _mask._last_shift;
-        ret += value_type( *byte_ptr & _mask._last_byte ) >> (8 - _mask._last_shift);
+        if(_mask._last_shift == 8){
+            ret <<= 8;
+        }else{
+            ret <<= 8 - _mask._last_shift;
+        }
+        ret += value_type( *byte_ptr & _mask._last_byte ) >> ( _mask._last_shift);
         return ret;
     }
 
