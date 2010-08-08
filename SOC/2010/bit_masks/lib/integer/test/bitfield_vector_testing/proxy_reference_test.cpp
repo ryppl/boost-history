@@ -47,7 +47,7 @@ int main() {
         unsigned char temp[20];
 #define TEST_MACRO_PTR_OFFSET_CTOR(NUMBER) \
         test_type_##NUMBER t##NUMBER(temp,2); \
-        BOOST_TEST(t##NUMBER._offset == 2); \
+        BOOST_TEST(t##NUMBER._mask._offset == 2); \
         BOOST_TEST(t##NUMBER._ptr == temp);
 
         TEST_MACRO_PTR_OFFSET_CTOR(1);
@@ -69,7 +69,7 @@ int main() {
 #define TEST_MACRO_COPY_CTOR(NUMBER) \
         test_type_##NUMBER t##NUMBER(temp,2); \
         test_type_##NUMBER u##NUMBER(t##NUMBER); \
-        BOOST_TEST(u##NUMBER._offset == 2); \
+        BOOST_TEST(u##NUMBER._mask._offset == 2); \
         BOOST_TEST(u##NUMBER._ptr == temp);
 
         TEST_MACRO_COPY_CTOR(1);
@@ -93,10 +93,10 @@ int main() {
 #define TEST_MACRO_COPY_ASSIGNMENT_OPERATOR(NUMBER) \
         test_type_##NUMBER t##NUMBER(temp,2);       \
         test_type_##NUMBER u##NUMBER(temp2,4);      \
-        BOOST_TEST(u##NUMBER._offset == 4);         \
+        BOOST_TEST(u##NUMBER._mask._offset == 4);         \
         BOOST_TEST(u##NUMBER._ptr == temp2);        \
         u##NUMBER = t##NUMBER;                      \
-        BOOST_TEST(u##NUMBER._offset == 2);         \
+        BOOST_TEST(u##NUMBER._mask._offset == 2);         \
         BOOST_TEST(u##NUMBER._ptr == temp);
 
         TEST_MACRO_COPY_ASSIGNMENT_OPERATOR(1);
@@ -112,117 +112,30 @@ int main() {
 
 #undef TEST_MACRO_COPY_ASSIGNMENT_OPERATOR
     }
-
-    // functions used for constructing the char_array mask.
-    // Testing: get_mask_array_size
-    {
-        std::size_t ret_value = 0;
-
-        ret_value = get_mask_array_size<3>(6);
-        BOOST_TEST(ret_value == 2);
-
-        ret_value = get_mask_array_size<4>(0);
-        BOOST_TEST(ret_value == 1);
-
-        ret_value = get_mask_array_size<50>(0);
-        BOOST_TEST(ret_value == 7);
-    }
-    // make_field_mask creates mask used to retrieve or set data.
-    {
-        mask_array_info manager_ptr;
-        storage_ptr_t ptr;
-
-        manager_ptr = make_field_mask<3>(6);
-        ptr = manager_ptr.mask;
-        BOOST_TEST(*ptr == 0x3);
-        ++ptr;
-        BOOST_TEST(*ptr == 0x80);
-        delete manager_ptr.mask;
-
-        manager_ptr = make_field_mask<3>(1);
-        ptr = manager_ptr.mask;
-        BOOST_TEST( *ptr == 0x70 );
-        delete manager_ptr.mask;
-
-        manager_ptr = make_field_mask<4>(0);
-        ptr = (manager_ptr.mask);
-        BOOST_TEST( *ptr == 0xf0 );
-        delete manager_ptr.mask;
-
-        manager_ptr = make_field_mask<50>(0);
-        ptr = (manager_ptr.mask);
-        // 1
-        BOOST_TEST( *ptr == 0xFF );
-        // 2
-        ++ptr;
-        BOOST_TEST( *ptr == 0xFF );
-        // 3
-        ++ptr;
-        BOOST_TEST( *ptr == 0xFF );
-        // 4
-        ++ptr;
-        BOOST_TEST( *ptr == 0xFF );
-        // 5
-        ++ptr;
-        BOOST_TEST( *ptr == 0xFF );
-        // 6
-        ++ptr;
-        BOOST_TEST( *ptr == 0xFF );
-        // 7
-        ++ptr;
-        BOOST_TEST( *ptr == 0xC0 );
-
-        delete manager_ptr.mask;
-
-
-        manager_ptr = make_field_mask<50>(2);
-        ptr = (manager_ptr.mask);
-        // 1
-        BOOST_TEST( *ptr == 0x3F );
-        // 2
-        ++ptr;
-        BOOST_TEST( *ptr == 0xFF );
-        // 3
-        ++ptr;
-        BOOST_TEST( *ptr == 0xFF );
-        // 4
-        ++ptr;
-        BOOST_TEST( *ptr == 0xFF );
-        // 5
-        ++ptr;
-        BOOST_TEST( *ptr == 0xFF );
-        // 6
-        ++ptr;
-        BOOST_TEST( *ptr == 0xFF );
-        // 7
-        ++ptr;
-        BOOST_TEST( *ptr == 0xF0 );
-
-        delete manager_ptr.mask;
-
-    }
-
     // encoding and decoding tests.
     {
+
+        // single byte mask testing
         typedef unsigned char storage_type;
         typedef storage_type* storage_ptr;
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << "single byte mask" << std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
         storage_type storage[20];
         storage_ptr ptr = storage;
         *ptr = storage_type(0x7) << 5;
         std::cout << "Test type 1. First byte value in hex: " << std::endl;
         std::cout << std::hex << std::size_t(*ptr) << std::endl;
-
         // first within the first index.
         test_type_1 t1(ptr,0);
         std::cout << "fist use of t1" << std::endl;
         test_type_1::value_type x = t1;
-        // std::cout << "Value returned by t1: "<< std::hex << x << std::endl;
-
         BOOST_TEST(x == 0x7);
-
-
-        
-        // now trying second index.
+       
+        // now trying second index. Still single byte mask testing
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << "middle of byte mask single bit" << std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
         test_type_1 t2(ptr,3);
         std::cout << "fist use of t2" << std::endl;
         BOOST_TEST(t2 == 0);
@@ -233,10 +146,39 @@ int main() {
         std::cout << "Value returned by t2: "<< std::hex << t2 << std::endl;
         std::cout << "third use of t2" << std::endl;
         BOOST_TEST(t2 == 7);
+        
+        // 2 byte mask testing.
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << "2 byte mask" << std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
+        test_type_1 t3(ptr,6);
+        *ptr = 0x03;
+        ++ptr;
+        *ptr = 0x80;
+        --ptr;
+        print_type_and_value(t3);
+        print_mask_details(t3);
+        BOOST_TEST( t3 == 7 );
 
+        // two byte with second byte = to 8.
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << "2 byte mask. 0x1 and 0xFF" << std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
+        proxy_reference_type<unsigned int, 9> t4(ptr,7);
+        std::memset(ptr,0,3);
+        *ptr = 0x01;
+        ++ptr;
+        *ptr = 0xFF;
+        --ptr;
+        print_type_and_value(t4);
+        print_mask_details(t4);        
+        BOOST_TEST(t4 == 0x1FF);
+
+        // testing multi byte > 2 
         
     }
     return boost::report_errors();
 }
+
 
 

@@ -13,9 +13,8 @@
 #include <boost/mpl/equal.hpp>
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/assert.hpp>
-#include <iostream>
-#include <iomanip>
 #include <cstring>
+
 
 namespace boost { namespace detail {
 
@@ -101,19 +100,19 @@ public:
 
     /** Copy Constructor. */
     proxy_reference_type(_self const& x)
-        :_ptr(x._ptr), _offset(x._offset)
+        :_ptr(x._ptr), _mask(x._mask )
     { }
 
     /** pointer, offset constructor. */
     proxy_reference_type(storage_type* ptr, offset_type offset)
-        :_ptr(ptr), _offset(offset)
+        :_ptr(ptr), _mask(get_mask_detail<Width>(offset) )
     { }
     //@}
 
     /** Copy assignment. */
     _self& operator=(_self const& x) {
         _ptr = x._ptr;
-        _offset = x._offset;
+        _mask = x._mask;
         return *this;
     }
 
@@ -129,7 +128,7 @@ public:
     // private:
     /** Member variables. */
     storage_type*    _ptr;
-    offset_type     _offset;
+    mask_detail     _mask;
 };
 
 
@@ -142,104 +141,7 @@ struct mask_array_info {
     std::size_t     last_left_shift;
 };
 
-
-/** Calculates the size of an array needed to store a particular mask inside of
- *  of char array.
- */
-template <std::size_t Width>
-inline std::size_t get_mask_array_size(std::size_t offset) {
-    BOOST_ASSERT(( offset < 8));
-    std::size_t total_bits = Width + offset;
-    std::size_t ret = 0;
-    ret = total_bits / 8;
-    if(total_bits % 8) {
-        ret += 1;
-    }
-    return ret;
-}
-
-
-void print_mask_array(storage_ptr_t start,storage_ptr_t end) {
-    std::cout << "Value Of Mask Array: " ;
-    for(;start != end;++start) {
-        std::cout << std::hex << std::size_t(*start) << "|";
-    }
-    std::cout << std::endl;
-}
-
-
-/** Creates a mask the which is used to extract the information from within
- *  a the storage unsigned char array.
- */
-template <std::size_t Width>
-inline mask_array_info
-make_field_mask(std::size_t offset) {
-
-    // I should consider using malloc for something like this shouldn't I.
-    // either way all I need to remember to do is make sure that it gets
-    // deleted.
-    std::size_t mask_size = get_mask_array_size<Width>(offset);
-    mask_array_info ret;
-    ret.mask_size = mask_size;
-    ret.mask = new storage_t[mask_size];
-    ret.last_left_shift = 0;
-    std::memset(ret.mask, 0, mask_size);
-    storage_ptr_t mask_ptr = ret.mask;
-
-    // calculate bit_count for for statement
-    std::size_t bit_count = Width + offset;
-    storage_t mask = 0x80;
-    mask >>= offset;
-   
-    // creating begining mask.
-    for(std::size_t index = offset;
-        index < bit_count && index <= 8;
-        ++index)
-    {
-        *mask_ptr |= mask;
-        mask >>= 1;
-    }
-
-    // This is a basic condition where if the mask has a size of 1 byte then
-    // it should simply be returned.
-    // this also denotes that the mask is not going to cross char boundries.
-    if(mask_size == 1) {
-        return ret;
-    }
-
-    // fill all but the last block with 0xff
-    storage_ptr_t end_mask_ptr = mask_ptr + mask_size - 1;
-    ++mask_ptr;
-    for(;mask_ptr < end_mask_ptr; ++mask_ptr) {
-        *mask_ptr = 0xff;
-    }
-
-    // if both the offset + width is divisible by 8 then that means that
-    // the mask ends on a char boundry and the last byte needs to be set to 0
-    // and the array returned.
-    if(!((offset + Width)%8)) {
-        mask_ptr = ret.mask + mask_size - 1;
-        *mask_ptr = 0xFF;
-        ret.last_left_shift = 8;
-        return ret;
-    }
-
-    // filling out the rest of the trailing bits.
-    mask = 0x80;
-
-    // calculate the number of trailing bits which need to be filled out.
-    std::size_t remaining_bits = (Width + offset) % 8;
-    ret.last_left_shift = remaining_bits;
-    // set the mask pointer to the last valid index inside of the array.
-    mask_ptr = ret.mask + mask_size - 1;
-    for(std::size_t bit_index = 0; bit_index < remaining_bits; ++bit_index) {
-        *mask_ptr |= mask;
-        mask >>= 1;
-    }
-    return ret;
-}
-
-
+/** Proxy reference type for unsigned types. */
 template <typename RetType, std::size_t Width>
 class proxy_reference_type<RetType,Width,false> {
     typedef proxy_reference_type<RetType,Width,false> _self;
@@ -258,53 +160,61 @@ public:
 
     /** Copy Constructor. */
     proxy_reference_type(_self const& x)
-        :_ptr(x._ptr),
-        _offset(x._offset),
-        _mask(make_field_mask<Width>(_offset))
+        :_ptr(x._ptr), _mask(x._mask)
     { }
 
     /** pointer, offset constructor. */
     proxy_reference_type(storage_type* ptr, offset_type offset)
-        :_ptr(ptr),
-        _offset(offset),
-        _mask(make_field_mask<Width>(_offset))
+        :_ptr(ptr), _mask(get_mask_detail<Width>(offset))
+        
     { }
 
-    ~proxy_reference_type() {
-        delete _mask.mask;
-    }
     //@}
 
     /** Copy assignment. */
     _self& operator=(_self const& x) {
-        storage_ptr_t mask_ptr = _mask.mask;
         _ptr = x._ptr;
-        _offset = x._offset;
-        _mask = make_field_mask<Width>(_offset);
-        delete mask_ptr;
+        _mask = x._mask;
         return *this;
     }
 
     /** Implicit Conversion Operator*/
     operator value_type() const {
+        if(_mask._size == 1) {
+            return (value_type( _mask._first_byte & *_ptr ) >>
+                (8 - (_mask._offset + width)));
+        }
+
         value_type ret = 0;
+        storage_ptr_t byte_ptr = _ptr;
 
-        storage_ptr_t mask_ptr = _mask.mask;
-        storage_ptr_t end_mask_ptr = _mask.mask + _mask.mask_size - 1 ;
-        storage_ptr_t data_ptr = _ptr;
+        if(_mask._size == 2) {
+            ret = value_type(_mask._first_byte & *byte_ptr) <<
+                 _mask._last_shift;
 
-        if(_mask.mask_size == 1) {
-            return value_type(*data_ptr & *mask_ptr) >> (8-(_offset + width));
+            ++byte_ptr;
+            ret += value_type( _mask._last_byte & *byte_ptr) >> (8 - _mask._last_shift);
+            if( _mask._last_byte != 0xFF) {
+                ret >>= _mask._last_shift - 1;
+            }
+            return ret;
         }
-        for(;mask_ptr < end_mask_ptr;++mask_ptr) {
+        
+        const storage_t all_bits = 0xFF;
+        // gettting first byte.
+        ret = value_type(_mask._first_byte & *byte_ptr) << 8;
+        ++byte_ptr;
+        // getting middle bytes
+        for(std::size_t index = 0; index < _mask._size - 2; ++index) {
             ret <<= 8;
-            ret += *data_ptr & *mask_ptr;
-            ++data_ptr;
+            ret += *byte_ptr & all_bits;
+            ++byte_ptr;
         }
-        ret <<= _mask.last_left_shift;
-        ++data_ptr;
-        ++mask_ptr;
-        return ret += *data_ptr & *mask_ptr;
+        // shifting bits
+        ++byte_ptr;
+        ret <<= _mask._last_shift;
+        ret += value_type( *byte_ptr & _mask._last_byte ) >> (8 - _mask._last_shift);
+        return ret;
     }
 
     /** value_type storage assignement operator.*/
@@ -319,9 +229,9 @@ public:
 
 // private:
     /** Member variables. */
-    storage_type*    _ptr;
-    offset_type     _offset;
-    mask_array_info _mask;
+    storage_type*   _ptr;
+    mask_detail     _mask;
+    // mask_array_info _mask;
 };
 
 
