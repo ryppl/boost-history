@@ -14,6 +14,9 @@
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/assert.hpp>
 #include <cstring>
+#include <boost/integer/low_bits_mask.hpp>
+#include <iostream>
+#include <iomanip>
 
 namespace boost { namespace detail {
 
@@ -211,7 +214,19 @@ public:
 
     /** value_type storage assignement operator.*/
     _self& operator=(value_type x) {
+        if(_mask._size == 1) {
+            storage_t previous_values = *_ptr & ~_mask._first_byte;
+            storage_t new_value = low_bits_mask<value_type, width>::value & x;
+            new_value <<= _mask._last_shift;
+            previous_values |= new_value;
+            *_ptr = previous_values;
+            return *this;
+        }
         
+        if(_mask._size == 2) {
+        }
+        
+        return *this;
     }
 
     bool operator==(_self const& rhs);
@@ -223,7 +238,6 @@ public:
     /** Member variables. */
     storage_type*   _ptr;
     mask_detail     _mask;
-    // mask_array_info _mask;
 };
 
 

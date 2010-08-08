@@ -218,7 +218,8 @@ int main() {
         ptr = storage;
         print_type_and_value(t6);
         print_mask_details(t6);
-        BOOST_TEST(t6 == 0xFFFFFFFFFF);
+        typedef unsigned long long ullt;
+        BOOST_TEST(t6 == ullt(0xFFFFFFFFFF));
 
 
         // testing multi byte > 2 and ending with 0xFF
@@ -252,13 +253,57 @@ int main() {
         // 8
         *ptr = 0xFE;
         ++ptr;
-        *ptr = 0xFF;
-        ++ptr;
-        *ptr = 0xFF;
         ptr = storage;
         print_type_and_value(t7);
         print_mask_details(t7);
-        BOOST_TEST(t7 == 0x7fffffffffffffff);
+        BOOST_TEST(t7 == 0x7fffffffffffffff );
+    }
+
+    // testing value_type assignment operator.
+    {
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << "Testing assignment value_type assignement operator" << std::endl;
+        std::cout << "-----------------------------------------" << std::endl
+            << std::endl<< std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << "1 byte offset 0" << std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
+        typedef unsigned char storage_type;
+        typedef storage_type* storage_ptr;        
+        storage_type storage[20];
+        storage_ptr ptr = storage;
+        std::memset(ptr,0,20);
+
+        test_type_1 t1(ptr, 0);
+        t1 = 0x7;
+        std::cout << std::hex << std::size_t(*ptr) << std::endl;
+        print_mask_details(t1);
+        BOOST_TEST(*ptr == 0xE0);
+
+
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << "1 byte offset not 2" << std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
+
+        std::memset(ptr,0,1);
+
+        test_type_1 t2(ptr, 2);
+        t2 = 0x7;
+        std::cout << std::hex << std::size_t(*ptr) << std::endl;
+        print_mask_details(t2);
+        BOOST_TEST(*ptr == 0x38);
+/*
+test_type_1;
+test_type_2;
+test_type_3;
+test_type_4;
+test_type_5;
+test_type_6;
+test_type_7;
+test_type_8;
+test_type_9;
+test_type_10;
+*/
     }
     return boost::report_errors();
 }
