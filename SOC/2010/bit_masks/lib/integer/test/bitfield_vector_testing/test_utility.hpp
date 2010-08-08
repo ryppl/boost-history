@@ -55,19 +55,21 @@ struct print_mpl_values {
 
 template<typename T>
 void print_type_and_value( T const& x) {
+    typedef unsigned long long ulltype;
     std::cout << "Type: " << typestr<T>() << "  Value:"
-        << std::hex << std::size_t(x) << std::endl;
+        << std::hex << ulltype(x) << std::endl;
 }
 
 template <typename T>
 void print_mask_details( T const& x) {
+    typedef unsigned long long ulltype;
     std::cout << "Mask detail for the following class" << std::endl;
     std::cout << "Type: " << typestr<T>() << std::endl;
     std::cout << "Mask Values" << std::endl;
     std::cout << "size:" <<  x._mask._size << std::endl;
     std::cout << "offset:" <<  x._mask._offset << std::endl;
-    std::cout << "first_byte:" <<  std::hex << std::size_t(x._mask._first_byte) << std::endl;
-    std::cout << "last_byte:" <<  std::hex << std::size_t(x._mask._last_byte) << std::endl;
+    std::cout << "first_byte:" <<  std::hex << ulltype(x._mask._first_byte) << std::endl;
+    std::cout << "last_byte:" <<  std::hex << ulltype(x._mask._last_byte) << std::endl;
     std::cout << "last_shift:" << x._mask._last_shift << std::endl << std::endl;
 
 }

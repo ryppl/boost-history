@@ -15,7 +15,6 @@
 #include <boost/assert.hpp>
 #include <cstring>
 
-
 namespace boost { namespace detail {
 
 template <std::size_t Width, bool = bool((Width%8) > 0)>
@@ -204,11 +203,8 @@ public:
             ++byte_ptr;
         }
         // shifting bits
-        if(_mask._last_shift == 8){
-            ret <<= 8;
-        }else{
-            ret <<= 8 - _mask._last_shift;
-        }
+
+        ret <<= 8 - _mask._last_shift;
         ret += value_type( *byte_ptr & _mask._last_byte ) >> ( _mask._last_shift);
         return ret;
     }

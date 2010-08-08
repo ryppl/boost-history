@@ -179,26 +179,48 @@ int main() {
         std::cout << "Multi byte mask > 2 bytes" << std::endl;
         std::cout << "0 offset" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
-        ptr = storage;
         test_type_4 t5(ptr,0);
         print_type_and_value(t5);
         print_mask_details(t5);
         std::memset(ptr,0,4);
         *ptr = 0xFF;
-        std::cout << std::hex<< std::size_t(*ptr) << std::endl;
         ++ptr;
         *ptr = 0xFF;
-        std::cout << std::hex<< std::size_t(*ptr) << std::endl;
         ++ptr;
         *ptr = 0x80;
-        std::cout << std::hex<< std::size_t(*ptr) << std::endl;
         ptr = storage;
 
         // expected mask 
         // 0xFF 0xFF 0x80
 
         BOOST_TEST(t5 == 0x1FFFF);
-                
+
+        // testing multi byte > 2 and ending with 0xFF
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << "Multi byte mask > 2 bytes and ending with 0xFF" << std::endl;
+        std::cout << "0 offset" << std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
+        proxy_reference_type<unsigned long long, 48> t6(ptr,0);
+        std::memset(ptr,0,4);
+
+        // 0xFFFFFFFFFFFF
+        *ptr = 0xFF;
+        ++ptr;
+        *ptr = 0xFF;
+        ++ptr;
+        *ptr = 0xFF;
+        ++ptr;
+        *ptr = 0xFF;
+        ++ptr;
+        *ptr = 0xFF;
+        ++ptr;
+        *ptr = 0xFF;
+
+        ptr = storage;
+        print_type_and_value(t6);
+        print_mask_details(t6);
+        //                 ff ff ff ff ff
+        BOOST_TEST(t6 == 0xFFFFFFFFFF);
     }
     return boost::report_errors();
 }
