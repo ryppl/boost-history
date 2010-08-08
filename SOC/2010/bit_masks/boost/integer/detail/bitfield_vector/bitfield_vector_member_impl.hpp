@@ -15,6 +15,7 @@
 #include <boost/assert.hpp>
 #include <cstring>
 #include <boost/integer/low_bits_mask.hpp>
+#include <boost/integer/bit_width.hpp>
 #include <iostream>
 #include <iomanip>
 
@@ -224,6 +225,28 @@ public:
         }
         
         if(_mask._size == 2) {
+            storage_t to_be_stored = 0;
+            std::size_t bits_in_first_mask = 8 - _mask._offset;
+            std::cout << "bits_in_first_mask: " << bits_in_first_mask << std::endl;
+            value_type first_mask = (~(~value_type(0) << bits_in_first_mask))
+                << (width - bits_in_first_mask - 1);
+            typedef unsigned long long ullt;
+            std::cout << "first_mask: " << std::hex << ullt(first_mask) << std::endl;
+            to_be_stored = storage_t((first_mask&x)>>(width - bits_in_first_mask - 1));
+            std::cout << "to be stored: " << std::hex << ullt(to_be_stored) << std::endl;
+            storage_ptr_t byte_ptr = _ptr;
+            
+            *byte_ptr = (*byte_ptr & ~_mask._first_byte) | to_be_stored;
+            ++byte_ptr;
+            std::size_t bits_in_mask = width - bits_in_first_mask;
+            std::cout << "bits in second mask: " << bits_in_mask << std::endl;
+            value_type second_mask = ~(~value_type(0) << bits_in_mask);
+            std::cout << "second mask: " << std::hex << ullt(second_mask) << std::endl;
+            to_be_stored = storage_t((second_mask & x) << _mask._last_shift);
+            std::cout << "to be stored: " << std::hex << ullt(to_be_stored) << std::endl;
+            *byte_ptr = (*byte_ptr & ~_mask._last_byte) | to_be_stored;
+
+            return *this;
         }
         
         return *this;

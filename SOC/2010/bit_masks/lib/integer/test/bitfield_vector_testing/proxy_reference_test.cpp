@@ -273,7 +273,6 @@ int main() {
         storage_type storage[20];
         storage_ptr ptr = storage;
         std::memset(ptr,0,20);
-
         test_type_1 t1(ptr, 0);
         t1 = 0x7;
         std::cout << std::hex << std::size_t(*ptr) << std::endl;
@@ -282,16 +281,30 @@ int main() {
 
 
         std::cout << "-----------------------------------------" << std::endl;
-        std::cout << "1 byte offset not 2" << std::endl;
+        std::cout << "1 byte offset 2" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
-
         std::memset(ptr,0,1);
-
         test_type_1 t2(ptr, 2);
         t2 = 0x7;
         std::cout << std::hex << std::size_t(*ptr) << std::endl;
         print_mask_details(t2);
         BOOST_TEST(*ptr == 0x38);
+
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << "multi byte extraction" << std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
+        // std::memset(ptr,0,1);
+        test_type_1 t3(ptr, 6);
+        
+        t3 = 0x7;
+        std::cout << std::hex << std::size_t(*ptr) << std::endl;
+        BOOST_TEST(t2 == 7);
+        ++ptr;
+        std::cout << std::hex << std::size_t(*ptr) << std::endl;
+        BOOST_TEST(*ptr == 0x80);
+        ptr = storage;
+        
+        // BOOST_TEST(false);
 /*
 test_type_1;
 test_type_2;
