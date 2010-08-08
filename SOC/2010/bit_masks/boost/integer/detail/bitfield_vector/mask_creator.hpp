@@ -7,6 +7,7 @@
 #define BOOST_BITFIELD_VECTOR_MASK_CREATOR_HPP
 #include "bitfield_vector_base.hpp"
 #include <boost/mpl/size_t.hpp>
+#include <boost/mpl/void.hpp>
 #include <boost/mpl/arithmetic.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/equal.hpp>
@@ -251,7 +252,7 @@ struct mask_detail {
     { }
 
     template <typename MaskInfo>
-    explicit mask_detail(MaskInfo const&)
+    mask_detail(MaskInfo const&)
         :_offset(MaskInfo::offset),
         _size(MaskInfo::size),
         _last_shift(MaskInfo::last_shift),
@@ -259,7 +260,7 @@ struct mask_detail {
         _last_byte(MaskInfo::last_value)
     { }
 
-    explicit mask_detail(mpl::void_* )
+    mask_detail(mpl::void_* )
         :_offset(0),
         _size(0),
         _last_shift(0),
@@ -290,7 +291,7 @@ struct mask_detail {
  *  mask detail.
  */
 template <std::size_t Width>
-mask_detail get_mask_info(std::size_t offset) {
+mask_detail get_mask_detail(std::size_t offset) {
     typedef typename create_masks<Width>::type masks;
     switch(offset){
         case 0:

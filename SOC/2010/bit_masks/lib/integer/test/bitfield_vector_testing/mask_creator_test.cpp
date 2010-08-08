@@ -192,6 +192,7 @@ int main() {
         BOOST_TEST(t3._first_byte==0xf0);
         BOOST_TEST(t3._last_byte==0x0f);
         using namespace boost;
+
         // template ctor
         typedef create_masks<3>::type masks;
         typedef mpl::at_c<masks,0>::type info;
@@ -203,6 +204,47 @@ int main() {
         BOOST_TEST(t4._first_byte==0xE0);
         BOOST_TEST(t4._last_byte==0x0);
 
+        // testing mpl::void_* constructor.
+        typedef mpl::void_* mpl_void_ptr;
+        mpl_void_ptr mvp = 0;
+        mask_detail t5(mvp);
+        BOOST_TEST(t5._offset==0);
+        BOOST_TEST(t5._size==0);
+        BOOST_TEST(t5._last_shift==0);
+        BOOST_TEST(t5._first_byte==0);
+        BOOST_TEST(t5._last_byte==0);
+    }
+
+    // testing get_mask_detail
+    {
+        mask_detail t1( get_mask_detail<3>(0) );
+        BOOST_TEST(t1._offset       == 0);
+        BOOST_TEST(t1._size         == 1);
+        BOOST_TEST(t1._last_shift   == 5);
+        BOOST_TEST(t1._first_byte   == 0xE0);
+        BOOST_TEST(t1._last_byte    == 0);
+
+
+        mask_detail t2( get_mask_detail<3>(2) );
+        BOOST_TEST(t2._offset       == 2);
+        BOOST_TEST(t2._size         == 1);
+        BOOST_TEST(t2._last_shift   == 3);
+        BOOST_TEST(t2._first_byte   == 0x38);
+        BOOST_TEST(t2._last_byte    == 0);
+
+        mask_detail t3( get_mask_detail<50>(1) );
+        BOOST_TEST(t3._offset       == 0);
+        BOOST_TEST(t3._size         == 0);
+        BOOST_TEST(t3._last_shift   == 0);
+        BOOST_TEST(t3._first_byte   == 0);
+        BOOST_TEST(t3._last_byte    == 0);
+
+        mask_detail t4( get_mask_detail<3>(6) );
+        BOOST_TEST(t4._offset       == 6);
+        BOOST_TEST(t4._size         == 2);
+        BOOST_TEST(t4._last_shift   == 7);
+        BOOST_TEST(t4._first_byte   == 0x03);
+        BOOST_TEST(t4._last_byte    == 0x80);
     }
     return boost::report_errors();
 }
