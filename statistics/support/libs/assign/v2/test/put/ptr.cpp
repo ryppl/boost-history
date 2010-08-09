@@ -26,20 +26,21 @@ namespace xxx_ptr{
 	void test(){
 		using namespace boost::assign::v2;
         {	// Array
-        	
+// TODO
+/*        	
             {	
         		typedef boost::ptr_array<int,8> cont_;
                 cont_ cont;
                 {
             		using namespace checking::constants;
-                    // TODO
-                	//put( cont )( a )( b )( c )( d )( e )( f )( g )( h );
-                }
-                {
-                	using namespace checking::container;
-                 	//do_check( cont );   
+                    using namespace checking::container;
+                	do_check(
+                    	put( cont )
+                        	( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+                    );
                 }
 			}
+*/            
         }
         {	// Sequence
         	
@@ -48,11 +49,11 @@ namespace xxx_ptr{
                 cont_ cont;
                 {
             		using namespace checking::constants;
-                	put( cont )( a )( b )( c )( d )( e )( f )( g )( h );
-                }
-                {
                 	using namespace checking::container;
-                 	do_check( cont );   
+                    do_check(
+                		put( cont )
+                        	( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+                    );
                 }
             }// ptr_deque
             {	
@@ -60,11 +61,11 @@ namespace xxx_ptr{
                 cont_ cont;
                 {
             		using namespace checking::constants;
-                	put( cont )( a )( b )( c )( d )( e )( f )( g )( h );
-                }
-                {
                 	using namespace checking::container;
-                 	do_check( cont );   
+                    do_check(
+                		put( cont )
+                        	( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+                    );
                 }
             }// ptr_list
             {	
@@ -72,17 +73,15 @@ namespace xxx_ptr{
                 cont_ cont;
                 {
             		using namespace checking::constants;
-                	put( cont )( a )( b )( c )( d )( e )( f )( g )( h );
-                }
-                {
                 	using namespace checking::container;
-                 	do_check( cont );   
+                    do_check(
+                    	put( cont )
+                        ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+                    );
                 }
             }// ptr_vector
-        
-        }
-
-	}
+        }// Sequence
+	}// test
   
 }// xxx_ptr
 }// xxx_put
