@@ -12,11 +12,11 @@
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/assign/v2/put/wrapper/crtp.hpp>
 
-// Modifiers:
-// object % ( _put_tag = Tag() );	Component 1-
-// object % ( _fun = F() );			Component 2-
-// object % ( _incr_lookup );		++v[ f( xi1, ..., xik(i) ) ];
-// object % ( _repeat = n );		
+// Usage:
+// 	put( v ) % ( _put_tag = Tag() );	
+// 	put( v ) % ( _fun = F() );		
+// 	put( v ) % ( _incr_lookup );		
+// 	put( v ) % ( _repeat = n );		
 
 namespace boost{
 namespace assign{ 

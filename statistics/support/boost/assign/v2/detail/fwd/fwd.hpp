@@ -11,5 +11,6 @@
 #define BOOST_ASSIGN_V2_DETAIL_FWD_FWD_ER_2010_HPP
 
 #include <boost/assign/v2/detail/fwd/container.hpp>
+#include <boost/assign/v2/detail/fwd/ptr_container.hpp>
 
 #endif

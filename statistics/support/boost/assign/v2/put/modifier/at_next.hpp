@@ -27,6 +27,10 @@ namespace put_aux{
         void impl(V& v,T& t)const{ 
         	v.at( i++ ) = t; 
         }
+
+        // TODO
+    	template<typename V,typename T>
+        void impl(V& v,T* t)const{ v.replace( i++ , t); }
         
         private:
         mutable std::size_t i;

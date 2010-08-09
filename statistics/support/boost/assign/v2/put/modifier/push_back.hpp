@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_PUSH_BACK_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_PUSH_BACK_ER_2010_HPP
+#include <boost/utility/enable_if.hpp>
 #include <boost/assign/v2/put/modifier/def.hpp>
 
 namespace boost{
@@ -21,9 +22,12 @@ namespace put_aux{
     struct modifier<v2::put_tag::push_back>{
     
     	modifier(){}
-        
+
     	template<typename V,typename T>
-        void impl(V& v,T& t)const{ v.push_back( t ); }
+       void impl(V& v,T& t)const{ v.push_back( t ); }        
+
+    	template<typename V,typename T>
+        void impl(V& v,T* t)const{ v.push_back( t ); }
         
     };
 

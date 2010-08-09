@@ -13,5 +13,6 @@
 #include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
 #include <boost/assign/v2/detail/functor/constructor.hpp>
 #include <boost/assign/v2/detail/functor/identity.hpp>
+#include <boost/assign/v2/detail/functor/new.hpp>
 
 #endif

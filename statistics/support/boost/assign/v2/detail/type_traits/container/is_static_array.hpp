@@ -9,7 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_TYPE_TRAITS_CONTAINER_IS_STATIC_ARRAY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TYPE_TRAITS_CONTAINER_IS_STATIC_ARRAY_ER_2010_HPP
+#include <boost/type_traits/remove_cv.hpp>
 #include <boost/assign/v2/detail/type_traits/container/has_static_size.hpp>
+#include <boost/assign/v2/detail/type_traits/container/forward_to_value.hpp>
 
 namespace boost{
 
@@ -29,8 +31,13 @@ namespace container_type_traits{
 	// TODO also check that operator[] exists
 
 	template<typename T>
-    struct is_static_array : has_static_size<T>{};
+    struct is_static_array_impl : has_static_size<T>{};
 
+    template<typename V>
+    struct is_static_array : forward_to_value<
+    	is_static_array_impl,
+    	typename boost::remove_cv<V>::type
+    >{};
 
 }// container_type_traits
 }// v2

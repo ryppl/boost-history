@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_TYPE_TRAITS_CONTAINER_HAS_STATIC_SIZE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TYPE_TRAITS_CONTAINER_HAS_STATIC_SIZE_ER_2010_HPP
+#include <boost/assign/v2/detail/fwd/ptr_container.hpp>
 #include <boost/mpl/bool.hpp>
 
 namespace boost{
@@ -35,6 +36,9 @@ namespace container_type_traits{
          typedef boost::mpl::bool_<value> type;
     }; 
             
+	template<typename T,std::size_t N,typename C>
+    struct has_static_size< boost::ptr_array<T, N, C> > : boost::mpl::true_{};
+
 }// container_type_traits
 }// v2
 }// assign

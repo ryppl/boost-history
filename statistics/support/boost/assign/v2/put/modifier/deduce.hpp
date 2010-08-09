@@ -13,8 +13,8 @@
 
 #include <boost/assign/v2/detail/type_traits/container/is_static_array.hpp>
 #include <boost/assign/v2/detail/type_traits/container/has_push.hpp>
-#include <boost/assign/v2/detail/type_traits/container/is_map.hpp>
- 
+#include <boost/assign/v2/detail/type_traits/container/is_associative.hpp>
+
 namespace boost{
 namespace assign{
 namespace v2{
@@ -33,7 +33,7 @@ namespace mpl{
     struct case_<switch_tag::deduce_put,0> :
         v2::mpl::wrap<
             v2::put_tag::insert,
-            v2::container_type_traits::is_map
+            v2::container_type_traits::is_associative
         >{};
 
     template<>

@@ -9,7 +9,11 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_TYPE_TRAITS_CONTAINER_VALUE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TYPE_TRAITS_CONTAINER_VALUE_ER_2010_HPP
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
+#include <boost/type_traits/remove_pointer.hpp>
 #include <boost/assign/v2/detail/type_traits/value.hpp>
+#include <boost/assign/v2/detail/type_traits/container/forward_to_value.hpp>
 
 namespace boost{
 namespace assign{
@@ -18,12 +22,16 @@ namespace container_type_traits
 {
 
 	// TODO
-    // if range_reference<V>::type exists, 
-    // 	remove_reference<typename range_reference<V>::type>::type
-    // else
-    // 	type_traits::value<V>::type
+    // maybe this should be
+    // 	remove_reference<V::reference>::type
+    // or 
+    // 	range_value<V>, is available.
+    // Think about ptr_container in making this change.
     template<typename V>
-    struct value : type_traits::value<V>{};
+    struct value : forward_to_value<
+    	type_traits::value,
+        V
+    >{};
 
 }// container_type_traits
 }// v2

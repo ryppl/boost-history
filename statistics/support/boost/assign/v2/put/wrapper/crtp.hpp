@@ -15,9 +15,11 @@
 #include <boost/preprocessor/repeat_from_to.hpp>
 #include <boost/preprocessor/arithmetic/add.hpp>
 #include <boost/mpl/always.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/range/reference.hpp>
 #include <boost/assign/v2/detail/config/arity_bound.hpp>
+#include <boost/assign/v2/detail/type_traits/container/is_ptr_container.hpp>
 #include <boost/assign/v2/detail/functor/functor.hpp>
 #include <boost/assign/v2/detail/keyword/keyword.hpp>
 #include <boost/assign/v2/put/modifier/modifier.hpp>
@@ -26,32 +28,11 @@
 //     Usage       //
 // --------------- //
 // Calling
-//  object = put( v );
-// wraps a class object around v, whose overloaded operator() and csv() mf act 
-// as a modifiers of v. To recover v, call
-//  object.unwrap();
-//
-// Let cond1 = ( k < BOOST_ASSIGN_V2_LVALUE_CONST_ARITY_BOUND )
-// Let cond2 = all arguments are lvalues.
-//
-// -- Overloaded syntax --
-//
-//  For 0 <= k(i) < BOOST_ASSIGN_V2_ARITY_BOUND
-// Expression														
-// 	object( x11, ..., x1k(1) ) ... ( xn1, ..., xnk(n) )
-// Side effect
-//  for each i=1,...,n puts f( xi1, ..., xik(i) ) into v for each i=1,...,n.
-// Returns a reference to the wrapper.
-//
-// Each argument's lvalue is preserved if either cond1 OR (!cond1 AND cond2)
-// In all other cases, arguments are passed as const references.
+//  put( v )( a )()( c0, c11 );
 //
 // ----- csv syntax ------
 //
-// For k(i) = 1, and n < BOOST_ASSIGN_V2_CSV_ARITY_BOUND,
-//  object.csv( x11, ..., xn1 )
-// Same return and effect as above by redefining cond1 = false. 
-
+// put( v )( a )( T() )( T(c0, c11) );
 
 namespace boost{
 namespace assign{ 
@@ -62,18 +43,28 @@ namespace put_aux{
 	template<typename V>
     struct crtp_traits 
     {
+//        typedef typename v2::container_type_traits::value<V>::type value_type;
+//        typedef typename result_of::constructor<value_type>::type functor_type;
+//        typedef typename put_aux::deduce_modifier<V>::type put_tag;
+
+		// Experimental
         typedef typename v2::container_type_traits::value<V>::type value_type;
-        typedef typename result_of::constructor<value_type>::type functor_type;
+        typedef typename boost::mpl::eval_if<
+        	container_type_traits::is_ptr_container<V>,
+            functor_aux::deduce_new_<V>,
+            functor_aux::deduce_constructor<V>
+        >::type functor_type;
         typedef typename put_aux::deduce_modifier<V>::type put_tag;
+
     };
 
 	// Requirements:
     // 	d.unwrap() 				returns a reference to V&
     // 	D d(U v, F const& f);   Constructs an object, d, of type D. 
     // Usually f is passed to the crtp. U = V& or V const& depending on need.
-    template<typename V,typename F, typename Tag,typename D,typename Traits> 
+    template<typename V,typename F, typename Tag, typename D, typename Traits> 
     class crtp : public functor_aux::crtp_unary_and_up<
-    	crtp<V,F,Tag,D,Traits>,
+    	crtp<V, F, Tag, D, Traits>,
         boost::mpl::always< D const& >
     >
     {
@@ -102,7 +93,6 @@ namespace put_aux{
     	result_type operator()()const
     	{
 			return this->arg_deduct( this->f() );
-            return this->derived();
     	}
 
 #define BOOST_ASSIGN_V2_impl(z, N, data) \
@@ -234,6 +224,14 @@ BOOST_PP_REPEAT_FROM_TO(
         }
 
 		protected:
+
+		// Experimental
+		template<typename T>
+        result_type arg_deduct(T* t)const
+        {
+			this->modifier.impl( this->derived().unwrap(), t );        	
+            return this->derived();
+        }
 
 		template<typename T>
         result_type arg_deduct(T& t)const

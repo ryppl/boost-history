@@ -10,7 +10,9 @@
 #ifndef BOOST_ASSIGN_V2_TYPE_TRAITS_CONTAINER_IS_SORTED_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TYPE_TRAITS_CONTAINER_IS_SORTED_ER_2010_HPP
 #include <boost/mpl/bool.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 #include <boost/assign/v2/detail/fwd/container.hpp>
+#include <boost/assign/v2/detail/type_traits/container/forward_to_value.hpp>
 
 namespace boost{
 namespace assign{
@@ -21,13 +23,19 @@ namespace container_tag{
 namespace container_type_traits{
 
 	template<typename V>
-    struct is_sorted : boost::mpl::false_{};
+    struct is_sorted_impl : boost::mpl::false_{};
     
     template<typename T,typename C,typename A>
-    struct is_sorted< std::set<T,C,A> > : boost::mpl::true_{};
+    struct is_sorted_impl< std::set<T,C,A> > : boost::mpl::true_{};
 
     template<typename K,typename T,typename C,typename A>
-    struct is_sorted< std::map<K,T,C,A> > : boost::mpl::true_{};
+    struct is_sorted_impl< std::map<K,T,C,A> > : boost::mpl::true_{};
+
+    template<typename V>
+    struct is_sorted : forward_to_value<
+    	is_sorted_impl,
+    	typename boost::remove_cv<V>::type
+    >{};
 
 }// container_type_traits
 }// v2

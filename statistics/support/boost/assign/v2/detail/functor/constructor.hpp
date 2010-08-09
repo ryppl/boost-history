@@ -36,6 +36,7 @@ namespace functor_aux{
         typedef functor_aux::crtp_unary_and_up<this_, meta_result_> super_;
          
     	public:
+        
 		constructor(){}
     
 		T operator()()const{ return T(); } 

@@ -37,9 +37,12 @@ namespace std{
 }// std
 namespace boost{
 	
-    // http://www.boost.org/doc/libs/1_43_0/doc/html/array.html
+    // http://www.boost.org/doc/libs/release/doc/html/array.html
     template<typename T, std::size_t size> class array;
     
+	// http://www.boost.org/doc/libs/release/libs/circular_buffer/index.html
+    template<typename T, typename Alloc> class circular_buffer;
+
 }// boost
 
 #endif

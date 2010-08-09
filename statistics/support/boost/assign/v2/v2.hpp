@@ -14,7 +14,6 @@
 #include <boost/assign/v2/chain/chain.hpp>
 #include <boost/assign/v2/detail/detail.hpp>
 #include <boost/assign/v2/put/put.hpp>
-#include <boost/assign/v2/put/range/range.hpp>
 #include <boost/assign/v2/ref/ref.hpp>
 
 #endif
