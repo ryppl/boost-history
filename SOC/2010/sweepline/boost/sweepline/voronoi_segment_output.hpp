@@ -1,4 +1,4 @@
-// Boost sweepline/voronoi_output.hpp header file 
+// Boost sweepline/voronoi_segment_output.hpp header file 
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -7,8 +7,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#ifndef BOOST_SWEEPLINE_VORONOI_OUTPUT
-#define BOOST_SWEEPLINE_VORONOI_OUTPUT
+#ifndef BOOST_SWEEPLINE_VORONOI_SEGMENT_OUTPUT
+#define BOOST_SWEEPLINE_VORONOI_SEGMENT_OUTPUT
 
 #include <list>
 #include <map>

@@ -1,4 +1,4 @@
-// Boost sweepline library voronoi_builder_test.cpp file 
+// Boost sweepline library segment_voronoi_builder_test.cpp file 
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -11,7 +11,7 @@
 #include <time.h>
 
 #include "test_type_list.hpp"
-#include "boost/sweepline/voronoi_sweepline.hpp"
+#include "boost/sweepline/voronoi_segment_sweepline.hpp"
 using namespace boost::sweepline;
 
 #define BOOST_TEST_MODULE voronoi_builder_test
@@ -568,7 +568,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(random_test4, T, test_types) {
     for (int i = 0; i < 10; i++) {
         points.clear();
         for (int j = 0; j < 10000; j++)
-        points.push_back(make_point_2d<coordinate_type>(\
+        points.push_back(make_point_2d<coordinate_type>(
             static_cast<coordinate_type>(rand() % 500 - 500),
             static_cast<coordinate_type>(rand() % 500 - 500)));
         test_beach_line.init(points);

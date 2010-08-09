@@ -1,4 +1,4 @@
-// Boost sweepline/voronoi_formation.hpp header file 
+// Boost sweepline/voronoi_segment_formation.hpp header file 
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -7,8 +7,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#ifndef BOOST_SWEEPLINE_VORONOI_FORMATION
-#define BOOST_SWEEPLINE_VORONOI_FORMATION
+#ifndef BOOST_SWEEPLINE_VORONOI_SEGMENT_FORMATION
+#define BOOST_SWEEPLINE_VORONOI_SEGMENT_FORMATION
 
 #include <list>
 #include <map>
@@ -22,6 +22,174 @@
 namespace boost {
 namespace sweepline {
 namespace detail {
+
+    ///////////////////////////////////////////////////////////////////////////
+    // GEOMETRY PREDICATES ////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    // TODO(asydorchuk): Remove code inside of this template. Left orientation test
+    // works only for integer input points.
+    template <typename T>
+    bool left_orientation_test(const point_2d<T> &point1,
+                               const point_2d<T> &point2,
+                               const point_2d<T> &point3) {
+        typedef long long ll;
+        typedef unsigned long long ull;
+        ull dif_x1, dif_x2, dif_y1, dif_y2;
+        bool dif_x1_plus, dif_x2_plus, dif_y1_plus, dif_y2_plus;
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point1.x()),
+                                         static_cast<ll>(point2.x()),
+                                         dif_x1, dif_x1_plus);
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point2.x()),
+                                         static_cast<ll>(point3.x()),
+                                         dif_x2, dif_x2_plus);
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point1.y()),
+                                         static_cast<ll>(point2.y()),
+                                         dif_y1, dif_y1_plus);
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point2.y()),
+                                         static_cast<ll>(point3.y()),
+                                         dif_y2, dif_y2_plus);
+        ull expr_l = dif_x1 * dif_y2;
+        bool expr_l_plus = (dif_x1_plus == dif_y2_plus) ? true : false;
+        ull expr_r = dif_x2 * dif_y1;
+        bool expr_r_plus = (dif_x2_plus == dif_y1_plus) ? true : false;
+
+        if (expr_l == 0)
+            expr_l_plus = true;
+        if (expr_r == 0)
+            expr_r_plus = true;
+        
+        if (!expr_l_plus) {
+            if (expr_r_plus)
+                return true;
+            else
+                return expr_l > expr_r; 
+        } else {
+            if (!expr_r_plus)
+                return false;
+            else
+                return expr_l < expr_r;
+        }
+    }
+
+    // Returns true if input triplet has left orientation.
+    // Integer points partial specialization.
+    template <>
+    bool left_orientation_test<int>(const point_2d<int> &point1,
+                                    const point_2d<int> &point2,
+                                    const point_2d<int> &point3) {
+        typedef long long ll;
+        typedef unsigned long long ull;
+        ull dif_x1, dif_x2, dif_y1, dif_y2;
+        bool dif_x1_plus, dif_x2_plus, dif_y1_plus, dif_y2_plus;
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point1.x()),
+                                         static_cast<ll>(point2.x()),
+                                         dif_x1, dif_x1_plus);
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point2.x()),
+                                         static_cast<ll>(point3.x()),
+                                         dif_x2, dif_x2_plus);
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point1.y()),
+                                         static_cast<ll>(point2.y()),
+                                         dif_y1, dif_y1_plus);
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point2.y()),
+                                         static_cast<ll>(point3.y()),
+                                         dif_y2, dif_y2_plus);
+        ull expr_l = dif_x1 * dif_y2;
+        bool expr_l_plus = (dif_x1_plus == dif_y2_plus) ? true : false;
+        ull expr_r = dif_x2 * dif_y1;
+        bool expr_r_plus = (dif_x2_plus == dif_y1_plus) ? true : false;
+
+        if (expr_l == 0)
+            expr_l_plus = true;
+        if (expr_r == 0)
+            expr_r_plus = true;
+        
+        if (!expr_l_plus) {
+            if (expr_r_plus)
+                return true;
+            else
+                return expr_l > expr_r; 
+        } else {
+            if (!expr_r_plus)
+                return false;
+            else
+                return expr_l < expr_r;
+        }
+    }
+
+    // Returns true if horizontal line going through new site intersects
+    // right arc at first, else returns false. If horizontal line goes
+    // through intersection point of the given two arcs returns false also. 
+    // Used during nodes comparison.
+    // Let x0 be sweepline coordinate, left site coordinates be (x1, y1),
+    // right site coordinates be (x2, y2). Equations of the arcs will be:
+    // x1(y) = ((y - y1)^2 + x1^2 - x0^2) / (2*(x1 - x0));
+    // x2(y) = ((y - y2)^2 + x2^2 - x0^2) / (2*(x2 - x0)).
+    // Horizontal line going throught site (x*, y*) intersects second arc
+    // at first if x2(y*) > x1(y*) or:
+    // (x0-x2)*(x0-x1)*(x1-x2) + (x0-x2)*(y*-y1)^2 < (x0-x1)*(y*-y2)^2.
+    template <typename T>
+    bool less(const point_2d<T> &left_point,
+              const point_2d<T> &right_point,
+              const point_2d<T> &new_point) {
+        typedef long long ll;
+        typedef unsigned long long ull;
+        ull a1, a2, b1, b2, b1_sqr, b2_sqr, l_expr, r_expr;
+        bool l_expr_plus, r_expr_plus;
+
+        // a1 and a2 are greater than zero.
+        a1 = static_cast<ull>(static_cast<ll>(new_point.x()) -
+                              static_cast<ll>(left_point.x()));
+        a2 = static_cast<ull>(static_cast<ll>(new_point.x()) -
+                              static_cast<ll>(right_point.x()));
+
+        // We don't need to know signs of b1 and b2, because we use their squared values.
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(new_point.y()),
+                                         static_cast<ll>(left_point.y()),
+                                         b1, l_expr_plus);
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(new_point.y()),
+                                         static_cast<ll>(right_point.y()),
+                                         b2, l_expr_plus);
+        b1_sqr = b1 * b1;
+        b2_sqr = b2 * b2;
+        ull b1_sqr_mod = b1_sqr % a1;
+        ull b2_sqr_mod = b2_sqr % a2;
+
+        // Compute left expression.
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(left_point.x()),
+                                         static_cast<ll>(right_point.x()),
+                                         l_expr, l_expr_plus);            
+        if (b2_sqr_mod * a1 < b1_sqr_mod * a2) {
+            if (!l_expr_plus)
+                l_expr++;
+            else if (l_expr != 0)
+                l_expr--;
+            else {
+                l_expr++;
+                l_expr_plus = false;
+            }
+        }
+
+        // Compute right expression.
+        INT_PREDICATE_COMPUTE_DIFFERENCE(b1_sqr / a1, b2_sqr / a2, r_expr, r_expr_plus);
+
+        // Compare left and right expressions.
+        if (!l_expr_plus && r_expr_plus)
+            return true;
+        if (l_expr_plus && !r_expr_plus)
+            return false;
+        if (l_expr_plus && r_expr_plus)
+            return l_expr < r_expr;
+        return l_expr > r_expr;
+
+        /*mpz_class a1, a2, b1, b2, c, left_expr, right_expr;
+        a1 = static_cast<int>(new_point.x() - left_point.x());
+        a2 = static_cast<int>(new_point.x() - right_point.x());
+        b1 = static_cast<int>(new_point.y() - left_point.y());
+        b2 = static_cast<int>(new_point.y() - right_point.y());
+        c = static_cast<int>(left_point.x() - right_point.x());
+        return a1 * a2 * c + a1 * b2 * b2 < a2 * b1 * b1;*/
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // VORONOI EVENT TYPES ////////////////////////////////////////////////////
@@ -45,57 +213,113 @@ namespace detail {
         typedef T coordinate_type;
         typedef point_2d<T> Point2D;
 
-        site_event() {}
+        site_event() : is_segment_(false), is_vertical_(true) {}
         
         site_event(coordinate_type x, coordinate_type y, int index) :
-            point_(x, y), site_index_(index) {}
+            point0_(x, y), site_index_(index), is_segment_(false), is_vertical_(true) {}
 
         site_event(const Point2D &point, int index) :
-            point_(point), site_index_(index) {}
+            point0_(point), site_index_(index), is_segment_(false), is_vertical_(true) {}
+
+        site_event(const Point2D &point1, const Point2D &point2, int index) :
+            point0_(point1), point1_(point2), site_index_(index), is_segment_(true) {
+            if (point0_ > point1_)
+                (std::swap)(point0_, point1_);
+            is_vertical_ = (point0_.x() == point1_.x());
+        }
 
         bool operator==(const site_event &s_event) const {
-            return point_ == s_event.get_point();
+            return (point0_ == s_event.point0_) &&
+                   ((!is_segment_ && !s_event.is_segment_) ||
+                   (is_segment_ && s_event.is_segment_ && (point1_ == s_event.point1_)));
         }
 
         bool operator!=(const site_event &s_event) const {
-            return point_ != s_event.get_point();
+            return !((*this) == s_event);
         }
 
+        // All the sites are sorted due to coordinates of the first point.
+        // Also non vertical segments follow after sites with the same 
+        // x coordinate of the first point.
         bool operator<(const site_event &s_event) const {
-            return point_ < s_event.get_point();
+            // If first points have different x coordinates, compare them.
+            if (this->point0_.x() != s_event.point0_.x())
+                return this->point0_.x() < s_event.point0_.x();
+
+            if (!this->is_segment_ || this->is_vertical_) {
+                // The first site is a point or a vertical segment.
+                if (!s_event.is_segment_ || s_event.is_vertical_) {
+                    // The second site is a point or a vertical segment.
+                    // Compare y coordinates.
+                    return this->point0_.y() < s_event.point0_.y();
+                }
+                // The second site is a segment, but not vertical.
+                return true;
+            } else {
+                // The first site is a segment, but not vertical.
+                if (!s_event.is_segment_ || s_event.is_vertical_) {
+                    // The second site is a point or a vertical segment.
+                    return false;
+                }
+                // The second site is a segment, but not vertical.
+                if (this->point0_.y() != s_event.point0_.y())
+                    return this->point0_.y() < s_event.point0_.y();
+
+                // TODO(asydorchuk): Compare segments by angle if required.
+                return this->point1_.y() < s_event.point1_.y();
+            }   
         }
 
         bool operator<=(const site_event &s_event) const {
-            return point_ <= s_event.get_point();
+            return !(s_event < (*this));
         }
 
         bool operator>(const site_event &s_event) const {
-            return point_ > s_event.get_point();
+            return s_event < (*this);
         }
 
         bool operator>=(const site_event &s_event) const {
-            return point_ >= s_event.get_point();
+            return !((*this) < s_event);
         }
 
         coordinate_type x() const {
-            return point_.x();
+            return point0_.x();
         }
 
         coordinate_type y() const {
-            return point_.y();
+            return point0_.y();
         }
 
-        const Point2D &get_point() const {
-            return point_;
+        const Point2D &get_point0() const {
+            return point0_;
+        }
+
+        const Point2D &get_point1() const {
+            return point1_;
+        }
+
+        void set_site_index(int index) {
+            site_index_ = index;
         }
 
         int get_site_index() const {
             return site_index_;
         }
 
+        bool is_segment() const {
+            return is_segment_;
+        }
+
+        bool is_vertical() const {
+            return is_vertical_;
+        }
+
     private:
-        Point2D point_;
+        Point2D point0_;
+        Point2D point1_;
         int site_index_;
+        bool is_segment_;
+        bool is_vertical_;
     };
 
     template <typename T>
@@ -106,6 +330,12 @@ namespace detail {
     template <typename T>
     site_event<T> make_site_event(const point_2d<T> &point, int index) {
         return site_event<T>(point, index);
+    }
+
+    template <typename T>
+    site_event<T> make_site_event(const point_2d<T> &point1,
+                                  const point_2d<T> &point2, int index) {
+        return site_event<T>(point1, point2, index);
     }
 
     // Circle event type. Occurs when sweepline sweeps over the bottom point of
@@ -420,81 +650,92 @@ namespace detail {
         }
 
         // Returns the rightmost site.
+        // Works correctly for vertical segments.
         const site_event_type& get_new_site() const {
             if (left_site_.x() > right_site_.x())
                 return left_site_;
             return right_site_;
         }
 
-        // Returns true if horizontal line going through new site intersects
-        // right arc at first, else returns false. If horizontal line goes
-        // through intersection point of the given two arcs returns false also. 
-        // Used during nodes comparison.
-        // Let x0 be sweepline coordinate, left site coordinates be (x1, y1),
-        // right site coordinates be (x2, y2). Equations of the arcs will be:
-        // x1(y) = ((y - y1)^2 + x1^2 - x0^2) / (2*(x1 - x0));
-        // x2(y) = ((y - y2)^2 + x2^2 - x0^2) / (2*(x2 - x0)).
-        // Horizontal line going throught site (x*, y*) intersects second arc
-        // at first if x2(y*) > x1(y*) or:
-        // (x0-x2)*(x0-x1)*(x1-x2) + (x0-x2)*(y*-y1)^2 < (x0-x1)*(y*-y2)^2.
-        bool less(const site_event_type &new_site) const {
-            typedef long long ll;
-            typedef unsigned long long ull;
-            ull a1, a2, b1, b2, b1_sqr, b2_sqr, l_expr, r_expr;
-            bool l_expr_plus, r_expr_plus;
+        bool less_pp(const Point2D &new_site) const {
+            if (left_site_.x() > right_site_.x()) {
+                if (new_site.y() <= left_site_.y())
+                    return false;
+                return less(left_site_.get_point0(), right_site_.get_point0(), new_site);
+            } else if (left_site_.x() < right_site_.x()) {
+                if (new_site.y() >= right_site_.y())
+                    return true;
+                return less(left_site_.get_point0(), right_site_.get_point0(), new_site);
+            } else {
+                return left_site_.y() + right_site_.y() <
+                       static_cast<coordinate_type>(2.0) * new_site.y();
+            }
+        }
 
-            // a1 and a2 are greater than zero.
-            a1 = static_cast<ull>(static_cast<ll>(new_site.x()) -
-                                  static_cast<ll>(left_site_.x()));
-            a2 = static_cast<ull>(static_cast<ll>(new_site.x()) -
-                                  static_cast<ll>(right_site_.x()));
+        bool more_equal_pp(const Point2D &new_site) const {
+            if (left_site_.x() > right_site_.x()) {
+                if (new_site.y() <= left_site_.y())
+                    return true;
+                return !less(left_site_.get_point0(), right_site_.get_point0(), new_site);
+            } else if (left_site_.x() < right_site_.x()) {
+                if (new_site.y() >= right_site_.y())
+                    return false;
+                return !less(left_site_.get_point0(), right_site_.get_point0(), new_site);
+            } else {
+                return !(left_site_.y() + right_site_.y() <
+                       static_cast<coordinate_type>(2.0) * new_site.y());
+            }
+        }
 
-            // We don't need to know signs of b1 and b2, because we use their squared values.
-            INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(new_site.y()),
-                                             static_cast<ll>(left_site_.y()),
-                                             b1, l_expr_plus);
-            INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(new_site.y()),
-                                             static_cast<ll>(right_site_.y()),
-                                             b2, l_expr_plus);
-            b1_sqr = b1 * b1;
-            b2_sqr = b2 * b2;
-            ull b1_sqr_mod = b1_sqr % a1;
-            ull b2_sqr_mod = b2_sqr % a2;
+        bool less_ps(const Point2D &new_site) const {
+            return true;
+            /*point_2d<T> decision_point = make_point_2d(x0, y0);
+            bool is_left_oriented1 = left_orientation_test(right_site_.get_point0(),
+                                                           right_site_.get_point1(),
+                                                           left_site_.get_point0());
+            bool is_left_oriented2 = left_orientation_tets(right_site_.get_point0(),
+                                                           right_site_.get_point1(),
+                                                           decision_point);
 
-            // Compute left expression.
-            INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(left_site_.x()),
-                                             static_cast<ll>(right_site_.x()),
-                                             l_expr, l_expr_plus);            
-            if (b2_sqr_mod * a1 < b1_sqr_mod * a2) {
-                if (!l_expr_plus)
-                    l_expr++;
-                else if (l_expr != 0)
-                    l_expr--;
-                else {
-                    l_expr++;
-                    l_expr_plus = false;
-                }
+            if (is_left_oriented1 != is_left_oriented2) {
+                return (is_left_oriented1) ? true : false;
             }
 
-            // Compute right expression.
-            INT_PREDICATE_COMPUTE_DIFFERENCE(b1_sqr / a1, b2_sqr / a2, r_expr, r_expr_plus);
+            if (is_left_oriented1) {
+                if (right_site_.get_point0().y() < right_site_.get_point1().y()) {
+                    if (y0 < left_site_.get_point0().y()) {
+                        return false;
+                    }
+                    
 
-            // Compare left and right expressions.
-            if (!l_expr_plus && r_expr_plus)
-                return true;
-            if (l_expr_plus && !r_expr_plus)
-                return false;
-            if (l_expr_plus && r_expr_plus)
-                return l_expr < r_expr;
-            return l_expr > r_expr;
+                } else {
+                }
+            } else {
+                if (right_site_.get_point0().y() > right_site_.get_point1().y()) {
+                    
+                } else {
+                }
+            }*/
+        }
 
-            /*mpz_class a1, a2, b1, b2, c, left_expr, right_expr;
-            a1 = static_cast<int>(new_site.x() - left_site.x());
-            a2 = static_cast<int>(new_site.x() - right_site.x());
-            b1 = static_cast<int>(new_site.y() - left_site.y());
-            b2 = static_cast<int>(new_site.y() - right_site.y());
-            c = static_cast<int>(left_site.x() - right_site.x());
-            return a1 * a2 * c + a1 * b2 * b2 < a2 * b1 * b1;*/
+        bool more_equal_ps(const Point2D &new_site) const {
+            return true;
+        }
+
+        bool less_sp(const Point2D &new_site) const {
+            return true;
+        }
+
+        bool more_equal_sp(const Point2D &new_site) const {
+            return true;
+        }
+
+        bool less_ss(const Point2D &new_site) const {
+            return true;
+        }
+
+        bool more_equal_ss(const Point2D &new_site) const {
+            return true;
         }
 
     private:
@@ -547,40 +788,32 @@ namespace detail {
             coordinate_type node2_line = node2.get_new_site().x();
 
             if (node1_line < node2_line) {
-                coordinate_type left_site_x = node1.get_left_site().x();
-                coordinate_type left_site_y = node1.get_left_site().y();
-                coordinate_type right_site_x = node1.get_right_site().x();
-                coordinate_type right_site_y = node1.get_right_site().y();
-                coordinate_type new_node_y = node2.get_new_site().y();
-                if (left_site_x > right_site_x) {
-                    if (new_node_y <= left_site_y)
-                        return false;
-                    return node1.less(node2.get_new_site());
-                } else if (left_site_x < right_site_x) {
-                    if (new_node_y >= right_site_y)
-                        return true;
-                    return node1.less(node2.get_new_site());
+                if (!node1.get_left_site().is_segment()) {
+                    if (!node1.get_right_site().is_segment()) {
+                        return node1.less_pp(node2.get_new_site().get_point0());
+                    } else {
+                        return node1.less_ps(node2.get_new_site().get_point0());
+                    }
                 } else {
-                    return left_site_y + right_site_y <
-                        static_cast<coordinate_type>(2.0) * new_node_y;
+                    if (!node1.get_right_site().is_segment()) {
+                        return node1.less_sp(node2.get_new_site().get_point0());
+                    } else {
+                        return node1.less_ss(node2.get_new_site().get_point0());
+                    }
                 }
             } else if (node1_line > node2_line) {
-                coordinate_type left_site_x = node2.get_left_site().x();
-                coordinate_type left_site_y = node2.get_left_site().y();
-                coordinate_type right_site_x = node2.get_right_site().x();
-                coordinate_type right_site_y = node2.get_right_site().y();
-                coordinate_type new_node_y = node1.get_new_site().y();
-                if (left_site_x > right_site_x) {
-                    if (new_node_y <= left_site_y)
-                        return true;
-                    return !node2.less(node1.get_new_site());
-                } else if (left_site_x < right_site_x) {
-                    if (new_node_y >= right_site_y)
-                        return false;
-                    return !node2.less(node1.get_new_site());
+                if (!node2.get_left_site().is_segment()) {
+                    if (!node2.get_right_site().is_segment()) {
+                        return node2.more_equal_pp(node1.get_new_site().get_point0());
+                    } else {
+                        return node2.more_equal_ps(node1.get_new_site().get_point0());
+                    }
                 } else {
-                    return !(left_site_y + right_site_y <
-                        static_cast<coordinate_type>(2.0) * new_node_y);
+                    if (!node2.get_right_site().is_segment()) {
+                        return node2.more_equal_sp(node1.get_new_site().get_point0());
+                    } else {
+                        return node2.more_equal_ss(node1.get_new_site().get_point0());
+                    }
                 }
             } else {
                 // Both nodes are situated on the same vertical line.
@@ -723,10 +956,10 @@ namespace detail {
             num_cell_records_++;
 
             // Update bounding rectangle.
-            voronoi_rect_ = BRect<coordinate_type>(site.get_point(), site.get_point());
+            voronoi_rect_ = BRect<coordinate_type>(site.get_point0(), site.get_point0());
 
             // Update cell records.
-            cell_records_.push_back(voronoi_record_type(site.get_point(), NULL));
+            cell_records_.push_back(voronoi_record_type(site.get_point0(), NULL));
         }
 
         // Inserts new half-edge into the output data structure during site
@@ -753,19 +986,19 @@ namespace detail {
             // Add initial cell during first edge insertion.
             if (cell_records_.empty()) {
                 cell_iterators_.push_back(cell_records_.insert(
-                    cell_records_.end(), voronoi_record_type(site1.get_point(), &edge1)));
+                    cell_records_.end(), voronoi_record_type(site1.get_point0(), &edge1)));
                 cell_records_.back().num_incident_edges++;
                 num_cell_records_++;
-                voronoi_rect_ = BRect<coordinate_type>(site1.get_point(), site1.get_point());
+                voronoi_rect_ = BRect<coordinate_type>(site1.get_point0(), site1.get_point0());
             }
 
             // Update bounding rectangle.
-            voronoi_rect_.update(site2.get_point());
+            voronoi_rect_.update(site2.get_point0());
 
             // Second site represents new site during site event processing.
             // Add new cell to the cell records vector.
             cell_iterators_.push_back(cell_records_.insert(
-                cell_records_.end(), voronoi_record_type(site2.get_point(), &edge2)));
+                cell_records_.end(), voronoi_record_type(site2.get_point0(), &edge2)));
             cell_records_.back().num_incident_edges++;
             
             // Update pointers to cells.
@@ -973,7 +1206,7 @@ namespace detail {
                 offset = y_len;
             offset *= static_cast<coordinate_type>(0.55);
 
-            if (offset == static_cast<coordinate_type>(0))
+            if (offset == static_cast<coordinate_type>(0.0))
                 offset = 0.5;
 
             BRect<coordinate_type> new_brect(x_mid - offset, y_mid - offset,

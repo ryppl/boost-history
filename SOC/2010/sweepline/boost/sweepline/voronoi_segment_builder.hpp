@@ -1,4 +1,4 @@
-// Boost sweepline/voronoi_builder.hpp header file 
+// Boost sweepline/voronoi_segment_builder.hpp header file 
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -7,8 +7,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#ifndef BOOST_SWEEPLINE_VORONOI_BUILDER
-#define BOOST_SWEEPLINE_VORONOI_BUILDER
+#ifndef BOOST_SWEEPLINE_VORONOI_SEGMENT_BUILDER
+#define BOOST_SWEEPLINE_VORONOI_SEGMENT_BUILDER
 
 #include <algorithm>
 
@@ -21,49 +21,84 @@ namespace sweepline {
     public:
         typedef T coordinate_type;
         typedef point_2d<coordinate_type> Point2D;
+        typedef std::pair<Point2D, Point2D> Segment2D;
         typedef voronoi_output_clipped<coordinate_type> ClippedOutput;
+        typedef typename detail::site_event<coordinate_type> site_event_type;
+        typedef typename detail::circle_event<coordinate_type> circle_event_type;
 
         voronoi_builder() {
             // Set sites iterator.
             site_events_iterator_ = site_events_.begin();
         }
 
+        void init(std::vector<Point2D> &points) {
+            std::vector<Segment2D> empty_vec;
+            init(points, empty_vec);
+        }
+
         // Init beach line before sweepline run.
         // In case of a few first sites situated on the same
         // vertical line, we init beach line with all of them.
         // In other case just use the first two sites for the initialization.
-        void init(std::vector<Point2D> &sites) {
+        void init(std::vector<Point2D> &points, std::vector<Segment2D> &segments) {
+            // Clear all data structures.
             reset();
 
-            // Sort all sites.
-            sort(sites.begin(), sites.end());
-
-            // Add all unique sites to the site events vector.
-            int site_event_index = 0;
-            int sz = sites.size();
-            for (int i = 0; i < sz; i++) {
-                if (!i || sites[i] != sites[i-1]) {
-                    site_events_.push_back(detail::make_site_event(
-                        static_cast<coordinate_type>(sites[i].x()),
-                        static_cast<coordinate_type>(sites[i].y()), site_event_index));
-                    site_event_index++;
-                }
+            // Return if there are no sites.
+            if (points.empty() && segments.empty()) {
+                site_events_iterator_ = site_events_.begin();
+                return;
             }
 
-            // Set sites iterator.
+            // TODO(asydorchuk): Add segments intersection check.
+
+            // Avoid additional memory reallocations.
+            site_events_.reserve(points.size() + segments.size() * 3);
+
+            // Create site events from point sites.
+            for (typename std::vector<Point2D>::const_iterator it = points.begin();
+                 it != points.end(); it++) {
+                site_events_.push_back(detail::make_site_event(it->x(), it->y(), 0));
+            }
+            
+            // Create site events from end points of segment sites and segment itself.
+            for (typename std::vector<Segment2D>::const_iterator it = segments.begin();
+                 it != segments.end(); it++) {
+                site_events_.push_back(detail::make_site_event(it->first, 0));
+                site_events_.push_back(detail::make_site_event(it->second, 0));
+                site_events_.push_back(detail::make_site_event(it->first, it->second, 0));
+            }
+
+            // Sort site events.
+            sort(site_events_.begin(), site_events_.end());
+
+            // Remove duplicates.
+            site_events_.erase(unique(site_events_.begin(), site_events_.end()),
+                               site_events_.end());
+
+            // Number sites.
+            for (int cur_index = 0; cur_index < static_cast<int>(site_events_.size()); cur_index++)
+                site_events_[cur_index].set_site_index(cur_index);
+
+            // Set site iterator.
             site_events_iterator_ = site_events_.begin();
 
             // Init output with number of site events.
+            // There will be one site event for each input point and three site events
+            // for each input segment: both ends of a segment and the segment itself.
             output_.init(site_events_.size());
-            
+
             int skip = 0;
             if (site_events_.size() == 1) {
+                // Handle one input site case.
                 output_.process_single_site(site_events_[0]);
                 skip = 1;
                 site_events_iterator_++;
             } else {
+                // Init beach line.
                 while(site_events_iterator_ != site_events_.end() &&
-                      site_events_iterator_->x() == site_events_.begin()->x()) {
+                      site_events_iterator_->x() == site_events_.begin()->x() &&
+                      site_events_iterator_->is_vertical()) {
                     site_events_iterator_++;
                     skip++;
                 }
@@ -71,9 +106,6 @@ namespace sweepline {
                 if (skip == 1) {
                     // Init beach line with two sites.
                     init_beach_line();
-
-                    // Skip the second point also.
-                    site_events_iterator_++;
                 } else {
                     // Init beach line with sites situated on the same vertical line.
                     init_beach_line_collinear_sites();
@@ -109,22 +141,25 @@ namespace sweepline {
             output_.simplify();
         }
 
+        // Returns output bounding rectangle that includes all the vertices and sites
+        // of the voronoi diagram.
         const BRect<coordinate_type> &get_bounding_rectangle() const {
             return output_.get_bounding_rectangle();
         }
 
+        // Clip using bounding rectangle that includes all the vertices and sites
+        // of the voronoi diagram.
         void clip(ClippedOutput &clipped_output) {
             output_.clip(clipped_output);
         }
 
+        // Clip using defined rectangle.
         void clip(const BRect<coordinate_type> &brect, ClippedOutput &clipped_output) {
             output_.clip(brect, clipped_output);
         }
 
     protected:
-        typedef typename detail::site_event<coordinate_type> site_event_type;
-        typedef typename detail::circle_event<coordinate_type> circle_event_type;
-        typedef typename std::vector<site_event_type>::const_iterator site_events_iterator;
+        typedef typename std::vector<site_event_type>::const_iterator site_events_iterator_type;
         
         typedef detail::voronoi_output<coordinate_type> Output;
         typedef typename Output::edge_type edge_type;
@@ -137,27 +172,35 @@ namespace sweepline {
         typedef typename std::map< Key, Value, NodeComparer >::iterator beach_line_iterator;
 
         void init_beach_line() {
-            site_events_iterator it_first = site_events_.begin();
-            site_events_iterator it_second = site_events_.begin();
+            // The first site is always a point.
+            // Get the first and the second site events.
+            site_events_iterator_type it_first = site_events_.begin();
+            site_events_iterator_type it_second = site_events_.begin();
             it_second++;
 
+            // The second site might be a point or a segment.
             // Create two new beach line nodes.
             Key new_left_node(*it_first, *it_second);
             Key new_right_node(*it_second, *it_first);
 
+            // TODO(asydorchuk) change output insertion!!!.
             // Update output.
             edge_type *edge = output_.insert_new_edge(*it_first, *it_second);
 
             // Insert two new nodes into the binary search tree.
             beach_line_.insert(std::pair<Key, Value>(new_left_node, Value(edge)));
             beach_line_.insert(std::pair<Key, Value>(new_right_node, Value(edge->twin)));
+
+            // The second site has been already processed.
+            site_events_iterator_++;
         }
 
+        // Insert bisectors for all collinear initial sites.
+        // There should be at least two colinear sites.
         void init_beach_line_collinear_sites() {
-             site_events_iterator it_first = site_events_.begin();
-             site_events_iterator it_second = site_events_.begin();
+             site_events_iterator_type it_first = site_events_.begin();
+             site_events_iterator_type it_second = site_events_.begin();
              it_second++;
-             int cur_site = 0;
              while (it_second != site_events_iterator_) {
                  // Create new beach line node.
                  Key new_node(*it_first, *it_second);
@@ -171,7 +214,6 @@ namespace sweepline {
                  // Update iterators.
                  it_first++;
                  it_second++;
-                 cur_site++;
              }
         }
 
@@ -310,48 +352,6 @@ namespace sweepline {
             return beach_line_.insert(std::pair<Key, Value>(new_right_node, Value(edge->twin))).first;
         }
 
-        bool bisectors_intersection_test(const Point2D &point1,
-                                          const Point2D &point2,
-                                          const Point2D &point3) const {
-            typedef long long ll;
-            typedef unsigned long long ull;
-            ull dif_x1, dif_x2, dif_y1, dif_y2;
-            bool dif_x1_plus, dif_x2_plus, dif_y1_plus, dif_y2_plus;
-            INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point1.x()),
-                                             static_cast<ll>(point2.x()),
-                                             dif_x1, dif_x1_plus);
-            INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point2.x()),
-                                             static_cast<ll>(point3.x()),
-                                             dif_x2, dif_x2_plus);
-            INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point1.y()),
-                                             static_cast<ll>(point2.y()),
-                                             dif_y1, dif_y1_plus);
-            INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point2.y()),
-                                             static_cast<ll>(point3.y()),
-                                             dif_y2, dif_y2_plus);
-            ull expr_l = dif_x1 * dif_y2;
-            bool expr_l_plus = (dif_x1_plus == dif_y2_plus) ? true : false;
-            ull expr_r = dif_x2 * dif_y1;
-            bool expr_r_plus = (dif_x2_plus == dif_y1_plus) ? true : false;
-
-            if (expr_l == 0)
-                expr_l_plus = true;
-            if (expr_r == 0)
-                expr_r_plus = true;
-            
-            if (!expr_l_plus) {
-                if (expr_r_plus)
-                    return true;
-                else
-                    return expr_l > expr_r; 
-            } else {
-                if (!expr_r_plus)
-                    return false;
-                else
-                    return expr_l < expr_r;
-            }
-        }
-
         // Create circle event from the given three points.
         bool create_circle_event(const site_event_type &site1,
                                  const site_event_type &site2,
@@ -394,9 +394,9 @@ namespace sweepline {
             //return true;
 
             // Check if bisectors intersect.
-            if (!bisectors_intersection_test(site1.get_point(),
-                                             site2.get_point(),
-                                             site3.get_point()))
+            if (!detail::left_orientation_test(site1.get_point0(),
+                                               site2.get_point0(),
+                                               site3.get_point0()))
                 return false;
 
             coordinate_type a = ((site1.x() - site2.x()) * (site2.y() - site3.y()) -
@@ -431,7 +431,7 @@ namespace sweepline {
 
     private:
         std::vector<site_event_type> site_events_;
-        site_events_iterator site_events_iterator_;
+        site_events_iterator_type site_events_iterator_;
         CircleEventsQueue circle_events_;
         BeachLine beach_line_;
         Output output_;
