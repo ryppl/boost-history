@@ -303,8 +303,22 @@ int main() {
         std::cout << std::hex << std::size_t(*ptr) << std::endl;
         BOOST_TEST(*ptr == 0x80);
         ptr = storage;
-        
+
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << "multi byte storage > 2" << std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
+        std::memset(ptr,0,2);
+        test_type_4 t4(ptr,0);
+        t4 = 0x1FFFFu;
+        BOOST_TEST(*ptr == 0xFF);
+        ++ptr;
+        BOOST_TEST(*ptr == 0xFF);
+        ++ptr;
+        BOOST_TEST(*ptr == 0x80);
+        ptr = storage;
+        BOOST_TEST(t4 == 0x1FFFF);
         // BOOST_TEST(false);
+
 /*
 test_type_1;
 test_type_2;

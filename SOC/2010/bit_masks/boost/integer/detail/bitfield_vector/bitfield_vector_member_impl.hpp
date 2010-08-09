@@ -224,32 +224,58 @@ public:
             return *this;
         }
         
+        storage_t       to_be_stored = 0;
+        std::size_t     bits_in_mask = 0;
+        value_type      mask         = 0;
+        storage_ptr_t   byte_ptr     = _ptr;
+
         if(_mask._size == 2) {
-            storage_t to_be_stored = 0;
-            std::size_t bits_in_mask = 8 - _mask._offset;
-            storage_ptr_t byte_ptr = _ptr;
-
-            // std::cout << "bits_in_first_mask: " << bits_in_first_mask << std::endl;
-            value_type mask = (~(~value_type(0) << bits_in_mask))
+            bits_in_mask = 8 - _mask._offset;
+            mask = (~(~value_type(0) << bits_in_mask))
                 << (width - bits_in_mask - 1);
-
-            typedef unsigned long long ullt;
-            // std::cout << "first_mask: " << std::hex << ullt(first_mask) << std::endl;
             to_be_stored = storage_t((mask&x)>>(width - bits_in_mask - 1));
-            // std::cout << "to be stored: " << std::hex << ullt(to_be_stored) << std::endl;
-            
             *byte_ptr = (*byte_ptr & ~_mask._first_byte) | to_be_stored;
             ++byte_ptr;
             bits_in_mask = width - bits_in_mask;
-            // std::cout << "bits in second mask: " << bits_in_mask << std::endl;
             mask = ~(~value_type(0) << bits_in_mask);
-            // std::cout << "second mask: " << std::hex << ullt(second_mask) << std::endl;
             to_be_stored = storage_t((mask & x) << _mask._last_shift);
-            // std::cout << "to be stored: " << std::hex << ullt(to_be_stored) << std::endl;
             *byte_ptr = (*byte_ptr & ~_mask._last_byte) | to_be_stored;
             return *this;
         }
-        
+        // calculate the offset of the first bit within x
+        // and creating a mask to extract the fist bits from within x
+        bits_in_mask = 8 - _mask._offset;
+        mask = _mask._first_byte;
+        mask <<= width - bits_in_mask;
+
+        typedef unsigned long long ullt;
+        std::cout << "First byte value: " << std::hex <<
+            ullt(_mask._first_byte) << std::endl;
+        std::cout << "First mask value: " << std::hex <<
+            ullt(mask) << std::endl;
+        // store first byte.
+        *byte_ptr = (*byte_ptr & ~_mask._first_byte) | ((x & mask ) >> (width - bits_in_mask));
+        std::cout << "stored value 1: " << std::hex <<
+            ullt(*byte_ptr) << std::endl;
+        ++byte_ptr;
+        mask = 0xFF;
+        mask <<= width - bits_in_mask - 8;
+        std::cout << "mask before loop: " << std::hex <<
+            ullt(mask) << std::endl;
+        for(std::size_t index = 0; index < _mask._size - 2;++index) {
+            *byte_ptr = (mask & x) >> (width - (bits_in_mask + (8 * index))- 8);
+            std::cout << "right shift in size of loop:"<<(width - (bits_in_mask + (8 * index) ) - 8)<<std::endl;
+            mask >>= 8;
+            ++byte_ptr;
+        }
+        // now calculating the last bytes information, retrieving it and then
+        // storing the data within the array.
+        mask = _mask._last_byte >> _mask._last_shift;
+
+        std::cout << "last value of mask: " << std::hex <<
+            ullt(mask) << std::endl;
+        *byte_ptr = (*byte_ptr & ~_mask._last_byte) |
+            ((mask & x) << (_mask._last_shift));
         return *this;
     }
 
