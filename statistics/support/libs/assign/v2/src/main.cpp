@@ -60,7 +60,7 @@ int main (int argc, char * const argv[]) {
     {
 	    using namespace example_assign_v2;
 	    xxx_tutorial::run();
-	    //xxx_experimental::run();
+	    xxx_experimental::run();
     }
     return 0;
 
