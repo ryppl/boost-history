@@ -81,6 +81,29 @@ inline void invalid_utf_sequence(Iterator begin, Iterator end)
 	boost::throw_exception(e);
 }
 
+    template<typename Iterator>
+    bool distance_greater_impl(Iterator begin, Iterator end, typename std::iterator_traits<Iterator>::difference_type min, std::random_access_iterator_tag*)
+    {
+        return (end - begin) >= min;
+    }
+    
+    template<typename Iterator>
+    bool distance_greater_impl(Iterator begin, Iterator end, typename std::iterator_traits<Iterator>::difference_type min, std::input_iterator_tag*)
+    {
+        for(typename std::iterator_traits<Iterator>::difference_type i=0; begin != end; ++begin, ++i)
+        {
+            if(i == min)
+                return true;
+        }
+        return false;
+    }
+
+    template<typename Iterator>
+    bool distance_greater(Iterator begin, Iterator end, typename std::iterator_traits<Iterator>::difference_type min)
+    {
+        return distance_greater_impl(begin, end, min, (typename std::iterator_traits<Iterator>::iterator_category*)0);
+    }
+
 } // namespace detail
 
 /** Model of \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly
@@ -216,7 +239,8 @@ struct u16_boundary
         BOOST_ASSERT(pos != begin);
         BOOST_ASSERT(pos != end);
         
-        return !is_surrogate(*pos) || is_high_surrogate(*pos);
+        return !is_surrogate(*pos)
+            || (is_high_surrogate(*pos) && detail::distance_greater(pos, end, 2));
     }
 };
 
@@ -399,7 +423,8 @@ struct u8_boundary
         BOOST_ASSERT(pos != end);
         
         unsigned char c = *pos;
-        return (c & 0x80) == 0 || (c & 0xc0) == 0xc0;
+        return (c & 0x80) == 0
+            || ((c & 0xc0) == 0xc0 && detail::distance_greater(pos, end, detail::utf8_byte_count(c)));
     }
 };
 

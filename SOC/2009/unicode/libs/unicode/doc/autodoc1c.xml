@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="yes"?>
-<library-reference xmlns:xi="http://www.w3.org/2001/XInclude" id="iterator_range_reference">
+<library-reference xmlns:xi="http://www.w3.org/2001/XInclude" id="converters_and_segmenters_reference">
 <title>Iterator/Range reference</title>
 
 <xi:include href="concepts/Converter.xml"/>

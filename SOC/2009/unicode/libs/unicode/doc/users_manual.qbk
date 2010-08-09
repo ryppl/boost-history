@@ -505,10 +505,15 @@ as is manipulated by the underlying, =char=-based, filebuf.
 Unfortunately, it appears it is only possible to use this mechanism with codecvt facets that have =char= as external and either
 =char= or =wchar_t= as internal, but C++0x may improve the situation.
 
-To use [classref boost::converter_codecvt], which allows to build a codecvt facet from converters, you will need two [conceptref Converter]s, one for each direction, as well as two [conceptref BoundaryChecker]s.
+To use [classref boost::converter_codecvt], which allows to build a codecvt facet from converters, you will need two [conceptref Converter]s, one
+for each direction, as well as two [conceptref BoundaryChecker]s.
 Indeed, as codecvt facets are passed arbitrary input buffers, there needs to be a way to tell what is the right boundaries to apply the steps on.
 An alternative would be to try to apply a step and try again if there was an error due to incomplete data. This is however not sufficient for
 converters that are not stable by concatenation.
+
+Unfortunately, codecvt facets do not provide a way to identify the end of the input in the file to memory case -- even though they do for the
+other way around -- and the generic mechanism used to build codecvt facets needs this.
+As a workaround, you can provide the size of the file to the codecvt facet's constructor.
 
 You may also build converters out of codecvt facets with [classref boost::codecvt_in_converter] or [classref boost::codecvt_out_converter], or
 directly convert locales to UTF-32 with [classref boost::unicode::locale_decoder] or [classref boost::unicode::locale_encoder].

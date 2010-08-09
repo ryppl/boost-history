@@ -37,6 +37,8 @@ public:
     template<typename In, typename Out>
     Out ltr(In& begin, In end, Out out)
     {
+        In old_begin = begin;
+        
         std::mbstate_t state;
         memset(&state, 0, sizeof state);
         
@@ -67,11 +69,9 @@ public:
                 const_cast<Input*>(from_next)[i] = *begin++;
             }
             
-            if(to_next - buffer_out)
+            if(to_next - buffer_out || begin == end)
                 break;
-
-            if(begin == end)
-                throw std::out_of_range("unexpected end");            
+                
             *const_cast<Input*>(from_next) = *begin++;
         }
         
@@ -94,6 +94,9 @@ public:
         }
         while(to_next != old_to_next);
     
+        // restore begin to the position given by the final 'from_next'
+        std::advance(old_begin, from_next - buffer_in);
+        begin = old_begin;
         return std::copy(buffer_out, to_next, out);
     }
     

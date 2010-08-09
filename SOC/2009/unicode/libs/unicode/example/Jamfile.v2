@@ -25,4 +25,5 @@ test-suite unicode-examples :
     [ run compose.cpp ]
     [ run search.cpp ]
     [ run source_input.cpp ]
+    [ run base64.cpp ]
 ;
