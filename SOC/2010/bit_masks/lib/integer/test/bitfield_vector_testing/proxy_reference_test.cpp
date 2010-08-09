@@ -317,6 +317,13 @@ int main() {
         BOOST_TEST(*ptr == 0x80);
         ptr = storage;
         BOOST_TEST(t4 == 0x1FFFF);
+        t4 = 17;
+        BOOST_TEST(t4 == 17);
+        
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << "memory corruption testing." << std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
+        // test_type_4 t4(ptr,0);
         // BOOST_TEST(false);
 
 /*
