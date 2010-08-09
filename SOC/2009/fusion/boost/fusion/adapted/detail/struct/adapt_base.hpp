@@ -12,7 +12,6 @@
 
 #include <boost/config.hpp>
 #include <boost/fusion/support/tag_of_fwd.hpp>
-
 #include <boost/preprocessor/stringize.hpp>
 #include <boost/preprocessor/control/if.hpp>
 #include <boost/preprocessor/seq/size.hpp>
@@ -83,6 +82,23 @@
         I,                                                                      \
         ATTRIBUTE)
 
+#ifdef BOOST_MSVC
+#   define BOOST_FUSION_ADAPT_STRUCT_MSVC_REDEFINE_TEMPLATE_PARAM(R,_,ELEM)     \
+        typedef ELEM ELEM;
+#   define BOOST_FUSION_ADAPT_STRUCT_MSVC_REDEFINE_TEMPLATE_PARAMS_IMPL(SEQ)    \
+        BOOST_PP_SEQ_FOR_EACH(                                                  \
+            BOOST_FUSION_ADAPT_STRUCT_MSVC_REDEFINE_TEMPLATE_PARAM,             \
+            _,                                                                  \
+            BOOST_PP_SEQ_TAIL(SEQ))
+#   define BOOST_FUSION_ADAPT_STRUCT_MSVC_REDEFINE_TEMPLATE_PARAMS(SEQ)         \
+        BOOST_PP_IF(                                                            \
+            BOOST_PP_SEQ_HEAD(SEQ),                                             \
+            BOOST_FUSION_ADAPT_STRUCT_MSVC_REDEFINE_TEMPLATE_PARAMS_IMPL,       \
+            BOOST_PP_TUPLE_EAT(1))(SEQ)
+#else
+#   define BOOST_FUSION_ADAPT_STRUCT_MSVC_REDEFINE_TEMPLATE_PARAMS(SEQ)
+#endif
+
 #define BOOST_FUSION_ADAPT_STRUCT_C_BASE(                                       \
     TEMPLATE_PARAMS_SEQ, NAME_SEQ, I, ATTRIBUTE, ATTRIBUTE_TUPEL_SIZE)          \
                                                                                 \
@@ -94,16 +110,19 @@
       , I                                                                       \
     >                                                                           \
     {                                                                           \
-        typedef BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 0, ATTRIBUTE) type;   \
+        typedef                                                                 \
+            BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 0, ATTRIBUTE)             \
+        attribute_type;                                                         \
+        BOOST_FUSION_ADAPT_STRUCT_MSVC_REDEFINE_TEMPLATE_PARAMS(                \
+            TEMPLATE_PARAMS_SEQ)                                                \
+                                                                                \
+        typedef attribute_type type;                                            \
                                                                                 \
         template<typename SeqRef>                                               \
         struct apply                                                            \
         {                                                                       \
             typedef typename                                                    \
-                detail::forward_as<                                             \
-                    SeqRef                                                      \
-                  , BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 0, ATTRIBUTE)     \
-                >::type                                                         \
+                detail::forward_as<SeqRef, attribute_type>::type                \
             type;                                                               \
                                                                                 \
             static type                                                         \

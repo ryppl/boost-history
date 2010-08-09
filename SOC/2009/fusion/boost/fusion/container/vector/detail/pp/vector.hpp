@@ -14,7 +14,6 @@
 #include <boost/fusion/container/vector/detail/pp/vector_n_chooser.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/bool.hpp>
-#include <boost/type_traits/add_const.hpp>
 #include <boost/fusion/container/detail/forward_interface.hpp>
 
 namespace boost { namespace fusion

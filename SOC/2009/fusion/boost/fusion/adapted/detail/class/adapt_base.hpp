@@ -81,6 +81,8 @@
     >                                                                           \
     {                                                                           \
         typedef BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 0, ATTRIBUTE) lvalue; \
+        BOOST_FUSION_ADAPT_STRUCT_MSVC_REDEFINE_TEMPLATE_PARAMS(                \
+            TEMPLATE_PARAMS_SEQ)                                                \
                                                                                 \
         typedef                                                                 \
             BOOST_PP_IF(                                                        \

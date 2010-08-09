@@ -23,7 +23,7 @@ namespace boost { namespace fusion
     BOOST_WORKAROUND(__GNUC_MINOR__,==5)
     //cschmidt: the internals of BOOST_WORKAROUND do not allow comparing
     //with 0!
-#   if __GNUC_PATCHLEVEL__==0
+#   if __GNUC_PATCHLEVEL__<=1
 #       define BOOST_FUSION_REVERSE_VIEW_USE_FORWARD_AS_GCC_HELPER
 
         template<typename TestType,typename Type>

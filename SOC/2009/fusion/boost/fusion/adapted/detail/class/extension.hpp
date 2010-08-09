@@ -10,15 +10,12 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_CLASS_EXTENSION_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_CLASS_EXTENSION_HPP
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace detail
 {
-    namespace detail
-    {
-        template<typename T, typename Dummy>
-        struct get_identity
-          : identity<T>
-        {};
-    }
-}}
+    template<typename T, typename Dummy>
+    struct get_identity
+      : identity<T>
+    {};
+}}}
 
 #endif

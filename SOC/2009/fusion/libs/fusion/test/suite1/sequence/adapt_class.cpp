@@ -52,9 +52,10 @@ namespace ns
         int y;
     };
 
+#if !BOOST_WORKAROUND(__GNUC__,<4)
     class point_with_private_members
     {
-        friend class boost::fusion::extension::access;
+        friend struct boost::fusion::extension::access;
 
     public:
         point_with_private_members() : x(0), y(0) {}
@@ -69,6 +70,7 @@ namespace ns
         int x;
         int y;
     };
+#endif
 }
 
 BOOST_FUSION_ADAPT_CLASS(
@@ -77,11 +79,13 @@ BOOST_FUSION_ADAPT_CLASS(
     (int, int, obj.get_y(), obj.set_y(val))
 )
 
+#if !BOOST_WORKAROUND(__GNUC__,<4)
 BOOST_FUSION_ADAPT_CLASS(
     ns::point_with_private_members,
     (int, int, obj.get_x(), obj.set_x(val))
     (int, int, obj.get_y(), obj.set_y(val))
 )
+#endif
 
 int
 main()
@@ -149,6 +153,7 @@ main()
           , boost::mpl::front<ns::point>::type>));
     }
 
+#if !BOOST_WORKAROUND(__GNUC__,<4)
     {
         BOOST_MPL_ASSERT_NOT((traits::is_view<ns::point_with_private_members>));
         ns::point_with_private_members p(123, 456);
@@ -168,6 +173,7 @@ main()
         BOOST_TEST(front(p) == 6);
         BOOST_TEST(back(p) == 9);
     }
+#endif
 
     return boost::report_errors();
 }
