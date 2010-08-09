@@ -7,6 +7,10 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
+
+// TODO : the forward declarations are not sufficient as the default
+// arguments aren't specified. If they were, redefinition error. Is there 
+// a better way?
 #include <deque>
 #include <list>
 #include <map>
@@ -15,6 +19,11 @@
 #include <stack>
 #include <vector>
 #include <boost/array.hpp>
+
+#include <boost/ptr_container/ptr_array.hpp>
+#include <boost/ptr_container/ptr_deque.hpp>
+#include <boost/ptr_container/ptr_list.hpp>
+#include <boost/ptr_container/ptr_vector.hpp>
 
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/control/expr_if.hpp>
@@ -39,14 +48,18 @@ namespace xxx_modifier{
     	using namespace boost::assign::v2;
         {
         	typedef put_tag::push_back wanted_;
-        	LIBS_ASSIGN_V2_TEST_PUT_modifier( std::list, 	int,	 ,	0 )
-        	LIBS_ASSIGN_V2_TEST_PUT_modifier( std::set, 	int,	 ,	0 )
-        	LIBS_ASSIGN_V2_TEST_PUT_modifier( std::vector, 	int,	 ,	0 )
-			LIBS_ASSIGN_V2_TEST_PUT_modifier( std::deque, 	int,	 ,	0 )
+        	LIBS_ASSIGN_V2_TEST_PUT_modifier( std::list, 	int, ,	0 )
+        	LIBS_ASSIGN_V2_TEST_PUT_modifier( std::vector, 	int, ,	0 )
+			LIBS_ASSIGN_V2_TEST_PUT_modifier( std::deque, 	int, ,	0 )
+
+			LIBS_ASSIGN_V2_TEST_PUT_modifier( boost::ptr_deque, 	int, ,	0 )
+			LIBS_ASSIGN_V2_TEST_PUT_modifier( boost::ptr_list, 		int, ,	0 )
+			LIBS_ASSIGN_V2_TEST_PUT_modifier( boost::ptr_vector, 	int, ,	0 )
         }
         {
         	typedef put_tag::at_next wanted_;
-			LIBS_ASSIGN_V2_TEST_PUT_modifier(boost::array, 	int, 	1,	1 )
+			LIBS_ASSIGN_V2_TEST_PUT_modifier( boost::array, 	int, 	1,	1 )
+			LIBS_ASSIGN_V2_TEST_PUT_modifier( boost::ptr_array, int, 	1,	1 )
         }
         {
         	typedef put_tag::push wanted_;
@@ -55,6 +68,7 @@ namespace xxx_modifier{
         }
         {
         	typedef put_tag::insert wanted_;
+        	LIBS_ASSIGN_V2_TEST_PUT_modifier( std::set, int, ,	0 )
 			LIBS_ASSIGN_V2_TEST_PUT_modifier( std::map, const char*, int,	1 )
         }
         

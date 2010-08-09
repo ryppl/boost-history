@@ -5,8 +5,12 @@
 
 #include <libs/assign/v2/test/detail/functor.h>
 
+#include <libs/assign/v2/test/put/modulo_op.h>
+#include <libs/assign/v2/test/put/ptr.h>
 #include <libs/assign/v2/test/put/modifier.h>
-#include <libs/assign/v2/test/put/put_wrapper.h>
+#include <libs/assign/v2/test/put/tuple_refs.h>
+#include <libs/assign/v2/test/put/static.h>
+#include <libs/assign/v2/test/put/stl.h>
 
 #include <libs/assign/v2/test/put_range/convert.h>
 
@@ -22,6 +26,7 @@
 #include <libs/assign/v2/test/ref/wrapper.h>
 
 #include <libs/assign/v2/example/tutorial.h>
+#include <libs/assign/v2/example/experimental.h>
 
 int main (int argc, char * const argv[]) {
 
@@ -33,8 +38,11 @@ int main (int argc, char * const argv[]) {
 
     xxx_detail::xxx_functor::test();
 
-    xxx_put::xxx_modifier::test();
-    xxx_put::xxx_put_wrapper::test();
+    xxx_put::xxx_modulo_op::test();
+    xxx_put::xxx_ptr::test();
+    xxx_put::xxx_static::test();
+    xxx_put::xxx_stl::test();
+    xxx_put::xxx_tuple_refs::test();
 
     xxx_put_range::xxx_convert::test();
 
@@ -43,7 +51,6 @@ int main (int argc, char * const argv[]) {
     xxx_ref::xxx_csv_anon::test();
     xxx_ref::xxx_fusion_list::test();
     xxx_ref::xxx_generic_anon::test();
-    xxx_put::xxx_put_wrapper::test();
     xxx_ref::xxx_wrapper::test();
 
     xxx_type_traits::xxx_has_push::test();
@@ -53,6 +60,7 @@ int main (int argc, char * const argv[]) {
     {
 	    using namespace example_assign_v2;
 	    xxx_tutorial::run();
+	    xxx_experimental::run();
     }
     return 0;
 

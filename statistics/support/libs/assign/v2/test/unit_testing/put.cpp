@@ -14,8 +14,11 @@
 
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_CHECK_EQUAL(a,b) BOOST_CHECK_EQUAL(a,b)
-#include <libs/assign/v2/test/put/put_wrapper.cpp>
-#include <libs/assign/v2/test/put/modifier.cpp>
+#include <libs/assign/v2/test/put/modulo_op.cpp>
+#include <libs/assign/v2/test/put/ptr.cpp>
+#include <libs/assign/v2/test/put/static.cpp>
+#include <libs/assign/v2/test/put/stl.cpp>
+#include <libs/assign/v2/test/put/tuple_refs.cpp>
 
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
@@ -25,8 +28,11 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     using namespace test_assign_v2;  
     {
     	using namespace xxx_put; 
-		test->add( BOOST_TEST_CASE( &xxx_put_wrapper::test ) );
-		test->add( BOOST_TEST_CASE( &xxx_modifier::test ) );
+		test->add( BOOST_TEST_CASE( &xxx_modulo_op::test ) );
+		test->add( BOOST_TEST_CASE( &xxx_ptr::test ) );
+		test->add( BOOST_TEST_CASE( &xxx_static::test ) );
+		test->add( BOOST_TEST_CASE( &xxx_stl::test ) );
+		test->add( BOOST_TEST_CASE( &xxx_tuple_refs::test ) );
     }
     return test;                             
 }                                            

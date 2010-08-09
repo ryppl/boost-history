@@ -16,7 +16,7 @@ namespace xxx_modifier{
 
     void test();
     
-}// modifier
+}// xxx_modifier
 }// xxx_put
 }// xxx_test_assign
 
