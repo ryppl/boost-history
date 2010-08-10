@@ -37,7 +37,7 @@ namespace chrono
     {
       DWORD cause = (nanosecs_per_tic <= 0.0L ? ERROR_NOT_SUPPORTED : ::GetLastError());
       boost::throw_exception(
-#if (BOOST_VERSION / 100 % 1000) < 44
+#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
         system::system_error( cause, system::system_category, "chrono::monotonic_clock" ));
 #else
         system::system_error( cause, system::system_category(), "chrono::monotonic_clock" ));
@@ -56,7 +56,7 @@ namespace chrono
     if ( (nanosecs_per_tic <= 0.0L) || (!QueryPerformanceCounter( &pcount )) )
     {
       DWORD cause = ((nanosecs_per_tic <= 0.0L) ? ERROR_NOT_SUPPORTED : ::GetLastError());
-#if (BOOST_VERSION / 100 % 1000) < 44
+#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
       ec.assign( cause, system::system_category );
 #else
       ec.assign( cause, system::system_category() );

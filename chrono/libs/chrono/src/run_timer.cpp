@@ -154,7 +154,7 @@ namespace boost
         catch (...) // eat any exceptions
         {
           assert( 0 && "error reporting not fully implemented yet" );
-#if (BOOST_VERSION / 100 % 1000) < 44
+#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
           ec.assign(system::errc::success, system::generic_category);
 #else
           ec.assign(system::errc::success, system::generic_category());

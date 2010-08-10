@@ -48,7 +48,7 @@ namespace boost
       else
       {
         //~ assert( 0 && "error handling not implemented yet" );
-#if (BOOST_VERSION / 100 % 1000) < 44
+#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
         ec.assign( ::GetLastError(), system::system_category );
 #else
         ec.assign( ::GetLastError(), system::system_category() );
@@ -82,7 +82,7 @@ namespace boost
       else
       {
         boost::throw_exception(
-#if (BOOST_VERSION / 100 % 1000) < 44
+#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
             system::system_error( ::GetLastError(), system::system_category, "chrono::monotonic_clock" ));
 #else
             system::system_error( ::GetLastError(), system::system_category(), "chrono::monotonic_clock" ));
