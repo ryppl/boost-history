@@ -494,3 +494,16 @@ BOOST_AUTO_TEST_CASE(test_async)
     BOOST_CHECK_EQUAL(exit_code, EXIT_SUCCESS); 
 #endif 
 } 
+
+BOOST_AUTO_TEST_CASE(test_shell)
+{
+    child c = bp::shell(get_helpers_path() + " exit_success")
+
+    int exit_code = c.wait(); 
+#if defined(BOOST_POSIX_API) 
+    BOOST_REQUIRE(WIFEXITED(exit_code)); 
+    BOOST_CHECK_EQUAL(WEXITSTATUS(exit_code), EXIT_SUCCESS); 
+#elif defined(BOOST_WINDOWS_API) 
+    BOOST_CHECK_EQUAL(exit_code, EXIT_SUCCESS); 
+#endif 
+}
