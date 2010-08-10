@@ -228,7 +228,8 @@ int main() {
         std::cout << "0 offset" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
         proxy_reference_type<unsigned long long, 63> t7(ptr,0);
-        std::memset(ptr,0,4);
+        std::memset(ptr,0,20);
+
         // 1
         *ptr = 0xFF;
         ++ptr;
@@ -254,6 +255,7 @@ int main() {
         *ptr = 0xFE;
         ++ptr;
         ptr = storage;
+
         print_type_and_value(t7);
         print_mask_details(t7);
         BOOST_TEST(t7 == 0x7fffffffffffffff );
@@ -333,7 +335,6 @@ int main() {
         storage_ptr ptr = storage;
         std::memset(ptr,0,20);
 
-
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << " Testing type: " << typestr<test_type_1>() <<std::endl;
         std::cout << "-----------------------------------------" << std::endl;
@@ -380,24 +381,76 @@ int main() {
 
         test_type_2 t1(ptr,0);
         test_type_2 t2(ptr,7);
+        ++ptr;
         test_type_2 t3(ptr,6);
         ++ptr;
         test_type_2 t4(ptr,5);
+        ++ptr;
         test_type_2 t5(ptr,4);
+        ++ptr;
         test_type_2 t6(ptr,3);
         ++ptr;
         test_type_2 t7(ptr,2);
+        ++ptr;
         test_type_2 t8(ptr,1);
+#define ASSIGN_MONITOR(P1,P2) \
+        std::cout << "before: "; \
+        print_storage_for_reference(P1); \
+        P1 = P2;\
+        std::cout << "after: ";\
+        print_storage_for_reference(P1);\
+        std::cout << std::endl << std::endl;
 
-        t1 = 0;
+        ASSIGN_MONITOR(t1,7)
+
+        std::cout << "before: ";
+        print_storage_for_reference(t2);
         t2 = 1;
+        std::cout << "after: ";
+        print_storage_for_reference(t2);
+        std::cout << std::endl << std::endl;
+
+        std::cout << "before: ";
+        print_storage_for_reference(t3);
         t3 = 2;
+        std::cout << "after: ";
+        print_storage_for_reference(t3);
+        std::cout << std::endl << std::endl;
+
+        std::cout << "before: ";
+        print_storage_for_reference(t4);
         t4 = 3;
+        std::cout << "after: ";
+        print_storage_for_reference(t4);
+        std::cout << std::endl << std::endl;
+
+        std::cout << "before: ";
+        print_storage_for_reference(t5);
         t5 = 5;
+        std::cout << "after: ";
+        print_storage_for_reference(t5);
+        std::cout << std::endl << std::endl;
+
+        std::cout << "before: ";
+        print_storage_for_reference(t6);
         t6 = 6;
+        std::cout << "after: ";
+        print_storage_for_reference(t6);
+        std::cout << std::endl << std::endl;
+
+        std::cout << "before: ";
+        print_storage_for_reference(t7);
         t7 = 7;
+        std::cout << "after: ";
+        print_storage_for_reference(t7);
+        std::cout << std::endl << std::endl;
+
+        std::cout << "Before: ";
+        print_storage_for_reference(t8);
         t8 = 9;
-        
+        std::cout << "After: ";
+        print_storage_for_reference(t8);
+        // print_from_to(storage, 7);
 
         BOOST_PRINT_ON_TEST_FAILURE_2(t1, 1);
         BOOST_PRINT_ON_TEST_FAILURE_2(t2, 2);

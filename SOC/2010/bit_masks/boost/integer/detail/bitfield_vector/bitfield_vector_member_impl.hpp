@@ -18,8 +18,18 @@
 #include <boost/integer/bit_width.hpp>
 #include <iostream>
 #include <iomanip>
+#include <sstream>
+#include <bitset>
 
 namespace boost { namespace detail {
+
+template <typename T>
+std::string to_binary_2(T x) {
+    std::stringstream ss(std::stringstream::in|std::stringstream::out);
+    ss << std::setfill('0') << std::setw(boost::bit_width<T>::value)
+        << std::bitset<  boost::bit_width<T>::value >(x).to_string();
+    return std::string(ss.str());
+}
 
 template <std::size_t Width, bool = bool((Width%8) > 0)>
 struct next_allocation_size;
@@ -102,12 +112,12 @@ public:
     //@{
 
     /** Copy Constructor. */
-    proxy_reference_type(_self const& x)
+    explicit proxy_reference_type(_self const& x)
         :_ptr(x._ptr), _mask(x._mask )
     { }
 
     /** pointer, offset constructor. */
-    proxy_reference_type(storage_type* ptr, offset_type offset)
+    explicit proxy_reference_type(storage_type* ptr, offset_type offset)
         :_ptr(ptr), _mask(get_mask_detail<Width>(offset) )
     { }
     //@}
@@ -152,12 +162,12 @@ public:
     //@{
 
     /** Copy Constructor. */
-    proxy_reference_type(_self const& x)
+    explicit proxy_reference_type(_self const& x)
         :_ptr(x._ptr), _mask(x._mask)
     { }
 
     /** pointer, offset constructor. */
-    proxy_reference_type(storage_type* ptr, offset_type offset)
+    explicit proxy_reference_type(storage_type* ptr, offset_type offset)
         :_ptr(ptr), _mask(get_mask_detail<Width>(offset))
         
     { }
@@ -218,6 +228,7 @@ public:
         if(_mask._size == 1) {
             storage_t previous_values = *_ptr & ~_mask._first_byte;
             storage_t new_value = low_bits_mask<value_type, width>::value & x;
+
             new_value <<= _mask._last_shift;
             previous_values |= new_value;
             *_ptr = previous_values;
@@ -230,11 +241,22 @@ public:
         storage_ptr_t   byte_ptr     = _ptr;
 
         if(_mask._size == 2) {
+            // std::cout << "Mask width 2 retrieval" << std::endl;
+            // std::cout << "First Mask" << std::endl;
             bits_in_mask = 8 - _mask._offset;
             mask = (~(~value_type(0) << bits_in_mask))
                 << (width - bits_in_mask - 1);
-            to_be_stored = storage_t((mask&x)>>(width - bits_in_mask - 1));
-            *byte_ptr = (*byte_ptr & ~_mask._first_byte) | to_be_stored;
+            // std::cout << "Value of x: " << to_binary_2(x) << std::endl;            
+            // std::cout << "First extraction mask: " << to_binary_2(mask) << std::endl;
+            // to_be_stored = storage_t((mask&x)>>(width - bits_in_mask - 1));
+            // std::cout << "Value to_be_stored: " << to_binary_2(to_be_stored) << std::endl; 
+            // std::cout << "Value at storage location: " << to_binary_2(*byte_ptr) << std::endl; 
+            // std::cout << "~_mask._first_byte: " << to_binary_2( _mask._first_byte ) << std::endl; 
+            // std::cout << "~_mask._first_byte: " << to_binary_2( ~_mask._first_byte ) << std::endl; 
+            // std::cout << "*byte_ptr & (~_mask._first_byte)): " << to_binary_2(*byte_ptr & (~_mask._first_byte) ) << std::endl; 
+            // std::cout << "new value to assign to storage location: "<< to_binary_2(storage_t(((*byte_ptr) & (~_mask._first_byte)) | to_be_stored)) << std::endl;
+            *byte_ptr = ((*byte_ptr) & (~_mask._first_byte)) | to_be_stored;
+            
             ++byte_ptr;
             bits_in_mask = width - bits_in_mask;
             mask = ~(~value_type(0) << bits_in_mask);
