@@ -5930,6 +5930,7 @@ All the units are given using the suffix "s" following the System International 
 [*Bug Fixes]
 
 * Valgrind fixes: "Conditional jump or move depends on uninitialised value(s)"
+* Take care of Boost.System break on version 1.44
 * gcc.4.4 "warning: suggest parentheses around '&&' within '||' " removal.
 
 [endsect]
