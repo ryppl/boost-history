@@ -275,7 +275,7 @@ int main() {
         std::memset(ptr,0,20);
         test_type_1 t1(ptr, 0);
         t1 = 0x7;
-        std::cout << std::hex << std::size_t(*ptr) << std::endl;
+        // std::cout << std::hex << std::size_t(*ptr) << std::endl;
         print_mask_details(t1);
         BOOST_TEST(*ptr == 0xE0);
 
@@ -286,7 +286,7 @@ int main() {
         std::memset(ptr,0,1);
         test_type_1 t2(ptr, 2);
         t2 = 0x7;
-        std::cout << std::hex << std::size_t(*ptr) << std::endl;
+        // std::cout << std::hex << std::size_t(*ptr) << std::endl;
         print_mask_details(t2);
         BOOST_TEST(*ptr == 0x38);
 
@@ -297,10 +297,10 @@ int main() {
         test_type_1 t3(ptr, 6);
         
         t3 = 0x7;
-        std::cout << std::hex << std::size_t(*ptr) << std::endl;
+        // std::cout << std::hex << std::size_t(*ptr) << std::endl;
         BOOST_TEST(t2 == 7);
         ++ptr;
-        std::cout << std::hex << std::size_t(*ptr) << std::endl;
+        // std::cout << std::hex << std::size_t(*ptr) << std::endl;
         BOOST_TEST(*ptr == 0x80);
         ptr = storage;
 
@@ -319,14 +319,104 @@ int main() {
         BOOST_TEST(t4 == 0x1FFFF);
         t4 = 17;
         BOOST_TEST(t4 == 17);
-        
+    }
+    {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "memory corruption testing." << std::endl;
+        std::cout << "-----------------------------------------" << std::endl
+            << std::endl << std::endl;
+
+
+        typedef unsigned char storage_type;
+        typedef storage_type* storage_ptr;        
+        storage_type storage[20];
+        storage_ptr ptr = storage;
+        std::memset(ptr,0,20);
+
+
         std::cout << "-----------------------------------------" << std::endl;
-        // test_type_4 t4(ptr,0);
-        // BOOST_TEST(false);
+        std::cout << " Testing type: " << typestr<test_type_1>() <<std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
+        test_type_1 t1(ptr,0);
+        test_type_1 t2(ptr,3);
+        test_type_1 t3(ptr,6);
+        ++ptr;
+        test_type_1 t4(ptr,1);
+        test_type_1 t5(ptr,4);
+        test_type_1 t6(ptr,7);
+        ++ptr;
+        test_type_1 t7(ptr,2);
+        test_type_1 t8(ptr,5);
+
+        t1 = 0;
+        t2 = 1;
+        t3 = 2;
+        t4 = 3;
+        t5 = 5;
+        t6 = 6;
+        t7 = 7;
+        t8 = 0;
+        
+
+        BOOST_PRINT_ON_TEST_FAILURE_2(t1, 1);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t2, 2);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t3, 3);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t4, 4);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t5, 5);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t6, 6);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t7, 7);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t8, 0);
+
+    }
+    {
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << " Testing type: " << typestr<test_type_2>() <<std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
+        typedef unsigned char storage_type;
+        typedef storage_type* storage_ptr;        
+        storage_type storage[20];
+        storage_ptr ptr = storage;
+        std::memset(ptr,0,20);
+
+        test_type_2 t1(ptr,0);
+        test_type_2 t2(ptr,7);
+        test_type_2 t3(ptr,6);
+        ++ptr;
+        test_type_2 t4(ptr,5);
+        test_type_2 t5(ptr,4);
+        test_type_2 t6(ptr,3);
+        ++ptr;
+        test_type_2 t7(ptr,2);
+        test_type_2 t8(ptr,1);
+
+        t1 = 0;
+        t2 = 1;
+        t3 = 2;
+        t4 = 3;
+        t5 = 5;
+        t6 = 6;
+        t7 = 7;
+        t8 = 9;
+        
+
+        BOOST_PRINT_ON_TEST_FAILURE_2(t1, 1);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t2, 2);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t3, 3);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t4, 4);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t5, 5);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t6, 6);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t7, 7);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t8, 9);
+
+
 
 /*
+typedef proxy_reference_type<unsigned int, 3>           test_type_1;
+typedef proxy_reference_type<unsigned char, 7>          test_type_2;
+typedef proxy_reference_type<unsigned long, 9>          test_type_3;
+typedef proxy_reference_type<unsigned long long, 17>    test_type_4;
+typedef proxy_reference_type<unsigned long long, 50>    test_type_5;
+
 test_type_1;
 test_type_2;
 test_type_3;
