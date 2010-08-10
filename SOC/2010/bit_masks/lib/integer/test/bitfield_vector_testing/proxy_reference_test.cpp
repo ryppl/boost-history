@@ -27,7 +27,7 @@ typedef proxy_reference_type<long, 7>                   test_type_8;
 typedef proxy_reference_type<long long, 17>             test_type_9;
 typedef proxy_reference_type<long long, 50>             test_type_10;
 
-
+bool display_debug = false;
 /*
 test_type_1;
 test_type_2;
@@ -164,15 +164,17 @@ int main() {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "2 byte mask. 0x1 and 0xFF" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
+        ptr = storage;
         proxy_reference_type<unsigned int, 9> t4(ptr,7);
-        std::memset(ptr,0,3);
+        std::memset(ptr,0,5);
         *ptr = 0x01;
         ++ptr;
         *ptr = 0xFF;
-        --ptr;
+        ptr = storage;
+        print_from_to(ptr,5);
         print_type_and_value(t4);
         print_mask_details(t4);
-        BOOST_TEST(t4 == 0x1FF);
+        BOOST_PRINT_ON_TEST_FAILURE(t4,0x1FF);
 
         // testing multi byte > 2 
         std::cout << "-----------------------------------------" << std::endl;
@@ -219,8 +221,11 @@ int main() {
         print_type_and_value(t6);
         print_mask_details(t6);
         typedef unsigned long long ullt;
-        BOOST_TEST(t6 == ullt(0xFFFFFFFFFF));
-
+        ullt temp(0);
+        temp = ~temp;
+        temp <<=16;
+        temp >>=16;
+        BOOST_PRINT_ON_TEST_FAILURE(t6,temp);
 
         // testing multi byte > 2 and ending with 0xFF
         std::cout << "-----------------------------------------" << std::endl;
@@ -323,6 +328,22 @@ int main() {
         BOOST_TEST(t4 == 17);
     }
     {
+    display_debug = false;
+#define ASSIGN_MONITOR(P1,P2) \
+    if(display_debug) {\
+    print_mask_details(P1);\
+    std::cout << #P2 << " Binary_value: " << to_binary(P2) << std::endl;\
+    std::cout << #P1 << " = " << #P2 << std::endl;\
+    std::cout << "before: "; \
+    print_storage_for_reference(P1);\
+    }\
+    P1 = P2;\
+    if(display_debug){\
+    std::cout << "after: "; \
+    print_storage_for_reference(P1);\
+    std::cout << std::endl << std::endl;\
+    }
+
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "memory corruption testing." << std::endl;
         std::cout << "-----------------------------------------" << std::endl
@@ -349,27 +370,37 @@ int main() {
         test_type_1 t7(ptr,2);
         test_type_1 t8(ptr,5);
 
-        t1 = 0;
-        t2 = 1;
-        t3 = 2;
-        t4 = 3;
-        t5 = 5;
-        t6 = 6;
-        t7 = 7;
-        t8 = 0;
-        
 
-        BOOST_PRINT_ON_TEST_FAILURE_2(t1, 1);
-        BOOST_PRINT_ON_TEST_FAILURE_2(t2, 2);
-        BOOST_PRINT_ON_TEST_FAILURE_2(t3, 3);
-        BOOST_PRINT_ON_TEST_FAILURE_2(t4, 4);
-        BOOST_PRINT_ON_TEST_FAILURE_2(t5, 5);
-        BOOST_PRINT_ON_TEST_FAILURE_2(t6, 6);
-        BOOST_PRINT_ON_TEST_FAILURE_2(t7, 7);
-        BOOST_PRINT_ON_TEST_FAILURE_2(t8, 0);
+        ASSIGN_MONITOR(t1,0)
+        ASSIGN_MONITOR(t2,1);
+        ASSIGN_MONITOR(t3,2);
+        ASSIGN_MONITOR(t4,3);
+        ASSIGN_MONITOR(t5,4);
+        if(display_debug) {
+            std::cout << "=================================="<< std::endl;
+            print_from_to(storage,4);
+        }        
+        ASSIGN_MONITOR(t6,5);
+        if(display_debug) {
+            print_from_to(storage,4);
+            std::cout << "=================================="<< std::endl;
+            std::cout << std::endl<< std::endl;
+        }
+        ASSIGN_MONITOR(t7,6);
+        ASSIGN_MONITOR(t8,7);      
+
+        BOOST_PRINT_ON_TEST_FAILURE_2(t1, 0);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t2, 1);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t3, 2);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t4, 3);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t5, 4);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t6, 5);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t7, 6);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t8, 7);
 
     }
     {
+        display_debug  = false;
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << " Testing type: " << typestr<test_type_2>() <<std::endl;
         std::cout << "-----------------------------------------" << std::endl;
@@ -393,76 +424,89 @@ int main() {
         test_type_2 t7(ptr,2);
         ++ptr;
         test_type_2 t8(ptr,1);
-#define ASSIGN_MONITOR(P1,P2) \
-        std::cout << "before: "; \
-        print_storage_for_reference(P1); \
-        P1 = P2;\
-        std::cout << "after: ";\
-        print_storage_for_reference(P1);\
-        std::cout << std::endl << std::endl;
+
 
         ASSIGN_MONITOR(t1,7)
+        ASSIGN_MONITOR(t2,1);
+        ASSIGN_MONITOR(t3,2);
+        ASSIGN_MONITOR(t4,3);
+        ASSIGN_MONITOR(t5,4);
+        ASSIGN_MONITOR(t6,5);
+        ASSIGN_MONITOR(t7,6);
+        ASSIGN_MONITOR(t8,7);
 
-        std::cout << "before: ";
-        print_storage_for_reference(t2);
-        t2 = 1;
-        std::cout << "after: ";
-        print_storage_for_reference(t2);
-        std::cout << std::endl << std::endl;
+        BOOST_PRINT_ON_TEST_FAILURE_2(t1, 7);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t2, 1);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t3, 2);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t4, 3);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t5, 4);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t6, 5);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t7, 6);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t8, 7);
 
-        std::cout << "before: ";
-        print_storage_for_reference(t3);
-        t3 = 2;
-        std::cout << "after: ";
-        print_storage_for_reference(t3);
-        std::cout << std::endl << std::endl;
+        print_from_to(storage,10);
+    }
+    {
+        display_debug  = false;
+        std::cout << "-----------------------------------------" << std::endl;
+        std::cout << " Testing type: " << typestr<test_type_2>() <<std::endl;
+        std::cout << "-----------------------------------------" << std::endl;
+        typedef unsigned char storage_type;
+        typedef storage_type* storage_ptr;        
+        storage_type storage[20];
+        storage_ptr ptr = storage;
+        std::memset(ptr,0,20);
+// index | multiple of 17  | byte index | offset
+//     0     17      0      0
+//     1     34      2      1
+//     2     51      4      2
+//     3     68      6      3
+//     4     85      8      4
+//     5    102     10      5
+//     6    119     12      6
+//     7    136     14      7
 
-        std::cout << "before: ";
-        print_storage_for_reference(t4);
-        t4 = 3;
-        std::cout << "after: ";
-        print_storage_for_reference(t4);
-        std::cout << std::endl << std::endl;
 
-        std::cout << "before: ";
-        print_storage_for_reference(t5);
-        t5 = 5;
-        std::cout << "after: ";
-        print_storage_for_reference(t5);
-        std::cout << std::endl << std::endl;
 
-        std::cout << "before: ";
-        print_storage_for_reference(t6);
-        t6 = 6;
-        std::cout << "after: ";
-        print_storage_for_reference(t6);
-        std::cout << std::endl << std::endl;
+        
+        test_type_4 t1(ptr,0);
+        ptr += 2;
+        test_type_4 t2(ptr,1);
+        ptr += 2;
+        test_type_4 t3(ptr,2);
+        ptr += 2; 
+        test_type_4 t4(ptr,3);
+        ptr += 2;
+        test_type_4 t5(ptr,4);
+        ptr += 2; 
+        test_type_4 t6(ptr,5);
+        ptr += 2; 
+        test_type_4 t7(ptr,6);
+        ptr += 2; 
+        test_type_4 t8(ptr,7);
 
-        std::cout << "before: ";
-        print_storage_for_reference(t7);
-        t7 = 7;
-        std::cout << "after: ";
-        print_storage_for_reference(t7);
-        std::cout << std::endl << std::endl;
 
-        std::cout << "Before: ";
+        t1 = 30204;
+        t2 = 14140;
+        t3 = 59713;
+        t4 = 60100;
+        t5 = 99999;
+        t6 = 10210;
+        t7 = 41740;
+        t8 = 10129;
+        BOOST_PRINT_ON_TEST_FAILURE_3(t1, 30204);
+        BOOST_PRINT_ON_TEST_FAILURE_3(t2, 14140);
+        BOOST_PRINT_ON_TEST_FAILURE_3(t3, 59713);
+        BOOST_PRINT_ON_TEST_FAILURE_3(t4, 60100);
+        BOOST_PRINT_ON_TEST_FAILURE_3(t5, 99999);
+        BOOST_PRINT_ON_TEST_FAILURE_3(t6, 10210);
+        BOOST_PRINT_ON_TEST_FAILURE_3(t7, 41740);
+        BOOST_PRINT_ON_TEST_FAILURE_3(t8, 10129);
+        unsigned long long temp = t8;
+        std::cout << to_binary(temp) << std::endl;
+        // 0  0000 10011  1100 10001
         print_storage_for_reference(t8);
-        t8 = 9;
-        std::cout << "After: ";
-        print_storage_for_reference(t8);
-        // print_from_to(storage, 7);
-
-        BOOST_PRINT_ON_TEST_FAILURE_2(t1, 1);
-        BOOST_PRINT_ON_TEST_FAILURE_2(t2, 2);
-        BOOST_PRINT_ON_TEST_FAILURE_2(t3, 3);
-        BOOST_PRINT_ON_TEST_FAILURE_2(t4, 4);
-        BOOST_PRINT_ON_TEST_FAILURE_2(t5, 5);
-        BOOST_PRINT_ON_TEST_FAILURE_2(t6, 6);
-        BOOST_PRINT_ON_TEST_FAILURE_2(t7, 7);
-        BOOST_PRINT_ON_TEST_FAILURE_2(t8, 9);
-
-
-
+        print_from_to(storage,17);
 /*
 typedef proxy_reference_type<unsigned int, 3>           test_type_1;
 typedef proxy_reference_type<unsigned char, 7>          test_type_2;

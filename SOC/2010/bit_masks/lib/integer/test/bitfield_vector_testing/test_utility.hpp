@@ -57,6 +57,14 @@ inline std::string typestr(T const&)
     BOOST_TEST( P1 == P2);
 
 
+#define BOOST_PRINT_ON_TEST_FAILURE_3(P1, P2) \
+    if(P1 != P2 ) { \
+        std::cout << #P1 << ": " << std::dec << std::size_t(P1) << std::endl; \
+        std::cout << #P2 << ": " << std::dec << std::size_t(P2) << std::endl; \
+        print_mask_details(P1);\
+    }\
+    BOOST_TEST( P1 == P2);
+
 struct print_mpl_values {
     template<typename T>
     void operator()(T x) {

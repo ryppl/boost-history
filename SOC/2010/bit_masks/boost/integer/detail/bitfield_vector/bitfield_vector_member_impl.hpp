@@ -184,22 +184,48 @@ public:
     /** Implicit Conversion Operator*/
     operator value_type() const {
         if(_mask._size == 1) {
+            // std::cout << "mask size_one decoding" << std::endl;
             return (value_type( _mask._first_byte & *_ptr ) >>
-                (8 - (_mask._offset + width)));
+                _mask._last_shift);
         }
 
         value_type ret = 0;
         storage_ptr_t byte_ptr = _ptr;
 
         if(_mask._size == 2) {
-            ret = value_type(_mask._first_byte & *byte_ptr) <<
-                 _mask._last_shift;
-
+            std::cout << "Byte pointer informantion" << std::endl;            
+            std::cout << std::hex << "First byte: " << std::size_t(*byte_ptr) << std::endl;
             ++byte_ptr;
-            ret += value_type( _mask._last_byte & *byte_ptr) >>
-                (8 - _mask._last_shift);
-            if( _mask._last_byte != 0xFF) {
-                ret >>= _mask._last_shift - 1;
+            std::cout << std::hex << "second byte: " << std::size_t(*byte_ptr) << std::endl;
+            byte_ptr = _ptr;
+            // getting first bits.
+            ret = value_type(_mask._first_byte & *byte_ptr) << ( 8 - _mask._last_shift );
+
+            // std::cout << "value of ret(Retrieved data from first mask):" << to_binary_2(ret) << std::endl;
+            ++byte_ptr;
+            //std::cout << "Value returned from mask applied to last byte: " << to_binary_2(value_type( _mask._last_byte & *byte_ptr) >>
+            //     (8 - _mask._last_shift)) << std::endl;
+
+            //std::cout << "Mask to be applied to storage: " << to_binary_2(value_type( _mask._last_byte))<<std::endl;
+            // std::cout << "Value of last byte: " << to_binary_2(*byte_ptr) << std::endl;
+            value_type retrieved_value;
+
+            // std::cout << "value of ret(Added data from second mask): " << to_binary_2(ret) << std::endl;
+            // std::cout << ret << std::endl;
+            if( _mask._last_byte == 0xFF) {
+                // std::cout <<"helllooooo"<< std::endl;
+                // std::cout << std::hex << "ret entering loop: " << ret << std::endl;
+                ret <<= 8;
+                // std::cout << std::hex << "ret after shift: " << ret << std::endl;
+                // std::cout << std::hex << "second byte: " << std::size_t(*byte_ptr) << std::endl;
+                ret += value_type(*byte_ptr);
+                // std::cout << std::hex << "ref after value added to it: " << ret << std::endl;
+            }else{
+                retrieved_value = (value_type( _mask._last_byte) & value_type(*byte_ptr));
+                // std::cout << "value returned from applying mask to pointer pre-shift: " << to_binary_2(retrieved_value) << std::endl;
+                retrieved_value >>= _mask._last_shift;
+                // std::cout << "value of ret(preformed last shift): " << to_binary_2(ret) << std::endl;
+                ret += retrieved_value;
             }
             return ret;
         }
@@ -217,9 +243,13 @@ public:
             ++byte_ptr;
         }
         // shifting bits
-
-        ret <<= 8 - _mask._last_shift;
-        ret += value_type( *byte_ptr & _mask._last_byte ) >> ( _mask._last_shift);
+        if(_mask._last_byte == 0xFF) {
+            ret <<= 8;
+            ret += value_type(*byte_ptr & _mask._last_byte);
+        }else{
+            ret <<= 8 - _mask._last_shift;
+            ret += value_type( *byte_ptr & _mask._last_byte ) >> ( _mask._last_shift);
+        }
         return ret;
     }
 
@@ -228,7 +258,6 @@ public:
         if(_mask._size == 1) {
             storage_t previous_values = *_ptr & ~_mask._first_byte;
             storage_t new_value = low_bits_mask<value_type, width>::value & x;
-
             new_value <<= _mask._last_shift;
             previous_values |= new_value;
             *_ptr = previous_values;
@@ -241,20 +270,10 @@ public:
         storage_ptr_t   byte_ptr     = _ptr;
 
         if(_mask._size == 2) {
-            // std::cout << "Mask width 2 retrieval" << std::endl;
-            // std::cout << "First Mask" << std::endl;
             bits_in_mask = 8 - _mask._offset;
             mask = (~(~value_type(0) << bits_in_mask))
-                << (width - bits_in_mask - 1);
-            // std::cout << "Value of x: " << to_binary_2(x) << std::endl;            
-            // std::cout << "First extraction mask: " << to_binary_2(mask) << std::endl;
-            // to_be_stored = storage_t((mask&x)>>(width - bits_in_mask - 1));
-            // std::cout << "Value to_be_stored: " << to_binary_2(to_be_stored) << std::endl; 
-            // std::cout << "Value at storage location: " << to_binary_2(*byte_ptr) << std::endl; 
-            // std::cout << "~_mask._first_byte: " << to_binary_2( _mask._first_byte ) << std::endl; 
-            // std::cout << "~_mask._first_byte: " << to_binary_2( ~_mask._first_byte ) << std::endl; 
-            // std::cout << "*byte_ptr & (~_mask._first_byte)): " << to_binary_2(*byte_ptr & (~_mask._first_byte) ) << std::endl; 
-            // std::cout << "new value to assign to storage location: "<< to_binary_2(storage_t(((*byte_ptr) & (~_mask._first_byte)) | to_be_stored)) << std::endl;
+                << (width - bits_in_mask);
+            to_be_stored = storage_t((mask&x)>>(width - bits_in_mask));
             *byte_ptr = ((*byte_ptr) & (~_mask._first_byte)) | to_be_stored;
             
             ++byte_ptr;
@@ -264,6 +283,7 @@ public:
             *byte_ptr = (*byte_ptr & ~_mask._last_byte) | to_be_stored;
             return *this;
         }
+        std::size_t     touch_bytes = 0;
         // calculate the offset of the first bit within x
         // and creating a mask to extract the fist bits from within x
         bits_in_mask = 8 - _mask._offset;
@@ -271,33 +291,47 @@ public:
         mask <<= width - bits_in_mask;
 
         typedef unsigned long long ullt;
-        std::cout << "First byte value: " << std::hex <<
-            ullt(_mask._first_byte) << std::endl;
-        std::cout << "First mask value: " << std::hex <<
-            ullt(mask) << std::endl;
+        //std::cout << "First byte value: " << std::hex <<
+        //    ullt(_mask._first_byte) << std::endl;
+        //std::cout << "First mask value: " << std::hex <<
+        //    ullt(mask) << std::endl;
         // store first byte.
         *byte_ptr = (*byte_ptr & ~_mask._first_byte) | ((x & mask ) >> (width - bits_in_mask));
-        std::cout << "stored value 1: " << std::hex <<
-            ullt(*byte_ptr) << std::endl;
+        // std::cout << "stored value 1: " << std::hex <<
+        //    ullt(*byte_ptr) << std::endl;
         ++byte_ptr;
+        touch_bytes +=1;
         mask = 0xFF;
         mask <<= width - bits_in_mask - 8;
-        std::cout << "mask before loop: " << std::hex <<
-            ullt(mask) << std::endl;
+        // std::cout << "mask before loop: " << std::hex <<
+        //     ullt(mask) << std::endl;
         for(std::size_t index = 0; index < _mask._size - 2;++index) {
             *byte_ptr = (mask & x) >> (width - (bits_in_mask + (8 * index))- 8);
-            std::cout << "right shift in size of loop:"<<(width - (bits_in_mask + (8 * index) ) - 8)<<std::endl;
+            // std::cout << "right shift in size of loop:"<<(width - (bits_in_mask + (8 * index) ) - 8)<<std::endl;
             mask >>= 8;
             ++byte_ptr;
+            touch_bytes +=1;
         }
         // now calculating the last bytes information, retrieving it and then
         // storing the data within the array.
-        mask = _mask._last_byte >> _mask._last_shift;
 
-        std::cout << "last value of mask: " << std::hex <<
-            ullt(mask) << std::endl;
-        *byte_ptr = (*byte_ptr & ~_mask._last_byte) |
-            ((mask & x) << (_mask._last_shift));
+        // std::cout << "last value of mask: " << std::hex <<
+        //    ullt(mask) << std::endl;
+        
+        // std::cout << "Value of storage before value writen: " << std::hex << ullt(*byte_ptr) << std::endl;
+        // std::cout << "Value of x in binary: " << to_binary_2(x) << std::endl;
+        // std::cout << "Value returned from appling mask to x: " << to_binary_2(_mask._last_byte & x) << std::endl;
+        // touch_bytes +=1;
+        if(_mask._last_byte == 0xFF) {
+            
+            // std::cout << "Value returned from appling mask to x: " << to_binary_2(_mask._last_byte & x) << std::endl;
+            *byte_ptr = _mask._last_byte & x;
+        }else{
+            mask = _mask._last_byte >> _mask._last_shift;
+            *byte_ptr = (*byte_ptr & ~_mask._last_byte) |
+                    ((mask & x) << (_mask._last_shift));
+        }
+        // std::cout << "Value of storage after value writen: " << std::hex << ullt(*byte_ptr) << std::endl;
         return *this;
     }
 
