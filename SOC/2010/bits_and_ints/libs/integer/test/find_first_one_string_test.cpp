@@ -15,6 +15,8 @@
 int main()
 {
 	using boost::find_first_one_string;
+	using boost::uint32_t;
+	using boost::uint64_t;
 	
 	BOOST_TEST((find_first_one_string((uint32_t)0, 1) == -1));
 	BOOST_TEST((find_first_one_string((uint32_t)0, 2) == -1));

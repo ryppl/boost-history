@@ -74,7 +74,8 @@ inline int count_trailing_zeros(unsigned long long int value)
 
 #else
 
-inline int count_trailing_zeros(uintmax_t value)
+template <typename T>
+inline int count_trailing_zeros(T value)
 {
 	return pop_count(~value & (value - 1));
 }

@@ -14,11 +14,14 @@
 BOOST_TEST((::boost::rotate_left(x, n) == y))
 
 #define ROTATE_R_TEST(x, n, y) \
-BOOST_TEST((::boost::rotate_right(x, n) == y)); \
-std::cout << "aah " << std::hex << ::boost::rotate_right(x, n) << std::endl
+BOOST_TEST((::boost::rotate_right(x, n) == y))
 
 int main()
 {
+	using boost::int64_t;
+	using boost::uint64_t;
+	using boost::int32_t;
+
     ROTATE_L_TEST(0x0, 1, 0);
 	ROTATE_L_TEST(0x0, 30, 0);
 	ROTATE_L_TEST(0xF0000000, 4, 0xF);

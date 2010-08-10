@@ -12,8 +12,8 @@
 #include <boost/integer/static_count_trailing_zeros.hpp>
 
 #define COUNT_ZEROS_TEST(x, y) \
-BOOST_TEST((::boost::count_trailing_zeros(unsigned(x)) == y)); \
-BOOST_TEST(((::boost::mpl::count_trailing_zeros< ::boost::mpl::integral_c< ::boost::uintmax_t, x> >::value) == y))
+BOOST_TEST((::boost::count_trailing_zeros(boost::uint32_t(x)) == y)); \
+BOOST_TEST(((::boost::mpl::count_trailing_zeros< ::boost::mpl::integral_c<boost::uint32_t, x> >::value) == y))
 
 
 // Main testing function
@@ -21,7 +21,7 @@ int main(int, char* [])
 {    
 	std::cout << "Doing tests on count_trailing_zeros functions." << std::endl;
 	
-	COUNT_ZEROS_TEST(0xF00000000, 32);
+	COUNT_ZEROS_TEST(0x00000000, 32);
 	COUNT_ZEROS_TEST(0x1, 0);
 	COUNT_ZEROS_TEST(0x2, 1);
 	COUNT_ZEROS_TEST(0x4, 2);
@@ -33,14 +33,14 @@ int main(int, char* [])
 	COUNT_ZEROS_TEST(0xAA, 1);
 	COUNT_ZEROS_TEST(0xFFFF, 0);
 	COUNT_ZEROS_TEST(0xF0A0, 5);
-	COUNT_ZEROS_TEST(0xFFFFFFFF, 0);
-	COUNT_ZEROS_TEST(0x55555555, 0);
-	COUNT_ZEROS_TEST(0xBABEBEEF, 0);
+	COUNT_ZEROS_TEST(unsigned(0xFFFFFFFFU), 0);
+	COUNT_ZEROS_TEST(0x55555555U, 0);
+	COUNT_ZEROS_TEST(0xBABEBEEFU, 0);
 	COUNT_ZEROS_TEST(0xFF800, 11);
 	COUNT_ZEROS_TEST(0x800, 11);
-	COUNT_ZEROS_TEST(0x123800, 11);
+	COUNT_ZEROS_TEST(0x123800U, 11);
 	COUNT_ZEROS_TEST(0x33800, 11);
-	COUNT_ZEROS_TEST(0x80000000, 31);
+	COUNT_ZEROS_TEST(0x80000000U, 31);
 	
 	return boost::report_errors();
 }

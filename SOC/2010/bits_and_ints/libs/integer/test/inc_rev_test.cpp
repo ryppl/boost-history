@@ -17,7 +17,7 @@ BOOST_TEST(a == b)
 int main()
 {
 	using boost::inc_rev;
-	uint8_t c = 0;
+	boost::uint8_t c = 0;
 	
 	INC_REV_TEST((c = inc_rev(c)), 128);
 	INC_REV_TEST((c = inc_rev(c)), 64);
