@@ -69,6 +69,7 @@ TODO:
 #include <limits>
 
 
+#include <boost/mpl/logical.hpp>
 #include <boost/ratio.hpp>
 #include <boost/type_traits/common_type.hpp>
 #include <boost/system/error_code.hpp>
@@ -502,7 +503,7 @@ struct common_type<chrono::time_point<Clock, Duration1>,
 //                                                                            //
 //----------------------------------------------------------------------------//
 
-
+    
 namespace chrono {
 
     template <class Rep, class Period>
@@ -521,14 +522,17 @@ namespace chrono {
         BOOST_CHRONO_CONSTEXPR duration() { } // = default;
         template <class Rep2>
         BOOST_CHRONO_CONSTEXPR explicit duration(const Rep2& r,
-            typename boost::enable_if_c
-                <
-                (   (boost::is_convertible<Rep2, rep>::value)
-                &&  ((treat_as_floating_point<rep>::value)
-                    || (    !treat_as_floating_point<rep>::value
-                        &&  !treat_as_floating_point<Rep2>::value)
-                    )
-                )
+            typename boost::enable_if <
+                    mpl::and_ <   
+                        boost::is_convertible<Rep2, rep>,
+                        mpl::or_ <
+                            treat_as_floating_point<rep>,
+                            mpl::and_ <    
+                                mpl::not_ < treat_as_floating_point<rep> >,
+                                mpl::not_ < treat_as_floating_point<Rep2> >
+                            >
+                        >
+                    >
                 >::type* = 0)
                   : rep_(r) { }
         ~duration() {} //= default;
@@ -542,12 +546,14 @@ namespace chrono {
         // conversions
         template <class Rep2, class Period2>
         BOOST_CHRONO_CONSTEXPR duration(const duration<Rep2, Period2>& d,
-            typename boost::enable_if_c
-                <
-                (   (treat_as_floating_point<rep>::value)
-                || (    (ratio_divide<Period2, period>::type::den == 1)
-                    &&  (!treat_as_floating_point<Rep2>::value))
-                )
+            typename boost::enable_if <
+                    mpl::or_ < 
+                        treat_as_floating_point<rep>,
+                        mpl::and_ < 
+                            mpl::bool_ < ratio_divide<Period2, period>::type::den == 1>,
+                            mpl::not_ < treat_as_floating_point<Rep2> >
+                        >
+                    >
                 >::type* = 0)
 #ifdef        __GNUC__
             // GCC 4.2.4 refused to accept a definition at this point,
@@ -621,12 +627,12 @@ namespace chrono {
 
   template <class Rep1, class Period, class Rep2>
   inline
-  typename boost::enable_if_c
-    <
-        (   (boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>::value)
-        &&  (boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>::value)
-        ),
-        duration<typename common_type<Rep1, Rep2>::type, Period>
+  typename boost::enable_if <
+    mpl::and_ < 
+        boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>, 
+        boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>
+    >,
+    duration<typename common_type<Rep1, Rep2>::type, Period>
   >::type
   operator*(const duration<Rep1, Period>& d, const Rep2& s)
   {
@@ -638,12 +644,12 @@ namespace chrono {
 
   template <class Rep1, class Period, class Rep2>
   inline
-  typename boost::enable_if_c
-    <
-        (   (boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>::value)
-        &&  (boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>::value)
-        ),
-        duration<typename common_type<Rep1, Rep2>::type, Period>
+  typename boost::enable_if <
+    mpl::and_ < 
+        boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>,
+        boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>
+    >,
+    duration<typename common_type<Rep1, Rep2>::type, Period>
   >::type
   operator*(const Rep1& s, const duration<Rep2, Period>& d)
   {
@@ -1081,12 +1087,14 @@ template <class Clock, class Duration>
     template <class Rep, class Period>
     template <class Rep2, class Period2>
     BOOST_CHRONO_CONSTEXPR duration<Rep, Period>::duration(const duration<Rep2, Period2>& d,
-        typename boost::enable_if_c
-            <
-            (   (treat_as_floating_point<rep>::value)
-            || (    (ratio_divide<Period2, period>::type::den == 1)
-                &&  (!treat_as_floating_point<Rep2>::value))
-            )
+        typename boost::enable_if <
+            mpl::or_ < 
+                treat_as_floating_point<rep>,
+                mpl::and_ <
+                    mpl::bool_ <ratio_divide<Period2, period>::type::den == 1>,
+                    mpl::not_ <treat_as_floating_point<Rep2> >
+                >
+            >
             >::type*)
           : rep_(duration_cast<duration>(d).count()) {}
 #endif
