@@ -3466,7 +3466,7 @@ A __time_point__ represents a point in time with respect to a specific clock.
 
         // conversions
         template <class Duration2>
-        time_point(const __time_point__<clock, Duration2>& t);
+        time_point(const time_point<clock, Duration2>& t);
 
         // observer
 
@@ -3688,7 +3688,7 @@ The `system_clock` class provides a means of obtaining the current wall-clock ti
         typedef BOOST_SYSTEM_CLOCK_DURATION          duration;
         typedef duration::rep                        rep;
         typedef duration::period                     period;
-        typedef chrono::__time_point__<system_clock>     time_point;
+        typedef chrono::time_point<system_clock>     time_point;
         static const bool is_monotonic =             false;
 
         static time_point  now();                         // throws on error
@@ -3737,7 +3737,7 @@ __monotonic_clock__ class provides access to the system-wide monotonic clock. Th
             typedef nanoseconds                          duration;
             typedef duration::rep                        rep;
             typedef duration::period                     period;
-            typedef chrono::__time_point__<monotonic_clock>  time_point;
+            typedef chrono::time_point<monotonic_clock>  time_point;
             static const bool is_monotonic =             true;
 
             static time_point  now();                         // throws on error
@@ -3800,7 +3800,7 @@ __process_real_cpu_clock__ class provides access to the real process wall-clock 
             typedef nanoseconds                          duration;
             typedef duration::rep                        rep;
             typedef duration::period                     period;
-            typedef chrono::__time_point__<process_real_cpu_clock>    time_point;
+            typedef chrono::time_point<process_real_cpu_clock>    time_point;
             static const bool is_monotonic =             true;
 
             static time_point now( system::error_code & ec = system::throws );
@@ -3819,7 +3819,7 @@ __process_user_cpu_clock__ class provides access to the user CPU-time monotonic 
             typedef nanoseconds                          duration;
             typedef duration::rep                        rep;
             typedef duration::period                     period;
-            typedef chrono::__time_point__<process_user_cpu_clock>    time_point;
+            typedef chrono::time_point<process_user_cpu_clock>    time_point;
             static const bool is_monotonic =             true;
 
             static time_point now( system::error_code & ec = system::throws );
@@ -3839,7 +3839,7 @@ __process_system_cpu_clock__ class provides access to the system CPU-time monoto
             typedef nanoseconds                          duration;
             typedef duration::rep                        rep;
             typedef duration::period                     period;
-            typedef chrono::__time_point__<process_system_cpu_clock>    time_point;
+            typedef chrono::time_point<process_system_cpu_clock>    time_point;
             static const bool is_monotonic =             true;
 
             static time_point now( system::error_code & ec = system::throws );
@@ -3864,14 +3864,14 @@ The process relative real, user and system current time can be obtained at once 
         typedef duration<times,  nano>                duration;
         typedef duration::rep                       rep;
         typedef duration::period                    period;
-        typedef chrono::__time_point__<process_cpu_clock>  time_point;
+        typedef chrono::time_point<process_cpu_clock>  time_point;
         static const bool is_monotonic =           true;
 
         static time_point now( system::error_code & ec = system::throws );
     };
 
     template <>
-    struct __duration_values__<process_cpu_clock::times>;
+    struct duration_values<process_cpu_clock::times>;
 
 
 [section:times Class `times`]
@@ -3956,7 +3956,7 @@ __thread_clock__ class provides access to the real thread wall-clock, i.e. the r
             typedef nanoseconds                          duration;
             typedef duration::rep                        rep;
             typedef duration::period                     period;
-            typedef chrono::__time_point__<thread_clock>    time_point;
+            typedef chrono::time_point<thread_clock>    time_point;
             static const bool is_monotonic =             BOOST_CHRONO_THREAD_CLOCK_IS_MONOTONIC;
 
             static time_point now( system::error_code & ec = system::throws );
@@ -4238,7 +4238,7 @@ Models of `Stopwatch`:
         struct dont_start_t;
         static const dont_start_t dont_start;
 
-        template <class Clock=high_resolution_clock> class stopwatch;
+        template <class Clock=high_resolution_clock> class __stopwatch__;
 
         template <class Clock>
         struct stopwatch_reporter_default_formatter<stopwatch<Clock> > {
@@ -4385,7 +4385,7 @@ The library provides stopwatch short cuts for all the models of __Clock__, repla
 [/==================================================]
 
     namespace boost { namespace chrono  {
-        template <class Clock, class Accumulator> class stopwatch_accumulator;
+        template <class Clock, class Accumulator> class __stopwatch_accumulator__;
 
         template <class Clock, class Accumulator>
         struct stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock, Accumulator> > {
@@ -4676,7 +4676,7 @@ The nested typedef `type` defines the default formatter used by the __stopwatch_
 
         template <class Stopwatch, 
                   class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type>
-        class stopwatch_reporter;
+        class __stopwatch_reporter__;
         
         template <class Stopwatch>
         struct wstopwatch_reporter_default_formatter;
@@ -4891,7 +4891,7 @@ Usage
 
     namespace boost { namespace chrono {
         template < class Clock, class Formatter > class basic_stopclock;
-        template < class Clock, class Formatter > class stopclock;
+        template < class Clock, class Formatter > class __stopclock__;
         template < class Clock, class Formatter > class wstopclock;
 
         typedef <see above> system_stopclock;
@@ -5100,7 +5100,7 @@ The library provides wstopclock shortcuts for all the models of __Clock__, repla
         template < class Clock, class Formatter >
         class basic_stopclock_accumulator;
         template < class Clock, class Formatter >
-        class stopclock_accumulator;
+        class __stopclock_accumulator__;
         template < class Clock, class Formatter >
         class wstopclock_accumulator;
 
@@ -5930,7 +5930,7 @@ All the units are given using the suffix "s" following the System International 
 [*Bug Fixes]
 
 * Valgrind fixes: "Conditional jump or move depends on uninitialised value(s)"
-
+* gcc.4.4 "warning: suggest parentheses around '&&' within '||' " removal.
 
 [endsect]
 
@@ -6439,7 +6439,7 @@ boost::chrono::duration<boost::chrono::process_cpu_clock::times, boost::ratio<1l
 ..\..\../boost/chrono/chrono.hpp:816: warning: suggest parentheses around '&&' within '||'
 ..\..\../boost/chrono/chrono.hpp:816: warning: suggest parentheses around '&&' within '||'
 
-] [???]                  [*Open*]]
+] [???]                  [Closed]]
     [[19]    [Use of Specific formatters doesn't works] []                  [Closed]]
 
     [[20]    [boost/chrono/scoped_suspend.hpp(31) : warning C4520: 'boost::chrono::scoped_suspend<Clock>' : multiple default constructors specified

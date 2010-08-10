@@ -2218,8 +2218,7 @@
 
     <span class="comment">// conversions
 </span>    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Duration2</span><span class="special">&gt;</span>
-    <span class="identifier">time_point</span><span class="special">(</span><span class="keyword">const</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;&amp;</span> <span class="identifier">t</span><span class="special">);</span>
+    <span class="identifier">time_point</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;&amp;</span> <span class="identifier">t</span><span class="special">);</span>
 
     <span class="comment">// observer
 </span>
@@ -2657,8 +2656,7 @@
     <span class="keyword">typedef</span> <span class="identifier">BOOST_SYSTEM_CLOCK_DURATION</span>          <span class="identifier">duration</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span>                        <span class="identifier">rep</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span>                     <span class="identifier">period</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">system_clock</span><span class="special">&gt;</span>     <span class="identifier">time_point</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">system_clock</span><span class="special">&gt;</span>     <span class="identifier">time_point</span><span class="special">;</span>
     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="keyword">false</span><span class="special">;</span>
 
     <span class="keyword">static</span> <span class="identifier">time_point</span>  <span class="identifier">now</span><span class="special">();</span>                         <span class="comment">// throws on error
@@ -2746,8 +2744,7 @@
         <span class="keyword">typedef</span> <span class="identifier">nanoseconds</span>                          <span class="identifier">duration</span><span class="special">;</span>
         <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span>                        <span class="identifier">rep</span><span class="special">;</span>
         <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span>                     <span class="identifier">period</span><span class="special">;</span>
-        <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">monotonic_clock</span><span class="special">&gt;</span>  <span class="identifier">time_point</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">monotonic_clock</span><span class="special">&gt;</span>  <span class="identifier">time_point</span><span class="special">;</span>
         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="keyword">true</span><span class="special">;</span>
 
         <span class="keyword">static</span> <span class="identifier">time_point</span>  <span class="identifier">now</span><span class="special">();</span>                         <span class="comment">// throws on error
