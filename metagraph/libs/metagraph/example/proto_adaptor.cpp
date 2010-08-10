@@ -127,6 +127,8 @@ struct proto_preorder_dfs :
 typedef BOOST_TYPEOF(_1*12/_2) expr_type;
 typedef proto_preorder_dfs<expr_type>::type pre_expr_travs;
 
+// print a nice error message showing that the traversal worked.  
+// will show the preorder traversal *in reverse order*, because push_back is lazy
 BOOST_MPL_ASSERT(( mpl::equal<pre_expr_travs, void > ));
 
 int main()
