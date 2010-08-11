@@ -1,7 +1,6 @@
 //
 //=======================================================================
-// Copyright 1997-2001 University of Notre Dame.
-// Authors: Jeremy G. Siek, Lie-Quan Lee, Andrew Lumsdaine
+// Copyright (C) 2010 Davi M. J. Barbosa
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -15,100 +14,103 @@
 #include <utility>
 #include <boost/graph/global_vertex_mapping.hpp>
 #include <boost/graph/graph_traits.hpp>
+#include <boost/graph/default.hpp>
 
 namespace boost {
+  namespace detail {
+    template <typename Graph, typename MutableGraph,
+              typename MergeVertices, typename SetVertexLabel,
+              typename MergeEdges, typename SetEdgeLabel>
+    void graph_intersection_impl(const Graph& g1, const Graph& g2, MutableGraph& g_out,
+                                 MergeVertices merge_vertices,
+                                 SetVertexLabel set_vertex_label,
+                                 MergeEdges merge_edges,
+                                 SetEdgeLabel set_edge_label)
+    {
+      typedef typename graph_traits<Graph>::vertex_descriptor InVertex;
+      typedef typename graph_traits<MutableGraph>::vertex_descriptor OutVertex;
 
-  // Question:
-  // Should we have a function to iterate over vertex making a copy if a predicates holds and another one for edges?
-  // This code pattern appears everywhere.
+      auto & gl1 = get_property(g1);
+      auto & gl2 = get_property(g2);
+      auto & gl_out = get_property(g_out);
 
-  template <class VertexListGraph, class MutableGraph> 
-  void graph_intersection(const VertexListGraph& g1, const VertexListGraph& g2, MutableGraph& g_out)
+      // copy vertices from (g1 intersection g2)
+      typename graph_traits < Graph >::vertex_iterator vi, vi_end;
+      for (tie(vi, vi_end) = vertices(g1); vi != vi_end; ++vi) {
+        if ( gl2.vertices.find( g1[*vi].name ) != gl2.vertices.end() ) { // if vi is in g2
+          OutVertex new_v = add_vertex(g_out);
+          merge_vertices(*vi, g1, gl2.vertices.find ( g1[*vi].name )->second, g2, new_v, g_out);
+          set_vertex_label(g1[*vi].name, new_v, g_out);
+          assert( g_out[new_v].name == g1[*vi].name ); // set_vertex_label did it
+          assert( gl_out.vertices[ g1[*vi].name ] == new_v ); // set_vertex_label did it
+        }
+      }
+
+      typename graph_traits < Graph >::edge_iterator ei, ei_end;
+      typename graph_traits < MutableGraph >::edge_descriptor new_e;
+      bool inserted;
+      // copy edges from (g1 intersection g2)
+      for (tie(ei, ei_end) = edges(g1); ei != ei_end; ++ei) {
+        auto src  = g1[source(*ei, g1)].name;
+        auto targ = g1[target(*ei, g1)].name;
+        assert( gl_out.vertices.find(src)  != gl_out.vertices.end() );
+        assert( gl_out.vertices.find(targ) != gl_out.vertices.end() );
+
+        if ( gl2.edges.find( g1[*ei].name ) != gl2.edges.end() ) { // if ei is in g2
+          boost::tie(new_e, inserted) = add_edge(gl_out.vertices[src], gl_out.vertices[targ], g_out);
+          assert( inserted );
+          //          merge_edges(*ei, g1, gl2.edges[ g1[*ei].name ], g2, new_e, g_out); // Does not compile! Why?
+          merge_edges(*ei, g1, gl2.edges.find( g1[*ei].name )->second, g2, new_e, g_out);
+          set_edge_label(g1[*ei].name, new_e, g_out);
+          assert( g_out[new_e].name == g1[*ei].name ); // set_edge_label did it
+          assert( gl_out.edges[ g1[*ei].name ] == new_e ); // set_edge_label did it
+        }
+      }
+    }
+  } // namespace detail
+
+  template <typename Graph, typename MutableGraph>
+  void graph_intersection(const Graph& g1, const Graph& g2, MutableGraph& g_out)
   {
-    typedef typename graph_traits<VertexListGraph>::vertex_descriptor InVertex;
-    typedef typename graph_traits<MutableGraph>::vertex_descriptor OutVertex;
-
-    // we only copy properties from g1
-    detail::vertex_copier<VertexListGraph, MutableGraph> copy_vertex = detail::make_vertex_copier(g1, g_out);
-    detail::edge_copier<VertexListGraph, MutableGraph> copy_edge = detail::make_edge_copier(g1, g_out);
-
-    auto & gl1 = get_property(g1, graph_label).hack->vertices; // c++ 0x
-    auto & gl2 = get_property(g2, graph_label).hack->vertices;
-    auto & gl_out = get_property(g_out, graph_label).hack->vertices;
-
-    // copy vertices from (g1 intersection g2)
-    typename graph_traits < VertexListGraph >::vertex_iterator vi, vi_end;
-    for (tie(vi, vi_end) = vertices(g1); vi != vi_end; ++vi) {
-      if ( gl2.find( g1[*vi].name ) != gl2.end() ) { // if vi is in g2
-        OutVertex new_v = add_vertex(g_out);
-        copy_vertex(*vi, new_v);
-        assert( g_out[new_v].name == g1[*vi].name ); // copy_vertex already did it
-        gl_out[ g1[*vi].name ] = new_v;
-      }
-    }
-
-    // copy edges from (g1 intersection g2)
-    // *not* using the edge name! (but checking with an assert)
-    typename graph_traits < VertexListGraph >::edge_iterator ei, ei_end;
-    for (tie(ei, ei_end) = edges(g1); ei != ei_end; ++ei) {
-      auto src  = g1[source(*ei, g1)].name;
-      auto targ = g1[target(*ei, g1)].name;
-      auto g2_s = gl2.find(src);
-      auto g2_t = gl2.find(targ);
-
-      if ( (g2_s != gl2.end() && g2_t != gl2.end() && edge(g2_s->second, g2_t->second, g2).second) ) {
-        assert( gl_out.find(src)  != gl_out.end() );
-        assert( gl_out.find(targ) != gl_out.end() );
-        assert( g1[ *ei ].name == g2[ edge(g2_s->second, g2_t->second, g2).first ].name );
-
-        typename graph_traits<MutableGraph>::edge_descriptor new_e;
-        bool inserted;
-        boost::tie(new_e, inserted) = add_edge(gl_out[src], gl_out[targ], g_out);
-        copy_edge(*ei, new_e);
-        assert( g_out[new_e].name == g1[*ei].name ); // copy_edge already did it
-        get_property(g_out, graph_label).hack->edges[ g1[*ei].name ] = new_e;
-      }
-    }
-
-#if 0
-    // if we use the edge name, the code is the following:
-    // copy edges from (g1 intersection g2)
-    typename graph_traits < VertexListGraph >::edge_iterator ei, ei_end;
-    for (tie(ei, ei_end) = edges(g1); ei != ei_end; ++ei) {
-      auto gl2e = get_property(g2, graph_label).hack->edges;
-
-      if ( gl2e.find( g1[*ei].name ) != gl2e.end() ) {
-        auto out_s = gl_out.find( g1[source(*ei, g1)].name );
-        auto out_t = gl_out.find( g1[target(*ei, g1)].name );
-
-        assert(out_s != gl_out.end() && out_t != gl_out.end());
-        assert( g2[ source(gl2e[g1[*ei].name], g2) ].name == g1[ source(*ei, g1) ].name);
-        assert( g2[ target(gl2e[g1[*ei].name], g2) ].name == g1[ target(*ei, g1) ].name);
-
-        typename graph_traits<MutableGraph>::edge_descriptor new_e;
-        bool inserted;
-        boost::tie(new_e, inserted) = add_edge(out_s->second, out_t->second, g_out);
-        copy_edge(*ei, new_e);
-        assert( g_out[new_e].name == g1[*ei].name ); // copy_edge already did it
-        get_property(g_out, graph_label).hack->edges[ g1[*ei].name ] = new_e;
-      }
-    }
-#endif // if 0
+    detail::graph_intersection_impl
+      (g1, g2, g_out,
+       detail::default_vertices_merge<Graph, MutableGraph>(),
+       detail::default_set_vertex_label<MutableGraph>(),
+       detail::default_edges_merge<Graph, MutableGraph>(),
+       detail::default_set_edge_label<MutableGraph>()
+       );
   }
 
+  template <typename Graph, typename MutableGraph,
+            typename P, typename T, typename R>
+  void graph_intersection(const Graph& g1, const Graph& g2, MutableGraph& g_out,
+                          const bgl_named_params<P, T, R>& params)
+  {
+    detail::graph_intersection_impl
+      (g1, g2, g_out,
+       choose_param(get_param(params, vertices_merge_t()),
+                    detail::default_vertices_merge<Graph, MutableGraph>()),
+       choose_param(get_param(params, set_vertex_label_t()),
+                    detail::default_set_vertex_label<MutableGraph>()),
+       choose_param(get_param(params, edges_merge_t()),
+                    detail::default_edges_merge<Graph, MutableGraph>()),
+       choose_param(get_param(params, set_edge_label_t()),
+                    detail::default_set_edge_label<MutableGraph>())
+       );
+  }
 
   // Version with globalVertexMapping
-  template <class VertexListGraph, class MutableGraph, class globalVertexMapping> 
-  void gvm_graph_intersection(const VertexListGraph& g1, const VertexListGraph& g2, globalVertexMapping m, MutableGraph& g_out)
+  template <class Graph, class MutableGraph, class globalVertexMapping> 
+  void gvm_graph_intersection(const Graph& g1, const Graph& g2, globalVertexMapping m, MutableGraph& g_out)
   {
-    typedef typename graph_traits<VertexListGraph>::vertex_descriptor InVertex;
+    typedef typename graph_traits<Graph>::vertex_descriptor InVertex;
     typedef typename graph_traits<MutableGraph>::vertex_descriptor OutVertex;
 
-    detail::vertex_copier<VertexListGraph, MutableGraph> copy_vertex = detail::make_vertex_copier(g1, g_out);
-    detail::edge_copier<VertexListGraph, MutableGraph> copy_edge = detail::make_edge_copier(g1, g_out);
+    detail::vertex_copier<Graph, MutableGraph> copy_vertex = detail::make_vertex_copier(g1, g_out);
+    detail::edge_copier<Graph, MutableGraph> copy_edge = detail::make_edge_copier(g1, g_out);
 
     // copy vertices from (g1 intersection g2)
-    typename graph_traits < VertexListGraph >::vertex_iterator vi, vi_end;
+    typename graph_traits < Graph >::vertex_iterator vi, vi_end;
     for (tie(vi, vi_end) = vertices(g1); vi != vi_end; ++vi) {
       std::pair < InVertex, bool > v = m.find_vertex( g1, *vi, g2 ); // search for vi in g2
       if (v.second == true) { // vi is also in g2
@@ -121,7 +123,7 @@ namespace boost {
     }
 
     // copy edges from (g1 intersection g2)
-    typename graph_traits < VertexListGraph >::edge_iterator ei, ei_end;
+    typename graph_traits < Graph >::edge_iterator ei, ei_end;
     for (tie(ei, ei_end) = edges(g1); ei != ei_end; ++ei) {
       std::pair < InVertex,  bool > g2_s, g2_t;
       std::pair < OutVertex, bool > out_s, out_t;

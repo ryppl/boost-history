@@ -1,3 +1,13 @@
+//
+//=======================================================================
+// Copyright (C) 2010 Davi M. J. Barbosa
+//
+// Distributed under the Boost Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+//=======================================================================
+//
+
 #include <iostream>                  // for std::cout
 #include <utility>                   // for std::pair
 #include <algorithm>                 // for std::for_each
@@ -9,6 +19,7 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_utility.hpp>
 
+#include <boost/graph/copy.hpp>
 #include <boost/graph/union.hpp>
 
 using namespace boost;
@@ -37,34 +48,25 @@ typedef graph_traits<Graph1>::vertex_iterator VertexIterator1;
 typedef graph_traits<Graph2>::vertex_iterator VertexIterator2;
 
 template <typename G1, typename G2>
-struct vertex_copier {
-  vertex_copier(const G1& g1, G2& g2)
-    : vertex_all_map1(get(vertex_all, g1)), 
-      vertex_all_map2(get(vertex_all, g2)) { }
-  
-  template <typename Vertex1, typename Vertex2>
-  void operator()(const Vertex1& v1, Vertex2& v2) const {
-    //    cout << "Copying vertex " << v1 << endl;
-    put(vertex_all_map2, v2, get(vertex_all_map1, v1));
+struct my_copier {
+  typedef typename graph_traits<G1>::vertex_descriptor Vertex1;
+  typedef typename graph_traits<G2>::vertex_descriptor Vertex2;
+  void operator()(const Vertex1& v1, const G1& g1, Vertex2& v2, G2& g2) {
+    put(get(vertex_all, g2), v2, get(get(vertex_all, g1), v1));
   }
-  typename property_map<G1, vertex_all_t>::const_type vertex_all_map1;
-  mutable typename property_map<G2, vertex_all_t>::type vertex_all_map2;
 };
 
-
 template <typename G1, typename G2>
-struct mycopier {
-  mycopier(const G1& _g1, G2& _g2, int _add, float _factor)
-    : g1(_g1), g2(_g2), add(_add), factor(_factor) { }
-  
+struct my_copier2 {
+  my_copier2(int _add, float _factor)
+    : add(_add), factor(_factor) { }
+
   template <typename Vertex1, typename Vertex2>
-  void operator()(const Vertex1& v1, Vertex2& v2) const {
+  void operator()(const Vertex1& v1, const G1& g1, Vertex2& v2, G2& g2) {
     g2[v2].name = g1[v1].name;
     g2[v2].id = g1[v1].id + add;
     g2[v2].value = g1[v1].value*factor;
   }
-  const G1& g1;
-  G2& g2;
   int add;
   float factor;
 };
@@ -126,13 +128,14 @@ int main(int,char*[])
   cout << "g3:" << endl;
   print(g3);
 
-  vertex_copier<Graph1, Graph1> c1(g1, g4), c2(g2, g4);
-  graph_disjoint_union(g1, g2, g4, vertex_copy(make_pair(c1, c2)));
+  graph_disjoint_union(g1, g2, g4, vertex_copy(my_copier<Graph1, Graph1>()));
   cout << "g4:" << endl;
   print(g4);
 
-  mycopier<Graph1, Graph2> cc1(g1, h1, 10, -2.1111), cc2(g2, h1, 100, 2);
-  graph_disjoint_union(g1, g2, h1, vertex_copy(make_pair(cc1, cc2)));
+  graph_disjoint_union(g1, g2, g4, vertex_copy(my_copier<Graph1, Graph1>()));
+
+
+  graph_disjoint_union(g1, g2, h1, vertex_copy(my_copier2<Graph1, Graph2>(100, 10)));
   cout << "h1:" << endl;
   print(h1);
 

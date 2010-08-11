@@ -1,3 +1,13 @@
+//
+//=======================================================================
+// Copyright (C) 2010 Davi M. J. Barbosa
+//
+// Distributed under the Boost Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+//=======================================================================
+//
+
 #include <iostream>                  // for std::cout
 #include <utility>                   // for std::pair
 #include <algorithm>                 // for std::for_each
