@@ -442,7 +442,7 @@ void write_handler(const boost::system::error_code &ec,
     std::size_t bytes_transferred) 
 { 
     BOOST_REQUIRE_EQUAL(ec, boost::system::error_code()); 
-    BOOST_CHECK_EQUAL(bytes_transferred, 4u); 
+    BOOST_CHECK_EQUAL(bytes_transferred, 5u); 
 } 
 
 void read_handler(const boost::system::error_code &ec, 
@@ -453,17 +453,17 @@ void read_handler(const boost::system::error_code &ec,
     std::string line; 
     std::getline(is, line); 
 #if defined(BOOST_POSIX_API) 
-    BOOST_CHECK_EQUAL(line, "test"); 
+    BOOST_CHECK_EQUAL(line, "async-test"); 
 #elif defined(BOOST_WINDOWS_API) 
-    BOOST_CHECK_EQUAL(line, "test\r"); 
+    BOOST_CHECK_EQUAL(line, "async-test\r"); 
 #endif 
 } 
 
 BOOST_AUTO_TEST_CASE(test_async) 
 { 
     std::vector<std::string> args; 
-    args.push_back("echo-stdout"); 
-    args.push_back("test"); 
+    args.push_back("prefix-once"); 
+    args.push_back("async-"); 
 
     bp::context ctx; 
     ctx.stdin_behavior = bp::behavior::named_pipe::create( 
@@ -479,7 +479,7 @@ BOOST_AUTO_TEST_CASE(test_async)
     bp::pipe write_end(ioservice, os.handle().release()); 
     bp::pipe read_end(ioservice, is.handle().release()); 
 
-    ba::async_write(write_end, ba::buffer("test", 4), write_handler); 
+    ba::async_write(write_end, ba::buffer("test\n", 5), write_handler); 
     ba::streambuf buf; 
     ba::async_read_until(read_end, buf, '\n', boost::bind(read_handler, 
         ba::placeholders::error, ba::placeholders::bytes_transferred, 

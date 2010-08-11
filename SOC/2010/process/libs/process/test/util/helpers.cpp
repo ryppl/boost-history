@@ -135,6 +135,14 @@ int h_prefix(int argc, char *argv[])
     return EXIT_SUCCESS; 
 } 
 
+int h_prefix_once(int argc, char *argv[]) 
+{ 
+    std::string line; 
+    std::getline(std::cin, line); 
+    std::cout << argv[1] << line << std::endl; 
+    return EXIT_SUCCESS; 
+} 
+
 int h_pwd(int argc, char *argv[]) 
 { 
     std::cout << bfs::current_path().string() << std::endl; 
@@ -243,6 +251,7 @@ struct helper
     { "is-nul-stderr", h_is_nul_stderr, 1, "" }, 
     { "loop", h_loop, 1, "" }, 
     { "prefix", h_prefix, 2, "string" }, 
+    { "prefix-once", h_prefix_once, 2, "string" }, 
     { "pwd", h_pwd, 1, "" }, 
     { "query-env", h_query_env, 2, "variable" }, 
     { "stdin-to-stdout", h_stdin_to_stdout, 1, "" }, 

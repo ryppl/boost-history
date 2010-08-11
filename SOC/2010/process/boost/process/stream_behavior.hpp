@@ -213,6 +213,12 @@ public:
         child_end_ = open(s.c_str(), O_RDONLY | O_NONBLOCK);
         if (!child_end_.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
+        int opts = fcntl(child_end_.native(), F_GETFL);
+        if (opts == -1)
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("fcntl(2) failed");
+        opts ^= O_NONBLOCK;
+        if (fcntl(child_end_.native(), F_SETFL, opts) == -1)
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("fcntl(2) failed");
         parent_end_ = open(s.c_str(), O_WRONLY);
         if (!parent_end_.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
