@@ -19,7 +19,8 @@
 #include <boost/range/iterator.hpp>
 #include <boost/range/as_literal.hpp>
 
-#include <boost/algorithm/string/finder.hpp>
+#include <boost/algorithm/string/finder/generated_finders.hpp>
+#include <boost/algorithm/string/finder/default_search_algorithm.hpp>
 #include <boost/algorithm/string/compare.hpp>
 #include <boost/algorithm/string/constants.hpp>
 
@@ -29,7 +30,7 @@
     delimiting the substring.
 */
 
-//!\todo update doc here
+//todo update doc here
 
 namespace boost {
     namespace algorithm {
@@ -54,7 +55,7 @@ namespace boost {
             BOOST_STRING_TYPENAME range_iterator<RangeT>::type>
         find( 
             RangeT& Input, 
-            const FinderT& Finder)
+            FinderT& Finder)
         {
             
             iterator_range<BOOST_STRING_TYPENAME range_iterator<RangeT>::type> lit_input(::boost::as_literal(Input));
@@ -85,10 +86,10 @@ namespace boost {
             const Range2T& Search,
             AlgorithmTagT const &algorithm)
         {
-            boost::algorithm::simplified_finder_t<Range2T, Range1T, typename AlgorithmTagT::type>
-                finder(&Search, &Input);
-            return finder.find_first();
-            //return ::boost::algorithm::find(Input, ::boost::algorithm::first_finder(Search));
+            return ::boost::algorithm::find(Input,
+                ::boost::algorithm::first_finder_t<Range2T,Range1T,
+                    typename AlgorithmTagT::type,::boost::algorithm::is_equal>(&Search)
+                );
         }
 
         template<typename Range1T, typename Range2T>
@@ -127,9 +128,13 @@ namespace boost {
             AlgorithmTagT const &,
             const std::locale& Loc=std::locale())
         {
-            boost::algorithm::simplified_finder_t<Range2T, Range1T, typename AlgorithmTagT::type,
-                ::boost::algorithm::is_iequal> finder(&Search, &Input, ::boost::algorithm::is_iequal(Loc));
-            return finder.find_first();
+            //boost::algorithm::simplified_finder_t<Range2T, Range1T, typename AlgorithmTagT::type,
+            //    ::boost::algorithm::is_iequal> finder(&Search, &Input, ::boost::algorithm::is_iequal(Loc));
+            //return finder.find_first();
+            return ::boost::algorithm::find(Input,
+                ::boost::algorithm::first_finder_t<Range2T,Range1T,
+                    typename AlgorithmTagT::type,::boost::algorithm::is_iequal>(&Search, ::boost::algorithm::is_iequal(Loc))
+                );
         }
 
         template<typename Range1T, typename Range2T>
@@ -168,9 +173,7 @@ namespace boost {
             const Range2T& Search,
             AlgorithmTagT const &)
         {
-            //!\todo find a way to use rbegin and rend here (via boost::adaptors::reversed)
-            //      if they are available (i.e. if the ranges are bidirectional at least)
-            //!\TODO IMPORTANT FIX this so it works (the final if check does not work properly)
+            /*
             simplified_finder_t<Range2T, Range1T, typename AlgorithmTagT::type>
                 finder(&Search, &Input);
             boost::iterator_range<typename boost::range_iterator<Range1T>::type>
@@ -180,17 +183,25 @@ namespace boost {
             {
                 prev=crt;
                 crt=finder.find_next();
-                if (boost::begin(crt) == boost::end(Input)) break;
+                //note: we don't use boost::end(Input) on the rhs, because Input can be a character
+                //array, which means we would have to apply boost::as_literal to Input first.
+                //however, the finder does that for us before saving the range, so we use the internal
+                //range instead.
+                if (boost::begin(crt) == boost::end(finder.get_string_range())) break;
             }
             return prev;
-
+            */
+            return ::boost::algorithm::find(Input,
+                ::boost::algorithm::last_finder_t<Range2T,Range1T,
+                    typename AlgorithmTagT::type,::boost::algorithm::is_equal>(&Search)
+                );
             //return ::boost::algorithm::find(Input, ::boost::algorithm::last_finder(Search));
         }
 
         template<typename Range1T, typename Range2T>
         inline iterator_range< 
             BOOST_STRING_TYPENAME range_iterator<Range1T>::type>
-            find_last( 
+        find_last( 
             Range1T& Input, 
             const Range2T& Search)
         {
@@ -214,6 +225,20 @@ namespace boost {
         
             \note This function provides the strong exception-safety guarantee    
         */
+        template<typename Range1T, typename Range2T, typename AlgorithmTagT>
+        inline iterator_range< 
+            BOOST_STRING_TYPENAME range_iterator<Range1T>::type>
+        ifind_last( 
+            Range1T& Input, 
+            const Range2T& Search,
+            AlgorithmTagT const &,
+            const std::locale& Loc=std::locale())
+        {
+            return ::boost::algorithm::find(Input,
+                ::boost::algorithm::last_finder_t<Range2T,Range1T,
+                    typename AlgorithmTagT::type,::boost::algorithm::is_iequal>(&Search, ::boost::algorithm::is_iequal(Loc)));
+        }
+
         template<typename Range1T, typename Range2T>
         inline iterator_range< 
             BOOST_STRING_TYPENAME range_iterator<Range1T>::type>
@@ -222,7 +247,8 @@ namespace boost {
             const Range2T& Search,
             const std::locale& Loc=std::locale())
         {
-            return ::boost::algorithm::find(Input, ::boost::algorithm::last_finder(Search, is_iequal(Loc)));
+            return ::boost::algorithm::ifind_last(Input, Search,
+                boost::algorithm::default_finder_algorithm_tag(), Loc);
         }
 
 //  find_nth ----------------------------------------------------------------------//
@@ -242,6 +268,23 @@ namespace boost {
                 \c Range1T::const_iterator, depending on the constness of 
                 the input parameter.
         */
+
+
+        template<typename Range1T, typename Range2T, typename AlgorithmTagT>
+        inline iterator_range< 
+            BOOST_STRING_TYPENAME range_iterator<Range1T>::type>
+            find_nth( 
+            Range1T& Input, 
+            const Range2T& Search,
+            int Nth,
+            AlgorithmTagT const &)
+        {
+            return ::boost::algorithm::find(Input, 
+                ::boost::algorithm::nth_finder_t<Range2T, Range1T,
+                    typename AlgorithmTagT::type, ::boost::algorithm::is_equal>(&Search, ::boost::algorithm::is_equal(), Nth)
+                    );
+        }
+
         template<typename Range1T, typename Range2T>
         inline iterator_range< 
             BOOST_STRING_TYPENAME range_iterator<Range1T>::type>
@@ -250,7 +293,8 @@ namespace boost {
             const Range2T& Search,
             int Nth)
         {
-            return ::boost::algorithm::find(Input, ::boost::algorithm::nth_finder(Search,Nth));
+            return ::boost::algorithm::find_nth(Input, Search, Nth,
+                ::boost::algorithm::default_finder_algorithm_tag());
         }
 
         //! Find n-th algorithm ( case insensitive ).
@@ -272,6 +316,21 @@ namespace boost {
 
             \note This function provides the strong exception-safety guarantee
         */
+        template <typename Range1T, typename Range2T, typename AlgorithmTagT>
+        inline iterator_range< 
+            BOOST_STRING_TYPENAME range_iterator<Range1T>::type>
+        ifind_nth (
+            Range1T& Input,
+            const Range2T &Search,
+            int Nth,
+            AlgorithmTagT const&,
+            const std::locale& Loc=std::locale())
+        {
+            return ::boost::algorithm::find(Input, 
+                ::boost::algorithm::nth_finder_t<Range2T, Range1T,
+                    typename AlgorithmTagT::type, ::boost::algorithm::is_iequal>(&Search, ::boost::algorithm::is_iequal(Loc), Nth));
+        }
+
         template<typename Range1T, typename Range2T>
         inline iterator_range< 
             BOOST_STRING_TYPENAME range_iterator<Range1T>::type>
@@ -281,7 +340,8 @@ namespace boost {
             int Nth,
             const std::locale& Loc=std::locale())
         {
-            return ::boost::algorithm::find(Input, ::boost::algorithm::nth_finder(Search,Nth,is_iequal(Loc)));
+            return ::boost::algorithm::ifind_nth(Input, Search, Nth,
+                ::boost::algorithm::default_finder_algorithm_tag(), Loc);
         }
 
 //  find_head ----------------------------------------------------------------------//

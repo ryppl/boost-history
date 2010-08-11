@@ -1,6 +1,9 @@
 #ifndef BOOST_STRING_FINDER_ALIASES_HPP
 #define BOOST_STRING_FINDER_ALIASES_HPP
 
+#include <boost/algorithm/string/finder/finder.hpp>
+#include <boost/algorithm/string/string_search.hpp>
+
 namespace boost { namespace algorithm {
     //Naive Search
     typedef boost::algorithm::finder_t<std::string, std::string,

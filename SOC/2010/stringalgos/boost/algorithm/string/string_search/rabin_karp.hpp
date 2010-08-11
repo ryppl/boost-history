@@ -13,24 +13,31 @@
 #include <boost/range/end.hpp>
 #include <string>
 #include <boost/lexical_cast.hpp>
-#include <boost/algorithm/string/finder.hpp>
-#include <boost/algorithm/string/detail/finder.hpp>
 #include <boost/algorithm/string/string_search/detail/rabin_karp.hpp>
+#include <boost/algorithm/string/finder/detail/finder_typedefs.hpp>
 #include <cassert>
 #include <limits>
 #include <boost/type_traits/is_same.hpp>
 
+/*!
+    \file
+    Implements the Rabin-Karp string search algorithm
+*/
+
 namespace boost { namespace algorithm {
 
-    //!\todo document the fact that it's approximate, how to make it deterministic
-    //      the limited comparators
-    //!\todo Make it work with case insensitive. Find a way to allow providing locales.
+    //todo Make it work with case insensitive. Find a way to allow providing locales.
 
-    //Note: this only works with comparator ==
-    //! \todo Implement a version that works with Input iterators?
-    //! \todo Make sure this only works with char and wchar_t
+    //TODO: Implement a version that works with Input iterators
+    //TODO: Make sure this only works with integral char types
+    //! A generic implementation of the string search algorithm Rabin-Karp
+    //! \warning This algorithm is approximate, meaning it can yield false positives (but not false negatives).
+    //!         In order to turn it into an exact matching algorithm, an extra equality check
+    //!         needs to be performed after a match has occurred.
+    //! \warning This algorithm is limited to using integral character types with
+    //!             the equality comparator only (this is because "rolling" hash
+    //!             functions need to be computed on the pattern and portions of text)
     template <
-        //bool Heuristic = true,
         class HashType,
         HashType FirstBase, HashType FirstModulo,
         HashType SecondBase, HashType SecondModulo>
@@ -51,7 +58,7 @@ namespace boost { namespace algorithm {
 		protected:
             //construct the algorithm given iterator ranges for the substring and the string
             algorithm () {
-                //!\todo add more assertions here
+                //todo add more assertions here
                 BOOST_STATIC_ASSERT((
                     sizeof(boost::range_value<Range1T>::type)*2 <= sizeof(HashType)
                 ));
@@ -62,7 +69,7 @@ namespace boost { namespace algorithm {
         private:
             inline void assert_overflow(HashType B, HashType M)
             {
-                //!\todo fix this
+                //todo fix this
                 //char_range_size = CHAR_MAX-CHAR_MIN+1
                 /*static const boost::uintmax_t char_range_size =
                     BOOST_ALGORITHM_DETAIL_ASSERTED_ADD(BOOST_ALGORITHM_DETAIL_ASSERTED_SUBSTRACT(
@@ -78,13 +85,18 @@ namespace boost { namespace algorithm {
         };
     };
 
-    //1/3732152659 odds of collision. useful with char
-    //!\todo replace with old one
+
+    //todo try to find better pairs for better efficiency?
+    //! An implementation of a 32bit version of Rabin-Karp
     typedef rabin_karp_algorithm<boost::uint_fast32_t,257,64433,277,57923> rabin_karp32;
     //1/150167080229379589 odds of collision. useful with wchar_t
+    //! An implementation of a 64bit version of Rabin-Karp
     typedef rabin_karp_algorithm<boost::uint64_t,337515847,373587883,255150899,401959183> rabin_karp64;
-
+    //! Instances of this type can be passed to find functions to require them to
+    //!     use the predefined 32bit Rabin-Karp algorithm.
     struct rabin_karp32_tag { typedef boost::algorithm::rabin_karp32 type; };
+    //! Instances of this type can be passed to find functions to require them to
+    //!     use the predefined 64bit Rabin-Karp algorithm.
     struct rabin_karp64_tag { typedef boost::algorithm::rabin_karp64 type; };
 } } // namespace algorithm, namespace boost
 

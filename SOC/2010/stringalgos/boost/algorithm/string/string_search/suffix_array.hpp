@@ -4,20 +4,29 @@
 #include <iterator>
 #include <vector>
 #include <algorithm>
+#include <string>
+
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/algorithm/sort.hpp>
-#include <boost/algorithm/string/finder.hpp>
-#include <string>
-#include <boost/algorithm/string/detail/finder.hpp>
+
+#include <boost/algorithm/string/finder/detail/finder_typedefs.hpp>
+
+/*!
+    \file
+    Implements a string search algorithm based on the suffix array data structure
+*/
 
 namespace boost { namespace algorithm {
+    //! An implementation of a string search algorithm using the suffix array data structure
+    //! \warning This algorithm can only work with the equality comparator (boost::algorithm::is_equal)
     struct suffix_array_search
     {
 
         //! \TODO this currently only works for boost::algorithm::is_equal as comparator because we don't yet have a template
         //!         parameter for LessThanComparator. Maybe we should pass two comparators, give it some thought.
+
         template <class Finder,class RandomAccessRange1T,
             class RandomAccessRange2T,class ComparatorT,class AllocatorT>
         class algorithm;
@@ -209,6 +218,8 @@ namespace boost { namespace algorithm {
 
         };
     };
+    //! Instances of this type can be passed to find functions to require them to
+    //!     use the Suffix Array Search algorithm.
     struct suffix_array_search_tag { typedef boost::algorithm::suffix_array_search type; };
 } }
 

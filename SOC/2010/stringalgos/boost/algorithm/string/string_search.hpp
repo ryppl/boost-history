@@ -1,7 +1,7 @@
 #ifndef BOOST_ALGORITHM_STRING_SEARCH_HPP
 #define BOOST_ALGORITHM_STRING_SEARCH_HPP
 
-//! \todo Make sure this header is included by boost/algorithm/string.hpp
+//todo Make sure this header is included by boost/algorithm/string.hpp
 
 #include <boost/algorithm/string/string_search/naive_search.hpp>
 #include <boost/algorithm/string/string_search/rabin_karp.hpp>

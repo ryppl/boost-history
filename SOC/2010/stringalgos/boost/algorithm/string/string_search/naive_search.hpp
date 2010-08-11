@@ -7,11 +7,18 @@
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <string>
-#include <boost/algorithm/string/finder.hpp>
-#include <boost/algorithm/string/detail/finder.hpp>
+
+#include <boost/algorithm/string/finder/detail/finder_typedefs.hpp>
+
+/*!
+    \file
+    Implements the naive string search algorithm
+*/
 
 namespace boost { namespace algorithm {
-    //! \todo Copyable
+    // todo Copyable
+
+    //! An implementation of the naive string search algorithm
 	struct naive_search
 	{
 
@@ -35,7 +42,8 @@ namespace boost { namespace algorithm {
                 typedef typename Finder::comparator_type comparator_type;*/
                 string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
                 substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
-                comparator_type comparator = static_cast<Finder*>(this)->get_comparator();
+                comparator_type const &comparator = static_cast<Finder*>(this)->get_comparator();
+
 
 				for (;
 					start != boost::end(str); ++start)
@@ -67,6 +75,8 @@ namespace boost { namespace algorithm {
 		};
 
 	};
+    //! Instances of this type can be passed to find functions to require them to
+    //!     use the Boyer-Moore algorithm.
     struct naive_search_tag { typedef boost::algorithm::naive_search type; };
 } }
 	

@@ -301,10 +301,10 @@ int main ()
     boost::benchmark_finder<std::string, std::string,
         boost::mpl::vector<
             boost::naive_search,
-            boost::knuth_morris_pratt,
-            boost::boyer_moore,
+            boost::knuth_morris_pratt//,
+            //boost::boyer_moore,
             //boost::suffix_array_search,
-            boost::rabin_karp32//,
+            //boost::rabin_karp32//,
             //boost::rabin_karp64
         >,
        boost::is_equal> b;

@@ -4,6 +4,8 @@
 
 //Our finder has 6 template params, which means we cannot use it in a placeholder expression
 //unless MPL supports metafunctions with arity >= 6
+//\todo remove this, we only have 5 template params now
+/*
 #ifdef BOOST_MPL_LIMIT_METAFUNCTION_ARITY
 # if BOOST_MPL_LIMIT_METAFUNCTION_ARITY < 6 || !defined BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #  error "benchmark_finder.hpp requires BOOST_MPL_LIMIT_METAFUNCTION_ARITY to be at least 6. " \
@@ -14,9 +16,10 @@
 #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #define BOOST_MPL_LIMIT_METAFUNCTION_ARITY 6
 #endif
+*/
 
-#include <boost/algorithm/string/finder.hpp>
-#include <boost/algorithm/string/detail/finder.hpp>
+#include <boost/algorithm/string/finder/simplified_finder.hpp>
+#include <boost/algorithm/string/finder/detail/finder_typedefs.hpp>
 #include <boost/algorithm/string/string_search/naive_search.hpp>
 
 #include <boost/tuple/tuple.hpp>
@@ -44,7 +47,7 @@
 #include <boost/spirit/home/phoenix/core/argument.hpp>
 #include <boost/spirit/home/phoenix/core/reference.hpp>
 
-//!\todo pretty messy, Boost.Chrono?
+//\todo pretty messy, Boost.Chrono?
 #ifdef BOOST_WINDOWS
 #include <windows.h>
 #endif
@@ -59,27 +62,35 @@
 
 #include <boost/throw_exception.hpp>
 
-//!\todo use something more accurate
+//todo use something more accurate
 #include <boost/timer.hpp>
+
+/*! \file
+    Defines a generic finder type useful for comparing the performance of various string search algorithms.
+*/
 
 namespace boost { namespace algorithm {
 
-    //! A generic finder type which benchmarks string search algorithms.
-    /** Poseses a similar interface to \ref finder_t and allows to test
+    //! A generic finder type which benchmarks string search algorithms
+    /** Possesses a similar interface to \ref simplified_finder_t and allows to test
         the performance of various string search algorithms in order to allow easier
         choice of the right algorithm for a certain data set
         \tparam Range1T A range representing the type of the substring (the pattern)
         \tparam Range2T A range representing the type of the string (the text)
+        \tparam AlgorithmSequenceT A MPL sequence containing algorithm types that are to be benchmarked
+        \tparam ComparatorT The comparator type passed to the algorithms
         */
         template <class Range1T, class Range2T, class AlgorithmSequenceT,
-        class ComparatorT>
-    class benchmark_finder :
-        public boost::algorithm::detail::finder_typedefs<Range1T, Range2T,
-        ComparatorT, std::allocator<std::size_t> >
-    {
-    public:
+        class ComparatorT = boost::algorithm::is_equal>
+        class benchmark_finder :
+            public boost::algorithm::detail::finder_typedefs<Range1T, Range2T,
+            ComparatorT, std::allocator<std::size_t> >
+        {
+        public:
 
-        void set_substring (Range1T const *const substring)
+        //! See \ref simplified_finder_t::set_substring
+        void set_substring (substring_type
+            const *const substring)
         {
             boost::phoenix::function<finder_set_substring> f;
             boost::fusion::for_each(finders, 
@@ -88,7 +99,8 @@ namespace boost { namespace algorithm {
             trusted_finder.set_substring(substring);
         }
 
-        void set_string (Range2T *const string)
+        //! See \ref simplified_finder_t::set_string
+        void set_string (string_type *const string)
         {
             boost::phoenix::function<finder_set_string> f;
             boost::fusion::for_each(
@@ -98,60 +110,50 @@ namespace boost { namespace algorithm {
             trusted_finder.set_string(string);
         }
 
+        //! Clears all the benchmark data obtained from searching
         void clear ()
         { boost::fusion::for_each(finders, clear_stats()); }
         
+        //! See \ref simplified_finder_t::find_reset
         void find_reset()
         {
             boost::fusion::for_each(finders, finder_reset());
             trusted_finder.find_reset();
         }
 
+        //! See \ref simplified_finder_t::find_next
         string_range_type find_next()
         {
             return boost::fusion::fold(finders, trusted_finder.find_next(),
                 finder_benchmark_and_test());
         }
 
+        //! See \ref simplified_finder_t::find_first
         string_range_type find_first()
         { find_reset(); return find_next(); }
 
-        /*void refresh()
-        {
-            boost::fusion::for_each(finders, finder_refresh());
-            trusted_finder.refresh();
-        }
-
-        void refresh_string()
-        {
-            boost::fusion::for_each(finders, finder_refresh_string());
-            trusted_finder.refresh_string();
-        }
-
-        void refresh_substring()
-        {
-            boost::fusion::for_each(finders, finder_refresh_substring());
-            trusted_finder.refresh_substring();
-        }*/
-
+        //! Output the benchmark data to a stream
+        /*!
+         \param output The stream to which the benchmark results are to be outputted
+        */
         template <class CharT, class TraitsT>
-        void output_stats (std::basic_ostream<CharT, TraitsT> &os)
+        void output_stats (std::basic_ostream<CharT, TraitsT> &output)
         {
             boost::phoenix::function<output_stats_> f;
-            boost::fusion::for_each(finders, f(boost::phoenix::ref(os), boost::phoenix::arg_names::arg1) );
+            boost::fusion::for_each(finders, f(boost::phoenix::ref(output), boost::phoenix::arg_names::arg1) );
         }
     private:
-        //! \todo write a proxy type allowing us to have a simplified_finder_t3 taking only the first
-        //!     3 template params. use that in boost::mpl::transform for eliminating the metafunction increased
-        //!     arity requirement
+        // todo write a proxy type allowing us to have a simplified_finder_t3 taking only the first
+        //     3 template params. use that in boost::mpl::transform for eliminating the metafunction increased
+        //     arity requirement
         typedef typename boost::mpl::transform<AlgorithmSequenceT,
             std::pair<
-                typename boost::algorithm::simplified_finder_t<Range1T,Range2T,
+                typename boost::algorithm::simplified_finder_t<substring_type,string_type,
                     boost::mpl::_, ComparatorT>,
                 std::deque<double>
             >
         >::type finders_sequence;
-        typename boost::simplified_finder_t<Range1T, Range2T, boost::naive_search,
+        typename boost::simplified_finder_t<substring_type, string_type, boost::naive_search,
             ComparatorT> trusted_finder;
 
         typename boost::fusion::result_of::as_vector< finders_sequence >::type finders;
@@ -161,7 +163,7 @@ namespace boost { namespace algorithm {
             template <class,class> struct result { typedef void type; };
 
             template <class Finder>
-            void operator() (Finder &finder, Range1T const *const substring) const
+            void operator() (Finder &finder, substring_type const *const substring) const
             { finder.first.set_substring(substring); }
         };
 
@@ -170,7 +172,7 @@ namespace boost { namespace algorithm {
             template <class,class> struct result { typedef void type; };
 
             template <class Finder>
-            void operator() (Finder &finder, Range2T *const string) const
+            void operator() (Finder &finder, string_type *const string) const
             { finder.first.set_string(string); }
         };
 
@@ -189,7 +191,7 @@ namespace boost { namespace algorithm {
             void operator() (Finder &finder) const { finder.first.find_reset(); }
         };
 
-        //!\todo Make sure tests are performed properly (via returning etc.)
+        //todo Make sure tests are performed properly (via returning etc.)
         struct finder_benchmark_and_test
         {
             template <class> struct result { typedef string_range_type type; };
@@ -240,33 +242,6 @@ namespace boost { namespace algorithm {
             }
         };
 
-        /*struct finder_refresh
-        {
-            template <class> struct result { typedef void type; };
-
-            template <class Finder>
-            void operator () (Finder &finder) const
-            { finder.first.refresh(); }
-        };
-
-        struct finder_refresh_string
-        {
-            template <class> struct result { typedef void type; };
-
-            template <class Finder>
-            void operator () (Finder &finder) const
-            { finder.first.refresh_string(); }
-        };
-
-        struct finder_refresh_substring
-        {
-            template <class> struct result { typedef void type; };
-
-            template <class Finder>
-            void operator () (Finder &finder) const
-            { finder.first.refresh_substring(); }
-        };*/
-
         struct output_stats_
         {
             template <class,class> struct result { typedef void type; };
@@ -284,7 +259,7 @@ namespace boost { namespace algorithm {
                 //if (size&1) median = t[size>>1];
                 //else median = t[size>>1] + t[1 + (size>>1)];
                 
-                //!\todo start from t.begin()+1, now we just want to check the values.
+
                 for (It it = t.begin(); it != t.end(); ++it)
                 {
                     if (*it < min) min = *it;

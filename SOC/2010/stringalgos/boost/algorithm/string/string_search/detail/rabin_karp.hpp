@@ -16,7 +16,7 @@
 #include <cassert>
 #include <limits>
 
-//!\todo add proper overflow assertions here. also try to find if these aren't already in boost
+//todo add proper overflow assertions here. also try to find if these aren't already in boost
 #define BOOST_ALGORITHM_DETAIL_ASSERTED_ADD(a, b, T) \
     assert((boost::uintmax_t)(a)+(boost::uintmax_t)(b) <= std::numeric_limits<T>::max()),((a)+(b))
 #define BOOST_ALGORITHM_DETAIL_ASSERTED_SUBSTRACT(a, b, T) \
@@ -102,19 +102,12 @@ namespace boost { namespace algorithm { namespace detail {
             >
         >::type
     >
-    //!\todo this generates possibly invalid allocator_type typedefs, although this is internally not relevant
-    //!     because rabin_karp doesn't need an allocator. however, this may be nasty externally
-    //!     possibly fix, although it's minor.
+    //todo this generates possibly invalid allocator_type typedefs, although this is internally not relevant
+    //     because rabin_karp doesn't need an allocator. however, this may be nasty externally
+    //     possibly fix, although it's minor.
     : public boost::algorithm::detail::finder_typedefs<
         Range1T,RandomAccessRange2T,boost::algorithm::is_equal,std::allocator<std::size_t> >
     {
-    public:
-        /*typedef ForwardRange1T substring_iterator_type;
-	    typedef ForwardRange2T string_iterator_type;
-        typedef typename std::iterator_traits<substring_iterator_type>::value_type substring_char_type;
-        typedef typename std::iterator_traits<string_iterator_type>::value_type string_char_type;
-        typedef typename boost::iterator_range<substring_iterator_type> substring_range_type;
-        typedef typename boost::iterator_range<string_iterator_type> string_range_type;*/
     protected:
 
         rabin_karp_algorithm() :
@@ -124,7 +117,7 @@ namespace boost { namespace algorithm { namespace detail {
                  first_inverse_(0), second_inverse_(0), string_size_(0), substring_size_(0), string_computed_upto_(0)
              { }
 
-        //!\todo this the right name? the right way to do it?
+        //\todo this the right name? the right way to do it?
         template <class T>
         inline HashType integer_promotion(T i)
         { return static_cast<HashType>(static_cast<boost::make_unsigned<T>::type>(i)); }
@@ -144,7 +137,7 @@ namespace boost { namespace algorithm { namespace detail {
                 first = (first * FirstBase + integer_promotion(*it) ) % FirstModulo;
                 second = (second * SecondBase + integer_promotion(*it) ) % SecondModulo;
             }
-            //! \todo Optimize here (by precomputing all powers FirstBase^(2^k) and SecondBase^(2^k))
+            // \todo Optimize here? (by precomputing all powers FirstBase^(2^k) and SecondBase^(2^k))
             //compute (-(FirstBase)^substring_size_) % FirstModulo
 
             first_inverse_ = FirstModulo - ::boost::algorithm::detail::logarithmic_exponentiation(
@@ -174,7 +167,7 @@ namespace boost { namespace algorithm { namespace detail {
             }
             //note: use the loop above to calculate part of the string size and then only finish the rest
             //(when having a forward iterator)
-            //!\todo figure out how to avoid necessity of string_size_ when you have an input iterator only
+            //todo figure out how to avoid necessity of string_size_ when you have an input iterator only
             string_size_ = boost::end(str) - boost::begin(str);
 
             first_string_hash_beginning_ = first;
@@ -247,7 +240,7 @@ namespace boost { namespace algorithm { namespace detail {
             return boost::make_tuple(first, second);
         }*/
 
-        //!\todo compatible force inline? __attribute__((force_inline)) in GCC
+        //todo compatible force inline? __attribute__((force_inline)) in GCC
         //inline void roll_string_hash()
         __forceinline void roll_string_hash()
         {
@@ -292,7 +285,6 @@ namespace boost { namespace algorithm { namespace detail {
             return a%b;
         }
 
-        //! \todo zero-initialize all of these, just in case
         HashType first_substring_hash_, second_substring_hash_;
         HashType first_string_hash_current_, second_string_hash_current_;
         HashType first_string_hash_beginning_, second_string_hash_beginning_;

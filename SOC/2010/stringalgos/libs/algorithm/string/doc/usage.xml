@@ -348,7 +348,21 @@
   </section>
   <section>
     <title>Finders</title>
-    <para>Finders offer a greater degree of control over what string search algorithms you would like to use for finding.</para>
-    <para>There are two finder types,<classname>finder</classname>and<classname>simplified_finder</classname>, as well as some finder generators:<functionname>first_finder</functionname>,<functionname>last_finder</functionname>,<functionname>nth_finder</functionname>,</para>
+    <para>Finders offer a greater degree of control over what string search algorithms you would like to use for finding. </para>
+    <para>They are especially useful if multiple searches are to be performed and the string or the substring do not change every iteration (because most string search algorithms precompute information on either the sought string or the text, meaning subsequent searches on the pattern or the text can be faster).</para>
+    <para>There are two finder types, <classname alt="boost::algorithm::finder_t">finder_t </classname>and <classname alt="boost::algorithm::simplified_finder_t">simplified_finder_t </classname>, as well as some finder generators: <functionname>first_finder</functionname>, <functionname>last_finder</functionname>, <functionname>nth_finder</functionname>etc.<programlisting>std::string random_saying =
+    "Speak when you are angry and you will make the best speech you'll ever regret.";
+
+boost::finder_t&lt;std::string, std::string, boost::knuth_morris_pratt&gt; finder("angry", &amp;random_saying);
+
+boost::to_upper(finder.find_first()); // we modified the internal text
+std::cout &lt;&lt; random_saying &lt;&lt; std::cout; // Outputs "Speak when you are ANGRY..."
+
+boost::boyer_moore_finder finder2; // a typedef for finder_t&lt;string,string,boyer_moore&gt;
+finder2.set_substring("Speak"); // makes an internal copy of the substring
+finder2.set_string(&amp;random_saying); // passing as a pointer allows the finder to not make a copy
+
+boost::to_upper(finder2.find_first()); // turn the match into uppercase
+std::cout &lt;&lt; random_saying &lt;&lt; std::endl; // Outputs "SPEAK when you are ANGRY..."</programlisting>For more information, consult the reference: <headername>boost/algorithm/string/finder.hpp</headername>.</para>
   </section>
 </section>

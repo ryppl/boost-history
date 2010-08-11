@@ -61,6 +61,8 @@ namespace boost {
             //! Function operator
             /*!
                 Compare two operands. Case is ignored.
+                TODO: FIX THIS. THE EQUIVALENCE TOUPPER(A)==TOUPPER(B) <=> A IS CASE-INSENSITIVE-EQUAL-TO B
+                DOES NOT ALWAYS HOLD (SEE GREEK!)
             */
             template< typename T1, typename T2 >
                 bool operator()( const T1& Arg1, const T2& Arg2 ) const

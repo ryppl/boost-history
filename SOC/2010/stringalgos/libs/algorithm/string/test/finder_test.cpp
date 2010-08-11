@@ -631,8 +631,7 @@ void find_test()
     BOOST_CHECK(( (ch_result.begin() - pch1 ) == 3) && ( (ch_result.end() - pch1 ) == 6 ) );
 
 
-    //!\todo uncomment after finishing impl
-    /*
+    
     // find_last
     BOOST_CHECKPOINT( "find_last" );
     
@@ -691,7 +690,6 @@ void find_test()
 
     ch_result=find_nth( pch1, "abc", 1 );
     BOOST_CHECK(( (ch_result.begin() - pch1 ) == 9) && ( (ch_result.end() - pch1 ) == 12 ) );
-    */
 
     // find_head
     BOOST_CHECKPOINT( "find_head" );
@@ -764,17 +762,19 @@ void find_test()
 
     // generic find
     BOOST_CHECKPOINT( "generic find" );
-    /*
     nc_result=find(str1, first_finder(string("abc")));
     BOOST_CHECK( 
         ( (nc_result.begin()-str1.begin()) == 3) &&
         ( (nc_result.end()-str1.begin()) == 6) );
 
+    //TODO: this one cannot work, what should we do about it?
+    /*
     cv_result=find(const_cast<const string&>(str1), first_finder(str2) );
     BOOST_CHECK( 
         ( (cv_result.begin()-str1.begin()) == 3) &&
         ( (cv_result.end()-str1.begin()) == 6) );
     */
+
     // multi-type comparison test 
     BOOST_CHECKPOINT( "multi-type" );
 

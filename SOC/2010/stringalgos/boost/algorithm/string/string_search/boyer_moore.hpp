@@ -16,15 +16,26 @@
 #include <boost/static_assert.hpp>
 #include <map>
 #include <string>
-#include <boost/algorithm/string/finder.hpp>
-#include <boost/algorithm/string/detail/finder.hpp>
+
+#include <boost/algorithm/string/finder/detail/finder_typedefs.hpp>
 
 #include <boost/unordered_map.hpp>
 #include <boost/functional/hash.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <locale>
 
+/*!
+    \file
+    Implements the Boyer-Moore string search algorithm
+*/
+
 namespace boost { namespace algorithm {
+    //! An implementation of the string search algorithm Boyer-Moore
+    //! \warning This algorithm can only work with the equality comparator and the inequality comparator
+    //! \warning For charsets where tolower(a)==tolower(b) is not equivalent to a case-insensitive match,
+    //!         you \b MUST \b NOT use the inequality comparator with this algorithm.
+    //!         It is best to avoid case-insensitive matches using Boyer-Moore for anything but
+    //!         CharT=char
     struct boyer_moore
     {
 
@@ -35,15 +46,6 @@ namespace boost { namespace algorithm {
                 RandomAccessRange1T,RandomAccessRange2T,ComparatorT,AllocatorT>
         {
         public:
-            /*typedef ForwardIterator1T substring_iterator_type;
-	        typedef ForwardIterator2T string_iterator_type;
-            typedef typename
-                std::iterator_traits<substring_iterator_type>::value_type substring_char_type;
-            typedef typename std::iterator_traits<string_iterator_type>::value_type string_char_type;
-            typedef typename boost::iterator_range<substring_iterator_type> substring_range_type;
-            typedef typename boost::iterator_range<string_iterator_type> string_range_type;
-            typedef Comparator comparator_type;
-            typedef Allocator allocator_type;*/
             std::string get_algorithm_name () const { return "Boyer-Moore"; }
         protected:
             algorithm () {
@@ -94,7 +96,7 @@ namespace boost { namespace algorithm {
                     //Case insensitive matches are supported properly for char (in case of Boyer-Moore)
                     BOOST_STATIC_ASSERT((boost::is_same<substring_char_type,char>::value));
 
-                    //!\todo get locale from user?
+                    //todo get locale from user?
                     if (idx_ != 0) alg_.table1.insert(std::make_pair(
                         std::tolower(c, std::locale()), idx_
                         ));
@@ -150,10 +152,12 @@ namespace boost { namespace algorithm {
 
                 substring_iterator_type const &pattern = boost::begin(substr);
 
-                //!\todo find a better solution for this
+
+                //todo find a better solution for this
                 for (unsigned int i = substr_size_-1;i--;)
                 {
-                    if (!comp(pattern[i],pattern[substr_size_-1]))
+                    //pattern[i] != pattern[m-1]
+                    if (!comp(*(pattern+i),*(pattern+(substr_size_-1))))
                     {
                         table2[substr_size_-1] = substr_size_ - 1 - i;
                         break;
@@ -171,18 +175,20 @@ namespace boost { namespace algorithm {
                 {
                     //Invariant: P[i+1..m-1] = P[j+1..m-1]
                     //try to align with pattern indexed by j (by sliding the pattern indexed by i)
-                    while (i != substr_size_ - 1 && !comp(pattern[i],pattern[j]))
+                    while (i != substr_size_ - 1 && !comp(*(pattern+i),*(pattern+j)))
                         i = substr_size_ - 1 - failure_func[i + 1];
 
                     //Invariant: Either i=m-1 or P[i..m-1] = P[j..m-1]
-                    while (i == substr_size_-1 && j > 0 && !comp(pattern[substr_size_-1],pattern[j]))
+                    while (i == substr_size_-1 && j > 0 &&
+                        !comp(*(pattern+(substr_size_-1)),*(pattern+j)))
                     {
                         //couldn't align the given j with any i
                         failure_func[j] = 0;
                         --j;
                     }
                     //Invariant: either (j==0 and i=m-1) or P[i..m-1] = P[j..m-1]
-                    if (j == 0 && i == substr_size_-1 && !comp(pattern[0],pattern[substr_size_-1]))
+                    if (j == 0 && i == substr_size_-1 &&
+                        !comp(*(pattern+0),*(pattern+(substr_size_-1))))
                     {
                         failure_func[0] = 0;
                     }
@@ -218,7 +224,8 @@ namespace boost { namespace algorithm {
                         //a = m-1-x <=> x = m-1-a
                         //j = x+1-k <=> k = m-a-j
                         unsigned int a = failure_func[j];
-                        while (a > 0 && !comp(pattern[substr_size_-1-a], pattern[j-1]))
+                        while (a > 0 && !comp(*(pattern+(substr_size_-1-a)), *(pattern+(j-1))))
+                        //while (a > 0 && !compare_range_nth(comp, substr, substr_size_-1-a, substr, j-1))
                         {
                             assert(substr_size_-1-a >= substr_size_-a-j); // x >= k
                             if (table2[substr_size_-1-a] > 2*substr_size_-i-1 -a-j)
@@ -269,10 +276,11 @@ namespace boost { namespace algorithm {
                 str_size = boost::end(str) - start;
                 str_idx = substr_size_ - 1; substr_idx = substr_size_ - 1;
 
+
                 while (str_idx < str_size)
                 {
-                    if (comp(start[str_idx],
-                        boost::begin(substr)[substr_idx]))
+                    if (comp(*(start+str_idx), *(boost::begin(substr)+substr_idx)))
+                    //if (compare_range_nth(comp, start[str_idx], boost::begin(substr)[substr_idx]))
                     {
                         if (substr_idx == 0)
                         {
@@ -310,8 +318,7 @@ namespace boost { namespace algorithm {
                 return string_range_type(boost::end(str), boost::end(str));
             }
 
-            //!\todo Get a better data structure here (hash table?)
-            //Maybe optimize for sizeof(substring_char_type)==1?
+            //TODO Maybe optimize for sizeof(substring_char_type)==1?
             typedef typename boost::unordered_map<substring_char_type, std::size_t,
                 boost::hash<substring_char_type>, ComparatorT,
                 typename AllocatorT::template
@@ -347,6 +354,8 @@ namespace boost { namespace algorithm {
 
         };
     };
+    //! Instances of this type can be passed to find functions to require them to
+    //!     use the Boyer-Moore algorithm.
     struct boyer_moore_tag { typedef boost::algorithm::boyer_moore type; };
 } }
 
