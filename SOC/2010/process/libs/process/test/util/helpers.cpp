@@ -88,6 +88,36 @@ int h_is_closed_stderr(int argc, char *argv[])
     return std::cerr.bad() ? EXIT_SUCCESS : EXIT_FAILURE; 
 } 
 
+int h_is_nul_stdin(int argc, char *argv[]) 
+{ 
+#if defined(BOOST_POSIX_API) 
+    std::string word; 
+    std::cin >> word; 
+    return std::cin.eof() ? EXIT_FAILURE : EXIT_SUCCESS; 
+#elif defined(BOOST_WINDOWS_API) 
+    HANDLE h = GetStdHandle(STD_INPUT_HANDLE); 
+    if (h == INVALID_HANDLE_VALUE) 
+        return EXIT_FAILURE; 
+    char buffer[1]; 
+    DWORD read; 
+    BOOL res = ReadFile(h, &buffer, 1, &read, NULL); 
+    CloseHandle(h); 
+    return res ? EXIT_SUCCESS : EXIT_FAILURE; 
+#endif 
+} 
+
+int h_is_nul_stdout(int argc, char *argv[]) 
+{ 
+    std::cout << "foo" << std::endl; 
+    return std::cout.bad() ? EXIT_FAILURE : EXIT_SUCCESS; 
+} 
+
+int h_is_nul_stderr(int argc, char *argv[]) 
+{ 
+    std::cerr << "foo" << std::endl; 
+    return std::cerr.bad() ? EXIT_FAILURE : EXIT_SUCCESS; 
+} 
+
 int h_loop(int argc, char *argv[]) 
 { 
     for (;;) 
@@ -208,6 +238,9 @@ struct helper
     { "is-closed-stdin", h_is_closed_stdin, 1, "" }, 
     { "is-closed-stdout", h_is_closed_stdout, 1, "" }, 
     { "is-closed-stderr", h_is_closed_stderr, 1, "" }, 
+    { "is-nul-stdin", h_is_nul_stdin, 1, "" }, 
+    { "is-nul-stdout", h_is_nul_stdout, 1, "" }, 
+    { "is-nul-stderr", h_is_nul_stderr, 1, "" }, 
     { "loop", h_loop, 1, "" }, 
     { "prefix", h_prefix, 2, "string" }, 
     { "pwd", h_pwd, 1, "" }, 

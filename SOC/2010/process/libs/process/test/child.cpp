@@ -495,15 +495,92 @@ BOOST_AUTO_TEST_CASE(test_async)
 #endif 
 } 
 
-BOOST_AUTO_TEST_CASE(test_shell)
-{
-    child c = bp::shell(get_helpers_path() + " exit_success")
-
-    int exit_code = c.wait(); 
+BOOST_AUTO_TEST_CASE(test_shell) 
+{ 
 #if defined(BOOST_POSIX_API) 
-    BOOST_REQUIRE(WIFEXITED(exit_code)); 
-    BOOST_CHECK_EQUAL(WEXITSTATUS(exit_code), EXIT_SUCCESS); 
+    std::string cmd = "echo test | sed 's,^,LINE-,'"; 
 #elif defined(BOOST_WINDOWS_API) 
-    BOOST_CHECK_EQUAL(exit_code, EXIT_SUCCESS); 
+    std::string cmd = "if foo==foo echo LINE-test"; 
 #endif 
-}
+
+    bp::context ctx; 
+    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+
+    bp::child c = bp::shell(cmd, ctx); 
+
+    std::string word; 
+    bp::pistream &is = c.get_stdout(); 
+    is >> word; 
+    BOOST_CHECK_EQUAL(word, "LINE-test"); 
+
+    int s = c.wait(); 
+#if defined(BOOST_POSIX_API) 
+    BOOST_REQUIRE(WIFEXITED(s)); 
+    BOOST_CHECK_EQUAL(WEXITSTATUS(s), EXIT_SUCCESS); 
+#elif defined(BOOST_WINDOWS_API) 
+    BOOST_CHECK_EQUAL(s, EXIT_SUCCESS); 
+#endif 
+} 
+
+BOOST_AUTO_TEST_CASE(test_dummy_stdin) 
+{ 
+    check_helpers(); 
+
+    std::vector<std::string> args; 
+    args.push_back("is-nul-stdin"); 
+
+    bp::context ctx; 
+    ctx.stdin_behavior = bpb::dummy::create(bpb::dummy::input_stream); 
+
+    bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
+
+    int s = c.wait(); 
+#if defined(BOOST_POSIX_API) 
+    BOOST_REQUIRE(WIFEXITED(s)); 
+    BOOST_CHECK_EQUAL(WEXITSTATUS(s), EXIT_SUCCESS); 
+#elif defined(BOOST_WINDOWS_API) 
+    BOOST_CHECK_EQUAL(s, EXIT_SUCCESS); 
+#endif 
+} 
+
+BOOST_AUTO_TEST_CASE(test_dummy_stdout) 
+{ 
+    check_helpers(); 
+
+    std::vector<std::string> args; 
+    args.push_back("is-nul-stdout"); 
+
+    bp::context ctx; 
+    ctx.stdout_behavior = bpb::dummy::create(bpb::dummy::output_stream); 
+
+    bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
+
+    int s = c.wait(); 
+#if defined(BOOST_POSIX_API) 
+    BOOST_REQUIRE(WIFEXITED(s)); 
+    BOOST_CHECK_EQUAL(WEXITSTATUS(s), EXIT_SUCCESS); 
+#elif defined(BOOST_WINDOWS_API) 
+    BOOST_CHECK_EQUAL(s, EXIT_SUCCESS); 
+#endif 
+} 
+
+BOOST_AUTO_TEST_CASE(test_dummy_stderr) 
+{ 
+    check_helpers(); 
+
+    std::vector<std::string> args; 
+    args.push_back("is-nul-stderr"); 
+
+    bp::context ctx; 
+    ctx.stderr_behavior = bpb::dummy::create(bpb::dummy::output_stream); 
+
+    bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
+
+    int s = c.wait(); 
+#if defined(BOOST_POSIX_API) 
+    BOOST_REQUIRE(WIFEXITED(s)); 
+    BOOST_CHECK_EQUAL(WEXITSTATUS(s), EXIT_SUCCESS); 
+#elif defined(BOOST_WINDOWS_API) 
+    BOOST_CHECK_EQUAL(s, EXIT_SUCCESS); 
+#endif 
+} 

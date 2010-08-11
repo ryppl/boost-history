@@ -318,7 +318,8 @@ public:
 #if defined(BOOST_POSIX_API)
         std::string filename = (stream == input_stream) ? "/dev/zero" :
             "/dev/null";
-        child_end_ = open(filename.c_str(), O_RDONLY);
+        int flag = (stream == input_stream) ? O_RDONLY : O_WRONLY;
+        child_end_ = open(filename.c_str(), flag);
         if (!child_end_.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
 #elif defined(BOOST_WINDOWS_API)
@@ -327,6 +328,10 @@ public:
             FILE_ATTRIBUTE_NORMAL, NULL);
         if (!child_end_.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateFile() failed");
+        if (!SetHandleInformation(child_end_.native(), HANDLE_FLAG_INHERIT,
+            HANDLE_FLAG_INHERIT))
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
+                "SetHandleInformation() failed");
 #endif
     }
 
