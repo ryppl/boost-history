@@ -20,7 +20,6 @@ project libs/graph/test
 # as part of the test suite.
 test-suite graph_test
   :
-    [ run test.cpp ]
-    [ run globalid.cpp ]
     [ run property_test.cpp ]
+    [ run disjoint_union.cpp ]
   ;

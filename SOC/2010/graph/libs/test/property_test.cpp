@@ -61,9 +61,8 @@ struct my_vertex_copier {
   typedef typename graph_traits<G1>::vertex_descriptor Vertex1;
   typedef typename graph_traits<G2>::vertex_descriptor Vertex2;
   void operator()(const Vertex1& v1, const G1& g1, Vertex2& v2, G2& g2) const {
-    auto & gl2 = get_property(g2).vertices;
     put(get(vertex_all, g2), v2, get(get(vertex_all, g1), v1));
-    gl2[ g1[v1].name ] = v2;
+    get_property(g2).vertices[ g1[v1].name ] = v2;
   }
 };
 
@@ -73,9 +72,8 @@ struct my_edge_copier {
   typedef typename graph_traits<G1>::edge_descriptor Edge1;
   typedef typename graph_traits<G2>::edge_descriptor Edge2;
   void operator()(const Edge1& e1, const G1& g1, Edge2& e2, G2& g2) const {
-    auto & gl2 = get_property(g2).edges;
     put(get(edge_all, g2), e2, get(get(edge_all, g1), e1));
-    gl2[ g1[e1].name ] = e2;
+    get_property(g2).edges[ g1[e1].name ] = e2;
   }
 };
 
