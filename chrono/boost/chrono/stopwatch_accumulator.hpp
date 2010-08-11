@@ -15,8 +15,8 @@
 #include <boost/chrono/chrono.hpp>
 #include <boost/chrono/stopwatch_scoped.hpp>
 #include <boost/chrono/stopwatch_reporter.hpp>
-#include <boost/chrono/stopwatch_accumulator_formatter.hpp>
 #include <boost/system/error_code.hpp>
+#include <boost/chrono/stopwatch_accumulator_formatter.hpp>
 #include <boost/accumulators/framework/accumulator_set.hpp>
 #include <boost/accumulators/statistics/sum.hpp>
 #include <boost/accumulators/statistics/min.hpp>
@@ -76,15 +76,18 @@ namespace boost
         typedef Clock                       clock;
         typedef typename Clock::duration    duration;
         typedef typename Clock::time_point  time_point;
+        typedef typename Clock::rep         rep;
+        typedef typename Clock::period      period;
         typedef Accumulator accumulator;
 
         stopwatch_accumulator( )
-        : running_(false), suspended_(false), accumulated_(),
-          partial_(), start_(duration::zero()), level_(0), suspend_level_(0)
-          , construction_(clock::now( ))
+        : running_(false), suspended_(false),
+          start_(duration::zero()), level_(0), partial_(duration::zero()), suspend_level_(0)
+          , accumulated_(), construction_(clock::now( ))
         {}
 
-        std::pair<duration, time_point>  restart( system::error_code & ec = system::throws ) {
+//--------------------------------------------------------------------------------------//
+        std::pair<duration, time_point> restart( system::error_code & ec = system::throws ) {
             time_point tmp=clock::now( ec );
             if (ec) return time_point();
             if (running_&&(--level_==0)) {
@@ -107,8 +110,9 @@ namespace boost
                 ++level_;
                 running_ = true;
                 return start_;
-            }  else {
+            } else {
                 ++level_;
+                ec.clear();
                 return time_point();
             }
         }
@@ -123,12 +127,14 @@ namespace boost
                     partial_=duration::zero();
                     --level_;
                     running_=false;
-                    return duration(accumulators::extract::sum(accumulated_));
+                    return duration(accumulators::sum(accumulated_));
                 } else {
                     --level_;
+                    ec.clear();
                     return duration::zero();
                 }
             } else {
+                ec.clear();
                 return duration::zero();
             }
         }
@@ -143,12 +149,15 @@ namespace boost
                     suspended_=true;
                     return duration(accumulators::sum(accumulated_));
                 } else {
+                    ec.clear();
                     return duration::zero();
                 }
             } else {
+                ec.clear();
                 return duration::zero();
             }
         }
+
         time_point resume( system::error_code & ec = system::throws ) {
             if (suspended_&&(--suspend_level_==0)) {
                 time_point tmp = clock::now( ec );
@@ -157,6 +166,7 @@ namespace boost
                 suspended_=false;
                 return start_;
             } else {
+                ec.clear();
                 return time_point();
             }
         }
@@ -175,16 +185,23 @@ namespace boost
             }
         }
 
+        time_point now( system::error_code & ec = system::throws )
+        {
+            return time_point(elapsed( ec ));
+        }
+
         void reset( system::error_code & ec = system::throws ) {
             construction_=clock::now( ec );
+            accumulated_ = accumulator();
             running_=false;
             suspended_=false;
-            accumulated_ = accumulator();
-            partial_=duration::zero();
+            partial_ = duration::zero();
             start_  = time_point(duration::zero());
             level_=0;
             suspend_level_=0;
+            ec.clear();
         }
+        
         accumulator& accumulated( ) { return accumulated_; }
         duration lifetime( system::error_code & ec = system::throws ) {
             return  clock::now( ec ) - construction_;
@@ -202,11 +219,11 @@ namespace boost
     private:
         bool running_;
         bool suspended_;
-        accumulator accumulated_;
-        duration partial_;
         time_point start_;
         std::size_t level_;
+        duration partial_;
         std::size_t suspend_level_;
+        accumulator accumulated_;
         time_point construction_;
     };
 

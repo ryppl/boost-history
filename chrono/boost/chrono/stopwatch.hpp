@@ -13,9 +13,9 @@
 #include <utility>
 #include <boost/chrono/chrono.hpp>
 #include <boost/chrono/stopwatch_scoped.hpp>
-#include <boost/chrono/stopwatch_formatter.hpp>
 #include <boost/chrono/stopwatch_reporter.hpp>
 #include <boost/system/error_code.hpp>
+#include <boost/chrono/stopwatch_formatter.hpp>
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
@@ -54,6 +54,7 @@ namespace boost
 
     struct dont_start_t{};
     static const dont_start_t dont_start = {};
+//--------------------------------------------------------------------------------------//
     template <class Clock>
     class stopwatch
     {
@@ -65,24 +66,45 @@ namespace boost
         typedef typename Clock::period      period;
 
         explicit stopwatch( system::error_code & ec = system::throws  )
-        : running_(false), suspended_(false), start_(), level_(0), partial_(duration::zero()), suspend_level_(0)
+        : running_(false), suspended_(false),
+          start_(duration::zero()), level_(0), partial_(duration::zero()), suspend_level_(0)
         {
             start(ec);
         }
 
         explicit stopwatch( const dont_start_t& t )
-        : running_(false), suspended_(false), start_(), level_(0), partial_(duration::zero()), suspend_level_(0)
+        : running_(false), suspended_(false),
+          start_(duration::zero()), level_(0), partial_(duration::zero()), suspend_level_(0)
         { }
 
-        time_point start( system::error_code & ec = system::throws ) {
+//--------------------------------------------------------------------------------------//
+        std::pair<duration, time_point> restart( system::error_code & ec = system::throws ) {
+            duration frozen;
+            time_point tmp=clock::now( ec );
+            if (ec) return time_point();
+            if (running_&&(--level_==0)) {
+                partial_ += tmp - start_;
+                frozen = partial_;
+                partial_=duration::zero();
+            } else {
+                frozen = duration::zero();
+                running_=true;
+            }
+            start_=tmp;
             ++level_;
+            return std::make_pair(frozen, start_);
+        }
+
+        time_point start( system::error_code & ec = system::throws ) {
             if (!running_) {
                 time_point tmp = clock::now( ec );
                 if (ec) return time_point();
                 start_ = tmp;
-                running_=true;
+                ++level_;
+                running_ = true;
                 return start_;
             } else {
+                ++level_;
                 ec.clear();
                 return time_point();
             }
@@ -103,23 +125,6 @@ namespace boost
             }
         }
 
-        std::pair<duration, time_point> restart( system::error_code & ec = system::throws ) {
-            duration frozen;
-            time_point tmp=clock::now( ec );
-            if (ec) return time_point();
-            if (running_&&(--level_==0)) {
-                partial_ += tmp - start_;
-                frozen = partial_;
-                partial_=duration::zero();
-            } else {
-                frozen = duration::zero();
-                running_=true;
-            }
-            start_=tmp;
-            ++level_;
-            return std::make_pair(frozen, start_);
-        }
-
         duration suspend( system::error_code & ec = system::throws ) {
             if (running_) {
                 ++suspend_level_;
@@ -134,6 +139,7 @@ namespace boost
                     return duration::zero();
                 }
             } else {
+                ec.clear();
                 return duration::zero();
             }
         }
@@ -164,9 +170,12 @@ namespace boost
         }
 
         void reset( system::error_code & ec = system::throws ) {
-            start_ = time_point();
-            level_=0;
             running_=false;
+            suspended_=false;
+            partial_ = duration::zero();
+            start_  = time_point(duration::zero());
+            level_=0;
+            suspend_level_=0;
             ec.clear();
         }
 
