@@ -15,15 +15,15 @@ test-suite "sweepline"
         [ run event_queue_test.cpp ]
         [ run event_types_test.cpp ]
 	[ run node_comparer_test.cpp ]
-	[ run voronoi_clipping_test.cpp ]
 	[ run voronoi_builder_test.cpp ]
+	[ run voronoi_clipping_test.cpp ]
     ;
 
 test-suite "sweepline_segment"
     :
-        [ run segment_event_queue_test.cpp ]
+	[ run segment_event_queue_test.cpp ]
         [ run segment_event_types_test.cpp ]
 	[ run segment_node_comparer_test.cpp ]
-	[ run segment_voronoi_clipping_test.cpp ]
 	[ run segment_voronoi_builder_test.cpp ]
+	[ run segment_voronoi_clipping_test.cpp ]
     ;

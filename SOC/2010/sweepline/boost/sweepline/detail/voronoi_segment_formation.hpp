@@ -10,6 +10,7 @@
 #ifndef BOOST_SWEEPLINE_VORONOI_SEGMENT_FORMATION
 #define BOOST_SWEEPLINE_VORONOI_SEGMENT_FORMATION
 
+#include <cstring>
 #include <list>
 #include <map>
 #include <queue>
@@ -19,6 +20,10 @@
         if (a >= b) { res = static_cast<ull>(a - b); sign = true; } \
         else { res = static_cast<ull>(b - a); sign = false; }
 
+#define INT_PREDICATE_CONVERT_65_BIT(a, res, sign) \
+        if (a >= 0) { res = static_cast<ull>(a); sign = true; } \
+        else { res = static_cast<ull>(-a); sign = false; }
+
 namespace boost {
 namespace sweepline {
 namespace detail {
@@ -27,12 +32,24 @@ namespace detail {
     // GEOMETRY PREDICATES ////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    bool almost_equal(double a, double b, long long maxUlps) {
+        long long ll_a, ll_b;
+        memcpy(&ll_a, &a, sizeof(double));
+        memcpy(&ll_b, &b, sizeof(double));
+        if (ll_a < 0)
+            ll_a = 0x8000000000000000LL;
+        if (ll_b < 0)
+            ll_b = 0x8000000000000000LL;
+        long long dif = ll_a - ll_b;
+        return (dif <= maxUlps) && (dif >= -maxUlps);
+    }
+
     // TODO(asydorchuk): Remove code inside of this template. Left orientation test
     // works only for integer input points.
     template <typename T>
-    bool left_orientation_test(const point_2d<T> &point1,
-                               const point_2d<T> &point2,
-                               const point_2d<T> &point3) {
+    bool right_orientation_test(const point_2d<T> &point1,
+                                const point_2d<T> &point2,
+                                const point_2d<T> &point3) {
         typedef long long ll;
         typedef unsigned long long ull;
         ull dif_x1, dif_x2, dif_y1, dif_y2;
@@ -72,50 +89,11 @@ namespace detail {
         }
     }
 
-    // Returns true if input triplet has left orientation.
-    // Integer points partial specialization.
-    template <>
-    bool left_orientation_test<int>(const point_2d<int> &point1,
-                                    const point_2d<int> &point2,
-                                    const point_2d<int> &point3) {
-        typedef long long ll;
-        typedef unsigned long long ull;
-        ull dif_x1, dif_x2, dif_y1, dif_y2;
-        bool dif_x1_plus, dif_x2_plus, dif_y1_plus, dif_y2_plus;
-        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point1.x()),
-                                         static_cast<ll>(point2.x()),
-                                         dif_x1, dif_x1_plus);
-        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point2.x()),
-                                         static_cast<ll>(point3.x()),
-                                         dif_x2, dif_x2_plus);
-        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point1.y()),
-                                         static_cast<ll>(point2.y()),
-                                         dif_y1, dif_y1_plus);
-        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point2.y()),
-                                         static_cast<ll>(point3.y()),
-                                         dif_y2, dif_y2_plus);
-        ull expr_l = dif_x1 * dif_y2;
-        bool expr_l_plus = (dif_x1_plus == dif_y2_plus) ? true : false;
-        ull expr_r = dif_x2 * dif_y1;
-        bool expr_r_plus = (dif_x2_plus == dif_y1_plus) ? true : false;
-
-        if (expr_l == 0)
-            expr_l_plus = true;
-        if (expr_r == 0)
-            expr_r_plus = true;
-        
-        if (!expr_l_plus) {
-            if (expr_r_plus)
-                return true;
-            else
-                return expr_l > expr_r; 
-        } else {
-            if (!expr_r_plus)
-                return false;
-            else
-                return expr_l < expr_r;
-        }
-    }
+    enum kPredicateResult {
+        LESS = -1,
+        UNDEFINED = 0,
+        MORE = 1,
+    };
 
     // Returns true if horizontal line going through new site intersects
     // right arc at first, else returns false. If horizontal line goes
@@ -129,9 +107,29 @@ namespace detail {
     // at first if x2(y*) > x1(y*) or:
     // (x0-x2)*(x0-x1)*(x1-x2) + (x0-x2)*(y*-y1)^2 < (x0-x1)*(y*-y2)^2.
     template <typename T>
-    bool less(const point_2d<T> &left_point,
-              const point_2d<T> &right_point,
-              const point_2d<T> &new_point) {
+    kPredicateResult fast_less_predicate(const point_2d<T> &left_point,
+                                         const point_2d<T> &right_point,
+                                         const point_2d<T> &new_point) {
+        double fast_a1 = static_cast<double>(new_point.x()) - static_cast<double>(left_point.x());
+        double fast_a2 = static_cast<double>(new_point.x()) - static_cast<double>(right_point.x());
+        double fast_b1 = static_cast<double>(new_point.y()) - static_cast<double>(left_point.y());
+        double fast_b2 = static_cast<double>(new_point.y()) - static_cast<double>(right_point.y());
+        double fast_c = static_cast<double>(left_point.x()) - static_cast<double>(right_point.x());
+        double fast_left_expr = fast_a1 * fast_a2 * fast_c + fast_a1 * fast_b2 * fast_b2;
+        double fast_right_expr = fast_a2 * fast_b1 * fast_b1;
+        if (!almost_equal(fast_left_expr, fast_right_expr, 6))
+            return (fast_left_expr < fast_right_expr) ? LESS : MORE;
+        return UNDEFINED;
+    }
+
+    template <typename T>
+    bool less_predicate(const point_2d<T> &left_point,
+                        const point_2d<T> &right_point,
+                        const point_2d<T> &new_point) {
+        kPredicateResult fast_res = fast_less_predicate(left_point, right_point, new_point);
+        if (fast_res != UNDEFINED)
+            return (fast_res == LESS);
+
         typedef long long ll;
         typedef unsigned long long ull;
         ull a1, a2, b1, b2, b1_sqr, b2_sqr, l_expr, r_expr;
@@ -189,6 +187,154 @@ namespace detail {
         b2 = static_cast<int>(new_point.y() - right_point.y());
         c = static_cast<int>(left_point.x() - right_point.x());
         return a1 * a2 * c + a1 * b2 * b2 < a2 * b1 * b1;*/
+    }
+
+    template <typename T>
+    kPredicateResult less_predicate_check(point_2d<T> segment_start, point_2d<T> segment_end,
+                                          point_2d<T> site_point, point_2d<T> new_point,
+                                          bool reverse_order) {
+        typedef long long ll;
+        typedef unsigned long long ull;
+        bool is_right_oriented1 = right_orientation_test(segment_start,
+                                                         segment_end,
+                                                         site_point);
+        bool is_right_oriented2 = right_orientation_test(segment_start,
+                                                         segment_end,
+                                                         new_point);
+        if (is_right_oriented1 != is_right_oriented2) {
+            return (is_right_oriented1) ? LESS : MORE;
+        }
+
+        ll dif_x = static_cast<ll>(new_point.x()) - static_cast<ll>(site_point.x());
+        ll dif_y = static_cast<ll>(new_point.y()) - static_cast<ll>(site_point.y());
+        ll a = static_cast<ll>(segment_end.x()) - static_cast<ll>(segment_start.x());
+        ll b = static_cast<ll>(segment_end.y()) - static_cast<ll>(segment_start.y());
+
+        if (a == 0) {
+            if (new_point.y() <= site_point.y() && !reverse_order)
+                return MORE;
+            else if (new_point.y() >= site_point.y() && reverse_order)
+                return LESS;
+            return UNDEFINED;
+        } else {
+            point_2d<T> point3 = make_point_2d(segment_end.x() + static_cast<T>(dif_x),
+                                               segment_end.y() + static_cast<T>(dif_y));
+            bool right_oriented = right_orientation_test(segment_start, segment_end, point3);
+            if (is_right_oriented1 ^ right_oriented) {
+                if (is_right_oriented1)
+                    return reverse_order ? LESS : UNDEFINED;
+                return reverse_order ? UNDEFINED : MORE;
+            }            
+        }
+
+        double fast_left_expr = static_cast<double>(a) *
+                                static_cast<double>(dif_y + dif_x) *
+                                static_cast<double>(dif_y - dif_x);
+        double fast_right_expr = static_cast<double>(b<<1) *
+                                 static_cast<double>(dif_x) *
+                                 static_cast<double>(dif_y);
+        if (!(almost_equal(fast_left_expr, fast_right_expr, 6))) {
+            if (is_right_oriented1 ^ (fast_left_expr > fast_right_expr) ^ !reverse_order)
+                return reverse_order ? LESS : MORE;
+            return UNDEFINED;
+        }
+
+        ull a_rob, a_sign, b_rob, b_sign, dif_x_rob, dif_x_sign, dif_y_rob, dif_y_sign;
+        INT_PREDICATE_CONVERT_65_BIT(a, a_rob, a_sign);
+        INT_PREDICATE_CONVERT_65_BIT(b, b_rob, b_sign);
+        INT_PREDICATE_CONVERT_65_BIT(dif_x, dif_x_rob, dif_x_sign);
+        INT_PREDICATE_CONVERT_65_BIT(dif_y, dif_y_rob, dif_y_sign);
+        
+        ull dif_x_sqr = dif_x_rob * dif_x_rob;
+        ull dif_y_sqr = dif_y_rob * dif_y_rob;
+        ull left_expr_div = dif_y_sqr / dif_x_sqr + 1;
+        ull left_expr_mod = dif_y_sqr % dif_x_sqr;
+
+        ull right_expr_denom = a_rob * dif_x_rob;
+        ull right_expr = b_rob * dif_y_rob;
+        ull right_expr_div = right_expr / right_expr_denom;
+        ull right_expr_mod = right_expr % right_expr_denom;
+
+        bool comparison_result;
+        if ((b_sign != dif_y_sign) && right_expr_div) 
+            comparison_result = true;
+        else {
+            if (b_sign != dif_y_sign)
+                right_expr_mod = right_expr_denom - right_expr_mod;
+            else
+                right_expr_div++;    
+            if (left_expr_div & 1) {
+                comparison_result = ((left_expr_div >> 1) >= right_expr_div);
+            } else {
+                left_expr_div >>= 1;
+                if (left_expr_div != right_expr_div) {
+                    comparison_result = (left_expr_div >= right_expr_div);
+                } else  {
+                    left_expr_div = left_expr_mod / dif_x_rob;
+                    right_expr_div = right_expr_mod / a_rob;
+                    if (left_expr_div != right_expr_div)
+                        comparison_result = (left_expr_div >= right_expr_div);
+                    left_expr_mod = left_expr_mod % dif_x_rob;
+                    right_expr_mod = right_expr_mod % a_rob;
+                    comparison_result = (right_expr_mod * a_rob >= left_expr_mod * dif_x_rob);
+                }
+            }
+        }
+        
+        if (is_right_oriented1 ^ comparison_result ^ !reverse_order)
+            return reverse_order ? LESS : MORE;
+        return UNDEFINED;
+    }
+
+    // Returns true if horizontal line going through new site intersects
+    // right arc at first, else returns false. If horizontal line goes
+    // through intersection point of the given two arcs returns false also. 
+    // Used during nodes comparison.
+    // If reverse order is false we are comparing (point, segment) intersection
+    // point and new point, else (segment, point) intersection point.
+    // (point, segment) and (segment, point) are two distinct points, except
+    // case of vertical segment.
+    template <typename T>
+    bool less_predicate(point_2d<T> segment_start, point_2d<T> segment_end,
+                        point_2d<T> site_point, point_2d<T> new_point, bool reverse_order) {
+        kPredicateResult fast_res = less_predicate_check(segment_start, segment_end,
+                                                         site_point, new_point, reverse_order);
+        if (fast_res != UNDEFINED)
+            return (fast_res == LESS);
+
+        double dif_x = static_cast<double>(new_point.x()) -
+                       static_cast<double>(site_point.x());
+        double dif_y = static_cast<double>(new_point.y()) -
+                       static_cast<double>(site_point.y());
+        double a = static_cast<double>(segment_end.x()) -
+                   static_cast<double>(segment_start.x());
+        double b = static_cast<double>(segment_end.y()) -
+                   static_cast<double>(segment_start.y());
+
+        double mul1 = static_cast<double>(new_point.x()) - static_cast<double>(segment_end.x());
+        double mul2 = static_cast<double>(new_point.y()) - static_cast<double>(segment_end.y());
+        double temp = dif_x * dif_x + dif_y * dif_y;
+        double left_expr = (a * a + b * b) * temp * temp;
+        double right_expr = (2.0 * dif_x * (b * mul1 - a * mul2) - b * temp);
+        right_expr *= right_expr;
+
+        if (!almost_equal(left_expr, right_expr, 128)) {
+            if (!reverse_order)
+                return left_expr > right_expr;
+            return left_expr < right_expr;
+        }
+
+        // TODO(asydorchuk): Add mpl there.
+        if (!reverse_order)
+            return left_expr > right_expr;
+        return left_expr < right_expr;
+    }
+
+    template <typename T>
+    bool less_predicate(point_2d<T> segment1_start, point_2d<T> segment1_end,
+                        point_2d<T> segment2_start, point_2d<T> segment2_end,
+                        point_2d<T> new_point) {
+        return true;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -657,85 +803,42 @@ namespace detail {
             return right_site_;
         }
 
+        bool less(const Point2D &new_site) const {
+            if (!left_site_.is_segment()) {
+                return (!right_site_.is_segment()) ? less_pp(new_site) : less_ps(new_site);
+            } else {
+                return (!right_site_.is_segment()) ? less_sp(new_site) : less_ss(new_site);
+            }
+        }
+
         bool less_pp(const Point2D &new_site) const {
             if (left_site_.x() > right_site_.x()) {
                 if (new_site.y() <= left_site_.y())
                     return false;
-                return less(left_site_.get_point0(), right_site_.get_point0(), new_site);
+                return less_predicate(left_site_.get_point0(), right_site_.get_point0(), new_site);
             } else if (left_site_.x() < right_site_.x()) {
                 if (new_site.y() >= right_site_.y())
                     return true;
-                return less(left_site_.get_point0(), right_site_.get_point0(), new_site);
+                return less_predicate(left_site_.get_point0(), right_site_.get_point0(), new_site);
             } else {
                 return left_site_.y() + right_site_.y() <
                        static_cast<coordinate_type>(2.0) * new_site.y();
             }
         }
 
-        bool more_equal_pp(const Point2D &new_site) const {
-            if (left_site_.x() > right_site_.x()) {
-                if (new_site.y() <= left_site_.y())
-                    return true;
-                return !less(left_site_.get_point0(), right_site_.get_point0(), new_site);
-            } else if (left_site_.x() < right_site_.x()) {
-                if (new_site.y() >= right_site_.y())
-                    return false;
-                return !less(left_site_.get_point0(), right_site_.get_point0(), new_site);
-            } else {
-                return !(left_site_.y() + right_site_.y() <
-                       static_cast<coordinate_type>(2.0) * new_site.y());
-            }
-        }
-
         bool less_ps(const Point2D &new_site) const {
-            return true;
-            /*point_2d<T> decision_point = make_point_2d(x0, y0);
-            bool is_left_oriented1 = left_orientation_test(right_site_.get_point0(),
-                                                           right_site_.get_point1(),
-                                                           left_site_.get_point0());
-            bool is_left_oriented2 = left_orientation_tets(right_site_.get_point0(),
-                                                           right_site_.get_point1(),
-                                                           decision_point);
-
-            if (is_left_oriented1 != is_left_oriented2) {
-                return (is_left_oriented1) ? true : false;
-            }
-
-            if (is_left_oriented1) {
-                if (right_site_.get_point0().y() < right_site_.get_point1().y()) {
-                    if (y0 < left_site_.get_point0().y()) {
-                        return false;
-                    }
-                    
-
-                } else {
-                }
-            } else {
-                if (right_site_.get_point0().y() > right_site_.get_point1().y()) {
-                    
-                } else {
-                }
-            }*/
-        }
-
-        bool more_equal_ps(const Point2D &new_site) const {
-            return true;
+            return less_predicate(right_site_.get_point0(), right_site_.get_point1(),
+                                  left_site_.get_point0(), new_site, false);
         }
 
         bool less_sp(const Point2D &new_site) const {
-            return true;
-        }
-
-        bool more_equal_sp(const Point2D &new_site) const {
-            return true;
+            return less_predicate(left_site_.get_point0(), left_site_.get_point1(),
+                                  right_site_.get_point0(), new_site, true);
         }
 
         bool less_ss(const Point2D &new_site) const {
-            return true;
-        }
-
-        bool more_equal_ss(const Point2D &new_site) const {
-            return true;
+            return less_predicate(left_site_.get_point0(), left_site_.get_point1(),
+                                  right_site_.get_point0(), right_site_.get_point1(), new_site);
         }
 
     private:
@@ -788,33 +891,9 @@ namespace detail {
             coordinate_type node2_line = node2.get_new_site().x();
 
             if (node1_line < node2_line) {
-                if (!node1.get_left_site().is_segment()) {
-                    if (!node1.get_right_site().is_segment()) {
-                        return node1.less_pp(node2.get_new_site().get_point0());
-                    } else {
-                        return node1.less_ps(node2.get_new_site().get_point0());
-                    }
-                } else {
-                    if (!node1.get_right_site().is_segment()) {
-                        return node1.less_sp(node2.get_new_site().get_point0());
-                    } else {
-                        return node1.less_ss(node2.get_new_site().get_point0());
-                    }
-                }
+                return node1.less(node2.get_new_site().get_point0());
             } else if (node1_line > node2_line) {
-                if (!node2.get_left_site().is_segment()) {
-                    if (!node2.get_right_site().is_segment()) {
-                        return node2.more_equal_pp(node1.get_new_site().get_point0());
-                    } else {
-                        return node2.more_equal_ps(node1.get_new_site().get_point0());
-                    }
-                } else {
-                    if (!node2.get_right_site().is_segment()) {
-                        return node2.more_equal_sp(node1.get_new_site().get_point0());
-                    } else {
-                        return node2.more_equal_ss(node1.get_new_site().get_point0());
-                    }
-                }
+                return !node2.less(node1.get_new_site().get_point0());
             } else {
                 // Both nodes are situated on the same vertical line.
                 // Let A be the new site event point, and B the site that
