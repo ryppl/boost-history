@@ -91,9 +91,9 @@ int h_is_closed_stderr(int argc, char *argv[])
 int h_is_nul_stdin(int argc, char *argv[]) 
 { 
 #if defined(BOOST_POSIX_API) 
-    std::string word; 
-    std::cin >> word; 
-    return std::cin.eof() ? EXIT_FAILURE : EXIT_SUCCESS; 
+    char buffer[1]; 
+    int res = read(STDIN_FILENO, &buffer, 1); 
+    return res != -1 ? EXIT_SUCCESS : EXIT_FAILURE; 
 #elif defined(BOOST_WINDOWS_API) 
     HANDLE h = GetStdHandle(STD_INPUT_HANDLE); 
     if (h == INVALID_HANDLE_VALUE) 
