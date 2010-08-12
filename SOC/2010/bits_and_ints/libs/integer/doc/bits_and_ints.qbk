@@ -220,7 +220,7 @@ int main()
 [endsect]
 
 [section:bit_reversal Bit Reversal]
-The bit reversal functions reverts the bits of integral types.
+The bit reversal functions reverses the bits of integral types.
 
 [section Non-Member Function `bit_reversal`]
 The run-time version can be included via [@../../../../boost/integer/bit_reversal.hpp <boost/integer/bit_reversal.hpp>].
@@ -935,6 +935,7 @@ functions wich computes the integral part of square root of integral values.
 	int isqrt(uint8_t value);
 	int isqrt(uint16_t value);
 	int isqrt(uint32_t value);
+	
 [endsect]
 
 *[*Returns: ] The square root of `value` rounded down.
@@ -963,7 +964,7 @@ isign or transfer of sign function is defined by:
 ``
  	isign(x, y) =
  		abs(x), if y is greater than or equal 0,
-		-abs(x), if y is less than 0
+			-abs(x), if y is less than 0
 ``
 
 The runtime functions are defined on [@../../../../boost/integer/isign.hpp <boost/integer/isign.hpp>] and the
