@@ -32,7 +32,7 @@ namespace boost { namespace detail {
  */
 template <typename Offset, typename Width>
 struct mask_size {
-    BOOST_STATIC_ASSERT( Offset::value < 8 );
+    BOOST_STATIC_ASSERT( bool((Offset::value) < 8 ));
     
     typedef typename mpl::if_<
         mpl::greater<
