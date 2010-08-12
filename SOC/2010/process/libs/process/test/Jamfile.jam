@@ -26,6 +26,11 @@ explicit helpers ;
 
 using testing ; 
 
+for local i in [ glob inclusion/*.cpp ] 
+{ 
+    compile $(i) : : include_$(i:B) ; 
+} 
+
 run environment.cpp bfs ; 
 run handle.cpp bfs ; 
 run self.cpp bfs ; 

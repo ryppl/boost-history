@@ -21,6 +21,16 @@
 #define BOOST_PROCESS_DETAIL_BASIC_STATUS_SERVICE_HPP
 
 #include <boost/process/config.hpp>
+
+#if defined(BOOST_POSIX_API)
+#   include <sys/types.h>
+#   include <sys/wait.h>
+#elif defined(BOOST_WINDOWS_API)
+#   include <windows.h>
+#else
+#   error "Unsupported platform."
+#endif
+
 #include <boost/process/pid_type.hpp>
 #include <boost/process/detail/status_impl.hpp>
 #include <boost/asio.hpp>
@@ -33,15 +43,6 @@
 #include <boost/system/error_code.hpp>
 #include <vector>
 #include <algorithm>
-
-#if defined(BOOST_POSIX_API)
-#   include <sys/types.h>
-#   include <sys/wait.h>
-#elif defined(BOOST_WINDOWS_API)
-#   include <windows.h>
-#else
-#   error "Unsupported platform."
-#endif
 
 namespace boost {
 namespace process {

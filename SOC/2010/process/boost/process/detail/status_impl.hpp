@@ -21,9 +21,6 @@
 #define BOOST_PROCESS_DETAIL_STATUS_IMPL_HPP
 
 #include <boost/process/config.hpp>
-#include <boost/system/error_code.hpp>
-#include <boost/ptr_container/ptr_unordered_map.hpp>
-#include <algorithm>
 
 #if defined(BOOST_POSIX_API)
 #   include <sys/types.h>
@@ -33,6 +30,11 @@
 #else
 #   error "Unsupported platform."
 #endif
+
+#include <boost/process/pid_type.hpp>
+#include <boost/system/error_code.hpp>
+#include <boost/ptr_container/ptr_unordered_map.hpp>
+#include <algorithm>
 
 namespace boost {
 namespace process {
