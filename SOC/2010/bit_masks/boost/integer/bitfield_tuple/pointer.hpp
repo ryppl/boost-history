@@ -27,8 +27,8 @@ template <
     typename ReturnType,
     typename Name,
     typename Mask = high_bits_mask<
-        typename detail::ptr_mask_type,
-        bit_width< typename detail::ptr_mask_type >::value - 2
+        detail::ptr_mask_type,
+        bit_width< detail::ptr_mask_type >::value - 2
     >
 >
 struct pointer;
