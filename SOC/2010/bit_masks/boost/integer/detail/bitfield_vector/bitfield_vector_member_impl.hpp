@@ -109,7 +109,8 @@ public:
     typedef std::size_t         offset_type;
     BOOST_STATIC_CONSTANT( std::size_t, width = Width );
     BOOST_STATIC_CONSTANT(value_type, sign_bit =
-        (high_bits_mask<value_type,1>::value));
+        (~value_type(0) <<(bit_width<value_type>::value-1) ));
+
     /** constructors and destructor for the proxy_reference_type type. */
     //@{
 

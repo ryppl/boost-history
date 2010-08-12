@@ -26,6 +26,7 @@ typedef proxy_reference_type<char, 9>                   test_type_7;
 typedef proxy_reference_type<long, 7>                   test_type_8;
 typedef proxy_reference_type<long long, 17>             test_type_9;
 typedef proxy_reference_type<long long, 50>             test_type_10;
+typedef proxy_reference_type<short, 13>                 test_type_11;
 
 bool display_debug = false;
 /*
@@ -481,9 +482,11 @@ int main() {
         BOOST_PRINT_ON_TEST_FAILURE_2(t6, 5);
         BOOST_PRINT_ON_TEST_FAILURE_2(t7, 6);
         BOOST_PRINT_ON_TEST_FAILURE_2(t8, 7);
-
-        print_from_to(storage,10);
+        if(display_debug){
+            print_from_to(storage,10);
+        }
     }
+#undef ASSIGN_MONITOR
     {
         if(display_debug) {
             std::cout << "-----------------------------------------" << std::endl;
@@ -553,19 +556,58 @@ int main() {
     // signed numbers.
     {
         display_debug = true;
-
         if(display_debug) {
             std::cout << "=========================================" << std::endl;
             std::cout << " Signed type tests" << std::endl;
             std::cout << "=========================================" << std::endl;
         }
+
+        typedef long long ll_type;
+        int     int_sign_bit    = ~int(0) << (boost::bit_width<int>::value-1);
+        char    char_sign_bit   = ~char(0) << (boost::bit_width<char>::value-1);
+        short   short_sign_bit  = ~long(0) <<
+            (boost::bit_width<short>::value-1);
+
+        long    long_sign_bit   = ~long(0) << (boost::bit_width<long>::value-1);
+        ll_type ll_sign_bit     = ~ll_type(0) <<
+            (boost::bit_width<ll_type>::value-1);
+
+#define PRINT_ON_SIGNBIT_FAILURE(P1, P2) \
+    if(display_debug) {     \
+        if(P1 != P2) {\
+            std::cout << #P1 << " = " << to_binary(P1) << std::endl;\
+            std::cout << #P2 << " = " << to_binary(P2) << std::endl;\
+            \
+        }\
+    }\
+    BOOST_TEST(P1 == P2);
+
+        // testing sign bits.
+        PRINT_ON_SIGNBIT_FAILURE(test_type_6::sign_bit, int_sign_bit);
+        PRINT_ON_SIGNBIT_FAILURE(test_type_7::sign_bit,char_sign_bit);
+        PRINT_ON_SIGNBIT_FAILURE(test_type_8::sign_bit,long_sign_bit);
+        PRINT_ON_SIGNBIT_FAILURE(test_type_9::sign_bit,ll_sign_bit);
+        PRINT_ON_SIGNBIT_FAILURE(test_type_10::sign_bit,ll_sign_bit);
+        PRINT_ON_SIGNBIT_FAILURE(test_type_11::sign_bit,short_sign_bit);
+#undef PRINT_ON_SIGNBIT_FAILURE
+
+
 /*
+typedef proxy_reference_type<int, 3>                    test_type_6;
+typedef proxy_reference_type<char, 9>                   test_type_7;
+typedef proxy_reference_type<long, 7>                   test_type_8;
+typedef proxy_reference_type<long long, 17>             test_type_9;
+typedef proxy_reference_type<long long, 50>             test_type_10;
+typedef proxy_reference_type<short, 13>                 test_type_11;
+
 test_type_6;
 test_type_7;
 test_type_8;
 test_type_9;
 test_type_10;
+test_type_11
 */
+
     }
     return boost::report_errors();
 }
