@@ -211,7 +211,7 @@ inline child create_child(const std::string &executable, Arguments args,
     std::vector<bool> closeflags(maxdescs, true);
     std::pair<std::size_t, char**> argv = detail::collection_to_argv(args);
     std::pair<std::size_t, char**> envp =
-        detail::environment_to_envp(ctx.environment);
+        detail::environment_to_envp(ctx.env);
 
     pid_t pid = fork();
     if (pid == -1)
@@ -309,7 +309,7 @@ inline child create_child(const std::string &executable, Arguments args,
     strcpy_s(workdir.get(), ctx.work_dir.size() + 1, ctx.work_dir.c_str());
 
     boost::shared_array<char> envstrs =
-        detail::environment_to_windows_strings(ctx.environment);
+        detail::environment_to_windows_strings(ctx.env);
 
     if (CreateProcessA(exe.get(), cmdline.get(), NULL, NULL, TRUE, 0,
         envstrs.get(), workdir.get(), &startup_info, &pi) == 0)

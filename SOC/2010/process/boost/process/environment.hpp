@@ -44,7 +44,7 @@ namespace process {
  * This is provided for-free by the map container used to implement this
  * type, and this behavior is required by Windows systems.
  */
-typedef std::map<std::string, std::string> environment_t;
+typedef std::map<std::string, std::string> environment;
 
 }
 }

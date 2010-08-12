@@ -74,9 +74,9 @@ public:
      * Returns the current process environment variables. Modifying the
      * returned object has no effect on the current environment.
      */
-    static environment_t get_environment()
+    static environment get_environment()
     {
-        environment_t e;
+        environment e;
 
 #if defined(BOOST_POSIX_API)
 #   if defined(__APPLE__)
@@ -89,7 +89,7 @@ public:
         {
             std::string s = *env;
             std::string::size_type pos = s.find('=');
-            e.insert(environment_t::value_type(s.substr(0, pos),
+            e.insert(environment::value_type(s.substr(0, pos),
                 s.substr(pos + 1)));
             ++env;
         }
@@ -108,7 +108,7 @@ public:
             {
                 std::string s = env;
                 std::string::size_type pos = s.find('=');
-                e.insert(environment_t::value_type(s.substr(0, pos),
+                e.insert(environment::value_type(s.substr(0, pos),
                     s.substr(pos + 1)));
                 env += s.size() + 1;
             }

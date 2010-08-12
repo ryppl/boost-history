@@ -25,7 +25,7 @@ void create_child_context_configuration()
     boost::process::context ctx; 
     ctx.process_name = "hostname"; 
     ctx.work_dir = "C:\\"; 
-    ctx.environment.insert(std::make_pair("new_variable", "value")); 
+    ctx.env.insert(std::make_pair("new_variable", "value")); 
     boost::process::create_child(exe, args, ctx); 
 //] 
 } 

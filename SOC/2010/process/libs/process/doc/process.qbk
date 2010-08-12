@@ -11,10 +11,10 @@
     ]
 ]
 
-[def _fork_ [@http://www.opengroup.org/onlinepubs/000095399/functions/fork.html `fork`]]
-[def _execve_ [@http://www.opengroup.org/onlinepubs/009695399/functions/exec.html `execve`]]
-[def _chroot_ [@http://opengroup.org/onlinepubs/007908799/xsh/chroot.html `chroot`]]
-[def _createprocess_ [@http://msdn.microsoft.com/en-us/library/ms682425(VS.85).aspx `CreateProcess`]]
+[def _fork_ [@http://www.opengroup.org/onlinepubs/000095399/functions/fork.html `fork()`]]
+[def _execve_ [@http://www.opengroup.org/onlinepubs/009695399/functions/exec.html `execve()`]]
+[def _chroot_ [@http://opengroup.org/onlinepubs/007908799/xsh/chroot.html `chroot()`]]
+[def _createprocess_ [@http://msdn.microsoft.com/en-us/library/ms682425(VS.85).aspx `CreateProcess()`]]
 [def _sys/wait.h_ [@http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/wait.h.html `sys/wait.h`]]
 [def _child_ [classref boost::process::child `child`]]
 [def _context_ [classref boost::process::context `context`]]
@@ -29,7 +29,7 @@
 [def _behavior_pipe_ [classref boost::process::behavior::pipe `behavior::pipe`]]
 [def _behavior_named_pipe_ [classref boost::process::behavior::named_pipe `behavior::named_pipe`]]
 [def _behavior_dummy_ [classref boost::process::behavior::dummy `behavior::dummy`]]
-[def _behavior_stream_create_ [memberref boost::process::behavior::stream::create `behavior::stream::create()`]]
+[def _behavior_stream_create_ [memberref boost::process::behavior::stream::create `create()`]]
 [def _behavior_stream_get_child_end_ [memberref boost::process::behavior::stream::get_child_end `behavior::stream::get_child_end()`]]
 [def _behavior_stream_get_parent_end_ [memberref boost::process::behavior::stream::get_parent_end `behavior::stream::get_parent_end()`]]
 [def _child_get_stdin_ [memberref boost::process::child::get_stdin `child::get_stdin()`]]
@@ -44,10 +44,11 @@
 [def _shell_ [funcref boost::process::shell `shell()`]]
 [def _find_executable_in_path_ [funcref boost::process::find_executable_in_path `find_executable_in_path()`]]
 
-[include preface.qbk]
+[include introduction.qbk]
 
 [section User Guide]
 
+[include headers.qbk]
 [include childprocess.qbk]
 [include context.qbk]
 [include communication.qbk]
@@ -61,3 +62,9 @@
 [endsect]
 
 [xinclude autodoc.xml]
+
+[section Appendices]
+
+[include future.qbk]
+
+[endsect]

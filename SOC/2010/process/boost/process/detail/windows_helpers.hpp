@@ -3,7 +3,8 @@
 // ~~~~~~~~~~~~~
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
-// Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling
+// Copyright (c) 2009 Boris Schaeling
 // Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -11,15 +12,13 @@
 //
 
 /**
- * \file boost/process/detail/helper_functions.hpp
+ * \file boost/process/detail/windows_helpers.hpp
  *
- * Includes the declaration of helper functions for the operations in a win32
- * system.
- *
+ * Includes the declaration of helper functions for Windows systems.
  */
 
-#ifndef BOOST_PROCESS_WIN32_HELPERS_HPP
-#define BOOST_PROCESS_WIN32_HELPERS_HPP
+#ifndef BOOST_PROCESS_WINDOWS_HELPERS_HPP
+#define BOOST_PROCESS_WINDOWS_HELPERS_HPP
 
 #include <boost/process/config.hpp>
 #include <boost/process/environment.hpp>
@@ -42,11 +41,13 @@ namespace detail {
  * allocated in dynamic memory; the caller must free it when not
  * used any more. This is enforced by the use of a shared pointer.
  *
+ * This operation is only available on Windows systems.
+ *
  * \return A dynamically allocated char* string that represents
  *         the environment's content. This string is of the form
  *         var1=value1\\0var2=value2\\0\\0.
  */
-inline boost::shared_array<char> environment_to_win32_strings(environment_t &env)
+inline boost::shared_array<char> environment_to_windows_strings(environment &env)
 {
     boost::shared_array<char> envp;
 
@@ -58,7 +59,7 @@ inline boost::shared_array<char> environment_to_win32_strings(environment_t &env
     else
     {
         std::string s;
-        for (environment_t::const_iterator it = env.begin(); it != env.end(); ++it)
+        for (environment::const_iterator it = env.begin(); it != env.end(); ++it)
         {
             s += it->first + "=" + it->second;
             s.push_back(0);
@@ -75,9 +76,10 @@ inline boost::shared_array<char> environment_to_win32_strings(environment_t &env
 }
 
 /**
- * Converts the command line to a plain string. Converts the command line's
- * list of arguments to the format expected by the \a lpCommandLine parameter
- * in the CreateProcess() system call.
+ * Converts the command line to a plain string.
+ *
+ * Converts the command line's list of arguments to the format expected by the
+ * \a lpCommandLine parameter in the CreateProcess() system call.
  *
  * This operation is only available on Windows systems.
  *
@@ -86,7 +88,7 @@ inline boost::shared_array<char> environment_to_win32_strings(environment_t &env
  *         shared_array object to ensure its release at some point.
  */
 template <class Arguments>
-inline boost::shared_array<char> collection_to_win32_cmdline(const Arguments &args)
+inline boost::shared_array<char> collection_to_windows_cmdline(const Arguments &args)
 {
     typedef std::vector<std::string> arguments_t;
     arguments_t args2;

@@ -1,6 +1,6 @@
 [section:asyncio Asynchronous I/O]
 
-Just like the streams from the C++ standard library _pistream_ and _postream_ only support synchronous (or blocking) I/O. For asynchronous I/O Boost.Process provides the class _pipe_. 
+Just like the streams from the C++ standard _pistream_ and _postream_ only support synchronous (or blocking) I/O. For asynchronous I/O Boost.Process provides the class _pipe_. 
 
 [import ../example/async_io.cpp]
 [async_io]

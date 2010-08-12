@@ -370,7 +370,7 @@ std::pair<bool, std::string> get_var_value(bp::context &ctx, const std::string &
 BOOST_AUTO_TEST_CASE(test_clear_environment) 
 { 
     bp::context ctx; 
-    ctx.environment.erase("TO_BE_QUERIED"); 
+    ctx.env.erase("TO_BE_QUERIED"); 
 
 #if defined(BOOST_POSIX_API) 
     BOOST_REQUIRE(setenv("TO_BE_QUERIED", "test", 1) != -1); 
@@ -401,7 +401,7 @@ BOOST_AUTO_TEST_CASE(test_unset_environment)
 #endif 
 
     bp::context ctx; 
-    ctx.environment.erase("TO_BE_UNSET"); 
+    ctx.env.erase("TO_BE_UNSET"); 
     std::pair<bool, std::string> p = get_var_value(ctx, "TO_BE_UNSET"); 
     BOOST_CHECK(!p.first); 
 } 
@@ -423,15 +423,14 @@ BOOST_AUTO_TEST_CASE(test_set_environment_var)
 #endif 
 
     bp::context ctx; 
-    ctx.environment.insert(bp::environment_t::value_type("TO_BE_SET", 
-        "some-value")); 
+    ctx.env.insert(bp::environment::value_type("TO_BE_SET", "some-value")); 
     std::pair<bool, std::string> p = get_var_value(ctx, "TO_BE_SET"); 
     BOOST_CHECK(p.first); 
     BOOST_CHECK_EQUAL(p.second, "'some-value'"); 
 
 #if defined(BOOST_POSIX_API) 
     bp::context ctx2; 
-    ctx2.environment.insert(bp::environment_t::value_type("TO_BE_SET", "")); 
+    ctx2.env.insert(bp::environment::value_type("TO_BE_SET", "")); 
     std::pair<bool, std::string> p2 = get_var_value(ctx2, "TO_BE_SET"); 
     BOOST_CHECK(p2.first); 
     BOOST_CHECK_EQUAL(p2.second, "''"); 

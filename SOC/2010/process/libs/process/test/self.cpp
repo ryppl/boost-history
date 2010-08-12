@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(test_get_environment)
 { 
     bp::self &p = bp::self::get_instance(); 
 
-    bp::environment_t env1 = p.get_environment(); 
+    bp::environment env1 = p.get_environment(); 
     BOOST_CHECK(env1.find("THIS_SHOULD_NOT_BE_DEFINED") == env1.end()); 
 
 #if defined(BOOST_POSIX_API) 
@@ -50,8 +50,8 @@ BOOST_AUTO_TEST_CASE(test_get_environment)
         "some-value") != 0); 
 #endif 
 
-    bp::environment_t env2 = p.get_environment(); 
-    bp::environment_t::const_iterator it = env2.find("THIS_SHOULD_BE_DEFINED"); 
+    bp::environment env2 = p.get_environment(); 
+    bp::environment::const_iterator it = env2.find("THIS_SHOULD_BE_DEFINED"); 
     BOOST_CHECK(it != env2.end()); 
     BOOST_CHECK_EQUAL(it->second, "some-value"); 
 } 

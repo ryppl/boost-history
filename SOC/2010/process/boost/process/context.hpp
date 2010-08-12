@@ -77,7 +77,7 @@ struct context
     /**
      * Environment variables.
      */
-    environment_t environment;
+    environment env;
 
     /**
      * Constructs a process context.
@@ -100,7 +100,7 @@ struct context
             STD_ERROR_HANDLE))),
 #endif
         work_dir(self::get_work_dir()),
-        environment(self::get_environment())
+        env(self::get_environment())
     {
     }
 

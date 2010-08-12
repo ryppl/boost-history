@@ -29,7 +29,7 @@
 
 BOOST_AUTO_TEST_CASE(test_current) 
 { 
-    bp::environment_t env1 = bp::self::get_environment(); 
+    bp::environment env1 = bp::self::get_environment(); 
     BOOST_CHECK(env1.find("THIS_SHOULD_NOT_BE_DEFINED") == env1.end()); 
 
 #if defined(BOOST_POSIX_API) 
@@ -39,8 +39,8 @@ BOOST_AUTO_TEST_CASE(test_current)
         "some-value") != 0); 
 #endif 
 
-    bp::environment_t env2 = bp::self::get_environment(); 
-    bp::environment_t::const_iterator it = 
+    bp::environment env2 = bp::self::get_environment(); 
+    bp::environment::const_iterator it = 
         env2.find("THIS_SHOULD_BE_DEFINED"); 
     BOOST_CHECK(it != env2.end()); 
     BOOST_CHECK_EQUAL(it->second, "some-value"); 
@@ -49,10 +49,10 @@ BOOST_AUTO_TEST_CASE(test_current)
 #if defined(BOOST_POSIX_API) 
 BOOST_AUTO_TEST_CASE(test_envp) 
 { 
-    bp::environment_t env; 
-    env.insert(bp::environment_t::value_type("VAR1", "value1")); 
-    env.insert(bp::environment_t::value_type("VAR2", "value2")); 
-    env.insert(bp::environment_t::value_type("VAR3", "value3")); 
+    bp::environment env; 
+    env.insert(bp::environment::value_type("VAR1", "value1")); 
+    env.insert(bp::environment::value_type("VAR2", "value2")); 
+    env.insert(bp::environment::value_type("VAR3", "value3")); 
 
     std::pair<std::size_t, char**> ep = bpd::environment_to_envp(env); 
 
@@ -74,9 +74,9 @@ BOOST_AUTO_TEST_CASE(test_envp)
 
 BOOST_AUTO_TEST_CASE(test_envp_unsorted) 
 { 
-    bp::environment_t env; 
-    env.insert(bp::environment_t::value_type("VAR2", "value2")); 
-    env.insert(bp::environment_t::value_type("VAR1", "value1")); 
+    bp::environment env; 
+    env.insert(bp::environment::value_type("VAR2", "value2")); 
+    env.insert(bp::environment::value_type("VAR1", "value1")); 
 
     std::pair<std::size_t, char**> ep = bpd::environment_to_envp(env); 
 
@@ -96,10 +96,10 @@ BOOST_AUTO_TEST_CASE(test_envp_unsorted)
 #if defined(BOOST_WINDOWS_API) 
 BOOST_AUTO_TEST_CASE(test_strings) 
 { 
-    bp::environment_t env; 
-    env.insert(bp::environment_t::value_type("VAR1", "value1")); 
-    env.insert(bp::environment_t::value_type("VAR2", "value2")); 
-    env.insert(bp::environment_t::value_type("VAR3", "value3")); 
+    bp::environment env; 
+    env.insert(bp::environment::value_type("VAR1", "value1")); 
+    env.insert(bp::environment::value_type("VAR2", "value2")); 
+    env.insert(bp::environment::value_type("VAR3", "value3")); 
 
     boost::shared_array<char> strs = 
         bpd::environment_to_windows_strings(env); 
@@ -111,9 +111,9 @@ BOOST_AUTO_TEST_CASE(test_strings)
 
 BOOST_AUTO_TEST_CASE(test_strings_unsorted) 
 { 
-    bp::environment_t env; 
-    env.insert(bp::environment_t::value_type("VAR2", "value2")); 
-    env.insert(bp::environment_t::value_type("VAR1", "value1")); 
+    bp::environment env; 
+    env.insert(bp::environment::value_type("VAR2", "value2")); 
+    env.insert(bp::environment::value_type("VAR1", "value1")); 
 
     boost::shared_array<char> strs = 
         bpd::environment_to_windows_strings(env); 

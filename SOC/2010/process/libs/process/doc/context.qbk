@@ -2,17 +2,17 @@
 
 Apart from the executable name and command line options a third parameter can be passed to _create_child_: The _context_ class is used to configure the runtime context of a new process. 
 
-The _context_ class provides only a few member variables. You can set the process name with `context::process_name`, the work directory with `context::work_dir` and environment variables with `context::environment`. 
+The _context_ class provides only a few member variables. You can set the process name with `context::process_name`, the work directory with `context::work_dir` and environment variables with `context::env`. 
 
 [import ../example/create_child_context.cpp]
 [create_child_context_configuration]
 
-In practice you are probably more often using the member variables `context::stdin_behavior`, `context::stdout_behavior` and `context::stderr_behavior`. It depends on these settings how the standard streams of a child process will be configured. 
+In practice you are probably more often using the member variables `context::stdin_behavior`, `context::stdout_behavior` and `context::stderr_behavior`. It depends on them how standard streams of a child process are configured. 
 
 The type of these three member variables is `boost::shared_ptr<boost::process::behavior::stream>`. _behavior_stream_ is the base class of a small hierarchy of behavior classes. Boost.Process provides the following stream behavior classes: 
 
-* _behavior_close_
 * _behavior_inherit_
+* _behavior_close_
 * _behavior_pipe_
 * _behavior_named_pipe_
 * _behavior_dummy_

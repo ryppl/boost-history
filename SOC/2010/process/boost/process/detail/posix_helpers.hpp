@@ -50,12 +50,12 @@ namespace detail {
  *         string of the form var=value. The caller is responsible for
  *         freeing them.
  */
-inline std::pair<std::size_t, char**> environment_to_envp(const environment_t &env)
+inline std::pair<std::size_t, char**> environment_to_envp(const environment &env)
 {
     std::size_t nargs = env.size();
     char **envp = new char*[nargs + 1]; 
-    environment_t::size_type i = 0; 
-    for (environment_t::const_iterator it = env.begin(); it != env.end(); ++it) 
+    environment::size_type i = 0; 
+    for (environment::const_iterator it = env.begin(); it != env.end(); ++it) 
     { 
         std::string s = it->first + "=" + it->second; 
         envp[i] = new char[s.size() + 1]; 
