@@ -12,6 +12,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/type_traits/is_signed.hpp>
+#include <boost/type_traits/make_unsigned.hpp>
 #include <boost/assert.hpp>
 #include <cstring>
 #include <boost/integer/high_low_bits.hpp>
@@ -107,9 +108,14 @@ public:
     typedef unsigned char       storage_type;
     typedef RetType             value_type;
     typedef std::size_t         offset_type;
+
+    typedef typename make_unsigned<value_type>::type unsigned_value_type;
     BOOST_STATIC_CONSTANT( std::size_t, width = Width );
     BOOST_STATIC_CONSTANT(value_type, sign_bit =
         (~value_type(0) <<(bit_width<value_type>::value-1) ));
+
+    BOOST_STATIC_CONSTANT(value_type, stored_sign_bit =
+        ( value_type(1) << (width -1)) );
 
     /** constructors and destructor for the proxy_reference_type type. */
     //@{
@@ -133,6 +139,73 @@ public:
     }
     /** Implicit conversion operator.*/
     operator value_type() const {
+
+        value_type ret = 0;
+        // value_type value_bits = 0;
+        if(_mask._size == 1) {
+            ret = (value_type( _mask._first_byte & *_ptr ) >>
+                _mask._last_shift);
+
+            if((stored_sign_bit & ret) == stored_sign_bit) {
+                ret = (~value_type(0) << (width - 1)) |
+                    ((~stored_sign_bit) & ret);
+            }
+            return ret;
+        }
+
+        storage_ptr_t byte_ptr = _ptr;
+
+        if(_mask._size == 2) {
+            ++byte_ptr;
+            byte_ptr = _ptr;
+            // getting first bits.
+            ret = value_type(_mask._first_byte & *byte_ptr)
+                << ( 8 - _mask._last_shift );
+            ++byte_ptr;
+            unsigned_value_type retrieved_value;
+            if( _mask._last_byte == 0xFF) {
+                ret <<= 8;
+                ret += 0xFF;
+            }else{
+                 retrieved_value = (unsigned_value_type( _mask._last_byte)
+                    & unsigned_value_type(*byte_ptr));
+                retrieved_value >>= _mask._last_shift;
+                ret += retrieved_value;
+            }
+            if(stored_sign_bit & ret) {
+                ret = (~value_type(0) << (width - 1)) |
+                    (~stored_sign_bit & ret);
+            }
+            return ret;
+        }
+        
+        const storage_t all_bits = 0xFF;
+        // gettting first byte.
+
+        ret = value_type( _mask._first_byte & *byte_ptr);
+        ++byte_ptr;
+        
+        // getting middle bytes
+        for(std::size_t index = 0; index < _mask._size - 2; ++index) {
+            ret <<= 8;
+            ret += *byte_ptr & all_bits;
+            ++byte_ptr;
+        }
+        // shifting bits
+        if(_mask._last_byte == 0xFF) {
+            ret <<= 8;
+            ret += value_type(*byte_ptr & _mask._last_byte);
+        }else{
+            ret <<= 8 - _mask._last_shift;
+            ret += unsigned_value_type( *byte_ptr & _mask._last_byte )
+                >> ( _mask._last_shift);
+        }
+        if(stored_sign_bit & ret) {
+            ret = (~value_type(0) << (width - 1)) ^
+                (~stored_sign_bit & ret);
+        }
+
+        return ret;
     }
 
     /** value_type storage assignement operator.*/
@@ -176,9 +249,7 @@ public:
     /** pointer, offset constructor. */
     explicit proxy_reference_type(storage_type* ptr, offset_type offset)
         :_ptr(ptr), _mask(get_mask_detail<Width>(offset))
-        
     { }
-
     //@}
 
     /** Copy assignment. */
@@ -236,7 +307,8 @@ public:
             ret += value_type(*byte_ptr & _mask._last_byte);
         }else{
             ret <<= 8 - _mask._last_shift;
-            ret += value_type( *byte_ptr & _mask._last_byte ) >> ( _mask._last_shift);
+            ret += value_type( *byte_ptr & _mask._last_byte )
+                >> ( _mask._last_shift);
         }
         return ret;
     }
@@ -277,12 +349,14 @@ public:
         mask = _mask._first_byte;
         mask <<= width - bits_in_mask;
 
-        *byte_ptr = (*byte_ptr & ~_mask._first_byte) | ((x & mask ) >> (width - bits_in_mask));
+        *byte_ptr = (*byte_ptr & ~_mask._first_byte) | ((x & mask )
+            >> (width - bits_in_mask));
         ++byte_ptr;
         mask = 0xFF;
         mask <<= width - bits_in_mask - 8;
         for(std::size_t index = 0; index < _mask._size - 2;++index) {
-            *byte_ptr = (mask & x) >> (width - (bits_in_mask + (8 * index))- 8);
+            *byte_ptr = (mask & x) >> (width - (bits_in_mask +
+                (8 * index))- 8);
             mask >>= 8;
             ++byte_ptr;
         }

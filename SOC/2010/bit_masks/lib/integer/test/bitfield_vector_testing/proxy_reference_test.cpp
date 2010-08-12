@@ -22,8 +22,8 @@ typedef proxy_reference_type<unsigned long long, 50>    test_type_5;
 
 // signed type testing.
 typedef proxy_reference_type<int, 3>                    test_type_6;
-typedef proxy_reference_type<char, 9>                   test_type_7;
-typedef proxy_reference_type<long, 7>                   test_type_8;
+typedef proxy_reference_type<char, 7>                   test_type_7;
+typedef proxy_reference_type<long, 9>                   test_type_8;
 typedef proxy_reference_type<long long, 17>             test_type_9;
 typedef proxy_reference_type<long long, 50>             test_type_10;
 typedef proxy_reference_type<short, 13>                 test_type_11;
@@ -466,7 +466,7 @@ int main() {
 
 
         ASSIGN_MONITOR(t1,7)
-        ASSIGN_MONITOR(t2,1);
+        ASSIGN_MONITOR(t2,47);
         ASSIGN_MONITOR(t3,2);
         ASSIGN_MONITOR(t4,3);
         ASSIGN_MONITOR(t5,4);
@@ -475,7 +475,7 @@ int main() {
         ASSIGN_MONITOR(t8,7);
 
         BOOST_PRINT_ON_TEST_FAILURE_2(t1, 7);
-        BOOST_PRINT_ON_TEST_FAILURE_2(t2, 1);
+        BOOST_PRINT_ON_TEST_FAILURE_2(t2, 47);
         BOOST_PRINT_ON_TEST_FAILURE_2(t3, 2);
         BOOST_PRINT_ON_TEST_FAILURE_2(t4, 3);
         BOOST_PRINT_ON_TEST_FAILURE_2(t5, 4);
@@ -572,6 +572,9 @@ int main() {
         ll_type ll_sign_bit     = ~ll_type(0) <<
             (boost::bit_width<ll_type>::value-1);
 
+
+
+       
 #define PRINT_ON_SIGNBIT_FAILURE(P1, P2) \
     if(display_debug) {     \
         if(P1 != P2) {\
@@ -589,12 +592,101 @@ int main() {
         PRINT_ON_SIGNBIT_FAILURE(test_type_9::sign_bit,ll_sign_bit);
         PRINT_ON_SIGNBIT_FAILURE(test_type_10::sign_bit,ll_sign_bit);
         PRINT_ON_SIGNBIT_FAILURE(test_type_11::sign_bit,short_sign_bit);
+
+        // testing stored sign bit retrieval.
+        PRINT_ON_SIGNBIT_FAILURE(test_type_6::stored_sign_bit,
+            int(1)<<(test_type_6::width-1) );
+        PRINT_ON_SIGNBIT_FAILURE(test_type_7::stored_sign_bit,
+            test_type_7::value_type(1)<<(test_type_7::width-1) );
+        PRINT_ON_SIGNBIT_FAILURE(test_type_8::stored_sign_bit,
+            test_type_8::value_type(1)<<(test_type_8::width-1) );
+        PRINT_ON_SIGNBIT_FAILURE(test_type_9::stored_sign_bit,
+            test_type_9::value_type(1)<<(test_type_9::width-1) );
+        PRINT_ON_SIGNBIT_FAILURE(test_type_10::stored_sign_bit,
+            test_type_10::value_type(1)<<(test_type_10::width-1) );
+        PRINT_ON_SIGNBIT_FAILURE(test_type_11::stored_sign_bit,
+            test_type_11::value_type(1)<<(test_type_11::width-1) );
 #undef PRINT_ON_SIGNBIT_FAILURE
 
+    }
 
+    // testing signed field retrieval.
+    {
+        // int t = -15;
+        // int value_bits = (~(~int(0) << 6)) & t;
+        // std::cout << "t: " << to_binary(t) << std::endl;
+        // std::cout << "value_bits: "<< to_binary(value_bits) << std::endl;
+
+        // int int_min_val = ~int(0) << 6;
+        // std::cout << "int_min_val: "<< to_binary(int_min_val) << std::endl;
+        // t = value_bits ^ int_min_val;
+        // std::cout << "resulting value: " << to_binary(t) << std::endl;
+        // std::cout << "resulting value: " << std::dec << t << std::endl;
+        // BOOST_TEST(false);
+        typedef unsigned char storage_type;
+        typedef storage_type* storage_ptr;        
+        storage_type storage[20];
+        storage_ptr ptr = storage;
+        std::memset(ptr,0,20);
+
+        *ptr = 0xA0;
+        
+        test_type_6 t1(ptr, 0);
+        BOOST_TEST( t1 == -3);
+        *ptr = 0x20;
+        BOOST_TEST( t1 == 1 );
+        *ptr = 0x5E;
+        test_type_7 t2(ptr, 0);
+        BOOST_TEST(t2 == 47);
+        *ptr = 0x51 << 1;
+
+        BOOST_TEST(t2 == -47);
+        // std::cout << to_binary(-47) <<std::endl;
+        *ptr = 0x50 >> 1;
+        ++ptr;
+        *ptr = 0x80;
+        ptr = storage;
+        test_type_7 t3(ptr,2);
+//         std::cout << to_binary(*ptr) << " ";
+//         ++ptr;
+//         std::cout << to_binary(*ptr) << std::endl;
+
+        BOOST_TEST( t3 == -47);
+
+
+        ptr = storage;
+        std::memset(ptr,0,2);
+        test_type_10 t4(ptr, 4);
+        // 2710
+        ++ptr;
+        ++ptr; // 16
+        ++ptr;
+        ++ptr; // 32
+        ++ptr;
+        *ptr = 0x9c;
+        ++ptr;
+        *ptr = 0x40;
+        ++ptr;
+        BOOST_TEST( t4 == 10000);
+
+        ptr = storage;
+        *ptr = 0x01 << 3;
+        BOOST_TEST(t4 == -562949953411312);
+        
+
+        // long long t = t4;
+        // std::cout << "hex value of ptr: " << std::hex << std::size_t(*ptr) << std::endl;
+        // std::cout << "t4: " << to_binary(t) << std::endl;
+        // std::cout << "Test type 7: " << std::dec << t << std::endl;
+        // std::cout << "binary of storage_sign_bit:  " << to_binary(test_type_7::stored_sign_bit) << std::endl;
+        
+        // 0000   00  0000 0000  0000 0000  0000 0000  0000 0000  0000 0000  0000 0000
+        //                                                    00  10 0111 1 0  0000 00
+    //  std::memset(ptr,0,10);
+        
 /*
 typedef proxy_reference_type<int, 3>                    test_type_6;
-typedef proxy_reference_type<char, 9>                   test_type_7;
+typedef proxy_reference_type<char, 7>                   test_type_7;
 typedef proxy_reference_type<long, 7>                   test_type_8;
 typedef proxy_reference_type<long long, 17>             test_type_9;
 typedef proxy_reference_type<long long, 50>             test_type_10;
@@ -607,6 +699,7 @@ test_type_9;
 test_type_10;
 test_type_11
 */
+        BOOST_TEST(false);
 
     }
     return boost::report_errors();
