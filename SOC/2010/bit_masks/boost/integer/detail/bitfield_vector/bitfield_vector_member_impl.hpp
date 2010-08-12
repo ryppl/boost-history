@@ -14,7 +14,7 @@
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/assert.hpp>
 #include <cstring>
-#include <boost/integer/low_bits_mask.hpp>
+#include <boost/integer/high_low_bits.hpp>
 #include <boost/integer/bit_width.hpp>
 #include <iostream>
 #include <iomanip>
