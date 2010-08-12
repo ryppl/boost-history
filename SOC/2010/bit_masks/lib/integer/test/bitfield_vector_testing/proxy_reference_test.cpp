@@ -555,7 +555,7 @@ int main() {
     // begining testing of the proxy reference type specialization for
     // signed numbers.
     {
-        display_debug = true;
+        display_debug = false;
         if(display_debug) {
             std::cout << "=========================================" << std::endl;
             std::cout << " Signed type tests" << std::endl;
@@ -671,36 +671,21 @@ int main() {
 
         ptr = storage;
         *ptr = 0x01 << 3;
-        BOOST_TEST(t4 == -562949953411312);
-        
+        BOOST_TEST(t4 == -562949953411312);        
+    }
 
-        // long long t = t4;
-        // std::cout << "hex value of ptr: " << std::hex << std::size_t(*ptr) << std::endl;
-        // std::cout << "t4: " << to_binary(t) << std::endl;
-        // std::cout << "Test type 7: " << std::dec << t << std::endl;
-        // std::cout << "binary of storage_sign_bit:  " << to_binary(test_type_7::stored_sign_bit) << std::endl;
-        
-        // 0000   00  0000 0000  0000 0000  0000 0000  0000 0000  0000 0000  0000 0000
-        //                                                    00  10 0111 1 0  0000 00
-    //  std::memset(ptr,0,10);
-        
-/*
-typedef proxy_reference_type<int, 3>                    test_type_6;
-typedef proxy_reference_type<char, 7>                   test_type_7;
-typedef proxy_reference_type<long, 7>                   test_type_8;
-typedef proxy_reference_type<long long, 17>             test_type_9;
-typedef proxy_reference_type<long long, 50>             test_type_10;
-typedef proxy_reference_type<short, 13>                 test_type_11;
-
-test_type_6;
-test_type_7;
-test_type_8;
-test_type_9;
-test_type_10;
-test_type_11
-*/
-        // BOOST_TEST(false);
-
+    // testing storage of signed types with proxy_reference_type
+    {
+        display_debug = true;
+        typedef unsigned char storage_type;
+        typedef storage_type* storage_ptr;        
+        storage_type storage[20];
+        storage_ptr ptr = storage;
+        std::memset(ptr,0,20);
+        test_type_6 t1(ptr,0);
+        t1 = -2;
+        BOOST_TEST(t1 == -2);
+    
     }
     return boost::report_errors();
 }

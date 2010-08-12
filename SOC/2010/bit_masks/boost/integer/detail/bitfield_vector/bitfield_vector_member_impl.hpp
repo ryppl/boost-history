@@ -210,15 +210,78 @@ public:
 
     /** value_type storage assignement operator.*/
     _self& operator=(value_type x) {
+        std::cout << "called assignment operator" << std::endl;
+        //std::cout << "x initial value: " << to_binary_2(x) <<std::endl;
+        unsigned_value_type x_adjusted = ((unsigned_value_type(x & sign_bit) >>
+                (bit_width<value_type>::value - width))
+            |
+        (low_bits_mask<value_type, std::size_t(width-1)>::value & x) );
+        //std::cout << "x new value: " << to_binary_2(x_new) <<std::endl;
 
+        if(_mask._size == 1) {
+            storage_t previous_values = *_ptr & ~_mask._first_byte;
+            storage_t new_value = low_bits_mask<value_type, width>::value &
+                x_adjusted;
+            new_value <<= _mask._last_shift;
+            previous_values |= new_value;
+            *_ptr = previous_values;
+            return *this;
+        }
+        
+        storage_t       to_be_stored = 0;
+        std::size_t     bits_in_mask = 0;
+        value_type      mask         = 0;
+        storage_ptr_t   byte_ptr     = _ptr;
+
+        if(_mask._size == 2) {
+            bits_in_mask = 8 - _mask._offset;
+            mask = (~(~value_type(0) << bits_in_mask))
+                << (width - bits_in_mask);
+            to_be_stored = storage_t((mask & 
+                x_adjusted)>>(width - bits_in_mask));
+            *byte_ptr = ((*byte_ptr) & (~_mask._first_byte)) | to_be_stored;
+            
+            ++byte_ptr;
+            bits_in_mask = width - bits_in_mask;
+            mask = ~(~value_type(0) << bits_in_mask);
+            to_be_stored = storage_t((mask & x_adjusted) << _mask._last_shift);
+            *byte_ptr = (*byte_ptr & ~_mask._last_byte) | to_be_stored;
+            return *this;
+        }
+        // calculate the offset of the first bit within x
+        // and creating a mask to extract the fist bits from within x
+        bits_in_mask = 8 - _mask._offset;
+        mask = _mask._first_byte;
+        mask <<= width - bits_in_mask;
+
+        *byte_ptr = (*byte_ptr & ~_mask._first_byte) | ((x_adjusted & mask )
+            >> (width - bits_in_mask));
+        ++byte_ptr;
+        mask = 0xFF;
+        mask <<= width - bits_in_mask - 8;
+        for(std::size_t index = 0; index < _mask._size - 2;++index) {
+            *byte_ptr = (mask & x_adjusted) >> (width - (bits_in_mask +
+                (8 * index))- 8);
+            mask >>= 8;
+            ++byte_ptr;
+        }
+        // now calculating the last bytes information, retrieving it and then
+        // storing the data within the array.
+        if(_mask._last_byte == 0xFF) {
+            *byte_ptr = _mask._last_byte & x_adjusted;
+        }else{
+            mask = _mask._last_byte >> _mask._last_shift;
+            *byte_ptr = (*byte_ptr & ~_mask._last_byte) |
+                    ((mask & x_adjusted) << (_mask._last_shift));
+        }
+        return *this;
     }
-
+/*
     bool operator==(_self const& rhs);
     bool operator!=(_self const& rhs);
     bool operator<(_self const& rhs);
+*/
 
-
-    // private:
     /** Member variables. */
     storage_type*    _ptr;
     mask_detail     _mask;
@@ -371,13 +434,12 @@ public:
         }
         return *this;
     }
-
+/*
     bool operator==(_self const& rhs);
     bool operator!=(_self const& rhs);
     bool operator<(_self const& rhs);
+*/
 
-
-// private:
     /** Member variables. */
     storage_type*   _ptr;
     mask_detail     _mask;
