@@ -118,39 +118,53 @@ int main() {
         // single byte mask testing
         typedef unsigned char storage_type;
         typedef storage_type* storage_ptr;
+        if(display_debug) {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "single byte mask" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
+        }
         storage_type storage[20];
         storage_ptr ptr = storage;
         *ptr = storage_type(0x7) << 5;
+        if(display_debug) {
         std::cout << "Test type 1. First byte value in hex: " << std::endl;
         std::cout << std::hex << std::size_t(*ptr) << std::endl;
+        }
         // first within the first index.
         test_type_1 t1(ptr,0);
+        if(display_debug) {
         std::cout << "fist use of t1" << std::endl;
+        }
         test_type_1::value_type x = t1;
         BOOST_TEST(x == 0x7);
        
         // now trying second index. Still single byte mask testing
+        if(display_debug) {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "middle of byte mask single bit" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
+        }
         test_type_1 t2(ptr,3);
+        if(display_debug) {
         std::cout << "fist use of t2" << std::endl;
+        }
         BOOST_TEST(t2 == 0);
         *ptr |= 0x1c;
+        if(display_debug) {
         std::cout << "Test type 1. First byte value in hex for test 2: " << std::endl;
         std::cout << std::hex << std::size_t(*ptr) << std::endl;
         std::cout << "second use of t2" << std::endl;
         std::cout << "Value returned by t2: "<< std::hex << t2 << std::endl;
         std::cout << "third use of t2" << std::endl;
+        }
         BOOST_TEST(t2 == 7);
         
         // 2 byte mask testing.
+        if(display_debug) {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "2 byte mask" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
+        }
         test_type_1 t3(ptr,6);
         *ptr = 0x03;
         ++ptr;
@@ -161,9 +175,11 @@ int main() {
         BOOST_TEST( t3 == 7 );
 
         // two byte with second byte = to 8.
+        if(display_debug) {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "2 byte mask. 0x1 and 0xFF" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
+        }
         ptr = storage;
         proxy_reference_type<unsigned int, 9> t4(ptr,7);
         std::memset(ptr,0,5);
@@ -171,19 +187,25 @@ int main() {
         ++ptr;
         *ptr = 0xFF;
         ptr = storage;
+        if(display_debug) {
         print_from_to(ptr,5);
         print_type_and_value(t4);
         print_mask_details(t4);
+        }
         BOOST_PRINT_ON_TEST_FAILURE(t4,0x1FF);
 
         // testing multi byte > 2 
+        if(display_debug) {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "Multi byte mask > 2 bytes" << std::endl;
         std::cout << "0 offset" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
+        }
         test_type_4 t5(ptr,0);
+        if(display_debug) {
         print_type_and_value(t5);
         print_mask_details(t5);
+        }
         std::memset(ptr,0,4);
         *ptr = 0xFF;
         ++ptr;
@@ -198,10 +220,12 @@ int main() {
         BOOST_TEST(t5 == 0x1FFFF);
 
         // testing multi byte > 2 and ending with 0xFF
+        if(display_debug) {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "Multi byte mask > 2 bytes and ending with 0xFF" << std::endl;
         std::cout << "0 offset" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
+        }
         proxy_reference_type<unsigned long long, 48> t6(ptr,0);
         std::memset(ptr,0,4);
 
@@ -218,8 +242,10 @@ int main() {
         *ptr = 0xFF;
 
         ptr = storage;
+        if(display_debug) {
         print_type_and_value(t6);
         print_mask_details(t6);
+        }
         typedef unsigned long long ullt;
         ullt temp(0);
         temp = ~temp;
@@ -228,10 +254,12 @@ int main() {
         BOOST_PRINT_ON_TEST_FAILURE(t6,temp);
 
         // testing multi byte > 2 and ending with 0xFF
+        if(display_debug) {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "Multi byte mask > 2 63 bit long long" << std::endl;
         std::cout << "0 offset" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
+        }
         proxy_reference_type<unsigned long long, 63> t7(ptr,0);
         std::memset(ptr,0,20);
 
@@ -260,14 +288,16 @@ int main() {
         *ptr = 0xFE;
         ++ptr;
         ptr = storage;
-
+        if(display_debug) {
         print_type_and_value(t7);
         print_mask_details(t7);
+        }
         BOOST_TEST(t7 == 0x7fffffffffffffff );
     }
 
     // testing value_type assignment operator.
     {
+        if(display_debug) {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "Testing assignment value_type assignement operator" << std::endl;
         std::cout << "-----------------------------------------" << std::endl
@@ -275,6 +305,7 @@ int main() {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "1 byte offset 0" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
+        }
         typedef unsigned char storage_type;
         typedef storage_type* storage_ptr;        
         storage_type storage[20];
@@ -286,20 +317,22 @@ int main() {
         print_mask_details(t1);
         BOOST_TEST(*ptr == 0xE0);
 
-
+        if(display_debug) {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "1 byte offset 2" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
+        }
         std::memset(ptr,0,1);
         test_type_1 t2(ptr, 2);
         t2 = 0x7;
         // std::cout << std::hex << std::size_t(*ptr) << std::endl;
         print_mask_details(t2);
         BOOST_TEST(*ptr == 0x38);
-
+        if(display_debug) {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "multi byte extraction" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
+        }
         // std::memset(ptr,0,1);
         test_type_1 t3(ptr, 6);
         
@@ -310,10 +343,11 @@ int main() {
         // std::cout << std::hex << std::size_t(*ptr) << std::endl;
         BOOST_TEST(*ptr == 0x80);
         ptr = storage;
-
+        if(display_debug) {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "multi byte storage > 2" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
+        }
         std::memset(ptr,0,2);
         test_type_4 t4(ptr,0);
         t4 = 0x1FFFFu;
@@ -328,7 +362,7 @@ int main() {
         BOOST_TEST(t4 == 17);
     }
     {
-    display_debug = false;
+
 #define ASSIGN_MONITOR(P1,P2) \
     if(display_debug) {\
     print_mask_details(P1);\
@@ -343,22 +377,24 @@ int main() {
     print_storage_for_reference(P1);\
     std::cout << std::endl << std::endl;\
     }
+        if(display_debug) {
 
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << "memory corruption testing." << std::endl;
         std::cout << "-----------------------------------------" << std::endl
             << std::endl << std::endl;
-
+        }
 
         typedef unsigned char storage_type;
         typedef storage_type* storage_ptr;        
         storage_type storage[20];
         storage_ptr ptr = storage;
         std::memset(ptr,0,20);
-
+        if(display_debug) {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << " Testing type: " << typestr<test_type_1>() <<std::endl;
         std::cout << "-----------------------------------------" << std::endl;
+        }
         test_type_1 t1(ptr,0);
         test_type_1 t2(ptr,3);
         test_type_1 t3(ptr,6);
@@ -400,10 +436,12 @@ int main() {
 
     }
     {
-        display_debug  = false;
+
+        if(display_debug) {
         std::cout << "-----------------------------------------" << std::endl;
         std::cout << " Testing type: " << typestr<test_type_2>() <<std::endl;
         std::cout << "-----------------------------------------" << std::endl;
+        }
         typedef unsigned char storage_type;
         typedef storage_type* storage_ptr;        
         storage_type storage[20];
@@ -447,10 +485,11 @@ int main() {
         print_from_to(storage,10);
     }
     {
-        display_debug  = false;
-        std::cout << "-----------------------------------------" << std::endl;
-        std::cout << " Testing type: " << typestr<test_type_2>() <<std::endl;
-        std::cout << "-----------------------------------------" << std::endl;
+        if(display_debug) {
+            std::cout << "-----------------------------------------" << std::endl;
+            std::cout << " Testing type: " << typestr<test_type_2>() <<std::endl;
+            std::cout << "-----------------------------------------" << std::endl;
+        }
         typedef unsigned char storage_type;
         typedef storage_type* storage_ptr;        
         storage_type storage[20];
@@ -502,23 +541,25 @@ int main() {
         BOOST_PRINT_ON_TEST_FAILURE_3(t6, 10210);
         BOOST_PRINT_ON_TEST_FAILURE_3(t7, 41740);
         BOOST_PRINT_ON_TEST_FAILURE_3(t8, 10129);
-        unsigned long long temp = t8;
-        std::cout << to_binary(temp) << std::endl;
+        // unsigned long long temp = t8;
+        // std::cout << to_binary(temp) << std::endl;
         // 0  0000 10011  1100 10001
-        print_storage_for_reference(t8);
-        print_from_to(storage,17);
-/*
-typedef proxy_reference_type<unsigned int, 3>           test_type_1;
-typedef proxy_reference_type<unsigned char, 7>          test_type_2;
-typedef proxy_reference_type<unsigned long, 9>          test_type_3;
-typedef proxy_reference_type<unsigned long long, 17>    test_type_4;
-typedef proxy_reference_type<unsigned long long, 50>    test_type_5;
+        if(display_debug) {
+            print_storage_for_reference(t8);
+            print_from_to(storage,17);
+        }
+    }
+    // begining testing of the proxy reference type specialization for
+    // signed numbers.
+    {
+        display_debug = true;
 
-test_type_1;
-test_type_2;
-test_type_3;
-test_type_4;
-test_type_5;
+        if(display_debug) {
+            std::cout << "=========================================" << std::endl;
+            std::cout << " Signed type tests" << std::endl;
+            std::cout << "=========================================" << std::endl;
+        }
+/*
 test_type_6;
 test_type_7;
 test_type_8;

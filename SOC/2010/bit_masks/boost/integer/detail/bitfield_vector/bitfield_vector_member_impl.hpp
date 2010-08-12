@@ -108,6 +108,8 @@ public:
     typedef RetType             value_type;
     typedef std::size_t         offset_type;
     BOOST_STATIC_CONSTANT( std::size_t, width = Width );
+    BOOST_STATIC_CONSTANT(value_type, sign_bit =
+        (high_bits_mask<value_type,1>::value));
     /** constructors and destructor for the proxy_reference_type type. */
     //@{
 
@@ -128,10 +130,14 @@ public:
         _mask = x._mask;
         return *this;
     }
+    /** Implicit conversion operator.*/
+    operator value_type() const {
+    }
 
-    operator value_type() const;
     /** value_type storage assignement operator.*/
-    _self& operator=(value_type x);
+    _self& operator=(value_type x) {
+
+    }
 
     bool operator==(_self const& rhs);
     bool operator!=(_self const& rhs);
