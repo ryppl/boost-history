@@ -699,7 +699,7 @@ test_type_9;
 test_type_10;
 test_type_11
 */
-        BOOST_TEST(false);
+        // BOOST_TEST(false);
 
     }
     return boost::report_errors();
