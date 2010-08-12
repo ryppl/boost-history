@@ -65,12 +65,13 @@ struct clz_helper<Mask,IndexingMask,ZeroCount,true>
         Mask,
         bits_mask<
             typename IndexingMask::value_type,
-             IndexingMask::offset ? IndexingMask::offset - 1 : 1
+             IndexingMask::offset ? IndexingMask::offset - 1 : 0
         >,
         ZeroCount + 1,
         bool((IndexingMask::value & Mask::value) == 0)
           &&
-        bool( ZeroCount < std::size_t(bit_width< typename Mask::value_type >::value))
+        bool( ZeroCount <
+            std::size_t(bit_width< typename Mask::value_type >::value))
     >
 { };
 
