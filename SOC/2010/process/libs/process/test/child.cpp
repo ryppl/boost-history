@@ -584,3 +584,99 @@ BOOST_AUTO_TEST_CASE(test_dummy_stderr)
     BOOST_CHECK_EQUAL(s, EXIT_SUCCESS); 
 #endif 
 } 
+
+#if defined(BOOST_POSIX_API) 
+class context : public bp::context 
+{ 
+public: 
+    context() 
+    : p(bpb::pipe::output_stream) 
+    { 
+    } 
+
+    void setup(std::vector<bool> &closeflags) 
+    { 
+        if (dup2(p.get_child_end().native(), 10) == -1) 
+        { 
+            write(STDERR_FILENO, "dup2() failed\n", 14); 
+            _exit(127); 
+        } 
+        closeflags[10] = false; 
+    } 
+
+    bpb::pipe p; 
+}; 
+
+BOOST_AUTO_TEST_CASE(test_posix) 
+{ 
+    check_helpers(); 
+
+    std::vector<std::string> args; 
+    args.push_back("posix-echo-one"); 
+    args.push_back("10"); 
+    args.push_back("test"); 
+
+    context ctx; 
+    bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
+
+    std::string word; 
+    bp::pistream is(ctx.p.get_parent_end()); 
+    is >> word; 
+    BOOST_CHECK_EQUAL(word, "test"); 
+
+    int s = c.wait(); 
+    BOOST_REQUIRE(WIFEXITED(s)); 
+    BOOST_CHECK_EQUAL(WEXITSTATUS(s), EXIT_SUCCESS); 
+} 
+#endif 
+
+#if defined(BOOST_WINDOWS_API) 
+STARTUPINFOA sa; 
+
+class context : public bp::context 
+{ 
+public: 
+    void setup(STARTUPINFOA &sainfo) 
+    { 
+        sa.dwFlags = sainfo.dwFlags |= STARTF_USEPOSITION | STARTF_USESIZE; 
+        sa.dwX = sainfo.dwX = 100; 
+        sa.dwY = sainfo.dwY = 200; 
+        sa.dwXSize = sainfo.dwXSize = 640; 
+        sa.dwYSize = sainfo.dwYSize = 480; 
+    } 
+}; 
+
+BOOST_AUTO_TEST_CASE(test_windows) 
+{ 
+    check_helpers(); 
+
+    std::vector<std::string> args; 
+    args.push_back("windows-print-startupinfo"); 
+
+    context ctx; 
+    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+
+    bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
+
+    bp::pistream &is = c.get_stdout(); 
+    std::string line; 
+    std::getline(is, line); 
+    BOOST_CHECK_EQUAL(line, "dwFlags = " + boost::lexical_cast<std::string>( 
+        sa.dwFlags) + "\r"); 
+    std::getline(is, line); 
+    BOOST_CHECK_EQUAL(line, "dwX = " + boost::lexical_cast<std::string>( 
+        sa.dwX) + "\r"); 
+    std::getline(is, line); 
+    BOOST_CHECK_EQUAL(line, "dwY = " + boost::lexical_cast<std::string>( 
+        sa.dwY) + "\r"); 
+    std::getline(is, line); 
+    BOOST_CHECK_EQUAL(line, "dwXSize = " + boost::lexical_cast<std::string>( 
+        sa.dwXSize) + "\r"); 
+    std::getline(is, line); 
+    BOOST_CHECK_EQUAL(line, "dwYSize = " + boost::lexical_cast<std::string>( 
+        sa.dwYSize) + "\r"); 
+
+    int s = c.wait(); 
+    BOOST_CHECK_EQUAL(s, EXIT_SUCCESS); 
+} 
+#endif 

@@ -21,6 +21,7 @@
 #include <boost/asio.hpp> 
 #include <boost/bind.hpp> 
 #include <boost/ref.hpp> 
+#include <boost/lexical_cast.hpp> 
 
 namespace bp = boost::process; 
 namespace bpb = boost::process::behavior; 

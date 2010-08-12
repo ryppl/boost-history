@@ -214,7 +214,7 @@ int h_posix_echo_two(int argc, char *argv[])
 #endif 
 
 #if defined(BOOST_WINDOWS_API) 
-int h_win32_print_startupinfo(int argc, char *argv[]) 
+int h_windows_print_startupinfo(int argc, char *argv[]) 
 { 
     STARTUPINFO si; 
     GetStartupInfo(&si); 
@@ -259,7 +259,7 @@ struct helper
     { "posix-echo-one", h_posix_echo_one, 3, "desc message" }, 
     { "posix-echo-two", h_posix_echo_two, 4, "desc1 desc2 message" }, 
 #elif defined(BOOST_WINDOWS_API) 
-    { "win32-print-startupinfo", h_win32_print_startupinfo, 1, "" }, 
+    { "windows-print-startupinfo", h_windows_print_startupinfo, 1, "" }, 
 #endif 
     { 0 } 
 }; 
