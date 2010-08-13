@@ -7002,7 +7002,7 @@ same exception introduce a race.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="70" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="70" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 18.6
 </section>
@@ -7019,7 +7019,7 @@ with<BR/>
 constexpr nothrow_t nothrow{};
 </suggestion>
 <notes></notes>
-<rationale>
+<rationale>There was consensus that it is too late to make such a change at this time.
 </rationale>
 </comment>
 <comment nb="GB" num="71" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -7249,7 +7249,7 @@ constructor."
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="78" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="78" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 19.5.6.2
 </section>
@@ -7281,8 +7281,8 @@ both have type system_error and lhs is a copy of
 rhs, then lhs.code()
 == rhs.code() shall hold."
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>Rapperswil Poll: Make GB 78 NAD?  5 5 3 0</notes>
+<rationale>This is already addressed by 17.5.2.2 [functions.within.classes]/1. 
 </rationale>
 </comment>
 <comment nb="GB" num="79" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -7357,7 +7357,7 @@ undefined behavior.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="80" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="80" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 20.2.3
 </section>
@@ -7370,11 +7370,13 @@ See (A) in attachment std_issues.txt
 <suggestion>
 as stated in the attached paper
 </suggestion>
-<notes></notes>
+<notes>Rapperswil Poll: NAD GB 80 and CA 10? 9 6 2 0</notes>
 <rationale>
 </rationale>
+It is an accurate statement because there is at least one operation, assignment with the
+indeterminate value on the left hand side, that does not involve undefined behavior. 
 </comment>
-<comment nb="CA" num="10" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="10" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 20.2.3p2
 </section>
@@ -7431,8 +7433,10 @@ We suggest changing the note to:<BR/>
 indeterminate values cause
 undefined behaviour. end note ]
 </suggestion>
-<notes></notes>
+<notes>Also see GB 80</notes>
 <rationale>
+It is an accurate statement because there is at least one operation, assignment with the
+indeterminate value on the left hand side, that does not involve undefined behavior.
 </rationale>
 </comment>
 <comment nb="US" num="86" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -7693,7 +7697,7 @@ Merged with US 90
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="92" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="92" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 20.3.3
 </section>
@@ -7710,10 +7714,10 @@ Restore std::identity, possibly in a different
 section.
 </suggestion>
 <notes></notes>
-<rationale>
+<rationale>No consensus to restore at this time. common_type can be used for the use case given. 
 </rationale>
 </comment>
-<comment nb="US" num="93" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="93" type="ge" owner="" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 20.3.3
 </section>
@@ -7730,8 +7734,10 @@ also confusing for me.
 Choose a name that expresses the semantics
 more clearly. Suggestion: std::unpin
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>Rapperswil Poll: Move US 93 to NAD.
+    SF	WF	WA	SA
+    10	4	  3	  0</notes>
+<rationale>No consensus for a change. 
 </rationale>
 </comment>
 <comment nb="US" num="94" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -7903,7 +7909,7 @@ consider n2995.
 <rationale>
 </rationale>
 </comment>
-<comment nb="ES" num="1" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="ES" num="1" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 20.3.5.4 [pair.range]
 </section>
@@ -7916,8 +7922,8 @@ N2995 and preceding papers).
 <suggestion>
 Provide a separate template range&lt;Iterator&gt;.
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>NAD Future</notes>
+<rationale>No consensus to make this change.
 </rationale>
 </comment>
 <comment nb="US" num="96" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -8017,7 +8023,7 @@ Change tuple to match.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="86" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="86" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 20.4
 </section>
@@ -8037,8 +8043,10 @@ Merge everything declared in 20.4 into the
 entirely, or move it to Annex D as a deprecated
 alias of the &lt;utility&gt; header.
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>Rapperswil Poll: Merge tuple and utility into one header?
+
+SF: 1 WF: 1 WA: 6 SA: 4 </notes>
+<rationale>There was no consensus to make this change.
 </rationale>
 </comment>
 <comment nb="US" num="98" type="te/ed" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
@@ -8245,7 +8253,7 @@ illformed.</ins>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="101" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="101" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 20.7
 </section>
@@ -8259,8 +8267,10 @@ so I am submitting a national body comment this time.
 Consider n2965 in the context of a national body
 comment.
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>The author of the paper suggested this to be a new feature,
+and therefore suggests it should be dispositioned as NAD Future.
+</notes>
+<rationale>There is no consensus to adopt this proposal at this time. 
 </rationale>
 </comment>
 <comment nb="GB" num="90" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -8392,7 +8402,7 @@ has_trivial_something traits.
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="18" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="18" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 20.7.4.3, Table 45 (Type property predicates)
 </section>
@@ -8434,8 +8444,10 @@ noexcept(has_nothrow_destructor&lt;T&gt;::value) {}
 };
 </PRE>
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>Rapperswil Poll: Adopt proposed wording from FI-18
+    SF	WF	WA	SA
+    0	  6	  5	  4</notes>
+<rationale>No consensus to make this change at this time. 
 </rationale>
 </comment>
 <comment nb="DE" num="19" type="te" owner="LWG" issue="" disp="modified" date="2010-08-07" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3047.html">
@@ -8485,7 +8497,7 @@ Change "(10)" to "(Clause 10)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="93" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="93" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 20.7.6.2
 </section>
@@ -8503,11 +8515,13 @@ called reference collapsing".
 Add a reference to 8.3.2 to the use of "reference
 collapsing" in 20.7.6.2/table 49
 </suggestion>
-<notes></notes>
+<notes>Rapperswil Poll: Those in favor of making GB 93 NAD
+    SF	WF	WA	SA
+    13	0	  0	  0</notes>
 <rationale>
-</rationale>
+</rationale>No consensus for a change. 
 </comment>
-<comment nb="US" num="103" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="103" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 20.7.6.6 [meta.trans.other]
 </section>
@@ -8522,8 +8536,8 @@ working for function pointers.
 Add &#8220;pointer to function&#8221; to the list of things that
 Fn shall be.
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>Howard: Submitted US 103, recommending NAD for that one. </notes>
+<rationale>Standard is correct as written. 
 </rationale>
 </comment>
 <comment nb="US" num="104" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -8621,7 +8635,7 @@ the template declaration for 'equal_to', 'hash' and
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="97" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="97" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 20.8.10
 </section>
@@ -8647,8 +8661,8 @@ another bind result that, when evaluated, yields
 '!res', where 'res' is the result of evaluating the
 original function.
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>NAD Future</notes>
+<rationale>No consensus for a change at this time. 
 </rationale>
 </comment>
 <comment nb="JP" num="3" type="tl" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
@@ -8758,7 +8772,7 @@ function(allocator_arg_t, const A&amp; a);
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="105" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="105" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 20.8.15.2
 </section>
@@ -8794,9 +8808,9 @@ shared_ptr&lt;int[]&gt; p( new int[10] );
 to handle deletion correctly by calling delete[] on
 the stored pointer.
 </suggestion>
-<notes></notes>
+<notes>No objections to NAD Future</notes>
 <rationale>
-</rationale>
+</rationale>No consensus to make this change at this time. 
 </comment>
 <comment nb="GB" num="98" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
@@ -8930,7 +8944,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="104" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="104" type="te" owner="Editor" issue="" disp="" date="" extdoc="">
 <section>
 20.9.5.1
 </section>
@@ -8944,11 +8958,11 @@ U.
 <suggestion>
 Add the missing ~ : Effects: p-&gt;~U()
 </suggestion>
-<notes></notes>
+<notes>The Project Editor suggested and the LWG agreed that this comment be treated as editorial</notes>
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="105" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="105" type="te" owner="Editor" issue="" disp="" date="" extdoc="">
 <section>
 20.9.6
 </section>
@@ -8968,7 +8982,7 @@ piecewise_construct_t, tuple&lt;Args1...&gt; x,
 tuple&lt;Args2...&gt; y);
 </PRE>
 </suggestion>
-<notes></notes>
+<notes>The Project Editor suggested and the LWG agreed that this comment be treated as editorial</notes>
 <rationale>
 </rationale>
 </comment>
@@ -9227,11 +9241,15 @@ as if it were equivalent to the expression h(p). In
 addition, h(p) == h(q) must become true if p and q
 share ownership.
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>Rapperswil Poll: In favor of accepting JP 5
+    SF	WF	WA	SA
+    0	  4	  8	  3
+    
+No objections to labeling it NAD Future. </notes>
+<rationale>No consensus to make this change at this time. 
 </rationale>
 </comment>
-<comment nb="CH" num="20" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="20" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 20.9.11.2
 </section>
@@ -9250,8 +9268,12 @@ reflect modifications that can introduce data
 races.' Possibly add additional synchronized
 constructors and assignments.
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>Rapperswil Poll: In favor of wording in CH 20.
+    SF	WF	WA	SA
+    2	  0	  2	  16
+    
+Alisdair: Plan to open an NAD Future issue to add an unsynchronized shared_ptr version. </notes>
+<rationale>No consensus to make a change at this time. 
 </rationale>
 </comment>
 <comment nb="US" num="108" type="te" owner="LWG" issue="" disp="modified" date="2010-08-07" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3109.html">
@@ -9272,7 +9294,7 @@ shared_ptr(auto_ptr&lt;Y&gt;&amp;); to
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="109" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="109" type="te" owner="Editor" issue="" disp="" date="" extdoc="">
 <section>
 20.9.11.2.6
 </section>
@@ -9294,7 +9316,7 @@ to<BR/>
 "the placement new expression ::new (pv)
 T(std::forward&lt;Args&gt;(args)...)"
 </suggestion>
-<notes></notes>
+<notes>The LWG asked to reclassify US 109 as editorial. </notes>
 <rationale>
 </rationale>
 </comment>
@@ -9320,7 +9342,7 @@ Replace "have been previously registered" with
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="106" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="106" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 20.10.3
 </section>
@@ -9337,11 +9359,13 @@ Add 20.3.8 [time.duration.limits]
 "duration is an arithmetic type, and so provides an
 appropriate specialization of numeric_limits."
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>Rapperswil Poll: In favor of opening an issue for GB 106 and asking someone to write wording.
+    SF	WF	WA	SA
+    2	  1	  7	  4</notes>
+<rationale>No consensus for a change. 
 </rationale>
 </comment>
-<comment nb="US" num="110" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="110" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 20.10.5
 </section>
@@ -9353,8 +9377,10 @@ rather than "implementation-defined".
 <suggestion>
 Make those parts "implementation-defined".
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>Rapperswil Poll: In favor of adopting proposed wording from US 110.
+    SF	WF	WA	SA
+    4	  4	  5	  4</notes>
+<rationale>No consensus to make a change. 
 </rationale>
 </comment>
 <comment nb="US" num="111" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -9495,7 +9521,7 @@ Change "(35)" to "(Table 35)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="108" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="108" type="te" owner="Editor" issue="" disp="" date="" extdoc="">
 <section>
 21.2.3.1
 </section>
@@ -9514,7 +9540,7 @@ Update the reference in 21.2.3.1 to refer forward
 to 27.2.2, rather than back to 21.2.2.
 Add a cross-reference to from 27.2.2 to 27.3.
 </suggestion>
-<notes></notes>
+<notes>LWG: no objections to passing to Pete as editorial</notes>
 <rationale>
 </rationale>
 </comment>
@@ -9564,7 +9590,7 @@ Change "(96)" to "(Table 96)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="110" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="110" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 21.4.7.1
 </section>
@@ -9586,10 +9612,10 @@ values in the array through the pointe retrieved
 through this new overload.
 </suggestion>
 <notes></notes>
-<rationale>
+<rationale>No consensus to make this change. 
 </rationale>
 </comment>
-<comment nb="GB" num="111" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="111" type="te" owner="Editor" issue="" disp="" date="" extdoc="">
 <section>
 21.5
 </section>
@@ -9615,7 +9641,7 @@ and sprintf() since these functions depend on the
 global C locale and thus cannot be made thread
 safe.
 </suggestion>
-<notes></notes>
+<notes>LWG: no objections to passing to Pete as editorial </notes>
 <rationale>
 </rationale>
 </comment>
@@ -9701,7 +9727,7 @@ Correct typo.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="113" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="113" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 23.2
 </section>
@@ -9715,8 +9741,8 @@ void.
 </description>
 <suggestion>
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>See ES 2 for more details.</notes>
+<rationale>No consensus for a change. 
 </rationale>
 </comment>
 <comment nb="US" num="114" type="te" owner="LWG" issue="" disp="modified" date="2010-08-07" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3108.pdf">
@@ -9762,7 +9788,7 @@ erase_after overloads in 23.3.3.4.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="115" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="115" type="te" owner="Editor" issue="" disp="" date="" extdoc="">
 <section>
 23.2.1
 </section>
@@ -9780,7 +9806,7 @@ Better terms would be X can copy-insert T, X can
 move-insert T, and X can construct-insert T with
 args. See Appendix 1 - Additional Details
 </suggestion>
-<notes></notes>
+<notes>LWG: no objections to passing to Pete as editorial</notes>
 <rationale>
 </rationale>
 </comment>
@@ -9808,7 +9834,7 @@ construction of some containers.  end note]</ins>
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="12" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="12" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 23.2.3 [sequence.reqmts]
 </section>
@@ -9832,8 +9858,8 @@ details are achievable without assignment, eg.
 with placement-new, the CopyAssignable
 requirement should be removed.
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>Submitter wishes to withdraw. </notes>
+<rationale>No consensus to make the change.
 </rationale>
 </comment>
 <comment nb="JP" num="90" type="E" owner="" issue="" disp="" date="" extdoc="">
@@ -9898,7 +9924,7 @@ unmodified
 <rationale>
 </rationale>
 </comment>
-<comment nb="ES" num="2" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="ES" num="2" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 23.2.5 [unord.req], Table 100 (Unordered associative container requirements (in addition to container))
 </section>
@@ -9927,9 +9953,17 @@ appearances of &#8220;<TT>iterator
 erase(const_iterator position)</TT>&#8221; in
 23.5.1, 23.5.2, 23.5.3 and 23.5.4.
 </suggestion>
-<notes></notes>
+<notes>Also see LWG issue 579, and NB comments US 113 and US 118
+
+Rapperswil Poll: Return type of erase: iterator (status quo) vs void (change)
+    SF iterator	WF iterator	WF void	SF void
+    12	        1	          1	      0
+
+Rapperswil Poll: Add quick_erase that returns void?
+    SF	WF	WA	SA
+    0	  0	  3	  10</notes>
 <rationale>
-</rationale>
+</rationale>No consensus for a change. 
 </comment>
 <comment nb="GB" num="112" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
 <section>
@@ -10116,7 +10150,7 @@ args);
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="117" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="117" type="te" owner="Editor" issue="" disp="" date="" extdoc="">
 <section>
 23.3.6.2
 </section>
@@ -10133,7 +10167,7 @@ this explicitely.
 Append "If sz == size(), does nothing" to the
 effects.
 </suggestion>
-<notes></notes>
+<notes>LWG: no objections to passing to Pete as editorial</notes>
 <rationale>
 </rationale>
 </comment>
@@ -10282,7 +10316,7 @@ explicit multiset(const Allocator&amp;);
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="118" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="118" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 23.5
 </section>
@@ -10295,8 +10329,8 @@ implemented using singly linked lists.
 <suggestion>
 See Appendix 1 - Additional Details
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>See ES 2 for more details.</notes>
+<rationale>No consensus for a change. 
 </rationale>
 </comment>
 <comment nb="JP" num="10" type="tl" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
@@ -10445,7 +10479,7 @@ explicit unordered_multiset(const Allocator&amp;);
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="119" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="119" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 [input.iterators] 24.2.3
 </section>
@@ -10459,8 +10493,8 @@ requirement that it exist.
 <suggestion>
 Add a == b to Table 104
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>The operator is already required. by the eq.comparable requirement. </notes>
+<rationale>Standard is correct as is. 
 </rationale>
 </comment>
 <comment nb="JP" num="42" type="E" owner="" issue="" disp="" date="" extdoc="">
@@ -10508,7 +10542,7 @@ specified. See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="ES" num="3" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="ES" num="3" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 25.2.12
 </section>
@@ -10523,7 +10557,7 @@ ranges have different value types
 Require both iterator types to have the same
 value type
 </suggestion>
-<notes></notes>
+<notes>Duplicate of US 120. See Rapperswil formal motion 25</notes>
 <rationale>
 </rationale>
 </comment>
@@ -11262,7 +11296,7 @@ Thus, it remains impossible to seek away from end of file.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="140" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="140" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 27.8
 </section>
@@ -11280,8 +11314,8 @@ The semantics of allocator propagation should be
 the same as if the stringbuf contained an
 embedded basic_string using the same allocator.
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>No objections to consider NAD future. </notes>
+<rationale>No consensus for a change at this time. 
 </rationale>
 </comment>
 <comment nb="GB" num="124" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -11375,7 +11409,7 @@ Please clarify.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="14" type="tl" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="14" type="tl" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 28.4
 </section>
@@ -11397,8 +11431,11 @@ typedef basic_regex&lt;char16_t&gt; u16regex;
 typedef basic_regex&lt;char32_t&gt; u32regex;
 </PRE>
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>There's not enough unicode experience in providing this functionality.
+Rapperswil Poll to accept JP 14
+    SF	WF	WA	SA
+    0	  0	  7	  3 </notes>
+<rationale>No consensus to make a change at this time. 
 </rationale>
 </comment>
 <comment nb="GB" num="127" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -13004,11 +13041,11 @@ The timeout operations are under-specified.
 Define precise semantics for timeout_until and
 timeout_for. See Appendix 1 - Additional Details
 </suggestion>
-<notes></notes>
+<notes>See CH 28</notes>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="182" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="182" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 [thread.req.native] 30.2.3
 </section>
@@ -13032,8 +13069,10 @@ Remove [thread.req.native] 30.2.3 and remove all
 mentions of native_handle and
 native_handle_type.
 </suggestion>
-<notes></notes>
-<rationale>
+<notes>Rapperswil Poll: Accept US 182.
+    SF	WF	WA	SA
+    8	  2	  3	  7</notes>
+<rationale>No consensus to make a change at this time. 
 </rationale>
 </comment>
 <comment nb="DE" num="23" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
@@ -13629,7 +13668,7 @@ condition variable proposed for C.
 Remove the wait_until functions or make them at
 least conditionally supported.
 </suggestion>
-<notes></notes>
+<notes>See US 181</notes>
 <rationale>
 </rationale>
 </comment>
