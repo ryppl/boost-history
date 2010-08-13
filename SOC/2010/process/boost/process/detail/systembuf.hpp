@@ -163,7 +163,8 @@ protected:
 
         if (!traits_type::eq_int_type(c, traits_type::eof()))
         {
-            traits_type::assign(*pptr(), c);
+            traits_type::assign(*pptr(), static_cast<traits_type::char_type>(
+                c));
             pbump(1);
         }
 

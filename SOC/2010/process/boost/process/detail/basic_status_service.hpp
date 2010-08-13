@@ -64,8 +64,6 @@ public:
         interrupt_pid_(-1),
         pids_(0)
 #elif defined(BOOST_WINDOWS_API)
-        work_thread_(&basic_status_service<StatusImplementation>::work_thread,
-            this),
         run_(true)
 #endif
     {
@@ -73,6 +71,8 @@ public:
         handles_.push_back(CreateEvent(NULL, FALSE, FALSE, NULL));
         if (handles_[0] == NULL)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateEvent() failed");
+        work_thread_ = boost::thread(
+            &basic_status_service<StatusImplementation>::work_thread, this);
 #endif
     }
 

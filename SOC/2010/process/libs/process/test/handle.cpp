@@ -49,11 +49,11 @@ BOOST_AUTO_TEST_CASE(test_handle_readwrite)
 #elif defined(BOOST_WINDOWS_API) 
     DWORD written; 
     BOOST_REQUIRE(WriteFile(write_end.native(), "test", 4, &written, NULL)); 
-    BOOST_CHECK_EQUAL(written, 4); 
+    BOOST_CHECK_EQUAL(written, 4u); 
     char buf[4]; 
     DWORD read; 
     BOOST_REQUIRE(ReadFile(read_end.native(), buf, sizeof(buf), &read, NULL)); 
-    BOOST_CHECK_EQUAL(read, 4); 
+    BOOST_CHECK_EQUAL(read, 4u); 
 #endif 
 
     read_end.close(); 

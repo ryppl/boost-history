@@ -133,6 +133,9 @@ struct context
 #elif defined(BOOST_WINDOWS_API)
     void setup(STARTUPINFOA &sainfo)
     {
+#if defined(BOOST_MSVC)
+        sainfo;
+#endif
     }
 #endif
 };

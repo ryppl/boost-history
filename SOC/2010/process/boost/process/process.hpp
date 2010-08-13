@@ -113,6 +113,9 @@ public:
         if (kill(id_, force ? SIGKILL : SIGTERM) == -1)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("kill(2) failed");
 #elif defined(BOOST_WINDOWS_API)
+#if defined(BOOST_MSVC)
+        force;
+#endif
         HANDLE h = OpenProcess(PROCESS_TERMINATE, FALSE, id_);
         if (h == NULL)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("OpenProcess() failed");

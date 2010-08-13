@@ -50,6 +50,9 @@ struct operation
 {
     virtual void operator()(int exit_code)
     {
+#if defined(BOOST_MSVC)
+        exit_code;
+#endif
     }
 };
 
