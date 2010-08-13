@@ -181,9 +181,10 @@
 </h5></div></div></div>
 <p>
             <a href="cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> is a facility which
-            is useful in specifying the type of the result of functions and operators
-            which take a variety of types (e.g. "mixed mode" complex arithmetic).
+          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> is a traits class
+            used to deduce a type common to a several types, useful as the return
+            type of functions operating on multiple input types such as in mixed-mode
+            arithmetic..
           </p>
 <p>
             The nested typedef <a href="cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
@@ -997,7 +998,7 @@
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> definition
                       if it is valid to compare their time_points by comparing their
                       respective <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>s</a>. <code class="computeroutput"><span class="identifier">C1</span></code> and <code class="computeroutput"><span class="identifier">C2</span></code>
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a>. <code class="computeroutput"><span class="identifier">C1</span></code> and <code class="computeroutput"><span class="identifier">C2</span></code>
                       must refer to the same epoch.
                     </p>
                   </td>
@@ -1097,9 +1098,9 @@
               tick period. If <code class="computeroutput"><span class="identifier">treat_as_floating_point</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">&gt;::</span><span class="identifier">value</span></code>
               is <code class="computeroutput"><span class="keyword">true</span></code>, then <code class="computeroutput"><span class="identifier">Rep</span></code> is a floating point type and
               implicit conversions are allowed among <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>s</a>. Otherwise, the
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a>. Otherwise, the
               implicit convertibility depends on the tick periods of the <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>s</a>. If <code class="computeroutput"><span class="identifier">Rep</span></code> is a class type which emulates
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a>. If <code class="computeroutput"><span class="identifier">Rep</span></code> is a class type which emulates
               a floating point type, the author of <code class="computeroutput"><span class="identifier">Rep</span></code>
               can specialize <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.traits.treat_as_floating_point" title="
             Metafunction treat_as_floating_point&lt;&gt;"><code class="computeroutput"><span class="identifier">treat_as_floating_point</span></code></a> so
@@ -1143,10 +1144,11 @@
               <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.traits.duration_values" title="
             Class template duration_values"><code class="computeroutput"><span class="identifier">duration_values</span></code></a> trait to construct
               special values of the <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>s</a> representation (<code class="computeroutput"><span class="identifier">Rep</span></code>). This is done because the representation
-              might be a class type with behavior which requires some other implementation
-              to return these special values. In that case, the author of that class
-              type should specialize <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.traits.duration_values" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a> representation
+              (<code class="computeroutput"><span class="identifier">Rep</span></code>). This is done
+              because the representation might be a class type with behavior which
+              requires some other implementation to return these special values.
+              In that case, the author of that class type should specialize <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.traits.duration_values" title="
             Class template duration_values"><code class="computeroutput"><span class="identifier">duration_values</span></code></a> to return
               the indicated values.
             </p>
@@ -1241,7 +1243,7 @@
             to it without requiring a division operation. The representation of this
             type is intended to be able to hold any value resulting from this conversion,
             with the possible exception of round-off error when floating point <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>s</a> are involved (but
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a> are involved (but
             not truncation error).
           </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration2</span><span class="special">&gt;</span>
@@ -1258,10 +1260,10 @@
 <p>
             The <a href="cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
           Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> of two <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code>s</a> is a <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code>'s</a> is a <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> with the same <code class="computeroutput"><span class="identifier">clock</span></code> (both have the same <code class="computeroutput"><span class="identifier">clock</span></code>), and the <a href="cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
           Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> of the two <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>s</a>.
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a>.
           </p>
 </div>
 <div class="section" lang="en">
@@ -1480,7 +1482,7 @@
               not participate in overload resolution. <span class="bold"><strong>note</strong></span>
               This requirement prevents implicit truncation error when converting
               between integral-based <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>s</a>. Such a construction
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a>. Such a construction
               could easily lead to confusion about the value of the <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>.
             </p>

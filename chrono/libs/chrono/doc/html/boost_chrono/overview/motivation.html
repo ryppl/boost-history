@@ -7,7 +7,7 @@
 <link rel="start" href="../../index.html" title="Boost.Chrono">
 <link rel="up" href="../overview.html" title="Overview">
 <link rel="prev" href="../overview.html" title="Overview">
-<link rel="next" href="../users_guide.html" title=" Users'Guide">
+<link rel="next" href="description.html" title="Description">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,74 +20,58 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="description.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_chrono.overview.motivation"></a><a href="motivation.html" title="Motivation">Motivation</a>
 </h3></div></div></div>
 <a name="boost_chrono.overview.motivation.time"></a><h4>
-<a name="id4758575"></a>
+<a name="id4803513"></a>
         <a href="motivation.html#boost_chrono.overview.motivation.time">Time</a>
       </h4>
 <p>
         We all deal with time every day of our lives. We've intuitively known it
         since birth. Thus we are all very familiar with it and believe it to be a
         simple matter. The modeling of time in computer programs should be similarly
-        simple.
+        simple. The unfortunate truth is that this perceived simplicity is only skin
+        deep. Fortunately however, we do not need a terribly complicated solution
+        to meet the bulk of our needs. However, overly simplistic solutions can be
+        dangerous and inefficient, and won't adapt as the computer industry evolves.
       </p>
 <p>
-        The unfortunate truth is that this perceived simplicity is only skin deep.
-        Fortunately however, we do not need a terribly complicated solution to meet
-        the bulk of our needs. However, overly simplistic solutions are fraught with
-        danger, inherent inefficiency, and lack the ability to adapt as the computer
-        industry evolves over decades.
-      </p>
-<p>
-        <span class="bold"><strong>Boost.Chrono</strong></span> proposes a solution that is
-        precision neutral, with a very simple end user interface which supports multiple
-        clocks, multiple precisions (both coarser and finer than we will ever need),
-        separate types for points in time and time durations, efficiency, and compile
-        time enforced safety.
-      </p>
-<p>
-        See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm" target="_top"><span class="bold"><strong>N2661 - A Foundation to Sleep On</strong></span></a> which is
-        very informative and provides motivation for key design decisions for <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> and <code class="computeroutput"><span class="identifier">chrono</span></code>.
-        This documentation contains a lot of extracts from this document.
+        <span class="bold"><strong>Boost.Chrono</strong></span> aims to implement the new time
+        facilities in C++0x, as proposed in <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm" target="_top"><span class="bold"><strong>N2661 - A Foundation to Sleep On</strong></span></a>. That document
+        provides background and motivation for key design decisions and is the source
+        of a good deal of information in this documentation.
       </p>
 <a name="boost_chrono.overview.motivation.wall_clock_versus_system_and_user_time"></a><h4>
-<a name="id4758685"></a>
+<a name="id4803571"></a>
         <a href="motivation.html#boost_chrono.overview.motivation.wall_clock_versus_system_and_user_time">Wall
         clock versus system and user time</a>
       </h4>
 <p>
-        It is also helpful if such timing information is broken down into real (wall
-        clock) time, CPU time spent by the user, and CPU time spent by the operating
-        system servicing user requests.
+        To make the timing facilities of Boost.Chrono more generally useful, the
+        library provides a number of clocks that are thin wrappers around the operating
+        system's process time API, thereby allowing the extraction of read (wall
+        clock) time, user CPU time, and system CPU time. (On POSIX-like systems,
+        this relies on times(). On Windows, it relies on GetProcessTimes().)
       </p>
-<p>
-        <span class="bold"><strong>Boost.Chrono</strong></span> provides thin wrappers around
-        the operating system's process timer API. For POSIX-like systems, that's
-        the times() function, while for Windows, it's the GetProcessTimes() function.
-      </p>
-<a name="boost_chrono.overview.motivation.reporting_slapsed_time"></a><h4>
-<a name="id4758725"></a>
-        <a href="motivation.html#boost_chrono.overview.motivation.reporting_slapsed_time">Reporting
-        slapsed time</a>
+<a name="boost_chrono.overview.motivation.reporting_elapsed_time"></a><h4>
+<a name="id4803615"></a>
+        <a href="motivation.html#boost_chrono.overview.motivation.reporting_elapsed_time">Reporting
+        elapsed time</a>
       </h4>
 <p>
-        Knowing how long a program, a function or a specific block takes to execute
-        is useful in both test and production environments. <span class="bold"><strong>Boost.Chrono</strong></span>
+        Knowing how long a program, a function or a specific code block takes to
+        execute is useful in both test and production environments. <span class="bold"><strong>Boost.Chrono</strong></span>
         introduces the <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
-        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> concept which captures
-        the mechanism to measure the elapsed time. A Stopwatch allows to start, stop,
-        suspend and resume the measure of the eleapsed time. <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
+        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> concept which is a mechanism
+        to measure the elapsed time. A Stopwatch allows to start, stop, suspend and
+        resume the measure of the elapsed time. <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
           Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a><code class="computeroutput"><span class="special">&lt;&gt;</span></code>
         is the basic model of <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
-        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> allowing to make a single
-        measure.
+        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a>.
       </p>
 <p>
         At the user level, the main use case of measuring the elapsed time is to
@@ -95,34 +79,23 @@
           Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a><code class="computeroutput"><span class="special">&lt;&gt;</span></code> provides a run time reporting package
         that can be invoked in a single line of code to report the usage of a Clock.
       </p>
-<a name="boost_chrono.overview.motivation.caveat_emptor"></a><h4>
-<a name="id4758849"></a>
-        <a href="motivation.html#boost_chrono.overview.motivation.caveat_emptor">Caveat emptor</a>
-      </h4>
-<p>
-        The underlying clocks provided by operating systems are subject to many seemingly
-        arbitrary policies and implementation irregularities. That's a polite way
-        of saying they tend to be flakey, and each operating system or even each
-        clock has its own cruel and unusual forms of flakiness. Don't bet the farm
-        on their accuracy, unless you have become deeply familiar with exactly what
-        the specific operating system is guaranteeing, which is often very little.
-      </p>
 <a name="boost_chrono.overview.motivation.how_reliable_are_these_measures_"></a><h4>
-<a name="id4758879"></a>
+<a name="id4803738"></a>
         <a href="motivation.html#boost_chrono.overview.motivation.how_reliable_are_these_measures_">How
         reliable are these measures?</a>
       </h4>
 <p>
-        There are three context on which you can get unreliable measures:
+        There are three cases which can lead to get unreliable measures:
       </p>
 <div class="itemizedlist"><ul type="disc"><li>
-          Precission of your clock. If the precission of your clock is 10ms you can
-          not be able to measure the time spent by blocks of code that takes the
-          same order of magnitude. The library provides a hig_resolution_clock that
-          gives you the higher resolution available on your platform. Respect to
-          the precission, nothing to do except to take the clock with the highest
-          resolution and measures blocks of code that will spent time having more
-          than one order of magnitude the precission of the clock.
+          precision of your clock. It is not possible to measure events that transpire
+          at rates of the same order of magnitude as the clock's precision with any
+          reliability. For example, a 10ms clock cannot be used reliably to measure
+          elapsed times of tens of milliseconds. The library provides a [high_resolution_clock]
+          that gives you the highest resolution time available on your platform.
+          That will give the best precision, but can only be used for reliable measurement
+          of events that elapse about an order of magnitude slower than that clock's
+          precision.
         </li></ul></div>
 <p>
         
@@ -137,13 +110,18 @@
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-          When your application is multithreaded, and you use a process clock, the
-          time you get is the delay during which your block has been executed, in
-          concurrency with the other threads of execution. If what you want is the
-          time spent by this specific thread another clock is needed. The library
-          provide a <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
-          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a> that returns the
-          time spent by the thread on platforms providing this kind of data.
+          Using a process clock in a multithreaded application will give elapsed
+          time for the process as a whole, including threads other than the calling
+          thread. To get time elapsed for a specific thread, use the supplied <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
+          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a> which returns time
+          elapsed for the calling thread only, if supported by the platform.
+        </li>
+<li>
+          When stopclocks are nested, usually from stopclocks appearing in each of
+          several nested function calls, the overhead of the stopclock processing
+          begins to be significant relative to run time of the code being measured.
+          The innermost measurements remain accurate, but those in the outermost
+          layers can measure too much overhead to be trustworthy.
         </li>
 <li>
           Nested stopclocks (usually nested function calls where each function contains
@@ -155,31 +133,26 @@
         </li>
 </ul></div>
 <p>
-        Some measures let us think that most of the time spent by the stopclock mechanism
-        is associated to the logging part. There are two things we can do to make
-        the difference :
+        Most of the stopclock overhead is likely due to logging. There are two things
+        we can do to make the difference :
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-          Avoid expensive operations as logging while doing the measures. Note that
-          reporting in itself is not too expensive as far as we don't need to flush
-          the buffer. This can be achieved either using a <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
-          Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a>, 'i.e. don't
-          report until all the measures have been compiled and then report some statistics
-          or using an asynchronous stream.
+          Don't flush log information while measuring elapsed time. A <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
+          Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a> can make
+          that possible, because it don't report until all the measures have been
+          compiled and then report some statistics. Alternatively, an asynchronous
+          stream would permit normal logging but by a thread other than the one being
+          measured.
         </li>
 <li>
-          Introduce some cheap mechanism that allows us to make the difference between
-          the application time and the intrinsec stopclock time. When the precission
-          of the clock is enough, we can suspend the counting of the Clock while
-          we are spending time reporting the measures, and resume it once the work
-          is done. The library provide a Clock wrapper <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.suspendible_clock_hpp.suspendible_clock" title="
-          Template Class suspendible_clock&lt;&gt;"><code class="computeroutput"><span class="identifier">suspendible_clock</span></code></a> that make the
-          resulting clock suspendible. The stopwatch_reporter is able to detect if
-          the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
-          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a> is a <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.suspendible_clock_req" title="
-        SuspendibleClock Requirements"><code class="computeroutput"><span class="identifier">SuspendibleClock</span></code></a> and then suspend/resume
-          the clock while doing the report.
+          Add a mechanism to track the difference between the application time and
+          stopclock time. If a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
+          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a> models <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.suspendible_clock_req" title="
+        SuspendibleClock Requirements"><code class="computeroutput"><span class="identifier">SuspendibleClock</span></code></a> and its precision
+          is sufficiently fine, this mechanism could suspend the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
+          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code>'s</a> counting while reporting
+          measurements and resume it thereafter.
         </li>
 </ul></div>
 </div>
@@ -193,7 +166,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="description.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
