@@ -21,7 +21,7 @@ namespace boost {
  */
 	
 template <typename T>
-T isign(T x, T y)
+inline T isign(T x, T y)
 {
 	const T tmp = (x ^ y) >> (sizeof(T) * 8 - 1);
 	return (x ^ tmp) - tmp;

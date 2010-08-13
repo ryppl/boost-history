@@ -40,4 +40,11 @@
 #include <boost/integer/static_lcm.hpp>
 #include <boost/integer/count_leading_zeros.hpp>
 #include <boost/integer/ilog2.hpp>
+#include <boost/integer/isqrt.hpp>
+#include <boost/integer/inc_rev.hpp>
+#include <boost/integer/static_inc_rev.hpp>
+#include <boost/integer/find_first_one_string.hpp>
+#include <boost/integer/rotate.hpp>
+#include <boost/integer/rrshift.hpp>
+
 #endif

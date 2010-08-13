@@ -18,7 +18,7 @@ namespace boost {
 //	Extend data represented in `bits' bits to 
 //		sizeof(Type) * 8 bits
 template <typename T>
-T sign_extend(T data, std::size_t bits)
+inline T sign_extend(T data, std::size_t bits)
 {
 	BOOST_ASSERT((bits < sizeof(T) * 8));
 	

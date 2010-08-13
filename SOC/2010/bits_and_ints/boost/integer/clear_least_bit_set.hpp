@@ -22,7 +22,7 @@
 namespace boost {
 
 template <typename T>
-T clear_least_bit_set(T value)
+inline T clear_least_bit_set(T value)
 {
 	return (value & (value - 1));
 } //clear_least_bit_set

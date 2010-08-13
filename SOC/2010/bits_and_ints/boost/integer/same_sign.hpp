@@ -22,7 +22,7 @@ namespace boost {
  */
 	
 template <typename T>
-bool same_sign(T first, T second)
+inline bool same_sign(T first, T second)
 {
 	BOOST_STATIC_ASSERT((is_integral<T>::value));
 	
