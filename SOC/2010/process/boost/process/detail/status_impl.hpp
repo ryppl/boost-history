@@ -94,7 +94,8 @@ public:
         }
         return status;
 #elif defined(BOOST_WINDOWS_API)
-        HANDLE h = OpenProcess(PROCESS_QUERY_INFORMATION | SYNCHRONIZE, FALSE, pid);
+        HANDLE h = OpenProcess(PROCESS_QUERY_INFORMATION | SYNCHRONIZE, FALSE,
+            pid);
         if (h == NULL)
         {
             ec = boost::system::error_code(GetLastError(),
@@ -136,7 +137,8 @@ public:
 
     void complete(phandle ph, int exit_code)
     {
-        boost::iterator_range<operations_type::iterator> r = ops_.equal_range(ph);
+        boost::iterator_range<operations_type::iterator> r =
+            ops_.equal_range(ph);
         for (operations_type::iterator it = r.begin(); it != r.end(); ++it)
             (*it->second)(exit_code);
         ops_.erase(r.begin(), r.end());

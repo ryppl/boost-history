@@ -23,6 +23,7 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
+#   include <boost/process/operations.hpp>
 #   include <sys/types.h>
 #   include <sys/wait.h>
 #elif defined(BOOST_WINDOWS_API)
@@ -59,12 +60,13 @@ class basic_status_service
 public:
     explicit basic_status_service(boost::asio::io_service &io_service)
         : boost::asio::detail::service_base<StatusImplementation>(io_service),
-        work_thread_(&basic_status_service<StatusImplementation>::work_thread, this)
 #if defined(BOOST_POSIX_API)
-        , interrupt_pid_(-1),
+        interrupt_pid_(-1),
         pids_(0)
 #elif defined(BOOST_WINDOWS_API)
-        , run_(true)
+        work_thread_(&basic_status_service<StatusImplementation>::work_thread,
+            this),
+        run_(true)
 #endif
     {
 #if defined(BOOST_WINDOWS_API)
@@ -76,9 +78,15 @@ public:
 
     ~basic_status_service()
     {
+#if defined(BOOST_POSIX_API)
+        if (work_thread_.joinable())
+        {
+            stop_work_thread();
+            work_thread_.join();
+        }
+#elif defined(BOOST_WINDOWS_API)
         stop_work_thread();
         work_thread_.join();
-#if defined(BOOST_WINDOWS_API)
         CloseHandle(handles_[0]);
 #endif
     }
@@ -116,16 +124,23 @@ public:
 #if defined(BOOST_POSIX_API)
         boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
         if (!work_)
-            work_.reset(new boost::asio::io_service::work(this->get_io_service()));
+            work_.reset(new boost::asio::io_service::work(
+                this->get_io_service()));
         ++pids_;
+        if (!work_thread_.joinable())
+            work_thread_ = boost::thread(
+                &basic_status_service<StatusImplementation>::work_thread,
+                this);
         impl->async_wait(pid, this->get_io_service().wrap(handler));
 #elif defined(BOOST_WINDOWS_API)
-        HANDLE handle = OpenProcess(SYNCHRONIZE | PROCESS_QUERY_INFORMATION, FALSE, pid);
+        HANDLE handle = OpenProcess(SYNCHRONIZE | PROCESS_QUERY_INFORMATION,
+            FALSE, pid);
         if (handle == NULL)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("OpenProcess() failed");
         boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
         if (!work_)
-            work_.reset(new boost::asio::io_service::work(this->get_io_service()));
+            work_.reset(new boost::asio::io_service::work(
+                this->get_io_service()));
         interrupt_work_thread();
         work_thread_cond_.wait(work_thread_mutex_);
         handles_.push_back(handle);
@@ -141,9 +156,9 @@ private:
 
     void work_thread()
     {
-        for (;;)
-        {
 #if defined(BOOST_POSIX_API)
+        while (pids_)
+        {
             int status;
             pid_t pid = ::wait(&status);
             if (pid == -1)
@@ -165,11 +180,15 @@ private:
                 if (--pids_ == 0)
                     work_.reset();
             }
+        }
 #elif defined(BOOST_WINDOWS_API)
+        for (;;)
+        {
             DWORD res = WaitForMultipleObjects(handles_.size(), &handles_[0],
                 FALSE, INFINITE);
             if (res == WAIT_FAILED)
-                BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("WaitForMultipleObjects() failed");
+                BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
+                    "WaitForMultipleObjects() failed");
             else if (res - WAIT_OBJECT_0 == 0)
             {
                 boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
@@ -183,7 +202,8 @@ private:
                 HANDLE handle = handles_[res - WAIT_OBJECT_0];
                 DWORD exit_code;
                 if (!GetExitCodeProcess(handle, &exit_code))
-                    BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("GetExitCodeProcess() failed");
+                    BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
+                        "GetExitCodeProcess() failed");
                 boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
                 for (std::vector<implementation_type>::iterator it =
                     impls_.begin(); it != impls_.end(); ++it)
@@ -194,8 +214,8 @@ private:
                 if (handles_.size() == 1)
                     work_.reset();
             }
-#endif
         }
+#endif
     }
 
     void interrupt_work_thread()

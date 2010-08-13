@@ -11,4 +11,8 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt) 
 // 
 
-#include <boost/process/detail/posix_helpers.hpp> 
+#include <boost/process/config.hpp> 
+
+#if defined(BOOST_POSIX_API) 
+#   include <boost/process/detail/posix_helpers.hpp> 
+#endif 
