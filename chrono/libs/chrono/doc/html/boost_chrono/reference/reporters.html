@@ -602,8 +602,9 @@
           Template Class <code class="computeroutput"><span class="identifier">stopclock</span><span class="special">&lt;&gt;</span></code></a>
 </h5></div></div></div>
 <p>
-            <code class="computeroutput"><span class="identifier">stopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code>
-            template class is a shortcut of <code class="computeroutput"><span class="identifier">basic_stopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">stopwatch_reporter_default_formatter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span></code> with a specific default formatter.
+            A stopclock is a stopwatch with the ability to report elapsed time on
+            an output stream. <code class="computeroutput"><span class="identifier">stopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code> template class is a shortcut of
+            <code class="computeroutput"><span class="identifier">basic_stopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">stopwatch_reporter_default_formatter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span></code> with a specific default formatter.
           </p>
 <pre class="programlisting"><span class="keyword">template</span>
     <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">=</span><span class="identifier">process_cpu_clock</span>
@@ -1070,7 +1071,7 @@
 <span class="special">}</span>
 </pre>
 <a name="boost_chrono.reference.reporters.scoped_stopclock_hpp.scoped_stopclock.synopsis"></a><h6>
-<a name="id4930340"></a>
+<a name="id4929834"></a>
             <a href="reporters.html#boost_chrono.reference.reporters.scoped_stopclock_hpp.scoped_stopclock.synopsis">Synopsis</a>
           </h6>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">=</span><span class="identifier">process_cpu_clock</span>

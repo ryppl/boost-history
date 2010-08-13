@@ -27,7 +27,7 @@
 <a name="boost_chrono.overview.motivation"></a><a href="motivation.html" title="Motivation">Motivation</a>
 </h3></div></div></div>
 <a name="boost_chrono.overview.motivation.time"></a><h4>
-<a name="id4803513"></a>
+<a name="id4803389"></a>
         <a href="motivation.html#boost_chrono.overview.motivation.time">Time</a>
       </h4>
 <p>
@@ -46,7 +46,7 @@
         of a good deal of information in this documentation.
       </p>
 <a name="boost_chrono.overview.motivation.wall_clock_versus_system_and_user_time"></a><h4>
-<a name="id4803571"></a>
+<a name="id4803446"></a>
         <a href="motivation.html#boost_chrono.overview.motivation.wall_clock_versus_system_and_user_time">Wall
         clock versus system and user time</a>
       </h4>
@@ -58,7 +58,7 @@
         this relies on times(). On Windows, it relies on GetProcessTimes().)
       </p>
 <a name="boost_chrono.overview.motivation.reporting_elapsed_time"></a><h4>
-<a name="id4803615"></a>
+<a name="id4803478"></a>
         <a href="motivation.html#boost_chrono.overview.motivation.reporting_elapsed_time">Reporting
         elapsed time</a>
       </h4>
@@ -68,93 +68,35 @@
         introduces the <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
         Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> concept which is a mechanism
         to measure the elapsed time. A Stopwatch allows to start, stop, suspend and
-        resume the measure of the elapsed time. <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
+        resume measuring the elapsed time. <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
           Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a><code class="computeroutput"><span class="special">&lt;&gt;</span></code>
         is the basic model of <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
         Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a>.
       </p>
 <p>
-        At the user level, the main use case of measuring the elapsed time is to
-        report these measures on the display. <a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
-          Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a><code class="computeroutput"><span class="special">&lt;&gt;</span></code> provides a run time reporting package
-        that can be invoked in a single line of code to report the usage of a Clock.
+        It is often necessary to report elapsed time on a user display or in a log
+        file. <a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
+          Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a>&lt;&gt; provides
+        a runtime reporting mechanism for this purpose which can be invoked in just
+        one line of code.
       </p>
 <a name="boost_chrono.overview.motivation.how_reliable_are_these_measures_"></a><h4>
-<a name="id4803738"></a>
+<a name="id4803594"></a>
         <a href="motivation.html#boost_chrono.overview.motivation.how_reliable_are_these_measures_">How
         reliable are these measures?</a>
       </h4>
 <p>
-        There are three cases which can lead to get unreliable measures:
+        There are a number of things that can lead to unreliable measurement (see
+        <a href="../appendices/rationale.html" title=" Appendix B: Rationale">here</a> for more details),
+        but they mostly amount to reporting overhead. Boost.Chrono provides two ways
+        to improve reliability of time measurements. A <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
+          Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a> only reports
+        statistics once all measurements have been acquired, which removes reporting
+        overhead from the measurements. The other approach is to use a <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.suspendible_clock_req" title="
+        SuspendibleClock Requirements"><code class="computeroutput"><span class="identifier">SuspendibleClock</span></code></a> such that the reporting
+        overhead can be ignored by suspending elapsed time tracking during reporting
+        operations
       </p>
-<div class="itemizedlist"><ul type="disc"><li>
-          precision of your clock. It is not possible to measure events that transpire
-          at rates of the same order of magnitude as the clock's precision with any
-          reliability. For example, a 10ms clock cannot be used reliably to measure
-          elapsed times of tens of milliseconds. The library provides a [high_resolution_clock]
-          that gives you the highest resolution time available on your platform.
-          That will give the best precision, but can only be used for reliable measurement
-          of events that elapse about an order of magnitude slower than that clock's
-          precision.
-        </li></ul></div>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-    <span class="special">...</span>
-    <a href="../reference/reporters.html#boost_chrono.reference.reporters.stopclock_hpp.stopclock" title="
-          Template Class stopclock&lt;&gt;"><code class="computeroutput"><span class="identifier">stopclock</span></code></a><span class="special">&lt;</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.high_resolution_clock" title="
-          Class high_resolution_clock"><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a><span class="special">&gt;</span> <span class="identifier">_</span><span class="special">;</span>
-</pre>
-<p>
-      </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-          Using a process clock in a multithreaded application will give elapsed
-          time for the process as a whole, including threads other than the calling
-          thread. To get time elapsed for a specific thread, use the supplied <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
-          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a> which returns time
-          elapsed for the calling thread only, if supported by the platform.
-        </li>
-<li>
-          When stopclocks are nested, usually from stopclocks appearing in each of
-          several nested function calls, the overhead of the stopclock processing
-          begins to be significant relative to run time of the code being measured.
-          The innermost measurements remain accurate, but those in the outermost
-          layers can measure too much overhead to be trustworthy.
-        </li>
-<li>
-          Nested stopclocks (usually nested function calls where each function contains
-          a stopclock). When the nesting is deep enough, the cumulative overhead
-          of all the stopclock functionality make the data unreliable except for
-          the inner-most trace points. The question is, how much time is related
-          to the application code we want to measure and how much to the fact we
-          are meassuring and logging in inner blocks?
-        </li>
-</ul></div>
-<p>
-        Most of the stopclock overhead is likely due to logging. There are two things
-        we can do to make the difference :
-      </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-          Don't flush log information while measuring elapsed time. A <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
-          Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a> can make
-          that possible, because it don't report until all the measures have been
-          compiled and then report some statistics. Alternatively, an asynchronous
-          stream would permit normal logging but by a thread other than the one being
-          measured.
-        </li>
-<li>
-          Add a mechanism to track the difference between the application time and
-          stopclock time. If a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
-          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a> models <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.suspendible_clock_req" title="
-        SuspendibleClock Requirements"><code class="computeroutput"><span class="identifier">SuspendibleClock</span></code></a> and its precision
-          is sufficiently fine, this mechanism could suspend the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
-          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code>'s</a> counting while reporting
-          measurements and resume it thereafter.
-        </li>
-</ul></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

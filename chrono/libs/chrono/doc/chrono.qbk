@@ -239,10 +239,13 @@ This documentation makes use of the following naming and formatting conventions.
 Finally, you can mentally add the following to any code fragments in this document:
 
     // Include all of Chrono files
+    #include <boost/stopwatches.hpp>
+
+[/
     #include <boost/type_traits/common_type.hpp>
     #include <boost/ratio.hpp>
     #include <boost/chrono.hpp>
-    #include <boost/stopwatches.hpp>
+]
 
 [/=================]
 [section Motivation]
@@ -317,49 +320,15 @@ As this is one of the expression more commonly use, the library provides a stopc
 
 Knowing how long a program, a function or a specific code block takes to execute is useful in both test and production environments.
 __Boost_Chrono__ introduces the __Stopwatch__ concept which is a mechanism to measure the elapsed time.
-A Stopwatch allows to start, stop, suspend and resume the measure of the elapsed time.
+A Stopwatch allows to start, stop, suspend and resume measuring the elapsed time.
 __stopwatch__`<>` is the basic model of __Stopwatch__.
 
-At the user level, the main use case of measuring the elapsed time is to report these measures on the display.
-__stopwatch_reporter__`<>` provides a run time reporting package that can be invoked in a single line of code to report the usage of a Clock.
-
-
-
+It is often necessary to report elapsed time on a user display or in a log file.  __stopwatch_reporter__<> provides a runtime reporting mechanism for this purpose which can be invoked in just one line of code.
 
 [heading How reliable are these measures?]
 
-[/note this section need to be reworked, the ideas are there, but ...]
+There are a number of things that can lead to unreliable measurement (see [link boost_chrono.appendices.rationale here] for more details), but they mostly amount to reporting overhead.  Boost.Chrono provides two ways to improve reliability of time measurements.  A __stopwatch_accumulator__ only reports statistics once all measurements have been acquired, which removes reporting overhead from the measurements.  The other approach is to use a __SuspendibleClock__ such that the reporting overhead can be ignored by suspending elapsed time tracking during reporting operations
 
-There are three cases which can lead to get unreliable measures:
-
-* precision of your clock. It is not possible to measure events that transpire at rates of the same order of magnitude as the clock's precision with any reliability.  For example, a 10ms clock cannot be used reliably to measure elapsed times of tens of milliseconds.  The library provides a [high_resolution_clock] that gives you the highest resolution time available on your platform.  That will give the best precision, but can only be used for reliable measurement of events that elapse about an order of magnitude slower than that clock's precision.
-
-
-``
-#include <boost/chrono/chrono.hpp>
-    ...
-    __stopclock__<__high_resolution_clock__> _;
-``
-
-* Using a process clock in a multithreaded application will give elapsed time for the process as a whole, including threads other than the calling thread.  To get time elapsed for a specific thread, use the supplied __thread_clock__ which returns time elapsed for the calling thread only, if supported by the platform.
-
-* When stopclocks are nested, usually from stopclocks appearing in each of several nested function calls, the overhead of the stopclock processing begins to be significant relative to run time of the code being measured.  The innermost measurements remain accurate, but those in the outermost layers can measure too much overhead to be trustworthy.
-
-* Nested stopclocks (usually nested function calls where each function contains a stopclock). When the nesting is deep enough, the cumulative overhead of all the stopclock functionality make the data unreliable except for the inner-most trace points. The question is, how much time is related to the application code we want to measure and how much to the fact we are meassuring and logging in inner blocks?
-
-
-Most of the stopclock overhead is likely due to logging. There are two things we can do to make the difference :
-
-* Don't flush log information while measuring elapsed time.  A __stopwatch_accumulator__ can make that possible, because it don't report until all the measures have been compiled and then report some statistics.  Alternatively, an asynchronous stream would permit normal logging but by a thread other than the one being measured.
-
-* Add a mechanism to track the difference between the application time and stopclock time.  If a __Clock__ models __SuspendibleClock__ and its precision is sufficiently fine, this mechanism could suspend the __Clock_s__ counting while reporting measurements and resume it thereafter.
-
-[/
-    stopclock<suspendible_clock<Clock> > _;
-
-
-See the performances section for more deep details.
-]
 [endsect]
 
 [/==================]
@@ -1042,7 +1011,7 @@ On posix systems for which the macro _POSIX_THREAD_CPUTIME is defined we can get
 
 Knowing how long a program, a function or a specific block takes to execute is useful in both test and production environments.
 __Boost_Chrono__ introduces the __Stopwatch__ concept which captures the mechanism to measure the elapsed time.
-A __Stopwatch__ allows to `start`, `stop`, `suspend` and `resume` the measure of the elapsed time.
+A __Stopwatch__ allows to `start`, `stop`, `suspend` and `resume` measuring the elapsed time.
 __stopwatch__`<>` is the basic model of __Stopwatch__ allowing to make a single measure.
 
 At the user level, the main use case of measuring the elapsed time is to report these measures on the display.
@@ -4984,6 +4953,7 @@ Usage
 
 [section:stopclock Template Class `stopclock<>`]
 
+A stopclock is a stopwatch with the ability to report elapsed time on an output stream.
 `stopclock<Clock>` template class is a shortcut of `basic_stopclock<Clock, typename stopwatch_reporter_default_formatter<stopwatch<Clock>>::type>` with a specific default formatter.
 
     template
@@ -6231,6 +6201,42 @@ If the CopyConstruction and Assignment ([[@http://home.roadrunner.com/~hinnant/i
     __ratio__<3,9>::type r2;
     r1 = r2; // compiles as both types are the same.
 
+
+[heading How reliable are these measures?]
+
+[/note this section need to be reworked, the ideas are there, but ...]
+
+
+There are three cases which can lead to get unreliable measures:
+
+* It is not possible to measure events that transpire at rates of the same order of magnitude as the clock's precision with any reliability.  For example, a 10ms clock cannot be used reliably to measure elapsed times of tens of milliseconds.  The library provides a [high_resolution_clock] that gives you the highest resolution time available on your platform.  That will give the best precision, but can only be used for reliable measurement of events that elapse about an order of magnitude slower than that clock's precision.
+
+
+``
+#include <boost/chrono/chrono.hpp>
+    ...
+    __stopclock__<__high_resolution_clock__> _;
+``
+
+* Using a process clock in a multithreaded application will give elapsed time for the process as a whole, including threads other than the calling thread.  To get time elapsed for a specific thread, use the supplied __thread_clock__ which returns time elapsed for the calling thread only, if supported by the platform.
+
+* When stopclocks are nested, usually from stopclocks appearing in each of several nested function calls, the overhead of the stopclock processing begins to be significant relative to run time of the code being measured.  The innermost measurements remain accurate, but those in the outermost layers can measure too much overhead to be trustworthy.
+
+* Nested stopclocks (usually nested function calls where each function contains a stopclock). When the nesting is deep enough, the cumulative overhead of all the stopclock functionality make the data unreliable except for the inner-most trace points. The question is, how much time is related to the application code we want to measure and how much to the fact we are meassuring and logging in inner blocks?
+
+
+Most of the stopclock overhead is likely due to logging. There are two things we can do to make the difference :
+
+* Don't flush log information while measuring elapsed time.  A __stopwatch_accumulator__ can make that possible, because it don't report until all the measures have been compiled and then report some statistics.  Alternatively, an asynchronous stream would permit normal logging but by a thread other than the one being measured.
+
+* Add a mechanism to track the difference between the application time and stopclock time.  If a __Clock__ models __SuspendibleClock__ and its precision is sufficiently fine, this mechanism could suspend the __Clock_s__ counting while reporting measurements and resume it thereafter.
+
+[/
+    stopclock<suspendible_clock<Clock> > _;
+
+
+See the performances section for more deep details.
+]
 
 [endsect]
 
