@@ -21,7 +21,79 @@ struct bits;
 /** Iterators. */
 //@{
 template<typename T, std::size_t Width>
-struct bf_vector_iterator
+class bf_vector_iterator
+    :protected detail::bitfield_vector_iterator_base<T,Width>,
+    public detail::safe_bool_impl::safe_bool<
+        detail::bitfield_vector_iterator_base<T,Width>
+    >
+{
+    typedef detail::bitfield_vector_iterator_base<T,Width>  _base;
+    typedef detail::safe_bool_impl::safe_bool< _base >      _safe_bool;
+    typedef bf_vector_iterator<T,Width>                     _self;
+public:
+
+    typedef typename _base::proxy_ref_type          proxy_ref_type;
+    typedef typename _base::const_proxy_ref_type    const_proxy_ref_type;
+    typedef typename _base::iterator_category       iterator_category;
+    typedef typename _base::value_type              value_type;
+    typedef typename _base::pointer                 pointer;
+    typedef typename _base::proxy_ref_type          reference;
+    typedef typename _base::difference_type         difference_type;
+
+
+    bf_vector_iterator()
+        :_base(),
+        _safe_bool()
+    { }
+
+    bf_vector_iterator(_self const& rhs)
+        :_base( static_cast<_base>(rhs) ),
+        _safe_bool()
+    { }
+
+    explicit bf_vector_iterator(reference const& x)
+        :_base( static_cast<_base>(x) ),
+        _safe_bool()
+    { }
+
+    reference operator*() const {
+        return this->deref();
+    }
+
+    _self& operator++() {
+        this->next();
+        return *this;
+    }
+
+    _self operator++(int) {
+        _self ret(*this);
+        this->next();
+        return ret;
+    }
+
+    _self& operator--() {
+        this->previous();
+        return *this;
+    }
+
+    _self operator--(int) {
+        _self ret(*this);
+        this->previous();
+        return ret;
+    }
+    
+    bool operator==(_self const& rhs) const {
+        return this->is_equal(rhs);
+    }
+
+    bool operator!=(_self const& rhs) const {
+        return !this->is_equal(rhs);
+    }
+
+};
+
+template<typename T, std::size_t Width>
+class const_bf_vector_iterator
     :protected detail::bitfield_vector_iterator_base<T,Width>,
     public detail::safe_bool_impl::safe_bool<
         detail::bitfield_vector_iterator_base<T,Width>
@@ -29,7 +101,7 @@ struct bf_vector_iterator
 { };
 
 template<typename T, std::size_t Width>
-struct const_bf_vector_iterator
+class bf_vector_reverse_iterator
     :protected detail::bitfield_vector_iterator_base<T,Width>,
     public detail::safe_bool_impl::safe_bool<
         detail::bitfield_vector_iterator_base<T,Width>
@@ -37,15 +109,7 @@ struct const_bf_vector_iterator
 { };
 
 template<typename T, std::size_t Width>
-struct bf_vector_reverse_iterator
-    :protected detail::bitfield_vector_iterator_base<T,Width>,
-    public detail::safe_bool_impl::safe_bool<
-        detail::bitfield_vector_iterator_base<T,Width>
-    >
-{ };
-
-template<typename T, std::size_t Width>
-struct const_bf_vector_reverse_iterator
+class const_bf_vector_reverse_iterator
     :protected detail::bitfield_vector_iterator_base<T,Width>,
     public detail::safe_bool_impl::safe_bool<
         detail::bitfield_vector_iterator_base<T,Width>

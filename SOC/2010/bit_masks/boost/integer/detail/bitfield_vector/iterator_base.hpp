@@ -53,18 +53,7 @@ void operator!=(safe_bool<T> const& lhs, safe_bool<U> const& rhs) {
     lhs.this_type_does_not_support_comparisons();
     return false;	
 }
-
-// Here's how to use safe_bool:
-
-
-// class Testable_without_virtual : 
-// public safe_bool <Testable_without_virtual> {
-// public:
-// bool boolean_test() const {
-//      Perform Boolean logic here
-// }
-// };
-} // end safe bool impl.
+} // end safe bool impl
 
 /** bitfield_vector_iterator_base
  *  This class is used to abstract all of the baisc operations which are 
@@ -102,7 +91,7 @@ struct bitfield_vector_iterator_base
     typedef std::bidirectional_iterator_tag         iterator_category;
     typedef T                                       value_type;
     typedef T*                                      pointer;
-    typedef proxy_ref_type                          reference;
+    // typedef proxy_ref_type                          reference;
     typedef std::ptrdiff_t                          difference_type;
     BOOST_STATIC_CONSTANT( std::size_t, width = Width );
     //@}
@@ -194,11 +183,26 @@ struct bitfield_vector_iterator_base
     bool has_value() const {
         return _ptr;
     }
+
+    bool is_less(_self const& rhs) const {
+        if(_ptr <= rhs._ptr) {
+            if( _bit_offset < rhs._bit_offset) {
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return true;
+        }
+    }
     //@)
     
+
+
     storage_ptr_t   _ptr;
     std::size_t     _bit_offset;
 };
+
 
 }} // end boost::detail
 

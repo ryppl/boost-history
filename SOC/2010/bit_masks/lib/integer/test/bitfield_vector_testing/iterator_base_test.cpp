@@ -63,7 +63,7 @@ int main() {
     // Testing constructor over a normal "non-const proxy_reference_type"
     {
         storage_t storage[20];
-        test_type_1::reference r1(storage,0);
+        test_type_1::proxy_ref_type r1(storage,0);
         test_type_1 t1(r1);
         BOOST_TEST( t1._ptr == storage);
         BOOST_TEST( t1._bit_offset == 0);
@@ -260,6 +260,21 @@ int main() {
         t1.advance(-3);
         BOOST_TEST( t1._ptr == storage);
         BOOST_TEST( t1._bit_offset == 0);
+    }
+
+    // testing is_less
+    {
+        storage_t storage[20];
+        std::memset(storage,0,20);
+        storage_ptr_t ptr = storage;
+        test_type_1 t1(storage, 0);
+        test_type_1 t2(t1);
+        BOOST_TEST( !t1.is_less(t1) );
+        BOOST_TEST( !t1.is_less(t2) );
+        t1.next();
+        BOOST_TEST( !t1.is_less(t2) );
+        BOOST_TEST( t2.is_less(t1) );
+
     }
 /*
 
