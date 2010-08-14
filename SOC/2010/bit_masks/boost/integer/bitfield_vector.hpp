@@ -38,8 +38,6 @@ public:
     typedef typename _base::proxy_ref_type          reference;
     typedef typename _base::difference_type         difference_type;
 
-
-
     bf_vector_iterator()
         :_base()
     { }
@@ -93,7 +91,33 @@ public:
         this->previous();
         return ret;
     }
-    
+
+    _self& operator+=(int rhs) {
+        this->advance(rhs);
+        return *this;
+    }
+
+    _self& operator-=(int rhs) {
+        this->advance(rhs * -1);
+        return *this;
+    }
+
+    _self operator+(int rhs) const {
+        _self ret(*this);
+        ret.advance(rhs);
+        return ret;
+    }
+
+    _self operator-(int rhs) const {
+        _self ret(*this);
+        ret.advance(rhs * -1);
+        return ret;
+    }
+
+    difference_type operator-(_self const& rhs) const {
+        return this->distance( static_cast<_base>(rhs) );
+    }
+        
     bool operator==(_self const& rhs) const {
         return this->is_equal(rhs);
     }
@@ -137,6 +161,10 @@ public:
         :_base( static_cast<proxy_ref_type>(x) )
     { }
 
+    const_bf_vector_iterator(storage_ptr_t ptr, std::size_t offset)
+        :_base(ptr, offset)
+    { }
+
     reference operator*() const {
         return this->const_deref();
     }
@@ -173,6 +201,32 @@ public:
         this->previous();
         return ret;
     }
+
+    _self& operator+=(int rhs) {
+        this->advance(rhs);
+        return *this;
+    }
+
+    _self& operator-=(int rhs) {
+        this->advance(rhs * -1);
+        return *this;
+    }
+
+    _self operator+(int rhs) const {
+        _self ret(*this);
+        ret.advance(rhs);
+        return ret;
+    }
+
+    _self operator-(int rhs) const {
+        _self ret(*this);
+        ret.advance(rhs * -1);
+        return ret;
+    }
+
+    difference_type operator-(_self const& rhs) const {
+        return this->distance(static_cast<_base>(rhs) );
+    }
     
     bool operator==(_self const& rhs) const {
         return this->is_equal(rhs);
@@ -207,6 +261,10 @@ public:
 
     bf_vector_reverse_iterator()
         :_base()
+    { }
+
+    bf_vector_reverse_iterator(storage_ptr_t ptr, std::size_t offset)
+        :_base(ptr, offset)
     { }
 
     bf_vector_reverse_iterator(_self const& rhs)
@@ -252,6 +310,32 @@ public:
         this->next();
         return ret;
     }
+
+    _self& operator+=(int rhs) {
+        this->advance(rhs * -1);
+        return *this;
+    }
+
+    _self& operator-=(int rhs) {
+        this->advance(rhs);
+        return *this;
+    }
+
+    _self operator+(int rhs) const {
+        _self ret(*this);
+        ret.advance(rhs * -1);
+        return ret;
+    }
+
+    _self operator-(int rhs) const {
+        _self ret(*this);
+        ret.advance(rhs);
+        return ret;
+    }
+
+    difference_type operator-(_self const& rhs) const {
+        return rhs.distance( static_cast<_base>(*this) );
+    }
     
     bool operator==(_self const& rhs) const {
         return this->is_equal(rhs);
@@ -262,7 +346,7 @@ public:
     }
 
     bool operator<(_self const& rhs) const {
-        return this->is_greater(static_cast<_base>(rhs));
+        return rhs.is_greater(static_cast<_base>(*this));
     }
 };
 
@@ -292,12 +376,16 @@ public:
         :_base( static_cast<_base>(rhs) )
     { }
 
+    const_bf_vector_reverse_iterator(storage_ptr_t ptr, std::size_t offset)
+        :_base(ptr, offset)
+    { }
+
     explicit const_bf_vector_reverse_iterator(reference const& x)
         :_base( static_cast<proxy_ref_type>(x) )
     { }
 
     reference operator*() const {
-        return this->deref();
+        return this->const_deref();
     }
 
     reference operator[](intmax_t index) const {
@@ -331,6 +419,32 @@ public:
         this->next();
         return ret;
     }
+
+    _self& operator+=(int rhs) {
+        this->advance(rhs * -1);
+        return *this;
+    }
+
+    _self& operator-=(int rhs) {
+        this->advance(rhs);
+        return *this;
+    }
+
+    _self operator+(int rhs) const {
+        _self ret(*this);
+        ret.advance(rhs * -1);
+        return ret;
+    }
+
+    _self operator-(int rhs) const {
+        _self ret(*this);
+        ret.advance(rhs);
+        return ret;
+    }
+
+    difference_type operator-(_self const& rhs) const {
+        return rhs.distance( static_cast<_base>(*this) );
+    }
     
     bool operator==(_self const& rhs) const {
         return this->is_equal(rhs);
@@ -341,7 +455,7 @@ public:
     }
 
     bool operator<(_self const& rhs) const {
-        return this->is_greater(static_cast<_base>(rhs));
+        return rhs.is_greater(static_cast<_base>(*this));
     }
 };
 

@@ -145,8 +145,7 @@ struct bitfield_vector_iterator_base
         // increment and decrement operations and this only works if 
         // the value is true otherwise the value is zero which is 
         // the behavior I want.
-        _bit_offset = (std::size_t((previous_offset%8)<0)<<3)
-            + (previous_offset % 8);
+        _bit_offset = (std::size_t((previous_offset%8)<0)<<3) + (previous_offset % 8);
     }
     
     void next() {
@@ -198,7 +197,7 @@ struct bitfield_vector_iterator_base
         }
     }
 
-    bool is_greater(_self const& rhs) {
+    bool is_greater(_self const& rhs) const {
         if(_ptr >= rhs._ptr) {
             if(_bit_offset > rhs._bit_offset) {
                 return true;
