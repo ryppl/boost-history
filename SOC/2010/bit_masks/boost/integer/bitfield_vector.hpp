@@ -6,9 +6,9 @@
 #ifndef BOOST_BITFIELD_VECTOR_HPP
 #define BOOST_BITFIELD_VECTOR_HPP
 #include <memory>
-#include <boost/integer/detail/bitfield_vector/bitfield_vector_member_impl.hpp>
 #include <boost/integer/detail/bitfield_vector/bitfield_vector_base.hpp>
-#include <cstring>
+#include <boost/integer/detail/bitfield_vector/bitfield_vector_member_impl.hpp>
+#include <boost/integer/detail/bitfield_vector/iterator_base.hpp>
 
 namespace boost {
 

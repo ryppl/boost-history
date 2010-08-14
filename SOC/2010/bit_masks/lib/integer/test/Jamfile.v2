@@ -77,5 +77,6 @@ test-suite integer
         [ run bitfield_vector_testing/proxy_reference_test.cpp ]
         [ run bitfield_vector_testing/member_impl_test.cpp ]
         [ run bitfield_vector_testing/mask_creator_test.cpp ]
+        [ run bitfield_vector_testing/iterator_base_test.cpp ]
     ;
 

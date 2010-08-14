@@ -17,20 +17,9 @@
 #include <cstring>
 #include <boost/integer/high_low_bits.hpp>
 #include <boost/integer/bit_width.hpp>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
-#include <bitset>
+
 
 namespace boost { namespace detail {
-
-template <typename T>
-std::string to_binary_2(T x) {
-    std::stringstream ss(std::stringstream::in|std::stringstream::out);
-    ss << std::setfill('0') << std::setw(boost::bit_width<T>::value)
-        << std::bitset<  boost::bit_width<T>::value >(x).to_string();
-    return std::string(ss.str());
-}
 
 template <std::size_t Width, bool = bool((Width%8) > 0)>
 struct next_allocation_size;
@@ -210,14 +199,12 @@ public:
 
     /** value_type storage assignement operator.*/
     _self& operator=(value_type x) {
-        std::cout << "called assignment operator" << std::endl;
-        //std::cout << "x initial value: " << to_binary_2(x) <<std::endl;
+
         unsigned_value_type x_adjusted = ((unsigned_value_type(x & sign_bit) >>
                 (bit_width<value_type>::value - width))
             |
         (low_bits_mask<value_type, std::size_t(width-1)>::value & x) );
-        //std::cout << "x new value: " << to_binary_2(x_new) <<std::endl;
-
+ 
         if(_mask._size == 1) {
             storage_t previous_values = *_ptr & ~_mask._first_byte;
             storage_t new_value = low_bits_mask<value_type, width>::value &
