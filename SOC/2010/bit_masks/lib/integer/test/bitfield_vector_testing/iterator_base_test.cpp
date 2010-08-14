@@ -266,7 +266,6 @@ int main() {
     {
         storage_t storage[20];
         std::memset(storage,0,20);
-        storage_ptr_t ptr = storage;
         test_type_1 t1(storage, 0);
         test_type_1 t2(t1);
         BOOST_TEST( !t1.is_less(t1) );
@@ -276,12 +275,19 @@ int main() {
         BOOST_TEST( t2.is_less(t1) );
 
     }
-/*
 
-typedef bitfield_vector_iterator_base<unsigned int, 3>  test_type_1;
-typedef bitfield_vector_iterator_base<int, 20>          test_type_2;
-typedef bitfield_vector_iterator_base<int, 8>           test_type_3;
-*/
+    // is_greater
+    {
+        storage_t storage[20];
+        std::memset(storage,0,20);
+        test_type_1 t1(storage, 0);
+        test_type_1 t2(t1);
+        BOOST_TEST( !t1.is_greater(t1) );
+        BOOST_TEST( !t1.is_greater(t2) );
+        t1.next();
+        BOOST_TEST( t1.is_greater(t2) );
+        BOOST_TEST( !t2.is_greater(t1) );
 
+    }
     return boost::report_errors();
 }

@@ -77,21 +77,23 @@ void operator!=(safe_bool<T> const& lhs, safe_bool<U> const& rhs) {
 
 template <typename T, std::size_t Width>
 struct bitfield_vector_iterator_base
-    // :safe_bool_impl::safe_bool_impl< bitfield_vector_iterator_base<T,Width> >
+    :safe_bool_impl::safe_bool< bitfield_vector_iterator_base<T,Width> >
 {
 
     /** Typedef's for iterator base class. */
     //@{
+    
     typedef bitfield_vector_iterator_base<T,Width>  _self;
+    typedef safe_bool_impl::safe_bool< _self >      _base;
     typedef proxy_reference_type<T,Width>           proxy_ref_type;
     typedef const_proxy_reference_type<T,Width>     const_proxy_ref_type;
+    typedef typename _base::bool_type               bool_type;
 
     // I don't believe that this iterator can be a random access iterator
     // until C++0x
     typedef std::bidirectional_iterator_tag         iterator_category;
     typedef T                                       value_type;
     typedef T*                                      pointer;
-    // typedef proxy_ref_type                          reference;
     typedef std::ptrdiff_t                          difference_type;
     BOOST_STATIC_CONSTANT( std::size_t, width = Width );
     //@}
@@ -187,6 +189,18 @@ struct bitfield_vector_iterator_base
     bool is_less(_self const& rhs) const {
         if(_ptr <= rhs._ptr) {
             if( _bit_offset < rhs._bit_offset) {
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return true;
+        }
+    }
+
+    bool is_greater(_self const& rhs) {
+        if(_ptr >= rhs._ptr) {
+            if(_bit_offset > rhs._bit_offset) {
                 return true;
             }else{
                 return false;
