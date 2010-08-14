@@ -1,3 +1,12 @@
+//  boost::ilog2 test file  ------------------------------//
+
+//  (C) Copyright Murilo Adriano Vasconcelos 2010.
+//  Distributed under the Boost Software License, Version 1.0. (See
+//  accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt
+
+//  See http://www.boost.org for updates, documentation, and revision history. 
+
 #define BOOST_TEST_MAIN
 #include <cerrno>
 #include <iostream>

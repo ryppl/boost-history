@@ -385,8 +385,7 @@
           types. Additionally, <code class="computeroutput"><span class="identifier">T1</span></code>
           must have 8, 16 or 32 bits and <code class="computeroutput"><span class="identifier">T2</span></code>
           must have 16, 32 or 64 bits. For these functions <code class="computeroutput"><span class="identifier">T2</span></code>
-          have the double of bits wich <code class="computeroutput"><span class="identifier">T1</span></code>
-          have.
+          have the double of bits of <code class="computeroutput"><span class="identifier">T1</span></code>.
         </li></ul></div>
 <p>
         <span class="bold"><strong>Returns: </strong></span> <code class="computeroutput"><span class="identifier">interleave</span></code>
@@ -490,7 +489,7 @@
 <td>
                 <p>
                   The data to be reversed. The type of data <span class="bold"><strong>must</strong></span>
-                  be an integral type and it's size <span class="bold"><strong>must</strong></span>
+                  be an integral type and its size <span class="bold"><strong>must</strong></span>
                   be 8, 16, 32 or 64-bits, otherwise, bit_reversal(data) will result
                   in an error.
                 </p>
@@ -548,7 +547,7 @@
 <td>
                 <p>
                   A <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>
-                  type wich holds an integral constant to be reversed.
+                  type that holds an integral constant to be reversed.
                 </p>
                 </td>
 </tr></tbody>
@@ -682,7 +681,7 @@
         </li>
 <li class="listitem">
 <span class="bold"><strong>Returns: </strong></span><code class="computeroutput"><span class="identifier">value</span></code>
-          with it's least significant active bit disactivated.
+          with its least significant active bit disactivated.
         </li>
 </ul></div>
 </div>
@@ -770,7 +769,7 @@
 <p>
         The header file <a href="../../../../../boost/integer/find_first_one_string.hpp" target="_top">&lt;boost/integer/find_first_one_string.hpp&gt;</a>
         defines <code class="computeroutput"><span class="identifier">find_first_one_string</span></code>
-        function wich returns the index of start position of a consecutive string
+        function that returns the index of start position of a consecutive string
         of ones with at least a given length.
       </p>
 <div class="section" title="Synopsis">
@@ -827,7 +826,7 @@
 </span>	<span class="comment">// 1111 0000 1111 1111 0000 0000 0000 0000
 </span>	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">find_first_one_string</span><span class="special">(</span><span class="number">0xF0FF0000u</span><span class="special">,</span> <span class="number">6</span><span class="special">)</span> <span class="special">==</span> <span class="number">8</span><span class="special">));</span>
 	
-	<span class="comment">// Not found a string of consecutive ones with legth at least 20
+	<span class="comment">// Not found a string of consecutive ones with length at least 20
 </span>	<span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">find_first_one_string</span><span class="special">(</span><span class="number">0xF0FF0000u</span><span class="special">,</span> <span class="number">20</span><span class="special">)</span> <span class="special">==</span> <span class="special">-</span><span class="number">1</span><span class="special">));</span>
 	
 	<span class="comment">//                                      v  
@@ -860,7 +859,7 @@
 <p>
         The header file <a href="../../../../../boost/integer/static_gcd.hpp" target="_top">&lt;boost/integer/static_gcd.hpp&gt;</a>
         defines <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">gcd</span><span class="special">&lt;&gt;</span></code>
-        metafunction wich calculates the greatest common divisor of two given <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>.
+        metafunction that calculates the greatest common divisor of two given <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>.
       </p>
 <div class="section" title="Synopsis">
 <div class="titlepage"><div><div><h4 class="title">
@@ -894,7 +893,7 @@
 </dl></div>
 <p>
         The header file <a href="../../../../../boost/integer/ilog2.hpp" target="_top">&lt;boost/integer/ilog2.hpp&gt;</a>
-        defines <code class="computeroutput"><span class="identifier">ilog2</span></code> function wich
+        defines <code class="computeroutput"><span class="identifier">ilog2</span></code> function that
         calculates the logarithm in base two of a given integral value.
       </p>
 <div class="section" title="Synopsis">
@@ -1004,7 +1003,7 @@
 <div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints._is_integral_constant____metafunction_.synopsis">Synopsis</a></span></dt></dl></div>
 <p>
         The header file <a href="../../../../../boost/integer/is_integral_constant.hpp" target="_top">&lt;boost/integer/is_integral_constant.hpp&gt;</a>
-        defines <code class="computeroutput"><span class="identifier">is_integral_constant</span><span class="special">&lt;&gt;</span></code> static metafunction wich verifies
+        defines <code class="computeroutput"><span class="identifier">is_integral_constant</span><span class="special">&lt;&gt;</span></code> static metafunction that verifies
         if an given template parameter is or not a <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>.
       </p>
 <div class="section" title="Synopsis">
@@ -1035,7 +1034,7 @@
 </h3></div></div></div>
 <div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.least_common_multiple_.synopsis">Synopsis</a></span></dt></dl></div>
 <p>
-        This header defines mpl::lcm&lt;&gt; metafunction wich calculates the least
+        This header defines mpl::lcm&lt;&gt; metafunction that calculates the least
         common multiple from two given <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>.
       </p>
 <p>
@@ -1988,7 +1987,7 @@
 <div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints._integral__square_root.synopsis">Synopsis</a></span></dt></dl></div>
 <p>
         The header file <a href="../../../../../boost/integer/isqrt.hpp" target="_top">&lt;boost/integer/isqrt.hpp&gt;</a>
-        defines <code class="computeroutput"><span class="identifier">isqrt</span></code> functions wich
+        defines <code class="computeroutput"><span class="identifier">isqrt</span></code> functions that
         computes the integral part of square root of integral values.
       </p>
 <div class="section" title="Synopsis">
@@ -2013,7 +2012,7 @@
 <p>
         The header file <a href="../../../../../boost/integer/swap_in_place.hpp" target="_top">&lt;boost/integer/swap_in_place.hpp&gt;</a>
         defines <code class="computeroutput"><span class="identifier">swap_in_place</span></code> function
-        wich swaps 2 integral values without using a temporary variable.
+        that swaps 2 integral values without using a temporary variable.
       </p>
 <div class="section" title="Synopsis">
 <div class="titlepage"><div><div><h4 class="title">

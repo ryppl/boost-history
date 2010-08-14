@@ -183,7 +183,7 @@ std::pair<T1, T1> uninterleave(T2 number);
 
 
 *[*Requires: ] `T1` and `T2` must be integral types. Additionally, `T1` must have 8, 16 or 32 bits and `T2` must have
-16, 32 or 64 bits. For these functions `T2` have the double of bits wich `T1` have.
+16, 32 or 64 bits. For these functions `T2` have the double of bits of `T1`.
 
 [*Returns: ] `interleave` function returns `x` and `y` interleaved. `x` will be in the even bits and `y` will be on odd positions, so the return type have the double of bits than the paramter's type. 
 
@@ -232,7 +232,7 @@ The run-time version can be included via [@../../../../boost/integer/bit_reversa
 
 [table
 	[[Parameter][Description]]
-	[[`data`][ The data to be reversed. The type of data *must* be an integral type and it's size *must* be 8, 16, 32 or 64-bits, otherwise, bit_reversal(data) will result in an error. ]]
+	[[`data`][ The data to be reversed. The type of data *must* be an integral type and its size *must* be 8, 16, 32 or 64-bits, otherwise, bit_reversal(data) will result in an error. ]]
 ]
 	
 *[*Requires: ] `T` must be an integral type.
@@ -252,7 +252,7 @@ The result will be in `value` member.
 
 [table
 	[[Parameter][Description]]
-	[[`IC`][ A `mpl::integral_c<>` type wich holds an integral constant to be reversed. ]]
+	[[`IC`][ A `mpl::integral_c<>` type that holds an integral constant to be reversed. ]]
 ]
 
 *[*Requires: ] `IC` must be an `mpl::integral_c<>` type.
@@ -322,7 +322,7 @@ Clears least significant 1 bit in an integral. The `clear_least_bit_set()` funct
 
 *[*Requires: ] `T` must be an integral type. `IC` must be an `mpl::integral_c<>` type. 
 
-*[*Returns: ] `value` with it's least significant active bit disactivated.
+*[*Returns: ] `value` with its least significant active bit disactivated.
 
 [endsect]
 
@@ -367,7 +367,7 @@ In the compile-time versions, the number of consecutive zeros in the `value` sta
 
 [section Find First One String of a Given Length]
 The header file [@../../../../boost/integer/find_first_one_string.hpp <boost/integer/find_first_one_string.hpp>] defines
-`find_first_one_string` function wich returns the index of start position of a consecutive string of ones with 
+`find_first_one_string` function that returns the index of start position of a consecutive string of ones with 
 at least a given length.
 
 [section Synopsis]
@@ -397,7 +397,7 @@ int main()
 	// 1111 0000 1111 1111 0000 0000 0000 0000
 	BOOST_ASSERT((find_first_one_string(0xF0FF0000u, 6) == 8));
 	
-	// Not found a string of consecutive ones with legth at least 20
+	// Not found a string of consecutive ones with length at least 20
 	BOOST_ASSERT((find_first_one_string(0xF0FF0000u, 20) == -1));
 	
 	//                                      v  
@@ -423,7 +423,7 @@ int main()
 
 [section Greatest Common Divisor ]
 The header file [@../../../../boost/integer/static_gcd.hpp <boost/integer/static_gcd.hpp>] defines `mpl::gcd<>` 
-metafunction wich calculates the greatest common divisor of two given `mpl::integral_c<>`.
+metafunction that calculates the greatest common divisor of two given `mpl::integral_c<>`.
 
 [section Synopsis]
 
@@ -440,7 +440,7 @@ metafunction wich calculates the greatest common divisor of two given `mpl::inte
 
 [section Integer Logarithm Base 2 (ilog2 function) ]
 The header file [@../../../../boost/integer/ilog2.hpp <boost/integer/ilog2.hpp>] defines `ilog2` 
-function wich calculates the logarithm in base two of a given integral value.
+function that calculates the logarithm in base two of a given integral value.
 
 [section Synopsis]
 
@@ -460,36 +460,34 @@ possible to change the behavior using Boost Math's policies. See section Example
 
 [section Examples]
 
-[@../../../../libs/integer/example/ilog2_policy_test.cpp `ilog2` policy example]
+[@../../../../libs/integer/example/ilog2_policy_example.cpp `ilog2` policy example]
 
 ``
-#define BOOST_TEST_MAIN
 #include <cerrno>
 #include <iostream>
 #include <stdexcept>
-#include <boost/test/included/unit_test.hpp>
 #include <boost/integer/ilog2.hpp>
 
 namespace boost { namespace math { namespace policies {
-
+	
 template <class T>
 T user_indeterminate_result_error(const char* function, const char* message, const T& val)
 {
-	std::cout << "User Error on function: " << function 
-		<< " with message: " << message << std::endl;
+	std::cout << "User Error on function: " << function << " retunrning -2" << std::endl;
 	
 	(void)val;
 	
 	// Returning a custom value
 	return -2;
 }
-
-} } }
 	
-BOOST_AUTO_TEST_CASE( test )
+} } }
+
+int main()
 {
 	// Checking default behavior
-	BOOST_CHECK_EQUAL(boost::ilog2(0u), -1);
+	std::cout << boost::ilog2(13265u) << std::endl; // 13
+	std::cout << boost::ilog2(0u) << std::endl; // -1
 	
 	using namespace boost::math::policies;
 	policy< indeterminate_result_error<throw_on_error> > throw_pol;
@@ -498,19 +496,48 @@ BOOST_AUTO_TEST_CASE( test )
 	policy< indeterminate_result_error<user_error> >     user_pol;
 	
 	
-	// Checking throw_on_error policy
-	BOOST_CHECK_THROW(boost::ilog2(0u, throw_pol) , std::domain_error);
+	// Checking throw_on_error policy (throw a std::domain_error exception on error)
+	try {
+		std::cout << boost::ilog2(13265u, throw_pol) << std::endl; // 13
+	}
+	catch (std::domain_error& e) {
+		std::cout << e.what() << std::endl; // never comes here
+	}
+	catch (...) {
+		// never comes here
+	}
 	
-	// Checking errno_on_error policy
+	try {
+		// Here an exception is threw
+		std::cout << boost::ilog2(0u, throw_pol) << std::endl;
+	}
+	catch (std::domain_error& e) {
+		std::cout << e.what() << std::endl; // Error in function boost::ilog2(i): ilog2 is indeterminate for value 0, returning -1
+	}
+	catch (...) {
+		// never comes here
+	}
+	
+	// Checking errno_on_error policy (ilog2(0) sets errno as EDOM on error)
+	std::cout << boost::ilog2(13265u, errno_pol) << std::endl; // 13
+		
 	errno = 0;
-	boost::ilog2(0u, errno_pol);
-	BOOST_CHECK_EQUAL(errno, EDOM);
+	std::cout << boost::ilog2(0u, errno_pol) << std::endl; // -1
+	std::cout << (errno == EDOM) << std::endl; // 1 (or true)
 	
-	// Checking ignore_error policy
-	BOOST_CHECK_EQUAL(boost::ilog2(0u, ignore_pol), -1);
+	// Checking ignore_error policy (ilog2(0) returns -1 on error)
+	std::cout << boost::ilog2(13265u, ignore_pol) << std::endl; // 13
+	std::cout << boost::ilog2(0u, ignore_pol) << std::endl; // -1
 	
-	// Checking user_error policy
-	BOOST_CHECK_EQUAL(boost::ilog2(0u, user_pol), -2);
+	// Checking user_error policy (as we defined at the beginning of this file, 
+	//		on error, our user function prints an error message and returns -2)
+	std::cout << boost::ilog2(13265u, user_pol) << std::endl; // 13
+	
+	// User Error on function: boost::ilog2(%1%) retunrning -2
+	// -2
+	std::cout << boost::ilog2(0u, user_pol) << std::endl; 
+		
+	return 0;
 }
 ``
 
@@ -520,7 +547,7 @@ BOOST_AUTO_TEST_CASE( test )
 
 [section `is_integral_constant<>` metafunction ]
 The header file [@../../../../boost/integer/is_integral_constant.hpp <boost/integer/is_integral_constant.hpp>] defines 
-`is_integral_constant<>` static metafunction wich verifies if an given template parameter is or not a `mpl::integral_c<>`.
+`is_integral_constant<>` static metafunction that verifies if an given template parameter is or not a `mpl::integral_c<>`.
 
 [section Synopsis]
 
@@ -536,7 +563,7 @@ The header file [@../../../../boost/integer/is_integral_constant.hpp <boost/inte
 [endsect]
 
 [section Least Common Multiple ]
-This header defines mpl::lcm<> metafunction wich calculates the 
+This header defines mpl::lcm<> metafunction that calculates the 
  least common multiple from two given `mpl::integral_c<>`.
  
 This static metafunction is defined on [@../../../../boost/integer/static_lcm.hpp <boost/integer/static_lcm.hpp>].
@@ -592,7 +619,7 @@ or [@http://en.wikipedia.org/wiki/Circular_shift Circular shifts] functions.
 [@../../../../libs/integer/example/rotate_example.cpp Rotate functions example]
 
 ``
-#include <boost/assert.hpp>
+#include <iostream>
 #include <boost/integer/rotate.hpp>
 
 int main()
@@ -600,17 +627,19 @@ int main()
 	using boost::rotate_left;
 	using boost::rotate_right;
 	
-	BOOST_ASSERT((rotate_left(0xABCDEF12u, 24) == 0x12ABCDEFu));
-	BOOST_ASSERT((rotate_left(0x12345678u,  4) == 0x23456781u));
-	BOOST_ASSERT((rotate_left(0x0FF00000u,  6) == 0xFC000003u));
-	BOOST_ASSERT((rotate_left(0x00000000u, 31) == 0x00000000u));
-	BOOST_ASSERT((rotate_left(0xF0F0F0F0u,  4) == 0x0F0F0F0Fu));
+	std::cout << std::hex << std::uppercase;
 	
-	BOOST_ASSERT((rotate_right(0xABCDEF12u,  8) == 0x12ABCDEFu));
-	BOOST_ASSERT((rotate_right(0x0000000Fu,  1) == 0x80000007u));
-	BOOST_ASSERT((rotate_right(0xFF00FF00u,  8) == 0x00FF00FFu));
-	BOOST_ASSERT((rotate_right(0xAABBCCDDu, 16) == 0xCCDDAABBu));
-	BOOST_ASSERT((rotate_right(0xFFFFFFFFu, 31) == 0xFFFFFFFFu));
+	std::cout << rotate_left(0xABCDEF12u, 24) << std::endl; // 12ABCDEF
+	std::cout << rotate_left(0x12345678u,  4) << std::endl; // 23456781
+	std::cout << rotate_left(0x0FF00000u,  6) << std::endl; // FC000003
+	std::cout << rotate_left(0x00000000u, 31) << std::endl; // 0
+	std::cout << rotate_left(0xF0F0F0F0u,  4) << std::endl; // F0F0F0F
+	
+	std::cout << rotate_right(0xABCDEF12u,  8) << std::endl; // 12ABCDEF
+	std::cout << rotate_right(0x0000000Fu,  1) << std::endl; // 80000007
+	std::cout << rotate_right(0xFF00FF00u,  8) << std::endl; // FF00FF
+	std::cout << rotate_right(0xAABBCCDDu, 16) << std::endl; // CCDDAABB
+	std::cout << rotate_right(0xFFFFFFFFu, 31) << std::endl; // FFFFFFFF
 }
 ``
 [endsect] 
@@ -929,7 +958,7 @@ int main()
 
 [section (Integral) Square Root]
 The header file [@../../../../boost/integer/isqrt.hpp <boost/integer/isqrt.hpp>] defines `isqrt` 
-functions wich computes the integral part of square root of integral values.
+functions that computes the integral part of square root of integral values.
 
 [section Synopsis]
 	int isqrt(uint8_t value);
@@ -944,7 +973,7 @@ functions wich computes the integral part of square root of integral values.
 
 [section Swap without a temporary (in-place) ]
 The header file [@../../../../boost/integer/swap_in_place.hpp <boost/integer/swap_in_place.hpp>] defines `swap_in_place` 
-function wich swaps 2 integral values without using a temporary variable.
+function that swaps 2 integral values without using a temporary variable.
 
 [section Synopsis]
 
