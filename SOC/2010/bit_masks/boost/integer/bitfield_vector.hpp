@@ -21,16 +21,36 @@ struct bits;
 /** Iterators. */
 //@{
 template<typename T, std::size_t Width>
-struct bf_vector_iterator { };
+struct bf_vector_iterator
+    :protected detail::bitfield_vector_iterator_base<T,Width>,
+    public detail::safe_bool_impl::safe_bool<
+        detail::bitfield_vector_iterator_base<T,Width>
+    >
+{ };
 
 template<typename T, std::size_t Width>
-struct const_bf_vector_iterator { };
+struct const_bf_vector_iterator
+    :protected detail::bitfield_vector_iterator_base<T,Width>,
+    public detail::safe_bool_impl::safe_bool<
+        detail::bitfield_vector_iterator_base<T,Width>
+    >
+{ };
 
 template<typename T, std::size_t Width>
-struct bf_vector_reverse_iterator { };
+struct bf_vector_reverse_iterator
+    :protected detail::bitfield_vector_iterator_base<T,Width>,
+    public detail::safe_bool_impl::safe_bool<
+        detail::bitfield_vector_iterator_base<T,Width>
+    >
+{ };
 
 template<typename T, std::size_t Width>
-struct const_bf_vector_reverse_iterator { };
+struct const_bf_vector_reverse_iterator
+    :protected detail::bitfield_vector_iterator_base<T,Width>,
+    public detail::safe_bool_impl::safe_bool<
+        detail::bitfield_vector_iterator_base<T,Width>
+    >
+{ };
 //@}
 
 

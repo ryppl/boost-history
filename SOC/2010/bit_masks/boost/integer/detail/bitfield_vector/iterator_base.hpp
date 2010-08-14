@@ -13,7 +13,10 @@
 #include <iostream>
 #include <boost/cstdint.hpp>
 
-namespace boost { namespace detail { namespace safe_bool_impl {
+namespace boost { namespace detail {
+
+namespace safe_bool_impl {
+
 class safe_bool_base {
 protected:
     typedef void (safe_bool_base::* bool_type )() const;
@@ -28,7 +31,7 @@ protected:
 };
 
 template <typename T>
-struct safe_bool_impl
+struct safe_bool
     :safe_bool_base
 {
 operator bool_type() const {
@@ -36,17 +39,17 @@ operator bool_type() const {
         ? &safe_bool_base::this_type_does_not_support_comparisons : 0;
 }
 protected:
-    ~safe_bool_impl() {}
+    ~safe_bool() {}
 };
 
 template <typename T, typename U> 
-void operator==(safe_bool_impl<T> const & lhs,safe_bool_impl<U> const& rhs) {
+void operator==(safe_bool<T> const & lhs,safe_bool<U> const& rhs) {
     lhs.this_type_does_not_support_comparisons();
     return false;
 }
 
 template <typename T,typename U> 
-void operator!=(safe_bool_impl<T> const& lhs, safe_bool_impl<U> const& rhs) {
+void operator!=(safe_bool<T> const& lhs, safe_bool<U> const& rhs) {
     lhs.this_type_does_not_support_comparisons();
     return false;	
 }
@@ -147,34 +150,20 @@ struct bitfield_vector_iterator_base
         // Comment for the following line of code.
         // In the case that previous_offset%8 is actually less then 8
         // will construct a size_t with 1 and left shift it 3 making it
-        // positive 8. This is done to avoid branching inside of a
-        // decrement operation and this only works if the value is true
-        // otherwise the value is zero which is the behavior I want.
+        // positive 8. This is done to avoid branching inside of 
+        // increment and decrement operations and this only works if 
+        // the value is true otherwise the value is zero which is 
+        // the behavior I want.
         _bit_offset = (std::size_t((previous_offset%8)<0)<<3)
             + (previous_offset % 8);
     }
     
     void next() {
-        unsigned int next_offset;
-        next_offset = _bit_offset + Width;
-        _ptr += (next_offset / 8);
-        _bit_offset = next_offset % 8;
+        advance(1);
     }
 
     void previous() {
-        typedef typename make_signed<std::size_t>::type signed_size_t;
-        signed_size_t previous_offset = signed_size_t(_bit_offset);
-        previous_offset -= signed_size_t(Width);
-        _ptr -= std::size_t((previous_offset%8)<0)+((previous_offset / 8)*-1);
-
-        // Comment for the following line of code.
-        // In the case that previous_offset%8 is actually less then 8
-        // will construct a size_t with 1 and left shift it 3 making it
-        // positive 8. This is done to avoid branching inside of a
-        // decrement operation and this only works if the value is true
-        // otherwise the value is zero which is the behavior I want.
-        _bit_offset = (std::size_t((previous_offset%8)<0)<<3)
-            + (previous_offset % 8);
+        advance(-1);
     }
 
     std::ptrdiff_t distance(_self const& rhs) const {

@@ -78,5 +78,6 @@ test-suite integer
         [ run bitfield_vector_testing/member_impl_test.cpp ]
         [ run bitfield_vector_testing/mask_creator_test.cpp ]
         [ run bitfield_vector_testing/iterator_base_test.cpp ]
+        [ run bitfield_vector_testing/bitfield_vector_iterator_test.cpp ]
     ;
 
