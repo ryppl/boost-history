@@ -137,7 +137,7 @@ namespace boost {
     template <class T, class U>
     struct common_type<T, U, void>
 #endif
-    : detail::common_type_2<T,U>
+    : boost::detail::common_type_2<T,U>
     { };
 
 
