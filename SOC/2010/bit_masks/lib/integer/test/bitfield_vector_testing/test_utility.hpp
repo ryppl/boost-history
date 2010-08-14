@@ -120,4 +120,8 @@ void print_storage_for_reference(T const& x) {
     print_from_to(x._ptr, x._mask._size);
 }
 
+template <typename T>
+void print_typestr() {
+    std::cout << typestr<T>() << std::endl;
+}
 #endif

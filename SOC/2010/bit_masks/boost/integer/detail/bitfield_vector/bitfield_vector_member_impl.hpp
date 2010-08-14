@@ -110,12 +110,12 @@ public:
     //@{
 
     /** Copy Constructor. */
-    explicit proxy_reference_type(_self const& x)
+    proxy_reference_type(_self const& x)
         :_ptr(x._ptr), _mask(x._mask )
     { }
 
     /** pointer, offset constructor. */
-    explicit proxy_reference_type(storage_type* ptr, offset_type offset)
+    proxy_reference_type(storage_type* ptr, offset_type offset)
         :_ptr(ptr), _mask(get_mask_detail<Width>(offset) )
     { }
     //@}
@@ -263,11 +263,6 @@ public:
         }
         return *this;
     }
-/*
-    bool operator==(_self const& rhs);
-    bool operator!=(_self const& rhs);
-    bool operator<(_self const& rhs);
-*/
 
     /** Member variables. */
     storage_type*    _ptr;
@@ -292,12 +287,12 @@ public:
     //@{
 
     /** Copy Constructor. */
-    explicit proxy_reference_type(_self const& x)
+    proxy_reference_type(_self const& x)
         :_ptr(x._ptr), _mask(x._mask)
     { }
 
     /** pointer, offset constructor. */
-    explicit proxy_reference_type(storage_type* ptr, offset_type offset)
+    proxy_reference_type(storage_type* ptr, offset_type offset)
         :_ptr(ptr), _mask(get_mask_detail<Width>(offset))
     { }
     //@}
@@ -421,17 +416,50 @@ public:
         }
         return *this;
     }
-/*
-    bool operator==(_self const& rhs);
-    bool operator!=(_self const& rhs);
-    bool operator<(_self const& rhs);
-*/
 
     /** Member variables. */
     storage_type*   _ptr;
     mask_detail     _mask;
 };
 
+
+template <typename RetType, std::size_t Width>
+class const_proxy_reference_type
+    :proxy_reference_type<RetType,Width>
+{
+    typedef proxy_reference_type<RetType,Width>         _base;
+    typedef const_proxy_reference_type<RetType,Width>   _self;
+    const_proxy_reference_type();
+public:
+
+    typedef typename _base::storage_type                storage_type;
+    typedef typename _base::value_type                  value_type;
+    typedef typename _base::offset_type                 offset_type;
+    BOOST_STATIC_CONSTANT( std::size_t, width = Width );
+
+
+    const_proxy_reference_type(_self const& x)
+        :_base( static_cast<_base>(x) )
+    { }
+
+    explicit const_proxy_reference_type(_base const& x)
+        :_base(x)
+    { }
+
+    const_proxy_reference_type(storage_type* ptr, offset_type offset)
+        :_base(ptr, offset)
+    { }
+
+    _self& operator=(_self const& rhs) {
+        static_cast<_base>(*this) = static_cast<_base>(rhs);
+        return *this;
+    }
+    
+    operator value_type() const {
+        return static_cast<_base>(*this);
+    }
+
+};
 
 
 
