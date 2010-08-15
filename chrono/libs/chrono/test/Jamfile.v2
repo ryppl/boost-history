@@ -39,7 +39,7 @@ project
         :
         [ compile-fail ratio_fail_test1.cpp  ]
         [ run ratio_test.cpp  :  :  : <link>static ]
-        #[ run ratio_test.cpp  :  :  :  : ratio_test_dll ]
+        [ run ratio_test.cpp  :  :  :  : ratio_test_dll ]
         ;
 
 
@@ -92,10 +92,10 @@ project
 
     test-suite "other_clocks"
         :
-        #[ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
-        #[ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread : test_suspendible_clock_dll  ]
-        #[ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
-        #[ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread : suspendible_stopclock_example_dll ]
+        [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
+        [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread : test_suspendible_clock_dll  ]
+        [ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
+        [ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread : suspendible_stopclock_example_dll ]
         [ run test_thread_clock.cpp :  :  : <link>static ]
         [ run test_thread_clock.cpp :  :  :  : test_thread_clock_dll ]
         ;
@@ -108,14 +108,14 @@ project
         [ run ../example/scoped_stopwatch_example.cpp :  :  :  : scoped_stopwatch_example_dll ]
         [ run ../example/stopwatch_accumulator_example.cpp :  :  : <link>static ]
         [ run ../example/stopwatch_accumulator_example.cpp :  :  :   : stopwatch_accumulator_example_dll ]
-        [ run ../example/nested_stopclock_accumulator_example.cpp :  :  :  <link>static ]
-        [ run ../example/nested_stopclock_accumulator_example.cpp :  :  :  : nested_stopclock_accumulator_example_dll ]
         [ run ../example/specific_stopwatch_accumulator_example.cpp :  :  : <link>static ]
         [ run ../example/specific_stopwatch_accumulator_example.cpp :  :  :   : specific_stopwatch_accumulator_example_dll ]
         [ run ../example/stopclock_example.cpp :  :  : <link>static ]
         [ run ../example/stopclock_example.cpp :  :  :   : stopclock_example_dll ]
         [ run ../example/stopclock_accumulator_example.cpp :  :  : <link>static ]
         [ run ../example/stopclock_accumulator_example.cpp :  :  :  : stopclock_accumulator_example_dll ]
+        [ run ../example/nested_stopclock_accumulator_example.cpp :  :  :  <link>static ]
+        [ run ../example/nested_stopclock_accumulator_example.cpp :  :  :  : nested_stopclock_accumulator_example_dll ]
         [ run ../example/loop_stopclock_accumulator_example.cpp :  :  :  <link>static ]
         [ run ../example/loop_stopclock_accumulator_example.cpp :  :  :  : loop_stopclock_accumulator_example_dll ]
         [ run ../example/t24_hours_example.cpp :  :  : <link>static ]
