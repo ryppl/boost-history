@@ -15,8 +15,8 @@ namespace boost {
 // template <typename,typename>
 // class vector;
 
-template <typename T,std::size_t>
-struct bits;
+// template <typename T,std::size_t>
+// struct bits;
 
 
 namespace detail {

@@ -91,11 +91,11 @@ public:
 
 
 
-typedef bits<short,2> T;
+// typedef bits<short,2> T;
 typedef allocator<int> alloc;
 typedef allocator<unsigned char> rebound_alloc;
 typedef detail::bitfield_vector_base<
-    T,
+    short,
     alloc
 >                           vector_base_type;
 
@@ -122,7 +122,7 @@ int main() {
         BOOST_TEST((
             is_same<
                 vector_base_type::value_type,
-                T
+                short
             >::type::value
         ));  
     }
