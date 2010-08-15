@@ -82,7 +82,7 @@ namespace boost
             duration frozen;
             time_point tmp=clock::now( ec );
             if (ec) return time_point();
-            if (running_&&(--level_==0)) {
+            if (running_&&(level_==1)) {
                 partial_ += tmp - start_;
                 frozen = partial_;
                 partial_=duration::zero();
@@ -91,7 +91,6 @@ namespace boost
                 running_=true;
             }
             start_=tmp;
-            ++level_;
             return std::make_pair(frozen, start_);
         }
 
@@ -111,7 +110,7 @@ namespace boost
         }
 
         duration stop( system::error_code & ec = system::throws ) {
-            if (running_&&(--level_==0)) {
+            if (running_ && (--level_==0)) {
                 time_point tmp=clock::now( ec );
                 if (ec) return duration::zero();
                 partial_ += tmp - start_;
@@ -127,14 +126,15 @@ namespace boost
 
         duration suspend( system::error_code & ec = system::throws ) {
             if (running_) {
-                ++suspend_level_;
                 if (!suspended_) {
                     time_point tmp=clock::now( ec );
                     if (ec) return duration::zero();
+                    ++suspend_level_;
                     partial_ += tmp - start_;
                     suspended_=true;
                     return partial_;
                 } else {
+                    ++suspend_level_;
                     ec.clear();
                     return duration::zero();
                 }
