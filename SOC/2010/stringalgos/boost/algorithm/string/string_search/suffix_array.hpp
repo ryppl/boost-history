@@ -1,3 +1,13 @@
+//  Boost string_algo library suffix_array.hpp header file  ---------------------------//
+
+//  Copyright Stefan Mihaila 2010.
+//
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+//  See http://www.boost.org/ for updates, documentation, and revision history.
+
 #ifndef BOOST_ALGORITHM_SUFFIX_ARRAY_HPP
 #define BOOST_ALGORITHM_SUFFIX_ARRAY_HPP
 
@@ -27,15 +37,11 @@ namespace boost { namespace algorithm {
     struct suffix_array_search
     {
 
-        //! \TODO this currently only works for boost::algorithm::is_equal as comparator because we don't yet have a template
-        //!         parameter for LessThanComparator. Maybe we should pass two comparators, give it some thought.
 
         template <class Range1CharT, class Range2CharT, class ComparatorT, class AllocatorT>
         class algorithm;
         template <class Range1CharT, class Range2CharT, class AllocatorT>
         class algorithm<Range1CharT, Range2CharT, boost::algorithm::is_equal, AllocatorT>
-            /*: public boost::algorithm::detail::finder_typedefs<
-                RandomAccessRange1T,RandomAccessRange2T,boost::algorithm::is_equal,AllocatorT>*/
         {
         private:
             typedef Range1CharT substring_char_type;
@@ -51,16 +57,16 @@ namespace boost { namespace algorithm {
 
             // no precomputation done on substring
             template <class Range1T, class Range2T> void on_substring_change(
-                typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &)
-            { on_substring_change(typename boost::range_category<Range1T>::type()); }
+                BOOST_STRING_TYPENAME boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &)
+            { on_substring_change(BOOST_STRING_TYPENAME boost::range_category<Range1T>::type()); }
             
             template <class Range1T, class Range2T>
-            inline void on_string_change(typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
-            { on_string_change(ranges, typename boost::range_category<Range2T>::type()); }
+            inline void on_string_change(BOOST_STRING_TYPENAME boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
+            { on_string_change(ranges, BOOST_STRING_TYPENAME boost::range_category<Range2T>::type()); }
 
             template <class Range1T, class Range2T>
-            inline typename boost::iterator_range<typename boost::range_iterator<Range2T>::type>
-                find(typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
+            inline BOOST_STRING_TYPENAME boost::iterator_range<BOOST_STRING_TYPENAME boost::range_iterator<Range2T>::type>
+                find(BOOST_STRING_TYPENAME boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
             {
                 BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
 
@@ -86,7 +92,7 @@ namespace boost { namespace algorithm {
                 //the substring is smaller than the smallest lexicographic suffix, therefore no matches
                 //if (std::lexicographical_compare(substr.begin(), substr.end(),str.begin()+pos[0],str.begin()+firstsuffix_end))
                 
-                //! \TODO Is this really correct? Just because it starts before other suffix it does not mean there are no matches
+                // TODO Is this really correct? Just because it starts before other suffix it does not mean there are no matches
                 if (suffix_less(substr, str, 0) ||
                     std::lexicographical_compare(str.begin()+pos_.back(),str.begin()+lastsuffix_end,substr.begin(),substr.end())
                     )
@@ -155,7 +161,7 @@ namespace boost { namespace algorithm {
                 //string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
                 //substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
 
-                typename std::vector<std::size_t, allocator_type>::const_iterator first_match = 
+                BOOST_STRING_TYPENAME std::vector<std::size_t, allocator_type>::const_iterator first_match = 
                             std::lower_bound(matches_.begin(), matches_.end(), start_offset);
                 if (first_match == matches_.end())
                     return StrT(
@@ -173,7 +179,7 @@ namespace boost { namespace algorithm {
             }
 
             template <class Range1T, class Range2T>
-            void on_string_change(typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges,
+            void on_string_change(BOOST_STRING_TYPENAME boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges,
                 std::random_access_iterator_tag)
             {
                 BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
@@ -236,8 +242,8 @@ namespace boost { namespace algorithm {
             comparator_type comp_;
             allocator_type alloc_;
             bool found_matches_;
-            std::vector<std::size_t, typename allocator_type::template rebind<std::size_t>::other> pos_;
-            std::vector<std::size_t, typename allocator_type::template rebind<std::size_t>::other> matches_;
+            std::vector<std::size_t, BOOST_STRING_TYPENAME allocator_type::template rebind<std::size_t>::other> pos_;
+            std::vector<std::size_t, BOOST_STRING_TYPENAME allocator_type::template rebind<std::size_t>::other> matches_;
 
 
         };

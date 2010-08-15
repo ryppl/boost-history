@@ -26,9 +26,9 @@
 #include <list>
 
 
-#if !defined(BOOST_HAS_RVALUE_REFS) && !defined(BOOST_NO_RVALUE_REFS)
-#define BOOST_HAS_RVALUE_REFS
-#endif
+//#if !defined(BOOST_HAS_RVALUE_REFS) && !defined(BOOST_NO_RVALUE_REFS)
+//#define BOOST_HAS_RVALUE_REFS
+//#endif
 
 //#define BOOST_TEST_ALTERNATIVE_INIT_API
 //#define BOOST_TEST_DYN_LINK
@@ -60,7 +60,7 @@ template <class T, class RangeT>
 T
 range_to_T(RangeT const &range)
 {
-    typename boost::iterator_range<boost::range_const_iterator<RangeT>::type> range2 = boost::as_literal(range);
+    BOOST_STRING_TYPENAME boost::iterator_range<BOOST_STRING_TYPENAME boost::range_const_iterator<RangeT>::type> range2 = boost::as_literal(range);
     return T(
         boost::begin(range2),
         boost::end(range2)
@@ -137,8 +137,8 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION(test_finders, Algorithm)
     //typedef std::string Sequence2T;
     typedef std::vector<char> Sequence1T;
     typedef std::vector<char> Sequence2T;
-    typedef typename boost::finder_t<Sequence1T, Sequence2T, Algorithm> f_t;
-    f_t::string_range_type i;
+    typedef BOOST_STRING_TYPENAME boost::finder_t<Sequence1T, Sequence2T, Algorithm> f_t;
+    BOOST_STRING_TYPENAME f_t::string_range_type i;
 
     Sequence1T s1 = range_to_T<Sequence1T>("some test substring"),
         s2 = range_to_T<Sequence1T>("another test substring");
@@ -191,7 +191,6 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION(test_finders, Algorithm)
     BOOST_CHECK(boost::equal(f5.get_string_range(), S1));
     BOOST_CHECK_EQUAL(f5.find_next_index(), 27);
 
-    //!\todo fix
 #   ifdef BOOST_HAS_RVALUE_REFS
     f_t f6( (Sequence1T(s1)), &S1); // rvalue, ptr
     BOOST_CHECK(boost::equal(f6.get_substring_range(),s1));
@@ -256,7 +255,6 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION(test_finders, Algorithm)
     // (0, 0)
     f.set_substring(&substr);
     f.set_string(&str);
-    //!\todo deal with these
     //BOOST_CHECK_EQUAL(f.find_first_index(), 0);
     //BOOST_CHECK_EQUAL(f.find_next_index(), -1);
 
@@ -292,7 +290,6 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION(test_finders, Algorithm)
     BOOST_CHECK_EQUAL(boost::distance(f.find_first()), 44);
     BOOST_CHECK_EQUAL(boost::distance(f.find_next()), 0);
 
-    //!\todo remove the useless checkpoints 'n stuff
 
     // (0, 1) (1, 2) (2, 3) (3, 4) (4, 5) (5, 6) (6, 7) (7, 8) (8, 9) (9, 10) (10, 11) (11, 12) (12, 13) (13, 14) (14, 15) (15, 16) (16, 17)
     assign_literal(substr,
@@ -307,7 +304,6 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION(test_finders, Algorithm)
     f.find_reset();
     for (unsigned int i=0; i<=16; ++i)
         BOOST_CHECK_EQUAL(f.find_next_index(), i);
-    BOOST_CHECKPOINT("WIN0");
 
     //
     assign_literal(substr,
@@ -327,7 +323,6 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION(test_finders, Algorithm)
     f.find_reset();
     for (unsigned int i=0; i<=21; i += 3)
         BOOST_CHECK_EQUAL(f.find_next_index(), i);
-    BOOST_CHECKPOINT("WIN");
     // (0, 7) (1, 8) (2, 9) (3, 10) (4, 11) (5, 12) (6, 13) (7, 14) (8, 15) (9, 16) (10, 17)
     assign_literal(substr,
         "AAAAAAA",7);

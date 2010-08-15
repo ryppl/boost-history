@@ -1,16 +1,32 @@
+//  Boost string_algo library finder_generators.hpp header file  ---------------------------//
+
+//  Copyright Pavol Droba 2002-2003.
+//  Copyright Stefan Mihaila 2010.
+//
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+//  See http://www.boost.org/ for updates, documentation, and revision history.
+
 #ifndef BOOST_ALGORITHM_FINDER_GENERATORS_HPP
 #define BOOST_ALGORITHM_FINDER_GENERATORS_HPP
 
 #include <boost/algorithm/string/finder/generated_finders.hpp>
 #include <boost/algorithm/string/finder/default_search_algorithm.hpp>
 #include <boost/algorithm/string/compare.hpp>
-#include <boost/algorithm/string/detail/finder.hpp>
+
+/*! \file
+    Defines finder generators. They are mostly deprecated functions
+    returning instances of finder types defined in \headername generated_finders.hpp.
+    Finder generators are preserved for backward compatibility, but their use is discouraged.
+*/
 
 namespace boost { namespace algorithm {
         
    //! "First" finder generator
     /*!
-        Constructs a \ref first_finder_t. For backward compatibility, the finder is a
+        Constructs a \ref first_finder_t. \ref first_finder_t is a
         functor which looks for the \b first occurrence of the string in a given input.
         The result is given as an \c iterator_range delimiting the match.
         \param Search The pattern to look for
@@ -19,12 +35,12 @@ namespace boost { namespace algorithm {
         \deprecated
     */
     template<typename RangeT,typename PredicateT, typename AlgorithmTagT>
-    inline boost::algorithm::first_finder_t<RangeT, typename AlgorithmTagT::type,PredicateT>
+    inline boost::algorithm::first_finder_t<RangeT, BOOST_STRING_TYPENAME AlgorithmTagT::type,PredicateT>
     first_finder( 
         const RangeT& Search, PredicateT const& Comp,
         AlgorithmTagT const&)
     {
-        return boost::algorithm::first_finder_t<RangeT, typename AlgorithmTagT::type,PredicateT>(&Search, Comp);
+        return boost::algorithm::first_finder_t<RangeT, BOOST_STRING_TYPENAME AlgorithmTagT::type,PredicateT>(&Search, Comp);
     }
 
     //! \overload
@@ -50,7 +66,7 @@ namespace boost { namespace algorithm {
 
     //! "Last" finder generator
     /*!
-        Constructs a \ref last_finder_t. For backward compatibility, the finder is a
+        Constructs a \ref last_finder_t. \ref last_finder_t is a
         functor which looks for the \b last occurrence of the string in a given input.
         The result is given as an \c iterator_range delimiting the match.
         \param Search The pattern to look for
@@ -59,11 +75,11 @@ namespace boost { namespace algorithm {
         \deprecated
     */
     template<typename RangeT, typename PredicateT, typename AlgorithmTagT>
-    inline boost::algorithm::last_finder_t<RangeT, typename AlgorithmTagT::type,PredicateT>
+    inline boost::algorithm::last_finder_t<RangeT, BOOST_STRING_TYPENAME AlgorithmTagT::type,PredicateT>
     last_finder( const RangeT& Search, PredicateT const &Comp,
         AlgorithmTagT const&)
     {
-        return boost::algorithm::last_finder_t<RangeT, typename AlgorithmTagT::type,PredicateT>(&Search, Comp);
+        return boost::algorithm::last_finder_t<RangeT, BOOST_STRING_TYPENAME AlgorithmTagT::type,PredicateT>(&Search, Comp);
     }
 
     //!\overload
@@ -88,7 +104,7 @@ namespace boost { namespace algorithm {
 
     //! "Nth" finder generator
     /*!
-        Constructs a \ref nth_finder_t. For backward compatibility, the finder is a
+        Constructs a \ref nth_finder_t. \ref nth_finder_t is a
         functor which looks for the \b Nth occurrence of the string in a given input.
         The result is given as an \c iterator_range delimiting the match.
         \param Search The pattern to look for
@@ -98,11 +114,11 @@ namespace boost { namespace algorithm {
     */
     template<typename RangeT, typename PredicateT, typename AlgorithmTagT>
     inline boost::algorithm::nth_finder_t<RangeT,
-        typename AlgorithmTagT::type,PredicateT>
+        BOOST_STRING_TYPENAME AlgorithmTagT::type,PredicateT>
     nth_finder(const RangeT& Search, int Nth, PredicateT const &Comp, AlgorithmTagT const &)
     {
         return boost::algorithm::nth_finder_t<RangeT,
-            typename AlgorithmTagT::type, PredicateT>(&Search, Comp, Nth);
+            BOOST_STRING_TYPENAME AlgorithmTagT::type, PredicateT>(&Search, Nth, Comp);
     }
 
     //!\overload

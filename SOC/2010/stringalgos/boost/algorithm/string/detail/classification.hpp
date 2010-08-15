@@ -69,7 +69,7 @@ namespace boost {
             {
             private:
                 // set cannot operate on const value-type
-                typedef typename ::boost::remove_const<CharT>::type set_value_type;
+                typedef BOOST_STRING_TYPENAME ::boost::remove_const<CharT>::type set_value_type;
 
             public:     
                 // Boost.ResultOf support

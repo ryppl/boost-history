@@ -1,9 +1,20 @@
+//  Boost string_algo library simplified_finder.hpp header file  ---------------------------//
+
+//  Copyright Stefan Mihaila 2010.
+//
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+//  See http://www.boost.org/ for updates, documentation, and revision history.
+
 #ifndef BOOST_ALGORITHM_SIMPLIFIED_FINDER_HPP
 #define BOOST_ALGORITHM_SIMPLIFIED_FINDER_HPP
 
 #include <boost/algorithm/string/finder/detail/finder_typedefs.hpp>
 #include <boost/algorithm/string/compare.hpp>
 #include <boost/algorithm/string/finder/detail/string_search_ranges.hpp>
+#include <boost/algorithm/string/finder/default_search_algorithm.hpp>
 
 #include <boost/range/as_literal.hpp>
 #include <boost/range/iterator_range.hpp>
@@ -13,6 +24,14 @@
 #include <boost/call_traits.hpp>
 
 #include <memory>
+
+/*! \file
+    Defines \ref simplified_finder_t, a finder type uesd for finding occurrences of a pattern in a string.
+    This finder is a more limited version of \ref finder_t, because it only allows passing pointers to ranges,
+    which means no internal copies of the strings are made (\see finder_t for details). While this offers additional
+    efficiency, it requires the caller to guarantee that the lifetime of a passed string is at least as long
+    as the lifetime of the finder.
+*/
 
 namespace boost { namespace algorithm {
 
@@ -24,14 +43,12 @@ namespace boost { namespace algorithm {
         \tparam Range1T A range representing the type of the substring (pattern)
         \tparam Range2T A range representing the type of the string (text)
         \tparam AlgorithmT The algorithm used to perform the searches
-        \tparam ComparatorT Optional template parameter passed to the algorithm.
+        \tparam ComparatorT Optional template parameter passed to the algorithm;
             Used for comparing individual characters for equality.
         \tparam AllocatorT Optional template parameter passed to the algorithm
             in the event that additional computation on the data has to be stored.
-        \tparam AdditionalBehaviorT Optional template parameter used to extend the functionality of
-            the finder.
     */
-    template <class Range1T, class Range2T, class AlgorithmT,
+    template <class Range1T, class Range2T, class AlgorithmT = boost::algorithm::default_finder_algorithm,
         class ComparatorT = ::boost::algorithm::is_equal,
         class AllocatorT = std::allocator<std::size_t>
     >
@@ -42,10 +59,10 @@ namespace boost { namespace algorithm {
         BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
         BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS2(ComparatorT, AllocatorT);
     private:
-        typedef typename AlgorithmT::template algorithm<substring_char_type, string_char_type,
+        typedef BOOST_STRING_TYPENAME AlgorithmT::template algorithm<substring_char_type, string_char_type,
             comparator_type, allocator_type> algorithm_type;
     public:
-        //! Constructs a finder.
+        //! Constructs the finder.
         /*!
             \param comparator ComparatorT instance used to compare individual characters
             \param allocator AllocatorT instance used to allocate memory
@@ -53,11 +70,11 @@ namespace boost { namespace algorithm {
         */
         explicit simplified_finder_t(ComparatorT const &comparator = ComparatorT(),
             AllocatorT const &allocator = AllocatorT())
-            : ranges_(), substring_has_changed_(false), string_has_changed_(false),
-            algorithm_(comparator, allocator)
+            : ranges_(), algorithm_(comparator, allocator),
+            substring_has_changed_(false), string_has_changed_(false)            
         { }
         /*!
-            Constructs a finder given a pattern and a text
+            Constructs the finder given a pattern and a text
             \param substr A pointer to a range (or a character array) representing the sought string
             \param str A pointer to a range (or a character array) representing the text
                 in which to search
@@ -80,7 +97,7 @@ namespace boost { namespace algorithm {
             substring_has_changed_(true), string_has_changed_(true)
         { }
 
-
+        //! Copies the finder
         simplified_finder_t (const simplified_finder_t &other)
             : ranges_(other.ranges_), algorithm_(other.algorithm_),
             substring_has_changed_(other.substring_has_changed_),
@@ -104,6 +121,7 @@ namespace boost { namespace algorithm {
         void set_substring (substring_type const *const substr)
         { ranges_.substr = boost::as_literal(*substr); substring_has_changed_ = true; }
 
+        //! \overload
         void set_substring (substring_iterator_type const &substring_begin, substring_iterator_type const &substring_end)
         {
             ranges_.substr = boost::make_iterator_range(substring_begin, substring_end);
@@ -118,6 +136,7 @@ namespace boost { namespace algorithm {
         void set_string (string_type *const str)
         { ranges_.str = boost::as_literal(*str); string_has_changed_ = true; }
 
+        //!\overload
         void set_string (string_iterator_type const &string_begin, string_iterator_type const &string_end)
         {
             ranges_.str = boost::make_iterator_range(string_begin, string_end);
@@ -145,7 +164,7 @@ namespace boost { namespace algorithm {
         /*!
             \deprecated Implemented to preserve compatibility
                 with the previous Finder concept
-            \param string_start An iterator at the start of the text in which to perform the search.
+            \param string_begin An iterator at the start of the text in which to perform the search.
             \param string_end An iterator one past the end of the text in which to perform the search.
             \return An iterator range indicating the place where the match has occurred.
             \warning This call changes the text used by the finder, but <b>DOES NOT</b> make a
@@ -155,14 +174,14 @@ namespace boost { namespace algorithm {
                 after the passed iterators become invalid.
             \note This is equivalent to:
                 <code>
-                finder.set_string(string_start, string_end);
+                finder.set_string(string_begin, string_end);
                 return finder.find_first();
                 </code>
             */
-        string_range_type operator()(string_iterator_type const &string_start,
+        string_range_type operator()(string_iterator_type const &string_begin,
             string_iterator_type const &string_end)
         {
-            set_string(string_start, string_end);
+            set_string(string_begin, string_end);
             return find_first();
         }
 
@@ -194,35 +213,36 @@ namespace boost { namespace algorithm {
         //! Get an iterator range of the current pattern (substring)
         /*!
             \return Iterator range of the current pattern
-            \warning If you modify the contents in this range, you must manually call
-                \ref use_internal_substring(), so that the finder can perform any required precomputation on the pattern
+            \warning If you modify the contents in this range externally, you must manually call
+                <code>set_substring(&substr);</code> afterwards
         */
         substring_range_type get_substring_range() const { return ranges_.substr; }
 
         //! Get an iterator range of the current text
         /*!
             \return Range of the current text
-            \warning If you modify the contents in this range, you must manually call
-                \ref use_internal_string(), so that the finder can perform any required precomputation on the text
+            \warning If you modify the contents in this range externally, you must manually call
+                <code>set_string(&str);</code> afterwards
         */
         string_range_type get_string_range() const { return ranges_.str; }
            
 
         /*
         //! Gets a reference to the current comparator
-        typename boost::call_traits<comparator_type>::const_reference get_comparator() const
+        BOOST_STRING_TYPENAME boost::call_traits<comparator_type>::const_reference get_comparator() const
         { return comparator_;  }
        
         //! Gets a reference to the current allocator
         //! \return A reference to the current allocator
-        typename boost::call_traits<allocator_type>::reference get_allocator()
+        BOOST_STRING_TYPENAME boost::call_traits<allocator_type>::reference get_allocator()
         { return allocator_; }
             
         //! Gets a reference to the current allocator
         //! \return A reference to the current allocator
-        typename boost::call_traits<allocator_type>::const_reference get_allocator() const
+        BOOST_STRING_TYPENAME boost::call_traits<allocator_type>::const_reference get_allocator() const
         { return allocator_; }
         */
+
         std::string get_algorithm_name() const { return algorithm_.get_algorithm_name(); }
 
     private:

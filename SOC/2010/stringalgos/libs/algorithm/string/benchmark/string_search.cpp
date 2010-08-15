@@ -124,8 +124,8 @@ class simplified_finder_t2 :
     //public boost::algorithm::detail::finder_typedefs<Range1T,Range2T,ComparatorT,AllocatorT>,
     private AlgorithmT::template algorithm<
         simplified_finder_t<Range1T, Range2T, AlgorithmT>,
-        typename boost::range_const_iterator<Range1T>::type,
-        typename boost::range_iterator<Range2T>::type//,
+        BOOST_STRING_TYPENAME boost::range_const_iterator<Range1T>::type,
+        BOOST_STRING_TYPENAME boost::range_iterator<Range2T>::type//,
         //ComparatorT,AllocatorT>
     >
 { };
@@ -313,8 +313,7 @@ int main ()
 
     b.set_substring(&substr); b.set_string(&str);
     std::cout << "Doing almost no work:" << std::endl;
-    //!\todo uncomment
-    //for (unsigned int i=0; i<5000; ++i) b.find_first();
+    for (unsigned int i=0; i<5000; ++i) b.find_first();
     b.output_stats(std::cout);
 
     b.clear();

@@ -1,32 +1,26 @@
+//  Boost string_algo library benchmark_finder.hpp header file  ---------------------------//
+
+//  Copyright Stefan Mihaila 2010
+//
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+//  See http://www.boost.org/ for updates, documentation, and revision history.
+
 #ifndef BOOST_STRING_BENCHMARK_FINDER_HPP
 #define BOOST_STRING_BENCHMARK_FINDER_HPP
 
+#include <boost/config.hpp>
 
-//Our finder has 6 template params, which means we cannot use it in a placeholder expression
-//unless MPL supports metafunctions with arity >= 6
-//\todo remove this, we only have 5 template params now
-/*
-#ifdef BOOST_MPL_LIMIT_METAFUNCTION_ARITY
-# if BOOST_MPL_LIMIT_METAFUNCTION_ARITY < 6 || !defined BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-#  error "benchmark_finder.hpp requires BOOST_MPL_LIMIT_METAFUNCTION_ARITY to be at least 6. " \
-    "Either configure MPL to have metafunction arity >= 6 or include benchmark_finder.hpp " \
-    "before any other header."
-# endif
-#else
-#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-#define BOOST_MPL_LIMIT_METAFUNCTION_ARITY 6
-#endif
-*/
-
+#include <boost/algorithm/string/config.hpp>
 #include <boost/algorithm/string/finder/simplified_finder.hpp>
 #include <boost/algorithm/string/finder/detail/finder_typedefs.hpp>
 #include <boost/algorithm/string/string_search/naive_search.hpp>
+#include <boost/algorithm/string/compare.hpp>
 
 #include <boost/tuple/tuple.hpp>
 
-//#include <boost/mpl/transform.hpp>
-//#include <boost/mpl/vector/vector0.hpp>
-//#include <boost/mpl/push_back.hpp>
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/placeholders.hpp>
 
@@ -42,7 +36,6 @@
 #include <boost/fusion/container/vector.hpp>
 #include <boost/fusion/container/vector/convert.hpp>
 
-
 #include <boost/spirit/home/phoenix/function.hpp>
 #include <boost/spirit/home/phoenix/core/argument.hpp>
 #include <boost/spirit/home/phoenix/core/reference.hpp>
@@ -50,6 +43,8 @@
 //\todo pretty messy, Boost.Chrono?
 #ifdef BOOST_WINDOWS
 #include <windows.h>
+#else
+#include <boost/timer.hpp>
 #endif
 
 #include <deque>
@@ -62,11 +57,10 @@
 
 #include <boost/throw_exception.hpp>
 
-//todo use something more accurate
-#include <boost/timer.hpp>
 
 /*! \file
-    Defines a generic finder type useful for comparing the performance of various string search algorithms.
+Defines a generic finder type with an iterface similar to that of \ref simplified_finder_t.
+This finder type is useful for comparing the performance of various string search algorithms.
 */
 
 namespace boost { namespace algorithm {
@@ -79,20 +73,19 @@ namespace boost { namespace algorithm {
         \tparam Range2T A range representing the type of the string (the text)
         \tparam AlgorithmSequenceT A MPL sequence containing algorithm types that are to be benchmarked
         \tparam ComparatorT The comparator type passed to the algorithms
-        */
-        template <class Range1T, class Range2T, class AlgorithmSequenceT,
-        class ComparatorT = boost::algorithm::is_equal>
-        class benchmark_finder /*:
-            public boost::algorithm::detail::finder_typedefs<Range1T, Range2T,
-            ComparatorT, std::allocator<std::size_t> >*/
-        {
-            typedef std::allocator<std::size_t> allocator_type_;
-        public:
-            BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS(Range1T,Range2T);
-            BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS2(ComparatorT, allocator_type_);
-        public:
+    */
+    template <class Range1T, class Range2T, class AlgorithmSequenceT,
+    class ComparatorT = boost::algorithm::is_equal>
+    class benchmark_finder
+    {
+        typedef std::allocator<std::size_t> allocator_type_;
+    public:
+        BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS(Range1T,Range2T);
+        BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS2(ComparatorT, allocator_type_);
+    public:
 
-        //! See \ref simplified_finder_t::set_substring
+        //! \copydoc simplified_finder_t::set_substring
+        //! \see \ref simplified_finder_t::set_substring
         void set_substring (substring_type
             const *const substring)
         {
@@ -103,7 +96,8 @@ namespace boost { namespace algorithm {
             trusted_finder.set_substring(substring);
         }
 
-        //! See \ref simplified_finder_t::set_string
+        //! \copydoc simplified_finder_t::set_string
+        //! \see \ref simplified_finder_t::set_string
         void set_string (string_type *const string)
         {
             boost::phoenix::function<finder_set_string> f;
@@ -118,27 +112,30 @@ namespace boost { namespace algorithm {
         void clear ()
         { boost::fusion::for_each(finders, clear_stats()); }
         
-        //! See \ref simplified_finder_t::find_reset
+        //! \copydoc simplified_finder_t::find_reset
+        //! \see \ref simplified_finder_t::find_reset
         void find_reset()
         {
             boost::fusion::for_each(finders, finder_reset());
             trusted_finder.find_reset();
         }
 
-        //! See \ref simplified_finder_t::find_next
+        //! \copydoc simplified_finder_t::find_next
+        //! \see \ref simplified_finder_t::find_next
         string_range_type find_next()
         {
             return boost::fusion::fold(finders, trusted_finder.find_next(),
                 finder_benchmark_and_test());
         }
 
+        //! \copydoc simplified_finder_t::find_first
         //! See \ref simplified_finder_t::find_first
         string_range_type find_first()
         { find_reset(); return find_next(); }
 
         //! Output the benchmark data to a stream
         /*!
-         \param output The stream to which the benchmark results are to be outputted
+            \param output The stream to which the benchmark results are to be outputted
         */
         template <class CharT, class TraitsT>
         void output_stats (std::basic_ostream<CharT, TraitsT> &output)
@@ -147,20 +144,17 @@ namespace boost { namespace algorithm {
             boost::fusion::for_each(finders, f(boost::phoenix::ref(output), boost::phoenix::arg_names::arg1) );
         }
     private:
-        // todo write a proxy type allowing us to have a simplified_finder_t3 taking only the first
-        //     3 template params. use that in boost::mpl::transform for eliminating the metafunction increased
-        //     arity requirement
-        typedef typename boost::mpl::transform<AlgorithmSequenceT,
+        typedef BOOST_STRING_TYPENAME boost::mpl::transform<AlgorithmSequenceT,
             std::pair<
-                typename boost::algorithm::simplified_finder_t<substring_type,string_type,
+                BOOST_STRING_TYPENAME boost::algorithm::simplified_finder_t<substring_type,string_type,
                     boost::mpl::_, ComparatorT>,
                 std::deque<double>
             >
         >::type finders_sequence;
-        typename boost::simplified_finder_t<substring_type, string_type, boost::naive_search,
+        BOOST_STRING_TYPENAME boost::simplified_finder_t<substring_type, string_type, boost::naive_search,
             ComparatorT> trusted_finder;
 
-        typename boost::fusion::result_of::as_vector< finders_sequence >::type finders;
+        BOOST_STRING_TYPENAME boost::fusion::result_of::as_vector< finders_sequence >::type finders;
 
         struct finder_set_substring
         {
@@ -231,12 +225,12 @@ namespace boost { namespace algorithm {
                     std::ostringstream ss;
 
                     ss << "Match failed on " << finder.first.get_algorithm_name()
-                       << " with:\n\tstr["<<boost::distance(finder.first.get_string_range())
-                       << "]=";
+                        << " with:\n\tstr["<<boost::distance(finder.first.get_string_range())
+                        << "]=";
                     boost::copy(finder.first.get_string_range(), std::ostream_iterator<char>(ss));
 
                     ss << "\n\tsubstr["<<boost::distance(finder.first.get_substring_range())
-                       << "]=";
+                        << "]=";
                     boost::copy(finder.first.get_substring_range(), std::ostream_iterator<char>(ss));
 
                     BOOST_THROW_EXCEPTION( std::runtime_error(ss.str()) );
@@ -278,10 +272,10 @@ namespace boost { namespace algorithm {
                 stddev = std::sqrt(stddev); // stddev is square root of variance
                 os << finder.first.get_algorithm_name() << "\n";
                 os << "Min   : " << min << "\n"
-                   << "Max   : " << max << "\n"
-                   << "Avg   : " << avg << "\n"
-                   << "Stddev: " << stddev << "\n"
-                   << "Smples: " << size << "\n";
+                    << "Max   : " << max << "\n"
+                    << "Avg   : " << avg << "\n"
+                    << "Stddev: " << stddev << "\n"
+                    << "Smples: " << size << "\n";
                 os << "==========================================" << std::endl;
             }
         };

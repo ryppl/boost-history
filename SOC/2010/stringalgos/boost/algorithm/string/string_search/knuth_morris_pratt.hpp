@@ -1,3 +1,13 @@
+//  Boost string_algo library knuth_morris_pratt.hpp header file  ---------------------------//
+
+//  Copyright Stefan Mihaila 2010.
+//
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+//  See http://www.boost.org/ for updates, documentation, and revision history.
+
 #ifndef BOOST_ALGORITHM_KNUTH_MORRIS_PRATT_HPP
 #define BOOST_ALGORITHM_KNUTH_MORRIS_PRATT_HPP
 
@@ -25,11 +35,7 @@ namespace boost { namespace algorithm {
 
         template <class Range1CharT, class Range2CharT, class ComparatorT, class AllocatorT>
         class algorithm
-            /*: public boost::algorithm::detail::finder_typedefs<
-            RandomAccessRange1T,RandomAccessRange2T,ComparatorT,AllocatorT>*/
         {
-            //BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS(RandomAccessRange1T, RandomAccessRange2T,
-            //    ComparatorT, AllocatorT)
         private:
             typedef Range1CharT substring_char_type;
             typedef Range2CharT string_char_type;

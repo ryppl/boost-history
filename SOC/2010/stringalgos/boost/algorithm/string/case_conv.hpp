@@ -61,7 +61,7 @@ namespace boost {
                Output,
                ::boost::as_literal(Input),
                ::boost::algorithm::detail::to_lowerF<
-                    typename range_value<RangeT>::type >(Loc));
+                    BOOST_STRING_TYPENAME range_value<RangeT>::type >(Loc));
         }
 
         //! Convert to lower case
@@ -76,7 +76,7 @@ namespace boost {
             return ::boost::algorithm::detail::transform_range_copy<SequenceT>(
                 Input,
                 ::boost::algorithm::detail::to_lowerF<
-                    typename range_value<SequenceT>::type >(Loc));
+                    BOOST_STRING_TYPENAME range_value<SequenceT>::type >(Loc));
         }
 
         //! Convert to lower case
@@ -95,7 +95,7 @@ namespace boost {
             ::boost::algorithm::detail::transform_range(
                 ::boost::as_literal(Input),
                 ::boost::algorithm::detail::to_lowerF<
-                    typename range_value<WritableRangeT>::type >(Loc));
+                    BOOST_STRING_TYPENAME range_value<WritableRangeT>::type >(Loc));
         }
         
 //  to_upper  -----------------------------------------------//
@@ -126,7 +126,7 @@ namespace boost {
                Output,
                ::boost::as_literal(Input),
                ::boost::algorithm::detail::to_upperF<
-                    typename range_value<RangeT>::type >(Loc));
+                    BOOST_STRING_TYPENAME range_value<RangeT>::type >(Loc));
         }
 
         //! Convert to upper case
@@ -141,7 +141,7 @@ namespace boost {
             return ::boost::algorithm::detail::transform_range_copy<SequenceT>(
                 Input,
                 ::boost::algorithm::detail::to_upperF<
-                    typename range_value<SequenceT>::type >(Loc));
+                    BOOST_STRING_TYPENAME range_value<SequenceT>::type >(Loc));
         }
 
         //! Convert to upper case
@@ -160,7 +160,7 @@ namespace boost {
             ::boost::algorithm::detail::transform_range(
                 ::boost::as_literal(Input),
                 ::boost::algorithm::detail::to_upperF<
-                    typename range_value<WritableRangeT>::type >(Loc));
+                    BOOST_STRING_TYPENAME range_value<WritableRangeT>::type >(Loc));
         }
 
     } // namespace algorithm

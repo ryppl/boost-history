@@ -1,3 +1,13 @@
+//  Boost string_algo library rabin_karp.hpp header file  ---------------------------//
+
+//  Copyright Stefan Mihaila 2010.
+//
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+//  See http://www.boost.org/ for updates, documentation, and revision history.
+
 #ifndef BOOST_ALGORITHM_RABIN_KARP_HPP
 #define BOOST_ALGORITHM_RABIN_KARP_HPP
 
@@ -36,7 +46,7 @@
 
 namespace boost { namespace algorithm {
 
-    //todo Make it work with case insensitive. Find a way to allow providing locales.
+    //todo Make it work with case insensitive for CharT=char? or locales for which tolower(x)==tolower(y)<=>x=(caseins)=y.
 
     //TODO: Implement a version that works with Input iterators
     //TODO: Make sure this only works with integral char types

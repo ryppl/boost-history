@@ -20,7 +20,7 @@
 
 #define BOOST_STRING_TYPENAME BOOST_DEDUCED_TYPENAME
 
-//TODO maybe force inline exists for other compilers? like __inline__ for GCC/ICC?
+//TODO maybe force inline exists for other compilers? like __inline__ or __attribute__((force_inline)) for GCC/ICC?
 #ifdef BOOST_MSVC
 #define BOOST_STRING_FORCE_INLINE __forceinline
 #else

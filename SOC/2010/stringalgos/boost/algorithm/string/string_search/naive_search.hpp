@@ -1,3 +1,13 @@
+//  Boost string_algo library naive_search.hpp header file  ---------------------------//
+
+//  Copyright Stefan Mihaila 2010.
+//
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+//  See http://www.boost.org/ for updates, documentation, and revision history.
+
 #ifndef BOOST_ALGORITHM_NAIVE_SEARCH_HPP
 #define BOOST_ALGORITHM_NAIVE_SEARCH_HPP
 
@@ -25,8 +35,6 @@ namespace boost { namespace algorithm {
 
         template <class Range1CharT, class Range2CharT, class ComparatorT, class AllocatorT>
         class algorithm
-            /*: public boost::algorithm::detail::finder_typedefs<
-                ForwardRange1T,ForwardRange2T,ComparatorT,AllocatorT>*/
 		{
         private:
             typedef Range1CharT substring_char_type;
@@ -65,12 +73,14 @@ namespace boost { namespace algorithm {
 				return boost::iterator_range<string_iterator_type>(
                     boost::end(str),boost::end(str));
 			}
-            //! It is guaranteed that each of these two functions will get called at least once before find()
-            //! is used.
+
             //No precomputation to be done on the substring
+            //It is guaranteed that each of these two functions will get called at least once before find()
+            //is used.
             template <class T> inline void on_substring_change(T const&)
             {
             }
+            
             //No precomputation to be done on the string
             template <class T> inline void on_string_change(T const&)
             {

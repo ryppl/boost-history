@@ -1,3 +1,13 @@
+//  Boost string_algo library rabin_karp.hpp header file  ---------------------------//
+
+//  Copyright Stefan Mihaila 2010.
+//
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+//  See http://www.boost.org/ for updates, documentation, and revision history.
+
 #ifndef BOOST_ALGORITHM_RABIN_KARP_DETAIL_HPP
 #define BOOST_ALGORITHM_RABIN_KARP_DETAIL_HPP
 
@@ -67,10 +77,10 @@ namespace boost { namespace algorithm { namespace detail {
         HashType SecondBase, HashType SecondModulo, class StringIteratorCategory>
     class rabin_karp_algorithm<Range1CharT, Range2CharT, HashType,
         FirstBase, FirstModulo, SecondBase, SecondModulo, StringIteratorCategory,
-        typename boost::enable_if<
-        typename boost::mpl::and_<
-        typename boost::is_base_of<std::input_iterator_tag, StringIteratorCategory>,
-        typename boost::mpl::not_<typename boost::is_base_of<std::forward_iterator_tag, StringIteratorCategory> >
+        BOOST_STRING_TYPENAME boost::enable_if<
+        BOOST_STRING_TYPENAME boost::mpl::and_<
+        BOOST_STRING_TYPENAME boost::is_base_of<std::input_iterator_tag, StringIteratorCategory>,
+        BOOST_STRING_TYPENAME boost::mpl::not_<BOOST_STRING_TYPENAME boost::is_base_of<std::forward_iterator_tag, StringIteratorCategory> >
         >
         >::type
     >
@@ -82,10 +92,10 @@ namespace boost { namespace algorithm { namespace detail {
         HashType SecondBase, HashType SecondModulo, class StringIteratorCategory>
     class rabin_karp_algorithm<Range1CharT, Range2CharT, HashType,
         FirstBase, FirstModulo, SecondBase, SecondModulo, StringIteratorCategory,
-        typename boost::enable_if<
-        typename boost::mpl::and_<
-        typename boost::is_base_of<std::forward_iterator_tag, StringIteratorCategory>,
-        typename boost::mpl::not_<typename boost::is_base_of<std::random_access_iterator_tag, StringIteratorCategory> >
+        BOOST_STRING_TYPENAME boost::enable_if<
+        BOOST_STRING_TYPENAME boost::mpl::and_<
+        BOOST_STRING_TYPENAME boost::is_base_of<std::forward_iterator_tag, StringIteratorCategory>,
+        BOOST_STRING_TYPENAME boost::mpl::not_<BOOST_STRING_TYPENAME boost::is_base_of<std::random_access_iterator_tag, StringIteratorCategory> >
         >
         >::type
     >
@@ -97,8 +107,8 @@ namespace boost { namespace algorithm { namespace detail {
         HashType SecondBase, HashType SecondModulo, class StringIteratorCategory>
     class rabin_karp_algorithm<Range1CharT, Range2CharT, HashType,
         FirstBase, FirstModulo, SecondBase, SecondModulo, StringIteratorCategory,
-        typename boost::enable_if<
-            typename boost::is_base_of<
+        BOOST_STRING_TYPENAME boost::enable_if<
+            BOOST_STRING_TYPENAME boost::is_base_of<
                 std::random_access_iterator_tag,
                 StringIteratorCategory
             >
@@ -120,13 +130,13 @@ namespace boost { namespace algorithm { namespace detail {
         //\todo this the right name? the right way to do it?
         template <class T>
         BOOST_STRING_FORCE_INLINE HashType integer_promotion(T i)
-        { return static_cast<HashType>(static_cast<typename boost::make_unsigned<T>::type>(i)); }
+        { return static_cast<HashType>(static_cast<BOOST_STRING_TYPENAME boost::make_unsigned<T>::type>(i)); }
 
     public:
 
         template <class Range1T, class Range2T>
         inline void on_substring_change(
-            typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
+            BOOST_STRING_TYPENAME boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
         {
             BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
 
@@ -160,7 +170,7 @@ namespace boost { namespace algorithm { namespace detail {
 
         template <class Range1T, class Range2T>
         inline void on_string_change(
-            typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
+            BOOST_STRING_TYPENAME boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
         {
             BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
 
@@ -188,8 +198,8 @@ namespace boost { namespace algorithm { namespace detail {
         }
 
         template <class Range1T, class Range2T>
-        inline typename boost::iterator_range<typename boost::range_iterator<Range2T>::type>
-            find(typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
+        inline BOOST_STRING_TYPENAME boost::iterator_range<BOOST_STRING_TYPENAME boost::range_iterator<Range2T>::type>
+            find(BOOST_STRING_TYPENAME boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
         {
             BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
 
@@ -256,18 +266,16 @@ namespace boost { namespace algorithm { namespace detail {
             return boost::make_tuple(first, second);
         }*/
 
-        //todo compatible force inline? __attribute__((force_inline)) in GCC
-        //inline void roll_string_hash()
         template <class StrT>
         BOOST_STRING_FORCE_INLINE void roll_string_hash(StrT const &str)
         {
 
             HashType remove = static_cast<HashType>(
-                static_cast<typename boost::make_unsigned<string_char_type>::type>(
+                static_cast<BOOST_STRING_TYPENAME boost::make_unsigned<string_char_type>::type>(
                     boost::begin(str)[string_computed_upto_-substring_size_]
             ));
             HashType add    = static_cast<HashType>(
-                static_cast<typename boost::make_unsigned<string_char_type>::type>(
+                static_cast<BOOST_STRING_TYPENAME boost::make_unsigned<string_char_type>::type>(
                     boost::begin(str)[string_computed_upto_]
             ));
             
