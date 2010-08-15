@@ -2,19 +2,28 @@
 #define BOOST_ALGORITHM_RABIN_KARP_DETAIL_HPP
 
 #include <boost/utility/enable_if.hpp>
+
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/make_unsigned.hpp>
+
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
+
 #include <boost/range/iterator.hpp>
 #include <boost/range/category.hpp>
-#include <boost/call_traits.hpp>
-#include <iterator>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
+
+#include <boost/call_traits.hpp>
+
+#include <iterator>
 #include <cassert>
 #include <limits>
+#include <memory>
+
+#include <boost/algorithm/string/config.hpp>
+#include <boost/algorithm/string/compare.hpp>
 
 //todo add proper overflow assertions here. also try to find if these aren't already in boost
 #define BOOST_ALGORITHM_DETAIL_ASSERTED_ADD(a, b, T) \
@@ -47,67 +56,58 @@ namespace boost { namespace algorithm { namespace detail {
         return ret;
     }
 
-    template <class Finder, class Range1T,class Range2T, class HashType,
+    template <class Range1CharT, class Range2CharT, class HashType,
         HashType FirstBase, HashType FirstModulo,
-        HashType SecondBase, HashType SecondModulo, class Enable = void>
+        HashType SecondBase, HashType SecondModulo, class StringIteratorCategory, class Enable = void>
     class rabin_karp_algorithm;
 
     // Implementation of Rabin Karp for text supporting Input Iterators
-    template <class Finder, class Range1T,class Range2T, class HashType,
+    template <class Range1CharT, class Range2CharT, class HashType,
         HashType FirstBase, HashType FirstModulo,
-        HashType SecondBase, HashType SecondModulo>
-    class rabin_karp_algorithm<Finder,
-        Range1T, Range2T, HashType,
-        FirstBase, FirstModulo, SecondBase, SecondModulo,
+        HashType SecondBase, HashType SecondModulo, class StringIteratorCategory>
+    class rabin_karp_algorithm<Range1CharT, Range2CharT, HashType,
+        FirstBase, FirstModulo, SecondBase, SecondModulo, StringIteratorCategory,
         typename boost::enable_if<
-            typename boost::mpl::and_<
-                typename boost::is_base_of<std::input_iterator_tag,
-                    typename boost::range_category<Range2T>::type>,
-                typename boost::mpl::not_<typename boost::is_base_of<std::forward_iterator_tag,
-                    typename boost::range_category<Range2T>::type> >
-            >
+        typename boost::mpl::and_<
+        typename boost::is_base_of<std::input_iterator_tag, StringIteratorCategory>,
+        typename boost::mpl::not_<typename boost::is_base_of<std::forward_iterator_tag, StringIteratorCategory> >
+        >
         >::type
     >
     ;
 
     // Implementation of Rabin Karp for text supporting Forward Iterators
-    template <class Finder, class Range1T,class ForwardRange2T, class HashType,
+    template <class Range1CharT, class Range2CharT, class HashType,
         HashType FirstBase, HashType FirstModulo,
-        HashType SecondBase, HashType SecondModulo>
-    class rabin_karp_algorithm<Finder,
-        Range1T, ForwardRange2T, HashType,
-        FirstBase, FirstModulo, SecondBase, SecondModulo,
+        HashType SecondBase, HashType SecondModulo, class StringIteratorCategory>
+    class rabin_karp_algorithm<Range1CharT, Range2CharT, HashType,
+        FirstBase, FirstModulo, SecondBase, SecondModulo, StringIteratorCategory,
         typename boost::enable_if<
-            typename boost::mpl::and_<
-                typename boost::is_base_of<std::forward_iterator_tag,
-                    typename boost::range_category<ForwardRange2T>::type>,
-                typename boost::mpl::not_<typename boost::is_base_of<std::random_access_iterator_tag,
-                    typename boost::range_category<ForwardRange2T>::type> >
-            >
+        typename boost::mpl::and_<
+        typename boost::is_base_of<std::forward_iterator_tag, StringIteratorCategory>,
+        typename boost::mpl::not_<typename boost::is_base_of<std::random_access_iterator_tag, StringIteratorCategory> >
+        >
         >::type
     >
     ;
 
     //Implementation of Rabin Karp for text supporting Random Access Iterators
-    template <class Finder, class Range1T,class RandomAccessRange2T, class HashType,
+    template <class Range1CharT, class Range2CharT, class HashType,
         HashType FirstBase, HashType FirstModulo,
-        HashType SecondBase, HashType SecondModulo>
-    class rabin_karp_algorithm<
-        Finder, Range1T, RandomAccessRange2T, HashType,
-        FirstBase, FirstModulo, SecondBase, SecondModulo,
+        HashType SecondBase, HashType SecondModulo, class StringIteratorCategory>
+    class rabin_karp_algorithm<Range1CharT, Range2CharT, HashType,
+        FirstBase, FirstModulo, SecondBase, SecondModulo, StringIteratorCategory,
         typename boost::enable_if<
             typename boost::is_base_of<
                 std::random_access_iterator_tag,
-                typename boost::range_category<RandomAccessRange2T>::type
+                StringIteratorCategory
             >
         >::type
     >
-    //todo this generates possibly invalid allocator_type typedefs, although this is internally not relevant
-    //     because rabin_karp doesn't need an allocator. however, this may be nasty externally
-    //     possibly fix, although it's minor.
-    : public boost::algorithm::detail::finder_typedefs<
-        Range1T,RandomAccessRange2T,boost::algorithm::is_equal,std::allocator<std::size_t> >
     {
+    private:
+        typedef Range1CharT substring_char_type;
+        typedef Range2CharT string_char_type;
     protected:
 
         rabin_karp_algorithm() :
@@ -119,12 +119,18 @@ namespace boost { namespace algorithm { namespace detail {
 
         //\todo this the right name? the right way to do it?
         template <class T>
-        inline HashType integer_promotion(T i)
-        { return static_cast<HashType>(static_cast<boost::make_unsigned<T>::type>(i)); }
+        BOOST_STRING_FORCE_INLINE HashType integer_promotion(T i)
+        { return static_cast<HashType>(static_cast<typename boost::make_unsigned<T>::type>(i)); }
 
-        void on_substring_change()
+    public:
+
+        template <class Range1T, class Range2T>
+        inline void on_substring_change(
+            typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
         {
-            substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
+            BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
+
+            substring_range_type const &substr = ranges.substr;
 
             HashType first = static_cast<HashType>(0), second = static_cast<HashType>(0);
             
@@ -149,12 +155,16 @@ namespace boost { namespace algorithm { namespace detail {
             second_substring_hash_ = second;
             
             if (substring_size_ != old_substring_size)
-                on_string_change();
+                on_string_change(ranges);
         }
 
-        void on_string_change()
+        template <class Range1T, class Range2T>
+        inline void on_string_change(
+            typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
         {
-            string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
+            BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
+
+            string_range_type const &str = ranges.str;
 
             HashType first = static_cast<HashType>(0), second = static_cast<HashType>(0);
             std::size_t computed = 0;
@@ -177,9 +187,15 @@ namespace boost { namespace algorithm { namespace detail {
             second_string_hash_current_ = second;
         }
 
-        string_range_type find(string_iterator_type start)
+        template <class Range1T, class Range2T>
+        inline typename boost::iterator_range<typename boost::range_iterator<Range2T>::type>
+            find(typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
         {
-            string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
+            BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
+
+            string_range_type const &str = ranges.str;
+            substring_range_type const &substr = ranges.substr;
+            string_iterator_type start = ranges.offset;
 
             //substring bigger than string
             if (string_size_ < substring_size_)
@@ -200,7 +216,7 @@ namespace boost { namespace algorithm { namespace detail {
             }
             //roll the hash until we reach the current offset
             while (offset > string_computed_upto_ - substring_size_)
-                roll_string_hash();
+                roll_string_hash(str);
 
             //a match found right at the current offset.
             if (equal())
@@ -208,7 +224,7 @@ namespace boost { namespace algorithm { namespace detail {
             //rolling the hash until we find a match
             while (string_computed_upto_ != string_size_)
             {
-                roll_string_hash();
+                roll_string_hash(str);
                 //match found
                 if (equal())
                     return boost::iterator_range<string_iterator_type>(
@@ -242,16 +258,16 @@ namespace boost { namespace algorithm { namespace detail {
 
         //todo compatible force inline? __attribute__((force_inline)) in GCC
         //inline void roll_string_hash()
-        __forceinline void roll_string_hash()
+        template <class StrT>
+        BOOST_STRING_FORCE_INLINE void roll_string_hash(StrT const &str)
         {
-            string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
 
             HashType remove = static_cast<HashType>(
-                static_cast<boost::make_unsigned<string_char_type>::type>(
+                static_cast<typename boost::make_unsigned<string_char_type>::type>(
                     boost::begin(str)[string_computed_upto_-substring_size_]
             ));
             HashType add    = static_cast<HashType>(
-                static_cast<boost::make_unsigned<string_char_type>::type>(
+                static_cast<typename boost::make_unsigned<string_char_type>::type>(
                     boost::begin(str)[string_computed_upto_]
             ));
             

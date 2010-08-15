@@ -9,6 +9,7 @@
 #include <string>
 
 #include <boost/algorithm/string/finder/detail/finder_typedefs.hpp>
+#include <boost/algorithm/string/finder/detail/string_search_ranges.hpp>
 
 /*!
     \file
@@ -22,28 +23,30 @@ namespace boost { namespace algorithm {
 	struct naive_search
 	{
 
-		template <class Finder, class ForwardRange1T, class ForwardRange2T, class ComparatorT, class AllocatorT>
-        struct algorithm
-            : public boost::algorithm::detail::finder_typedefs<
-                ForwardRange1T,ForwardRange2T,ComparatorT,AllocatorT>
+        template <class Range1CharT, class Range2CharT, class ComparatorT, class AllocatorT>
+        class algorithm
+            /*: public boost::algorithm::detail::finder_typedefs<
+                ForwardRange1T,ForwardRange2T,ComparatorT,AllocatorT>*/
 		{
+        private:
+            typedef Range1CharT substring_char_type;
+            typedef Range2CharT string_char_type;
+            typedef ComparatorT comparator_type;
+            typedef AllocatorT allocator_type;
         public:
             std::string get_algorithm_name () const { return "Naive search"; }
-		protected:
-            algorithm () { }
+            algorithm (comparator_type const &comp, allocator_type const &alloc)
+                : comp_(comp), alloc_(alloc) { }
 
-
-			string_range_type find(string_iterator_type start)
+            template <class Range1T, class Range2T>
+            inline typename boost::iterator_range<typename boost::range_iterator<Range2T>::type>
+                find(typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
 			{
-                /*typedef typename Finder::string_iterator_type string_iterator_type;
-                typedef typename Finder::substring_iterator_type substring_iterator_type;
-                typedef typename Finder::substring_range_type substring_range_type;
-                typedef typename Finder::string_range_type string_range_type;
-                typedef typename Finder::comparator_type comparator_type;*/
-                string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
-                substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
-                comparator_type const &comparator = static_cast<Finder*>(this)->get_comparator();
+                BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
 
+                string_range_type const &str = ranges.str;
+                substring_range_type const &substr = ranges.substr;
+                string_iterator_type start = ranges.offset;
 
 				for (;
 					start != boost::end(str); ++start)
@@ -54,7 +57,7 @@ namespace boost { namespace algorithm {
 						substr_iter != boost::end(substr) && str_iter != boost::end(str);
                         ++substr_iter, ++str_iter)
 					{
-						if (!comparator(*str_iter, *substr_iter)) break;
+						if (!comp_(*str_iter, *substr_iter)) break;
 					}
 					if (substr_iter == boost::end(substr))
 						return boost::iterator_range<string_iterator_type>(start, str_iter);
@@ -65,13 +68,16 @@ namespace boost { namespace algorithm {
             //! It is guaranteed that each of these two functions will get called at least once before find()
             //! is used.
             //No precomputation to be done on the substring
-            inline void on_substring_change()
+            template <class T> inline void on_substring_change(T const&)
             {
             }
             //No precomputation to be done on the string
-            inline void on_string_change()
+            template <class T> inline void on_string_change(T const&)
             {
             }
+        private:
+            comparator_type comp_;
+            allocator_type alloc_;
 		};
 
 	};

@@ -210,13 +210,13 @@ void find_test()
 
     nc_vresult=find_first( vec1, string("abc") );
     BOOST_CHECK( 
-        ( (nc_result.begin()-str1.begin()) == 3) &&
-        ( (nc_result.end()-str1.begin()) == 6) );
+        ( (nc_vresult.begin()-vec1.begin()) == 3) &&
+        ( (nc_vresult.end()-vec1.begin()) == 6) );
 
     cv_vresult=find_first( const_cast<const vector<int>&>(vec1), str2 );
     BOOST_CHECK( 
-        ( (cv_result.begin()-str1.begin()) == 3) &&
-        ( (cv_result.end()-str1.begin()) == 6) );
+        ( (cv_vresult.begin()-vec1.begin()) == 3) &&
+        ( (cv_vresult.end()-vec1.begin()) == 6) );
 
     // overflow test
     BOOST_CHECKPOINT( "overflow" );

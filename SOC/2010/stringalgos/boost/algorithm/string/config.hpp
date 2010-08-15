@@ -20,6 +20,13 @@
 
 #define BOOST_STRING_TYPENAME BOOST_DEDUCED_TYPENAME
 
+//TODO maybe force inline exists for other compilers? like __inline__ for GCC/ICC?
+#ifdef BOOST_MSVC
+#define BOOST_STRING_FORCE_INLINE __forceinline
+#else
+#define BOOST_STRING_FORCE_INLINE inline
+#endif
+
 // Metrowerks workaround
 #if BOOST_WORKAROUND(__MWERKS__, <= 0x3003) // 8.x
 #pragma parse_func_templ off

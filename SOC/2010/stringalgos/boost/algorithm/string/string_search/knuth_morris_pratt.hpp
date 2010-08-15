@@ -8,8 +8,10 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
+#include <boost/range/category.hpp>
 
 #include <boost/algorithm/string/finder/detail/finder_typedefs.hpp>
+#include <boost/algorithm/string/finder/detail/string_search_ranges.hpp>
 
 /*!
     \file
@@ -21,38 +23,61 @@ namespace boost { namespace algorithm {
     struct knuth_morris_pratt
     {
 
-        template <class Finder,class RandomAccessRange1T,
-        class RandomAccessRange2T,class ComparatorT,class AllocatorT>
+        template <class Range1CharT, class Range2CharT, class ComparatorT, class AllocatorT>
         class algorithm
-            : public boost::algorithm::detail::finder_typedefs<
-            RandomAccessRange1T,RandomAccessRange2T,ComparatorT,AllocatorT>
+            /*: public boost::algorithm::detail::finder_typedefs<
+            RandomAccessRange1T,RandomAccessRange2T,ComparatorT,AllocatorT>*/
         {
+            //BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS(RandomAccessRange1T, RandomAccessRange2T,
+            //    ComparatorT, AllocatorT)
+        private:
+            typedef Range1CharT substring_char_type;
+            typedef Range2CharT string_char_type;
+            typedef ComparatorT comparator_type;
+            typedef AllocatorT allocator_type;
         public:
             std::string get_algorithm_name () const { return "Knuth-Morris-Pratt"; }
-        protected:
-            string_range_type find(string_iterator_type start)
+
+            algorithm (comparator_type const &comp, allocator_type const &alloc)
+                : comp_(comp), alloc_(alloc), failure_func(alloc_)
             {
-                return find(start, string_iterator_category());
             }
 
-            void on_substring_change()
+
+            template <class Range1T, class Range2T>
+            inline typename boost::iterator_range<typename boost::range_iterator<Range2T>::type>
+                find(typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
             {
-                on_substring_change(substring_iterator_category());
+                return find(ranges, typename boost::range_category<Range2T>::type());
             }
 
-            void on_string_change()
+            template <class Range1T, class Range2T>
+            inline void on_substring_change(
+                typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
             {
+                on_substring_change(ranges.substr, typename boost::range_category<Range1T>::type());
             }
+
+            //No precomputation to be done on the string
+            template <class T>
+            inline void on_string_change(T const&) { }
         private:
 
+            comparator_type comp_;
+            allocator_type alloc_;
             std::vector<std::size_t,
-                typename AllocatorT::template rebind<std::size_t>::other > failure_func;
+                typename allocator_type::template rebind<std::size_t>::other > failure_func;
 
-            string_range_type find(string_iterator_type start, std::random_access_iterator_tag)
+            template <class Range1T, class Range2T>
+            inline typename boost::iterator_range<typename boost::range_iterator<Range2T>::type>
+                find(typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges,
+                std::random_access_iterator_tag)
             {
-                string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
-                substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
-                comparator_type const &comp = static_cast<Finder*>(this)->get_comparator();
+                BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
+
+                string_range_type const &str = ranges.str;
+                substring_range_type const &substr = ranges.substr;
+                string_iterator_type start = ranges.offset;
 
                 std::size_t str_idx = start - boost::begin(str),
                     str_size = boost::end(str) - boost::begin(str), substr_idx = 0,
@@ -79,13 +104,13 @@ namespace boost { namespace algorithm {
                     
                     //Slide the pattern to the right until we manage to find a match for the current char
                     while (substr_idx > 0 &&
-                            !comp(*(boost::begin(str)+str_idx),*(boost::begin(substr)+substr_idx)))
+                            !comp_(*(boost::begin(str)+str_idx),*(boost::begin(substr)+substr_idx)))
                         substr_idx = failure_func[substr_idx-1];
 
                     // Invariant: Either substr_idx==0 or string[str_idx]==substr[substr_idx]
 
                     while (substr_idx == 0 && str_idx < compare_against
-                            && !comp(*(boost::begin(str)+str_idx),*(boost::begin(substr)+0)))
+                            && !comp_(*(boost::begin(str)+str_idx),*(boost::begin(substr)+0)))
                         ++str_idx;
 
                     //Invariant: string[str_idx]==substr[substr_idx] or (str_idx=0 and str_idx >= str_size)
@@ -101,10 +126,11 @@ namespace boost { namespace algorithm {
                     boost::end(str), boost::end(str));
             }
             
-            void on_substring_change(std::random_access_iterator_tag)
+            template <class RangeT>
+            void on_substring_change(RangeT const &substr, std::random_access_iterator_tag)
             {
-                substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
-                comparator_type const &comp = static_cast<Finder*>(this)->get_comparator();
+                //substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
+                //comparator_type const &comp = static_cast<Finder*>(this)->get_comparator();
 
                 //failure_func[i] = the size of the largest border (prefix that's also a suffix)
                 //      of P[0..i], that's different from itself.
@@ -120,10 +146,10 @@ namespace boost { namespace algorithm {
                 //std::size_t capacity = failure_func.capacity();
                 while (j < substr_size)
                 {
-                    while (i > 0 && !comp(*(boost::begin(substr)+i), *(boost::begin(substr)+j)))
+                    while (i > 0 && !comp_(*(boost::begin(substr)+i), *(boost::begin(substr)+j)))
                         i = failure_func[i-1];
                     while (i == 0 && j < substr_size &&
-                        !comp(*(boost::begin(substr)+0),*(boost::begin(substr)+j)))
+                        !comp_(*(boost::begin(substr)+0),*(boost::begin(substr)+j)))
                     {
                         //Invariant: i == 0 and substr[0] != substr[j], which means failure_func[j]=0
                         failure_func.push_back(0);

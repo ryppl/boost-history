@@ -10,8 +10,11 @@
 #include <boost/range/end.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/algorithm/sort.hpp>
+#include <boost/range/category.hpp>
 
+#include <boost/algorithm/string/compare.hpp>
 #include <boost/algorithm/string/finder/detail/finder_typedefs.hpp>
+#include <boost/algorithm/string/finder/detail/string_search_ranges.hpp>
 
 /*!
     \file
@@ -27,44 +30,55 @@ namespace boost { namespace algorithm {
         //! \TODO this currently only works for boost::algorithm::is_equal as comparator because we don't yet have a template
         //!         parameter for LessThanComparator. Maybe we should pass two comparators, give it some thought.
 
-        template <class Finder,class RandomAccessRange1T,
-            class RandomAccessRange2T,class ComparatorT,class AllocatorT>
+        template <class Range1CharT, class Range2CharT, class ComparatorT, class AllocatorT>
         class algorithm;
-        template <class Finder, class RandomAccessRange1T,
-            class RandomAccessRange2T, class AllocatorT>
-        class algorithm<Finder,RandomAccessRange1T,RandomAccessRange2T,
-            boost::algorithm::is_equal,AllocatorT>
-            : public boost::algorithm::detail::finder_typedefs<
-                RandomAccessRange1T,RandomAccessRange2T,boost::algorithm::is_equal,AllocatorT>
+        template <class Range1CharT, class Range2CharT, class AllocatorT>
+        class algorithm<Range1CharT, Range2CharT, boost::algorithm::is_equal, AllocatorT>
+            /*: public boost::algorithm::detail::finder_typedefs<
+                RandomAccessRange1T,RandomAccessRange2T,boost::algorithm::is_equal,AllocatorT>*/
         {
+        private:
+            typedef Range1CharT substring_char_type;
+            typedef Range2CharT string_char_type;
+            typedef boost::algorithm::is_equal comparator_type;
+            typedef AllocatorT allocator_type;
         public:
             std::string get_algorithm_name () const { return "Suffix array"; }
-        protected:
-            algorithm () : found_matches_(false), pos_(), matches_() { }
-            
-            void on_substring_change()
-            { on_substring_change(substring_iterator_category()); }
-            
-            void on_string_change()
-            { on_string_change(string_iterator_category()); }
 
-            string_range_type find (string_iterator_type start)
+            algorithm (comparator_type const &comp, allocator_type const &alloc)
+                : comp_(comp), alloc_(alloc), found_matches_(false), pos_(alloc_), matches_(alloc_) { }
+            
+
+            // no precomputation done on substring
+            template <class Range1T, class Range2T> void on_substring_change(
+                typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &)
+            { on_substring_change(typename boost::range_category<Range1T>::type()); }
+            
+            template <class Range1T, class Range2T>
+            inline void on_string_change(typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
+            { on_string_change(ranges, typename boost::range_category<Range2T>::type()); }
+
+            template <class Range1T, class Range2T>
+            inline typename boost::iterator_range<typename boost::range_iterator<Range2T>::type>
+                find(typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
             {
-                substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
-                string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
-                comparator_type const &comp = static_cast<Finder*>(this)->get_comparator();
+                BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
+
+                string_range_type const &str = ranges.str;
+                substring_range_type const &substr = ranges.substr;
+                string_iterator_type start = ranges.offset;
 
                 std::size_t start_offset = start - boost::begin(str),
                     substr_size = boost::end(substr) - boost::begin(substr),
                     str_size = boost::end(str) - boost::begin(str);
 
                 if (found_matches_)
-                    return find_first_match(start_offset);
+                    return find_first_match(str, substr, start_offset);
                 
                 if (boost::begin(str) == boost::end(str)) return string_range_type(boost::end(str), boost::end(str));
                 
                 std::size_t suffix_left, suffix_right;
-                std::size_t firstsuffix_end = pos_[0] + substr_size, lastsuffix_end = pos_.back()+substr_size;
+                std::size_t /*firstsuffix_end = pos_[0] + substr_size, */lastsuffix_end = pos_.back()+substr_size;
                 //the end position of the smallest lexicographic suffix
                 //if (firstsuffix_end > str.size()) firstsuffix_end = str.size();
                 //the end position of the biggest lexicographic suffix
@@ -131,23 +145,24 @@ namespace boost { namespace algorithm {
                     for (std::size_t k = suffix_left; k < suffix_right; ++k)
                         matches_.push_back(pos_[k]);
                     boost::sort(matches_);
-                    return find_first_match(start_offset);
+                    return find_first_match(str, substr, start_offset);
                 }
             }
         private:
-            inline string_range_type find_first_match (std::size_t start_offset)
+            template <class StrT, class SubstrT>
+            inline StrT find_first_match (StrT const &str, SubstrT const &substr, std::size_t start_offset)
             {
-                string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
-                substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
+                //string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
+                //substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
 
-                std::vector<std::size_t, AllocatorT>::const_iterator first_match = 
+                typename std::vector<std::size_t, allocator_type>::const_iterator first_match = 
                             std::lower_bound(matches_.begin(), matches_.end(), start_offset);
                 if (first_match == matches_.end())
-                    return string_range_type(
+                    return StrT(
                         boost::end(str), boost::end(str));
                 std::size_t substr_size = boost::end(substr) - boost::begin(substr);
                 assert(*first_match + substr_size <= static_cast<std::size_t>(str.size()) );
-                return string_range_type(
+                return StrT(
                     boost::begin(str) + (*first_match),
                     boost::begin(str) + (*first_match) + substr_size
                     );
@@ -157,22 +172,27 @@ namespace boost { namespace algorithm {
                 found_matches_ = false;
             }
 
-            void on_string_change(std::random_access_iterator_tag)
+            template <class Range1T, class Range2T>
+            void on_string_change(typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges,
+                std::random_access_iterator_tag)
             {
-                string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
+                BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
+
+                string_range_type const &str = ranges.str;
 
                 // compute the suffix array
                 std::size_t str_size = boost::end(str) - boost::begin(str);
                 pos_.clear();
                 pos_.reserve(str_size);
                 std::generate_n(std::back_inserter(pos_), str_size, increasing_generator());
-                std::sort(pos_.begin(), pos_.end(), suffix_array_sort_comparator(str));
+                std::sort(pos_.begin(), pos_.end(), suffix_array_sort_comparator<string_range_type>(str));
 
                 found_matches_ = false;
             }
 
-            inline bool suffix_less(substring_range_type const &substr,
-                string_range_type const &str, std::size_t suffix)
+            template <class SubstrT, class StrT>
+            inline bool suffix_less(SubstrT const &substr,
+                StrT const &str, std::size_t suffix)
             {
                 std::size_t start_offset = pos_[suffix],
                     end_offset = start_offset + (boost::end(substr) - boost::begin(substr)),
@@ -183,8 +203,9 @@ namespace boost { namespace algorithm {
                     boost::begin(str) + start_offset, boost::begin(str) + end_offset);
             }
 
-            inline bool suffix_equal(substring_range_type const &substr,
-                string_range_type const &str, std::size_t suffix)
+            template <class SubstrT, class StrT>
+            inline bool suffix_equal(SubstrT const &substr,
+                StrT const &str, std::size_t suffix)
             {
                 std::size_t start_offset = pos_[suffix],
                     end_offset = start_offset + (boost::end(substr) - boost::begin(substr)),
@@ -194,11 +215,6 @@ namespace boost { namespace algorithm {
                 return std::equal(substr.begin(), substr.end(), boost::begin(str)+start_offset);
             }
 
-            std::vector<std::size_t, typename AllocatorT::template rebind<std::size_t>::other> pos_;
-            bool found_matches_;
-            std::vector<std::size_t, typename AllocatorT::template rebind<std::size_t>::other> matches_;
-
-
             struct increasing_generator
             {
                 increasing_generator () : idx_(0) { }
@@ -206,15 +222,23 @@ namespace boost { namespace algorithm {
                 std::size_t idx_;
             };
 
+            template <class Range2T>
             struct suffix_array_sort_comparator
             {
-                suffix_array_sort_comparator (string_range_type const &str) : str_(str) { }
+                suffix_array_sort_comparator (Range2T const &str) : str_(str) { }
                 bool operator()(std::size_t lhs, std::size_t rhs)
                 {
                     return std::lexicographical_compare(str_.begin()+lhs, str_.end(), str_.begin()+rhs, str_.end());
                 }
-                string_range_type const &str_;
+                Range2T const &str_;
             };
+
+            comparator_type comp_;
+            allocator_type alloc_;
+            bool found_matches_;
+            std::vector<std::size_t, typename allocator_type::template rebind<std::size_t>::other> pos_;
+            std::vector<std::size_t, typename allocator_type::template rebind<std::size_t>::other> matches_;
+
 
         };
     };

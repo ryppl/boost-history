@@ -11,6 +11,7 @@
 exe conv_example : conv_example.cpp ;
 exe predicate_example : predicate_example.cpp ;
 exe find_example : find_example.cpp ;
+exe finder_example : finder_example.cpp ;
 exe replace_example : replace_example.cpp ;
 exe rle_example : rle_example.cpp ;
 exe trim_example : trim_example.cpp ;

@@ -595,6 +595,7 @@ void find_test()
     string str1("123abcxXxabcXxXabc321");
     string str2("abc");
     string str3("");
+    std::string str4("abc-AbC-bAc-ABC-abC-ACC-ACB-AbC-XYZ");    //[0,3) [4,7) [12,15) [16,19) [28,31)
     const char* pch1="123abcxxxabcXXXabc321";
     vector<int> vec1( str1.begin(), str1.end() );
 
@@ -687,6 +688,50 @@ void find_test()
         ( (cv_result.begin()-str1.begin()) == 12) &&
         ( (cv_result.end()-str1.begin()) == 15) );
 
+    
+    nc_result = ifind_nth(str4, "abc", -1);
+    BOOST_CHECK_EQUAL(nc_result.begin() - str4.begin(), 28);
+    BOOST_CHECK_EQUAL(nc_result.end() - str4.begin(), 31);
+
+    nc_result = ifind_nth(str4, "abc", -2);
+    BOOST_CHECK_EQUAL(nc_result.begin() - str4.begin(), 16);
+    BOOST_CHECK_EQUAL(nc_result.end() - str4.begin(), 19);
+
+    nc_result = ifind_nth(str4, "abc", -3);
+    BOOST_CHECK_EQUAL(nc_result.begin() - str4.begin(), 12);
+    BOOST_CHECK_EQUAL(nc_result.end() - str4.begin(), 15);
+
+    nc_result = ifind_nth(str4, "abc", -4);
+    BOOST_CHECK_EQUAL(nc_result.begin() - str4.begin(), 4);
+    BOOST_CHECK_EQUAL(nc_result.end() - str4.begin(), 7);
+
+    nc_result = ifind_nth(str4, "abc", -5);
+    BOOST_CHECK_EQUAL(nc_result.begin() - str4.begin(), 0);
+    BOOST_CHECK_EQUAL(nc_result.end() - str4.begin(), 3);
+
+    nc_result = ifind_nth(str4, "abc", -6);
+    BOOST_CHECK(nc_result.begin() == nc_result.end());
+    BOOST_CHECK(nc_result.end() == str4.end());
+
+    nc_result = ifind_nth(str4, "abc", -12345);
+    BOOST_CHECK(nc_result.begin() == nc_result.end());
+    BOOST_CHECK(nc_result.end() == str4.end());
+
+    nc_result = ifind_last(str4, "abc");
+    BOOST_CHECK_EQUAL(nc_result.begin() - str4.begin(), 28);
+    BOOST_CHECK_EQUAL(nc_result.end() - str4.begin(), 31);
+
+    std::list<char> l4(str4.begin(), str4.end());
+    using std::distance;
+    boost::iterator_range<std::list<char>::iterator> nc_lresult = ifind_last(l4, "abc", boost::algorithm::naive_search_tag());
+    BOOST_CHECK_EQUAL(distance(l4.begin(),nc_lresult.begin()), 28);
+    BOOST_CHECK_EQUAL(distance(l4.begin(),nc_lresult.end()), 31);
+
+    nc_result = ifind_last(str4, "abo");
+    BOOST_CHECK(nc_result.begin() == nc_result.end());
+    BOOST_CHECK(nc_result.end() == str4.end());
+
+
 
     ch_result=find_nth( pch1, "abc", 1 );
     BOOST_CHECK(( (ch_result.begin() - pch1 ) == 9) && ( (ch_result.end() - pch1 ) == 12 ) );
@@ -767,18 +812,14 @@ void find_test()
         ( (nc_result.begin()-str1.begin()) == 3) &&
         ( (nc_result.end()-str1.begin()) == 6) );
 
-    //TODO: this one cannot work, what should we do about it?
-    /*
     cv_result=find(const_cast<const string&>(str1), first_finder(str2) );
     BOOST_CHECK( 
         ( (cv_result.begin()-str1.begin()) == 3) &&
         ( (cv_result.end()-str1.begin()) == 6) );
-    */
 
     // multi-type comparison test 
     BOOST_CHECKPOINT( "multi-type" );
 
-    //!\todo fix this in find_test.cpp. find why teh fuck did these tests use to pass.
     nc_vresult=find_first( vec1, string("abc") );
     BOOST_CHECK(nc_vresult.begin()-vec1.begin() == 3);
     BOOST_CHECK(nc_vresult.end()-vec1.begin() == 6);

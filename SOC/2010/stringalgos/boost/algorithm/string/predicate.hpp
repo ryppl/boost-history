@@ -20,7 +20,8 @@
 #include <boost/range/iterator_range.hpp>
 
 #include <boost/algorithm/string/compare.hpp>
-#include <boost/algorithm/string/find.hpp>
+#include <boost/algorithm/string/finder/default_search_algorithm.hpp>
+#include <boost/algorithm/string/finder/simplified_finder.hpp>
 #include <boost/algorithm/string/detail/predicate.hpp>
 
 /*! \file boost/algorithm/string/predicate.hpp
@@ -215,18 +216,29 @@ namespace boost {
             const Range2T& Test,
             PredicateT Comp)
         {
-            iterator_range<BOOST_STRING_TYPENAME range_const_iterator<Range1T>::type> lit_input(::boost::as_literal(Input));
-            iterator_range<BOOST_STRING_TYPENAME range_const_iterator<Range2T>::type> lit_test(::boost::as_literal(Test));
 
+            /*iterator_range<BOOST_STRING_TYPENAME range_const_iterator<Range1T>::type> lit_input(::boost::as_literal(Input));
+            iterator_range<BOOST_STRING_TYPENAME range_const_iterator<Range2T>::type> lit_test(::boost::as_literal(Test));
             if (::boost::empty(lit_test))
             {
                 // Empty range is contained always
                 return true;
-            }
+            }*/
+            //
             
+            /*
             // Use the temporary variable to make VACPP happy
-            bool bResult=(::boost::algorithm::first_finder(lit_test,Comp)(::boost::begin(lit_input), ::boost::end(lit_input)));
-            return bResult;
+                        //bool bResult=(::boost::algorithm::first_finder(lit_test,Comp)(::boost::begin(lit_input), ::boost::end(lit_input)));*/
+            
+            boost::algorithm::simplified_finder_t<Range2T, const Range1T,
+                boost::default_finder_algorithm, PredicateT> finder(&Test, &Input, Comp);
+            
+            if (boost::empty(finder.get_substring_range()))
+                return true;
+            
+            return boost::begin(finder.find_first()) != boost::end(finder.get_string_range());
+            //bool bResult
+            //return bResult;
         }
 
         //! 'Contains' predicate

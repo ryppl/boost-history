@@ -3,6 +3,7 @@
 
 #include <boost/algorithm/string/finder/detail/finder_typedefs.hpp>
 #include <boost/algorithm/string/compare.hpp>
+#include <boost/algorithm/string/finder/detail/string_search_ranges.hpp>
 
 #include <boost/range/as_literal.hpp>
 #include <boost/range/iterator_range.hpp>
@@ -34,49 +35,26 @@ namespace boost { namespace algorithm {
         class ComparatorT = ::boost::algorithm::is_equal,
         class AllocatorT = std::allocator<std::size_t>
     >
-    class simplified_finder_t :
-        public AlgorithmT::template algorithm<
-            simplified_finder_t<Range1T, Range2T, AlgorithmT, ComparatorT, AllocatorT>,
-            Range1T, Range2T, ComparatorT,AllocatorT>
+    class simplified_finder_t
     {
         // TODO Add concept assertions here.
-    private:
-        typedef typename AlgorithmT::template algorithm<simplified_finder_t, Range1T,
-            Range2T, ComparatorT, AllocatorT> algorithm_type;
     public:
-        //! The type of the pattern (substring)
-        typedef typename algorithm_type::substring_type substring_type;
-        //! The type of the text (string)
-        typedef typename algorithm_type::string_type string_type;
-        //! The type of the comparator
-        typedef typename algorithm_type::comparator_type comparator_type;
-        //! The type of the allocator
-        typedef typename algorithm_type::allocator_type allocator_type;
-        //! The type of the substring's iterator
-        typedef typename algorithm_type::substring_iterator_type substring_iterator_type;
-        //! The type of the text's iterator
-        typedef typename algorithm_type::string_iterator_type string_iterator_type;
-        //! The character type of the substring
-        typedef typename algorithm_type::substring_char_type substring_char_type;
-        //! The character type of the text
-        typedef typename algorithm_type::string_char_type string_char_type;
-        //! The range type of the substring (pattern)
-        typedef typename algorithm_type::substring_range_type substring_range_type;
-        //! The range type of the text
-        typedef typename algorithm_type::string_range_type string_range_type;
-        //! A type capable of holding the difference between two iterators of the text
-        typedef typename algorithm_type::string_difference_type string_difference_type;
-
+        BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
+        BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS2(ComparatorT, AllocatorT);
+    private:
+        typedef typename AlgorithmT::template algorithm<substring_char_type, string_char_type,
+            comparator_type, allocator_type> algorithm_type;
+    public:
         //! Constructs a finder.
         /*!
             \param comparator ComparatorT instance used to compare individual characters
             \param allocator AllocatorT instance used to allocate memory
                 for storing precomputed data if necessary
         */
-        explicit simplified_finder_t(ComparatorT comparator = ComparatorT(), AllocatorT allocator = AllocatorT())
-            : substring_range_(), string_range_(), substring_has_changed_(false),
-            string_has_changed_(false), comparator_(comparator), allocator_(allocator),
-            start_offset_()
+        explicit simplified_finder_t(ComparatorT const &comparator = ComparatorT(),
+            AllocatorT const &allocator = AllocatorT())
+            : ranges_(), substring_has_changed_(false), string_has_changed_(false),
+            algorithm_(comparator, allocator)
         { }
         /*!
             Constructs a finder given a pattern and a text
@@ -95,32 +73,27 @@ namespace boost { namespace algorithm {
                 finder.set_substring(&substr); // re-set the substring so the finder now uses the new, valid range
                 </code> </example>
         */
-        simplified_finder_t(Range1T const *const substr, Range2T *str,
+        simplified_finder_t(Range1T const *const substr, Range2T *const str,
             ComparatorT comparator = ComparatorT(), AllocatorT allocator = AllocatorT())
-            : substring_range_(boost::as_literal(*substr)),
-            string_range_(boost::as_literal(*str)),
-            comparator_(comparator), allocator_(allocator),
-            substring_has_changed_(true), string_has_changed_(true),
-            algorithm_type()
+            : ranges_(boost::as_literal(*substr), boost::as_literal(*str)),
+            algorithm_(comparator, allocator),
+            substring_has_changed_(true), string_has_changed_(true)
         { }
 
 
         simplified_finder_t (const simplified_finder_t &other)
-            : substring_range_(other.substring_range_), string_range_(other.string_range_),
-            substring_has_changed_(other.substring_has_changed_), string_has_changed_(other.string_has_changed_),
-            comparator_(other.comparator_), allocator_(other.allocator_), start_offset_(other.start_offset_),
-            algorithm_type(other)
+            : ranges_(other.ranges_), algorithm_(other.algorithm_),
+            substring_has_changed_(other.substring_has_changed_),
+            string_has_changed_(other.string_has_changed_)
         {
         }
+
         simplified_finder_t &operator=(const simplified_finder_t &rhs)
         {
-            substring_range_ = rhs.substring_range_;
-            string_range_ = rhs.string_range_;
+            ranges_ = rhs.ranges_;
+            algorithm_ = rhs.algorithm_;
             substring_has_changed_ = rhs.substring_has_changed_;
             string_has_changed_ = rhs.string_has_changed_;
-            comparator_ = rhs.comparator_;
-            allocator_ = rhs.allocator_;
-            start_offset_ = rhs.start_offset_;
             return *this;
         }
 
@@ -129,11 +102,11 @@ namespace boost { namespace algorithm {
             \param substr A pointer to a range (or a character array) representing the sought string
         */
         void set_substring (substring_type const *const substr)
-        { substring_range_ = boost::as_literal(*substr); substring_has_changed_ = true; }
+        { ranges_.substr = boost::as_literal(*substr); substring_has_changed_ = true; }
 
         void set_substring (substring_iterator_type const &substring_begin, substring_iterator_type const &substring_end)
         {
-            substring_range_ = boost::make_iterator_range(substring_begin, substring_end);
+            ranges_.substr = boost::make_iterator_range(substring_begin, substring_end);
             substring_has_changed_ = true;
         }
 
@@ -143,17 +116,17 @@ namespace boost { namespace algorithm {
                 in which to search
         */
         void set_string (string_type *const str)
-        { string_range_ = boost::as_literal(*str); string_has_changed_ = true; }
+        { ranges_.str = boost::as_literal(*str); string_has_changed_ = true; }
 
         void set_string (string_iterator_type const &string_begin, string_iterator_type const &string_end)
         {
-            string_range_ = boost::make_iterator_range(string_begin, string_end);
+            ranges_.str = boost::make_iterator_range(string_begin, string_end);
             string_has_changed_ = true;
         }
 
         //! Reset the internal offset to the beginning of the text.
         void find_reset ()
-        { start_offset_ = boost::begin(string_range_); }
+        { ranges_.offset = boost::begin(ranges_.str); }
 
         //! Finds the first occurrence of the pattern in the text (substring in the string)
         /*!
@@ -186,8 +159,8 @@ namespace boost { namespace algorithm {
                 return finder.find_first();
                 </code>
             */
-        string_range_type operator()(string_iterator_type &string_start,
-            string_iterator_type &string_end)
+        string_range_type operator()(string_iterator_type const &string_start,
+            string_iterator_type const &string_end)
         {
             set_string(string_start, string_end);
             return find_first();
@@ -201,19 +174,19 @@ namespace boost { namespace algorithm {
         string_range_type find_next()
         {
             apply_changes();
-            if (start_offset_ == boost::end(string_range_))
-                return string_range_type(start_offset_, start_offset_);
+            if (ranges_.offset == boost::end(ranges_.str))
+                return string_range_type(ranges_.offset, ranges_.offset);
             string_range_type ret =
-                algorithm_type::find(start_offset_);
-            if (boost::begin(ret) == boost::end(string_range_))
+                algorithm_.find(ranges_);
+            if (boost::begin(ret) == boost::end(ranges_.str))
             {
-                start_offset_ = boost::end(string_range_);
+                ranges_.offset = boost::end(ranges_.str);
                 return ret;
             }
             else
             {
-                start_offset_ = boost::begin(ret);
-                ++start_offset_;
+                ranges_.offset = boost::begin(ret);
+                ++ranges_.offset;
                 return ret;
             }
         }
@@ -224,7 +197,7 @@ namespace boost { namespace algorithm {
             \warning If you modify the contents in this range, you must manually call
                 \ref use_internal_substring(), so that the finder can perform any required precomputation on the pattern
         */
-        substring_range_type get_substring_range() const { return substring_range_; }
+        substring_range_type get_substring_range() const { return ranges_.substr; }
 
         //! Get an iterator range of the current text
         /*!
@@ -232,8 +205,10 @@ namespace boost { namespace algorithm {
             \warning If you modify the contents in this range, you must manually call
                 \ref use_internal_string(), so that the finder can perform any required precomputation on the text
         */
-        string_range_type get_string_range() const { return string_range_; }
-            
+        string_range_type get_string_range() const { return ranges_.str; }
+           
+
+        /*
         //! Gets a reference to the current comparator
         typename boost::call_traits<comparator_type>::const_reference get_comparator() const
         { return comparator_;  }
@@ -247,6 +222,8 @@ namespace boost { namespace algorithm {
         //! \return A reference to the current allocator
         typename boost::call_traits<allocator_type>::const_reference get_allocator() const
         { return allocator_; }
+        */
+        std::string get_algorithm_name() const { return algorithm_.get_algorithm_name(); }
 
     private:
         inline void apply_changes()
@@ -254,26 +231,19 @@ namespace boost { namespace algorithm {
             if (substring_has_changed_ || string_has_changed_) {
                 find_reset();
                 if (substring_has_changed_) {
-                    on_substring_change();
+                    algorithm_.on_substring_change(ranges_);
                     substring_has_changed_ = false;
                 }
                 if (string_has_changed_) {
-                    on_string_change();
+                    algorithm_.on_string_change(ranges_);
                     string_has_changed_ = false;
                 }
             }
         }
 
-
-    protected:
-        substring_range_type substring_range_;
-        string_range_type string_range_;
+        boost::algorithm::detail::string_search_ranges<substring_type, string_type> ranges_;
+        algorithm_type algorithm_;
         bool substring_has_changed_, string_has_changed_;
-
-        comparator_type comparator_;
-        allocator_type allocator_;
-
-        string_iterator_type start_offset_;
     };
 
 } }

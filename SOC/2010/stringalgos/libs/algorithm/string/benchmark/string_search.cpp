@@ -350,7 +350,7 @@ int main ()
 
                 std::cout << "Test " << test << " (" << fn << "):" << std::endl;
             
-                std::ifstream bf(fn, std::ios::binary);
+                std::ifstream bf(fn.c_str(), std::ios::binary);
                 if (!bf) { std::cerr << "Error opening " << fn << std::endl; return -1; }
 
                 const unsigned int MAX_STR_SIZE = 10*1024*1024;//10;//1000000;

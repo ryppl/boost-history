@@ -2,21 +2,31 @@
 #define BOOST_ALGORITHM_RABIN_KARP_HPP
 
 #include <boost/cstdint.hpp>
-#include <boost/range/iterator_range.hpp>
-#include <boost/algorithm/string/compare.hpp>
+
 #include <boost/call_traits.hpp>
+
 #include <boost/tuple/tuple.hpp>
+
 #include <boost/mpl/void.hpp>
-#include <cstdlib>
+
 #include <boost/static_assert.hpp>
+
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <string>
+#include <boost/range/iterator_range.hpp>
+
 #include <boost/lexical_cast.hpp>
+
+#include <boost/algorithm/string/compare.hpp>
 #include <boost/algorithm/string/string_search/detail/rabin_karp.hpp>
 #include <boost/algorithm/string/finder/detail/finder_typedefs.hpp>
+#include <boost/algorithm/string/finder/detail/string_search_ranges.hpp>
+
 #include <cassert>
 #include <limits>
+#include <string>
+#include <cstdlib>
+
 #include <boost/type_traits/is_same.hpp>
 
 /*!
@@ -40,27 +50,33 @@ namespace boost { namespace algorithm {
     template <
         class HashType,
         HashType FirstBase, HashType FirstModulo,
-        HashType SecondBase, HashType SecondModulo>
+        HashType SecondBase, HashType SecondModulo,
+        class StringIteratorCategory = std::random_access_iterator_tag>
     struct rabin_karp_algorithm
     {
 
-        template <class Finder, class Range1T, class Range2T, class ComparatorT, class AllocatorT>
+        template <class Range1CharT, class Range2CharT, class ComparatorT, class AllocatorT>
         class algorithm;
 
-        template <class Finder, class Range1T, class Range2T, class AllocatorT>
-        class algorithm<Finder, Range1T, Range2T, boost::algorithm::is_equal, AllocatorT>
-            : public ::boost::algorithm::detail::rabin_karp_algorithm<Finder,
-                Range1T, Range2T, HashType, FirstBase, FirstModulo, SecondBase, SecondModulo>
+        template <class Range1CharT, class Range2CharT, class AllocatorT>
+        class algorithm<Range1CharT, Range2CharT, boost::algorithm::is_equal, AllocatorT>
+            : public ::boost::algorithm::detail::rabin_karp_algorithm<
+                Range1CharT, Range2CharT, HashType, FirstBase, FirstModulo, SecondBase, SecondModulo, StringIteratorCategory>
         {
+        private:
+            typedef Range1CharT substring_char_type;
+            typedef Range2CharT string_char_type;
+            typedef boost::algorithm::is_equal comparator_type;
+            typedef AllocatorT allocator_type;
         public:
             std::string get_algorithm_name () const
             { return "Rabin-Karp (" + boost::lexical_cast<std::string>(sizeof(HashType)) + ")"; }
-		protected:
-            //construct the algorithm given iterator ranges for the substring and the string
-            algorithm () {
+            algorithm (comparator_type const &comp, allocator_type const &alloc)
+                : comp_(comp), alloc_(alloc)
+            {
                 //todo add more assertions here
                 BOOST_STATIC_ASSERT((
-                    sizeof(boost::range_value<Range1T>::type)*2 <= sizeof(HashType)
+                    sizeof(substring_char_type)*2 <= sizeof(HashType)
                 ));
                 BOOST_STATIC_ASSERT(( boost::is_same<substring_char_type,string_char_type>::value ));
                 assert_overflow(FirstBase, FirstModulo);
@@ -82,6 +98,7 @@ namespace boost { namespace algorithm {
                         BOOST_ALGORITHM_DETAIL_ASSERTED_MULTIPLY(M-1, B, HashType), char_range_size, HashType),
                     BOOST_ALGORITHM_DETAIL_ASSERTED_MULTIPLY(M-1,char_range_size, HashType), HashType );*/
             }
+            comparator_type comp_; allocator_type alloc_;
         };
     };
 

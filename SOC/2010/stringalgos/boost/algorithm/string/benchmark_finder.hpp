@@ -82,10 +82,14 @@ namespace boost { namespace algorithm {
         */
         template <class Range1T, class Range2T, class AlgorithmSequenceT,
         class ComparatorT = boost::algorithm::is_equal>
-        class benchmark_finder :
+        class benchmark_finder /*:
             public boost::algorithm::detail::finder_typedefs<Range1T, Range2T,
-            ComparatorT, std::allocator<std::size_t> >
+            ComparatorT, std::allocator<std::size_t> >*/
         {
+            typedef std::allocator<std::size_t> allocator_type_;
+        public:
+            BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS(Range1T,Range2T);
+            BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS2(ComparatorT, allocator_type_);
         public:
 
         //! See \ref simplified_finder_t::set_substring

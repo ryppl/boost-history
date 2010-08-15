@@ -1,28 +1,35 @@
 #ifndef BOOST_ALGORITHM_BOYER_MOORE_HPP
 #define BOOST_ALGORITHM_BOYER_MOORE_HPP
 
-#include <iterator>
-#include <memory>
-#include <utility>
-#include <vector>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/adaptor/reversed.hpp>
 #include <boost/range/algorithm/for_each.hpp>
 #include <boost/range/distance.hpp>
 #include <boost/range/category.hpp>
+
 #include <boost/call_traits.hpp>
+
 #include <boost/type_traits/is_same.hpp>
+
 #include <boost/static_assert.hpp>
+
 #include <map>
 #include <string>
+#include <locale>
+#include <iterator>
+#include <memory>
+#include <utility>
+#include <vector>
 
 #include <boost/algorithm/string/finder/detail/finder_typedefs.hpp>
+#include <boost/algorithm/string/finder/detail/string_search_ranges.hpp>
 
 #include <boost/unordered_map.hpp>
 #include <boost/functional/hash.hpp>
+
 #include <boost/utility/enable_if.hpp>
-#include <locale>
+
 
 /*!
     \file
@@ -39,33 +46,59 @@ namespace boost { namespace algorithm {
     struct boyer_moore
     {
 
-        template <class Finder, class RandomAccessRange1T,class RandomAccessRange2T,
-            class ComparatorT,class AllocatorT>
+        template <class Range1CharT, class Range2CharT, class ComparatorT, class AllocatorT>
         class algorithm
-            : public boost::algorithm::detail::finder_typedefs<
-                RandomAccessRange1T,RandomAccessRange2T,ComparatorT,AllocatorT>
         {
+        private:
+            typedef Range1CharT substring_char_type;
+            typedef Range2CharT string_char_type;
+            typedef ComparatorT comparator_type;
+            typedef AllocatorT allocator_type;
         public:
             std::string get_algorithm_name () const { return "Boyer-Moore"; }
-        protected:
-            algorithm () {
+            algorithm (comparator_type const &comp, allocator_type const &alloc)
+                : comp_(comp), alloc_(alloc), table1(alloc_), table2(alloc_)
+            {
                 BOOST_STATIC_ASSERT((boost::is_same<substring_char_type,string_char_type>::value));
             }
 
-            string_range_type find(string_iterator_type start)
+            template <class Range1T, class Range2T>
+            inline typename boost::iterator_range<typename boost::range_iterator<Range2T>::type>
+                find(typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
             {
-                return find(start, string_iterator_category());
+                
+                return find(ranges, typename boost::range_category<Range2T>::type());
             }
 
             //Compute the two tables
-            void on_substring_change()
+            template <class Range1T, class Range2T>
+            inline void on_substring_change(
+                typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges)
             {
-                on_substring_change(substring_iterator_category());
+                on_substring_change(ranges.substr, typename boost::range_category<Range1T>::type());
             }
+
             //No precomputation to be done on the string
-            inline void on_string_change()
-            { }
+            template <class T>
+            inline void on_string_change(T const&) { }
         private:
+            comparator_type comp_; allocator_type alloc_;
+
+            //TODO Maybe optimize for sizeof(substring_char_type)==1, or substring_char_type=char?
+            typedef typename boost::unordered_map<substring_char_type, std::size_t,
+                typename boost::hash<substring_char_type>, comparator_type,
+                typename allocator_type::template
+                rebind<substring_char_type>::other
+            > table1_type;
+            table1_type table1;
+
+            typedef typename std::vector<std::size_t,
+                typename allocator_type::template rebind<std::size_t>::other
+            > table2_type;
+            table2_type table2;
+
+            std::size_t substr_size_;
+
             struct compute_first_table_functor
             {
                 //Case 1: ComparatorT=boost::algorithm::is_equal
@@ -75,7 +108,7 @@ namespace boost { namespace algorithm {
                 }
                 compute_first_table_functor (algorithm &alg) : idx_(0), alg_(alg)
                 { alg_.table1.clear(); }
-            private:
+
                 template <class ComparatorTT>
                 void compute_first_table(typename boost::call_traits<substring_char_type>::param_type c,
                     typename boost::enable_if<
@@ -106,25 +139,10 @@ namespace boost { namespace algorithm {
                 algorithm &alg_;
             };
 
-#if 0
-            struct compute_second_table_functor {
-                void operator()(typename boost::call_traits<substring_char_type>::param_type c)
-                {
-
-                }
-                compute_second_table_functor (algorithm &alg) : idx_(0), alg_(alg)
-                { /*alg_.table2.clear();*/ }
-            private:
-                std::size_t idx_;
-                algorithm &alg_;
-            };
-#endif
-
             //precomputation on pattern=bidirectional range
-            void on_substring_change(std::bidirectional_iterator_tag)
+            template <class RangeT>
+            void on_substring_change(RangeT const &substr, std::bidirectional_iterator_tag)
             {
-                substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
-                comparator_type const &comp = static_cast<Finder*>(this)->get_comparator();
                 
                 substr_size_ = boost::distance(substr);
 
@@ -150,14 +168,14 @@ namespace boost { namespace algorithm {
 
                 if (substr_size_ < 2) return;
 
-                substring_iterator_type const &pattern = boost::begin(substr);
+                typename boost::range_iterator<RangeT>::type const &pattern = boost::begin(substr);
 
 
                 //todo find a better solution for this
                 for (unsigned int i = substr_size_-1;i--;)
                 {
                     //pattern[i] != pattern[m-1]
-                    if (!comp(*(pattern+i),*(pattern+(substr_size_-1))))
+                    if (!comp_(*(pattern+i),*(pattern+(substr_size_-1))))
                     {
                         table2[substr_size_-1] = substr_size_ - 1 - i;
                         break;
@@ -175,12 +193,12 @@ namespace boost { namespace algorithm {
                 {
                     //Invariant: P[i+1..m-1] = P[j+1..m-1]
                     //try to align with pattern indexed by j (by sliding the pattern indexed by i)
-                    while (i != substr_size_ - 1 && !comp(*(pattern+i),*(pattern+j)))
+                    while (i != substr_size_ - 1 && !comp_(*(pattern+i),*(pattern+j)))
                         i = substr_size_ - 1 - failure_func[i + 1];
 
                     //Invariant: Either i=m-1 or P[i..m-1] = P[j..m-1]
                     while (i == substr_size_-1 && j > 0 &&
-                        !comp(*(pattern+(substr_size_-1)),*(pattern+j)))
+                        !comp_(*(pattern+(substr_size_-1)),*(pattern+j)))
                     {
                         //couldn't align the given j with any i
                         failure_func[j] = 0;
@@ -188,7 +206,7 @@ namespace boost { namespace algorithm {
                     }
                     //Invariant: either (j==0 and i=m-1) or P[i..m-1] = P[j..m-1]
                     if (j == 0 && i == substr_size_-1 &&
-                        !comp(*(pattern+0),*(pattern+(substr_size_-1))))
+                        !comp_(*(pattern+0),*(pattern+(substr_size_-1))))
                     {
                         failure_func[0] = 0;
                     }
@@ -224,7 +242,7 @@ namespace boost { namespace algorithm {
                         //a = m-1-x <=> x = m-1-a
                         //j = x+1-k <=> k = m-a-j
                         unsigned int a = failure_func[j];
-                        while (a > 0 && !comp(*(pattern+(substr_size_-1-a)), *(pattern+(j-1))))
+                        while (a > 0 && !comp_(*(pattern+(substr_size_-1-a)), *(pattern+(j-1))))
                         //while (a > 0 && !compare_range_nth(comp, substr, substr_size_-1-a, substr, j-1))
                         {
                             assert(substr_size_-1-a >= substr_size_-a-j); // x >= k
@@ -262,11 +280,20 @@ namespace boost { namespace algorithm {
             }
 
             //finding in text=random access range
-            string_range_type find(string_iterator_type start, std::random_access_iterator_tag)
+            template <class Range1T, class Range2T>
+            inline typename boost::iterator_range<typename boost::range_iterator<Range2T>::type>
+                find(typename boost::algorithm::detail::string_search_ranges<Range1T, Range2T> const &ranges,
+                std::random_access_iterator_tag)
             {
-                string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
-                substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
-                comparator_type const &comp = static_cast<Finder*>(this)->get_comparator();
+                BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
+
+                string_range_type const &str = ranges.str;
+                substring_range_type const &substr = ranges.substr;
+                string_iterator_type start = ranges.offset;
+
+                //string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
+                //substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
+                //comparator_type const &comp = static_cast<Finder*>(this)->get_comparator();
 
                 std::size_t str_idx, substr_idx, str_size;
 
@@ -279,8 +306,7 @@ namespace boost { namespace algorithm {
 
                 while (str_idx < str_size)
                 {
-                    if (comp(*(start+str_idx), *(boost::begin(substr)+substr_idx)))
-                    //if (compare_range_nth(comp, start[str_idx], boost::begin(substr)[substr_idx]))
+                    if (comp_(*(start+str_idx), *(boost::begin(substr)+substr_idx)))
                     {
                         if (substr_idx == 0)
                         {
@@ -290,7 +316,7 @@ namespace boost { namespace algorithm {
                     }
                     else
                     {
-                        table1_type::const_iterator iter = table1_find<comparator_type>(start[str_idx]);
+                        typename table1_type::const_iterator iter = table1_find<comparator_type>(start[str_idx]);
                         std::size_t step = substr_size_ - substr_idx;
                         if (iter == table1.end())
                         {
@@ -318,22 +344,10 @@ namespace boost { namespace algorithm {
                 return string_range_type(boost::end(str), boost::end(str));
             }
 
-            //TODO Maybe optimize for sizeof(substring_char_type)==1?
-            typedef typename boost::unordered_map<substring_char_type, std::size_t,
-                boost::hash<substring_char_type>, ComparatorT,
-                typename AllocatorT::template
-                    rebind<substring_char_type>::other
-            > table1_type;
-            table1_type table1;
-            typedef typename std::vector<std::size_t,
-                typename AllocatorT::template rebind<std::size_t>::other
-            > table2_type;
-            table2_type table2;
-
             //Case 1: ComparatorT=boost::algorithm::is_equal
             template <class ComparatorTT>
             typename table1_type::iterator table1_find (string_char_type const &chr,
-            typename boost::enable_if<
+                typename boost::enable_if<
                 typename boost::is_same<ComparatorTT, boost::algorithm::is_equal> >::type* = 0)
             {
                 return table1.find(chr);
@@ -343,14 +357,10 @@ namespace boost { namespace algorithm {
             template <class ComparatorTT>
             typename table1_type::iterator table1_find (string_char_type const &chr,
                 typename boost::enable_if<
-                    typename boost::is_same<ComparatorTT, boost::algorithm::is_iequal> >::type* = 0)
+                typename boost::is_same<ComparatorTT, boost::algorithm::is_iequal> >::type* = 0)
             {
                 return table1.find(std::tolower(chr, std::locale()));
             }
-            
-            //std::vector<std::pair<substring_char_type, std::size_t> > table1;
-
-            std::size_t substr_size_;
 
         };
     };
