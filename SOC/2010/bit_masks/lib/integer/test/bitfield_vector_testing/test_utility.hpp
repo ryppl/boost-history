@@ -13,6 +13,7 @@
 #include <bitset>
 #include <boost/integer/bit_width.hpp>
 #include <sstream>
+#include <boost/type_traits/is_same.hpp>
 
 #if defined(__GNUC__)
 #include <cxxabi.h>

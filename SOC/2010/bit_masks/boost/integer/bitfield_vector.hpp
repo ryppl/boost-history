@@ -495,19 +495,34 @@ public:
     typedef detail::const_proxy_reference_type<value_type,Width>
         const_reference;
 
+    /** Constructable over an allocator and default constructor. */
     explicit bitfield_vector(Allocator const& alloc = Allocator() )
         :_base(alloc)
     { }
 
-    explicit bitfield_vector(size_type n, T const& value= T(),
-        Allocator const& = Allocator() );
+    /** fill with value constructor.
+     *  Fills the vector with N items with value of value.
+     */
+    explicit bitfield_vector(size_type n,
+                             value_type const& value = T(),
+                             allocator_type const& alloc = Allocator()
+    )
+        :_base(alloc)
+    {
+        allocate_and_fill(n,value);
+    }
 
     template <class InputIterator>
     bitfield_vector(InputIterator first, InputIterator last,
         Allocator const& = Allocator());
 
     bitfield_vector(_self const& x );
-    ~bitfield_vector();
+
+    // TODO Implement me!!!
+    // should just call clear maybe?
+    ~bitfield_vector() {
+
+    }
 
     _self& operator=(_self const& x);
 
@@ -515,11 +530,21 @@ public:
      *  types supported by this data structure.
      */
     //@{
-    iterator                begin();
-    const_iterator          begin() const;
+    iterator                begin() {
+        return iterator(this->_impl._start,0);
+    }
 
-    iterator                end();
-    const_iterator          end() const;
+    const_iterator          begin() const {
+        return const_iterator(this->_impl._start,0);
+    }
+
+    iterator                end() {
+        return begin() + (this->_impl._bits_in_use / Width);
+    }
+
+    const_iterator          end() const {
+        return begin() + (this->_impl._bits_in_use / Width);
+    }
 
     reverse_iterator        rbegin();
     const_reverse_iterator  rbegin() const;
@@ -581,6 +606,60 @@ public:
     allocator_type get_allocator() const;
 
 protected:
+
+    /** Inserts a value at the location 
+     *  of the iterator.
+     *  TODO Implement this
+     */
+    template <typename Iter>
+    void _insert_at(Iter iter, value_type value) {
+    }
+
+    /** allocates a chunck of memory of the correct size and then
+     *  correctly fills that memory with value for each of the
+     *  bitfields within it.
+     */
+    void allocate_and_fill(size_type n, value_type value) {
+
+        // figure out exactly how many bits are going to be needed.
+        size_type min_allocation_size = n * Width;
+
+        // calculate that size in bytes.
+        min_allocation_size = (min_allocation_size/8)
+            + size_type((min_allocation_size%8)!=0);
+
+        // calculate the correct size of the allocation
+        // by getting the closest power of 2 greater then the number of bytes
+        // needed to stor n bitfields in.
+        size_type corrected_allocation_size = 1;
+        while(corrected_allocation_size < min_allocation_size) {
+            corrected_allocation_size *= 2;
+        }
+
+        // must save the original pointer so that I can maintain the state
+        // of this object and NOT leak memory.
+        pointer old_start = this->_impl._start;
+        try {
+            // allocate the necessary memory to hold all of the bitfields.
+            // This CAN throw std::bad_alloc
+            this->_impl._start = this->allocate_impl(corrected_allocation_size);
+            std::memset(this->_impl._start,0,corrected_allocation_size);
+            // this line will never throw because this is pointer arithmatic
+            // and integer assignment.
+            this->_impl._end = this->_impl._start + corrected_allocation_size;
+        }catch(...) {
+            this->_impl._start = old_start;
+            throw;
+        }
+
+        // once allocation is completed next comes filling the bitfields
+        // with val.
+        for(iterator it( begin()); it != end(); ++it) {
+            *it = value;
+            this->_impl._bits_in_use += Width;
+        }
+    }
+
     void check_for_resizing() {
         size_type size_of_alloc = (this->_impl._end - this->_impl._start);
         difference_type remaing_bits = ((size_of_alloc*8) - this->_impl._bits_in_use);
