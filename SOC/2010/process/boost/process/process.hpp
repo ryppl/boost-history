@@ -66,7 +66,7 @@ public:
     {
     }
 
-#if defined(BOOST_WINDOWS_API)
+#if defined(BOOST_WINDOWS_API) || defined(BOOST_PROCESS_DOXYGEN)
     /**
      * Constructs a new process object.
      *
@@ -104,8 +104,8 @@ public:
      * process identifier may have been reused by a different process. It
      * might still be valid, though, if the process has refused to die.
      *
-     * \throw boost::system::system_error If the system call used to
-     *        terminate the process fails.
+     * \throw boost::system::system_error If system calls used to terminate the
+     *        process fail.
      */
     void terminate(bool force = false) const
     {
@@ -130,14 +130,16 @@ public:
     }
 
     /**
-     * Blocks and waits for the child process to terminate.
+     * Blocks and waits for the process to terminate.
      *
-     * Returns an exit code. The child process object ceases to be
-     * valid after this call.
+     * Returns an exit code. The process object ceases to be valid after this
+     * call.
      *
-     * \remark Blocking remarks: This call blocks if the child
-     *         process has not finalized execution and waits until
-     *         it terminates.
+     * \remark Blocking remarks: This call blocks if the process has not
+     *         finalized execution and waits until it terminates.
+     *
+     * \throw boost::system::system_error If system calls used to wait for the
+     *        process fail.
      */
     int wait() const
     {

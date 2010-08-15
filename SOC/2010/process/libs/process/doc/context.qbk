@@ -7,7 +7,7 @@ The _context_ class provides only a few member variables. You can set the proces
 [import ../example/create_child_context.cpp]
 [create_child_context_configuration]
 
-In practice you are probably more often using the member variables `context::stdin_behavior`, `context::stdout_behavior` and `context::stderr_behavior`. It depends on them how standard streams of a child process are configured. 
+In practice you are probably more often using the member variables `context::stdin_behavior`, `context::stdout_behavior` and `context::stderr_behavior`. They are used to configure standard streams for child processes. 
 
 The type of these three member variables is `boost::shared_ptr<boost::process::behavior::stream>`. _behavior_stream_ is the base class of a small hierarchy of behavior classes. Boost.Process provides the following stream behavior classes: 
 
@@ -17,7 +17,7 @@ The type of these three member variables is `boost::shared_ptr<boost::process::b
 * _behavior_named_pipe_
 * _behavior_dummy_
 
-It depends on these classes if and how a standard stream can be used by a child process. As it is a class hierarchy you are free to derive your own classes and [link boost_process.extension_points define new stream behaviors]. 
+It depends on these classes if and how a standard stream can be used by a child process. As it is a class hierarchy you are free to derive your own classes and [link boost_process.user_guide.user_stream_behaviors define new stream behaviors]. 
 
 By default, standard streams are inherited. If you want to configure standard streams differently create an instance of a stream behavior class and assign it. For convenience all behavior classes provide a _behavior_stream_create_ member function which returns an instance of a stream behavior owned by `boost::shared_ptr`. 
 

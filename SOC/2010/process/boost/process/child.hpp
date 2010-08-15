@@ -50,7 +50,7 @@ public:
      * Creates a new child object that represents the just spawned child
      * process \a id.
      *
-     * The \a fhstdin, \a fhstdout and \a fhstderr file handles represent
+     * The \a hstdin, \a hstdout and \a hstderr file handles represent
      * the parent's handles used to communicate with the corresponding
      * data streams. They needn't be valid but their availability must
      * match the redirections configured by the launcher that spawned this

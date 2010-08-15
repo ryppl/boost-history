@@ -74,7 +74,7 @@ public:
      * Constructs a handle from a native handle.
      *
      * This constructor creates a new \a handle object that takes
-     * ownership of the given \a h native handle. The user must not
+     * ownership of the given \a native handle. The user must not
      * close \a native on his own during the lifetime of the new object.
      * Ownership can be reclaimed using release().
      *

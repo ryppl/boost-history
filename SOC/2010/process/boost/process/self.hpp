@@ -124,6 +124,9 @@ public:
         return e;
     }
 
+    /**
+     * Returns the current work directory.
+     */
     static std::string get_work_dir()
     {
 #if defined(BOOST_POSIX_API) 

@@ -10,6 +10,6 @@ If a parent process wants to communicate with a child process the return value o
 
 [caution You must not call _child_get_stdin_, _child_get_stdout_ and _child_get_stderr_ if you didn't configure the standard streams to be redirected to the parent process.]
 
-The streams returned by _child_get_stdin_, _child_get_stdout_ and _child_get_stderr_ are used similarly to streams from the C++ standard. The type of the return values is either _pistream_ and _postream_ (depending on whether they are input or output streams). These classes are derived from `std::istream` and `std::ostream` and provide two additional member functions `close()` and `handle()`. You use the latter member function for asynchronous I/O. 
+The streams returned by _child_get_stdin_, _child_get_stdout_ and _child_get_stderr_ are used similarly to streams from the C++ standard. The type of the return values is either _pistream_ or _postream_ (depending on whether they are input or output streams). These classes are derived from `std::istream` and `std::ostream` and provide two additional member functions `close()` and `handle()`. The latter member function is used for asynchronous I/O. 
 
 [endsect]
