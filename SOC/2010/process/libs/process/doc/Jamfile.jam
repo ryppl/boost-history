@@ -17,7 +17,6 @@ doxygen autodoc
     : 
         ../../../boost/process.hpp 
         [ glob ../../../boost/process/*.hpp ] 
-        [ glob ../../../boost/process/detail/*.hpp ] 
     : 
         <doxygen:param>PREDEFINED=BOOST_PROCESS_DOXYGEN 
         <doxygen:param>HIDE_UNDOC_CLASSES=YES 
