@@ -124,7 +124,10 @@ namespace boost {
     private:
         BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(T) > 0, BOOST_COMMON_TYPE_MUST_BE_A_COMPLE_TYPE, (T));
         BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(U) > 0, BOOST_COMMON_TYPE_MUST_BE_A_COMPLE_TYPE, (U));
-
+        static bool declval_bool();  // workaround gcc bug; not required by std
+        static typename add_rvalue_reference_helper<T>::type declval_T();  // workaround gcc bug; not required by std
+        static typename add_rvalue_reference_helper<U>::type  declval_U();  // workaround gcc bug; not required by std
+    
 #if !defined(BOOST_NO_DECLTYPE)
     public:
         typedef decltype(declval<bool>() ? declval<T>() : declval<U>()) type;
@@ -135,13 +138,13 @@ namespace boost {
         static no deduce(U);
     public:
         typedef typename mpl::if_c<
-            sizeof( deduce(declval<bool>() ? declval<T>() : declval<U>()) ) == sizeof( yes ),
+            sizeof( deduce( declval_bool() ? declval_T() : declval_U() ) ) == sizeof( yes ),
             T,
             U
         >::type type;
 #else
     public:
-        typedef BOOST_TYPEOF_TPL(declval<bool>() ? declval<T>() : declval<U>()) type;
+        typedef BOOST_TYPEOF_TPL(declval_bool() ? declval_T() : declval_U()) type;
 #endif
     };
 
