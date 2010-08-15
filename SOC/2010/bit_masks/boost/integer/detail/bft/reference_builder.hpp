@@ -67,8 +67,10 @@ struct enable_if_proxy_reference_type_by_index {
         mpl::size_t<
             Index
         >,
-        mpl::size<
-            typename BitfieldTuple::members
+        mpl::size_t<
+            mpl::size<
+                typename BitfieldTuple::members
+            >::type::value
         >
     >                   is_valid_index;
 

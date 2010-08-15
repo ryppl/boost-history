@@ -216,13 +216,13 @@ namespace boost { namespace integer {
 
         //! setter from a value type
         void set(value_type val) {
-            field_ = (field_ & ~FIELD_MASK) | value_to_storage(val);
+            field_ = (field_ & ~FIELD_MASK) | this_type::value_to_storage(val);
         }
 
 
         //! Returns the bitfield value.
         value_type get() const {
-   	        return storage_to_value(field_);
+   	        return this_type::storage_to_value(field_);
         }
 
     private:

@@ -80,12 +80,18 @@ void print_type_and_value( T const& x) {
 }
 
 template <typename T>
-std::string to_binary(T x) {
+std::string to_binary(T
+#if 0
+x) {
     typedef unsigned long long ullt;
     std::stringstream ss(std::stringstream::in|std::stringstream::out);
     ss << std::setfill('0') << std::setw(boost::bit_width<T>::value)
         << std::bitset<  boost::bit_width<T>::value >(ullt(x)).to_string();
     return std::string(ss.str());
+#else
+) {
+    return std::string();
+#endif
 }
 
 void print_from_to(unsigned char* ptr, std::size_t to) {
