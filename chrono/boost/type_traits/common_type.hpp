@@ -17,8 +17,7 @@
 #endif
 
 //----------------------------------------------------------------------------//
-#if defined(BOOST_NO_RVALUE_REFERENCES) \
-    || defined(BOOST_NO_DECLTYPE)
+#if defined(BOOST_NO_DECLTYPE) && !defined(BOOST_COMMON_TYPE_DONT_USE_TYPEOF)
 #define BOOST_TYPEOF_SILENT
 #include <boost/typeof/typeof.hpp>   // boost wonders never cease!
 #endif
@@ -47,6 +46,8 @@
 #endif
 
 #include <boost/mpl/if.hpp>
+#include <boost/type_traits/is_void.hpp>
+#include <boost/type_traits/is_reference.hpp>
 
 //----------------------------------------------------------------------------//
 //                                                                            //
@@ -90,36 +91,57 @@ namespace boost {
 // 2 args
 
 
-    namespace detail {
+    namespace type_traits_detail {
+
+    template <typename T,
+        bool = !is_reference<T>::value && !is_void<T>::value>
+    struct add_rvalue_reference_helper
+    { typedef T   type; };
+
+    template <typename T>
+    struct add_rvalue_reference_helper<T, true>
+    {
+#if !defined(BOOST_NO_RVALUE_REFERENCES)
+        typedef T&&   type;
+#else
+        typedef T   type;
+#endif
+    };
+
+    /// add_rvalue_reference
+    template <typename T>
+    struct add_rvalue_reference
+    : public add_rvalue_reference_helper<T>
+    { };
+
+
+    template <typename T>
+    typename add_rvalue_reference<T>::type declval();
+
     template <class T, class U>
     struct common_type_2
     {
     private:
         BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(T) > 0, BOOST_COMMON_TYPE_MUST_BE_A_COMPLE_TYPE, (T));
         BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(U) > 0, BOOST_COMMON_TYPE_MUST_BE_A_COMPLE_TYPE, (U));
-        static bool m_f();  // workaround gcc bug; not required by std
-#if !defined(BOOST_NO_RVALUE_REFERENCES) \
-    && !defined(BOOST_NO_DECLTYPE)
-            static T&& m_t();
-            static U&& m_u();
 
+#if !defined(BOOST_NO_DECLTYPE)
     public:
-        typedef decltype(m_f() ? m_t() : m_u()) type;
-#else
-        static T m_t();
-        static U m_u();
-#if 0
-    public:
-        typedef BOOST_TYPEOF_TPL(m_f() ? m_t() : m_u()) type;
-#else
+        typedef decltype(declval<bool>() ? declval<T>() : declval<U>()) type;
+#elif defined(BOOST_COMMON_TYPE_DONT_USE_TYPEOF)
         typedef char (&yes)[1];
         typedef char (&no)[2];
         static yes deduce(T);
         static no deduce(U);
     public:
-        typedef typename mpl::if_c< sizeof( deduce(m_f() ? m_t() : m_u()) ) == sizeof( yes ), T, U >::type type;
-
-#endif
+        typedef typename mpl::if_c<
+            sizeof( deduce(declval<bool>() ? declval<T>() : declval<U>()) ) == sizeof( yes ),
+            T,
+            U
+        >::type type;
+#else
+    public:
+        typedef BOOST_TYPEOF_TPL(declval<bool>() ? declval<T>() : declval<U>()) type;
 #endif
     };
 
@@ -137,7 +159,7 @@ namespace boost {
     template <class T, class U>
     struct common_type<T, U, void>
 #endif
-    : boost::detail::common_type_2<T,U>
+    : type_traits_detail::common_type_2<T,U>
     { };
 
 
