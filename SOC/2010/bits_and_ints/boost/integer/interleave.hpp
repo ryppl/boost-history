@@ -124,7 +124,7 @@ uninterleave(typename uint_t<Bits>::exact number)
 		b |= ((number & (1 << (i + 1)))) >> ((i >> 1) + 1);
 	}
 	
-	return make_pair(a, b);
+	return std::make_pair(a, b);
 } // uninterleave
 
 } // boost

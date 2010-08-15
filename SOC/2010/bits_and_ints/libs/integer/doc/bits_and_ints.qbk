@@ -175,15 +175,19 @@ These functions are defined in the header [@../../../../boost/integer/interleave
 
 [section Synopsis]
 ``
-T2 interleave(T1 x, T1 y);
+template <int Bits>
+typename uint_t<Bits * 2>::exact>::type 
+interleave(typename uint_t<Bits>::exact x, typename uint_t<Bits>::exact y);
 
-std::pair<T1, T1> uninterleave(T2 number);
+template <int Bits>
+std::pair<typename uint_t<Bits/2>::exact, typename uint_t<Bits/2>::exact> >::type 
+uninterleave(typename uint_t<Bits>::exact number);
 ``
 [endsect]
 
 
-*[*Requires: ] `T1` and `T2` must be integral types. Additionally, `T1` must have 8, 16 or 32 bits and `T2` must have
-16, 32 or 64 bits. For these functions `T2` have the double of bits of `T1`.
+*[*Requires: ] The parameters must be integral types. Additionally, for the `interleave` function, `Bits` must be 8, 16 or 32. For `uninterleave` function `Bits` must be
+16, 32 or 64.
 
 [*Returns: ] `interleave` function returns `x` and `y` interleaved. `x` will be in the even bits and `y` will be on odd positions, so the return type have the double of bits than the paramter's type. 
 
@@ -193,27 +197,25 @@ member will be the integral represented in the odd positions of `number`.
 [section Examples]
 
 ``
-#include <boost/integer/interleave.hpp>
 #include <utility>
 #include <iostream>
+#include <boost/cstdint.hpp>
+#include <boost/integer.hpp>
+#include <boost/integer/interleave.hpp>
 
-using namespace std;
 using namespace boost;
 
 int main()
 {
-	uint_t<64>::exact inter = interleave<32>(0x10, 0x0e);
-	
-	cout << "interleaved number: ";
-	cout << hex << inter << endl;
+	uint_t<32>::exact inter = interleave<16>(0x10, 0x0e);
+	std::cout << std::hex << inter << std::endl; // 1a8
 
-	pair<uint8_t, uint8_t> uninter = uninterleave<16>(inter);
+	std::pair<uint16_t, uint16_t> uninter = uninterleave<32>(inter);
+	std::cout << std::hex << uninter.first << " " << uninter.second << std::endl; // 10 e
 	
-	uint8_t a = uninter.first, b = uninter.second;
-
-	cout << "uninterleaved number: ";
-	cout << hex << unsigned(a) << " " << unsigned(b) << endl; 
+	return 0;
 }
+
 ``
 
 [endsect]
@@ -508,7 +510,7 @@ int main()
 	}
 	
 	try {
-		// Here an exception is threw
+		// Throws an exception
 		std::cout << boost::ilog2(0u, throw_pol) << std::endl;
 	}
 	catch (std::domain_error& e) {

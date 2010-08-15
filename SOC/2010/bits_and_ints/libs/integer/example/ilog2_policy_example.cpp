@@ -52,7 +52,7 @@ int main()
 	}
 	
 	try {
-		// Here an exception is threw
+		// Throw an exception
 		std::cout << boost::ilog2(0u, throw_pol) << std::endl;
 	}
 	catch (std::domain_error& e) {

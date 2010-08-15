@@ -372,20 +372,24 @@
 <p>
           
 </p>
-<pre class="programlisting"><span class="identifier">T2</span> <span class="identifier">interleave</span><span class="special">(</span><span class="identifier">T1</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">T1</span> <span class="identifier">y</span><span class="special">);</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">int</span> <span class="identifier">Bits</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">uint_t</span><span class="special">&lt;</span><span class="identifier">Bits</span> <span class="special">*</span> <span class="number">2</span><span class="special">&gt;::</span><span class="identifier">exact</span><span class="special">&gt;::</span><span class="identifier">type</span> 
+<span class="identifier">interleave</span><span class="special">(</span><span class="keyword">typename</span> <span class="identifier">uint_t</span><span class="special">&lt;</span><span class="identifier">Bits</span><span class="special">&gt;::</span><span class="identifier">exact</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">uint_t</span><span class="special">&lt;</span><span class="identifier">Bits</span><span class="special">&gt;::</span><span class="identifier">exact</span> <span class="identifier">y</span><span class="special">);</span>
 
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span> <span class="identifier">T1</span><span class="special">&gt;</span> <span class="identifier">uninterleave</span><span class="special">(</span><span class="identifier">T2</span> <span class="identifier">number</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">int</span> <span class="identifier">Bits</span><span class="special">&gt;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">uint_t</span><span class="special">&lt;</span><span class="identifier">Bits</span><span class="special">/</span><span class="number">2</span><span class="special">&gt;::</span><span class="identifier">exact</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">uint_t</span><span class="special">&lt;</span><span class="identifier">Bits</span><span class="special">/</span><span class="number">2</span><span class="special">&gt;::</span><span class="identifier">exact</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span> 
+<span class="identifier">uninterleave</span><span class="special">(</span><span class="keyword">typename</span> <span class="identifier">uint_t</span><span class="special">&lt;</span><span class="identifier">Bits</span><span class="special">&gt;::</span><span class="identifier">exact</span> <span class="identifier">number</span><span class="special">);</span>
 </pre>
 <p>
         </p>
 </div>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">T1</span></code>
-          and <code class="computeroutput"><span class="identifier">T2</span></code> must be integral
-          types. Additionally, <code class="computeroutput"><span class="identifier">T1</span></code>
-          must have 8, 16 or 32 bits and <code class="computeroutput"><span class="identifier">T2</span></code>
-          must have 16, 32 or 64 bits. For these functions <code class="computeroutput"><span class="identifier">T2</span></code>
-          have the double of bits of <code class="computeroutput"><span class="identifier">T1</span></code>.
+<span class="bold"><strong>Requires: </strong></span> The parameters must be integral
+          types. Additionally, for the <code class="computeroutput"><span class="identifier">interleave</span></code>
+          function, <code class="computeroutput"><span class="identifier">Bits</span></code> must be
+          8, 16 or 32. For <code class="computeroutput"><span class="identifier">uninterleave</span></code>
+          function <code class="computeroutput"><span class="identifier">Bits</span></code> must be 16,
+          32 or 64.
         </li></ul></div>
 <p>
         <span class="bold"><strong>Returns: </strong></span> <code class="computeroutput"><span class="identifier">interleave</span></code>
