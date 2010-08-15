@@ -293,7 +293,7 @@ int main() {
         print_type_and_value(t7);
         print_mask_details(t7);
         }
-        BOOST_TEST(t7 == 0x7fffffffffffffff );
+        BOOST_TEST(t7 == 0x7fffffffffffffffll );
     }
 
     // testing value_type assignment operator.
@@ -671,7 +671,7 @@ int main() {
 
         ptr = storage;
         *ptr = 0x01 << 3;
-        BOOST_TEST(t4 == -562949953411312);        
+        BOOST_TEST(t4 == -562949953411312LL);        
     }
 
     // testing storage of signed types with proxy_reference_type
