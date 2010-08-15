@@ -475,39 +475,25 @@ class bitfield_vector
     typedef detail::bitfield_vector_base<T,Allocator> _base;
 
 public:
-    typedef detail::bf_vector_iterator<T,Width>                 iterator;
-    typedef detail::const_bf_vector_iterator<T,Width>           const_iterator;
-    typedef detail::bf_vector_reverse_iterator<T,Width>         reverse_iterator;
-    typedef detail::const_bf_vector_reverse_iterator<T,Width>   const_reverse_iterator;
+    typedef detail::bf_vector_iterator<T,Width>
+        iterator;
+    typedef detail::const_bf_vector_iterator<T,Width>
+        const_iterator;
+    typedef detail::bf_vector_reverse_iterator<T,Width>
+        reverse_iterator;
+    typedef detail::const_bf_vector_reverse_iterator<T,Width>
+        const_reverse_iterator;
+
     typedef T                                           value_type;
     typedef Allocator                                   allocator_type;
     typedef std::size_t                                 size_type;
     typedef std::ptrdiff_t                              difference_type;
     typedef typename _base::storage_type*               pointer;
     typedef typename _base::storage_type const*         const_pointer;
-    
-    class reference {
-        friend class bitfield_vector;
-        reference();
-    public:
-        ~reference();
-        operator value_type() const;
-        reference& operator= (value_type const&  x);
-        reference& operator= (reference const & x);
-        void flip();
-    };
-
-    class const_reference {
-        friend class bitfield_vector;
-        const_reference();
-    public:
-        ~const_reference();
-        operator value_type () const;
-        // const_reference& operator=(const value_type x);
-        const_reference& operator=(const_reference const& x);
-        void flip();
-    };
-
+    typedef detail::proxy_reference_type<value_type,Width>
+        reference;
+    typedef detail::const_proxy_reference_type<value_type,Width>
+        const_reference;
 
     explicit bitfield_vector(Allocator const& alloc = Allocator() )
         :_base(alloc)
@@ -515,27 +501,52 @@ public:
 
     explicit bitfield_vector(size_type n, T const& value= T(),
         Allocator const& = Allocator() );
+
     template <class InputIterator>
     bitfield_vector(InputIterator first, InputIterator last,
         Allocator const& = Allocator());
+
     bitfield_vector(_self const& x );
     ~bitfield_vector();
 
     _self& operator=(_self const& x);
 
-    iterator    begin();
-    iterator    end();
-    iterator    rbegin();
-    iterator    rend();
+    /** Begin and end and all variations of begin and end for all iterator
+     *  types supported by this data structure.
+     */
+    //@{
+    iterator                begin();
+    const_iterator          begin() const;
+
+    iterator                end();
+    const_iterator          end() const;
+
+    reverse_iterator        rbegin();
+    const_reverse_iterator  rbegin() const;
+
+    reverse_iterator        rend();
+    const_reverse_iterator  rend() const;
+
+    const_iterator          cbegin() const;
+    const_iterator          cend() const;
+
+    const_reverse_iterator  crbegin() const;
+    const_reverse_iterator  crend() const;
+    //@}
+
+
+
+
+    /** Direct member access to front and back for both const and non const 
+     *  types.
+     */
+    //@{
     reference   front();
     reference   back();
-
-    const_iterator  begin()  const;
-    const_iterator  end()    const;
-    const_iterator  rbegin() const;
-    const_iterator  rend()   const;
     const_reference front()  const;
     const_reference back()   const;
+    //@}
+
 
     size_type size() const;
     size_type max_size() const;
@@ -547,8 +558,9 @@ public:
     void reserve(size_type n);
     reference operator[](size_type n);
     const_reference operator[](size_type n) const;
-    const_reference at(size_type n) const;
     reference at(size_type n);
+    const_reference at(size_type n) const;
+
 
     template <class InputIterator>
     void assign(InputIterator first, InputIterator last);
