@@ -176,7 +176,7 @@ namespace boost { namespace chrono  {
     typedef stopclock< boost::chrono::process_real_cpu_clock > process_real_cpu_stopclock;
     typedef stopclock< boost::chrono::process_user_cpu_clock > process_user_cpu_stopclock;
     typedef stopclock< boost::chrono::process_system_cpu_clock > process_system_cpu_stopclock;
-    //typedef stopclock< boost::chrono::process_cpu_clock > process_cpu_stopclock;
+    typedef stopclock< boost::chrono::process_cpu_clock > process_cpu_stopclock;
 
     template <class Clock=process_cpu_clock, class Formatter=typename wstopwatch_reporter_default_formatter<stopwatch<Clock> >::type>
     class wstopclock;
@@ -250,7 +250,7 @@ namespace boost { namespace chrono  {
     typedef wstopclock< boost::chrono::process_real_cpu_clock > process_real_cpu_wstopclock;
     typedef wstopclock< boost::chrono::process_user_cpu_clock > process_user_cpu_wstopclock;
     typedef wstopclock< boost::chrono::process_system_cpu_clock > process_system_cpu_wstopclock;
-    //typedef wstopclock< boost::chrono::process_cpu_clock > process_cpu_wstopclock;
+    typedef wstopclock< boost::chrono::process_cpu_clock > process_cpu_wstopclock;
 
 
   } // namespace chrono

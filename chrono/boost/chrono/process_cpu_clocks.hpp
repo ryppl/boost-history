@@ -54,8 +54,9 @@ namespace boost { namespace chrono {
     class BOOST_CHRONO_DECL process_cpu_clock
     {
     public:
-        struct times : arithmetic<times>, less_than_comparable<times>
+        struct times : arithmetic<times, multiplicative<times, process_real_cpu_clock::rep, less_than_comparable<times> > >
         {
+            typedef process_real_cpu_clock::rep rep;
             times()
                 : real(0)
                 , user(0)
@@ -96,10 +97,22 @@ namespace boost { namespace chrono {
                 system*=rhs.system;
                 return *this;
             }
+            times operator*=(rep const& rhs) {
+                real*=rhs;
+                user*=rhs;
+                system*=rhs;
+                return *this;
+            }
             times operator/=(times const& rhs) {
                 real/=rhs.real;
                 user/=rhs.user;
                 system/=rhs.system;
+                return *this;
+            }
+            times operator/=(rep const& rhs) {
+                real/=rhs;
+                user/=rhs;
+                system/=rhs;
                 return *this;
             }
             bool operator<(times const & rhs) const {
@@ -107,9 +120,14 @@ namespace boost { namespace chrono {
                 if (real > rhs.real) return false;
                 if (user < rhs.user) return true;
                 if (user > rhs.user) return false;
-                if (user < rhs.user) return true;
+                if (system < rhs.system) return true;
                 else return false;
             }
+            
+            template <typename OSTREAM>
+            void print(OSTREAM& os) {
+                os <<  "{"<< real <<","<< user <<","<< system << "}";
+            };
         };
 
         typedef boost::chrono::duration<times,  nano>                duration;
@@ -121,6 +139,12 @@ namespace boost { namespace chrono {
         static time_point now( system::error_code & ec = system::throws );
     };
 
+    template <typename OSTREAM>
+    OSTREAM& operator<<(OSTREAM& os, process_cpu_clock::times const& rhs) {
+        rhs.print(os);
+        return os;
+    }
+    
     template <>
     struct duration_values<process_cpu_clock::times>
     {
