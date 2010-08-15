@@ -5,8 +5,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_ALGORITHMS_OVERLAY_SELF_TURN_POINTS_HPP
-#define BOOST_GEOMETRY_ALGORITHMS_OVERLAY_SELF_TURN_POINTS_HPP
+#ifndef BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_SELF_TURN_POINTS_HPP
+#define BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_SELF_TURN_POINTS_HPP
 
 #include <cstddef>
 
@@ -19,7 +19,7 @@
 #include <boost/geometry/geometries/concepts/check.hpp>
 
 #include <boost/geometry/algorithms/detail/disjoint.hpp>
-#include <boost/geometry/algorithms/overlay/get_turns.hpp>
+#include <boost/geometry/algorithms/detail/overlay/get_turns.hpp>
 
 
 namespace boost { namespace geometry
@@ -175,6 +175,8 @@ struct self_get_turn_points
                 (e.g. vector of "intersection/turn point"'s)
     \param geometry geometry
     \param turns container which will contain intersection points
+    \param interrupt_policy policy determining if process is stopped
+        when intersection is found
  */
 template
 <
@@ -211,4 +213,4 @@ inline void get_turns(Geometry const& geometry,
 
 }} // namespace boost::geometry
 
-#endif // BOOST_GEOMETRY_ALGORITHMS_OVERLAY_SELF_TURN_POINTS_HPP
+#endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_SELF_TURN_POINTS_HPP
