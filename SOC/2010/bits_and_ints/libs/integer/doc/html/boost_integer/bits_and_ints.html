@@ -413,27 +413,25 @@
 <p>
           
 </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">interleave</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">utility</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">utility</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">cstdint</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">interleave</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
-<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">std</span><span class="special">;</span>
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
-	<span class="identifier">uint_t</span><span class="special">&lt;</span><span class="number">64</span><span class="special">&gt;::</span><span class="identifier">exact</span> <span class="identifier">inter</span> <span class="special">=</span> <span class="identifier">interleave</span><span class="special">&lt;</span><span class="number">32</span><span class="special">&gt;(</span><span class="number">0x10</span><span class="special">,</span> <span class="number">0x0e</span><span class="special">);</span>
-	
-	<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"interleaved number: "</span><span class="special">;</span>
-	<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">hex</span> <span class="special">&lt;&lt;</span> <span class="identifier">inter</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
-
-	<span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">uint8_t</span><span class="special">,</span> <span class="identifier">uint8_t</span><span class="special">&gt;</span> <span class="identifier">uninter</span> <span class="special">=</span> <span class="identifier">uninterleave</span><span class="special">&lt;</span><span class="number">16</span><span class="special">&gt;(</span><span class="identifier">inter</span><span class="special">);</span>
-	
-	<span class="identifier">uint8_t</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">uninter</span><span class="special">.</span><span class="identifier">first</span><span class="special">,</span> <span class="identifier">b</span> <span class="special">=</span> <span class="identifier">uninter</span><span class="special">.</span><span class="identifier">second</span><span class="special">;</span>
-
-	<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"uninterleaved number: "</span><span class="special">;</span>
-	<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">hex</span> <span class="special">&lt;&lt;</span> <span class="keyword">unsigned</span><span class="special">(</span><span class="identifier">a</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span> <span class="special">&lt;&lt;</span> <span class="keyword">unsigned</span><span class="special">(</span><span class="identifier">b</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span> 
+	<span class="identifier">uint_t</span><span class="special">&lt;</span><span class="number">32</span><span class="special">&gt;::</span><span class="identifier">exact</span> <span class="identifier">inter</span> <span class="special">=</span> <span class="identifier">interleave</span><span class="special">&lt;</span><span class="number">16</span><span class="special">&gt;(</span><span class="number">0x10</span><span class="special">,</span> <span class="number">0x0e</span><span class="special">);</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">hex</span> <span class="special">&lt;&lt;</span> <span class="identifier">inter</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// 1a8
+</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">uint16_t</span><span class="special">,</span> <span class="identifier">uint16_t</span><span class="special">&gt;</span> <span class="identifier">uninter</span> <span class="special">=</span> <span class="identifier">uninterleave</span><span class="special">&lt;</span><span class="number">32</span><span class="special">&gt;(</span><span class="identifier">inter</span><span class="special">);</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">hex</span> <span class="special">&lt;&lt;</span> <span class="identifier">uninter</span><span class="special">.</span><span class="identifier">first</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span> <span class="special">&lt;&lt;</span> <span class="identifier">uninter</span><span class="special">.</span><span class="identifier">second</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// 10 e
+</span>	
+	<span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
+
 </pre>
 <p>
         </p>
@@ -990,7 +988,7 @@
 </span>	<span class="special">}</span>
 	
 	<span class="keyword">try</span> <span class="special">{</span>
-		<span class="comment">// Here an exception is threw
+		<span class="comment">// Throws an exception
 </span>		<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ilog2</span><span class="special">(</span><span class="number">0u</span><span class="special">,</span> <span class="identifier">throw_pol</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 	<span class="special">}</span>
 	<span class="keyword">catch</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">domain_error</span><span class="special">&amp;</span> <span class="identifier">e</span><span class="special">)</span> <span class="special">{</span>
