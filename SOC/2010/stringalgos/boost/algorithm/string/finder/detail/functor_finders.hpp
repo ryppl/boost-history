@@ -1,4 +1,4 @@
-//  Boost string_algo library finder.hpp header file  ---------------------------//
+//  Boost string_algo library functor_finders.hpp header file  ---------------------------//
 
 //  Copyright Pavol Droba 2002-2006.
 //

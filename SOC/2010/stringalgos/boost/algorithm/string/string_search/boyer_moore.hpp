@@ -57,6 +57,8 @@ namespace boost { namespace algorithm {
     struct boyer_moore
     {
 
+#       ifndef BOOST_ALGORITHM_DOXYGEN
+
         template <class Range1CharT, class Range2CharT, class ComparatorT, class AllocatorT>
         class algorithm
         {
@@ -67,6 +69,8 @@ namespace boost { namespace algorithm {
             typedef AllocatorT allocator_type;
         public:
             std::string get_algorithm_name () const { return "Boyer-Moore"; }
+
+
             algorithm (comparator_type const &comp, allocator_type const &alloc)
                 : comp_(comp), alloc_(alloc), table1(alloc_), table2(alloc_)
             {
@@ -92,6 +96,7 @@ namespace boost { namespace algorithm {
             //No precomputation to be done on the string
             template <class T>
             inline void on_string_change(T const&) { }
+
         private:
             comparator_type comp_; allocator_type alloc_;
 
@@ -373,6 +378,8 @@ namespace boost { namespace algorithm {
             }
 
         };
+
+#       endif /* !defined(BOOST_ALGORITHM_DOXYGEN) */
     };
     //! Instances of this type can be passed to find functions to require them to
     //!     use the Boyer-Moore algorithm.

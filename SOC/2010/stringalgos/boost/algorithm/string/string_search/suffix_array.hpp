@@ -37,6 +37,7 @@ namespace boost { namespace algorithm {
     struct suffix_array_search
     {
 
+#       ifndef BOOST_ALGORITHM_DOXYGEN
 
         template <class Range1CharT, class Range2CharT, class ComparatorT, class AllocatorT>
         class algorithm;
@@ -50,6 +51,7 @@ namespace boost { namespace algorithm {
             typedef AllocatorT allocator_type;
         public:
             std::string get_algorithm_name () const { return "Suffix array"; }
+
 
             algorithm (comparator_type const &comp, allocator_type const &alloc)
                 : comp_(comp), alloc_(alloc), found_matches_(false), pos_(alloc_), matches_(alloc_) { }
@@ -245,8 +247,8 @@ namespace boost { namespace algorithm {
             std::vector<std::size_t, BOOST_STRING_TYPENAME allocator_type::template rebind<std::size_t>::other> pos_;
             std::vector<std::size_t, BOOST_STRING_TYPENAME allocator_type::template rebind<std::size_t>::other> matches_;
 
-
         };
+#       endif /* !defined(BOOST_ALGORITHM_DOXYGEN) */
     };
     //! Instances of this type can be passed to find functions to require them to
     //!     use the Suffix Array Search algorithm.

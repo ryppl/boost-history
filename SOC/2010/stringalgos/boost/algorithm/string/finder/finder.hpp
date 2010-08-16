@@ -33,13 +33,13 @@
 #include <boost/algorithm/string/finder/detail/finder_typedefs.hpp>
 
 /*! \file
-    Defines \ref finder_t, a finder type used for finding occurrences of a pattern in a string.
+    Defines \ref boost::algorithm::finder_t, a finder type used for finding occurrences of a pattern in a string.
     This finder allows passing both references and pointers to strings. The overloads taking references
     will make an internal copy of the passed string, whereas the pointer overloads will rely on the lifetime
     of the passed string being longer than that of the finder.
     If you are not planning on passing temporaries as strings and you can always guarantee on the lifetime of your
-    strings, you might want to use \ref simplified_finder_t instead, which only has the pointer overloads (and
-    cannot possess any internal copies). Likewise, if efficiency is very important, \ref simplified_finder_t is preferred.
+    strings, you might want to use \ref boost::algorithm::simplified_finder_t instead, which only has the pointer overloads (and
+    cannot possess any internal copies). Likewise, if efficiency is very important, \ref boost::algorithm::simplified_finder_t is preferred.
 */
 
 namespace boost { namespace algorithm {
@@ -52,6 +52,14 @@ namespace boost { namespace algorithm {
     //! A generic finder type
     /*!
         Allows simple use of various string search algorithms.
+        This finder allows passing the pattern and the text both as pointers to ranges and as reference to ranges.
+        Whereas the overloads taking pointers are faster (because no strings are copied around),
+        you have to guarantee that the lifetime of your pointee is at least as long as the lifetime
+        of the finder. If you cannot guarantee on the lifetime, use a reference instead, which will
+        force a copy.
+        Note that this finder is the only one supporting reference overloads, all other support pointer-only versions
+        of the functions, which means this is the only finder which can make copies for you.
+
         \tparam Sequence1T A sequence representing the type of the substring (pattern)
         \tparam Sequence2T A sequence representing the type of the string (text)
         \tparam AlgorithmT The algorithm used to perform the searches
@@ -78,11 +86,13 @@ namespace boost { namespace algorithm {
         //         but std::string does not obey this concept, which means that even calling these template
         //         parameters sequences is wrong.
     private:
+#       ifndef BOOST_ALGORITHM_DOXYGEN
         BOOST_CONCEPT_ASSERT((boost::Container<Sequence1T>));
         BOOST_CONCEPT_ASSERT((boost::Container<Sequence2T>));
+#       endif
     public:
         BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Sequence1T, Sequence2T);
-        BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS2(ComparatorT, AllocatorT);
+        BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS2(ComparatorT, AllocatorT);
     private:
         typedef BOOST_STRING_TYPENAME AlgorithmT::template algorithm<substring_char_type, string_char_type,
             comparator_type, allocator_type> algorithm_type;
@@ -95,18 +105,9 @@ namespace boost { namespace algorithm {
                 of the pattern to be searched, or a pointer to a sequence of type \ref substring_type.
             \param string Either a range (or character array)
                 of the string to be searched, or a pointer to a sequence of type \ref string_type..
-            \param comparator ComparatorT instance used to compare individual characters
+            \param comparator ComparatorT instance used by the string search algorithm to compare individual characters
             \param allocator AllocatorT instance used to allocate memory
                 for storing precomputed data if necessary
-            \note Both the pattern and the text can be passed either as references of ranges,
-                or as pointers to sequences. In the former case, the pattern and/or text is copied
-                internally. In the latter class, the pointer is used by the finder and no copy is made.
-            \warning Whereas the overloads taking pointers are faster (because no strings are copied around),
-                you have to guarantee that the lifetime of your pointee is at least as long as the lifetime
-                of the finder. If you cannot guarantee on the lifetime, use a reference instead, which will
-                force a copy.
-            \note If a rvalue reference is passed as the string or substring, and your compiler supports rvalue
-                references, then a move is performed as opposed to a copy.
             */
         explicit finder_t (const Sequence1T *const substring = 0, Sequence2T *const string = 0,
             ComparatorT const &comparator = ComparatorT(), AllocatorT const &allocator = AllocatorT()) 
@@ -115,7 +116,7 @@ namespace boost { namespace algorithm {
             substring_has_changed_(true), string_has_changed_(true)
         { }
 
-        //! \overload
+        //! \copydoc finder_t::finder_t(const Sequence1T *const,Sequence2T *const)
         template <class Range2T>
         finder_t (const Sequence1T *const substring, Range2T &string,
             ComparatorT const &comparator = ComparatorT(), AllocatorT const &allocator = AllocatorT(),
@@ -127,7 +128,7 @@ namespace boost { namespace algorithm {
             ranges_.substr = substring?*substring:substring_optional_copy_;
         }
 
-        //! \overload
+        //! \copydoc finder_t::finder_t(const Sequence1T *const,Sequence2T *const)
         template <class Range1T>
         explicit finder_t (const Range1T &substring, Sequence2T *const string = 0,
             ComparatorT const &comparator = ComparatorT(), AllocatorT const &allocator = AllocatorT(),
@@ -140,7 +141,7 @@ namespace boost { namespace algorithm {
             ranges_.str = string?boost::as_literal(*string):string_optional_copy_;
         }
 
-        //! \overload
+        //! \copydoc finder_t::finder_t(const Sequence1T *const,Sequence2T *const)
         template <class Range1T, class Range2T>
         finder_t (const Range1T &substring, Range2T &string,
             ComparatorT comparator = ComparatorT(), AllocatorT allocator = AllocatorT(),
@@ -154,7 +155,7 @@ namespace boost { namespace algorithm {
         }
 
 #       ifdef BOOST_HAS_RVALUE_REFS
-        //! \overload
+        //! \copydoc finder_t::finder_t(const Sequence1T *const,Sequence2T *const)
         template <class Range2T>
         explicit finder_t (
             Sequence1T const &&substring,
@@ -166,7 +167,7 @@ namespace boost { namespace algorithm {
             substring_has_changed_(true), string_has_changed_(true)
         { }
 
-        //! \overload
+        //! \copydoc finder_t::finder_t(const Sequence1T *const,Sequence2T *const)
         template <class Range2T>
         explicit finder_t (
             Sequence1T const &&substring,
@@ -179,7 +180,7 @@ namespace boost { namespace algorithm {
             substring_has_changed_(true)
         { set_string(string); ranges_.substr = substring_optional_copy_; }
 
-        //! \overload
+        //! \copydoc finder_t::finder_t(const Sequence1T *const,Sequence2T *const)
         finder_t (
             Sequence1T const &&substring,
             Sequence2T &&string,
@@ -190,7 +191,7 @@ namespace boost { namespace algorithm {
             substring_has_changed_(true), string_has_changed_(true)
         { }
 
-        //! \overload
+        //! \copydoc finder_t::finder_t(const Sequence1T *const,Sequence2T *const)
         finder_t (const Sequence1T *const substring,
             Sequence2T &&string,
             ComparatorT const &comparator = ComparatorT(), AllocatorT const &allocator = AllocatorT()) 
@@ -200,7 +201,7 @@ namespace boost { namespace algorithm {
             substring_has_changed_(true), string_has_changed_(true)
         { }
             
-        //! \overload
+        //! \copydoc finder_t::finder_t(const Sequence1T *const,Sequence2T *const)
         template <class Range1T>
         finder_t (const Range1T &substring,
             Sequence2T &&string,
@@ -531,6 +532,8 @@ return finder.find_first();
         }
 
     private:
+#       ifndef BOOST_ALGORITHM_DOXYGEN
+
         inline void apply_changes()
         {
             if (substring_has_changed_ || string_has_changed_) {
@@ -549,9 +552,11 @@ return finder.find_first();
         algorithm_type algorithm_;
         substring_type substring_optional_copy_;
         string_type string_optional_copy_;
-        // TODO should we use the allocator here too?
+        // TODO should we use the allocator here too, or should we warn the user to provide sequences using AllocatorT?
         boost::algorithm::detail::string_search_ranges<Sequence1T, Sequence2T> ranges_;
         bool substring_has_changed_, string_has_changed_;
+
+#       endif
     };
 
 

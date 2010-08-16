@@ -18,7 +18,7 @@
 
 /*! \file
     Defines finder generators. They are mostly deprecated functions
-    returning instances of finder types defined in \headername functor_finders.hpp.
+    returning instances of finder types defined in \headerfile boost/algorithm/string/finder/functor_finders.hpp .
     Finder generators are preserved for backward compatibility, but their use is discouraged.
 */
 
@@ -31,14 +31,14 @@ namespace boost { namespace algorithm {
         The result is given as an \c iterator_range delimiting the match.
         \param Search The pattern to look for
         \param Comp A comparator used to match individual characters
-        \tparam AlgorithmTagT A tag of the search algorithm that should be used for searching
+        \param Algorithm A tag of the search algorithm that should be used for searching
         \deprecated
     */
     template<typename RangeT,typename PredicateT, typename AlgorithmTagT>
     inline boost::algorithm::first_finder_t<RangeT, BOOST_STRING_TYPENAME AlgorithmTagT::type,PredicateT>
     first_finder( 
         const RangeT& Search, PredicateT const& Comp,
-        AlgorithmTagT const&)
+        AlgorithmTagT const &Algorithm)
     {
         return boost::algorithm::first_finder_t<RangeT, BOOST_STRING_TYPENAME AlgorithmTagT::type,PredicateT>(&Search, Comp);
     }
@@ -71,13 +71,13 @@ namespace boost { namespace algorithm {
         The result is given as an \c iterator_range delimiting the match.
         \param Search The pattern to look for
         \param Comp A comparator used to match individual characters
-        \tparam AlgorithmTagT A tag of the search algorithm that should be used for searching
+        \param Algorithm A tag of the search algorithm that should be used for searching
         \deprecated
     */
     template<typename RangeT, typename PredicateT, typename AlgorithmTagT>
     inline boost::algorithm::last_finder_t<RangeT, BOOST_STRING_TYPENAME AlgorithmTagT::type,PredicateT>
     last_finder( const RangeT& Search, PredicateT const &Comp,
-        AlgorithmTagT const&)
+        AlgorithmTagT const &Algorithm)
     {
         return boost::algorithm::last_finder_t<RangeT, BOOST_STRING_TYPENAME AlgorithmTagT::type,PredicateT>(&Search, Comp);
     }
@@ -109,13 +109,15 @@ namespace boost { namespace algorithm {
         The result is given as an \c iterator_range delimiting the match.
         \param Search The pattern to look for
         \param Comp A comparator used to match individual characters
-        \tparam AlgorithmTagT A tag of the search algorithm that should be used for searching
+        \param Nth Specifies for which occurrence of the pattern should the finder look. For negative N, it starts
+                looking from the back to the front.
+        \param Algorithm A tag of the search algorithm that should be used for searching
         \deprecated
     */
     template<typename RangeT, typename PredicateT, typename AlgorithmTagT>
     inline boost::algorithm::nth_finder_t<RangeT,
         BOOST_STRING_TYPENAME AlgorithmTagT::type,PredicateT>
-    nth_finder(const RangeT& Search, int Nth, PredicateT const &Comp, AlgorithmTagT const &)
+    nth_finder(const RangeT& Search, int Nth, PredicateT const &Comp, AlgorithmTagT const &Algorithm)
     {
         return boost::algorithm::nth_finder_t<RangeT,
             BOOST_STRING_TYPENAME AlgorithmTagT::type, PredicateT>(&Search, Nth, Comp);
@@ -209,9 +211,8 @@ namespace boost { namespace algorithm {
         any operation. It simply returns the given range for 
         any input. 
 
-        \param Begin Beginning of the range
-        \param End End of the range
-        \param Range The range.
+        \param Begin Beginning of the range to be returned by the finder
+        \param End End of the range to be returned by the finder
         \return An instance of the \c range_finger object
     */
     template< typename ForwardIteratorT >
@@ -224,8 +225,13 @@ namespace boost { namespace algorithm {
     }
 
     //! "Range" finder
-    /*!       
-        \overload
+    /*!
+        Construct the \c range_finder. The finder does not perform 
+        any operation. It simply returns the given range for 
+        any input. 
+
+        \param Range The range to be returned by the finder
+        \return An instance of the \c range_finger object
     */
     template< typename ForwardIteratorT >
     inline detail::range_finderF<ForwardIteratorT>

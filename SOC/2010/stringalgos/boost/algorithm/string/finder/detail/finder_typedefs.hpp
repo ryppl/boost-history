@@ -18,6 +18,9 @@
 
 #include <boost/iterator/iterator_traits.hpp>
 
+#define BOOST_ALGORITHM_DETAIL_DEFAULT_ALLOCATOR_TYPE std::allocator<std::size_t>
+#define BOOST_ALGORITHM_DETAIL_DEFAULT_COMPARATOR_TYPE boost::algorithm::is_equal
+
 #define BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T) \
     typedef Range1T substring_type; /*!< The type of the substring */ \
     typedef Range2T string_type; /*!< The type of the string */ \
@@ -44,25 +47,28 @@
     typedef typename boost::iterator_range<substring_reverse_iterator_type> substring_reverse_range_type; \
     typedef typename boost::iterator_range<string_reverse_iterator_type> string_reverse_range_type
 
+/*
 #define BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS(Range1T, Range2T) \
         BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T); \
     protected: \
         BOOST_ALGORITHM_DETAIL_UNCOMMON_FINDER_TYPEDEFS(Range1T, Range2T);
+*/
 
-
-#define BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS2(ComparatorT, AllocatorT) \
+#define BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS2(ComparatorT, AllocatorT) \
     typedef ComparatorT comparator_type; /*!< The type of the comparator */ \
     typedef AllocatorT allocator_type /*!< The type of the allocator */
 
 
+/*
 namespace boost { namespace algorithm { namespace detail {
 
     template <class Range1T, class Range2T, class ComparatorT, class AllocatorT>
     struct finder_typedefs
     {
         BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS(Range1T, Range2T);
-        BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS2(ComparatorT, AllocatorT);
+        BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS2(ComparatorT, AllocatorT);
     };
+*/
 
 } } }
 

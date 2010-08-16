@@ -33,6 +33,8 @@ namespace boost { namespace algorithm {
     struct knuth_morris_pratt
     {
 
+#       ifndef BOOST_ALGORITHM_DOXYGEN
+
         template <class Range1CharT, class Range2CharT, class ComparatorT, class AllocatorT>
         class algorithm
         {
@@ -67,6 +69,7 @@ namespace boost { namespace algorithm {
             //No precomputation to be done on the string
             template <class T>
             inline void on_string_change(T const&) { }
+
         private:
 
             comparator_type comp_;
@@ -191,6 +194,7 @@ namespace boost { namespace algorithm {
             }
 
         };
+#       endif /* !defined(BOOST_ALGORITHM_DOXYGEN) */
     };
     //! Instances of this type can be passed to find functions to require them to
     //!     use the Knuth-Morris-Pratt algorithm.

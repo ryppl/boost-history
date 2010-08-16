@@ -541,21 +541,21 @@ The interface of this finder provides constructors and setters taking both refer
               <classname>first_finder_t</classname>
             </entry>
             <entry>Functor finder that can be passed to find/replace/split algorithms.
-Works as a function object returning the first occurrence of a pattern in a string.</entry>
+Works as a function object returning the <emphasis>first</emphasis> occurrence of a pattern in a string.</entry>
           </row>
           <row>
             <entry>
               <classname>nth_finder_t</classname>
             </entry>
             <entry>Functor finder that can be passed to find/replace/split algorithms.
-Works as a function object returning the N-th occurrence of a pattern in a string.</entry>
+Works as a function object returning the <emphasis>N-th</emphasis> occurrence of a pattern in a string.</entry>
           </row>
           <row>
             <entry>
               <classname>last_finder_t</classname>
             </entry>
             <entry>Functor finder that can be passed to find/replace/split algorithms.
-Works as a function object returning the last occurrence of a pattern in a string.</entry>
+Works as a function object returning the <emphasis>last</emphasis> occurrence of a pattern in a string.</entry>
           </row>
         </tbody>
       </tgroup>

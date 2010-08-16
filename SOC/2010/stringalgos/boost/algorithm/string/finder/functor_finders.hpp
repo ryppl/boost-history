@@ -1,4 +1,4 @@
-//  Boost string_algo library generated_finders.hpp header file  ---------------------------//
+//  Boost string_algo library functor_finders.hpp header file  ---------------------------//
 
 //  Copyright Stefan Mihaila 2010.
 //
@@ -14,7 +14,7 @@
 #include <boost/algorithm/string/compare.hpp>
 #include <boost/algorithm/string/finder/detail/string_search_ranges.hpp>
 #include <boost/algorithm/string/finder/detail/finder_typedefs.hpp>
-#include <boost/algorithm/string/finder/detail/generated_finders.hpp>
+#include <boost/algorithm/string/finder/detail/functor_finders.hpp>
 #include <boost/algorithm/string/finder/default_search_algorithm.hpp>
 
 #include <boost/range/begin.hpp>
@@ -28,7 +28,8 @@
 #include <memory>
 
 /*! \file
-    Defines a few useful finder types (\ref first_finder_t, \ref last_finder_t, \ref nth_finder_t).
+    Defines a few useful finder types (\ref boost::algorithm::first_finder_t, \ref boost::algorithm::last_finder_t,
+    \ref boost::algorithm::nth_finder_t).
     These finder objects are functors which get constructed with a pattern to search for, and can afterwards
     be called using a pair of iterators representing the text in which the search is to be performed.
 */
@@ -136,6 +137,8 @@ namespace boost { namespace algorithm {
                 BOOST_STRING_TYPENAME boost::iterator_category<Iterator2T>::type());
         }
     private:
+#       ifndef BOOST_ALGORITHM_DOXYGEN
+
         //implementation of last_finder_t for when bidirectional iterators are available
         template <class Iterator2T>
         BOOST_STRING_TYPENAME boost::iterator_range<Iterator2T>
@@ -213,6 +216,8 @@ namespace boost { namespace algorithm {
         BOOST_STRING_TYPENAME boost::iterator_range<substring_iterator_type> substring_range_;
         algorithm_type algorithm_;
         bool first_call_bidi_, first_call_forw_;
+
+#       endif /* !defined(BOOST_ALGORITHM_DOXYGEN) */
     };
    
     //! A generic "nth" finder type.
@@ -269,6 +274,7 @@ namespace boost { namespace algorithm {
         */
         void set_n(int n) { n_ = n; }
     private:
+#       ifndef BOOST_ALGORITHM_DOXYGEN
         //find nth, for n>=0
         template <class Iterator2T>
         BOOST_STRING_TYPENAME boost::iterator_range<Iterator2T>
@@ -351,6 +357,8 @@ namespace boost { namespace algorithm {
         int n_;
         algorithm_type algorithm_;
         bool first_call_forw_, first_call_bidi_;
+
+#       endif /* !defined(BOOST_ALGORITHM_DOXYGEN) */
     };
 } }
 

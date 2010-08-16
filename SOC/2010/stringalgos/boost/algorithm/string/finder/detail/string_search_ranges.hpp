@@ -20,7 +20,7 @@ namespace boost { namespace algorithm { namespace detail {
     class string_search_ranges
     {
     private:
-        BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS(Range1T, Range2T);
+        BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
     public:	
         boost::iterator_range<substring_iterator_type> substr;
         boost::iterator_range<string_iterator_type> str;

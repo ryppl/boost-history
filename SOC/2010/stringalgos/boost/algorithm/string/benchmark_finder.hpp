@@ -59,7 +59,7 @@
 
 
 /*! \file
-Defines a generic finder type with an iterface similar to that of \ref simplified_finder_t.
+Defines a generic finder type with an interface similar to that of \ref boost::algorithm::simplified_finder_t.
 This finder type is useful for comparing the performance of various string search algorithms.
 */
 
@@ -69,7 +69,7 @@ namespace boost { namespace algorithm {
     /** Possesses a similar interface to \ref simplified_finder_t and allows to test
         the performance of various string search algorithms in order to allow easier
         choice of the right algorithm for a certain data set
-        \tparam Range1T A range representing the type of the substring (the pattern)
+        \tparam Range1T A range representing the type of the substr (the pattern)
         \tparam Range2T A range representing the type of the string (the text)
         \tparam AlgorithmSequenceT A MPL sequence containing algorithm types that are to be benchmarked
         \tparam ComparatorT The comparator type passed to the algorithms
@@ -78,34 +78,33 @@ namespace boost { namespace algorithm {
     class ComparatorT = boost::algorithm::is_equal>
     class benchmark_finder_t
     {
-        typedef std::allocator<std::size_t> allocator_type_;
     public:
-        BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS(Range1T,Range2T);
-        BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS2(ComparatorT, allocator_type_);
+        BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T,Range2T);
+        BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS2(ComparatorT, BOOST_ALGORITHM_DETAIL_DEFAULT_ALLOCATOR_TYPE);
     public:
 
         //! \copydoc boost::algorithm::simplified_finder_t::set_substring
         //! \see boost::algorithm::simplified_finder_t::set_substring
         void set_substring (substring_type
-            const *const substring)
+            const *const substr)
         {
             boost::phoenix::function<finder_set_substring> f;
             boost::fusion::for_each(finders, 
-                f(boost::phoenix::arg_names::arg1, substring)
+                f(boost::phoenix::arg_names::arg1, substr)
             );
-            trusted_finder.set_substring(substring);
+            trusted_finder.set_substring(substr);
         }
 
         //! \copydoc boost::algorithm::simplified_finder_t::set_string
         //! \see boost::algorithm::simplified_finder_t::set_string
-        void set_string (string_type *const string)
+        void set_string (string_type *const str)
         {
             boost::phoenix::function<finder_set_string> f;
             boost::fusion::for_each(
                 finders,
-                f(boost::phoenix::arg_names::arg1, string)
+                f(boost::phoenix::arg_names::arg1, str)
             );
-            trusted_finder.set_string(string);
+            trusted_finder.set_string(str);
         }
 
         //! Clears all the benchmark data obtained from searching
@@ -144,6 +143,8 @@ namespace boost { namespace algorithm {
             boost::fusion::for_each(finders, f(boost::phoenix::ref(output), boost::phoenix::arg_names::arg1) );
         }
     private:
+#       ifndef BOOST_ALGORITHM_DOXYGEN
+
         typedef BOOST_STRING_TYPENAME boost::mpl::transform<AlgorithmSequenceT,
             std::pair<
                 BOOST_STRING_TYPENAME boost::algorithm::simplified_finder_t<substring_type,string_type,
@@ -279,7 +280,7 @@ namespace boost { namespace algorithm {
                 os << "==========================================" << std::endl;
             }
         };
-
+#       endif /* !defined(BOOST_ALGORITHM_DOXYGEN) */
     };
 } }
 

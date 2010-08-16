@@ -64,6 +64,7 @@ namespace boost { namespace algorithm {
         class StringIteratorCategory = std::random_access_iterator_tag>
     struct rabin_karp_algorithm
     {
+#       ifndef BOOST_ALGORITHM_DOXYGEN
 
         template <class Range1CharT, class Range2CharT, class ComparatorT, class AllocatorT>
         class algorithm;
@@ -81,6 +82,9 @@ namespace boost { namespace algorithm {
         public:
             std::string get_algorithm_name () const
             { return "Rabin-Karp (" + boost::lexical_cast<std::string>(sizeof(HashType)) + ")"; }
+
+
+
             algorithm (comparator_type const &comp, allocator_type const &alloc)
                 : comp_(comp), alloc_(alloc)
             {
@@ -110,15 +114,24 @@ namespace boost { namespace algorithm {
             }
             comparator_type comp_; allocator_type alloc_;
         };
+#       endif /* !defined(BOOST_ALGORITHM_DOXYGEN) */
     };
 
 
     //todo try to find better pairs for better efficiency?
     //! An implementation of a 32bit version of Rabin-Karp
+#   ifndef BOOST_ALGORITHM_DOXYGEN
     typedef rabin_karp_algorithm<boost::uint_fast32_t,257,64433,277,57923> rabin_karp32;
+#   else
+    typedef rabin_karp_algorithm<boost::uint_fast32_t,unspecified,unspecified,unspecified,unspecified> rabin_karp32;
+#   endif
     //1/150167080229379589 odds of collision. useful with wchar_t
     //! An implementation of a 64bit version of Rabin-Karp
+#   ifndef BOOST_ALGORITHM_DOXYGEN
     typedef rabin_karp_algorithm<boost::uint64_t,337515847,373587883,255150899,401959183> rabin_karp64;
+#   else
+    typedef rabin_karp_algorithm<boost::uint64_t,unspecified,unspecified,unspecified,unspecified> rabin_karp64;
+#   endif
     //! Instances of this type can be passed to find functions to require them to
     //!     use the predefined 32bit Rabin-Karp algorithm.
     struct rabin_karp32_tag { typedef boost::algorithm::rabin_karp32 type; };

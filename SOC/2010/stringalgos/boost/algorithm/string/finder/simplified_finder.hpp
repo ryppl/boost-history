@@ -26,9 +26,9 @@
 #include <memory>
 
 /*! \file
-    Defines \ref simplified_finder_t, a finder type uesd for finding occurrences of a pattern in a string.
-    This finder is a more limited version of \ref finder_t, because it only allows passing pointers to ranges,
-    which means no internal copies of the strings are made (\see finder_t for details). While this offers additional
+    Defines \ref boost::algorithm::simplified_finder_t, a finder type uesd for finding occurrences of a pattern in a string.
+    This finder is a more limited version of \ref boost::algorithm::finder_t, because it only allows passing pointers to ranges,
+    which means no internal copies of the strings are made (see boost::algorithm::finder_t for details). While this offers additional
     efficiency, it requires the caller to guarantee that the lifetime of a passed string is at least as long
     as the lifetime of the finder.
 */
@@ -57,7 +57,7 @@ namespace boost { namespace algorithm {
         // TODO Add concept assertions here.
     public:
         BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS(Range1T, Range2T);
-        BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS2(ComparatorT, AllocatorT);
+        BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS2(ComparatorT, AllocatorT);
     private:
         typedef BOOST_STRING_TYPENAME AlgorithmT::template algorithm<substring_char_type, string_char_type,
             comparator_type, allocator_type> algorithm_type;
@@ -125,8 +125,8 @@ finder.set_substring(&substr); // re-set the substring so the finder now uses th
 
         //! Change the pattern (substring) to be searched.
         /*!
-            \param string_begin An iterator indicating the beginning of the pattern to be searched.
-            \param string_end An iterator indicating the end of the pattern to be searched.
+            \param substring_begin An iterator indicating the beginning of the pattern to be searched.
+            \param substring_end An iterator indicating the end of the pattern to be searched.
         */
         void set_substring (substring_iterator_type const &substring_begin, substring_iterator_type const &substring_end)
         {
@@ -251,6 +251,8 @@ finder.set_substring(&substr); // re-set the substring so the finder now uses th
         std::string get_algorithm_name() const { return algorithm_.get_algorithm_name(); }
 
     private:
+#       ifndef BOOST_ALGORITHM_DOXYGEN
+
         inline void apply_changes()
         {
             if (substring_has_changed_ || string_has_changed_) {
@@ -269,6 +271,7 @@ finder.set_substring(&substr); // re-set the substring so the finder now uses th
         boost::algorithm::detail::string_search_ranges<substring_type, string_type> ranges_;
         algorithm_type algorithm_;
         bool substring_has_changed_, string_has_changed_;
+#       endif
     };
 
 } }

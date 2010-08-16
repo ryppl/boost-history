@@ -12,7 +12,7 @@
 #define BOOST_STRING_FINDER_ALIASES_HPP
 
 /*! \file
-    Defines useful typedefs for a easier creation of \ref finder_t finders.
+    Defines useful typedefs for a easier creation of \ref boost::algorithm::finder_t finders.
 */
 
 #include <boost/algorithm/string/finder/finder.hpp>

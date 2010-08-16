@@ -300,7 +300,7 @@ int main ()
 
     boost::benchmark_finder_t<std::string, std::string,
         boost::mpl::vector<
-            //boost::naive_search,
+            boost::naive_search,
             boost::knuth_morris_pratt//,
             //boost::boyer_moore,
             //boost::suffix_array_search,
@@ -321,8 +321,8 @@ int main ()
     std::string const &benchmark_path = "E:/gsoc-boost/benchmarks";
 
     std::vector<std::string> benchmark_files = list_of
-        /*("dblp.xml.200MB")*/ ("dna.200MB") /*("english.200MB") ("pitches.50MB")
-        ("proteins.200MB") ("sources.200MB") ("random1.50MB") ("binary.50MB")*/;
+        ("dblp.xml.200MB") ("dna.200MB") ("english.200MB") ("pitches.50MB")
+        ("proteins.200MB") ("sources.200MB") ("random1.50MB") ("binary.50MB");
     boost::for_each(benchmark_files, arg1 = benchmark_path + "/" + arg1);
 
 
@@ -337,7 +337,7 @@ int main ()
     bool substr_change = false;
     try {
         //Category 1
-        for (unsigned int test = 4; test <= 4; ++test)
+        for (unsigned int test = 1; test <= 4; ++test)
         {
 
             BOOST_FOREACH(std::string fn, benchmark_files)
