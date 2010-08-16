@@ -14,5 +14,7 @@ it.
 [include class_reference/flag.qbk]
 [include class_reference/align.qbk]
 [include class_reference/storage.qbk]
+[include class_reference/pointer.qbk]
+[include class_reference/custom.qbk]
 [endsect]
 

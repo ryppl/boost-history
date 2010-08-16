@@ -1,0 +1,37 @@
+[/
+Copyright (c) 2010 Brian Bartman
+
+Distributed under the Boost Software License, Version 1.0. (See accompanying
+file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+[section `struct custom`]
+[h4 Description]
+
+
+[h4 Template Signature]
+``
+namespace boost { namespace bitfields {
+template <
+    typename ReturnType,
+    typename Name,
+    typename Mask,
+    template <typename, typename, typename, typename>
+        class Policy = detail::custom_packing_policy
+>
+struct custom;
+}} // end boost::bitfields
+``
+
+
+
+
+[h4 Header file Locaton]
+This header file is included with the <boost/integer/bitfield_tuple.hpp> header
+file.
+``
+#include <boost/integer/details/bft/custom.hpp>
+``
+[h4 Example]
+``
+``
+[endsect]
