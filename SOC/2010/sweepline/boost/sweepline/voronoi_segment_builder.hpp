@@ -10,8 +10,6 @@
 #ifndef BOOST_SWEEPLINE_VORONOI_SEGMENT_BUILDER
 #define BOOST_SWEEPLINE_VORONOI_SEGMENT_BUILDER
 
-#include <algorithm>
-
 namespace boost {
 namespace sweepline {
 
@@ -227,6 +225,7 @@ namespace sweepline {
             // lying above the new site point.
             Key new_key(site_event);
             beach_line_iterator it = beach_line_.lower_bound(new_key);
+            beach_line_iterator position = it;
 
             site_event_type site_arc;
             if (it == beach_line_.end()) {
@@ -234,7 +233,7 @@ namespace sweepline {
                 site_arc = it->first.get_right_site();
 
                 // Insert new arc into the sweepline.
-                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_event);
+                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_event, position);
                 new_node_it--;
 
                 // Add candidate circle to the event queue.
@@ -246,7 +245,7 @@ namespace sweepline {
                 site_arc = it->first.get_left_site();
 
                 // Insert new arc into the sweepline.
-                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_event);
+                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_event, position);
                 new_node_it++;
 
                 // Add candidate circle to the event queue.
@@ -266,7 +265,7 @@ namespace sweepline {
 
 
                 // Insert new arc into the sweepline.
-                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_event);
+                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_event, position);
 
                 // Add candidate circles to the event queue.
                 new_node_it--;
@@ -340,7 +339,8 @@ namespace sweepline {
 
         // Insert new arc below site arc into the beach line.
         beach_line_iterator insert_new_arc(const site_event_type &site_arc,
-                                           const site_event_type &site_event) {
+                                           const site_event_type &site_event,
+                                           const beach_line_iterator &position) {
             // Create two new nodes.
             Key new_left_node(site_arc, site_event);
             Key new_right_node(site_event, site_arc);
@@ -348,8 +348,10 @@ namespace sweepline {
             // Insert two new nodes into the binary search tree.
             // Update output.
             edge_type *edge = output_.insert_new_edge(site_arc, site_event);
-            beach_line_.insert(std::pair<Key, Value>(new_left_node, Value(edge)));
-            return beach_line_.insert(std::pair<Key, Value>(new_right_node, Value(edge->twin))).first;
+            beach_line_iterator it = beach_line_.insert(position,
+                std::pair<Key, Value>(new_right_node, Value(edge->twin)));
+            beach_line_.insert(it, std::pair<Key, Value>(new_left_node, Value(edge)));
+            return it;
         }
 
         // Create circle event from the given three points.
@@ -400,20 +402,20 @@ namespace sweepline {
                 return false;
 
             coordinate_type a = ((site1.x() - site2.x()) * (site2.y() - site3.y()) -
-                                 (site1.y() - site2.y()) * (site2.x() - site3.x())) *
+                                (site1.y() - site2.y()) * (site2.x() - site3.x())) *
                                 static_cast<coordinate_type>(2.0);
             
             coordinate_type b1 = (site1.x() - site2.x()) * (site1.x() + site2.x()) +
                                  (site1.y() - site2.y()) * (site1.y() + site2.y());
             coordinate_type b2 = (site2.x() - site3.x()) * (site2.x() + site3.x()) +
-                           (site2.y() - site3.y()) * (site2.y() + site3.y());
+                                 (site2.y() - site3.y()) * (site2.y() + site3.y());
 
             // Create new circle event.
             coordinate_type c_x = (b1*(site2.y() - site3.y()) - b2*(site1.y() - site2.y())) / a;
             coordinate_type c_y = (b2*(site1.x() - site2.x()) - b1*(site2.x() - site3.x())) / a;
-            coordinate_type sqr_radius = (c_x-site1.x())*(c_x-site1.x()) +
-                                         (c_y-site1.y())*(c_y-site1.y());
-            c_event = detail::make_circle_event<coordinate_type>(c_x, c_y, sqr_radius);
+            coordinate_type radius = sqrt((c_x-site1.x())*(c_x-site1.x()) +
+                                          (c_y-site1.y())*(c_y-site1.y()));
+            c_event = detail::make_circle_event<coordinate_type>(c_x, c_y, c_x + radius);
             return true;
         }
 

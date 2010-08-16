@@ -10,12 +10,6 @@
 #ifndef BOOST_SWEEPLINE_VORONOI_SEGMENT_FORMATION
 #define BOOST_SWEEPLINE_VORONOI_SEGMENT_FORMATION
 
-#include <cstring>
-#include <list>
-#include <map>
-#include <queue>
-#include <vector>
-
 #define INT_PREDICATE_COMPUTE_DIFFERENCE(a, b, res, sign) \
         if (a >= b) { res = static_cast<ull>(a - b); sign = true; } \
         else { res = static_cast<ull>(b - a); sign = false; }
@@ -23,6 +17,10 @@
 #define INT_PREDICATE_CONVERT_65_BIT(a, res, sign) \
         if (a >= 0) { res = static_cast<ull>(a); sign = true; } \
         else { res = static_cast<ull>(-a); sign = false; }
+
+#define INT_PREDICATE_AVOID_CANCELLATION(val, first_expr, second_expr) \
+        if ((val) >= 0) first_expr += (val); \
+        else second_expr -= (val);
 
 namespace boost {
 namespace sweepline {
@@ -32,20 +30,33 @@ namespace detail {
     // GEOMETRY PREDICATES ////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    // If two floating-point numbers in the same format are ordered (x < y), then
+    // they are ordered the same way when their bits are reinterpreted as
+    // sign-magnitude integers.
     bool almost_equal(double a, double b, long long maxUlps) {
         long long ll_a, ll_b;
+        // Reinterpret double bits as long long.
         memcpy(&ll_a, &a, sizeof(double));
         memcpy(&ll_b, &b, sizeof(double));
+
+        // Positive 0.0 is integer zero. Negative 0.0 is 0x8000000000000000.
+        // Map negative zero to an integer zero representation - making it
+        // identical to positive zero - and it makes it so that the smallest
+        // negative number is represented by negative one, and downwards from there.
         if (ll_a < 0)
-            ll_a = 0x8000000000000000LL;
+            ll_a = 0x8000000000000000LL - ll_a;
         if (ll_b < 0)
-            ll_b = 0x8000000000000000LL;
+            ll_b = 0x8000000000000000LL - ll_b;
+
+        // Compare long long representations of input values.
+        // Difference in 1 Ulp is equivalent to a relative error of between
+        // 1/4,000,000,000,000,000 and 1/8,000,000,000,000,000.
         long long dif = ll_a - ll_b;
         return (dif <= maxUlps) && (dif >= -maxUlps);
     }
 
-    // TODO(asydorchuk): Remove code inside of this template. Left orientation test
-    // works only for integer input points.
+    // TODO(asydorchuk): Make templates specification for integer coordinate type,
+    // as it is actually working with integer input.
     template <typename T>
     bool right_orientation_test(const point_2d<T> &point1,
                                 const point_2d<T> &point2,
@@ -115,9 +126,13 @@ namespace detail {
         double fast_b1 = static_cast<double>(new_point.y()) - static_cast<double>(left_point.y());
         double fast_b2 = static_cast<double>(new_point.y()) - static_cast<double>(right_point.y());
         double fast_c = static_cast<double>(left_point.x()) - static_cast<double>(right_point.x());
-        double fast_left_expr = fast_a1 * fast_a2 * fast_c + fast_a1 * fast_b2 * fast_b2;
+        double fast_left_expr = fast_a1 * fast_b2 * fast_b2;
         double fast_right_expr = fast_a2 * fast_b1 * fast_b1;
-        if (!almost_equal(fast_left_expr, fast_right_expr, 6))
+        
+        // Avoid cancellation.
+        INT_PREDICATE_AVOID_CANCELLATION(fast_a1 * fast_a2 * fast_c,
+                                         fast_left_expr, fast_right_expr);
+        if (!almost_equal(fast_left_expr, fast_right_expr, 5))
             return (fast_left_expr < fast_right_expr) ? LESS : MORE;
         return UNDEFINED;
     }
@@ -179,14 +194,6 @@ namespace detail {
         if (l_expr_plus && r_expr_plus)
             return l_expr < r_expr;
         return l_expr > r_expr;
-
-        /*mpz_class a1, a2, b1, b2, c, left_expr, right_expr;
-        a1 = static_cast<int>(new_point.x() - left_point.x());
-        a2 = static_cast<int>(new_point.x() - right_point.x());
-        b1 = static_cast<int>(new_point.y() - left_point.y());
-        b2 = static_cast<int>(new_point.y() - right_point.y());
-        c = static_cast<int>(left_point.x() - right_point.x());
-        return a1 * a2 * c + a1 * b2 * b2 < a2 * b1 * b1;*/
     }
 
     template <typename T>
@@ -227,13 +234,14 @@ namespace detail {
             }            
         }
 
+        // dif_x and dif_y are integers, so there will be no cancellation issues.
         double fast_left_expr = static_cast<double>(a) *
                                 static_cast<double>(dif_y + dif_x) *
                                 static_cast<double>(dif_y - dif_x);
         double fast_right_expr = static_cast<double>(b<<1) *
                                  static_cast<double>(dif_x) *
                                  static_cast<double>(dif_y);
-        if (!(almost_equal(fast_left_expr, fast_right_expr, 6))) {
+        if (!(almost_equal(fast_left_expr, fast_right_expr, 4))) {
             if (is_right_oriented1 ^ (fast_left_expr > fast_right_expr) ^ !reverse_order)
                 return reverse_order ? LESS : MORE;
             return UNDEFINED;
@@ -286,6 +294,37 @@ namespace detail {
         return UNDEFINED;
     }
 
+#ifdef USE_MULTI_PRECISION_LIBRARY
+    template<typename T>
+    bool mpz_less_predicate(point_2d<T> segment_start, point_2d<T> segment_end,
+                            point_2d<T> site_point, point_2d<T> new_point, bool reverse_order) {
+        mpz_class segment_start_x, segment_start_y, segment_end_x, segment_end_y,
+                  site_point_x, site_point_y, new_point_x, new_point_y;
+        segment_start_x = static_cast<int>(segment_start.x());
+        segment_start_y = static_cast<int>(segment_start.y());
+        segment_end_x = static_cast<int>(segment_end.x());
+        segment_end_y = static_cast<int>(segment_end.y());
+        site_point_x = static_cast<int>(site_point.x());
+        site_point_y = static_cast<int>(site_point.y());
+        new_point_x = static_cast<int>(new_point.x());
+        new_point_y = static_cast<int>(new_point.y());
+
+        mpz_class dif_x, dif_y, a, b, mul1, mul2, temp, left_expr, right_expr;
+        dif_x = new_point_x - site_point_x;
+        dif_y = new_point_y - site_point_y;
+        a = segment_end_x - segment_start_x;
+        b = segment_end_y - segment_start_y;
+        mul1 = new_point_x - segment_end_x;
+        mul2 = new_point_y - segment_end_y;
+        temp = dif_x * dif_x + dif_y * dif_y;
+        left_expr = (a * a + b * b) * temp * temp;
+        right_expr = (2.0 * dif_x * (b * mul1 - a * mul2) - b * temp);
+        right_expr = right_expr * right_expr;
+
+        return (!reverse_order) ? (left_expr > right_expr) : (left_expr < right_expr);
+    }
+#endif
+
     // Returns true if horizontal line going through new site intersects
     // right arc at first, else returns false. If horizontal line goes
     // through intersection point of the given two arcs returns false also. 
@@ -314,26 +353,33 @@ namespace detail {
         double mul1 = static_cast<double>(new_point.x()) - static_cast<double>(segment_end.x());
         double mul2 = static_cast<double>(new_point.y()) - static_cast<double>(segment_end.y());
         double temp = dif_x * dif_x + dif_y * dif_y;
-        double left_expr = (a * a + b * b) * temp * temp;
-        double right_expr = (2.0 * dif_x * (b * mul1 - a * mul2) - b * temp);
-        right_expr *= right_expr;
+        double a_sqr = a * a;
+        double b_sqr = b * b;
+        double left_expr = (a_sqr * temp + (4.0 * dif_x * mul1) * b_sqr) * temp;
+        double right_expr = (4.0 * dif_x * dif_x) * ((mul1 * mul1) * b_sqr + (mul2 * mul2) * a_sqr);
+        double common_expr = (4.0 * dif_x * a) * (b * mul2);
+        INT_PREDICATE_AVOID_CANCELLATION(common_expr * temp, right_expr, left_expr);
+        INT_PREDICATE_AVOID_CANCELLATION(common_expr * (2.0 * dif_x * mul1), left_expr, right_expr);
 
-        if (!almost_equal(left_expr, right_expr, 128)) {
+        if (!almost_equal(left_expr, right_expr, 18)) {
             if (!reverse_order)
                 return left_expr > right_expr;
             return left_expr < right_expr;
         }
 
-        // TODO(asydorchuk): Add mpl there.
-        if (!reverse_order)
-            return left_expr > right_expr;
-        return left_expr < right_expr;
+#ifndef USE_MULTI_PRECISION_LIBRARY
+        return (!reverse_order) ? (left_expr > right_expr) : (left_expr < right_expr);
+#else
+        return mpz_less_predicate(segment_start, segment_end, site_point,
+                                  new_point, reverse_order);
+#endif
     }
 
     template <typename T>
     bool less_predicate(point_2d<T> segment1_start, point_2d<T> segment1_end,
                         point_2d<T> segment2_start, point_2d<T> segment2_end,
                         point_2d<T> new_point) {
+        
         return true;
     }
 
@@ -486,14 +532,8 @@ namespace detail {
 
     // Circle event type. Occurs when sweepline sweeps over the bottom point of
     // the voronoi circle (with center at the bisectors intersection point).
-    // Circle event contains circle center and squared radius (to avoid sqrt
-    // computation). To compare bottom points of two different voronoi circles
-    // we don't compute exact radius and use special arithmetic for that. This 
-    // way voronoi diagram implementation may be used with rational arithmetic.
-    // Let circle center coordinates be (x, y), squared radius be r. 
-    // Bottom point of the voronoi circle will be defined as (x + sqrt(r), y).
-    // Contains reference to the second bisector node (ordered from left to
-    // right in the beach line) that creates given circle event.
+    // Circle event contains circle center, lowest x coordinate, event state and
+    // iterator to the corresponding bisectors.
     template <typename T>
     struct circle_event {
     public:
@@ -506,45 +546,30 @@ namespace detail {
 
         circle_event() : is_active_(true) {}
 
-        circle_event(coordinate_type c_x, coordinate_type c_y, coordinate_type sqr_r) :
-            center_(c_x, c_y), sqr_radius_(sqr_r), is_active_(true) {}
+        circle_event(coordinate_type c_x, coordinate_type c_y, coordinate_type lower_x) :
+            center_(c_x, c_y), lower_x_(lower_x), is_active_(true) {}
 
-        circle_event(const Point2D &center, coordinate_type sqr_r) :
-            center_(center), sqr_radius_(sqr_r), is_active_(true) {}
+        circle_event(const Point2D &center, coordinate_type lower_x) :
+            center_(center), lower_x_(lower_x), is_active_(true) {}
 
         circle_event(const circle_event& c_event) {
             center_ = c_event.center_;
-            sqr_radius_ = c_event.sqr_radius_;
+            lower_x_ = c_event.lower_x_;
             bisector_node_ = c_event.bisector_node_;
             is_active_ = c_event.is_active_;
         }
 
         void operator=(const circle_event& c_event) {
             center_ = c_event.center_;
-            sqr_radius_ = c_event.sqr_radius_;
+            lower_x_ = c_event.lower_x_;
             bisector_node_ = c_event.bisector_node_;
             is_active_ = c_event.is_active_;
         }
 
         bool operator==(const circle_event &c_event) const {
-            if (center_.y() != c_event.y())
-                return false;
-
-            if ((center_.x() > c_event.x() && sqr_radius_ > c_event.get_sqr_radius()) ||
-                (center_.x() < c_event.x() && sqr_radius_ < c_event.get_sqr_radius()))
-                return false;
-
-            coordinate_type sqr_dif_x = (center_.x() - c_event.x()) * (center_.x() - c_event.x());
-            coordinate_type sum_r_sqr = sqr_radius_ + c_event.get_sqr_radius();
-            
-            if (sqr_dif_x > sum_r_sqr)
-                return false;
-
-            coordinate_type value_left = (sum_r_sqr - sqr_dif_x) * (sum_r_sqr - sqr_dif_x);
-            coordinate_type value_right = static_cast<coordinate_type>(4) * sqr_radius_ *
-                                          c_event.get_sqr_radius();
-
-            return value_left == value_right;
+            return (center_.y() == c_event.y()) &&
+                   (center_.x() == c_event.x()) &&
+                   (lower_x_ == c_event.lower_x_);
         }
 
         bool operator!=(const circle_event &c_event) const {
@@ -552,48 +577,9 @@ namespace detail {
         }
 
         bool operator<(const circle_event &c_event) const {
-            coordinate_type x1 = center_.x();
-            coordinate_type y1 = center_.y();
-            coordinate_type sqr_r1 = sqr_radius_;
-            coordinate_type x2 = c_event.x();
-            coordinate_type y2 = c_event.y();
-            coordinate_type sqr_r2 = c_event.get_sqr_radius();
-
-            coordinate_type sqr_dif_x = (x1 - x2) * (x1 - x2);
-            coordinate_type sum_r_sqr = sqr_r1 + sqr_r2;
-            coordinate_type value_left = (sum_r_sqr - sqr_dif_x) * (sum_r_sqr - sqr_dif_x);
-            coordinate_type value_right = static_cast<coordinate_type>(4) * sqr_r1 * sqr_r2;
-            
-            if (x1 > x2) {
-                if (sqr_r2 <= sqr_r1)
-                    return false;
-                
-                if (sqr_dif_x > sum_r_sqr)
-                    return false;
-
-                if (value_left != value_right)
-                    return value_left > value_right;
-                
-                return y1 < y2;
-            }
-            else if (x1 < x2) {
-                if (sqr_r1 <= sqr_r2)
-                    return true;
-
-                if (sqr_dif_x > sum_r_sqr)
-                    return true;
-
-                if (value_left != value_right)
-                    return value_left < value_right;
-
-                return y1 < y2;
-            }
-            else {
-                if (sqr_r1 != sqr_r2)
-                    return sqr_r1 < sqr_r2;
-
-                return y1 < y2;
-            }
+            if (lower_x_ != c_event.lower_x_)
+                return lower_x_ < c_event.lower_x_;
+            return center_.y() < c_event.y();
         }
 
         bool operator<=(const circle_event &c_event) const {
@@ -613,15 +599,12 @@ namespace detail {
         // If circle point is equal to site point return 0.
         // If circle point is greater than site point return 1.
         int compare(const site_event<coordinate_type> &s_event) const {
-            if (s_event.x() < center_.x())
-                return 1;
-            coordinate_type sqr_dif_x = (s_event.x() - center_.x()) * (s_event.x() - center_.x());
-            if (sqr_dif_x == sqr_radius_) {
-                if (center_.y() == s_event.y())
-                    return 0;
-                return (center_.y() < s_event.y()) ? -1 : 1;
+            if (s_event.x() != lower_x_) {
+                return (lower_x_ < s_event.x()) ? -1 : 1;
             }
-            return (sqr_dif_x < sqr_radius_) ? 1 : -1;
+            if (s_event.y() != center_.y())
+                return (center_.y() < s_event.y()) ? -1 : 1;
+            return 0;
         }
 
         coordinate_type x() const {
@@ -636,8 +619,8 @@ namespace detail {
             return center_;
         }
 
-        const coordinate_type &get_sqr_radius() const {
-            return sqr_radius_;
+        const coordinate_type &get_lower_x() const {
+            return lower_x_;
         }
 
         void set_bisector(beach_line_iterator iterator) {
@@ -656,10 +639,9 @@ namespace detail {
             return is_active_;
         }
 
-
     private:
         Point2D center_;
-        coordinate_type sqr_radius_;
+        coordinate_type lower_x_;
         beach_line_iterator bisector_node_;
         bool is_active_;
     };
@@ -908,6 +890,10 @@ namespace detail {
                     node1.get_right_site().get_site_index() ==
                     node2.get_left_site().get_site_index())
                     return node1.get_right_site().x() == node1_line;
+
+                if (node1.get_right_site().get_point0().x() == node1_line &&
+                    node1.get_right_site().get_point0() == node2.get_left_site().get_point0())
+                    return true;
 
                 // Just compare coordinates of the sites situated on the sweepline.
                 return node1.get_new_site().y() < node2.get_new_site().y();

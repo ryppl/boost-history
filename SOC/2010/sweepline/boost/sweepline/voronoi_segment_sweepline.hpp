@@ -10,6 +10,19 @@
 #ifndef BOOST_SWEEPLINE_VORONOI_SEGMENT_SWEEPLINE
 #define BOOST_SWEEPLINE_VORONOI_SEGMENT_SWEEPLINE
 
+#include <algorithm>
+#include <cmath>
+#include <cstring>
+#include <list>
+#include <map>
+#include <queue>
+#include <vector>
+
+#ifdef USE_MULTI_PRECISION_LIBRARY 
+    #pragma warning( disable : 4800 )
+    #include "gmpxx.h"
+#endif
+
 #include "voronoi_segment_output.hpp"
 
 #include "detail/voronoi_segment_formation.hpp"

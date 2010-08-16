@@ -10,6 +10,14 @@
 #ifndef BOOST_SWEEPLINE_VORONOI_SWEEPLINE
 #define BOOST_SWEEPLINE_VORONOI_SWEEPLINE
 
+#include <algorithm>
+#include <cmath>
+#include <cstring>
+#include <list>
+#include <map>
+#include <queue>
+#include <vector>
+
 #include "voronoi_output.hpp"
 
 #include "detail/voronoi_formation.hpp"

@@ -152,7 +152,7 @@ private slots:
         QString file_path = file_dir_.filePath(file_name);
         message_label_->setText("Building...");
         glWidget_->build(file_path);
-        message_label_->setText("Double click item to build voronoi diagram:");
+        message_label_->setText("Double click the item to build voronoi diagram:");
         setWindowTitle(tr("Voronoi Visualizer - ") + file_path);
     }
 

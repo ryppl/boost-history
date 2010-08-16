@@ -10,18 +10,187 @@
 #ifndef BOOST_SWEEPLINE_VORONOI_FORMATION
 #define BOOST_SWEEPLINE_VORONOI_FORMATION
 
-#include <list>
-#include <map>
-#include <queue>
-#include <vector>
-
 #define INT_PREDICATE_COMPUTE_DIFFERENCE(a, b, res, sign) \
         if (a >= b) { res = static_cast<ull>(a - b); sign = true; } \
         else { res = static_cast<ull>(b - a); sign = false; }
 
+#define INT_PREDICATE_AVOID_CANCELLATION(val, first_expr, second_expr) \
+        if ((val) >= 0) first_expr += (val); \
+        else second_expr -= (val);
+
 namespace boost {
 namespace sweepline {
 namespace detail {
+
+    ///////////////////////////////////////////////////////////////////////////
+    // GEOMETRY PREDICATES ////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    // If two floating-point numbers in the same format are ordered (x < y), then
+    // they are ordered the same way when their bits are reinterpreted as
+    // sign-magnitude integers.
+    bool almost_equal(double a, double b, long long maxUlps) {
+        long long ll_a, ll_b;
+        // Reinterpret double bits as long long.
+        memcpy(&ll_a, &a, sizeof(double));
+        memcpy(&ll_b, &b, sizeof(double));
+
+        // Positive 0.0 is integer zero. Negative 0.0 is 0x8000000000000000.
+        // Map negative zero to an integer zero representation - making it
+        // identical to positive zero - and it makes it so that the smallest
+        // negative number is represented by negative one, and downwards from there.
+        if (ll_a < 0)
+            ll_a = 0x8000000000000000LL - ll_a;
+        if (ll_b < 0)
+            ll_b = 0x8000000000000000LL - ll_b;
+
+        // Compare long long representations of input values.
+        // Difference in 1 Ulp is equivalent to a relative error of between
+        // 1/4,000,000,000,000,000 and 1/8,000,000,000,000,000.
+        long long dif = ll_a - ll_b;
+        return (dif <= maxUlps) && (dif >= -maxUlps);
+    }
+
+    // TODO(asydorchuk): Make templates specification for integer coordinate type,
+    // as it is actually working with integer input.
+    template <typename T>
+    bool right_orientation_test(const point_2d<T> &point1,
+                                const point_2d<T> &point2,
+                                const point_2d<T> &point3) {
+        typedef long long ll;
+        typedef unsigned long long ull;
+        ull dif_x1, dif_x2, dif_y1, dif_y2;
+        bool dif_x1_plus, dif_x2_plus, dif_y1_plus, dif_y2_plus;
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point1.x()),
+                                         static_cast<ll>(point2.x()),
+                                         dif_x1, dif_x1_plus);
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point2.x()),
+                                         static_cast<ll>(point3.x()),
+                                         dif_x2, dif_x2_plus);
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point1.y()),
+                                         static_cast<ll>(point2.y()),
+                                         dif_y1, dif_y1_plus);
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(point2.y()),
+                                         static_cast<ll>(point3.y()),
+                                         dif_y2, dif_y2_plus);
+        ull expr_l = dif_x1 * dif_y2;
+        bool expr_l_plus = (dif_x1_plus == dif_y2_plus) ? true : false;
+        ull expr_r = dif_x2 * dif_y1;
+        bool expr_r_plus = (dif_x2_plus == dif_y1_plus) ? true : false;
+
+        if (expr_l == 0)
+            expr_l_plus = true;
+        if (expr_r == 0)
+            expr_r_plus = true;
+        
+        if (!expr_l_plus) {
+            if (expr_r_plus)
+                return true;
+            else
+                return expr_l > expr_r; 
+        } else {
+            if (!expr_r_plus)
+                return false;
+            else
+                return expr_l < expr_r;
+        }
+    }
+
+    enum kPredicateResult {
+        LESS = -1,
+        UNDEFINED = 0,
+        MORE = 1,
+    };
+
+    // Returns true if horizontal line going through new site intersects
+    // right arc at first, else returns false. If horizontal line goes
+    // through intersection point of the given two arcs returns false also. 
+    // Used during nodes comparison.
+    // Let x0 be sweepline coordinate, left site coordinates be (x1, y1),
+    // right site coordinates be (x2, y2). Equations of the arcs will be:
+    // x1(y) = ((y - y1)^2 + x1^2 - x0^2) / (2*(x1 - x0));
+    // x2(y) = ((y - y2)^2 + x2^2 - x0^2) / (2*(x2 - x0)).
+    // Horizontal line going throught site (x*, y*) intersects second arc
+    // at first if x2(y*) > x1(y*) or:
+    // (x0-x2)*(x0-x1)*(x1-x2) + (x0-x2)*(y*-y1)^2 < (x0-x1)*(y*-y2)^2.
+    template <typename T>
+    kPredicateResult fast_less_predicate(const point_2d<T> &left_point,
+                                         const point_2d<T> &right_point,
+                                         const point_2d<T> &new_point) {
+        double fast_a1 = static_cast<double>(new_point.x()) - static_cast<double>(left_point.x());
+        double fast_a2 = static_cast<double>(new_point.x()) - static_cast<double>(right_point.x());
+        double fast_b1 = static_cast<double>(new_point.y()) - static_cast<double>(left_point.y());
+        double fast_b2 = static_cast<double>(new_point.y()) - static_cast<double>(right_point.y());
+        double fast_c = static_cast<double>(left_point.x()) - static_cast<double>(right_point.x());
+        double fast_left_expr = fast_a1 * fast_b2 * fast_b2;
+        double fast_right_expr = fast_a2 * fast_b1 * fast_b1;
+        
+        // Avoid cancellation.
+        INT_PREDICATE_AVOID_CANCELLATION(fast_a1 * fast_a2 * fast_c,
+                                         fast_left_expr, fast_right_expr);
+        if (!almost_equal(fast_left_expr, fast_right_expr, 5))
+            return (fast_left_expr < fast_right_expr) ? LESS : MORE;
+        return UNDEFINED;
+    }
+
+    template <typename T>
+    bool less_predicate(const point_2d<T> &left_point,
+                        const point_2d<T> &right_point,
+                        const point_2d<T> &new_point) {
+        kPredicateResult fast_res = fast_less_predicate(left_point, right_point, new_point);
+        if (fast_res != UNDEFINED)
+            return (fast_res == LESS);
+
+        typedef long long ll;
+        typedef unsigned long long ull;
+        ull a1, a2, b1, b2, b1_sqr, b2_sqr, l_expr, r_expr;
+        bool l_expr_plus, r_expr_plus;
+
+        // a1 and a2 are greater than zero.
+        a1 = static_cast<ull>(static_cast<ll>(new_point.x()) -
+                              static_cast<ll>(left_point.x()));
+        a2 = static_cast<ull>(static_cast<ll>(new_point.x()) -
+                              static_cast<ll>(right_point.x()));
+
+        // We don't need to know signs of b1 and b2, because we use their squared values.
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(new_point.y()),
+                                         static_cast<ll>(left_point.y()),
+                                         b1, l_expr_plus);
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(new_point.y()),
+                                         static_cast<ll>(right_point.y()),
+                                         b2, l_expr_plus);
+        b1_sqr = b1 * b1;
+        b2_sqr = b2 * b2;
+        ull b1_sqr_mod = b1_sqr % a1;
+        ull b2_sqr_mod = b2_sqr % a2;
+
+        // Compute left expression.
+        INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(left_point.x()),
+                                         static_cast<ll>(right_point.x()),
+                                         l_expr, l_expr_plus);            
+        if (b2_sqr_mod * a1 < b1_sqr_mod * a2) {
+            if (!l_expr_plus)
+                l_expr++;
+            else if (l_expr != 0)
+                l_expr--;
+            else {
+                l_expr++;
+                l_expr_plus = false;
+            }
+        }
+
+        // Compute right expression.
+        INT_PREDICATE_COMPUTE_DIFFERENCE(b1_sqr / a1, b2_sqr / a2, r_expr, r_expr_plus);
+
+        // Compare left and right expressions.
+        if (!l_expr_plus && r_expr_plus)
+            return true;
+        if (l_expr_plus && !r_expr_plus)
+            return false;
+        if (l_expr_plus && r_expr_plus)
+            return l_expr < r_expr;
+        return l_expr > r_expr;
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // VORONOI EVENT TYPES ////////////////////////////////////////////////////
@@ -110,14 +279,8 @@ namespace detail {
 
     // Circle event type. Occurs when sweepline sweeps over the bottom point of
     // the voronoi circle (with center at the bisectors intersection point).
-    // Circle event contains circle center and squared radius (to avoid sqrt
-    // computation). To compare bottom points of two different voronoi circles
-    // we don't compute exact radius and use special arithmetic for that. This 
-    // way voronoi diagram implementation may be used with rational arithmetic.
-    // Let circle center coordinates be (x, y), squared radius be r. 
-    // Bottom point of the voronoi circle will be defined as (x + sqrt(r), y).
-    // Contains reference to the second bisector node (ordered from left to
-    // right in the beach line) that creates given circle event.
+    // Circle event contains circle center, lowest x coordinate, event state and
+    // iterator to the corresponding bisectors.
     template <typename T>
     struct circle_event {
     public:
@@ -130,45 +293,30 @@ namespace detail {
 
         circle_event() : is_active_(true) {}
 
-        circle_event(coordinate_type c_x, coordinate_type c_y, coordinate_type sqr_r) :
-            center_(c_x, c_y), sqr_radius_(sqr_r), is_active_(true) {}
+        circle_event(coordinate_type c_x, coordinate_type c_y, coordinate_type lower_x) :
+            center_(c_x, c_y), lower_x_(lower_x), is_active_(true) {}
 
-        circle_event(const Point2D &center, coordinate_type sqr_r) :
-            center_(center), sqr_radius_(sqr_r), is_active_(true) {}
+        circle_event(const Point2D &center, coordinate_type lower_x) :
+            center_(center), lower_x_(lower_x), is_active_(true) {}
 
         circle_event(const circle_event& c_event) {
             center_ = c_event.center_;
-            sqr_radius_ = c_event.sqr_radius_;
+            lower_x_ = c_event.lower_x_;
             bisector_node_ = c_event.bisector_node_;
             is_active_ = c_event.is_active_;
         }
 
         void operator=(const circle_event& c_event) {
             center_ = c_event.center_;
-            sqr_radius_ = c_event.sqr_radius_;
+            lower_x_ = c_event.lower_x_;
             bisector_node_ = c_event.bisector_node_;
             is_active_ = c_event.is_active_;
         }
 
         bool operator==(const circle_event &c_event) const {
-            if (center_.y() != c_event.y())
-                return false;
-
-            if ((center_.x() > c_event.x() && sqr_radius_ > c_event.get_sqr_radius()) ||
-                (center_.x() < c_event.x() && sqr_radius_ < c_event.get_sqr_radius()))
-                return false;
-
-            coordinate_type sqr_dif_x = (center_.x() - c_event.x()) * (center_.x() - c_event.x());
-            coordinate_type sum_r_sqr = sqr_radius_ + c_event.get_sqr_radius();
-            
-            if (sqr_dif_x > sum_r_sqr)
-                return false;
-
-            coordinate_type value_left = (sum_r_sqr - sqr_dif_x) * (sum_r_sqr - sqr_dif_x);
-            coordinate_type value_right = static_cast<coordinate_type>(4) * sqr_radius_ *
-                                          c_event.get_sqr_radius();
-
-            return value_left == value_right;
+            return (center_.y() == c_event.y()) &&
+                   (center_.x() == c_event.x()) &&
+                   (lower_x_ == c_event.lower_x_);
         }
 
         bool operator!=(const circle_event &c_event) const {
@@ -176,48 +324,9 @@ namespace detail {
         }
 
         bool operator<(const circle_event &c_event) const {
-            coordinate_type x1 = center_.x();
-            coordinate_type y1 = center_.y();
-            coordinate_type sqr_r1 = sqr_radius_;
-            coordinate_type x2 = c_event.x();
-            coordinate_type y2 = c_event.y();
-            coordinate_type sqr_r2 = c_event.get_sqr_radius();
-
-            coordinate_type sqr_dif_x = (x1 - x2) * (x1 - x2);
-            coordinate_type sum_r_sqr = sqr_r1 + sqr_r2;
-            coordinate_type value_left = (sum_r_sqr - sqr_dif_x) * (sum_r_sqr - sqr_dif_x);
-            coordinate_type value_right = static_cast<coordinate_type>(4) * sqr_r1 * sqr_r2;
-            
-            if (x1 > x2) {
-                if (sqr_r2 <= sqr_r1)
-                    return false;
-                
-                if (sqr_dif_x > sum_r_sqr)
-                    return false;
-
-                if (value_left != value_right)
-                    return value_left > value_right;
-                
-                return y1 < y2;
-            }
-            else if (x1 < x2) {
-                if (sqr_r1 <= sqr_r2)
-                    return true;
-
-                if (sqr_dif_x > sum_r_sqr)
-                    return true;
-
-                if (value_left != value_right)
-                    return value_left < value_right;
-
-                return y1 < y2;
-            }
-            else {
-                if (sqr_r1 != sqr_r2)
-                    return sqr_r1 < sqr_r2;
-
-                return y1 < y2;
-            }
+            if (lower_x_ != c_event.lower_x_)
+                return lower_x_ < c_event.lower_x_;
+            return center_.y() < c_event.y();
         }
 
         bool operator<=(const circle_event &c_event) const {
@@ -237,15 +346,12 @@ namespace detail {
         // If circle point is equal to site point return 0.
         // If circle point is greater than site point return 1.
         int compare(const site_event<coordinate_type> &s_event) const {
-            if (s_event.x() < center_.x())
-                return 1;
-            coordinate_type sqr_dif_x = (s_event.x() - center_.x()) * (s_event.x() - center_.x());
-            if (sqr_dif_x == sqr_radius_) {
-                if (center_.y() == s_event.y())
-                    return 0;
-                return (center_.y() < s_event.y()) ? -1 : 1;
+            if (s_event.x() != lower_x_) {
+                return (lower_x_ < s_event.x()) ? -1 : 1;
             }
-            return (sqr_dif_x < sqr_radius_) ? 1 : -1;
+            if (s_event.y() != center_.y())
+                return (center_.y() < s_event.y()) ? -1 : 1;
+            return 0;
         }
 
         coordinate_type x() const {
@@ -260,8 +366,8 @@ namespace detail {
             return center_;
         }
 
-        const coordinate_type &get_sqr_radius() const {
-            return sqr_radius_;
+        const coordinate_type &get_lower_x() const {
+            return lower_x_;
         }
 
         void set_bisector(beach_line_iterator iterator) {
@@ -280,10 +386,9 @@ namespace detail {
             return is_active_;
         }
 
-
     private:
         Point2D center_;
-        coordinate_type sqr_radius_;
+        coordinate_type lower_x_;
         beach_line_iterator bisector_node_;
         bool is_active_;
     };
@@ -426,75 +531,19 @@ namespace detail {
             return right_site_;
         }
 
-        // Returns true if horizontal line going through new site intersects
-        // right arc at first, else returns false. If horizontal line goes
-        // through intersection point of the given two arcs returns false also. 
-        // Used during nodes comparison.
-        // Let x0 be sweepline coordinate, left site coordinates be (x1, y1),
-        // right site coordinates be (x2, y2). Equations of the arcs will be:
-        // x1(y) = ((y - y1)^2 + x1^2 - x0^2) / (2*(x1 - x0));
-        // x2(y) = ((y - y2)^2 + x2^2 - x0^2) / (2*(x2 - x0)).
-        // Horizontal line going throught site (x*, y*) intersects second arc
-        // at first if x2(y*) > x1(y*) or:
-        // (x0-x2)*(x0-x1)*(x1-x2) + (x0-x2)*(y*-y1)^2 < (x0-x1)*(y*-y2)^2.
-        bool less(const site_event_type &new_site) const {
-            typedef long long ll;
-            typedef unsigned long long ull;
-            ull a1, a2, b1, b2, b1_sqr, b2_sqr, l_expr, r_expr;
-            bool l_expr_plus, r_expr_plus;
-
-            // a1 and a2 are greater than zero.
-            a1 = static_cast<ull>(static_cast<ll>(new_site.x()) -
-                                  static_cast<ll>(left_site_.x()));
-            a2 = static_cast<ull>(static_cast<ll>(new_site.x()) -
-                                  static_cast<ll>(right_site_.x()));
-
-            // We don't need to know signs of b1 and b2, because we use their squared values.
-            INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(new_site.y()),
-                                             static_cast<ll>(left_site_.y()),
-                                             b1, l_expr_plus);
-            INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(new_site.y()),
-                                             static_cast<ll>(right_site_.y()),
-                                             b2, l_expr_plus);
-            b1_sqr = b1 * b1;
-            b2_sqr = b2 * b2;
-            ull b1_sqr_mod = b1_sqr % a1;
-            ull b2_sqr_mod = b2_sqr % a2;
-
-            // Compute left expression.
-            INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(left_site_.x()),
-                                             static_cast<ll>(right_site_.x()),
-                                             l_expr, l_expr_plus);            
-            if (b2_sqr_mod * a1 < b1_sqr_mod * a2) {
-                if (!l_expr_plus)
-                    l_expr++;
-                else if (l_expr != 0)
-                    l_expr--;
-                else {
-                    l_expr++;
-                    l_expr_plus = false;
-                }
+        bool less(const Point2D &new_site) const {
+            if (left_site_.x() > right_site_.x()) {
+                if (new_site.y() <= left_site_.y())
+                    return false;
+                return less_predicate(left_site_.get_point(), right_site_.get_point(), new_site);
+            } else if (left_site_.x() < right_site_.x()) {
+                if (new_site.y() >= right_site_.y())
+                    return true;
+                return less_predicate(left_site_.get_point(), right_site_.get_point(), new_site);
+            } else {
+                return left_site_.y() + right_site_.y() <
+                       static_cast<coordinate_type>(2.0) * new_site.y();
             }
-
-            // Compute right expression.
-            INT_PREDICATE_COMPUTE_DIFFERENCE(b1_sqr / a1, b2_sqr / a2, r_expr, r_expr_plus);
-
-            // Compare left and right expressions.
-            if (!l_expr_plus && r_expr_plus)
-                return true;
-            if (l_expr_plus && !r_expr_plus)
-                return false;
-            if (l_expr_plus && r_expr_plus)
-                return l_expr < r_expr;
-            return l_expr > r_expr;
-
-            /*mpz_class a1, a2, b1, b2, c, left_expr, right_expr;
-            a1 = static_cast<int>(new_site.x() - left_site.x());
-            a2 = static_cast<int>(new_site.x() - right_site.x());
-            b1 = static_cast<int>(new_site.y() - left_site.y());
-            b2 = static_cast<int>(new_site.y() - right_site.y());
-            c = static_cast<int>(left_site.x() - right_site.x());
-            return a1 * a2 * c + a1 * b2 * b2 < a2 * b1 * b1;*/
         }
 
     private:
@@ -547,41 +596,9 @@ namespace detail {
             coordinate_type node2_line = node2.get_new_site().x();
 
             if (node1_line < node2_line) {
-                coordinate_type left_site_x = node1.get_left_site().x();
-                coordinate_type left_site_y = node1.get_left_site().y();
-                coordinate_type right_site_x = node1.get_right_site().x();
-                coordinate_type right_site_y = node1.get_right_site().y();
-                coordinate_type new_node_y = node2.get_new_site().y();
-                if (left_site_x > right_site_x) {
-                    if (new_node_y <= left_site_y)
-                        return false;
-                    return node1.less(node2.get_new_site());
-                } else if (left_site_x < right_site_x) {
-                    if (new_node_y >= right_site_y)
-                        return true;
-                    return node1.less(node2.get_new_site());
-                } else {
-                    return left_site_y + right_site_y <
-                        static_cast<coordinate_type>(2.0) * new_node_y;
-                }
+                return node1.less(node2.get_new_site().get_point());
             } else if (node1_line > node2_line) {
-                coordinate_type left_site_x = node2.get_left_site().x();
-                coordinate_type left_site_y = node2.get_left_site().y();
-                coordinate_type right_site_x = node2.get_right_site().x();
-                coordinate_type right_site_y = node2.get_right_site().y();
-                coordinate_type new_node_y = node1.get_new_site().y();
-                if (left_site_x > right_site_x) {
-                    if (new_node_y <= left_site_y)
-                        return true;
-                    return !node2.less(node1.get_new_site());
-                } else if (left_site_x < right_site_x) {
-                    if (new_node_y >= right_site_y)
-                        return false;
-                    return !node2.less(node1.get_new_site());
-                } else {
-                    return !(left_site_y + right_site_y <
-                        static_cast<coordinate_type>(2.0) * new_node_y);
-                }
+                return !node2.less(node1.get_new_site().get_point());
             } else {
                 // Both nodes are situated on the same vertical line.
                 // Let A be the new site event point, and B the site that
