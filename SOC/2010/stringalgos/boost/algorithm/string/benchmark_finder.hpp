@@ -76,7 +76,7 @@ namespace boost { namespace algorithm {
     */
     template <class Range1T, class Range2T, class AlgorithmSequenceT,
     class ComparatorT = boost::algorithm::is_equal>
-    class benchmark_finder
+    class benchmark_finder_t
     {
         typedef std::allocator<std::size_t> allocator_type_;
     public:
@@ -84,8 +84,8 @@ namespace boost { namespace algorithm {
         BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS2(ComparatorT, allocator_type_);
     public:
 
-        //! \copydoc simplified_finder_t::set_substring
-        //! \see \ref simplified_finder_t::set_substring
+        //! \copydoc boost::algorithm::simplified_finder_t::set_substring
+        //! \see boost::algorithm::simplified_finder_t::set_substring
         void set_substring (substring_type
             const *const substring)
         {
@@ -96,8 +96,8 @@ namespace boost { namespace algorithm {
             trusted_finder.set_substring(substring);
         }
 
-        //! \copydoc simplified_finder_t::set_string
-        //! \see \ref simplified_finder_t::set_string
+        //! \copydoc boost::algorithm::simplified_finder_t::set_string
+        //! \see boost::algorithm::simplified_finder_t::set_string
         void set_string (string_type *const string)
         {
             boost::phoenix::function<finder_set_string> f;
@@ -112,24 +112,24 @@ namespace boost { namespace algorithm {
         void clear ()
         { boost::fusion::for_each(finders, clear_stats()); }
         
-        //! \copydoc simplified_finder_t::find_reset
-        //! \see \ref simplified_finder_t::find_reset
+        //! \copydoc boost::algorithm::simplified_finder_t::find_reset
+        //! \see boost::algorithm::simplified_finder_t::find_reset
         void find_reset()
         {
             boost::fusion::for_each(finders, finder_reset());
             trusted_finder.find_reset();
         }
 
-        //! \copydoc simplified_finder_t::find_next
-        //! \see \ref simplified_finder_t::find_next
+        //! \copydoc boost::algorithm::simplified_finder_t::find_next
+        //! \see boost::algorithm::simplified_finder_t::find_next
         string_range_type find_next()
         {
             return boost::fusion::fold(finders, trusted_finder.find_next(),
                 finder_benchmark_and_test());
         }
 
-        //! \copydoc simplified_finder_t::find_first
-        //! See \ref simplified_finder_t::find_first
+        //! \copydoc boost::algorithm::simplified_finder_t::find_first
+        //! \sa boost::algorithm::simplified_finder_t::find_first
         string_range_type find_first()
         { find_reset(); return find_next(); }
 
@@ -283,6 +283,6 @@ namespace boost { namespace algorithm {
     };
 } }
 
-namespace boost { using algorithm::benchmark_finder; }
+namespace boost { using algorithm::benchmark_finder_t; }
 
 #endif

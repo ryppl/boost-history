@@ -866,6 +866,7 @@ boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
     \todo test the non-match of nonempty substring in empty string
     \todo test the unique match of empty substring in empty string
     \todo test more strings with consecutive substring matches
+    \todo some tests that check correctness of kmp (patterns with unusual failure functions), bm and suffix arrays
     */
 
     typedef boost::mpl::list<

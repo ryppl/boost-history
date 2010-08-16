@@ -12,13 +12,13 @@
 #ifndef BOOST_ALGORITHM_FINDER_GENERATORS_HPP
 #define BOOST_ALGORITHM_FINDER_GENERATORS_HPP
 
-#include <boost/algorithm/string/finder/generated_finders.hpp>
+#include <boost/algorithm/string/finder/functor_finders.hpp>
 #include <boost/algorithm/string/finder/default_search_algorithm.hpp>
 #include <boost/algorithm/string/compare.hpp>
 
 /*! \file
     Defines finder generators. They are mostly deprecated functions
-    returning instances of finder types defined in \headername generated_finders.hpp.
+    returning instances of finder types defined in \headername functor_finders.hpp.
     Finder generators are preserved for backward compatibility, but their use is discouraged.
 */
 

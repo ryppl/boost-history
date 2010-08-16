@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd"[]>
 <!-- Copyright (c) 2002-2006 Pavol Droba.
+ Copyright (c) 2010 Stefan Mihaila.
      Subject to the Boost Software License, Version 1.0. 
      (See accompanying file LICENSE_1_0.txt or  http://www.boost.org/LICENSE_1_0.txt)
 -->
@@ -505,8 +506,62 @@
   </section>
   <section>
     <title>Finders</title>
+    <table id="string_algo.quickref.finder_types">
+      <title>Finder types</title>
+      <tgroup cols="2" align="left">
+        <thead>
+          <row>
+            <entry>Type</entry>
+            <entry>Description</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>
+              <classname>finder_t</classname>
+            </entry>
+            <entry>Allows the user to perform multiple searches using a given string search algorithm.
+The precomputed data (either on the text, the pattern, or both, depending on the chosen search algorithm) is kept from one search to another, potentially making future searches faster if either the pattern or the text remain unchanged.
+The interface of this finder provides constructors and setters taking both references (in which case copies are made) and pointers.</entry>
+          </row>
+          <row>
+            <entry>
+              <classname>simplified_finder_t</classname>
+            </entry>
+            <entry>Behaves very similarly to <classname>finder_t</classname>, but it supports a more limited set of constructors and setters (only the ones taking pointers). When efficiency is very important, this should be preferred over <classname>finder_t</classname>.</entry>
+          </row>
+          <row>
+            <entry>
+              <classname>benchmark_finder_t</classname>
+            </entry>
+            <entry>Finder with a similar interface to that of <classname>simplified_finder_t</classname>, whose purpose is to benchmark various string search algorithms.</entry>
+          </row>
+          <row>
+            <entry>
+              <classname>first_finder_t</classname>
+            </entry>
+            <entry>Functor finder that can be passed to find/replace/split algorithms.
+Works as a function object returning the first occurrence of a pattern in a string.</entry>
+          </row>
+          <row>
+            <entry>
+              <classname>nth_finder_t</classname>
+            </entry>
+            <entry>Functor finder that can be passed to find/replace/split algorithms.
+Works as a function object returning the N-th occurrence of a pattern in a string.</entry>
+          </row>
+          <row>
+            <entry>
+              <classname>last_finder_t</classname>
+            </entry>
+            <entry>Functor finder that can be passed to find/replace/split algorithms.
+Works as a function object returning the last occurrence of a pattern in a string.</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
     <table>
-      <title>Finder generators</title>
+      <title>Finder generators <emphasis>(deprecated)</emphasis></title>
       <tgroup cols="3" align="left">
         <thead>
           <row>
@@ -571,33 +626,6 @@
             <entry>
               <functionname>regex_finder()</functionname>
             </entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-    <table>
-      <title>Finder types</title>
-      <tgroup cols="2" align="left">
-        <thead>
-          <row>
-            <entry>Type</entry>
-            <entry>Description</entry>
-          </row>
-        </thead>
-        <tbody>
-          <row>
-            <entry>
-              <classname>finder_t</classname>
-            </entry>
-            <entry>Allows the user to perform multiple searches using a given string search algorithm.
-The precomputed data (either on the text, the pattern, or both, depending on the chosen search algorithm) is kept from one search to another, potentially making future searches faster if either the pattern or the text remain unchanged.
-The interface of this finder provides constructors and setters taking both references (in which case copies are made) and pointers.</entry>
-          </row>
-          <row>
-            <entry>
-              <classname>simplified_finder_t</classname>
-            </entry>
-            <entry>Behaves very similarly to <classname>finder_t</classname>, but it supports a more limited set of constructors and setters (only the ones taking pointers).</entry>
           </row>
         </tbody>
       </tgroup>
@@ -781,7 +809,7 @@ The interface of this finder provides constructors and setters taking both refer
       </tgroup>
     </table>
   </section>
-  <section id="string_search_algorithms">
+  <section id="string_algo.quickref.string_search_algorithms">
     <title>String search algorithms</title>
     <table>
       <title>String search algorithms</title>
@@ -792,6 +820,7 @@ The interface of this finder provides constructors and setters taking both refer
             <entry>Iterator requirements</entry>
             <entry>Comparators</entry>
             <entry>Complexity</entry>
+            <entry>Exact</entry>
             <entry>Type</entry>
           </row>
         </thead>
@@ -801,6 +830,7 @@ The interface of this finder provides constructors and setters taking both refer
             <entry>Forward Iterator</entry>
             <entry>Any</entry>
             <entry>O(n*m) worst-case</entry>
+            <entry>Yes</entry>
             <entry>
               <classname alt="boost::algorithm::naive_search">naive_search</classname>
             </entry>
@@ -811,6 +841,7 @@ The interface of this finder provides constructors and setters taking both refer
             <entry>Any</entry>
             <entry>Pattern preprocessing: O(m)
 Finding: O(n)</entry>
+            <entry>Yes</entry>
             <entry>
               <classname alt="boost::algorithm::knuth_morris_pratt">knuth_morris_pratt</classname>
             </entry>
@@ -822,6 +853,7 @@ Finding: O(n)</entry>
               <functionname>is_equal()</functionname>for any CharT and <functionname>is_iequal()</functionname> only for CharT=char</entry>
             <entry>Pattern preprocessing: O(m)
 Finding: O(n/m) average, O(n) worst-case</entry>
+            <entry>Yes</entry>
             <entry>
               <classname alt="boost::algorithm::boyer_moore">boyer_moore</classname>
             </entry>
@@ -831,10 +863,12 @@ Finding: O(n/m) average, O(n) worst-case</entry>
             <entry>Random Access Iterators
 Note: will support Input Iterators</entry>
             <entry>Only <functionname>is_equal()</functionname> , with CharT an integral type</entry>
-            <entry>Pattern preprocessing: O(m)
-Finding: O(n) average, O(n*m) worst-case</entry>
+            <entry>Pattern preprocessing: O(m) Finding: O(n)</entry>
             <entry>
-              <classname alt="boost::algorithm::rabin_karp">rabin_karp32</classname>, <classname alt="boost::algorithm::rabin_karp64">rabin_karp64</classname>, <classname alt="boost::algorithm::rabin_karp_algorithm">rabin_karp_algorithm</classname></entry>
+              <emphasis>No (can yield false negatives, but not false positives)</emphasis>
+            </entry>
+            <entry>
+              <classname alt="boost::algorithm::rabin_karp32">rabin_karp32</classname>, <classname alt="boost::algorithm::rabin_karp64">rabin_karp64</classname>, <classname alt="boost::algorithm::rabin_karp_algorithm">rabin_karp_algorithm</classname></entry>
           </row>
           <row>
             <entry>Suffix array</entry>
@@ -842,8 +876,9 @@ Finding: O(n) average, O(n*m) worst-case</entry>
             <entry>Only <classname>is_equal()</classname></entry>
             <entry>Text preprocessing: O(n)
 Find: ...?</entry>
+            <entry>Yes</entry>
             <entry>
-              <classname alt="boost::algorithm::suffix_array">suffix_array</classname>
+              <classname alt="boost::algorithm::suffix_array_search">suffix_array_search</classname>
             </entry>
           </row>
         </tbody>

@@ -152,7 +152,7 @@ namespace boost { namespace algorithm {
 
             //precomputation on pattern=bidirectional range
             template <class RangeT>
-            void on_substring_change(RangeT const &substr, std::bidirectional_iterator_tag)
+            void on_substring_change(RangeT const &substr, std::random_access_iterator_tag)
             {
                 
                 substr_size_ = boost::distance(substr);

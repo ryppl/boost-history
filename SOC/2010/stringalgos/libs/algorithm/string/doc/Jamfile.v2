@@ -29,17 +29,21 @@ doxygen autodoc
     [ glob ../../../../boost/algorithm/string/compare.hpp ]
     [ glob ../../../../boost/algorithm/string/constants.hpp ]
     [ glob ../../../../boost/algorithm/string/case_conv.hpp ]
-    [ glob ../../../../boost/algorithm/string/find.hpp ]
+    [ glob ../../../../boost/algorithm/string/finder/default_search_algorithm.hpp ]
+    [ glob ../../../../boost/algorithm/string/finder/simplified_finder.hpp ]
+	[ glob ../../../../boost/algorithm/string/finder/finder.hpp ]
+    [ glob ../../../../boost/algorithm/string/finder/functor_finders.hpp ]
+    [ glob ../../../../boost/algorithm/string/finder/finder_generators.hpp ]
     [ glob ../../../../boost/algorithm/string/finder.hpp ]
     [ glob ../../../../boost/algorithm/string/finder_aliases.hpp ]
     [ glob ../../../../boost/algorithm/string/benchmark_finder.hpp ]
-    [ glob ../../../../boost/algorithm/string/string_search.hpp ]
     [ glob ../../../../boost/algorithm/string/string_search/boyer_moore.hpp ]
     [ glob ../../../../boost/algorithm/string/string_search/knuth_morris_pratt.hpp ]
     [ glob ../../../../boost/algorithm/string/string_search/naive_search.hpp ]
     [ glob ../../../../boost/algorithm/string/string_search/rabin_karp.hpp ]
     [ glob ../../../../boost/algorithm/string/string_search/suffix_array.hpp ]
-	
+	[ glob ../../../../boost/algorithm/string/string_search.hpp ]	
+	[ glob ../../../../boost/algorithm/string/find.hpp ]
     [ glob ../../../../boost/algorithm/string/find_iterator.hpp ]
     [ glob ../../../../boost/algorithm/string/trim.hpp ]
     [ glob ../../../../boost/algorithm/string/predicate.hpp ]
@@ -59,7 +63,7 @@ doxygen autodoc
     <doxygen:param>MACRO_EXPANSION=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
     <doxygen:param>SEARCH_INCLUDES=YES
-    <doxygen:param>PREDEFINED="BOOST_STRING_TYPENAME=typename \"BOOST_STATIC_CONSTANT(type,var)=static const type var; BOOST_HAS_RVALUE_REFS\""
+    <doxygen:param>PREDEFINED="BOOST_STRING_TYPENAME=typename; BOOST_STATIC_CONSTANT(type,var)=static const type var; BOOST_HAS_RVALUE_REFS;"
     ;
         
 

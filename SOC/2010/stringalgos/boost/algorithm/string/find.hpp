@@ -24,7 +24,7 @@
 #include <boost/range/as_literal.hpp>
 
 #include <boost/algorithm/string/finder/finder_generators.hpp>
-#include <boost/algorithm/string/finder/generated_finders.hpp>
+#include <boost/algorithm/string/finder/functor_finders.hpp>
 #include <boost/algorithm/string/finder/default_search_algorithm.hpp>
 #include <boost/algorithm/string/compare.hpp>
 #include <boost/algorithm/string/constants.hpp>

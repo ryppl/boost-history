@@ -85,9 +85,9 @@ namespace boost { namespace algorithm {
                 substring_range_type const &substr = ranges.substr;
                 string_iterator_type start = ranges.offset;
 
-                std::size_t str_idx = start - boost::begin(str),
-                    str_size = boost::end(str) - boost::begin(str), substr_idx = 0,
+                std::size_t str_size = boost::end(str) - boost::begin(str),
                     substr_size = boost::end(substr) - boost::begin(substr);
+                std::size_t str_idx = start - boost::begin(str), substr_idx = 0;
 
                 if (boost::begin(substr) == boost::end(substr))
                     return boost::iterator_range<string_iterator_type>(
@@ -144,28 +144,50 @@ namespace boost { namespace algorithm {
 
                 //Invariant: 0 <= failure_func[i] <= i, i=0..m-1
 
-
-                std::size_t i = 0, j = 1, substr_size = boost::end(substr) - boost::begin(substr);
+                typedef typename boost::range_const_iterator<RangeT>::type substring_iterator_type;
+                
+                std::size_t substr_size = boost::end(substr) - boost::begin(substr);
                 failure_func.clear();
                 failure_func.reserve(substr_size);
                 failure_func.push_back(0); // failure_func[0] = 0
-                //std::size_t capacity = failure_func.capacity();
-                while (j < substr_size)
+                
+                if (substr_size < 2) return;
+
+                //std::size_t i = 0, j = 1;
+                substring_iterator_type i = boost::begin(substr), j = boost::begin(substr)+1;
+
+                //while (j < substr_size)
+                do
                 {
-                    while (i > 0 && !comp_(*(boost::begin(substr)+i), *(boost::begin(substr)+j)))
-                        i = failure_func[i-1];
-                    while (i == 0 && j < substr_size &&
-                        !comp_(*(boost::begin(substr)+0),*(boost::begin(substr)+j)))
+                    //while (i > 0 && !comp_(*(boost::begin(substr)+i), *(boost::begin(substr)+j)))
+                    //    i = failure_func[i-1];
+                    while (i != boost::begin(substr) && !comp_(*i,*j))
+                        i = boost::begin(substr) + failure_func[(i-boost::begin(substr))-1];
+                    
+                    //while (i == 0 && j < substr_size &&
+                    //    !comp_(*(boost::begin(substr)+0),*(boost::begin(substr)+j)))
+                    while (i == boost::begin(substr) && j != boost::end(substr) &&
+                        !comp_(*i,*j))
                     {
                         //Invariant: i == 0 and substr[0] != substr[j], which means failure_func[j]=0
                         failure_func.push_back(0);
                         ++j;
                     }
                     //Invariant: j is out of bounds or P[i]==P[j], meaning failure_func[j]=i+1
-                    if (j < substr_size) failure_func.push_back(i+1);
-                    ++j; ++i;
-                }
-                //assert(failure_func.capacity() == capacity);
+                    /*if (j < substr_size)
+                    {
+                        failure_func.push_back(i+1);
+                        ++j; ++i;
+                    }
+                    else break;*/
+                    if (j != boost::end(substr))
+                    {
+                        failure_func.push_back((i-boost::begin(substr))+1);
+                        ++j; ++i;
+                    }
+                    else break;
+                } while (j != boost::end(substr));
+                //while (j < substr_size);
             }
 
         };

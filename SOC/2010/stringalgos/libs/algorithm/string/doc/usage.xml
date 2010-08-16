@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd"[]>
 <!-- Copyright (c) 2002-2006 Pavol Droba.
+ Copyright (c) 2010 Stefan Mihaila.
      Subject to the Boost Software License, Version 1.0. 
      (See accompanying file LICENSE_1_0.txt or  http://www.boost.org/LICENSE_1_0.txt)
 -->
@@ -348,21 +349,49 @@
   </section>
   <section>
     <title>Finders</title>
-    <para>Finders offer a greater degree of control over what string search algorithms you would like to use for finding. </para>
-    <para>They are especially useful if multiple searches are to be performed and the string or the substring do not change every iteration (because most string search algorithms precompute information on either the sought string or the text, meaning subsequent searches on the pattern or the text can be faster).</para>
-    <para>There are two finder types, <classname alt="boost::algorithm::finder_t">finder_t </classname>and <classname alt="boost::algorithm::simplified_finder_t">simplified_finder_t </classname>, as well as some finder generators: <functionname>first_finder</functionname>, <functionname>last_finder</functionname>, <functionname>nth_finder</functionname>etc.<programlisting>std::string random_saying =
+    <para>Finders offer a greater degree of control over what string search algorithms you would like to use for finding. Some of them may also be used as parameters to find/replace/split functions. </para>
+    <para>They are especially useful if multiple searches are to be performed and the string or the substring do not change every iteration (because most string search algorithms precompute information on either the sought string or the text, meaning subsequent searches can be faster).</para>
+    <para>There currently are 6 supported finder types: <classname alt="boost::algorithm::finder_t">finder_t</classname>, <classname alt="boost::algorithm::simplified_finder_t">simplified_finder_t</classname><classname alt="boost::algorithm::benchmark_finder_t">benchmark_finder_t</classname>, <classname alt="boost::algorithm::first_finder_t">first_finder_t</classname>, <classname alt="boost::algorithm::nth_finder_t">nth_finder_t</classname> and <classname alt="boost::algorithm::last_finder_t">last_finder_t</classname>.<programlisting>std::string random_saying =
     "Speak when you are angry and you will make the best speech you'll ever regret.";
 
+//Create a finder_t object that will search using the Knuth-Morris-Pratt algorithm.
+//Rule of thumb for finder_t is:
+//  pass a pointer and no copy is made, pass a reference and an internal copy is made.
+//Note that finder_t is the only finder to support passing references (other finders only support
+//  passing pointers)
+//In this example, we pass a temporary as the pattern (which will be copied internally), and a pointer to a range
+//as the text (and no copy will be made).
 boost::finder_t&lt;std::string, std::string, boost::knuth_morris_pratt&gt; finder("angry", &amp;random_saying);
 
-boost::to_upper(finder.find_first()); // we modified the internal text
-std::cout &lt;&lt; random_saying &lt;&lt; std::cout; // Outputs "Speak when you are ANGRY..."
+//Look for the first match of the pattern in the text using our finder
+boost::iterator_range&lt;std::string::iterator&gt; &amp;match = finder.find_first();
+boost::to_upper(match); // turn the matching range into uppercase
+std::cout &lt;&lt; random_saying &lt;&lt; std::endl; // Outputs "Speak when you are ANGRY..."
 
-boost::boyer_moore_finder finder2; // a typedef for finder_t&lt;string,string,boyer_moore&gt;
-finder2.set_substring("Speak"); // makes an internal copy of the substring
-finder2.set_string(&amp;random_saying); // passing as a pointer allows the finder to not make a copy
+//Create a functor finder (first_finder_t, last_finder_t, nth_finder_t are functor finders)
+//which looks for the last occurrence of pattern "you" in a string using the Boyer-Moore algorithm.
+std::string pattern = "you";
+boost::last_finder_t&lt;std::string, boost::boyer_moore&gt; finder2(&amp;pattern);
+//Call the functor using the string in which to search
+match = finder2(random_saying.begin(), random_saying.end());
+//Turn the last occurrence of "you" in random_saying to uppercase
+boost::to_upper(match);
+std::cout &lt;&lt; random_saying &lt;&lt; std::endl; // Outputs "... YOU'll ever regret."
 
-boost::to_upper(finder2.find_first()); // turn the match into uppercase
-std::cout &lt;&lt; random_saying &lt;&lt; std::endl; // Outputs "SPEAK when you are ANGRY..."</programlisting>For more information, consult the reference: <headername>boost/algorithm/string/finder.hpp</headername>.</para>
+//Create a simplified_finder_t. Very similar to finder_t, except it only accepts
+//pointers (no references, which means it never attempts to make copies).
+pattern = "Speak";
+boost::simplified_finder_t&lt;std::string, std::string,
+    boost::suffix_array_search&gt; finder3;
+finder3.set_string(&amp;random_saying);
+finder3.set_substring(&amp;pattern);
+match = finder3.find_first();
+boost::to_upper(match);
+//Important:
+//if we want to use finder3 at this point, we have to call set_string again,
+//because the string has changed (we turned some of it into uppercase and the finder has no idea we did that)
+finder3.set_string(&amp;random_saying);
+
+std::cout &lt;&lt; random_saying &lt;&lt; std::endl; // Outputs "SPEAK when you are ANGRY and you will make the best speech YOU'll ever regret."</programlisting>For more information on the features and functionality of various finder types, see <xref linkend="string_algo.quickref.finder_types"></xref>.</para>
   </section>
 </section>

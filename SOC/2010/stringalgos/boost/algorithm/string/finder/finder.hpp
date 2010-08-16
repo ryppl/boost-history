@@ -75,8 +75,9 @@ namespace boost { namespace algorithm {
     {
         //TODO:: Maybe write a String concept?
         //TODO:: Currently, there's a SGI Sequence Concept implemented by Boost.ConceptCheck,
-        //!         but std::string does not obey this concept, which means that even calling these template
-        //!         parameters sequences is wrong.
+        //         but std::string does not obey this concept, which means that even calling these template
+        //         parameters sequences is wrong.
+    private:
         BOOST_CONCEPT_ASSERT((boost::Container<Sequence1T>));
         BOOST_CONCEPT_ASSERT((boost::Container<Sequence2T>));
     public:
@@ -348,8 +349,8 @@ namespace boost { namespace algorithm {
                 after the passed iterators become invalid.
             \note This is equivalent to:
                 <code>finder::string_range_type range(string_begin,string_end);
-                finder.set_string(&range);
-                return finder.find_first();
+finder.set_string(&range);
+return finder.find_first();
                 </code>
                 */
         string_range_type operator()(string_iterator_type &string_begin,
@@ -460,8 +461,8 @@ namespace boost { namespace algorithm {
             \post The internal find offset is set immediately after the current match starts.
             \warning If the match is performed against the internal text, then an iterator range in the
                 internal text will be returned. Modifying the contents of that range will modify the internal text,
-                making it necessary to call \ref use_internal_string() afterwards. This call will switch to using the internal
-                text (in our case, it already does that, so it will just "refresh") and will force the string search algorithm
+                making it necessary to call \ref use_internal_string() afterwards. \ref use_internal_string() will switch to using the internal
+                text (or, in case it's already using it, update the range with new, valid, iterators) and will force the string search algorithm
                 to recompute its information on the new text.
         */
         string_range_type find_next()

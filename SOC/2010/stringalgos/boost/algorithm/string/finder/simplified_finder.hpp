@@ -83,12 +83,14 @@ namespace boost { namespace algorithm {
                 for storing precomputed data if necessary
             \warning The ranges that substr and str point to must not change during the lifetime of the finder,
                 otherwise one would have to re-set the ranges:
-                <example> <code>
-                string substr("a"), str("b");
-                simplified_finder_t<string,string,..> finder(&substr, &str);
-                substr = "b"; // substr has changed, invalidating the internally stored range
-                finder.set_substring(&substr); // re-set the substring so the finder now uses the new, valid range
-                </code> </example>
+                <example> 
+<code>
+string substr("a"), str("b");
+simplified_finder_t<string,string,..> finder(&substr, &str);
+substr = "b"; // substr has changed, invalidating the internally stored range
+finder.set_substring(&substr); // re-set the substring so the finder now uses the new, valid range
+</code>
+                </example>
         */
         simplified_finder_t(Range1T const *const substr, Range2T *const str,
             ComparatorT comparator = ComparatorT(), AllocatorT allocator = AllocatorT())
@@ -121,7 +123,11 @@ namespace boost { namespace algorithm {
         void set_substring (substring_type const *const substr)
         { ranges_.substr = boost::as_literal(*substr); substring_has_changed_ = true; }
 
-        //! \overload
+        //! Change the pattern (substring) to be searched.
+        /*!
+            \param string_begin An iterator indicating the beginning of the pattern to be searched.
+            \param string_end An iterator indicating the end of the pattern to be searched.
+        */
         void set_substring (substring_iterator_type const &substring_begin, substring_iterator_type const &substring_end)
         {
             ranges_.substr = boost::make_iterator_range(substring_begin, substring_end);
@@ -136,7 +142,11 @@ namespace boost { namespace algorithm {
         void set_string (string_type *const str)
         { ranges_.str = boost::as_literal(*str); string_has_changed_ = true; }
 
-        //!\overload
+        //! Change the text in which to search.
+        /*!
+            \param string_begin An iterator indicating the beginning of the text to be searched.
+            \param string_end An iterator indicating the end of the text to be searched.
+        */
         void set_string (string_iterator_type const &string_begin, string_iterator_type const &string_end)
         {
             ranges_.str = boost::make_iterator_range(string_begin, string_end);
@@ -150,9 +160,7 @@ namespace boost { namespace algorithm {
         //! Finds the first occurrence of the pattern in the text (substring in the string)
         /*!
             Equivalent to:
-            \code
-            find_reset(); return find_next();
-            \endcode
+            <code>find_reset(); return find_next();</code>
         */
         string_range_type find_first ()
         {
@@ -173,10 +181,7 @@ namespace boost { namespace algorithm {
                 would cause undefined behavior. Make sure you call set_string() if you want to use this finder
                 after the passed iterators become invalid.
             \note This is equivalent to:
-                <code>
-                finder.set_string(string_begin, string_end);
-                return finder.find_first();
-                </code>
+                <code>finder.set_string(string_begin, string_end); return finder.find_first();</code>
             */
         string_range_type operator()(string_iterator_type const &string_begin,
             string_iterator_type const &string_end)
