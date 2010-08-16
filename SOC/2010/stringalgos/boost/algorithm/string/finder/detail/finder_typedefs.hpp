@@ -68,9 +68,8 @@ namespace boost { namespace algorithm { namespace detail {
         BOOST_ALGORITHM_DETAIL_FINDER_TYPEDEFS(Range1T, Range2T);
         BOOST_ALGORITHM_DETAIL_COMMON_FINDER_TYPEDEFS2(ComparatorT, AllocatorT);
     };
-*/
 
 } } }
-
+*/
 
 #endif // BOOST_ALGORITHM_FINDER_TYPEDEFS_HPP

@@ -1,145 +1,10 @@
-/*
-#if defined(BOOST_MPL_LIMIT_METAFUNCTION_ARITY) && BOOST_MPL_LIMIT_METAFUNCTION_ARITY < 6
-#undef BOOST_MPL_LIMIT_METAFUNCTION_ARITY
-#define BOOST_MPL_LIMIT_METAFUNCTION_ARITY 10
-#elif !defined(BOOST_MPL_LIMIT_METAFUNCTION_ARITY)
-#define BOOST_MPL_LIMIT_METAFUNCTION_ARITY 10
-#endif
-*/
-
-
-#if 0
-
-#include <boost/type_traits.hpp>
-
-
-#include <boost/mpl/lambda.hpp>
-#include <boost/mpl/placeholders.hpp>
-#include <boost/mpl/transform.hpp>
-#include <boost/mpl/vector_c.hpp>
-#include <boost/mpl/equal.hpp>
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/vector.hpp>
-
-
-#include <iostream>
-#include <string>
-#include <vector>
-
-
-using namespace std;
-using namespace boost;
-
-/*
-template <class F, class X>
-struct twice : boost::mpl::apply<F, typename boost::mpl::apply<F, X>::type> {};
-
-using namespace boost::mpl;
-using namespace boost::mpl::placeholders;
-
-template <class S1, class S2>
-struct cross_product
-{
-    template <class OldS, class T>
-    struct inner_cross_product
-    {
-        typedef typename boost::mpl::fold<S2, OldS,
-            boost::mpl::push_back<boost::mpl::_1, std::pair<T, boost::mpl::_2> > >::type type;
-    };
-
-    typedef typename boost::mpl::fold<S1, boost::mpl::vector0<>,
-        inner_cross_product<boost::mpl::_1,boost::mpl::_2> >::type type;
-};
-
-int main ()
-{
-    using namespace boost;
-    using namespace boost::mpl::placeholders;
-    typedef twice<boost::add_pointer<boost::mpl::_1>,int>::type A;
-    static_assert(is_same<A, int**>::value,"a");
-    static_assert(
-        boost::mpl::equal<
-            boost::mpl::transform<
-                boost::mpl::vector_c<int, 1,2,3>,
-                boost::mpl::plus<_,boost::mpl::int_<1> >
-            >::type,
-            boost::mpl::vector_c<int,2,3,4>
-        >::value, "c");
-    static_assert(
-        boost::mpl::equal<
-            boost::mpl::transform<
-                boost::mpl::vector_c<int,1,2,3>,
-                boost::mpl::vector_c<int,1,1,1>,
-                boost::mpl::plus<_,_>
-            >::type,
-            boost::mpl::vector_c<int,2,3,4>
-        >::value, "b");
-    static_assert(
-        boost::mpl::equal<
-            boost::mpl::fold<
-                boost::mpl::vector<int>, boost::mpl::vector0<>,
-                boost::mpl::push_back<boost::mpl::_1,std::pair<boost::mpl::_2,boost::mpl::_2> > >::type,
-            boost::mpl::vector<std::pair<int,int>>
-        >::value, "c");
-    static_assert(
-        boost::mpl::equal<
-            cross_product<
-                boost::mpl::vector<char>, boost::mpl::vector<char>
-            >::type,
-            boost::mpl::vector<std::pair<char,char>>
-        >::value, "ohai"
-    );
-
-
-    std::cin.get();
-    return 0;
-}
-*/
-
-
-
-
-
-
-#include <boost/mpl/lambda.hpp>
-#include <boost/mpl/placeholders.hpp>
-#include <boost/mpl/transform.hpp>
-#include <boost/mpl/vector_c.hpp>
-#include <boost/mpl/equal.hpp>
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/apply.hpp>
-#include <boost/fusion/adapted/mpl.hpp>
-
-
-template <class T, class U, class V> struct A : T::template X<U> {};
-
-#if 0
-template <class Range1T, class Range2T, class AlgorithmT/*,
-    class ComparatorT = ::boost::algorithm::is_equal,*/
-    //class AllocatorT = /*typename AlgorithmT::default_allocator_type*/std::allocator<std::size_t>/*,
-    //class AdditionalBehaviorT = boost::algorithm::finder_no_additional_behavior*/
->
-class simplified_finder_t2 :
-    //public boost::algorithm::detail::finder_typedefs<Range1T,Range2T,ComparatorT,AllocatorT>,
-    private AlgorithmT::template algorithm<
-        simplified_finder_t<Range1T, Range2T, AlgorithmT>,
-        BOOST_STRING_TYPENAME boost::range_const_iterator<Range1T>::type,
-        BOOST_STRING_TYPENAME boost::range_iterator<Range2T>::type//,
-        //ComparatorT,AllocatorT>
-    >
-{ };
-#endif
-
-#endif
-
-//#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-//#define BOOST_MPL_LIMIT_METAFUNCTION_ARITY 10
 #include <boost/algorithm/string/benchmark_finder.hpp>
 
 #include <boost/algorithm/string/find.hpp>
 #include <boost/algorithm/string/finder.hpp>
 #include <boost/algorithm/string/string_search.hpp>
+
+//#include <boost/algorithm/string/string_search/knuth_morris_pratt2.hpp>
 
 #include <boost/mpl/lambda.hpp>
 #include <boost/fusion/algorithm/transformation/transform.hpp>
@@ -301,11 +166,11 @@ int main ()
     boost::benchmark_finder_t<std::string, std::string,
         boost::mpl::vector<
             boost::naive_search,
-            boost::knuth_morris_pratt//,
-            //boost::boyer_moore,
-            //boost::suffix_array_search,
-            //boost::rabin_karp32//,
-            //boost::rabin_karp64
+            boost::knuth_morris_pratt,
+            boost::boyer_moore,
+            boost::suffix_array_search,
+            boost::rabin_karp32,
+            boost::rabin_karp64
         >,
        boost::is_equal> b;
 
@@ -318,6 +183,7 @@ int main ()
 
     b.clear();
 
+    //Use your own files here to benchmark.
     std::string const &benchmark_path = "E:/gsoc-boost/benchmarks";
 
     std::vector<std::string> benchmark_files = list_of

@@ -90,6 +90,7 @@ namespace boost { namespace algorithm {
 
                 std::size_t str_size = boost::end(str) - boost::begin(str),
                     substr_size = boost::end(substr) - boost::begin(substr);
+                
                 std::size_t str_idx = start - boost::begin(str), substr_idx = 0;
 
                 if (boost::begin(substr) == boost::end(substr))
@@ -151,15 +152,15 @@ namespace boost { namespace algorithm {
                 
                 std::size_t substr_size = boost::end(substr) - boost::begin(substr);
                 failure_func.clear();
-                failure_func.reserve(substr_size);
-                failure_func.push_back(0); // failure_func[0] = 0
+                //failure_func.reserve(substr_size);
+                //failure_func.push_back(0); // failure_func[0] = 0
+                failure_func.resize(substr_size);
                 
                 if (substr_size < 2) return;
 
                 //std::size_t i = 0, j = 1;
                 substring_iterator_type i = boost::begin(substr), j = boost::begin(substr)+1;
 
-                //while (j < substr_size)
                 do
                 {
                     //while (i > 0 && !comp_(*(boost::begin(substr)+i), *(boost::begin(substr)+j)))
@@ -173,13 +174,14 @@ namespace boost { namespace algorithm {
                         !comp_(*i,*j))
                     {
                         //Invariant: i == 0 and substr[0] != substr[j], which means failure_func[j]=0
-                        failure_func.push_back(0);
+                        //failure_func.push_back(0);
                         ++j;
                     }
                     //Invariant: j is out of bounds or P[i]==P[j], meaning failure_func[j]=i+1
                     /*if (j < substr_size)
                     {
-                        failure_func.push_back(i+1);
+                        failure_func[j]=i+1;
+                        //failure_func.push_back(i+1);
                         ++j; ++i;
                     }
                     else break;*/
