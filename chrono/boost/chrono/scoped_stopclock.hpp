@@ -14,6 +14,7 @@
 #include <boost/chrono/stopwatch.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
 #include <boost/chrono/time_formatter.hpp>
+#include <boost/chrono/stopwatch_accumulator_time_formatter.hpp>
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 

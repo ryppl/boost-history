@@ -14,9 +14,7 @@
 
 #include <boost/chrono/chrono.hpp>
 #include <boost/chrono/stopwatch_scoped.hpp>
-#include <boost/chrono/stopwatch_reporter.hpp>
 #include <boost/system/error_code.hpp>
-#include <boost/chrono/stopwatch_accumulator_formatter.hpp>
 #include <boost/accumulators/framework/accumulator_set.hpp>
 #include <boost/accumulators/statistics/sum.hpp>
 #include <boost/accumulators/statistics/min.hpp>
@@ -58,15 +56,6 @@ namespace boost
     >
     class stopwatch_accumulator;
 
-    template <class Clock, class Accumulator>
-    struct stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock, Accumulator> > {
-        typedef stopwatch_accumulator_formatter type;
-    };
-
-    template <class Clock, class Accumulator>
-    struct wstopwatch_reporter_default_formatter<stopwatch_accumulator<Clock, Accumulator> > {
-        typedef wstopwatch_accumulator_formatter type;
-    };
 
 //--------------------------------------------------------------------------------------//
     template <class Clock, class Accumulator>
@@ -194,7 +183,7 @@ namespace boost
             suspend_level_=0;
             ec.clear();
         }
-        
+
         accumulator& accumulated( ) { return accumulated_; }
         duration lifetime( system::error_code & ec = system::throws ) {
             return  clock::now( ec ) - construction_;
@@ -204,11 +193,6 @@ namespace boost
         typedef stopwatch_stopper<stopwatch_accumulator<Clock> > scoped_stop;
         typedef stopwatch_suspender<stopwatch_accumulator<Clock> > scoped_suspend;
         typedef stopwatch_resumer<stopwatch_accumulator<Clock> > scoped_resume;
-        template <class Formatter=typename stopwatch_reporter_default_formatter<stopwatch_accumulator>::type>
-        struct get_reporter {
-            typedef stopwatch_reporter<stopwatch_accumulator,Formatter > type;
-        };
-        typedef stopwatch_reporter<stopwatch_accumulator<Clock> > reporter;
     private:
         bool running_;
         bool suspended_;

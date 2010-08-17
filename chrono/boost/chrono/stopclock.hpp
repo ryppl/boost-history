@@ -13,10 +13,11 @@
 #include <boost/chrono/config.hpp>
 #include <boost/chrono/detail/static_assert.hpp>
 #include <boost/chrono/stopwatch_reporter.hpp>
+#include <boost/chrono/stopwatch_formatter.hpp>
+#include <boost/chrono/time_formatter.hpp>
 #include <boost/chrono/stopwatch.hpp>
 //#include <boost/chrono/chrono.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
-#include <boost/chrono/time_formatter.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
@@ -42,6 +43,37 @@ namespace boost { namespace chrono  {
  * }
  */
 //--------------------------------------------------------------------------------------//
+
+    template <class Clock>
+    struct stopwatch_reporter_default_formatter<stopwatch<Clock> > {
+        typedef stopwatch_formatter type;
+    };
+
+    template <class Clock>
+    struct wstopwatch_reporter_default_formatter<stopwatch<Clock> > {
+        typedef wstopwatch_formatter type;
+    };
+
+    template <>
+    struct stopwatch_reporter_default_formatter<stopwatch<process_cpu_clock> > {
+        typedef time_formatter type;
+    };
+
+    template <>
+    struct wstopwatch_reporter_default_formatter<stopwatch<process_cpu_clock> > {
+        typedef wtime_formatter type;
+    };
+
+    template <>
+    struct stopwatch_reporter_default_formatter<stopwatch<suspendible_clock<process_cpu_clock> > > {
+        typedef stopwatch_reporter_default_formatter<stopwatch<process_cpu_clock> >::type  type;
+    };
+
+    template <>
+    struct wstopwatch_reporter_default_formatter<stopwatch<suspendible_clock<process_cpu_clock> > > {
+        typedef wstopwatch_reporter_default_formatter<stopwatch<process_cpu_clock> >::type  type;
+    };
+
 
     template <class Clock, class Formatter>
     class basic_stopclock : public basic_stopwatch_reporter<chrono::stopwatch<Clock>, Formatter> {

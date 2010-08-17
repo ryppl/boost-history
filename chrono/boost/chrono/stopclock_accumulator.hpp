@@ -16,6 +16,7 @@
 #include <boost/chrono/stopwatch_reporter.hpp>
 #include <boost/chrono/stopwatch_accumulator.hpp>
 #include <boost/chrono/stopwatch_accumulator_formatter.hpp>
+#include <boost/chrono/stopwatch_accumulator_time_formatter.hpp>
 #include <boost/chrono/chrono.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -43,6 +44,36 @@ namespace boost { namespace chrono  {
  * }
  */
 //--------------------------------------------------------------------------------------//
+
+    template <class Clock, class Accumulator>
+    struct stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock, Accumulator> > {
+        typedef stopwatch_accumulator_formatter type;
+    };
+
+    template <class Clock, class Accumulator>
+    struct wstopwatch_reporter_default_formatter<stopwatch_accumulator<Clock, Accumulator> > {
+        typedef wstopwatch_accumulator_formatter type;
+    };
+
+    template <class Accumulator>
+    struct stopwatch_reporter_default_formatter<stopwatch_accumulator<process_cpu_clock,Accumulator> > {
+        typedef stopwatch_accumulator_time_formatter type;
+    };
+
+    template <class Accumulator>
+    struct wstopwatch_reporter_default_formatter<stopwatch_accumulator<process_cpu_clock, Accumulator> > {
+        typedef wstopwatch_accumulator_time_formatter type;
+    };
+
+    template <class Accumulator>
+    struct stopwatch_reporter_default_formatter<stopwatch_accumulator<suspendible_clock<process_cpu_clock>, Accumulator> > {
+        typedef stopwatch_reporter_default_formatter<stopwatch_accumulator<process_cpu_clock> >::type  type;
+    };
+
+    template <class Accumulator>
+    struct wstopwatch_reporter_default_formatter<stopwatch_accumulator<suspendible_clock<process_cpu_clock>, Accumulator> > {
+        typedef wstopwatch_reporter_default_formatter<stopwatch_accumulator<process_cpu_clock> >::type  type;
+    };
 
 
     template <class Clock, class Formatter>
@@ -178,7 +209,7 @@ namespace boost { namespace chrono  {
     typedef stopclock_accumulator< boost::chrono::process_real_cpu_clock > process_real_cpu_stopclock_accumulator;
     typedef stopclock_accumulator< boost::chrono::process_user_cpu_clock > process_user_cpu_stopclock_accumulator;
     typedef stopclock_accumulator< boost::chrono::process_system_cpu_clock > process_system_cpu_stopclock_accumulator;
-    //typedef stopclock_accumulator< boost::chrono::process_cpu_clock > process_cpu_stopclock_accumulator;
+    typedef stopclock_accumulator< boost::chrono::process_cpu_clock > process_cpu_stopclock_accumulator;
 
     template <class Clock=high_resolution_clock, class Formatter=typename wstopwatch_reporter_default_formatter<stopwatch_accumulator<Clock> >::type>
     class wstopclock_accumulator;
@@ -252,7 +283,8 @@ namespace boost { namespace chrono  {
     typedef wstopclock_accumulator< boost::chrono::process_real_cpu_clock > process_real_cpu_wstopclock_accumulator;
     typedef wstopclock_accumulator< boost::chrono::process_user_cpu_clock > process_user_cpu_wstopclock_accumulator;
     typedef wstopclock_accumulator< boost::chrono::process_system_cpu_clock > process_system_cpu_wstopclock_accumulator;
-    //typedef wstopclock_accumulator< boost::chrono::process_cpu_clock > process_cpu_wstopclock_accumulator;
+    typedef wstopclock_accumulator< boost::chrono::process_cpu_clock > process_cpu_wstopclock_accumulator;
+
 
   } // namespace chrono
 } // namespace boost

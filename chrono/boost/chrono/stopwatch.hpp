@@ -13,9 +13,7 @@
 #include <utility>
 #include <boost/chrono/chrono.hpp>
 #include <boost/chrono/stopwatch_scoped.hpp>
-#include <boost/chrono/stopwatch_reporter.hpp>
 #include <boost/system/error_code.hpp>
-#include <boost/chrono/stopwatch_formatter.hpp>
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
@@ -41,16 +39,6 @@ namespace boost
 
     template <class Clock=high_resolution_clock>
     class stopwatch;
-
-    template <class Clock>
-    struct stopwatch_reporter_default_formatter<stopwatch<Clock> > {
-        typedef stopwatch_formatter type;
-    };
-
-    template <class Clock>
-    struct wstopwatch_reporter_default_formatter<stopwatch<Clock> > {
-        typedef wstopwatch_formatter type;
-    };
 
     struct dont_start_t{};
     static const dont_start_t dont_start = {};
@@ -183,11 +171,6 @@ namespace boost
         typedef stopwatch_stopper<stopwatch<Clock> > scoped_stop;
         typedef stopwatch_suspender<stopwatch<Clock> > scoped_suspend;
         typedef stopwatch_resumer<stopwatch<Clock> > scoped_resume;
-        template <class Formatter=typename stopwatch_reporter_default_formatter<stopwatch<Clock> >::type>
-        struct get_reporter {
-            typedef stopwatch_reporter<stopwatch<Clock>,Formatter > type;
-        };
-        typedef stopwatch_reporter<stopwatch<Clock> > reporter;
 
     private:
         bool running_;

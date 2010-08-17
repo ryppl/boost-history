@@ -63,7 +63,7 @@ namespace boost { namespace chrono  {
         static int default_places() { return 3; }
 
         template <class Stopwatch >
-        static void show_time( Stopwatch & stopwatch_
+        static void show_time( typename Stopwatch::duration::rep const & times
             , const char_type* format, int places, ostream_type & os
             , system::error_code & ec)
           //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
@@ -71,8 +71,6 @@ namespace boost { namespace chrono  {
           {
             typedef typename Stopwatch::duration duration;
             typedef typename duration::rep rep;
-            duration d = stopwatch_.elapsed( ec );
-            rep times=d.count();
             if ( times.real < 0 ) return;
             if ( places > 9 )
               places = 9;  // sanity check
@@ -119,12 +117,25 @@ namespace boost { namespace chrono  {
                   }
                   break;
                 default:
-                  assert(0 && "run_timer internal logic error");
+                  assert(0 && "basic_time_formatter internal logic error");
                 }
               }
             }
           }
 
+        template <class Stopwatch >
+        static void show_time( Stopwatch & stopwatch_
+            , const char_type* format, int places, ostream_type & os
+            , system::error_code & ec)
+          //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
+          //  be as low as 10, although will be 15 for many common platforms.
+        {
+            typedef typename Stopwatch::duration duration;
+            typedef typename duration::rep rep;
+            duration d = stopwatch_.elapsed( ec );
+            rep times=d.count();
+            show_time<Stopwatch>(times, format, places, os, ec);
+        }
     };
 
 namespace detail {
@@ -158,16 +169,6 @@ namespace detail {
     typedef basic_time_formatter<char> time_formatter;
     typedef basic_time_formatter<wchar_t> wtime_formatter;
 
-    template <>
-    struct stopwatch_reporter_default_formatter<stopwatch<process_cpu_clock> > {
-        typedef time_formatter type;
-    };
-
-    template <>
-    struct stopwatch_reporter_default_formatter<stopwatch<suspendible_clock<process_cpu_clock> > > {
-        typedef stopwatch_reporter_default_formatter<stopwatch<process_cpu_clock> >::type  type;
-    };
-    
   } // namespace chrono
 } // namespace boost
 
