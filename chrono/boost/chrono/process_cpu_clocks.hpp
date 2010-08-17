@@ -125,7 +125,7 @@ namespace boost { namespace chrono {
             }
             
             template <typename OSTREAM>
-            void print(OSTREAM& os) {
+            void print(OSTREAM& os) const {
                 os <<  "{"<< real <<","<< user <<","<< system << "}";
             };
         };
