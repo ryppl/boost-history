@@ -17,7 +17,7 @@ int main( int argc, char * argv[] )
 
   boost::chrono::run_timer t( format, places );
 
-  for ( long i = 0; i < 10000000; ++i )
+  for ( long i = 0; i < 10000; ++i )
     std::sqrt( 123.456L ); // burn some time
 
   return 0;

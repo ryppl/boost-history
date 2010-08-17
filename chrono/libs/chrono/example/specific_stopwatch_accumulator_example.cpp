@@ -1,6 +1,6 @@
 //  stopwatch_accumulator_example.cpp  ---------------------------------------------------//
 
-//  Copyright 2009 Vicente J. Botet Escriba
+//  Copyright 2009/2010 Vicente J. Botet Escriba
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
@@ -65,31 +65,19 @@ using namespace boost::accumulators;
 
 
 typedef stopwatch_reporter<
-        stopwatch_accumulator<process_real_cpu_clock,
-            accumulator_set<process_real_cpu_clock::rep,
-                features<
+            stopwatch_accumulator<process_real_cpu_clock,
+                accumulator_set<process_real_cpu_clock::rep,
+                    features<
                         tag::count,
                         tag::sum,
                         tag::mean,
                         tag::variance(lazy)
+                    >
                 >
             >
-        >
         , my_stopwatch_accumulator_formatter
     > my_stopwatch_accumulator_reporter;
 
-typedef stopwatch_accumulator<process_real_cpu_clock,
-            accumulator_set<process_real_cpu_clock::rep,
-                features<
-                        tag::count,
-                        tag::sum,
-                        tag::mean,
-                        tag::variance(lazy)
-                >
-            >
-        >::get_reporter< my_stopwatch_accumulator_formatter>::type
-    my_stopwatch_accumulator_reporter2;
-    
 int f1(long j)
 {
   //static my_stopwatch_accumulator_reporter acc(BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT);
@@ -105,9 +93,9 @@ int main()
 {
   static my_stopwatch_accumulator_reporter acc;
 
-  f1(100000);
-  f1(200000);
-  f1(300000);
+  f1(1000);
+  f1(2000);
+  f1(3000);
   return 0;
 }
 
