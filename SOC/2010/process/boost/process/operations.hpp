@@ -213,12 +213,14 @@ inline child create_child(const std::string &executable, Arguments args,
     std::pair<std::size_t, char**> envp =
         detail::environment_to_envp(ctx.env);
 
+    const char *work_dir = ctx.work_dir.c_str();
+
     pid_t pid = fork();
     if (pid == -1)
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("fork(2) failed");
     else if (pid == 0)
     {
-        if (chdir(ctx.work_dir.c_str()) == -1)
+        if (chdir(work_dir) == -1)
         {
             write(STDERR_FILENO, "chdir() failed\n", 15);
             _exit(127);
