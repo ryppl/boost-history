@@ -48,6 +48,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_void.hpp>
 #include <boost/type_traits/is_reference.hpp>
+#include <boost/type_traits/is_pointer.hpp>
 
 //----------------------------------------------------------------------------//
 //                                                                            //
@@ -94,7 +95,7 @@ namespace boost {
     namespace type_traits_detail {
 
     template <typename T,
-        bool = !is_reference<T>::value && !is_void<T>::value>
+        bool = !is_reference<T>::value && ! is_pointer<T>::value &&  !is_void<T>::value>
     struct add_rvalue_reference_helper
     { typedef T   type; };
 
@@ -114,6 +115,11 @@ namespace boost {
     : public add_rvalue_reference_helper<T>
     { };
 
+    template <typename T>
+    struct add_rvalue_reference<T&>
+    { typedef T& type;
+        };
+
 
     template <typename T>
     typename add_rvalue_reference<T>::type declval();
@@ -126,14 +132,16 @@ namespace boost {
         BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(U) > 0, BOOST_COMMON_TYPE_MUST_BE_A_COMPLE_TYPE, (U));
         static bool declval_bool();  // workaround gcc bug; not required by std
         static typename add_rvalue_reference_helper<T>::type declval_T();  // workaround gcc bug; not required by std
-        static typename add_rvalue_reference_helper<U>::type  declval_U();  // workaround gcc bug; not required by std
-    
+        static typename add_rvalue_reference_helper<U>::type declval_U();  // workaround gcc bug; not required by std
+
 #if !defined(BOOST_NO_DECLTYPE)
     public:
         typedef decltype(declval<bool>() ? declval<T>() : declval<U>()) type;
 #elif defined(BOOST_COMMON_TYPE_DONT_USE_TYPEOF)
         typedef char (&yes)[1];
         typedef char (&no)[2];
+        //~ static yes deduce(typename add_rvalue_reference_helper<T>::type);
+        //~ static no deduce(typename add_rvalue_reference_helper<U>::type);
         static yes deduce(T);
         static no deduce(U);
     public:
