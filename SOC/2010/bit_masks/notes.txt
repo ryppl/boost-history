@@ -1,3 +1,328 @@
+--------------------------------------------------------------------------------
+                    General Notes/Things to fix for Documentation
+--------------------------------------------------------------------------------
+1)  Get the image replacement for notes, warnings, suggestions,... etc working.
+
+
+  
+--------------------------------------------------------------------------------
+                        Project Documentation Status
+--------------------------------------------------------------------------------
+
+Current topics inside of documentation
+
+1)  Header file summary
+    *   Add bitfield_tuple header to the list of header files.
+        *   Create a link to the files section of bitfield_tuple.
+        *   add the bitfield_tuple_fwd.hpp header to the list of header files.
+
+    *   Add bitfield_vector to the list of header files (post implementation)
+        *   create section for it.
+    *   Fix: bits_mask type and low_bits_mask type 
+        change to: `bits_mask` type
+
+    *   Use inline code for all of the class names (ie `class name`).
+
+2)  Bit Masks
+    *   Maybe add something here? (this section may be best left blank for now).
+
+    A)  Overview
+        *   Give a summary of the project along with the Description and
+            overview links.
+        *   Give super simple example and add something about the general
+            use cases for this library.
+
+        I)  Description
+            *   first sentence: change constructible to compossible.
+            *   Rewrite the first paragraph completely this needs to be worded
+                better. Try to use the same basic idea though.
+            *   Add different examples.
+            *   add example for composing masks for basic things.
+                =   maybe something like bitfields or something along those 
+                    lines.
+            *   REMOVE THE SENTENCES: Now, because these values were intended to 
+                be used during the runtime of a program all of the masking types
+                which are provided by this library provide an additional 
+                functionality for run time support. All of the mask types in 
+                this library provide the implicit cast operator allowing for the
+                meta-function objects to be used as if they were the integral 
+                value they were used to construct.
+
+            *   CONSIDER ADDING: Something that say that the masks use the 
+                implicit cast operator from integral_constant to allow for
+                construction of the mask type and for ease of use during
+                runtime.
+
+        II) rationale
+            *   list arguments for why the bit masks are good and help with
+                the quick creation of masks also reword second sentence the word
+                clarity doesn't make sense there.
+            *   "Fix"(Remove) comment line.
+            *   Basic rationale ideas
+                1)  I don't like using hex.
+                    a) Hex can be confusing.
+                    b)  Sometimes the way in which one thinks about the creation
+                        of a bit mask differs from situation to situation.
+                2)  sometimes it's easier to thing about a mask as a section
+                    of contiguous bits being moved around.
+
+                3)  Often times masks don't make a lot of sense so this provides
+                    clarity where often times unintentional obfuscation exists.
+    B1) Getting started section <- NEW
+
+    B)  integral_mask_type
+            *   Remove "type" from the end of this link.
+            *   Add offset and width to integral mask's documentation.
+            *   Add a header for the template parameters section.
+            *   Make sure that integral_mask and all uses of N are enclosed in
+                ` `.
+            *   Make a section for the header and make a link to the file
+                that it points at.
+            *   Inside of the parameters table change the wording of value's
+                description from "represent the mask" to "as the mask".
+                This should make things more clear.
+            *   Change section name to use ` `.
+            *   Note the position of this mask to the other mask types
+                within the inheritance hierarchy.
+            *   Make note of the namespace in which this exists.
+            *   Add hex counter-example?
+            *   Document PRECONDITIONS for using the template (If there are non
+                say so).
+ 
+    C)  high_bits_mask
+            *   Rewrite Description paragraph.
+            *   Give multiple examples at the top of the page showing the
+                bits for more types then just int (short and char).
+            *   Add documentation for offset for interface.
+            *   Re word documentation for value change to say something along
+                the lines of value of the mask instead of value associated with
+                N.
+            *   Add documentation for the header file in which high bits mask
+                is located. Make sure to document both header files that can be
+                used to include high_bits_mask.
+            *   The section for the header file needs its own header.
+            *   Make sure that high_bits_mask and all uses of N are enclosed in
+                ` `.
+            *   Note the position in the hierarchy in relation to integral_mask.
+            *   Should I be using high bit and low bit instead of using left and
+                right?
+            *   Make sure the link for this section is enclosed inside of ` `.
+            *   Make note of the namespace in which this exists.
+            *   Add hex counter-example?
+            *   Document PRECONDITIONS for using the template.
+
+    D)  low_bits_mask
+            *   Rewrite the Description for this class so that it doesn't
+                reference high_bits_mask as an example.
+            *   Make sure the link for this section is enclosed inside of ` `.
+            *   Make sure low_bits_mask and all uses of N are enclosed inside of
+                ` `.
+            *   Create section for the header files.
+            *   Note the position in the hierarchy in relation to integral_mask.
+            *   Add both header files which can be used to include this class.
+            *   Make note of the namespace in which this exists.
+            *   Add documentation for offset as part of the interface.
+            *   Add hex counter-example?
+            *   Document PRECONDITIONS for using the template.
+
+    E)  bits_mask
+            *   Make sure the link for this section is enclosed inside of ` `.
+            *   Make sure that bits_mask and all uses of N are enclosed within
+                ` `.
+            *   Add a section for header files.
+            *   Add the header file which this exist's within to that section.
+            *   Move comments from inside of the code section into the
+                description (unless its binary representation of a mask.
+            *   Add hex counter-example?
+            *   Note the position in the hierarchy in relation to integral_mask.
+            *   Note the namespace in which this exists.
+            *   Remove TYPENAME from the example section and replace it with
+                `bits_mask`.
+            *   Note the default parameter for Width inside of the parameter
+                documentation.
+
+    D)  bit_width <- NEW
+        *   Create section for the bit_width meta-function.
+        *   Note this as a meta-function and NOT a mask.
+        *   Explain where this is used and what it does.
+        *   Note header file.
+        *   Note parameters and interface.
+        *   Give example of basic usage.
+        *   Give equivalent code for what this is actually doing( 8*sizeof(T) ).
+        *   - Maybe Rationale?!?!
+
+    E)  MPL integration example <- NEW
+        *   Show how the different bit mask's can be used for creating more
+            complex masks by using the MPL bitwise operations.
+        *   This may be better suited to a different section.
+
+3)  bitfield_tuple
+    A)  Overview
+        *   Add very simple summary to this page saying what a bitfield_tuple
+            actually is.
+        
+        I)  Description
+            *   Remove the part about endianness (at end of description).
+            *   Add additional use cases for doing strange things with pointers.
+            *   Add example for doing something with a custom member.
+            *   Add the traditional example of how item's are stored within
+                and integer.
+            *   Explain how the 
+
+        II) rationale
+            *   Add documentation about the space saving measures for pointers.
+            *   Add reference to the red-black tree color storage.
+            *   Add something about storing boolean values within a number that
+                is always even.
+
+    B)  Users Guide       
+        I)   Getting Started
+            a)  Installation
+                * Remove the current documentation and add "coming soon".
+
+            b)  Dependencies
+                *   Need to do implact analysis and remove this header from the
+                    includes before final draft. 
+                *   Remove the netinet from the dependencies documentation.
+                *   double check all of the items used from type traits and
+                    update the list of includes with the correct files from
+                    type traits.
+                *   Change boost to Boost and capitalize all of the library
+                    names.
+                *   update the "Bitfield Tuple Specific Headers" section
+                    by adding of the header files and their respective location.
+
+            c)  Building With bitfield_tuple
+                *   Add "Coming Soon".
+                
+            d)  Testing
+                * add the compilers which Vicente and my self tested on.
+
+        II)  Tutorial
+            *   Need to come up with some basic example for each of the
+                different parts of the interface, then make a tutorial for each.
+
+        III) External Resources
+            *   Add relevant links here.
+
+        IV)  Glossary
+            *   Add the wikipedia article about endianness.
+            *   Add a link to Beman's endians in vault/sandbox maybe both?
+            *   Add a link to Vicente's Bitfield within boost vault / sandbox.
+
+    C)  Reference
+        I)  Concepts
+        II)  bitfield_tuple Class Reference
+            a)  bitfield_tuple and bitfield_reference
+                *   Note the namespace that bitfield_tuple resides within.
+                *   CHANGE: Enforced macro macro error message.
+                    ->
+                    Enforced by macro error message.
+                *   Template Members in first sentence there is a comma where
+                    a period should be.
+                *   Update preconditions for both custom and pointer members.
+
+            b)  struct padding
+                *   Add header file to the documentation.
+                    *   Note that this class needs to be noted as being included
+                        with the bitfield_tuple header.
+                *   Make Bits lower case.
+                *   Add an example.
+                *   Add template parameter documentation.
+
+            c)  struct member
+                *   Add a Real description to this section.
+                *   Add header file to the documentation.
+                    *   Note that this class needs to be noted as being included
+                        with the bitfield_tuple header.
+                *   Add an example.
+
+            d)  struct flag
+                *   Move the example lower on the page under the example
+                    section.
+                *   Create real Description for the this.
+                *   Add documentation for the template parameter.
+
+            e)  struct align
+                *   Give example referencing binary.
+                *   Add an example.
+                *   Add documentation for the template parameter.
+
+            f)  struct storage
+                *   Add documentation for the template parameter.
+                *   Add 2 examples here and then show that their sizes are the
+                    same using both deduced and non-deduced types.
+
+            g)  struct pointer
+                *   Add documentation for the template parameter.
+
+                *   Add 3 examples of how to specify the mask.
+                *   Add 2 examples of how to use a pointer member.
+                *   Make sure pointer is enclosed within ` ` when referencing
+                    the template.
+
+            h)  struct custom
+                *   Add documentation for the template parameter.
+                *   Add an example of how to use custom with and 1 without
+                    providing your own policy.
+                *   Document template parameters.
+                *   Document what a policy looks like and what a policy does/how
+                    it interacts with the reference type.
+                *   This also needs a description.
+
+        III) bitfield_tuple Macro Reference
+            a)  Parameter Adjustment macros
+            b)  Code Generation Macros
+
+        IV)  Function Reference
+            a)  Function make_bitfield_tuple
+            b)  get as a free function <- NEW
+
+        V)   Meta-Function Reference
+            a)  name_exists <- NEW
+            b)  find_by_element_name <- NEW
+            c)  find_by_element_index <- NEW
+            d)  get_proxy_reference_type_by_name <- NEW
+            e)  get_proxy_reference_type_by_index <- NEW
+            f)  element <- NEW
+            g)  element_n <- NEW
+
+        VI)  Boost.Fusion Sequence Extension
+            a)  tag_of <- NEW
+            b)  bitfield_tuple_iterator <- NEW
+            c)  at <- NEW
+            d)  begin <- NEW
+            e)  category_of <- NEW
+            f)  end <- NEW
+            g)  is_sequence <- NEW
+            h)  is_view <- NEW
+            i)  size <- NEW
+
+        VII) Files
+            *   Add a list of files and their locations here.
+
+    D)  Appendices
+        I)  Design Rationale
+        II) Implementation Details
+            a) Internal documentation
+                1)  Macros
+                2)  Class Templates
+                3)  Function Templates
+        III) Acknowledgments
+        VI)  Future Work
+
+
+
+
+Classes and components to be documented
+    1) bit_mask
+        1)  integral_mask
+        2)  bits_mask
+        3)  high_bits_mask
+        4)  low_bits_mask
+
+    2) bitfield_tuple
+        1
 
 --------------------------------------------------------------------------------
                             bitfield_vector
@@ -11,11 +336,11 @@ list of header files
 
 
 list of test files.
-1) bitfield_vector_test.cpp ]
-2) bitfield_vector_base_test.cpp ]
-3) proxy_reference_test.cpp ]
-4) member_impl_test.cpp ]
-5) mask_creator_test.cpp ]
+1) bitfield_vector_test.cpp
+2) bitfield_vector_base_test.cpp
+3) proxy_reference_test.cpp
+4) member_impl_test.cpp
+5) mask_creator_test.cpp
 
 
 --------------------------------------------------------------------------------
