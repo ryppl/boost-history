@@ -134,6 +134,6 @@ project
         
     test-suite "perf"
         :
-        [ run ../perf/stopclock_perf.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
-        [ run ../perf/stopclock_perf.cpp :  :  :  <library>/boost/thread//boost_thread : stopclock_perf_dll ]
+        #[ run ../perf/stopclock_perf.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
+        #[ run ../perf/stopclock_perf.cpp :  :  :  <library>/boost/thread//boost_thread : stopclock_perf_dll ]
         ;        
