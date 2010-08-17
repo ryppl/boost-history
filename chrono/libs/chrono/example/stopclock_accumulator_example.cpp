@@ -15,10 +15,11 @@
 #include "sleep_for.hpp"
 
 using namespace boost::chrono;
+template <typename Clock>
 int f1(long j)
 {
-  static stopclock_accumulator<> acc(BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT);
-  stopclock_accumulator<>::scoped_run _(acc);
+  static stopclock_accumulator<Clock> acc(BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT);
+  typename stopclock_accumulator<Clock>::scoped_run _(acc);
 
   for ( long i = 0; i < j; ++i )
     std::sqrt( 123.456L );  // burn some time
@@ -29,11 +30,11 @@ int f1(long j)
 }
 int main()
 {
-  static stopclock_accumulator<> acc(BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT);
-  stopclock_accumulator<>::scoped_run _(acc);
+  static stopclock_accumulator<process_cpu_clock> acc(BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT);
+  stopclock_accumulator<process_cpu_clock>::scoped_run _(acc);
 
-  f1(100000);
-  f1(200000);
-  f1(300000);
+  f1<high_resolution_clock>(1000);
+  f1<high_resolution_clock>(2000);
+  f1<high_resolution_clock>(3000);
   return 0;
 }

@@ -24,8 +24,8 @@ int main()
 {
   scoped_stopclock<> _(BOOST_CURRENT_FUNCTION);   
 
-  f1(100000);
-  f1(200000);
-  f1(300000);
+  f1(1000);
+  f1(2000);
+  f1(3000);
   return 0;
 }
