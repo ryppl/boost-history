@@ -166,6 +166,64 @@ namespace boost { namespace chrono {
 } // namespace chrono
 } // namespace boost
 
+namespace std {
+    
+    template <>
+    class numeric_limits<boost::chrono::process_cpu_clock::times> 
+    {
+        typedef boost::chrono::process_cpu_clock::times Rep;
+        
+        public:
+        static const bool is_specialized = true;
+        static Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {
+          return Rep((std::numeric_limits<boost::chrono::process_real_cpu_clock::rep>::min)(),
+                      (std::numeric_limits<boost::chrono::process_user_cpu_clock::rep>::min)(),
+                      (std::numeric_limits<boost::chrono::process_system_cpu_clock::rep>::min)());
+        }
+        static Rep max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {
+          return Rep((std::numeric_limits<boost::chrono::process_real_cpu_clock::rep>::max)(),
+                      (std::numeric_limits<boost::chrono::process_user_cpu_clock::rep>::max)(),
+                      (std::numeric_limits<boost::chrono::process_system_cpu_clock::rep>::max)());
+        }
+        static Rep lowest() throw() { return (min)(); }
+        static const int digits = std::numeric_limits<boost::chrono::process_real_cpu_clock::rep>::digits+
+                        std::numeric_limits<boost::chrono::process_user_cpu_clock::rep>::digits+
+                        std::numeric_limits<boost::chrono::process_system_cpu_clock::rep>::digits;
+        static const int digits10 = std::numeric_limits<boost::chrono::process_real_cpu_clock::rep>::digits10+
+                        std::numeric_limits<boost::chrono::process_user_cpu_clock::rep>::digits10+
+                        std::numeric_limits<boost::chrono::process_system_cpu_clock::rep>::digits10;
+        //~ static const int max_digits10 = std::numeric_limits<boost::chrono::process_real_cpu_clock::rep>::max_digits10+
+                        //~ std::numeric_limits<boost::chrono::process_user_cpu_clock::rep>::max_digits10+
+                        //~ std::numeric_limits<boost::chrono::process_system_cpu_clock::rep>::max_digits10;
+        static const bool is_signed = false;
+        static const bool is_integer = true;
+        static const bool is_exact = true;
+        static const int radix = 0;
+        //~ static Rep epsilon() throw() { return 0; }
+        //~ static Rep round_error() throw() { return 0; }
+        //~ static const int min_exponent = 0;
+        //~ static const int min_exponent10 = 0;
+        //~ static const int max_exponent = 0;
+        //~ static const int max_exponent10 = 0;
+        //~ static const bool has_infinity = false;
+        //~ static const bool has_quiet_NaN = false;
+        //~ static const bool has_signaling_NaN = false;
+        //~ static const float_denorm_style has_denorm = denorm_absent;
+        //~ static const bool has_denorm_loss = false;
+        //~ static Rep infinity() throw() { return 0; }
+        //~ static Rep quiet_NaN() throw() { return 0; }
+        //~ static Rep signaling_NaN() throw() { return 0; }
+        //~ static Rep denorm_min() throw() { return 0; }
+        //~ static const bool is_iec559 = false;
+        //~ static const bool is_bounded = true;
+        //~ static const bool is_modulo = false;
+        //~ static const bool traps = false;
+        //~ static const bool tinyness_before = false;
+        //~ static const float_round_style round_style = round_toward_zero;        
+        
+    };
+}
+
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif  // BOOST_CHRONO_PROCESS_CPU_CLOCKS_HPP
