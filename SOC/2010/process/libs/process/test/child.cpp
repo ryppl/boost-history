@@ -203,6 +203,39 @@ BOOST_AUTO_TEST_CASE(test_output_error)
 #endif 
 } 
 
+BOOST_AUTO_TEST_CASE(test_output_stdout_stderr) 
+{ 
+    std::vector<std::string> args; 
+    args.push_back("echo-stdout-stderr"); 
+    args.push_back("message-to-two-streams"); 
+
+    bp::context ctx; 
+    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+    ctx.stderr_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+
+    bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
+
+    std::string word; 
+    bp::pistream &isout = c.get_stdout(); 
+    isout >> word; 
+    BOOST_CHECK_EQUAL(word, "stdout"); 
+    isout >> word; 
+    BOOST_CHECK_EQUAL(word, "message-to-two-streams"); 
+    bp::pistream &iserr = c.get_stderr(); 
+    iserr >> word; 
+    BOOST_CHECK_EQUAL(word, "stderr"); 
+    iserr >> word; 
+    BOOST_CHECK_EQUAL(word, "message-to-two-streams"); 
+
+    int s = c.wait(); 
+#if defined(BOOST_POSIX_API) 
+    BOOST_REQUIRE(WIFEXITED(s)); 
+    BOOST_CHECK_EQUAL(WEXITSTATUS(s), EXIT_SUCCESS); 
+#elif defined(BOOST_WINDOWS_API) 
+    BOOST_CHECK_EQUAL(s, EXIT_SUCCESS); 
+#endif 
+} 
+
 class redirect_to : public bpb::stream 
 { 
 public: 
