@@ -1,0 +1,91 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>struct pointer</title>
+<link rel="stylesheet" href="../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../../../index.html" title="Boost.Integer Bits Masks Extension">
+<link rel="up" href="../_bitfield_tuple__class_reference.html" title="bitfield_tuple Class Reference">
+<link rel="prev" href="_struct_storage_.html" title="struct storage">
+<link rel="next" href="_struct_custom_.html" title="struct custom">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="_struct_storage_.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__class_reference.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="_struct_custom_.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_pointer_"></a><a class="link" href="_struct_pointer_.html" title="struct pointer"><code class="computeroutput"><span class="keyword">struct</span> <span class="identifier">pointer</span></code></a>
+</h5></div></div></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_pointer_.description"></a><h5>
+<a name="id713708"></a>
+            <a class="link" href="_struct_pointer_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_pointer_.description">Description</a>
+          </h5>
+<p>
+            The pointer member is a member of a bitfield_tuple which allows the user
+            to use a bitfield to store a pointer. This is useful when a user has
+            allocated an object on a DWORD boundry, when that happens the last two
+            bits of a pointer are 0. Because the last to bits of the pointer are
+            zero two boolean values can be stored within those two bits effectivly
+            saving 2 bytes per pointer. There are other types of space optimizations
+            which can be preformed when you know how a perticular object is going
+            to be allocated. Another example of what the pointer member can be used
+            for stuffing bits into the leading bits of the pointer. This can be done
+            in a valid manner if the address of the pointer is at a lower value.
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_pointer_.template_signature"></a><h5>
+<a name="id713740"></a>
+            <a class="link" href="_struct_pointer_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_pointer_.template_signature">Template
+            Signature</a>
+          </h5>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">bitfields</span> <span class="special">{</span>
+<span class="keyword">template</span> <span class="special">&lt;</span>
+    <span class="keyword">typename</span> <span class="identifier">ReturnType</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Name</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Mask</span> <span class="special">=</span> <span class="identifier">implementation</span> <span class="identifier">defined</span>
+    <span class="special">&gt;</span>
+<span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">pointer</span><span class="special">;</span>
+<span class="special">}}</span> <span class="comment">// end boost::bitfields
+</span></pre>
+<p>
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_pointer_.header_file_locaton"></a><h5>
+<a name="id713914"></a>
+            <a class="link" href="_struct_pointer_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_pointer_.header_file_locaton">Header
+            file Locaton</a>
+          </h5>
+<p>
+            This header file is included with the &lt;boost/integer/bitfield_tuple.hpp&gt;
+            header file. 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">details</span><span class="special">/</span><span class="identifier">bft</span><span class="special">/</span><span class="identifier">pointer</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_pointer_.example"></a><h5>
+<a name="id714013"></a>
+            <a class="link" href="_struct_pointer_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_pointer_.example">Example</a>
+          </h5>
+<p>
+          </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2010 Brian Bartman<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="_struct_storage_.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__class_reference.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="_struct_custom_.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

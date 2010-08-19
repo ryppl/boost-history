@@ -8,10 +8,10 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 [c++]
 [section:high_bits_maskbits high_bits_mask]
 [h3 Description]
-THe template `high_bits_mask` preforms bitwise operations on compile time then 
-exposes the newly created mask via `value` and `operator T()`. What `high_bits_mask` 
-does is create a mask inside your integral type which sets all bits starting
-from the left most bit reaching out width bits to the right. For example,
+The `high_bits_mask` is an abstract representation of a contiguous section of
+bits which extend out from the most significant bit towards the least
+significant bit. The `high_bits_mask` changes base on the width of the type but
+always maintains the same high level description of the bits. For example,
 ``
 // using high bits to create a mask starting from the left most bit with a width
 // of 15
@@ -20,12 +20,21 @@ typedef high_bits_mask<int, 15> bits;
 // 1111 1111  1111 1110  0000 0000  0000 0000
 ``
 
+[h3 Header File Information]
+Header file: <boost/integer/high_bits_mask.hpp>
+Header file: <boost/integer/high_low_mask.hpp>
+
 [h3 Template Signature]
 `high_bits_mask` has the following template signature:
-``
+`` 
+namespace boost {
 template <typename T, unsigned int Width>
 struct high_bits_mask;
+}
 ``
+[h3 Bit Mask Hierarchy]
+
+[h3 Template Parameters]
 
 [table
     [[Parameter][Description]]
@@ -42,10 +51,13 @@ struct high_bits_mask;
     [[`N::value`][Returns the `value` associated with `N`. ]]
     [[`N::value_type`][Returns `T` which is the type associated with `value` inside `N`. ]]
     [[`N::type`][ Returns the current types type. ]]
+[[`N::offset`][ Always set to zero for this type. The offset is something which
+all of the mask type support and refers the amount the mask has been shifted to
+the right or the left (Depending on the type of mask used). In the case of
+`integral_mask`, no left or right shift has occurred so `N::offset` is always set
+to zero. ]]
     [[`N::width`][ Returns the integral value associated with the `width` template parameter. ]]
-    [[`operator T()`][ Run time support function. All this function does is
-return the value associated with the type. With the c++0x feature `constexper`
-this function will be made fasters and more effieient.]]
+    [[`operator T()`][ Run time support function. Returns `value`. ]]
 ]
 
 

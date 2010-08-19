@@ -68,17 +68,15 @@ current case that is int). ]]
     [[`N::type`][ Returns the current types type (using `N` as an example,
 `N::type` is equivalent to `integral_mask<int,16>` )]]
     [[`N::offset`][ Always set to zero for this type. The offset is something which
-all of the mask type suppor and refers the ammount the mask has been shifted to
+all of the mask type support and refers the amount the mask has been shifted to
 the right or the left (Depending on the type of mask used). In the case of
-`integral_mask`, no left or right shift has occured so `N::offset` is always set
+`integral_mask`, no left or right shift has occurred so `N::offset` is always set
 to zero. ]]
     [[`N::width`][ The value of `N::width` is always set to zero because the width
 refers the width of a contiguous section of bits and the contiguity of the 
 an integral mask is unknown. ]]
 
-    [[`operator T()`][ Run time support function. All this function does is
-return the value associated with the type. With the c++0x feature `constexper`
-this function will be made fasters and more effieient.]]
+    [[`operator T()`][ Run time support function. ]]
 ]
 
 
