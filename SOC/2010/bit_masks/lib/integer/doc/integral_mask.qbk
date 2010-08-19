@@ -6,29 +6,57 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 
 [c++]
-[section:integral_mask integral_mask type]
+[section:integral_mask integral_mask ]
 [h3 Description]
 The `integral_mask` type is the most basic mask type. It is used to abstract all
 masks back to a simple integral type. This type is used similar to an
-`integral_constant` type from the boost.type_traits library. The `integral_mask`
-template is located in the following header file: <boost/integer/integral_mask.hpp>.
+`integral_constant` type from the Boost.Type Traits library.
+
+
+[h3 Header File Information]
+Header file: <boost/integer/integral_mask.hpp>
 
 
 [h3 Template Signature]
 `integral_mask` has the following template signature:
 ``
-template <typename T, T Value>
-struct integral_mask;
+namespace boost {
+template <typename T, T Value> struct integral_mask;
+} // end boost
 ``
+[h3 Bit Mask Hierarchy]
+All other mask types either derive directly or indirectly from this class. The
+`integral_mask` class inherits from `integral_constant`.
+
+
+[h3 Template Parameters]
 [table
     [[Parameter][Description]]
-    [[`T`][This Parameters specifies the integral type to be associated with the
-value.]]
-    [[`value`][ The integral value which is used to represent a mask.]]
+    [[`T`][ The type of the the mask. ]]
+    [[`value`][ The integral value of the mask.]]
+]
+
+[h3 Preconditions]
+[table
+    [
+        [Precondition]
+        [Description]
+        [Enforcement]
+    ]
+    [
+        [ ]
+        [ T must be an integral type. ]
+        [ This is only a documented precondition. It is not enforced. ]
+    ]
+    [
+        [ ]
+        [ Value must be in the domain of the integral type T. ]
+        [ This is only a documented precondition. It is not enforced. ]
+    ]
 ]
 
 [h3 Interface]
-`Integral_mask` Compile time interface. Assume that N is of type
+`Integral_mask` Compile time interface. Assume that `N` is of type
 `integral_mask<int, 16>` the type supplied here is only for example.
 
 [table
@@ -37,8 +65,17 @@ value.]]
 that is 16). ]]
     [[`N::value_type`][Returns `T` which is the type associated with `value` inside `N` (in the
 current case that is int). ]]
-    [[`N::type`][ Returns the current types type (using N as an example,
+    [[`N::type`][ Returns the current types type (using `N` as an example,
 `N::type` is equivalent to `integral_mask<int,16>` )]]
+    [[`N::offset`][ Always set to zero for this type. The offset is something which
+all of the mask type suppor and refers the ammount the mask has been shifted to
+the right or the left (Depending on the type of mask used). In the case of
+`integral_mask`, no left or right shift has occured so `N::offset` is always set
+to zero. ]]
+    [[`N::width`][ The value of `N::width` is always set to zero because the width
+refers the width of a contiguous section of bits and the contiguity of the 
+an integral mask is unknown. ]]
+
     [[`operator T()`][ Run time support function. All this function does is
 return the value associated with the type. With the c++0x feature `constexper`
 this function will be made fasters and more effieient.]]

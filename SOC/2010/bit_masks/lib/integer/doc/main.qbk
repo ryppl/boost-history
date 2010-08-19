@@ -5,7 +5,7 @@ Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 
-[library Boost.Integer Bits Masks Extension
+[article Boost.Integer Bits Masks Extension
     [quickbook 1.5]
     [copyright 2010 Brian Bartman]
     [purpose Bit Mask Selection]
@@ -45,21 +45,43 @@ please use the table of contents above.
       [ Header contains includes for `high_bits_mask` and `low_bits_mask`. ]
    ]
    [
-      [ `bits_mask` type and `low_bits_mask` type ]
+      [ `bits_mask` type]
       [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/bits_mask.hpp <boost/integer/bits_mask.hpp>]]]
       [ Header contains `bits_mask` template. ]
    ]
 
-[/   [
+[/  Either completely remove this or re-do it to make it better then using
+    mpl::xor_
+    [
       [`compound_mask` type]
       [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/compound_mask.hpp <boost/integer/compound_mask.hpp>]]]
       [ Header contains `compound_mask` meta-function. ]
    ]
 ]
    [
+      [`bit_width` type]
+      [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/bit_width.hpp <boost/integer/bit_width.hpp>]]]
+      [ Contains the `bit_width` meta-function . ]
+   ]
+
+[/ Re-add this at a later time once it has been re-writen.
+   [
       [`bit_mask_group` type]
       [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/bit_mask_group.hpp <boost/integer/bit_mask_group.hpp>]]]
       [ Header contains `bit_mask_group` meta-function/container. ]
+   ]
+]
+
+   [
+      [`bitfield_tuple` type]
+      [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/bitfield_tuple.hpp <boost/integer/bitfield_tuple.hpp>]]]
+      [ Header contains `bitfield_tuple` data structure and all of the interface used for or with `bitfield_tuple`. For a full list of header files
+relating to the `bitfield_tuple` please see the [link boost_integer_bits_masks_extension.bitfield_tuple.reference.files Files] section of the `bitfield_tuple` documentation. ]
+   ]
+   [
+      [`bitfield_tuple_fwd` type]
+      [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/bitfield_tuple_fwd.hpp <boost/integer/bitfield_tuple_fwd.hpp>]]]
+      [ Header contains a forward declaration for `bitfield_tuple`. ]
    ]
 ]
 

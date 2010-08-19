@@ -6,8 +6,14 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 
 [section Bit Masks]
-[include bit_mask_doc/overview.qbk]
 
+The Bits Masks library extension was created to help simplify the creation of
+bit masks on compile time. The library contains multiple utilities for creating
+and representing contiguous sections of bits within an integral type as well as
+a utility for determining the width in bits of a type on compile time.
+
+
+[include bit_mask_doc/overview.qbk]
 [include:integral_mask integral_mask.qbk]
 [include:high_bits_mask high_bits.qbk]
 [include:low_bits_mask low_bits.qbk]

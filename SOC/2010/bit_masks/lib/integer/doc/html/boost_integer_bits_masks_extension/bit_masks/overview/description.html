@@ -4,40 +4,41 @@
 <title>Description</title>
 <link rel="stylesheet" href="../../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="../../../index.html" title="Chapter&#160;1.&#160;Boost.Integer Bits Masks Extension">
+<link rel="home" href="../../../index.html" title="Boost.Integer Bits Masks Extension">
 <link rel="up" href="../overview.html" title="Overview">
 <link rel="prev" href="../overview.html" title="Overview">
-<link rel="next" href="rationale.html" title="rationale">
+<link rel="next" href="../../../Rationale/bit_masks/overview/rationale.html" title="Rationale">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../overview.html"><img src="../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../images/home.png" alt="Home"></a><a accesskey="n" href="rationale.html"><img src="../../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="../overview.html"><img src="../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../images/home.png" alt="Home"></a><a accesskey="n" href="../../../Rationale/bit_masks/overview/rationale.html"><img src="../../../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_integer_bits_masks_extension.bit_masks.overview.description"></a><a class="link" href="description.html" title="Description">Description</a>
 </h4></div></div></div>
 <p>
-          The purpose of this library extension to the boost.integer library is to
+          The purpose of this library extension to the Boost.Integer library is to
           make the creation of simple and complex integral masks simple and easy
-          and constructable on compile time. The structure of the masks are extensions
-          of the type <code class="computeroutput"><span class="identifier">integral_constant</span></code>
-          provided by boost.type_traits library. All masks are able to be treated
+          and compossible on compile time. The structure of the bit masks are an
+          extensions of the type <code class="computeroutput"><span class="identifier">integral_constant</span></code>
+          provided by Boost.Type Traits library. All masks are able to be treated
           as the <code class="computeroutput"><span class="identifier">integral_constant</span></code>
-          type. All masks provide the following three compile time accessible features.
-          They all provide <code class="computeroutput"><span class="special">::</span><span class="identifier">type</span></code>,
-          <code class="computeroutput"><span class="special">::</span><span class="identifier">value_type</span></code>
-          and <code class="computeroutput"><span class="special">::</span><span class="identifier">value</span></code>
+          type. All masks provide the following three compile time accessible features"
+          <code class="computeroutput"><span class="special">::</span><span class="identifier">type</span></code>,
+          <code class="computeroutput"><span class="special">::</span><span class="identifier">value_type</span></code>,
+          <code class="computeroutput"><span class="special">::</span><span class="identifier">value</span></code>
+          <code class="computeroutput"><span class="special">::</span><span class="identifier">offset</span></code>
+          and <code class="computeroutput"><span class="special">::</span><span class="identifier">width</span></code>
           for compile time support. This also means that all masks can be used with
-          the boost.mpl bitwise operator meta-functions for creation of more complex
-          masks. Now, because these values were intended to be used during the runtime
-          of a program all of the masking types which are provided by this library
-          provide an additional functionality for run timesupport. All of the mask
-          types in this library provide the implicit cast operator allowing for the
-          meta-function objects to be used as if they were the integral value they
-          were used to construct. For example,
+          the Boost.MPL bitwise operator meta-functions for creation of more complex
+          masks. For runtime support all mask types in this library extension provide
+          the implicit cast operator allowing for the meta-function objects to be
+          used as if they were the integral value they are being used to represent.
+          The implicit cast operator is also provided by the <code class="computeroutput"><span class="identifier">integral_constant</span></code>
+          type which the masks are based upon. For example,
         </p>
 <p>
           
@@ -68,6 +69,82 @@
             All masks are trivially default constructible and destructible.
           </p></td></tr>
 </table></div>
+<p>
+          Using masks to describe contiguious sections of bits within an integral
+          value is simplified by doing it at a higher level, using the <code class="computeroutput"><span class="identifier">offset</span></code> from the least or greatest significant
+          bit, <code class="computeroutput"><span class="identifier">width</span></code> of the contigious
+          bits, and the integral type which is to be used for masking. The following
+          are examples of how one would use the different masks to create masks at
+          a high level.
+        </p>
+<a name="boost_integer_bits_masks_extension.bit_masks.overview.description.general_use_cases"></a><h5>
+<a name="id3167209"></a>
+          <a class="link" href="description.html#boost_integer_bits_masks_extension.bit_masks.overview.description.general_use_cases">General
+          use cases</a>
+        </h5>
+<p>
+          Example: Using <code class="computeroutput"><span class="identifier">integral_mask</span></code>
+          as a trival example. The following example is of an integral mask which
+          is being used to represent hex. 
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">integral_mask</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="number">0x20</span><span class="special">&gt;</span> <span class="identifier">mask</span><span class="special">;</span>
+
+<span class="comment">// Used to represent the following binary value.
+</span><span class="comment">// most significant          least significant
+</span><span class="comment">// 31         23         15         7       0
+</span><span class="comment">// 0000 0000  0000 0000  0000 0000  0010 0000
+</span></pre>
+<p>
+        </p>
+<p>
+          Example: Using <code class="computeroutput"><span class="identifier">low_bits_mask</span></code>
+          to defines that the last 3 bits should be set to 1. 
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">low_bits_mask</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">short</span><span class="special">,</span> <span class="number">3</span><span class="special">&gt;</span> <span class="identifier">mask_2_low</span><span class="special">;</span>
+
+<span class="comment">// Used to represent the following binary value.
+</span><span class="comment">// most significant          least significant
+</span><span class="comment">//            15         7       0
+</span><span class="comment">//            0000 0000  0000 0111
+</span></pre>
+<p>
+        </p>
+<p>
+          Example: Using <code class="computeroutput"><span class="identifier">high_bits_mask</span></code>
+          to quickly specify the sign bit of a provided type. 
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">high_bits_mask</span><span class="special">&lt;</span><span class="keyword">short</span><span class="special">,</span> <span class="number">1</span><span class="special">&gt;</span> <span class="identifier">sign_bit</span><span class="special">;</span>
+
+<span class="comment">// Used to represent the following binary value.
+</span><span class="comment">// most significant          least significant
+</span><span class="comment">//            15         7       0
+</span><span class="comment">//            1000 0000  0000 0000
+</span>
+</pre>
+<p>
+          Within the above example if <code class="computeroutput"><span class="keyword">short</span></code>
+          is replaced with any other type it will represent the most significant
+          bit of that type. In the case of signed types that is the sign bit of that
+          type.
+        </p>
+<p>
+          Example: Using <code class="computeroutput"><span class="identifier">bits_mask</span></code>
+          quickly create a mask over for a bit flag within an integral type. 
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bits_mask</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">3</span><span class="special">&gt;</span> <span class="identifier">flag_mask</span><span class="special">;</span>
+
+<span class="comment">// Used to represent the following binary value.
+</span><span class="comment">// most significant          least significant
+</span><span class="comment">// 31         23         15         7       0
+</span><span class="comment">// 0000 0000  0000 0000  0000 0000  0000 0100
+</span></pre>
+<p>
+        </p>
+<p>
+          For additional uses and information about each of the different templates
+          used for creating integral masks please see the documentation relating
+          to each of the corresponding masks.
+        </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
@@ -79,7 +156,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../overview.html"><img src="../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../images/home.png" alt="Home"></a><a accesskey="n" href="rationale.html"><img src="../../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="../overview.html"><img src="../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../images/home.png" alt="Home"></a><a accesskey="n" href="../../../Rationale/bit_masks/overview/rationale.html"><img src="../../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

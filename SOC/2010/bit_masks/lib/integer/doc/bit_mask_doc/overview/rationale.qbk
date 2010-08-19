@@ -5,13 +5,20 @@ Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 
-[section rationale]
-The motivation for the creation of a structure for creating bit masks on compile
-time. Bit masks are usually create using hexadecimal characters or by using
-macros. In either case the readability of the clarity of the bit masks are
-obscured and often the mask it self is not readible.
+[section Rationale]
+The primary motivation for the creation of the bit masks library extension lies
+in a need to quickly compose masks which are static typed and provide additional
+additional information about the mask itself as well as abstract the notion of
+contiguous bits within a mask. Bit masks are usually created by using the
+preprocessor or by using hexadecimal characters. Often times both previous
+methods of creating bit masks, by either macro or hexadecimal, can make code
+less readable and at times harder to deduce types the values are going to be
+used to represent. The other feature which this library extension provides is a
+means to represent masks as a contiguous section of bits within an integral
+type, which can be difficult to represent when looking at hex.
 
-[\
+
+[/
 
 TODO need to actually do this before adding it to the documentation.
 This extension will also allow the users to work with endianness at an

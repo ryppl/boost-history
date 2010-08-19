@@ -6,20 +6,19 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 [section Description]
 
-The purpose of this library extension to the boost.integer library is to make
+The purpose of this library extension to the Boost.Integer library is to make
 the creation of simple and complex integral masks simple and easy and
-constructable on compile time. The structure of the masks are extensions of the
-type `integral_constant` provided by boost.type_traits library. All masks are
-able to be treated as the `integral_constant` type. All masks provide the
-following three compile time accessible features. They all provide `::type`,
-`::value_type` and `::value` for compile time support. This also means that all
-masks can be used with the boost.mpl bitwise operator meta-functions for 
-creation of more complex masks. Now, because these values were intended to be
-used during the runtime of a program all of the masking types which are provided
-by this library provide an additional functionality for run timesupport. All of
-the mask types in this library provide the implicit cast operator allowing for
-the meta-function objects to be used as if they were the integral value they
-were used to construct. For example,
+compossible on compile time. The structure of the bit masks are an extensions
+of the type `integral_constant` provided by Boost.Type Traits library. All masks
+are able to be treated as the `integral_constant` type. All masks provide the
+following three compile time accessible features" `::type`, `::value_type`,
+`::value` `::offset` and `::width` for compile time support. This also means
+that all masks can be used with the Boost.MPL bitwise operator meta-functions for 
+creation of more complex masks. For runtime support all mask types in this 
+library extension provide the implicit cast operator allowing for the
+meta-function objects to be used as if they were the integral value they are
+being used to represent. The implicit cast operator is also provided by the
+`integral_constant` type which the masks are based upon. For example,
 
 ``
 #include <boost/integer/integral_mask.hpp>
@@ -39,5 +38,69 @@ For the use of a mask all that one needs to do is to construct the mask and
 simply treat it as though it were an integer.
 
 [note All masks are trivially default constructible and destructible.]
+
+Using masks to describe contiguious sections of bits within an integral value
+is simplified by doing it at a higher level, using the `offset` from the least or
+greatest significant bit, `width` of the contigious bits, and the integral type
+which is to be used for masking. The following are examples of how one would use
+the different masks to create masks at a high level.
+
+[h4 General use cases]
+
+Example: Using `integral_mask` as a trival example.
+The following example is of an integral mask which is being used to represent
+hex.
+``
+typedef integral_mask<unsigned int, 0x20> mask;
+
+// Used to represent the following binary value.
+// most significant          least significant
+// 31         23         15         7       0
+// 0000 0000  0000 0000  0000 0000  0010 0000
+``
+
+
+Example: Using `low_bits_mask` to defines that the last 3 bits should be
+set to 1.
+``
+typedef low_bits_mask<unsigned short, 3> mask_2_low;
+
+// Used to represent the following binary value.
+// most significant          least significant
+//            15         7       0
+//            0000 0000  0000 0111
+``
+
+
+Example: Using `high_bits_mask` to quickly specify the sign bit of a provided
+type.
+``
+typedef high_bits_mask<short, 1> sign_bit;
+
+// Used to represent the following binary value.
+// most significant          least significant
+//            15         7       0
+//            1000 0000  0000 0000
+
+``
+Within the above example if `short` is replaced with any other type it will
+represent the most significant bit of that type. In the case of signed types
+that is the sign bit of that type.
+
+
+Example: Using `bits_mask` quickly create a mask over for a bit flag within an
+integral type.
+``
+typedef bits_mask<int, 3> flag_mask;
+
+// Used to represent the following binary value.
+// most significant          least significant
+// 31         23         15         7       0
+// 0000 0000  0000 0000  0000 0000  0000 0100
+``
+
+For additional uses and information about each of the different templates used
+for creating integral masks please see the documentation relating to each of the
+corresponding masks.
 
 [endsect]
