@@ -4,7 +4,11 @@
 1)  Get the image replacement for notes, warnings, suggestions,... etc working.
 
 
-  
+
+--------------------------------------------------------------------------------
+                    Links to add for ease of documentation navigation
+--------------------------------------------------------------------------------
+
 --------------------------------------------------------------------------------
                         Project Documentation Status
 --------------------------------------------------------------------------------
@@ -12,82 +16,37 @@
 Current topics inside of documentation
 
 1)  Header file summary
-    *   Add bitfield_tuple header to the list of header files.
-        *   Create a link to the files section of bitfield_tuple.
-        *   add the bitfield_tuple_fwd.hpp header to the list of header files.
+    Links to add:
+        1)  Create links for each of the types within the columns component
+            linking them to their respective places in the documentation.
 
     *   Add bitfield_vector to the list of header files (post implementation)
         *   create section for it.
-    *   Fix: bits_mask type and low_bits_mask type 
-        change to: `bits_mask` type
 
-    *   Use inline code for all of the class names (ie `class name`).
 
 2)  Bit Masks
-    *   Maybe add something here? (this section may be best left blank for now).
 
     A)  Overview
-        *   Give a summary of the project along with the Description and
-            overview links.
-        *   Give super simple example and add something about the general
-            use cases for this library.
 
         I)  Description
-            *   first sentence: change constructible to compossible.
-            *   Rewrite the first paragraph completely this needs to be worded
-                better. Try to use the same basic idea though.
-            *   Add different examples.
-            *   add example for composing masks for basic things.
-                =   maybe something like bitfields or something along those 
-                    lines.
-            *   REMOVE THE SENTENCES: Now, because these values were intended to 
-                be used during the runtime of a program all of the masking types
-                which are provided by this library provide an additional 
-                functionality for run time support. All of the mask types in 
-                this library provide the implicit cast operator allowing for the
-                meta-function objects to be used as if they were the integral 
-                value they were used to construct.
-
-            *   CONSIDER ADDING: Something that say that the masks use the 
-                implicit cast operator from integral_constant to allow for
-                construction of the mask type and for ease of use during
-                runtime.
+            Links to add:
+                1) Create link for Boost.Integer 
+                2) Create link for Boost.Type Traits
+                3) Create link for Boost.MPL
 
         II) rationale
-            *   list arguments for why the bit masks are good and help with
-                the quick creation of masks also reword second sentence the word
-                clarity doesn't make sense there.
-            *   "Fix"(Remove) comment line.
-            *   Basic rationale ideas
-                1)  I don't like using hex.
-                    a) Hex can be confusing.
-                    b)  Sometimes the way in which one thinks about the creation
-                        of a bit mask differs from situation to situation.
-                2)  sometimes it's easier to thing about a mask as a section
-                    of contiguous bits being moved around.
 
-                3)  Often times masks don't make a lot of sense so this provides
-                    clarity where often times unintentional obfuscation exists.
-    B1) Getting started section <- NEW
+**** TODO STILL **** B1) Getting started section <- NEW **** TODO STILL **** 
+
 
     B)  integral_mask_type
-            *   Remove "type" from the end of this link.
-            *   Add offset and width to integral mask's documentation.
-            *   Add a header for the template parameters section.
+            Links to add:
+                1)  Create link for Boost.Type Traits
+                2)  Create a link to the header file
+
             *   Make sure that integral_mask and all uses of N are enclosed in
                 ` `.
-            *   Make a section for the header and make a link to the file
-                that it points at.
-            *   Inside of the parameters table change the wording of value's
-                description from "represent the mask" to "as the mask".
-                This should make things more clear.
-            *   Change section name to use ` `.
-            *   Note the position of this mask to the other mask types
-                within the inheritance hierarchy.
-            *   Make note of the namespace in which this exists.
-            *   Add hex counter-example?
-            *   Document PRECONDITIONS for using the template (If there are non
-                say so).
+
  
     C)  high_bits_mask
             *   Rewrite Description paragraph.
