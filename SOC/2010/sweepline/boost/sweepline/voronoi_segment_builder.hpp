@@ -396,9 +396,8 @@ namespace sweepline {
             //return true;
 
             // Check if bisectors intersect.
-            if (!detail::right_orientation_test(site1.get_point0(),
-                                                site2.get_point0(),
-                                                site3.get_point0()))
+            if (detail::orientation_test(site1.get_point0(),site2.get_point0(),
+                site3.get_point0()) != detail::RIGHT_ORIENTATION)
                 return false;
 
             coordinate_type a = ((site1.x() - site2.x()) * (site2.y() - site3.y()) -

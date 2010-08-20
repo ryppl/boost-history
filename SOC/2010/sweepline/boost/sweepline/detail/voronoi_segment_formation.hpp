@@ -55,12 +55,18 @@ namespace detail {
         return (dif <= maxUlps) && (dif >= -maxUlps);
     }
 
+    enum kOrientation {
+        RIGHT_ORIENTATION = -1,
+        COLINEAR = 0,
+        LEFT_ORIENTATION = 1,
+    };
+
     // TODO(asydorchuk): Make templates specification for integer coordinate type,
     // as it is actually working with integer input.
     template <typename T>
-    bool right_orientation_test(const point_2d<T> &point1,
-                                const point_2d<T> &point2,
-                                const point_2d<T> &point3) {
+    kOrientation orientation_test(const point_2d<T> &point1,
+                                  const point_2d<T> &point2,
+                                  const point_2d<T> &point3) {
         typedef long long ll;
         typedef unsigned long long ull;
         ull dif_x1, dif_x2, dif_y1, dif_y2;
@@ -87,16 +93,19 @@ namespace detail {
         if (expr_r == 0)
             expr_r_plus = true;
         
+        if ((expr_l_plus == expr_r_plus) && (expr_l == expr_r))
+            return COLINEAR;
+
         if (!expr_l_plus) {
             if (expr_r_plus)
-                return true;
+                return RIGHT_ORIENTATION;
             else
-                return expr_l > expr_r; 
+                return (expr_l > expr_r) ? RIGHT_ORIENTATION : LEFT_ORIENTATION; 
         } else {
             if (!expr_r_plus)
-                return false;
+                return LEFT_ORIENTATION;
             else
-                return expr_l < expr_r;
+                return (expr_l < expr_r) ? RIGHT_ORIENTATION : LEFT_ORIENTATION;
         }
     }
 
@@ -202,12 +211,10 @@ namespace detail {
                                           bool reverse_order) {
         typedef long long ll;
         typedef unsigned long long ull;
-        bool is_right_oriented1 = right_orientation_test(segment_start,
-                                                         segment_end,
-                                                         site_point);
-        bool is_right_oriented2 = right_orientation_test(segment_start,
-                                                         segment_end,
-                                                         new_point);
+        bool is_right_oriented1 =
+            orientation_test(segment_start, segment_end, site_point) != LEFT_ORIENTATION;
+        bool is_right_oriented2 =
+            orientation_test(segment_start, segment_end, new_point) != LEFT_ORIENTATION;
         if (is_right_oriented1 != is_right_oriented2) {
             return (is_right_oriented1) ? LESS : MORE;
         }
@@ -226,7 +233,8 @@ namespace detail {
         } else {
             point_2d<T> point3 = make_point_2d(segment_end.x() + static_cast<T>(dif_x),
                                                segment_end.y() + static_cast<T>(dif_y));
-            bool right_oriented = right_orientation_test(segment_start, segment_end, point3);
+            bool right_oriented =
+                orientation_test(segment_start, segment_end, point3) != LEFT_ORIENTATION;
             if (is_right_oriented1 ^ right_oriented) {
                 if (is_right_oriented1)
                     return reverse_order ? LESS : UNDEFINED;
@@ -267,24 +275,35 @@ namespace detail {
         if ((b_sign != dif_y_sign) && right_expr_div) 
             comparison_result = true;
         else {
-            if (b_sign != dif_y_sign)
+            if (b_sign != dif_y_sign && right_expr_mod)
                 right_expr_mod = right_expr_denom - right_expr_mod;
             else
-                right_expr_div++;    
-            if (left_expr_div & 1) {
-                comparison_result = ((left_expr_div >> 1) >= right_expr_div);
+                right_expr_div++;
+            bool left_expr_odd = (left_expr_div % 2 == 1);
+            left_expr_div >>= 1;
+            if (left_expr_div != right_expr_div) {
+                comparison_result = (left_expr_div >= right_expr_div);
             } else {
-                left_expr_div >>= 1;
-                if (left_expr_div != right_expr_div) {
+                ull temp_right = right_expr_denom - right_expr_mod;
+                if (temp_right > right_expr_mod) {
+                    if (left_expr_odd)
+                        comparison_result = true;
+                    else
+                        right_expr_mod <<= 1;
+                } else {
+                    if (!left_expr_odd)
+                        comparison_result = false;
+                    else
+                        right_expr_mod = right_expr_mod - temp_right;
+                }
+                left_expr_div = left_expr_mod / dif_x_rob;
+                right_expr_div = right_expr_mod / a_rob;
+                if (left_expr_div != right_expr_div)
                     comparison_result = (left_expr_div >= right_expr_div);
-                } else  {
-                    left_expr_div = left_expr_mod / dif_x_rob;
-                    right_expr_div = right_expr_mod / a_rob;
-                    if (left_expr_div != right_expr_div)
-                        comparison_result = (left_expr_div >= right_expr_div);
+                else {
                     left_expr_mod = left_expr_mod % dif_x_rob;
                     right_expr_mod = right_expr_mod % a_rob;
-                    comparison_result = (right_expr_mod * a_rob >= left_expr_mod * dif_x_rob);
+                    comparison_result = (left_expr_mod * a_rob >= right_expr_mod * dif_x_rob);
                 }
             }
         }
@@ -378,9 +397,91 @@ namespace detail {
     template <typename T>
     bool less_predicate(point_2d<T> segment1_start, point_2d<T> segment1_end,
                         point_2d<T> segment2_start, point_2d<T> segment2_end,
-                        point_2d<T> new_point) {
+                        point_2d<T> new_point, bool reverse_order) {
+        typedef unsigned long long ull;
+        kOrientation orientation1 = orientation_test(segment1_start, segment1_end, segment2_start);
+        kOrientation orientation2 = orientation_test(segment1_start, segment1_end, segment2_end);
+        assert(static_cast<int>(orientation1) || static_cast<int>(orientation2));
+        if (static_cast<int>(orientation1) * static_cast<int>(orientation2) == -1) {
+            assert(!reverse_order);
+            return less_predicate(segment2_start, segment2_end, 
+                                  segment1_start, segment1_end,
+                                  new_point, true);
+        }
+
+        double intersection_x1 = 0.0;
+        double intersection_x2 = 0.0;
+        double a1 = static_cast<double>(segment1_start.x()) -
+                    static_cast<double>(segment1_end.x());
+        if (a1 == 0.0) {
+            // Avoid cancellation.
+            intersection_x2 += static_cast<double>(new_point.x()) -
+                               static_cast<double>(segment1_end.x());
+        } else {
+            double b1 = static_cast<double>(segment1_start.y()) -
+                        static_cast<double>(segment1_end.y());
+            double c1 = b1 * (static_cast<double>(new_point.x()) -
+                              static_cast<double>(segment1_end.x())) +
+                        a1 * segment1_end.y();
+            double mul1 = sqrt(a1 * a1 + b1 * b1);
+            if ((orientation1 == LEFT_ORIENTATION) || (orientation2 == LEFT_ORIENTATION)) {
+                if (b1 >= 0.0) {
+                    mul1 = 1.0 / (b1 + mul1);
+                } else {
+                    mul1 = (-b1 + mul1) / (a1 * a1);
+                }
+            } else {
+                if (b1 >= 0.0) {
+                    mul1 = (-b1 - mul1) / (a1 * a1);
+                } else {
+                    mul1 = 1.0 / (b1 - mul1);
+                }
+            }
+            INT_PREDICATE_AVOID_CANCELLATION(a1 * mul1 * static_cast<double>(new_point.y()),
+                                             intersection_x1, intersection_x2);
+            INT_PREDICATE_AVOID_CANCELLATION(-c1 * mul1, intersection_x1, intersection_x2);
+        }
+
+        double a2 = static_cast<double>(segment2_start.x()) -
+                    static_cast<double>(segment2_end.x());
+        if (a2 == 0.0) {
+            // Avoid cancellation.
+            intersection_x1 += static_cast<double>(new_point.x()) - 
+                               static_cast<double>(segment2_end.x());
+        } else {
+            double b2 = static_cast<double>(segment2_start.y()) -
+                        static_cast<double>(segment2_end.y());
+            double c2 = b2 * (static_cast<double>(new_point.x()) -
+                              static_cast<double>(segment2_end.x())) +
+                        a2 * segment2_end.y();
+            double mul2 = sqrt(a2 * a2 + b2 * b2);
+            if (((orientation1 == LEFT_ORIENTATION) || (orientation2 == LEFT_ORIENTATION)) ^
+                !reverse_order) {
+                if (b2 >= 0.0) {
+                    mul2 = 1.0 / (b2 + mul2);
+                } else {
+                    mul2 = (-b2 + mul2) / (a2 * a2);
+                }
+            } else {
+                if (b2 >= 0.0) {
+                    mul2 = (-b2 - mul2) / (a2 * a2);
+                } else {
+                    mul2 = 1.0 / (b2 - mul2);
+                }
+            }
+            INT_PREDICATE_AVOID_CANCELLATION(a2 * static_cast<double>(new_point.y()) * mul2,
+                                             intersection_x2, intersection_x1);
+            INT_PREDICATE_AVOID_CANCELLATION(-c2 * mul2, intersection_x2, intersection_x1);
+        }
+
+        if (!almost_equal(intersection_x1, intersection_x2, 20)) {
+            return ((orientation1 == LEFT_ORIENTATION) || (orientation2 == LEFT_ORIENTATION)) ^
+                   reverse_order ^ (intersection_x1 > intersection_x2);
+        }
         
-        return true;
+        // TODO(asydorchuk): Add mpl support there.
+        return ((orientation1 == LEFT_ORIENTATION) || (orientation2 == LEFT_ORIENTATION)) ^
+               reverse_order ^ (intersection_x1 > intersection_x2);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -457,8 +558,9 @@ namespace detail {
                 if (this->point0_.y() != s_event.point0_.y())
                     return this->point0_.y() < s_event.point0_.y();
 
-                // TODO(asydorchuk): Compare segments by angle if required.
-                return this->point1_.y() < s_event.point1_.y();
+                // Sort by angle.
+                return orientation_test(this->point1_, this->point0_, s_event.point1_) ==
+                       RIGHT_ORIENTATION;
             }   
         }
 
@@ -568,7 +670,6 @@ namespace detail {
 
         bool operator==(const circle_event &c_event) const {
             return (center_.y() == c_event.y()) &&
-                   (center_.x() == c_event.x()) &&
                    (lower_x_ == c_event.lower_x_);
         }
 
@@ -820,7 +921,8 @@ namespace detail {
 
         bool less_ss(const Point2D &new_site) const {
             return less_predicate(left_site_.get_point0(), left_site_.get_point1(),
-                                  right_site_.get_point0(), right_site_.get_point1(), new_site);
+                                  right_site_.get_point0(), right_site_.get_point1(), 
+                                  new_site, false);
         }
 
     private:
@@ -1675,5 +1777,9 @@ namespace detail {
 } // sweepline
 } // boost
 } // detail
+
+#undef INT_PREDICATE_COMPUTE_DIFFERENCE
+#undef INT_PREDICATE_CONVERT_65_BIT
+#undef INT_PREDICATE_AVOID_CANCELLATION
 
 #endif
