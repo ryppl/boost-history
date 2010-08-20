@@ -30,7 +30,7 @@ int f1(long j)
 }
 int main()
 {
-  static stopclock_accumulator<process_cpu_clock> acc(BOOST_CHRONO_ACCUMULATOR_FUNCTION_FORMAT);
+  static stopclock_accumulator<process_cpu_clock> acc(BOOST_CHRONO_ACCUMULATOR_TIME_FUNCTION_FORMAT);
   stopclock_accumulator<process_cpu_clock>::scoped_run _(acc);
 
   f1<high_resolution_clock>(1000);
