@@ -32,7 +32,8 @@
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
-#define BOOST_CHRONO_ACCUMULATOR_TIME_FORMAT_DEFAULT "%c times, sum=%ss, min=%ms, max=%Ms, mean=%as, frequency=%fHz, lifetime=%ls, percentage=%p%\n"
+//~ #define BOOST_CHRONO_ACCUMULATOR_TIME_FORMAT_DEFAULT "%c times, sum=%s, min=%m, max=%M, mean=%a, frequency=%fHz, lifetime=%ls, percentage=%p%|real %rs, cpu %cs (%p%), user %us, system %ss\n"
+#define BOOST_CHRONO_ACCUMULATOR_TIME_FORMAT_DEFAULT "%c times, sum %s, min %m, max %M, mean=%a, frequency=%fHz, lifetime=%ls, percentage=%p%\n"
 
 
 namespace boost { namespace chrono  {
@@ -82,10 +83,10 @@ namespace boost { namespace chrono  {
             boost::io::ios_precision_saver ips( os );
             os.precision( places );
 
-            const char_type* format2;
-            for (format2=format ; *format2; ++format2 ) {
-                if (*format2=='|') {++format2; break;}
-            }
+            const char_type* format2=BOOST_CHRONO_TIME_FORMAT_DEFAULT;
+            //~ for (format2=format ; *format2; ++format2 ) {
+                //~ if (*format2=='|') {++format2; break;}
+            //~ }
 
             for ( ; *format; ++format ) {
                 if ( (*format != '%') || (!*(format+1)) || (!std::strchr("acflmMps", *(format+1))) ) {
@@ -112,7 +113,7 @@ namespace boost { namespace chrono  {
                         if (accumulators::count(acc)>0)
                          //? os << boost::chrono::duration<double>(duration_t(typename duration_t::rep(accumulators::mean(acc)))).count()
                                 //~ os << boost::chrono::duration<double>(duration_t(accumulators::sum(acc))).count() / accumulators::count(acc)
-                            os << accumulators::sum(acc) / accumulators::count(acc);
+                            time_formatter::show_time<process_cpu_clock>(accumulators::sum(acc) / accumulators::count(acc), format2, places, os, ec);
                         else
                             os << 0;
                         break;
@@ -151,7 +152,8 @@ namespace detail {
 #ifndef BOOST_NO_STD_WSTRING
     template <>
     struct basic_stopwatch_accumulator_time_formatter_default_format<wchar_t> {
-        static const wchar_t* apply() {return L"%c times, sum=%ss, min=%ms, max=%Ms, mean=%as, frequency=%fHz, lifetime=%ls, percentage=%p%\n"; }
+        //~ static const wchar_t* apply() {return L"%c times, sum=%ss, min=%ms, max=%Ms, mean=%as, frequency=%fHz, lifetime=%ls, percentage=%p%|real %rs, cpu %cs (%p%), user %us, system %ss\n"; }
+        static const wchar_t* apply() {return L"%c times, sum %s, min %m, max %M, mean %a, frequency=%fHz, lifetime=%ls, percentage=%p%\n"; }
     };
 
 #endif
@@ -176,7 +178,7 @@ namespace detail {
 } // namespace chrono
 } // namespace boost
 
-#define BOOST_CHRONO_ACCUMULATOR_TIME_FORMAT(F) boost::chrono::detail::adaptive_string(F " : " BOOST_CHRONO_ACCUMULATOR_FORMAT_DEFAULT)
+#define BOOST_CHRONO_ACCUMULATOR_TIME_FORMAT(F) boost::chrono::detail::adaptive_string(F " : " BOOST_CHRONO_ACCUMULATOR_TIME_FORMAT_DEFAULT)
 #ifdef __GNUC__
 #define BOOST_CHRONO_ACCUMULATOR_TIME_FUNCTION_FORMAT boost::chrono::stopwatch_accumulator_time_formatter::format(BOOST_CURRENT_FUNCTION)
 #else

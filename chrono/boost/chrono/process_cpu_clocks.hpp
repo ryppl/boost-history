@@ -51,17 +51,14 @@ namespace boost { namespace chrono {
         static time_point now( system::error_code & ec = system::throws );
     };
 
-    class BOOST_CHRONO_DECL process_cpu_clock
-    {
-    public:
-        struct times : arithmetic<times, multiplicative<times, process_real_cpu_clock::rep, less_than_comparable<times> > >
+        struct process_cpu_clock_times : arithmetic<process_cpu_clock_times, multiplicative<process_cpu_clock_times, process_real_cpu_clock::rep, less_than_comparable<process_cpu_clock_times> > >
         {
             typedef process_real_cpu_clock::rep rep;
-            times()
+            process_cpu_clock_times()
                 : real(0)
                 , user(0)
                 , system(0){}
-            times(
+            process_cpu_clock_times(
                 process_real_cpu_clock::rep r,
                 process_user_cpu_clock::rep   u,
                 process_system_cpu_clock::rep s)
@@ -73,49 +70,49 @@ namespace boost { namespace chrono {
             process_user_cpu_clock::rep   user;    // user cpu time
             process_system_cpu_clock::rep system;  // system cpu time
 
-            bool operator==(times const& rhs) {
+            bool operator==(process_cpu_clock_times const& rhs) {
                 return (real==rhs.real &&
                         user==rhs.user &&
                         system==rhs.system);
             }
 
-            times operator+=(times const& rhs) {
+            process_cpu_clock_times operator+=(process_cpu_clock_times const& rhs) {
                 real+=rhs.real;
                 user+=rhs.user;
                 system+=rhs.system;
                 return *this;
             }
-            times operator-=(times const& rhs) {
+            process_cpu_clock_times operator-=(process_cpu_clock_times const& rhs) {
                 real-=rhs.real;
                 user-=rhs.user;
                 system-=rhs.system;
                 return *this;
             }
-            times operator*=(times const& rhs) {
+            process_cpu_clock_times operator*=(process_cpu_clock_times const& rhs) {
                 real*=rhs.real;
                 user*=rhs.user;
                 system*=rhs.system;
                 return *this;
             }
-            times operator*=(rep const& rhs) {
+            process_cpu_clock_times operator*=(rep const& rhs) {
                 real*=rhs;
                 user*=rhs;
                 system*=rhs;
                 return *this;
             }
-            times operator/=(times const& rhs) {
+            process_cpu_clock_times operator/=(process_cpu_clock_times const& rhs) {
                 real/=rhs.real;
                 user/=rhs.user;
                 system/=rhs.system;
                 return *this;
             }
-            times operator/=(rep const& rhs) {
+            process_cpu_clock_times operator/=(rep const& rhs) {
                 real/=rhs;
                 user/=rhs;
                 system/=rhs;
                 return *this;
             }
-            bool operator<(times const & rhs) const {
+            bool operator<(process_cpu_clock_times const & rhs) const {
                 if (real < rhs.real) return true;
                 if (real > rhs.real) return false;
                 if (user < rhs.user) return true;
@@ -129,7 +126,12 @@ namespace boost { namespace chrono {
                 os <<  "{"<< real <<","<< user <<","<< system << "}";
             };
         };
+        
+    class BOOST_CHRONO_DECL process_cpu_clock
+    {
+    public:
 
+        typedef process_cpu_clock_times times;
         typedef boost::chrono::duration<times,  nano>                duration;
         typedef duration::rep                       rep;
         typedef duration::period                    period;
@@ -140,15 +142,15 @@ namespace boost { namespace chrono {
     };
 
     template <typename OSTREAM>
-    OSTREAM& operator<<(OSTREAM& os, process_cpu_clock::times const& rhs) {
+    OSTREAM& operator<<(OSTREAM& os, process_cpu_clock_times const& rhs) {
         rhs.print(os);
         return os;
     }
     
     template <>
-    struct duration_values<process_cpu_clock::times>
+    struct duration_values<process_cpu_clock_times>
     {
-        typedef process_cpu_clock::times Rep;
+        typedef process_cpu_clock_times Rep;
     public:
         static Rep zero() {return Rep();}
         static Rep max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {
