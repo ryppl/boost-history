@@ -660,6 +660,80 @@ BOOST_AUTO_TEST_CASE(test_posix)
     BOOST_REQUIRE(WIFEXITED(s)); 
     BOOST_CHECK_EQUAL(WEXITSTATUS(s), EXIT_SUCCESS); 
 } 
+
+class raii_dup2 
+{ 
+public: 
+    raii_dup2(int fd1, int fd2) 
+    : reverted_(false), 
+    fd1_(fd1), 
+    fd2_(fd2) 
+    { 
+        BOOST_REQUIRE(dup2(fd1_, fd2_) != -1); 
+    } 
+
+    ~raii_dup2() 
+    { 
+        if (!reverted_) 
+            revert(); 
+    } 
+
+    void revert() 
+    { 
+        reverted_ = true; 
+        BOOST_REQUIRE(dup2(fd2_, fd1_) != -1); 
+    } 
+
+private: 
+    bool reverted_; 
+    int fd1_; 
+    int fd2_; 
+}; 
+
+BOOST_AUTO_TEST_CASE(test_posix_daemon) 
+{ 
+    check_helpers(); 
+
+    std::vector<std::string> args; 
+    args.push_back("echo-stdout-stderr"); 
+    args.push_back("message-to-two-streams"); 
+
+    context ctx; 
+
+    // File descriptors must be closed after context is instantiated as the 
+    // context constructor uses the behavior inherit which tries to dup() 
+    // stdin, stdout and stderr. 
+    raii_dup2 raii_stdin(STDIN_FILENO, 100); 
+    close(STDIN_FILENO); 
+    raii_dup2 raii_stdout(STDOUT_FILENO, 101); 
+    close(STDOUT_FILENO); 
+    raii_dup2 raii_stderr(STDERR_FILENO, 102); 
+    close(STDERR_FILENO); 
+
+    ctx.stderr_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+
+    bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
+
+    std::string words[4]; 
+    bp::pistream &isout = c.get_stdout(); 
+    isout >> words[0] >> words[1]; 
+    bp::pistream &iserr = c.get_stderr(); 
+    iserr >> words[2] >> words[3]; 
+
+    raii_stdin.revert(); 
+    raii_stdout.revert(); 
+    raii_stderr.revert(); 
+
+    int s = c.wait(); 
+    BOOST_REQUIRE(WIFEXITED(s)); 
+    BOOST_CHECK_EQUAL(WEXITSTATUS(s), EXIT_SUCCESS); 
+
+    BOOST_CHECK_EQUAL(words[0], "stdout"); 
+    BOOST_CHECK_EQUAL(words[1], "message-to-two-streams"); 
+    BOOST_CHECK_EQUAL(words[2], "stderr"); 
+    BOOST_CHECK_EQUAL(words[3], "message-to-two-streams"); 
+} 
 #endif 
 
 #if defined(BOOST_WINDOWS_API) 

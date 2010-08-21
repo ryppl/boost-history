@@ -28,6 +28,7 @@
 #   include <cstddef>
 #   include <stdlib.h>
 #   include <unistd.h>
+#   include <fcntl.h>
 #   if defined(__CYGWIN__)
 #       include <boost/scoped_array.hpp>
 #       include <sys/cygwin.h>
@@ -227,8 +228,33 @@ inline child create_child(const std::string &executable, Arguments args,
         }
 
         handle hstdin = ctx.stdin_behavior->get_child_end();
+        handle hstdout = ctx.stdout_behavior->get_child_end();
+        handle hstderr = ctx.stderr_behavior->get_child_end();
+
         if (hstdin.valid())
         {
+            if (hstdout.native() == STDIN_FILENO)
+            {
+                int fd = fcntl(hstdout.native(), F_DUPFD, 3);
+                if (fd == -1)
+                {
+                    write(STDERR_FILENO, "fcntl() failed\n", 15);
+                    _exit(127);
+                }
+                hstdout = fd;
+            }
+
+            if (hstderr.native() == STDIN_FILENO)
+            {
+                int fd = fcntl(hstderr.native(), F_DUPFD, 3);
+                if (fd == -1)
+                {
+                    write(STDERR_FILENO, "fcntl() failed\n", 15);
+                    _exit(127);
+                }
+                hstderr = fd;
+            }
+
             if (dup2(hstdin.native(), STDIN_FILENO) == -1)
             {
                 write(STDERR_FILENO, "dup2() failed\n", 14);
@@ -237,9 +263,19 @@ inline child create_child(const std::string &executable, Arguments args,
             closeflags[STDIN_FILENO] = false;
         }
 
-        handle hstdout = ctx.stdout_behavior->get_child_end();
         if (hstdout.valid())
         {
+            if (hstderr.native() == STDOUT_FILENO)
+            {
+                int fd = fcntl(hstderr.native(), F_DUPFD, 3);
+                if (fd == -1)
+                {
+                    write(STDERR_FILENO, "fcntl() failed\n", 15);
+                    _exit(127);
+                }
+                hstderr = fd;
+            }
+
             if (dup2(hstdout.native(), STDOUT_FILENO) == -1)
             {
                 write(STDERR_FILENO, "dup2() failed\n", 14);
@@ -248,7 +284,6 @@ inline child create_child(const std::string &executable, Arguments args,
             closeflags[STDOUT_FILENO] = false;
         }
 
-        handle hstderr = ctx.stderr_behavior->get_child_end();
         if (hstderr.valid())
         {
             if (dup2(hstderr.native(), STDERR_FILENO) == -1)
