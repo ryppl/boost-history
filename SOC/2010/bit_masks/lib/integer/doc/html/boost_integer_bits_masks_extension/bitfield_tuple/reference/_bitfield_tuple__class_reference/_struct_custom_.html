@@ -13,18 +13,27 @@
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="_struct_pointer_.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__class_reference.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../_bitfield_tuple__macro_reference.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="_struct_pointer_.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__class_reference.html"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="../_bitfield_tuple__macro_reference.html"><img src="../../../../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_"></a><a class="link" href="_struct_custom_.html" title="struct custom"><code class="computeroutput"><span class="keyword">struct</span> <span class="identifier">custom</span></code></a>
 </h5></div></div></div>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.description"></a><h5>
-<a name="id714071"></a>
+<a name="id3073559"></a>
             <a class="link" href="_struct_custom_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.description">Description</a>
           </h5>
+<p>
+            The <code class="computeroutput"><span class="identifier">custom</span></code> member is
+            a template which is used to do to integers what <code class="computeroutput"><span class="identifier">pointer</span></code>
+            does to pointers. That being said, the custom class allows for semi-intrusive
+            behavior with regards to the storage of <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+            In the simplest use cases the <code class="computeroutput"><span class="identifier">custom</span></code>
+            member will only ever take three template parameters and will use the
+            default policy which is supplied.
+          </p>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.template_signature"></a><h5>
-<a name="id714093"></a>
+<a name="id3073638"></a>
             <a class="link" href="_struct_custom_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.template_signature">Template
             Signature</a>
           </h5>
@@ -40,12 +49,170 @@
         <span class="keyword">class</span> <span class="identifier">Policy</span> <span class="special">=</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">custom_packing_policy</span>
 <span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">custom</span><span class="special">;</span>
-<span class="special">}}</span> <span class="comment">// end boost::bitfields
-</span></pre>
+<span class="special">}}</span>
+</pre>
 <p>
           </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.template_parameters"></a><h5>
+<a name="id3073876"></a>
+            <a class="link" href="_struct_custom_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.template_parameters">Template
+            Parameters</a>
+          </h5>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      template Parameter
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Explanation
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">ReturnType</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      The type that the value is to be returned from the get function
+                      as.You may supply a signed type for a member but please note
+                      that a singed bit will be stored within the width you specify,
+                      so if you don't need negative values you should not store them.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Name</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      This is a type which is associated with the bitfield which
+                      is represented by this member template.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Mask</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      This is a mask which minimally defines the following two <code class="computeroutput"><span class="keyword">typedef</span></code>s and static constant:
+                      <code class="computeroutput"><span class="identifier">Mask</span><span class="special">::</span><span class="identifier">type</span></code>, <code class="computeroutput"><span class="identifier">Mask</span><span class="special">::</span><span class="identifier">value_type</span></code>,
+                      and <code class="computeroutput"><span class="identifier">Mask</span><span class="special">::</span><span class="identifier">value</span></code>. There are masking
+                      utilities which are included with <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                      which make using this parameter easier.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Policy</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      See below in the <code class="computeroutput"><span class="identifier">Policy</span></code>
+                      Section of this page. Default behavior is to apply the Mask
+                      to the incoming information and extract it, shift the new information
+                      to the correct location of the bitfield within the <code class="computeroutput"><span class="identifier">bitfield_tuples</span></code> storage.
+                      The next step is to take the complement of the current shifted
+                      mask and &amp; that with the storage, and | that with the shifted
+                      value then store that in the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>'s
+                      storage. The similar is done to get the information out of
+                      the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>'s
+                      storage. <span class="bold"><strong>For MOST cases this will NOT
+                      have to be used and the default case will work just fine.</strong></span>
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.preconditions"></a><h4>
+<a name="id3074202"></a>
+            <a class="link" href="_struct_custom_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.preconditions">Preconditions</a>
+          </h4>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Precondition
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Enforcement
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Mask</span><span class="special">::</span><span class="identifier">value</span> <span class="special">!=</span>
+                      <span class="number">0</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      The value associated with the mask can not be zero.
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Enforced by static assert.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Name</span></code> must be
+                      unique.
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      The <code class="computeroutput"><span class="identifier">Name</span></code> template
+                      parameter can only be supplied once per <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Enforced by static assert.
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.header_file_locaton"></a><h5>
-<a name="id714332"></a>
+<a name="id3074387"></a>
             <a class="link" href="_struct_custom_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.header_file_locaton">Header
             file Locaton</a>
           </h5>
@@ -57,10 +224,299 @@
 </pre>
 <p>
           </p>
-<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.example"></a><h5>
-<a name="id714431"></a>
-            <a class="link" href="_struct_custom_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.example">Example</a>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.examples"></a><h5>
+<a name="id3074493"></a>
+            <a class="link" href="_struct_custom_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.examples">Examples</a>
           </h5>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.using_a__code__phrase_role__identifier__custom__phrase___code__member_to_store_the_16_most_significant_bits_of_an_integer"></a><h6>
+<a name="id3074522"></a>
+            <a class="link" href="_struct_custom_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.using_a__code__phrase_role__identifier__custom__phrase___code__member_to_store_the_16_most_significant_bits_of_an_integer">Using
+            a <code class="computeroutput"><span class="identifier">custom</span></code> member to store
+            the 16 most significant bits of an integer</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bifield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bitifields</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">high_bits_mask</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="number">16</span><span class="special">&gt;</span> <span class="identifier">top16bits</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">int1</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">int2</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">storage</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">&gt;,</span>
+    <span class="identifier">custom</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">int1</span><span class="special">,</span> <span class="identifier">top16bits</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">int2</span><span class="special">,</span> <span class="number">16</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>           <span class="identifier">two_different_halves</span><span class="special">;</span>
+</pre>
+<p>
+            <code class="computeroutput"><span class="identifier">custom</span></code> members are accessed
+            just the same as every other member within a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            by simply using the get function followed by its index or <code class="computeroutput"><span class="identifier">Name</span></code>.
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.how_to_define_a_policy_for_a_custom_member"></a><h5>
+<a name="id3074928"></a>
+            <a class="link" href="_struct_custom_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.how_to_define_a_policy_for_a_custom_member">How
+            to Define a Policy For a Custom Member</a>
+          </h5>
+<p>
+            As stated before, if the previous case works for you then this is unnecessary.
+            Defining a policy is only necessary when you need to do custom packing
+            of a type before it's stored and custom unpack before it's returned.
+            Custom packing means that you are storing a mass of normally non contiguous
+            bits in a contiguous manner and expanding them to be non-contiguous afterwards.
+          </p>
+<p>
+            The template signature of a policy, as seen above in the template parameters,
+            table takes 4 arguments. Here is what to expect for each of those template
+            arguments. 
+</p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Mask</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">ValueType</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Offset</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Width</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">my_policy</span><span class="special">;</span>
+</pre>
+<p>
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.policy_parameter_description"></a><h6>
+<a name="id3075070"></a>
+            <a class="link" href="_struct_custom_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.policy_parameter_description">Policy
+            Parameter Description</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Parameter Name
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Mask</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Mask</span></code> is the
+                      template parameter which was supplied to the <code class="computeroutput"><span class="identifier">custom</span></code> member as a <code class="computeroutput"><span class="identifier">Mask</span></code>.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">ValueType</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      This is the type which was supplied to the <code class="computeroutput"><span class="identifier">custom</span></code>
+                      template as the <code class="computeroutput"><span class="identifier">ReturnType</span></code>.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Offset</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      This of type <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&lt;</span></code><span class="emphasis"><em>Implementation
+                      Defined</em></span><code class="computeroutput"><span class="special">&gt;</span></code>
+                      which is used to denote the number of bits from the least significant
+                      bit the field is supposed to be.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Width</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      This of type <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&lt;</span></code><span class="emphasis"><em>Implementation
+                      Defined</em></span><code class="computeroutput"><span class="special">&gt;</span></code>.
+                      The width is deduced from the mask supplied to the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> based on leading
+                      and trailing zeros within <code class="computeroutput"><span class="identifier">Mask</span></code>.
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.policy_body"></a><h6>
+<a name="id3075398"></a>
+            <a class="link" href="_struct_custom_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.policy_body">Policy
+            Body</a>
+          </h6>
+<p>
+            The body of the class template must contain the following <code class="computeroutput"><span class="keyword">typedef</span></code> and member template.
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Type
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">value_type</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      This is the ValueType which was supplied to the policy. If
+                      the <code class="computeroutput"><span class="keyword">typedef</span></code> isn't
+                      the same as ValueType it could cause problems however there
+                      is nothing enforcing this. So if you attempt to specify a different
+                      type for value_type then ValueType do so at your own risk.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">StorageType</span><span class="special">&gt;</span> <span class="keyword">struct</span>
+                      <span class="identifier">apply</span><span class="special">;</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Because at the time the policy is being instantiated and kept
+                      for later use the type of the storage may not be known yet.
+                      It has to be passed in at a later time. The <code class="computeroutput"><span class="identifier">StorageType</span></code>
+                      in the apply member template refers to the integral type which
+                      the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                      is using for storing its bitfields.
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<div class="tip"><table border="0" summary="Tip">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../../../images/tip.png"></td>
+<th align="left">Tip</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              I recommend that if you wish to specialize the policy you do so by
+              having the <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">StorageType</span><span class="special">&gt;</span> <span class="keyword">struct</span>
+              <span class="identifier">apply</span><span class="special">;</span></code>
+              inherit something which takes all five template parameters in scope:
+              <code class="computeroutput"><span class="identifier">Mask</span></code>, <code class="computeroutput"><span class="identifier">ValueType</span></code>, <code class="computeroutput"><span class="identifier">Offset</span></code>,
+              <code class="computeroutput"><span class="identifier">Width</span></code> and <code class="computeroutput"><span class="identifier">StorageType</span></code> and then define the necessary
+              two static functions there.
+            </p></td></tr>
+</table></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.the__code__phrase_role__identifier__apply__phrase___code__member_template"></a><h6>
+<a name="id3075722"></a>
+            <a class="link" href="_struct_custom_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.the__code__phrase_role__identifier__apply__phrase___code__member_template">The
+            <code class="computeroutput"><span class="identifier">apply</span></code> member template</a>
+          </h6>
+<p>
+            The apply member template is where the actual magic happens so to speak.
+            The apply template defines two static functions. The two static functions
+            are what is called to preform the actual storage and retrieval of the
+            bitfield itself.
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Static Function
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="keyword">static</span> <span class="identifier">StorageType</span>
+                      <span class="identifier">set</span><span class="special">(</span><span class="identifier">StorageType</span> <span class="identifier">storage</span><span class="special">,</span> <span class="identifier">ValueType</span>
+                      <span class="identifier">value</span><span class="special">);</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      This function is used to set the value of the bitfield and
+                      store it inside of storage then return storage. The returned
+                      storage is set to the storage which <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                      uses.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="keyword">static</span> <span class="identifier">ValueType</span>
+                      <span class="identifier">get</span><span class="special">(</span><span class="identifier">StorageType</span> <span class="identifier">storage</span><span class="special">);</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Retrieves the value of from <code class="computeroutput"><span class="identifier">storage</span></code>
+                      which is the actual storage from within <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                      and returns the value of the bitfield.
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.completed_policy_structure_"></a><h6>
+<a name="id3075977"></a>
+            <a class="link" href="_struct_custom_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_custom_.completed_policy_structure_">Completed
+            Policy Structure </a>
+          </h6>
+<p>
+            Example of what a completed policy will need to look like. 
+</p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Mask</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">ValueType</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Offset</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Width</span><span class="special">&gt;</span> 
+<span class="keyword">struct</span> <span class="identifier">my_policy</span> <span class="special">{</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">ValueType</span> <span class="identifier">value_type</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">StorageType</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">apply</span> <span class="special">{</span>
+        <span class="keyword">static</span> <span class="identifier">ValueType</span> <span class="identifier">get</span><span class="special">(</span><span class="identifier">StorageType</span> <span class="identifier">storage</span><span class="special">);</span>
+        <span class="keyword">static</span> <span class="identifier">StorageType</span> <span class="identifier">set</span><span class="special">(</span><span class="identifier">StorageType</span> <span class="identifier">storage</span><span class="special">,</span> <span class="identifier">ValueType</span> <span class="identifier">value</span><span class="special">);</span>
+    <span class="special">};</span>
+<span class="special">};</span>
+</pre>
 <p>
           </p>
 </div>
@@ -74,7 +530,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="_struct_pointer_.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__class_reference.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../_bitfield_tuple__macro_reference.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="_struct_pointer_.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__class_reference.html"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="../_bitfield_tuple__macro_reference.html"><img src="../../../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

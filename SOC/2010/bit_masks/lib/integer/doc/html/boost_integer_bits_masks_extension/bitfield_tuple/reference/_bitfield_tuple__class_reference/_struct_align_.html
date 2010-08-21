@@ -13,14 +13,14 @@
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="_struct_flag_.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__class_reference.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="_struct_storage_.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="_struct_flag_.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__class_reference.html"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="_struct_storage_.html"><img src="../../../../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_align_"></a><a class="link" href="_struct_align_.html" title="struct align"><code class="computeroutput"><span class="keyword">struct</span> <span class="identifier">align</span></code></a>
 </h5></div></div></div>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_align_.description"></a><h5>
-<a name="id712937"></a>
+<a name="id3069301"></a>
             <a class="link" href="_struct_align_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_align_.description">Description</a>
           </h5>
 <p>
@@ -33,7 +33,7 @@
           </p>
 <div class="note"><table border="0" summary="Note">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../..//home/brian/boost/boost-trunk/doc/html/images/note.png"></td>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../images/note.png"></td>
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
@@ -43,7 +43,7 @@
             </p></td></tr>
 </table></div>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_align_.template_signature"></a><h5>
-<a name="id713073"></a>
+<a name="id3069447"></a>
             <a class="link" href="_struct_align_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_align_.template_signature">Template
             Signature</a>
           </h5>
@@ -52,12 +52,48 @@
 </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">bitfields</span> <span class="special">{</span>
 <span class="keyword">template</span> <span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">AlignTo</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">align</span><span class="special">;</span>
-<span class="special">}}</span> <span class="comment">// end boost::bitfields
-</span></pre>
+<span class="special">}}</span>
+</pre>
 <p>
           </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_align_.template_parameters"></a><h5>
+<a name="id3069573"></a>
+            <a class="link" href="_struct_align_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_align_.template_parameters">Template
+            Parameters</a>
+          </h5>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      template Parameter
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Explanation
+                    </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">AlignTo</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      The value that the next bitfield's first bit should be a multiple
+                      of.
+                    </p>
+                  </td>
+</tr></tbody>
+</table></div>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_align_.header_file_locaton"></a><h5>
-<a name="id713199"></a>
+<a name="id3069665"></a>
             <a class="link" href="_struct_align_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_align_.header_file_locaton">Header
             file Locaton</a>
           </h5>
@@ -70,10 +106,33 @@
 <p>
           </p>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_align_.example"></a><h5>
-<a name="id713298"></a>
+<a name="id3069775"></a>
             <a class="link" href="_struct_align_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_align_.example">Example</a>
           </h5>
 <p>
+            
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bitfields</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">i</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">red</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">green</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">blue</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">storage</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">long</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span><span class="identifier">red</span><span class="special">,</span><span class="number">5</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">green</span><span class="special">,</span> <span class="number">6</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="identifier">unsinged</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">blue</span><span class="special">,</span><span class="number">5</span><span class="special">&gt;,</span>
+    <span class="identifier">align</span><span class="special">&lt;</span><span class="number">32</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier">i</span><span class="special">,</span><span class="number">32</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>    <span class="identifier">color_plus_int</span><span class="special">;</span>
+</pre>
+<p>
+            With in the above example the first 3 fields are the size of a short
+            then the alignment is pushed up to the next boundary and a full sized
+            integer is then stored at the end. This actually does make accessing
+            slightly for the integer.
           </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
@@ -86,7 +145,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="_struct_flag_.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__class_reference.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="_struct_storage_.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="_struct_flag_.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__class_reference.html"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="_struct_storage_.html"><img src="../../../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

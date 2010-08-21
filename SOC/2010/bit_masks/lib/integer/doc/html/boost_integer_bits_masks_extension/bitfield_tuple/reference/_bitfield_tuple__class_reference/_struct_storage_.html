@@ -13,14 +13,14 @@
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="_struct_align_.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__class_reference.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="_struct_pointer_.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="_struct_align_.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__class_reference.html"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="_struct_pointer_.html"><img src="../../../../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_"></a><a class="link" href="_struct_storage_.html" title="struct storage"><code class="computeroutput"><span class="keyword">struct</span> <span class="identifier">storage</span></code></a>
 </h5></div></div></div>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.description"></a><h5>
-<a name="id713354"></a>
+<a name="id3070241"></a>
             <a class="link" href="_struct_storage_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.description">Description</a>
           </h5>
 <p>
@@ -39,7 +39,7 @@
             and accept values in the endianness of your native machine.
           </p>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.template_signature"></a><h5>
-<a name="id713436"></a>
+<a name="id3070342"></a>
             <a class="link" href="_struct_storage_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.template_signature">Template
             Signature</a>
           </h5>
@@ -48,12 +48,119 @@
 </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">bitfields</span> <span class="special">{</span>
 <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">StorageType</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">storage</span><span class="special">;</span>
-<span class="special">}}</span> <span class="comment">// end boost::bitfields
-</span></pre>
+<span class="special">}}</span>
+</pre>
 <p>
           </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.template_parameters"></a><h5>
+<a name="id3070460"></a>
+            <a class="link" href="_struct_storage_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.template_parameters">Template
+            Parameters</a>
+          </h5>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      template Parameter
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Explanation
+                    </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">StorageType</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      The storage type to be used for storing data inside of the
+                      <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                    </p>
+                  </td>
+</tr></tbody>
+</table></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.preconditions"></a><h4>
+<a name="id3070562"></a>
+            <a class="link" href="_struct_storage_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.preconditions">Preconditions</a>
+          </h4>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Precondition
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Enforcement
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      storage type can be supplied 0 or 1 times for the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      The <code class="computeroutput"><span class="identifier">storage</span></code>
+                      not be specified more then once per inside of the template
+                      parameters for a single <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Enforced by static assert.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      Total width of all bitfields in a single <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                      can not exceed the width in bits of the storage type when the
+                      storage type is specified or 64 bits when a storage type is
+                      not specified if you system supports some form 64 bit integer
+                      other wise the limit is set to 32 bits.
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      This is a limitation on the internal storage that <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> uses to hold
+                      its bitfields.
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Enforced by static assert.
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.header_file_locaton"></a><h5>
-<a name="id713552"></a>
+<a name="id3070746"></a>
             <a class="link" href="_struct_storage_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.header_file_locaton">Header
             file Locaton</a>
           </h5>
@@ -66,10 +173,45 @@
 <p>
           </p>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.example"></a><h5>
-<a name="id713652"></a>
+<a name="id3070851"></a>
             <a class="link" href="_struct_storage_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.example">Example</a>
           </h5>
 <p>
+            Specified storage type example. 
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">red</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">green</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">blue</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">storage</span><span class="special">&lt;</span><span class="identifier">unsinged</span> <span class="keyword">int</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span><span class="identifier">red</span><span class="special">,</span><span class="number">4</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span><span class="identifier">green</span><span class="special">,</span><span class="number">4</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span><span class="identifier">blue</span><span class="special">,</span><span class="number">4</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>       <span class="identifier">rgb444</span><span class="special">;</span>
+</pre>
+<p>
+            The type <code class="computeroutput"><span class="identifier">rgb444</span></code> shown
+            in the above example has the size of 4. <code class="computeroutput"><span class="identifier">rgb444</span></code>
+            has the same size as the integer type which the storage type specifies.
+          </p>
+<p>
+            non-specified storage type example. 
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">red</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">green</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">blue</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span><span class="identifier">red</span><span class="special">,</span><span class="number">4</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span><span class="identifier">green</span><span class="special">,</span><span class="number">4</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span><span class="identifier">blue</span><span class="special">,</span><span class="number">4</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>       <span class="identifier">rgb444_2</span><span class="special">;</span>
+</pre>
+<p>
+            The in this example a storage type is being deduced by the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>. So the type <code class="computeroutput"><span class="identifier">rgb444_2</span></code> has a size of 2 which is the
+            size of an unsigned short which is the smallest type that could hold
+            all of the bitfields.
           </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
@@ -82,7 +224,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="_struct_align_.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__class_reference.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="_struct_pointer_.html"><img src="../../../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="_struct_align_.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__class_reference.html"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="_struct_pointer_.html"><img src="../../../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

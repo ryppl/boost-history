@@ -13,7 +13,7 @@
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="getting_started/testing.html"><img src="../../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="external_resources.html"><img src="../../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started/testing.html"><img src="../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../images/home.png" alt="Home"></a><a accesskey="n" href="external_resources.html"><img src="../../../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
@@ -25,7 +25,7 @@
           and all of the different functionalities it provides.
         </p>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_1__the_basics"></a><h6>
-<a name="id705720"></a>
+<a name="id3057559"></a>
           <a class="link" href="tutorial.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_1__the_basics">Part
           1: The Basics</a>
         </h6>
@@ -81,7 +81,7 @@
           a width of 2 bits.
         </p>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_2__using_the_tuple"></a><h5>
-<a name="id706406"></a>
+<a name="id3058236"></a>
           <a class="link" href="tutorial.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_2__using_the_tuple">Part
           2: Using the tuple</a>
         </h5>
@@ -99,7 +99,7 @@
         </p>
 <div class="note"><table border="0" summary="Note">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../..//home/brian/boost/boost-trunk/doc/html/images/note.png"></td>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../images/note.png"></td>
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
@@ -121,7 +121,6 @@
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
-<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bitfields</span><span class="special">;</span>
 
 <span class="comment">// names used to mimic the names in struct foo.
@@ -150,7 +149,7 @@
 <p>
         </p>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_3__slightly_more_advanced"></a><h6>
-<a name="id707184"></a>
+<a name="id3058953"></a>
           <a class="link" href="tutorial.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_3__slightly_more_advanced">Part
           3: Slightly More Advanced</a>
         </h6>
@@ -162,7 +161,7 @@
         </p>
 <p>
           The different templates that can be used within a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>'s
-          template decalaration.
+          template declaration.
         </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -185,19 +184,19 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">filler</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span></code>
+                    <code class="computeroutput"><span class="identifier">padding</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span></code>
                   </p>
                 </td>
 <td>
                   <p>
-                    Padding in bits that can be used to seperate bitfield.
+                    Padding in bits that can be used to separate bitfield.
                   </p>
                 </td>
 </tr>
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">bit_align</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span></code>
+                    <code class="computeroutput"><span class="identifier">align</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span></code>
                   </p>
                 </td>
 <td>
@@ -250,11 +249,37 @@
                   </p>
                 </td>
 </tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">pointer</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">,</span><span class="keyword">typename</span><span class="special">,</span><span class="keyword">typename</span><span class="special">&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    This allows for a pointer to have bits stuffed into it and have
+                    both extracted separately but stored together.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">custom</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">,</span><span class="keyword">typename</span><span class="special">,</span><span class="keyword">typename</span><span class="special">,</span><span class="keyword">typename</span><span class="special">&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    This type allows for custom packing and unpacking of the the
+                    data before it is stored within the bitfield_tuple.
+                  </p>
+                </td>
+</tr>
 </tbody>
 </table></div>
 <div class="tip"><table border="0" summary="Tip">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../..//home/brian/boost/boost-trunk/doc/html/images/tip.png"></td>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../../images/tip.png"></td>
 <th align="left">Tip</th>
 </tr>
 <tr><td align="left" valign="top"><p>
@@ -264,20 +289,180 @@
           </p></td></tr>
 </table></div>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_4__fusion_sequence_extension"></a><h6>
-<a name="id707575"></a>
+<a name="id3059497"></a>
           <a class="link" href="tutorial.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_4__fusion_sequence_extension">Part
           4: Fusion Sequence extension</a>
         </h6>
 <p>
           The <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> is a
           boost.fusion sequence. It supports the all of the functionality that is
-          supported by a random access container and an associtve sequence. The
+          supported by a random access container and an associative sequence. The
           <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> internally
           stores its fields as an associative array. This allows the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> to provide both index
           based as well as named <code class="computeroutput"><span class="identifier">get</span></code>
-          functions. For full documentataion of how to use boost.fusion see the boost.fusion
-          documentation. For the boost.fusion features supported by the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> see the fusion extension
+          functions. For full documentation of how to use boost.fusion see the boost.fusion
+          documentation. For the Boost.Fusion features supported by the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> see the fusion extension
           documentation located in the reference section of the documentation.
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">fusion</span><span class="special">/</span><span class="identifier">include</span><span class="special">/</span><span class="identifier">for_each</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bitfields</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">red</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">green</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">pink</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">blue</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">salmon</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span><span class="identifier">red</span><span class="special">,</span><span class="number">4</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">green</span><span class="special">,</span><span class="number">5</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">salmon</span><span class="special">,</span> <span class="number">16</span><span class="special">&gt;,</span>
+    <span class="identifier">storage</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>  <span class="identifier">fusion_example_tuple</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">unary_function_object</span><span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()</span> <span class="special">(</span><span class="identifier">T</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">x</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    
+    <span class="identifier">fusion_example_tuple</span> <span class="identifier">bft</span><span class="special">;</span>
+    <span class="identifier">bft</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span>
+    <span class="identifier">bft</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">2</span><span class="special">;</span>
+    <span class="identifier">bft</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
+
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">bft</span><span class="special">,</span><span class="identifier">unary_function_object</span><span class="special">());</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The above code uses the fusion for_each to iterate over each element within
+          the bitfield_tuple and print it. For a full description of all of the Boost.Fusion
+          supported operations please see the section of the documentation relating
+          to the Boost.Fusion sequence extension.
+        </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_5__pointer_stuffing"></a><h6>
+<a name="id3060401"></a>
+          <a class="link" href="tutorial.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_5__pointer_stuffing">Part
+          5: Pointer stuffing</a>
+        </h6>
+<p>
+          <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> provides
+          a mechanism for for stuffing bits into pointers (as well as other things).
+          For a more in depth description of the <code class="computeroutput"><span class="identifier">pointer</span></code>
+          member of <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          please refer to the documentation for <code class="computeroutput"><span class="identifier">pointer</span></code>.
+          The following is a basic example for pointers which point to DWORD aligned
+          sections of memory.
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assert</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">color</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">ptr</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">pointer</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">ptr</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span><span class="identifier">color</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;</span>
+<span class="special">&gt;</span> <span class="identifier">color_stuffed_ptr_tuple</span><span class="special">;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bitfields</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">int</span><span class="special">*</span> <span class="identifier">some_ptr</span> <span class="special">=</span> <span class="keyword">new</span> <span class="keyword">int</span><span class="special">();</span>
+    <span class="identifier">color_stuffed_ptr_tuple</span> <span class="identifier">colored_ptr</span><span class="special">;</span>
+    <span class="identifier">colored_ptr</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">ptr</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="identifier">some_ptr</span><span class="special">;</span>
+    <span class="identifier">colored_ptr</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">color</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
+
+    <span class="comment">// set the value of the thing being pointed at to 3.
+</span>    <span class="special">*</span><span class="identifier">colored_ptr</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">ptr</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
+
+    <span class="comment">// make sure that the color is correctly set.
+</span>    <span class="identifier">BOOST_ASSERT</span><span class="special">((</span> <span class="identifier">colored_ptr</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">color</span><span class="special">&gt;()</span> <span class="special">==</span> <span class="number">3</span> <span class="special">));</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+
+</pre>
+<p>
+          There is much more one can do with a stuffed pointer but this is the minimal
+          example of how to use the <code class="computeroutput"><span class="identifier">pointer</span></code>
+          member.
+        </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_5__custom_integral_stuffing"></a><h6>
+<a name="id3061055"></a>
+          <a class="link" href="tutorial.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_5__custom_integral_stuffing">Part
+          5: Custom Integral Stuffing</a>
+        </h6>
+<p>
+          The <code class="computeroutput"><span class="identifier">custom</span></code> member allows
+          the user to specify a section of bits within a type and extract those bits
+          and then store them inside of the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+          One of the use cases for something like this is if a number is always even
+          then the last bit is always zero. The following example is how to specify
+          the <code class="computeroutput"><span class="identifier">custom</span></code> member such
+          that it is used to store an always even number.
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bitfields</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">always_even_int</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">extra_bool</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">custom</span><span class="special">&lt;</span>
+        <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span>
+        <span class="identifier">always_even_int</span><span class="special">,</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">high_bits_mask</span><span class="special">&lt;</span>
+            <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span>
+            <span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">bit_width</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">-</span> <span class="number">1</span><span class="special">)</span>
+        <span class="special">&gt;</span>
+    <span class="special">&gt;,</span>
+    <span class="identifier">flag</span><span class="special">&lt;</span><span class="identifier">extra_bool</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>                       <span class="identifier">custom_stuffing</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">custom_stuffing</span> <span class="identifier">cs</span><span class="special">;</span>
+    <span class="identifier">cs</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">always_even_int</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">4</span><span class="special">;</span>
+    
+    <span class="identifier">BOOST_ASSERT</span><span class="special">((</span> <span class="identifier">cs</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">always_even_int</span><span class="special">&gt;()</span> <span class="special">==</span> <span class="number">4</span><span class="special">));</span>
+    <span class="identifier">cs</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">extra_bool</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span>
+
+    <span class="identifier">BOOST_ASSERT</span><span class="special">((</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">custom_stuffing</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span> <span class="special">));</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The <code class="computeroutput"><span class="identifier">high_bits_mask</span></code> in the
+          above example, is what is used to specify the value bits within the value
+          type. The mask is used to extract the value bits out of the <code class="computeroutput"><span class="keyword">unsigned</span> <span class="keyword">int</span></code>
+          when the <code class="computeroutput"><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">alway_even_int</span><span class="special">()</span></code>'s
+          value type assignment operator is called. When the <code class="computeroutput"><span class="keyword">operator</span>
+          <span class="identifier">value_type</span><span class="special">()</span></code>
+          the function returns the value bits so that they match the mask that was
+          used to take them. For instance, if the order of the template parameters
+          was switched so that the <code class="computeroutput"><span class="identifier">flag</span><span class="special">&lt;</span><span class="identifier">extra_bool</span><span class="special">&gt;</span></code> was to be first and the <code class="computeroutput"><span class="identifier">custom</span></code> member second the data structure
+          would look exactly the same, but there would be a slight difference in
+          performance because of the shifts which would have to occur in order to
+          correctly unpack or pack the type before it is returned or stored.
+        </p>
+<p>
+          There is much more that can be done with the <code class="computeroutput"><span class="identifier">custom</span></code>
+          member type then what is shown for additional information on how to fully
+          utilize all features of this type please see the documentation relating
+          the <code class="computeroutput"><span class="identifier">custom</span></code> member.
         </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
@@ -290,7 +475,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="getting_started/testing.html"><img src="../../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="external_resources.html"><img src="../../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started/testing.html"><img src="../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../images/home.png" alt="Home"></a><a accesskey="n" href="external_resources.html"><img src="../../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

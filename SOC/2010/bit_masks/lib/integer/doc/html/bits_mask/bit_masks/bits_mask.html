@@ -7,20 +7,20 @@
 <link rel="home" href="../../index.html" title="Boost.Integer Bits Masks Extension">
 <link rel="up" href="../../boost_integer_bits_masks_extension/bit_masks.html" title="Bit Masks">
 <link rel="prev" href="../../low_bits_mask/bit_masks/low_bits_mask.html" title="low_bits_mask">
-<link rel="next" href="../../bitfield_tuple/bitfield_tuple.html" title="bitfield_tuple">
+<link rel="next" href="../../bit_width/bit_masks/bit_width.html" title="bit_width">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../../low_bits_mask/bit_masks/low_bits_mask.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_integer_bits_masks_extension/bit_masks.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../bitfield_tuple/bitfield_tuple.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../low_bits_mask/bit_masks/low_bits_mask.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_integer_bits_masks_extension/bit_masks.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../../bit_width/bit_masks/bit_width.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="bits_mask.bit_masks.bits_mask"></a><a class="link" href="bits_mask.html" title="bits_mask"> bits_mask</a>
 </h3></div></div></div>
 <a name="bits_mask.bit_masks.bits_mask.description"></a><h4>
-<a name="id701402"></a>
+<a name="id3052280"></a>
         <a class="link" href="bits_mask.html#bits_mask.bit_masks.bits_mask.description">Description</a>
       </h4>
 <p>
@@ -55,12 +55,20 @@
 </span></pre>
 <p>
       </p>
+<a name="bits_mask.bit_masks.bits_mask.header_file_information"></a><h4>
+<a name="id3052506"></a>
+        <a class="link" href="bits_mask.html#bits_mask.bit_masks.bits_mask.header_file_information">Header
+        File Information</a>
+      </h4>
 <p>
-        The <code class="computeroutput"><span class="identifier">bits_mask</span></code> template is
-        located in the &lt;boost/integer/bits_mask.hpp&gt; header file.
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bits_mask</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
       </p>
 <a name="bits_mask.bit_masks.bits_mask.template_signature"></a><h4>
-<a name="id701622"></a>
+<a name="id3052577"></a>
         <a class="link" href="bits_mask.html#bits_mask.bit_masks.bits_mask.template_signature">Template
         Signature</a>
       </h4>
@@ -68,11 +76,26 @@
         <code class="computeroutput"><span class="identifier">bits_mask</span></code> has the following
         template signature: 
 </p>
-<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">Offset</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">Width</span> <span class="special">=</span> <span class="number">1</span> <span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">bits_mask</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">Offset</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">Width</span> <span class="special">=</span> <span class="number">1u</span> <span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">bits_mask</span><span class="special">;</span>
+<span class="special">}</span>
 </pre>
 <p>
       </p>
+<a name="bits_mask.bit_masks.bits_mask.bit_mask_hierarchy"></a><h4>
+<a name="id3052724"></a>
+        <a class="link" href="bits_mask.html#bits_mask.bit_masks.bits_mask.bit_mask_hierarchy">Bit Mask
+        Hierarchy</a>
+      </h4>
+<p>
+        <code class="computeroutput"><span class="identifier">bits_mask</span></code> inherits from
+        <code class="computeroutput"><span class="identifier">integral_mask</span></code>.
+      </p>
+<a name="bits_mask.bit_masks.bits_mask.template_parameters"></a><h4>
+<a name="id3052763"></a>
+        <a class="link" href="bits_mask.html#bits_mask.bit_masks.bits_mask.template_parameters">Template
+        Parameters</a>
+      </h4>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -111,8 +134,10 @@
               </td>
 <td>
                 <p>
-                  This is the number of bits which is used for a left shift of the
-                  <code class="computeroutput"><span class="identifier">width</span></code>.
+                  This is the number of bits from the least significant bit to the
+                  first bit being used to compose the mask. Another way to think
+                  of this is the amount that the mask has been shifted to the left
+                  (using the left shift operator).
                 </p>
               </td>
 </tr>
@@ -124,20 +149,113 @@
               </td>
 <td>
                 <p>
-                  This is the width of the mask in bits.
+                  This is the width of the mask in bits. <code class="computeroutput"><span class="identifier">Width</span></code>
+                  has a default value of <code class="computeroutput"><span class="number">1u</span></code>
+                  so that <code class="computeroutput"><span class="identifier">bits_mask</span></code>
+                  can be easily used to create boolean flags by providing only an
+                  <code class="computeroutput"><span class="identifier">Offset</span></code> to the bit.
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<a name="bits_mask.bit_masks.bits_mask.preconditions"></a><h4>
+<a name="id3052937"></a>
+        <a class="link" href="bits_mask.html#bits_mask.bit_masks.bits_mask.preconditions">Preconditions</a>
+      </h4>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Precondition
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+<th>
+                <p>
+                  Enforcement
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">T</span></code> must be an integral
+                  type.
+                </p>
+              </td>
+<td>
+                <p>
+                  This is only a documented precondition. It is not enforced.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="identifier">Offset</span>
+                  <span class="special">+</span> <span class="identifier">Width</span><span class="special">)</span> <span class="special">&lt;=</span>
+                  <span class="special">(</span> <span class="identifier">bit_width</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span>
+                  <span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  The <code class="computeroutput"><span class="identifier">Width</span> <span class="special">+</span>
+                  <span class="identifier">Offset</span></code> must be less then
+                  or equal to the number of bits within the integral type <code class="computeroutput"><span class="identifier">T</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Enforced by static assert.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Valid range for mask width is &gt; 0.
+                </p>
+              </td>
+<td>
+                <p>
+                  The <code class="computeroutput"><span class="identifier">Width</span></code> of a
+                  mask must not be zero. Because <code class="computeroutput"><span class="identifier">Width</span></code>
+                  is of <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span></code> it can not be negative.
+                </p>
+              </td>
+<td>
+                <p>
+                  Enforced by domain of template parameter and by static assert.
                 </p>
               </td>
 </tr>
 </tbody>
 </table></div>
 <a name="bits_mask.bit_masks.bits_mask.interface"></a><h4>
-<a name="id701858"></a>
+<a name="id3053212"></a>
         <a class="link" href="bits_mask.html#bits_mask.bit_masks.bits_mask.interface">Interface</a>
       </h4>
 <p>
-        <code class="computeroutput"><span class="identifier">TYPENAME</span></code> Compile time interface.
-        Assume that N is of type <code class="computeroutput"><span class="identifier">N</span> <span class="identifier">TYPE</span></code> the type supplied here is only for
-        example.
+        <code class="computeroutput"><span class="identifier">bits_mask</span></code> Compile time interface.
+        Assume that <code class="computeroutput"><span class="identifier">N</span></code> is of type
+        <code class="computeroutput"><span class="identifier">bits_mask</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span><span class="number">4</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;</span></code> the type
+        supplied here is only for example.
       </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -231,115 +349,14 @@
 <td>
                 <p>
                   Run time support function. All this function does is return the
-                  value associated with the type. With the c++0x feature <code class="computeroutput"><span class="identifier">constexper</span></code> this function will
-                  be made fasters and more effieient.
-                </p>
-              </td>
-</tr>
-</tbody>
-</table></div>
-<a name="bits_mask.bit_masks.bits_mask.preconditions"></a><h4>
-<a name="id702199"></a>
-        <a class="link" href="bits_mask.html#bits_mask.bit_masks.bits_mask.preconditions">Preconditions</a>
-      </h4>
-<p>
-        Preconditions associated with the <code class="computeroutput"><span class="identifier">bits_mask</span></code>
-        template. There are two types of precondtions ones which are only documented
-        and ones which are both enforced and documented. Preconditions will specify
-        which are which within the documentation. All of the preconditions will document
-        how they are enforced when they are enforced.
-      </p>
-<div class="informaltable"><table class="table">
-<colgroup>
-<col>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>
-                <p>
-                  Precondition
-                </p>
-              </th>
-<th>
-                <p>
-                  Reasoning
-                </p>
-              </th>
-<th>
-                <p>
-                  Enforcement
-                </p>
-              </th>
-</tr></thead>
-<tbody>
-<tr>
-<td>
-                <p>
-                  <code class="computeroutput"><span class="special">(</span><span class="identifier">Offset</span>
-                  <span class="special">+</span> <span class="identifier">Width</span><span class="special">)</span> <span class="special">&lt;</span>
-                  <span class="special">(</span> <span class="identifier">bit_width</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span>
-                  <span class="special">-</span> <span class="number">1</span><span class="special">)</span></code>
-                </p>
-              </td>
-<td>
-                <p>
-                  It will cause overflow if the width plus the offset is greater
-                  then total width of the type in bits.
-                </p>
-              </td>
-<td>
-                <p>
-                  Enforced by <code class="computeroutput"><span class="identifier">BOOST_STATIC_ASSERT</span></code>.
-                </p>
-              </td>
-</tr>
-<tr>
-<td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">Width</span> <span class="special">&gt;</span>
-                  <span class="number">0</span></code>
-                </p>
-              </td>
-<td>
-                <p>
-                  This would create an empty mask, which won't do anything.
-                </p>
-              </td>
-<td>
-                <p>
-                  Enfoced by the domain of the <code class="computeroutput"><span class="identifier">Width</span></code>
-                  template parameter which is an <code class="computeroutput"><span class="keyword">unsigned</span>
-                  <span class="keyword">int</span></code>, which prevents the
-                  value from being negative, and by <code class="computeroutput"><span class="identifier">BOOST_STATIC_ASSERT</span></code>,
-                  which prevents the value from being zero.
-                </p>
-              </td>
-</tr>
-<tr>
-<td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">T</span></code> must satisfy
-                  the <code class="computeroutput"><span class="identifier">is_integral</span></code>
-                  type trait.
-                </p>
-              </td>
-<td>
-                <p>
-                  The <code class="computeroutput"><span class="identifier">bits_mask</span></code> template
-                  has only been tested with integral types.
-                </p>
-              </td>
-<td>
-                <p>
-                  This is only a documented precondition.
+                  value associated with the type.
                 </p>
               </td>
 </tr>
 </tbody>
 </table></div>
 <a name="bits_mask.bit_masks.bits_mask.examples"></a><h4>
-<a name="id702494"></a>
+<a name="id3053604"></a>
         <a class="link" href="bits_mask.html#bits_mask.bit_masks.bits_mask.examples">Examples</a>
       </h4>
 <p>
@@ -405,7 +422,7 @@
 <p>
       </p>
 <p>
-        The implicit cast operator allows for simplicity, clairity of code. In the
+        The implicit cast operator allows for simplicity, clarity of code. In the
         above example <code class="computeroutput"><span class="identifier">mask</span><span class="special">()</span></code>
         could be replaced with <code class="computeroutput"><span class="identifier">mask</span><span class="special">::</span><span class="identifier">value</span></code>
         to achieve the same result. The same applies to all other bitwise operators.
@@ -421,7 +438,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../../low_bits_mask/bit_masks/low_bits_mask.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_integer_bits_masks_extension/bit_masks.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../bitfield_tuple/bitfield_tuple.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../low_bits_mask/bit_masks/low_bits_mask.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_integer_bits_masks_extension/bit_masks.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../../bit_width/bit_masks/bit_width.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

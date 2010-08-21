@@ -13,23 +13,20 @@
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../../high_bits_mask/bit_masks/high_bits_maskbits.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_integer_bits_masks_extension/bit_masks.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../bits_mask/bit_masks/bits_mask.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../high_bits_mask/bit_masks/high_bits_maskbits.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_integer_bits_masks_extension/bit_masks.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../../bits_mask/bit_masks/bits_mask.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="low_bits_mask.bit_masks.low_bits_mask"></a><a class="link" href="low_bits_mask.html" title="low_bits_mask"> low_bits_mask</a>
 </h3></div></div></div>
 <a name="low_bits_mask.bit_masks.low_bits_mask.description"></a><h4>
-<a name="id700577"></a>
+<a name="id3051023"></a>
         <a class="link" href="low_bits_mask.html#low_bits_mask.bit_masks.low_bits_mask.description">Description</a>
       </h4>
 <p>
-        <code class="computeroutput"><span class="identifier">low_bits_mask</span></code> creates a mask
-        of bits starting from the right most bit and extending out to the left. The
-        <code class="computeroutput"><span class="identifier">low_bits_mask</span></code> is similar
-        to the <code class="computeroutput"><span class="identifier">high_bits_mask</span></code> just
-        starts on the right most bit instead of the left most bit. The way <code class="computeroutput"><span class="identifier">low_bits_mask</span></code> behaves in the following
-        example:
+        <code class="computeroutput"><span class="identifier">low_bits_mask</span></code> is a section
+        of contiguous of bits which extend out from the least significant bit toward
+        the most significant bit. The following is a basic example of how <code class="computeroutput"><span class="identifier">low_bits_mask</span></code> works:
       </p>
 <p>
         
@@ -39,11 +36,22 @@
 </span><span class="comment">// 0000 0000  0000 0000  0000 0011  1111 1111
 </span></pre>
 <p>
-        The <code class="computeroutput"><span class="identifier">low_bits_mask</span></code> template
-        is located in the &lt;boost/integer/low_bits_mask.hpp&gt; header file.
+      </p>
+<a name="low_bits_mask.bit_masks.low_bits_mask.header_file_information"></a><h4>
+<a name="id3051125"></a>
+        <a class="link" href="low_bits_mask.html#low_bits_mask.bit_masks.low_bits_mask.header_file_information">Header
+        File Information</a>
+      </h4>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">low_bits_mask</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">high_low_mask</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
       </p>
 <a name="low_bits_mask.bit_masks.low_bits_mask.template_signature"></a><h4>
-<a name="id700698"></a>
+<a name="id3051240"></a>
         <a class="link" href="low_bits_mask.html#low_bits_mask.bit_masks.low_bits_mask.template_signature">Template
         Signature</a>
       </h4>
@@ -51,11 +59,26 @@
         <code class="computeroutput"><span class="identifier">low_bits_mask</span></code> has the following
         template signature: 
 </p>
-<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">Width</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">low_bits_mask</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">Width</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">low_bits_mask</span><span class="special">;</span>
+<span class="special">}</span>
 </pre>
 <p>
       </p>
+<a name="low_bits_mask.bit_masks.low_bits_mask.bit_mask_hierarchy"></a><h4>
+<a name="id3051356"></a>
+        <a class="link" href="low_bits_mask.html#low_bits_mask.bit_masks.low_bits_mask.bit_mask_hierarchy">Bit
+        Mask Hierarchy</a>
+      </h4>
+<p>
+        <code class="computeroutput"><span class="identifier">low_bits_mask</span></code> inherits from
+        <code class="computeroutput"><span class="identifier">integral_mask</span></code>.
+      </p>
+<a name="low_bits_mask.bit_masks.low_bits_mask.template_parameters"></a><h4>
+<a name="id3051396"></a>
+        <a class="link" href="low_bits_mask.html#low_bits_mask.bit_masks.low_bits_mask.template_parameters">Template
+        Parameters</a>
+      </h4>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -101,7 +124,7 @@
 </tbody>
 </table></div>
 <a name="low_bits_mask.bit_masks.low_bits_mask.interface"></a><h4>
-<a name="id700870"></a>
+<a name="id3051503"></a>
         <a class="link" href="low_bits_mask.html#low_bits_mask.bit_masks.low_bits_mask.interface">Interface</a>
       </h4>
 <p>
@@ -183,21 +206,100 @@
 <tr>
 <td>
                 <p>
+                  <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">offset</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Returns 0 for this mask because the <code class="computeroutput"><span class="identifier">low_bits_mask</span></code>
+                  is not shifted in any direction and always starts at the least
+                  significant bit.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
                   <code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">T</span><span class="special">()</span></code>
                 </p>
               </td>
 <td>
                 <p>
                   Run time support function. All this function does is return the
-                  value associated with the type. With the c++0x feature <code class="computeroutput"><span class="identifier">constexper</span></code> this function will
-                  be made fasters and more effieient.
+                  value associated with the type.
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<a name="low_bits_mask.bit_masks.low_bits_mask.preconditions"></a><h4>
+<a name="id3051882"></a>
+        <a class="link" href="low_bits_mask.html#low_bits_mask.bit_masks.low_bits_mask.preconditions">Preconditions</a>
+      </h4>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Precondition
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+<th>
+                <p>
+                  Enforcement
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">bit_width</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">&gt;=</span>
+                  <span class="identifier">Width</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  The <code class="computeroutput"><span class="identifier">Width</span></code> must
+                  not be greater then the size in bits of type <code class="computeroutput"><span class="identifier">T</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Enforced by static assert.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">T</span></code> must be an integral
+                  type.
+                </p>
+              </td>
+<td>
+                <p>
+                  This is only a documented precondition. It is not enforced.
                 </p>
               </td>
 </tr>
 </tbody>
 </table></div>
 <a name="low_bits_mask.bit_masks.low_bits_mask.examples"></a><h4>
-<a name="id701192"></a>
+<a name="id3052055"></a>
         <a class="link" href="low_bits_mask.html#low_bits_mask.bit_masks.low_bits_mask.examples">Examples</a>
       </h4>
 <p>
@@ -240,7 +342,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../../high_bits_mask/bit_masks/high_bits_maskbits.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_integer_bits_masks_extension/bit_masks.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../bits_mask/bit_masks/bits_mask.html"><img src="../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../high_bits_mask/bit_masks/high_bits_maskbits.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_integer_bits_masks_extension/bit_masks.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../../bits_mask/bit_masks/bits_mask.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
