@@ -21,17 +21,32 @@ exactly what they are getting when the include the bitfield_tuple header file.]
 
 [h5 Standard Library Includes]
 * <cstddef> - Included for `std::size_t`.
-    * Included by boost.integer.bitfield 
+    * Included by Boost.Integer.Bitfield 
         * <cassert>
         * <limits>
-        * <netinet/in.h> <- Need to do implact analysis and remove this header
-from the includes before final draft.
 
-[h5 Boost Library Includes]
-* boost.Preprocessor
-    * <boost/preprocessor/repetition/enum.hpp>
-    * <boost/preprocessor/repetition/repeat_from_to.hpp>
 
+[h4 Boost Library Includes]
+[h5 boost.Preprocessor]
+* <boost/preprocessor/repetition/enum.hpp>
+* <boost/preprocessor/repetition/repeat_from_to.hpp>
+
+[h5 Boost.Config]
+* <boost/config.hpp>
+
+[h5 Boost.MPL]
+* <boost/mpl/vector.hpp>
+* <boost/mpl/not.hpp>
+* <boost/mpl/deref.hpp>
+* <boost/mpl/at.hpp>
+* <boost/mpl/less.hpp>
+* <boost/mpl/size.hpp>
+* <boost/mpl/int.hpp>
+* <boost/mpl/assert.hpp>
+* <boost/mpl/if.hpp>
+* <boost/mpl/minus.hpp>
+* <boost/mpl/size_t.hpp>
+* <boost/mpl/void.hpp>
 
 [note The `mpl::vector` is a limiting factor of the `bitfield_tuple` for more
 information on how to deal with limitations of the `bitfield_tuple` and its
@@ -39,117 +54,47 @@ dependencies please see the class reference documentation for `bitfield_tuple`
 and `bitfield_reference` regarding Preconditions.]
 
 
-* boost.MPL
-    * <boost/mpl/vector.hpp>
-    * <boost/mpl/not.hpp>
-    * <boost/mpl/deref.hpp>
-    * <boost/mpl/at.hpp>
-    * <boost/mpl/less.hpp>
-    * <boost/mpl/size.hpp>
-    * <boost/mpl/int.hpp>
-    * <boost/mpl/assert.hpp>
-    * <boost/mpl/if.hpp>
-    * <boost/mpl/minus.hpp>
-    * <boost/mpl/size_t.hpp>
-    * <boost/mpl/void.hpp>
+[h5 Boost.Type Traits]
+*   <boost/type_traits/add_reference.hpp>
+*   <boost/type_traits/is_const.hpp>
+*   <boost/type_traits/make_unsigned.hpp>
+*   <boost/type_traits/is_same.hpp>
+*   <boost/type_traits/is_pod.hpp>
 
-* boost.Type Traits
-    * <boost/type_traits.hpp> <- Need to figure out which parts of type_traits 
-are being used and make sure that I only include those.
-    * <boost/type_traits/is_const.hpp>
+[h5 Boost.Static Assert]
+* <boost/static_assert.hpp>
 
+[h5 Boost.Enable If]
+* <boost/utility/enable_if.hpp>
 
-* boost.Static Assert
-    * <boost/static_assert.hpp>
-
-
-* boost.Enable If
-    * <boost/utility/enable_if.hpp>
-
-
-* boost.Fusion
-    * <boost/fusion/sequence/intrinsic.hpp>
-    * <boost/fusion/support/is_sequence.hpp>
-    * <boost/fusion/support/is_view.hpp>
-    * <boost/fusion/support/tag_of_fwd.hpp>
-    * <boost/fusion/iterator/iterator_facade.hpp>
-    * <boost/fusion/iterator/value_of.hpp>
-    * <boost/fusion/iterator/deref.hpp>
-    * <boost/fusion/iterator/next.hpp>
-    * <boost/fusion/iterator/prior.hpp>
-    * <boost/fusion/iterator/distance.hpp>
-    * <boost/fusion/iterator/key_of.hpp>
-    * <boost/fusion/iterator/value_of_data.hpp>
-    * <boost/fusion/iterator/deref_data.hpp>
-
-
-[h4 Bitfield Tuple Specific Headers]
-
-* <boost/integer/details/bft/template_expansion_macros.hpp>
-    * Includes macros for tempate parameter generation and defining macros
-which can be used for specilization over a bitfield_tuple type.
-* <boost/integer/details/bitfield_tuple_impl.hpp>
-    * Base class for a `bitfield_tuple` that is responsible for enforcing
-some of the preconditions related to the `bitfield_tuples` template parameters.
-* <boost/integer/details/bft/bft_element.hpp>
-    * Element used for storing information about the `bitfield_tuple`'s 
-bitfields.
-* <boost/integer/details/bft/arg_parse_impl.hpp>
-    * A structure and its specializations which are responsible for the paring
-of template parameters into `bitfield_element`s which are then stored in an
-mpl sequence.
-* <boost/integer/details/bft/deduce_storage.hpp>
-    * Functionality for deducing the storage type for a bitfield tuple if one
-isn't supplied.
-* <boost/integer/details/bft/name_lookup.hpp>
-    * predicate used with `mpl::find_if` for locating items within the mpl
-sequence with the name tag specified by the user.
-* <boost/integer/details/bft/reference_builder.hpp>
-    * used to aid with the construction of the `bitfield_reference` template of
-a bitfield, from a `bitfield_tuple`.
-* <boost/integer/bitfield_tuple_fwd.hpp>
-    * forward declaration of the `bitfield_tuple`.
-* <boost/integer/details/fusion_ext_includes.hpp>
-    * Includes all of the headers necessary for creating the boost.fusion
-extension of the `bitfield_tuple`.
-* <boost/integer/details/bft/ext/bitfield_tuple_fusion_includes.hpp>
-    * Include all header files from the related to the bitfield
-tuple which compose the fusion extension interface of a `bitfield_tuple`.
-* <boost/integer/details/bft/make_bitfield_tuple.hpp>
-    * contains macros and functions used for creating the `make_bitfield_tuple`
-funciton template.
-
-
-[h5 Bitfield Tuple Fusion Extension]
-* header files which compose the boost.Fusion interface extension of a
-`bitfield_tuple`.
-    * <boost/integer/bft/ext/tag_of.hpp>
-    * <boost/integer/bft/ext/bitfield_iterator.hpp>
-    * <boost/integer/bft/ext/fusion/is_sequence_impl.hpp>
-    * <boost/integer/bft/ext/fusion/is_view_impl.hpp>
-    * <boost/integer/bft/ext/fusion/category_of_impl.hpp>
-    * <boost/integer/bft/ext/fusion/at_impl.hpp>
-    * <boost/integer/bft/ext/fusion/begin_impl.hpp>
-    * <boost/integer/bft/ext/fusion/size_impl.hpp>
-    * <boost/integer/bft/ext/fusion/end_impl.hpp>
-
+[h5 Boost.Fusion]
+* <boost/fusion/sequence/intrinsic.hpp>
+* <boost/fusion/support/is_sequence.hpp>
+* <boost/fusion/support/is_view.hpp>
+* <boost/fusion/support/tag_of_fwd.hpp>
+* <boost/fusion/iterator/iterator_facade.hpp>
+* <boost/fusion/iterator/value_of.hpp>
+* <boost/fusion/iterator/deref.hpp>
+* <boost/fusion/iterator/next.hpp>
+* <boost/fusion/iterator/prior.hpp>
+* <boost/fusion/iterator/distance.hpp>
+* <boost/fusion/iterator/key_of.hpp>
+* <boost/fusion/iterator/value_of_data.hpp>
+* <boost/fusion/iterator/deref_data.hpp>
 
 [h5 Boost Vault Includes]
 * <boost/bitfield/bitfield.hpp>
-    * Does the storage and retrieval of data to and from the bitfield_tuples
-internal storage.
 
-
-
-[h5 Boost.integer Bit Mask Includes]
+[h5 Boost.Integer Bit Mask Extension Includes]
 * <boost/integer/bits_mask.hpp>
 * <boost/integer/bit_width.hpp>
+* <boost/integer/high_bits_mask.hpp>
+* <boost/integer/low_bits_mask.hpp>
+* <boost/integer/integral_mask.hpp>
 
-[/
+[h5 Bitfield Tuple Include Files ]
+Please see the Files section for a full list and description of all files
+which are part of the `bitfield_tuple` and its interface.
 
 
-
-
-
-]
 [endsect]

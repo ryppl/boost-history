@@ -6,39 +6,85 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 [section `struct flag`]
 [h4 Description]
-`flag` is used to specify a boolean member of width one. For example,
-``
-struct red;
-
-typedef bitfield_tuple<
-    flag<red>
->           bitfield_tuple_1;
-
-
-typedef btifield_tuple<
-    member<bool,red,1>
->           bitfield_tuple_2;
-``
-the types `bitfield_tuple_1` and `bitfield_tuple_2` specify the same internal 
-structure for their data. `flag<red>` has the same affect on a `bitfield_tuple`
-as `member<bool,red,1>` would have.
-
+`flag` is used to specify a boolean member of width one. This is a simplification
+of `member<bool,NameType,1>` and does the exact same thing.
 
 [h4 Template Signature]
 ``
 namespace boost { namespace bitfields {
 template <typename Name> struct flag;
-}} // end boost::bitfields
+}}
 ``
+[h4 Template Parameters]
+[table
+    [[template Parameter][Explanation]]
+    [
+        [`Name`]
+        [ This is the name which can be used to access the template parameter
+using the get function. ]
+    ]
+]
+
+[h3 Preconditions]
+[table
+    [
+        [Precondition]
+        [Description]
+        [Enforcement]
+    ]
+    [
+        [ `Name` must be unique. ]
+        [ The `Name` template parameter can only be supplied once per
+`bitfield_tuple`. ]
+        [ Enforced by static assert. ]
+    ]       
+]
 
 
-[h4 Header file Locaton]
+[h4 Header File Location]
 This header file is included with the <boost/integer/bitfield_tuple.hpp> header
 file.
 ``
 #include <boost/integer/details/bft/flag.hpp>
 ``
 [h4 Example]
+This is the simplification which `flag` makes in comparison to writing the
+same thing using the `member` template.
 ``
+struct b;
+
+typedef bitfield_tuple<
+    flag<b>
+>           bitfield_tuple_1;
+
+
+typedef btifield_tuple<
+    member<bool,b,1>
+>           bitfield_tuple_2;
 ``
+
+Example of how to use `flag` within the declaration of a `bitfield_tuple`
+template.
+``
+#include <boost/integer/bitfield_tuple.hpp>
+
+using namespace boost::bitfields;
+
+struct b0;
+struct b1;
+struct b2;
+struct b3;
+struct something;
+
+typedef btifield_tuple<
+    flag<b0>,
+    flag<b1>,
+    flag<b2>,
+    flag<b3>,
+    member<unsigned int, something,4>
+>   int_bool_size_char;
+``
+The above type is used to represent a char which is split between 4 `bool` values
+and a 4 bit `unsigned int`
+
 [endsect]

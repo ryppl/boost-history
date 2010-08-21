@@ -6,7 +6,11 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 [section `struct custom`]
 [h4 Description]
-
+The `custom` member is a template which is used to do to integers what `pointer`
+does to pointers. That being said, the custom class allows for semi-intrusive
+behavior with regards to the storage of `bitfield_tuple`. In the simplest use
+cases the `custom` member will only ever take three template parameters and 
+will use the default policy which is supplied.
 
 [h4 Template Signature]
 ``
@@ -19,9 +23,66 @@ template <
         class Policy = detail::custom_packing_policy
 >
 struct custom;
-}} // end boost::bitfields
+}}
 ``
 
+[h4 Template Parameters]
+[table
+    [
+        [template Parameter]
+        [Explanation]
+    ]
+    [
+        [`ReturnType`]
+        [The type that the value is to be returned from the get function as.You 
+may supply a signed type for a member but please note that a singed bit will be
+stored within the width you specify, so if you don't need negative values you
+should not store them.]
+    ]
+    [
+        [`Name`]
+        [This is a type which is associated with the bitfield which is
+represented by this member template.]
+    ]
+    [
+        [`Mask`]
+        [ This is a mask which minimally defines the following two `typedef`s and
+static constant: `Mask::type`, `Mask::value_type`, and `Mask::value`. There are
+masking utilities which are included with `bitfield_tuple` which make using this
+parameter easier. ]
+    ]
+    [
+        [`Policy`]
+        [ See below in the `Policy` Section of this page. Default behavior is to
+apply the Mask to the incoming information and extract it, shift the new
+information to the correct location of the bitfield within the `bitfield_tuples`
+storage. The next step is to take the complement of the current shifted mask and
+& that with the storage, and | that with the shifted value then store that in the
+`bitfield_tuple`'s storage. The similar is done to get the information out of the
+`bitfield_tuple`'s storage. *For MOST cases this will NOT have to be used and the
+default case will work just fine.* ]
+    ]
+]
+
+[h3 Preconditions]
+[table
+    [
+        [Precondition]
+        [Description]
+        [Enforcement]
+    ]
+    [
+        [ `Mask::value != 0` ]
+        [ The value associated with the mask can not be zero. ]
+        [ Enforced by static assert. ]
+    ]
+    [
+        [ `Name` must be unique. ]
+        [ The `Name` template parameter can only be supplied once per
+`bitfield_tuple`. ]
+        [ Enforced by static assert. ]
+    ]
+]
 
 
 
@@ -31,7 +92,139 @@ file.
 ``
 #include <boost/integer/details/bft/custom.hpp>
 ``
-[h4 Example]
+
+[h4 Examples]
+[h5 Using a `custom` member to store the 16 most significant bits of an integer]
 ``
+#include <boost/integer/bifield_tuple.hpp>
+
+using namespace boost::bitifields;
+typedef boost::high_bits_mask<unsigned int, 16> top16bits;
+struct int1;
+struct int2;
+typedef bitfield_tuple<
+    storage<unsigned int>,
+    custom<unsigned int, int1, top16bits>,
+    member<unsigned int, int2, 16>
+>           two_different_halves;
+``
+`custom` members are accessed just the same as every other member within a
+`bitfield_tuple` by simply using the get function followed by its index or
+`Name`.
+
+[h4 How to Define a Policy For a Custom Member]
+As stated before, if the previous case works for you then this is unnecessary.
+Defining a policy is only necessary when you need to do custom packing of a type
+before it's stored and custom unpack before it's returned. Custom packing means
+that you are storing a mass of normally non contiguous bits in a contiguous
+manner and expanding them to be non-contiguous afterwards.
+
+
+The template signature of a policy, as seen above in the template parameters,
+table takes 4 arguments. Here is what to expect for each of those template
+arguments.
+``
+template <typename Mask, typename ValueType, typename Offset, typename Width>
+struct my_policy;
+``
+[h5 Policy Parameter Description]
+[table
+    [
+        [Parameter Name]
+        [Description]
+    ]
+    [
+        [`Mask`]
+        [ `Mask` is the template parameter which was supplied to the `custom`
+member as a `Mask`. ]
+    ]
+    [
+        [`ValueType`]
+        [ This is the type which was supplied to the `custom` template as the
+`ReturnType`.]
+    ]
+    [
+        [`Offset`]
+        [ This of type `mpl::size_t<`['Implementation Defined]`>` which is used
+to denote the number of bits from the least significant bit the field is
+supposed to be.]
+    ]
+    [
+        [`Width`]
+        [ This of type `mpl::size_t<`['Implementation Defined]`>`. The width is
+deduced from the mask supplied to the `bitfield_tuple` based on leading and
+trailing zeros within `Mask`. ]
+    ]
+]
+
+[h5 Policy Body]
+The body of the class template must contain the following `typedef` and
+member template.
+[table
+    [
+        [Type]
+        [Description]
+    ]
+    [
+        [`value_type`]
+        [ This is the ValueType which was supplied to the policy. If the
+`typedef` isn't the same as ValueType it could cause problems however there is
+nothing enforcing this. So if you attempt to specify a different type for
+value_type then ValueType do so at your own risk. ]
+    ]
+    [
+        [`template<typename StorageType> struct apply;`]
+        [ Because at the time the policy is being instantiated and kept for
+later use the type of the storage may not be known yet. It has to be passed in
+at a later time. The `StorageType` in the apply member template refers to the
+integral type which the `bitfield_tuple` is using for storing its bitfields. ]
+    ]
+
+]
+[tip I recommend that if you wish to specialize the policy you do so by
+having the `template<typename StorageType> struct apply;` inherit something
+which takes all five template parameters in scope: `Mask`, `ValueType`,
+`Offset`, `Width` and `StorageType` and then define the necessary
+two static functions there.
+]
+
+[h5 The `apply` member template]
+The apply member template is where the actual magic happens so to speak. The
+apply template defines two static functions. The two static functions
+are what is called to preform the actual storage and retrieval of the bitfield
+itself.
+
+[table
+    [
+        [Static Function]
+        [Description]
+    ]
+    [
+        [`static StorageType set(StorageType storage, ValueType value);`]
+        [ This function is used to set the value of the bitfield and store it
+inside of storage then return storage. The returned storage is set to the 
+storage which `bitfield_tuple` uses.]
+    ]
+    [
+        [`static ValueType get(StorageType storage);`]
+        [ Retrieves the value of from `storage` which is the actual storage from
+within `bitfield_tuple` and returns the value of the bitfield.]
+    ]
+]
+
+[h5 Completed Policy Structure ]
+Example of what a completed policy will need to look like.
+``
+template <typename Mask, typename ValueType, typename Offset, typename Width> 
+struct my_policy {
+
+    typedef ValueType value_type;
+
+    template <typename StorageType>
+    struct apply {
+        static ValueType get(StorageType storage);
+        static StorageType set(StorageType storage, ValueType value);
+    };
+};
 ``
 [endsect]

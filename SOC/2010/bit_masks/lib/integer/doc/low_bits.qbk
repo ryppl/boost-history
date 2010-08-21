@@ -4,29 +4,38 @@ Copyright (c) 2010 Brian Bartman
 Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
+
 [c++]
 [section:low_bits_mask low_bits_mask]
 [h3 Description]
-`low_bits_mask` creates a mask of bits starting from the right most bit and
-extending out to the left. The `low_bits_mask` is similar to the `high_bits_mask`
-just starts on the right most bit instead of the left most bit. The way 
-`low_bits_mask` behaves in the following example:
+`low_bits_mask` is a section of contiguous of bits which extend out from the
+least significant bit toward the most significant bit. The following is a basic
+example of how `low_bits_mask` works:
 
 ``
 typedef low_bits_mask<int, 10> mask;
 // mask::value has the following binary value
 // 0000 0000  0000 0000  0000 0011  1111 1111
 ``
-The `low_bits_mask` template is located in the <boost/integer/low_bits_mask.hpp>
-header file.
+
+[h3 Header File Information]
+``
+#include <boost/integer/low_bits_mask.hpp>
+#include <boost/integer/high_low_mask.hpp>
+``
 
 [h3 Template Signature]
 `low_bits_mask` has the following template signature:
 ``
-template <typename T, unsigned int Width>
-struct low_bits_mask;
+namespace boost {
+template <typename T, unsigned int Width> struct low_bits_mask;
+}
 ``
 
+[h3 Bit Mask Hierarchy]
+`low_bits_mask` inherits from `integral_mask`.
+
+[h3 Template Parameters]
 [table
     [[Parameter][Description]]
     [[`T`][ Is an integral type which the mask is to be created over. ]]
@@ -43,11 +52,31 @@ struct low_bits_mask;
     [[`N::value_type`][Returns `T` which is the type associated with `value` inside `N`. ]]
     [[`N::type`][ Returns the current types type. ]]
     [[`N::width`][ Returns the integral value associated with the `width` template parameter. ]]
+    [[`N::offset`][ Returns 0 for this mask because the `low_bits_mask` is not
+shifted in any direction and always starts at the least significant bit. ]]
     [[`operator T()`][ Run time support function. All this function does is
-return the value associated with the type. With the c++0x feature `constexper`
-this function will be made fasters and more effieient.]]
+return the value associated with the type.]]
 ]
 
+
+[h3 Preconditions]
+[table
+    [
+        [Precondition]
+        [Description]
+        [Enforcement]
+    ]
+    [
+        [`bit_width<T>::value >= Width`]
+        [ The `Width` must not be greater then the size in bits of type `T`.]
+        [ Enforced by static assert. ]
+    ]
+    [
+        [ ]
+        [ `T` must be an integral type. ]
+        [ This is only a documented precondition. It is not enforced. ]
+    ]
+]
 
 [h3 Examples]
 Examples and use cases related to the `low_bits_mask` template.

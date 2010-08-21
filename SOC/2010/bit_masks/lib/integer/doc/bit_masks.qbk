@@ -18,5 +18,6 @@ a utility for determining the width in bits of a type on compile time.
 [include:high_bits_mask high_bits.qbk]
 [include:low_bits_mask low_bits.qbk]
 [include:bits_mask bits_mask.qbk]
+[include:bit_width bit_width.qbk]
 [endsect]
 

@@ -20,5 +20,10 @@ IBM Bit Field Documentation] - Documentation page on the IBM about bit fields.
 Wikipedia Data Struture Alignment] - Data Structure Alignment article from
 Wikipedia. This relates directly to packing of data structures.
 
+* Endianness
+    * [@http://en.wikipedia.org/wiki/Endianness Wikipedia Endianness] - Wikipedia
+article on endianness.
+    * [@http://mysite.verizon.net/beman/endian-0.10/libs/integer/doc/endian.html
+Endians] - In boost standbox.
 
 [endsect]

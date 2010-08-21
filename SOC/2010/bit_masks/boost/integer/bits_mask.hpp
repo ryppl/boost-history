@@ -21,7 +21,7 @@ namespace boost {
  *  Preconditions for bit_mask
  *  Pre-Conditions
  *
- *  1. The width of the masked section must not be longer then the
+ *  1. The width + the offset of the masked section must not be longer then the
  *  mask itself.
  *
  *  2. Valid range for mask width is > 0.

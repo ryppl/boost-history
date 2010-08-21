@@ -22,10 +22,45 @@ endianness of your native machine.
 ``
 namespace boost { namespace bitfields {
 template <typename StorageType> struct storage;
-}} // end boost::bitfields
+}}
 ``
+[h4 Template Parameters]
+[table
+    [
+        [template Parameter]
+        [Explanation]
+    ]
+    [
+        [`StorageType`]
+        [ The storage type to be used for storing data inside of the
+`bitfield_tuple`. ]
+    ]
+]
 
 
+[h3 Preconditions]
+[table
+    [
+        [Precondition]
+        [Description]
+        [Enforcement]
+    ]
+    [
+        [ storage type can be supplied 0 or 1 times for the `bitfield_tuple`. ]
+        [ The `storage` not be specified more then once per inside of the template
+parameters for a single `bitfield_tuple`. ]
+        [ Enforced by static assert. ]
+    ]
+    [
+        [ Total width of all bitfields in a single `bitfield_tuple` can not
+exceed the width in bits of the storage type when the storage type is specified 
+or 64 bits when a storage type is not specified if you system supports some form
+64 bit integer other wise the limit is set to 32 bits. ]
+        [ This is a limitation on the internal storage that `bitfield_tuple` uses
+to hold its bitfields. ]
+        [ Enforced by static assert. ]
+    ]
+]
 
 
 [h4 Header file Locaton]
@@ -35,6 +70,37 @@ file.
 #include <boost/integer/details/bft/storage.hpp>
 ``
 [h4 Example]
+
+Specified storage type example.
 ``
+struct red;
+struct green;
+struct blue;
+
+typedef bitfield_tuple<
+    storage<unsinged int>,
+    member<unsigned int,red,4>,
+    member<unsigned int,green,4>,
+    member<unsigned int,blue,4>
+>       rgb444;
 ``
+The type `rgb444` shown in the above example has the size of 4. `rgb444` has the
+same size as the integer type which the storage type specifies.
+
+non-specified storage type example.
+``
+struct red;
+struct green;
+struct blue;
+
+typedef bitfield_tuple<
+    member<unsigned int,red,4>,
+    member<unsigned int,green,4>,
+    member<unsigned int,blue,4>
+>       rgb444_2;
+``
+The in this example a storage type is being deduced by the `bitfield_tuple`. So
+the type `rgb444_2` has a size of 2 which is the size of an unsigned short which
+is the smallest type that could hold all of the bitfields.
+
 [endsect]

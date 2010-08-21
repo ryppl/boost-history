@@ -29,27 +29,64 @@ typedef bits_mask<int,11> mask;
 // this creates a mask at the 11th bit within an integer.
 ``
 
-The `bits_mask` template is located in the <boost/integer/bits_mask.hpp> header
-file.
+[h3 Header File Information]
+``
+#include <boost/integer/bits_mask.hpp>
+``
 
 [h3 Template Signature]
 `bits_mask` has the following template signature:
 ``
-template <typename T, unsigned int Offset, unsigned int Width = 1 >
-struct bits_mask;
+namespace boost {
+template <typename T, unsigned int Offset, unsigned int Width = 1u > struct bits_mask;
+}
 ``
 
+[h3 Bit Mask Hierarchy]
+`bits_mask` inherits from `integral_mask`.
+
+
+[h3 Template Parameters]
 [table
     [[Parameter][Description]]
     [[`T`][ Is an integral type which the mask is to be created over. ]]
-    [[`Offset`][ This is the number of bits which is used for a left shift of
-the `width`. ]]
-    [[`Width`][ This is the width of the mask in bits. ]]
+    [[`Offset`][ This is the number of bits from the least significant bit to the first bit being used to compose the mask.
+Another way to think of this is the amount that the mask has been shifted to the left (using the left shift operator). ]]
+    [[`Width`][ This is the width of the mask in bits. `Width` has a default
+value of `1u` so that `bits_mask` can be easily used to create boolean flags 
+by providing only an `Offset` to the bit.]]
 ]
 
+[h3 Preconditions]
+[table
+    [
+        [Precondition]
+        [Description]
+        [Enforcement]
+    ]
+    [
+        [ ]
+        [ `T` must be an integral type. ]
+        [ This is only a documented precondition. It is not enforced. ]
+    ]
+    [
+        [ `(Offset + Width) <= ( bit_width<T>::value )`]
+        [ The `Width + Offset` must be less then or equal to the number of bits
+within the integral type `T`  ]
+        [ Enforced by static assert. ]
+    ]
+    [
+        [ Valid range for mask width is > 0.]
+        [ The `Width` of a mask must not be zero. Because `Width` is of
+`std::size_t` it can not be negative.]
+        [ Enforced by domain of template parameter and by static assert. ]
+    ]
+]
+
+
 [h3 Interface]
-`TYPENAME` Compile time interface. Assume that N is of type
-`N TYPE` the type supplied here is only for example.
+`bits_mask` Compile time interface. Assume that `N` is of type
+`bits_mask<unsigned int,4,1>` the type supplied here is only for example.
 
 [table
     [[Operation][Description]]
@@ -59,37 +96,9 @@ the `width`. ]]
     [[`N::width`][ Returns the integral value associated with the `width` template parameter. ]]
     [[`N::offset`][ Returns the integral value associated with the `Offset` template parameter. ]]
     [[`operator T()`][ Run time support function. All this function does is
-return the value associated with the type. With the c++0x feature `constexper`
-this function will be made fasters and more effieient.]]
+return the value associated with the type.]]
 ]
-[h3 Preconditions]
-Preconditions associated with the `bits_mask` template. There are two types 
-of precondtions ones which are only documented and ones which are both enforced
-and documented. Preconditions will specify which are which within the 
-documentation. All of the preconditions will document how they are enforced when
-they are enforced.
 
-[table
-    [[Precondition][Reasoning][Enforcement]]
-    [
-        [`(Offset + Width) < ( bit_width<T>::value - 1)`]
-        [It will cause overflow if the width plus the offset is greater then
-total width of the type in bits. ]
-        [ Enforced by `BOOST_STATIC_ASSERT`. ]
-    ]
-    [
-        [`Width > 0`]
-        [ This would create an empty mask, which won't do anything. ]
-        [ Enfoced by the domain of the `Width` template parameter which is an
-`unsigned int`, which prevents the value from being negative, and by
-`BOOST_STATIC_ASSERT`, which prevents the value from being zero. ]
-    ]
-    [
-        [ `T` must satisfy the `is_integral` type trait.]
-        [ The `bits_mask` template has only been tested with integral types. ]
-        [ This is only a documented precondition. ]
-    ]
-]
 
 [h3 Examples]
 Examples and use cases related to the `bits_mask` template.
@@ -145,7 +154,7 @@ int new_int_value = ( some_bit_value & mask() ) >> mask::offset;
 ``
 
 
-The implicit cast operator allows for simplicity, clairity of code. In the
+The implicit cast operator allows for simplicity, clarity of code. In the
 above example `mask()` could be replaced with `mask::value` to achieve the same
 result. The same applies to all other bitwise operators.
 

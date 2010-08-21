@@ -4,28 +4,57 @@ Copyright (c) 2010 Brian Bartman
 Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
-[section `struct filler`]
+[section `struct padding`]
 [h4 Description]
-Filler specifies a number of empty bits to be ignored. Another good way to think
-about this is as bit padding, it adds the number of bits in padding when
+`padding` specifies a number of empty bits to be ignored. Another good way to
+think about this is as bit padding, it adds the number of bits in padding when
 specified. From an implementation stand point it adds `Bits` to the starting
 the next starting position of the next bitfield specified in the template
-parameter list.
+parameter list. This class is used to give explicit control to the user
+when it comes to the internal storage of the bits within the `bitfield_tuple`.
 
 [h4 Template Signature]
 ``
 namespace boost { namespace bitfields {
-template <std::size_t Bits> struct filler;
-}} // end boost::bitfields
+template <std::size_t Bits> struct padding;
+}}
 ``
 
-[h4 Header file Locaton]
+[h4 Template Parameters]
+
+[table
+    [[Parameter][Description]]
+    [[`Bits`][The amount of padding to add.]]
+]
+
+
+[h4 Header File Location]
 This header file is included with the <boost/integer/bitfield_tuple.hpp> header
 file.
 ``
-#include <boost/integer/details/bft/filler.hpp>
+#include <boost/integer/details/bft/padding.hpp>
 ``
 [h4 Example]
 ``
+#include <boost\integer\bitfield_tuple.hpp>
+
+using namespace boost::bitfields;
+
+struct red;
+struct green;
+struct pink;
+struct blue;
+struct salmon;
+
+typedef bitfield_tuple<
+    storage<std::size_t>,
+    member<char,red,4>,
+    member<unsigned char, green,5>,
+    padding<3>,
+    member<int, salmon, 16>,
+    flag<blue>
+>       tuple_with_padding;
 ``
+All the padding does in the above is shift the last two members over by 3 bits.
+
 [endsect]

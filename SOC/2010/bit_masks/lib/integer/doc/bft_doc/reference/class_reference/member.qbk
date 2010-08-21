@@ -5,16 +5,33 @@ Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 [section `struct member`]
+
 [h4 Description]
-`member` us used for specifying different bitfields within a `bitfield_tuple`.
+`member` is used for specifying different bitfields within a `bitfield_tuple`. A
+`member` is meant to look like a bitfield when it is declared within a `class` or
+`struct`. A `member` is the most basic type of bitfield that can be used for a
+`bitfield_tuple`. When other templates used to specify a `bitfield_tuple` are
+noted as members, it means they have storage space as a bitfield within the
+`bitfield_tuple`.
+
+
+[h4 Template Signature]
+``
+namespace boost { namespace bitfields {
+template <typename ReturnType, typename NameType, std::size_t Width> struct member;
+}}
+``
+
+
+[h4 Template Parameters]
 [table
     [[template Parameter][Explanation]]
     [
         [`ReturnType`]
-        [The type that the value is to be returnd from the get function as.You 
+        [The type that the value is to be returned from the get function as.You 
 may supply a signed type for a member but please note that a singed bit will be
 stored within the width you specify, so if you don't need negative values you
-shouldn't store them.]
+should not store them.]
     ]
     [
         [`NameType`]
@@ -29,13 +46,32 @@ by the `member` template.]
     ]
 ]
 
-[h4 Template Signature]
-``
-namespace boost { namespace bitfields {
-template <typename ReturnType, typename NameType, std::size_t Width>
-struct member;
-}} // end boost::bitfields
-``
+[h3 Preconditions]
+[table
+    [
+        [Precondition]
+        [Description]
+        [Enforcement]
+    ]
+    [
+        [ `Width != 0` ]
+        [ The `Width` template parameter must not be zero. ]
+        [ Enforced by static assert. ]
+    ]
+    [
+        [ `Width <= bit_width<ReturnType>::value` ]
+        [ The `Width` parameter of `member` must not exceed the width in bits
+of `ReturnType` template parameter.]
+        [ Enforced by static assert. ]
+    ]
+    [
+        [ `NameType` must be unique. ]
+        [ The `NameType` template parameter can only be supplied once per
+`bitfield_tuple`. ]
+        [ Enforced by static assert. ]
+    ]
+]
+
 
 
 [h4 Header file Locaton]
@@ -46,5 +82,20 @@ file.
 ``
 [h4 Example]
 ``
+#include <boost/integer/bitfield_tuple.hpp>
+
+using namespace boost::bitfields;
+
+struct red;
+struct green;
+struct salmon;
+
+typedef bitfield_tuple<
+    member<char,red,4>,
+    member<unsigned char, green,5>,
+    member<int, salmon, 16>
+> color_tuple;
 ``
+The `member`s specified in `color_tuple` above are used to specify the different
+bitfields within the `bitfield_tuple`.
 [endsect]

@@ -34,7 +34,7 @@ namespace detail {
                 mpl::size_t<Width>
             >::type::value))
         ));
-        typedef integral_constant<T, val>       type;
+        typedef integral_mask<T, val>       type;
     };
     // long long specialization
     template<unsigned int Width>
@@ -44,7 +44,7 @@ namespace detail {
             mpl::size_t<Width>
         >::type::value)
         ));
-        typedef integral_constant<long long, val>       type;
+        typedef integral_mask<long long, val>       type;
     };
     // unsigned long long specialization
     template<unsigned int Width>
@@ -54,7 +54,7 @@ namespace detail {
             mpl::size_t<Width>
         >::type::value)
         ));
-        typedef integral_constant<unsigned long long, val>       type;
+        typedef integral_mask<unsigned long long, val>       type;
     };
 
 }

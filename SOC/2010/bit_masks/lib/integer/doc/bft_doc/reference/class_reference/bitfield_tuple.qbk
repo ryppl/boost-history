@@ -47,7 +47,9 @@ Forward declaration file:
 
 [h5 Template Signature]
 ``
-tempate <typename... Args> struct bitfield_tuple;
+namespace boost { namespace bitfields {
+template <typename... Args> struct bitfield_tuple;
+}}
 ``
 For additional information on creating specilizations over the 
 `bitfield_tuple`'s implementation documentation reguarding macros.
@@ -87,7 +89,7 @@ of the first bit of the next bitfield that would be added into the
 
 [h5 Template Members]
 The `bitfield_reference` type is responsible for acting as the proxy reference
-type into the storage of a `bitfield_tuple`, This works similar to the proxy 
+type into the storage of a `bitfield_tuple`. This works similar to the proxy 
 reference type supplied by `std::vector<bool>` specilization. 
 
 [note If one wishes to work with the reference direcrly please not that the
@@ -323,7 +325,7 @@ in that situation. ]
 is because the `mpl::vector` doesn't support more then 50 parameters. Please see
 documentation `BOOST_BFT_PARAM_COUNT` under macro reference section for 
 additional information regarding the `BOOST_BFT_PARAM_COUNT` macro. ]
-        [ Enforced macro macro error message. ]
+        [ Enforced by macro error message. ]
     ]
     [
         [ Don't set `BOOST_MPL_LIMIT_VECTOR_SIZE` to be less then

@@ -80,7 +80,6 @@ using a name or an index.
 #include <boost/integer/bitfield_tuple.hpp>
 #include <iostream>
 
-using namespace boost;
 using namespace boost::bitfields;
 
 // names used to mimic the names in struct foo.
@@ -116,31 +115,44 @@ This part of the tutorial covers the additional functionalities provided by the
 
 
 The different templates that can be used within a `bitfield_tuple`'s template
-decalaration.
+declaration.
 [table 
     [
         [Signature][Brief Description]
     ]
     [
-        [`filler<std::size_t>`][ Padding in bits that can be used to seperate bitfield.]
+        [`padding<std::size_t>`]
+        [ Padding in bits that can be used to separate bitfield.]
     ]
     [
-        [`bit_align<std::size_t>`][ Sets the offset of the first bit of the next
-bitfield supplied to a multiple of the integer supplied. ]
+        [`align<std::size_t>`]
+        [ Sets the offset of the first bit of the next bitfield supplied to a
+multiple of the integer supplied. ]
     ]
     [
-        [`flag<typename>`][ Makes a single bit width boolean `member` with a name
-supplied to as the parameter. ]
+        [`flag<typename>`]
+        [ Makes a single bit width boolean `member` with a name supplied to as
+the parameter. ]
     ]
     [
-        [`member<typename, typename, std::size_t>`][ Used for specifying a
-member where the first parameter is the type being stored, the second is the name
-and the third is the width in bits.]
+        [`member<typename, typename, std::size_t>`]
+[ Used for specifying a member where the first parameter is the type being
+stored, the second is the name and the third is the width in bits.]
     ]
     [
-        [`storage<typename>`][ The type specified in this parameter is used as
-the storage. This parameter is optional and it doesn't matter where in the template
-you put it.]
+        [`storage<typename>`]
+        [ The type specified in this parameter is used as the storage. This
+parameter is optional and it doesn't matter where in the template you put it.]
+    ]
+    [
+        [`pointer<typename,typename,typename>`]
+        [ This allows for a pointer to have bits stuffed into it and have both
+extracted separately but stored together.]
+    ]
+    [
+        [`custom<typename,typename,typename,typename>`]
+        [ This type allows for custom packing and unpacking of the the data
+before it is stored within the bitfield_tuple. ]
     ]
 ]
 [tip Read the documentation under the class reference section for additional
@@ -149,14 +161,146 @@ information about the templates used to create the `bitfield_tuple` type.]
 
 [h5 Part 4: Fusion Sequence extension]
 The `bitfield_tuple` is a boost.fusion sequence. It supports the all of the
-functionality that is supported by a random access container and an associtve
+functionality that is supported by a random access container and an associative
 sequence. The `bitfield_tuple` internally stores its fields as an associative
 array. This allows the `bitfield_tuple` to provide both index based as well as
-named `get` functions. For full documentataion of how to use boost.fusion see
-the boost.fusion documentation. For the boost.fusion features supported by 
+named `get` functions. For full documentation of how to use boost.fusion see
+the boost.fusion documentation. For the Boost.Fusion features supported by 
 the `bitfield_tuple` see the fusion extension documentation located in the
 reference section of the documentation.
 
+``
+#include <boost/integer/bitfield_tuple.hpp>
+#include <iostream>
+#include <boost/fusion/include/for_each.hpp>
 
+using namespace boost::bitfields;
+
+struct red;
+struct green;
+struct pink;
+struct blue;
+struct salmon;
+
+typedef bitfield_tuple<
+    member<char,red,4>,
+    member<unsigned char, green,5>,
+    member<int, salmon, 16>,
+    storage<std::size_t>
+>  fusion_example_tuple;
+
+struct unary_function_object{
+    template <typename T>
+    void operator() (T x) {
+        std::cout << x << std::endl;
+    }
+};
+
+int main() {
+    
+    fusion_example_tuple bft;
+    bft.get<0>() = 1;
+    bft.get<1>() = 2;
+    bft.get<2>() = 3;
+
+    boost::fusion::for_each(bft,unary_function_object());
+    return 0;
+}
+``
+The above code uses the fusion for_each to iterate over each element within
+the bitfield_tuple and print it. For a full description of all of the
+Boost.Fusion supported operations please see the section of the documentation
+relating to the Boost.Fusion sequence extension.
+
+
+[h5 Part 5: Pointer stuffing]
+`bitfield_tuple` provides a mechanism for for stuffing bits into pointers (as
+well as other things). For a more in depth description of the `pointer` member
+of `bitfield_tuple` please refer to the documentation for `pointer`. The
+following is a basic example for pointers which point to DWORD aligned sections
+of memory.
+
+``
+#include <boost/integer/bitfield_tuple.hpp>
+#include <boost/assert.hpp>
+struct color;
+struct ptr;
+
+typedef bitfield_tuple<
+    pointer<int, ptr>,
+    member<unsigned int,color,2>
+> color_stuffed_ptr_tuple;
+
+using namespace boost::bitfields;
+
+int main() {
+    int* some_ptr = new int();
+    color_stuffed_ptr_tuple colored_ptr;
+    colored_ptr.get<ptr>() = some_ptr;
+    colored_ptr.get<color>() = 3;
+
+    // set the value of the thing being pointed at to 3.
+    *colored_ptr.get<ptr>() = 3;
+
+    // make sure that the color is correctly set.
+    BOOST_ASSERT(( colored_ptr.get<color>() == 3 ));
+
+    return 0;
+}
+
+``
+There is much more one can do with a stuffed pointer but this is the minimal 
+example of how to use the `pointer` member.
+
+[h5 Part 5: Custom Integral Stuffing]
+The `custom` member allows the user to specify a section of bits within a type
+and extract those bits and then store them inside of the `bitfield_tuple`. One
+of the use cases for something like this is if a number is always even then the
+last bit is always zero. The following example is how to specify the `custom`
+member such that it is used to store an always even number.
+
+``
+#include <boost/integer/bitfield_tuple.hpp>
+
+using namespace boost::bitfields;
+struct always_even_int;
+struct extra_bool;
+typedef bitfield_tuple<
+    custom<
+        unsigned int,
+        always_even_int,
+        boost::high_bits_mask<
+            unsigned int,
+            (boost::bit_width<unsigned int>::value - 1)
+        >
+    >,
+    flag<extra_bool>
+>                       custom_stuffing;
+
+int main() {
+    custom_stuffing cs;
+    cs.get<always_even_int>() = 4;
+    
+    BOOST_ASSERT(( cs.get<always_even_int>() == 4));
+    cs.get<extra_bool>() = true;
+
+    BOOST_ASSERT(( sizeof(custom_stuffing) == sizeof(unsigned int) ));
+}
+``
+The `high_bits_mask` in the above example, is what is used to specify the value
+bits within the value type. The mask is used to extract the value bits out of
+the `unsigned int` when the `get<alway_even_int()`'s value type assignment
+operator is called. When the `operator value_type()` the function returns the
+value bits so that they match the mask that was used to take them. For instance,
+if the order of the template parameters was switched so that the
+`flag<extra_bool>` was to be first and the `custom` member second the data
+structure would look exactly the same, but there would be a slight difference in
+performance because of the shifts which would have to occur in order to
+correctly unpack or pack the type before it is returned or stored.
+
+
+There is much more that can be done with the `custom` member type then what is
+shown for additional information on how to fully utilize all features of this
+type please see the documentation relating the `custom` member.
 
 [endsect]

@@ -1,10 +1,10 @@
-
 [/
 Copyright (c) 2010 Brian Bartman
 
 Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
+
 [c++]
 [section:high_bits_maskbits high_bits_mask]
 [h3 Description]
@@ -13,6 +13,7 @@ bits which extend out from the most significant bit towards the least
 significant bit. The `high_bits_mask` changes base on the width of the type but
 always maintains the same high level description of the bits. For example,
 ``
+
 // using high bits to create a mask starting from the left most bit with a width
 // of 15
 typedef high_bits_mask<int, 15> bits;
@@ -21,18 +22,24 @@ typedef high_bits_mask<int, 15> bits;
 ``
 
 [h3 Header File Information]
-Header file: <boost/integer/high_bits_mask.hpp>
-Header file: <boost/integer/high_low_mask.hpp>
+``
+#include <boost/integer/high_bits_mask.hpp>
+#include <boost/integer/high_low_mask.hpp>
+``
+
 
 [h3 Template Signature]
 `high_bits_mask` has the following template signature:
 `` 
 namespace boost {
-template <typename T, unsigned int Width>
-struct high_bits_mask;
+template <typename T, unsigned int Width> struct high_bits_mask;
 }
 ``
+
+
 [h3 Bit Mask Hierarchy]
+`high_bits_mask` inherits from `integral_mask`.
+
 
 [h3 Template Parameters]
 
@@ -51,7 +58,7 @@ struct high_bits_mask;
     [[`N::value`][Returns the `value` associated with `N`. ]]
     [[`N::value_type`][Returns `T` which is the type associated with `value` inside `N`. ]]
     [[`N::type`][ Returns the current types type. ]]
-[[`N::offset`][ Always set to zero for this type. The offset is something which
+    [[`N::offset`][ Always set to zero for this type. The offset is something which
 all of the mask type support and refers the amount the mask has been shifted to
 the right or the left (Depending on the type of mask used). In the case of
 `integral_mask`, no left or right shift has occurred so `N::offset` is always set
@@ -60,6 +67,25 @@ to zero. ]]
     [[`operator T()`][ Run time support function. Returns `value`. ]]
 ]
 
+
+[h3 Preconditions]
+[table
+    [
+        [Precondition]
+        [Description]
+        [Enforcement]
+    ]
+    [
+        [`bit_width<T>::value >= Width`]
+        [ The `Width` must not be greater then the size in bits of type `T`.]
+        [ Enforced by static assert. ]
+    ]
+    [
+        [ ]
+        [ `T` must be an integral type. ]
+        [ This is only a documented precondition. It is not enforced. ]
+    ]
+]
 
 [h3 Examples]
 Examples and use cases related to the `high_bits_mask` template.

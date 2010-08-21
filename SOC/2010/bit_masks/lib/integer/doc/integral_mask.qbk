@@ -14,8 +14,9 @@ masks back to a simple integral type. This type is used similar to an
 
 
 [h3 Header File Information]
-Header file: <boost/integer/integral_mask.hpp>
-
+``
+#include <boost/integer/integral_mask.hpp>
+``
 
 [h3 Template Signature]
 `integral_mask` has the following template signature:
@@ -45,12 +46,12 @@ All other mask types either derive directly or indirectly from this class. The
     ]
     [
         [ ]
-        [ T must be an integral type. ]
+        [ `T` must be an integral type. ]
         [ This is only a documented precondition. It is not enforced. ]
     ]
     [
         [ ]
-        [ Value must be in the domain of the integral type T. ]
+        [ `Value` must be in the domain of the integral type `T`. ]
         [ This is only a documented precondition. It is not enforced. ]
     ]
 ]

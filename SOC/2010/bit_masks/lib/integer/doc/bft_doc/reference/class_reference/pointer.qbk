@@ -27,9 +27,62 @@ template <
     >
 >
 struct pointer;
-}} // end boost::bitfields
+}}
 ``
 
+[h4 Template Parameters]
+[table
+    [
+        [template Parameter]
+        [Explanation]
+    ]
+    [
+        [`ReturnType`]
+        [ This is the type which a pointer is being made to. ]
+    ]
+    [
+        [`Name`]
+        [ `Name` of the field which is can be used to access the field with the
+get function.]
+    ]
+    [
+        [`Mask`]
+        [ This is a mask which minimally defines the following two `typedef`s and
+static constant: `Mask::type`, `Mask::value_type`, and `Mask::value`. There are
+masking utilities which are included with `bitfield_tuple` which make using this
+parameter easier. The `Mask` is used to define the value bits of the pointer which
+are to be stored within the `bitfield_tuple`. The default value for this parameter
+is to define a `Mask` over an integral type which is the same size as a pointer, and
+leaves off the 2 least significant bits of the pointer. This is because on most
+32 and 64 bit architectures it is common for most allocation to be DWORD aligned,
+which makes the address divisible by 4. ]
+    ]
+]
+
+[h3 Preconditions]
+[table
+    [
+        [Precondition]
+        [Description]
+        [Enforcement]
+    ]
+    [
+        [ `Mask::value != 0` ]
+        [ The value associated with the mask can not be zero. ]
+        [ Enforced by static assert. ]
+    ]
+    [
+        [ `sizeof(Mask::value_type) == sizeof(void*)` ]
+        [ The value type of the mask must be the same size as a pointer. ]
+        [ Enforced by static assert. ]
+    ]
+    [
+        [ `Name` must be unique. ]
+        [ The `Name` template parameter can only be supplied once per
+`bitfield_tuple`. ]
+        [ Enforced by static assert. ]
+    ]
+]
 
 
 
@@ -39,7 +92,95 @@ file.
 ``
 #include <boost/integer/details/bft/pointer.hpp>
 ``
-[h4 Example]
+[h4 Basic Example]
+Basic use case for stuffing the 2 least significant bits of a pointer.
 ``
+#include <boost/integer/bitfield_tuple.hpp>
+
+using namespace boost::bitfields;
+
+struct ptr;
+struct b1;
+struct b2;
+
+typedef bitfield_tuple<
+        pointer<int, ptr>,
+        flag<b1>,
+        flag<b2>
+>       bool_stuffed_ptr;
+
+
+
+int main() {
+    int* some_ptr = new int();
+    bool_stuffed_ptr bsp;
+    bsp.get<ptr>() = some_ptr;
+
+    // prints the value of the integer being pointed at.
+    std::cout << *bsp.get<ptr>() << std::endl;
+
+    return 0;
+}
+
 ``
+The `bool_stuffed_ptr` type allows for a the `ptr` member to point to an integer
+which is DWORD aligned within memory and use the unused bits inside of it for
+storage of 2 additional boolean values. If a valid address has been stored for
+`ptr` the value returned from the get function will be dereferenceable just like
+a regular pointer.
+
+[h4 Mask Example]
+Example of how to define a the `Mask` parameter for differently aligned memory
+allocations. The following allocations are 8 byte aligned rather then 4 byte
+aligned, which leaves 3 bits instead of 2 bits.
+``
+using namespace boost::bitfields;
+
+struct ptr;
+struct b1;
+struct b2;
+struct b3;
+
+typedef boost::high_bits_mask<
+    std::size_t,
+    bit_width<std::size_t>::value - 3
+>       ptr_mask;
+
+typedef bitfield_tuple<
+        pointer<int, ptr, ptr_mask>,
+        flag<b1>,
+        flag<b2>,
+        flag<b3>
+>       bool_stuffed_ptr;
+``
+The `boost::high_bits_mask` defines a mask which starting at the most significant
+bit makes a contiguous section of 1 bits which are used to compose a mask.
+In the above example `high_bits_mask` is being used to create the following
+mask in binary (assuming a 32 bit architecture):
+[pre
+most significant bit            least significant bit
+      31                                       0
+      1111 1111  1111 1111  1111 1111  1111 1000
+]
+
+
+[h5 Two Pointers and a 4 Bit Integer]
+The next example is how to on a 32 bit system to stuff two pointers to DWORD aligned
+memory and a 4 bit integer into a single `unsigned long long` type.
+``
+struct ptr1;
+struct ptr2;
+struct four_bit_int;
+
+typedef bitfield_tuple<
+        pointer<int, ptr1>,
+        pointer<int, ptr2>,
+        member<unsigned int,four_bit_int,4>
+>       pointer_double_stuffed;
+``
+The `pointer` members are treated as bitfields and simply move around within
+the storage of the `bitfield_tuple` as a normal member would be. This can
+effect the access time but only by a shift operation to correctly place place
+the pointer to match the value bits of its mask.
+
 [endsect]

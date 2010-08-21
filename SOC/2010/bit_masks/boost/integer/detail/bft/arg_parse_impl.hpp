@@ -16,8 +16,6 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/comparison.hpp>
 #include <boost/mpl/logical.hpp>
-#include <boost/type_traits/add_pointer.hpp>
-
 
 #include <boost/integer/bitfield_tuple/storage.hpp>
 #include <boost/integer/bitfield_tuple/member.hpp>
@@ -323,6 +321,21 @@ struct bft_arg_parse_impl <
 {
     // PRECONDITION: Value bits of the mask Can't be 0.
     BOOST_STATIC_ASSERT(( Mask::value != 0 ));
+    // make sure that the name doesn't already exist.
+    BOOST_STATIC_ASSERT((
+        is_same<
+            typename mpl::find_if<
+                FieldVector,
+                detail::match_name<
+                    mpl::_1,
+                    Name
+                >
+            >::type,
+            typename mpl::end<
+                FieldVector
+            >::type
+        >::value            
+    ));
 
     typedef typename pointer_member::count_leading_zeros<
         Mask
@@ -396,6 +409,22 @@ struct bft_arg_parse_impl <
 
     // PRECONDTION: type of mask::value_type must be the same size as a pointer.
     BOOST_STATIC_ASSERT(( sizeof(typename Mask::value_type) == sizeof(void*) ));
+
+    // make sure that the name doesn't already exist.
+    BOOST_STATIC_ASSERT((
+        is_same<
+            typename mpl::find_if<
+                FieldVector,
+                detail::match_name<
+                    mpl::_1,
+                    Name
+                >
+            >::type,
+            typename mpl::end<
+                FieldVector
+            >::type
+        >::value            
+    ));
 
 
     typedef typename pointer_member::count_leading_zeros<

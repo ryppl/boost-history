@@ -8,7 +8,7 @@
 #define BOOST_BITFIELD_TUPLE_POINTER_PACKING_POLICY_HPP
 #include <boost/integer/detail/bft/policy_creation_detail.hpp>
 
-namespace boost { namespace bitfields{ namespace detail {
+namespace boost { namespace bitfields { namespace detail {
 
 template <
     typename Mask,
@@ -17,7 +17,7 @@ template <
     typename Width
 > 
 struct pointer_packing_policy {
-    typedef Mask                mask;
+    // typedef Mask                mask;
     typedef ValueType           value_type;
 
     template <typename StorageType>

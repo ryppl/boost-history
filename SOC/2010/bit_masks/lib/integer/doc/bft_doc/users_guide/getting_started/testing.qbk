@@ -4,10 +4,21 @@ Copyright (c) 2010 Brian Bartman
 Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
-[section Testing]
-Currently only tested on GCC 4.4.
 
-TODO:
-Test on more compilers and add the information here.
+
+[section Testing]
+List of compilers which the library has been tested on.
+
+* GCC
+    * GCC-4.4.3
+* MSVC
+    * MSVC 10.0
+    * MSVC 9.0
+* Cygwin
+    * GCC-3.4.4 
+* MinGW with
+    * GCC 4.4.0
+    * GCC 4.5.0
+
 
 [endsect]

@@ -1,0 +1,67 @@
+[/
+Copyright (c) 2010 Brian Bartman
+
+Distributed under the Boost Software License, Version 1.0. (See accompanying
+file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[c++]
+[section:bit_width bit_width]
+[h3 Description]
+`bit_width` is a basic type trait style meta-function which takes a type,
+and gives you the width of that type in bits.
+
+
+[h3 Header File Information]
+``
+#include <boost/integer/bit_width.hpp>
+``
+
+
+[h3 Template Signature]
+`bit_width` has the following template signature:
+`` 
+namespace boost {
+template <typename T> struct bit_width;
+}
+``
+
+[h3 Template Parameters]
+
+[table
+    [[Parameter][Description]]
+    [[`T`][ A type which you would like the width of. ]]
+]
+
+[h3 Interface]
+[table
+    [[Operation][Description]]
+    [[`N::value`][ Returns a value of type `std::size_t` which is the number of bits
+within `T`. ]]
+]
+
+
+[h3 Preconditions]
+[table
+    [
+        [Precondition]
+        [Description]
+        [Enforcement]
+    ]
+    [
+        [ ]
+        [ You must be able to call `sizeof` on type `T` ]
+        [ This is enforced by attempting to take the `sizeof` `T` and the
+compiler telling you you can not. ]
+    ]
+]
+
+[h3 Examples]
+
+Example:
+``
+assert( bit_width<int>::value == 32);
+``
+
+[endsect]
+
