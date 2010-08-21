@@ -39,12 +39,10 @@
  * Specifies the system's maximal supported path length.
  *
  * The macro BOOST_PROCESS_POSIX_PATH_MAX is set to a positive integer
- * value which specifies the system's maximal supported path length.
- * By default it is set to 259. You should set the macro to PATH_MAX
- * which should be defined in limits.h provided by your operating system
- * if you experience problems when calling boost::process::self::get_work_dir().
- * The function tries to retrieve the maximal supported path length but uses
- * BOOST_PROCESS_POSIX_PATH_MAX if it fails. Please note that the function is
+ * value which specifies the system's maximal supported path length. It is
+ * only used if neither PATH_MAX nor _PC_PATH_MAX and HAVE_PATHCONF are defined.
+ * The maximal supported path length is required by
+ * boost::process::self::get_work_dir(). Please note that this function is
  * also called by the constructor of boost::process::context.
  */
 #       define BOOST_PROCESS_POSIX_PATH_MAX 259

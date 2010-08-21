@@ -26,6 +26,7 @@
 #   include <boost/scoped_array.hpp>
 #   include <errno.h>
 #   include <unistd.h>
+#   include <limits.h>
 #   if defined(__APPLE__)
 #       include <crt_externs.h>
 #   endif
@@ -129,19 +130,30 @@ public:
      */
     static std::string get_work_dir()
     {
-#if defined(BOOST_POSIX_API) 
+#if defined(BOOST_POSIX_API)
+#if defined(PATH_MAX)
+        char buffer[PATH_MAX];
+        char *cwd = buffer;
+        long size = PATH_MAX;
+#elif defined(_PC_PATH_MAX)
         errno = 0;
-        long size = pathconf(".", _PC_PATH_MAX);
+        long size = pathconf("/", _PC_PATH_MAX);
         if (size == -1 && errno)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("pathconf(2) failed");
         else if (size == -1)
             size = BOOST_PROCESS_POSIX_PATH_MAX;
         BOOST_ASSERT(size > 0);
-        boost::scoped_array<char> cwd(new char[size]);
-        if (!getcwd(cwd.get(), size))
+        boost::scoped_array<char> buffer(new char[size]);
+        char *cwd = buffer.get();
+#else
+        char buffer[BOOST_PROCESS_POSIX_PATH_MAX];
+        char *cwd = buffer;
+        long size = BOOST_PROCESS_POSIX_PATH_MAX;
+#endif
+        if (!getcwd(cwd, size))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("getcwd(2) failed");
         BOOST_ASSERT(cwd[0] != '\0');
-        return cwd.get();
+        return cwd;
 #elif defined(BOOST_WINDOWS_API)
         BOOST_ASSERT(MAX_PATH > 0);
         char cwd[MAX_PATH];
