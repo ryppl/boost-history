@@ -1,0 +1,155 @@
+[/
+Copyright (c) 2010 Brian Bartman
+
+Distributed under the Boost Software License, Version 1.0. (See accompanying
+file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section:element_n struct element_n]
+[h5 Description]
+`element_n` is a meta-function similar to the `element`. The only difference
+between this `element` and `element_n` is that `element_n` operates using the 
+member's name instead of its index.
+
+
+[h5 Template Signature]
+``
+namespace boost { namespace bitfields {
+template<typename BitfieldTuple, typename Name> struct element_n;
+}}
+``
+[h5 Template Parameters]
+[table
+    [
+        [Parameter] 
+        [Description]
+    ]
+    [
+        [`BitfieldTuple`]
+        [ The `bitfield_tuple` which is to be used to retrieve the proxy
+reference type from. ]
+    ]
+    [
+        [`Name`]
+        [ The `Name` supplied to the member when the `bitfield_tuple`. ]
+    ]
+]
+
+[note If there is a need for retrieving a `const` version of a proxy reference
+type there is a convention for retrieving a `const` proxy reference type from
+the `element_n` meta-function. To retrieve a `const` proxy reference type all that
+needs to be done is to supply the `const` qualifier along with the
+`BitfieldTuple` template parameter. For an example, see below within the example
+section. ]
+
+[h5 Preconditions]
+[table
+    [
+        [Precondition]
+        [Description]
+        [Enforcement]
+    ]
+    [
+        [ `Name` must exist ]
+        [ The `Name` template parameter must exist within the `BitfieldTuple`
+template parameter. ]
+        [ Enforced by static assert. ]
+    ]
+    [
+        [ BitfieldTuple must be a `bitfield_tuple`. ]
+        [ Means that if something other then a `bitfield_tuple` is supplied
+for the `BitfieldTuple` template parameter that this meta-function will not work. ]
+        [ Documented requirement only. Not enforced. ]
+    ]
+]
+
+[h5 Interface]
+`N` is used for type `element_n` within the following interface documentation.
+[table
+    [
+        [Operation]
+        [Description]
+    ]
+    [
+        [ `N::type`]
+        [ This is the type which would be returned from the `get` function
+when it is called with `Name`.]
+    ]
+]
+
+
+[h5 Header File Location]
+This meta-function is included along with the <boost/integer/bitfield_tuple.hpp>
+header file. There is no need to directly include the element header file
+within your code.
+[pre
+#include <boost/integer/bitfield_tuple/element.hpp>
+]
+
+[h5 Example]
+Basic example of how to use the `element_n` meta-function to retrieve the 
+return type of the `get` member or free function.
+``
+#include <boost/integer/bitfield_tuple.hpp>
+
+using namespace boost::bitfields;
+
+struct i;
+struct red;
+struct green;
+struct blue;
+
+typedef bitfield_tuple<
+    member<unsigned int,red,5>,
+    member<unsigned int, green, 6>,
+    member<unsinged int, blue,5>
+>       rgb565;
+
+// write a function whose return type is the proxy reference type
+// which would be returned from calling get<0>() or get<red>()
+element_n<rgb565,red>::type my_func(rgb565 bft) {
+    return bft.get<red>(); // this could be replaced with get<0>()
+}
+
+// make a const version of my_func
+element_n<const rgb565,red>::type my_func(rgb565 const& bft) {
+    return bft.get<red>(); // this could be replaced with get<0>()
+}
+``
+
+How to use element_n to make views from a `bitfield_tuple` type. 
+`const` still applies to the views, if one would like a `const` view into
+something simply supply the `const` qualifier to the BitfieldTuple template
+parameter and that's all that needs to be done.
+``
+#include <boost/integer/bitfield_tuple.hpp>
+#include <cassert>
+
+using namespace boost::bitfields;
+
+struct red;
+struct green;
+struct blue;
+
+typedef bitfield_tuple<
+    storage<std::size_t>,
+    member<char,red,4>,
+    member<unsigned char, green,5>,
+    member<int, salmon, 16>
+>       test_tuple_1;
+
+int main() {
+
+    typedef element_n<test_tuple_1,red>::type view_red;
+    std::size_t storage = 0;
+    // constructs the red view type over storage
+    // which is simply std::size_t.
+    view_red red_v(storage);
+    assert(red_v == 0);
+    red_v = 3;
+    assert(red_v == 3);
+    return 0;
+}
+``
+
+[endsect]

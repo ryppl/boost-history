@@ -101,7 +101,7 @@ Current topics inside of documentation
             *   Add relevant links here. Need to think about more relevant links
                 and add them!!!!
 
-        IV)  Glossary
+        IV)  Glossary - maybe switch this with external resources?
             *   Add a link to Vicente's Bitfield within boost vault / sandbox.
 
     C)  Reference
@@ -117,16 +117,18 @@ Current topics inside of documentation
             h)  struct custom
         III) bitfield_tuple Macro Reference
         IV)  Function Reference
-            b)  get as a free function <- NEW
-
+            b)  get as a free function
         V)   Meta-Function Reference
-            a)  name_exists <- NEW
+
+
             b)  find_by_element_name <- NEW
             c)  find_by_element_index <- NEW
             d)  get_proxy_reference_type_by_name <- NEW
             e)  get_proxy_reference_type_by_index <- NEW
-            f)  element <- NEW
-            g)  element_n <- NEW
+
+            a)  name_exists
+            f)  element
+            g)  element_n
 
         VI)  Boost.Fusion Sequence Extension
             a)  tag_of <- NEW
@@ -151,19 +153,6 @@ Current topics inside of documentation
                 3)  Function Templates
         III) Acknowledgments
         VI)  Future Work
-
-
-
-
-Classes and components to be documented
-    1) bit_mask
-        1)  integral_mask
-        2)  bits_mask
-        3)  high_bits_mask
-        4)  low_bits_mask
-
-    2) bitfield_tuple
-        1
 
 --------------------------------------------------------------------------------
                             bitfield_vector

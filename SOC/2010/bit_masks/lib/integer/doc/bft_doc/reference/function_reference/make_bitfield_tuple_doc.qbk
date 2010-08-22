@@ -5,14 +5,14 @@ Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 
-[section Function `make_bitfield_tuple`]
+[section:make_bitfield_tuple make_bitfield_tuple Free Function]
 The `make_bitfield_tuple` function is included with the bitfield_tuple header. 
 `make_bitfield_tuple` like `make_tuple` takes a variadic number of parameters. 
 However, differing from the `make_tuple`, `make_bitfield_tuple` requires one to
 specify the `bitfield_tuple` the wish to create.
 
 
-
+[h5 Function Signature]
 Function signature for `make_bitfield_tuple`:
 
 `template <typename BitfieldTuple>

@@ -1,0 +1,161 @@
+[/
+Copyright (c) 2010 Brian Bartman
+
+Distributed under the Boost Software License, Version 1.0. (See accompanying
+file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section:element struct element]
+[h5 Description]
+The `element` meta-function, is a template which behaves the in a similar
+fashion to that of Boost.Tuple's `element`. It takes a `bitfield_tuple` followed
+by an index and returns the proxy reference type that would be returned from
+calling the `get` function with the same index. It is possible to use `element`
+to create a type of view into another integral type which is not a
+`bitfield_tuple`. This is done by using the proxy reference type to construct 
+a proxy reference over an integral instead of over another proxy reference type
+which is the only other constructor, for the `bitfield_reference` type.
+
+
+[h5 Template Signature]
+``
+namespace boost { namespace bitfields {
+template<typename BitfieldTuple, std::size_t Index> struct element;
+}}
+``
+[h5 Template Parameters]
+[table
+    [
+        [Parameter] 
+        [Description]
+    ]
+    [
+        [`BitfieldTuple`]
+        [The `bitfield_tuple` which is to be used to retrieve the proxy
+reference type from. ]
+    ]
+    [
+        [`Index`]
+        [The index to use for retrieving the proxy reference type.]
+    ]
+]
+[note If there is a need for retrieving a `const` version of a proxy reference
+type there is a convention for retrieving a `const` proxy reference type from
+the `element` meta-function. To retrieve a `const` proxy reference type all that
+needs to be done is to supply the `const` qualifier along with the
+`BitfieldTuple` template parameter. For an example, see below within the example
+section. ]
+
+[h5 Preconditions]
+[table
+    [
+        [Precondition]
+        [Description]
+        [Enforcement]
+    ]
+    [
+        [ `Index < mpl::size<BitfieldTuple::members>::type::value`]
+        [ The index supplied must be less then the number of members within the
+`bitfield_tuple` which is supplied as a template parameter. All this means is
+that if the `Index` supplied is not a valid index the `element` meta-function
+will statically assert. ]
+        [ Enforced by static assert. ]
+    ]
+    [
+        [ BitfieldTuple must be a `bitfield_tuple`. ]
+        [ Means that if something other then a `bitfield_tuple` is supplied
+for the `BitfieldTuple` template parameter that this meta-function will not work. ]
+        [ Documented requirement only. Not enforced. ]
+    ]
+]
+
+[h5 Interface]
+`N` is used for type `element` within the following interface documentation.
+[table
+    [
+        [Operation]
+        [Description]
+    ]
+    [
+        [ `N::type`]
+        [ This is set to the proxy reference type which would be returned from
+the get function at the specified `Index`.]
+    ]
+]
+
+
+[h5 Header File Location]
+This meta-function is included along with the <boost/integer/bitfield_tuple.hpp>
+header file. There is no need to directly include the element header file
+within your code.
+[pre
+#include <boost/integer/bitfield_tuple/element.hpp>
+]
+
+[h5 Example]
+Basic example of how to use the `element` meta-function to retrieve the 
+return type of the `get` member or free function.
+``
+#include <boost/integer/bitfield_tuple.hpp>
+
+using namespace boost::bitfields;
+
+struct i;
+struct red;
+struct green;
+struct blue;
+
+typedef bitfield_tuple<
+    member<unsigned int,red,5>,
+    member<unsigned int, green, 6>,
+    member<unsinged int, blue,5>
+>       rgb565;
+
+// write a function whose return type is the proxy reference type
+// which would be returned from calling get<0>() or get<red>()
+element<rgb565,0>::type my_func(rgb565 bft) {
+    return bft.get<red>(); // this could be replaced with get<0>()
+}
+
+// make a const version of my_func
+element<const rgb565,0>::type my_func(rgb565 const& bft) {
+    return bft.get<red>(); // this could be replaced with get<0>()
+}
+``
+
+How to use element to make views from a `bitfield_tuple` type. 
+`const` still applies to the views, if one would like a `const` view into
+something simply supply the `const` qualifier to the BitfieldTuple template
+parameter and that's all that needs to be done.
+``
+#include <boost/integer/bitfield_tuple.hpp>
+#include <cassert>
+
+using namespace boost::bitfields;
+
+struct red;
+struct green;
+struct blue;
+
+typedef bitfield_tuple<
+    storage<std::size_t>,
+    member<char,red,4>,
+    member<unsigned char, green,5>,
+    member<int, salmon, 16>
+>       test_tuple_1;
+
+int main() {
+
+    typedef element<test_tuple_1,0>::type view_red;
+    std::size_t storage = 0;
+    // constructs the red view type over storage
+    // which is simply std::size_t.
+    view_red red_v(storage);
+    assert(red_v == 0);
+    red_v = 3;
+    assert(red_v == 3);
+    return 0;
+}
+``
+
+[endsect]

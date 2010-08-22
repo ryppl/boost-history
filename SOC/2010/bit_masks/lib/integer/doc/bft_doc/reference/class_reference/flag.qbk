@@ -4,7 +4,7 @@ Copyright (c) 2010 Brian Bartman
 Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
-[section `struct flag`]
+[section flag]
 [h4 Description]
 `flag` is used to specify a boolean member of width one. This is a simplification
 of `member<bool,NameType,1>` and does the exact same thing.

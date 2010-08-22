@@ -4,7 +4,7 @@ Copyright (c) 2010 Brian Bartman
 Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
-[section `struct custom`]
+[section custom]
 [h4 Description]
 The `custom` member is a template which is used to do to integers what `pointer`
 does to pointers. That being said, the custom class allows for semi-intrusive
@@ -86,7 +86,7 @@ default case will work just fine.* ]
 
 
 
-[h4 Header file Locaton]
+[h4 Header file Location]
 This header file is included with the <boost/integer/bitfield_tuple.hpp> header
 file.
 ``

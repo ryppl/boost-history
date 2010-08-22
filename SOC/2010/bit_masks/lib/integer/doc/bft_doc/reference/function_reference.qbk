@@ -6,4 +6,5 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 [section Function Reference]
 [include function_reference/make_bitfield_tuple_doc.qbk]
+[include function_reference/get_free_function.qbk]
 [endsect]

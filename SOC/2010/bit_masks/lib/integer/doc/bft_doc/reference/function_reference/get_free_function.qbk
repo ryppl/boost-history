@@ -1,0 +1,69 @@
+[/
+Copyright (c) 2010 Brian Bartman
+
+Distributed under the Boost Software License, Version 1.0. (See accompanying
+file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section:get get Free Function]
+[h5 Description]
+There are two variations on the `get` function overloads. The first, is a member
+function of `bitfield_tuple`. The second, is a free function with similar
+interface. The free function version of `get` simplifies things for writing
+inside of a template scope. The member function version of `get` requires
+the user to constantly put the word template before it, while the free function
+version does not require the word template inside of a template scope.
+
+[h5 get Free Function Overloads]
+``
+template <std::size_t Index, typename BitfieldTuple>
+inline (Implementation Defined proxy_reference_type) get(BitfieldTuple& bft);
+
+template <typename Name, typename BitfieldTuple>
+inline (Implementation Defined proxy_reference_type) get(BitfieldTuple& bft);
+
+template <std::size_t Index, typename BitfieldTuple>
+inline (Implementation Defined proxy_reference_type) get(BitfieldTuple const& bft);
+
+template <typename Name, typename BitfieldTuple>
+inline (Implementation Defined proxy_reference_type) get(BitfieldTuple const& bft);
+
+``
+
+[h5 Examples]
+``
+#include <boost/integer/bitfield_tuple.hpp>
+#include <cassert>
+
+using namespace boost;
+
+struct red;
+struct green;
+struct pink;
+struct blue;
+struct salmon;
+
+typedef bitfield_tuple<
+    member<char,red,4>,
+    member<unsigned char, green,5>,
+    storage<std::size_t>,
+    filler<3>,
+    member<int, salmon, 16>,
+    flag<blue>
+>   get_free_function_example;
+
+int main(){
+
+    get_free_function_example t1;
+
+    // equivalent operations.
+    assert(get<red>(t1) == t1.get<red>());
+
+    // equivalent operations.
+    assert(get<0>(t1) == t1.get<0>());
+    return 0;
+}
+``
+
+
+[endsect]

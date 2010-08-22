@@ -4,7 +4,7 @@ Copyright (c) 2010 Brian Bartman
 Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
-[section `struct align`]
+[section align]
 [h4 Description]
 Adjusts the next `member` or `flag` template inside of the `bitfield_tuple`'s
 template parameter to a multiple of the `AlignTo` parameter. If the current

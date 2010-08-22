@@ -4,8 +4,8 @@ Copyright (c) 2010 Brian Bartman
 Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
-[section `bitfield_tuple` and `bitfield_reference`]
-[h4 `bitfield_tuple` interface]
+[section bitfield_tuple and bitfield_reference]
+[h4 bitfield_tuple interface]
 There are two main sections to the interface of a `bitfield_tuple`. The first
 part of a `bitfield_tuple`'s interface is how its specified and how those 
 specifications effect its behavior and composition. The second part of the
@@ -54,7 +54,7 @@ template <typename... Args> struct bitfield_tuple;
 For additional information on creating specilizations over the 
 `bitfield_tuple`'s implementation documentation reguarding macros.
 
-[h5 types]
+[h5 Typedefs]
 `N` is used to represent a `bitfield_tuple`.
 
 [table
@@ -115,7 +115,7 @@ a bitfield within the bitfield_tuple.]
     ]
 ]
 
-[h5 `bitfield_reference` Internal Types]
+[h5 bitfield_reference Internal Types]
 `ref` refers to a `bitfield_reference` type
 [table
     [
@@ -270,7 +270,7 @@ is that it returns a proxy reference type.]
     ]
 ]
 
-[h5 Preconditions on the `bitfield_tuple` template]
+[h5 Preconditions on the bitfield_tuple template]
 The following is a list of documented and/or enforeced preconditions for
 constructing a `bitfield_tuple`. All of the preconditions will be noted as
 either being documentation only or enfocred. For documentation only

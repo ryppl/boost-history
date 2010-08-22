@@ -7,5 +7,16 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 [section Boost.Fusion Sequence Extension]
 
 [include fusion_extension_reference/fusion_sequence_extension.qbk]
+[/
+    [include fusion_extension_reference/bitfield_tuple_iterator.qbk]
+    [include fusion_extension_reference/tag_of.qbk]
+    [include fusion_extension_reference/at.qbk]
+    [include fusion_extension_reference/begin.qbk]
+    [include fusion_extension_reference/category_of.qbk]
+    [include fusion_extension_reference/end.qbk]
+    [include fusion_extension_reference/is_sequence.qbk]
+    [include fusion_extension_reference/is_view.qbk]
+    [include fusion_extension_reference/size.qbk]
+]
 
 [endsect]
