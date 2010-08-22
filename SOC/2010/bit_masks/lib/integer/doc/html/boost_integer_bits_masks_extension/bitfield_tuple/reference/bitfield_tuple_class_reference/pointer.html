@@ -1,0 +1,358 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>pointer</title>
+<link rel="stylesheet" href="../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../../../index.html" title="Boost.Integer Bits Masks Extension">
+<link rel="up" href="../bitfield_tuple_class_reference.html" title="bitfield_tuple Class Reference">
+<link rel="prev" href="storage.html" title="storage">
+<link rel="next" href="custom.html" title="custom">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="storage.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../bitfield_tuple_class_reference.html"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="custom.html"><img src="../../../../images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer"></a><a class="link" href="pointer.html" title="pointer">pointer</a>
+</h5></div></div></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.description"></a><h5>
+<a name="id3237064"></a>
+            <a class="link" href="pointer.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.description">Description</a>
+          </h5>
+<p>
+            The pointer member is a member of a bitfield_tuple which allows the user
+            to use a bitfield to store a pointer. This is useful when a user has
+            allocated an object on a DWORD boundry, when that happens the last two
+            bits of a pointer are 0. Because the last to bits of the pointer are
+            zero two boolean values can be stored within those two bits effectivly
+            saving 2 bytes per pointer. There are other types of space optimizations
+            which can be preformed when you know how a perticular object is going
+            to be allocated. Another example of what the pointer member can be used
+            for stuffing bits into the leading bits of the pointer. This can be done
+            in a valid manner if the address of the pointer is at a lower value.
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.template_signature"></a><h5>
+<a name="id3237118"></a>
+            <a class="link" href="pointer.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.template_signature">Template
+            Signature</a>
+          </h5>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">bitfields</span> <span class="special">{</span>
+<span class="keyword">template</span> <span class="special">&lt;</span>
+    <span class="keyword">typename</span> <span class="identifier">ReturnType</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Name</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Mask</span> <span class="special">=</span> <span class="identifier">implementation</span> <span class="identifier">defined</span>
+    <span class="special">&gt;</span>
+<span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">pointer</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<p>
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.template_parameters"></a><h5>
+<a name="id3237291"></a>
+            <a class="link" href="pointer.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.template_parameters">Template
+            Parameters</a>
+          </h5>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      template Parameter
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Explanation
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">ReturnType</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      This is the type which a pointer is being made to.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Name</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Name</span></code> of the
+                      field which is can be used to access the field with the get
+                      function.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Mask</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      This is a mask which minimally defines the following two <code class="computeroutput"><span class="keyword">typedef</span></code>s and static constant:
+                      <code class="computeroutput"><span class="identifier">Mask</span><span class="special">::</span><span class="identifier">type</span></code>, <code class="computeroutput"><span class="identifier">Mask</span><span class="special">::</span><span class="identifier">value_type</span></code>,
+                      and <code class="computeroutput"><span class="identifier">Mask</span><span class="special">::</span><span class="identifier">value</span></code>. There are masking
+                      utilities which are included with <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                      which make using this parameter easier. The <code class="computeroutput"><span class="identifier">Mask</span></code>
+                      is used to define the value bits of the pointer which are to
+                      be stored within the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                      The default value for this parameter is to define a <code class="computeroutput"><span class="identifier">Mask</span></code> over an integral type
+                      which is the same size as a pointer, and leaves off the 2 least
+                      significant bits of the pointer. This is because on most 32
+                      and 64 bit architectures it is common for most allocation to
+                      be DWORD aligned, which makes the address divisible by 4.
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.preconditions"></a><h4>
+<a name="id3237579"></a>
+            <a class="link" href="pointer.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.preconditions">Preconditions</a>
+          </h4>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Precondition
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Enforcement
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Mask</span><span class="special">::</span><span class="identifier">value</span> <span class="special">!=</span>
+                      <span class="number">0</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      The value associated with the mask can not be zero.
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Enforced by static assert.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">Mask</span><span class="special">::</span><span class="identifier">value_type</span><span class="special">)</span>
+                      <span class="special">==</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="keyword">void</span><span class="special">*)</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      The value type of the mask must be the same size as a pointer.
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Enforced by static assert.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Name</span></code> must be
+                      unique.
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      The <code class="computeroutput"><span class="identifier">Name</span></code> template
+                      parameter can only be supplied once per <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Enforced by static assert.
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.header_file_locaton"></a><h5>
+<a name="id3237841"></a>
+            <a class="link" href="pointer.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.header_file_locaton">Header
+            file Locaton</a>
+          </h5>
+<p>
+            This header file is included with the &lt;boost/integer/bitfield_tuple.hpp&gt;
+            header file. 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">details</span><span class="special">/</span><span class="identifier">bft</span><span class="special">/</span><span class="identifier">pointer</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.basic_example"></a><h5>
+<a name="id3237950"></a>
+            <a class="link" href="pointer.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.basic_example">Basic
+            Example</a>
+          </h5>
+<p>
+            Basic use case for stuffing the 2 least significant bits of a pointer.
+            
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bitfields</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">ptr</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">b1</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">b2</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+        <span class="identifier">pointer</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">ptr</span><span class="special">&gt;,</span>
+        <span class="identifier">flag</span><span class="special">&lt;</span><span class="identifier">b1</span><span class="special">&gt;,</span>
+        <span class="identifier">flag</span><span class="special">&lt;</span><span class="identifier">b2</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>       <span class="identifier">bool_stuffed_ptr</span><span class="special">;</span>
+
+
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">int</span><span class="special">*</span> <span class="identifier">some_ptr</span> <span class="special">=</span> <span class="keyword">new</span> <span class="keyword">int</span><span class="special">();</span>
+    <span class="identifier">bool_stuffed_ptr</span> <span class="identifier">bsp</span><span class="special">;</span>
+    <span class="identifier">bsp</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">ptr</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="identifier">some_ptr</span><span class="special">;</span>
+
+    <span class="comment">// prints the value of the integer being pointed at.
+</span>    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="special">*</span><span class="identifier">bsp</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">ptr</span><span class="special">&gt;()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+
+</pre>
+<p>
+            The <code class="computeroutput"><span class="identifier">bool_stuffed_ptr</span></code>
+            type allows for a the <code class="computeroutput"><span class="identifier">ptr</span></code>
+            member to point to an integer which is DWORD aligned within memory and
+            use the unused bits inside of it for storage of 2 additional boolean
+            values. If a valid address has been stored for <code class="computeroutput"><span class="identifier">ptr</span></code>
+            the value returned from the get function will be dereferenceable just
+            like a regular pointer.
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.mask_example"></a><h5>
+<a name="id3238474"></a>
+            <a class="link" href="pointer.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.mask_example">Mask
+            Example</a>
+          </h5>
+<p>
+            Example of how to define a the <code class="computeroutput"><span class="identifier">Mask</span></code>
+            parameter for differently aligned memory allocations. The following allocations
+            are 8 byte aligned rather then 4 byte aligned, which leaves 3 bits instead
+            of 2 bits. 
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bitfields</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">ptr</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">b1</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">b2</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">b3</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">high_bits_mask</span><span class="special">&lt;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">,</span>
+    <span class="identifier">bit_width</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">-</span> <span class="number">3</span>
+<span class="special">&gt;</span>       <span class="identifier">ptr_mask</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+        <span class="identifier">pointer</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">ptr</span><span class="special">,</span> <span class="identifier">ptr_mask</span><span class="special">&gt;,</span>
+        <span class="identifier">flag</span><span class="special">&lt;</span><span class="identifier">b1</span><span class="special">&gt;,</span>
+        <span class="identifier">flag</span><span class="special">&lt;</span><span class="identifier">b2</span><span class="special">&gt;,</span>
+        <span class="identifier">flag</span><span class="special">&lt;</span><span class="identifier">b3</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>       <span class="identifier">bool_stuffed_ptr</span><span class="special">;</span>
+</pre>
+<p>
+            The <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">high_bits_mask</span></code> defines a mask which
+            starting at the most significant bit makes a contiguous section of 1
+            bits which are used to compose a mask. In the above example <code class="computeroutput"><span class="identifier">high_bits_mask</span></code> is being used to create
+            the following mask in binary (assuming a 32 bit architecture):
+          </p>
+<pre class="programlisting">most significant bit            least significant bit
+      31                                       0
+      1111 1111  1111 1111  1111 1111  1111 1000
+</pre>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.two_pointers_and_a_4_bit_integer"></a><h6>
+<a name="id3238894"></a>
+            <a class="link" href="pointer.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.pointer.two_pointers_and_a_4_bit_integer">Two
+            Pointers and a 4 Bit Integer</a>
+          </h6>
+<p>
+            The next example is how to on a 32 bit system to stuff two pointers to
+            DWORD aligned memory and a 4 bit integer into a single <code class="computeroutput"><span class="keyword">unsigned</span> <span class="keyword">long</span>
+            <span class="keyword">long</span></code> type. 
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">ptr1</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">ptr2</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">four_bit_int</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+        <span class="identifier">pointer</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">ptr1</span><span class="special">&gt;,</span>
+        <span class="identifier">pointer</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">ptr2</span><span class="special">&gt;,</span>
+        <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span><span class="identifier">four_bit_int</span><span class="special">,</span><span class="number">4</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>       <span class="identifier">pointer_double_stuffed</span><span class="special">;</span>
+</pre>
+<p>
+            The <code class="computeroutput"><span class="identifier">pointer</span></code> members are
+            treated as bitfields and simply move around within the storage of the
+            <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> as a normal
+            member would be. This can effect the access time but only by a shift
+            operation to correctly place place the pointer to match the value bits
+            of its mask.
+          </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2010 Brian Bartman<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="storage.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../bitfield_tuple_class_reference.html"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="custom.html"><img src="../../../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

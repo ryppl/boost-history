@@ -1,0 +1,142 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>padding</title>
+<link rel="stylesheet" href="../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../../../index.html" title="Boost.Integer Bits Masks Extension">
+<link rel="up" href="../bitfield_tuple_class_reference.html" title="bitfield_tuple Class Reference">
+<link rel="prev" href="bitfield_tuple_and_bitfield_reference.html" title="bitfield_tuple and bitfield_reference">
+<link rel="next" href="member.html" title="member">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="bitfield_tuple_and_bitfield_reference.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../bitfield_tuple_class_reference.html"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="member.html"><img src="../../../../images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.padding"></a><a class="link" href="padding.html" title="padding">padding</a>
+</h5></div></div></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.padding.description"></a><h5>
+<a name="id3231794"></a>
+            <a class="link" href="padding.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.padding.description">Description</a>
+          </h5>
+<p>
+            <code class="computeroutput"><span class="identifier">padding</span></code> specifies a number
+            of empty bits to be ignored. Another good way to think about this is
+            as bit padding, it adds the number of bits in padding when specified.
+            From an implementation stand point it adds <code class="computeroutput"><span class="identifier">Bits</span></code>
+            to the starting the next starting position of the next bitfield specified
+            in the template parameter list. This class is used to give explicit control
+            to the user when it comes to the internal storage of the bits within
+            the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.padding.template_signature"></a><h5>
+<a name="id3231860"></a>
+            <a class="link" href="padding.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.padding.template_signature">Template
+            Signature</a>
+          </h5>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">bitfields</span> <span class="special">{</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">Bits</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">padding</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<p>
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.padding.template_parameters"></a><h5>
+<a name="id3231986"></a>
+            <a class="link" href="padding.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.padding.template_parameters">Template
+            Parameters</a>
+          </h5>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Parameter
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Bits</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      The amount of padding to add.
+                    </p>
+                  </td>
+</tr></tbody>
+</table></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.padding.header_file_location"></a><h5>
+<a name="id3232075"></a>
+            <a class="link" href="padding.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.padding.header_file_location">Header
+            File Location</a>
+          </h5>
+<p>
+            This header file is included with the &lt;boost/integer/bitfield_tuple.hpp&gt;
+            header file. 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">details</span><span class="special">/</span><span class="identifier">bft</span><span class="special">/</span><span class="identifier">padding</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.padding.example"></a><h5>
+<a name="id3232182"></a>
+            <a class="link" href="padding.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.bitfield_tuple_class_reference.padding.example">Example</a>
+          </h5>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">\</span><span class="identifier">integer</span><span class="special">\</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bitfields</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">red</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">green</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">pink</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">blue</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">salmon</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">storage</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span><span class="identifier">red</span><span class="special">,</span><span class="number">4</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">green</span><span class="special">,</span><span class="number">5</span><span class="special">&gt;,</span>
+    <span class="identifier">padding</span><span class="special">&lt;</span><span class="number">3</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">salmon</span><span class="special">,</span> <span class="number">16</span><span class="special">&gt;,</span>
+    <span class="identifier">flag</span><span class="special">&lt;</span><span class="identifier">blue</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>       <span class="identifier">tuple_with_padding</span><span class="special">;</span>
+</pre>
+<p>
+            All the padding does in the above is shift the last two members over
+            by 3 bits.
+          </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2010 Brian Bartman<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="bitfield_tuple_and_bitfield_reference.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../bitfield_tuple_class_reference.html"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="member.html"><img src="../../../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

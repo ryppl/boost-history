@@ -1,0 +1,324 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>struct element_n</title>
+<link rel="stylesheet" href="../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../../../index.html" title="Boost.Integer Bits Masks Extension">
+<link rel="up" href="../meta_function_reference.html" title="Meta-Function Reference">
+<link rel="prev" href="element.html" title="struct element">
+<link rel="next" href="../boost_fusion_sequence_extension.html" title="Boost.Fusion Sequence Extension">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="element.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../meta_function_reference.html"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="../boost_fusion_sequence_extension.html"><img src="../../../../images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.meta_function_reference.element_n"></a><a class="link" href="element_n.html" title="struct element_n">
+          struct element_n</a>
+</h5></div></div></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.meta_function_reference.element_n.description"></a><h6>
+<a name="id3246902"></a>
+            <a class="link" href="element_n.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.meta_function_reference.element_n.description">Description</a>
+          </h6>
+<p>
+            <code class="computeroutput"><span class="identifier">element_n</span></code> is a meta-function
+            similar to the <code class="computeroutput"><span class="identifier">element</span></code>.
+            The only difference between this <code class="computeroutput"><span class="identifier">element</span></code>
+            and <code class="computeroutput"><span class="identifier">element_n</span></code> is that
+            <code class="computeroutput"><span class="identifier">element_n</span></code> operates using
+            the member's name instead of its index.
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.meta_function_reference.element_n.template_signature"></a><h6>
+<a name="id3246988"></a>
+            <a class="link" href="element_n.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.meta_function_reference.element_n.template_signature">Template
+            Signature</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">bitfields</span> <span class="special">{</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">BitfieldTuple</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Name</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">element_n</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<p>
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.meta_function_reference.element_n.template_parameters"></a><h6>
+<a name="id3247119"></a>
+            <a class="link" href="element_n.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.meta_function_reference.element_n.template_parameters">Template
+            Parameters</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Parameter
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">BitfieldTuple</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      The <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                      which is to be used to retrieve the proxy reference type from.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Name</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      The <code class="computeroutput"><span class="identifier">Name</span></code> supplied
+                      to the member when the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              If there is a need for retrieving a <code class="computeroutput"><span class="keyword">const</span></code>
+              version of a proxy reference type there is a convention for retrieving
+              a <code class="computeroutput"><span class="keyword">const</span></code> proxy reference
+              type from the <code class="computeroutput"><span class="identifier">element_n</span></code>
+              meta-function. To retrieve a <code class="computeroutput"><span class="keyword">const</span></code>
+              proxy reference type all that needs to be done is to supply the <code class="computeroutput"><span class="keyword">const</span></code> qualifier along with the <code class="computeroutput"><span class="identifier">BitfieldTuple</span></code> template parameter.
+              For an example, see below within the example section.
+            </p></td></tr>
+</table></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.meta_function_reference.element_n.preconditions"></a><h6>
+<a name="id3247348"></a>
+            <a class="link" href="element_n.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.meta_function_reference.element_n.preconditions">Preconditions</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Precondition
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Enforcement
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Name</span></code> must exist
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      The <code class="computeroutput"><span class="identifier">Name</span></code> template
+                      parameter must exist within the <code class="computeroutput"><span class="identifier">BitfieldTuple</span></code>
+                      template parameter.
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Enforced by static assert.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      BitfieldTuple must be a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Means that if something other then a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                      is supplied for the <code class="computeroutput"><span class="identifier">BitfieldTuple</span></code>
+                      template parameter that this meta-function will not work.
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Documented requirement only. Not enforced.
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.meta_function_reference.element_n.interface"></a><h6>
+<a name="id3247537"></a>
+            <a class="link" href="element_n.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.meta_function_reference.element_n.interface">Interface</a>
+          </h6>
+<p>
+            <code class="computeroutput"><span class="identifier">N</span></code> is used for type <code class="computeroutput"><span class="identifier">element_n</span></code> within the following interface
+            documentation.
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Operation
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">type</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      This is the type which would be returned from the <code class="computeroutput"><span class="identifier">get</span></code> function when it is called
+                      with <code class="computeroutput"><span class="identifier">Name</span></code>.
+                    </p>
+                  </td>
+</tr></tbody>
+</table></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.meta_function_reference.element_n.header_file_location"></a><h6>
+<a name="id3247683"></a>
+            <a class="link" href="element_n.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.meta_function_reference.element_n.header_file_location">Header
+            File Location</a>
+          </h6>
+<p>
+            This meta-function is included along with the &lt;boost/integer/bitfield_tuple.hpp&gt;
+            header file. There is no need to directly include the element header
+            file within your code.
+          </p>
+<pre class="programlisting">#include &lt;boost/integer/bitfield_tuple/element.hpp&gt;
+</pre>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.meta_function_reference.element_n.example"></a><h6>
+<a name="id3247728"></a>
+            <a class="link" href="element_n.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.meta_function_reference.element_n.example">Example</a>
+          </h6>
+<p>
+            Basic example of how to use the <code class="computeroutput"><span class="identifier">element_n</span></code>
+            meta-function to retrieve the return type of the <code class="computeroutput"><span class="identifier">get</span></code>
+            member or free function. 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bitfields</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">i</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">red</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">green</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">blue</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span><span class="identifier">red</span><span class="special">,</span><span class="number">5</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">green</span><span class="special">,</span> <span class="number">6</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="identifier">unsinged</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">blue</span><span class="special">,</span><span class="number">5</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>       <span class="identifier">rgb565</span><span class="special">;</span>
+
+<span class="comment">// write a function whose return type is the proxy reference type
+</span><span class="comment">// which would be returned from calling get&lt;0&gt;() or get&lt;red&gt;()
+</span><span class="identifier">element_n</span><span class="special">&lt;</span><span class="identifier">rgb565</span><span class="special">,</span><span class="identifier">red</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">my_func</span><span class="special">(</span><span class="identifier">rgb565</span> <span class="identifier">bft</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">bft</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">red</span><span class="special">&gt;();</span> <span class="comment">// this could be replaced with get&lt;0&gt;()
+</span><span class="special">}</span>
+
+<span class="comment">// make a const version of my_func
+</span><span class="identifier">element_n</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">rgb565</span><span class="special">,</span><span class="identifier">red</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">my_func</span><span class="special">(</span><span class="identifier">rgb565</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">bft</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">bft</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">red</span><span class="special">&gt;();</span> <span class="comment">// this could be replaced with get&lt;0&gt;()
+</span><span class="special">}</span>
+</pre>
+<p>
+          </p>
+<p>
+            How to use element_n to make views from a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            type. <code class="computeroutput"><span class="keyword">const</span></code> still applies
+            to the views, if one would like a <code class="computeroutput"><span class="keyword">const</span></code>
+            view into something simply supply the <code class="computeroutput"><span class="keyword">const</span></code>
+            qualifier to the BitfieldTuple template parameter and that's all that
+            needs to be done. 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cassert</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bitfields</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">red</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">green</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">blue</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">storage</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span><span class="identifier">red</span><span class="special">,</span><span class="number">4</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">green</span><span class="special">,</span><span class="number">5</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">salmon</span><span class="special">,</span> <span class="number">16</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>       <span class="identifier">test_tuple_1</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">element_n</span><span class="special">&lt;</span><span class="identifier">test_tuple_1</span><span class="special">,</span><span class="identifier">red</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">view_red</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">storage</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="comment">// constructs the red view type over storage
+</span>    <span class="comment">// which is simply std::size_t.
+</span>    <span class="identifier">view_red</span> <span class="identifier">red_v</span><span class="special">(</span><span class="identifier">storage</span><span class="special">);</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">red_v</span> <span class="special">==</span> <span class="number">0</span><span class="special">);</span>
+    <span class="identifier">red_v</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">red_v</span> <span class="special">==</span> <span class="number">3</span><span class="special">);</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2010 Brian Bartman<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="element.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../meta_function_reference.html"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="../boost_fusion_sequence_extension.html"><img src="../../../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>get Free Function</title>
+<link rel="stylesheet" href="../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../../../index.html" title="Boost.Integer Bits Masks Extension">
+<link rel="up" href="../function_reference.html" title="Function Reference">
+<link rel="prev" href="make_bitfield_tuple.html" title="make_bitfield_tuple Free Function">
+<link rel="next" href="../meta_function_reference.html" title="Meta-Function Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="make_bitfield_tuple.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../function_reference.html"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="../meta_function_reference.html"><img src="../../../../images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.function_reference.get"></a><a class="link" href="get.html" title="get Free Function">
+          get Free Function</a>
+</h5></div></div></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.function_reference.get.description"></a><h6>
+<a name="id3243498"></a>
+            <a class="link" href="get.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.function_reference.get.description">Description</a>
+          </h6>
+<p>
+            There are two variations on the <code class="computeroutput"><span class="identifier">get</span></code>
+            function overloads. The first, is a member function of <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>. The second, is a free
+            function with similar interface. The free function version of <code class="computeroutput"><span class="identifier">get</span></code> simplifies things for writing inside
+            of a template scope. The member function version of <code class="computeroutput"><span class="identifier">get</span></code>
+            requires the user to constantly put the word template before it, while
+            the free function version does not require the word template inside of
+            a template scope.
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.function_reference.get.get_free_function_overloads"></a><h6>
+<a name="id3243576"></a>
+            <a class="link" href="get.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.function_reference.get.get_free_function_overloads">get
+            Free Function Overloads</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">Index</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">BitfieldTuple</span><span class="special">&gt;</span>
+<span class="keyword">inline</span> <span class="special">(</span><span class="identifier">Implementation</span> <span class="identifier">Defined</span> <span class="identifier">proxy_reference_type</span><span class="special">)</span> <span class="identifier">get</span><span class="special">(</span><span class="identifier">BitfieldTuple</span><span class="special">&amp;</span> <span class="identifier">bft</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Name</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">BitfieldTuple</span><span class="special">&gt;</span>
+<span class="keyword">inline</span> <span class="special">(</span><span class="identifier">Implementation</span> <span class="identifier">Defined</span> <span class="identifier">proxy_reference_type</span><span class="special">)</span> <span class="identifier">get</span><span class="special">(</span><span class="identifier">BitfieldTuple</span><span class="special">&amp;</span> <span class="identifier">bft</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">Index</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">BitfieldTuple</span><span class="special">&gt;</span>
+<span class="keyword">inline</span> <span class="special">(</span><span class="identifier">Implementation</span> <span class="identifier">Defined</span> <span class="identifier">proxy_reference_type</span><span class="special">)</span> <span class="identifier">get</span><span class="special">(</span><span class="identifier">BitfieldTuple</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">bft</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Name</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">BitfieldTuple</span><span class="special">&gt;</span>
+<span class="keyword">inline</span> <span class="special">(</span><span class="identifier">Implementation</span> <span class="identifier">Defined</span> <span class="identifier">proxy_reference_type</span><span class="special">)</span> <span class="identifier">get</span><span class="special">(</span><span class="identifier">BitfieldTuple</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">bft</span><span class="special">);</span>
+
+</pre>
+<p>
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.function_reference.get.examples"></a><h6>
+<a name="id3244056"></a>
+            <a class="link" href="get.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.function_reference.get.examples">Examples</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cassert</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">red</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">green</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">pink</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">blue</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">salmon</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span><span class="identifier">red</span><span class="special">,</span><span class="number">4</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">green</span><span class="special">,</span><span class="number">5</span><span class="special">&gt;,</span>
+    <span class="identifier">storage</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;,</span>
+    <span class="identifier">filler</span><span class="special">&lt;</span><span class="number">3</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">salmon</span><span class="special">,</span> <span class="number">16</span><span class="special">&gt;,</span>
+    <span class="identifier">flag</span><span class="special">&lt;</span><span class="identifier">blue</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>   <span class="identifier">get_free_function_example</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(){</span>
+
+    <span class="identifier">get_free_function_example</span> <span class="identifier">t1</span><span class="special">;</span>
+
+    <span class="comment">// equivalent operations.
+</span>    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">red</span><span class="special">&gt;(</span><span class="identifier">t1</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">t1</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">red</span><span class="special">&gt;());</span>
+
+    <span class="comment">// equivalent operations.
+</span>    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;(</span><span class="identifier">t1</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">t1</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;());</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2010 Brian Bartman<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="make_bitfield_tuple.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../function_reference.html"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="../meta_function_reference.html"><img src="../../../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
