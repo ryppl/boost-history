@@ -785,4 +785,38 @@ BOOST_AUTO_TEST_CASE(test_windows)
     int s = c.wait(); 
     BOOST_CHECK_EQUAL(s, EXIT_SUCCESS); 
 } 
+
+BOOST_AUTO_TEST_CASE(test_sync_io_with_named_pipe) 
+{ 
+    check_helpers(); 
+
+    std::vector<std::string> args; 
+    args.push_back("stdin-to-stdout"); 
+
+    bp::context ctx; 
+    ctx.stdin_behavior = bpb::named_pipe::create( 
+        bpb::named_pipe::input_stream); 
+    ctx.stdout_behavior = bpb::named_pipe::create( 
+        bpb::named_pipe::output_stream); 
+
+    bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
+
+    bp::postream &os = c.get_stdin(); 
+    bp::pistream &is = c.get_stdout(); 
+
+    os << "message-to-process" << std::endl; 
+    os.close(); 
+
+    std::string word; 
+    is >> word; 
+    BOOST_CHECK_EQUAL(word, "message-to-process"); 
+
+    int s = c.wait(); 
+#if defined(BOOST_POSIX_API) 
+    BOOST_REQUIRE(WIFEXITED(s)); 
+    BOOST_CHECK_EQUAL(WEXITSTATUS(s), EXIT_SUCCESS); 
+#elif defined(BOOST_WINDOWS_API) 
+    BOOST_CHECK_EQUAL(s, EXIT_SUCCESS); 
+#endif 
+} 
 #endif 
