@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
-<document date="2010-08-12"
+<document date="2010-08-23"
   rev="0"
-  docno="PL22.16 10/xxxx = WG21 Nyyyy"
+  docno="PL22.16 10/0108 = WG21 N3118"
 >
 
-<comment nb="ITTF" num="1" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="ITTF" num="1" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 General
 </section>
@@ -109,11 +109,11 @@ visible side effects will (eventually) be seen by
 other threads. Possibly use the word &#8220;should&#8221; if
 an absolute requirement is impossible.
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="4" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="4" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 all
 </section>
@@ -128,11 +128,11 @@ identifier fails.
 <suggestion>
 Protect all identifiers against hyphenation.
 </suggestion>
-<notes></notes>
+<notes>Typesetting (i.e., not done until FDIS production).</notes>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="5" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="5" type="ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 all
 </section>
@@ -146,9 +146,10 @@ The word "object" often copies as "ob ject".
 </suggestion>
 <notes></notes>
 <rationale>
+Some PDF viewers do this. Don't know why, or how to avoid it.
 </rationale>
 </comment>
-<comment nb="US" num="6" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="6" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 various
 </section>
@@ -167,7 +168,7 @@ Use U+007E consistently
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="7" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="7" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 various
 </section>
@@ -187,7 +188,7 @@ monospace font)
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="1" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="1" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1.1
 </section>
@@ -206,7 +207,7 @@ strike "inline functions" from the list of C++
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="2" type="Ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="2" type="Ge" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 1.2
 </section>
@@ -230,7 +231,7 @@ Alternatively, it can refer to ISO/IEC 9945.
 <rationale>
 </rationale>
 </comment>
-<comment nb="ITTF" num="2" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="ITTF" num="2" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1.2
 </section>
@@ -254,7 +255,7 @@ amendments) applies.&#8221;
 <rationale>
 </rationale>
 </comment>
-<comment nb="ITTF" num="3" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="ITTF" num="3" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1.3
 </section>
@@ -270,7 +271,7 @@ Change the title to &#8220;Terms and definitions&#8221;.
 <rationale>
 </rationale>
 </comment>
-<comment nb="ITTF" num="4" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="ITTF" num="4" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1.3
 </section>
@@ -291,7 +292,7 @@ terms and definitions apply.&#8221;
 <rationale>
 </rationale>
 </comment>
-<comment nb="ITTF" num="5" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="ITTF" num="5" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1.3
 </section>
@@ -308,11 +309,11 @@ Redraft definitions 1.3.11 and 1.3.13 so that they
 can replace the term in context (i.e. they should
 not be more than one sentence).
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
-<comment nb="ITTF" num="6" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="ITTF" num="6" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1.3
 </section>
@@ -328,7 +329,7 @@ Remove the full stops at the end of the definitions.
 <rationale>
 </rationale>
 </comment>
-<comment nb="ITTF" num="7" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="ITTF" num="7" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 1.3
 </section>
@@ -349,7 +350,7 @@ ISO/IEC Directives, Part 2.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="3" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="3" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1.3
 </section>
@@ -367,7 +368,7 @@ Update reference to clause 27 to say clause 30.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="15" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="15" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1.3
 </section>
@@ -389,7 +390,7 @@ Clauses 17 through 30 and Annex D.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="4" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="4" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1.3.10
 </section>
@@ -405,7 +406,7 @@ Change back the "catch clause"
 <rationale>
 </rationale>
 </comment>
-<comment nb="RU" num="1" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="RU" num="1" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1.7
 </section>
@@ -440,11 +441,11 @@ should be used here.
 <suggestion>
 [Need to identify a better example to propose]
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="6" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="6" type="Ed" owner="CWG" issue="1102" disp="accepted" date="" extdoc="">
 <section>
 1.9
 </section>
@@ -480,11 +481,11 @@ observable behaviour.
 <suggestion>
 Clarify it.
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="7" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="7" type="Te" owner="CWG" issue="1173" disp="accepted" date="" extdoc="">
 <section>
 1.9.6
 </section>
@@ -522,11 +523,13 @@ handler, and the value of any object not in either
 of these two categories that is modified by the
 handler becomes undefined.
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
+The reference should be 1.9 paragraph 6, not 1.9.6 (which does
+not exist).
 </rationale>
 </comment>
-<comment nb="US" num="8" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="8" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 1.9
 </section>
@@ -545,6 +548,10 @@ until proven otherwise.".
 </suggestion>
 <notes></notes>
 <rationale>
+The statement involved is non-normative and is, in general, correct.
+An implementation can treat overloaded operators as associative or
+commutative only under the &#8220;as-if&#8221; rule, so the statement
+is clear enough.
 </rationale>
 </comment>
 <comment nb="CA" num="23" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -564,7 +571,7 @@ aligning with the new C1x atomics
 Add back compatibility between C++0x and C1x
 atomics
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -593,10 +600,10 @@ undefined behaviour, in examples such as this (from
 Hans):
 <PRE>
 atomic&lt; atomic&lt;int&gt; * &gt; p
-f() |
-{ atomic&lt;int&gt;x; | W_na x
-p.store(&amp;x,mo_rlx); | W_rlx p=&amp;x
-} |
+f()                    |
+{ atomic&lt;int&gt;x;        | W_na x
+  p.store(&amp;x,mo_rlx);  | W_rlx p=&amp;x
+}                      |
 </PRE>
 (where na is nonatomic and rlx is relaxed). We suspect
 also that no other mixed atomic/nonatomic access to the
@@ -612,7 +619,7 @@ Add the following to 1.10p4:<BR/>
 writes to atomic objects, for example
 on initialization and renitialization. - end note]
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -663,7 +670,7 @@ operation<BR/>
 that performed the release, or<BR/>
 - is an atomic read-modify-write
 operation.</suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -682,7 +689,7 @@ as locks are defined in Clause 30.
 Change "operations on locks" to "locking
 operations".
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -710,17 +717,17 @@ x. We think the final read (e) could read from either (a) or
 modification order.
 <PRE>
 a:Wrlx x=1   b:Wrlx x=2
-\     /
-sb\   /sb
-\ /
-c:Wrel y-----------
-\sw
-\
-d:Racq y
-|
-|sb
-|
-e:Rrlx x=?
+      \     /
+     sb\   /sb
+        \ /
+        c:Wrel y-----------
+                           \sw
+                            \
+                         d:Racq y
+                             |
+                             |sb
+                             |
+                         e:Rrlx x=?
 </PRE>
 |
 Paul&gt; In that case IIRC, the standard does not specify<BR/>
@@ -771,7 +778,7 @@ sequenced rather than unsequenced?
 <suggestion>
 Please clarify.
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -791,14 +798,14 @@ implementation on hardware, this would be forbidden by
 coherence, but that the current text allows it. We don't
 know whether it should be allowed or not.
 <PRE>
-hb
-do
-rf
+            hb
+            do
+            rf
 Wx_release ----&gt; Rx_consume
-^         |
-\        |sb,hb
-mo \       v
---- Wx_release
+         ^         |
+          \        |sb,hb
+        mo \       v
+             --- Wx_release
 </PRE>
 Paul claims this is forbidden by 1.10p5, but we don't see
 how that can be the case. We don't see much room in
@@ -842,7 +849,7 @@ about it more.
 <suggestion>
 Please clarify.
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -865,7 +872,7 @@ not include control dependencies between atomics.
 <suggestion>
 Please clarify.
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -917,7 +924,7 @@ headed by A, or<BR/>
 dependency-ordered before X and
 X carries a dependency to B.
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -941,11 +948,11 @@ effect.
 Remove the word "subsequent" from the definition
 of visible sequence of side effects in 1.10p12.
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="17" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="17" type="Ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 1.10p12
 </section>
@@ -963,8 +970,15 @@ of visible sequence of side effects in 1.10p12.
 "...as defined here..." should be
 "...as defined below...".
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
+The reference really should be to "data races as defined
+in this International Standard", because the note compares
+this definition with the generally-understood meaning of
+data races in sequentially-consistent executions. That's
+far too stilted, and "as defined here" seems like a
+reasonable way to phrase it in the less formal context of
+a note.
 </rationale>
 </comment>
 <comment nb="CA" num="13" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1026,7 +1040,7 @@ stored by a side effect Y, where Y
 follows X in the modification order
 of M."
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -1123,7 +1137,7 @@ by<BR/>
 "in a visible sequence of M with
 respect to B"
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -1147,7 +1161,7 @@ both are atomic and operate on overlapping, but
 not-identical, memory locations)</ins>, and neither
 happens before the other.
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -1164,7 +1178,7 @@ There is some confusion between locks and mutexes.
 <suggestion>
 Change "lock" when used as a noun to "mutex".
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -1183,7 +1197,7 @@ http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3074.html
 Proposed change in N3074:
 http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3074.html
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -1274,7 +1288,7 @@ total order. Each lock acquisition &#8220;reads the value
 written&#8221; by the last lock release on the same
 mutex.  &#8212;end note ]"
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -1292,7 +1306,7 @@ See (B) in attachment Appendix 1 - Additional Details
 Request the concurrency working group to
 determine if changes are needed
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -1332,7 +1346,7 @@ There is thus no contradiction.
 Request the concurrency working group to
 determine if changes are needed
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -1350,9 +1364,9 @@ happens-before relation that it seems
 clear should be forbidden, e.g.
 <PRE>
 Rx_consume&lt;--+   +--&gt;Ry_consume
-|           rf\ /rf |
-|sb            X    |sb
-v             / \   v
+|           rf\ /rf  |
+|sb            X     |sb
+v             / \    v
 Wy_release---+   +---Wx_release
 </PRE>
 One could instead impose acyclicity on
@@ -1364,7 +1378,7 @@ equivalent.
 "The inter-thread happens-before relation of an
 execution must be acyclic"
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -1411,7 +1425,7 @@ execution.
 Request the concurrency working group to
 determine if changes are needed
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -1441,7 +1455,7 @@ order of the object by 1.10p5.
 Request the concurrency working group to
 determine if changes are needed
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -1467,7 +1481,7 @@ the modification order of M."
 Request the concurrency working group to
 determine if changes are needed
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -1488,7 +1502,7 @@ refrain from performing the optimisation
 Request the concurrency working group to
 determine if changes are needed.
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -1504,11 +1518,11 @@ See (J) in attachment Appendix 1 - Additional Details
 Request the concurrency working group to
 determine if changes are needed.
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="16" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="16" type="Ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 1.10
 </section>
@@ -1522,11 +1536,15 @@ See (L) in attachment Appendix 1 - Additional Details
 "...as defined here..." should be "...as defined
 below...".
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
+"As defined here" refers to this standard, which is the
+intention. If it were normative text the correct phrase
+would be "in this International Standard", but for a note,
+the text as written is sufficient.
 </rationale>
 </comment>
-<comment nb="US" num="13" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="13" type="te" owner="CWG" issue="1103" disp="accepted" date="" extdoc="">
 <section>
 2.2
 </section>
@@ -1544,7 +1562,7 @@ Make the reversion apply to the entire raw-string.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="14" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="14" type="te" owner="CWG" issue="1103" disp="accepted" date="" extdoc="">
 <section>
 2.2 2.3 2.5 2.14.5
 </section>
@@ -1571,13 +1589,13 @@ Note that this provides fuel for anti-trigraph
 sentiment:<BR/>
 const char str[] = R"#()??=")#";</LI></UL>
 Change in [lex.string] from N3077:<BR/>
-Escape sequences and universal-characternames
+Escape sequences and universal-character-names
 in non-raw string literals have the same
 meaning as in character literals ....<BR/>
 should be reflected in [lex.phases] paragraph 1, phase 5
 (CD2 wording):<BR/>
-Each source character set member and universalcharacter-
-name in a character literal or a string literal, as
+Each source character set member and universal-character-name
+in a character literal or a string literal, as
 well as each escape sequence in a character literal or a
 non-raw string literal, is converted to the corresponding
 member of the execution character set (2.14.3, 2.14.5); if
@@ -1585,11 +1603,11 @@ there is no corresponding member, it is converted to an
 implementation-defined member other than the null (wide)
 character<BR/>
 and [lex.charset] paragraph 2 (CD2 wording):<BR/>
-Additionally, if the hexadecimal value for a universalcharacter-
-name outside the <I>c-char-sequence</I>, <I>s-charsequence</I>,
+Additionally, if the hexadecimal value for a universal-character-name
+outside the <I>c-char-sequence</I>, <I>s-char-sequence</I>,
 or <I>r-char-sequence</I> of a character or string
 literal corresponds to a control character (in either of the
-ranges 0x000x1F or 0x7F0x9F, both inclusive) or to a
+ranges 0x00-0x1F or 0x7F-0x9F, both inclusive) or to a
 character in the basic source character set, the program is
 ill-formed.<BR/>
 UCNs simply do not occur in the grammar for r-char-sequence
@@ -1644,8 +1662,8 @@ directive. &#8212;end example ]<BR/>
 In 2.2 [lex.phases] paragraph 1, phase 5:<BR/>
 Each source character set member in a
 character literal or a string literal, as well
-as each escape sequence and universalcharacter-
-name in a character literal or a
+as each escape sequence and universal-character-name
+in a character literal or a
 non-raw string literal, is converted to the
 corresponding member of the execution
 character set (2.14.3, 2.14.5); if there is
@@ -1680,8 +1698,7 @@ preprocessing token shall be a
 raw string literal and any
 transformations performed in
 phases 1 and 2 on this input
-stream (trigraphs, universalcharacter-
-names, and line
+stream (trigraphs, universal-character-names, and line
 splicing) are reverted for the
 remainder of the stream until
 said raw string literal (2.14.5) is
@@ -1707,7 +1724,7 @@ analysis to fail.</LI></UL>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="15" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="15" type="te" owner="CWG" issue="1104" disp="accepted" date="" extdoc="">
 <section>
 2.6
 </section>
@@ -1727,7 +1744,7 @@ hack for &gt;&gt;.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="24" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="24" type="Te" owner="CWG" issue="1105" disp="" date="" extdoc="">
 <section>
 2.11
 </section>
@@ -1769,7 +1786,7 @@ Please clarify.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="17" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="17" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 2.14.2
 </section>
@@ -1793,7 +1810,7 @@ int unsigned long long int"
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="16" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="16" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 2.14.3
 </section>
@@ -1813,7 +1830,7 @@ members of the execution wide-character set (see
 <rationale>
 </rationale>
 </comment>
-<comment nb="RU" num="2" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="RU" num="2" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 2.14.3
 </section>
@@ -1831,7 +1848,7 @@ type"
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="2" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="2" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 2.14.4
 </section>
@@ -1847,9 +1864,11 @@ hexadecimal floating-point literals.
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus to adopt this feature at this point in the
+standardization process.
 </rationale>
 </comment>
-<comment nb="US" num="16" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="16" type="ge" owner="CWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 2.14.5 [lex.string]
 </section>
@@ -1864,9 +1883,10 @@ paper prior the FDIS.
 </suggestion>
 <notes></notes>
 <rationale>
+The feature has been implemented.
 </rationale>
 </comment>
-<comment nb="DE" num="3" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="3" type="te" owner="CWG" issue="1106" disp="accepted" date="" extdoc="">
 <section>
 2.14.7
 </section>
@@ -1884,7 +1904,7 @@ cross-references to the normative statements in
 <rationale>
 </rationale>
 </comment>
-<comment nb="RU" num="5" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="RU" num="5" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 2.14.7
 </section>
@@ -1897,11 +1917,11 @@ Page layout bug
 <suggestion>
 Move footnote 24 from page 28 to page 27
 </suggestion>
-<notes></notes>
+<notes>Typesetting, i.e., not done until FDIS production.</notes>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="17" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="17" type="te" owner="CWG" issue="1107" disp="accepted" date="" extdoc="">
 <section>
 2.14.8
 </section>
@@ -1930,7 +1950,7 @@ type is the same as the type of ch.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="17" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="17" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 2.14.8
 </section>
@@ -1950,7 +1970,7 @@ treated as
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="18" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="18" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 2.14.8
 </section>
@@ -1970,7 +1990,7 @@ treated as
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="18" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="18" type="ge" owner="CWG" issue="1108" disp="" date="" extdoc="">
 <section>
 2.24.8 [lex.ext]
 </section>
@@ -1985,9 +2005,10 @@ paper prior the FDIS.
 </suggestion>
 <notes></notes>
 <rationale>
+(Reference should be to 2.14.8, not 2.24.8.)
 </rationale>
 </comment>
-<comment nb="US" num="19" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="19" type="te" owner="CWG" issue="1109" disp="accepted" date="" extdoc="">
 <section>
 3
 </section>
@@ -2010,7 +2031,7 @@ term, such as "occurrence" or "appearance" or
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="20" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="20" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 3.1
 </section>
@@ -2027,7 +2048,7 @@ expressions".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="21" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="21" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 3.1
 </section>
@@ -2044,7 +2065,7 @@ using N::d; // declares d
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="22" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="22" type="te" owner="CWG" issue="1110" disp="rejected" date="" extdoc="">
 <section>
 3.2
 </section>
@@ -2063,9 +2084,12 @@ decltype( expression )
 </suggestion>
 <notes></notes>
 <rationale>
+The premise is incorrect: it is the function call, not <TT>decltype</TT>,
+that requires a complete type.  Changing this behavior would require
+too much invention at this point in the standardization process.
 </rationale>
 </comment>
-<comment nb="JP" num="19" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="19" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 3.2
 </section>
@@ -2090,7 +2114,7 @@ Change "(10)" to "(Clause 10)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="20" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="20" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 3.3.2
 </section>
@@ -2115,7 +2139,7 @@ Change "(9)" to "(Clause 9)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="23" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="23" type="te" owner="CWG" issue="1111" disp="accepted" date="" extdoc="">
 <section>
 3.4.5
 </section>
@@ -2135,7 +2159,7 @@ template,". See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="24" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="24" type="te" owner="CWG" issue="1112" disp="accepted" date="" extdoc="">
 <section>
 3.5
 </section>
@@ -2156,7 +2180,7 @@ Add parallel wording for the constexpr specifier.
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="4" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="4" type="te" owner="CWG" issue="1113" disp="accepted" date="" extdoc="">
 <section>
 3.5
 </section>
@@ -2178,7 +2202,7 @@ void g(); // has external linkage
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="5" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="5" type="te" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 3.7.3
 </section>
@@ -2196,7 +2220,7 @@ paragraph.
 <rationale>
 </rationale>
 </comment>
-<comment nb="RU" num="3" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="RU" num="3" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 3.7.4.3
 </section>
@@ -2214,7 +2238,7 @@ arithmetic"
 <rationale>
 </rationale>
 </comment>
-<comment nb="RU" num="4" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="RU" num="4" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 3.7.4.3
 </section>
@@ -2232,7 +2256,7 @@ pointer conversion"
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="18" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="18" type="Te" owner="CWG" issue="1114" disp="accepted" date="" extdoc="">
 <section>
 3.8
 </section>
@@ -2244,7 +2268,7 @@ It isn't clear that the comment in the example actually
 reflects the result of the placement new.
 If the intended placement operator new is supposed to be
 the one given by the standard library
-,by including , the example is ill-formed as the placementnew
+,by including , the example is ill-formed as the placement-new
 expression &amp;b is const B*
 which doesn't implicitly convert to void*.
 </description>
@@ -2258,7 +2282,7 @@ new (const_cast&lt;B*&gt;(&amp;b)) const B;
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="25" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="25" type="Te" owner="CWG" issue="1115" disp="accepted" date="" extdoc="">
 <section>
 3.11
 </section>
@@ -2273,7 +2297,7 @@ Make the changes proposed in WG21/N3093
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="26" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="26" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 3.7.4, 5.3.5, 12.5, 17.6.3.6, 18.6
 </section>
@@ -2293,9 +2317,11 @@ Appendix 1 - Additional Details
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for making the suggested change at this
+point in the standardization process.
 </rationale>
 </comment>
-<comment nb="US" num="27" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="27" type="te" owner="CWG" issue="1116" disp="accepted" date="" extdoc="">
 <section>
 3.8
 </section>
@@ -2319,7 +2345,7 @@ creating an int object in u2 and making the return
 statement well-defined. If this is well-defined, compilers
 are significantly limited in the assumptions they can make
 about type aliasing. On the other hand, the variant where
-U has an array of unsigned char member must be welldefined
+U has an array of unsigned char member must be well-defined
 in order to support std::aligned_storage.
 </description>
 <suggestion>
@@ -2335,7 +2361,7 @@ the object through the allocated type.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="28" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="28" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 4.4
 </section>
@@ -2352,9 +2378,11 @@ Additional Details
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for adding this feature at this point in the
+standardization process.
 </rationale>
 </comment>
-<comment nb="FI" num="7" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="7" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 4.11 [conv.mem], 5.2.9 [expr.static.cast]
 </section>
@@ -2377,9 +2405,11 @@ allow explicit conversion the other way around.
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for making this change at this point in the
+standardization process.
 </rationale>
 </comment>
-<comment nb="CH" num="3" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="3" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 4.11 and 5.2.9
 </section>
@@ -2399,9 +2429,11 @@ allow explicit conversion in the other direction.
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for making this change at this point in the
+standardization process.
 </rationale>
 </comment>
-<comment nb="JP" num="21" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="21" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 4.13
 </section>
@@ -2426,7 +2458,7 @@ Change "(5)" to "(Clause 5)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="1" type="TL" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="1" type="TL" owner="CWG" issue="1117" disp="accepted" date="" extdoc="">
 <section>
 5
 </section>
@@ -2452,7 +2484,7 @@ type.
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="8" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="8" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 5.1.2 [expr.prim.lambda]
 </section>
@@ -2468,9 +2500,11 @@ Allow specifying capture by move.
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for making the suggested change at this point
+in the standardization process.
 </rationale>
 </comment>
-<comment nb="CH" num="4" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="4" type="ed" owner="CWG" issue="1062" disp="accepted" date="" extdoc="">
 <section>
 5.1.2
 </section>
@@ -2495,7 +2529,7 @@ trailing-return-typeopt
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="5" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="5" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 5.1.2
 </section>
@@ -2512,7 +2546,7 @@ Change second 'if' to 'is'.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="29" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="29" type="te" owner="CWG" issue="974" disp="rejected" date="" extdoc="">
 <section>
 5.1.2
 </section>
@@ -2528,9 +2562,12 @@ See Appendix 1 - Additional Details
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for making the suggested change at this point in
+the standardization process.  However, core language issue 974 remains
+open for consideration in a future revision.
 </rationale>
 </comment>
-<comment nb="US" num="30" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="30" type="te" owner="CWG" issue="975" disp="rejected" date="" extdoc="">
 <section>
 5.1.2
 </section>
@@ -2546,9 +2583,12 @@ See Appendix 1 - Additional Details
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for making the suggested change at this point in
+the standardization process.  However, core language issue 975 remains
+open for consideration in a future revision.
 </rationale>
 </comment>
-<comment nb="JP" num="22" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="22" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 5.1.2
 </section>
@@ -2573,7 +2613,7 @@ Change "(5)" to "(Clause 5)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="6" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="6" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 5.1.2
 </section>
@@ -2588,9 +2628,10 @@ Consider to make those rules less restrictive.
 </suggestion>
 <notes></notes>
 <rationale>
+The comment made no specific suggestions for change.
 </rationale>
 </comment>
-<comment nb="GB" num="19" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="19" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 5.1.2
 </section>
@@ -2624,7 +2665,7 @@ nesting depth.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="20" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="20" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 5.1.2
 </section>
@@ -2648,7 +2689,7 @@ return of int does not contribute to the example.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="21" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="21" type="Te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 5.1.2
 </section>
@@ -2669,9 +2710,10 @@ or "do not contain &amp;")
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for making the suggested change.
 </rationale>
 </comment>
-<comment nb="FI" num="19" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="19" type="te" owner="CWG" issue="1118" disp="rejected" date="" extdoc="">
 <section>
 5.1.2 [expr.prim.lambda]
 </section>
@@ -2682,7 +2724,7 @@ or "do not contain &amp;")
 &#8220;When the lambda-expression is evaluated, the entities
 that are captured by copy are used to direct-initialize each
 corresponding non-static data member of the resulting
-closure object.&#8221; This apparently means that if the capturedefault
+closure object.&#8221; This apparently means that if the capture-default
 is to copy, entities captured by default, implicitly,
 are copied even in cases where the copy constructors of
 such entities are explicit.
@@ -2697,9 +2739,10 @@ See Appendix 1 - Additional Details
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for the suggested change.
 </rationale>
 </comment>
-<comment nb="GB" num="23" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="23" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 5.2.2
 </section>
@@ -2727,7 +2770,7 @@ with respect to each other [1.9] - end note]"
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="31" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="31" type="te" owner="CWG" issue="1022" disp="accepted" date="" extdoc="">
 <section>
 5.2.9;7.2
 </section>
@@ -2756,7 +2799,7 @@ range.]"
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="32" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="32" type="te" owner="CWG" issue="1119" disp="accepted" date="" extdoc="">
 <section>
 5.2.5
 </section>
@@ -2786,7 +2829,7 @@ the class of the object expression.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="64" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="64" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 5.2.8
 </section>
@@ -2812,7 +2855,7 @@ class D { /* ... */ };
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="22" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="22" type="Te" owner="CWG" issue="1120" disp="accepted" date="" extdoc="">
 <section>
 5.2.10
 </section>
@@ -2840,7 +2883,7 @@ reinterpret_cast cannot cast away constness.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="33" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="33" type="te" owner="CWG" issue="1121" disp="accepted" date="" extdoc="">
 <section>
 5.3.1
 </section>
@@ -2863,7 +2906,7 @@ list, add a link to issue 203).
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="24" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="24" type="Te" owner="CWG" issue="1122" disp="accepted" date="" extdoc="">
 <section>
 5.3.3
 </section>
@@ -2876,7 +2919,7 @@ of type std::size_t, defined in library clause 18.2. This, in
 turn, says that size_t is defined in the C standard, which in
 turn says that size_t is defined as the type of the result of
 the sizeof operator!
-The C definition of sizeof returns an implementationdefined
+The C definition of sizeof returns an implementation-defined
 unsigned integer type, recommended not to have
 "an integer conversion rank greater than signed long int,
 unless the implementation supports objects large enough
@@ -2904,11 +2947,11 @@ requirements and guarantees.
 Add requirements. See Appendix 1 - Additional
 Details
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="35" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="35" type="ge" owner="CWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 5.3.7
 </section>
@@ -2925,9 +2968,10 @@ paper prior the FDIS.
 </suggestion>
 <notes></notes>
 <rationale>
+The feature has been implemented.
 </rationale>
 </comment>
-<comment nb="FI" num="17" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="17" type="te" owner="CWG" issue="1123" disp="accepted" date="" extdoc="">
 <section>
 5.3.7 [expr.unary.noexcept]
 </section>
@@ -2948,7 +2992,7 @@ explicitly declared noexcept(false).
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="2" type="TL" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="2" type="TL" owner="CWG" issue="1124" disp="accepted" date="" extdoc="">
 <section>
 5.5
 </section>
@@ -2967,7 +3011,7 @@ reference type
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="36" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="36" type="ge" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 5.19 [expr.const]
 </section>
@@ -2983,9 +3027,12 @@ paper prior the FDIS.
 </suggestion>
 <notes></notes>
 <rationale>
+An implementation is in progress and is expected to be complete before
+the publication of the FDIS. Also, this feature is needed in the Standard
+library and thus should not be removed.
 </rationale>
 </comment>
-<comment nb="DE" num="7" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="7" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 5.19
 </section>
@@ -3005,9 +3052,13 @@ normative text.
 </suggestion>
 <notes></notes>
 <rationale>
+The possibility of differing results of calculations is implicit in
+the absence of normative statements constraining their accuracy, so
+no normative change is needed; the existing note is sufficient to
+point out this implication.
 </rationale>
 </comment>
-<comment nb="DE" num="8" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="8" type="te" owner="CWG" issue="1125" disp="accepted" date="" extdoc="">
 <section>
 5.19
 </section>
@@ -3039,7 +3090,7 @@ constexpr int f3(bool v) { return v &amp;&amp; (throw 0, 0); }
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="25" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="25" type="Te" owner="CWG" issue="1126" disp="accepted" date="" extdoc="">
 <section>
 5.19
 </section>
@@ -3068,7 +3119,7 @@ both the examples are valid.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="26" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="26" type="Te" owner="CWG" issue="1127" disp="accepted" date="" extdoc="">
 <section>
 5.19
 </section>
@@ -3127,7 +3178,7 @@ arguments.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="37" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="37" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 6.5
 </section>
@@ -3150,9 +3201,11 @@ expression )".
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for making the suggested change at this point
+in the standardization process.
 </rationale>
 </comment>
-<comment nb="CA" num="3" type="various" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="3" type="various" owner="CWG" issue="" disp="" date="" extdoc="">
 <section>
 Various
 </section>
@@ -3194,11 +3247,11 @@ atomic operation (Clause 29)."<BR/>
 Possibly move this and the attached note to
 section 1.9, after p8.
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="69" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="69" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 6.35.1
 </section>
@@ -3222,7 +3275,7 @@ form
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="27" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="27" type="Te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 6.5.4p1
 </section>
@@ -3263,9 +3316,12 @@ for (; ...
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for making the suggested change. Use of iterators
+of different types is incompatible with the Standard library containers
+and with the earlier concepts-based specification.
 </rationale>
 </comment>
-<comment nb="CH" num="7" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="7" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 6.5.4
 </section>
@@ -3287,9 +3343,14 @@ been written the way in the specification.
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for making the suggested change. The Standard
+needs to specify the meaning of the statement; removing the
+&#8220;equivalent to&#8221; phrasing would leave the feature underspecified.
+Implementations have a good deal of latitude under the &#8220;as-if&#8221;
+rule.
 </rationale>
 </comment>
-<comment nb="GB" num="28" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="28" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 7
 </section>
@@ -3306,7 +3367,7 @@ Replace "Atrributes" with "Attributes"
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="39" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="39" type="te" owner="CWG" issue="1128" disp="accepted" date="" extdoc="">
 <section>
 7.1
 </section>
@@ -3316,10 +3377,10 @@ Replace "Atrributes" with "Attributes"
 <description>
 The current wording is, "The optional attribute-specifier in
 a decl-specifier-seq appertains to the type determined by
-the decl-specifier-seq." However, the rule for declspecifier-
-seq in the grammar is recursive, and the intent is
-for the attribute-specifier to appertain to the top declspecifier-
-seq, not the one in which the attribute-specifier
+the decl-specifier-seq." However, the rule for decl-specifier-seq
+in the grammar is recursive, and the intent is
+for the attribute-specifier to appertain to the top decl-specifier-seq,
+not the one in which the attribute-specifier
 directly appears.
 </description>
 <suggestion>
@@ -3330,7 +3391,7 @@ or outermost decl-specifier-seq is intended.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="29" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="29" type="Te" owner="CWG" issue="1129" disp="modified" date="" extdoc="">
 <section>
 7.1.5
 </section>
@@ -3352,9 +3413,15 @@ exception specification.
 </suggestion>
 <notes></notes>
 <rationale>
+The premise is not correct: an exception is forbidden only when a
+<TT>constexpr</TT> function is invoked in a context that requires
+a constant expression. Used as an ordinary function, it can throw.
+Instead of changing the default exception specification, the result
+of the <TT>noexcept</TT> operator was changed, based on whether the
+invocation of the function is a constant expression or not.
 </rationale>
 </comment>
-<comment nb="US" num="40" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="40" type="te" owner="CWG" issue="1130" disp="accepted" date="" extdoc="">
 <section>
 7.1.6.2
 </section>
@@ -3381,7 +3448,7 @@ decay but before the removal of cv-qualification.
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="9" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="9" type="te" owner="CWG" issue="1110" disp="rejected" date="" extdoc="">
 <section>
 7.1.6.2
 </section>
@@ -3402,9 +3469,14 @@ type of a function call.
 </suggestion>
 <notes></notes>
 <rationale>
+Changing this would require too much invention at this stage in the
+standardization process. However, core language issue 1110 will remain
+open for possible consideration in a future revision. However, core
+language issue 1110 will remain open for possible consideration in a
+future revision.
 </rationale>
 </comment>
-<comment nb="US" num="41" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="41" type="te" owner="CWG" issue="1131" disp="accepted" date="" extdoc="">
 <section>
 7.1.6.3
 </section>
@@ -3423,14 +3495,13 @@ struct X&lt;int&gt;* p2; // ill-formed
 </description>
 <suggestion>
 Add the necessary wording to prohibit a
-specialization of a template alias in an elaboratedtype-
-specifier.
+specialization of a template alias in an elaborated-type-specifier.
 </suggestion>
 <notes></notes>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="42" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="42" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 7.1.6.4
 </section>
@@ -3448,9 +3519,10 @@ hits.
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus to make the suggested change.
 </rationale>
 </comment>
-<comment nb="US" num="43" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="43" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 7.6
 </section>
@@ -3471,7 +3543,7 @@ first sentence.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="30" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="30" type="Te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 7.6.1
 </section>
@@ -3499,9 +3571,11 @@ Delete 7.6.1 paragraph 6.
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for reconsidering the previous explicit
+decision of the Committee on this issue.
 </rationale>
 </comment>
-<comment nb="JP" num="23" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="23" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 7.6.1
 </section>
@@ -3527,7 +3601,7 @@ Clause 8)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="31" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="31" type="Te" owner="CWG" issue="1115" disp="accepted" date="" extdoc="">
 <section>
 7.6.2
 </section>
@@ -3548,7 +3622,7 @@ an attribute.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="32" type="Ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="32" type="Ge" owner="CWG" issue="1132" disp="rejected" date="" extdoc="">
 <section>
 7.6.3
 </section>
@@ -3570,9 +3644,10 @@ that a function can be overloaded upon.
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus to make the suggested change.
 </rationale>
 </comment>
-<comment nb="US" num="44" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="44" type="te" owner="CWG" issue="1133" disp="accepted" date="" extdoc="">
 <section>
 7.6.5
 </section>
@@ -3598,7 +3673,7 @@ design, even in the face of backward compatibility
 concerns (e.g., that some existing code may already use
 those words as identifiers) because those concerns have
 already been resolved in other ways in existing practice
-(see below).BR/&gt;
+(see below)<BR/>
 More importantly, this is exactly the abuse of attributes as
 disguised keywords that was objected to and was
 explicitly promised not to happen in order to get this
@@ -3644,7 +3719,7 @@ not use attributes.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="45" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="45" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 7.6.5
 </section>
@@ -3692,7 +3767,7 @@ attribute-specifier<SUB>opt</SUB>"
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="46" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="46" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 8.3.2 20.7.6.2
 </section>
@@ -3719,9 +3794,11 @@ an object or function type...
 </suggestion>
 <notes></notes>
 <rationale>
+It is possible to create an array prvalue: an array member of a class
+prvalue is an array prvalue.
 </rationale>
 </comment>
-<comment nb="GB" num="33" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="33" type="Ed" owner="CWG" issue="1130" disp="modified" date="" extdoc="">
 <section>
 8.3.5
 </section>
@@ -3740,9 +3817,12 @@ becomes char* end example ]"
 </suggestion>
 <notes></notes>
 <rationale>
+<TT>thread_local</TT> cannot be used for a parameter. However,
+storage class specifiers do not affect the type, so mentioning
+storage class specifiers was incorrect and has been removed.
 </rationale>
 </comment>
-<comment nb="US" num="47" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="47" type="te" owner="CWG" issue="1134" disp="" date="" extdoc="">
 <section>
 8.4.2
 </section>
@@ -3765,7 +3845,7 @@ to<BR/>
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="34" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="34" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 8.4.2
 </section>
@@ -3790,7 +3870,7 @@ numbered paragraph.
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="1" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="1" type="te" owner="CWG" issue="1135" disp="accepted" date="" extdoc="">
 <section>
 8.4.2 [dcl.fct.def.default]
 </section>
@@ -3811,7 +3891,7 @@ Strike the &#8220;it shall be public&#8221; bullet.
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="2" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="2" type="te" owner="CWG" issue="1136" disp="accepted" date="" extdoc="">
 <section>
 8.4.2 [dcl.fct.def.default]
 </section>
@@ -3833,7 +3913,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="3" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="3" type="te" owner="CWG" issue="1137" disp="accepted" date="" extdoc="">
 <section>
 8.4.2 [dcl.fct.def.default]
 </section>
@@ -3855,7 +3935,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="35" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="35" type="Te" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 8.5.1
 </section>
@@ -3875,7 +3955,7 @@ c; };"
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="71" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="71" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 8.5.1
 </section>
@@ -3905,7 +3985,7 @@ S ss = { 1, "asdf" };
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="72" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="72" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 8.5.1
 </section>
@@ -3939,7 +4019,7 @@ u e = { "asdf" }; // error
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="36" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="36" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 8.5.1
 </section>
@@ -3958,7 +4038,7 @@ Update union u as: "union u { int a; const char* b;
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="48" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="48" type="te" owner="CWG" issue="1138" disp="accepted" date="" extdoc="">
 <section>
 8.5.3
 </section>
@@ -3989,7 +4069,7 @@ appropriate type.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="49" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="49" type="te" owner="CWG" issue="1139" disp="accepted" date="" extdoc="">
 <section>
 8.5.3
 </section>
@@ -4016,7 +4096,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="37" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="37" type="Te" owner="CWG" issue="1138" disp="accepted" date="" extdoc="">
 <section>
 8.5.3
 </section>
@@ -4078,8 +4158,8 @@ of _copyable_ types should be copied into a temporary
 object so that they may bind to an rvalue ref. Allowing this
 would not affect const T&amp;/T&amp;&amp; overload pairs. But
 it could be potentially useful when writing functions that
-wish to accept a number of rvalue refs to copyable-butnot-
-movable types (such as all C++03 classes with userdefined
+wish to accept a number of rvalue refs to copyable-but-not-movable
+types (such as all C++03 classes with user-defined
 copy constructors), or when writing functions that
 "take apart" a number their arguments in a way that is
 different from a straightforward move (perhaps some
@@ -4109,7 +4189,7 @@ last example would also need to be deleted.]
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="10" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="10" type="Te" owner="CWG" issue="1138" disp="accepted" date="" extdoc="">
 <section>
 8.5.3
 </section>
@@ -4137,7 +4217,7 @@ f("hello"); // #2, error,
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="50" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="50" type="te" owner="CWG" issue="1140" disp="accepted" date="" extdoc="">
 <section>
 9
 </section>
@@ -4158,7 +4238,7 @@ copyable?
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="16" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="16" type="ge" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 9 9 9 3.9
 </section>
@@ -4186,9 +4266,10 @@ copyable, literal and POD types.
 </suggestion>
 <notes></notes>
 <rationale>
+The current wording is clear enough.
 </rationale>
 </comment>
-<comment nb="JP" num="81" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="81" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 9
 </section>
@@ -4207,7 +4288,7 @@ data." as an annotation.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="51" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="51" type="ge" owner="CWG" issue="1141" disp="" date="" extdoc="">
 <section>
 9.2 [class.mem]
 </section>
@@ -4223,9 +4304,10 @@ paper prior the FDIS.
 </suggestion>
 <notes></notes>
 <rationale>
+C++/CLI has a very similar feature that has been implemented.
 </rationale>
 </comment>
-<comment nb="US" num="52" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="52" type="te" owner="CWG" issue="1142" disp="accepted" date="" extdoc="">
 <section>
 9.3
 </section>
@@ -4249,7 +4331,7 @@ of a "previously-declared member function."
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="53" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="53" type="ge" owner="CWG" issue="1143" disp="" date="" extdoc="">
 <section>
 9.3.1 [class.mfct.non-static]
 </section>
@@ -4267,7 +4349,7 @@ paper prior the FDIS.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="73" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="73" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 9.3.1
 </section>
@@ -4314,7 +4396,7 @@ n2.set("def",0,0);
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="54" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="54" type="ge" owner="CWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 9.5 [class.union]
 </section>
@@ -4329,9 +4411,10 @@ paper prior the FDIS.
 </suggestion>
 <notes></notes>
 <rationale>
+The feature has been implemented
 </rationale>
 </comment>
-<comment nb="JP" num="74" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="74" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 9.5
 </section>
@@ -4364,7 +4447,7 @@ p = "Jennifer";
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="38" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="38" type="Te" owner="CWG" issue="675" disp="rejected" date="" extdoc="">
 <section>
 9.6
 </section>
@@ -4397,9 +4480,12 @@ ODR issue with A&lt;long&gt; and A&lt;signed long&gt;
 </suggestion>
 <notes></notes>
 <rationale>
+Resolving this question was not deemed essential for this revision of
+the Standard, but core language issue 675 remains open for
+possible consideration in a future revision.
 </rationale>
 </comment>
-<comment nb="US" num="55" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="55" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 10.3
 </section>
@@ -4470,9 +4556,11 @@ class
 </suggestion>
 <notes></notes>
 <rationale>
+It is necessary to be able to calculate the offsets applied to
+covariant return values when only the class definition is available.
 </rationale>
 </comment>
-<comment nb="US" num="56" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="56" type="te" owner="CWG" issue="1144" disp="accepted" date="" extdoc="">
 <section>
 11.3 [class.access.decl]
 </section>
@@ -4489,7 +4577,7 @@ paper.
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="4" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="4" type="te" owner="CWG" issue="1145" disp="rejected" date="" extdoc="">
 <section>
 12.1 [class.ctor]
 </section>
@@ -4522,9 +4610,11 @@ See Appendix 1 - Additional Details
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus to make the suggested change at this point
+in the standardization process.
 </rationale>
 </comment>
-<comment nb="FI" num="15" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="15" type="ge" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 12.3.1
 </section>
@@ -4553,9 +4643,10 @@ specified.
 </suggestion>
 <notes></notes>
 <rationale>
+The current wording is clear enough.
 </rationale>
 </comment>
-<comment nb="US" num="57" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="57" type="ge" owner="CWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 12.3.2 [class.conv.fct]
 </section>
@@ -4571,9 +4662,10 @@ paper prior the FDIS.
 </suggestion>
 <notes></notes>
 <rationale>
+The feature has been implemented.
 </rationale>
 </comment>
-<comment nb="GB" num="39" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="39" type="Te" owner="CWG" issue="1146" disp="accepted" date="" extdoc="">
 <section>
 12.4
 </section>
@@ -4596,7 +4688,7 @@ specification.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="40" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="40" type="Te" owner="CWG" issue="1147" disp="" date="" extdoc="">
 <section>
 12.4
 </section>
@@ -4629,7 +4721,7 @@ function
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="9" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="9" type="te" owner="CWG" issue="1147" disp="" date="" extdoc="">
 <section>
 12.4 and 15.4
 </section>
@@ -4647,7 +4739,7 @@ soecification are considered noexcept(true).
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="58" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="58" type="ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 12.5
 </section>
@@ -4662,9 +4754,10 @@ Add the comma.
 </suggestion>
 <notes></notes>
 <rationale>
+Because of the comma later in the sentence, a comma here would be wrong.
 </rationale>
 </comment>
-<comment nb="US" num="59" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="59" type="ge" owner="CWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 12.6.2 [class.base.init]
 </section>
@@ -4680,9 +4773,10 @@ paper prior the FDIS.
 </suggestion>
 <notes></notes>
 <rationale>
+The feature has been implemented.
 </rationale>
 </comment>
-<comment nb="US" num="60" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="60" type="ge" owner="CWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 12.8 [class.copy]
 </section>
@@ -4699,9 +4793,10 @@ paper prior the FDIS.
 </suggestion>
 <notes></notes>
 <rationale>
+The feature has been implemented.
 </rationale>
 </comment>
-<comment nb="DE" num="11" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="11" type="te" owner="CWG" issue="1148" disp="accepted" date="" extdoc="">
 <section>
 12.8
 </section>
@@ -4723,7 +4818,7 @@ move-construction.
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="5" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="5" type="te" owner="CWG" issue="1149" disp="rejected" date="" extdoc="">
 <section>
 12.8 [class.copy]
 </section>
@@ -4751,9 +4846,11 @@ See Appendix 1 - Additional Details
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus to make the suggested change at this point in
+the standardization process.
 </rationale>
 </comment>
-<comment nb="GB" num="41" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="41" type="Te" owner="CWG" issue="1146" disp="accepted" date="" extdoc="">
 <section>
 12.8
 </section>
@@ -4776,7 +4873,7 @@ specification.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="61" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="61" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 12.8;20.2.5
 </section>
@@ -4789,11 +4886,11 @@ static_cast is broken across two lines
 <suggestion>
 do not hyphenate static_cast
 </suggestion>
-<notes></notes>
+<notes>Typesetting, i.e., not done until FDIS production.</notes>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="62" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="62" type="te" owner="CWG" issue="1051" disp="accepted" date="" extdoc="">
 <section>
 12.8
 </section>
@@ -4812,7 +4909,7 @@ Add the required description.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="63" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="63" type="te" owner="CWG" issue="1064" disp="accepted" date="" extdoc="">
 <section>
 12.8
 </section>
@@ -4834,7 +4931,7 @@ Add the required description.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="64" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="64" type="te" owner="CWG" issue="1066" disp="accepted" date="" extdoc="">
 <section>
 12.8
 </section>
@@ -4865,7 +4962,7 @@ needed for the operation is implicitly defined.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="65" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="65" type="ge" owner="CWG" issue="1150" disp="" date="" extdoc="">
 <section>
 12.9 [class.inhctor]
 </section>
@@ -4883,7 +4980,7 @@ paper prior the FDIS.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="65" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="65" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 13.1
 </section>
@@ -4912,7 +5009,7 @@ int f (cInt) { /* ... */ } // error: redefinition of f(int)
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="66" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="66" type="te" owner="CWG" issue="1151" disp="accepted" date="" extdoc="">
 <section>
 13.3.1.7
 </section>
@@ -4931,7 +5028,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="67" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="67" type="ge" owner="CWG" issue="1152" disp="modified" date="" extdoc="">
 <section>
 13.3.2
 </section>
@@ -4952,9 +5049,11 @@ things as it does.
 </suggestion>
 <notes></notes>
 <rationale>
+The resolution for core language issue 1152 fixes a related problem,
+but a rationale was not deemed necessary at this time.
 </rationale>
 </comment>
-<comment nb="JP" num="75" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="75" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 13.2
 </section>
@@ -4988,7 +5087,7 @@ int f(const char*);
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="76" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="76" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 13.2
 </section>
@@ -5022,7 +5121,7 @@ f("asdf"); // error: f(int) hides f(const char*)
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="77" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="77" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 13.3.1.2
 </section>
@@ -5064,7 +5163,7 @@ int I = 1 + 1; // Always evaluates to 2 even if
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="68" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="68" type="te" owner="CWG" issue="1153" disp="accepted" date="" extdoc="">
 <section>
 13.4
 </section>
@@ -5085,7 +5184,7 @@ the target type.<BR/>
 function under consideration were not
 overloaded.<BR/>
 This question arises for pointer-to-member types, where
-there is an implicit conversion from a pointer-to-basemember
+there is an implicit conversion from a pointer-to-base-member
 to a pointer-to-derived-member, as well as when
 the context is an explicit type conversion (which allows for
 static_cast a conversion from pointer-to-derived-member
@@ -5101,7 +5200,7 @@ whether the types match.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="82" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="82" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 13.5.8
 </section>
@@ -5120,7 +5219,7 @@ Correct typo.<BR/>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="69" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="69" type="te" owner="CWG" issue="1154" disp="accepted" date="" extdoc="">
 <section>
 14.3.2
 </section>
@@ -5140,7 +5239,7 @@ parameters.
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="12" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="12" type="te" owner="CWG" issue="1155" disp="accepted" date="" extdoc="">
 <section>
 14.3.2
 </section>
@@ -5159,7 +5258,7 @@ template parameters.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="78" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="78" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 14.3.2
 </section>
@@ -5188,7 +5287,7 @@ template&lt;class T, const char* p&gt; class X {
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="83" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="83" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 14.3.2
 </section>
@@ -5225,7 +5324,7 @@ X&lt;int,p&gt; x2; // OK
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="42" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="42" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 14.5.3
 </section>
@@ -5245,7 +5344,7 @@ Tuple&lt;0&gt; error;<BR/>
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="24" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="24" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 14.5.3
 </section>
@@ -5270,7 +5369,7 @@ Change "(10)" to "(Clause 10)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="70" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="70" type="te" owner="CWG" issue="1156" disp="accepted" date="" extdoc="">
 <section>
 14.5.6.2
 </section>
@@ -5311,7 +5410,7 @@ unused
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="7" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="7" type="te" owner="CWG" issue="1157" disp="rejected" date="" extdoc="">
 <section>
 14.5.6.2p3
 </section>
@@ -5387,9 +5486,12 @@ determined
 </suggestion>
 <notes></notes>
 <rationale>
+Resolving this issue was not deemed essential for this revision of
+the Standard.  Core language issue 1157 was opened, however, to
+allow for possible consideration for a future revision.
 </rationale>
 </comment>
-<comment nb="US" num="72" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="72" type="ge" owner="CWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 14.5.7 [temp.alias]
 </section>
@@ -5404,9 +5506,10 @@ paper prior the FDIS.
 </suggestion>
 <notes></notes>
 <rationale>
+The feature has been implemented.
 </rationale>
 </comment>
-<comment nb="US" num="73" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="73" type="te" owner="CWG" issue="1158" disp="accepted" date="" extdoc="">
 <section>
 14.5.7
 </section>
@@ -5439,7 +5542,7 @@ template aliases are ill-formed.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="74" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="74" type="te" owner="CWG" issue="1159" disp="accepted" date="" extdoc="">
 <section>
 14.5.7
 </section>
@@ -5464,9 +5567,11 @@ add an example illustrating this usage.
 </suggestion>
 <notes></notes>
 <rationale>
+Definition of a class or enumeration is now prohibited in a template
+alias.
 </rationale>
 </comment>
-<comment nb="FI" num="10" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="10" type="te" owner="CWG" issue="924" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 14.5.7 [temp.alias]
 </section>
@@ -5482,7 +5587,7 @@ not allowed by the current grammar.
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="11" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="11" type="te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 14.5.7 [temp.alias]
 </section>
@@ -5500,7 +5605,7 @@ everywhere.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="25" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="25" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 14.5.7
 </section>
@@ -5513,59 +5618,10 @@ Most reference links to clause (table) number, say X, are
 in the form "Clause X" ("Table X") capitalized, and
 subsection Y.Y.Y is referenced with its number only in the
 form "Y.Y.Y". Whether they are parenthesized or not
-US
-73
-14.5.7 1 te The current wording of 7.1.3p2 requires that the identifier
-in an alias-declaration "...shall not appear in the type-id."
-With template aliases, however, the name of the alias can
-be used indirectly:
-template&lt;typename T&gt; struct A;
-template&lt;typename T&gt; using B=typename A&lt;T&gt;::U;
-template&lt;typename T&gt; struct A {
-typedef B&lt;T&gt; U;
-};
-B&lt;short&gt; b;
-Here the instantiation of B&lt;short&gt; causes the instantiation
-of A&lt;short&gt;, and the typedef in A&lt;short&gt; ends up
-attempting to use B&lt;short&gt;, which is still in the process of
-being instantiated.
-Add wording to indicate that such usages in
-template aliases are ill-formed.
-US
-74
-14.5.7 1 te An alias-declaration allows a class or enumeration type to
-be defined in its type-id (7.1.6p3). However, it's not clear
-that this is desirable when the alias-declaration is part of a
-template alias:
-template&lt;typename T&gt; using A =
-struct { void f(T) { } };
-Either prohibit the definition of classes and
-enumerations in template aliases, or prohibit the
-use of template parameters in such definitions, or
-add an example illustrating this usage.
-FI
-10
-14.5.7
-[temp.alias]
-te Can template aliases be declared in class scope? Allow declaring template aliases in class scope, if
-not allowed by the current grammar.
-FI
-11
-14.5.7
-[temp.alias]
-te We have class templates and function templates,
-shouldn't we call template aliases alias templates for
-consistency?
-Change &#8220;template alias&#8221; -&gt; &#8220;alias template&#8221;
-everywhere.
-JP
-25
-14.5.7 1 E Representations of reference link are not unified.
-Most reference links to clause (table) number, say X, are
-in the form "Clause X" ("Table X") capitalized, and
-subsection Y.Y.Y is referenced with its number only in the
-form "Y.Y.Y". Whether they are parenthesized or not
-Change "(clause 7)" to "(Clause 7)".
+depends on the context.
+However there are some notations "(Z)" consisting of only
+a number Z in parentheses to confer Clause or Table
+number Z.
 </description>
 <suggestion>
 Change "(clause 7)" to "(Clause 7)".
@@ -5574,7 +5630,7 @@ Change "(clause 7)" to "(Clause 7)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="26" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="26" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 14.6.2.1
 </section>
@@ -5599,7 +5655,7 @@ Change "(9)" to "(Clause 9)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="43" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="43" type="Te" owner="CWG" issue="1160" disp="accepted" date="" extdoc="">
 <section>
 14.6.2.1p3
 </section>
@@ -5645,7 +5701,7 @@ enclosed in &lt;&gt;,"
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="44" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="44" type="Te" owner="CWG" issue="1161" disp="accepted" date="" extdoc="">
 <section>
 14.6p5
 </section>
@@ -5664,10 +5720,10 @@ by the syntax. Ultimately, current compilers accept this.
 </description>
 <suggestion>
 Change 14.6/5 to<BR/>
-A qualified name used as the name in a meminitializer-
-id, a base-specifier, an elaborated-typespecifier
-or the nested-name-specifier of a pointerto-
-member declarator is implicitly assumed to
+A qualified name used as the name in a mem-initializer-id,
+a base-specifier, an elaborated-type-specifier
+or the nested-name-specifier of a pointer-to-member
+declarator is implicitly assumed to
 name a type, without the use of the typename
 keyword.
 </suggestion>
@@ -5675,7 +5731,7 @@ keyword.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="6" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="6" type="te" owner="CWG" issue="1162" disp="rejected" date="" extdoc="">
 <section>
 14.6p5
 </section>
@@ -5685,9 +5741,9 @@ P5
 <description>
 Given the change in N1376=02-0034 to [temp.res], found
 in FCD in [temp.res] paragraph 5:<BR/>
-A qualified name used as the name in a meminitializer-
-id, a base-specifier, or an elaboratedtype-
-specifier is implicitly assumed to name a
+A qualified name used as the name in a mem-initializer-id,
+a base-specifier, or an elaborated-type-specifier is
+implicitly assumed to name a
 type, without the use of the typename keyword<BR/>
 the following appears to be well-formed, with templates
 foo() being distinct since any type T will produce an invalid
@@ -5702,10 +5758,10 @@ struct A { enum u_type { I }; }; int main(void) { foo((A*)0); }
 </PRE>
 In particular, while determining the signature (1.3.11
 [defns.signature]) for the function templates foo(), an
-elaborated-type-specifier qualifies as part of the declspecifier-
-seq under 8.3.5 [dcl.fct] paragraph 5 in
-determining the type of a parameter in the parametertype-
-list (absent additional wording).
+elaborated-type-specifier qualifies as part of the decl-specifier-seq
+under 8.3.5 [dcl.fct] paragraph 5 in
+determining the type of a parameter in the parameter-type-list
+(absent additional wording).
 Also, the return type is included in the signature of a
 function template.<BR/>
 A portion of the GCC 4.5.0 output:<BR/>
@@ -5733,9 +5789,11 @@ to the language.
 </suggestion>
 <notes></notes>
 <rationale>
+The specification is as intended; compilers should handle cases like
+these.
 </rationale>
 </comment>
-<comment nb="US" num="75" type="TE" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="75" type="TE" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 14.7
 </section>
@@ -5753,9 +5811,10 @@ like Visual C++ does already
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for making the suggested change.
 </rationale>
 </comment>
-<comment nb="JP" num="79" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="79" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 14.7.1
 </section>
@@ -5801,7 +5860,7 @@ than in the global namespace. &#8212;end example ]
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="9" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="9" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 14.7.3 [temp.expl.spec]
 </section>
@@ -5820,9 +5879,10 @@ inside class templates.
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for making the suggested change.
 </rationale>
 </comment>
-<comment nb="JP" num="80" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="80" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 14.8.1
 </section>
@@ -5862,7 +5922,7 @@ f2&lt;char, short, int, long&gt;(); // OK
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="76" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="76" type="te" owner="CWG" issue="1163" disp="rejected" date="" extdoc="">
 <section>
 14.8.2
 </section>
@@ -5879,9 +5939,12 @@ instantiation". See Appendix 1 - Additional Details
 </suggestion>
 <notes></notes>
 <rationale>
+Section reference should be 14.7.2. The suggested change could result
+in a silent change of meaning between implementations if speculative
+instantiation for inlining is allowed.
 </rationale>
 </comment>
-<comment nb="US" num="77" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="77" type="te" owner="CWG" issue="1164" disp="accepted" date="" extdoc="">
 <section>
 14.8.2.1
 </section>
@@ -5908,7 +5971,7 @@ to be more specialized than z(T&amp;&amp;).
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="78" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="78" type="te" owner="CWG" issue="1165" disp="accepted" date="" extdoc="">
 <section>
 15.2
 </section>
@@ -5944,7 +6007,7 @@ and storage duration.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="45" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="45" type="Te" owner="CWG" issue="1166" disp="rejected" date="" extdoc="">
 <section>
 15.3
 </section>
@@ -5952,7 +6015,7 @@ and storage duration.
 16
 </para>
 <description>
-The phrasing of this clause suggests all exceptiondeclarations
+The phrasing of this clause suggests all exception-declarations
 produce objects. There should be some
 additional wording to clarify that exception-declarations
 that declare references bind to the exception object by
@@ -5967,6 +6030,9 @@ an elipsis.
 </suggestion>
 <notes></notes>
 <rationale>
+Resolving this issue was not deemed essential for this revision of
+the Standard.  However, issue 1166 was opened for possible consideration
+in a future revision.
 </rationale>
 </comment>
 <comment nb="CA" num="5" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -5996,11 +6062,11 @@ exception by its parent.
 <suggestion>
 Clarify and fix as suggested.
 </suggestion>
-<notes></notes>
+<notes>For concurrency group.</notes>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="79" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="79" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 15.4
 </section>
@@ -6020,9 +6086,10 @@ declaration lacks the noexcept keyword.
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus for making the suggested change.
 </rationale>
 </comment>
-<comment nb="GB" num="46" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="46" type="Te" owner="CWG" issue="1167" disp="accepted" date="" extdoc="">
 <section>
 15.4
 </section>
@@ -6043,7 +6110,7 @@ if that is an automatic terminate call.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="10" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="10" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 15.4
 </section>
@@ -6061,9 +6128,11 @@ behaviour is undefined.
 </suggestion>
 <notes></notes>
 <rationale>
+There was no consensus to reconsider the explicit decision of the
+Committee on this point.
 </rationale>
 </comment>
-<comment nb="GB" num="47" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="47" type="Te" owner="CWG" issue="1168" disp="accepted" date="" extdoc="">
 <section>
 15.5.1
 </section>
@@ -6096,7 +6165,7 @@ the object that is joinable.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="48" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="48" type="Te" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 15.5.2
 </section>
@@ -6117,7 +6186,7 @@ in clause 15.5.2,
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="49" type="Ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="49" type="Ge" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 15.5.2
 </section>
@@ -6134,9 +6203,11 @@ Move 15.5.2 [except.unexpected] to Annex D.
 </suggestion>
 <notes></notes>
 <rationale>
+The convention in the core clauses is to note the deprecation but
+leave the specification <I>in situ</I>.
 </rationale>
 </comment>
-<comment nb="CH" num="11" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="11" type="ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 16.1
 </section>
@@ -6161,9 +6232,10 @@ context of conditional inclusion."
 </suggestion>
 <notes></notes>
 <rationale>
+The current wording is the same as in C++03, and hasn't caused confusion.
 </rationale>
 </comment>
-<comment nb="CH" num="12" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="12" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 16.3.5
 </section>
@@ -6190,7 +6262,7 @@ read
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="13" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="13" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 16.3.5
 </section>
@@ -6216,7 +6288,7 @@ t(1,2,3), t(,4,5), t(6,,7), t(8,9,),"
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="14" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="14" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 16.3.5
 </section>
@@ -6246,7 +6318,7 @@ items.");
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="13" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="13" type="te" owner="CWG" issue="1169" disp="accepted" date="" extdoc="">
 <section>
 16.8
 </section>
@@ -6435,7 +6507,7 @@ be specified.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="66" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="66" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 17-30
 </section>
@@ -6531,7 +6603,7 @@ effect into clause 17.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="27" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="27" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 17.1
 </section>
@@ -6608,7 +6680,7 @@ Strike subclause 17.3.14, [defns.move.ctor]
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="67" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="67" type="E" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 17.5.2.1.2
 </section>
@@ -6641,6 +6713,7 @@ static const
 </suggestion>
 <notes></notes>
 <rationale>
+This is pseudo-code; okay as written.
 </rationale>
 </comment>
 <comment nb="GB" num="53" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -6660,14 +6733,14 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="54" type="Ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="54" type="Ge" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 17.5.2.1.4.x
 </section>
 <para></para>
 <description>
-The defined terms NTC16S, NTC32S, NTWCS, char16-
-character sequence, null-terminated char16-character
+The defined terms NTC16S, NTC32S, NTWCS, char16-character
+sequence, null-terminated char16-character
 string, char32-character sequence, null-terminated
 char32-character string, wide-character sequence and
 null-terminated wide-character string do not occur at any
@@ -6790,7 +6863,7 @@ use this name.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="59" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="59" type="Ed" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 17.6.3.6
 </section>
@@ -6828,9 +6901,11 @@ replace 'throw()' with 'noexcept')
 </suggestion>
 <notes></notes>
 <rationale>
+Cross-reference changed as requested.  Additions to name mentions
+not done: these are not declarations.
 </rationale>
 </comment>
-<comment nb="US" num="81" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="81" type="ed" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 17.6.3.9
 </section>
@@ -6846,6 +6921,7 @@ s/statements/ specifications/
 </suggestion>
 <notes></notes>
 <rationale>
+Removed the offending word.
 </rationale>
 </comment>
 <comment nb="US" num="82" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -6866,7 +6942,7 @@ Rephrase the Note in terms of xvalue.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="83" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="83" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 17.6.3.10
 </section>
@@ -6907,7 +6983,7 @@ be true."
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="68" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="68" type="E" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 18.3.1.5
 </section>
@@ -6940,9 +7016,10 @@ throw() { return /* ... */; }
 </suggestion>
 <notes></notes>
 <rationale>
+Replaced "..." by "value".
 </rationale>
 </comment>
-<comment nb="JP" num="84" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="84" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 18.5
 </section>
@@ -6965,7 +7042,7 @@ Replace "shall" with "do".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="69" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="69" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 18.5
 </section>
@@ -7219,7 +7296,7 @@ object.", and append the same sentence to
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="77" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="77" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 19.5.6.2
 </section>
@@ -7439,7 +7516,7 @@ It is an accurate statement because there is at least one operation, assignment 
 indeterminate value on the left hand side, that does not involve undefined behavior.
 </rationale>
 </comment>
-<comment nb="US" num="86" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="86" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.2.5
 </section>
@@ -7502,7 +7579,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="89" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="89" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.3 [utility]
 </section>
@@ -7519,7 +7596,7 @@ make_pair(T1&amp;&amp;, T2&amp;&amp;); to the synopsis in
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="81" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="81" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.3
 </section>
@@ -7538,7 +7615,7 @@ see below make_pair(T1&amp;&amp;, T2&amp;&amp;);
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="82" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="82" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.3
 </section>
@@ -7607,7 +7684,7 @@ way, the present status is not acceptable.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="28" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="28" type="E" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 20.3.1
 </section>
@@ -7630,9 +7707,10 @@ Change "(31)" to "(Clause 31)".
 </suggestion>
 <notes></notes>
 <rationale>
+Changed to "(Table 31)".
 </rationale>
 </comment>
-<comment nb="JP" num="29" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="29" type="E" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 20.3.1
 </section>
@@ -7655,9 +7733,10 @@ Change "(32)" to "(Clause 32)".
 </suggestion>
 <notes></notes>
 <rationale>
+Changed to "(Table 32)".
 </rationale>
 </comment>
-<comment nb="JP" num="30" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="30" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.3.2
 </section>
@@ -7740,7 +7819,7 @@ more clearly. Suggestion: std::unpin
 <rationale>No consensus for a change. 
 </rationale>
 </comment>
-<comment nb="US" num="94" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="94" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.3.3
 </section>
@@ -7783,7 +7862,7 @@ function templates.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="31" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="31" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.5.1
 </section>
@@ -7808,7 +7887,7 @@ Change "(section 3.9)" to "(3.9)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="84" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="84" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.3.5.2
 </section>
@@ -8273,7 +8352,7 @@ and therefore suggests it should be dispositioned as NAD Future.
 <rationale>There is no consensus to adopt this proposal at this time. 
 </rationale>
 </comment>
-<comment nb="GB" num="90" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="90" type="Ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 20.7
 </section>
@@ -8290,6 +8369,8 @@ Move clause 20.7 into clause 18.
 </suggestion>
 <notes></notes>
 <rationale>
+Type traits support queries about all types, not just
+built-in types. They do not belong in Clause 18.
 </rationale>
 </comment>
 <comment nb="DE" num="17" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -8356,7 +8437,7 @@ functions and pointers to data members.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="91" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="91" type="Ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 20.7.4.3
 </section>
@@ -8378,6 +8459,9 @@ has_nothrow_move_assign type traits.
 </suggestion>
 <notes></notes>
 <rationale>
+There is no undefined behavior because the expression
+is an unevaluated operand. It's not at all clear that
+the proposed change would be clearer.
 </rationale>
 </comment>
 <comment nb="GB" num="92" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -8558,7 +8642,7 @@ Add allocators to regexes
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="94" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="94" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.8
 </section>
@@ -8699,7 +8783,7 @@ public:typedef R result_type;
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="33" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="33" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.8.15
 </section>
@@ -8724,7 +8808,7 @@ Change "(37)" to "(Table 37)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="34" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="34" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.8.15
 </section>
@@ -8812,7 +8896,7 @@ the stored pointer.
 <rationale>
 </rationale>No consensus to make this change at this time. 
 </comment>
-<comment nb="GB" num="98" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="98" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.9
 </section>
@@ -8944,7 +9028,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="104" type="te" owner="Editor" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="104" type="Te" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.9.5.1
 </section>
@@ -8962,7 +9046,7 @@ Add the missing ~ : Effects: p-&gt;~U()
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="105" type="te" owner="Editor" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="105" type="Te" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 20.9.6
 </section>
@@ -8984,6 +9068,7 @@ tuple&lt;Args2...&gt; y);
 </suggestion>
 <notes>The Project Editor suggested and the LWG agreed that this comment be treated as editorial</notes>
 <rationale>
+The declaration is identical to the proposed text.
 </rationale>
 </comment>
 <comment nb="US" num="107" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
@@ -9001,7 +9086,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="101" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="101" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.9.10
 </section>
@@ -9023,7 +9108,7 @@ unique_ptr template..."
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="13" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="13" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.9.10.
 </section>
@@ -9041,7 +9126,7 @@ unique_ptr."
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="102" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="102" type="Ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 20.9.10
 </section>
@@ -9055,9 +9140,11 @@ move [unique.ptr] to a sub-clause of [util.smartptr]
 </suggestion>
 <notes></notes>
 <rationale>
+[util.smartptr] deals with shared_ptr and weak_ptr,
+which work together. Adding unique_ptr would create a muddle.
 </rationale>
 </comment>
-<comment nb="JP" num="35" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="35" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.9.10.2
 </section>
@@ -9082,7 +9169,7 @@ Change "(38)" to "(Table 38)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="36" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="36" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.9.10.2.1
 </section>
@@ -9107,7 +9194,7 @@ Change "(33)" to "(Table 33)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="37" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="37" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.9.10.2.1
 </section>
@@ -9132,7 +9219,7 @@ Change "(34)" to "(Table 34)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="38" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="38" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.9.10.2.3
 </section>
@@ -9294,7 +9381,7 @@ shared_ptr(auto_ptr&lt;Y&gt;&amp;); to
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="109" type="te" owner="Editor" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="109" type="te" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.9.11.2.6
 </section>
@@ -9496,7 +9583,7 @@ Require that it be a distinct class type.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="39" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="39" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 21.2.2
 </section>
@@ -9521,7 +9608,7 @@ Change "(35)" to "(Table 35)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="108" type="te" owner="Editor" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="108" type="te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 21.2.3.1
 </section>
@@ -9565,7 +9652,7 @@ removed type POS_T.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="40" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="40" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 21.4
 </section>
@@ -9596,8 +9683,8 @@ Change "(96)" to "(Table 96)".
 </section>
 <para></para>
 <description>
-data() is the function of choice for calling into legacy 'C'-
-like APIs. Both vector and array designed this function to
+data() is the function of choice for calling into legacy 'C'-like
+APIs. Both vector and array designed this function to
 be callable in a const-correct way while allowing for
 functions that want to use the result to designate a return
 buffer.
@@ -9615,7 +9702,7 @@ through this new overload.
 <rationale>No consensus to make this change. 
 </rationale>
 </comment>
-<comment nb="GB" num="111" type="te" owner="Editor" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="111" type="te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 21.5
 </section>
@@ -9645,7 +9732,7 @@ safe.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="86" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="86" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 21.7
 </section>
@@ -9664,7 +9751,7 @@ Tables 71, 72, 73, 74, 75, and 76 describe
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="87" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="87" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 22.3.1
 </section>
@@ -9685,7 +9772,7 @@ Change "Traits" to "traits" in three places.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="88" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="88" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 22.6
 </section>
@@ -9709,7 +9796,7 @@ iswspace
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="89" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="89" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 23.1
 </section>
@@ -9788,7 +9875,7 @@ erase_after overloads in 23.3.3.4.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="115" type="te" owner="Editor" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="115" type="te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.2.1
 </section>
@@ -9810,7 +9897,7 @@ args. See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="116" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="116" type="ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 23.2.1
 </section>
@@ -9832,6 +9919,7 @@ construction of some containers.  end note]</ins>
 </suggestion>
 <notes></notes>
 <rationale>
+The text as is seems quite clear; the proposed note just muddles things.
 </rationale>
 </comment>
 <comment nb="FI" num="12" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
@@ -9862,7 +9950,7 @@ requirement should be removed.
 <rationale>No consensus to make the change.
 </rationale>
 </comment>
-<comment nb="JP" num="90" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="90" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 23.2.3
 </section>
@@ -9883,7 +9971,7 @@ Change &lt;Arg&gt; to &lt;Args&gt;.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="91" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="91" type="E" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 23.2.5
 </section>
@@ -9904,9 +9992,11 @@ in the table.
 </suggestion>
 <notes></notes>
 <rationale>
+The newline is needed, but the space is unnecessary.  Removed the
+space.
 </rationale>
 </comment>
-<comment nb="JP" num="92" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="92" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 23.2.5
 </section>
@@ -10019,7 +10109,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="41" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="41" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 23.3.3
 </section>
@@ -10044,7 +10134,7 @@ Change "(table 93)" to "(Table 93)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="114" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="114" type="Ed" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 23.3.4.1
 </section>
@@ -10060,6 +10150,8 @@ Move the erase/insert effects down to p12
 </suggestion>
 <notes></notes>
 <rationale>
+The code in question is a remmant from a previous version.  It has
+now been removed.
 </rationale>
 </comment>
 <comment nb="GB" num="115" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -10084,7 +10176,7 @@ nothing and covers the sz==size() case.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="116" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="116" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 23.3.5
 </section>
@@ -10126,7 +10218,7 @@ priority_queue, and stack.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="93" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="93" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 23.3.5.2
 </section>
@@ -10150,7 +10242,7 @@ args);
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="117" type="te" owner="Editor" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="117" type="te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.3.6.2
 </section>
@@ -10398,7 +10490,7 @@ explicit unordered_multimap(const Allocator&amp;);
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="94" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="94" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 23.5.2
 </section>
@@ -10497,7 +10589,7 @@ Add a == b to Table 104
 <rationale>Standard is correct as is. 
 </rationale>
 </comment>
-<comment nb="JP" num="42" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="42" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 25.1
 </section>
@@ -10561,7 +10653,7 @@ value type
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="43" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="43" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 25.3.9
 </section>
@@ -10629,7 +10721,7 @@ FORM]
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="44" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="44" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 25.4
 </section>
@@ -10654,7 +10746,7 @@ Change "(4)" to "(Clause 4)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="45" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="45" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 25.4.7
 </section>
@@ -10695,7 +10787,7 @@ Apply N2772 to the WP.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="123" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="123" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 25.5
 </section>
@@ -10714,7 +10806,7 @@ to match the notation of N3056.
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="14" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="14" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 26.3.1.
 </section>
@@ -10759,7 +10851,7 @@ INTENT IS APPROVED]
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="46" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="46" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 26.5.1.6
 </section>
@@ -10832,7 +10924,7 @@ required to hold: 2u &lt; w.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="125" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="125" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 26.5.4.1 [rand.adapt.disc]
 </section>
@@ -10869,7 +10961,7 @@ Give it the obvious definition.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="127" type="ed/te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="127" type="ed/te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 26.5.4.1
 </section>
@@ -10888,7 +10980,7 @@ Engine::min() and return Engine::max().
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="128" type="ed/te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="128" type="ed/te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 26.5.4.3
 </section>
@@ -10907,7 +10999,7 @@ Engine::min() and return Engine::max().
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="129" type="ed/te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="129" type="ed/te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 26.5.7.1
 </section>
@@ -10925,7 +11017,7 @@ Replace x by k so as to obtain begin[k+q].
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="130" type="ed/te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="130" type="ed/te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 26.5.7.1
 </section>
@@ -10942,7 +11034,7 @@ s/three more times,/again,/
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="131" type="ed/te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="131" type="ed/te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 26.5.7.1
 </section>
@@ -10964,7 +11056,7 @@ begin[k + q] by xoring it with <I>r</I><SUB>4</SUB>, and ...&#8221;
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="132" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="132" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 26.5.7.1 [rand.util.seedseq]
 </section>
@@ -10982,7 +11074,7 @@ Change &#8220;begin[x + q]&#8221; to &#8220;begin[k + q]&#8221;
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="133" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="133" type="te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 26.5.7.1 [rand.util.seedseq]
 </section>
@@ -11062,7 +11154,7 @@ for k = 0,...,n.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="47" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="47" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 26.7.1
 </section>
@@ -11086,7 +11178,7 @@ Change "(35)" to "(Table 35)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="48" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="48" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 26.7.2
 </section>
@@ -11111,7 +11203,7 @@ Change "(35)" to "(Table 35)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="49" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="49" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 26.7.4
 </section>
@@ -11468,7 +11560,7 @@ regex_constants::match_default.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="50" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="50" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 28.5.2
 </section>
@@ -11493,7 +11585,7 @@ Change "table 136" to "Table 136".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="51" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="51" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 28.5.3
 </section>
@@ -11576,7 +11668,7 @@ Requires: !empty()
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="52" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="52" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 28.11.2
 </section>
@@ -11601,7 +11693,7 @@ Change "table 139" to "Table 139".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="95" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="95" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 28.11.3
 </section>
@@ -11622,7 +11714,7 @@ to section (24.2.6).
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="53" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="53" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 28.11.3
 </section>
@@ -11646,7 +11738,7 @@ Change "table 140" to "Table 140".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="54" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="54" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 28.13
 </section>
@@ -11747,7 +11839,7 @@ corresponding typedefs from are available.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="16" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="16" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.1p1 29.3p8
 </section>
@@ -11772,7 +11864,7 @@ should be removed.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="142" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="142" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.1
 </section>
@@ -11789,7 +11881,7 @@ Add 29.8 Fences
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="143" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="143" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 [atomics.syn] 29.2
 </section>
@@ -11809,7 +11901,7 @@ volatile integral types to the synopsis.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="144" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="144" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 [atomics.syn] 29.2
 </section>
@@ -11832,7 +11924,7 @@ Change 29.2 [atomics.syn] to match 29.4
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="145" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="145" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.2
 </section>
@@ -11905,7 +11997,7 @@ implementation-defined
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="146" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="146" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.2
 </section>
@@ -11923,7 +12015,7 @@ Change to match 29.4/0.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="147" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="147" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.2
 </section>
@@ -11942,7 +12034,7 @@ Change it to 29.6.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="148" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="148" type="ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 29.2
 </section>
@@ -11958,9 +12050,10 @@ Change it to 'implementation defined'.
 </suggestion>
 <notes></notes>
 <rationale>
+No, definitely not implementation defined. "See below "is correct.
 </rationale>
 </comment>
-<comment nb="US" num="149" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="149" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.2
 </section>
@@ -11978,7 +12071,7 @@ Copy them from 29.5.1.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="150" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="150" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.2
 </section>
@@ -11998,7 +12091,7 @@ Add them.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="151" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="151" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.2
 </section>
@@ -12017,7 +12110,7 @@ declaration.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="152" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="152" type="ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 29.3
 </section>
@@ -12034,6 +12127,7 @@ See below."
 </suggestion>
 <notes></notes>
 <rationale>
+It's named in the second and fourth bullet items.
 </rationale>
 </comment>
 <comment nb="GB" num="131" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -12088,11 +12182,11 @@ whereas the evaluation of e2 reads y and writes x, with
 reads-from edges as below (all this is within a single
 thread).
 <PRE>
-e1           e2
+ e1           e2
 Wrlx y--   --Wrlx x
-rf\ /rf
-X
-/ \
+      rf\ /rf
+         X
+        / \
 Rrlx x&lt;-   -&gt;Rrlx y
 </PRE>
 This seems like it should be allowed, but there seems to
@@ -12114,7 +12208,7 @@ Please clarify.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="153" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="153" type="ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 [atomics.lockfree] 29.4
 </section>
@@ -12133,6 +12227,9 @@ to "see below".
 </suggestion>
 <notes></notes>
 <rationale>
+Implementation defined requires that the implementation
+document what it does. Removing this requirement would be a
+technical change.
 </rationale>
 </comment>
 <comment nb="US" num="154" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -12153,7 +12250,7 @@ Add ATOMIC_BOOL_LOCK_FREE to 29.4
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="155" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="155" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.4
 </section>
@@ -12215,7 +12312,7 @@ implementation-defined<BR/>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="156" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="156" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 [atomics.types.integral] 29.5.1
 </section>
@@ -12238,7 +12335,7 @@ compare_exchange_strong.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="55" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="55" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.5.1
 </section>
@@ -12313,7 +12410,7 @@ atomic_bool.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="158" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="158" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.5.1
 </section>
@@ -12331,7 +12428,7 @@ Remove the space.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="159" type="Editorial" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="159" type="Editorial" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.5.1
 </section>
@@ -12477,7 +12574,7 @@ arguments.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="56" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="56" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.5.3
 </section>
@@ -12604,7 +12701,7 @@ is not clear)
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="166" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="166" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12622,7 +12719,7 @@ Add semicolons to ends of the bullets.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="167" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="167" type="ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12638,6 +12735,7 @@ Add semicolons to ends of the bullets.
 </suggestion>
 <notes></notes>
 <rationale>
+Seems to be a duplicate of US 166 but with the wrong section number.
 </rationale>
 </comment>
 <comment nb="US" num="168" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -12660,7 +12758,7 @@ C. --end note]
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="169" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="169" type="ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12676,9 +12774,11 @@ Change it to 'implementation defined'.
 </suggestion>
 <notes></notes>
 <rationale>
+No, we should not require implementors to document
+the details of how they do this.
 </rationale>
 </comment>
-<comment nb="US" num="170" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="170" type="ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12695,9 +12795,10 @@ constructor definition.
 </suggestion>
 <notes></notes>
 <rationale>
+The current order reflects the order of declarations. No need to change it.
 </rationale>
 </comment>
-<comment nb="GB" num="134" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="134" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12752,14 +12853,14 @@ compatibility with C. --end note]"
 para 9, 13, 17, 20
 </para>
 <description>
-The order specifications are incomplete because the non-
-_explicit functions do not have such parameters.
+The order specifications are incomplete because the non-_explicit
+functions do not have such parameters.
 </description>
 <suggestion>
 Add a new sentence: "If the program does not
 specify an order, it shall be
-memory_order_seq_cst." Or perhaps: "The non-
-_explicit non-member functions shall affect
+memory_order_seq_cst." Or perhaps: "The non-_explicit
+non-member functions shall affect
 memory as though they were _explicit with
 memory_order_seq_cst."
 </suggestion>
@@ -12767,7 +12868,7 @@ memory_order_seq_cst."
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="173" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="173" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12785,7 +12886,7 @@ are atomic".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="174" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="174" type="ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12800,6 +12901,9 @@ Move this note to just after the Effects paragraph.
 </suggestion>
 <notes></notes>
 <rationale>
+This would require a significant rewrite, because
+the Returns clause refers to the "result of the comparison"
+from the Effects clause. Okay as written.
 </rationale>
 </comment>
 <comment nb="US" num="175" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -12844,7 +12948,7 @@ by expected unchanged."
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="176" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="176" type="ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12861,6 +12965,7 @@ is in a loop,".
 </suggestion>
 <notes></notes>
 <rationale>
+Okay as written. Two different subjects, two paragraphs.
 </rationale>
 </comment>
 <comment nb="US" num="177" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -12907,7 +13012,7 @@ Fix the Remark to say whatever was intended.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="136" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12924,7 +13029,7 @@ done on p6 and p7.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="178" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="178" type="ed" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 29.7
 </section>
@@ -12943,6 +13048,7 @@ memory_order_acq_rel."
 </suggestion>
 <notes></notes>
 <rationale>
+Changed "nor" to "or".
 </rationale>
 </comment>
 <comment nb="US" num="179" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -12991,7 +13097,7 @@ handler executed in the same thread."
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="180" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="180" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.1
 </section>
@@ -13133,7 +13239,7 @@ associated std::thread object.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="98" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="97" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.3.1.5
 </section>
@@ -13154,7 +13260,7 @@ Throws: system_error
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="99" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="98" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.3.1.5
 </section>
@@ -13287,7 +13393,7 @@ delete p18, adjust 30.4.4 p1 and p4 accordingly
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="99" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="99" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.4.1
 </section>
@@ -13327,7 +13433,7 @@ in try_lock. See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="187" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="187" type="ed" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 30.4.1
 </section>
@@ -13344,9 +13450,10 @@ Change &#8220;compare_exchange&#8221; to
 </suggestion>
 <notes></notes>
 <rationale>
+Changed <TT>compare_exchange</TT> to "compare and exchange".
 </rationale>
 </comment>
-<comment nb="JP" num="57" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="57" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.4.1
 </section>
@@ -13388,7 +13495,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="58" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="58" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.4.1.1
 </section>
@@ -13439,7 +13546,7 @@ avoid a memory fence).
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="59" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="59" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.4.1.2
 </section>
@@ -13464,7 +13571,7 @@ Change "(9)" to "(Clause 9)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="60" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="60" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.4.2.1
 </section>
@@ -13489,7 +13596,7 @@ Change "(9)" to "(Clause 9)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="61" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="61" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.4.2.2
 </section>
@@ -13514,7 +13621,7 @@ Change "(9)" to "(Clause 9)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="70" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="70" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.4.3.2
 </section>
@@ -13536,7 +13643,7 @@ required
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="100" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="100" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.4.3.2.2
 </section>
@@ -13577,7 +13684,7 @@ once_flag object shall not introduce data races
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="101" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="101" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.4.5.2
 </section>
@@ -13615,7 +13722,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="139" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="139" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.5
 </section>
@@ -13633,7 +13740,7 @@ Replace "thred" with "thread"
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="140" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="140" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.5
 </section>
@@ -13672,7 +13779,7 @@ least conditionally supported.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="102" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="102" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.5.1
 </section>
@@ -13713,7 +13820,7 @@ state that terminate() is called in this case.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="103" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="103" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.5.1
 </section>
@@ -13734,7 +13841,7 @@ Throws: system_error
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="31" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="31" type="ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 30.5.1 and 30.5.2
 </section>
@@ -13754,9 +13861,12 @@ Clock::now(), or spuriously."
 </suggestion>
 <notes></notes>
 <rationale>
+This is correct as written. There are three conditions:
+"when signalled", "if", "spuriously". The first has two
+parts, separated by "or".
 </rationale>
 </comment>
-<comment nb="JP" num="104" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="104" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.5.1
 </section>
@@ -13777,7 +13887,7 @@ Throws: system_error
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="192" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="192" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.5.1
 </section>
@@ -13833,7 +13943,7 @@ optimization. See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="62" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="62" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.5.1
 </section>
@@ -13875,7 +13985,7 @@ Consider the removal of 'native_handle()'.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="105" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="105" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.5.2
 </section>
@@ -13896,7 +14006,7 @@ Throws: system_error
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="106" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="106" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.5.2
 </section>
@@ -13917,7 +14027,7 @@ Throws: system_error
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="33" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="33" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.5.2
 </section>
@@ -13937,7 +14047,7 @@ Clock, class Duration, class Predicate&gt;".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="96" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="96" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.5.3
 </section>
@@ -14004,7 +14114,7 @@ Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="34" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="34" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.6.1
 </section>
@@ -14153,7 +14263,7 @@ after 30.6.5/28 and 30.6.5/31.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="200" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="200" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.6.6
 </section>
@@ -14339,7 +14449,7 @@ async(launch::sync|launch::async,...)
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="107" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="107" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.6.9
 </section>
@@ -14358,7 +14468,7 @@ decay_copy(std::forward&lt;Args&gt;(args))...
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="108" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="108" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.6.9
 </section>
@@ -14381,7 +14491,7 @@ decay_copy(std::forward&lt;Args&gt;(args))...
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="206" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="206" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 [futures.task.members] 30.6.10.1
 </section>
@@ -14442,7 +14552,7 @@ should be and write them.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="141" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="141" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 Appendix A [gram] paragraph 1
 </section>
@@ -14460,7 +14570,7 @@ p1
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="63" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="63" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 A.1
 </section>
@@ -14486,7 +14596,7 @@ Change "(clause 14)" to "(Clause 14)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="6" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="6" type="te" owner="CWG" issue="1012" disp="accepted" date="" extdoc="">
 <section>
 D.2 [depr.static]
 </section>
@@ -14527,7 +14637,7 @@ the binders and auto_ptr
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="109" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="109" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 Annex B
 </section>
@@ -14545,7 +14655,7 @@ Add the following line.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="110" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="110" type="E" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 Index
 </section>
