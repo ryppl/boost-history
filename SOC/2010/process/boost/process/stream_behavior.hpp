@@ -249,33 +249,6 @@ public:
             OPEN_EXISTING, FILE_FLAG_OVERLAPPED, NULL);
         if (!parent_end_.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateFile() failed");
-
-        OVERLAPPED overlapped;
-        ZeroMemory(&overlapped, sizeof(overlapped));
-        overlapped.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-        if (!overlapped.hEvent)
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateEvent() failed");
-        BOOL b = ConnectNamedPipe(child_end_.native(), &overlapped);
-        if (!b)
-        {
-            if (GetLastError() == ERROR_IO_PENDING)
-            {
-                if (WaitForSingleObject(overlapped.hEvent, INFINITE) ==
-                    WAIT_FAILED)
-                {
-                    CloseHandle(overlapped.hEvent);
-                    BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
-                        "WaitForSingleObject() failed");
-                }
-            }
-            else if (GetLastError() != ERROR_PIPE_CONNECTED)
-            {
-                CloseHandle(overlapped.hEvent);
-                BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
-                    "ConnectNamedPipe() failed");
-            }
-        }
-        CloseHandle(overlapped.hEvent);
 #endif
         if (stream == output_stream)
             std::swap(child_end_, parent_end_);
