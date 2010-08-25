@@ -79,11 +79,11 @@ bool declval_bool(){return true;}
 int test_main( int argc, char * argv[] )
 {
     assignation_2<C1C2, C1>();
-    //~ typedef boost::common_type<C1C2&, C1&>::type T1; // fails if BOOST_COMMON_TYPE_DONT_USE_TYPEOF
-    std::cout << f(declval_bool()?declval_C1C2():declval_C1()) << std::endl;
+    typedef boost::common_type<C1C2&, C1&>::type T1; // fails if BOOST_COMMON_TYPE_DONT_USE_TYPEOF
+    //~ std::cout << f(declval_bool()?declval_C1C2():declval_C1()) << std::endl;
     typedef boost::common_type<C3*, C2*>::type T2;
     typedef boost::common_type<int*, int const*>::type T3;
-    //~ typedef boost::common_type<int volatile*, int const*>::type T4; // fails if BOOST_COMMON_TYPE_DONT_USE_TYPEOF
+    typedef boost::common_type<int volatile*, int const*>::type T4; // fails if BOOST_COMMON_TYPE_DONT_USE_TYPEOF
     typedef boost::common_type<int*, int volatile*>::type T5;
     //~ typedef boost::common_type<short volatile*, int const*>::type T5; // fails
 
