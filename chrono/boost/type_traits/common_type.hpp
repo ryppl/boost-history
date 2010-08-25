@@ -45,10 +45,12 @@
 #define BOOST_COMMON_TYPE_MUST_BE_A_COMPLE_TYPE "must be complete type"
 #endif
 
+#include <boost/type_traits/detail/common_type.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_void.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/is_pointer.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 
 //----------------------------------------------------------------------------//
 //                                                                            //
@@ -170,7 +172,11 @@ namespace boost {
     template <class T, class U>
     struct common_type<T, U, void>
 #endif
-    : type_traits_detail::common_type_2<T,U>
+    //~ : type_traits_detail::common_type_2<T,U>
+    : detail_type_traits_common_type::common_type_impl<
+          typename remove_cv<T>::type,
+          typename remove_cv<U>::type
+      >
     { };
 
 
