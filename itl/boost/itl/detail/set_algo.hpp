@@ -13,6 +13,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/predicates.hpp>
 #include <boost/itl/functors.hpp>
+#include <boost/itl/seqs.hpp>
 
 /*
 <b>SetAlgo </b>
@@ -36,7 +37,8 @@ namespace boost{namespace itl
             lwb = x1.end();
             upb = x1.end();
 
-            if(ITL_FUN_REN(empty, is_empty, x1) || ITL_FUN_REN(empty, is_empty, x2)) 
+            //JODO gcc.3.4.4 :(  if(itl::is_empty(x1) || itl::is_empty(x2)) 
+            if(x1.empty() || x2.empty()) 
                 return false;
 
             IteratorT x1_fst_ = x1.begin();
@@ -68,7 +70,7 @@ namespace boost{namespace itl
             typedef typename ObjectT::const_iterator Object_const_iterator;
             typename ObjectT::iterator prior_ = result.end();
             for(Object_const_iterator x2_ = x2.begin(); x2_ != x2.end(); x2_++)
-                prior_ = result.add(prior_, *x2_);
+                prior_ = add(result, prior_, *x2_);
 
             return result;
         }
@@ -115,8 +117,8 @@ namespace boost{namespace itl
         bool within(const SetType& sub, const SetType& super)
         {
             if(&super == &sub)                   return true;
-            if(ITL_FUN_REN(empty, is_empty, sub))               return true;
-            if(ITL_FUN_REN(empty, is_empty, super))             return false;
+            if(itl::is_empty(sub))               return true;
+            if(itl::is_empty(super))             return false;
             if(*sub.begin()    < *super.begin()) return false;
             if(*super.rbegin() < *sub.rbegin() ) return false;
 

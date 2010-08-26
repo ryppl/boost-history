@@ -65,35 +65,35 @@ void partys_height_average()
 
     height_sums +=
       make_pair( 
-        interval<ptime>::rightopen(
+        discrete_interval<ptime>::rightopen(
           time_from_string("2008-05-20 19:30"), 
           time_from_string("2008-05-20 23:00")), 
         counted_sum(165)); // Mary is 1,65 m tall.
 
     height_sums +=
       make_pair( 
-        interval<ptime>::rightopen(
+        discrete_interval<ptime>::rightopen(
           time_from_string("2008-05-20 19:30"), 
           time_from_string("2008-05-20 23:00")), 
         counted_sum(180)); // Harry is 1,80 m tall.
 
     height_sums +=
       make_pair( 
-        interval<ptime>::rightopen(
+        discrete_interval<ptime>::rightopen(
           time_from_string("2008-05-20 20:10"), 
           time_from_string("2008-05-21 00:00")), 
         counted_sum(170)); // Diana is 1,70 m tall.
 
     height_sums +=
       make_pair( 
-        interval<ptime>::rightopen(
+        discrete_interval<ptime>::rightopen(
           time_from_string("2008-05-20 20:10"), 
           time_from_string("2008-05-21 00:00")), 
         counted_sum(165)); // Susan is 1,65 m tall.
 
     height_sums +=
       make_pair( 
-        interval<ptime>::rightopen(
+        discrete_interval<ptime>::rightopen(
           time_from_string("2008-05-20 22:15"), 
           time_from_string("2008-05-21 00:30")), 
         counted_sum(200)); // Peters height is 2,00 m
@@ -102,11 +102,11 @@ void partys_height_average()
     cout << "-------------- History of average guest height -------------------\n";
     while(height_sum_ != height_sums.end())
     {
-        interval<ptime> when = height_sum_->first;
+        discrete_interval<ptime> when = height_sum_->first;
 
         double height_average = (*height_sum_++).second.average();
         cout << setprecision(3)
-             << "[" << when.first() << " - " << when.upper() << ")"
+             << "[" << first(when) << " - " << upper(when) << ")"
              << ": " << height_average <<" cm = " << height_average/30.48 << " ft" << endl;
     }
 }

@@ -178,7 +178,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
         return;
 
     std::pair<iterator,bool> insertion 
-        = this->template map_insert<Combiner>(inter_val, co_val);
+        = this->template _map_insert<Combiner>(inter_val, co_val);
 
     if(!insertion.second)
     {
@@ -211,7 +211,7 @@ inline typename split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Sect
         return prior_;
 
     std::pair<iterator,bool> insertion 
-        = this->template map_add<Combiner>(prior_, inter_val, co_val);
+        = this->template _map_add<Combiner>(prior_, inter_val, co_val);
 
     if(insertion.second)
         return insertion.first;
@@ -352,7 +352,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
 
             //NOTE: This is NOT an insertion that has to take care for correct application of
             // the Combiner functor. It only reestablished that state after splitting the
-            // 'it_' interval value pair. Using map_insert<Combiner> does not work here.
+            // 'it_' interval value pair. Using _map_insert<Combiner> does not work here.
             iterator insertion_ = this->_map.insert(it_, value_type(right_resid, it_->second));
 
             Combiner()(it_->second, co_val);
@@ -502,7 +502,7 @@ inline typename split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Sect
         return prior_;
 
     std::pair<iterator,bool> insertion 
-        = this->template map_insert<codomain_combine>(prior_, inter_val, co_val);
+        = this->template _map_insert<codomain_combine>(prior_, inter_val, co_val);
 
     if(insertion.second)
         return insertion.first;
@@ -647,7 +647,7 @@ template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL
 struct is_set<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
     typedef is_set<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
-    BOOST_STATIC_CONSTANT(bool, value = true); 
+    BOOST_STATIC_CONSTANT(bool, value = (is_set<CodomainT>::value)); 
 };
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>

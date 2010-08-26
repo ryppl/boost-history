@@ -57,7 +57,7 @@ using namespace boost::itl;
 typedef boost::itl::set<string> GuestSetT;
 
 // Time is the domain type the split_interval_map. It's key values are therefore
-// time intervals: interval<Time>. The content is the set of names: GuestSetT.
+// time intervals. The content is the set of names: GuestSetT.
 
 
 void party()
@@ -75,14 +75,14 @@ void party()
 
     interval_map<Time, GuestSetT> party;
 
-    party += make_pair( interval<Time>::rightopen(Time(19,30), Time(23,00)), mary_harry);
-    party += make_pair( interval<Time>::rightopen(Time(20,10), Time(monday,0,0)), diana_susan);
-    party += make_pair( interval<Time>::rightopen(Time(22,15), Time(monday,0,30)), peter);
+    party += make_pair( discrete_interval<Time>::rightopen(Time(19,30), Time(23,00)), mary_harry);
+    party += make_pair( discrete_interval<Time>::rightopen(Time(20,10), Time(monday,0,0)), diana_susan);
+    party += make_pair( discrete_interval<Time>::rightopen(Time(22,15), Time(monday,0,30)), peter);
 
     interval_map<Time, GuestSetT>::iterator it = party.begin();
     while(it != party.end())
     {
-        interval<Time> when = it->first;
+        discrete_interval<Time> when = it->first;
         // Who is at the party within the time interval 'when' ?
         GuestSetT who = (*it++).second;
         cout << when << ": " << who << endl;

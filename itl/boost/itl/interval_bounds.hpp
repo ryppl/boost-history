@@ -174,12 +174,12 @@ right_subtract_bounds(const IntervalT& x1, const IntervalT& x2)
 { return right_subtract_bounds(x1.bounds(), x2.bounds()); }
 
 
-template<class DomainT, ITL_COMPARE Compare>
+template<class DomainT>
 class bounded_value
 {
 public:
     typedef DomainT domain_type;
-    typedef bounded_value<DomainT,Compare> type;
+    typedef bounded_value<DomainT> type;
 public:
     bounded_value(const domain_type& value, interval_bounds bound)
         : _value(value), _bound(bound) {}

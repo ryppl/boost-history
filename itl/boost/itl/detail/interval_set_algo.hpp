@@ -114,6 +114,26 @@ bool is_element_greater(const LeftT& left, const RightT& right)
 // Subset/superset compare on ranges of two interval container 
 //------------------------------------------------------------------------------
 
+template<class IntervalContainerT>
+bool is_joinable(const IntervalContainerT& container, 
+                 typename IntervalContainerT::const_iterator first, 
+                 typename IntervalContainerT::const_iterator past) 
+{
+    if(first == container.end())
+        return true;
+
+    typename IntervalContainerT::const_iterator it_ = first, next_ = first;
+    ++next_;
+
+    while(next_ != container.end() && it_ != past)
+        if(!itl::touches(IntervalContainerT::key_value(it_++),
+                         IntervalContainerT::key_value(next_++)))
+            return false;
+
+    return true;
+}
+
+
 template<class LeftT, class RightT>
 bool is_inclusion_equal(const LeftT& left, const RightT& right)
 {
@@ -131,13 +151,28 @@ typename enable_if<mpl::and_<is_concept_combinable<is_interval_set, is_interval_
                    bool>::type
 within(const LeftT&, const RightT&)
 {
-    cout << "within\n";
     return true;
 }
 
 template<class LeftT, class RightT>
-typename enable_if<mpl::not_<mpl::and_<is_concept_combinable<is_interval_set, is_interval_map, LeftT, RightT>, 
-                                       is_total<RightT> > >,
+typename enable_if<mpl::and_<is_concept_combinable<is_interval_set, is_interval_map, LeftT, RightT>, 
+                             mpl::not_<is_total<RightT> > >,
+                   bool>::type
+within(const LeftT& sub, const RightT& super)
+{
+    int result =
+        subset_compare
+        (
+            sub, super, 
+            sub.begin(), sub.end(), 
+            super.begin(), super.end()
+        );
+    return result == inclusion::subset || result == inclusion::equal;
+}
+
+
+template<class LeftT, class RightT> //JODO Codereplication: Unify some more
+typename enable_if<is_concept_combinable<is_interval_map, is_interval_map, LeftT, RightT>, 
                    bool>::type
 within(const LeftT& sub, const RightT& super)
 {
@@ -152,18 +187,49 @@ within(const LeftT& sub, const RightT& super)
 }
 
 template<class LeftT, class RightT>
+typename enable_if<is_concept_combinable<is_interval_set, is_interval_set, LeftT, RightT>, 
+                   bool>::type
+within(const LeftT& sub, const RightT& super)
+{
+    int result =
+        subset_compare
+        (
+            sub, super, 
+            sub.begin(), sub.end(), 
+            super.begin(), super.end()
+        );
+    return result == inclusion::subset || result == inclusion::equal;
+}
+
+
+
+template<class LeftT, class RightT>
 typename enable_if<mpl::and_<is_concept_combinable<is_interval_map, is_interval_set, LeftT, RightT>, 
                              is_total<LeftT> >,
                    bool>::type
 contains(const LeftT&, const RightT&)
 {
-    cout << "contains\n";
     return true;
 }
 
 template<class LeftT, class RightT>
-typename enable_if<mpl::not_<mpl::and_<is_concept_combinable<is_interval_map, is_interval_set, LeftT, RightT>, 
-                                       is_total<LeftT> > >,
+typename enable_if<mpl::and_<is_concept_combinable<is_interval_map, is_interval_set, LeftT, RightT>, 
+                             mpl::not_<is_total<LeftT> > >,
+                   bool>::type
+contains(const LeftT& super, const RightT& sub)
+{
+    int result =
+        subset_compare
+        (
+            super, sub, 
+            super.begin(), super.end(), 
+            sub.begin(), sub.end()
+        );
+    return result == inclusion::superset || result == inclusion::equal;
+}
+
+template<class LeftT, class RightT>
+typename enable_if<is_concept_combinable<is_interval_set, is_interval_set, LeftT, RightT>, 
                    bool>::type
 contains(const LeftT& super, const RightT& sub)
 {
@@ -201,25 +267,6 @@ bool contains(const IntervalContainerT& container,
     return
           itl::contains(hull(*(exterior.first), *last_overlap), sub_interval)
       &&  Interval_Set::is_joinable(container, exterior.first, last_overlap);
-}
-
-template<class IntervalContainerT>
-bool is_joinable(const IntervalContainerT& container, 
-                 typename IntervalContainerT::const_iterator first, 
-                 typename IntervalContainerT::const_iterator past) 
-{
-    if(first == container.end())
-        return true;
-
-    typename IntervalContainerT::const_iterator it_ = first, next_ = first;
-    ++next_;
-
-    while(next_ != container.end() && it_ != past)
-        if(!itl::touches(IntervalContainerT::key_value(it_++),
-                         IntervalContainerT::key_value(next_++)))
-            return false;
-
-    return true;
 }
 
 

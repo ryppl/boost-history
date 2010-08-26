@@ -23,6 +23,17 @@ std::string make(int n)
 }
 */
 
+struct mono
+{
+	mono(){};
+	mono& operator ++ (){ return *this; }
+	mono& operator -- (){ return *this; }
+	mono& operator += (const mono&){ return *this; }
+};
+
+bool operator == (const mono&, const mono&){ return true; }
+bool operator < (const mono&, const mono&){ return false; }
+
 template <class BicrementableT>
 BicrementableT make(int n)
 {

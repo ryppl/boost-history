@@ -56,7 +56,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 // Prior to other includes for interval containers we define ...
 #define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
 // ... so all interval containers will use rightopen_intervals that
-// has static interval borders.
+// have static interval borders.
 
 #include <boost/itl/interval_map.hpp>
 

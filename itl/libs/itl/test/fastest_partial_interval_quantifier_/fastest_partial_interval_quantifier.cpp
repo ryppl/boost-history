@@ -18,6 +18,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 
 #include <boost/itl/interval_map.hpp>
 #include <boost/itl/split_interval_map.hpp>
+#include <boost/itl/detail/interval_morphism.hpp>
 
 using namespace std;
 using namespace boost;

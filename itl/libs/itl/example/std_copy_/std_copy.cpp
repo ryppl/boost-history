@@ -32,19 +32,19 @@ using namespace boost::itl;
 // 'make_segments' returns a vector of interval value pairs, which
 // are not sorted. The values are taken from the minimal example
 // in section 'interval combining styles'.
-vector<pair<interval<int>, int> > make_segments()
+vector<pair<discrete_interval<int>, int> > make_segments()
 {
-    vector<pair<interval<int>, int> > segment_vec;
-    segment_vec.push_back(make_pair(interval<int>::rightopen(2,4), 1));
-    segment_vec.push_back(make_pair(interval<int>::rightopen(4,5), 1));
-    segment_vec.push_back(make_pair(interval<int>::rightopen(1,3), 1));
+    vector<pair<discrete_interval<int>, int> > segment_vec;
+    segment_vec.push_back(make_pair(discrete_interval<int>::rightopen(2,4), 1));
+    segment_vec.push_back(make_pair(discrete_interval<int>::rightopen(4,5), 1));
+    segment_vec.push_back(make_pair(discrete_interval<int>::rightopen(1,3), 1));
     return segment_vec;
 }
 
 // 'show_segments' displays the source segements.
-void show_segments(const vector<pair<interval<int>, int> >& segments)
+void show_segments(const vector<pair<discrete_interval<int>, int> >& segments)
 {
-    vector<pair<interval<int>, int> >::const_iterator iter = segments.begin();
+    vector<pair<discrete_interval<int>, int> >::const_iterator iter = segments.begin();
     while(iter != segments.end())
     {
         cout << "(" << iter->first << "," << iter->second << ")";
@@ -55,7 +55,7 @@ void show_segments(const vector<pair<interval<int>, int> >& segments)
 void std_copy()
 {
     // So we have some segments stored in an std container.
-    vector<pair<interval<int>, int> > segments = make_segments(); 
+    vector<pair<discrete_interval<int>, int> > segments = make_segments(); 
     // Display the input
     cout << "input sequence: "; show_segments(segments); cout << "\n\n";
 

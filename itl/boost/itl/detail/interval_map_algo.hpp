@@ -105,18 +105,18 @@ contains(const IntervalMapT& container,
 }
 
 //- set_type -------------------------------------------------------------------
-template<class IntervalMapT>
-typename enable_if<mpl::not_<is_total<IntervalMapT> >, bool>::type
-contains(const IntervalMapT& super_map, 
-         const typename IntervalMapT::set_type& sub_set) 
+template<class IntervalMapT, class IntervalSetT>
+typename enable_if<mpl::and_<mpl::not_<is_total<IntervalMapT> >
+                            ,is_interval_set<IntervalSetT> >, bool>::type
+contains(const IntervalMapT& super_map, const IntervalSetT& sub_set) 
 {
     return Interval_Set::within(sub_set, super_map);
 }
 
-template<class IntervalMapT>
-typename enable_if<is_total<IntervalMapT>, bool>::type
-contains(const IntervalMapT& super_map, 
-         const typename IntervalMapT::set_type& sub_set) 
+template<class IntervalMapT, class IntervalSetT>
+typename enable_if<mpl::and_<is_total<IntervalMapT>
+                            ,is_interval_set<IntervalSetT> >, bool>::type
+contains(const IntervalMapT& super_map, const IntervalSetT& sub_set) 
 {
     return true;
 }
@@ -130,7 +130,7 @@ template<class IntervalMapT>
 bool contains(const IntervalMapT& container, 
               const typename IntervalMapT::element_type& key_value_pair) 
 {
-    IntervalMapT::const_iterator it_ = container.find(key_value_pair.key);
+    typename IntervalMapT::const_iterator it_ = container.find(key_value_pair.key);
     return it_ != container.end() && it_->second == key_value_pair.data;
 }
 

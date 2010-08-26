@@ -47,7 +47,7 @@ using namespace boost::itl;
 typedef boost::itl::set<string> MemberSetT;
 
 // boost::gregorian::date is the domain type the interval map. 
-// It's key values are therefore time intervals: interval<date>. The content
+// It's key values are therefore time intervals: discrete_interval<date>. The content
 // is the set of names: MemberSetT.
 typedef interval_map<date, MemberSetT> MembershipT;
 
@@ -74,18 +74,18 @@ void user_groups()
 
     med_users.add( // add and element
       make_pair( 
-        interval<date>::closed(
+        discrete_interval<date>::closed(
           from_string("2008-01-01"), from_string("2008-12-31")), mary_harry));
 
     med_users +=  // element addition can also be done via operator +=
       make_pair( 
-        interval<date>::closed(
+        discrete_interval<date>::closed(
           from_string("2008-01-15"), from_string("2008-12-31")), 
           chief_physician);
 
     med_users +=
       make_pair( 
-        interval<date>::closed(
+        discrete_interval<date>::closed(
           from_string("2008-02-01"), from_string("2008-10-15")), 
           director_of_admin);
 
@@ -94,18 +94,18 @@ void user_groups()
 
     admin_users += // element addition can also be done via operator +=
       make_pair( 
-        interval<date>::closed(
+        discrete_interval<date>::closed(
           from_string("2008-03-20"), from_string("2008-09-30")), diana_susan);
 
     admin_users +=
       make_pair( 
-        interval<date>::closed(
+        discrete_interval<date>::closed(
           from_string("2008-01-15"), from_string("2008-12-31")), 
           chief_physician);
 
     admin_users +=
       make_pair( 
-        interval<date>::closed(
+        discrete_interval<date>::closed(
           from_string("2008-02-01"), from_string("2008-10-15")), 
           director_of_admin);
 
@@ -117,10 +117,10 @@ void user_groups()
     cout << "----- Membership of medical staff -----------------------------------\n";
     while(med_ != med_users.end())
     {
-        interval<date> when = (*med_).first;
+        discrete_interval<date> when = (*med_).first;
         // Who is member of group med_users within the time interval 'when' ?
         MemberSetT who = (*med_++).second;
-        cout << "[" << when.first() << " - " << when.last() << "]"
+        cout << "[" << first(when) << " - " << last(when) << "]"
              << ": " << who << endl;
     }
 
@@ -128,10 +128,10 @@ void user_groups()
     cout << "----- Membership of admin staff -------------------------------------\n";
     while(admin_ != admin_users.end())
     {
-        interval<date> when = (*admin_).first;
+        discrete_interval<date> when = (*admin_).first;
         // Who is member of group admin_users within the time interval 'when' ?
         MemberSetT who = (*admin_++).second;
-        cout << "[" << when.first() << " - " << when.last() << "]"
+        cout << "[" << first(when) << " - " << last(when) << "]"
              << ": " << who << endl;
     }
 
@@ -139,10 +139,10 @@ void user_groups()
     cout << "----- Membership of all users (med + admin) -------------------------\n";
     while(all_ != all_users.end())
     {
-        interval<date> when = (*all_).first;
+        discrete_interval<date> when = (*all_).first;
         // Who is member of group med_users OR admin_users ?
         MemberSetT who = (*all_++).second;
-        cout << "[" << when.first() << " - " << when.last() << "]"
+        cout << "[" << first(when) << " - " << last(when) << "]"
              << ": " << who << endl;
     }
 
@@ -150,10 +150,10 @@ void user_groups()
     cout << "----- Membership of super users: intersection(med,admin) ------------\n";
     while(super_ != super_users.end())
     {
-        interval<date> when = (*super_).first;
+        discrete_interval<date> when = (*super_).first;
         // Who is member of group med_users AND admin_users ?
         MemberSetT who = (*super_++).second;
-        cout << "[" << when.first() << " - " << when.last() << "]"
+        cout << "[" << first(when) << " - " << last(when) << "]"
              << ": " << who << endl;
     }
 

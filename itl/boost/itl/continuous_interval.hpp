@@ -26,7 +26,7 @@ class continuous_interval : public base_interval<DomainT,Compare>
 public:
     typedef continuous_interval<DomainT,Compare> type;
     typedef DomainT domain_type;
-    typedef typename bounded_value<DomainT,Compare>::type bounded_domain_type;
+    typedef typename bounded_value<DomainT>::type bounded_domain_type;
 
 public:
     //==========================================================================
@@ -93,9 +93,30 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 }
 
 
-//------------------------------------------------------------------------------
-//- dynamic_intervals: Adapt interval class to interval concept
-//------------------------------------------------------------------------------
+//==============================================================================
+//=T continuous_interval -> concept intervals
+//==============================================================================
+template<class DomainT, ITL_COMPARE Compare>
+struct intervals< itl::continuous_interval<DomainT, Compare> >
+{
+    typedef intervals type;
+    typedef DomainT domain_type;
+    typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
+    typedef itl::continuous_interval<DomainT, Compare> interval_type;
+
+    static interval_type construct(const domain_type& lo, const domain_type& up)
+    {
+        return interval_type(lo, up);
+    }
+
+    static domain_type lower(const interval_type& inter_val){ return inter_val.lower(); };
+    static domain_type upper(const interval_type& inter_val){ return inter_val.upper(); };
+};
+
+
+//==============================================================================
+//=T continuous_interval -> concept dynamic_intervals
+//==============================================================================
 template<class DomainT, ITL_COMPARE Compare>
 struct dynamic_intervals<boost::itl::continuous_interval<DomainT,Compare> >
 {
@@ -107,8 +128,8 @@ struct dynamic_intervals<boost::itl::continuous_interval<DomainT,Compare> >
             static_cast<itl::continuous_interval<DomainT,Compare>* >(0) );
     }
 
-    static interval_type construct_bounded(const bounded_value<DomainT,Compare>& lo, 
-                                           const bounded_value<DomainT,Compare>& up)
+    static interval_type construct_bounded(const bounded_value<DomainT>& lo, 
+                                           const bounded_value<DomainT>& up)
     {
         return  itl::continuous_interval<DomainT,Compare>
                 (

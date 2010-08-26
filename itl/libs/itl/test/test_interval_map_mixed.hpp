@@ -371,7 +371,7 @@ void partial_interval_map_mixed_contains_4_bicremental_types()
     BOOST_CHECK_EQUAL(  contains(join_map, I_D(0,7)), false );
 
     // Map types
-    BOOST_CHECK_EQUAL( contains(join_map, K_v(1,2)), true );
+	BOOST_CHECK_EQUAL( contains(join_map, K_v(1,2)), true );
     BOOST_CHECK_EQUAL( contains(join_map, K_v(5,1)), true );
     BOOST_CHECK_EQUAL( contains(join_map, K_v(9,2)), true );
 

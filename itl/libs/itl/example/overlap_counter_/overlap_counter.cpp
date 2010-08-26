@@ -20,9 +20,9 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     aggregation is summation of an integer. A interval_map<int,int> maps
     intervals of int to ints. 
 
-    If we insert a value pair (interval<int>(2,6), 1) into the interval_map, it
+    If we insert a value pair (discrete_interval<int>(2,6), 1) into the interval_map, it
     increases the content of all value pairs in the map by 1, if their interval
-    part overlaps with interval<int>(2,6).
+    part overlaps with discrete_interval<int>(2,6).
 
     \include overlap_counter_/overlap_counter.cpp
 */
@@ -45,7 +45,7 @@ void print_overlaps(const OverlapCounterT& counter)
 {
     for(OverlapCounterT::const_iterator it = counter.begin(); it != counter.end(); it++)
     {
-        interval<int> itv  = (*it).first;
+        discrete_interval<int> itv  = (*it).first;
         int overlaps_count = (*it).second;
         if(overlaps_count == 1)
             cout << "in interval " << itv << " intervals do not overlap" << endl;
@@ -57,21 +57,21 @@ void print_overlaps(const OverlapCounterT& counter)
 void overlap_counter()
 {
     OverlapCounterT overlap_counter;
-    interval<int> inter_val;
+    discrete_interval<int> inter_val;
 
-    inter_val = interval<int>::rightopen(4,8);
+    inter_val = discrete_interval<int>::rightopen(4,8);
     cout << "-- adding   " << inter_val << " -----------------------------------------" << endl;
     overlap_counter += make_pair(inter_val, 1);
     print_overlaps(overlap_counter);
     cout << "-----------------------------------------------------------" << endl;
 
-    inter_val = interval<int>::rightopen(6,9);
+    inter_val = discrete_interval<int>::rightopen(6,9);
     cout << "-- adding   " << inter_val << " -----------------------------------------" << endl;
     overlap_counter += make_pair(inter_val, 1);
     print_overlaps(overlap_counter);
     cout << "-----------------------------------------------------------" << endl;
 
-    inter_val = interval<int>::rightopen(1,9);
+    inter_val = discrete_interval<int>::rightopen(1,9);
     cout << "-- adding   " << inter_val << " -----------------------------------------" << endl;
     overlap_counter += make_pair(inter_val, 1);
     print_overlaps(overlap_counter);

@@ -91,7 +91,7 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 }
 
 //==============================================================================
-//= Concept interval: Adaption via trais class
+//=T rightopen_interval -> concept intervals
 //==============================================================================
 template<class DomainT, ITL_COMPARE Compare>
 struct intervals< itl::rightopen_interval<DomainT, Compare> >

@@ -17,7 +17,7 @@ project
 test-suite "itl"
     : 
       # interval
-      [ run fastest_itl_interval_/fastest_itl_interval.cpp ]
+      #[ run fastest_itl_interval_/fastest_itl_interval.cpp ]
       
       # sets
       [ run fastest_interval_set_/fastest_interval_set.cpp ]

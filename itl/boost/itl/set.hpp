@@ -231,10 +231,10 @@ public:
     template<typename IteratorT>
     static const key_type& key_value(IteratorT value_){ return (*value_); }
 
-    /** \c data_value allows for a uniform access to \c data_values which is
+    /** \c codomain_value allows for a uniform access to \c data_values which is
         is used for common algorithms on sets and maps. */
     template<typename IteratorT>
-    static const data_type& data_value(IteratorT value_){ return (*value_); }
+    static const codomain_type& codomain_value(IteratorT value_){ return (*value_); }
 
     /** \c key_less allows for a uniform notation of key comparison which
         is used for common algorithms on sets and maps. */
@@ -244,8 +244,8 @@ public:
 
     /** \c make_element allows for a uniform notation of key comparison which
         is used for common algorithms on sets and maps. */
-    static value_type make_element(const key_type& key_val, const data_type&)
-    { return key_val; }
+    static value_type make_value(const key_type& key_value, const codomain_type&)
+    { return key_value; }
 
 };
 
@@ -449,7 +449,36 @@ inline bool operator >= (const itl::set<DomainT,Compare,Alloc>& lhs,
                          const itl::set<DomainT,Compare,Alloc>& rhs)
 { return !(lhs < rhs); }
 
-//--------------------------------------------------------------------------
+//==============================================================================
+//= Size
+//==============================================================================
+
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+typename set<DomainT,Compare,Alloc>::size_type
+size(const itl::set<DomainT,Compare,Alloc>& object)
+{
+    return object.size();
+}
+
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+typename set<DomainT,Compare,Alloc>::size_type
+cardinality(const itl::set<DomainT,Compare,Alloc>& object)
+{
+    return object.size();
+}
+
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+typename set<DomainT,Compare,Alloc>::size_type
+iterative_size(const itl::set<DomainT,Compare,Alloc>& object)
+{
+    return object.size();
+}
+
+
+
+//==============================================================================
+//= Addition
+//==============================================================================
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 inline itl::set<DomainT,Compare,Alloc>& 
@@ -695,6 +724,25 @@ operator ^  (      itl::set<DomainT,Compare,Alloc>  object,
     return object ^= operand; 
 }
 
+
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+std::pair<typename set<DomainT,Compare,Alloc>::iterator, bool> 
+    add(      set<DomainT,Compare,Alloc>& object, 
+        const     DomainT&                operand) 
+{ return object.insert(operand); }
+
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+typename set<DomainT,Compare,Alloc>::iterator 
+    add(         set<DomainT,Compare,Alloc>&          object,
+        typename set<DomainT,Compare,Alloc>::iterator prior,
+        const        DomainT&                         operand) 
+{ return object.insert(prior, operand); }
+
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+std::pair<typename set<DomainT,Compare,Alloc>::iterator, bool> 
+    insert(      set<DomainT,Compare,Alloc>& object, 
+           const     DomainT&                operand) 
+{ return object.insert(operand); }
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 set<DomainT,Compare,Alloc>& 

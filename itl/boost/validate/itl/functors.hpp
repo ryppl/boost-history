@@ -71,7 +71,8 @@ struct base_addition
     {
         ITL_FUN_CALL(clear, collected);
         ITL_const_FORALL(typename SourceT, item_, items)
-            collected.add(*item_);
+			//JODO itl::add(collected, *item_);
+			collected.add(*item_);
     }
 };
 
@@ -86,6 +87,7 @@ struct hint_addition
         ITL_FUN_CALL(clear, collected);
         typename TargetT::iterator prior_ = collected.end();
         ITL_const_FORALL(typename SourceT, item_, items)
+            //JODO prior_ = add(collected, prior_, *item_);
             prior_ = collected.add(prior_, *item_);
     }
 };

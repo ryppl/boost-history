@@ -23,7 +23,7 @@ by setting defines in this file.
 // will be used as default for all interval containers. 
 // ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS should be defined in the application
 // before other includes from the ITL
-#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS //JODO comment this out for the final release
+//#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS //JODO comment this out for the final release
 // If ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS is NOT defined, ITL uses intervals
 // with dynamic borders as default.
 
@@ -32,13 +32,13 @@ by setting defines in this file.
 #endif
 
 //#define ITL_CONCEPT_ORIENTED
-//#define ITL_PURE_CONCEPTUAL
+#define ITL_PURE_CONCEPTUAL
 
 #ifndef ITL_CONCEPT_ORIENTED
 #define ITL_OBJECT_ORIENTED
 #endif
 
-#ifdef  ITL_CONCEPT_ORIENTED
+#ifdef  ITL_CONCEPT_ORIENTED //CL
 #   define ITL_FUN_CALL(func, arg) itl::func(arg)
 #   define ITL_FUN_REN(func_obj, func_conc, arg) itl::func_conc(arg)
 #else //ITL_OBJECT_ORIENTED 
@@ -46,7 +46,7 @@ by setting defines in this file.
 #   define ITL_FUN_REN(func_obj, func_conc, arg) arg.func_obj()
 #endif
 
-#ifdef  ITL_OBJECT_ORIENTED
+#ifdef  ITL_OBJECT_ORIENTED //CL
 #   define ITL_BEGIN_COMMON_MEMBER_FUNCTIONS public
 #   define ITL_END_COMMON_MEMBER_FUNCTIONS   public
 #else //ITL_CONCEPT_ORIENTED

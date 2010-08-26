@@ -11,8 +11,11 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/itl/type_traits/is_interval_container.hpp>
 #include <boost/itl/type_traits/is_element_container.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
+#include <boost/itl/detail/interval_map_functors.hpp>
+#include <boost/itl/detail/interval_map_algo.hpp>
 
 namespace boost{namespace itl
 {
@@ -27,11 +30,7 @@ template<class ObjectT>
 typename enable_if<is_interval_container<ObjectT>, void>::type
 clear(ObjectT& object) //JODO test
 {
-#ifdef ITL_CONCEPT_ORIENTED //JODO find final decision
     object.erase(object.begin(), object.end());
-#else //ITL_OBJECT_ORIENTED
-    object.clear();
-#endif
 }
 
 /** Tests if the container is empty. 
@@ -40,11 +39,7 @@ template<class ObjectT>
 typename enable_if<is_interval_container<ObjectT>, bool>::type
 is_empty(const ObjectT& object)
 {
-#ifdef ITL_CONCEPT_ORIENTED //JODO find final decision
     return object.begin() == object.end();
-#else //ITL_OBJECT_ORIENTED
-    return object.empty();
-#endif
 }
 
 
@@ -57,7 +52,8 @@ typename enable_if<has_same_concept<is_interval_map, ObjectT, OperandT>,
                    bool>::type 
 contains(const ObjectT& super, const OperandT& sub)
 {
-    return Interval_Set::contains(super, sub);
+    return interval_map_contains<ObjectT>::apply(super, sub);
+    //CL?? return Interval_Set::contains(super, sub);
 }
 
 template<class ObjectT, class OperandT>
@@ -74,7 +70,8 @@ typename enable_if<mpl::and_<is_interval_map<ObjectT>,
                    bool>::type
 contains(const ObjectT& super, const OperandT& sub)
 { 
-    return Interval_Map::contains(super, sub);
+    return interval_map_contains<ObjectT>::apply(super, sub);
+    //CL?? return Interval_Map::contains(super, sub);
 }
 
 template<class ObjectT, class OperandT>
@@ -91,7 +88,8 @@ typename enable_if<is_cross_derivative<ObjectT, OperandT>,
                    bool>::type
 contains(const ObjectT& super, const OperandT& sub)
 { 
-    return Interval_Map::contains(super, sub);
+    return interval_map_contains_key<ObjectT, is_total<ObjectT>::value>::apply(super, sub);
+    //CL?? return Interval_Map::contains(super, sub);
 }
 
 template<class ObjectT, class IntervalSetT>
@@ -100,7 +98,8 @@ typename enable_if<mpl::and_<is_interval_map<ObjectT>,
                    bool>::type
 contains(const ObjectT& super, const IntervalSetT& sub)
 {
-    return Interval_Map::contains(super, sub);
+    return interval_map_contains_key<ObjectT, is_total<ObjectT>::value>::apply(super, sub);
+    //CL?? return Interval_Map::contains(super, sub);
 }
 
 
@@ -408,7 +407,7 @@ typename enable_if<combines_right_to_interval_container<ObjectT, OperandT>,
                    ObjectT>::type&
 erase(ObjectT& object, const OperandT& operand)
 {
-    if(ITL_FUN_REN(empty, is_empty, operand))
+    if(itl::is_empty(operand))
         return object;
 
     typename OperandT::const_iterator common_lwb;
@@ -490,7 +489,7 @@ intersects(const LeftT& left, const RightT& right)
     while(it_ != right_common_upper_)
     {
         left.add_intersection(intersection, *it_++);
-        if(!ITL_FUN_REN(empty, is_empty, intersection))
+        if(!itl::is_empty(intersection))
             return true;
     }
 
@@ -509,7 +508,7 @@ intersects(const LeftT& left, const RightT& right)
 {
     LeftT intersection;
 
-    if(ITL_FUN_REN(empty, is_empty, left) || ITL_FUN_REN(empty, is_empty, right))
+    if(itl::is_empty(left) || itl::is_empty(right))
         return false;
 
     typename RightT::const_iterator right_common_lower_;
@@ -522,7 +521,7 @@ intersects(const LeftT& left, const RightT& right)
     while(it_ != right_common_upper_)
     {
         left.add_intersection(intersection, RightT::key_value(it_++));
-        if(!ITL_FUN_REN(empty, is_empty, intersection))
+        if(!itl::is_empty(intersection))
             return true;
     }
 
@@ -616,7 +615,7 @@ typename enable_if<is_interval_container<ObjectT>,
 hull(const ObjectT& object)
 {
     return 
-        ITL_FUN_REN(empty, is_empty, object) ? neutron<typename ObjectT::interval_type>::value()
+        itl::is_empty(object) ? neutron<typename ObjectT::interval_type>::value()
         : hull((ObjectT::key_value(object.begin())), ObjectT::key_value(object.rbegin()));
 }
 

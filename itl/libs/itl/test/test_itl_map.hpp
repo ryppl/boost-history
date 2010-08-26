@@ -19,6 +19,43 @@ template <class T, class U, class Trt,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
           >
+void itl_map_contains_4_bicremental_types()
+{
+    typedef IntervalMap<T,U,Trt> IntervalMapT;
+    typedef itl::map<T,U,Trt> MapT;
+    typedef itl::set<T> SetT;
+	typedef typename MapT::element_type map_element_type;
+
+    IntervalMapT itv_map_a;
+    itv_map_a.add(IDv(2,4,1)).add(IIv(6,7,3));
+
+    MapT map_a;
+    segmental::atomize(map_a, itv_map_a);
+
+    BOOST_CHECK_EQUAL( contains(map_a, MK_u(3)), true );
+    BOOST_CHECK_EQUAL( within(MK_u(3), map_a),   true );
+
+	map_element_type key_value_pair(MK_v(6), MK_u(3));
+    BOOST_CHECK( contains(map_a, key_value_pair) );
+    BOOST_CHECK( within(key_value_pair, map_a) );
+
+    //found = map_a.find(MK_v(5));
+
+    //BOOST_CHECK_EQUAL( found == map_a.end(), true );
+    //BOOST_CHECK_EQUAL( map_a(MK_v(5)), MK_u(0) );
+}
+
+
+template <class T, class U, class Trt,
+          template<class T, class U,
+                   class Traits = Trt,
+                   ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
+                   ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
+                   ITL_ALLOC   Alloc   = std::allocator
+                  >class IntervalMap
+          >
 void itl_map_find_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;

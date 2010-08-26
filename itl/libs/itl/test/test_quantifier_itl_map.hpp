@@ -22,7 +22,7 @@ template <class T, class U, class Trt,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
           >
-void quantifier_map_check_monoid_plus_4_bicremental_types()
+void itv_quantifier_check_monoid_plus_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
     typedef itl::map<T,U,Trt> MapT;
@@ -55,7 +55,7 @@ template <class T, class U, class Trt,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
           >
-void quantifier_map_check_monoid_et_4_bicremental_types()
+void itv_quantifier_check_monoid_et_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
     typedef itl::map<T,U,Trt> MapT;
@@ -91,7 +91,7 @@ template <class T, class U, class Trt,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
           >
-void quantifier_map_check_abelian_monoid_plus_4_bicremental_types()
+void itv_quantifier_check_abelian_monoid_plus_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
     typedef itl::map<T,U,Trt> MapT;
@@ -124,7 +124,7 @@ template <class T, class U, class Trt,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
           >
-void quantifier_map_check_abelian_monoid_et_4_bicremental_types()
+void itv_quantifier_check_abelian_monoid_et_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
     typedef itl::map<T,U,Trt> MapT;
@@ -160,7 +160,7 @@ template <class T, class U, class Trt,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
           >
-void quantifier_map_check_partial_invertive_monoid_plus_4_bicremental_types()
+void itv_quantifier_check_partial_invertive_monoid_plus_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
     typedef itl::map<T,U,Trt> MapT;
@@ -195,7 +195,7 @@ template <class T, class U, class Trt,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
           >
-void quantifier_map_check_partial_invertive_monoid_plus_prot_inv_4_bicremental_types()
+void itv_quantifier_check_partial_invertive_monoid_plus_prot_inv_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
     typedef itl::map<T,U,Trt> MapT;
@@ -234,7 +234,7 @@ template <class T, class U, class Trt,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
           >
-void quantifier_map_check_abelian_group_plus_4_bicremental_types()
+void itv_quantifier_check_abelian_group_plus_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
     typedef itl::map<T,U,Trt> MapT;
@@ -269,7 +269,7 @@ template <class T, class U, class Trt,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
           >
-void quantifier_map_check_abelian_group_plus_prot_inv_4_bicremental_types()
+void itv_quantifier_check_abelian_group_plus_prot_inv_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
     typedef itl::map<T,U,Trt> MapT;

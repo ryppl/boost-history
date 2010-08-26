@@ -40,6 +40,8 @@ struct mapping_pair
     DomainT   key;
     CodomainT data;
 
+    mapping_pair():key(), data(){}
+
     mapping_pair(const DomainT& key_value, const CodomainT& data_value)
         :key(key_value), data(data_value){}
 
@@ -479,7 +481,7 @@ public:
     {
         typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> operand_type;
 
-        if(ITL_FUN_REN(empty, is_empty, operand))
+        if(itl::is_empty(operand))
             return *that();
 
         typename operand_type::const_iterator common_lwb;
@@ -543,7 +545,7 @@ public:
     )const
     {
         typedef IntervalSet<DomainT,Compare,Interval,Alloc> sectant_type;
-        if(ITL_FUN_REN(empty, is_empty, sectant)) 
+        if(itl::is_empty(sectant)) 
             return;
 
         typename sectant_type::const_iterator common_lwb;
@@ -608,7 +610,7 @@ public:
 
         type intersection;
         add_intersection(intersection, interval_value_pair);
-        return !ITL_FUN_REN(empty, is_empty, intersection); 
+        return !itl::is_empty(intersection); 
     }
 
 
@@ -736,17 +738,14 @@ public:
     static const key_type& key_value(IteratorT value_){ return (*value_).first; }
 
     template<typename IteratorT>
-    static const data_type& data_value(IteratorT value_){ return (*value_).second; }
-
-    template<typename IteratorT>
     static codomain_type codomain_value(IteratorT value_){ return (*value_).second; }
 
     template<typename LeftIterT, typename RightIterT>
     static bool key_less(LeftIterT left_, RightIterT right_) 
     { return key_compare()((*left_).first, (*right_).first); }
 
-    static value_type make_domain_element(const domain_type& dom_val, const codomain_type& codom_val)
-    { return value_type(interval_type(dom_val), codom_val); }
+    static value_type make_value(const key_type& key_value, const codomain_type& codom_val)
+    { return value_type(key_value, codom_val); }
 
 protected:
     sub_type* that() { return static_cast<sub_type*>(this); }
@@ -773,7 +772,7 @@ protected:
     }
 
     template <class Combiner>
-    std::pair<iterator,bool> map_insert(const interval_type& inter_val, const codomain_type& co_val)
+    std::pair<iterator,bool> _map_insert(const interval_type& inter_val, const codomain_type& co_val)
     {
         if(mpl::and_<is_total<type>, has_inverse<codomain_type>, is_negative<Combiner> >::value)
             return this->_map.insert(value_type(inter_val, version<Combiner>()(co_val)));
@@ -784,7 +783,7 @@ protected:
     // Insertion with hint, that does report insertion failure
     template <class Combiner>
     std::pair<iterator, bool> 
-        map_insert(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
+        _map_insert(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
     {
         iterator inserted_
             = this->_map.insert(prior_, value_type(inter_val, co_val));
@@ -799,7 +798,7 @@ protected:
 
     template <class Combiner>
     std::pair<iterator, bool> 
-        map_add(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
+        _map_add(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
     {
         // Never try to insert a neutron into a neutron absorber here:
         BOOST_ASSERT(!(Traits::absorbs_neutrons && co_val==Combiner::neutron()));
@@ -1563,7 +1562,7 @@ template
 struct is_set<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
     typedef is_set<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
-    BOOST_STATIC_CONSTANT(bool, value = true); 
+    BOOST_STATIC_CONSTANT(bool, value = (is_set<CodomainT>::value)); 
 };
 
 template 

@@ -51,17 +51,17 @@ private:
 // interval maps with MyObject data we need a function
 // 'to_segment' that maps an object of type MyObject into
 // the value type to the interval map we want to tranform to ...
-pair<interval<int>, int> to_segment(const MyObject& myObj)
+pair<discrete_interval<int>, int> to_segment(const MyObject& myObj)
 {
-    return std::pair< interval<int>, int >
-        (interval<int>::closed(myObj.from(), myObj.to()), myObj.value());
+    return std::pair< discrete_interval<int>, int >
+        (discrete_interval<int>::closed(myObj.from(), myObj.to()), myObj.value());
 }
 
 // ... there may be another function that returns the interval
 // of an object only
-interval<int> to_interval(const MyObject& myObj)
+discrete_interval<int> to_interval(const MyObject& myObj)
 {
-    return interval<int>::closed(myObj.from(), myObj.to());
+    return discrete_interval<int>::closed(myObj.from(), myObj.to());
 }
 
 

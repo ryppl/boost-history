@@ -44,12 +44,12 @@ interval_set<date> weekends(const discrete_interval<date>& scope)
     interval_set<date> weekends;
 
     date cur_weekend_sat 
-        = scope.first() 
-          + days(days_until_weekday(scope.first(), greg_weekday(Saturday))) 
+        = first(scope) 
+          + days(days_until_weekday(first(scope), greg_weekday(Saturday))) 
           - weeks(1);
     week_iterator week_iter(cur_weekend_sat);
 
-    for(; week_iter <= scope.last(); ++week_iter)
+    for(; week_iter <= last(scope); ++week_iter)
         weekends += discrete_interval<date>::rightopen(*week_iter, *week_iter + days(2));
 
     weekends &= scope; // cut off the surplus
@@ -144,14 +144,14 @@ void man_power()
     manpower += bodos_working_hours;
 
 
-    cout << scope.first() << " - " << scope.last() 
+    cout << first(scope) << " - " << last(scope) 
          << "    available man-power:" << endl;
     cout << "---------------------------------------------------------------\n";
 
     for(interval_map<date,int>::iterator it = manpower.begin(); 
         it != manpower.end(); it++)
     {
-        cout << it->first.first() << " - " << it->first.last() 
+        cout << first(it->first) << " - " << last(it->first) 
              << " -> " << it->second << endl;
     }
 }

@@ -23,7 +23,8 @@ namespace boost{namespace itl
 
                 for(typename IntervalContainerT::domain_type element = first(itv); element <= last(itv); ++element)
                 {
-                    result.insert(ElementContainerT::make_element(element, coval));
+                    insert(result, ElementContainerT::make_value(element, coval));
+                    //CL result.insert(ElementContainerT::make_element(element, coval));
                 }
             }
         }
@@ -31,12 +32,13 @@ namespace boost{namespace itl
         template <typename IntervalContainerT, typename ElementContainerT>
         void cluster(IntervalContainerT& result, const ElementContainerT& src)
         {
+			typedef typename IntervalContainerT::key_type key_type;
             ITL_const_FORALL(typename ElementContainerT, element_, src)
             {
                 const typename ElementContainerT::key_type&  key  = ElementContainerT::key_value(element_);
-                const typename ElementContainerT::data_type& data = ElementContainerT::data_value(element_);
+                const typename ElementContainerT::data_type& data = ElementContainerT::codomain_value(element_);
 
-                result += IntervalContainerT::make_domain_element(key, data);
+                result += IntervalContainerT::make_value(key_type(key), data);
             }
         }
 

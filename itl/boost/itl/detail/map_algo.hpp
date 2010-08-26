@@ -24,80 +24,8 @@ namespace boost{namespace itl
 namespace Map 
 {
 
-template<class MapType>
-bool within(const MapType& sub, const MapType& super)
-{
-    if(&super == &sub)                   return true;
-    if(ITL_FUN_REN(empty, is_empty, sub))               return true;
-    if(ITL_FUN_REN(empty, is_empty, super))             return false;
-    if(super.size()    < sub.size()    ) return false;
-    if(*sub.begin()    < *super.begin()) return false;
-    if(*super.rbegin() < *sub.rbegin() ) return false;
-
-    typename MapType::const_iterator common_lwb_;
-    typename MapType::const_iterator common_upb_;
-    if(!Set::common_range(common_lwb_, common_upb_, sub, super))
-        return false;
-
-    typename MapType::const_iterator sub_ = sub.begin(), super_;
-    while(sub_ != sub.end())
-    {
-        super_ = super.find((*sub_).first);
-        if(super_ == super.end()) 
-            return false;
-        else if(!(sub_->second == super_->second))
-            return false;
-        sub_++;
-    }
-    return true;
-}
-
-template<class MapType>
-bool within(const typename MapType::set_type& sub, const MapType& super)
-{
-    typedef typename MapType::set_type SetType;
-
-    if(sub.empty())                      return true;
-    if(super.empty())                    return false;
-    if(super.size()    < sub.size()    ) return false;
-    if(*sub.begin()    < *super.begin()) return false;
-    if(*super.rbegin() < *sub.rbegin() ) return false;
-
-    typename SetType::const_iterator common_lwb_;
-    typename SetType::const_iterator common_upb_;
-    if(!Set::common_range(common_lwb_, common_upb_, sub, super))
-        return false;
-
-    typename SetType::const_iterator sub_ = sub.begin();
-    typename MapType::const_iterator super_;
-    while(sub_ != sub.end())
-    {
-        super_ = super.find(*sub_++);
-        if(super_ == super.end()) 
-            return false;
-    }
-    return true;
-}
-
-
-template <class MapType>
-bool intersects(const MapType& left, const MapType& right)
-{
-    typename MapType::const_iterator right_common_lower_;
-    typename MapType::const_iterator right_common_upper_;
-    if(!Set::common_range(right_common_lower_, right_common_upper_, right, left))
-        return false;
-
-    typename MapType::const_iterator right_ = right_common_lower_;
-    while(right_ != right_common_upper_)
-        if(left.intersects(*right_++))
-            return true;
-
-    return false;
-}
-
 template <class ObjectT, class CoObjectT>
-bool key_intersects(const ObjectT& left, const CoObjectT& right)
+bool intersects(const ObjectT& left, const CoObjectT& right)
 {
     typename CoObjectT::const_iterator right_common_lower_;
     typename CoObjectT::const_iterator right_common_upper_;
@@ -112,53 +40,12 @@ bool key_intersects(const ObjectT& left, const CoObjectT& right)
     return false;
 }
 
-//----------------------------------------------------------------------
-// flip
-//----------------------------------------------------------------------
-template<class MapType>
-void flip(MapType& result, const MapType& x2)
-{
-    if(mpl::and_<is_total<MapType>, absorbs_neutrons<MapType> >::value)
-    {
-        ITL_FUN_CALL(clear, result);
-        return;
-    }
 
-    typename MapType::const_iterator x2_ = x2.begin(), cur_x2_, x1_;
-    while(x2_ != x2.end()) 
-    {
-        cur_x2_ = x2_;
-        std::pair<typename MapType::iterator,bool> insertion 
-            = result.insert(*x2_++);
-        if(!insertion.second)
-        {
-            //result.erase(insertion.first);
-            if(is_set<typename MapType::codomain_type>::value)
-            {
-                typename MapType::iterator res_ = insertion.first;
-                typename MapType::codomain_type common_value = res_->second;
-                typename MapType::key_type key_value = res_->first;
-                typename MapType::inverse_codomain_intersect()(common_value, cur_x2_->second);
-                result.subtract(*res_);
-                result.add(typename MapType::value_type(key_value, common_value));
-            }
-            else
-                result.subtract(*insertion.first);
-        }
-    }
-
-    if(mpl::and_<is_total<MapType>, mpl::not_<absorbs_neutrons<MapType> > >::value)
-        ITL_FORALL(typename MapType, it_, result)
-            it_->second = neutron<typename MapType::codomain_type>::value();
-}
-
-
-
-template<class MapType>
-typename MapType::const_iterator next_proton(typename MapType::const_iterator& iter_, const MapType& object)
+template<class MapT>
+typename MapT::const_iterator next_proton(typename MapT::const_iterator& iter_, const MapT& object)
 {
     while(   iter_ != object.end() 
-          && iter_->second == neutron<typename MapType::codomain_type>::value())
+          && iter_->second == neutron<typename MapT::codomain_type>::value())
         ++iter_;
 
     return iter_;
@@ -166,14 +53,14 @@ typename MapType::const_iterator next_proton(typename MapType::const_iterator& i
 
 /** Function template <tt>lexicographical_equal</tt> implements 
 lexicographical equality except for neutronic content values. */
-template<class MapType>
-bool lexicographical_protonic_equal(const MapType& left, const MapType& right)
+template<class MapT>
+bool lexicographical_protonic_equal(const MapT& left, const MapT& right)
 {
     if(&left == &right)        
         return true;
 
-    typename MapType::const_iterator left_  = left.begin();
-    typename MapType::const_iterator right_ = right.begin();
+    typename MapT::const_iterator left_  = left.begin();
+    typename MapT::const_iterator right_ = right.begin();
 
     left_  = next_proton(left_,  left);
     right_ = next_proton(right_, right);

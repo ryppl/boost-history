@@ -29,7 +29,7 @@ typedef unsigned char bound_type; //JODO encapsulation in a small class
 //==============================================================================
 
 class interval_bounds; //JODO separate dynamically and statically bounded interval concepts
-template<class DomainT, ITL_COMPARE Compare> class bounded_value;
+template<class DomainT> class bounded_value;
 
 //------------------------------------------------------------------------------
 //- Adapter classes
@@ -54,8 +54,8 @@ struct dynamic_intervals
     typedef typename IntervalT::domain_compare domain_compare;
 
     static IntervalT construct(const domain_type& lo, const domain_type& up, interval_bounds bounds);
-    static IntervalT construct_bounded(const bounded_value<domain_type,domain_compare>& lo, 
-                                       const bounded_value<domain_type,domain_compare>& up);
+    static IntervalT construct_bounded(const bounded_value<domain_type>& lo, 
+                                       const bounded_value<domain_type>& up);
 };
 
 
@@ -571,7 +571,7 @@ typename boost::enable_if<is_discrete_interval<IntervalT>,
     typename IntervalT::size_type>::type
 cardinality(const IntervalT& object)
 {
-    return (last(object) + itl::unon<IntervalT::size_type>::value()) - first(object);
+    return (last(object) + itl::unon<typename IntervalT::size_type>::value()) - first(object);
 }
 
 
@@ -592,7 +592,7 @@ typename boost::enable_if<is_discrete_asymmetric<IntervalT>,
     typename IntervalT::size_type>::type
 cardinality(const IntervalT& object)
 {
-    return (last(object) + itl::unon<IntervalT::size_type>::value()) - first(object);
+    return (last(object) + itl::unon<typename IntervalT::size_type>::value()) - first(object);
 }
 
 
@@ -601,7 +601,9 @@ cardinality(const IntervalT& object)
 
 //- size -----------------------------------------------------------------------
 template<class IntervalT>
-inline typename IntervalT::size_type size(const IntervalT& object)
+inline typename enable_if<is_interval<IntervalT>, 
+                          typename IntervalT::size_type>::type
+size(const IntervalT& object)
 {
     return cardinality(object);
 }
@@ -620,7 +622,7 @@ inline typename boost::enable_if<is_discrete_interval<IntervalT>,
     typename IntervalT::difference_type>::type
 length(const IntervalT& object)
 {
-    return    (last(object) + itl::unon<IntervalT::difference_type>::value()) 
+    return    (last(object) + itl::unon<typename IntervalT::difference_type>::value()) 
             -  first(object);
 }
 
@@ -637,7 +639,7 @@ inline typename boost::enable_if<is_discrete_asymmetric<IntervalT>,
     typename IntervalT::difference_type>::type
 length(const IntervalT& object)
 {
-    return    (last(object) + itl::unon<IntervalT::difference_type>::value()) 
+    return    (last(object) + itl::unon<typename IntervalT::difference_type>::value()) 
             -  first(object);
 }
 

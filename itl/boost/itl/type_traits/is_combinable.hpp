@@ -15,6 +15,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/mpl/not.hpp> 
 #include <boost/type_traits/is_same.hpp>
 #include <boost/itl/type_traits/is_concept_equivalent.hpp>
+#include <boost/itl/type_traits/is_interval_container.hpp>
 
 namespace boost{namespace itl
 {
