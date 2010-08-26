@@ -7,6 +7,8 @@
 #define BOOST_BITFIELD_VECTOR_BASE_HPP
 #include <cstddef>
 #include <climits>
+#include <limits>
+// #include <boost/type_traits/integral_constant.hpp>
 
 namespace boost { namespace detail {
 
@@ -16,6 +18,7 @@ namespace boost { namespace detail {
  */
 typedef unsigned char storage_t;
 typedef storage_t* storage_ptr_t;
+
 
 /** bitfield_vector_base
  *  This a bitfield_vector's base class (if you can't tell by the name) and it

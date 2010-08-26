@@ -9,6 +9,8 @@
 #include <boost/integer/detail/bitfield_vector/bitfield_vector_base.hpp>
 #include <boost/integer/detail/bitfield_vector/bitfield_vector_member_impl.hpp>
 #include <boost/integer/detail/bitfield_vector/iterator_base.hpp>
+#include <algorithm>
+#include <iterator>
 
 namespace boost {
 
@@ -510,13 +512,13 @@ public:
 
     bitfield_vector(_self const& x );
 
-    // TODO Implement me!!!
-    // should just call clear maybe?
-    ~bitfield_vector() {
+    /** This calls a the base classes destructor and 
+     *  that frees all of the memory.
+     */
+    ~bitfield_vector() { }
 
+    _self& operator=(_self const& x) {
     }
-
-    _self& operator=(_self const& x);
 
     /** Begin and end and all variations of begin and end for all iterator
      *  types supported by this data structure.
@@ -589,7 +591,8 @@ public:
     void insert(iterator position, size_type n, value_type const& x);
 
     template <class InputIterator>
-    void insert(iterator position, InputIterator first, InputIterator last);
+    void insert(iterator position, InputIterator first, InputIterator last) {
+    }
 
     iterator erase(iterator position);
     iterator erase(iterator first, iterator last);
@@ -599,12 +602,50 @@ public:
 
 protected:
 
-    /** Inserts a value at the location 
-     *  of the iterator.
-     *  TODO Implement this
+    /**  */
+    template <typename InputIter>
+    void assign_impl(InputIter iter1, InputIter iter2) {
+        std::memset(this->m_impl.m_start,
+            0,
+            this->m_impl->m_end - this->m_impl->m_start);
+        // TODO: displatch this correctly!
+        using namespace std;
+        size_type dist = distance(iter1,iter2);
+        if(dist >= (this->m_impl->m_end - this->m_impl->m_start)) {
+            
+        }
+        for(;iter1 != iter2; ++iter1) {
+            
+        }
+        
+    }
+
+    /** Does a single allocation of a fixed size 
+     *  This is for making sure that if an exception does occur that I can
+     *  catch it and recover correctly with out leaking any memory.
+     *  Not responsible for deallocating memory.
      */
-    template <typename Iter>
-    void _insert_at(Iter iter, value_type value) {
+    void allocate_storage(size_type allocation_size) {
+        // must save the original pointer so that I can maintain the state
+        // of this object and NOT leak memory.
+        pointer old_start = this->m_impl.m_start;
+        try {
+            // allocate the necessary memory to hold all of the bitfields.
+            // This CAN throw std::bad_alloc
+            this->m_impl.m_start
+                = this->allocate_impl(allocation_size);
+        }catch(...) {
+            this->m_impl.m_start = old_start;
+            throw;
+        }
+    }
+
+    /** This deallocates the storage. */
+    void deallocate_storage() {
+        this->deallocate_impl(
+            this->m_impl.m_start,
+            this->m_impl.m_end - this->m_impl.m_start
+        );
     }
 
     /** allocates a chunck of memory of the correct size and then
@@ -620,6 +661,7 @@ protected:
         min_allocation_size = (min_allocation_size/CHAR_BIT)
             + size_type((min_allocation_size%CHAR_BIT)!=0);
 
+
         // calculate the correct size of the allocation
         // by getting the closest power of 2 greater then the number of bytes
         // needed to stor n bitfields in.
@@ -628,21 +670,14 @@ protected:
             corrected_allocation_size *= 2;
         }
 
-        // must save the original pointer so that I can maintain the state
-        // of this object and NOT leak memory.
-        pointer old_start = this->m_impl.m_start;
-        try {
-            // allocate the necessary memory to hold all of the bitfields.
-            // This CAN throw std::bad_alloc
-            this->m_impl.m_start = this->allocate_impl(corrected_allocation_size);
-            std::memset(this->m_impl.m_start,0,corrected_allocation_size);
-            // this line will never throw because this is pointer arithmatic
-            // and integer assignment.
-            this->m_impl.m_end = this->m_impl.m_start + corrected_allocation_size;
-        }catch(...) {
-            this->m_impl.m_start = old_start;
-            throw;
-        }
+        // Call the allocate storage because that is responsible for
+        // if there is a need deallocating 
+        allocate_storage( corrected_allocation_size );
+
+        std::memset(this->m_impl.m_start,0,corrected_allocation_size);
+        // this line will never throw because this is pointer arithmatic
+        // and integer assignment.
+        this->m_impl.m_end = this->m_impl.m_start + corrected_allocation_size;
 
         // once allocation is completed next comes filling the bitfields
         // with val.
