@@ -7,12 +7,11 @@
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
-#if !defined(BOOST_SPIRIT_QUICKBOOK_PHRASE_HPP)
-#define BOOST_SPIRIT_QUICKBOOK_PHRASE_HPP
 
-#include "./detail/quickbook.hpp"
-#include "./detail/actions_class.hpp"
-#include "detail/utils.hpp"
+#include "./phrase_grammar.hpp"
+#include "./quickbook.hpp"
+#include "./actions_class.hpp"
+#include "./utils.hpp"
 #include <boost/spirit/include/classic_core.hpp>
 #include <boost/spirit/include/classic_confix.hpp>
 #include <boost/spirit/include/classic_chset.hpp>
@@ -59,481 +58,496 @@ namespace quickbook
             ;
     }
 
-    struct phrase_grammar : grammar<phrase_grammar>
+    template <typename Scanner>
+    phrase_grammar::definition<Scanner>::definition(phrase_grammar const& self)
     {
-        phrase_grammar(quickbook::actions& actions, bool& no_eols)
-            : no_eols(no_eols), actions(actions) {}
+        using detail::var;
+        quickbook::actions& actions = self.actions;
 
-        template <typename Scanner>
-        struct definition
+        space =
+            *(space_p | comment)
+            ;
+
+        blank =
+            *(blank_p | comment)
+            ;
+
+        eol = blank >> eol_p
+            ;
+
+        phrase_end =
+            ']' |
+            if_p(var(self.no_eols))
+            [
+                eol >> eol                      // Make sure that we don't go
+            ]                                   // past a single block, except
+            ;                                   // when preformatted.
+
+        hard_space =
+            (eps_p - (alnum_p | '_')) >> space  // must not be preceded by
+            ;                                   // alpha-numeric or underscore
+
+        comment =
+            "[/" >> *(dummy_block | (anychar_p - ']')) >> ']'
+            ;
+
+        dummy_block =
+            '[' >> *(dummy_block | (anychar_p - ']')) >> ']'
+            ;
+
+        common =
+                macro
+            |   phrase_markup
+            |   code_block
+            |   inline_code
+            |   simple_format
+            |   escape
+            |   comment
+            ;
+
+        macro =
+            eps_p(actions.macro                 // must not be followed by
+                >> (eps_p - (alpha_p | '_')))   // alpha or underscore
+            >> actions.macro                    [actions.do_macro]
+            ;
+
+        static const bool true_ = true;
+        static const bool false_ = false;
+
+        template_ =
+            (
+                ch_p('`')                       [assign_a(actions.template_escape,true_)]
+                |
+                eps_p                           [assign_a(actions.template_escape,false_)]
+            )
+            >>
+            ( (
+                (eps_p(punct_p)
+                    >> actions.templates.scope
+                )                               [assign_a(actions.template_identifier)]
+                                                [clear_a(actions.template_args)]
+                >> !template_args
+            ) | (
+                (actions.templates.scope
+                    >> eps_p(hard_space)
+                )                               [assign_a(actions.template_identifier)]
+                                                [clear_a(actions.template_args)]
+                >> space
+                >> !template_args
+            ) )
+            >> eps_p(']')
+            ;
+
+        template_args =
+            if_p(qbk_since(105u)) [
+                template_args_1_5
+            ].else_p [
+                template_args_1_4
+            ]
+            ;
+
+        template_args_1_4 = template_arg_1_4 >> *(".." >> template_arg_1_4);
+
+        template_arg_1_4 =
+                (   eps_p(*blank_p >> eol_p)    [assign_a(actions.template_block, true_)]
+                |   eps_p                       [assign_a(actions.template_block, false_)]
+                )
+            >>  template_inner_arg_1_4          [actions.template_arg]
+            ;
+
+        template_inner_arg_1_4 =
+            +(brackets_1_4 | (anychar_p - (str_p("..") | ']')))
+            ;
+
+        brackets_1_4 =
+            '[' >> template_inner_arg_1_4 >> ']'
+            ;
+
+        template_args_1_5 = template_arg_1_5 >> *(".." >> template_arg_1_5);
+
+        template_arg_1_5 =
+                (   eps_p(*blank_p >> eol_p)    [assign_a(actions.template_block, true_)]
+                |   eps_p                       [assign_a(actions.template_block, false_)]
+                )
+            >>  (+(brackets_1_5 | ('\\' >> anychar_p) | (anychar_p - (str_p("..") | '[' | ']'))))
+                                                [actions.template_arg]
+            ;
+
+        template_inner_arg_1_5 =
+            +(brackets_1_5 | ('\\' >> anychar_p) | (anychar_p - (str_p('[') | ']')))
+            ;
+
+        brackets_1_5 =
+            '[' >> template_inner_arg_1_5 >> ']'
+            ;
+
+        inline_code =
+            '`' >>
+            (
+               *(anychar_p -
+                    (   '`'
+                    |   (eol >> eol)            // Make sure that we don't go
+                    )                           // past a single block
+                ) >> eps_p('`')
+            )                                   [actions.inline_code]
+            >>  '`'
+            ;
+
+        code_block =
+                (
+                    "```" >>
+                    (
+                       *(anychar_p - "```")
+                            >> eps_p("```")
+                    )                           [actions.code_block]
+                    >>  "```"
+                )
+            |   (
+                    "``" >>
+                    (
+                       *(anychar_p - "``")
+                            >> eps_p("``")
+                    )                           [actions.code_block]
+                    >>  "``"
+                )
+            ;
+
+        simple_format =
+                simple_bold
+            |   simple_italic
+            |   simple_underline
+            |   simple_teletype
+            ;
+
+        simple_phrase_end = '[' | phrase_end;
+
+        simple_markup(simple_bold,
+            '*', actions.simple_bold, simple_phrase_end);
+        simple_markup(simple_italic,
+            '/', actions.simple_italic, simple_phrase_end);
+        simple_markup(simple_underline,
+            '_', actions.simple_underline, simple_phrase_end);
+        simple_markup(simple_teletype,
+            '=', actions.simple_teletype, simple_phrase_end);
+
+        phrase =
+           *(   common
+            |   comment
+            |   (anychar_p - phrase_end)        [actions.plain_char]
+            )
+            ;
+
+        phrase_markup =
+                '['
+            >>  (   cond_phrase
+                |   image
+                |   url
+                |   link
+                |   anchor
+                |   source_mode
+                |   funcref
+                |   classref
+                |   memberref
+                |   enumref
+                |   macroref
+                |   headerref
+                |   conceptref
+                |   globalref
+                |   bold
+                |   italic
+                |   underline
+                |   teletype
+                |   strikethrough
+                |   quote
+                |   replaceable
+                |   footnote
+                |   template_                   [actions.do_template]
+                |   str_p("br")                 [actions.break_]
+                )
+            >>  ']'
+            ;
+
+        escape =
+                str_p("\\ ")                    // ignore an escaped space
+            |   '\\' >> punct_p                 [actions.raw_char]
+            |   "\\u" >> repeat_p(4) [chset<>("0-9a-fA-F")]
+                                                [actions.escape_unicode]
+            |   "\\U" >> repeat_p(8) [chset<>("0-9a-fA-F")]
+                                                [actions.escape_unicode]
+            |   (
+                    ("'''" >> !eol)             [actions.escape_pre]
+                >>  *(anychar_p - "'''")        [actions.raw_char]
+                >>  str_p("'''")                [actions.escape_post]
+                )
+            ;
+
+        macro_identifier =
+            +(anychar_p - (space_p | ']'))
+            ;
+
+        cond_phrase =
+                '?' >> blank
+            >>  macro_identifier                [actions.cond_phrase_pre]
+            >>  (!phrase)                       [actions.cond_phrase_post]
+            ;
+
+        image =
+                '$' >> blank                    [clear_a(actions.attributes)]
+            >>  if_p(qbk_since(105u)) [
+                        (+(
+                            *space_p
+                        >>  +(anychar_p - (space_p | phrase_end | '['))
+                        ))                       [assign_a(actions.image_fileref)]
+                    >>  hard_space
+                    >>  *(
+                            '['
+                        >>  (*(alnum_p | '_'))  [assign_a(actions.attribute_name)]
+                        >>  space
+                        >>  (*(anychar_p - (phrase_end | '[')))
+                                                [actions.attribute]
+                        >>  ']'
+                        >>  space
+                        )
+                ].else_p [
+                        (*(anychar_p -
+                            phrase_end))        [assign_a(actions.image_fileref)]
+                ]
+            >>  eps_p(']')                      [actions.image]
+            ;
+            
+        url =
+                '@'
+            >>  (*(anychar_p -
+                    (']' | hard_space)))        [actions.url_pre]
+            >>  (   eps_p(']')
+                |   (hard_space >> phrase)
+                )                               [actions.url_post]
+            ;
+
+        link =
+                "link" >> hard_space
+            >>  (*(anychar_p -
+                    (']' | hard_space)))        [actions.link_pre]
+            >>  (   eps_p(']')
+                |   (hard_space >> phrase)
+                )                               [actions.link_post]
+            ;
+
+        anchor =
+                '#'
+            >>  blank
+            >>  (   *(anychar_p -
+                        phrase_end)
+                )                               [actions.anchor]
+            ;
+
+        funcref =
+            "funcref" >> hard_space
+            >>  (*(anychar_p -
+                    (']' | hard_space)))        [actions.funcref_pre]
+            >>  (   eps_p(']')
+                |   (hard_space >> phrase)
+                )                               [actions.funcref_post]
+            ;
+
+        classref =
+            "classref" >> hard_space
+            >>  (*(anychar_p -
+                    (']' | hard_space)))        [actions.classref_pre]
+            >>  (   eps_p(']')
+                |   (hard_space >> phrase)
+                )                               [actions.classref_post]
+            ;
+
+        memberref =
+            "memberref" >> hard_space
+            >>  (*(anychar_p -
+                    (']' | hard_space)))        [actions.memberref_pre]
+            >>  (   eps_p(']')
+                |   (hard_space >> phrase)
+                )                               [actions.memberref_post]
+            ;
+
+        enumref =
+            "enumref" >> hard_space
+            >>  (*(anychar_p -
+                    (']' | hard_space)))        [actions.enumref_pre]
+            >>  (   eps_p(']')
+                |   (hard_space >> phrase)
+                )                               [actions.enumref_post]
+            ;
+
+        macroref =
+            "macroref" >> hard_space
+            >>  (*(anychar_p -
+                    (']' | hard_space)))        [actions.macroref_pre]
+            >>  (   eps_p(']')
+                |   (hard_space >> phrase)
+                )                               [actions.macroref_post]
+            ;
+
+        headerref =
+            "headerref" >> hard_space
+            >>  (*(anychar_p -
+                    (']' | hard_space)))        [actions.headerref_pre]
+            >>  (   eps_p(']')
+                |   (hard_space >> phrase)
+                )                               [actions.headerref_post]
+            ;
+
+        conceptref =
+            "conceptref" >> hard_space
+            >>  (*(anychar_p -
+                    (']' | hard_space)))        [actions.conceptref_pre]
+            >>  (   eps_p(']')
+                |   (hard_space >> phrase)
+                )                               [actions.conceptref_post]
+            ;
+
+        globalref =
+            "globalref" >> hard_space
+            >>  (*(anychar_p -
+                    (']' | hard_space)))        [actions.globalref_pre]
+            >>  (   eps_p(']')
+                |   (hard_space >> phrase)
+                )                               [actions.globalref_post]
+            ;
+
+        bold =
+                ch_p('*')                       [actions.bold_pre]
+            >>  blank >> phrase                 [actions.bold_post]
+            ;
+
+        italic =
+                ch_p('\'')                      [actions.italic_pre]
+            >>  blank >> phrase                 [actions.italic_post]
+            ;
+
+        underline =
+                ch_p('_')                       [actions.underline_pre]
+            >>  blank >> phrase                 [actions.underline_post]
+            ;
+
+        teletype =
+                ch_p('^')                       [actions.teletype_pre]
+            >>  blank >> phrase                 [actions.teletype_post]
+            ;
+
+        strikethrough =
+                ch_p('-')                       [actions.strikethrough_pre]
+            >>  blank >> phrase                 [actions.strikethrough_post]
+            ;
+
+        quote =
+                ch_p('"')                       [actions.quote_pre]
+            >>  blank >> phrase                 [actions.quote_post]
+            ;
+
+        replaceable =
+                ch_p('~')                       [actions.replaceable_pre]
+            >>  blank >> phrase                 [actions.replaceable_post]
+            ;
+
+        source_mode =
+            (
+                str_p("c++")
+            |   "python"
+            |   "teletype"
+            )                                   [assign_a(actions.source_mode)]
+            ;
+
+        footnote =
+                str_p("footnote")               [actions.footnote_pre]
+            >>  blank >> phrase                 [actions.footnote_post]
+            ;
+    }
+
+    template <typename Scanner>
+    struct simple_phrase_grammar::definition
+    {
+        definition(simple_phrase_grammar const& self)
+            : unused(false), common(self.actions, unused)
         {
-            definition(phrase_grammar const& self)
-            {
-                using detail::var;
-                quickbook::actions& actions = self.actions;
+            quickbook::actions& actions = self.actions;
 
-                space =
-                    *(space_p | comment)
-                    ;
+            phrase =
+               *(   common
+                |   comment
+                |   (anychar_p - ']')           [actions.plain_char]
+                )
+                ;
 
-                blank =
-                    *(blank_p | comment)
-                    ;
+            comment =
+                "[/" >> *(dummy_block | (anychar_p - ']')) >> ']'
+                ;
 
-                eol = blank >> eol_p
-                    ;
+            dummy_block =
+                '[' >> *(dummy_block | (anychar_p - ']')) >> ']'
+                ;
+        }
 
-                phrase_end =
-                    ']' |
-                    if_p(var(self.no_eols))
-                    [
-                        eol >> eol                      // Make sure that we don't go
-                    ]                                   // past a single block, except
-                    ;                                   // when preformatted.
+        bool unused;
+        rule<Scanner> phrase, comment, dummy_block;
+        phrase_grammar common;
 
-                hard_space =
-                    (eps_p - (alnum_p | '_')) >> space  // must not be preceded by
-                    ;                                   // alpha-numeric or underscore
-
-                comment =
-                    "[/" >> *(dummy_block | (anychar_p - ']')) >> ']'
-                    ;
-
-                dummy_block =
-                    '[' >> *(dummy_block | (anychar_p - ']')) >> ']'
-                    ;
-
-                common =
-                        macro
-                    |   phrase_markup
-                    |   code_block
-                    |   inline_code
-                    |   simple_format
-                    |   escape
-                    |   comment
-                    ;
-
-                macro =
-                    eps_p(actions.macro                 // must not be followed by
-                        >> (eps_p - (alpha_p | '_')))   // alpha or underscore
-                    >> actions.macro                    [actions.do_macro]
-                    ;
-
-                static const bool true_ = true;
-                static const bool false_ = false;
-
-                template_ =
-                    (
-                        ch_p('`')                       [assign_a(actions.template_escape,true_)]
-                        |
-                        eps_p                           [assign_a(actions.template_escape,false_)]
-                    )
-                    >>
-                    ( (
-                        (eps_p(punct_p)
-                            >> actions.templates.scope
-                        )                               [assign_a(actions.template_identifier)]
-                                                        [clear_a(actions.template_args)]
-                        >> !template_args
-                    ) | (
-                        (actions.templates.scope
-                            >> eps_p(hard_space)
-                        )                               [assign_a(actions.template_identifier)]
-                                                        [clear_a(actions.template_args)]
-                        >> space
-                        >> !template_args
-                    ) )
-                    >> eps_p(']')
-                    ;
-
-                template_args =
-                    if_p(qbk_since(105u)) [
-                        template_args_1_5
-                    ].else_p [
-                        template_args_1_4
-                    ]
-                    ;
-
-                template_args_1_4 = template_arg_1_4 >> *(".." >> template_arg_1_4);
-
-                template_arg_1_4 =
-                        (   eps_p(*blank_p >> eol_p)    [assign_a(actions.template_block, true_)]
-                        |   eps_p                       [assign_a(actions.template_block, false_)]
-                        )
-                    >>  template_inner_arg_1_4          [actions.template_arg]
-                    ;
-
-                template_inner_arg_1_4 =
-                    +(brackets_1_4 | (anychar_p - (str_p("..") | ']')))
-                    ;
-
-                brackets_1_4 =
-                    '[' >> template_inner_arg_1_4 >> ']'
-                    ;
-
-                template_args_1_5 = template_arg_1_5 >> *(".." >> template_arg_1_5);
-
-                template_arg_1_5 =
-                        (   eps_p(*blank_p >> eol_p)    [assign_a(actions.template_block, true_)]
-                        |   eps_p                       [assign_a(actions.template_block, false_)]
-                        )
-                    >>  (+(brackets_1_5 | ('\\' >> anychar_p) | (anychar_p - (str_p("..") | '[' | ']'))))
-                                                        [actions.template_arg]
-                    ;
-
-                template_inner_arg_1_5 =
-                    +(brackets_1_5 | ('\\' >> anychar_p) | (anychar_p - (str_p('[') | ']')))
-                    ;
-
-                brackets_1_5 =
-                    '[' >> template_inner_arg_1_5 >> ']'
-                    ;
-
-                inline_code =
-                    '`' >>
-                    (
-                       *(anychar_p -
-                            (   '`'
-                            |   (eol >> eol)            // Make sure that we don't go
-                            )                           // past a single block
-                        ) >> eps_p('`')
-                    )                                   [actions.inline_code]
-                    >>  '`'
-                    ;
-
-                code_block =
-                        (
-                            "```" >>
-                            (
-                               *(anychar_p - "```")
-                                    >> eps_p("```")
-                            )                           [actions.code_block]
-                            >>  "```"
-                        )
-                    |   (
-                            "``" >>
-                            (
-                               *(anychar_p - "``")
-                                    >> eps_p("``")
-                            )                           [actions.code_block]
-                            >>  "``"
-                        )
-                    ;
-
-                simple_format =
-                        simple_bold
-                    |   simple_italic
-                    |   simple_underline
-                    |   simple_teletype
-                    ;
-
-                simple_phrase_end = '[' | phrase_end;
-
-                simple_markup(simple_bold,
-                    '*', actions.simple_bold, simple_phrase_end);
-                simple_markup(simple_italic,
-                    '/', actions.simple_italic, simple_phrase_end);
-                simple_markup(simple_underline,
-                    '_', actions.simple_underline, simple_phrase_end);
-                simple_markup(simple_teletype,
-                    '=', actions.simple_teletype, simple_phrase_end);
-
-                phrase =
-                   *(   common
-                    |   comment
-                    |   (anychar_p - phrase_end)        [actions.plain_char]
-                    )
-                    ;
-
-                phrase_markup =
-                        '['
-                    >>  (   cond_phrase
-                        |   image
-                        |   url
-                        |   link
-                        |   anchor
-                        |   source_mode
-                        |   funcref
-                        |   classref
-                        |   memberref
-                        |   enumref
-                        |   macroref
-                        |   headerref
-                        |   conceptref
-                        |   globalref
-                        |   bold
-                        |   italic
-                        |   underline
-                        |   teletype
-                        |   strikethrough
-                        |   quote
-                        |   replaceable
-                        |   footnote
-                        |   template_                   [actions.do_template]
-                        |   str_p("br")                 [actions.break_]
-                        )
-                    >>  ']'
-                    ;
-
-                escape =
-                        str_p("\\ ")                    // ignore an escaped space
-                    |   '\\' >> punct_p                 [actions.raw_char]
-                    |   "\\u" >> repeat_p(4) [chset<>("0-9a-fA-F")]
-                                                        [actions.escape_unicode]
-                    |   "\\U" >> repeat_p(8) [chset<>("0-9a-fA-F")]
-                                                        [actions.escape_unicode]
-                    |   (
-                            ("'''" >> !eol)             [actions.escape_pre]
-                        >>  *(anychar_p - "'''")        [actions.raw_char]
-                        >>  str_p("'''")                [actions.escape_post]
-                        )
-                    ;
-
-                macro_identifier =
-                    +(anychar_p - (space_p | ']'))
-                    ;
-
-                cond_phrase =
-                        '?' >> blank
-                    >>  macro_identifier                [actions.cond_phrase_pre]
-                    >>  (!phrase)                       [actions.cond_phrase_post]
-                    ;
-
-                image =
-                        '$' >> blank                    [clear_a(actions.attributes)]
-                    >>  if_p(qbk_since(105u)) [
-                                (+(
-                                    *space_p
-                                >>  +(anychar_p - (space_p | phrase_end | '['))
-                                ))                       [assign_a(actions.image_fileref)]
-                            >>  hard_space
-                            >>  *(
-                                    '['
-                                >>  (*(alnum_p | '_'))  [assign_a(actions.attribute_name)]
-                                >>  space
-                                >>  (*(anychar_p - (phrase_end | '[')))
-                                                        [actions.attribute]
-                                >>  ']'
-                                >>  space
-                                )
-                        ].else_p [
-                                (*(anychar_p -
-                                    phrase_end))        [assign_a(actions.image_fileref)]
-                        ]
-                    >>  eps_p(']')                      [actions.image]
-                    ;
-                    
-                url =
-                        '@'
-                    >>  (*(anychar_p -
-                            (']' | hard_space)))        [actions.url_pre]
-                    >>  (   eps_p(']')
-                        |   (hard_space >> phrase)
-                        )                               [actions.url_post]
-                    ;
-
-                link =
-                        "link" >> hard_space
-                    >>  (*(anychar_p -
-                            (']' | hard_space)))        [actions.link_pre]
-                    >>  (   eps_p(']')
-                        |   (hard_space >> phrase)
-                        )                               [actions.link_post]
-                    ;
-
-                anchor =
-                        '#'
-                    >>  blank
-                    >>  (   *(anychar_p -
-                                phrase_end)
-                        )                               [actions.anchor]
-                    ;
-
-                funcref =
-                    "funcref" >> hard_space
-                    >>  (*(anychar_p -
-                            (']' | hard_space)))        [actions.funcref_pre]
-                    >>  (   eps_p(']')
-                        |   (hard_space >> phrase)
-                        )                               [actions.funcref_post]
-                    ;
-
-                classref =
-                    "classref" >> hard_space
-                    >>  (*(anychar_p -
-                            (']' | hard_space)))        [actions.classref_pre]
-                    >>  (   eps_p(']')
-                        |   (hard_space >> phrase)
-                        )                               [actions.classref_post]
-                    ;
-
-                memberref =
-                    "memberref" >> hard_space
-                    >>  (*(anychar_p -
-                            (']' | hard_space)))        [actions.memberref_pre]
-                    >>  (   eps_p(']')
-                        |   (hard_space >> phrase)
-                        )                               [actions.memberref_post]
-                    ;
-
-                enumref =
-                    "enumref" >> hard_space
-                    >>  (*(anychar_p -
-                            (']' | hard_space)))        [actions.enumref_pre]
-                    >>  (   eps_p(']')
-                        |   (hard_space >> phrase)
-                        )                               [actions.enumref_post]
-                    ;
-
-                macroref =
-                    "macroref" >> hard_space
-                    >>  (*(anychar_p -
-                            (']' | hard_space)))        [actions.macroref_pre]
-                    >>  (   eps_p(']')
-                        |   (hard_space >> phrase)
-                        )                               [actions.macroref_post]
-                    ;
-
-                headerref =
-                    "headerref" >> hard_space
-                    >>  (*(anychar_p -
-                            (']' | hard_space)))        [actions.headerref_pre]
-                    >>  (   eps_p(']')
-                        |   (hard_space >> phrase)
-                        )                               [actions.headerref_post]
-                    ;
-
-                conceptref =
-                    "conceptref" >> hard_space
-                    >>  (*(anychar_p -
-                            (']' | hard_space)))        [actions.conceptref_pre]
-                    >>  (   eps_p(']')
-                        |   (hard_space >> phrase)
-                        )                               [actions.conceptref_post]
-                    ;
-
-                globalref =
-                    "globalref" >> hard_space
-                    >>  (*(anychar_p -
-                            (']' | hard_space)))        [actions.globalref_pre]
-                    >>  (   eps_p(']')
-                        |   (hard_space >> phrase)
-                        )                               [actions.globalref_post]
-                    ;
-
-                bold =
-                        ch_p('*')                       [actions.bold_pre]
-                    >>  blank >> phrase                 [actions.bold_post]
-                    ;
-
-                italic =
-                        ch_p('\'')                      [actions.italic_pre]
-                    >>  blank >> phrase                 [actions.italic_post]
-                    ;
-
-                underline =
-                        ch_p('_')                       [actions.underline_pre]
-                    >>  blank >> phrase                 [actions.underline_post]
-                    ;
-
-                teletype =
-                        ch_p('^')                       [actions.teletype_pre]
-                    >>  blank >> phrase                 [actions.teletype_post]
-                    ;
-
-                strikethrough =
-                        ch_p('-')                       [actions.strikethrough_pre]
-                    >>  blank >> phrase                 [actions.strikethrough_post]
-                    ;
-
-                quote =
-                        ch_p('"')                       [actions.quote_pre]
-                    >>  blank >> phrase                 [actions.quote_post]
-                    ;
-
-                replaceable =
-                        ch_p('~')                       [actions.replaceable_pre]
-                    >>  blank >> phrase                 [actions.replaceable_post]
-                    ;
-
-                source_mode =
-                    (
-                        str_p("c++")
-                    |   "python"
-                    |   "teletype"
-                    )                                   [assign_a(actions.source_mode)]
-                    ;
-
-                footnote =
-                        str_p("footnote")               [actions.footnote_pre]
-                    >>  blank >> phrase                 [actions.footnote_post]
-                    ;
-            }
-
-            rule<Scanner>   space, blank, comment, phrase, phrase_markup, image,
-                            simple_phrase_end, phrase_end, bold, italic, underline, teletype,
-                            strikethrough, escape, url, common, funcref, classref,
-                            memberref, enumref, macroref, headerref, conceptref, globalref,
-                            anchor, link, hard_space, eol, inline_code, simple_format,
-                            simple_bold, simple_italic, simple_underline,
-                            simple_teletype, source_mode, template_,
-                            quote, code_block, footnote, replaceable, macro,
-                            dummy_block, cond_phrase, macro_identifier, template_args,
-                            template_args_1_4, template_arg_1_4,
-                            template_inner_arg_1_4, brackets_1_4,
-                            template_args_1_5, template_arg_1_5,
-                            template_inner_arg_1_5, brackets_1_5
-                            ;
-
-            rule<Scanner> const&
-            start() const { return common; }
-        };
-
-        bool& no_eols;
-        quickbook::actions& actions;
+        rule<Scanner> const&
+        start() const { return phrase; }
     };
 
-    struct simple_phrase_grammar
-    : public grammar<simple_phrase_grammar >
+    template <typename Scanner>
+    struct command_line_grammar::definition
     {
-        simple_phrase_grammar(quickbook::actions& actions)
-            : actions(actions) {}
-
-        template <typename Scanner>
-        struct definition
+        definition(command_line_grammar const& self)
+            : unused(false), common(self.actions, unused)
         {
-            definition(simple_phrase_grammar const& self)
-                : unused(false), common(self.actions, unused)
-            {
-                quickbook::actions& actions = self.actions;
+            quickbook::actions& actions = self.actions;
 
-                phrase =
-                   *(   common
-                    |   comment
-                    |   (anychar_p - ']')           [actions.plain_char]
+            macro =
+                    *space_p
+                >>  macro_identifier            [actions.macro_identifier]
+                >>  *space_p
+                >>  (   '='
+                    >>  *space_p
+                    >>  phrase                  [actions.macro_definition]
+                    >>  *space_p
                     )
-                    ;
+                |   eps_p                       [actions.macro_definition]
+                ;
 
-                comment =
-                    "[/" >> *(dummy_block | (anychar_p - ']')) >> ']'
-                    ;
+            macro_identifier =
+                +(anychar_p - (space_p | ']' | '='))
+                ;
 
-                dummy_block =
-                    '[' >> *(dummy_block | (anychar_p - ']')) >> ']'
-                    ;
-            }
+            phrase =
+               *(   common
+                |   (anychar_p - ']')           [actions.plain_char]
+                )
+                ;
+        }
 
-            bool unused;
-            rule<Scanner> phrase, comment, dummy_block;
-            phrase_grammar common;
+        bool unused;
+        rule<Scanner> macro, macro_identifier, phrase;
+        phrase_grammar common;
 
-            rule<Scanner> const&
-            start() const { return phrase; }
-        };
-
-        quickbook::actions& actions;
+        rule<Scanner> const&
+        start() const { return macro; }
     };
+
+    template <typename Iterator, typename Grammar>
+    parse_info<Iterator> parse(Iterator& first, Iterator last, Grammar& g)
+    {
+        return boost::spirit::classic::parse(first, last, g);
+    }
+
+    void instantiate_phrase_grammar(quickbook::iterator i, phrase_grammar& g) {
+        parse(i, i, g);
+    }
+
+    void instantiate_simple_phrase_grammar(quickbook::iterator i, simple_phrase_grammar& g) {
+        parse(i, i, g);
+    }
+
+    void instantiate_command_line_grammar(quickbook::iterator i, command_line_grammar& g) {
+        parse(i, i, g);
+    }
 }
-
-#endif // BOOST_SPIRIT_QUICKBOOK_PHRASE_HPP
-
