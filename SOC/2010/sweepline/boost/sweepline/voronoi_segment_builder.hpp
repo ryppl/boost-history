@@ -34,6 +34,11 @@ namespace sweepline {
             init(points, empty_vec);
         }
 
+        void init(std::vector<Segment2D> &segments) {
+            std::vector<Point2D> empty_vec;
+            init(empty_vec, segments);
+        }
+
         // Init beach line before sweepline run.
         // In case of a few first sites situated on the same
         // vertical line, we init beach line with all of them.
@@ -181,7 +186,6 @@ namespace sweepline {
             Key new_left_node(*it_first, *it_second);
             Key new_right_node(*it_second, *it_first);
 
-            // TODO(asydorchuk) change output insertion!!!.
             // Update output.
             edge_type *edge = output_.insert_new_edge(*it_first, *it_second);
 
@@ -303,7 +307,7 @@ namespace sweepline {
             // Let circle event sites be A, B, C, two bisectors that define
             // circle event be (A, B), (B, C). During circle event processing
             // we remove (A, B), (B, C) and insert (A, C). As beach line nodes 
-            // comparer doesn't work fine for the circle events. We only remove
+            // comparer doesn't work fine for the circle events we only remove
             // (B, C) bisector and change (A, B) bisector to the (A, C). That's
             // why we use const_cast there and take all the responsibility that
             // map data structure keeps correct ordering.
@@ -354,47 +358,11 @@ namespace sweepline {
             return it;
         }
 
-        // Create circle event from the given three points.
-        bool create_circle_event(const site_event_type &site1,
-                                 const site_event_type &site2,
-                                 const site_event_type &site3,
-                                 circle_event_type &c_event) const {
-            //mpz_class dif_x1, dif_x2, dif_y1, dif_y2, a;
-            //dif_x1 = static_cast<int>(site1.x() - site2.x());
-            //dif_x2 = static_cast<int>(site2.x() - site3.x());
-            //dif_y1 = static_cast<int>(site1.y() - site2.y());
-            //dif_y2 = static_cast<int>(site2.y() - site3.y());
-            //a = (dif_x1 * dif_y2 - dif_y1 * dif_x2) * 2;
-            //
-            //// Check if bisectors intersect.
-            //if (a >= 0)
-            //    return false;
-
-            //mpz_class sum_x1, sum_x2, sum_y1, sum_y2, b1, b2;
-            //sum_x1 = static_cast<int>(site1.x() + site2.x());
-            //sum_x2 = static_cast<int>(site2.x() + site3.x());
-            //sum_y1 = static_cast<int>(site1.y() + site2.y());
-            //sum_y2 = static_cast<int>(site2.y() + site3.y());
-            //b1 = dif_x1 * sum_x1 + dif_y1 * sum_y1;
-            //b2 = dif_x2 * sum_x2 + dif_y2 * sum_y2;
-
-            //mpq_class c_x(b1 * dif_y2 - b2 * dif_y1, a);
-            //c_x.canonicalize();
-            //mpq_class c_y(b2 * dif_x1 - b1 * dif_x2, a);
-            //c_y.canonicalize();
-            //mpq_class temp_x(c_x - site1.x());
-            //mpq_class temp_y(c_y - site1.y());
-            //mpq_class sqr_radius(temp_x * temp_x + temp_y * temp_y);
-
-            //// Create new circle event;
-            //c_event = detail::make_circle_event<coordinate_type>(c_x.get_d(),
-            //                                                     c_y.get_d(),
-            //                                                     sqr_radius.get_d());
-            //c_event.set_sites(site1.get_site_index(),
-            //                  site2.get_site_index(),
-            //                  site3.get_site_index());
-            //return true;
-
+        // Create circle event from three point sites.
+        bool create_circle_event_ppp(const site_event_type &site1,
+                                     const site_event_type &site2,
+                                     const site_event_type &site3,
+                                     circle_event_type &c_event) const {
             // Check if bisectors intersect.
             if (detail::orientation_test(site1.get_point0(),site2.get_point0(),
                 site3.get_point0()) != detail::RIGHT_ORIENTATION)
@@ -412,10 +380,141 @@ namespace sweepline {
             // Create new circle event.
             coordinate_type c_x = (b1*(site2.y() - site3.y()) - b2*(site1.y() - site2.y())) / a;
             coordinate_type c_y = (b2*(site1.x() - site2.x()) - b1*(site2.x() - site3.x())) / a;
-            coordinate_type radius = sqrt((c_x-site1.x())*(c_x-site1.x()) +
-                                          (c_y-site1.y())*(c_y-site1.y()));
+            coordinate_type radius = sqrt((c_x-site2.x())*(c_x-site2.x()) +
+                                          (c_y-site2.y())*(c_y-site2.y()));
             c_event = detail::make_circle_event<coordinate_type>(c_x, c_y, c_x + radius);
             return true;
+        }
+
+        // Create circle event from two point sites and one segment site.
+        bool create_circle_event_pps(const site_event_type &site1,
+                                     const site_event_type &site2,
+                                     const site_event_type &site3,
+                                     int segment_index,
+                                     circle_event_type &c_event) const {
+            // Check if bisectors intersect.
+            detail::kOrientation orientation1 = detail::orientation_test(
+                site3.get_point0(), site3.get_point1(), site1.get_point0());
+            detail::kOrientation orientation2 = detail::orientation_test(
+                site3.get_point0(), site3.get_point1(), site2.get_point0());
+
+            // If point sites are situated on different sides of segment return false.
+            if (static_cast<int>(orientation1) * static_cast<int>(orientation2) == -1)
+                return false;
+
+            if ((orientation1 == detail::COLINEAR) && (orientation2 == detail::COLINEAR))
+                return false;
+
+            bool right_oriented = (orientation1 == detail::RIGHT_ORIENTATION) ||
+                                  (orientation2 == detail::RIGHT_ORIENTATION);
+
+            // Additional orientation test if segment index is equal to 1 or 3.
+            if (segment_index != 2) {
+                const Point2D &test_point = ((segment_index == 1) ^ right_oriented) ?
+                                            site3.get_point1() : site3.get_point0();
+                if ((segment_index == 1 && 
+                    detail::orientation_test(test_point, site1.get_point0(), site2.get_point0()) !=
+                    detail::RIGHT_ORIENTATION) ||
+                    (segment_index == 3 &&
+                    detail::orientation_test(site1.get_point0(), site2.get_point0(), test_point) !=
+                    detail::RIGHT_ORIENTATION))
+                    return false;
+            } else {
+                if (detail::orientation_test(site1.get_point0(), site3.get_point0(),
+                    site2.get_point0()) != detail::RIGHT_ORIENTATION &&
+                    detail::orientation_test(site1.get_point0(), site3.get_point1(),
+                    site2.get_point0()) != detail::RIGHT_ORIENTATION)
+                    return false;
+            }
+
+            double line_a = site3.get_point1().y() - site3.get_point0().y();
+            double line_b = site3.get_point0().x() - site3.get_point1().x();
+            double vec_x = site2.y() - site1.y();
+            double vec_y = site1.x() - site2.x();
+            double teta = line_b * vec_y + line_a * vec_x;
+            double A = line_a * (site1.x() - site3.get_point1().x()) +
+                       line_b * (site1.y() - site3.get_point1().y());
+            double B = line_a * (site2.x() - site3.get_point1().x()) +
+                       line_b * (site2.y() - site3.get_point1().y());
+            double denom = line_b * vec_x - line_a * vec_y;
+            double det = 0.0;
+            if (orientation1 != detail::COLINEAR && orientation2 != detail::COLINEAR)
+                det = sqrt((teta * teta + denom * denom) * A * B);
+            double t;
+            
+            if (detail::orientation_test(static_cast<long long>(line_a),
+                                         static_cast<long long>(line_b),
+                                         static_cast<long long>(vec_x),
+                                         static_cast<long long>(vec_y)) == detail::COLINEAR) {
+                t = (teta * teta - 4.0 * A * B) / (4.0 * teta * (A + B));
+            } else {
+                if (segment_index == 2)
+                    det = -det;
+                t = (teta * (A + B) + 2.0 * det) / (2.0 * denom * denom);
+            }
+            double c_x = 0.5 * (site1.x() + site2.x()) + t * vec_x;
+            double c_y = 0.5 * (site1.y() + site2.y()) + t * vec_y;
+            double radius = sqrt((c_x-site2.x())*(c_x-site2.x()) +
+                                 (c_y-site2.y())*(c_y-site2.y()));
+            c_event = detail::make_circle_event<coordinate_type>(c_x, c_y, c_x + radius);
+            return true;
+        }
+
+        // Create circle event from one point site and two segment sites.
+        bool create_circle_event_pss(const site_event_type &site1,
+                                     const site_event_type &site2,
+                                     const site_event_type &site3,
+                                     int point_index,
+                                     circle_event_type &c_event) const {
+            // Check if bisectors intersect.
+            // Not implemented yet.
+            return false;
+        }
+
+        // Create circle event from three segment sites.
+        bool create_circle_event_sss(const site_event_type &site1,
+                                     const site_event_type &site2,
+                                     const site_event_type &site3,
+                                     circle_event_type &c_event) const {
+            // Check if bisectors intersecto.
+            // Not implemented yet.
+            return false;
+        }
+
+        // Create circle event from the given three points.
+        bool create_circle_event(const site_event_type &site1,
+                                 const site_event_type &site2,
+                                 const site_event_type &site3,
+                                 circle_event_type &c_event) const {
+            if (!site1.is_segment()) {
+                if (!site2.is_segment()) {
+                    if (!site3.is_segment()) {
+                        return create_circle_event_ppp(site1, site2, site3, c_event);
+                    } else {
+                        return create_circle_event_pps(site1, site2, site3, 3, c_event);
+                    }
+                } else {
+                    if (!site3.is_segment()) {
+                        return create_circle_event_pps(site1, site3, site2, 2, c_event);
+                    } else {
+                        return create_circle_event_pss(site1, site2, site3, 1, c_event);
+                    }
+                }
+            } else {
+                if (!site2.is_segment()) {
+                    if (!site3.is_segment()) {
+                        return create_circle_event_pps(site2, site3, site1, 1, c_event);
+                    } else {
+                        return create_circle_event_pss(site2, site1, site3, 2, c_event);
+                    }
+                } else {
+                    if (!site3.is_segment()) {
+                        return create_circle_event_pss(site3, site1, site2, 3, c_event);
+                    } else {
+                        return create_circle_event_sss(site1, site2, site3, c_event);
+                    }
+                }
+            }
         }
 
         // Add new circle event to the event queue.

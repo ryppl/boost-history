@@ -16,7 +16,6 @@ using namespace boost::sweepline::detail;
 #include <boost/test/test_case_template.hpp>
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp1, T, test_types) {
-    typedef point_2d<T> Point2D;
     typedef site_event<T> site_event_type; 
     typedef beach_line_node<T> bline_node;
     typedef typename std::map< bline_node, int, 
@@ -43,7 +42,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp1, T, test_types) {
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp2, T, test_types) {
-    typedef point_2d<T> Point2D;
     typedef site_event<T> site_event_type; 
     typedef beach_line_node<T> bline_node;
     typedef typename std::map< bline_node, int, 
@@ -61,8 +59,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp2, T, test_types) {
 
     bline_node new_node1(site1, site3);
     bline_node new_node2(site3, site1);
-    test_beach_line.insert(std::pair<bline_node, int>(initial_node1, 2));
-    test_beach_line.insert(std::pair<bline_node, int>(initial_node2, 3));
+    test_beach_line.insert(std::pair<bline_node, int>(new_node1, 2));
+    test_beach_line.insert(std::pair<bline_node, int>(new_node2, 3));
 
     int cur_value = 0;
     for (bline_it it = test_beach_line.begin();
@@ -249,4 +247,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp8, T, test_types) {
     BOOST_CHECK_EQUAL(node_comparer_test(new_node2, initial_node), false);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node3, initial_node), false);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node4, initial_node), false);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_ps1, T, test_types) {
+    // TODO(asydorchuk): add more tests there.   
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_ss1, T, test_types) {
+    // TODO(asydorchuk): add more tests there.
 }

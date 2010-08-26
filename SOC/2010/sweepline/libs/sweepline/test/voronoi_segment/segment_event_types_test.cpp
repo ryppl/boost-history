@@ -64,6 +64,101 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(site_event_test1, T, test_types) {
     EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr3);
 }
 
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(site_event_test2, T, test_types) {
+    point_2d<T> point1 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(2));
+    point_2d<T> point2 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(0));
+    point_2d<T> point3 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(-2));
+    point_2d<T> point4 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(-1));
+    point_2d<T> point5 = make_point_2d<T>(static_cast<T>(1), static_cast<T>(1));
+    site_event<T> site1 = make_site_event<T>(point1, point2, 0);
+
+    BOOST_CHECK_EQUAL(point1 == site1.get_point1(), true);
+    BOOST_CHECK_EQUAL(point2 == site1.get_point0(), true);
+    BOOST_CHECK_EQUAL(site1.is_segment(), true);
+    BOOST_CHECK_EQUAL(site1.is_vertical(), true);
+
+    site_event<T> site2 = make_site_event<T>(point1, 0);
+    BOOST_CHECK_EQUAL(site2.is_segment(), false);
+    BOOST_CHECK_EQUAL(site2.is_vertical(), true);
+    
+    bool arr1_1[] = { true, false, true, false, false, true };
+    bool arr1_2[] = { false , true, false, true, false, true };
+    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr1_1);
+    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr1_2);
+
+    site2 = make_site_event<T>(point2, 0);
+    bool arr2_1[] = { false, true, false, true, false, true };
+    bool arr2_2[] = { true, false, true, false, false, true };
+    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr2_1);
+    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr2_2);
+
+    site2 = make_site_event<T>(point3, point4, 0);
+    bool arr3_1[] = { false, true, false, true, false, true };
+    bool arr3_2[] = { true, false, true, false, false, true };
+    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr3_1);
+    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr3_2);
+
+    site2 = make_site_event<T>(point3, point5, 0);
+    bool arr4_1[] = { true, false, true, false, false, true };
+    bool arr4_2[] = { false, true, false, true, false, true };
+    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr4_1);
+    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr4_2);
+
+    site2 = make_site_event<T>(point2, point5, 0);
+    bool arr5_1[] = { true, false, true, false, false, true };
+    bool arr5_2[] = { false, true, false, true, false, true };
+    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr5_1);
+    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr5_2);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(site_event_test3, T, test_types) {
+    point_2d<T> point1 = make_point_2d<T>(static_cast<T>(10), static_cast<T>(10));
+    point_2d<T> point2 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(0));
+    point_2d<T> point3 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(1));
+    point_2d<T> point4 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(10));
+    site_event<T> site1 = make_site_event<T>(point1, point2, 0);
+
+    BOOST_CHECK_EQUAL(point1 == site1.get_point1(), true);
+    BOOST_CHECK_EQUAL(point2 == site1.get_point0(), true);
+    BOOST_CHECK_EQUAL(site1.is_segment(), true);
+    BOOST_CHECK_EQUAL(site1.is_vertical(), false);
+
+    site_event<T> site2 = make_site_event<T>(point2, 0);
+    bool arr1_1[] = { false, true, false, true, false, true };
+    bool arr1_2[] = { true, false, true, false, false, true };
+    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr1_1);
+    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr1_2);
+
+    site2 = make_site_event<T>(static_cast<T>(0), static_cast<T>(-1), 0);
+    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr1_1);
+    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr1_2);
+
+    site2 = make_site_event<T>(static_cast<T>(0), static_cast<T>(1), 0);
+    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr1_1);
+    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr1_2);
+
+    site2 = make_site_event<T>(point3, point4, 0);
+    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr1_1);
+    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr1_2);
+
+    point3 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(-10));
+    point4 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(-1));
+    site2 = make_site_event<T>(point3, point4, 0);
+    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr1_1);
+    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr1_2);
+
+    point4 = make_point_2d<T>(static_cast<T>(10), static_cast<T>(9));
+    site2 = make_site_event<T>(point2, point4, 0);
+    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr1_1);
+    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr1_2);
+
+    point4 = make_point_2d<T>(static_cast<T>(9), static_cast<T>(10));
+    site2 = make_site_event<T>(point2, point4, 0);
+    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr1_2);
+    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr1_1);
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(circle_event_test1, T, test_types) {
     circle_event<T> circle1 = make_circle_event<T>(static_cast<T>(1),
                                                    static_cast<T>(2),
@@ -116,33 +211,4 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(circle_event_test2, T, test_types) {
 
     site = make_site_event<T>(static_cast<T>(4), static_cast<T>(2), 0);
     BOOST_CHECK_EQUAL(circle.compare(site), -1);
-}
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(segment_site_event_test1, T, test_types) {
-    point_2d<T> point1 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(2));
-    point_2d<T> point2 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(0));
-    site_event<T> segment = make_site_event<T>(point1, point2, 0);
-
-    BOOST_CHECK_EQUAL(point1 == segment.get_point1(), true);
-    BOOST_CHECK_EQUAL(point2 == segment.get_point0(), true);
-    BOOST_CHECK_EQUAL(segment.is_segment(), true);
-    BOOST_CHECK_EQUAL(segment.is_vertical(), true);
-
-    site_event<T> point = make_site_event<T>(point1, 0);
-    BOOST_CHECK_EQUAL(point.is_segment(), false);
-    BOOST_CHECK_EQUAL(point.is_vertical(), true);
-    
-    //bool arr1[] = {
-
-}
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(segment_site_event_test2, T, test_types) {
-    point_2d<T> point1 = make_point_2d<T>(static_cast<T>(1), static_cast<T>(1));
-    point_2d<T> point2 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(0));
-    site_event<T> segment = make_site_event<T>(point1, point2, 0);
-
-    BOOST_CHECK_EQUAL(point1 == segment.get_point1(), true);
-    BOOST_CHECK_EQUAL(point2 == segment.get_point0(), true);
-    BOOST_CHECK_EQUAL(segment.is_segment(), true);
-    BOOST_CHECK_EQUAL(segment.is_vertical(), false);
 }

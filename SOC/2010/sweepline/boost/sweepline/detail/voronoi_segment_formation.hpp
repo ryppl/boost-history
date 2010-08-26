@@ -109,6 +109,42 @@ namespace detail {
         }
     }
 
+    kOrientation orientation_test(long long dif_x1_, long long dif_y1_,
+                                  long long dif_x2_, long long dif_y2_) {
+        typedef unsigned long long ull;
+        ull dif_x1, dif_y1, dif_x2, dif_y2;
+        bool dif_x1_plus, dif_x2_plus, dif_y1_plus, dif_y2_plus;
+        INT_PREDICATE_CONVERT_65_BIT(dif_x1_, dif_x1, dif_x1_plus);
+        INT_PREDICATE_CONVERT_65_BIT(dif_y1_, dif_y1, dif_y1_plus);
+        INT_PREDICATE_CONVERT_65_BIT(dif_x2_, dif_x2, dif_x2_plus);
+        INT_PREDICATE_CONVERT_65_BIT(dif_y2_, dif_y2, dif_y2_plus);
+        
+        ull expr_l = dif_x1 * dif_y2;
+        bool expr_l_plus = (dif_x1_plus == dif_y2_plus) ? true : false;
+        ull expr_r = dif_x2 * dif_y1;
+        bool expr_r_plus = (dif_x2_plus == dif_y1_plus) ? true : false;
+
+        if (expr_l == 0)
+            expr_l_plus = true;
+        if (expr_r == 0)
+            expr_r_plus = true;
+        
+        if ((expr_l_plus == expr_r_plus) && (expr_l == expr_r))
+            return COLINEAR;
+
+        if (!expr_l_plus) {
+            if (expr_r_plus)
+                return RIGHT_ORIENTATION;
+            else
+                return (expr_l > expr_r) ? RIGHT_ORIENTATION : LEFT_ORIENTATION; 
+        } else {
+            if (!expr_r_plus)
+                return LEFT_ORIENTATION;
+            else
+                return (expr_l < expr_r) ? RIGHT_ORIENTATION : LEFT_ORIENTATION;
+        }
+    }
+
     enum kPredicateResult {
         LESS = -1,
         UNDEFINED = 0,
@@ -211,13 +247,12 @@ namespace detail {
                                           bool reverse_order) {
         typedef long long ll;
         typedef unsigned long long ull;
-        bool is_right_oriented1 =
-            orientation_test(segment_start, segment_end, site_point) != LEFT_ORIENTATION;
-        bool is_right_oriented2 =
-            orientation_test(segment_start, segment_end, new_point) != LEFT_ORIENTATION;
-        if (is_right_oriented1 != is_right_oriented2) {
-            return (is_right_oriented1) ? LESS : MORE;
-        }
+        kOrientation orientation1 = orientation_test(segment_start, segment_end, site_point);
+        kOrientation orientation2 = orientation_test(segment_start, segment_end, new_point);
+        if (orientation1 == COLINEAR)
+            orientation1 = reverse_order ? LEFT_ORIENTATION : RIGHT_ORIENTATION;
+        if (orientation1 != orientation2)
+            return (orientation1 == RIGHT_ORIENTATION) ? LESS : MORE;
 
         ll dif_x = static_cast<ll>(new_point.x()) - static_cast<ll>(site_point.x());
         ll dif_y = static_cast<ll>(new_point.y()) - static_cast<ll>(site_point.y());
@@ -225,18 +260,16 @@ namespace detail {
         ll b = static_cast<ll>(segment_end.y()) - static_cast<ll>(segment_start.y());
 
         if (a == 0) {
-            if (new_point.y() <= site_point.y() && !reverse_order)
+            if (new_point.y() < site_point.y() && !reverse_order)
                 return MORE;
-            else if (new_point.y() >= site_point.y() && reverse_order)
+            else if (new_point.y() > site_point.y() && reverse_order)
                 return LESS;
             return UNDEFINED;
         } else {
-            point_2d<T> point3 = make_point_2d(segment_end.x() + static_cast<T>(dif_x),
-                                               segment_end.y() + static_cast<T>(dif_y));
-            bool right_oriented =
-                orientation_test(segment_start, segment_end, point3) != LEFT_ORIENTATION;
-            if (is_right_oriented1 ^ right_oriented) {
-                if (is_right_oriented1)
+            kOrientation orientation = orientation_test(a, b, dif_x, dif_y);
+            if ((orientation == COLINEAR) ||
+                ((orientation1 == RIGHT_ORIENTATION) ^ (orientation == RIGHT_ORIENTATION))) {
+                if (orientation1 == RIGHT_ORIENTATION)
                     return reverse_order ? LESS : UNDEFINED;
                 return reverse_order ? UNDEFINED : MORE;
             }            
@@ -250,7 +283,8 @@ namespace detail {
                                  static_cast<double>(dif_x) *
                                  static_cast<double>(dif_y);
         if (!(almost_equal(fast_left_expr, fast_right_expr, 4))) {
-            if (is_right_oriented1 ^ (fast_left_expr > fast_right_expr) ^ !reverse_order)
+            if ((orientation1 == RIGHT_ORIENTATION) ^
+                (fast_left_expr > fast_right_expr) ^ !reverse_order)
                 return reverse_order ? LESS : MORE;
             return UNDEFINED;
         }
@@ -282,7 +316,7 @@ namespace detail {
             bool left_expr_odd = (left_expr_div % 2 == 1);
             left_expr_div >>= 1;
             if (left_expr_div != right_expr_div) {
-                comparison_result = (left_expr_div >= right_expr_div);
+                comparison_result = (left_expr_div > right_expr_div);
             } else {
                 ull temp_right = right_expr_denom - right_expr_mod;
                 if (temp_right > right_expr_mod) {
@@ -299,16 +333,16 @@ namespace detail {
                 left_expr_div = left_expr_mod / dif_x_rob;
                 right_expr_div = right_expr_mod / a_rob;
                 if (left_expr_div != right_expr_div)
-                    comparison_result = (left_expr_div >= right_expr_div);
+                    comparison_result = (left_expr_div > right_expr_div);
                 else {
                     left_expr_mod = left_expr_mod % dif_x_rob;
                     right_expr_mod = right_expr_mod % a_rob;
-                    comparison_result = (left_expr_mod * a_rob >= right_expr_mod * dif_x_rob);
+                    comparison_result = (left_expr_mod * a_rob > right_expr_mod * dif_x_rob);
                 }
             }
         }
         
-        if (is_right_oriented1 ^ comparison_result ^ !reverse_order)
+        if ((orientation1 == RIGHT_ORIENTATION) ^ comparison_result ^ !reverse_order)
             return reverse_order ? LESS : MORE;
         return UNDEFINED;
     }
@@ -531,33 +565,57 @@ namespace detail {
             return !((*this) == s_event);
         }
 
+        //// All the sites are sorted due to coordinates of the first point.
+        //// Point sites preceed segment sites with the same first point.
+        //// Segments with the same first point use counterclockwise comparison.
+        //bool operator<(const site_event &s_event) const {
+        //    // If first points have different x coordinates, compare them.
+        //    if (this->point0_.x() != s_event.point0_.x())
+        //        return this->point0_.x() < s_event.point0_.x();
+
+        //    // If first points have different y coordinates, compare them.
+        //    if (this->point0_.y() != s_event.point0_.y() ||
+        //        !(this->is_segment_ || s_event.is_segment_))
+        //        return this->point0_.y() < s_event.point0_.y();
+
+        //    // Point site events go before segment site events with the same first point.
+        //    if (this->is_segment_ ^ s_event.is_segment_)
+        //        return !this->is_segment;
+
+        //    // Use angle comparison for segment sites with the same first point.
+        //    return orientation_test(this->point1_, this->point0_, s_event.point1_) ==
+        //           RIGHT_ORIENTATION;
+        //}
+
         // All the sites are sorted due to coordinates of the first point.
-        // Also non vertical segments follow after sites with the same 
-        // x coordinate of the first point.
+        // Point sites preceed vertical segment sites with the same first point.
+        // Point sites and vertical segments preceed not vertical segments with
+        // the same x coordinate of the first point.
+        // Non vertical segments with the same first point are sorted counterclockwise.
         bool operator<(const site_event &s_event) const {
             // If first points have different x coordinates, compare them.
             if (this->point0_.x() != s_event.point0_.x())
                 return this->point0_.x() < s_event.point0_.x();
 
-            if (!this->is_segment_ || this->is_vertical_) {
-                // The first site is a point or a vertical segment.
-                if (!s_event.is_segment_ || s_event.is_vertical_) {
-                    // The second site is a point or a vertical segment.
-                    // Compare y coordinates.
+            if (!(this->is_segment_)) {
+                if (!s_event.is_segment_) {
                     return this->point0_.y() < s_event.point0_.y();
                 }
-                // The second site is a segment, but not vertical.
+                if (s_event.is_vertical_) {
+                    return this->point0_.y() <= s_event.point0_.y();
+                }
                 return true;
             } else {
-                // The first site is a segment, but not vertical.
                 if (!s_event.is_segment_ || s_event.is_vertical_) {
-                    // The second site is a point or a vertical segment.
+                    if (this->is_vertical_) {
+                        return this->point0_.y() < s_event.point0_.y();
+                    }
                     return false;
                 }
-                // The second site is a segment, but not vertical.
+                if (this->is_vertical_)
+                    return true;
                 if (this->point0_.y() != s_event.point0_.y())
                     return this->point0_.y() < s_event.point0_.y();
-
                 // Sort by angle.
                 return orientation_test(this->point1_, this->point0_, s_event.point1_) ==
                        RIGHT_ORIENTATION;
@@ -878,12 +936,32 @@ namespace detail {
             right_site_ = site;
         }
 
-        // Returns the rightmost site.
-        // Works correctly for vertical segments.
-        const site_event_type& get_new_site() const {
-            if (left_site_.x() > right_site_.x())
-                return left_site_;
-            return right_site_;
+        coordinate_type get_comparison_x() const {
+            return (left_site_.get_site_index() >= right_site_.get_site_index()) ?
+                   left_site_.x() : right_site_.x();
+        }
+
+        std::pair<coordinate_type, int> get_comparison_y() const {
+            // If node is lookup node.
+            if (left_site_.get_site_index() == right_site_.get_site_index())
+                return std::make_pair(left_site_.y(), 0);
+            if (left_site_.get_site_index() > right_site_.get_site_index()) {
+                if (left_site_.x() != right_site_.x() &&
+                    left_site_.is_segment() && left_site_.is_vertical())
+                    return std::make_pair(left_site_.get_point1().y(), 1);
+                return std::make_pair(left_site_.y(), 1);
+            }
+            return std::make_pair(right_site_.y(), -1);
+        }
+
+        int get_comparison_index() const {
+            return (left_site_.get_site_index() > right_site_.get_site_index()) ?
+                   left_site_.get_site_index() : right_site_.get_site_index();
+        }
+
+        const Point2D &get_comparison_point() const {
+            return (left_site_.get_site_index() >= right_site_.get_site_index()) ?
+                   left_site_.get_point0() : right_site_.get_point0();
         }
 
         bool less(const Point2D &new_site) const {
@@ -964,41 +1042,27 @@ namespace detail {
 
         // Compares nodes in the balanced binary search tree. Nodes are
         // compared based on the y coordinates of the arcs intersection points.
-        // Nodes with lesser y coordinate of the intersection point go first.
+        // Nodes with less y coordinate of the intersection point go first.
         // Comparison is only called during site events processing. That's why
         // one of the nodes will always lie on the sweepline. Comparison won't
         // work fine for nodes situated above sweepline.
         bool operator() (const BeachLineNode &node1,
                          const BeachLineNode &node2) const {
             // Get x coordinate of the righmost site from both nodes.
-            coordinate_type node1_line = node1.get_new_site().x();
-            coordinate_type node2_line = node2.get_new_site().x();
+            coordinate_type node1_x = node1.get_comparison_x();
+            coordinate_type node2_x = node2.get_comparison_x();
 
-            if (node1_line < node2_line) {
-                return node1.less(node2.get_new_site().get_point0());
-            } else if (node1_line > node2_line) {
-                return !node2.less(node1.get_new_site().get_point0());
+            if (node1_x < node2_x) {
+                return node1.less(node2.get_comparison_point());
+            } else if (node1_x > node2_x) {
+                return !node2.less(node1.get_comparison_point());
             } else {
-                // Both nodes are situated on the same vertical line.
-                // Let A be the new site event point, and B the site that
-                // creates arc above A. In this case two new nodes are being
-                // inserted: (A,B) and (B,A). As intersection points for the
-                // first node and for the second are the same we need to
-                // compare them based on some another characteristic.
-                // That's why we assume that node (C, D) goes before node
-                // (D, C), only if D lies on the sweepline.
-                if (node1.get_left_site().get_site_index() ==
-                    node2.get_right_site().get_site_index() &&
-                    node1.get_right_site().get_site_index() ==
-                    node2.get_left_site().get_site_index())
-                    return node1.get_right_site().x() == node1_line;
-
-                if (node1.get_right_site().get_point0().x() == node1_line &&
-                    node1.get_right_site().get_point0() == node2.get_left_site().get_point0())
-                    return true;
-
-                // Just compare coordinates of the sites situated on the sweepline.
-                return node1.get_new_site().y() < node2.get_new_site().y();
+                std::pair<coordinate_type, int> y1 = node1.get_comparison_y();
+                std::pair<coordinate_type, int> y2 = node2.get_comparison_y();
+                if (y1 != y2)
+                    return y1 < y2;
+                return (node1.get_comparison_index() > node2.get_comparison_index()) ?
+                       (y1.second > 0) : (y2.second < 0);
             }
         }
     };
