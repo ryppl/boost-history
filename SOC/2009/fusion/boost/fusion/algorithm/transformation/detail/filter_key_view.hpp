@@ -31,7 +31,7 @@ namespace boost { namespace fusion
         struct filter_key_view
           : sequence_base<filter_key_view<Seq, Pred> >
         {
-            typedef view_storage<Seq> storage_type;
+            typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq) storage_type;
             typedef typename storage_type::type seq_type;
             typedef Pred pred_type;
 
@@ -77,7 +77,7 @@ namespace boost { namespace fusion
                 return *this;
             }
 
-            detail::view_storage<Seq> seq;
+            storage_type seq;
         };
     }
 }}

@@ -8,13 +8,24 @@
 #ifndef BOOST_FUSION_VIEW_DETAIL_VIEW_STORAGE_HPP
 #define BOOST_FUSION_VIEW_DETAIL_VIEW_STORAGE_HPP
 
+#include <boost/config.hpp>
 #include <boost/fusion/support/is_view.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
+#ifdef BOOST_MSVC
+#   define BOOST_FUSION_DETAIL_VIEW_STROAGE(SEQ)\
+        detail::view_storage<SEQ, traits::is_view<SEQ>::type::value>
+
+    template<typename T, bool IsView>
+    struct view_storage;
+#else
+#   define BOOST_FUSION_DETAIL_VIEW_STROAGE(SEQ) detail::view_storage<SEQ>
+
     template<typename T, bool IsView=traits::is_view<T>::type::value>
     struct view_storage;
+#endif
 
     template<typename View>
     struct view_storage<View, /*IsView*/true>
@@ -28,7 +39,8 @@ namespace boost { namespace fusion { namespace detail
 
 #define BOOST_FUSION_VIEW_STORAGE_CTOR(MODIFIER,_)\
         template<typename OtherT, bool IsView>\
-        view_storage(view_storage<OtherT, IsView> MODIFIER storage)\
+        view_storage(\
+            view_storage<OtherT, IsView> MODIFIER storage)\
           : view(storage.template get<view_storage<OtherT, IsView> MODIFIER>())\
         {}
 
@@ -85,7 +97,8 @@ namespace boost { namespace fusion { namespace detail
 
 #define BOOST_FUSION_VIEW_STORAGE_CTOR(MODIFIER,_)\
         template<typename OtherSeq>\
-        view_storage(view_storage<OtherSeq, false> MODIFIER storage)\
+        view_storage(\
+            view_storage<OtherSeq, false> MODIFIER storage)\
           : seq(storage.seq)\
         {}
 

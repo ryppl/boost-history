@@ -22,7 +22,7 @@ namespace boost { namespace fusion { namespace extension
         template<typename ItRef>
         struct apply
           : mpl::if_c<
-                !detail::remove_reference<ItRef>::type::index::value
+                !remove_reference<ItRef>::type::index::value
               , std::string
               , int
             >

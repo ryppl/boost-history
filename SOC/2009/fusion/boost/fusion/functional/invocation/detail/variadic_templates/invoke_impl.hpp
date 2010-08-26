@@ -17,9 +17,19 @@
 #   include <boost/fusion/functional/invocation/detail/member_object_pointer_helper.hpp>
 #   include <boost/fusion/functional/invocation/detail/that_ptr.hpp>
 #endif
+#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/internal/result_of.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/arithmetic/dec.hpp>
+#include <boost/preprocessor/arithmetic/sub.hpp>
+#include <boost/preprocessor/control/iif.hpp>
+#include <boost/preprocessor/control/expr_iif.hpp>
+#include <boost/preprocessor/facilities/intercept.hpp>
+#include <boost/preprocessor/comparison/equal.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/if.hpp>
@@ -70,9 +80,9 @@ namespace boost { namespace fusion { namespace detail
       , Result
     >::type
     BOOST_PP_CAT(BOOST_FUSION_INVOKE_NAME,_call_impl)(
-                    F&& f,
-                    Instance&& instance,
-                    Args&&... args)
+        F&& f,
+        Instance&& instance,
+        Args&&... args)
     {
 #   ifndef BOOST_FUSION_RETURN_VOID
         return
@@ -88,9 +98,9 @@ namespace boost { namespace fusion { namespace detail
       , Result
     >::type
     BOOST_PP_CAT(BOOST_FUSION_INVOKE_NAME,_call_impl)(
-                    F&& f,
-                    Instance&& instance,
-                    Args&&... args)
+        F&& f,
+        Instance&& instance,
+        Args&&... args)
     {
         BOOST_FUSION_STATIC_ASSERT(!sizeof...(Args));
 
@@ -107,221 +117,167 @@ namespace boost { namespace fusion { namespace detail
     namespace bidirectional_impl
     {
 #ifndef BOOST_FUSION_RETURN_VOID
+
         template<
             int NumElementsLeft
           , typename F
-          , typename It4
+          , typename It
           , typename...Args
         >
+        struct BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME);
+
+#   define BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL_IT_DEF(Z, N, MAX_N)      \
+    typedef typename                                                            \
+        result_of::prior<BOOST_PP_CAT(It,BOOST_PP_SUB(MAX_N, N)) const&>::type  \
+    BOOST_PP_CAT(It,BOOST_PP_DEC(BOOST_PP_SUB(MAX_N, N)));
+
+#   define BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL_SPECIALIZATION(N)        \
+        template<typename F, typename BOOST_PP_CAT(It,N), typename... Args>     \
+        struct BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME)<      \
+            N                                                                   \
+          , F                                                                   \
+          , BOOST_PP_CAT(It,N)                                                  \
+          , Args...                                                             \
+        >
+
+#   define BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL_DECLERATION(N)           \
+        template<                                                               \
+            int NumElementsLeft                                                 \
+          , typename F                                                          \
+          , typename BOOST_PP_CAT(It,N)                                         \
+          , typename...Args                                                     \
+        >                                                                       \
         struct BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME)
-        {
-            typedef typename result_of::prior<It4>::type It3;
-            typedef typename result_of::prior<It3>::type It2;
-            typedef typename result_of::prior<It2>::type It1;
-            typedef typename result_of::prior<It1>::type It0;
 
-            typedef typename
-                BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME)<
-                    NumElementsLeft-4
-                  , F
-                  , typename result_of::prior<It0>::type
-                  , typename result_of::deref<It0>::type
-                  , typename result_of::deref<It1>::type
-                  , typename result_of::deref<It2>::type
-                  , typename result_of::deref<It3>::type
-                  , Args...
-                >::type
-            type;
+#   define BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL_NEXT()                   \
+        BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME)<             \
+            NumElementsLeft-BOOST_FUSION_UNROLLED_DEPTH                         \
+          , F                                                                   \
+          , typename result_of::prior<It0 const&>::type
+
+#   define BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL_LAST()                   \
+        detail::BOOST_PP_CAT(                                                   \
+            BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME),         \
+            _impl)                                                              \
+        <                                                                       \
+            F
+
+#   define BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL(Z,N,_)                   \
+        BOOST_PP_IIF(                                                           \
+            BOOST_PP_EQUAL(N,BOOST_FUSION_UNROLLED_DEPTH),                      \
+            BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL_DECLERATION,            \
+            BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL_SPECIALIZATION)(N)      \
+        {                                                                       \
+            BOOST_PP_REPEAT(                                                    \
+                N,                                                              \
+                BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL_IT_DEF,             \
+                N)                                                              \
+                                                                                \
+            typedef typename                                                    \
+                BOOST_PP_IIF(                                                   \
+                    BOOST_PP_EQUAL(N,BOOST_FUSION_UNROLLED_DEPTH),              \
+                    BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL_NEXT,           \
+                    BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL_LAST)()         \
+                    BOOST_PP_COMMA_IF(N)                                        \
+                    BOOST_PP_ENUM_BINARY_PARAMS(                                \
+                        N,                                                      \
+                        typename result_of::deref<It,                           \
+                        >::type BOOST_PP_INTERCEPT)                             \
+                  , Args...                                                     \
+                >::type                                                         \
+            type;                                                               \
         };
 
-        template<typename F, typename It3, typename...Args>
-        struct BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME)<
-            3
-          , F
-          , It3
-          , Args...
-        >
-        {
-            typedef typename result_of::prior<It3>::type It2;
-            typedef typename result_of::prior<It2>::type It1;
+        BOOST_PP_REPEAT(
+            BOOST_PP_INC(BOOST_FUSION_UNROLLED_DEPTH),
+            BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL,
+            _)
 
-            typedef typename
-                detail::BOOST_PP_CAT(
-                    BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME),
-                    _impl)
-                <
-                    F
-                  , typename result_of::deref<
-                        typename result_of::prior<It1>::type
-                    >::type
-                  , typename result_of::deref<It1>::type
-                  , typename result_of::deref<It2>::type
-                  , Args...
-                >::type
-            type;
-        };
+#   undef BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL
+#   undef BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL_NEXT
+#   undef BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL_LAST
+#   undef BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL_DECLERATION
+#   undef BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL_SPECIALIZATION
+#   undef BOOST_FUSION_RESULT_OF_UNROLLED_INVOKE_IMPL_IT_DEF
 
-        template<typename F, typename It2, typename...Args>
-        struct BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME)<
-            2
-          , F
-          , It2
-          , Args...
-        >
-        {
-            typedef typename result_of::prior<It2>::type It1;
-
-            typedef typename
-                detail::BOOST_PP_CAT(
-                    BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME),
-                    _impl)
-                <
-                    F
-                  , typename result_of::deref<
-                        typename result_of::prior<It1>::type
-                    >::type
-                  , typename result_of::deref<It1>::type
-                  , Args...
-                >::type
-            type;
-        };
-
-        template<typename F, typename It1, typename...Args>
-        struct BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME)<
-            1
-          , F
-          , It1
-          , Args...
-        >
-        {
-            typedef typename
-                detail::BOOST_PP_CAT(
-                    BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME),
-                    _impl)
-                <
-                    F
-                  , typename result_of::deref<
-                        typename result_of::prior<It1>::type
-                    >::type
-                  , Args...
-                >::type
-            type;
-        };
-
-        template<typename F, typename It0, typename...Args>
-        struct BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME)<
-            0
-          , F
-          , It0
-          , Args...
-        >
-        {
-            typedef typename
-                detail::BOOST_PP_CAT(
-                    BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME),
-                    _impl)
-                <
-                    F
-                  , Args...
-                >::type
-            type;
-        };
 #endif
 
         template<typename F, typename Result>
         struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_INVOKE_NAME)
         {
-            template<int NumElementsLeft,typename It4,typename...Args>
-            static Result
-            call(mpl::int_<NumElementsLeft>,
-                            F f,
-                            It4 const& it4,
-                            Args&&... args)
-            {
-                typedef typename result_of::prior<It4 const&>::type It3;
-                It3 it3 = fusion::prior(it4);
-                typedef typename result_of::prior<It3&>::type It2;
-                It2 it2 = fusion::prior(it3);
-                typedef typename result_of::prior<It2&>::type It1;
-                It1 it1 = fusion::prior(it2);
-                typedef typename result_of::prior<It1&>::type It0;
-                It0 it0 = fusion::prior(it1);
+#if defined(BOOST_NO_AUTO_DECLARATIONS) || defined(BOOST_NO_RVALUE_REFERENCES)
+#   define BOOST_FUSION_UNROLLED_INVOKE_IMPL_IT_DEF(Z, N, MAX_N)                \
+    typedef typename                                                            \
+        result_of::prior<BOOST_PP_CAT(It,BOOST_PP_SUB(MAX_N, N)) const&>::type  \
+    BOOST_PP_CAT(It,BOOST_PP_DEC(BOOST_PP_SUB(MAX_N, N)));                      \
+    BOOST_PP_CAT(It,BOOST_PP_DEC(BOOST_PP_SUB(MAX_N, N))) const                 \
+        BOOST_PP_CAT(it,BOOST_PP_DEC(BOOST_PP_SUB(MAX_N, N)))=                  \
+            fusion::prior(BOOST_PP_CAT(it,BOOST_PP_SUB(MAX_N, N)));
+#else
+#   define BOOST_FUSION_UNROLLED_INVOKE_IMPL_IT_DEF(Z, N, MAX_N)                \
+    auto const BOOST_PP_CAT(it,BOOST_PP_DEC(BOOST_PP_SUB(MAX_N, N)))=           \
+        fusion::prior(BOOST_PP_CAT(it,BOOST_PP_SUB(MAX_N, N)));
+#endif
 
-                return call(
-                    mpl::int_<NumElementsLeft-4>(),
-                    static_cast<F>(f),
-                    it0,
-                    fusion::deref(it0),
-                    fusion::deref(it1),
-                    fusion::deref(it2),
-                    fusion::deref(it3),
-                    std::forward<Args>(args)...);
+#define BOOST_FUSION_UNROLLED_INVOKE_IMPL_IT_ENUM(Z,N,_)                        \
+    fusion::deref(BOOST_PP_CAT(it,N)),
+
+#define BOOST_FUSION_UNROLLED_INVOKE_IMPL_NEXT()                                \
+    call(                                                                       \
+        mpl::int_<NumElementsLeft-BOOST_FUSION_UNROLLED_DEPTH>(),               \
+        static_cast<F>(f),                                                      \
+        it0
+
+#define BOOST_FUSION_UNROLLED_INVOKE_IMPL_LAST()                                \
+    BOOST_PP_CAT(BOOST_FUSION_INVOKE_NAME,_call_impl)<                          \
+        Result                                                                  \
+    >(static_cast<F>(f)
+
+#define BOOST_FUSION_UNROLLED_INVOKE_IMPL(Z,N,_)                                \
+            template<                                                           \
+                BOOST_PP_EXPR_IIF(                                              \
+                    BOOST_PP_EQUAL(N,BOOST_FUSION_UNROLLED_DEPTH),              \
+                    int NumElementsLeft)                                        \
+                BOOST_PP_COMMA_IF(                                              \
+                    BOOST_PP_EQUAL(N,BOOST_FUSION_UNROLLED_DEPTH))              \
+                typename BOOST_PP_CAT(It,N)                                     \
+              , typename...Args                                                 \
+            >                                                                   \
+            static Result                                                       \
+            call(                                                               \
+                mpl::int_<BOOST_PP_IIF(                                         \
+                    BOOST_PP_EQUAL(N,BOOST_FUSION_UNROLLED_DEPTH),              \
+                    NumElementsLeft,                                            \
+                    N)                                                          \
+                >,                                                              \
+                F f,                                                            \
+                BOOST_PP_CAT(It,N) const& BOOST_PP_CAT(it,N),                   \
+                Args&&... args)                                                 \
+            {                                                                   \
+                BOOST_PP_REPEAT(                                                \
+                    N,                                                          \
+                    BOOST_FUSION_UNROLLED_INVOKE_IMPL_IT_DEF,                   \
+                    N)                                                          \
+                                                                                \
+                return BOOST_PP_IIF(                                            \
+                    BOOST_PP_EQUAL(N,BOOST_FUSION_UNROLLED_DEPTH),              \
+                    BOOST_FUSION_UNROLLED_INVOKE_IMPL_NEXT,                     \
+                    BOOST_FUSION_UNROLLED_INVOKE_IMPL_LAST)(),                  \
+                    BOOST_PP_REPEAT(                                            \
+                        N, BOOST_FUSION_UNROLLED_INVOKE_IMPL_IT_ENUM, _)        \
+                    std::forward<Args>(args)...);                               \
             }
 
-            template<typename It3,typename...Args>
-            static Result
-            call(mpl::int_<3>,
-                            F f,
-                            It3 const& it3,
-                            Args&&... args)
-            {
-                typedef typename result_of::prior<It3 const&>::type It2;
-                It2 it2 = fusion::prior(it3);
-                typedef typename result_of::prior<It2&>::type It1;
-                It1 it1 = fusion::prior(it2);
+            BOOST_PP_REPEAT(
+                BOOST_PP_INC(BOOST_FUSION_UNROLLED_DEPTH),
+                BOOST_FUSION_UNROLLED_INVOKE_IMPL,
+                _)
 
-                return BOOST_PP_CAT(BOOST_FUSION_INVOKE_NAME,_call_impl)<
-                    Result
-                >(static_cast<F>(f),
-                        fusion::deref(fusion::prior(it1)),
-                        fusion::deref(it1),
-                        fusion::deref(it2),
-                        std::forward<Args>(args)...);
-            }
-
-            template<typename It2,typename...Args>
-            static Result
-            call(mpl::int_<2>,
-                            F f,
-                            It2 const& it2,
-                            Args&&... args)
-            {
-                typedef typename result_of::prior<It2 const&>::type It1;
-                It1 it1 = fusion::prior(it2);
-
-                return BOOST_PP_CAT(BOOST_FUSION_INVOKE_NAME,_call_impl)<
-                    Result
-                >(static_cast<F>(f),
-                        fusion::deref(fusion::prior(it1)),
-                        fusion::deref(it1),
-                        std::forward<Args>(args)...);
-            }
-
-            template<typename It1,typename...Args>
-            static Result
-            call(mpl::int_<1>,
-                            F f,
-                            It1 const& it1,
-                            Args&&... args)
-            {
-                return BOOST_PP_CAT(BOOST_FUSION_INVOKE_NAME,_call_impl)<
-                    Result
-                >(static_cast<F>(f),
-                    fusion::deref(fusion::prior(it1)),
-                    std::forward<Args>(args)...);
-            }
-
-            template<typename It,typename...Args>
-            static Result
-            call(mpl::int_<0>,
-                            F f,
-                            It const& it,
-                            Args&&... args)
-            {
-                return BOOST_PP_CAT(BOOST_FUSION_INVOKE_NAME,_call_impl)<
-                    Result
-                >(static_cast<F>(f),std::forward<Args>(args)...);
-            }
+#undef BOOST_FUSION_UNROLLED_INVOKE_IMPL
+#undef BOOST_FUSION_UNROLLED_INVOKE_IMPL_NEXT
+#undef BOOST_FUSION_UNROLLED_INVOKE_IMPL_LAST
+#undef BOOST_FUSION_UNROLLED_INVOKE_IMPL_IT_ENUM
+#undef BOOST_FUSION_UNROLLED_INVOKE_IMPL_IT_DEF
         };
     }
 
@@ -374,11 +330,11 @@ namespace boost { namespace fusion { namespace detail
             call(mpl::int_<NumArgsLeft>, F f, Begin const& begin,Args&&... args)
             {
                 return call(
-                        mpl::int_<NumArgsLeft-1>(),
-                        static_cast<F>(f),
-                        begin,
-                        fusion::deref(fusion::advance_c<NumArgsLeft-1>(begin)),
-                        std::forward<Args>(args)...);
+                    mpl::int_<NumArgsLeft-1>(),
+                    static_cast<F>(f),
+                    begin,
+                    fusion::deref(fusion::advance_c<NumArgsLeft-1>(begin)),
+                    std::forward<Args>(args)...);
             }
         };
     }

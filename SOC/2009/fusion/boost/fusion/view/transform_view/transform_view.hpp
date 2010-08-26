@@ -73,9 +73,9 @@ namespace boost { namespace fusion
             mpl::equal_to<result_of::size<Seq1>,result_of::size<Seq2> >));
 
         typedef IsAssociative is_associative;
-        typedef detail::view_storage<Seq1> storage1_type;
+        typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq1) storage1_type;
         typedef typename storage1_type::type seq1_type;
-        typedef detail::view_storage<Seq2> storage2_type;
+        typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq2) storage2_type;
         typedef typename storage2_type::type seq2_type;
         typedef F transform_type;
         typedef typename
@@ -154,7 +154,7 @@ namespace boost { namespace fusion
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
         typedef IsAssociative is_associative;
-        typedef detail::view_storage<Seq> storage_type;
+        typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq) storage_type;
         typedef typename storage_type::type seq_type;
         typedef typename
             mpl::eval_if<

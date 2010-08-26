@@ -11,13 +11,24 @@
 
 #include <boost/config.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    namespace traits
+    namespace fusion
     {
-        template<typename Seq, typename Enable=void>
-        struct tag_of;
+        struct fusion_sequence_tag;
+
+        namespace traits
+        {
+            template<typename Seq, typename Enable=void>
+            struct tag_of;
+        }
     }
-}}
+
+    namespace mpl
+    {
+        template<typename>
+        struct sequence_tag;
+    }
+}
 
 #endif

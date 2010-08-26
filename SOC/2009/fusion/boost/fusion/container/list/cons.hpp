@@ -148,7 +148,8 @@ namespace boost { namespace fusion
         {}
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
-#   ifdef BOOST_NO_RVALUE_REFERENCES
+//cschmidt: https://svn.boost.org/trac/boost/ticket/4530#comment:1
+#   if defined(BOOST_NO_RVALUE_REFERENCES) || defined(BOOST_MSVC)
         explicit
         cons(typename call_traits<Car>::param_type car)
           : car(car)

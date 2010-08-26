@@ -20,7 +20,7 @@ namespace boost { namespace fusion { namespace extension
         template<typename ItRef, typename N>
         struct apply
         {
-            typedef typename detail::remove_reference<ItRef>::type it;
+            typedef typename remove_reference<ItRef>::type it;
 
             typedef
                 example::example_struct_iterator<

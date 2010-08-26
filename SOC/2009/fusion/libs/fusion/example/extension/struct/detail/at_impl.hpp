@@ -31,7 +31,7 @@ namespace boost { namespace fusion { namespace extension
         {
             typedef typename
                 mpl::if_<
-                    is_const<typename detail::remove_reference<SeqRef>::type>
+                    is_const<typename remove_reference<SeqRef>::type>
                   , std::string const&
                   , std::string&
                 >::type
@@ -49,7 +49,7 @@ namespace boost { namespace fusion { namespace extension
         {
             typedef typename
                 mpl::if_<
-                    is_const<typename detail::remove_reference<SeqRef>::type>
+                    is_const<typename remove_reference<SeqRef>::type>
                   , int const&
                   , int&
                 >::type

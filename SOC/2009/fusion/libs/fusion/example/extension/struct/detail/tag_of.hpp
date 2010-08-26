@@ -11,7 +11,6 @@
 
 #include <boost/config.hpp>
 #include <boost/fusion/support/tag_of_fwd.hpp>
-#include <string>
 
 namespace fields
 {
@@ -30,45 +29,63 @@ namespace example
     struct example_struct_iterator_tag;
 }
 
-namespace boost { namespace fusion { namespace traits
+namespace boost
 {
-    template<>
-    struct tag_of<example::example_struct>
+    namespace fusion { namespace traits
     {
-        typedef example::example_sequence_tag type;
-    };
+        template<>
+        struct tag_of<example::example_struct>
+        {
+            typedef example::example_sequence_tag type;
+        };
 
-    template<>
-    struct tag_of<example::example_struct const>
-    {
-        typedef example::example_sequence_tag type;
-    };
+        template<>
+        struct tag_of<example::example_struct const>
+        {
+            typedef example::example_sequence_tag type;
+        };
 
-    template<>
-    struct tag_of<example::example_struct&>
-    {
-        typedef example::example_sequence_tag type;
-    };
+        template<>
+        struct tag_of<example::example_struct&>
+        {
+            typedef example::example_sequence_tag type;
+        };
 
-    template<>
-    struct tag_of<example::example_struct const&>
-    {
-        typedef example::example_sequence_tag type;
-    };
+        template<>
+        struct tag_of<example::example_struct const&>
+        {
+            typedef example::example_sequence_tag type;
+        };
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
-    template<>
-    struct tag_of<example::example_struct&&>
-    {
-        typedef example::example_sequence_tag type;
-    };
+        template<>
+        struct tag_of<example::example_struct&&>
+        {
+            typedef example::example_sequence_tag type;
+        };
 
-    template<>
-    struct tag_of<example::example_struct const&&>
-    {
-        typedef example::example_sequence_tag type;
-    };
+        template<>
+        struct tag_of<example::example_struct const&&>
+        {
+            typedef example::example_sequence_tag type;
+        };
 #endif
-}}}
+    }}
+
+    namespace mpl
+    {
+        template<>
+        struct sequence_tag<example::example_struct>
+        {
+            typedef fusion::fusion_sequence_tag type;
+        };
+
+        template<>
+        struct sequence_tag<example::example_struct const>
+        {
+            typedef fusion::fusion_sequence_tag type;
+        };
+    }
+}
 
 #endif

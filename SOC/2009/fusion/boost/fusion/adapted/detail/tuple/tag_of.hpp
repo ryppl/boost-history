@@ -8,8 +8,6 @@
 
 #include <boost/config.hpp>
 #include <boost/fusion/support/tag_of_fwd.hpp>
-
-#include <boost/mpl/tag.hpp>
 #if defined(BOOST_FUSION_ADAPTED_STD_TUPLE) &&\
     (defined(BOOST_NO_0X_HDR_TUPLE) || defined(BOOST_NO_VARIADIC_TEMPLATES))
 #   include <boost/preprocessor/enum_params.hpp>
@@ -27,7 +25,6 @@ namespace boost
         struct std_tuple_iterator_tag;
         struct boost_tuple_tag;
         struct boost_tuple_iterator_tag;
-        struct fusion_sequence_tag;
         struct random_access_traversal_tag;
 
         namespace traits
@@ -58,8 +55,8 @@ namespace boost
 #   ifdef BOOST_NO_PARTIAL_SPECIALIZATION_IMPLICIT_DEFAULT_ARGS
 #       define BOOST_FUSION_TUPLE_TAG_OF_SPECIALIZATION(MODIFIER,_)\
             template<\
-                class T0, class T1, class T2, class T3, class T4, \
-                class T5, class T6, class T7, class T8, class T9\
+                class T0, class T1, class T2, class T3, class T4\
+              , class T5, class T6, class T7, class T8, class T9\
             >\
             struct tag_of<\
                 tuples::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> MODIFIER\
@@ -83,8 +80,8 @@ namespace boost
 #   else
 #       define BOOST_FUSION_TUPLE_TAG_OF_SPECIALIZATION(MODIFIER,_)\
             template<\
-                class T0, class T1, class T2, class T3, class T4, \
-                class T5, class T6, class T7, class T8, class T9\
+                class T0, class T1, class T2, class T3, class T4\
+              , class T5, class T6, class T7, class T8, class T9\
             >\
             struct tag_of<\
                 tuples::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> MODIFIER\
@@ -116,9 +113,6 @@ namespace boost
 
     namespace mpl
     {
-        template<typename>
-        struct sequence_tag;
-
 #ifdef BOOST_FUSION_ADAPTED_STD_TUPLE
 #   ifndef BOOST_FUSION_STD_TUPLE_UPPER_LIMIT
         template<typename... Types>
@@ -159,8 +153,8 @@ namespace boost
 #   endif
 #else
         template<
-            class T0, class T1, class T2, class T3, class T4,
-            class T5, class T6, class T7, class T8, class T9
+            class T0, class T1, class T2, class T3, class T4
+          , class T5, class T6, class T7, class T8, class T9
         >
         struct sequence_tag<
             tuples::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>
@@ -170,8 +164,8 @@ namespace boost
         };
 
         template<
-            class T0, class T1, class T2, class T3, class T4,
-            class T5, class T6, class T7, class T8, class T9
+            class T0, class T1, class T2, class T3, class T4
+          , class T5, class T6, class T7, class T8, class T9
         >
         struct sequence_tag<
             tuples::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> const

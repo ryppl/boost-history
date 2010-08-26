@@ -22,7 +22,6 @@
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/mpl/bool.hpp>
-#include <boost/mpl/tag.hpp>
 
 #define BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME_TEMPLATE_PARAMS(SEQ)              \
     BOOST_PP_SEQ_HEAD(SEQ)<BOOST_PP_SEQ_ENUM(BOOST_PP_SEQ_TAIL(SEQ))>
@@ -201,9 +200,6 @@ namespace boost                                                                 
                                                                                 \
     namespace mpl                                                               \
     {                                                                           \
-        template<typename>                                                      \
-        struct sequence_tag;                                                    \
-                                                                                \
         template<                                                               \
             BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(                   \
                 TEMPLATE_PARAMS_SEQ)                                            \

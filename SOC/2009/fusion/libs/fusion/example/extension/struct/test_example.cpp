@@ -7,7 +7,7 @@
 ==============================================================================*/
 
 #include "example_struct.hpp"
-#include "example_struct_type.hpp"
+#include "adapt_example_struct.hpp"
 #include <boost/detail/lightweight_test.hpp>
 
 #include <boost/fusion/sequence.hpp>

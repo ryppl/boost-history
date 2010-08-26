@@ -24,7 +24,6 @@ namespace boost
         struct array_tag;
         struct array_iterator_tag;
         struct random_access_traversal_tag;
-        struct fusion_sequence_tag;
 
         namespace traits
         {
@@ -57,9 +56,6 @@ namespace boost
 
     namespace mpl
     {
-        template<typename>
-        struct sequence_tag;
-
         template<typename T, std::size_t N>
         struct sequence_tag<BOOST_FUSION_ADAPTED_ARRAY_NAMESPACE::array<T,N> >
         {

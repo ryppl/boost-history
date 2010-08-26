@@ -18,7 +18,6 @@ namespace boost
         struct po_array_tag;
         struct po_array_iterator_tag;
         struct random_access_traversal_tag;
-        struct fusion_sequence_tag;
 
         namespace traits
         {
@@ -53,9 +52,6 @@ namespace boost
 
     namespace mpl
     {
-        template<typename>
-        struct sequence_tag;
-
         template<typename T, std::size_t N>
         struct sequence_tag<T[N]>
         {

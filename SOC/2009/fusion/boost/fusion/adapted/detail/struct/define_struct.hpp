@@ -139,7 +139,7 @@
 #define BOOST_FUSION_DEFINE_STRUCT_SEQ_CTOR_DISABLER(                           \
     ATTRIBUTES_SEQ, ATTRIBUTE_TUPEL_SIZE)                                       \
                                                                                 \
-    , typename boost::disable_if<                                               \
+  , typename boost::disable_if<                                                 \
         boost::fusion::detail::is_explicitly_convertible<                       \
             BOOST_FUSION_R_ELSE_CLREF(Seq)                                      \
           , BOOST_PP_TUPLE_ELEM(                                                \

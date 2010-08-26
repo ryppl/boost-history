@@ -62,7 +62,7 @@ namespace boost { namespace fusion
         BOOST_FUSION_MPL_ASSERT((traits::is_random_access<Seq>));
 
         typedef Indices indices;
-        typedef detail::view_storage<Seq> storage_type;
+        typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq) storage_type;
         typedef typename storage_type::type seq_type;
 
         typedef nview_tag fusion_tag;

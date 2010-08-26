@@ -22,8 +22,8 @@ namespace boost { namespace fusion { namespace extension
         template<typename It1Ref, typename It2Ref>
         struct apply
           : mpl::minus<
-                typename detail::remove_reference<It2Ref>::type::index
-              , typename detail::remove_reference<It1Ref>::type::index
+                typename remove_reference<It2Ref>::type::index
+              , typename remove_reference<It1Ref>::type::index
             >
         {};
     };

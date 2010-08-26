@@ -49,7 +49,7 @@ namespace boost { namespace fusion
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
         BOOST_FUSION_MPL_ASSERT((traits::is_bidirectional<Seq>));
 
-        typedef detail::view_storage<Seq> storage_type;
+        typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq) storage_type;
         typedef typename storage_type::type seq_type;
 
         typedef typename traits::category_of<seq_type>::type category;
@@ -91,7 +91,7 @@ namespace boost { namespace fusion
             return *this;
         }
 
-        detail::view_storage<Seq> seq;
+        storage_type seq;
     };
 }}
 

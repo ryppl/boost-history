@@ -20,10 +20,17 @@
 #include <boost/fusion/iterator/value_of.hpp>
 #include <boost/fusion/iterator/prior.hpp>
 #include <boost/fusion/iterator/next.hpp>
+#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/support/internal/result_of.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/comparison/equal.hpp>
+#include <boost/preprocessor/arithmetic/inc.hpp>
+#include <boost/preprocessor/arithmetic/dec.hpp>
+#include <boost/preprocessor/control/iif.hpp>
+#include <boost/preprocessor/repetition/repeat.hpp>
+#include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
@@ -71,309 +78,247 @@ namespace boost { namespace fusion
     namespace detail
     {
         template<typename State, typename It, typename F>
-        struct BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)
+        struct BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _result_of_helper)
           : boost::result_of<
                 F(
 #ifdef BOOST_NO_RVALUE_REFERENCES
                 typename add_lref<typename add_const<State>::type>::type,
 #else
-                State&&,
+                typename remove_reference<State>::type&,
 #endif
                 BOOST_FUSION_FOLD_IMPL_INVOKE_IT_META_TRANSFORM(It))
             >
         {};
 
-        template<typename Result,int N>
-        struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)
-        {
-            template<typename State, typename It0, typename F>
-            static Result
-            call(BOOST_FUSION_R_ELSE_CLREF(State) state,
-                    It0 const& it0,
-                    BOOST_FUSION_RREF_ELSE_OBJ(F) f)
-            {
-                typedef typename
-                    result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
-                        It0 const&
-                    >::type
-                It1;
-                It1 it1 = fusion::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION(it0);
-                typedef typename
-                    result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
-                        It1&
-                    >::type
-                It2;
-                It2 it2 = fusion::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION(it1);
-                typedef typename
-                    result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
-                        It2&
-                    >::type
-                It3;
-                It3 it3 = fusion::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION(it2);
+        template<typename State0, typename It0, typename F, int N>
+        struct BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_FOLD_NAME);
 
-                return BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)<
-                    Result
-                  , N-4
-                >::call(
-                    f(
-                        f(
-                            f(
-                                f(
-                                    BOOST_FUSION_FORWARD(State,state),
-                                    BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(
-                                        it0)
-                                ),
-                                BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(it1)
-                            ),
-                            BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(it2)
-                        ),
-                        BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(it3)
-                    ),
-                    fusion::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION(it3),
-                    BOOST_FUSION_FORWARD(F,f));
-            }
-        };
+#ifdef BOOST_NO_RVALUE_REFERENCES
+#   define BOOST_FUSION_CONST_IF_NO_RVALUE_REFERENCES const
+#else
+#   define BOOST_FUSION_CONST_IF_NO_RVALUE_REFERENCES
+#endif
 
-        template<typename Result>
-        struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)<Result,3>
-        {
-            template<typename State, typename It0, typename F>
-            static Result
-            call(BOOST_FUSION_R_ELSE_CLREF(State) state,
-                    It0 const& it0,
-                    BOOST_FUSION_RREF_ELSE_OBJ(F) f)
-            {
-                typedef typename
-                    result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
-                        It0 const&
-                    >::type
-                It1;
-                It1 it1 = fusion::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION(it0);
-                typedef typename
-                    result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
-                        It1&
-                    >::type
-                It2;
-                It2 it2 = fusion::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION(it1);
+#define BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_IT_DEF(Z, N, _)               \
+        typedef typename                                                        \
+            result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<                 \
+                BOOST_PP_CAT(It,N) const&                                       \
+            >::type                                                             \
+        BOOST_PP_CAT(It,BOOST_PP_INC(N));
 
-                return f(
-                        f(
-                            f(
-                                BOOST_FUSION_FORWARD(State,state),
-                                BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(it0)
-                            ),
-                            BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(it1)
-                        ),
-                        BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(
-                            fusion::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION(it1)
-                        ));
-            }
-        };
+#define BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_STATE_DEF(Z, N, _)            \
+        typedef typename                                                        \
+            BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _result_of_helper)<            \
+                BOOST_PP_CAT(State,N) BOOST_FUSION_CONST_IF_NO_RVALUE_REFERENCES\
+              , BOOST_PP_CAT(It,N) const&                                       \
+              , F                                                               \
+            >::type                                                             \
+        BOOST_PP_CAT(State,BOOST_PP_INC(N));                                    \
 
-        template<typename Result>
-        struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)<Result,2>
-        {
-            template<typename State, typename It0, typename F>
-            static Result
-            call(BOOST_FUSION_R_ELSE_CLREF(State) state,
-                    It0 const& it0,
-                    BOOST_FUSION_RREF_ELSE_OBJ(F) f)
-            {
-                return f(
-                    f(BOOST_FUSION_FORWARD(State,state),
-                        BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(it0)),
-                    BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(
-                        fusion::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION(it0)));
-            }
-        };
+#define BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_NEXT(N_)                      \
+        typename BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_FOLD_NAME)<      \
+            BOOST_PP_CAT(State,N_)                                              \
+          , typename result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<        \
+                BOOST_PP_CAT(It,BOOST_PP_DEC(N_)) const&                        \
+            >::type                                                             \
+          , F                                                                   \
+          , N-BOOST_FUSION_UNROLLED_DEPTH                                       \
+        >::type
 
-        template<typename Result>
-        struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)<Result,1>
-        {
-            template<typename State, typename It0, typename F>
-            static Result
-            call(BOOST_FUSION_R_ELSE_CLREF(State) state,
-                It0 const& it0,
-                BOOST_FUSION_RREF_ELSE_OBJ(F) f)
-            {
-                return f(BOOST_FUSION_FORWARD(State,state),
-                    BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(it0));
-            }
-        };
+#define BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_LAST(N) BOOST_PP_CAT(State,N)
 
-        template<typename Result>
-        struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)<Result,0>
-        {
-            template<typename State, typename It0, typename F>
-            static Result
-            call(BOOST_FUSION_R_ELSE_CLREF(State) state,
-                It0 const&,
-                BOOST_FUSION_RREF_ELSE_OBJ(F))
-            {
-                return static_cast<Result>(state);
-            }
-        };
-
-        template<typename StateRef, typename It0, typename F, int N>
+#define BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_DECLERATION(N_)               \
+        template<typename State0, typename It0, typename F, int N>              \
         struct BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_FOLD_NAME)
-        {
-            typedef typename
-                BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)<
-                    StateRef
-                  , It0 const&
-                  , F
-                >::type
-            rest1;
-            typedef typename
-                result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
-                    It0 const&
-                >::type
-            it1;
-            typedef typename
-                BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)<
-                    rest1
-                  , it1&
-                  , F
-                >::type
-            rest2;
-            typedef typename
-                result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<it1&>::type
-            it2;
-            typedef typename
-                BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)<
-                    rest2
-                  , it2&
-                  , F
-                >::type
-            rest3;
-            typedef typename
-                result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<it2&>::type
-            it3;
 
-            typedef typename
-                BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_FOLD_NAME)<
-                    typename BOOST_PP_CAT(
-                        BOOST_FUSION_FOLD_NAME, _rvalue_state)<
-                        rest3
-                      , it3&
-                      , F
-                    >::type
-                  , typename result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
-                        it3&
-                    >::type
-                  , F
-                  , N-4
-                >::type
-            type;
+#define BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_SPECIALIZATION(N)             \
+        template<typename State0, typename It0, typename F>                     \
+        struct BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_FOLD_NAME)<        \
+            State0                                                              \
+          , It0                                                                 \
+          , F                                                                   \
+          , N                                                                   \
+        >
+
+#define BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL(Z,N,_)                        \
+        BOOST_PP_IIF(                                                           \
+            BOOST_PP_EQUAL(N,BOOST_FUSION_UNROLLED_DEPTH),                      \
+            BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_DECLERATION,              \
+            BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_SPECIALIZATION)(N)        \
+        {                                                                       \
+            BOOST_PP_REPEAT(                                                    \
+                BOOST_PP_DEC(N),                                                \
+                BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_IT_DEF,               \
+                _)                                                              \
+            BOOST_PP_REPEAT(                                                    \
+                N,                                                              \
+                BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_STATE_DEF,            \
+                _)                                                              \
+                                                                                \
+            typedef                                                             \
+                BOOST_PP_IIF(                                                   \
+                    BOOST_PP_EQUAL(N,BOOST_FUSION_UNROLLED_DEPTH),              \
+                    BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_NEXT,             \
+                    BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_LAST)(N)          \
+            type;                                                               \
         };
 
-        template<typename StateRef, typename It0, typename F>
-        struct BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_FOLD_NAME)<
-            StateRef
-          , It0
-          , F
-          , 3
-        >
-        {
-            typedef typename
-                BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)<
-                    StateRef
-                  , It0 const&
-                  , F
-                >::type
-            rest1;
-            typedef typename
-                result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
-                    It0 const&
-                >::type
-            it1;
+        BOOST_PP_REPEAT_FROM_TO(
+            1,
+            BOOST_PP_INC(BOOST_FUSION_UNROLLED_DEPTH),
+            BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL,
+            _)
 
-            typedef typename
-                BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)<
-                    typename BOOST_PP_CAT(
-                        BOOST_FUSION_FOLD_NAME, _rvalue_state)<
-                        rest1
-                      , it1&
-                      , F
-                    >::type
-                  , BOOST_FUSION_R_ELSE_CLREF(
-                        typename result_of::
-                            BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
-                            it1&
-                        >::type)
-                  , F
-                >::type
-            type;
-        };
+#undef BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL
+#undef BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_DECLERATION
+#undef BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_SPECIALIZATION
+#undef BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_NEXT
+#undef BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_LAST
+#undef BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_STATE_DEF
+#undef BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_IT_DEF
 
-        template<typename StateRef, typename It0, typename F>
+        template<typename State0, typename It0, typename F>
         struct BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_FOLD_NAME)<
-            StateRef
-          , It0
-          , F
-          , 2
-        >
-          : BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)<
-                typename BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)<
-                    StateRef
-                  , It0 const&
-                  , F
-                >::type
-              , BOOST_FUSION_R_ELSE_CLREF(
-                    typename result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
-                        It0 const&
-                    >::type)
-              , F
-            >
-        {};
-
-        template<typename StateRef, typename It0, typename F>
-        struct BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_FOLD_NAME)<
-            StateRef
-          , It0
-          , F
-          , 1
-        >
-          : BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)<
-                StateRef
-              , It0 const&
-              , F
-            >
-        {};
-
-        template<typename StateRef, typename It0, typename F>
-        struct BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_FOLD_NAME)<
-            StateRef
+            State0
           , It0
           , F
           , 0
         >
         {
-            typedef StateRef type;
+            typedef State0 type;
+        };
+
+        template<typename FFuncBase, typename Result,int N>
+        struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME);
+
+#if defined(BOOST_NO_AUTO_DECLARATIONS) || defined(BOOST_NO_RVALUE_REFERENCES)
+#   define BOOST_FUSION_UNROLLED_FOLD_IMPL_LOCAL_INIT(Z,N,_)                    \
+        typedef typename                                                        \
+            result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<                 \
+                BOOST_PP_CAT(It,N) const&                                       \
+            >::type                                                             \
+        BOOST_PP_CAT(It,BOOST_PP_INC(N));                                       \
+        BOOST_PP_CAT(It,BOOST_PP_INC(N)) const BOOST_PP_CAT(it,BOOST_PP_INC(N))(\
+            fusion::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION(                    \
+                BOOST_PP_CAT(it,N)));                                           \
+                                                                                \
+        typedef typename BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME,_result_of_helper)<\
+            BOOST_PP_CAT(State,N) BOOST_FUSION_CONST_IF_NO_RVALUE_REFERENCES    \
+          , BOOST_PP_CAT(It,N) const&                                           \
+          , FFuncBase                                                           \
+        >::type BOOST_PP_CAT(State,BOOST_PP_INC(N));                            \
+        BOOST_PP_CAT(State,BOOST_PP_INC(N))                                     \
+            BOOST_FUSION_CONST_IF_NO_RVALUE_REFERENCES                          \
+            BOOST_PP_CAT(state,BOOST_PP_INC(N))(                                \
+                f(                                                              \
+                    BOOST_PP_CAT(state,N),                                      \
+                    BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(                 \
+                        BOOST_PP_CAT(it,N)))                                    \
+                );
+#else
+#   define BOOST_FUSION_UNROLLED_FOLD_IMPL_LOCAL_INIT(Z,N,_)                    \
+        auto const BOOST_PP_CAT(it,BOOST_PP_INC(N))=                            \
+            fusion::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION(BOOST_PP_CAT(it,N));\
+        auto&& BOOST_PP_CAT(state,BOOST_PP_INC(N))=f(                           \
+            BOOST_PP_CAT(state,N),                                              \
+            BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(BOOST_PP_CAT(it,N)));
+#endif
+
+#define BOOST_FUSION_UNROLLED_FOLD_IMPL_DECLERATION(N_)                         \
+        template<typename FFuncBase, typename Result,int N>                     \
+        struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)
+
+#define BOOST_FUSION_UNROLLED_FOLD_IMPL_SPECIALIZATION(N)                       \
+        template<typename FFuncBase, typename Result>                           \
+        struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)<                  \
+            FFuncBase                                                           \
+          , Result                                                              \
+          , N                                                                   \
+        >
+
+#define BOOST_FUSION_UNROLLED_FOLD_IMPL_NEXT(N_)                                \
+        BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)<                         \
+            FFuncBase                                                           \
+          , Result                                                              \
+          , N-BOOST_FUSION_UNROLLED_DEPTH                                       \
+        >::call(f(                                                              \
+                BOOST_PP_CAT(state,BOOST_PP_DEC(N_)),                           \
+                BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(                     \
+                    BOOST_PP_CAT(it,BOOST_PP_DEC(N_)))),                        \
+            fusion::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION(                    \
+                BOOST_PP_CAT(it,BOOST_PP_DEC(N_))),                             \
+            f)
+
+#define BOOST_FUSION_UNROLLED_FOLD_IMPL_RETURN(N)                               \
+        f(BOOST_PP_CAT(state,BOOST_PP_DEC(N)),                                  \
+            BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(                         \
+                BOOST_PP_CAT(it,BOOST_PP_DEC(N))))
+
+#define BOOST_FUSION_UNROLLED_FOLD_IMPL(Z,N,_)                                  \
+        BOOST_PP_IIF(                                                           \
+            BOOST_PP_EQUAL(N,BOOST_FUSION_UNROLLED_DEPTH),                      \
+            BOOST_FUSION_UNROLLED_FOLD_IMPL_DECLERATION,                        \
+            BOOST_FUSION_UNROLLED_FOLD_IMPL_SPECIALIZATION)(N)                  \
+        {                                                                       \
+            template<typename State0, typename It0, typename F>                 \
+            static Result                                                       \
+            call(BOOST_FUSION_R_ELSE_CLREF(State0) state0,                      \
+                It0 const& it0,                                                 \
+                BOOST_FUSION_RREF_ELSE_OBJ(F) f)                                \
+            {                                                                   \
+                BOOST_PP_REPEAT(                                                \
+                    BOOST_PP_DEC(N),                                            \
+                    BOOST_FUSION_UNROLLED_FOLD_IMPL_LOCAL_INIT,                 \
+                    _)                                                          \
+                                                                                \
+                return BOOST_PP_IIF(                                            \
+                    BOOST_PP_EQUAL(N,BOOST_FUSION_UNROLLED_DEPTH),              \
+                    BOOST_FUSION_UNROLLED_FOLD_IMPL_NEXT,                       \
+                    BOOST_FUSION_UNROLLED_FOLD_IMPL_RETURN)(N);                 \
+            }                                                                   \
+        };
+
+        BOOST_PP_REPEAT_FROM_TO(
+            1,
+            BOOST_PP_INC(BOOST_FUSION_UNROLLED_DEPTH),
+            BOOST_FUSION_UNROLLED_FOLD_IMPL,
+            _)
+
+#undef BOOST_FUSION_UNROLLED_FOLD_IMPL
+#undef BOOST_FUSION_UNROLLED_FOLD_IMPL_NEXT
+#undef BOOST_FUSION_UNROLLED_FOLD_IMPL_RETURN
+#undef BOOST_FUSION_UNROLLED_FOLD_IMPL_SPECIALIZATION
+#undef BOOST_FUSION_UNROLLED_FOLD_IMPL_DECLERATION
+#undef BOOST_FUSION_UNROLLED_FOLD_IMPL_LOCAL_INIT
+
+#undef BOOST_FUSION_CONST_IF_NO_RVALUE_REFERENCES
+
+        template<typename FFuncBase, typename Result>
+        struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)<
+            FFuncBase
+          , Result
+          , 0
+        >
+        {
+            template<typename State0, typename It0, typename F>
+            static Result
+            call(BOOST_FUSION_R_ELSE_CLREF(State0) state0,
+                It0 const&,
+                BOOST_FUSION_RREF_ELSE_OBJ(F))
+            {
+                return static_cast<Result>(state0);
+            }
         };
 
         template<typename StateRef, typename It0, typename F, int SeqSize>
         struct BOOST_PP_CAT(result_of_first_unrolled,BOOST_FUSION_FOLD_NAME)
-        {
-            typedef typename get_func_base<F>::type f;
-
-            typedef typename
-                BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_FOLD_NAME)<
-                    typename boost::result_of<
-                        f(
-                            StateRef,
-                            BOOST_FUSION_FOLD_IMPL_INVOKE_IT_META_TRANSFORM(
-                                It0 const&)
-                        )
-                    >::type
-                  , typename result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
-                        It0 const&
-                    >::type
-                  , f
-                  , SeqSize-1
-                >::type
-            type;
-        };
+          : BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_FOLD_NAME)<
+                StateRef
+              , It0
+              , typename get_func_base<F>::type
+              , SeqSize
+            >
+        {};
 
         template<int SeqSize, typename StateRef, typename It0, typename F>
         struct BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME,_impl)
@@ -398,7 +343,8 @@ namespace boost { namespace fusion
             call(StateRef state, It0 const& it0, F f)
             {
                 return BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)<
-                    type
+                    typename get_func_base<F>::type
+                  , type
                   , SeqSize
                 >::call(
                     BOOST_FUSION_FORWARD(StateRef,state),
@@ -471,7 +417,11 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template<typename Seq, typename State, typename F>
-    inline typename result_of::fold<Seq&,State const&,F>::type
+    inline typename result_of::BOOST_FUSION_FOLD_NAME<
+        Seq&
+      , State const&
+      , F
+    >::type
     BOOST_FUSION_FOLD_NAME(Seq& seq,State const& state,F f)
     {
         return result_of::BOOST_FUSION_FOLD_NAME<Seq&,State const&,F>::call(

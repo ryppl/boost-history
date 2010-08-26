@@ -1,7 +1,7 @@
 /*==============================================================================
     Copyright (c) 2001-2007 Joel de Guzman
     Copyright (c) 2007 Dan Marsden
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -13,7 +13,6 @@
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
-
 #include <boost/fusion/algorithm/iteration/detail/for_each.hpp>
 
 namespace boost { namespace fusion
@@ -41,7 +40,8 @@ namespace boost { namespace fusion
     {
         detail::for_each_unrolled<
             result_of::size<BOOST_FUSION_R_ELSE_CLREF(Seq)>::value
-        >::call(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)),
+        >::call(
+            fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)),
             BOOST_FUSION_FORWARD(F,f));
     }
 
@@ -50,8 +50,9 @@ namespace boost { namespace fusion
     inline typename result_of::for_each<Seq&,F>::type
     for_each(Seq& seq,F f)
     {
-        detail::for_each_unrolled<result_of::size<Seq>::value>::call(
-            fusion::begin(seq),f);
+        detail::for_each_unrolled<
+            result_of::size<Seq>::value
+        >::call(fusion::begin(seq),f);
     }
 #endif
 }}

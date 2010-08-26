@@ -10,121 +10,78 @@
 #ifndef BOOST_FUSION_ALGORITHM_QUERY_DETAIL_ALL_HPP
 #define BOOST_FUSION_ALGORITHM_QUERY_DETAIL_ALL_HPP
 
-#include <boost/config.hpp>
-#include <boost/fusion/iterator/advance.hpp>
-#include <boost/fusion/iterator/equal_to.hpp>
+#include <boost/fusion/sequence/intrinsic/begin.hpp>
+#include <boost/fusion/sequence/intrinsic/end.hpp>
+#include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
-#include <boost/fusion/support/internal/constexpr.hpp>
-
-#include <boost/mpl/bool.hpp>
+#include <boost/fusion/support/config.hpp>
+#include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/arithmetic/dec.hpp>
+#include <boost/preprocessor/arithmetic/inc.hpp>
+#include <boost/preprocessor/comparison/equal.hpp>
+#include <boost/preprocessor/comparison/not_equal.hpp>
+#include <boost/preprocessor/control/expr_if.hpp>
+#include <boost/preprocessor/control/expr_iif.hpp>
+#include <boost/preprocessor/tuple/eat.hpp>
+#include <boost/preprocessor/repetition/repeat.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
     template<int N>
-    struct unrolled_all
-    {
-        template<typename It0, typename F>
-        static bool
-        call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
-        {
-            if(!f(fusion::deref(it0)))
-            {
-                return false;
-            }
+    struct unrolled_all;
 
-            typedef typename result_of::next<It0 const&>::type It1;
-            It1 it1 = fusion::next(it0);
-            if(!f(fusion::deref(it1)))
-            {
-                return false;
-            }
+#define BOOST_FUSION_UNROLLED_ALL_IMPL_N(Z,N,_)                                 \
+    if(!f(fusion::deref(BOOST_PP_CAT(it,N))))                                   \
+    {                                                                           \
+        return false;                                                           \
+    }                                                                           \
+                                                                                \
+    typedef typename                                                            \
+        result_of::next<BOOST_PP_CAT(It,N) const&>::type                        \
+    BOOST_PP_CAT(It,BOOST_PP_INC(N));                                           \
+    BOOST_PP_CAT(It,BOOST_PP_INC(N)) const BOOST_PP_CAT(it,BOOST_PP_INC(N))(    \
+        fusion::next(BOOST_PP_CAT(it,N)));
 
-            typedef typename result_of::next<It1&>::type It2;
-            It2 it2 = fusion::next(it1);
-            if(!f(fusion::deref(it2)))
-            {
-                return false;
-            }
+#define BOOST_FUSION_UNROLLED_ALL_IMPL_LAST(_) true;
 
-            typedef typename result_of::next<It2&>::type It3;
-            It3 it3 = fusion::next(it2);
-            if(!f(fusion::deref(it3)))
-            {
-                return false;
-            }
+#define BOOST_FUSION_UNROLLED_ALL_IMPL_NEXT(N_)                                 \
+    unrolled_all<N-BOOST_FUSION_UNROLLED_DEPTH>::call(                          \
+        fusion::next(BOOST_PP_CAT(it,BOOST_PP_DEC(N_))),                        \
+        BOOST_FUSION_FORWARD(F,f));
 
-            return unrolled_all<N-4>::call(
-                    fusion::next(it3),
-                    BOOST_FUSION_FORWARD(F,f));
-        }
+#define BOOST_FUSION_UNROLLED_ALL_IMPL(Z,N_,_)                                  \
+    template<BOOST_PP_EXPR_IIF(                                                 \
+        BOOST_PP_EQUAL(BOOST_PP_INC(N_),BOOST_FUSION_UNROLLED_DEPTH), int N)    \
+    >                                                                           \
+    struct unrolled_all                                                         \
+    BOOST_PP_EXPR_IIF(                                                          \
+        BOOST_PP_NOT_EQUAL(BOOST_PP_INC(N_),BOOST_FUSION_UNROLLED_DEPTH), <N_>) \
+    {                                                                           \
+        template<typename It0, typename F>                                      \
+        static bool                                                             \
+        call(                                                                   \
+            It0 const& BOOST_PP_EXPR_IF(N_,it0),                                \
+            BOOST_FUSION_RREF_ELSE_OBJ(F) BOOST_PP_EXPR_IF(N_,f))               \
+        {                                                                       \
+            BOOST_PP_REPEAT(N_,BOOST_FUSION_UNROLLED_ALL_IMPL_N,_)              \
+                                                                                \
+            return BOOST_PP_IIF(                                                \
+                BOOST_PP_EQUAL(N_,BOOST_FUSION_UNROLLED_DEPTH),                 \
+                BOOST_FUSION_UNROLLED_ALL_IMPL_NEXT,                            \
+                BOOST_FUSION_UNROLLED_ALL_IMPL_LAST)(N);                        \
+        }                                                                       \
     };
 
-    template<>
-    struct unrolled_all<3>
-    {
-        template<typename It0, typename F>
-        static bool
-        call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
-        {
-            if(!f(fusion::deref(it0)))
-            {
-                return false;
-            }
+    BOOST_PP_REPEAT(
+        BOOST_FUSION_UNROLLED_DEPTH,
+        BOOST_FUSION_UNROLLED_ALL_IMPL,
+        _)
 
-            typedef typename result_of::next<It0 const&>::type It1;
-            It1 it1 = fusion::next(it0);
-            if(!f(fusion::deref(it1)))
-            {
-                return false;
-            }
-
-            typedef typename result_of::next<It1&>::type It2;
-            It2 it2 = fusion::next(it1);
-            return f(fusion::deref(it2));
-        }
-    };
-
-    template<>
-    struct unrolled_all<2>
-    {
-        template<typename It0, typename F>
-        static bool
-        call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
-        {
-            if(!f(fusion::deref(it0)))
-            {
-                return false;
-            }
-
-            typedef typename result_of::next<It0 const&>::type It1;
-            It1 it1 = fusion::next(it0);
-            return f(fusion::deref(it1));
-        }
-    };
-
-    template<>
-    struct unrolled_all<1>
-    {
-        template<typename It0, typename F>
-        static bool
-        call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
-        {
-            return f(fusion::deref(it0));
-        }
-    };
-
-    template<>
-    struct unrolled_all<0>
-    {
-        template<typename It0, typename F>
-        static BOOST_FUSION_CONSTEXPR
-        bool
-        call(It0 const&, BOOST_FUSION_RREF_ELSE_OBJ(F))
-        {
-            return true;
-        }
-    };
+#undef BOOST_FUSION_UNROLLED_ALL_IMPL
+#undef BOOST_FUSION_UNROLLED_ALL_IMPL_NEXT
+#undef BOOST_FUSION_UNROLLED_ALL_IMPL_LAST
+#undef BOOST_FUSION_UNROLLED_ALL_IMPL_N
 }}}
 
 #endif

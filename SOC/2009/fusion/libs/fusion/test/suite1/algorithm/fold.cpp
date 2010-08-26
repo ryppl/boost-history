@@ -37,10 +37,9 @@ struct add_ints_only
     template <typename State, typename T>
     struct result<add_ints_only(State, T)>
     {
-        //TODO!!!
         typedef typename
             boost::remove_const<
-                typename boost::fusion::detail::remove_reference<State>::type
+                typename boost::remove_reference<State>::type
             >::type
         type;
     };
@@ -67,11 +66,10 @@ struct count_ints
     template <typename CountT, typename T>
     struct result<count_ints(CountT, T)>
     {
-        //TODO!!!
         typedef typename boost::remove_const<
-            typename boost::fusion::detail::remove_reference<CountT>::type>::type state;
+            typename boost::remove_reference<CountT>::type>::type state;
         typedef typename boost::remove_const<
-            typename boost::fusion::detail::remove_reference<T>::type>::type elem;
+            typename boost::remove_reference<T>::type>::type elem;
 
         typedef typename
             if_<

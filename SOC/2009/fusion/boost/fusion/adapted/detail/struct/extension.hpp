@@ -17,7 +17,6 @@ namespace boost { namespace fusion
     struct struct_tag;
     struct struct_iterator_tag;
     struct assoc_struct_tag;
-    struct fusion_sequence_tag;
 
     struct assoc_struct_category
       : random_access_traversal_tag, associative_tag

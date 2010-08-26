@@ -13,6 +13,7 @@
 #include <boost/fusion/iterator/advance_c.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
+#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #ifdef BOOST_FUSION_PREFER_MPL
 #   include <boost/fusion/support/internal/variadic_templates/variadic_arguments_to_vector.hpp>
@@ -165,7 +166,7 @@ namespace boost { namespace fusion
             {}
 
             template<typename It>
-            vector_impl(assign_by_deref,It const& it)
+            vector_impl(assign_by_deref,It const&)
             {}
 
             vector_impl(assign_directly)
@@ -173,7 +174,7 @@ namespace boost { namespace fusion
 
             template<typename It0>
             void
-            assign(It0 const& it0)
+            assign(It0 const&)
             {}
         };
 
@@ -293,40 +294,59 @@ namespace boost { namespace fusion
             BOOST_PP_REPEAT(N,BOOST_FUSION_UNROLLED_VECTOR_AT,_)\
         };
 
-        BOOST_PP_REPEAT_FROM_TO(1, 5, BOOST_FUSION_UNROLLED_VECTOR_IMPL, _)
+        BOOST_PP_REPEAT_FROM_TO(
+            1,
+            BOOST_PP_INC(BOOST_FUSION_UNROLLED_DEPTH),
+            BOOST_FUSION_UNROLLED_VECTOR_IMPL,
+            _)
 
-        template<int I, BOOST_PP_ENUM_PARAMS(4, typename H), typename... Others>
-        struct vector_impl<I,BOOST_PP_ENUM_PARAMS(4, H),Others...>
-          : vector_impl<I+4,Others...>
+        template<
+            int I,
+            BOOST_PP_ENUM_PARAMS(BOOST_FUSION_UNROLLED_DEPTH, typename H),
+            typename... Others>
+        struct vector_impl<
+            I
+          , BOOST_PP_ENUM_PARAMS(BOOST_FUSION_UNROLLED_DEPTH, H)
+          , Others...
+        >
+          : vector_impl<I+BOOST_FUSION_UNROLLED_DEPTH,Others...>
         {
-            typedef vector_impl<I+4,Others...> base_type;
+            typedef
+                vector_impl<I+BOOST_FUSION_UNROLLED_DEPTH,Others...>
+            base_type;
             typedef base_type chain_upper;
 
             using base_type::at_impl;
 
             vector_impl()
-              : BOOST_PP_ENUM(4,
-                      BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEFAULT_INIT,
-                      _)
+              : BOOST_PP_ENUM(
+                    BOOST_FUSION_UNROLLED_DEPTH,
+                    BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEFAULT_INIT,
+                    _)
             {}
 
             template<typename It>
             vector_impl(assign_by_deref,It const& it)
-              : base_type(assign_by_deref(),fusion::advance_c<4>(it))
-              , BOOST_PP_ENUM(4,
+              : base_type(
+                    assign_by_deref(),
+                    fusion::advance_c<BOOST_FUSION_UNROLLED_DEPTH>(it))
+              , BOOST_PP_ENUM(
+                    BOOST_FUSION_UNROLLED_DEPTH,
                     BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEREF_ASSIGN_PARAMS,
                     _)
             {}
 
 #   ifndef BOOST_NO_RVALUE_REFERENCES
             template<
-                BOOST_PP_ENUM_PARAMS(4, typename OtherH)
+                BOOST_PP_ENUM_PARAMS(
+                    BOOST_FUSION_UNROLLED_DEPTH, typename OtherH)
               , typename... OtherElements
             >
 #   endif
             vector_impl(
                 assign_directly,
-                BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_PARAMS(4),
+                BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_PARAMS(
+                    BOOST_FUSION_UNROLLED_DEPTH),
 #   ifdef BOOST_NO_RVALUE_REFERENCES
                 typename call_traits<Others>::param_type...  elements
 #   else
@@ -334,22 +354,30 @@ namespace boost { namespace fusion
 #   endif
             )
               : base_type(assign_directly(),
-                        BOOST_FUSION_FORWARD(OtherElements,elements)...)
-              , BOOST_PP_ENUM(4, BOOST_FUSION_UNROLLED_VECTOR_DIRECT_ASSIGN, _)
+                    BOOST_FUSION_FORWARD(OtherElements,elements)...)
+              , BOOST_PP_ENUM(
+                    BOOST_FUSION_UNROLLED_DEPTH,
+                    BOOST_FUSION_UNROLLED_VECTOR_DIRECT_ASSIGN,
+                    _)
             {}
 
             template<typename It0>
             void
             assign(It0 const& it0)
             {
-                BOOST_PP_REPEAT(4,
-                        BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEREF_ASSIGN,
-                        _)
+                BOOST_PP_REPEAT(
+                    BOOST_FUSION_UNROLLED_DEPTH,
+                    BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEREF_ASSIGN,
+                    _)
 
-                static_cast<base_type*>(this)->assign(fusion::next(it4));
+                static_cast<base_type*>(this)->assign(
+                    fusion::next(BOOST_PP_CAT(it,BOOST_FUSION_UNROLLED_DEPTH)));
             }
 
-            BOOST_PP_REPEAT(4,BOOST_FUSION_UNROLLED_VECTOR_AT,_)
+            BOOST_PP_REPEAT(
+                BOOST_FUSION_UNROLLED_DEPTH,
+                BOOST_FUSION_UNROLLED_VECTOR_AT,
+                _)
         };
 
 #   undef BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEFAULT_INIT
@@ -366,7 +394,10 @@ namespace boost { namespace fusion
 #   ifndef BOOST_FUSION_PREFER_MPL
     template<typename Vector, int I>
     struct vector_meta_value_at
-      : vector_meta_value_at<typename Vector::chain_upper, I-4>
+      : vector_meta_value_at<
+            typename Vector::chain_upper
+          , I-BOOST_FUSION_UNROLLED_DEPTH
+        >
     {};
 
 #       define BOOST_FUSION_META_VALUE_AT_SPECIALIZATION(Z,N,_)\
@@ -376,7 +407,10 @@ namespace boost { namespace fusion
         typedef typename Vector::BOOST_PP_CAT(h,N) type;\
     };
 
-    BOOST_PP_REPEAT(4, BOOST_FUSION_META_VALUE_AT_SPECIALIZATION, _)
+    BOOST_PP_REPEAT(
+        BOOST_FUSION_UNROLLED_DEPTH,
+        BOOST_FUSION_META_VALUE_AT_SPECIALIZATION,
+        _)
 
 #       undef BOOST_FUSION_META_VALUE_AT_SPECIALIZATION
 #   endif

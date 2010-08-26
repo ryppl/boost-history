@@ -50,9 +50,9 @@ namespace boost { namespace fusion
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
 
-        typedef detail::view_storage<Seq1> storage1_type;
+        typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq1) storage1_type;
         typedef typename storage1_type::type seq1_type;
-        typedef detail::view_storage<Seq2> storage2_type;
+        typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq2) storage2_type;
         typedef typename storage2_type::type seq2_type;
 
         typedef typename

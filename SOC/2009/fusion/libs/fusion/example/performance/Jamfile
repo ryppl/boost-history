@@ -9,11 +9,11 @@
 #==============================================================================
 
 project
-    : requirements
+  : requirements
         <define>BOOST_FUSION_ENABLE_STATIC_ASSERTS
         <warnings>all
         <toolset>gcc:<cxxflags>-Wno-long-long
-    ;
+  ;
     
 {
     for local test-file in [ glob *.cpp ]

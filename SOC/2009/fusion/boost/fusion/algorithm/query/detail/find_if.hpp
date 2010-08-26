@@ -1,7 +1,7 @@
 /*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2007 Dan Marsden
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -16,7 +16,12 @@
 #include <boost/fusion/iterator/advance_c.hpp>
 #include <boost/fusion/iterator/distance.hpp>
 #include <boost/fusion/support/category_of.hpp>
-
+#include <boost/fusion/support/config.hpp>
+#include <boost/preprocessor/comparison/equal.hpp>
+#include <boost/preprocessor/arithmetic/dec.hpp>
+#include <boost/preprocessor/control/iif.hpp>
+#include <boost/preprocessor/repetition/repeat.hpp>
+#include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/or.hpp>
@@ -61,9 +66,6 @@ namespace boost { namespace fusion
           : main_find_if<Begin, End, Pred>
         {};
 
-        template<typename It, typename Pred, int N>
-        struct unroll_again;
-
         template<typename It, typename Pred, int Offset>
         struct apply_offset_filter
           : mpl::apply1<
@@ -72,69 +74,68 @@ namespace boost { namespace fusion
             >::type
         {};
 
-        template<typename It, typename Pred, int N>
-        struct unrolled_find_if
-          : mpl::eval_if<
-                typename mpl::apply1<Pred,It>::type
-              , mpl::identity<It>
-              , mpl::eval_if<
-                    apply_offset_filter<It, Pred, 1>
-                  , result_of::next<It>
-                  , mpl::eval_if<
-                        apply_offset_filter<It, Pred, 2>
-                      , result_of::advance_c<It, 2>
-                      , mpl::eval_if<
-                            apply_offset_filter<It, Pred, 3>
-                          , result_of::advance_c<It, 3>
-                          , unroll_again<
-                                It
-                              , Pred
-                              , N
-                            >
-                        >
-                    >
-                >
-            >
-        {};
+        template<typename It0, typename Pred, int N>
+        struct unrolled_find_if;
 
-        template<typename It, typename Pred, int n>
+        template<typename It, typename Pred, int N>
         struct unroll_again
           : unrolled_find_if<
-                typename result_of::advance_c<It, 4>::type
+                typename result_of::advance_c<
+                    It
+                  , BOOST_FUSION_UNROLLED_DEPTH
+                >::type
               , Pred
-              , n-4
+              , N-BOOST_FUSION_UNROLLED_DEPTH
             >
         {};
 
-        template<typename It, typename Pred>
-        struct unrolled_find_if<It, Pred, 3>
-          : mpl::eval_if<
-                typename mpl::apply1<Pred,It>::type
-              , mpl::identity<It>
-              , mpl::eval_if<
-                    apply_offset_filter<It, Pred, 1>
-                  , result_of::next<It>
-                  , mpl::eval_if<
-                        apply_offset_filter<It, Pred, 2>
-                      , result_of::advance_c<It, 2>
-                      , result_of::advance_c<It, 3>
-                    >
-                >
-            >
+#define BOOST_FUSION_UNROLLED_FIND_IF_IMPL_DECLERATION(_)                       \
+        template<typename It0, typename Pred, int N>                            \
+        struct unrolled_find_if
+
+#define BOOST_FUSION_UNROLLED_FIND_IF_IMPL_SPECIALIZATION(N)                    \
+        template<typename It0, typename Pred>                                   \
+        struct unrolled_find_if<It0, Pred, N>
+
+#define BOOST_FUSION_UNROLLED_FIND_IF_HIERARCHY(Z,N,_)                          \
+      , mpl::eval_if<                                                           \
+            apply_offset_filter<It0, Pred, N>                                   \
+          , result_of::advance_c<It0,N>
+
+#define BOOST_FUSION_UNROLLED_FIND_IF_HIERARCHY_CLOSE(Z,N,_) >
+
+#define BOOST_FUSION_UNROLLED_FIND_IF_IMPL(Z,N_,_)                              \
+        BOOST_PP_IIF(                                                           \
+            BOOST_PP_EQUAL(BOOST_PP_INC(N_),BOOST_FUSION_UNROLLED_DEPTH),       \
+            BOOST_FUSION_UNROLLED_FIND_IF_IMPL_DECLERATION,                     \
+            BOOST_FUSION_UNROLLED_FIND_IF_IMPL_SPECIALIZATION)(N_)              \
+          : mpl::eval_if<                                                       \
+                typename mpl::apply1<Pred,It0>::type                            \
+              , mpl::identity<It0>                                              \
+              , mpl::eval_if<                                                   \
+                    apply_offset_filter<It0, Pred, 1>                           \
+                  , result_of::next<It0>                                        \
+                    BOOST_PP_REPEAT_FROM_TO(                                    \
+                        2,                                                      \
+                        N_,                                                     \
+                        BOOST_FUSION_UNROLLED_FIND_IF_HIERARCHY,                \
+                        _)                                                      \
+                      , result_of::advance_c<It0, N_>                           \
+            BOOST_PP_REPEAT(                                                    \
+                N_,BOOST_FUSION_UNROLLED_FIND_IF_HIERARCHY_CLOSE,_)             \
         {};
 
-        template<typename It, typename Pred>
-        struct unrolled_find_if<It, Pred, 2>
-          : mpl::eval_if<
-                typename mpl::apply1<Pred,It>::type
-              , mpl::identity<It>
-              , mpl::eval_if<
-                    apply_offset_filter<It, Pred, 1>
-                  , result_of::next<It>
-                  , result_of::advance_c<It, 2>
-                >
-            >
-        {};
+        BOOST_PP_REPEAT_FROM_TO(
+            2,
+            BOOST_FUSION_UNROLLED_DEPTH,
+            BOOST_FUSION_UNROLLED_FIND_IF_IMPL,
+            _)
+
+#undef BOOST_FUSION_UNROLLED_FIND_IF_IMPL
+#undef BOOST_FUSION_UNROLLED_FIND_IF_HIERARCHY_CLOSE
+#undef BOOST_FUSION_UNROLLED_FIND_IF_HIERARCHY
+#undef BOOST_FUSION_UNROLLED_FIND_IF_IMPL_DECLERATION
+#undef BOOST_FUSION_UNROLLED_FIND_IF_IMPL_SPECIALIZATION
 
         template<typename It, typename Pred>
         struct unrolled_find_if<It, Pred, 1>
@@ -145,10 +146,10 @@ namespace boost { namespace fusion
             >
         {};
 
-        template<typename It, typename Pred>
-        struct unrolled_find_if<It, Pred, 0>
+        template<typename It0, typename Pred>
+        struct unrolled_find_if<It0, Pred, 0>
         {
-            typedef It type;
+            typedef It0 type;
         };
 
         template<typename Begin, typename End, typename Pred>

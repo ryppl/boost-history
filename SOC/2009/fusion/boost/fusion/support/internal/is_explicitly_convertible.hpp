@@ -8,6 +8,7 @@
 #ifndef BOOST_FUSION_SUPPORT_INTERNAL_IS_EXPLICITLY_CONVERTIBLE_HPP
 #define BOOST_FUSION_SUPPORT_INTERNAL_IS_EXPLICITLY_CONVERTIBLE_HPP
 
+#include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #if !BOOST_WORKAROUND(__GNUC__,<4) && !defined(BOOST_MSVC)
@@ -15,16 +16,23 @@
 #   include <boost/fusion/support/internal/small_big_type.hpp>
 #   include <boost/mpl/bool.hpp>
 #   include <cstddef>
+#elif defined(BOOST_MSVC)
+#   include <type_traits>
 #endif
 
 namespace boost { namespace fusion { namespace detail
 {
+#if BOOST_WORKAROUND(__GNUC__,<4)
 //cschmidt: Fall back due to a defect in gcc 3.x's call_expr...
-//... and a bug in MSVC
-#if BOOST_WORKAROUND(__GNUC__,<4) || defined(BOOST_MSVC)
     template<typename From, typename To>
     struct is_explicitly_convertible
       : is_convertible<From,To>
+    {};
+#elif defined(BOOST_MSVC)
+//cschmidt: https://svn.boost.org/trac/boost/ticket/4530#comment:1
+    template<typename From, typename To>
+    struct is_explicitly_convertible
+      : std::tr1::is_convertible<From,To>
     {};
 #else
     template<typename T>
