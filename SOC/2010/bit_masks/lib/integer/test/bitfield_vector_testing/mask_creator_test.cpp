@@ -163,34 +163,34 @@ int main() {
     {
         // default ctor test.
         mask_detail t1;
-        BOOST_TEST(t1._offset==0);
-        BOOST_TEST(t1._size==0);
-        BOOST_TEST(t1._last_shift==0);
-        BOOST_TEST(t1._first_byte==0);
-        BOOST_TEST(t1._last_byte==0);
+        BOOST_TEST(t1.m_offset==0);
+        BOOST_TEST(t1.m_size==0);
+        BOOST_TEST(t1.m_last_shift==0);
+        BOOST_TEST(t1.m_first_byte==0);
+        BOOST_TEST(t1.m_last_byte==0);
 
         // copy ctor
-        t1._offset = 3;
-        t1._size = 2;
-        t1._last_shift=1;
-        t1._first_byte=0xf0;
-        t1._last_byte=0x0f;
+        t1.m_offset = 3;
+        t1.m_size = 2;
+        t1.m_last_shift=1;
+        t1.m_first_byte=0xf0;
+        t1.m_last_byte=0x0f;
         
         mask_detail t2(t1);
-        BOOST_TEST(t2._offset==3);
-        BOOST_TEST(t2._size==2);
-        BOOST_TEST(t2._last_shift==1);
-        BOOST_TEST(t2._first_byte==0xf0);
-        BOOST_TEST(t2._last_byte==0x0f);
+        BOOST_TEST(t2.m_offset==3);
+        BOOST_TEST(t2.m_size==2);
+        BOOST_TEST(t2.m_last_shift==1);
+        BOOST_TEST(t2.m_first_byte==0xf0);
+        BOOST_TEST(t2.m_last_byte==0x0f);
 
         // assignment operator.
         mask_detail t3;
         t3 = t2;
-        BOOST_TEST(t3._offset==3);
-        BOOST_TEST(t3._size==2);
-        BOOST_TEST(t3._last_shift==1);
-        BOOST_TEST(t3._first_byte==0xf0);
-        BOOST_TEST(t3._last_byte==0x0f);
+        BOOST_TEST(t3.m_offset==3);
+        BOOST_TEST(t3.m_size==2);
+        BOOST_TEST(t3.m_last_shift==1);
+        BOOST_TEST(t3.m_first_byte==0xf0);
+        BOOST_TEST(t3.m_last_byte==0x0f);
         using namespace boost;
 
         // template ctor
@@ -198,53 +198,53 @@ int main() {
         typedef mpl::at_c<masks,0>::type info;
         info inf;
         mask_detail t4( inf );
-        BOOST_TEST(t4._offset ==0);
-        BOOST_TEST(t4._size==1);
-        BOOST_TEST(t4._last_shift==5);
-        BOOST_TEST(t4._first_byte==0xE0);
-        BOOST_TEST(t4._last_byte==0x0);
+        BOOST_TEST(t4.m_offset ==0);
+        BOOST_TEST(t4.m_size==1);
+        BOOST_TEST(t4.m_last_shift==5);
+        BOOST_TEST(t4.m_first_byte==0xE0);
+        BOOST_TEST(t4.m_last_byte==0x0);
 
         // testing mpl::void_* constructor.
         typedef mpl::void_* mpl_void_ptr;
         mpl_void_ptr mvp = 0;
         mask_detail t5(mvp);
-        BOOST_TEST(t5._offset==0);
-        BOOST_TEST(t5._size==0);
-        BOOST_TEST(t5._last_shift==0);
-        BOOST_TEST(t5._first_byte==0);
-        BOOST_TEST(t5._last_byte==0);
+        BOOST_TEST(t5.m_offset==0);
+        BOOST_TEST(t5.m_size==0);
+        BOOST_TEST(t5.m_last_shift==0);
+        BOOST_TEST(t5.m_first_byte==0);
+        BOOST_TEST(t5.m_last_byte==0);
     }
 
     // testing get_mask_detail
     {
         mask_detail t1( get_mask_detail<3>(0) );
-        BOOST_TEST(t1._offset       == 0);
-        BOOST_TEST(t1._size         == 1);
-        BOOST_TEST(t1._last_shift   == 5);
-        BOOST_TEST(t1._first_byte   == 0xE0);
-        BOOST_TEST(t1._last_byte    == 0);
+        BOOST_TEST(t1.m_offset       == 0);
+        BOOST_TEST(t1.m_size         == 1);
+        BOOST_TEST(t1.m_last_shift   == 5);
+        BOOST_TEST(t1.m_first_byte   == 0xE0);
+        BOOST_TEST(t1.m_last_byte    == 0);
 
 
         mask_detail t2( get_mask_detail<3>(2) );
-        BOOST_TEST(t2._offset       == 2);
-        BOOST_TEST(t2._size         == 1);
-        BOOST_TEST(t2._last_shift   == 3);
-        BOOST_TEST(t2._first_byte   == 0x38);
-        BOOST_TEST(t2._last_byte    == 0);
+        BOOST_TEST(t2.m_offset       == 2);
+        BOOST_TEST(t2.m_size         == 1);
+        BOOST_TEST(t2.m_last_shift   == 3);
+        BOOST_TEST(t2.m_first_byte   == 0x38);
+        BOOST_TEST(t2.m_last_byte    == 0);
 
         mask_detail t3( get_mask_detail<50>(1) );
-        BOOST_TEST(t3._offset       == 0);
-        BOOST_TEST(t3._size         == 0);
-        BOOST_TEST(t3._last_shift   == 0);
-        BOOST_TEST(t3._first_byte   == 0);
-        BOOST_TEST(t3._last_byte    == 0);
+        BOOST_TEST(t3.m_offset       == 0);
+        BOOST_TEST(t3.m_size         == 0);
+        BOOST_TEST(t3.m_last_shift   == 0);
+        BOOST_TEST(t3.m_first_byte   == 0);
+        BOOST_TEST(t3.m_last_byte    == 0);
 
         mask_detail t4( get_mask_detail<3>(6) );
-        BOOST_TEST(t4._offset       == 6);
-        BOOST_TEST(t4._size         == 2);
-        BOOST_TEST(t4._last_shift   == 7);
-        BOOST_TEST(t4._first_byte   == 0x03);
-        BOOST_TEST(t4._last_byte    == 0x80);
+        BOOST_TEST(t4.m_offset       == 6);
+        BOOST_TEST(t4.m_size         == 2);
+        BOOST_TEST(t4.m_last_shift   == 7);
+        BOOST_TEST(t4.m_first_byte   == 0x03);
+        BOOST_TEST(t4.m_last_byte    == 0x80);
     }
     return boost::report_errors();
 }

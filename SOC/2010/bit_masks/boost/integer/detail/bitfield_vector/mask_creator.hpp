@@ -22,8 +22,9 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/assert.hpp>
-#include  <boost/type_traits/remove_pointer.hpp>
+#include <boost/type_traits/remove_pointer.hpp>
 #include <cstddef>
+#include <climits>
 
 namespace boost { namespace detail {
 
@@ -32,7 +33,7 @@ namespace boost { namespace detail {
  */
 template <typename Offset, typename Width>
 struct mask_size {
-    BOOST_STATIC_ASSERT( bool((Offset::value) < 8 ));
+    BOOST_STATIC_ASSERT( bool((Offset::value) < CHAR_BIT ));
     
     typedef typename mpl::if_<
         mpl::greater<
@@ -41,7 +42,7 @@ struct mask_size {
                     Offset,
                     Width
                 >::type,
-                mpl::size_t<8>
+                mpl::size_t<CHAR_BIT>
             >::type,
             mpl::size_t<0>
         >,
@@ -51,7 +52,7 @@ struct mask_size {
                     Offset,
                     Width
                 >::type,
-                mpl::size_t<8>
+                mpl::size_t<CHAR_BIT>
             >::type,
             mpl::size_t<1>
         >::type,
@@ -60,7 +61,7 @@ struct mask_size {
                 Offset,
                 Width
             >::type,
-            mpl::size_t<8>
+            mpl::size_t<CHAR_BIT>
         >::type
     >::type type;
 };
@@ -92,7 +93,7 @@ struct calc_first_byte_helper< Offset, Width, Index, Mask, true >
         storage_t(Mask | (0x80 >> Index)),
         bool((Index + 1) < (Offset + Width))
           &&
-        bool((Index + 1) < 8)
+        bool((Index + 1) < CHAR_BIT)
     >
         
 { };
@@ -120,8 +121,8 @@ template<std::size_t Offset, std::size_t Width>
 struct calc_last_shift {
     typedef typename mpl::if_c<
         bool(mask_size<mpl::size_t<Offset>,mpl::size_t<Width> >::type::value==1),
-        mpl::size_t<std::size_t(8-(Width + Offset))>,
-        mpl::size_t<std::size_t(8-((Offset+Width)%8))>
+        mpl::size_t<std::size_t(CHAR_BIT-(Width + Offset))>,
+        mpl::size_t<std::size_t(CHAR_BIT-((Offset+Width)%8))>
     >::type                             type;
 };
 
@@ -236,53 +237,53 @@ struct create_masks {
  */
 struct mask_detail {
     mask_detail()
-        :_offset(0),
-        _size(0),
-        _last_shift(0),
-        _first_byte(0),
-        _last_byte(0)
+        :m_offset(0),
+        m_size(0),
+        m_last_shift(0),
+        m_first_byte(0),
+        m_last_byte(0)
     { }
 
     mask_detail(mask_detail const& x)
-        :_offset(x._offset),
-        _size(x._size),
-        _last_shift(x._last_shift),
-        _first_byte(x._first_byte),
-        _last_byte(x._last_byte)
+        :m_offset(x.m_offset),
+        m_size(x.m_size),
+        m_last_shift(x.m_last_shift),
+        m_first_byte(x.m_first_byte),
+        m_last_byte(x.m_last_byte)
     { }
 
     template <typename MaskInfo>
     mask_detail(MaskInfo const&)
-        :_offset(MaskInfo::offset),
-        _size(MaskInfo::size),
-        _last_shift(MaskInfo::last_shift),
-        _first_byte(MaskInfo::first_value),
-        _last_byte(MaskInfo::last_value)
+        :m_offset(MaskInfo::offset),
+        m_size(MaskInfo::size),
+        m_last_shift(MaskInfo::last_shift),
+        m_first_byte(MaskInfo::first_value),
+        m_last_byte(MaskInfo::last_value)
     { }
 
     mask_detail(mpl::void_* )
-        :_offset(0),
-        _size(0),
-        _last_shift(0),
-        _first_byte(0),
-        _last_byte(0)
+        :m_offset(0),
+        m_size(0),
+        m_last_shift(0),
+        m_first_byte(0),
+        m_last_byte(0)
     { }
 
     mask_detail& operator=(mask_detail const& x) {
-        _offset = x._offset;
-        _size = x._size;
-        _last_shift = x._last_shift;
-        _first_byte = x._first_byte;
-        _last_byte = x._last_byte;
+        m_offset = x.m_offset;
+        m_size = x.m_size;
+        m_last_shift = x.m_last_shift;
+        m_first_byte = x.m_first_byte;
+        m_last_byte = x.m_last_byte;
         return *this;
     }
 
 
-    std::size_t _offset;
-    std::size_t _size;
-    std::size_t _last_shift;
-    storage_t   _first_byte;
-    storage_t   _last_byte;
+    std::size_t m_offset;
+    std::size_t m_size;
+    std::size_t m_last_shift;
+    storage_t   m_first_byte;
+    storage_t   m_last_byte;
 };
 
 /** This is the function responsible for taking both the width and the offset

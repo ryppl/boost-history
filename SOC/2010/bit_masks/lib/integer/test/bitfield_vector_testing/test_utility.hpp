@@ -113,18 +113,18 @@ void print_mask_details( T const& x) {
     std::cout << "Mask detail for the following class" << std::endl;
     std::cout << "Type: " << typestr<T>() << std::endl;
     std::cout << "Mask Values " << std::endl;
-    std::cout << "size: " <<  x._mask._size << std::endl;
-    std::cout << "offset: " <<  x._mask._offset << std::endl;
-    std::cout << "first_byte: " <<  std::hex << ulltype(x._mask._first_byte) << std::endl;
-    std::cout << "first_byte in binary: " <<  to_binary(x._mask._first_byte) << std::endl;
-    std::cout << "last_byte: " <<  std::hex << ulltype(x._mask._last_byte) << std::endl;
-    std::cout << "last_byte in binary: " <<   to_binary(x._mask._last_byte) << std::endl;
-    std::cout << "last_shift: " << x._mask._last_shift << std::endl << std::endl;
+    std::cout << "size: " <<  x.m_mask.m_size << std::endl;
+    std::cout << "offset: " <<  x.m_mask.m_offset << std::endl;
+    std::cout << "first_byte: " <<  std::hex << ulltype(x.m_mask.m_first_byte) << std::endl;
+    std::cout << "first_byte in binary: " <<  to_binary(x.m_mask.m_first_byte) << std::endl;
+    std::cout << "last_byte: " <<  std::hex << ulltype(x.m_mask.m_last_byte) << std::endl;
+    std::cout << "last_byte in binary: " <<   to_binary(x.m_mask.m_last_byte) << std::endl;
+    std::cout << "last_shift: " << x.m_mask.m_last_shift << std::endl << std::endl;
 }
 template<typename T>
 void print_storage_for_reference(T const& x) {
     std::cout << "Storage For Reference Type" << std::endl;
-    print_from_to(x._ptr, x._mask._size);
+    print_from_to(x.m_ptr, x.m_mask.m_size);
 }
 
 template <typename T>

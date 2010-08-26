@@ -48,8 +48,8 @@ int main() {
         unsigned char temp[20];
 #define TEST_MACRO_PTR_OFFSET_CTOR(NUMBER) \
         test_type_##NUMBER t##NUMBER(temp,2); \
-        BOOST_TEST(t##NUMBER._mask._offset == 2); \
-        BOOST_TEST(t##NUMBER._ptr == temp);
+        BOOST_TEST(t##NUMBER.m_mask.m_offset == 2); \
+        BOOST_TEST(t##NUMBER.m_ptr == temp);
 
         TEST_MACRO_PTR_OFFSET_CTOR(1);
         TEST_MACRO_PTR_OFFSET_CTOR(2);
@@ -70,8 +70,8 @@ int main() {
 #define TEST_MACRO_COPY_CTOR(NUMBER) \
         test_type_##NUMBER t##NUMBER(temp,2); \
         test_type_##NUMBER u##NUMBER(t##NUMBER); \
-        BOOST_TEST(u##NUMBER._mask._offset == 2); \
-        BOOST_TEST(u##NUMBER._ptr == temp);
+        BOOST_TEST(u##NUMBER.m_mask.m_offset == 2); \
+        BOOST_TEST(u##NUMBER.m_ptr == temp);
 
         TEST_MACRO_COPY_CTOR(1);
         TEST_MACRO_COPY_CTOR(2);
@@ -94,11 +94,11 @@ int main() {
 #define TEST_MACRO_COPY_ASSIGNMENT_OPERATOR(NUMBER) \
         test_type_##NUMBER t##NUMBER(temp,2);       \
         test_type_##NUMBER u##NUMBER(temp2,4);      \
-        BOOST_TEST(u##NUMBER._mask._offset == 4);         \
-        BOOST_TEST(u##NUMBER._ptr == temp2);        \
+        BOOST_TEST(u##NUMBER.m_mask.m_offset == 4);         \
+        BOOST_TEST(u##NUMBER.m_ptr == temp2);        \
         u##NUMBER = t##NUMBER;                      \
-        BOOST_TEST(u##NUMBER._mask._offset == 2);         \
-        BOOST_TEST(u##NUMBER._ptr == temp);
+        BOOST_TEST(u##NUMBER.m_mask.m_offset == 2);         \
+        BOOST_TEST(u##NUMBER.m_ptr == temp);
 
         TEST_MACRO_COPY_ASSIGNMENT_OPERATOR(1);
         TEST_MACRO_COPY_ASSIGNMENT_OPERATOR(2);

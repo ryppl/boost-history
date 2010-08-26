@@ -105,25 +105,25 @@ struct bitfield_vector_iterator_base
     //@{
     // default
     bitfield_vector_iterator_base()
-        :_ptr(0),
-        _bit_offset(0)
+        :m_ptr(0),
+        m_bit_offset(0)
     { }
 
     // copy
     bitfield_vector_iterator_base( _self const& rhs )
-        :_ptr(rhs._ptr),
-        _bit_offset(rhs._bit_offset)
+        :m_ptr(rhs.m_ptr),
+        m_bit_offset(rhs.m_bit_offset)
     { }
 
     // over a reference type
     explicit bitfield_vector_iterator_base(proxy_ref_type const& ref)
-        : _ptr( ref._ptr),
-        _bit_offset(ref._mask._offset)
+        : m_ptr( ref.m_ptr),
+        m_bit_offset(ref.m_mask.m_offset)
     { }
 
     bitfield_vector_iterator_base(storage_ptr_t ptr, std::size_t bit_offset)
-        :_ptr(ptr),
-        _bit_offset(bit_offset)
+        :m_ptr(ptr),
+        m_bit_offset(bit_offset)
     { }
     //@}
 
@@ -135,18 +135,20 @@ struct bitfield_vector_iterator_base
     void advance(intmax_t rhs) {
         typedef typename make_signed<std::size_t>::type signed_size_t;
 
-        signed_size_t previous_offset = signed_size_t(_bit_offset);
+        signed_size_t previous_offset = signed_size_t(m_bit_offset);
         previous_offset += (signed_size_t(Width)*rhs);
-        _ptr -= std::size_t((previous_offset%8)<0)+((previous_offset / 8)*-1);
+        m_ptr -= std::size_t((previous_offset%CHAR_BIT)<0)
+            + ((previous_offset / CHAR_BIT)*-1);
 
         // Comment for the following line of code.
         // In the case that previous_offset%8 is actually less then 8
-        // will construct a size_t with 1 and left shift it 3 making it
-        // positive 8. This is done to avoid branching inside of 
+        // will construct a size_t with 1 and then multiplying by the number of
+        // bits per char. This is done to avoid branching inside of 
         // increment and decrement operations and this only works if 
         // the value is true otherwise the value is zero which is 
         // the behavior I want.
-        _bit_offset = (std::size_t((previous_offset%8)<0)<<3) + (previous_offset % 8);
+        m_bit_offset = (std::size_t((previous_offset%CHAR_BIT)<0)*CHAR_BIT)
+            + (previous_offset % CHAR_BIT);
     }
     
     void next() {
@@ -158,37 +160,37 @@ struct bitfield_vector_iterator_base
     }
 
     std::ptrdiff_t distance(_self const& rhs) const {
-        std::ptrdiff_t ret = 8 * (_ptr - rhs._ptr);
-        ret -= rhs._bit_offset;
-        ret += _bit_offset;
+        std::ptrdiff_t ret = CHAR_BIT * (m_ptr - rhs.m_ptr);
+        ret -= rhs.m_bit_offset;
+        ret += m_bit_offset;
         return ret / Width;
     }
 
     bool is_equal(_self const& rhs) const {
-        return _ptr == rhs._ptr && _bit_offset == rhs._bit_offset;
+        return m_ptr == rhs.m_ptr && m_bit_offset == rhs.m_bit_offset;
     }
 
     _self& assign(_self const& rhs) {
-        _ptr = rhs._ptr;
-        _bit_offset = rhs._bit_offset;
+        m_ptr = rhs.m_ptr;
+        m_bit_offset = rhs.m_bit_offset;
         return *this;
     }
 
     const_proxy_ref_type const_deref() const {
-        return const_proxy_ref_type(_ptr, _bit_offset);
+        return const_proxy_ref_type(m_ptr, m_bit_offset);
     }
 
     proxy_ref_type deref() const {
-        return proxy_ref_type(_ptr, _bit_offset);
+        return proxy_ref_type(m_ptr, m_bit_offset);
     }
 
     bool has_value() const {
-        return _ptr;
+        return m_ptr;
     }
 
     bool is_less(_self const& rhs) const {
-        if(_ptr <= rhs._ptr) {
-            if( _bit_offset < rhs._bit_offset) {
+        if(m_ptr <= rhs.m_ptr) {
+            if( m_bit_offset < rhs.m_bit_offset) {
                 return true;
             }else{
                 return false;
@@ -199,8 +201,8 @@ struct bitfield_vector_iterator_base
     }
 
     bool is_greater(_self const& rhs) const {
-        if(_ptr >= rhs._ptr) {
-            if(_bit_offset > rhs._bit_offset) {
+        if(m_ptr >= rhs.m_ptr) {
+            if(m_bit_offset > rhs.m_bit_offset) {
                 return true;
             }else{
                 return false;
@@ -213,8 +215,8 @@ struct bitfield_vector_iterator_base
     
 
 
-    storage_ptr_t   _ptr;
-    std::size_t     _bit_offset;
+    storage_ptr_t   m_ptr;
+    std::size_t     m_bit_offset;
 };
 
 

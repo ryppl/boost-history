@@ -658,9 +658,8 @@ protected:
         if(remaing_bits < Width) {
             std::size_t next_allocation_size =
                 detail::next_allocation_size<Width>()(
-                    size_of_alloc,
-                    this->m_impl._bits_in_use
-                );
+                    size_of_alloc, this->m_impl.m_bits_in_use);
+
             pointer ptr = this->allocate_impl( next_allocation_size );
 
             std::memcpy(static_cast<void*>(ptr),
