@@ -15,9 +15,75 @@
 <div class="spirit-nav">
 <a accesskey="p" href="../reference.html"><img src="../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../images/home.png" alt="Home"></a><a accesskey="n" href="bitfield_tuple_class_reference.html"><img src="../../../images/next.png" alt="Next"></a>
 </div>
-<div class="section"><div class="titlepage"><div><div><h4 class="title">
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.concepts"></a><a class="link" href="concepts.html" title="Concepts">Concepts</a>
-</h4></div></div></div></div>
+</h4></div></div></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.concepts.concepts_within_the_documentation"></a><h6>
+<a name="id3006177"></a>
+          <a class="link" href="concepts.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.concepts.concepts_within_the_documentation">Concepts
+          within the documentation</a>
+        </h6>
+<p>
+          The following is a basic high level explanation of some of the different
+          terms use throughout <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>'s
+          documentation. Please note that concepts, in this context, is not being
+          used to refer to C++0x concepts, but instead, is being used to refer to
+          high level ideas and patterns which occur throughout the implementation
+          of <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> and its
+          interface.
+        </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.concepts.terms_and_ideas_which_reoccur_throughout__code__phrase_role__identifier__bitfield_tuple__phrase___code__"></a><h6>
+<a name="id3006232"></a>
+          <a class="link" href="concepts.html#boost_integer_bits_masks_extension.bitfield_tuple.reference.concepts.terms_and_ideas_which_reoccur_throughout__code__phrase_role__identifier__bitfield_tuple__phrase___code__">Terms
+          and Ideas which reoccur throughout <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          </a>
+        </h6>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Name</strong></span> - Is a type which when supplied
+            to a parameter which takes a name allow the field represented by that
+            parameter, to later be accessed or retrieved via that name.
+          </li>
+<li class="listitem">
+<span class="bold"><strong>Member</strong></span> - Is a bit field which is accessible
+            through an instance of <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            by either using a name or index to access it. This is also used to refer
+            to specific template parameters which when given to a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            template, define members to be within the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+            Members are the only are the only items which take a name parameter and
+            are used to represent bit fields which contain a value, within the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>. Any parameter which
+            does not represent an accessible bit field does not increase the index
+            of the next member.
+          </li>
+<li class="listitem">
+<span class="bold"><strong>get function</strong></span> - Refers to eight functions
+            which can be used to access members of a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            instance. There are four member and four free versions of the <code class="computeroutput"><span class="identifier">get</span></code> function. One which takes a index,
+            one which takes a name and cost versions of both of those, for both free
+            and member function. For additional, information about either the member
+            or free <code class="computeroutput"><span class="identifier">get</span></code> functions
+            please see, the documentation for <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            and <code class="computeroutput"><span class="identifier">bitfield_reference</span></code>
+            for the documentation of the member function, and see get function under
+            the free function documentation.
+          </li>
+<li class="listitem">
+<span class="bold"><strong>Bit Field</strong></span> - A bit field is a field of
+            contiguous bits which is used to represent a value.
+          </li>
+<li class="listitem">
+<span class="bold"><strong>Offset</strong></span> - Within a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            the offset refers to the number of bits from the least significant bit
+            that a bit field has been shifted. In other words this is the number
+            of bits between the least significant bit and the first bit of the bitfield.
+          </li>
+<li class="listitem">
+<span class="bold"><strong>Width</strong></span> - The number of contiguous bits
+            used for a bit field.
+          </li>
+</ul></div>
+</div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
 <td align="right"><div class="copyright-footer">Copyright &#169; 2010 Brian Bartman<p>

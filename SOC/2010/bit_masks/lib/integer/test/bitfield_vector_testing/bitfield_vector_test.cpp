@@ -132,9 +132,9 @@ struct test_for_bfv
 
     // default ctor test
     void test_default_ctor() {
-        BOOST_TEST(this->_impl._start == 0 );
-        BOOST_TEST(this->_impl._end == 0 );
-        BOOST_TEST(this->_impl._bits_in_use == 0 );
+        BOOST_TEST(this->m_impl.m_start == 0 );
+        BOOST_TEST(this->m_impl.m_end == 0 );
+        BOOST_TEST(this->m_impl.m_bits_in_use == 0 );
     }
 
     // ctor over alloc
@@ -144,9 +144,9 @@ struct test_for_bfv
 
     // ctor over alloc test
     void test_alloc_ctor() {
-        BOOST_TEST(this->_impl._start == 0 );
-        BOOST_TEST(this->_impl._end == 0 );
-        BOOST_TEST(this->_impl._bits_in_use == 0 );
+        BOOST_TEST(this->m_impl.m_start == 0 );
+        BOOST_TEST(this->m_impl.m_end == 0 );
+        BOOST_TEST(this->m_impl.m_bits_in_use == 0 );
     }
 
     // fill n with value ctor.
@@ -155,9 +155,9 @@ struct test_for_bfv
     { }
 
     void test_fill_with_n(typename _base::value_type val) {
-        typename _base::iterator it(this->_impl._start, 0);
-        typename _base::iterator it_end(this->_impl._start, 0);
-        it_end += this->_impl._bits_in_use / Width;
+        typename _base::iterator it(this->m_impl.m_start, 0);
+        typename _base::iterator it_end(this->m_impl.m_start, 0);
+        it_end += this->m_impl.m_bits_in_use / Width;
         while(it != it_end) {
             BOOST_TEST( *it == val);
             ++it;

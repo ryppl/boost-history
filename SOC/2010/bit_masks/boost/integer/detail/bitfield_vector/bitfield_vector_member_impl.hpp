@@ -17,6 +17,7 @@
 #include <cstring>
 #include <boost/integer/high_low_bits.hpp>
 #include <boost/integer/bit_width.hpp>
+#include <climits>
 
 
 namespace boost { namespace detail {

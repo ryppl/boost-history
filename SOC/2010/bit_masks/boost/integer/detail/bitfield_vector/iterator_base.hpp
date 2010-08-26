@@ -12,6 +12,7 @@
 #include <boost/type_traits/make_signed.hpp>
 #include <iostream>
 #include <boost/cstdint.hpp>
+#include <climits>
 
 namespace boost { namespace detail {
 

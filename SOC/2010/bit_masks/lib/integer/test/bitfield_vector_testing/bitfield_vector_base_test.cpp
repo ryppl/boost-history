@@ -141,9 +141,9 @@ int main() {
 
         // testing the default constructor for bitfield_vector_impl.
         vect_impl temp_default_constructed;
-        BOOST_TEST(temp_default_constructed._start == 0 );
-        BOOST_TEST(temp_default_constructed._end == 0 );
-        BOOST_TEST(temp_default_constructed._bits_in_use == 0 );
+        BOOST_TEST(temp_default_constructed.m_start == 0 );
+        BOOST_TEST(temp_default_constructed.m_end == 0 );
+        BOOST_TEST(temp_default_constructed.m_bits_in_use == 0 );
     }
     BOOST_TEST( allocation_size == 0 );
     BOOST_TEST( default_constructor_called );
@@ -160,9 +160,9 @@ int main() {
         alloc temp_alloc;
         vect_impl temp_allocator_constructed(temp_alloc);
 
-        BOOST_TEST(temp_allocator_constructed._start == 0 );
-        BOOST_TEST(temp_allocator_constructed._end == 0 );
-        BOOST_TEST(temp_allocator_constructed._bits_in_use == 0 );        
+        BOOST_TEST(temp_allocator_constructed.m_start == 0 );
+        BOOST_TEST(temp_allocator_constructed.m_end == 0 );
+        BOOST_TEST(temp_allocator_constructed.m_bits_in_use == 0 );        
     }
     BOOST_TEST( allocation_size == 0 );
     BOOST_TEST( default_constructor_called );
@@ -178,9 +178,9 @@ int main() {
     {
         // Default Constructor.
         vector_base_type default_constructed;
-        BOOST_TEST(default_constructed._impl._start == 0 );
-        BOOST_TEST(default_constructed._impl._end == 0 );
-        BOOST_TEST(default_constructed._impl._bits_in_use == 0 );
+        BOOST_TEST(default_constructed.m_impl.m_start == 0 );
+        BOOST_TEST(default_constructed.m_impl.m_end == 0 );
+        BOOST_TEST(default_constructed.m_impl.m_bits_in_use == 0 );
     }
     BOOST_TEST( allocation_size == 0 );
     BOOST_TEST( default_constructor_called );
@@ -196,9 +196,9 @@ int main() {
         // Allocator Constructor
         alloc temp_alloc;
         vector_base_type allocator_constructed(temp_alloc);
-        BOOST_TEST(allocator_constructed._impl._start == 0 );
-        BOOST_TEST(allocator_constructed._impl._end == 0 );
-        BOOST_TEST(allocator_constructed._impl._bits_in_use == 0 );
+        BOOST_TEST(allocator_constructed.m_impl.m_start == 0 );
+        BOOST_TEST(allocator_constructed.m_impl.m_end == 0 );
+        BOOST_TEST(allocator_constructed.m_impl.m_bits_in_use == 0 );
     }
     BOOST_TEST( allocation_size == 0 );
     BOOST_TEST( allocator_copy_called );
@@ -213,9 +213,9 @@ int main() {
     {
         // N Constructor
         vector_base_type n_array_constructed(3);
-        BOOST_TEST(n_array_constructed._impl._start != 0 );
-        BOOST_TEST(n_array_constructed._impl._end != 0 );
-        BOOST_TEST(n_array_constructed._impl._bits_in_use == 0 );
+        BOOST_TEST(n_array_constructed.m_impl.m_start != 0 );
+        BOOST_TEST(n_array_constructed.m_impl.m_end != 0 );
+        BOOST_TEST(n_array_constructed.m_impl.m_bits_in_use == 0 );
     }
     BOOST_TEST( allocation_size == 3 );
     BOOST_TEST( !allocator_copy_called );
@@ -231,9 +231,9 @@ int main() {
         alloc temp_alloc;
         // N + Allocator Constructor
         vector_base_type n_plus_allocator_array_constructed(3, temp_alloc);
-        BOOST_TEST(n_plus_allocator_array_constructed._impl._start != 0 );
-        BOOST_TEST(n_plus_allocator_array_constructed._impl._end != 0 );
-        BOOST_TEST(n_plus_allocator_array_constructed._impl._bits_in_use == 0 );
+        BOOST_TEST(n_plus_allocator_array_constructed.m_impl.m_start != 0 );
+        BOOST_TEST(n_plus_allocator_array_constructed.m_impl.m_end != 0 );
+        BOOST_TEST(n_plus_allocator_array_constructed.m_impl.m_bits_in_use == 0 );
     }
     BOOST_TEST( allocation_size == 3 );
     BOOST_TEST( allocator_copy_called );

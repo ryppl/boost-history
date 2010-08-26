@@ -6,6 +6,7 @@
 #ifndef BOOST_BITFIELD_VECTOR_BASE_HPP
 #define BOOST_BITFIELD_VECTOR_BASE_HPP
 #include <cstddef>
+#include <climits>
 
 namespace boost { namespace detail {
 
@@ -46,34 +47,34 @@ struct bitfield_vector_base {
     {
         bitfield_vector_impl()
             :rebound_alloc_type(),
-            _start(0),
-            _end(0),
-            _bits_in_use(0)
+            m_start(0),
+            m_end(0),
+            m_bits_in_use(0)
         { }
 
         bitfield_vector_impl( rebound_alloc_type const& alloc)
             :rebound_alloc_type(alloc),
-            _start(0),
-            _end(0),
-            _bits_in_use(0)
+            m_start(0),
+            m_end(0),
+            m_bits_in_use(0)
         { }
 
-        typename rebound_alloc_type::pointer    _start;
-        typename rebound_alloc_type::pointer    _end;
-        typename rebound_alloc_type::size_type  _bits_in_use;
+        typename rebound_alloc_type::pointer    m_start;
+        typename rebound_alloc_type::pointer    m_end;
+        typename rebound_alloc_type::size_type  m_bits_in_use;
     };
 
     /** This is an instance of the bitfield_vector_impl type. */
-    bitfield_vector_impl _impl;
+    bitfield_vector_impl m_impl;
 
     /** Allocator retrieval implementation functions. */
     //@{
     rebound_alloc_type& get_allocator_impl() {
-        return *static_cast<rebound_alloc_type*>(&this->_impl);
+        return *static_cast<rebound_alloc_type*>(&this->m_impl);
     }
 
     rebound_alloc_type const& get_allocator_impl() const {
-        return *static_cast<rebound_alloc_type const*>(&this->_impl);
+        return *static_cast<rebound_alloc_type const*>(&this->m_impl);
     }
     //@}
 
@@ -84,47 +85,47 @@ struct bitfield_vector_base {
 
     /** Default constructor for vector base. */
     bitfield_vector_base()
-        :_impl()
+        :m_impl()
     { }
 
     /** Constructor over an allocator. */
     bitfield_vector_base(allocator const& alloc)
-        :_impl(alloc)
+        :m_impl(alloc)
     { }
 
     /** Array Constructor. */
     bitfield_vector_base(std::size_t n)
-        :_impl()
+        :m_impl()
     {
-        this->_impl._start = this->allocate_impl(n);
-        this->_impl._end = this->_impl._start + n;
+        this->m_impl.m_start = this->allocate_impl(n);
+        this->m_impl.m_end = this->m_impl.m_start + n;
     }
 
     /** Array + Allocator Constructor. */
     bitfield_vector_base(std::size_t n, allocator const& alloc)
-        :_impl(alloc)
+        :m_impl(alloc)
     {
-        this->_impl._start = this->allocate_impl(n);
-        this->_impl._end = this->_impl._start + n;
+        this->m_impl.m_start = this->allocate_impl(n);
+        this->m_impl.m_end = this->m_impl.m_start + n;
     }
     
     /** Destructor. */
     ~bitfield_vector_base() {
-        deallocate_impl(this->_impl._start, this->_impl._end
-            - this->_impl._start);
+        deallocate_impl(this->m_impl.m_start, this->m_impl.m_end
+            - this->m_impl.m_start);
     }
 
 
     /** Calles allocate unless n = 0. */
     typename rebound_alloc_type::pointer allocate_impl(std::size_t n) {
-        return n != 0 ? _impl.allocate(n): 0;
+        return n != 0 ? m_impl.allocate(n): 0;
     }
 
     /** Calles deallocate unless ptr = 0. */
     void
     deallocate_impl(typename rebound_alloc_type::pointer ptr, std::size_t n) {
         if(ptr) {
-            _impl.deallocate(ptr,n);
+            m_impl.deallocate(ptr,n);
         }
     }
 };

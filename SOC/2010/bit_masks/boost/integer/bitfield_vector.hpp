@@ -12,13 +12,6 @@
 
 namespace boost {
 
-// template <typename,typename>
-// class vector;
-
-// template <typename T,std::size_t>
-// struct bits;
-
-
 namespace detail {
 /** Iterators. */
 //@{
@@ -505,8 +498,7 @@ public:
      */
     explicit bitfield_vector(size_type n,
                              value_type const& value = T(),
-                             allocator_type const& alloc = Allocator()
-    )
+                             allocator_type const& alloc = Allocator() )
         :_base(alloc)
     {
         allocate_and_fill(n,value);
@@ -531,19 +523,19 @@ public:
      */
     //@{
     iterator                begin() {
-        return iterator(this->_impl._start,0);
+        return iterator(this->m_impl.m_start,0);
     }
 
     const_iterator          begin() const {
-        return const_iterator(this->_impl._start,0);
+        return const_iterator(this->m_impl.m_start,0);
     }
 
     iterator                end() {
-        return begin() + (this->_impl._bits_in_use / Width);
+        return begin() + (this->m_impl.m_bits_in_use / Width);
     }
 
     const_iterator          end() const {
-        return begin() + (this->_impl._bits_in_use / Width);
+        return begin() + (this->m_impl.m_bits_in_use / Width);
     }
 
     reverse_iterator        rbegin();
@@ -625,8 +617,8 @@ protected:
         size_type min_allocation_size = n * Width;
 
         // calculate that size in bytes.
-        min_allocation_size = (min_allocation_size/8)
-            + size_type((min_allocation_size%8)!=0);
+        min_allocation_size = (min_allocation_size/CHAR_BIT)
+            + size_type((min_allocation_size%CHAR_BIT)!=0);
 
         // calculate the correct size of the allocation
         // by getting the closest power of 2 greater then the number of bytes
@@ -638,17 +630,17 @@ protected:
 
         // must save the original pointer so that I can maintain the state
         // of this object and NOT leak memory.
-        pointer old_start = this->_impl._start;
+        pointer old_start = this->m_impl.m_start;
         try {
             // allocate the necessary memory to hold all of the bitfields.
             // This CAN throw std::bad_alloc
-            this->_impl._start = this->allocate_impl(corrected_allocation_size);
-            std::memset(this->_impl._start,0,corrected_allocation_size);
+            this->m_impl.m_start = this->allocate_impl(corrected_allocation_size);
+            std::memset(this->m_impl.m_start,0,corrected_allocation_size);
             // this line will never throw because this is pointer arithmatic
             // and integer assignment.
-            this->_impl._end = this->_impl._start + corrected_allocation_size;
+            this->m_impl.m_end = this->m_impl.m_start + corrected_allocation_size;
         }catch(...) {
-            this->_impl._start = old_start;
+            this->m_impl.m_start = old_start;
             throw;
         }
 
@@ -656,27 +648,27 @@ protected:
         // with val.
         for(iterator it( begin()); it != end(); ++it) {
             *it = value;
-            this->_impl._bits_in_use += Width;
+            this->m_impl.m_bits_in_use += Width;
         }
     }
 
     void check_for_resizing() {
-        size_type size_of_alloc = (this->_impl._end - this->_impl._start);
-        difference_type remaing_bits = ((size_of_alloc*8) - this->_impl._bits_in_use);
+        size_type size_of_alloc = (this->m_impl.m_end - this->m_impl.m_start);
+        difference_type remaing_bits = ((size_of_alloc*CHAR_BIT) - this->m_impl.m_bits_in_use);
         if(remaing_bits < Width) {
             std::size_t next_allocation_size =
                 detail::next_allocation_size<Width>()(
                     size_of_alloc,
-                    this->_impl._bits_in_use
+                    this->m_impl._bits_in_use
                 );
             pointer ptr = this->allocate_impl( next_allocation_size );
 
             std::memcpy(static_cast<void*>(ptr),
-                        static_cast<void*>(this->_impl._start),
+                        static_cast<void*>(this->m_impl.m_start),
                         size_of_alloc);
-            this->deallocate_impl(this->_impl._start, size_of_alloc);
-            this->_impl._start = ptr;
-            this->_impl._end = ptr + next_allocation_size;
+            this->deallocate_impl(this->m_impl.m_start, size_of_alloc);
+            this->m_impl.m_start = ptr;
+            this->m_impl.m_end = ptr + next_allocation_size;
         }
     }
     

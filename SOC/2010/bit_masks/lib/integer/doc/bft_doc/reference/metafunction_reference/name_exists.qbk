@@ -1,0 +1,103 @@
+[/
+Copyright (c) 2010 Brian Bartman
+
+Distributed under the Boost Software License, Version 1.0. (See accompanying
+file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section:name_exists struct name_exists]
+[h5 Description]
+This meta-function yields either mpl::true_ or mpl::false_ depending on
+if the supplied name type exists within the `bitfield_tuple` type.
+
+
+[h5 Template Signature]
+``
+namespace boost { namespace bitfields {
+template<typename BitfieldTuple, typename Name> struct name_exists;
+}}
+``
+[h5 Template Parameters]
+[table
+    [
+        [Parameter] 
+        [Description]
+    ]
+    [
+        [`BitfieldTuple`]
+        [ The `bitfield_tuple` in which to look for the name. ]
+    ]
+    [
+        [`Name`]
+        [ The `Name` supplied to the member when the `bitfield_tuple`. ]
+    ]
+]
+
+
+[h5 Preconditions]
+[table
+    [
+        [Precondition]
+        [Description]
+        [Enforcement]
+    ]
+    [
+        [ BitfieldTuple must be a `bitfield_tuple`. ]
+        [ Means that if something other then a `bitfield_tuple` is supplied
+for the `BitfieldTuple` template parameter that this meta-function will not work. ]
+        [ Documented requirement only. Not enforced. ]
+    ]
+]
+
+[h5 Interface]
+`N` is used for type `name_exists` within the following interface documentation.
+[table
+    [
+        [Operation]
+        [Description]
+    ]
+    [
+        [ `N::type`]
+        [ This is mpl::true_ or mpl::false_ based on whether or not the name
+exists within the `BitfieldTuple` parameter. ]
+    ]
+]
+
+
+[h5 Header File Location]
+This meta-function is included along with the <boost/integer/bitfield_tuple.hpp>
+header file. There is no need to directly include the element header file
+within your code.
+[pre
+#include <boost/integer/bitfield_tuple/interface_metafunctions.hpp>
+]
+
+[h5 Example]
+Basic overview of how to use the `name_exists` meta-function.
+``
+#include <boost/integer/bitfield_tuple.hpp>
+
+using namespace boost::bitfields;
+
+struct i;
+struct red;
+struct green;
+struct blue;
+
+typedef bitfield_tuple<
+    member<unsigned int,red,5>,
+    member<unsigned int, green, 6>,
+    member<unsinged int, blue,5>
+>               rgb565;
+
+struct salmon;
+
+// has_salmon would be mpl::false_
+typedef name_exists<rgb565,salmon>::type has_salmon;
+
+// has red would be mpl::true_
+typedef name_exists<rgb565,red>::type has_red;
+
+``
+
+[endsect]

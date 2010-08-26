@@ -5,4 +5,41 @@ Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 [section Concepts]
+[h5 Concepts within the documentation]
+The following is a basic high level explanation of some of the different terms
+use throughout `bitfield_tuple`'s documentation. Please note that concepts,
+in this context, is not being used to refer to C++0x concepts, but instead, is
+being used to refer to high level ideas and patterns which occur throughout the
+implementation of `bitfield_tuple` and its interface.
+
+
+[h5 Terms and Ideas which reoccur throughout `bitfield_tuple` ]
+* *Name* - Is a type which when supplied to a parameter which takes a name allow
+the field represented by that parameter, to later be accessed or retrieved via
+that name.
+* *Member* - Is a bit field which is accessible through an instance of
+`bitfield_tuple` by either using a name or index to access it. This is also used
+to refer to specific template parameters which when given to a `bitfield_tuple`
+template, define members to be within the `bitfield_tuple`. Members are the only
+are the only items which take a name parameter and are used to represent bit
+fields which contain a value, within the `bitfield_tuple`. Any parameter which
+does not represent an accessible bit field does not increase the index of the
+next member.
+* *get function* - Refers to eight functions which can be used to access members
+of a `bitfield_tuple` instance. There are four member and four free versions of
+the `get` function. One which takes a index, one which takes a name and cost
+versions of both of those, for both free and member function. For additional,
+information about either the member or free `get` functions please see, the
+documentation for `bitfield_tuple` and `bitfield_reference` for the documentation
+of the member function, and see get function under the free function
+documentation.
+* *Bit Field* - A bit field is a field of contiguous bits which is used to
+represent a value.
+* *Offset* - Within a `bitfield_tuple` the offset refers to the number of bits
+from the least significant bit that a bit field has been shifted. In other words
+this is the number of bits between the least significant bit and the first bit
+of the bitfield.
+* *Width* - The number of contiguous bits used for a bit field.
+
+
 [endsect]

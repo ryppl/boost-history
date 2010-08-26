@@ -106,6 +106,10 @@ Current topics inside of documentation
 
     C)  Reference
         I)  Concepts
+            Links to add:
+                1)  Under the get function explanation:
+                        add links for free and member get functions.
+
         II)  bitfield_tuple Class Reference
             a)  bitfield_tuple and bitfield_reference
             b)  struct padding
