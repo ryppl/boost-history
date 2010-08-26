@@ -7,7 +7,7 @@
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
-#include "../syntax_highlight.hpp"
+#include "./syntax_highlight.hpp"
 #include "./actions_class.hpp"
 
 namespace quickbook
@@ -49,17 +49,17 @@ namespace quickbook
         if (source_mode == "c++")
         {
             cpp_p_type cpp_p(temp, macro, do_macro_action(temp), escape_actions);
-            parse(first, last, cpp_p);
+            boost::spirit::classic::parse(first, last, cpp_p);
         }
         else if (source_mode == "python")
         {
             python_p_type python_p(temp, macro, do_macro_action(temp), escape_actions);
-            parse(first, last, python_p);
+            boost::spirit::classic::parse(first, last, python_p);
         }
         else if (source_mode == "teletype")
         {
             teletype_p_type teletype_p(temp, macro, do_macro_action(temp), escape_actions);
-            parse(first, last, teletype_p);
+            boost::spirit::classic::parse(first, last, teletype_p);
         }
         else
         {

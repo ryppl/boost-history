@@ -18,16 +18,19 @@ project quickbook
 
 exe quickbook
     :
-    detail/quickbook.cpp
-    detail/actions.cpp
-    detail/actions_class.cpp
-    detail/utils.cpp
-    detail/input_path.cpp
-    detail/post_process.cpp
-    detail/collector.cpp
-    detail/template_stack.cpp
-    detail/markups.cpp
-    detail/syntax_highlight.cpp
+    quickbook.cpp
+    actions.cpp
+    actions_class.cpp
+    utils.cpp
+    input_path.cpp
+    post_process.cpp
+    collector.cpp
+    template_stack.cpp
+    markups.cpp
+    syntax_highlight.cpp
+    block_grammar.cpp
+    phrase_grammar.cpp
+    doc_info_grammar.cpp
     /boost//program_options
     /boost//filesystem
     : #<define>QUICKBOOK_NO_DATES
@@ -43,24 +46,4 @@ exe quickbook
       <toolset>msvc:<cxxflags>/wd4800
       <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
       <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
-    ;
-
-install dist-bin
-    :
-    quickbook
-    :
-    <install-type>EXE
-    <location>../../dist/bin
-    :
-    release
-    ;
-
-install dist-lib
-    :
-    quickbook
-    :
-    <install-type>LIB
-    <location>../../dist/lib
-    :
-    release
     ;
