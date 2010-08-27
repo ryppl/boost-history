@@ -94,7 +94,7 @@ public:
 
     void construct(implementation_type &impl)
     {
-        impl = boost::make_shared<StatusImplementation>(StatusImplementation());
+        impl = boost::make_shared<StatusImplementation>();
         boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
         impls_.push_back(impl);
     }

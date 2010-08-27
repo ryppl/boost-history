@@ -62,7 +62,7 @@ public:
      */
     static boost::shared_ptr<stream> create()
     {
-        return boost::make_shared<stream>(stream());
+        return boost::make_shared<stream>();
     }
 
     /**
@@ -114,7 +114,7 @@ public:
 
     static boost::shared_ptr<inherit> create(handle::native_type child_end)
     {
-        return boost::make_shared<inherit>(inherit(child_end));
+        return boost::make_shared<inherit>(child_end);
     }
 
     handle get_child_end()
@@ -163,7 +163,7 @@ public:
 
     static boost::shared_ptr<behavior::pipe> create(stream_type stream)
     {
-        return boost::make_shared<pipe>(pipe(stream));
+        return boost::make_shared<pipe>(stream);
     }
 
     handle get_child_end()
@@ -263,7 +263,7 @@ public:
     static boost::shared_ptr<named_pipe> create(stream_type stream,
         std::string *name = 0)
     {
-        return boost::make_shared<named_pipe>(named_pipe(stream, name));
+        return boost::make_shared<named_pipe>(stream, name);
     }
 
     handle get_child_end()
@@ -316,7 +316,7 @@ public:
 
     static boost::shared_ptr<dummy> create(stream_type stream)
     {
-        return boost::make_shared<dummy>(dummy(stream));
+        return boost::make_shared<dummy>(stream);
     }
 
     handle get_child_end()
