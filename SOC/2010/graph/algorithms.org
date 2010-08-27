@@ -117,6 +117,7 @@
     Copy all vertices from g1 & g2
     Copy all edges from g1 & g2
 *** Questions
+    - Only intersection of edges or intersection of vertices and edges?
     - How to copy properties?
 *** Links
     - http://graph-theory-algorithms-book.googlecode.com/files/graph-theory-0.3.pdf [page 18]
@@ -149,7 +150,6 @@
     - Does it make sense to have an in-place version?
 *** Links
     - http://graph-theory-algorithms-book.googlecode.com/files/graph-theory-0.3.pdf [page 18-19]
-    - http://books.google.com/books?id=0ghuqEYf25YC&lpg=PA76&ots=cr4vXOlk5g&dq=symmetric%20difference%20graph&pg=PA76#v=onepage&q=symmetric%20difference%20graph&f=false
 ** Edge symmetric difference
 *** Methods
   - void graph_edge_symmetric_difference(g1, g2, g_out)
@@ -179,6 +179,7 @@
 *** Links
     - http://graph-theory-algorithms-book.googlecode.com/files/graph-theory-0.3.pdf [page 18-19]
     - http://networkx.lanl.gov/reference/generated/networkx.symmetric_difference.html
+    - http://books.google.com/books?id=0ghuqEYf25YC&lpg=PA76&ots=cr4vXOlk5g&dq=symmetric%20difference%20graph&pg=PA76#v=onepage&q=symmetric%20difference%20graph&f=false
 ** Disjoint union
 *** Methods
   - void graph_disjoint_union(g1, g2, g_out)

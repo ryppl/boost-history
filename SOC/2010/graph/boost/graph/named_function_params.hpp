@@ -42,6 +42,9 @@ namespace boost {
   struct edge_compare_t { };
   struct vertex_max_invariant_t { };
   struct orig_to_copy_t { };
+  struct in_to_out_t { };
+  struct in1_to_out_t { };
+  struct in2_to_out_t { };
   struct root_vertex_t { };
   struct polling_t { };
   struct lookahead_t { };
@@ -91,6 +94,9 @@ namespace boost {
     BOOST_BGL_ONE_PARAM_CREF(set_edge_label, set_edge_label) \
     BOOST_BGL_ONE_PARAM_REF(buffer, buffer_param) \
     BOOST_BGL_ONE_PARAM_CREF(orig_to_copy, orig_to_copy) \
+    BOOST_BGL_ONE_PARAM_CREF(in_to_out, in_to_out) \
+    BOOST_BGL_ONE_PARAM_CREF(in1_to_out, in1_to_out) \
+    BOOST_BGL_ONE_PARAM_CREF(in2_to_out, in2_to_out) \
     BOOST_BGL_ONE_PARAM_CREF(isomorphism_map, vertex_isomorphism) \
     BOOST_BGL_ONE_PARAM_CREF(vertex_invariant, vertex_invariant) \
     BOOST_BGL_ONE_PARAM_CREF(vertex_invariant1, vertex_invariant1) \

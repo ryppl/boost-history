@@ -20,7 +20,7 @@
 #include <boost/graph/graph_utility.hpp>
 
 #include <boost/graph/copy.hpp>
-#include <boost/graph/union.hpp>
+#include <boost/graph/disjoint_union.hpp>
 
 using namespace boost;
 using namespace std;

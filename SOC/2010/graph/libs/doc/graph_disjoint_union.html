@@ -1,0 +1,124 @@
+<HTML>
+<!--
+     Copyright (C) 2010 Davi M. J. Barbosa
+     Distributed under the Boost Software License, Version 1.0.
+     (See accompanying file LICENSE_1_0.txt or copy at
+     http://www.boost.org/LICENSE_1_0.txt)
+  -->
+<Head>
+<Title>Boost Graph Library: Graph Disjoint Union</Title>
+<BODY BGCOLOR="#ffffff" LINK="#0000ee" TEXT="#000000" VLINK="#551a8b"
+        ALINK="#ff0000">
+<IMG SRC="../../../boost.png"
+     ALT="C++ Boost" width="277" height="86">
+
+<BR Clear>
+
+<H1><TT>graph_disjoint_union</TT></H1>
+
+<PRE>
+template &lt;class <a href="./VertexListGraph.html">VertexListGraph</a>, class <a href="./MutableGraph.html">MutableGraph</a>&gt;
+void graph_disjoint_union(const VertexListGraph&amp; g1, const VertexListGraph&amp; g2, MutableGraph&amp; g_out,
+    const bgl_named_params&lt;P, T, R&gt;&amp; params = <i>all defaults</i>)
+
+template &lt;class <a href="./VertexListGraph.html">VertexListGraph</a>&gt;
+VertexListGraph graph_disjoint_union(const VertexListGraph&amp; g1, const VertexListGraph&amp; g2,
+    const bgl_named_params&lt;P, T, R&gt;&amp; params = <i>all defaults</i>)
+</PRE>
+
+The result graph contains all vertices and edges from <tt>g1</tt> and
+<tt>g2</tt>, which are considered to be disjoint.
+
+<H3>Where Defined</H3>
+
+<P>
+<a href="../../../boost/graph/disjoint_union.hpp"><TT>boost/graph/disjoint_union.hpp</TT></a>
+
+<P>
+
+<H3>Parameters</H3>
+
+IN: <tt>const VertexListGraph&amp; g1</tt>
+<blockquote>
+A directed or undirected graph. The graph type must be a model of <a href="./VertexListGraph.html">Vertex List Graph</a>.
+</blockquote>
+
+IN: <tt>const VertexListGraph&amp; g2</tt>
+<blockquote>
+A directed or undirected graph. The graph type must be a model of <a href="./VertexListGraph.html">Vertex List Graph</a>.
+</blockquote>
+
+OUT: <tt>MutableGraph&amp; g_out</tt>
+<blockquote>
+The disjoint union of <tt>g1</tt> and <tt>g2</tt>. The graph type must be a model of <a href="./MutableGraph.html">Mutable Graph</a>.
+</blockquote>
+
+<h3>Named Parameters</h3>
+
+IN: <tt>vertex_copy(VertexCopier vc)</tt>
+<blockquote>
+
+This is a function that copies the properties of a vertex in the original graph
+into the corresponding vertex in the copy.<br>
+
+<b>Default:</b> default_vertex_copier which uses the property tag
+<tt>vertex_all</tt> to access a property map from the graph.
+</blockquote>
+
+IN: <tt>edge_copy(EdgeCopier ec)</tt>
+<blockquote>
+This is a function that copies the properties of an edge in the original graph
+into the corresponding edge in the copy.<br>
+
+<b>Default:</b> default_edge_copier which uses the property tag
+<tt>edge_all</tt> to access a property map from the graph.
+</blockquote>
+
+IN: <tt>vertex_index_map1(VertexIndexMap vertex_index1)</tt> and
+    <tt>vertex_index_map2(VertexIndexMap vertex_index2)</tt>
+<blockquote>
+The vertex index map type must be a model of <a
+href="../../property_map/doc/ReadablePropertyMap.html">Readable
+Property Map</a> and must map the vertex descriptors of <tt>g1</tt>
+(for <tt>vertex_index1</tt>) and <tt>g2</tt> (for
+<tt>vertex_index2</tt>) to the integers in the half-open range
+<tt>[0,num_vertices(g1))</tt> and <tt>[0,num_vertices(g2))</tt>
+respectively.<br>
+
+<b>Default:</b> <tt>get(vertex_index, g1)</tt> and <tt>get(vertex_index, g2)</tt>.
+Note: if you use this default, make sure your graph has
+an internal <tt>vertex_index</tt> property. For example,
+<tt>adjacenty_list</tt> with <tt>VertexList=listS</tt> does
+not have an internal <tt>vertex_index</tt> property.
+</blockquote>
+
+
+UTIL/OUT: <tt>in_to_out1(In2OutMap c1)</tt> and
+          <tt>in_to_out2(In2OutMap c2)</tt>
+<blockquote>
+This maps vertices in the input graphs (<tt>g1</tt> and <tt>g2</tt>
+respectively) to vertices in the output.
+
+<b>Default:</b> an <a
+  href="../../property_map/doc/iterator_property_map.html">
+  </tt>iterator_property_map</tt></a> created from a
+  <tt>std::vector</tt> of the output graph's vertex descriptor type of size
+  <tt>num_vertices(g1)</tt> (<tt>num_vertices(g2)</tt>) and using the
+  <tt>vertex_index1</tt> (<tt>vertex_index2</tt>) for the index map.
+</blockquote>
+
+<H3>Complexity</H3>
+
+<P>
+The time complexity is <i>O(V+E)</i>.
+
+<br>
+<HR>
+<TABLE>
+<TR valign=top>
+<TD nowrap>Copyright &copy; 2010</TD><TD>
+<A HREF=""></A>, University .. (<A HREF="mailto:..">..</A>)
+</TD></TR></TABLE>
+
+</BODY>
+</HTML>

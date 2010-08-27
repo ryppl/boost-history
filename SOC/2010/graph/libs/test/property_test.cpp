@@ -22,7 +22,7 @@
 #include <boost/graph/sum.hpp>
 #include <boost/graph/difference.hpp>
 #include <boost/graph/intersection.hpp>
-#include <boost/graph/union.hpp>
+#include <boost/graph/disjoint_union.hpp>
 #include <boost/graph/complement.hpp>
 #include <boost/graph/join.hpp>
 
@@ -142,7 +142,7 @@ int main(int,char*[])
   boost::mt19937 gen;
   gen.seed(uint32_t(time(0)));
 
-  Graph g1, g2, g_simple_compl, g_compl, g_rcompl, g_int, g_sum, g_diff, g_union, g_join, g_join2;
+  Graph g1, g2, g_simple_compl, g_compl, g_rcompl, g_int, g_sum, g_diff, g_sym_diff, g_union, g_join, g_join2;
 
   generate_random_graph(g1, 3,  5, gen, false);
   generate_random_graph(g2, 4, 10, gen, false);
@@ -161,20 +161,20 @@ int main(int,char*[])
   cout << endl;
 
   cout << "Complement of g1:" << endl;
-  graph_complement(g1, g_simple_compl, false); // ignore name mapping (but copy vertex properties)
+  graph_complement(g1, g_simple_compl); // ignore name mapping (but copy vertex properties)
   // check(g_compl); // graph_complement don't set graph_label
   print(g_simple_compl);
   cout << endl;
 
   cout << "Complement of g1:" << endl;
   my_vertex_copier<Graph, Graph> c;
-  graph_complement(g1, g_compl, vertex_copy(c), false);
+  g_compl = graph_complement(g1, vertex_copy(c));
   check(g_compl, false); // graph_complement don't set edge names in graph_label, but my_vertex_copier do it for vertices
   print(g_compl);
   cout << endl;
 
   cout << "Reflexive complement of g1:" << endl;
-  graph_complement(g1, g_rcompl, vertex_copy(c).edge_visitor(my_edge_visitor<Edge, Graph>()), true);
+  graph_reflexive_complement(g1, g_rcompl, vertex_copy(c).edge_visitor(my_edge_visitor<Edge, Graph>()));
   check(g_rcompl);
   print(g_rcompl);
   cout << endl;
@@ -195,6 +195,12 @@ int main(int,char*[])
   graph_difference(g1, g2, g_diff);
   check(g_diff);
   print(g_diff);
+  cout << endl;
+
+  cout << "Vertex Symmetric Difference of g1 and g2:" << endl;
+  graph_vertex_symmetric_difference(g1, g2, g_sym_diff);
+  check(g_sym_diff);
+  print(g_sym_diff);
   cout << endl;
 
   // For union and join, the vertex and edge set are considered to be disjoint.

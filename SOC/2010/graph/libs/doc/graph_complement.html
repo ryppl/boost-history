@@ -1,0 +1,126 @@
+<HTML>
+<!--
+     Copyright (C) 2010 Davi M. J. Barbosa
+     Distributed under the Boost Software License, Version 1.0.
+     (See accompanying file LICENSE_1_0.txt or copy at
+     http://www.boost.org/LICENSE_1_0.txt)
+  -->
+<Head>
+<Title>Boost Graph Library: Graph Complement</Title>
+<BODY BGCOLOR="#ffffff" LINK="#0000ee" TEXT="#000000" VLINK="#551a8b"
+        ALINK="#ff0000">
+<IMG SRC="../../../boost.png"
+     ALT="C++ Boost" width="277" height="86">
+
+<BR Clear>
+
+<H1><TT>graph_complement</TT></H1>
+
+<PRE>
+template &lt;class <a href="./VertexListGraph.html">VertexListGraph</a>, class <a href="./MutableGraph.html">MutableGraph</a>&gt;
+void graph_complement(const VertexListGraph&amp; g_in, MutableGraph&amp; g_out,
+    const bgl_named_params&lt;P, T, R&gt;&amp; params = <i>all defaults</i>)
+
+template &lt;class <a href="./VertexListGraph.html">VertexListGraph</a>&gt;
+VertexListGraph graph_complement(const VertexListGraph&amp; g_in,
+    const bgl_named_params&lt;P, T, R&gt;&amp; params = <i>all defaults</i>)
+
+template &lt;class <a href="./VertexListGraph.html">VertexListGraph</a>, class <a href="./MutableGraph.html">MutableGraph</a>&gt;
+void graph_reflexive_complement(const VertexListGraph&amp; g1, MutableGraph&amp; g_out,
+    const bgl_named_params&lt;P, T, R&gt;&amp; params = <i>all defaults</i>)
+
+template &lt;class <a href="./VertexListGraph.html">VertexListGraph</a>&gt;
+VertexListGraph graph_reflexive_complement(const VertexListGraph&amp; g1,
+    const bgl_named_params&lt;P, T, R&gt;&amp; params = <i>all defaults</i>)
+</PRE>
+
+The result graph is the complement of the input graph <tt>g_in</tt>,
+i.e., the graph with the same vertex set of <tt>g_in</tt> but whose
+edges are not present in <tt>g_in</tt>. The reflexive version creates
+self-loops.
+
+<H3>Where Defined</H3>
+
+<P>
+<a href="../../../boost/graph/complement.hpp"><TT>boost/graph/complement.hpp</TT></a>
+
+<P>
+
+<H3>Parameters</H3>
+
+IN: <tt>const VertexListGraph&amp; g_in</tt>
+<blockquote>
+A directed or undirected graph. The graph type must be a model of <a href="./VertexListGraph.html">Vertex List Graph</a>.
+</blockquote>
+
+OUT: <tt>MutableGraph&amp; g_out</tt>
+<blockquote>
+The complement of <tt>g_in</tt>. The graph type must be a model of <a href="./MutableGraph.html">Mutable Graph</a>.
+</blockquote>
+
+<h3>Named Parameters</h3>
+
+IN: <tt>vertex_copy(VertexCopier vc)</tt>
+<blockquote>
+
+This is a function that copies the properties of a vertex in the original graph
+into the corresponding vertex in the output.<br>
+
+<b>Default:</b> default_vertex_copier which uses the property tag
+<tt>vertex_all</tt> to access a property map from the graph.
+</blockquote>
+
+IN: <tt>edge_visitor(EdgeVisitor ev)</tt>
+<blockquote>
+
+This is a function that is called for brand new edges in the output,
+making it possible to set the edge property.<br>
+
+<b>Default:</b> default_edge_visitor which does nothing.
+</blockquote>
+
+IN: <tt>vertex_index_map(VertexIndexMap i_map)</tt>
+<blockquote>
+The vertex index map type must be a model of <a
+href="../../property_map/doc/ReadablePropertyMap.html">Readable Property
+Map</a> and must map the vertex descriptors of <tt>g_in</tt> to the
+integers in the half-open range <tt>[0,num_vertices(g_in))</tt>.<br>
+
+<b>Default:</b> <tt>get(vertex_index, g_in)</tt>.
+Note: if you use this default, make sure your graph has
+an internal <tt>vertex_index</tt> property. For example,
+<tt>adjacenty_list</tt> with <tt>VertexList=listS</tt> does
+not have an internal <tt>vertex_index</tt> property.
+</blockquote>
+
+
+UTIL/OUT: <tt>in_to_out(In2OutMap c)</tt>
+<blockquote>
+This maps vertices in the original graph to vertices in the output.
+
+<b>Default:</b> an <a
+  href="../../property_map/doc/iterator_property_map.html">
+  </tt>iterator_property_map</tt></a> created from a
+  <tt>std::vector</tt> of the output graph's vertex descriptor type of size
+  <tt>num_vertices(g_in)</tt> and using the <tt>i_map</tt> for the index
+  map.
+</blockquote>
+
+<H3>Complexity</H3>
+
+<P>
+The time complexity is <i>O(V&sup2;)</i>.
+
+
+
+<br>
+<HR>
+<TABLE>
+<TR valign=top>
+<TD nowrap>Copyright &copy; 2010</TD><TD>
+<!-- TODO! Fill up this information:-->
+<A HREF="">Davi M. J. Barbosa</A>, State University of Campinas (<A HREF="mailto:.."></A>)
+</TD></TR></TABLE>
+
+</BODY>
+</HTML>

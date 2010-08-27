@@ -17,24 +17,24 @@
 
 namespace boost {
   namespace detail {
-    template <typename Graph, typename MutableGraph,
+    template <typename VertexListGraph, typename MutableGraph,
               typename MergeVertices, typename SetVertexLabel,
               typename MergeEdges, typename SetEdgeLabel>
-    void graph_intersection_impl(const Graph& g1, const Graph& g2, MutableGraph& g_out,
+    void graph_intersection_impl(const VertexListGraph& g1, const VertexListGraph& g2, MutableGraph& g_out,
                                  MergeVertices merge_vertices,
                                  SetVertexLabel set_vertex_label,
                                  MergeEdges merge_edges,
                                  SetEdgeLabel set_edge_label)
     {
-      typedef typename graph_traits<Graph>::vertex_descriptor InVertex;
+      typedef typename graph_traits<VertexListGraph>::vertex_descriptor InVertex;
       typedef typename graph_traits<MutableGraph>::vertex_descriptor OutVertex;
 
-      //typename graph_bundle_type<Graph>::type const& gl1 = get_property(g1);
-      typename graph_bundle_type<Graph>::type const& gl2 = get_property(g2);
+      //typename graph_bundle_type<VertexListGraph>::type const& gl1 = get_property(g1);
+      typename graph_bundle_type<VertexListGraph>::type const& gl2 = get_property(g2);
       typename graph_bundle_type<MutableGraph>::type& gl_out = get_property(g_out);
 
       // copy vertices from (g1 intersection g2)
-      typename graph_traits < Graph >::vertex_iterator vi, vi_end;
+      typename graph_traits < VertexListGraph >::vertex_iterator vi, vi_end;
       for (tie(vi, vi_end) = vertices(g1); vi != vi_end; ++vi) {
         if ( gl2.vertices.find( g1[*vi].name ) != gl2.vertices.end() ) { // if vi is in g2
           OutVertex new_v = add_vertex(g_out);
@@ -45,7 +45,7 @@ namespace boost {
         }
       }
 
-      typename graph_traits < Graph >::edge_iterator ei, ei_end;
+      typename graph_traits < VertexListGraph >::edge_iterator ei, ei_end;
       typename graph_traits < MutableGraph >::edge_descriptor new_e;
       bool inserted;
       // copy edges from (g1 intersection g2)
@@ -67,34 +67,51 @@ namespace boost {
     }
   } // namespace detail
 
-  template <typename Graph, typename MutableGraph>
-  void graph_intersection(const Graph& g1, const Graph& g2, MutableGraph& g_out)
+  template <typename VertexListGraph, typename MutableGraph>
+  void graph_intersection(const VertexListGraph& g1, const VertexListGraph& g2, MutableGraph& g_out)
   {
     detail::graph_intersection_impl
       (g1, g2, g_out,
-       detail::default_vertices_merge<Graph, MutableGraph>(),
+       detail::default_vertices_merge<VertexListGraph, MutableGraph>(),
        detail::default_set_vertex_label<MutableGraph>(),
-       detail::default_edges_merge<Graph, MutableGraph>(),
+       detail::default_edges_merge<VertexListGraph, MutableGraph>(),
        detail::default_set_edge_label<MutableGraph>()
        );
   }
 
-  template <typename Graph, typename MutableGraph,
+  template <typename VertexListGraph, typename MutableGraph,
             typename P, typename T, typename R>
-  void graph_intersection(const Graph& g1, const Graph& g2, MutableGraph& g_out,
+  void graph_intersection(const VertexListGraph& g1, const VertexListGraph& g2, MutableGraph& g_out,
                           const bgl_named_params<P, T, R>& params)
   {
     detail::graph_intersection_impl
       (g1, g2, g_out,
        choose_param(get_param(params, vertices_merge_t()),
-                    detail::default_vertices_merge<Graph, MutableGraph>()),
+                    detail::default_vertices_merge<VertexListGraph, MutableGraph>()),
        choose_param(get_param(params, set_vertex_label_t()),
                     detail::default_set_vertex_label<MutableGraph>()),
        choose_param(get_param(params, edges_merge_t()),
-                    detail::default_edges_merge<Graph, MutableGraph>()),
+                    detail::default_edges_merge<VertexListGraph, MutableGraph>()),
        choose_param(get_param(params, set_edge_label_t()),
                     detail::default_set_edge_label<MutableGraph>())
        );
+  }
+
+  template <typename VertexListGraph>
+  VertexListGraph graph_intersection(const VertexListGraph& g1, const VertexListGraph& g2)
+  {
+    VertexListGraph g_out;
+    graph_intersection(g1, g2, g_out);
+    return g_out;
+  }
+
+  template <typename VertexListGraph, typename P, typename T, typename R>
+  VertexListGraph graph_intersection(const VertexListGraph& g1, const VertexListGraph& g2,
+                                     const bgl_named_params<P, T, R>& params)
+  {
+    VertexListGraph g_out;
+    graph_intersection(g1, g2, g_out, params);
+    return g_out;
   }
 } // namespace boost
 
