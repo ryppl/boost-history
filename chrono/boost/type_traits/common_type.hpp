@@ -36,12 +36,12 @@
 #elif defined(BOOST_COMMON_TYPE_USES_ARRAY_ASSERT)
 #define BOOST_COMMON_TYPE_CONCAT(A,B) A##B
 #define BOOST_COMMON_TYPE_NAME(A,B) BOOST_COMMON_TYPE_CONCAT(A,B)
-#define BOOST_COMMON_TYPE_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_COMMON_TYPE_NAME(__boost_common_type_test_,__LINE__)[CND];
+#define BOOST_COMMON_TYPE_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_COMMON_TYPE_NAME(__boost_common_type_test_,__LINE__)[CND]
 #else
 #define BOOST_COMMON_TYPE_STATIC_ASSERT(CND, MSG, TYPES)
 #endif
 
-#if !defined(BOOST_COMMON_TYPE_USES_MPL_ASSERT)
+#if !defined(BOOST_NO_STATIC_ASSERT) || !defined(BOOST_COMMON_TYPE_USES_MPL_ASSERT)
 #define BOOST_COMMON_TYPE_MUST_BE_A_COMPLE_TYPE "must be complete type"
 #endif
 
@@ -140,6 +140,7 @@ namespace boost {
     public:
         typedef decltype(declval<bool>() ? declval<T>() : declval<U>()) type;
 #elif defined(BOOST_COMMON_TYPE_DONT_USE_TYPEOF)
+#if 0    
         typedef char (&yes)[1];
         typedef char (&no)[2];
         //~ static yes deduce(typename add_rvalue_reference_helper<T>::type);
@@ -152,6 +153,13 @@ namespace boost {
             T,
             U
         >::type type;
+#else
+    public:
+    typedef typename detail_type_traits_common_type::common_type_impl<
+          typename remove_cv<T>::type,
+          typename remove_cv<U>::type
+      >::type type;
+#endif    
 #else
     public:
         typedef BOOST_TYPEOF_TPL(declval_bool() ? declval_T() : declval_U()) type;
@@ -172,11 +180,7 @@ namespace boost {
     template <class T, class U>
     struct common_type<T, U, void>
 #endif
-    //~ : type_traits_detail::common_type_2<T,U>
-    : detail_type_traits_common_type::common_type_impl<
-          typename remove_cv<T>::type,
-          typename remove_cv<U>::type
-      >
+    : type_traits_detail::common_type_2<T,U>
     { };
 
 
