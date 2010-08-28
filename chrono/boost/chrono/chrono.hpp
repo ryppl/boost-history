@@ -77,8 +77,9 @@ TODO:
 #include <boost/type_traits.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/detail/workaround.hpp>
+#include <boost/integer_traits.hpp>
 
-#ifndef BOOST_CHRONO_USES_MPL_ASSERT
+#if !defined(BOOST_NO_STATIC_ASSERT) || !defined(BOOST_CHRONO_USES_MPL_ASSERT)
 #define BOOST_CHRONO_A_DURATION_REPRESENTATION_CAN_NOT_BE_A_DURATION        "A duration representation can not be a duration"
 #define BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_DURATION_MUST_BE_A_STD_RATIO "Second template parameter of duration must be a std::ratio"
 #define BOOST_CHRONO_DURATION_PERIOD_MUST_BE_POSITIVE "duration period must be positive"
@@ -471,8 +472,11 @@ namespace chrono {
       static BOOST_CHRONO_CONSTEXPR Rep m_min_imp(boost::true_type)  {return zero();}
   public:
       static BOOST_CHRONO_CONSTEXPR Rep zero() {return Rep(0);}
+      static const Rep const_zero = Rep(0);
       static BOOST_CHRONO_CONSTEXPR Rep max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return (std::numeric_limits<Rep>::max)();}
+      static const Rep const_max = integer_traits<Rep>::const_max;
       static BOOST_CHRONO_CONSTEXPR Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return m_min_imp(boost::is_unsigned<Rep>());}
+      static const Rep const_min = integer_traits<Rep>::const_min;
   };
 
 }  // namespace chrono
