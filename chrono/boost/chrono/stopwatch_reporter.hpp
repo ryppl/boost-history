@@ -10,6 +10,16 @@
 #ifndef BOOST_CHRONO_STOPWATCH_REPORTER_HPP
 #define BOOST_CHRONO_STOPWATCH_REPORTER_HPP
 
+#if !defined(BOOST_ENABLE_WARNINGS) && !defined(BOOST_CHRONO_ENABLE_WARNINGS) 
+#if defined __GNUC__
+#pragma GCC system_header
+#elif defined __SUNPRO_CC
+#pragma disable_warn
+#elif defined _MSC_VER
+#pragma warning(push, 1)
+#endif
+#endif
+
 #include <boost/chrono/chrono.hpp>
 #include <boost/chrono/stopwatch_scoped.hpp>
 #include <boost/system/error_code.hpp>
@@ -75,43 +85,63 @@ namespace boost { namespace chrono  {
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
 
-        explicit basic_stopwatch_reporter( system::error_code & /*ec*/ = system::throws )
-        : m_places(Formatter::default_places()), m_os(Formatter::default_os()), m_format(Formatter::default_format()), m_reported(false) { }
+        explicit basic_stopwatch_reporter( system::error_code & ec = system::throws )
+        : m_places(Formatter::default_places()), m_os(Formatter::default_os()), m_format(Formatter::default_format()), m_reported(false) { 
+            if (&ec==&system::throws) ec.clear();
+        }
         explicit basic_stopwatch_reporter( ostream_type & os,
-                    system::error_code & /*ec*/ = system::throws )
-        : m_places(Formatter::default_places()), m_os(os), m_format(Formatter::default_format()), m_reported(false) { }
+                    system::error_code & ec = system::throws )
+        : m_places(Formatter::default_places()), m_os(os), m_format(Formatter::default_format()), m_reported(false) {  
+            if (&ec==&system::throws) ec.clear();
+        }
 
         explicit basic_stopwatch_reporter( const string_type & format,
-                    system::error_code & /*ec*/ = system::throws )
-        : m_places(Formatter::default_places()), m_os(Formatter::default_os()), m_format(format), m_reported(false) {}
+                    system::error_code & ec = system::throws )
+        : m_places(Formatter::default_places()), m_os(Formatter::default_os()), m_format(format), m_reported(false) { 
+            if (&ec==&system::throws) ec.clear();
+        }
 
         explicit basic_stopwatch_reporter( int places,
-                    system::error_code & /*ec*/ = system::throws )
-        : m_places(places), m_os(Formatter::default_os()), m_format(Formatter::default_format()), m_reported(false) { }
+                    system::error_code & ec = system::throws )
+        : m_places(places), m_os(Formatter::default_os()), m_format(Formatter::default_format()), m_reported(false) {  
+            if (&ec==&system::throws) ec.clear();
+        }
 
         basic_stopwatch_reporter( ostream_type & os, const string_type & format,
-                    system::error_code & /*ec*/ = system::throws )
-        : m_places(Formatter::default_places()), m_os(os), m_format(format), m_reported(false) { }
+                    system::error_code & ec = system::throws )
+        : m_places(Formatter::default_places()), m_os(os), m_format(format), m_reported(false) {  
+            if (&ec==&system::throws) ec.clear();
+        }
 
         basic_stopwatch_reporter( const string_type & format, int places,
-                    system::error_code & /*ec*/ = system::throws )
-        : m_places(places), m_os(Formatter::default_os()), m_format(format), m_reported(false) { }
+                    system::error_code & ec = system::throws )
+        : m_places(places), m_os(Formatter::default_os()), m_format(format), m_reported(false) {  
+            if (&ec==&system::throws) ec.clear();
+        }
 
         basic_stopwatch_reporter( ostream_type & os, int places,
-                    system::error_code & /*ec*/ = system::throws )
-        : m_places(places), m_os(os), m_format(Formatter::default_format()), m_reported(false) { }
+                    system::error_code & ec = system::throws )
+        : m_places(places), m_os(os), m_format(Formatter::default_format()), m_reported(false) {  
+            if (&ec==&system::throws) ec.clear();
+        }
 
         basic_stopwatch_reporter( int places, const string_type & format,
-                    system::error_code & /*ec*/ = system::throws )
-        : m_places(places), m_os(Formatter::default_os()), m_format(format), m_reported(false) { }
+                    system::error_code & ec = system::throws )
+        : m_places(places), m_os(Formatter::default_os()), m_format(format), m_reported(false) {  
+            if (&ec==&system::throws) ec.clear();
+        }
 
         basic_stopwatch_reporter( ostream_type & os, const string_type & format, int places,
-                    system::error_code & /*ec*/ = system::throws )
-        : m_places(places), m_os(os), m_format(format), m_reported(false) { }
+                    system::error_code & ec = system::throws )
+        : m_places(places), m_os(os), m_format(format), m_reported(false) {  
+            if (&ec==&system::throws) ec.clear();
+        }
 
         basic_stopwatch_reporter( ostream_type & os, int places, const string_type & format,
-                    system::error_code & /*ec*/ = system::throws )
-        : m_places(places), m_os(os), m_format(format), m_reported(false) { }
+                    system::error_code & ec = system::throws )
+        : m_places(places), m_os(os), m_format(format), m_reported(false) {  
+            if (&ec==&system::throws) ec.clear();
+        }
 
         ~basic_stopwatch_reporter() {// never throws
             system::error_code ec;
@@ -146,6 +176,7 @@ namespace boost { namespace chrono  {
     template <class Stopwatch, class Formatter>
     void basic_stopwatch_reporter<Stopwatch, Formatter>::report( system::error_code & ec ) {
         chrono::scoped_suspend<typename Stopwatch::clock> _(ec);
+        if (ec) return;
         if ( m_format.empty() ) m_format = Formatter::default_format();
 
         m_reported = true;
@@ -305,5 +336,14 @@ namespace boost { namespace chrono  {
 } // namespace boost
 
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
+
+#if !defined(BOOST_ENABLE_WARNINGS) && !defined(BOOST_CHRONO_ENABLE_WARNINGS)
+#if defined __SUNPRO_CC
+#pragma enable_warn
+#elif defined _MSC_VER
+#pragma warning(pop)
+#endif
+#endif
+
 
 #endif

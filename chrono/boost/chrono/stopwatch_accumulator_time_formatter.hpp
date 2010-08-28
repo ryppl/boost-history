@@ -67,6 +67,8 @@ namespace boost { namespace chrono  {
         //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
         //  be as low as 10, although will be 15 for many common platforms.
         {
+            if (&ec==&system::throws) ec.clear();
+                
             typedef typename Stopwatch::accumulator accumulator;
             typedef typename Stopwatch::duration duration_t;
             accumulator& acc = stopwatch_.accumulated();
@@ -97,25 +99,30 @@ namespace boost { namespace chrono  {
                     case 's':
                         //~ os << boost::chrono::duration<double>(duration_t(accumulators::sum(acc))).count();
                         time_formatter::show_time<process_cpu_clock>(accumulators::sum(acc), format2, places, os, ec);
+                        if (ec) return;
                         //~ os << accumulators::sum(acc);
                         break;
                     case 'm':
                         //~ os << boost::chrono::duration<double>(duration_t((accumulators::min)(acc))).count();
                         time_formatter::show_time<process_cpu_clock>((accumulators::min)(acc), format2, places, os, ec);
+                        if (ec) return;
                         //~ os << (accumulators::min)(acc);
                         break;
                     case 'M':
                         //~ os << boost::chrono::duration<double>(duration_t((accumulators::max)(acc))).count();
                         time_formatter::show_time<process_cpu_clock>((accumulators::max)(acc), format2, places, os, ec);
+                        if (ec) return;
                         //~ os << (accumulators::max)(acc);
                         break;
                     case 'a':
-                        if (accumulators::count(acc)>0)
+                        if (accumulators::count(acc)>0) {
                          //? os << boost::chrono::duration<double>(duration_t(typename duration_t::rep(accumulators::mean(acc)))).count()
                                 //~ os << boost::chrono::duration<double>(duration_t(accumulators::sum(acc))).count() / accumulators::count(acc)
                             time_formatter::show_time<process_cpu_clock>(accumulators::sum(acc) / accumulators::count(acc), format2, places, os, ec);
-                        else
+                            if (ec) return;
+                        } else {
                             os << 0;
+                        }
                         break;
                     case 'c':
                         os << accumulators::count(acc);

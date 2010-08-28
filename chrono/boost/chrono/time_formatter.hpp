@@ -65,10 +65,12 @@ namespace boost { namespace chrono  {
         template <class Stopwatch >
         static void show_time( typename Stopwatch::duration::rep const & times
             , const char_type* format, int places, ostream_type & os
-            , system::error_code & ec)
+            , system::error_code & ec
+        )
           //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
           //  be as low as 10, although will be 15 for many common platforms.
           {
+            if (&ec != &system::throws) ec.clear();
             typedef typename Stopwatch::duration duration;
             typedef typename duration::rep rep;
             if ( times.real < 0 ) return;
@@ -133,6 +135,7 @@ namespace boost { namespace chrono  {
             typedef typename Stopwatch::duration duration;
             typedef typename duration::rep rep;
             duration d = stopwatch_.elapsed( ec );
+            if (ec) return;
             rep times=d.count();
             show_time<Stopwatch>(times, format, places, os, ec);
         }

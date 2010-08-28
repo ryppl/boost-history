@@ -65,11 +65,14 @@ namespace boost { namespace chrono  {
         //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
         //  be as low as 10, although will be 15 for many common platforms.
         {
+            if (&ec==&system::throws) ec.clear();
+            
             typedef typename Stopwatch::accumulator accumulator;
             typedef typename Stopwatch::duration duration_t;
             accumulator& acc = stopwatch_.accumulated();
-            duration_t lt= stopwatch_.lifetime();
-
+            duration_t lt= stopwatch_.lifetime(ec);
+            if (ec) return;
+                
             //if ( d < duration_t::zero() ) return;
             if ( places > 9 )
                 places = 9;  // sanity check
