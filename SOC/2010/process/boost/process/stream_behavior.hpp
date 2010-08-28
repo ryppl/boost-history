@@ -54,6 +54,13 @@ class stream
 {
 public:
     /**
+     * Empty virtual destructor.
+     */
+    virtual ~stream()
+    {
+    }
+
+    /**
      * Factory function to create a stream behavior object.
      *
      * Returns a shared pointer to the stream behavior object as this is
