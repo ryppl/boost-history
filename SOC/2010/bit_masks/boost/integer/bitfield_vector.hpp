@@ -11,6 +11,8 @@
 #include <boost/integer/detail/bitfield_vector/iterator_base.hpp>
 #include <algorithm>
 #include <iterator>
+#include <limits>
+#include <stdexcept>
 
 namespace boost {
 
@@ -544,11 +546,15 @@ public:
     }
 
     reverse_iterator        rbegin() {
-        return reverse_iterator(this->m_impl.m_end - 1,0);
+        return reverse_iterator(this->m_impl.m_start +
+            (this->m_impl.m_bits_in_use/CHAR_BIT),
+            this->m_impl.m_bits_in_use%CHAR_BIT);
     }
 
     const_reverse_iterator  rbegin() const {
-        return const_reverse_iterator(this->m_impl.m_end - 1,0);
+        return const_reverse_iterator(this->m_impl.m_start +
+            (this->m_impl.m_bits_in_use/CHAR_BIT),
+            this->m_impl.m_bits_in_use%CHAR_BIT);
     }
 
     reverse_iterator        rend() {
@@ -598,14 +604,102 @@ public:
     //@}
 
 
-    size_type size() const;
-    size_type max_size() const;
+    /** size and Max size.
+     *  size - Returns the number of elements within the bitfield_vector.
+     *  max_size - Returns the maximum_nu
+     */
+    size_type size() const {
+        return this->m_impl.m_bits_in_use/Width;
+    }
+
+    /** This is being defined and the number of bitfields which can be put into
+     *  the largest character array.
+     */
+    size_type max_size() const {
+        typedef typename mpl::divides<
+            typename mpl::times<
+                mpl::integral_c<
+                    size_type,
+                    (~size_type(0))
+                >,
+                mpl::size_t<CHAR_BIT>
+            >::type,
+            mpl::size_t<Width>
+        >::type             result;
+        return result::value;
+    }
+
+    /** Returns the maximum number of elements which could be placed into 
+     *  the currently allocated memory.
+     */
+    size_type capacity() const {
+        return ((this->m_impl.m_end - this->m_impl.m_start) * CHAR_BIT) / Width;
+    }
+    
+    /** Returns true if there are no elements in the container. */
+    bool empty() const {
+        return !(this->m_impl.m_bits_in_use > 0);
+    }
 
 
-    void resize(size_type sz, value_type c = value_type() );    
-    size_type capacity() const;
-    bool empty() const;
-    void reserve(size_type n);
+    /** vector swap function.
+     *  swaps two bitfield_vectors.
+     */
+    void swap(_self& vec) {
+        using namespace std;
+        swap(this->m_impl.m_start, vec.m_impl.m_start);
+        swap(this->m_impl.m_end, vec.m_impl.m_end);
+        swap(this->m_impl.m_bits_in_use, vec.m_impl.m_bits_in_use);
+    }
+
+    /** Returns the current allocator. */
+    allocator_type get_allocator() const {
+        return this->_base::get_allocator();
+    }
+
+    /** Because all bitfields are trivially destructable
+     *  I'm skipping the part where I attempt to call
+     *  the destructor and instead simply setting the number of bit in use to 0
+     *  is the same a clear. Also notice that this really can't be used to call
+     *  the destructor because to do so I would need to take its address which
+     *  I can't.
+     */
+    void clear() {
+        this->m_impl.m_bits_in_use = 0;
+    }
+
+    /** Reserves a section of memory greater then or equal to n.
+     *  
+     */
+    void reserve(size_type n) {
+        if(n > max_size())
+            throw std::length_error();
+
+        if(capacity() > n )
+            return;
+    /*
+        storage_ptr_t old_storage = this->m_impl.m_start;
+        size_type number_of_bits_to_allocate = n * Width;
+        // size_type corrected_allocation_size = 1;
+        // locate the closest power of two greater then the value of n.
+        size_type pwr_of_two = 1;
+        while(pwr_of_two < n) {
+            pwr_of_two *= 2;
+        }
+
+        try {
+            this->m_impl.m_start = this->allocate_impl(
+                corrected_allocation_size);
+        } catch(...) {
+            this->m_impl.m_start = old_storage;
+        }
+*/
+    }
+
+
+
+
+    void resize(size_type sz, value_type c = value_type() );
     reference operator[](size_type n);
     const_reference operator[](size_type n) const;
     reference at(size_type n);
@@ -614,7 +708,6 @@ public:
 
     template <class InputIterator>
     void assign(InputIterator first, InputIterator last);
-
     void assign(size_type n, value_type const& u);
     void push_back(value_type const& x);
     void pop_back();
@@ -622,18 +715,15 @@ public:
     void insert(iterator position, size_type n, value_type const& x);
 
     template <class InputIterator>
-    void insert(iterator position, InputIterator first, InputIterator last) {
-    }
+    void insert(iterator position, InputIterator first, InputIterator last);
 
     iterator erase(iterator position);
     iterator erase(iterator first, iterator last);
-    void swap(_self& vec);
-    void clear();
-    allocator_type get_allocator() const;
+
 
 protected:
 
-    /**  */
+    /**  
     template <typename InputIter>
     void assign_impl(InputIter iter1, InputIter iter2) {
         std::memset(this->m_impl.m_start,
@@ -648,8 +738,8 @@ protected:
         for(;iter1 != iter2; ++iter1) {
             
         }
-        
     }
+*/
 
     /** Does a single allocation of a fixed size 
      *  This is for making sure that if an exception does occur that I can
@@ -699,7 +789,7 @@ protected:
         // if there is a need deallocating 
         allocate_storage( corrected_allocation_size );
 
-        std::memset(this->m_impl.m_start,0,corrected_allocation_size);
+
 
         // once allocation is completed next comes filling the bitfields
         // with val.

@@ -18,7 +18,8 @@
 #include <boost/integer/high_low_bits.hpp>
 #include <boost/integer/bit_width.hpp>
 #include <climits>
-
+#include <limits>
+#include <boost/mpl/less.hpp>
 
 namespace boost { namespace detail {
 
@@ -461,8 +462,6 @@ public:
     }
 
 };
-
-
 
 }} // end boost::detail
 

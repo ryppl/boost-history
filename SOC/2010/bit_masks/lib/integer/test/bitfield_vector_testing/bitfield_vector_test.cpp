@@ -250,6 +250,36 @@ struct test_for_bfv
         BOOST_TEST(b == this->back());
     }
 
+    // size
+    void test_size(typename _base::size_type s) const {
+        BOOST_TEST( s == this->size() );
+    }
+
+    // max size
+    void test_max_size() {
+        BOOST_TEST((~(typename _base::size_type(0))*CHAR_BIT)/Width
+            ==this->max_size());
+    }
+    
+    // capacity
+    void test_capacity() {
+        typename _base::size_type allcation_size = this->m_impl.m_end
+            - this->m_impl.m_start;
+        allcation_size *= CHAR_BIT;
+        allcation_size /= Width;
+        BOOST_TEST( allcation_size == this->capacity() );
+    }
+
+    // empty
+    void test_empty(bool is_empty) {
+        BOOST_TEST(is_empty == this->empty());
+    }
+
+    // clear
+    void test_clear() {
+        this->clear();
+        BOOST_TEST( this->m_impl.m_bits_in_use == 0);
+    }
 };
 
 
@@ -339,6 +369,45 @@ void test_orchestrator() {
         Tester t1(2, 2);
         *--t1.end() = 3;
         t1.test_const_front_and_back(2,3);
+    }
+
+    // size
+    {
+        Tester t1(1, 2);
+        Tester t2(5, 2);
+        Tester t3(8, 2);
+
+        t1.test_size(1);
+        t2.test_size(5);
+        t3.test_size(8);
+    }
+
+    // max size
+    {
+        Tester t1;
+        t1.test_max_size();
+    }
+    
+    // capacity
+    {
+        Tester t1;
+        t1.test_capacity();
+        Tester t2(8, 2);
+        t2.test_capacity();
+    }
+    
+    // empty
+    {
+        Tester t1;
+        t1.test_empty(true);
+        Tester t2(8, 2);
+        t2.test_empty(false);
+    }
+
+    // clear test.
+    {
+        Tester t2(8, 2);
+        t2.test_clear();
     }
 }
 

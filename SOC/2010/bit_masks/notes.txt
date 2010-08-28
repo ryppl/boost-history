@@ -262,7 +262,8 @@ thrown.
 void allocate_storage(size_type allocation_size)
     and all functions which call it
     - fill constructor.
-
+void reserve(size_type n)
+    can throw bad alloc and length_error
 
 
 
