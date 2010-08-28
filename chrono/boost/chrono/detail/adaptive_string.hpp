@@ -15,14 +15,14 @@
 namespace boost { namespace chrono  {
 
 namespace detail {
-    
+
     /**
      * this class is a shim between std::string type and wchar_t type.
-     * it accepts a std::string type and returns a std::string or 
+     * it accepts a std::string type and returns a std::string or
      * std::wstring according to the context(e.g. type on the left side
      * of '=' operator):
      * - in case of a string type, it forwards the passed-in std::string
-     * - in case of a wstring type, it widens it passed-in std::string 
+     * - in case of a wstring type, it widens it passed-in std::string
      * before forwarding
      *
      * typical usage:
@@ -30,16 +30,16 @@ namespace detail {
      *    std::wstring ws = adaptive_string("hello"); // ws = L"hello"
      * N.B. it doe not do any code conversion like: MBCS <--> UNICODE
      */
-        
+
     struct adaptive_string
     {
         adaptive_string(const std::string& s):str_(s)
         {}
-        
+
         // implicit convert to  any basic_string
         template <
-            typename CharT, 
-            typename Traits, 
+            typename CharT,
+            typename Traits,
             class Alloc
         >
         operator std::basic_string<CharT, Traits, Alloc>() const
@@ -49,13 +49,16 @@ namespace detail {
             s.assign(str_.begin(), str_.end());
             return s;
         }
-      
+        adaptive_string(const adaptive_string& rhs) : str_(rhs.str_)
+        {}
+
       private:
         const std::string& str_;
+        adaptive_string& operator=(const adaptive_string&); // = delete;
     };
-    
-    
-} // namespace detail  
+
+
+} // namespace detail
 } // namespace chrono
 } // namespace boost
 
