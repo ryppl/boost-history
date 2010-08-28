@@ -28,10 +28,10 @@ struct C1C2 {
 };
 
 template <typename C, typename A>
-void f2(typename boost::common_type<A, C>::type const& rhs) {}
+void f2(typename boost::common_type<A, C>::type const& ) {}
 
 template <typename C, typename A, typename B>
-void f3(typename boost::common_type<C, A, B>::type const& rhs) {}
+void f3(typename boost::common_type<C, A, B>::type const& ) {}
 
 template <typename C, typename A>
 void assignation_2() {
@@ -76,7 +76,7 @@ C1C2& declval_C1C2() {return c1c2;}
 C1& declval_C1(){return c1;}
 bool declval_bool(){return true;}
 
-int test_main( int argc, char * argv[] )
+int test_main( int /*argc*/, char * /*argv*/[] )
 {
     assignation_2<C1C2, C1>();
     typedef boost::common_type<C1C2&, C1&>::type T1; // fails if BOOST_COMMON_TYPE_DONT_USE_TYPEOF
