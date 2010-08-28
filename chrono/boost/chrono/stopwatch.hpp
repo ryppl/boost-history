@@ -32,9 +32,6 @@ namespace boost
 //~ A call to reset resets the stopwatch to zero.
 //~ A stopwatch can also also used to record split times or lap times.
 //~ The elapsed time since the last start is available through the elapsed function.
-//~ When the freeze function is called while the watch is running, the elapsed time is frozen,
-//~ allowing the elapsed time to that point to be read using the frozen function,
-//~ but the watch mechanism continues running to record total elapsed time.
 //--------------------------------------------------------------------------------------//
 
     template <class Clock=high_resolution_clock>
