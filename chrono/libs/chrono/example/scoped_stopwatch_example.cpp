@@ -12,7 +12,7 @@
 #include "sleep_for.hpp"
 
 using namespace boost::chrono;
-double res;
+long double res;
 void f1(long j)
 {
     stopwatch_reporter<stopwatch<> > _(BOOST_CHRONO_STOPWATCH_FUNCTION_FORMAT);

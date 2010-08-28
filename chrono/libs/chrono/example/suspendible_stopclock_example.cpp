@@ -13,14 +13,14 @@
 #include <cmath>
 
 using namespace boost::chrono;
-double res;
+long double res;
 
 int f1(long j)
 {
     stopclock<suspendible_clock<high_resolution_clock> > a(9);   
     //stopclock<high_resolution_clock> b(9);   
 
-    for ( long i = 0; i < j; ++i )
+    for ( int i = 0; i < j; ++i )
         res+=std::sqrt( res+123.456L+i );  // burn some time
     if (j!=0) f1(j-1);
     //boost::this_thread::sleep(boost::posix_time::milliseconds(10));
@@ -33,7 +33,7 @@ int main()
     stopclock<suspendible_clock<high_resolution_clock> > a(9);   
     //stopclock<high_resolution_clock> b(9);   
 
-    for (long i =1; i<= 3; ++i)
+    for (int i =1; i<= 3; ++i)
         f1(i*100);
     std::cout<< res << std::endl;
     return 0;
