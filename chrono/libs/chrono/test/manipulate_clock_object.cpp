@@ -33,8 +33,14 @@ time2_demo contained this comment:
 
 using namespace boost::chrono;
 
-
+#if defined _MSC_VER
+#pragma warning(push)
+#pragma warning(disable:4100)
+#endif
 void manipulate_clock_object(system_clock clock)
+#if defined _MSC_VER
+#pragma warning(pop)    
+#endif
 {
     system_clock::duration delay = milliseconds(5);
     system_clock::time_point start = clock.now();
@@ -44,7 +50,7 @@ void manipulate_clock_object(system_clock clock)
     system_clock::time_point stop = clock.now();
     system_clock::duration elapsed = stop - start;
     std::cout << "paused " << nanoseconds(elapsed).count() << " nanoseconds\n";
-};
+}
 
 
 int main()
