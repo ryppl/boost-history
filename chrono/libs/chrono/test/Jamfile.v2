@@ -20,14 +20,20 @@ project
     : requirements
         <os>LINUX:<threading>multi
         #<library>/boost/chrono//boost_chrono
-        <library>/boost/system//boost_system
         <library>../build//boost_chrono
+        <library>/boost/system//boost_system
         #<library>/boost/thread//boost_thread/<link>shared
         # uncomment the line above if you build outside the Boost release
         #<include>$(BOOST_ROOT) 
         # uncomment the line above if you build outside the Boost release
         #<include>../../..
         <toolset>msvc:<asynch-exceptions>on
+        <define>BOOST_ENABLE_WARNINGS
+        <warnings>all
+        <toolset>gcc:<cxxflags>-Wextra
+        <toolset>gcc:<cxxflags>-Wno-long-long        
+        <toolset>gcc-mingw-4.5.0:<cxxflags>-fdiagnostics-show-option
+        <toolset>msvc:<cxxflags>/wd4127
     ;
 
    test-suite "common_type"
