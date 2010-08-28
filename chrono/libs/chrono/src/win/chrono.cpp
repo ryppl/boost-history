@@ -18,7 +18,7 @@ namespace
     LARGE_INTEGER freq;
     if ( !QueryPerformanceFrequency( &freq ) )
       return 0.0L;
-    return 1000000000.0L / freq.QuadPart;
+    return double(1000000000.0L / freq.QuadPart);
   }
 
   const double nanosecs_per_tic = get_nanosecs_per_tic();

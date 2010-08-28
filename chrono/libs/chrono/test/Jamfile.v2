@@ -32,6 +32,7 @@ project
         <warnings>all
         <toolset>gcc:<cxxflags>-Wextra
         <toolset>gcc:<cxxflags>-Wno-long-long        
+        <toolset>gcc-mingw-4.5.0:<cxxflags>-Wno-missing-field-initializers        
         <toolset>gcc-mingw-4.5.0:<cxxflags>-fdiagnostics-show-option
         <toolset>msvc:<cxxflags>/wd4127
     ;
