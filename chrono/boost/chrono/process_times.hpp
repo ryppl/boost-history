@@ -9,7 +9,7 @@
 //  See http://www.boost.org/libs/system for documentation.
 
 #ifndef BOOST_PROCESS_TIMES_HPP
-#define BOOST_PROCESS_TIMES_HPP
+#define BOOST_PROCESS_TIMES_HPP  
 
 #include <boost/chrono/chrono.hpp>
 #include <boost/system/error_code.hpp>
@@ -99,6 +99,9 @@ namespace boost
 
     protected:
       process_times   m_start;
+    private:
+      process_timer(const process_timer&); // = delete;
+      process_timer& operator=(const process_timer&); // = delete;
     };
 
 //--------------------------------------------------------------------------------------//
@@ -161,11 +164,21 @@ namespace boost
     private:
       int             m_places;
       std::ostream &  m_os;
+    
+#if defined _MSC_VER
+#pragma warning(push)
+#pragma warning(disable:4251)
+#endif
       std::string     m_format;
+#if defined _MSC_VER
+#pragma warning(pop)    
+#endif
       bool            m_reported;
 
       static std::ostream &  m_cout();
       static const int m_default_places = 3;
+      run_timer(const run_timer&); // = delete;
+      run_timer& operator=(const run_timer&); // = delete;
     };
 
   } // namespace chrono
