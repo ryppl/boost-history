@@ -154,6 +154,7 @@ struct test_for_bfv
         :_base(n,val)
     { }
 
+    // fill constructor test.
     void test_fill_with_n(typename _base::value_type val) {
         typename _base::iterator it(this->m_impl.m_start, 0);
         typename _base::iterator it_end(this->m_impl.m_start, 0);
@@ -163,6 +164,92 @@ struct test_for_bfv
             ++it;
         }
     }
+
+    // implementation function tests.
+    // void allocate_and_fill(size_type n, value_type value)
+    void test_allocate_and_fill(typename _base::size_type n,
+        typename _base::value_type val)
+    {
+        this->allocate_and_fill(n,val);
+        
+        typename _base::size_type allocated_amount = ((n*Width)/CHAR_BIT)
+            + ((n%CHAR_BIT)>0);
+        BOOST_TEST(typename _base::size_type(this->m_impl.m_end - this->m_impl.m_start)
+            == allocated_amount);
+        BOOST_TEST(this->m_impl.m_bits_in_use == n*Width );
+        typename _base::iterator it(this->m_impl.m_start, 0);
+        typename _base::iterator it_end(this->m_impl.m_start, 0);
+        while(it != it_end) {
+            BOOST_TEST( *it == val);
+            ++it;
+        }
+    }
+    
+    // testing the regular begin function.
+    void test_begin_and_end(typename _base::difference_type n) {
+        typename _base::iterator i1 = this->begin();
+        typename _base::iterator i2 = this->end();
+        BOOST_TEST( i1 != i2 );
+        BOOST_TEST( i2 - i1 == n );
+    }
+
+    // testing the const begin function.
+    void test_const_begin_and_end(typename _base::difference_type n) const {
+        typename _base::const_iterator i1 = this->begin();
+        typename _base::const_iterator i2 = this->end();
+        BOOST_TEST( i1 != i2 );
+        BOOST_TEST( i2 - i1 == n );
+    }
+
+    // reverse iterator begin and end
+    void test_reverse_begin_and_end(typename _base::difference_type n) {
+        typename _base::reverse_iterator i1 = this->rbegin();
+        typename _base::reverse_iterator i2 = this->rend();
+        std::cout << "i2 - i1: "  << i2 - i1 << std::endl;
+        BOOST_TEST( i1 != i2 );
+        BOOST_TEST( i2 - i1 == n );
+    }
+
+    // const reverse iterator begin and end
+    void test_const_reverse_begin_and_end(typename _base::difference_type n) const {
+        typename _base::const_reverse_iterator i1 = this->rbegin();
+        typename _base::const_reverse_iterator i2 = this->rend();
+        BOOST_TEST( i1 != i2 );
+        BOOST_TEST( i2 - i1 == n );
+    }
+
+    // explicitly const begin and end
+    void test_cbegin_and_cend(typename _base::difference_type n) {
+        typename _base::const_iterator i1 = this->cbegin();
+        typename _base::const_iterator i2 = this->cend();
+        BOOST_TEST( i1 != i2 );
+        BOOST_TEST( i2 - i1 == n );
+    }
+
+    // explictly const reverse begin and end
+    void test_crbegin_and_crend(typename _base::difference_type n) {
+        typename _base::const_reverse_iterator i1 = this->crbegin();
+        typename _base::const_reverse_iterator i2 = this->crend();
+        BOOST_TEST( i1 != i2 );
+        BOOST_TEST( i2 - i1 == n );
+    }
+
+    // front and back
+    void test_front_and_back(typename _base::value_type f,
+        typename _base::value_type b)
+    {
+        BOOST_TEST(f == this->front());
+        BOOST_TEST(b == this->back());
+    }
+    
+    // const front and back
+    void test_const_front_and_back(typename _base::value_type f,
+        typename _base::value_type b) const
+    {
+        BOOST_TEST(f == this->front());
+        BOOST_TEST(b == this->back());
+    }
+
 };
 
 
@@ -197,19 +284,62 @@ void test_orchestrator() {
         Tester t1(4, 2);
         t1.test_fill_with_n(2);
     }
-    // regular begin and end.
+
+    // allocate_and_fill
     {
-    }
-    // const begin and end
-    {
-    }
-    // reverse begin and end
-    {
-    }
-    // const reverse begine and end
-    {
+        Tester t1;
+        t1.test_allocate_and_fill(4,3);
     }
 
+    // regular begin and end.
+    {
+        Tester t1(5, 2);
+        t1.test_begin_and_end(5);
+
+    }
+
+    // const begin and end
+    {
+        Tester t1(5, 2);
+        t1.test_const_begin_and_end(5);
+    }
+
+    // reverse begin and end
+    {
+        Tester t1(4, 2);
+        t1.test_reverse_begin_and_end(4);
+    }
+
+    // const reverse begine and end
+    {
+        Tester t1(2, 2);
+        t1.test_const_reverse_begin_and_end(2);
+    }
+
+    // explicitly const begin and end
+    {
+        Tester t1(2, 2);
+        t1.test_cbegin_and_cend(2);
+    }
+    
+    // explicity const reverse begin and end
+    {
+        Tester t1(2, 2);
+        t1.test_crbegin_and_crend(2);
+    }
+    
+    // non const front and back.
+    {
+        Tester t1(2, 2);
+        t1.test_front_and_back(2,2);
+    }
+
+    // const front and back
+    {
+        Tester t1(2, 2);
+        *--t1.end() = 3;
+        t1.test_const_front_and_back(2,3);
+    }
 }
 
 int main() {

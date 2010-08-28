@@ -254,41 +254,19 @@ List of TODO's throughout the bitfield_tuple
 --------------------------------------------------------------------------------
 
 
-                  THINGS TO CREATE EXTERNAL DOCUMENTATION FOR
+                        bitfield_vector testing 
 --------------------------------------------------------------------------------
+make sure that the following functions don't leak memory when an exception is
+thrown.
 
-inside of file <boost/integer/bitfield_tuple/interface_meta_functions.hpp>
-1) template <typename BitfieldTuple, typename Name>
-   struct name_exists;
-
-2) template <typename BitfieldTuple, typename Name>
-   struct find_by_element_name;
-
-3) template <typename BitfieldTuple, std::size_t Index>
-   struct find_by_element_index;
-
-4) template <typename BitfieldTuple, typename Name>
-   struct get_proxy_reference_type_by_name;
-
-5) template <typename BitfieldTuple, std::size_t Index>
-   struct get_proxy_reference_type_by_index;
-
-no particular file yet.
-6) How to make your own custom policy (After I finish the pointer/custom stuff)
+void allocate_storage(size_type allocation_size)
+    and all functions which call it
+    - fill constructor.
 
 
-General Topic
-Make note of the issue with retrieving a proxy reference type in a 
-const scope and how to deal with it if they wish to create their own 
-proxy reference type OR if they wish to actually return the proxy
-reference type.
 
 
-*) Update documentation for filler -> padding 
-*) update documentation for bit_align -> align
-*)  Create documentation for how to create your own policy.
-*)  proxy_reference_policy may need additional documentation however it looks
-    good currently.
+
 --------------------------------------------------------------------------------
 
 

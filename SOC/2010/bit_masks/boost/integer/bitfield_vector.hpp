@@ -495,8 +495,10 @@ public:
         :_base(alloc)
     { }
 
-    /** fill with value constructor.
+    /** fill constructor
      *  Fills the vector with N items with value of value.
+     *  Throws: std::bad_alloc (or anything which is thrown out of
+     *  the allocators allocate function).
      */
     explicit bitfield_vector(size_type n,
                              value_type const& value = T(),
@@ -505,6 +507,7 @@ public:
     {
         allocate_and_fill(n,value);
     }
+
 
     template <class InputIterator>
     bitfield_vector(InputIterator first, InputIterator last,
@@ -540,30 +543,58 @@ public:
         return begin() + (this->m_impl.m_bits_in_use / Width);
     }
 
-    reverse_iterator        rbegin();
-    const_reverse_iterator  rbegin() const;
+    reverse_iterator        rbegin() {
+        return reverse_iterator(this->m_impl.m_end - 1,0);
+    }
 
-    reverse_iterator        rend();
-    const_reverse_iterator  rend() const;
+    const_reverse_iterator  rbegin() const {
+        return const_reverse_iterator(this->m_impl.m_end - 1,0);
+    }
 
-    const_iterator          cbegin() const;
-    const_iterator          cend() const;
+    reverse_iterator        rend() {
+        return rbegin() + (this->m_impl.m_bits_in_use / Width);
+    }
 
-    const_reverse_iterator  crbegin() const;
-    const_reverse_iterator  crend() const;
+    const_reverse_iterator  rend() const {
+        return rbegin() + (this->m_impl.m_bits_in_use / Width);
+    }
+
+    const_iterator          cbegin() const {
+        return begin();
+    }
+
+    const_iterator          cend() const {
+        return end();
+    }
+
+    const_reverse_iterator  crbegin() const {
+        return rbegin();
+    }
+
+    const_reverse_iterator  crend() const {
+        return rend();
+    }
     //@}
 
-
-
-
     /** Direct member access to front and back for both const and non const 
-     *  types.
+     *  access.
      */
     //@{
-    reference   front();
-    reference   back();
-    const_reference front()  const;
-    const_reference back()   const;
+    reference   front() {
+        return *begin();
+    }
+
+    reference   back() {
+        return *(--end());
+    }
+
+    const_reference front()  const {
+        return *begin();
+    }
+
+    const_reference back()   const {
+        return *(--end());
+    }
     //@}
 
 
@@ -624,6 +655,8 @@ protected:
      *  This is for making sure that if an exception does occur that I can
      *  catch it and recover correctly with out leaking any memory.
      *  Not responsible for deallocating memory.
+     *  This function updates the m_start and m_end member pointers but not
+     *  the m_bits_in
      */
     void allocate_storage(size_type allocation_size) {
         // must save the original pointer so that I can maintain the state
@@ -632,20 +665,12 @@ protected:
         try {
             // allocate the necessary memory to hold all of the bitfields.
             // This CAN throw std::bad_alloc
-            this->m_impl.m_start
-                = this->allocate_impl(allocation_size);
+            this->m_impl.m_start = this->allocate_impl(allocation_size);
         }catch(...) {
             this->m_impl.m_start = old_start;
             throw;
         }
-    }
-
-    /** This deallocates the storage. */
-    void deallocate_storage() {
-        this->deallocate_impl(
-            this->m_impl.m_start,
-            this->m_impl.m_end - this->m_impl.m_start
-        );
+        this->m_impl.m_end = this->m_impl.m_start + allocation_size;
     }
 
     /** allocates a chunck of memory of the correct size and then
@@ -675,21 +700,18 @@ protected:
         allocate_storage( corrected_allocation_size );
 
         std::memset(this->m_impl.m_start,0,corrected_allocation_size);
-        // this line will never throw because this is pointer arithmatic
-        // and integer assignment.
-        this->m_impl.m_end = this->m_impl.m_start + corrected_allocation_size;
 
         // once allocation is completed next comes filling the bitfields
         // with val.
-        for(iterator it( begin()); it != end(); ++it) {
-            *it = value;
-            this->m_impl.m_bits_in_use += Width;
-        }
+        this->m_impl.m_bits_in_use = n*Width;
+        using namespace std;
+        fill(begin(),end(),value);
     }
 
     void check_for_resizing() {
         size_type size_of_alloc = (this->m_impl.m_end - this->m_impl.m_start);
-        difference_type remaing_bits = ((size_of_alloc*CHAR_BIT) - this->m_impl.m_bits_in_use);
+        difference_type remaing_bits = ((size_of_alloc*CHAR_BIT) -
+            this->m_impl.m_bits_in_use);
         if(remaing_bits < Width) {
             std::size_t next_allocation_size =
                 detail::next_allocation_size<Width>()(
