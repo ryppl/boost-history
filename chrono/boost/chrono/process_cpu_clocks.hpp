@@ -124,7 +124,7 @@ namespace boost { namespace chrono {
             template <typename OSTREAM>
             void print(OSTREAM& os) const {
                 os <<  "{"<< real <<","<< user <<","<< system << "}";
-            };
+            }
         };
         
     class BOOST_CHRONO_DECL process_cpu_clock
