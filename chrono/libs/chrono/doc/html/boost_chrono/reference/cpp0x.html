@@ -112,6 +112,8 @@
           Configuration macros"><code class="computeroutput"><span class="identifier">BOOST_COMMON_TYPE_USES_MPL_ASSERT</span></code></a>
 <span class="preprocessor">#define</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.conf" title="
           Configuration macros"><code class="computeroutput"><span class="identifier">BOOST_COMMON_TYPE_USES_ARRAY_ASSERT</span></code></a>
+<span class="preprocessor">#define</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.pp" title="
+          Preprocessor info"><code class="computeroutput"><span class="identifier">BOOST_COMMON_TYPE_DONT_USE_TYPEOF</span></code></a>
 
 <span class="comment">// preprocessor info
 </span><span class="preprocessor">#define</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.pp" title="
@@ -159,6 +161,11 @@
 <p>
             Depending on the static assertion used system you will have an hint of
             the failing assertion either through the symbol or through the texte.
+          </p>
+<p>
+            When BOOST_NO_DECLTYPE is not defined common_type is implemented using
+            decltype. Otherwise when BOOST_COMMON_TYPE_DONT_USE_TYPEOF is not defined
+            it uses Boost.TypeOf.
           </p>
 </div>
 <div class="section" lang="en">

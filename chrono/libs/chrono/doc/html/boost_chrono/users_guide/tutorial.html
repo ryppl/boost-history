@@ -477,7 +477,7 @@
             fractional part gets silently discarded.
           </p>
 <a name="boost_chrono.users_guide.tutorial.duration.what_happens_if_i_assign__m3___us3__to__minutes__instead_of__microseconds__.but_what_if_the_truncation_behavior_is_what_i_want_to_do_"></a><h6>
-<a name="id4815604"></a>
+<a name="id4815606"></a>
             <a href="tutorial.html#boost_chrono.users_guide.tutorial.duration.what_happens_if_i_assign__m3___us3__to__minutes__instead_of__microseconds__.but_what_if_the_truncation_behavior_is_what_i_want_to_do_">But
             what if the truncation behavior is what I want to do?</a>
           </h6>
@@ -1267,12 +1267,14 @@
 <span class="keyword">double</span> <span class="identifier">res</span><span class="special">;</span>
 <span class="keyword">void</span> <span class="identifier">f1</span><span class="special">(</span><span class="keyword">long</span> <span class="identifier">j</span><span class="special">)</span>
 <span class="special">{</span>
-    <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
-          Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a><span class="special">&lt;&gt;::</span><span class="identifier">reporter</span> <span class="identifier">_</span><span class="special">(</span><span class="identifier">BOOST_CHRONO_STOPWATCH_FUNCTION_FORMAT</span><span class="special">);</span>
+    <a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
+          Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a><span class="special">&lt;</span><a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
+          Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a><span class="special">&lt;&gt;</span> <span class="special">&gt;::</span> <span class="identifier">_</span><span class="special">(</span><span class="identifier">BOOST_CHRONO_STOPWATCH_FUNCTION_FORMAT</span><span class="special">);</span>
     <span class="keyword">for</span> <span class="special">(</span><span class="keyword">long</span> <span class="identifier">i</span> <span class="special">=</span><span class="number">0</span><span class="special">;</span> <span class="identifier">i</span><span class="special">&lt;</span> <span class="identifier">j</span><span class="special">;</span> <span class="identifier">i</span><span class="special">+=</span><span class="number">1</span><span class="special">)</span>
         <span class="identifier">res</span><span class="special">+=</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">sqrt</span><span class="special">(</span> <span class="identifier">res</span><span class="special">+</span><span class="number">123.456L</span><span class="special">+</span><span class="identifier">i</span> <span class="special">);</span>  <span class="comment">// burn some time
-</span>    <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
-          Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a><span class="special">&lt;&gt;::</span><span class="identifier">reporter</span><span class="special">::</span><span class="identifier">scoped_suspend</span> <span class="identifier">s</span><span class="special">(</span><span class="identifier">_</span><span class="special">);</span>
+</span>    <a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
+          Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a><span class="special">&lt;</span><a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
+          Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a><span class="special">&lt;&gt;</span> <span class="special">&gt;::</span><span class="identifier">scoped_suspend</span> <span class="identifier">s</span><span class="special">(</span><span class="identifier">_</span><span class="special">);</span>
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span><span class="number">200</span><span class="special">));</span>
 <span class="special">}</span>
 </pre>
@@ -1303,7 +1305,8 @@
           </p>
 <pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">accumulators</span><span class="special">;</span>
 
-<span class="keyword">typedef</span> <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
+<span class="keyword">typedef</span> <a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
+          Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a><span class="special">&lt;</span><a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
           Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a><span class="special">&lt;</span><a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
           Class process_real_cpu_clock"><code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code></a><span class="special">,</span>
             <span class="identifier">accumulator_set</span><span class="special">&lt;</span><a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
@@ -1314,7 +1317,7 @@
                         <span class="identifier">tag</span><span class="special">::</span><span class="identifier">mean</span>
                 <span class="special">&gt;</span>
             <span class="special">&gt;</span>
-  <span class="special">&gt;::</span><span class="identifier">reporter</span> <span class="identifier">my_stopwatch_accumulator_reporter</span><span class="special">;</span>
+  <span class="special">&gt;</span> <span class="identifier">my_stopwatch_accumulator_reporter</span><span class="special">;</span>
 
 <span class="keyword">int</span> <span class="identifier">f1</span><span class="special">(</span><span class="keyword">long</span> <span class="identifier">j</span><span class="special">)</span>
 <span class="special">{</span>
@@ -1358,7 +1361,8 @@
 <pre class="programlisting"><span class="special">...</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">accumulators</span><span class="special">/</span><span class="identifier">statistics</span><span class="special">/</span><span class="identifier">variance</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="special">...</span>
-<span class="keyword">typedef</span> <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
+<span class="keyword">typedef</span> <a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
+          Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a><span class="special">&lt;</span><a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
           Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a><span class="special">&lt;</span><a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
           Class process_real_cpu_clock"><code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code></a><span class="special">,</span>
             <span class="identifier">accumulator_set</span><span class="special">&lt;</span><a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
@@ -1370,14 +1374,15 @@
                         <span class="identifier">tag</span><span class="special">::</span><span class="identifier">variance</span><span class="special">(</span><span class="identifier">lazy</span><span class="special">)</span>
                 <span class="special">&gt;</span>
             <span class="special">&gt;</span>
-<span class="special">&gt;::</span><span class="identifier">reporter</span> <span class="identifier">my_stopwatch_accumulator_reporter</span><span class="special">;</span>
+<span class="special">&gt;</span> <span class="identifier">my_stopwatch_accumulator_reporter</span><span class="special">;</span>
 </pre>
 <p>
             But what happens if we add new statistics to the accumulator_set that
             are not taken in account by the default formatter? These statistics will
             simply be ignored. So we will need to define our own accumulator formatter.
           </p>
-<pre class="programlisting"><span class="keyword">typedef</span> <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
+<pre class="programlisting"><span class="keyword">typedef</span> <a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
+          Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a><span class="special">&lt;</span><a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
           Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a><span class="special">&lt;</span><a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
           Class process_real_cpu_clock"><code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code></a><span class="special">,</span>
             <span class="identifier">accumulator_set</span><span class="special">&lt;</span><a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
@@ -1390,7 +1395,7 @@
                 <span class="special">&gt;</span>
             <span class="special">&gt;,</span>
             <span class="identifier">my_stopwatch_accumulator_formatter</span>
-<span class="special">&gt;::</span><span class="identifier">reporter</span> <span class="identifier">my_stopwatch_accumulator_reporter</span><span class="special">;</span>
+<span class="special">&gt;</span> <span class="identifier">my_stopwatch_accumulator_reporter</span><span class="special">;</span>
 </pre>
 <p>
             Next follow the definition of a formatter taking care of count, sum,

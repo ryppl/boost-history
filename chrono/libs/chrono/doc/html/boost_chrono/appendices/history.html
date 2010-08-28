@@ -27,6 +27,7 @@
 <a name="boost_chrono.appendices.history"></a><a href="history.html" title=" Appendix A: History"> Appendix A: History</a>
 </h3></div></div></div>
 <div class="toc"><dl>
+<dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_4_6__august_28__2010__"><span class="bold"><strong>Version 0.4.6, August 28, 2010</strong></span> </a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_4_5__july_6__2010____documentation_update_"><span class="bold"><strong>Version 0.4.5, July 6, 2010</strong></span> <span class="emphasis"><em>Documentation
         update</em></span></a></span></dt>
 <dt><span class="section"><a href="history.html#boost_chrono.appendices.history.__version_0_4_4__february_22__2010_____warning_fixes_"><span class="bold"><strong>Version 0.4.4, February 22, 2010</strong></span> <span class="emphasis"><em>Warning
@@ -52,6 +53,47 @@
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.appendices.history.__version_0_4_6__august_28__2010__"></a><a href="history.html#boost_chrono.appendices.history.__version_0_4_6__august_28__2010__" title="Version 0.4.6, August 28, 2010 "><span class="bold"><strong>Version 0.4.6, August 28, 2010</strong></span> </a>
+</h4></div></div></div>
+<p>
+          <span class="bold"><strong>New Features:</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            Implementation of <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
+          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> without using Boost.TypeOf.
+          </li>
+<li>
+            Added <a href="../reference/formatters.html#boost_chrono.reference.formatters.stopwatch_accumulator_time_formatter_hpp.basic_stopwatch_accumulator_time_formatter" title="
+          Template Class basic_stopwatch_accumulator_time_formatter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator_time_formatter</span></code></a>
+            class.
+          </li>
+</ul></div>
+<p>
+          <span class="bold"><strong>Old Features:</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+            Type reporter removed from Stopwatches as well as the get_reporter metafunction.
+          </li></ul></div>
+<p>
+          <span class="bold"><strong>Bug Fixes</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            __process_cpu<span class="underline">clock</span>_ is now a valid
+            model of Clock that can be used with __stopclocks<span class="underline">accumulator</span>_.
+          </li>
+<li>
+            eliminate or suppress a lot of warnings appearing with with warnings=all
+            -Wextra
+          </li>
+<li>
+            improve the error code handling
+          </li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
 <a name="boost_chrono.appendices.history.__version_0_4_5__july_6__2010____documentation_update_"></a><a href="history.html#boost_chrono.appendices.history.__version_0_4_5__july_6__2010____documentation_update_" title="Version 0.4.5, July 6, 2010 Documentation
         update"><span class="bold"><strong>Version 0.4.5, July 6, 2010</strong></span> <span class="emphasis"><em>Documentation
         update</em></span></a>
@@ -64,10 +106,12 @@
             Overview rewriting
           </li>
 <li>
-            Added missing thread_clock reference.
+            Added missing <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
+          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a> reference.
           </li>
 <li>
-            How to implement a thread_clock tutorial removed.
+            How to implement a <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
+          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a> tutorial removed.
           </li>
 <li>
             References section renamed to External Resources.

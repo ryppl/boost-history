@@ -39,6 +39,7 @@
 [def __common_type__BOOST_COMMON_TYPE_USES_MPL_ASSERT [common_type_macros `BOOST_COMMON_TYPE_USES_MPL_ASSERT`]]
 [def __common_type__BOOST_COMMON_TYPE_USES_ARRAY_ASSERT [common_type_macros `BOOST_COMMON_TYPE_USES_ARRAY_ASSERT`]]
 [def __common_type__BOOST_COMMON_TYPE_ARITY [common_type_pp `BOOST_COMMON_TYPE_ARITY`]]
+[def __common_type__BOOST_COMMON_TYPE_DONT_USE_TYPEOF [common_type_pp `BOOST_COMMON_TYPE_DONT_USE_TYPEOF`]]
 
 
 [/===============================================]
@@ -201,6 +202,8 @@
 [def __suspendible_clock__ [link boost_chrono.reference.other_clocks.suspendible_clock_hpp.suspendible_clock `suspendible_clock`]]
 
 [def __stopwatch_accumulator_formatter__ [link boost_chrono.reference.formatters.stopwatch_accumulator_formatter_hpp.basic_stopwatch_accumulator_formatter `stopwatch_accumulator_formatter`]]
+
+[def __stopwatch_accumulator_time_formatter__ [link boost_chrono.reference.formatters.stopwatch_accumulator_time_formatter_hpp.basic_stopwatch_accumulator_time_formatter `stopwatch_accumulator_time_formatter`]]
 
 [def __basic_stopwatch_formatter__ [link boost_chrono.reference.formatters.stopwatch_formatter_hpp.basic_stopwatch_formatter `stopwatch_accumulator_formatter`]]
 
@@ -469,7 +472,7 @@ __Boost_Chrono__ depends optionaly on:
     [[@http://www.boost.org/libs/thread [*Boost.Thread]]] [for thread_specific_ptr when suspendible_clock.hpp is included]
 ]
 [
-    [[@http://www.boost.org/libs/typeof [*Boost.Typeof]]] [for duration and time_point registration when typeof/boost/chrono/chrono.hpp is include]
+    [[@http://www.boost.org/libs/typeof [*Boost.Typeof]]] [for duration and time_point registration when typeof/boost/chrono/chrono.hpp is include or when BOOST_COMMON_TYPE_DONT_USE_TYPEOF is not defined]
 ]
 ]
 
@@ -1207,10 +1210,10 @@ The typical example of stopclock_accumulator is to get statistical measures of t
     double res;
     void f1(long j)
     {
-        __stopwatch__<>::reporter _(BOOST_CHRONO_STOPWATCH_FUNCTION_FORMAT);
+        __stopwatch_reporter__<__stopwatch__<> >:: _(BOOST_CHRONO_STOPWATCH_FUNCTION_FORMAT);
         for (long i =0; i< j; i+=1)
             res+=std::sqrt( res+123.456L+i );  // burn some time
-        __stopwatch__<>::reporter::scoped_suspend s(_);
+        __stopwatch_reporter__<__stopwatch__<> >::scoped_suspend s(_);
         boost::this_thread::sleep(boost::posix_time::milliseconds(200));
     }
 
@@ -1227,7 +1230,7 @@ For the first case we just need to change the accumulator_set and the format we 
 
     using namespace boost::accumulators;
 
-    typedef __stopwatch_accumulator__<__process_real_cpu_clock__,
+    typedef __stopwatch_reporter__<__stopwatch_accumulator__<__process_real_cpu_clock__,
                 accumulator_set<__process_real_cpu_clock__::rep,
                     features<
                             tag::count,
@@ -1235,7 +1238,7 @@ For the first case we just need to change the accumulator_set and the format we 
                             tag::mean
                     >
                 >
-      >::reporter my_stopwatch_accumulator_reporter;
+      > my_stopwatch_accumulator_reporter;
 
     int f1(long j)
     {
@@ -1269,7 +1272,7 @@ Imagine then that we want to report the `tag::variance(lazy)`. We will need to i
     ...
     #include <boost/accumulators/statistics/variance.hpp>
     ...
-    typedef __stopwatch_accumulator__<__process_real_cpu_clock__,
+    typedef __stopwatch_reporter__<__stopwatch_accumulator__<__process_real_cpu_clock__,
                 accumulator_set<__process_real_cpu_clock__::rep,
                     features<
                             tag::count,
@@ -1278,11 +1281,11 @@ Imagine then that we want to report the `tag::variance(lazy)`. We will need to i
                             tag::variance(lazy)
                     >
                 >
-    >::reporter my_stopwatch_accumulator_reporter;
+    > my_stopwatch_accumulator_reporter;
 
 But what happens if we add new statistics to the accumulator_set that are not taken in account by the default formatter? These statistics will simply be ignored. So we will need to define our own accumulator formatter.
 
-    typedef __stopwatch_accumulator__<__process_real_cpu_clock__,
+    typedef __stopwatch_reporter__<__stopwatch_accumulator__<__process_real_cpu_clock__,
                 accumulator_set<__process_real_cpu_clock__::rep,
                     features<
                             tag::count,
@@ -1292,7 +1295,7 @@ But what happens if we add new statistics to the accumulator_set that are not ta
                     >
                 >,
                 my_stopwatch_accumulator_formatter
-    >::reporter my_stopwatch_accumulator_reporter;
+    > my_stopwatch_accumulator_reporter;
 
 Next follow the definition of a formatter taking care of count, sum, mean and variance
 
@@ -2451,6 +2454,7 @@ Usage
     #define __common_type__BOOST_COMMON_TYPE_USES_STATIC_ASSERT
     #define __common_type__BOOST_COMMON_TYPE_USES_MPL_ASSERT
     #define __common_type__BOOST_COMMON_TYPE_USES_ARRAY_ASSERT
+    #define __common_type__BOOST_COMMON_TYPE_DONT_USE_TYPEOF
 
     // preprocessor info
     #define __common_type__BOOST_COMMON_TYPE_ARITY
@@ -2474,6 +2478,8 @@ When BOOST_COMMON_TYPE_USES_MPL_ASSERT is not defined the following symbols are 
         "must be complete type"
 
 Depending on the static assertion used system you will have an hint of the failing assertion either through the symbol or through the texte.
+
+When BOOST_NO_DECLTYPE is not defined common_type is implemented using decltype. Otherwise when BOOST_COMMON_TYPE_DONT_USE_TYPEOF is not defined it uses Boost.TypeOf.
 
 
 [endsect]
@@ -4129,6 +4135,7 @@ This file include all the stopwatches related files
     #include <boost/chrono/stopwatch.hpp>
     #include <boost/chrono/stopwatch_accumulator.hpp>
     #include <boost/chrono/stopwatch_accumulator_formatter.hpp>
+    #include <boost/chrono/stopwatch_accumulator_time_formatter.hpp>
     #include <boost/chrono/stopwatch_formatter.hpp>
     #include <boost/chrono/stopwatch_reporter.hpp>
     #include <boost/chrono/stopwatch_scoped.hpp>
@@ -4152,7 +4159,6 @@ A Stopwatch must meet the requirements in the following table. In this table `S`
     [[`S::scoped_run`]        [`stopwatch_runner<stopwatch<Clock> >`]  [RAI which `start`/`stop` the `stopwatch`.]]
     [[`S::scoped_suspend`]        [`stopwatch_suspender<stopwatch<Clock> >`]  [RAI which `suspend`/`resume` the `stopwatch`.]]
     [[`S::scoped_resume`]        [`stopwatch_resumer<stopwatch<Clock> >`]  [RAI which `resume`/`suspend` the `stopwatch`.]]
-    [[`S::reporter`]        [`stopwatch_reporter<stopwatch<Clock> >`]  [RAI which reports the elapsed time on destruction.]]
     [[`s.start()`]        [`S::time_point`]  [starts a Stopwatch.]]
     [[`s.restart()`]        [`std::pair<S::duration,S::time_point>`]  [restarts a Stopwatch.]]
     [[`s.stop()`]        [`S::duration`]  [stops a Stopwatch.]]
@@ -5586,6 +5592,81 @@ The library provides basic_time_formatter shortcuts for char and wchar_t.
 [endsect]
 
 [/==================================================]
+[section:stopwatch_accumulator_time_formatter_hpp Header `<boost/chrono/stopwatch_accumulator_time_formatter.hpp>`]
+[/==================================================]
+
+    namespace boost { namespace chrono  {
+        template <
+            typename CharT=char,
+            typename Traits=std::char_traits<CharT>,
+            class Alloc=std::allocator<CharT>
+        > basic_stopwatch_accumulator_time_formatter;
+        typedef basic_stopwatch_accumulator_time_formatter<char> stopwatch_accumulator_time_formatter;
+        typedef basic_stopwatch_accumulator_time_formatter<wchar_t> wstopwatch_accumulator_time_formatter;
+    }}
+
+[section:basic_stopwatch_accumulator_time_formatter Template Class `basic_stopwatch_accumulator_time_formatter<>`]
+
+`basic_stopwatch_accumulator_time_formatter` is a model of __Formatter__
+
+    template <
+        typename CharT=char,
+        typename Traits=std::char_traits<CharT>,
+        class Alloc=std::allocator<CharT>
+    class basic_stopwatch_accumulator_time_formatter {
+    public:
+        typedef std::basic_string<CharT,Traits,Alloc> string_type;
+        typedef CharT char_type;
+        typedef std::basic_ostream<CharT,Traits> ostream_type;
+        static ostream_type &  default_os();
+        static const char_type * default_format();
+        static int default_places();
+
+        template <class Stopwatch >
+        static void show_time( Stopwatch & stopwatch_, const char * format, int places, 
+                               std::ostream & os, system::error_code & ec);
+    };
+
+The default places is given by default_places and is 3.
+
+The default format is "%c times, sum=%s, min=%m, max=%M, mean=%a, frequency=%fHz, lifetime=%ls, percentage=%p\%\\n|real %rs, cpu %cs (%p%), user %us, system %ss", where
+
+The part before the '|' corresponds to the accumulator format and the part after corresponds to the times format, which will be used for the sum, max, min and mean statistics.
+
+* `%c` : the counter of the number of times the pair srat/stop has been called.
+* `%s` : the sum of the samples of elapsed time between the call to start/stop.
+* `%m` : the min of the samples of elapsed time between the call to start/stop.
+* `%M` : the max of the samples of elapsed time between the call to start/stop.
+* `%a` : the mean of the samples of elapsed time between the call to start/stop.
+* `%f` : the frequency of calls to start.
+* `%l` : the lifetime of the stopwatch_accumulator.
+* `%p` : the percentage of time spent by this stopwatch respect to its lifetime.
+
+* `%r` : real process clock
+* `%u` : user process clock
+* `%s` : system process clock
+* `%c` : user+system process clock
+* `%p` : percentage (user+system)/real process clock
+
+The time is given using the suffix "s", the frequency is given using the suffix "Hz", both following the System International d'Unites Std.
+
+
+[endsect]
+
+[section:typedefs `basic_stopwatch_accumulator_time_formatter` useful typedefs]
+
+The library provides basic_stopwatch_accumulator_time_formatter shortcuts for char and wchar_t.
+
+        typedef basic_stopwatch_accumulator_time_formatter<char> 
+            stopwatch_accumulator_time_formatter;
+        typedef basic_stopwatch_accumulator_time_formatter<wchar_t> 
+            wstopwatch_accumulator_time_formatter;
+
+
+[endsect]
+[endsect]
+
+[/==================================================]
 [section:t24_hours_hpp Header `<boost/chrono/t24_hours.hpp>`]
 [/==================================================]
 
@@ -5908,14 +5989,32 @@ All the units are given using the suffix "s" following the System International 
 [section:history Appendix A: History]
 [/==================================]
 
+[section [*Version 0.4.6, August 28, 2010] ]
+
+[*New Features:]
+
+* Implementation of __common_type__ without using Boost.TypeOf.
+* Added __stopwatch_accumulator_time_formatter__ class.
+
+[*Old Features:]
+
+* Type reporter removed from Stopwatches as well as the get_reporter metafunction.
+
+[*Bug Fixes]
+
+* __process_cpu_clock__ is now a valid model of Clock that can be used with __stopclocks_accumulator__.
+* eliminate or suppress a lot of warnings appearing with with warnings=all -Wextra
+* improve the error code handling
+
+[endsect]
 
 [section [*Version 0.4.5, July 6, 2010] ['Documentation update]]
 
 [*Documentation]
 
 * Overview rewriting
-* Added missing thread_clock reference.
-* How to implement a thread_clock tutorial removed.
+* Added missing __thread_clock__ reference.
+* How to implement a __thread_clock__ tutorial removed.
 * References section renamed to External Resources.
 * Added links to source examples.
 * Added links between Models and Concepts.
@@ -6331,6 +6430,8 @@ Thanks to Adrew Chinoff for its multiple suggestion on __stopwatch_accumulator__
 Thanks to Tom Tan for reporting some compiler issues with MSVC V10 beta and MinGW-gcc-4.4.0 and for the many suggestion he did concerning the new __stopwatch__, `process_cpu_clock`and `stopclock` classes and a deep help with wide characters implementation.
 
 Thanks to Ronald Bock for reporting Valgind issues and for the many suggestion he did concerning the documentation.
+
+Thansk to Jeffrey Lee Hellrung, Jr. for sharing his implementation of __common_type__ without using Boost.TypeOf.
 
 [endsect]
 
