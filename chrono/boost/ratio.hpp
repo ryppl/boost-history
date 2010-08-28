@@ -38,7 +38,7 @@ time2_demo contained this comment:
 #include <boost/utility/enable_if.hpp>
 #include <boost/integer_traits.hpp>
 
-#ifndef BOOST_RATIO_USES_MPL_ASSERT
+#if !defined(BOOST_NO_STATIC_ASSERT) || !defined(BOOST_RATIO_USES_MPL_ASSERT)
 #define BOOST_RATIO_OVERFLOW_IN_ADD "overflow in ratio add"
 #define BOOST_RATIO_OVERFLOW_IN_ADD "overflow in ratio add"
 #define BOOST_RATIO_OVERFLOW_IN_SUB "overflow in ratio sub"
@@ -62,7 +62,7 @@ time2_demo contained this comment:
 #elif defined(BOOST_RATIO_USES_ARRAY_ASSERT)
 #define BOOST_RATIO_CONCAT(A,B) A##B
 #define BOOST_RATIO_NAME(A,B) BOOST_RATIO_CONCAT(A,B)
-#define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_RATIO_NAME(boost_ratio_test_,__LINE__)[CND];
+#define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_RATIO_NAME(__boost_ratio_test_,__LINE__)[CND]
 #else
 #define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES)
 #endif
