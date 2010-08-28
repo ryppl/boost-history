@@ -123,7 +123,7 @@ namespace
             > wstopclock_t; 
 }
 
-int test_main( int argc, char * argv[] )
+int test_main( int /*argc*/, char * /*argv*/[] )
 {
   std::locale loc( "" );     // test with appropriate locale
   std::cout.imbue( loc );
