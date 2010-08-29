@@ -19,7 +19,8 @@ explicit bt ;
 
 project : requirements 
         <target-os>windows:<define>WIN32_LEAN_AND_MEAN 
-        <target-os>linux:<linkflags>-lpthread ; 
+        <target-os>linux:<linkflags>-lpthread 
+        <target-os>freebsd:<linkflags>-pthread ; 
 
 exe helpers : util/helpers.cpp bfs ; 
 explicit helpers ; 
