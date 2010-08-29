@@ -67,14 +67,12 @@ using namespace boost::accumulators;
 
 typedef stopwatch_reporter<
             stopwatch_accumulator<process_real_cpu_clock,
-                accumulator_set<process_real_cpu_clock::rep,
                     features<
                         tag::count,
                         tag::sum,
                         tag::mean,
                         tag::variance(lazy)
                     >
-                >
             >
         , my_stopwatch_accumulator_formatter
     > my_stopwatch_accumulator_reporter;
