@@ -45,33 +45,33 @@ namespace boost { namespace chrono  {
  */
 //--------------------------------------------------------------------------------------//
 
-    template <class Clock, class Accumulator>
-    struct stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock, Accumulator> > {
+    template <class Clock, typename Features, typename Weight>
+    struct stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock, Features,Weight> > {
         typedef stopwatch_accumulator_formatter type;
     };
 
-    template <class Clock, class Accumulator>
-    struct wstopwatch_reporter_default_formatter<stopwatch_accumulator<Clock, Accumulator> > {
+    template <class Clock, typename Features, typename Weight>
+    struct wstopwatch_reporter_default_formatter<stopwatch_accumulator<Clock, Features,Weight> > {
         typedef wstopwatch_accumulator_formatter type;
     };
 
-    template <class Accumulator>
-    struct stopwatch_reporter_default_formatter<stopwatch_accumulator<process_cpu_clock,Accumulator> > {
+    template <typename Features, typename Weight>
+    struct stopwatch_reporter_default_formatter<stopwatch_accumulator<process_cpu_clock,Features,Weight> > {
         typedef stopwatch_accumulator_time_formatter type;
     };
 
-    template <class Accumulator>
-    struct wstopwatch_reporter_default_formatter<stopwatch_accumulator<process_cpu_clock, Accumulator> > {
+    template <typename Features, typename Weight>
+    struct wstopwatch_reporter_default_formatter<stopwatch_accumulator<process_cpu_clock, Features,Weight> > {
         typedef wstopwatch_accumulator_time_formatter type;
     };
 
-    template <class Accumulator>
-    struct stopwatch_reporter_default_formatter<stopwatch_accumulator<suspendible_clock<process_cpu_clock>, Accumulator> > {
+    template <typename Features, typename Weight>
+    struct stopwatch_reporter_default_formatter<stopwatch_accumulator<suspendible_clock<process_cpu_clock>, Features,Weight> > {
         typedef stopwatch_reporter_default_formatter<stopwatch_accumulator<process_cpu_clock> >::type  type;
     };
 
-    template <class Accumulator>
-    struct wstopwatch_reporter_default_formatter<stopwatch_accumulator<suspendible_clock<process_cpu_clock>, Accumulator> > {
+    template <typename Features, typename Weight>
+    struct wstopwatch_reporter_default_formatter<stopwatch_accumulator<suspendible_clock<process_cpu_clock>, Features,Weight> > {
         typedef wstopwatch_reporter_default_formatter<stopwatch_accumulator<process_cpu_clock> >::type  type;
     };
 

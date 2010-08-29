@@ -42,23 +42,23 @@ namespace boost
 
     // forward declaration
     template <class Clock=high_resolution_clock,
-        class Accumulator=accumulators::accumulator_set<typename Clock::duration::rep,
-                    accumulators::features<
+        typename Features=accumulators::features<
                         accumulators::tag::count,
                         accumulators::tag::sum,
                         accumulators::tag::min,
                         accumulators::tag::max,
-                        accumulators::tag::mean >
-        >
+                        accumulators::tag::mean >,
+        typename Weight=void 
     >
     class stopwatch_accumulator;
 
 
 //--------------------------------------------------------------------------------------//
-    template <class Clock, class Accumulator>
+    template <class Clock, typename Features, typename Weight>
     class stopwatch_accumulator
     {
     public:
+        typedef accumulators::accumulator_set<typename Clock::duration::rep, Features, Weight> Accumulator; 
         typedef Clock                       clock;
         typedef typename Clock::duration    duration;
         typedef typename Clock::time_point  time_point;
@@ -171,6 +171,7 @@ namespace boost
 
         void reset( system::error_code & ec = system::throws ) {
             construction_=clock::now( ec );
+            if (ec) return;
             accumulated_ = accumulator();
             running_=false;
             suspended_=false;
@@ -178,7 +179,6 @@ namespace boost
             start_  = time_point(duration::zero());
             level_=0;
             suspend_level_=0;
-            ec.clear();
         }
 
         accumulator& accumulated( ) { return accumulated_; }
@@ -186,10 +186,10 @@ namespace boost
             return  clock::now( ec ) - construction_;
         }
 
-        typedef stopwatch_runner<stopwatch_accumulator<Clock> > scoped_run;
-        typedef stopwatch_stopper<stopwatch_accumulator<Clock> > scoped_stop;
-        typedef stopwatch_suspender<stopwatch_accumulator<Clock> > scoped_suspend;
-        typedef stopwatch_resumer<stopwatch_accumulator<Clock> > scoped_resume;
+        typedef stopwatch_runner<stopwatch_accumulator<Clock,Features,Weight> > scoped_run;
+        typedef stopwatch_stopper<stopwatch_accumulator<Clock,Features,Weight> > scoped_stop;
+        typedef stopwatch_suspender<stopwatch_accumulator<Clock,Features,Weight> > scoped_suspend;
+        typedef stopwatch_resumer<stopwatch_accumulator<Clock,Features,Weight> > scoped_resume;
     private:
         bool running_;
         bool suspended_;
