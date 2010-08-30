@@ -57,9 +57,6 @@ namespace boost
         : pbase_type(), lightweight_stopwatch<Clock>(pbase_type::member, t)
         { }
         
-    //~ private:
-        //~ stopwatch operator=( stopwatch const& rhs );
-
     };
 
 //--------------------------------------------------------------------------------------//

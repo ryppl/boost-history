@@ -87,7 +87,7 @@ namespace boost
         typedef Accumulator                 accumulator;
         static const bool is_accumulator_set = traits::is_accumulator_set;
 
-        lightweight_stopwatch( accumulator& acc, system::error_code & ec = system::throws )
+        explicit lightweight_stopwatch( accumulator& acc, system::error_code & ec = system::throws )
         : running_(false), suspended_(false),
           start_(duration::zero()), level_(0), partial_(duration::zero()), suspend_level_(0)
           , accumulated_(&acc), construction_(clock::now( ))
@@ -238,19 +238,7 @@ namespace boost
         typedef stopwatch_stopper<lightweight_stopwatch<Clock,Features,Weight> > scoped_stop;
         typedef stopwatch_suspender<lightweight_stopwatch<Clock,Features,Weight> > scoped_suspend;
         typedef stopwatch_resumer<lightweight_stopwatch<Clock,Features,Weight> > scoped_resume;
-    private:
-        //~ lightweight_stopwatch operator=( lightweight_stopwatch const& rhs );
-        //~ {
-            //~ running_=rhs.running_; 
-            //~ suspended_=rhs.suspended_;
-            //~ start_=rhs.start_; 
-            //~ level_=rhs.level_;
-            //~ partial_=rhs.partial_;
-            //~ suspend_level_=rhs.suspend_level_;
-            //~ accumulated_=rhs.accumulated_;
-            //~ construction_=rhs.construction_;
-        //~ }
-        
+    private:        
         bool running_;
         bool suspended_;
         time_point start_;
