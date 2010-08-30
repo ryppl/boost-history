@@ -25,6 +25,11 @@ struct trace_scope
   #else
     #define FUNCTOR_CONSTANCY
   #endif
+  #if 0
+    #define ARG_CONSTANCY const
+  #else
+    #define ARG_CONSTANCY
+  #endif
 #define APPLY_UNPACK_USER_CHECKED_ARGS
 #include <boost/composite_storage/pack/multiple_dispatch/reify_apply.hpp>
 #include <boost/composite_storage/pack/multiple_dispatch/reifier_switch.hpp>
@@ -182,6 +187,7 @@ struct functor3
   >
 #endif
 {
+  #ifdef APPLY_UNPACK_USER_CHECKED_ARGS
         typedef
       functor_bad_args
       < functor3
@@ -191,37 +197,38 @@ struct functor3
     
     using super_type::operator();
     
+    typedef typename super_type::result_type result_type;
+  #endif
+          
     functor3(void)
     {}
-    
-    typedef typename super_type::result_type result_type;
     
     int operator()(void)FUNCTOR_CONSTANCY
     {
         ind_out<<"functor3:arity=0.\n";
         return 0;
     }
-  #if 0
-    int operator()( host_concrete<0>const&a0)FUNCTOR_CONSTANCY
+  #if 1
+    int operator()( host_concrete<0> ARG_CONSTANCY &a0)FUNCTOR_CONSTANCY
     {
         ind_out<<"functor3:arity=1:\n";
         ind_out<<":a0="<<a0<<"\n";
         return 0;
     }
-    int operator()( host_concrete<1>const&a0)FUNCTOR_CONSTANCY
+    int operator()( host_concrete<1> ARG_CONSTANCY &a0)FUNCTOR_CONSTANCY
     {
         ind_out<<"functor3:arity=1:";
         ind_out<<":a0="<<a0<<"\n";
         return 0;
     }
-    int operator()( host_concrete<2>const&a0)FUNCTOR_CONSTANCY
+    int operator()( host_concrete<2> ARG_CONSTANCY &a0)FUNCTOR_CONSTANCY
     {
         ind_out<<"functor3:arity=1:";
         ind_out<<":a0="<<a0<<"\n";
         return 0;
     }
-    int operator()( host_concrete<0>const&a0
-      , host_concrete<1>const&a1)FUNCTOR_CONSTANCY
+    int operator()( host_concrete<0> ARG_CONSTANCY &a0
+      , host_concrete<1> ARG_CONSTANCY &a1)FUNCTOR_CONSTANCY
     {
         ind_out<<"functor3:arity=2:\n";
         ind_out<<":a0="<<a0<<"\n";
@@ -260,12 +267,9 @@ void test(void)
         {
             ind_out<<"v["<<i<<"].which="<<tagged_v[i].which()<<"\n";
         }
-        typedef
-        #if 0
-          functor_any
-        #else
-          functor3
-        #endif
+      #define FUNCTOR_T functor3
+            typedef
+          FUNCTOR_T
         FUNCTOR_CONSTANCY functor_t;
         functor_t functor_v;
         int result=0;
@@ -300,8 +304,8 @@ void test(void)
           #endif
             >( functor_v
           #ifdef REIFIER_VISITOR
-            , static_cast<host_abstract<>const&>(host_concrete<0>())
-            , static_cast<host_abstract<>const&>(host_concrete<1>())
+            , static_cast<host_abstract<> ARG_CONSTANCY &>(host_concrete<0>())
+            , static_cast<host_abstract<> ARG_CONSTANCY &>(host_concrete<1>())
           #else
             , tagged_v[0]
             //, tagged_v[1]
@@ -311,7 +315,7 @@ void test(void)
             //This should fail compilation with error message
             //something about invalid args.
             #ifdef REIFIER_VISITOR
-              , static_cast<host_abstract<>const&>(host_concrete<0>())
+              , static_cast<host_abstract<> ARG_CONSTANCY &>(host_concrete<0>())
             #else        
               , tagged_v[0]
             #endif
