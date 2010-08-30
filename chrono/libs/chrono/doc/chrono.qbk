@@ -4229,8 +4229,10 @@ Models of `Stopwatch`:
 * __stopwatch_accumulator__
 
 [endsect]
+
+
 [/==================================================]
-[section:stopwatch_hpp Header `<boost/chrono/stopwatch.hpp>`]
+[section:lightweight_stopwatch_hpp Header `<boost/chrono/lightweight_stopwatch.hpp>`]
 [/==================================================]
 
 
@@ -4238,6 +4240,141 @@ Models of `Stopwatch`:
         struct dont_start_t;
         static const dont_start_t dont_start;
 
+        template <class Clock=high_resolution_clock,
+                typename Features=void,
+                typename Weight=void
+        > class __lightweight_stopwatch__;
+
+        typedef <see above> system_lightweight_stopwatch;
+        #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
+        typedef <see above> monotonic_lightweight_stopwatch;
+        #endif
+        typedef <see above> high_resolution_lightweight_stopwatch;
+    }}
+
+[section:dont_start_t Class `dont_start_t`]
+
+Structure used to don't start a `lightweight_stopwatch` at construction time.
+
+        struct dont_start_t;
+        static const dont_start_t dont_start;
+
+[endsect]
+
+[section:lightweight_stopwatch Template Class `lightweight_stopwatch<>`]
+
+`lightweight_stopwatch<>` is a model of a __lightweight_stopwatch_concept__.
+
+Knowing how long a part of a program takes to execute is useful in both test and production environments.
+A __lightweight_stopwatch__ object measures elapsed time. It is recommended to use it with clocks that measure wall clock rather than CPU time since the intended use is performance measurement on systems where total elapsed time is more important than just process or CPU time.
+
+The maximum measurable elapsed time depends on the Clock parameter. The accuracy of timings depends on the
+accuracy of timing information provided the Clock, and this coudl varies a great deal from one clock to another.
+
+        template <class Clock, typename Features, typename Weight> 
+        class lightweight_stopwatch {
+        public:
+            typedef Clock                       clock;
+            typedef typename Clock::duration    duration;
+            typedef typename Clock::time_point  time_point;
+            typedef <see below>                 storage;
+
+            explicit lightweight_stopwatch( storage& st, system::error_code & ec = system::throws );
+            lightweight_stopwatch( storage& st, const dont_start_t& t );
+
+            ~lightweight_stopwatch();
+
+            time_point start( system::error_code & ec = system::throws );
+            duration stop( system::error_code & ec = system::throws );
+            std::pair<duration,time_point> restart( system::error_code & ec = system::throws );
+
+            duration suspend( system::error_code & ec = system::throws );
+            time_point resume( system::error_code & ec = system::throws );
+
+            duration elapsed( system::error_code & ec = system::throws );
+
+            time_point now( system::error_code & ec = system::throws );
+
+            void reset( system::error_code & ec = system::throws );
+
+            storage& get_storage( );
+
+            duration lifetime( system::error_code & ec = system::throws );
+
+            typedef lightweight_stopwatch_runner<lightweight_stopwatch<Clock> > scoped_run;
+            typedef lightweight_stopwatch_suspender<lightweight_stopwatch<Clock> > scoped_suspend;
+            typedef lightweight_stopwatch_resumer<lightweight_stopwatch<Clock> > scoped_resume;
+            typedef lightweight_stopwatch_reporter<lightweight_stopwatch<Clock> > reporter;
+
+        };
+
+
+`storage` is either `Clock::duration` if Features and Weight are void and `accumulators::accumulator_set<typename Clock::duration::rep, Features, Weight>` otherwise.
+    
+[section:c1 Constructor `lightweight_stopwatch( storage&, system::error_code &)`]
+
+            explicit lightweight_stopwatch( storage& st, system::error_code & ec = system::throws );
+
+[*Effect:] constructs and starts the lightweight_stopwatch.
+
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
+
+[endsect]
+
+[section:c2 Constructor `lightweight_stopwatch( storage&, dont_start_t &)`]
+
+            explicit lightweight_stopwatch( storage& st, const dont_start_t& t );
+
+[*Effect:] constructs the lightweight_stopwatch without starting it.
+
+[*Throw:] Nothing.
+
+[endsect]
+
+
+[section:lightweight_stopwatch_elapsed Member Function `elapsed()`]
+
+            duration elapsed(system::error_code & ec = system::throws) const;
+
+[*Returns:] the cumulated elapsed time.
+
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
+
+[endsect]
+
+
+[section:stopwatch_accumulator_accumulated Member Function `accumulated()`]
+
+            storage& get_storage();
+
+[*Returns:] the assocaited storage reference.
+
+[*Throw:] Nothing.
+
+[endsect]
+
+
+[section:stopwatch_accumulator_reset Member Function `reset()`]
+
+    void reset( );
+
+[*Effect:] Stop the lightweight_stopwatch and reinit the storage.
+
+[*Throw:] Nothing.
+
+[endsect]
+
+[endsect]
+
+[endsect]
+
+
+[/==================================================]
+[section:stopwatch_hpp Header `<boost/chrono/stopwatch.hpp>`]
+[/==================================================]
+
+
+    namespace boost { namespace chrono  {
         template <class Clock=high_resolution_clock> class __stopwatch__;
 
         template <class Clock>
@@ -4255,19 +4392,8 @@ Models of `Stopwatch`:
         typedef <see above> monotonic_stopwatch;
         #endif
         typedef <see above> high_resolution_stopwatch;
-        typedef <see above> process_real_cpu_stopwatch;
-        typedef <see above> process_user_cpu_stopwatch;
-        typedef <see above> process_system_cpu_stopwatch;
     }}
 
-[section:dont_start_t Class `dont_start_t`]
-
-Structure used to don't start a `stopwatch` at construction time.
-
-        struct dont_start_t;
-        static const dont_start_t dont_start;
-
-[endsect]
 
 [section:stopwatch Template Class `stopwatch<>`]
 
@@ -4279,32 +4405,14 @@ A __stopwatch__ object measures elapsed time. It is recommended to use it with c
 The maximum measurable elapsed time depends on the Clock parameter. The accuracy of timings depends on the
 accuracy of timing information provided the Clock, and this coudl varies a great deal from one clock to another.
 
-        template <class Clock> class stopwatch {
-        public:
-            typedef Clock                       clock;
-            typedef typename Clock::duration    duration;
-            typedef typename Clock::time_point  time_point;
-
-            explicit stopwatch( system::error_code & ec = system::throws );
-            explicit stopwatch( const dont_start_t& t );
-
-            ~stopwatch();
-
-            time_point start( system::error_code & ec = system::throws );
-            duration stop( system::error_code & ec = system::throws );
-            std::pair<duration,time_point> restart( system::error_code & ec = system::throws );
-
-            duration suspend( system::error_code & ec = system::throws );
-            time_point resume( system::error_code & ec = system::throws );
-
-            duration elapsed( system::error_code & ec = system::throws );
-
-            typedef stopwatch_runner<stopwatch<Clock> > scoped_run;
-            typedef stopwatch_suspender<stopwatch<Clock> > scoped_suspend;
-            typedef stopwatch_resumer<stopwatch<Clock> > scoped_resume;
-            typedef stopwatch_reporter<stopwatch<Clock> > reporter;
-
-        };
+    template <class Clock>
+    class stopwatch : private base_from_member<typename Clock::duration>, public lightweight_stopwatch<Clock>
+    {
+    public:
+        explicit stopwatch( system::error_code & ec = system::throws  );
+        explicit stopwatch( const dont_start_t& t );
+        
+    };
 
 [section:c1 Constructor `stopwatch( system::error_code &)`]
 
@@ -4323,17 +4431,6 @@ accuracy of timing information provided the Clock, and this coudl varies a great
 [*Effect:] constructs the stopwatch without starting it.
 
 [*Throw:] Nothing.
-
-[endsect]
-
-
-[section:stopwatch_elapsed Member Function `elapsed()`]
-
-            duration elapsed(system::error_code & ec = system::throws) const;
-
-[*Returns:] the elapsed time from the last call to start.
-
-[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
 
 [endsect]
 
@@ -4370,13 +4467,6 @@ The library provides stopwatch short cuts for all the models of __Clock__, repla
         typedef boost::chrono::stopwatch< boost::chrono::high_resolution_clock > 
             high_resolution_stopwatch;
 
-        typedef boost::chrono::stopwatch< boost::chrono::process_real_cpu_clock > 
-            process_real_cpu_stopwatch;
-        typedef boost::chrono::stopwatch< boost::chrono::process_user_cpu_clock > 
-            process_user_cpu_stopwatch;
-        typedef boost::chrono::stopwatch< boost::chrono::process_system_cpu_clock > 
-            process_system_cpu_stopwatch;
-
 [endsect]
 [endsect]
 
@@ -4385,7 +4475,15 @@ The library provides stopwatch short cuts for all the models of __Clock__, repla
 [/==================================================]
 
     namespace boost { namespace chrono  {
-        template <class Clock, class Accumulator> class __stopwatch_accumulator__;
+        template <class Clock, 
+                    typename Features=accumulators::features<
+                        accumulators::tag::count,
+                        accumulators::tag::sum,
+                        accumulators::tag::min,
+                        accumulators::tag::max,
+                        accumulators::tag::mean >,
+                    typename Weight=void
+        > class __stopwatch_accumulator__;
 
         template <class Clock, class Accumulator>
         struct stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock, Accumulator> > {
@@ -4403,10 +4501,6 @@ The library provides stopwatch short cuts for all the models of __Clock__, repla
     #endif
         typedef <see below> high_resolution_stopwatch_accumulator;
 
-        typedef <see below> process_real_cpu_stopwatch_accumulator;
-        typedef <see below> process_user_cpu_stopwatch_accumulator;
-        typedef <see below> process_system_cpu_stopwatch_accumulator;
-
     }}
 
 
@@ -4414,66 +4508,20 @@ The library provides stopwatch short cuts for all the models of __Clock__, repla
 
 A `stopwatch_accumulator<>` is a model of a __stopwatch_concept__ that allows to accumulate the time in several times instead of at once as it is the case of the class __stopwatch__`<>`.
 
-        template <class Clock> class stopwatch_accumulator {
-        public:
-            typedef Clock                       clock;
-            typedef typename Clock::duration    duration;
-            typedef typename Clock::time_point  time_point;
-            typedef Accumulator accumulator;
-
-            stopwatch_accumulator();
-
-            time_point start( system::error_code & ec = system::throws );
-            duration stop( system::error_code & ec = system::throws );
-            std::pair<duration,time_point> restart( system::error_code & ec = system::throws );
-
-            duration suspend( system::error_code & ec = system::throws );
-            time_point resume( system::error_code & ec = system::throws );
-
-            duration elapsed(system::error_code & ec = system::throws);
-
-            accumulator& accumulated( );
-            void reset();
-
-            typedef stopwatch_runner<stopwatch_accumulator<Clock> > scoped_run;
-            typedef stopwatch_suspender<stopwatch_accumulator<Clock> > scoped_suspend;
-            typedef stopwatch_resumer<stopwatch_accumulator<Clock> > scoped_resume;
-            typedef stopwatch_reporter<stopwatch_accumulator<Clock> > reporter;
-        };
+    template <class Clock, typename Features, typename Weight>
+    class stopwatch_accumulator
+        : private base_from_member<typename accumulators::accumulator_set<typename Clock::duration::rep, Features, Weight> >,
+          public lightweight_stopwatch<Clock,Features,Weight> 
+    {
+    public:
+        stopwatch_accumulator( );
+    };
 
 [section:stopwatch_accumulator_c Constructor `stopwatch_accumulator()`]
 
     stopwatch_accumulator();
 
 [*Effect:] Initialize the elapsed duration and the times counter to 0.
-
-[endsect]
-[section:stopwatch_accumulator_reset Member Function `reset()`]
-
-    void reset( );
-
-[*Effect:] Stop the stopwatch and reset the accumulator.
-
-[*Throw:] Nothing.
-
-[endsect]
-[section:stopwatch_accumulator_elapsed Member Function `elapsed()`]
-
-            duration elapsed(system::error_code & ec = system::throws) const;
-
-[*Returns:] the cumulated elapsed time.
-
-[*Throw:] Nothing.
-
-[endsect]
-
-[section:stopwatch_accumulator_accumulated Member Function `accumulated()`]
-
-            accumulator& accumulated();
-
-[*Returns:] the assocaited accumulator.
-
-[*Throw:] Nothing.
 
 [endsect]
 
@@ -4510,13 +4558,6 @@ The library provides stopwatch_accumulator shortcuts for all the models of __Clo
     #endif
     typedef boost::chrono::stopwatch_accumulator< boost::chrono::high_resolution_clock > 
         high_resolution_stopwatch_accumulator;
-
-    typedef boost::chrono::stopwatch_accumulator< boost::chrono::process_real_cpu_clock >   
-        process_real_cpu_stopwatch_accumulator;
-    typedef boost::chrono::stopwatch_accumulator< boost::chrono::process_user_cpu_clock > 
-        process_user_cpu_stopwatch_accumulator;
-    typedef boost::chrono::stopwatch_accumulator< boost::chrono::process_system_cpu_clock > 
-        process_system_cpu_stopwatch_accumulator;
 
 [endsect]
 [endsect]

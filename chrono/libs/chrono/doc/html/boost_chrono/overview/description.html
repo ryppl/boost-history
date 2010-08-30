@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="motivation.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="motivation.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -31,39 +31,39 @@
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-          A means to represent time durations: managed by the generic <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> class . Examples of time
-          durations include <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+            A means to represent time durations: managed by the generic <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> class . Examples of
+            time durations include <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">days</span></code></a>, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">minutes</span></code></a>, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">seconds</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">nanoseconds</span></code></a>, which can be represented
-          with a fixed number of clock ticks per unit. All of these units of time
-          duration are united with a generic interface by the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            with a fixed number of clock ticks per unit. All of these units of time
+            duration are united with a generic interface by the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> facility.
-        </li>
+          </li>
 <li>
-          A type for representing points in time: <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+            A type for representing points in time: <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>. A <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> represents an epoch
-          plus or minus a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>. The library leaves epochs
-          unspecified. A <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+            plus or minus a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>. The library leaves
+            epochs unspecified. A <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> is associated with
-          a <span class="emphasis"><em>clock</em></span>.
-        </li>
+            a <span class="emphasis"><em>clock</em></span>.
+          </li>
 <li>
-          Several clocks, some of which may not be available on a particular platform:
-          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.system_clock" title="
+            Several clocks, some of which may not be available on a particular platform:
+            <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.system_clock" title="
           Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a>, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.monotonic_clock" title="
           Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.high_resolution_clock" title="
           Class high_resolution_clock"><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a>. A clock
-          is a pairing of a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+            is a pairing of a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>, and a function which
-          returns a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+            returns a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> representing <span class="emphasis"><em>now</em></span>.
-        </li>
+          </li>
 </ul></div>
 <p>
         Additionally, a minimal amount of general purpose infrastructure is provided
@@ -76,20 +76,21 @@
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-<a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
+            <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
           Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> is a traits class
-          used to deduce a type common to a several types, useful as the return type
-          of functions operating on multiple input types such as in mixed-mode arithmetic.
-        </li>
+            used to deduce a type common to a several types, useful as the return
+            type of functions operating on multiple input types such as in mixed-mode
+            arithmetic.
+          </li>
 <li>
-          A class template, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+            A class template, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
           Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a>, for specifying compile
-          time rational constants such as 1/3 of a nanosecond or the number of inches
-          per meter. <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+            time rational constants such as 1/3 of a nanosecond or the number of
+            inches per meter. <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
           Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> represents a compile time
-          ratio of compile time constants with support for compile time arithmetic
-          with overflow and division by zero protection
-        </li>
+            ratio of compile time constants with support for compile time arithmetic
+            with overflow and division by zero protection
+          </li>
 </ul></div>
 <p>
         Knowing how long a program takes to execute is useful in both test and production
@@ -98,54 +99,54 @@
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-          Stopwatches: A facility to measure elapsed time with the ability to start,
-          stop, suspend, or resume measurement.
-          <div class="itemizedlist"><ul type="circle">
+            Stopwatches: A facility to measure elapsed time with the ability to start,
+            stop, suspend, or resume measurement.
+            <div class="itemizedlist"><ul type="circle">
 <li>
-<a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
+                  <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
         Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> concept
-            </li>
+                </li>
 <li>
-              Scoped helper classes allowing to pairwise start/stop operations, suspend/resume
-              and resume/suspend a <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
+                  Scoped helper classes allowing to pairwise start/stop operations,
+                  suspend/resume and resume/suspend a <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
         Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a>.
-            </li>
+                </li>
 <li>
-<a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
+                  <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
           Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a>, model of <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
         Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> capturing elapsed
-              <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
+                  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
           Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a> times.
-            </li>
+                </li>
 <li>
-<a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
-          Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a>, model
-              of <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
+                  <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
+          Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a>,
+                  model of <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
         Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> capturing cummulated
-              elapsed Clock times.
-            </li>
+                  elapsed Clock times.
+                </li>
 </ul></div>
-</li>
+          </li>
 <li>
-          a Stopclocks higher layer: provide a complete stopclock reporting package
-          that can be invoked in a single line of code.
-          <div class="itemizedlist"><ul type="circle">
+            a Stopclocks higher layer: provide a complete stopclock reporting package
+            that can be invoked in a single line of code.
+            <div class="itemizedlist"><ul type="circle">
 <li>
-<a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
+                  <a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
           Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a>, convenient
-              reporting to an output stream (including wide char streams) of the
-              elapsed time of models of <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
+                  reporting to an output stream (including wide char streams) of
+                  the elapsed time of models of <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
         Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> results.
-            </li>
+                </li>
 <li>
-<a href="../reference/reporters.html#boost_chrono.reference.reporters.stopclock_hpp.stopclock" title="
+                  <a href="../reference/reporters.html#boost_chrono.reference.reporters.stopclock_hpp.stopclock" title="
           Template Class stopclock&lt;&gt;"><code class="computeroutput"><span class="identifier">stopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code></a>
-              shortcut of <code class="computeroutput"><a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
+                  shortcut of <code class="computeroutput"><a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
           Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a><span class="special">&lt;</span><a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
           Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;&gt;</span></code>
-</li>
+                </li>
 </ul></div>
-</li>
+          </li>
 </ul></div>
 <p>
         To make the timing facilities more generally useful, <span class="bold"><strong>Boost.Chrono</strong></span>
@@ -155,27 +156,27 @@
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-<a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
+            <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
           Class process_real_cpu_clock"><code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code></a>, captures
-          real (wall clock) CPU times.
-        </li>
+            real (wall clock) CPU times.
+          </li>
 <li>
-<a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock" title="
+            <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock" title="
           Class process_user_cpu_clock"><code class="computeroutput"><span class="identifier">process_user_cpu_clock</span></code></a>, captures
-          user-CPU times.
-        </li>
+            user-CPU times.
+          </li>
 <li>
-<a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock" title="
+            <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock" title="
           Class process_system_cpu_clock"><code class="computeroutput"><span class="identifier">process_system_cpu_clock</span></code></a>, captures
-          system-CPU times.
-        </li>
+            system-CPU times.
+          </li>
 <li>
-          A tuple-like class <code class="computeroutput"><span class="identifier">process_cpu_clock</span></code>,
-          that captures real, user-CPU, and system-CPU times together.
-        </li>
+            A tuple-like class <code class="computeroutput"><span class="identifier">process_cpu_clock</span></code>,
+            that captures real, user-CPU, and system-CPU times together.
+          </li>
 <li>
-          Thread clocks, when supported by a platform.
-        </li>
+            Thread clocks, when supported by a platform.
+          </li>
 </ul></div>
 <p>
         Lastly, <span class="bold"><strong>Boost.Chrono</strong></span> includes <a href="http://www.boost.org/libs/typeof" target="_top">typeof</a>
@@ -185,7 +186,7 @@
         auto with C++03 compilers.
       </p>
 <a name="boost_chrono.overview.description.caveat_emptor"></a><h4>
-<a name="id4758567"></a>
+<a name="id4942228"></a>
         <a href="description.html#boost_chrono.overview.description.caveat_emptor">Caveat emptor</a>
       </h4>
 <p>
@@ -207,7 +208,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="motivation.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="motivation.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="reporters.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="deprecated.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="reporters.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="deprecated.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -131,9 +131,9 @@
             The default format is "%ts\n", where
           </p>
 <div class="itemizedlist"><ul type="disc"><li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">d</span></code>
-              : the result of elapsed() when the reporting is done.
-            </li></ul></div>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">d</span></code>
+                : the result of elapsed() when the reporting is done.
+              </li></ul></div>
 <p>
             The time is given using the suffix "s" following the System
             International d'Unites Std.
@@ -201,37 +201,38 @@
           </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">c</span></code>
-              : the counter of the number of times the pair srat/stop has been called.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">c</span></code>
+                : the counter of the number of times the pair srat/stop has been
+                called.
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">s</span></code>
-              : the sum of the samples of elapsed time between the call to start/stop.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">s</span></code>
+                : the sum of the samples of elapsed time between the call to start/stop.
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">m</span></code>
-              : the min of the samples of elapsed time between the call to start/stop.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">m</span></code>
+                : the min of the samples of elapsed time between the call to start/stop.
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">M</span></code>
-              : the max of the samples of elapsed time between the call to start/stop.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">M</span></code>
+                : the max of the samples of elapsed time between the call to start/stop.
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">a</span></code>
-              : the mean of the samples of elapsed time between the call to start/stop.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">a</span></code>
+                : the mean of the samples of elapsed time between the call to start/stop.
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">f</span></code>
-              : the frequency of calls to start.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">f</span></code>
+                : the frequency of calls to start.
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">l</span></code>
-              : the lifetime of the stopwatch_accumulator.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">l</span></code>
+                : the lifetime of the stopwatch_accumulator.
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">p</span></code>
-              : the percentage of time spent by this stopwatch respect to its lifetime.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">p</span></code>
+                : the percentage of time spent by this stopwatch respect to its lifetime.
+              </li>
 </ul></div>
 <p>
             The time is given using the suffix "s", the frequency is given
@@ -328,25 +329,25 @@
           </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">r</span></code>
-              : real process clock
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">r</span></code>
+                : real process clock
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">u</span></code>
-              : user process clock
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">u</span></code>
+                : user process clock
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">s</span></code>
-              : system process clock
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">s</span></code>
+                : system process clock
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">c</span></code>
-              : user+system process clock
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">c</span></code>
+                : user+system process clock
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">p</span></code>
-              : percentage (user+system)/real process clock
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">p</span></code>
+                : percentage (user+system)/real process clock
+              </li>
 </ul></div>
 <p>
             All the units are given using the suffix "s" following the
@@ -450,57 +451,58 @@
           </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">c</span></code>
-              : the counter of the number of times the pair srat/stop has been called.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">c</span></code>
+                : the counter of the number of times the pair srat/stop has been
+                called.
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">s</span></code>
-              : the sum of the samples of elapsed time between the call to start/stop.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">s</span></code>
+                : the sum of the samples of elapsed time between the call to start/stop.
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">m</span></code>
-              : the min of the samples of elapsed time between the call to start/stop.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">m</span></code>
+                : the min of the samples of elapsed time between the call to start/stop.
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">M</span></code>
-              : the max of the samples of elapsed time between the call to start/stop.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">M</span></code>
+                : the max of the samples of elapsed time between the call to start/stop.
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">a</span></code>
-              : the mean of the samples of elapsed time between the call to start/stop.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">a</span></code>
+                : the mean of the samples of elapsed time between the call to start/stop.
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">f</span></code>
-              : the frequency of calls to start.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">f</span></code>
+                : the frequency of calls to start.
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">l</span></code>
-              : the lifetime of the stopwatch_accumulator.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">l</span></code>
+                : the lifetime of the stopwatch_accumulator.
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">p</span></code>
-              : the percentage of time spent by this stopwatch respect to its lifetime.
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">p</span></code>
+                : the percentage of time spent by this stopwatch respect to its lifetime.
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">r</span></code>
-              : real process clock
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">r</span></code>
+                : real process clock
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">u</span></code>
-              : user process clock
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">u</span></code>
+                : user process clock
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">s</span></code>
-              : system process clock
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">s</span></code>
+                : system process clock
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">c</span></code>
-              : user+system process clock
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">c</span></code>
+                : user+system process clock
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">p</span></code>
-              : percentage (user+system)/real process clock
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">p</span></code>
+                : percentage (user+system)/real process clock
+              </li>
 </ul></div>
 <p>
             The time is given using the suffix "s", the frequency is given
@@ -645,25 +647,25 @@
           </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">d</span></code>
-              : days
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">d</span></code>
+                : days
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">h</span></code>
-              : hours
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">h</span></code>
+                : hours
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">m</span></code>
-              : minutes
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">m</span></code>
+                : minutes
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">s</span></code>
-              : seconds
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">s</span></code>
+                : seconds
+              </li>
 <li>
-<code class="computeroutput"><span class="special">%</span><span class="identifier">n</span></code>
-              : nanoseconds
-            </li>
+                <code class="computeroutput"><span class="special">%</span><span class="identifier">n</span></code>
+                : nanoseconds
+              </li>
 </ul></div>
 </div>
 <div class="section" lang="en">
@@ -694,7 +696,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="reporters.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="deprecated.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="reporters.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="deprecated.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
