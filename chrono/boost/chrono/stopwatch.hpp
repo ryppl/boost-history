@@ -13,7 +13,9 @@
 #include <utility>
 #include <boost/chrono/chrono.hpp>
 #include <boost/chrono/stopwatch_scoped.hpp>
+#include <boost/chrono/lightweight_stopwatch.hpp>
 #include <boost/system/error_code.hpp>
+#include <boost/utility/base_from_member.hpp>
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
@@ -37,145 +39,26 @@ namespace boost
     template <class Clock=high_resolution_clock>
     class stopwatch;
 
-    struct dont_start_t{};
-    static const dont_start_t dont_start = {};
+    //~ struct dont_start_t{};
+    //~ static const dont_start_t dont_start = {};
 //--------------------------------------------------------------------------------------//
+
     template <class Clock>
-    class stopwatch
+    class stopwatch : private base_from_member<typename Clock::duration>, public lightweight_stopwatch<Clock>
     {
     public:
-        typedef Clock                       clock;
-        typedef typename Clock::duration    duration;
-        typedef typename Clock::time_point  time_point;
-        typedef typename Clock::rep         rep;
-        typedef typename Clock::period      period;
-
+        typedef base_from_member<typename Clock::duration> pbase_type;
         explicit stopwatch( system::error_code & ec = system::throws  )
-        : running_(false), suspended_(false),
-          start_(duration::zero()), level_(0), partial_(duration::zero()), suspend_level_(0)
+        : pbase_type(), lightweight_stopwatch<Clock>(pbase_type::member, ec)
         {
-            start(ec);
         }
 
         explicit stopwatch( const dont_start_t& t )
-        : running_(false), suspended_(false),
-          start_(duration::zero()), level_(0), partial_(duration::zero()), suspend_level_(0)
+        : pbase_type(), lightweight_stopwatch<Clock>(pbase_type::member, t)
         { }
-
-//--------------------------------------------------------------------------------------//
-        std::pair<duration, time_point> restart( system::error_code & ec = system::throws ) {
-            duration frozen;
-            time_point tmp=clock::now( ec );
-            if (ec) return time_point();
-            if (running_&&(level_==1)) {
-                partial_ += tmp - start_;
-                frozen = partial_;
-                partial_=duration::zero();
-            } else {
-                frozen = duration::zero();
-                running_=true;
-            }
-            start_=tmp;
-            return std::make_pair(frozen, start_);
-        }
-
-        time_point start( system::error_code & ec = system::throws ) {
-            if (!running_) {
-                time_point tmp = clock::now( ec );
-                if (ec) return time_point();
-                start_ = tmp;
-                ++level_;
-                running_ = true;
-                return start_;
-            } else {
-                ++level_;
-                ec.clear();
-                return time_point();
-            }
-        }
-
-        duration stop( system::error_code & ec = system::throws ) {
-            if (running_ && (--level_==0)) {
-                time_point tmp=clock::now( ec );
-                if (ec) return duration::zero();
-                partial_ += tmp - start_;
-                duration frozen= partial_;
-                partial_=duration::zero();
-                running_=false;
-                return frozen;
-            } else {
-                ec.clear();
-                return duration::zero();
-            }
-        }
-
-        duration suspend( system::error_code & ec = system::throws ) {
-            if (running_) {
-                if (!suspended_) {
-                    time_point tmp=clock::now( ec );
-                    if (ec) return duration::zero();
-                    ++suspend_level_;
-                    partial_ += tmp - start_;
-                    suspended_=true;
-                    return partial_;
-                } else {
-                    ++suspend_level_;
-                    ec.clear();
-                    return duration::zero();
-                }
-            } else {
-                ec.clear();
-                return duration::zero();
-            }
-        }
-        time_point resume( system::error_code & ec = system::throws ) {
-            if (suspended_&&(--suspend_level_==0)) {
-                time_point tmp = clock::now( ec );
-                if (ec) return time_point();
-                start_ = tmp;
-                suspended_=false;
-                return start_;
-            } else {
-                ec.clear();
-                return time_point();
-            }
-        }
-
-        duration elapsed( system::error_code & ec = system::throws )
-        {
-            if (running_)
-                return clock::now( ec ) - start_ + partial_;
-            else
-                return partial_;
-        }
-
-        time_point now( system::error_code & ec = system::throws )
-        {
-            return time_point(elapsed( ec ));
-        }
-
-        void reset( system::error_code & ec = system::throws ) {
-            running_=false;
-            suspended_=false;
-            partial_ = duration::zero();
-            start_  = time_point(duration::zero());
-            level_=0;
-            suspend_level_=0;
-            ec.clear();
-        }
-
-        typedef stopwatch_runner<stopwatch<Clock> > scoped_run;
-        typedef stopwatch_stopper<stopwatch<Clock> > scoped_stop;
-        typedef stopwatch_suspender<stopwatch<Clock> > scoped_suspend;
-        typedef stopwatch_resumer<stopwatch<Clock> > scoped_resume;
-
-    private:
-        bool running_;
-        bool suspended_;
-        time_point start_;
-        std::size_t level_;
-        duration partial_;
-        std::size_t suspend_level_;
+        
+    //~ private:
+        //~ stopwatch operator=( stopwatch const& rhs );
 
     };
 
