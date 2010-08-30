@@ -245,6 +245,23 @@ void check_union_containedness(const Type& a, const TypeB& b)
 	BOOST_CHECK_EQUAL(contains(b + a, a), true);
 }
 
+template<class MapT>
+void check_domain_containedness(const MapT& a)
+{
+	typedef typename MapT::set_type set_type;
+	set_type dom;
+	domain(dom, a);
+	BOOST_CHECK_EQUAL(within(dom, a), true);
+	BOOST_CHECK_EQUAL(contains(a, dom), true);
+
+	if(!dom.empty())
+	{
+		typename MapT::domain_type a1 = *dom.begin();
+		BOOST_CHECK_EQUAL(within(a1, a), true);
+		BOOST_CHECK_EQUAL(contains(a, a1), true);
+	}
+}
+
 //==============================================================================
 // Law tests are now combined to test algebraic concepts.
 //------------------------------------------------------------------------------

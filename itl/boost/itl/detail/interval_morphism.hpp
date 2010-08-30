@@ -19,7 +19,7 @@ namespace boost{namespace itl
             ITL_const_FORALL(typename IntervalContainerT, itv_, src)
             {
                 const typename IntervalContainerT::key_type& itv   = IntervalContainerT::key_value(itv_);
-                typename IntervalContainerT::codomain_type   coval = IntervalContainerT::codomain_value(itv_);
+                typename IntervalContainerT::codomain_type   coval = IntervalContainerT::co_value(itv_);
 
                 for(typename IntervalContainerT::domain_type element = first(itv); element <= last(itv); ++element)
                 {
@@ -36,7 +36,7 @@ namespace boost{namespace itl
             ITL_const_FORALL(typename ElementContainerT, element_, src)
             {
                 const typename ElementContainerT::key_type&  key  = ElementContainerT::key_value(element_);
-                const typename ElementContainerT::data_type& data = ElementContainerT::codomain_value(element_);
+                const typename ElementContainerT::data_type& data = ElementContainerT::co_value(element_);
 
                 result += IntervalContainerT::make_value(key_type(key), data);
             }

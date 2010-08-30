@@ -51,9 +51,9 @@ public:
 
     bool covalues_are_equal(LeftIterT& left, RightIterT& right)
     {
-        if(LeftT::codomain_value(left) < RightT::codomain_value(right))
+        if(LeftT::co_value(left) < RightT::co_value(right))
             _result = less;
-        if(RightT::codomain_value(right) < LeftT::codomain_value(left))
+        if(RightT::co_value(right) < LeftT::co_value(left))
             _result = greater;
         return _result == equal;
     }

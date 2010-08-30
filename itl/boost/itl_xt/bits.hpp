@@ -17,6 +17,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/type_to_string.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl/type_traits/is_set.hpp>
+#include <boost/itl/type_traits/has_set_semantics.hpp>
 #include <boost/itl/detail/relation_state.hpp>
 
 namespace boost{namespace itl
@@ -238,7 +239,6 @@ struct is_set<bits<NaturalT> >
     typedef is_set<bits<NaturalT> > type;
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
-
 
 
 template <>struct type_to_string<itl::bits<unsigned char > >{static std::string apply(){ return "bit8";  }};

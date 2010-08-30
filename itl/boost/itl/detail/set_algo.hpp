@@ -13,7 +13,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/predicates.hpp>
 #include <boost/itl/functors.hpp>
-#include <boost/itl/seqs.hpp>
+//CL #include <boost/itl/seqs.hpp>
 
 /*
 <b>SetAlgo </b>

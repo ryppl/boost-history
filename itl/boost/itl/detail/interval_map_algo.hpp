@@ -41,10 +41,10 @@ bool is_joinable(const IntervalMapT& container,
     ++next_;
 
     const typename IntervalMapT::codomain_type& co_value 
-        = IntervalMapT::codomain_value(first);
+        = IntervalMapT::co_value(first);
     while(it_ != past)
     {
-        if(IntervalMapT::codomain_value(next_) != co_value)
+        if(IntervalMapT::co_value(next_) != co_value)
             return false;
         if(!itl::touches(IntervalMapT::key_value(it_++),
                          IntervalMapT::key_value(next_++)))

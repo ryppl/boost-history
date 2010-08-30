@@ -34,6 +34,15 @@ struct mono
 bool operator == (const mono&, const mono&){ return true; }
 bool operator < (const mono&, const mono&){ return false; }
 
+template<class CharType, class CharTraits>
+std::basic_ostream<CharType, CharTraits>&
+operator << (std::basic_ostream<CharType, CharTraits>& stream, const mono& object)
+{
+    return stream << "*";
+}
+
+
+
 template <class BicrementableT>
 BicrementableT make(int n)
 {

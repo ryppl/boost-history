@@ -458,7 +458,7 @@ ITL_END_COMMON_MEMBER_FUNCTIONS:
     static const key_type& key_value(IteratorT value_){ return (*value_); }
 
     template<typename IteratorT>
-    static codomain_type codomain_value(IteratorT value_)
+    static codomain_type co_value(IteratorT value_)
     { return itl::is_empty(*value_)? codomain_type() : (*value_).lower(); }
 
     template<typename LeftIterT, typename RightIterT>

@@ -307,6 +307,8 @@ void icl_quantifier_check_containedness_4_bicremental_types()
 
 	check_union_containedness(map_a, map_c);
 	check_union_containedness(map_c, map_pair_a);
+
+	check_domain_containedness(map_a);
 }
 
 

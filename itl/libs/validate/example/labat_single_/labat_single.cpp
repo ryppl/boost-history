@@ -74,16 +74,18 @@ void test_LawValidater()
     //typedef InplaceCommutativity<itl::set<double> > TestLawT;
     //LawValidater<TestLawT> test_law;
 
+    //typedef FunctionEquality
+    //<
+    //    itl::list<std::pair<rightopen_interval<double,std::less>,int> >, //SourceT, 
+    //    split_interval_map<double,int,partial_absorber>,                 //TargetT, 
+    //    base_insertion, 
+    //    hint_insertion
+    //>
+    //TestLawT;
 
-    
-    typedef FunctionEquality
-    <
-        itl::list<std::pair<rightopen_interval<double,std::less>,int> >, //SourceT, 
-        split_interval_map<double,int,partial_absorber>,                 //TargetT, 
-        base_insertion, 
-        hint_insertion
-    >
-    TestLawT;
+
+    typedef Antisymmetry<itl::map<int,int>, itl::sub_super_set, itl::element_equal> TestLawT;
+
     LawValidater<TestLawT> test_law;
 
 

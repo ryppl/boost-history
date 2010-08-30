@@ -40,6 +40,8 @@ public:
 
     typedef type joint_type;
 
+    typedef type key_object_type;
+
     /// The domain type of the set
     typedef DomainT   domain_type;
     /// The codomaintype is the same as domain_type

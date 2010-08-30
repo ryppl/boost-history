@@ -34,6 +34,7 @@ public:
 
     typedef interval_set<DomainT,Compare,Interval,Alloc> joint_type;
     typedef type overloadable_type;
+    typedef type key_object_type;
 
     /// The domain type of the set
     typedef DomainT   domain_type;

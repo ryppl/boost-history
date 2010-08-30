@@ -63,6 +63,13 @@ namespace boost { namespace itl
         typedef is_set<mini::bits<NaturalT> > type;
         BOOST_STATIC_CONSTANT(bool, value = true); 
     };
+
+    template<class NaturalT>
+    struct has_set_semantics<mini::bits<NaturalT> >
+    { 
+        typedef has_set_semantics<mini::bits<NaturalT> > type;
+        BOOST_STATIC_CONSTANT(bool, value = true); 
+    };
 }}
 //]
 

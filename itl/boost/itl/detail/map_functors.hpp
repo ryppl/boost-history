@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Copyright (c) 2007-2010: Joachim Faulhaber
+Copyright (c) 2010-2010: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
@@ -9,6 +9,8 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #define BOOST_ITL_DETAIL_MAP_FUNCTORS_HPP_JOFA_100823
 
 #include <boost/itl/detail/design_config.hpp>
+#include <boost/itl/detail/associated_value.hpp>
+#include <boost/itl/type_traits/adds_inversely.hpp>
 #include <boost/itl/functors.hpp>
 #include <boost/itl/map_functions.hpp>
 
@@ -20,18 +22,6 @@ inline typename enable_if<is_element_map<MapT>, MapT>::type&
 erase_if(const Predicate& pred, MapT& object);//JODO gcc-3.4.4 does not recognize some functions from map_functions.hpp
                                               //JODO e.g. erase_if and subtract. Forward decl should not be necessary
                                               //JODO but may be it is better to use forward decls only instead of inlclues here.
-
-
-template<class MapT, class Combiner> //JODO locate
-struct adds_inversely
-{
-    typedef adds_inversely type;
-    BOOST_STATIC_CONSTANT(bool, 
-        value = (mpl::and_< has_inverse<typename MapT::codomain_type>
-                          , is_negative<Combiner> 
-                          >::value)); 
-};
-
 
 template<class MapT, class Combiner, bool creates_inverse>
 struct element_version
@@ -56,192 +46,118 @@ struct element_version<MapT, Combiner, true>
 };
 
 //==============================================================================
-//=P Containment
-//==============================================================================
+//JODO should be made usable for interval maps too and must go to it's own file
+// in itl/detail
 
-template<class MapT>
-struct map_within
+template<class MapT, class Combiner, bool absorbs_neutrons>
+struct absorbs_neutron
 {
-	typedef typename MapT::set_type set_type;
+	static bool apply(const typename MapT::codomain_type& value);
+};
 
-	static bool apply(const typename MapT::set_type& sub, const MapT& super)
-	{
-		if(itl::is_empty(sub))                return true;
-		if(itl::is_empty(super))              return false;
-		if(itl::size(super) < itl::size(sub)) return false;
+template<class MapT, class Combiner>
+struct absorbs_neutron<MapT,Combiner,false>
+{
+	static bool apply(const typename MapT::codomain_type&){ return false; }
+};
 
-		typename set_type::const_iterator common_lwb_;
-		typename set_type::const_iterator common_upb_;
-		if(!Set::common_range(common_lwb_, common_upb_, sub, super))
-			return false;
+template<class MapT, class Combiner>
+struct absorbs_neutron<MapT,Combiner,true>
+{
+	static bool apply(const typename MapT::codomain_type& value)
+	{ return value == Combiner::neutron(); }
+};
 
-		typename set_type::const_iterator sub_ = sub.begin();
-		typename MapT::const_iterator super_;
-		while(sub_ != seqs<MapT>::end(sub))
-		{
-			super_ = seqs<MapT>::find(super, *sub_++);
-			if(super_ == seqs<MapT>::end(super)) 
-				return false;
+//------------------------------------------------------------------------------
+template<class MapT, class Combiner, bool absorbs_neutrons>
+struct handle_neutron
+{
+	typedef typename MapT::iterator iterator;
+	static iterator apply(MapT& object, iterator it);
+};
+
+template<class MapT, class Combiner>
+struct handle_neutron<MapT,Combiner,false>
+{
+	typedef typename MapT::iterator iterator;
+	static iterator apply(MapT&, iterator it)
+	{ return it; }
+};
+
+template<class MapT, class Combiner>
+struct handle_neutron<MapT,Combiner,true>
+{
+	typedef typename MapT::iterator iterator;
+	static iterator apply(MapT& object, iterator it)
+	{ 
+		if(it->second == Combiner::neutron())
+		{                                           
+			object.erase(it);                
+			return object.end();                    
 		}
-		return true;
-	}
-
-	static bool apply(const MapT& sub, const MapT& super)
-	{
-		if(&super == &sub)                    return true;
-		if(itl::is_empty(sub))                return true;
-		if(itl::is_empty(super))              return false;
-		if(itl::size(super) < itl::size(sub)) return false;
-
-		typename MapT::const_iterator common_lwb_;
-		typename MapT::const_iterator common_upb_;
-		if(!Set::common_range(common_lwb_, common_upb_, sub, super))
-			return false;
-
-		typename MapT::const_iterator sub_ = sub.begin(), super_;
-		while(sub_ != seqs<MapT>::end(sub))
-		{
-			super_ = seqs<MapT>::find(super, seqs<MapT>::key_value(sub_));
-			if(super_ == super.end()) 
-				return false;
-			else if(!(seqs<MapT>::co_value(sub_) == seqs<MapT>::co_value(super_)))
-				return false;
-			sub_++;
-		}
-		return true;
+		return it;
 	}
 };
+
+//==============================================================================
+
 
 //==============================================================================
 //=P Addition
 //==============================================================================
 
-template<class MapT, class Combiner, bool absorbs_neutrons>
-struct map_add
-{
-    typedef MapT map_type;
-    typedef typename map_type::value_type    value_type;
-    typedef typename map_type::element_type  element_type;
-    typedef typename map_type::iterator      iterator;
-
-    static MapT&    apply(map_type& object, const value_type& value_pair);
-    static iterator apply(map_type& object, iterator prior, const element_type& value_pair);
-};
-
-template <class MapT, class Combiner>
-struct map_add<MapT, Combiner, true> 
-{               // absorbs_neutrons
+template <class MapT, class Combiner, bool absorbs_neutrons>
+struct map_add 
+{             
     typedef MapT map_type;
     typedef typename map_type::value_type    value_type;
     typedef typename map_type::element_type  element_type;
     typedef typename map_type::codomain_type codomain_type;
     typedef typename map_type::iterator      iterator;
 
-    BOOST_STATIC_CONSTANT(bool, co_version = (adds_inversely<MapT,Combiner>::value));
-
-    static map_type& apply(map_type& object, const value_type& val)
-    {
-        if(val.second == Combiner::neutron())
-            return object;
-                                              // if Combiner is negative e.g. subtract and
-        std::pair<iterator, bool> insertion = // the codomain has an inverse, we have to 
-            seqs<map_type>::insert(object,    // insert the inverse element of val.second
-                                   element_version<MapT,Combiner,co_version>::apply(val));
-
-        if( insertion.second )
-            return object;
-        else
-        {
-            iterator it = insertion.first;
-            Combiner()((*it).second, val.second);   // If this combination results in a
-                                                    // neutral element, 
-            if((*it).second == Combiner::neutron()) // it has to be removed.
-                seqs<map_type>::erase(object, it);
-
-            return object;
-        }
-    }
-
-
-    static iterator apply(map_type& object, iterator prior, const element_type& value_pair)
-    {
-        if(value_pair.second == Combiner::neutron())
-            return seqs<map_type>::end(object);
-
-        iterator inserted_ 
-            = seqs<map_type>::insert(object, prior, 
-                                     value_type(value_pair.first, Combiner::neutron()));
-        Combiner()(inserted_->second, value_pair.second); // May generate an inverse via inv(x)= 0-x
-
-        if(inserted_->second == Combiner::neutron())
-        {
-            seqs<map_type>::erase(object, inserted_);
-            return seqs<map_type>::end(object);
-        }
-        else
-            return inserted_;
-    }
-};
-
-
-template <class MapT, class Combiner>
-struct map_add<MapT, Combiner, false> 
-{               // !absorbs_neutrons
-    typedef MapT map_type;
-    typedef typename map_type::value_type    value_type;
-    typedef typename map_type::element_type  element_type;
-    typedef typename map_type::codomain_type codomain_type;
-    typedef typename map_type::iterator      iterator;
-
-    BOOST_STATIC_CONSTANT(bool, co_version = (adds_inversely<MapT,Combiner>::value));
+    BOOST_STATIC_CONSTANT(bool, 
+		co_version = (adds_inversely<codomain_type,Combiner>::value));
 
     static map_type& apply(map_type& object, const value_type& value_pair)
     {
-        std::pair<iterator, bool> insertion = 
-            seqs<map_type>::insert(object, 
-                                   element_version<MapT,Combiner,co_version>::apply(value_pair));
+		if(absorbs_neutron<MapT,Combiner,absorbs_neutrons>::apply(value_pair.second))
+            return object;
+
+		// if Combiner is negative e.g. subtract and the codomain has an inverse, 
+		// we have to insert the inverse element of value_pair.second
+        std::pair<iterator, bool> insertion =  
+            object.insert(element_version<MapT,Combiner,co_version>::apply(value_pair));
 
         if( insertion.second )
             return object;
         else
         {
             iterator it = insertion.first;
-            Combiner()((*it).second, value_pair.second);
+            Combiner()((*it).second, value_pair.second);  
+                                                   
+			handle_neutron<MapT,Combiner,absorbs_neutrons>::apply(object, it);
             return object;
         }
     }
 
     static iterator apply(map_type& object, iterator prior, const element_type& value_pair)
     {
+		if(absorbs_neutron<MapT,Combiner,absorbs_neutrons>::apply(value_pair.second))
+            return object.end();
+
         iterator inserted_ 
-            = seqs<MapT>::insert(object, prior, 
-                                 value_type(value_pair.first, Combiner::neutron()));
+            = object.insert(prior, value_type(value_pair.first, Combiner::neutron()));
         Combiner()(inserted_->second, value_pair.second); // May generate an inverse via inv(x)= 0-x
-        return inserted_;
+
+		return handle_neutron<MapT,Combiner,absorbs_neutrons>::apply(object, inserted_);
     }
-
 };
 
 
+
 //==============================================================================
-//=P Subtraction
+//=P Subtraction < is_total && is_invertible >
 //==============================================================================
-
-//------------------------------------------------------------------------------
-//-P Subtraction for partial maps
-//------------------------------------------------------------------------------
-
-template<class MapT, class Combiner, bool absorbs_neutrons>
-struct map_partial_subtract
-{
-    typedef          MapT                   map_type;
-    typedef typename map_type::domain_type  domain_type;
-    typedef typename map_type::element_type element_type;
-
-    static map_type& apply(map_type&, const element_type&);
-};
-
-//------------------------------------------------------------------------------
 
 template<class MapT, bool is_total_invertible>
 struct map_subtract
@@ -272,53 +188,22 @@ struct map_subtract<MapT, true>
 template<class MapT>
 struct map_subtract<MapT, false>
 {
-    typedef          MapT                   map_type;
-    typedef typename map_type::element_type element_type;
-    typedef typename map_type::inverse_codomain_combine inverse_codomain_combine;
-
-    static map_type& apply(map_type& object, const element_type& value_pair)
-    {
-        return map_partial_subtract<map_type
-                                   ,inverse_codomain_combine
-                                   ,absorbs_neutrons<MapT>::value >
-               ::apply(object, value_pair);        
-    }
-};
-
-template<class MapT, class Combiner>
-struct map_partial_subtract<MapT, Combiner, true>
-{
     typedef          MapT                       map_type;
     typedef typename map_type::element_type     element_type;
     typedef typename map_type::codomain_combine codomain_combine;
+    typedef typename map_type::inverse_codomain_combine 
+		                                        inverse_codomain_combine;
     typedef typename map_type::iterator         iterator;
+    BOOST_STATIC_CONSTANT(bool, absorbs = (absorbs_neutrons<MapT>::value));
 
     static map_type& apply(map_type& object, const element_type& value_pair)
     {
-        iterator it_ = seqs<map_type>::find(object, value_pair.first);
-        if(it_ != seqs<map_type>::end(object))
+        iterator it_ = object.find(value_pair.first);
+        if(it_ != object.end())
         {
-            Combiner()((*it_).second, value_pair.second);
-            if((*it_).second == codomain_combine::neutron())
-                seqs<map_type>::erase(object, it_);
+            inverse_codomain_combine()((*it_).second, value_pair.second);
+			handle_neutron<MapT,codomain_combine,absorbs>::apply(object,it_);
         }
-        return object;
-    }
-};
-
-template<class MapT, class Combiner>
-struct map_partial_subtract<MapT, Combiner, false>
-{
-    typedef          MapT                   map_type;
-    typedef typename map_type::element_type element_type;
-    typedef typename map_type::iterator     iterator;
-
-    static map_type& apply(map_type& object, const element_type& value_pair)
-    {
-        iterator it_ = seqs<MapT>::find(object, value_pair.first);
-        if(it_ != seqs<MapT>::end(object))
-            Combiner()((*it_).second, value_pair.second);
-        
         return object;
     }
 };
@@ -331,18 +216,6 @@ struct map_partial_subtract<MapT, Combiner, false>
 template<class MapT, class Combiner, bool absorbs_neutrons>
 struct map_insert
 {
-    typedef          MapT                   map_type;
-    typedef typename map_type::domain_type  domain_type;
-    typedef typename map_type::element_type element_type;
-    typedef typename map_type::iterator     iterator;
-
-    static map_type& apply(map_type&, const element_type&);
-    static map_type& apply(map_type&, iterator, const element_type&);
-};
-
-template<class MapT, class Combiner>
-struct map_insert<MapT, Combiner, true>
-{
     typedef          MapT                       map_type;
     typedef typename map_type::element_type     element_type;
     typedef typename map_type::codomain_combine codomain_combine;
@@ -350,37 +223,18 @@ struct map_insert<MapT, Combiner, true>
 
     static std::pair<iterator,bool> apply(map_type& object, const element_type& value_pair)
     {
-        if(value_pair.second == codomain_combine::neutron()) 
+		if(absorbs_neutron<MapT,Combiner,absorbs_neutrons>::apply(value_pair.second)) 
             return std::pair<iterator,bool>(object.end(),true);
         else
-            return seqs<map_type>::insert(object, value_pair);
+            return object.insert(value_pair);
     }
 
     static iterator apply(map_type& object, iterator prior, const element_type& value_pair)
     {
-        if(value_pair.second == codomain_combine::neutron()) 
-            return seqs<map_type>::end(object);
+		if(absorbs_neutron<MapT,Combiner,absorbs_neutrons>::apply(value_pair.second)) 
+            return object.end();
         else
-            return seqs<map_type>::insert(object, prior, value_pair);
-    }
-
-};
-
-template<class MapT, class Combiner>
-struct map_insert<MapT, Combiner, false>
-{
-    typedef          MapT                   map_type;
-    typedef typename map_type::element_type element_type;
-    typedef typename map_type::iterator     iterator;
-
-    static std::pair<iterator,bool> apply(map_type& object, const element_type& value_pair)
-    {
-        return seqs<MapT>::insert(object, value_pair);
-    }
-
-    static iterator apply(map_type& object, iterator prior, const element_type& value_pair)
-    {
-        return seqs<MapT>::insert(object, prior, value_pair);
+            return object.insert(prior, value_pair);
     }
 
 };
@@ -398,64 +252,27 @@ struct map_erase
     typedef typename map_type::size_type    size_type;
     typedef typename map_type::iterator     iterator;
 
-    static size_type apply(map_type&, const element_type&);
-
     static size_type apply(map_type& object, const domain_type& key)
     {
-        iterator it_ = seqs<map_type>::find(object, key);
-        if(it_ != seqs<map_type>::end(object))
+        iterator it_ = object.find(key);
+        if(it_ != object.end())
         {
-            seqs<map_type>::erase(object, it_);
+            object.erase(it_);
             return 1;
         }
 
         return 0;
     }
 
-};
-
-template<class MapT, class Combiner>
-struct map_erase<MapT, Combiner, true>
-{
-    typedef          MapT                       map_type;
-    typedef typename map_type::domain_type      domain_type;
-    typedef typename map_type::element_type     element_type;
-    typedef typename map_type::size_type        size_type;
-    typedef typename map_type::codomain_combine codomain_combine;
-    typedef typename map_type::iterator         iterator;
-
     static size_type apply(map_type& object, const element_type& value_pair)
     {
-        if(value_pair.second == codomain_combine::neutron())
-            return 0; // neutrons are never contained 'substantially' 
-                      // only 'virtually'.
+		if(absorbs_neutron<MapT,Combiner,absorbs_neutrons>::apply(value_pair.second)) 
+            return 0; // neutrons are never contained 'substantially' only 'virtually'.
 
-        iterator it_ = seqs<map_type>::find(object, value_pair.first);
-        if(it_ != seqs<map_type>::end(object) && value_pair.second == it_->second)
+        iterator it_ = object.find(value_pair.first);
+        if(it_ != object.end() && value_pair.second == it_->second)
         {
-            seqs<map_type>::erase(object, it_);
-            return 1;
-        }
-
-        return 0;
-    }
-};
-
-template<class MapT, class Combiner>
-struct map_erase<MapT, Combiner, false>
-{
-    typedef          MapT                   map_type;
-    typedef typename map_type::domain_type  domain_type;
-    typedef typename map_type::element_type element_type;
-    typedef typename map_type::size_type    size_type;
-    typedef typename map_type::iterator     iterator;
-
-    static size_type apply(map_type& object, const element_type& value_pair)
-    {
-        iterator it_ = seqs<map_type>::find(object, value_pair.first);
-        if(it_ != seqs<map_type>::end(object) && value_pair.second == it_->second)
-        {
-            seqs<map_type>::erase(object, it_);
+            object.erase(it_);
             return 1;
         }
 
@@ -483,16 +300,20 @@ struct map_add_intersection
 template<class MapT>
 struct map_add_intersection<MapT, true> 
 {                          // is_total     
-    typedef          MapT                   map_type;
-    typedef typename map_type::domain_type  domain_type;
-    typedef typename map_type::element_type element_type;
+    typedef          MapT                       map_type;
+    typedef typename map_type::domain_type      domain_type;
+    typedef typename map_type::element_type     element_type;
+    typedef typename map_type::codomain_combine codomain_combine;
+    typedef typename map_type::const_iterator   const_iterator;
 
+    BOOST_STATIC_CONSTANT(bool, absorbs = (absorbs_neutrons<MapT>::value));
 
     static map_type& apply(map_type& section, const map_type& object, const domain_type& key_value)
     {
-        typename map_type::const_iterator it_ = seqs<map_type>::find(object, key_value);
-        if(it_ != seqs<map_type>::end(object))
-            itl::add(section, *it_);
+        const_iterator it_ = object.find(key_value);
+        if(it_ != object.end())
+            //itl::add(section, *it_);
+			map_add<map_type,codomain_combine,absorbs>::apply(section, *it_);
         return section;
     }
 
@@ -516,8 +337,8 @@ struct map_add_intersection<MapT, false>
 
     static map_type& apply(map_type& section, const map_type& object, const domain_type& key_value)
     {
-        const_iterator it_ = seqs<map_type>::find(object, key_value);
-        if(it_ != seqs<map_type>::end(object))
+        const_iterator it_ = object.find(key_value);
+        if(it_ != object.end())
             map_add<map_type,codomain_intersect,absorbs>::apply(section, *it_);
 
         return section;
@@ -525,8 +346,8 @@ struct map_add_intersection<MapT, false>
 
     static map_type& apply(map_type& section, const map_type& object, const element_type& value_pair)
     {
-        const_iterator it_ = seqs<map_type>::find(object, value_pair.first);
-        if(it_ != seqs<map_type>::end(object))
+        const_iterator it_ = object.find(value_pair.first);
+        if(it_ != object.end())
         {
             map_add<map_type,codomain_intersect,absorbs>::apply(section, *it_);
             map_add<map_type,codomain_intersect,absorbs>::apply(section, value_pair);
@@ -576,7 +397,7 @@ struct map_inplace_intersect<MapT, false>
     {
         MapT section;
 		map_add_intersection<MapT,false>::apply(section, object, operand);
-		seqs<MapT>::swap(object, section);
+		object.swap(section);
         return object;
     }
 
@@ -592,8 +413,8 @@ struct map_inplace_intersect<MapT, false>
 			const_iterator sec_ = common_lwb_;
 			while(sec_ != common_upb_)
 			{
-				const_iterator it_ = seqs<MapT>::find(object, sec_->first);
-				if(it_ != seqs<MapT>::end(object))
+				const_iterator it_ = object.find(sec_->first);
+				if(it_ != object.end())
 				{
 					itl::add(section, *it_);
 					map_add<MapT, codomain_intersect, absorbs_neutrons<MapT>::value >::apply(section, *sec_);
@@ -602,7 +423,7 @@ struct map_inplace_intersect<MapT, false>
 			}
 		}
 
-		seqs<MapT>::swap(object, section);
+		object.swap(section);
         return object;
     }
 
@@ -727,7 +548,7 @@ struct map_flip<MapT, true, false>
 {              // is_total, !absorbs_neutrons     
     typedef MapT map_type;
     typedef typename map_type::codomain_type codomain_type;
-    BOOST_STATIC_CONSTANT(bool, codomain_is_set = (is_set<codomain_type>::value));
+    BOOST_STATIC_CONSTANT(bool, codomain_is_set = (has_set_semantics<codomain_type>::value));
 
     static map_type& apply(map_type& object, const map_type& operand)
     {
@@ -745,7 +566,7 @@ struct map_flip<MapT, false, absorbs_neutrons>
 {              // !is_total
     typedef          MapT                    map_type;
     typedef typename map_type::codomain_type codomain_type;
-    BOOST_STATIC_CONSTANT(bool, codomain_is_set = (is_set<codomain_type>::value));
+    BOOST_STATIC_CONSTANT(bool, codomain_is_set = (has_set_semantics<codomain_type>::value));
 
     static map_type& apply(map_type& object, const map_type& operand)
     {
@@ -773,8 +594,8 @@ struct map_flip_<MapT, false>
 
     static void apply(MapT& result, const MapT& x2)
     {
-		const_iterator x2_ = seqs<MapT>::begin(x2);
-        while(x2_ != seqs<MapT>::end(x2)) 
+		const_iterator x2_ = x2.begin();
+        while(x2_ != x2.end()) 
             apply(result, *x2_++);
     }
 };
@@ -809,14 +630,11 @@ struct map_flip_<MapT, true>
 
     static void apply(MapT& result, const MapT& x2)
     {
-		const_iterator x2_ = seqs<MapT>::begin(x2);
-        while(x2_ != seqs<MapT>::end(x2)) 
+		const_iterator x2_ = x2.begin();
+        while(x2_ != x2.end()) 
 			apply(result, *x2_++);
     }
 };
-
-
-
 
 //=============================================================================
 //=P Neutron absorbtion

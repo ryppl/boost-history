@@ -11,6 +11,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/detail/map_algo.hpp>
 #include <boost/itl/detail/map_functors.hpp>
+#include <boost/itl/type_traits/is_element_container.hpp>
+#include <boost/itl/type_traits/is_key_container_of.hpp>
 
 namespace boost{namespace itl
 {
@@ -25,7 +27,7 @@ template<class MapT>
 typename enable_if<is_element_map<MapT>, void>::type
 clear(MapT& object)
 {
-    seqs<MapT>::erase(object, seqs<MapT>::begin(object), seqs<MapT>::end(object));
+    object.clear();
 }
 
 /** Tests if the container is empty. 
@@ -34,7 +36,7 @@ template<class MapT>
 typename enable_if<is_element_map<MapT>, bool>::type
 is_empty(const MapT& object)
 {
-    return seqs<MapT>::begin(object) == seqs<MapT>::end(object);
+    return object.empty();
 }
 
 /** Checks if a key is in the map */
@@ -42,7 +44,7 @@ template<class MapT>
 typename enable_if<is_element_map<MapT>, bool>::type
 contains(const MapT& object, const typename MapT::domain_type& key)
 { 
-    return !(seqs<MapT>::find(object,key) == seqs<MapT>::end(object)); 
+    return !(object.find(key) == object.end()); 
 }
 
 /** Checks if a key-value pair is in the map */
@@ -51,23 +53,58 @@ typename enable_if<is_element_map<MapT>, bool>::type
 contains(const MapT& object, const typename MapT::element_type& key_value_pair)
 { 
     typedef typename MapT::const_iterator const_iterator;
-    const_iterator found_ = seqs<MapT>::find(object, key_value_pair.first);
-    return found_ != seqs<MapT>::end(object) && found_->second == key_value_pair.second;
+    const_iterator found_ = object.find(key_value_pair.first);
+    return found_ != object.end() && found_->second == key_value_pair.second;
 }
 
 /** Does <tt>super</tt> contain <tt>sub</tt>? */
 template<class MapT>
 typename enable_if<is_element_map<MapT>, bool>::type
 contains(const MapT& super, const MapT& sub)
-{ return map_within<MapT>::apply(sub, super); }
+{ return itl::within(sub, super); }
 
 /** Does <tt>super</tt> contain <tt>sub</tt>? */
 template<class MapT>
 typename enable_if<is_element_map<MapT>, bool>::type
 contains(const MapT& super, const typename MapT::set_type& sub)
-{ return map_within<MapT>::apply(sub, super); }
+{ 
+    return itl::within(sub, super); 
+}
 
 //- within ---------------------------------------------------------------------
+
+
+template<class SubT, class SuperT>
+typename enable_if<mpl::and_< is_element_map<SuperT> 
+                            , is_key_container_of<SubT, SuperT> >,
+                   bool>::type
+within(const SubT& sub, const SuperT& super)
+{
+    if(itl::is_empty(sub))                return true;
+    if(itl::is_empty(super))              return false;
+    if(itl::size(super) < itl::size(sub)) return false;
+
+    typename SubT::const_iterator common_lwb_;
+    typename SubT::const_iterator common_upb_;
+    if(!Set::common_range(common_lwb_, common_upb_, sub, super))
+        return false;
+
+    typename SubT::const_iterator sub_ = sub.begin();
+    typename SuperT::const_iterator super_;
+    while(sub_ != sub.end())
+    {
+        super_ = super.find(SubT::key_value(sub_));
+        if(super_ == super.end()) 
+            return false;
+        else if(!co_equal(sub_, super_, sub, super))
+            return false;
+
+		++sub_;
+    }
+    return true;
+}
+
+
 
 /** Is <tt>sub</tt> contained within <tt>super</tt>? */
 template<class MapT>
@@ -81,18 +118,6 @@ typename enable_if<is_element_map<MapT>, bool>::type
 within(const typename MapT::element_type& sub, const MapT& super)
 { return contains(super, sub); }
 
-/** Is <tt>sub</tt> contained within <tt>super</tt>? */
-template<class MapT>
-typename enable_if<is_element_map<MapT>, bool>::type
-within(const typename MapT::set_type& sub, const MapT& super) 
-{ return map_within<MapT>::apply(sub, super); }
-
-/** Is <tt>sub</tt> contained within <tt>super</tt>? */
-template<class MapT>
-typename enable_if<is_element_map<MapT>, bool>::type
-within(const MapT& sub, const MapT& super)
-{ return map_within<MapT>::apply(sub, super); }
-
 //==============================================================================
 //= Size
 //==============================================================================
@@ -100,21 +125,21 @@ template<class MapT>
 typename enable_if<is_element_map<MapT>, typename MapT::size_type>::type
 size(const MapT& object)
 { 
-    return seqs<MapT>::size(object); 
+    return object.size(); 
 }
 
 template<class MapT>
 typename enable_if<is_element_map<MapT>, typename MapT::size_type>::type
 cardinality(const MapT& object)
 { 
-    return seqs<MapT>::size(object); 
+    return object.size(); 
 }
 
 template<class MapT>
 typename enable_if<is_element_map<MapT>, typename MapT::size_type>::type
 iterative_size(const MapT& object)
 { 
-    return seqs<MapT>::size(object); 
+    return object.size(); 
 }
 
 
@@ -134,8 +159,8 @@ template<class MapT>
 inline typename enable_if<is_element_map<MapT>, bool>::type
 operator == (const MapT& lhs, const MapT& rhs)
 {
-    return seqs<MapT>::size(lhs) == seqs<MapT>::size(rhs)
-        && equal(seqs<MapT>::begin(lhs), seqs<MapT>::end(lhs), seqs<MapT>::begin(rhs));
+    return lhs.size() == rhs.size()
+        && equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 
 #ifdef BOOST_MSVC
@@ -166,8 +191,7 @@ inline typename enable_if<is_element_map<MapT>, bool>::type
 operator < (const MapT& lhs, const MapT& rhs)
 {
     return std::lexicographical_compare(
-        seqs<MapT>::begin(lhs), seqs<MapT>::end(lhs), 
-        seqs<MapT>::begin(rhs), seqs<MapT>::end(rhs), 
+        lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), 
         typename MapT::element_compare()
         //lhs.value_comp() //JODO why does this implementation violate antisymmetry?
         );
@@ -215,6 +239,7 @@ add(MapT& object, typename MapT::iterator prior,
 { 
     return MapT::add_::apply(object, prior, value_pair); 
 }
+
 
 template <class MapT>
 inline typename enable_if<is_element_map<MapT>, MapT>::type&
@@ -377,7 +402,7 @@ insert(MapT& object, const MapT& addend)
 {
     typedef typename MapT::iterator iterator;
 
-    iterator prior_ = seqs<MapT>::end(object);
+    iterator prior_ = object.end();
     ITL_const_FORALL(typename MapT, elem_, addend) 
         itl::insert(object, prior_, *elem_);
 
@@ -517,7 +542,7 @@ operator &= (MapT& object, const typename MapT::set_type& operand)
 { 
     MapT section;
     add_intersection(section, object, operand);
-    seqs<MapT>::swap(object, section);
+    object.swap(section);
     return object;
 }
 
@@ -632,7 +657,7 @@ inline typename enable_if<is_element_map<MapT>, MapT>::type
 operator ^ (MapT object, const typename MapT::element_type& value_pair)
 {
     MapT operand;//JODO
-    seqs<MapT>::insert(operand, value_pair);
+    operand.insert(value_pair);
     return object ^= operand; 
 }
 
@@ -641,9 +666,27 @@ inline typename enable_if<is_element_map<MapT>, MapT>::type
 operator ^ (const typename MapT::element_type& value_pair, MapT object)
 {
     MapT operand;//JODO
-    seqs<MapT>::insert(operand, value_pair);
+    operand.insert(value_pair);
     return object ^= operand; 
 }
+
+//==============================================================================
+//= Set selection
+//==============================================================================
+template<class MapT>
+inline typename enable_if<is_element_map<MapT>, 
+                          typename MapT::set_type>::type&
+domain(typename MapT::set_type& domain_set, const MapT& object)
+{
+    typename MapT::set_type::iterator prior_ = domain_set.end();
+    typename MapT::const_iterator it_ = object.begin();
+    while(it_ != object.end())
+        prior_ = domain_set.insert(prior_, (*it_++).first);
+        //JODO prior_ = itl::insert(domain_set, prior_, it_->first);
+
+    return domain_set;
+}
+
 
 //==============================================================================
 //= Manipulation by predicates
@@ -653,8 +696,8 @@ template<class MapT, class Predicate>
 inline typename enable_if<is_element_map<MapT>, MapT>::type&
 erase_if(const Predicate& pred, MapT& object)
 {
-    typename MapT::iterator it_ = seqs<MapT>::begin(object);
-    while(it_ != seqs<MapT>::end(object))
+    typename MapT::iterator it_ = object.begin();
+    while(it_ != object.end())
         if(pred(*it_))
             itl::erase(object, it_++); 
         else ++it_;
@@ -666,8 +709,8 @@ template<class MapT, class Predicate>
 inline typename enable_if<is_element_map<MapT>, MapT>::type&
 add_if(const Predicate& pred, MapT& object, const MapT& src)
 {
-    typename MapT::const_iterator it_ = seqs<MapT>::begin(src);
-    while(it_ != seqs<MapT>::end(src))
+    typename MapT::const_iterator it_ = src.begin();
+    while(it_ != src.end())
         if(pred(*it_)) 
             itl::add(object, *it_++); 
     
@@ -692,7 +735,6 @@ absorb_neutrons(MapT& object)
 {
     return map_absorb_neutrons<MapT,absorbs_neutrons<MapT>::value>::apply(object);
 }
-
 
 
 //---------------------------------------------------------------------------------

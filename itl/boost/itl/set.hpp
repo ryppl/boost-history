@@ -22,6 +22,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/detail/concept_check.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl/type_traits/is_set.hpp>
+#include <boost/itl/type_traits/has_set_semantics.hpp>
 #include <boost/itl/type_traits/is_interval_container.hpp>
 #include <boost/itl/type_traits/is_interval_splitter.hpp>
 #include <boost/itl/type_traits/is_interval_separator.hpp>
@@ -54,6 +55,7 @@ class set: private ITL_IMPL_SPACE::set<DomainT, ITL_COMPARE_DOMAIN(Compare,Domai
 public:
     typedef typename itl::set<DomainT, Compare, Alloc> type;
     typedef typename ITL_IMPL_SPACE::set<DomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), Alloc<DomainT> > base_type;
+    typedef type key_object_type;
 
 public:
     typedef DomainT     domain_type;
@@ -231,10 +233,10 @@ public:
     template<typename IteratorT>
     static const key_type& key_value(IteratorT value_){ return (*value_); }
 
-    /** \c codomain_value allows for a uniform access to \c data_values which is
+    /** \c co_value allows for a uniform access to \c data_values which is
         is used for common algorithms on sets and maps. */
     template<typename IteratorT>
-    static const codomain_type& codomain_value(IteratorT value_){ return (*value_); }
+    static const codomain_type& co_value(IteratorT value_){ return (*value_); }
 
     /** \c key_less allows for a uniform notation of key comparison which
         is used for common algorithms on sets and maps. */

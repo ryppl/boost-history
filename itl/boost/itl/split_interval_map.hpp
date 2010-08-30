@@ -63,6 +63,7 @@ public:
 
     typedef interval_set<DomainT,Compare,Interval,Alloc> interval_set_type;
     typedef interval_set_type set_type;
+    typedef set_type          key_object_type;
 
     enum { fineness = 3 };
 
@@ -642,14 +643,6 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
 //-----------------------------------------------------------------------------
 // type traits
 //-----------------------------------------------------------------------------
-
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-struct is_set<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
-{ 
-    typedef is_set<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
-    BOOST_STATIC_CONSTANT(bool, value = (is_set<CodomainT>::value)); 
-};
-
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 struct is_map<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 

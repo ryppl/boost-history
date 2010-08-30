@@ -33,6 +33,7 @@ public:
     typedef interval_base_set<type,DomainT,Compare,Interval,Alloc> base_type;
 
     typedef type overloadable_type;
+    typedef type key_object_type;
 
     typedef interval_set<DomainT,Compare,Interval,Alloc> joint_type;
 

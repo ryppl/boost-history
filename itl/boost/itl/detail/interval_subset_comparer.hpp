@@ -34,8 +34,8 @@ struct settic_codomain_compare
 {
     static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
     {
-        return inclusion_compare( LeftT::codomain_value(left_), 
-                                 RightT::codomain_value(right_));
+        return inclusion_compare( LeftT::co_value(left_), 
+                                 RightT::co_value(right_));
     }
 };
 
@@ -44,7 +44,7 @@ struct atomic_codomain_compare
 {
     static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
     {
-        if(LeftT::codomain_value(left_) == RightT::codomain_value(right_))
+        if(LeftT::co_value(left_) == RightT::co_value(right_))
             return inclusion::equal;
         else
             return inclusion::unrelated;

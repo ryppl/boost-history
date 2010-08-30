@@ -27,7 +27,7 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/is_element_container.hpp>
 #include <boost/itl/type_traits/has_inverse.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
-#include <boost/itl/seqs.hpp>
+//CL #include <boost/itl/seqs.hpp>
 #include <boost/itl/functors.hpp>
 #include <boost/itl/predicates.hpp>
 #include <boost/itl/set.hpp>
@@ -78,6 +78,7 @@ template<>
 inline std::string type_to_string<total_enricher>::apply() { return "e^0"; }
 
 
+/*CL
 template<class, class, class, ITL_COMPARE, ITL_COMBINE, ITL_SECTION, ITL_ALLOC>
 class map;
 
@@ -141,7 +142,7 @@ struct seqs< itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 };
 
 //==============================================================================
-
+*/
 
 /** \brief Addable, subractable and intersectable maps */
 template 
@@ -164,6 +165,7 @@ public:
     typedef typename ITL_IMPL_SPACE::map<DomainT, CodomainT, ITL_COMPARE_DOMAIN(Compare,DomainT),
                                          allocator_type>   base_type;
     typedef typename itl::set<DomainT, Compare, Alloc >    set_type;
+    typedef set_type                                       key_object_type;
 
     typedef Traits traits;
 
@@ -181,7 +183,7 @@ public:
     typedef ITL_COMPARE_DOMAIN(Compare,element_type)    element_compare;
     typedef typename inverse<codomain_combine >::type   inverse_codomain_combine;
     typedef typename mpl::if_
-        <is_set<codomain_type>
+        <has_set_semantics<codomain_type>
         , ITL_SECTION_CODOMAIN(Section,CodomainT)     
         , codomain_combine
         >::type                                         codomain_intersect; //JODO extra metafuction?
@@ -394,10 +396,10 @@ public:
     template<typename IteratorT>
     static const key_type& key_value(IteratorT value_){ return (*value_).first; }
 
-    /** \c codomain_value allows for a uniform access to \c codomain_values which is
+    /** \c co_value allows for a uniform access to \c codomain_values which is
         is used for common algorithms on sets and maps. */
-    template<typename IteratorT>
-    static const codomain_type& codomain_value(IteratorT value_){ return (*value_).second; }
+    template<typename IteratorT> 
+    static const codomain_type& co_value(IteratorT value_){ return (*value_).second; }
 
     /** \c key_less allows for a uniform notation of key comparison which
         is used for common algorithms on sets and maps. */
@@ -423,13 +425,6 @@ public:
 //-----------------------------------------------------------------------------
 // type traits
 //-----------------------------------------------------------------------------
-template<class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-struct is_set<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
-{ 
-    typedef is_set<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> > type;
-    BOOST_STATIC_CONSTANT(bool, value = (is_set<CodomainT>::value)); 
-};
-
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 struct is_map<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 { 

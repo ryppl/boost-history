@@ -14,6 +14,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/neutron.hpp>
 #include <boost/itl/type_traits/unon.hpp>
 #include <boost/itl/type_traits/is_set.hpp>
+#include <boost/itl/type_traits/has_set_semantics.hpp>
 
 namespace boost{namespace itl
 {
@@ -274,7 +275,7 @@ namespace boost{namespace itl
         : public neutron_based_inplace_combine<Type>
     {
         typedef typename boost::mpl::
-            if_<is_set<Type>,
+            if_<has_set_semantics<Type>,
                 itl::inplace_et<Type>, 
                 itl::inplace_plus<Type> 
                >::type
@@ -348,7 +349,7 @@ namespace boost{namespace itl
         : public neutron_based_inplace_combine<Type>
     {
         typedef typename boost::mpl::
-            if_<is_set<Type>,
+            if_<has_set_semantics<Type>,
                 itl::inplace_caret<Type>, 
                 itl::inplace_minus<Type> 
                >::type

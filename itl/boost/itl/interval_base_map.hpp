@@ -738,7 +738,7 @@ public:
     static const key_type& key_value(IteratorT value_){ return (*value_).first; }
 
     template<typename IteratorT>
-    static codomain_type codomain_value(IteratorT value_){ return (*value_).second; }
+    static codomain_type co_value(IteratorT value_){ return (*value_).second; }
 
     template<typename LeftIterT, typename RightIterT>
     static bool key_less(LeftIterT left_, RightIterT right_) 
@@ -991,7 +991,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
         const_iterator it_;
         iterator prior_ = section.end();
 
-        if(is_set<CodomainT>::value)
+        if(has_set_semantics<CodomainT>::value)
             for(it_=first_; it_ != end_; it_++) 
             {
                 interval_type common_interval = it_->first & sectant_interval; 
@@ -1102,7 +1102,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
             // ... shall be subtracted
             eraser.add(common_interval);
 
-            if(is_set<codomain_type>::value)
+            if(has_set_semantics<codomain_type>::value)
             {
                 codomain_type common_value = x_value;
                 inverse_codomain_intersect()(common_value, co_value);
@@ -1554,16 +1554,6 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 //-----------------------------------------------------------------------------
 // type traits
 //-----------------------------------------------------------------------------
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-struct is_set<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
-{ 
-    typedef is_set<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
-    BOOST_STATIC_CONSTANT(bool, value = (is_set<CodomainT>::value)); 
-};
 
 template 
 <

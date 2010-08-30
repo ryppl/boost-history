@@ -63,6 +63,7 @@ BOOST_AUTO_TEST_CASE
 //------------------------------------------------------------------------------
 // Containedness
 //------------------------------------------------------------------------------
+
 BOOST_AUTO_TEST_CASE
 (fastest_itl_partial_icl_quantifier_check_containedness_4_bicremental_types)
 {                    icl_quantifier_check_containedness_4_bicremental_types<bicremental_type_1, mono, partial_absorber, INTERVAL_MAP>();}
