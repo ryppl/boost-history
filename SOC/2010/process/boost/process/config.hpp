@@ -23,7 +23,6 @@
 
 #include <boost/config.hpp>
 #include <boost/system/config.hpp>
-#include <boost/preprocessor/stringize.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/throw_exception.hpp>
 
@@ -51,7 +50,7 @@
 
 /** \cond */
 #define BOOST_PROCESS_SOURCE_LOCATION \
-    "in file '" __FILE__ "', line " BOOST_PP_STRINGIZE(__LINE__) ": "
+    "in file '" __FILE__ "', line " BOOST_STRINGIZE(__LINE__) ": "
 
 #if defined(BOOST_POSIX_API)
 #   define BOOST_PROCESS_LAST_ERROR errno
