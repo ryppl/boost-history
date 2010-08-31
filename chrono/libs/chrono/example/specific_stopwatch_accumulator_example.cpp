@@ -29,9 +29,9 @@ using namespace boost::accumulators;
                                 int places, ostream_type & os, boost::system::error_code & ec)
         {
             if (&ec != &boost::system::throws) ec.clear();
-            typedef typename Stopwatch::accumulator accumulator_t;
+            typedef typename Stopwatch::storage_type accumulator_t;
             typedef typename Stopwatch::duration duration_t;
-            accumulator_t& acc = stopwatch_.accumulated();
+            accumulator_t& acc = stopwatch_.get_storage();
 
             boost::io::ios_flags_saver ifs( os );
             os.setf( std::ios_base::fixed, std::ios_base::floatfield );
