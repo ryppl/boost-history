@@ -652,7 +652,10 @@ public:
         swap(this->m_impl.m_bits_in_use, vec.m_impl.m_bits_in_use);
     }
 
-    /** Returns the current allocator. */
+    /** Returns the current allocator the implementation of this function is
+     *  inside of the base class for bitfield_vector because the base class is
+     *  responsible for working with the allocator directely.
+     */
     allocator_type get_allocator() const {
         return this->_base::get_allocator();
     }
@@ -668,32 +671,45 @@ public:
         this->m_impl.m_bits_in_use = 0;
     }
 
-    /** Reserves a section of memory greater then or equal to n.
-     *  
+    /** Reserves a section of memory which can be used to hold equal to or 
+     *  greater then n elements.
      */
     void reserve(size_type n) {
         if(n > max_size())
             throw std::length_error();
 
-        if(capacity() > n )
+        if(capacity() >= n )
             return;
-    /*
-        storage_ptr_t old_storage = this->m_impl.m_start;
-        size_type number_of_bits_to_allocate = n * Width;
-        // size_type corrected_allocation_size = 1;
-        // locate the closest power of two greater then the value of n.
-        size_type pwr_of_two = 1;
-        while(pwr_of_two < n) {
-            pwr_of_two *= 2;
-        }
 
-        try {
-            this->m_impl.m_start = this->allocate_impl(
-                corrected_allocation_size);
-        } catch(...) {
-            this->m_impl.m_start = old_storage;
-        }
-*/
+        // size_type elements_allocated = this->m_impl.m_bits_in_use/Width;
+        // size_type next_size_in_bits = n * Width;
+        size_type next_size = 1;
+        // find correct power of 2 for holding n elements
+        while(n > next_size)
+            next_size *= 2;
+
+        // calculate number of bits needed for next allocation.
+        next_size *= Width;
+
+        // calculate the number of bytes needed to hold the elements.
+        next_size += (next_size/CHAR_BIT) + size_type((next_size%CHAR_BIT) > 0);
+
+
+        // preform memory allocation and make sure to correctly handle
+        // the exception.
+        detail::storage_ptr_t old_storage = this->m_impl.m_start;
+        // if allocate_impl throws the assignment will never complete.
+        this->m_impl.m_start = this->allocate_impl(next_size);
+        // copy to new memory
+        std::memcpy(old_storage,
+            this->m_impl.m_start,
+            this->m_impl.m_end - old_storage);
+
+        // deallocate old memory
+        this->deallocate_impl(old_storage,this->m_impl.m_end - old_storage);
+
+        // set the end to the new end.
+        this->m_impl.m_end = this->m_impl.m_start + next_size;
     }
 
 
@@ -723,45 +739,6 @@ public:
 
 protected:
 
-    /**  
-    template <typename InputIter>
-    void assign_impl(InputIter iter1, InputIter iter2) {
-        std::memset(this->m_impl.m_start,
-            0,
-            this->m_impl->m_end - this->m_impl->m_start);
-        // TODO: displatch this correctly!
-        using namespace std;
-        size_type dist = distance(iter1,iter2);
-        if(dist >= (this->m_impl->m_end - this->m_impl->m_start)) {
-            
-        }
-        for(;iter1 != iter2; ++iter1) {
-            
-        }
-    }
-*/
-
-    /** Does a single allocation of a fixed size 
-     *  This is for making sure that if an exception does occur that I can
-     *  catch it and recover correctly with out leaking any memory.
-     *  Not responsible for deallocating memory.
-     *  This function updates the m_start and m_end member pointers but not
-     *  the m_bits_in
-     */
-    void allocate_storage(size_type allocation_size) {
-        // must save the original pointer so that I can maintain the state
-        // of this object and NOT leak memory.
-        pointer old_start = this->m_impl.m_start;
-        try {
-            // allocate the necessary memory to hold all of the bitfields.
-            // This CAN throw std::bad_alloc
-            this->m_impl.m_start = this->allocate_impl(allocation_size);
-        }catch(...) {
-            this->m_impl.m_start = old_start;
-            throw;
-        }
-        this->m_impl.m_end = this->m_impl.m_start + allocation_size;
-    }
 
     /** allocates a chunck of memory of the correct size and then
      *  correctly fills that memory with value for each of the
@@ -785,11 +762,8 @@ protected:
             corrected_allocation_size *= 2;
         }
 
-        // Call the allocate storage because that is responsible for
-        // if there is a need deallocating 
-        allocate_storage( corrected_allocation_size );
-
-
+        this->m_impl.m_start = this->allocate_impl(corrected_allocation_size);
+        this->m_impl.m_end = this->m_impl.m_start + corrected_allocation_size;
 
         // once allocation is completed next comes filling the bitfields
         // with val.

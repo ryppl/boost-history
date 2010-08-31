@@ -77,7 +77,7 @@ to zero. ]]
 refers the width of a contiguous section of bits and the contiguity of the 
 an integral mask is unknown. ]]
 
-    [[`operator T()`][ Run time support function. ]]
+    [[`operator T()`][ Run time support function. Returns `value`.]]
 ]
 
 
