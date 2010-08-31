@@ -20,6 +20,8 @@
 #include <climits>
 #include <limits>
 #include <boost/mpl/less.hpp>
+#include <iterator>
+#include "bitfield_vector_iterator_fwd.hpp"
 
 namespace boost { namespace detail {
 
@@ -462,6 +464,88 @@ public:
     }
 
 };
+
+
+/** Tags used for dispatching to the correct function and then allowing
+ *  the dispatch work in a much easier fashion.
+ */
+struct constant_time_distance;
+struct other_iterator_type;
+#if 0
+/** Tag dispatch for iterator types. */
+template <typename Iter, typename BitfieldIter, typename Visitor, typename>
+struct bitfield_vector_insert_dispatch;
+
+/** random_access Dispatch. */
+template <typename Iter, typename BitfieldIter, typename Visitor>
+struct bitfield_vector_insert_dispatch <
+    Iter,
+    BitfieldIter,
+    Visitor,
+    std::random_access_iterator_tag
+> {
+};
+
+
+/** This is an implementation for insert dispatch for bitfield_vector.
+ *  This is directly used for nothing but dispatching, overloading and using 
+ *  a visitor to do exactly what needs to be for a particular algorithm. This
+ *  will hopfully work for all of the different scenarios which occur
+ *  within bitfield_vector.
+ */
+template <typename T, typename BitfieldIter, typename Visitor>
+struct btifield_vector_insert_impl {
+};
+
+/** Partical specializations for iterators from the bitfield_vector class.
+ *  because they arn't actually bidirectional iterators, but they are classiffied
+ *  as such, although they have a constant time size.
+ */
+/** const_bf_vector_iterator<T,Width> */
+template <typename T, std::size_t Width, typename BitfieldIter, typename Visitor>
+struct btifield_vector_insert_impl <
+    bf_vector_iterator<T,Width>,
+    BitfieldIter,
+    Visitor
+> {
+};
+
+/** const_bf_vector_iterator<T,Width> */
+template <typename T, std::size_t Width, typename BitfieldIter, typename Visitor>
+struct btifield_vector_insert_impl <
+    const_bf_vector_iterator<T,Width>,
+    BitfieldIter,
+    Visitor
+> {
+};
+
+/** bf_vector_reverse_iterator<T,Width> */
+template <typename T, std::size_t Width, typename BitfieldIter, typename Visitor>
+struct btifield_vector_insert_impl <
+    bf_vector_reverse_iterator<T,Width>,
+    BitfieldIter,
+    Visitor
+> {
+};
+
+/** const_bf_vector_reverse_iterator<T,Width> */
+template <typename T, std::size_t Width, typename BitfieldIter, typename Visitor>
+struct btifield_vector_insert_impl <
+    const_bf_vector_reverse_iterator<T,Width>,
+    BitfieldIter,
+    Visitor
+> {
+};
+
+/** pointer overload */
+template <typename T, typename BitfieldIter, typename Visitor>
+struct btifield_vector_insert_impl <
+    T*,
+    BitfieldIter,
+    Visitor
+> {
+};
+#endif
 
 }} // end boost::detail
 

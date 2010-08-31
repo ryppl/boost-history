@@ -740,6 +740,8 @@ public:
 protected:
 
 
+
+
     /** allocates a chunck of memory of the correct size and then
      *  correctly fills that memory with value for each of the
      *  bitfields within it.
