@@ -54,17 +54,19 @@ namespace boost
 
     template <class Clock, typename Features, typename Weight>
     class stopwatch_accumulator
-        : private base_from_member<typename accumulators::accumulator_set<typename Clock::duration::rep, Features, Weight> >,
-          public lightweight_stopwatch<Clock,Features,Weight>
+        : private base_from_member<
+            typename accumulators::accumulator_set<typename Clock::duration::rep, Features, Weight> 
+                //~ typename lightweight_stopwatch_accumulator_set_traits<Features,Weight>::template apply<Clock::duration>::storage_type
+            >,
+          public lightweight_stopwatch<Clock,lightweight_stopwatch_accumulator_set_traits<Features,Weight> >
     {
     public:
         typedef base_from_member<typename accumulators::accumulator_set<typename Clock::duration::rep, Features, Weight> > pbase_type;
 
         stopwatch_accumulator( )
-        : pbase_type(), lightweight_stopwatch<Clock,Features,Weight>(pbase_type::member, dont_start)
+        : pbase_type(), 
+          lightweight_stopwatch<Clock,lightweight_stopwatch_accumulator_set_traits<Features,Weight> >(pbase_type::member, dont_start)
         { }
-    //~ private:
-        //~ stopwatch_accumulator operator=( stopwatch_accumulator const& rhs );
     };
 
 //--------------------------------------------------------------------------------------//

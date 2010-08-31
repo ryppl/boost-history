@@ -67,9 +67,9 @@ namespace boost { namespace chrono  {
         {
             if (&ec==&system::throws) ec.clear();
             
-            typedef typename Stopwatch::accumulator accumulator;
+            typedef typename Stopwatch::storage_type accumulator;
             typedef typename Stopwatch::duration duration_t;
-            accumulator& acc = stopwatch_.accumulated();
+            accumulator& acc = stopwatch_.get_storage();
             duration_t lt= stopwatch_.lifetime(ec);
             if (ec) return;
                 

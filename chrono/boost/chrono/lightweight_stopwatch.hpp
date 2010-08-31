@@ -29,35 +29,34 @@ namespace boost
   namespace chrono
   {
 
-    template <typename Clock, typename Features, typename Weight>
-    class lightweight_stopwatch_traits {
-    public:
-        static const bool is_accumulator_set = true;
-        typedef accumulators::accumulator_set<typename Clock::duration::rep, Features, Weight> accumulator_set_t;
-        typedef typename Clock::duration duration;
-        static duration get_duration(accumulator_set_t& acc_) { return duration(accumulators::sum(acc_)); }
-        static void set_duration(accumulator_set_t& acc_, duration d) { acc_(d.count()); }
-        static void reset(accumulator_set_t& acc_) { acc_=accumulator_set_t(); }
+    template <typename Features, typename Weight=void>
+    struct lightweight_stopwatch_accumulator_set_traits {
+        template <typename D>
+        struct apply {
+            struct type {
+                typedef accumulators::accumulator_set<typename D::rep, Features, Weight> storage_type;
+                typedef D duration_type;
+                static duration_type get_duration(storage_type& acc_) { return duration_type(accumulators::sum(acc_)); }
+                static void set_duration(storage_type& acc_, duration_type d) { acc_(d.count()); }
+                static void reset(storage_type& acc_) { acc_=storage_type(); }
+            };
+        };
     };
 
-    template <typename Clock>
-    class lightweight_stopwatch_traits<Clock, void, void> {
-    public:
-        static const bool is_accumulator_set = false;
-        typedef typename Clock::duration duration;
-        typedef duration accumulator_set_t;
-        static duration get_duration(accumulator_set_t& acc_) { return acc_; }
-        static void set_duration(accumulator_set_t& acc_, duration d) { acc_=d; }
-        static void reset(accumulator_set_t& acc_) { acc_=duration(); }
+    struct lightweight_stopwatch_identity_traits {
+        template <typename D>
+        struct apply {
+            struct type {
+                typedef D duration_type;
+                typedef duration_type storage_type;
+                static duration_type get_duration(storage_type& acc_) { return acc_; }
+                static void set_duration(storage_type& acc_, duration_type d) { acc_=d; }
+                static void reset(storage_type& acc_) { acc_=storage_type(); }
+            };
+        };
+        
     };
 
-    //~ template <typename Clock>
-    //~ class default_features;
-
-    //~ template <>
-    //~ class default_features<high_resolution_clock> {
-        //~ typedef void type;
-    //~ };
 
     struct dont_start_t{};
     static const dont_start_t dont_start = {};
@@ -65,40 +64,36 @@ namespace boost
     // forward declaration
     template <
         typename Clock=high_resolution_clock,
-        typename Features=void,
-        typename Weight=void
-        //~ typename Features=typename default_features<Clock>::type
+        typename Traits=lightweight_stopwatch_identity_traits
     >
     class lightweight_stopwatch;
 
 
 //--------------------------------------------------------------------------------------//
-    template <typename Clock, typename Features, typename Weight>
+    template <typename Clock, typename Traits>
     class lightweight_stopwatch
     {
     public:
-        typedef lightweight_stopwatch_traits<Clock,Features,Weight> traits;
-        typedef typename traits::accumulator_set_t Accumulator;
+        typedef typename Traits::template apply<typename Clock::duration>::type traits;
+        typedef typename traits::storage_type storage_type;
         typedef Clock                       clock;
         typedef typename Clock::duration   duration;
         typedef typename Clock::time_point time_point;
         typedef typename Clock::rep        rep;
         typedef typename Clock::period     period;
-        typedef Accumulator                 accumulator;
-        static const bool is_accumulator_set = traits::is_accumulator_set;
 
-        explicit lightweight_stopwatch( accumulator& acc, system::error_code & ec = system::throws )
+        explicit lightweight_stopwatch( storage_type& acc, system::error_code & ec = system::throws )
         : running_(false), suspended_(false),
           start_(duration::zero()), level_(0), partial_(duration::zero()), suspend_level_(0)
-          , accumulated_(&acc), construction_(clock::now( ))
+          , storage_(&acc), construction_(clock::now( ))
         {
             start(ec);
         }
 
-        lightweight_stopwatch( accumulator& acc, const dont_start_t& )
+        lightweight_stopwatch( storage_type& acc, const dont_start_t& )
         : running_(false), suspended_(false),
           start_(duration::zero()), level_(0), partial_(duration::zero()), suspend_level_(0)
-          , accumulated_(&acc), construction_(clock::now( ))
+          , storage_(&acc), construction_(clock::now( ))
         {
         }
 
@@ -115,13 +110,13 @@ namespace boost
             if (ec) return time_point();
             if (running_&&(level_==1)) {
                 partial_ += tmp - start_;
-                traits::set_duration(accumulated(),partial_);
+                traits::set_duration(get_storage(),partial_);
                 partial_=duration::zero();
             } else {
                 running_=true;
             }
             start_=tmp;
-            return std::make_pair(traits::get_duration(accumulated()),start_);
+            return std::make_pair(traits::get_duration(get_storage()),start_);
         }
 
         time_point start( system::error_code & ec = system::throws )
@@ -146,10 +141,10 @@ namespace boost
                 time_point tmp=clock::now( ec );
                 if (ec) return duration::zero();
                 partial_ += tmp - start_;
-                traits::set_duration(accumulated(),partial_);
+                traits::set_duration(get_storage(),partial_);
                 partial_=duration::zero();
                 running_=false;
-                return traits::get_duration(accumulated());
+                return traits::get_duration(get_storage());
             } else {
                 ec.clear();
                 return duration::zero();
@@ -165,7 +160,7 @@ namespace boost
                     ++suspend_level_;
                     partial_ += tmp - start_;
                     suspended_=true;
-                    return traits::get_duration(accumulated());
+                    return traits::get_duration(get_storage());
                 } else {
                     ++suspend_level_;
                     ec.clear();
@@ -195,14 +190,14 @@ namespace boost
         {
             if (running_) {
                 if (suspended_)
-                    return traits::get_duration(accumulated());
+                    return traits::get_duration(get_storage());
                 else {
                     time_point tmp = clock::now( ec );
                     if (ec) return duration::zero();
-                    return traits::get_duration(accumulated())+tmp - start_;
+                    return traits::get_duration(get_storage())+tmp - start_;
                 }
             } else {
-                return traits::get_duration(accumulated());
+                return traits::get_duration(get_storage());
             }
         }
 
@@ -215,7 +210,7 @@ namespace boost
         {
             construction_=clock::now( ec );
             if (ec) return;
-            traits::reset(accumulated());
+            traits::reset(get_storage());
             running_=false;
             suspended_=false;
             partial_ = duration::zero();
@@ -224,9 +219,9 @@ namespace boost
             suspend_level_=0;
         }
 
-        accumulator& accumulated( )
+        storage_type& get_storage( )
         {
-            return *accumulated_;
+            return *storage_;
         }
 
         duration lifetime( system::error_code & ec = system::throws )
@@ -234,10 +229,10 @@ namespace boost
             return  clock::now( ec ) - construction_;
         }
 
-        typedef stopwatch_runner<lightweight_stopwatch<Clock,Features,Weight> > scoped_run;
-        typedef stopwatch_stopper<lightweight_stopwatch<Clock,Features,Weight> > scoped_stop;
-        typedef stopwatch_suspender<lightweight_stopwatch<Clock,Features,Weight> > scoped_suspend;
-        typedef stopwatch_resumer<lightweight_stopwatch<Clock,Features,Weight> > scoped_resume;
+        typedef stopwatch_runner<lightweight_stopwatch<Clock,Traits> > scoped_run;
+        typedef stopwatch_stopper<lightweight_stopwatch<Clock,Traits> > scoped_stop;
+        typedef stopwatch_suspender<lightweight_stopwatch<Clock,Traits> > scoped_suspend;
+        typedef stopwatch_resumer<lightweight_stopwatch<Clock,Traits> > scoped_resume;
     private:        
         bool running_;
         bool suspended_;
@@ -245,7 +240,7 @@ namespace boost
         std::size_t level_;
         duration partial_;
         std::size_t suspend_level_;
-        accumulator* accumulated_;
+        storage_type* storage_;
         time_point construction_;
     };
 
@@ -263,11 +258,14 @@ namespace boost
 #endif
     typedef boost::chrono::lightweight_stopwatch< boost::chrono::high_resolution_clock > high_resolution_lightweight_stopwatch;
 
-    typedef boost::chrono::lightweight_stopwatch< boost::chrono::system_clock,default_features > system_lightweight_stopwatch_accumulator;
+    typedef boost::chrono::lightweight_stopwatch< boost::chrono::system_clock,
+        lightweight_stopwatch_accumulator_set_traits<default_features> > system_lightweight_stopwatch_accumulator;
 #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-    typedef boost::chrono::lightweight_stopwatch< boost::chrono::monotonic_clock,default_features > monotonic_lightweight_stopwatch_accumulator;
+    typedef boost::chrono::lightweight_stopwatch< boost::chrono::monotonic_clock,
+        lightweight_stopwatch_accumulator_set_traits<default_features> > monotonic_lightweight_stopwatch_accumulator;
 #endif
-    typedef boost::chrono::lightweight_stopwatch< boost::chrono::high_resolution_clock,default_features > high_resolution_lightweight_stopwatch_accumulator;
+    typedef boost::chrono::lightweight_stopwatch< boost::chrono::high_resolution_clock,
+        lightweight_stopwatch_accumulator_set_traits<default_features> > high_resolution_lightweight_stopwatch_accumulator;
 
 //--------------------------------------------------------------------------------------//
 

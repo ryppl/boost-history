@@ -35,7 +35,7 @@ namespace boost
 #if 0
         typename Stopwatch::duration elapsed(system::error_code & ec = system::throws)
         {
-            return stopwatch_.elapsed(ec)-stopwatch_.accumulated();
+            return stopwatch_.elapsed(ec)-stopwatch_.get_storage();
         }
 #endif
     private:
@@ -61,7 +61,7 @@ namespace boost
 #if 0
         typename Stopwatch::duration elapsed(system::error_code & ec = system::throws)
         {
-            return stopwatch_.elapsed(ec)-stopwatch_.accumulated();
+            return stopwatch_.elapsed(ec)-stopwatch_.get_storage();
         }
 #endif
     private:
