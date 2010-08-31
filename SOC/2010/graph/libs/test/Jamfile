@@ -21,5 +21,10 @@ project libs/graph/test
 test-suite graph_test
   :
     [ run property_test.cpp ]
+    [ run complement.cpp ]
     [ run disjoint_union.cpp ]
+    [ run join.cpp ]
+    [ run difference.cpp ]
+    [ run intersection.cpp ]
+    [ run sum.cpp ]
   ;

@@ -16,6 +16,7 @@
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/copy.hpp>
+#include <boost/graph/default.hpp>
 
 namespace boost {
   namespace detail {

@@ -16,9 +16,9 @@
 
 #include "graph_op_common.hpp"
 
-#include <boost/graph/disjoint_union.hpp>
+#include <boost/graph/join.hpp>
 
-// Vertex and edge names are NOT used by disjoint union
+// Vertex and edge names are NOT used by join
 // They are here only to test how properties are copied
 // and how it works with a custom copier function
 
@@ -44,41 +44,45 @@ int main(int,char*[])
   cout << "g2:" << endl;
   print(g2);
 
-  cout << "Disjoint union of g1 and g2:" << endl;
-  graph_disjoint_union(g1, g2, g3);
+  cout << "Join of g1 and g2:" << endl;
+  graph_join(g1, g2, g3);
   print(g3);
 
-  cout << "Disjoint union of g1 and g2:" << endl;
-  graph_disjoint_union(g1, g2, g4, vertex_copy(my_vertex_copier_and_setter<Graph1, Graph1>()));
+  cout << "Join of g1 and g2:" << endl;
+  graph_join(g1, g2, g4, vertex_copy(my_vertex_copier_and_setter<Graph1, Graph1>()));
   check_vertex_naming(g4);
   print(g4);
 
   cout << "Other tests..." << endl;
 
-  g4 = graph_disjoint_union(g1, g2);
+  g4 = graph_join(g1, g2);
 
   auto_name_edges(g1);
   auto_name_edges(g2);
   Graph1 g5;
-  graph_disjoint_union(g1, g2, g5,
-                       vertex_copy(my_vertex_copier_and_setter<Graph1, Graph1>())
-                       .edge_copy(my_edge_copier_and_setter<Graph1, Graph1>()));
+  graph_join(g1, g2, g5,
+             vertex_copy(my_vertex_copier_and_setter<Graph1, Graph1>())
+             .edge_copy(my_edge_copier_and_setter<Graph1, Graph1>())
+             .edge_visitor(my_edge_visitor<Graph1>())
+             );
   check_vertex_and_edge_naming(g5);
 
-  g4 = graph_disjoint_union(g1, g2,
-                            vertex_copy(my_vertex_copier_and_setter<Graph1, Graph1>())
-                            .edge_copy(my_edge_copier_and_setter<Graph1, Graph1>()));
+  g4 = graph_join(g1, g2,
+                  vertex_copy(my_vertex_copier_and_setter<Graph1, Graph1>())
+                  .edge_copy(my_edge_copier_and_setter<Graph1, Graph1>())
+                  .edge_visitor(my_edge_visitor<Graph1>())
+                  );
   // This was supposed to be exactly like the g5 example and work with:
   // check_vertex_and_edge_naming(g4);
-  // and it works just before, inside and at the end of that call to graph_disjoint_union
+  // and it works just before, inside and at the end of that call to graph_join
   // After the graph is copied to g4, the edge name mapping does not work properly anymore.
   // For vertex it is ok:
   check_vertex_naming(g1);
 
   cout << "Passed." << endl;
 
-  cout << "Disjoint union of g1 and g2: (output with different type + special copy vertex)" << endl;
-  graph_disjoint_union(g1, g2, h, vertex_copy(my_vertex_copier<Graph1, Graph2>(100, 10)));
+  cout << "Join of g1 and g2: (output with different type + special copy vertex)" << endl;
+  graph_join(g1, g2, h, vertex_copy(my_vertex_copier<Graph1, Graph2>(100, 10)));
   print(h);
 
   return EXIT_SUCCESS;

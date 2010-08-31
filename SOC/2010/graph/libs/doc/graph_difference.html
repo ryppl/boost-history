@@ -24,6 +24,14 @@ void graph_difference(const VertexListGraph&amp; g1, const VertexListGraph&amp; 
 template &lt;class <a href="./VertexListGraph.html">VertexListGraph</a>&gt;
 VertexListGraph graph_difference(const VertexListGraph&amp; g1, const VertexListGraph&amp; g2,
     const bgl_named_params&lt;P, T, R&gt;&amp; params = <i>all defaults</i>)
+
+template &lt;class <a href="./VertexListGraph.html">VertexListGraph</a>, class <a href="./MutableGraph.html">MutableGraph</a>&gt;
+void simple_graph_difference(const VertexListGraph&amp; g1, const VertexListGraph&amp; g2, MutableGraph&amp; g_out,
+    const bgl_named_params&lt;P, T, R&gt;&amp; params = <i>all defaults</i>)
+
+template &lt;class <a href="./VertexListGraph.html">VertexListGraph</a>&gt;
+VertexListGraph simple_graph_difference(const VertexListGraph&amp; g1, const VertexListGraph&amp; g2,
+    const bgl_named_params&lt;P, T, R&gt;&amp; params = <i>all defaults</i>)
 </PRE>
 
 The result graph is <tt>g1</tt> without the edges of graph
@@ -33,6 +41,10 @@ The graphs must contain name properties for vertices and edges with
 type <tt>size_t</tt> and two maps in the graph properties,
 <tt>map&lt;size_t, Vertex&gt; vertices</tt> and <tt>map&lt;size_t,
 Edge&gt; edges</tt>, mapping names to descriptors.
+
+The simple version relies only on vertex naming to identify edges, not
+needing the vertex names and not receiving the <tt>set_edge_label</tt>
+argument.
 
 <H3>Where Defined</H3>
 
