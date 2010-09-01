@@ -67,5 +67,17 @@ BOOST_AUTO_TEST_CASE
 (fastest_itl_split_interval_set_check_partial_invertive_monoid_plus_4_bicremental_types)
 {                  interval_set_check_partial_invertive_monoid_plus_4_bicremental_types<bicremental_type_4, split_interval_set>();}
 
+
+//------------------------------------------------------------------------------
+// Containedness
+//------------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_split_interval_set_check_containedness_4_bicremental_types) //JODO complete slowtest
+{                  interval_set_check_containedness_4_bicremental_types<bicremental_type_4, split_interval_set>();}
+
+
+
+
 #endif // BOOST_ITL_FASTEST_SET_INTERVAL_SET_CASES_HPP_JOFA_090703
 

@@ -224,14 +224,12 @@ public:
     //==========================================================================
     //= Containedness
     //==========================================================================
-ITL_BEGIN_COMMON_MEMBER_FUNCTIONS:
     /** clear the map */
     void clear() { _map.clear(); }
 
     /** is the map empty? */
     bool empty()const { return _map.empty(); }
 
-ITL_END_COMMON_MEMBER_FUNCTIONS:
     //--- contains: set view ---------------------------------------------------
     /** Does the map contain the domain element \c key? */
     bool contains(const domain_type& key)const
@@ -284,10 +282,16 @@ ITL_END_COMMON_MEMBER_FUNCTIONS:
     //==========================================================================
 
     /** Number of elements in the map (cardinality). */
-    size_type cardinality()const;
+    size_type cardinality()const
+	{
+		return itl::cardinality(*that());
+	}
 
     /** An interval map's size is it's cardinality */
-    size_type size()const { return cardinality(); }
+    size_type size()const
+	{
+		return itl::cardinality(*that());
+	}
 
     /** The length of the interval container which is the sum of 
         interval lengths */
@@ -852,7 +856,7 @@ bool interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
     return Interval_Map::contains(*this, sub_segment);
 }
 
-//CL
+//CL JODO unify
 //{
 //    interval_type sub_interval = sub_segment.first;
 //    if(itl::is_empty(sub_interval)) 
@@ -878,6 +882,7 @@ bool interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
 //= Size
 //==============================================================================
 
+/*CL
 template 
 <
     class SubType, class DomainT, class CodomainT, class Traits, 
@@ -897,6 +902,7 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,
               >
               ::type::cardinality(*this);
 }
+*/
 
 template 
 <

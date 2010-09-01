@@ -20,8 +20,8 @@ void interval_set_mixed_ctor_4_ordered_types()
     separate_interval_set<T> sep_set(split_set);
     interval_set<T>          join_set(sep_set);
 
-    BOOST_CHECK_EQUAL( split_set.lower(), sep_set.lower() );
-    BOOST_CHECK_EQUAL( split_set.lower(), join_set.lower() );
+    BOOST_CHECK_EQUAL( hull(split_set).lower(), hull(sep_set).lower() );
+    BOOST_CHECK_EQUAL( hull(split_set).lower(), hull(join_set).lower() );
 }
 
 template <class T> 
@@ -107,8 +107,8 @@ void interval_set_mixed_assign_4_ordered_types()
     sep_set = split_set;
     join_set = sep_set;
 
-    BOOST_CHECK_EQUAL( split_set.lower(), sep_set.lower() );
-    BOOST_CHECK_EQUAL( split_set.lower(), join_set.lower() );
+    BOOST_CHECK_EQUAL( hull(split_set).lower(), hull(sep_set).lower() );
+    BOOST_CHECK_EQUAL( hull(split_set).lower(), hull(join_set).lower() );
 
     split_interval_set<T>    split_self = split_interval_set<T>().add(v0);
     separate_interval_set<T> sep_self   = separate_interval_set<T>().add(v0).add(v1);

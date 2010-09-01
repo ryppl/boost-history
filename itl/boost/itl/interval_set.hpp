@@ -11,7 +11,9 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 #include <boost/assert.hpp>
 #include <boost/itl/rightopen_interval.hpp> //JODO REV?
+#include <boost/itl/type_traits/is_interval_joiner.hpp>
 #include <boost/itl/interval_base_set.hpp>
+#include <boost/itl/functions/associative_interval_container.hpp>
 #include <boost/itl/functions.hpp>
 
 namespace boost{namespace itl
@@ -195,6 +197,13 @@ template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interva
 struct is_interval_container<itl::interval_set<DomainT,Compare,Interval,Alloc> >
 { 
     typedef is_interval_container<itl::interval_set<DomainT,Compare,Interval,Alloc> > type;
+    BOOST_STATIC_CONSTANT(bool, value = true); 
+};
+
+template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
+struct is_interval_joiner<itl::interval_set<DomainT,Compare,Interval,Alloc> >
+{ 
+    typedef is_interval_joiner<itl::interval_set<DomainT,Compare,Interval,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 

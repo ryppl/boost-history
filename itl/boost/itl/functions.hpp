@@ -12,6 +12,9 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 #include <boost/mpl/or.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/itl/type_traits/is_interval_container.hpp>
+#include <boost/itl/type_traits/is_interval_separator.hpp>
+#include <boost/itl/type_traits/is_interval_splitter.hpp>
+#include <boost/itl/type_traits/is_interval_joiner.hpp>
 #include <boost/itl/type_traits/is_element_container.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
 #include <boost/itl/detail/interval_map_functors.hpp>
@@ -58,13 +61,31 @@ contains(const ObjectT& super, const OperandT& sub)
     //CL?? return Interval_Map::contains(super, sub);
 }
 
-template<class ObjectT, class OperandT>
-typename enable_if<mpl::and_<is_interval_set<ObjectT>,
-                             is_intra_derivative<ObjectT, OperandT> >, 
-                   bool>::type
-contains(const ObjectT& super, const OperandT& sub)
+template<class ObjectT>
+typename enable_if<is_interval_set<ObjectT>, bool>::type
+contains(const ObjectT& super, const typename ObjectT::segment_type& inter_val)
 { 
-    return Interval_Set::contains(super, sub);
+    typedef typename ObjectT::const_iterator const_iterator;
+    if(itl::is_empty(inter_val)) 
+        return true;
+
+    std::pair<const_iterator, const_iterator> exterior 
+        = super.equal_range(inter_val);
+    if(exterior.first == exterior.second)
+        return false;
+
+    const_iterator last_overlap = super.prior(exterior.second);
+
+    return 
+        itl::contains(hull(*(exterior.first), *last_overlap), inter_val)
+    &&  Interval_Set::is_joinable(super, exterior.first, last_overlap);
+}
+
+template<class ObjectT>
+typename enable_if<is_interval_set<ObjectT>, bool>::type
+contains(const ObjectT& super, const typename ObjectT::element_type& element)
+{
+    return !(super.find(element) == super.end());
 }
 
 template<class ObjectT, class OperandT>
@@ -94,7 +115,7 @@ template<class SubT, class SuperT>
 typename enable_if<is_interval_container<SuperT>, bool>::type 
 within(const SubT& sub, const SuperT& super)
 {
-	return itl::contains(super, sub); 
+    return itl::contains(super, sub); 
 }
 
 
@@ -155,6 +176,96 @@ inclusion_compare(const LeftT& left, const RightT& right)
 //==============================================================================
 //= Addition
 //==============================================================================
+
+//- joining_add ----------------------------------------------------------------
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_joiner<ObjectT> >, ObjectT>::type&
+add(ObjectT& object, const typename ObjectT::element_type& operand)
+{
+	detail::joining_add(object, typename ObjectT::interval_type(operand));
+    return object; //JODO: May be it is better to return the iterator
+}
+
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_joiner<ObjectT> >, ObjectT>::type&
+add(ObjectT& object, const typename ObjectT::segment_type& operand)
+{
+	detail::joining_add(object, operand);
+    return object; //JODO: May be it is better to return the iterator
+}
+
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_joiner<ObjectT> >, 
+                   typename ObjectT::iterator>::type
+add(ObjectT& object, typename ObjectT::iterator      prior, 
+               const typename ObjectT::segment_type& operand)
+{
+    return detail::joining_add(object, prior, operand);
+}
+
+//- separating_add -------------------------------------------------------------
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_separator<ObjectT> >, ObjectT>::type&
+add(ObjectT& object, const typename ObjectT::element_type& operand)
+{
+	detail::separating_add(object, typename ObjectT::interval_type(operand));
+    return object;
+}
+
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_separator<ObjectT> >, ObjectT>::type&
+add(ObjectT& object, const typename ObjectT::segment_type& operand)
+{
+    detail::separating_add(object, operand);
+    return object; //JODO: May be it is better to return the iterator
+}
+
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_separator<ObjectT> >,
+                   typename ObjectT::iterator>::type
+add(ObjectT& object, typename ObjectT::iterator      prior, 
+               const typename ObjectT::segment_type& operand)
+{
+    return detail::separating_add(object, prior, operand);
+}
+
+//- splitting_add -------------------------------------------------------------
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_splitter<ObjectT> >, ObjectT>::type&
+add(ObjectT& object, const typename ObjectT::element_type& operand)
+{
+	detail::splitting_add(object, typename ObjectT::interval_type(operand));
+    return object;
+}
+
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_splitter<ObjectT> >, ObjectT>::type&
+add(ObjectT& object, const typename ObjectT::segment_type& operand)
+{
+    detail::splitting_add(object, operand);
+    return object; //JODO: May be it is better to return the iterator
+}
+
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_splitter<ObjectT> >,
+                   typename ObjectT::iterator>::type
+add(ObjectT& object, typename ObjectT::iterator      prior, 
+               const typename ObjectT::segment_type& operand)
+{
+    return detail::splitting_add(object, prior, operand);
+}
+//------------------------------------------------------------------------------
+
+
 /** \par \b Requires: \c OperandT is an interval container addable to \c ObjectT. 
     \b Effects: \c operand is added to \c object.
     \par \b Returns: A reference to \c object.
@@ -165,7 +276,7 @@ operator += (ObjectT& object, const OperandT& operand)
 {
     typename ObjectT::iterator prior_ = object.end();
     ITL_const_FORALL(typename OperandT, elem_, operand) 
-        prior_ = object.add(prior_, *elem_); 
+		prior_ = object.add(prior_, *elem_); //JODO
 
     return object; 
 }
@@ -195,8 +306,17 @@ template<class ObjectT, class OperandT>
 typename enable_if<is_intra_derivative<ObjectT, OperandT>, ObjectT>::type&
 operator += (ObjectT& object, const OperandT& operand)
 { 
-    return object.add(operand); 
+	//JODO return itl::add(object, operand); 
+	return object.add(operand); 
 }
+
+//CL
+//template<class ObjectT, class OperandT>
+//typename enable_if<is_intra_derivative<ObjectT, OperandT>, ObjectT>::type&
+//add(ObjectT& object, const OperandT& operand)
+//{ 
+//    return object.add(operand); 
+//}
 
 /** \par \b Requires: \c object and \c operand are addable.
     \b Effects: \c operand is added to \c object.
@@ -301,6 +421,23 @@ ObjectT operator | (typename ObjectT::overloadable_type object, const ObjectT& o
 //==============================================================================
 //= Subtraction
 //==============================================================================
+
+template<class ObjectT>
+typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
+subtract(ObjectT& object, const typename ObjectT::element_type& operand)
+{
+    detail::subtract(object, typename ObjectT::segment_type(operand));
+    return object; //JODO: May be it is better to return the iterator
+}
+
+template<class ObjectT>
+typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
+subtract(ObjectT& object, const typename ObjectT::segment_type& operand)
+{
+    detail::subtract(object, operand);
+    return object; //JODO: May be it is better to return the iterator
+}
+
 //------------------------------------------------------------------------------
 //- Subtraction -=, -
 //------------------------------------------------------------------------------
@@ -328,12 +465,12 @@ For interval sets subtraction of segments
 is \b amortized \b logarithmic.
 */
 template<class ObjectT, class OperandT>
-typename enable_if<is_concept_equivalent<is_interval_map, ObjectT, OperandT>, 
+typename enable_if<has_same_concept<is_interval_map, ObjectT, OperandT>, 
                    ObjectT>::type& 
 operator -=(ObjectT& object, const OperandT& operand)
 {
     ITL_const_FORALL(typename OperandT, elem_, operand) 
-        object.subtract(*elem_); 
+		object.subtract(*elem_); //JODO 
 
     return object; 
 }
@@ -342,7 +479,8 @@ template<class ObjectT, class OperandT>
 typename enable_if<is_intra_derivative<ObjectT, OperandT>, ObjectT>::type&
 operator -= (ObjectT& object, const OperandT& operand)
 { 
-    return object.subtract(operand); 
+	//JODO return itl::subtract(object, operand); 
+	return object.subtract(operand); 
 }
 
 template<class ObjectT, class OperandT>
@@ -589,19 +727,6 @@ ObjectT operator ^ (typename ObjectT::overloadable_type object, const ObjectT& o
     return object ^= operand; 
 }
 
-
-//-----------------------------------------------------------------------------
-// hull
-//-----------------------------------------------------------------------------
-template<class ObjectT>
-typename enable_if<is_interval_container<ObjectT>, 
-                          typename ObjectT::interval_type>::type
-hull(const ObjectT& object)
-{
-    return 
-        itl::is_empty(object) ? neutron<typename ObjectT::interval_type>::value()
-        : hull((ObjectT::key_value(object.begin())), ObjectT::key_value(object.rbegin()));
-}
 
 
 }} // namespace itl boost

@@ -11,6 +11,9 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 #include <limits>
 #include <boost/itl/type_traits/interval_type_default.hpp>
+#include <boost/itl/type_traits/is_interval_joiner.hpp>
+#include <boost/itl/type_traits/is_interval_separator.hpp>
+#include <boost/itl/type_traits/is_interval_splitter.hpp>
 #include <boost/itl/detail/interval_set_algo.hpp>
 #include <boost/itl/set.hpp>
 #include <boost/itl/interval.hpp>
@@ -25,6 +28,92 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 namespace boost{namespace itl
 {
+
+//JODO Forward 4 gcc-3.4.4 -----------------------------------------------------
+template<class Type>
+typename enable_if<is_interval_container<Type>, std::size_t>::type
+interval_count(const Type&);
+
+template<class Type>
+typename enable_if<is_interval_container<Type>, typename Type::size_type>::type
+cardinality(const Type&);
+
+template<class Type>
+typename enable_if<is_interval_container<Type>, typename Type::difference_type>::type
+length(const Type&);
+
+template<class ObjectT>
+typename enable_if<is_interval_set<ObjectT>, bool>::type
+contains(const ObjectT& super, const typename ObjectT::segment_type&);
+
+template<class ObjectT>
+typename enable_if<is_interval_set<ObjectT>, bool>::type
+contains(const ObjectT& super, const typename ObjectT::element_type&);
+
+//- joining_add -------------------------------------------------------------
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_joiner<ObjectT> >, ObjectT>::type&
+add(ObjectT&, const typename ObjectT::element_type&);
+
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_joiner<ObjectT> >, ObjectT>::type&
+add(ObjectT&, const typename ObjectT::segment_type&);
+
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_joiner<ObjectT> >, 
+                   typename ObjectT::iterator>::type
+add(ObjectT&, typename ObjectT::iterator, 
+        const typename ObjectT::segment_type&);
+
+//- separating_add -------------------------------------------------------------
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_separator<ObjectT> >, ObjectT>::type&
+add(ObjectT&, const typename ObjectT::element_type&);
+
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_separator<ObjectT> >, ObjectT>::type&
+add(ObjectT& object, const typename ObjectT::segment_type& operand);
+
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_separator<ObjectT> >,
+                   typename ObjectT::iterator>::type
+add(ObjectT& object, typename ObjectT::iterator      prior, 
+               const typename ObjectT::segment_type& operand);
+
+//- splitting_add -------------------------------------------------------------
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_splitter<ObjectT> >, ObjectT>::type&
+add(ObjectT&, const typename ObjectT::element_type&);
+
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_splitter<ObjectT> >, ObjectT>::type&
+add(ObjectT& object, const typename ObjectT::segment_type& operand);
+
+template<class ObjectT>
+typename enable_if<mpl::and_< is_interval_set<ObjectT>
+                            , is_interval_splitter<ObjectT> >,
+                   typename ObjectT::iterator>::type
+add(ObjectT& object, typename ObjectT::iterator      prior, 
+               const typename ObjectT::segment_type& operand);
+
+template<class ObjectT>
+typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
+subtract(ObjectT&, const typename ObjectT::element_type&);
+
+template<class ObjectT>
+typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
+subtract(ObjectT&, const typename ObjectT::segment_type&);
+
+//JODO Forward 4 gcc-3.4.4 -----------------------------------------------------
+
 
 /** \brief Implements a set as a set of intervals (base class) */
 template 
@@ -158,42 +247,35 @@ public:
     }
 
     /** swap the content of containers */
-    void swap(interval_base_set& x) { _set.swap(x._set); }
+    void swap(interval_base_set& operand) { _set.swap(operand._set); }
 
     //==========================================================================
     //= Containedness
     //==========================================================================
 
     /** sets the container empty */
-    void clear() { _set.clear(); }
+	void clear() { itl::clear(*that()); }
     /** is the container empty? */
-    bool empty()const { return _set.empty(); }
+	bool empty()const { return itl::is_empty(*that()); }
 
     /** Does the container contain the element \c key ? */
     bool contains(const element_type& key)const
-    { return that()->contains(interval_type(key)); }
+	{ 
+		return itl::contains(*that(), key); 
+	}
 
     /** Does the container contain the interval \c sub_interval ? */
     bool contains(const segment_type& sub_interval)const
     { 
-        if(itl::is_empty(sub_interval)) 
-            return true;
-
-        std::pair<const_iterator, const_iterator> exterior = equal_range(sub_interval);
-        if(exterior.first == exterior.second)
-            return false;
-
-        const_iterator last_overlap = prior(exterior.second);
-
-        return 
-            itl::contains(hull(*(exterior.first), *last_overlap), sub_interval)
-        &&  Interval_Set::is_joinable(*this, exterior.first, last_overlap);
+		return itl::contains(*that(), sub_interval);
     }
 
 
     /** Does the container contain the subcontainer \c sub ? */
     bool contains(const interval_base_set& sub)const 
-    { return sub.contained_in(*this); }
+	{ 
+		return itl::within(sub, *that()); 
+	}
 
     /** Does <tt>*this</tt> container contain <tt>sub</tt>? */
     template
@@ -203,7 +285,9 @@ public:
         class IntervalSet
     >
     bool contains(const IntervalSet<DomainT,Compare,Interval,Alloc>& sub)const 
-    { return sub.contained_in(*that()); }
+    { 
+		return itl::within(sub,*that()); 
+	}
 
     /** Is <tt>*this</tt> container contained in <tt>super</tt>? */
     template
@@ -223,40 +307,40 @@ public:
 
     /** Number of elements in the set (cardinality). 
         Infinite for continuous domain datatyps    */
-    size_type cardinality()const;
+    size_type cardinality()const
+	{
+		return itl::cardinality(*that());
+	}
 
     /** An interval set's size is it's cardinality */
-    size_type size()const { return cardinality(); }
+    size_type size()const
+	{
+		return itl::cardinality(*that());
+	}
 
     /** The length of the interval container which is the sum of interval lengths */
-    difference_type length()const;
+    difference_type length()const
+	{
+		return itl::length(*that());
+	}
 
     /** Number of intervals which is also the size of the iteration over the object */
-    std::size_t interval_count()const { return _set.size(); }
+    std::size_t interval_count()const 
+	{ 
+		return itl::interval_count(*that()); 
+	}
 
     /** Size of the iteration over this container */
-    std::size_t iterative_size()const { return _set.size(); }
+    std::size_t iterative_size()const 
+	{ 
+		return _set.size(); 
+	}
 
     //==========================================================================
     //= Range
     //==========================================================================
 
-    /** lower bound of all intervals in the object */
-    DomainT lower()const 
-    { return empty()? interval_type().lower() : (*(_set.begin())).lower(); }
-    /** upper bound of all intervals in the object */
-    DomainT upper()const 
-    { return empty()? interval_type().upper() : (*(_set.rbegin())).upper(); }
-
-    /** Smallest element of the set (wrt. the partial ordering on DomainT).
-        first() does not exist for continuous datatypes and open interval 
-        bounds. */
-    DomainT first()const { return (*(_set.begin())).first(); }
-
-    /** Largest element of the set (wrt. the partial ordering on DomainT).
-        last() does not exist for continuous datatypes and open interval 
-        bounds. */
-    DomainT last()const { return (*(_set.rbegin())).last(); }
+	//JODO remove lower, upper, first, last from the interface of all interval containers and docs
 
     //==========================================================================
     //= Selection
@@ -265,8 +349,7 @@ public:
     /** Find the interval value pair, that contains element \c key */
     const_iterator find(const element_type& key)const
     { 
-        typename ImplSetT::const_iterator it_ = this->_set.find(interval_type(key)); 
-        return it_; 
+        return this->_set.find(interval_type(key)); 
     }
 
     //==========================================================================
@@ -275,17 +358,23 @@ public:
 
     /** Add a single element \c key to the set */
     SubType& add(const element_type& key) 
-    { that()->add_(interval_type(key)); return *that(); }
+    {
+		return itl::add(*that(), key);
+	}
 
     /** Add an interval of elements \c inter_val to the set */
     SubType& add(const segment_type& inter_val) 
-    { that()->add_(inter_val); return *that(); }
+    {
+		return itl::add(*that(), inter_val);
+	}
 
     /** Add an interval of elements \c inter_val to the set. Iterator 
         \c prior_ is a hint to the position \c inter_val can be 
         inserted after. */
     iterator add(iterator prior_, const segment_type& inter_val) 
-    { return that()->add_(prior_, inter_val); }
+    { 
+		return itl::add(*that(), prior_, inter_val);
+	}
 
     //==========================================================================
     //= Subtraction
@@ -293,11 +382,15 @@ public:
 
     /** Subtract a single element \c key from the set */
     SubType& subtract(const element_type& key) 
-    { that()->subtract_(interval_type(key)); return *that(); }
+    { 
+		return itl::subtract(*that(), key);
+	}
 
     /** Subtract an interval of elements \c inter_val from the set */
     SubType& subtract(const segment_type& inter_val) 
-    { that()->subtract_(inter_val); return *that(); }
+    { 
+		return itl::subtract(*that(), inter_val);
+	}
 
     //==========================================================================
     //= Insertion, erasure
@@ -309,33 +402,49 @@ public:
 
     /** Insert an element \c key into the set */
     SubType& insert(const element_type& key) 
-    { return add(interval_type(key)); }
+	{ 
+		return itl::add(*that(), key); 
+	}
 
     /** Insert an interval of elements \c inter_val to the set */
     SubType& insert(const segment_type& inter_val) 
-    { return add(inter_val); }
+	{ 
+		return itl::add(*that(), inter_val); 
+	}
 
     /** Insert an interval of elements \c inter_val to the set. Iterator 
         \c prior_ is a hint to the position \c inter_val can be 
         inserted after. */
     iterator insert(iterator prior_, const segment_type& inter_val) 
-    { return that()->add_(prior_, inter_val); }
+    { 
+		return itl::add(*that(), prior_, inter_val); 
+	}
 
 
 
     /** Erase an element \c key from the set */
     SubType& erase(const element_type& key) 
-    { return subtract(interval_type(key)); }
+    { 
+		return itl::subtract(*that(), key); 
+	}
 
     /** Erase an interval of elements \c inter_val from the set */
     SubType& erase(const segment_type& inter_val) 
-    { return subtract(inter_val); }
+    { 
+		return itl::subtract(*that(), inter_val); 
+	}
 
     /** Erase the interval that iterator \c position points to. */
-    void erase(iterator position){ _set.erase(position); }
+    void erase(iterator position)
+	{ 
+		_set.erase(position); 
+	}
 
     /** Erase all intervals in the range <tt>[first,past)</tt> of iterators. */
-    void erase(iterator first, iterator past){ _set.erase(first, past); }
+    void erase(iterator first, iterator past)
+	{ 
+		_set.erase(first, past); 
+	}
 
 
     //==========================================================================
@@ -481,10 +590,10 @@ public:
     iterator prior(iterator it_)
     { return it_ == this->_set.begin() ? this->_set.end() : --it_; }
 
-protected:
-
     const_iterator prior(const_iterator it_)const
     { return it_ == this->_set.begin() ? this->_set.end() : --it_; }
+
+protected:
 
     iterator gap_insert(iterator prior_, const interval_type& inter_val)
     {
@@ -498,7 +607,7 @@ protected:
 } ;
 
 
-
+/*CL
 template
 <
     class SubType, class DomainT, 
@@ -530,6 +639,7 @@ interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::length()const
         length += itl::length(*it_);
     return length;
 }
+*/
 
 
 template<class SubType,

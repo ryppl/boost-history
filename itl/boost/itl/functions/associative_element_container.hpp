@@ -88,6 +88,24 @@ contains(const SuperT& super, const SubT& sub)
     return itl::within(sub, super); 
 }
 
+//==============================================================================
+//= Size
+//==============================================================================
+
+template<class Type>
+typename enable_if<is_associative_element_container<Type>, typename Type::size_type>::type
+size(const Type& object)
+{ 
+	return itl::iterative_size(object); 
+}
+
+template<class Type>
+typename enable_if<is_associative_element_container<Type>, typename Type::size_type>::type
+cardinality(const Type& object)
+{ 
+	return itl::iterative_size(object); 
+}
+
 
 //==============================================================================
 //= Equivalences and Orderings

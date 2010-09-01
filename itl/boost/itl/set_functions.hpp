@@ -17,7 +17,6 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/functions/associative_element_container.hpp>
 
 
-
 namespace boost{namespace itl
 {
 

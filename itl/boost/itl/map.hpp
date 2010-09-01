@@ -83,71 +83,6 @@ template<>
 inline std::string type_to_string<total_enricher>::apply() { return "e^0"; }
 
 
-/*CL
-template<class, class, class, ITL_COMPARE, ITL_COMBINE, ITL_SECTION, ITL_ALLOC>
-class map;
-
-//==============================================================================
-//=+ seqs
-//==============================================================================
-
-template<class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-struct seqs< itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
-{
-    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> map_type;
-    typedef typename map_type::domain_type    domain_type;
-    typedef typename map_type::codomain_type  codomain_type;
-    typedef typename map_type::element_type   element_type;
-    typedef typename map_type::size_type      size_type;
-    typedef typename map_type::domain_compare domain_compare;
-
-    typedef typename map_type::iterator       iterator;
-    typedef typename map_type::const_iterator const_iterator;
-
-    static const_iterator begin(const map_type& object){ return object.begin(); }
-    static       iterator begin(      map_type& object){ return object.begin(); }
-    static const_iterator end  (const map_type& object){ return object.end();   }
-    static       iterator end  (      map_type& object){ return object.end();   }
-    static      size_type size (const map_type& object){ return object.size();  }
-
-    static const_iterator find(const map_type& object, const domain_type& key)
-    { return object.find(key); }
-
-    static iterator find(map_type& object, const domain_type& key)
-    { return object.find(key); }
-
-    static std::pair<iterator,bool> insert(map_type& object, const element_type& key_value_pair)
-    { return object.insert(key_value_pair); }
-
-    static iterator insert(map_type& object, iterator prior, const element_type& key_value_pair)
-    { return object.insert(prior, key_value_pair); }
-
-    static void erase(map_type& object, iterator pos)
-    { object.erase(pos); }
-
-    static void erase(map_type& object, iterator first, iterator past)
-    { object.erase(first, past);  }
-
-    static void swap(map_type& left, map_type& right)
-    { left.swap(right);    }
-
-    //--------------------------------------------------------------------------
-    template<typename IteratorT>
-    static const domain_type& key_value(IteratorT value_){ return value_->first; }
-
-    template<typename IteratorT>
-    static const codomain_type& co_value(IteratorT value_){ return value_->second; }
-
-    template<typename LeftIterT, typename RightIterT>
-    static bool key_less(LeftIterT lhs_, RightIterT rhs_) 
-    { return domain_compare()((*lhs_).first,(*rhs_).first); }
-
-    static element_type make_value(const domain_type& key_value, const codomain_type& data_value)
-    { return element_type(key_value, data_value); }
-};
-
-//==============================================================================
-*/
 
 /** \brief Addable, subractable and intersectable maps */
 template 
@@ -387,9 +322,9 @@ public:
     //= Symmetric difference
     //==========================================================================
 
-    map& flip(const element_type& value_pair)
+    map& flip(const element_type& operand)
     { 
-        return (*this) ^= value_pair; 
+		return itl::flip(*this, operand); 
     }
 
     //==========================================================================

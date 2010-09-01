@@ -395,6 +395,13 @@ disjoint(const MapT& left, const MapT& right)//JODO All variants via meta predic
 
 template<class MapT>
 inline typename enable_if<is_element_map<MapT>, MapT>::type&
+flip(MapT& object, const typename MapT::element_tpye& operand)
+{
+    return MapT::flip_::apply(object, operand); 
+}
+
+template<class MapT>
+inline typename enable_if<is_element_map<MapT>, MapT>::type&
 operator ^= (MapT& object, const typename MapT::element_tpye& operand)
 {
     return MapT::flip_::apply(object, operand); 

@@ -40,29 +40,24 @@ clear(Type& object)
 //==============================================================================
 //= Size
 //==============================================================================
-template<class Type>
-typename enable_if<is_container<Type>, typename Type::size_type>::type
-size(const Type& object)
-{ 
-    return object.size(); 
-}
 
-template<class Type>
-typename enable_if<is_container<Type>, typename Type::size_type>::type
-cardinality(const Type& object)
-{ 
-    return object.size(); 
-}
-
-template<class Type>
+template<class Type> 
 typename enable_if<is_container<Type>, typename Type::size_type>::type
 iterative_size(const Type& object)
 { 
     return object.size(); 
 }
 
+//==============================================================================
+//= Swap
+//==============================================================================
 
-
+template<class Type>
+typename enable_if<is_container<Type>, void>::type
+swap(Type& left, Type& right)
+{
+    left.swap(right); //JODO test
+}
 
 }} // namespace itl boost
 

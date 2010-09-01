@@ -243,13 +243,7 @@ contains(const LeftT& super, const RightT& sub)
     return result == inclusion::superset || result == inclusion::equal;
 }
 
-template<class IntervalContainerT>
-bool contains(const IntervalContainerT& super, 
-              const typename IntervalContainerT::element_type& element)
-{
-    return super.contains(element);
-}
-
+//JODO check if this is still needed
 template<class IntervalContainerT>
 bool contains(const IntervalContainerT& container, 
               const typename IntervalContainerT::segment_type& sub_interval)

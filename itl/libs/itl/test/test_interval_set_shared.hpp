@@ -102,8 +102,8 @@ void interval_set_fundamentals_4_ordered_types()
 
     BOOST_CHECK_EQUAL(single_I0_0I_from_element, single_I0_0I_from_interval);
     BOOST_CHECK_EQUAL(single_I0_0I_from_element, single_I0_0I);
-    BOOST_CHECK_EQUAL(single_I0_0I.lower(), I0_0I.lower());
-    BOOST_CHECK_EQUAL(single_I0_0I.upper(), I0_0I.upper());
+	BOOST_CHECK_EQUAL(itl::hull(single_I0_0I).lower(), I0_0I.lower());
+    BOOST_CHECK_EQUAL(itl::hull(single_I0_0I).upper(), I0_0I.upper());
 
     IntervalSet<T> single_I1_1I_from_element(v1);
     IntervalSet<T> single_I1_1I_from_interval(I1_1I);
@@ -117,8 +117,8 @@ void interval_set_fundamentals_4_ordered_types()
 
     BOOST_CHECK_EQUAL(single_I0_1I_from_interval, single_I0_1I);
     BOOST_CHECK_EQUAL(hull(single_I0_1I), I0_1I);
-    BOOST_CHECK_EQUAL(single_I0_1I.lower(), I0_1I.lower());
-    BOOST_CHECK_EQUAL(single_I0_1I.upper(), I0_1I.upper());
+	BOOST_CHECK_EQUAL(hull(single_I0_1I).lower(), I0_1I.lower());
+    BOOST_CHECK_EQUAL(hull(single_I0_1I).upper(), I0_1I.upper());
 
     //contains predicate
     BOOST_CHECK_EQUAL(contains(single_I0_0I, v0), true);
@@ -179,8 +179,8 @@ void interval_set_ctor_4_bicremental_types()
     BOOST_CHECK_EQUAL( _I4_4I.size(),             unon<typename IntervalSet<T>::size_type>::value()  );
     BOOST_CHECK_EQUAL( _I4_4I.interval_count(),   1  );
     BOOST_CHECK_EQUAL( _I4_4I.iterative_size(),   1  );
-    BOOST_CHECK_EQUAL( _I4_4I.lower(),            v4 );
-    BOOST_CHECK_EQUAL( _I4_4I.upper(),            v4 );
+    BOOST_CHECK_EQUAL( hull(_I4_4I).lower(),      v4 );
+    BOOST_CHECK_EQUAL( hull(_I4_4I).upper(),      v4 );
 
     IntervalSet<T> _I4_4I_copy(_I4_4I);
     IntervalSet<T> _I4_4I_assigned;
@@ -222,8 +222,8 @@ void interval_set_add_sub_4_bicremental_types()
     IntervalSet<T> set_B = IntervalSet<T>().insert(v9).insert(I5_6I).insert(v0);
     BOOST_CHECK_EQUAL( set_A, set_B );
     BOOST_CHECK_EQUAL( hull(set_A), I0_9I );
-    BOOST_CHECK_EQUAL( set_A.lower(), I0_9I.lower() );
-    BOOST_CHECK_EQUAL( set_A.upper(), I0_9I.upper() );
+    BOOST_CHECK_EQUAL( hull(set_A).lower(), I0_9I.lower() );
+    BOOST_CHECK_EQUAL( hull(set_A).upper(), I0_9I.upper() );
 
     IntervalSet<T> set_A1 = set_A, set_B1 = set_B,
                    set_A2 = set_A, set_B2 = set_B;
