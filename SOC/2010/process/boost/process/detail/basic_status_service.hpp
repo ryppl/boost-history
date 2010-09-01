@@ -36,7 +36,6 @@
 #include <boost/process/detail/status_impl.hpp>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
-#include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/scoped_ptr.hpp>
