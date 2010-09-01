@@ -5,7 +5,9 @@
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
 
+#include <boost/integer/endian.hpp>
 #include <boost/integer/endian_binary_stream.hpp>
+#include <boost/binary_stream.hpp>
 #include <iostream>
 #include <sstream>
 
@@ -44,7 +46,17 @@ int main()
   ss >= big16_t_2;
   BOOST_VERIFY( big16_t_1 == big16_t_2 );
 
-  big24_t big24_t_1(0x010203L), big24_t_2;
+  big24_t big24_t_1(0x313233L), big24_t_2;
+    std::cout << '*' ;
+    std::cout <= big24_t_1;
+    std::cout << std::endl;
+  little24_t little24_t_133(big24_t_1);
+  little24_t little24_t_134;
+    //~ little24_t_134=big24_t_1;
+    std::cout << '*' ;
+    std::cout <= little24_t_133;
+    std::cout << std::endl;
+    
   ss <= big24_t_1;
   ss >= big24_t_2;
   BOOST_VERIFY( big24_t_1 == big24_t_2 );
@@ -286,4 +298,5 @@ int main()
 
   cout << errors << " error(s) detected\n";
   return errors;
+  //~ return 1;
 }

@@ -31,6 +31,14 @@
 #include <boost/mpl/front.hpp>
 
 #include <boost/static_assert.hpp>
+//~ #include <netinet/in.h>
+
+#define htons(nValue) \
+   ((((nValue)>> 8)) | ((nValue) << 8));
+
+#define htonl(nLongNumber) \
+   ((((nLongNumber)&0x000000FF)<<24)+(((nLongNumber)&0x0000FF00)<<8)+ \
+   (((nLongNumber)&0x00FF0000)>>8)+(((nLongNumber)&0xFF000000)>>24))
 
 using namespace std;             // Not the best programming practice, but I
 using namespace boost;           //   want to verify this combination of using
@@ -157,6 +165,7 @@ BOOST_MPL_ASSERT_MSG((
 namespace
 {
     X::mixed_c m;
+    //~ Y::mixed_c m2;
     
 void check_endian_send()
 {
@@ -168,15 +177,17 @@ void check_endian_send()
     //~ std::cout << std::hex << m.b.b << std::endl;
     
     //~ integer::convert_from<network>(m.a);
+    //~ m.a.a=htonl(m.a.a);
+    //~ m.a.b=htons(m.a.b);
     //~ integer::convert_from<network>(m.b);
     convert<from<network>, to<native_endian> >(m);
-    convert_from<network>(m);
+    //~ convert_from<network>(m);
     //~ std::cout << std::hex << m.a.a << std::endl;
     //~ std::cout << std::hex << m.a.b << std::endl;
     //~ std::cout << std::hex << m.b.a << std::endl;
     //~ std::cout << std::hex << m.b.b << std::endl;
 
-    convert_to<network>(m);
+    //~ convert_to<network>(m);
     //~ std::cout << std::hex << m.a.a << std::endl;
     //~ std::cout << std::hex << m.a.b << std::endl;
     //~ std::cout << std::hex << m.b.a << std::endl;
