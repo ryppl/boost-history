@@ -221,7 +221,7 @@ private:
 #if defined(BOOST_POSIX_API)
         // By creating a child process which immediately exits
         // we interrupt wait().
-        interrupt_pid_ = create_child("/usr/sh").get_id();
+        interrupt_pid_ = create_child("/bin/sh").get_id();
 #elif defined(BOOST_WINDOWS_API)
         // By signaling the event in the first slot WaitForMultipleObjects()
         // will return. The work thread won't do anything except checking if
