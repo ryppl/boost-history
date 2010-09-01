@@ -554,7 +554,7 @@ BOOST_AUTO_TEST_CASE(test_shell)
 #endif 
 } 
 
-BOOST_AUTO_TEST_CASE(test_dummy_stdin) 
+BOOST_AUTO_TEST_CASE(test_null_stdin) 
 { 
     check_helpers(); 
 
@@ -562,7 +562,7 @@ BOOST_AUTO_TEST_CASE(test_dummy_stdin)
     args.push_back("is-nul-stdin"); 
 
     bp::context ctx; 
-    ctx.stdin_behavior = bpb::dummy::create(bpb::dummy::input_stream); 
+    ctx.stdin_behavior = bpb::null::create(bpb::null::input_stream); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -575,7 +575,7 @@ BOOST_AUTO_TEST_CASE(test_dummy_stdin)
 #endif 
 } 
 
-BOOST_AUTO_TEST_CASE(test_dummy_stdout) 
+BOOST_AUTO_TEST_CASE(test_null_stdout) 
 { 
     check_helpers(); 
 
@@ -583,7 +583,7 @@ BOOST_AUTO_TEST_CASE(test_dummy_stdout)
     args.push_back("is-nul-stdout"); 
 
     bp::context ctx; 
-    ctx.stdout_behavior = bpb::dummy::create(bpb::dummy::output_stream); 
+    ctx.stdout_behavior = bpb::null::create(bpb::null::output_stream); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -596,7 +596,7 @@ BOOST_AUTO_TEST_CASE(test_dummy_stdout)
 #endif 
 } 
 
-BOOST_AUTO_TEST_CASE(test_dummy_stderr) 
+BOOST_AUTO_TEST_CASE(test_null_stderr) 
 { 
     check_helpers(); 
 
@@ -604,7 +604,7 @@ BOOST_AUTO_TEST_CASE(test_dummy_stderr)
     args.push_back("is-nul-stderr"); 
 
     bp::context ctx; 
-    ctx.stderr_behavior = bpb::dummy::create(bpb::dummy::output_stream); 
+    ctx.stderr_behavior = bpb::null::create(bpb::null::output_stream); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 

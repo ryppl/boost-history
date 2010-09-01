@@ -294,12 +294,12 @@ private:
  * A child process will be able to use streams. But data written to an
  * output stream is discarded and data read from an input stream is 0.
  */
-class dummy : public stream
+class null : public stream
 {
 public:
     enum stream_type { input_stream, output_stream };
 
-    dummy(stream_type stream)
+    null(stream_type stream)
     {
 #if defined(BOOST_POSIX_API)
         std::string filename = (stream == input_stream) ? "/dev/zero" :
@@ -321,9 +321,9 @@ public:
 #endif
     }
 
-    static boost::shared_ptr<dummy> create(stream_type stream)
+    static boost::shared_ptr<null> create(stream_type stream)
     {
-        return boost::make_shared<dummy>(stream);
+        return boost::make_shared<null>(stream);
     }
 
     handle get_child_end()

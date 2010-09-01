@@ -30,14 +30,14 @@ void create_child_context_configuration()
 //] 
 } 
 
-void create_child_context_dummy() 
+void create_child_context_null() 
 { 
-//[create_child_context_dummy 
+//[create_child_context_null 
     std::string exe = boost::process::find_executable_in_path("hostname"); 
     std::vector<std::string> args; 
     boost::process::context ctx; 
-    ctx.stdout_behavior = boost::process::behavior::dummy::create( 
-        boost::process::behavior::dummy::output_stream); 
+    ctx.stdout_behavior = boost::process::behavior::null::create( 
+        boost::process::behavior::null::output_stream); 
     boost::process::create_child(exe, args, ctx); 
 //] 
 } 
@@ -59,6 +59,6 @@ void create_child_context_pipe()
 int main() 
 { 
     create_child_context_configuration(); 
-    create_child_context_dummy(); 
+    create_child_context_null(); 
     create_child_context_pipe(); 
 } 
