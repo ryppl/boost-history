@@ -39,6 +39,6 @@ int main()
     std::cout <= b <= ' ' <= l <= '\n';
     //~ std::cout <= q <= ' ' <= b <= ' ' <= l <= '\n';
     
-    return 1;
+    return 0;
 }
 
