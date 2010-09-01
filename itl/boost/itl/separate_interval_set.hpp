@@ -9,6 +9,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define BOOST_ITL_SEPARATE_INTERVAL_SET_HPP_JOFA_080608
 
 #include <boost/assert.hpp>
+#include <boost/itl/type_traits/is_interval_separator.hpp>
 #include <boost/itl/interval_base_set.hpp>
 #include <boost/itl/interval_set.hpp>
 
@@ -147,84 +148,21 @@ private:
 template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline void separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend)
 {
-    if(itl::is_empty(addend)) return;
-
-    std::pair<iterator,bool> insertion = this->_set.insert(addend);
-
-    if(insertion.second)
-        handle_neighbours(insertion.first);
-    else
-    {
-        iterator first_ = this->_set.lower_bound(addend),
-                 last_  = insertion.first,
-                 end_   = insertion.first; end_  ++;
-        //BOOST_ASSERT(end_ == this->_map.upper_bound(inter_val));
-        iterator second_= first_; ++second_;
-
-        //JODO code replication here: search hull(hull
-        interval_type left_resid  = right_subtract(*first_, addend);
-        interval_type right_resid =  left_subtract(*last_ , addend);
-
-        this->_set.erase(second_, end_);
-
-        const_cast<value_type&>(*first_) = hull(hull(left_resid, addend), right_resid);
-    }
+	detail::separating_add(*this, addend);
 }
 
 template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 typename separate_interval_set<DomainT,Compare,Interval,Alloc>::iterator 
     separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
 {
-    if(itl::is_empty(addend)) 
-        return prior_;
-
-    iterator insertion = this->_set.insert(prior_, addend);
-
-    if(*insertion == addend)
-        return insertion;
-    else
-    {
-        std::pair<iterator,iterator> overlap = this->_set.equal_range(addend);
-        iterator first_ = overlap.first,
-                 end_   = overlap.second,
-                 last_  = end_; --last_;
-
-        iterator second_= first_; ++second_;
-
-        //JODO code replication here: search hull(hull
-        interval_type left_resid  = right_subtract(*first_, addend);
-        interval_type right_resid =  left_subtract(*last_ , addend);
-
-        this->_set.erase(second_, end_);
-
-        const_cast<value_type&>(*first_) = hull(hull(left_resid, addend), right_resid);
-        return first_;
-    }
+	return detail::separating_add(*this, prior_, addend);
 }
 
 
 template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline void separate_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
 {
-    if(itl::is_empty(minuend)) return;
-    iterator first_ = this->_set.lower_bound(minuend);
-    if(first_==this->_set.end()) return;
-    iterator end_   = this->_set.upper_bound(minuend);
-    iterator second_= first_; ++second_;
-    iterator last_  = end_; --last_;
-
-    interval_type leftResid = right_subtract(*first_, minuend);
-    interval_type rightResid; 
-    if(first_ != end_  )
-        rightResid = left_subtract(*last_ , minuend);
-
-    this->_set.erase(first_, end_  );
-
-    if(!itl::is_empty(leftResid))
-        this->_set.insert(leftResid);
-
-    if(!itl::is_empty(rightResid))
-        this->_set.insert(rightResid);
+	detail::subtract(*this, minuend);
 }
 
 //-----------------------------------------------------------------------------

@@ -16,22 +16,22 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-template<class ObjectT, class CoObjectT> //JODO Only maps of equal iterability shall match!
-typename enable_if< mpl::and_< is_domain_compare_equal<ObjectT,CoObjectT>
-                             , mpl::and_<is_map<ObjectT>, is_map<CoObjectT> > >, 
+template<class Type, class CoType> //JODO Only maps of equal iterability shall match!
+typename enable_if< mpl::and_< is_domain_compare_equal<Type,CoType>
+                             , mpl::and_<is_map<Type>, is_map<CoType> > >, 
                     bool>::type
-co_equal(typename ObjectT::const_iterator left_, typename CoObjectT::const_iterator right_,
-		 const ObjectT& left, const CoObjectT& right)
+co_equal(typename Type::const_iterator left_, typename CoType::const_iterator right_,
+		 const Type&, const CoType&)
 {
-	return ObjectT::co_value(left_) == CoObjectT::co_value(right_);
+	return Type::co_value(left_) == CoType::co_value(right_);
 }
 
-template<class ObjectT, class CoObjectT> 
-typename enable_if< mpl::and_< is_domain_compare_equal<ObjectT,CoObjectT>
-                             , mpl::not_<mpl::and_<is_map<ObjectT>, is_map<CoObjectT> > > >,
+template<class Type, class CoType> 
+typename enable_if< mpl::and_< is_domain_compare_equal<Type,CoType>
+                             , mpl::not_<mpl::and_<is_map<Type>, is_map<CoType> > > >,
                   bool>::type
-co_equal(typename ObjectT::const_iterator, typename CoObjectT::const_iterator,
-		 const ObjectT&, const CoObjectT&)
+co_equal(typename Type::const_iterator, typename CoType::const_iterator,
+		 const Type&, const CoType&)
 {
 	return true;
 }

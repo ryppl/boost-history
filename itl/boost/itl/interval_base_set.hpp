@@ -164,13 +164,11 @@ public:
     //= Containedness
     //==========================================================================
 
-ITL_BEGIN_COMMON_MEMBER_FUNCTIONS:
     /** sets the container empty */
     void clear() { _set.clear(); }
     /** is the container empty? */
     bool empty()const { return _set.empty(); }
 
-ITL_END_COMMON_MEMBER_FUNCTIONS:
     /** Does the container contain the element \c key ? */
     bool contains(const element_type& key)const
     { return that()->contains(interval_type(key)); }
@@ -304,6 +302,10 @@ ITL_END_COMMON_MEMBER_FUNCTIONS:
     //==========================================================================
     //= Insertion, erasure
     //==========================================================================
+
+	std::pair<iterator,bool> _insert(const value_type& value){ return this->_set.insert(value); }
+	iterator _insert(iterator prior, const value_type& value){ return this->_set.insert(prior, value); }
+
 
     /** Insert an element \c key into the set */
     SubType& insert(const element_type& key) 
@@ -475,9 +477,11 @@ protected:
 public:
     sub_type& self() { return *that(); }
 
-protected:
+public:
     iterator prior(iterator it_)
     { return it_ == this->_set.begin() ? this->_set.end() : --it_; }
+
+protected:
 
     const_iterator prior(const_iterator it_)const
     { return it_ == this->_set.begin() ? this->_set.end() : --it_; }

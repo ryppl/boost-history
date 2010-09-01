@@ -16,15 +16,6 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 
 namespace boost{ namespace itl
 {
-    template <class Type> 
-    struct is_element_container
-    { 
-        typedef is_element_container<Type> type;
-        BOOST_STATIC_CONSTANT(bool, value = 
-            (mpl::and_<is_set<Type>, mpl::not_<is_interval_container<Type> > >::value)
-            );
-    };
-
     template<class Type> 
     struct is_element_map
     {
@@ -34,7 +25,23 @@ namespace boost{ namespace itl
             );
     };
 
+    template<class Type> 
+    struct is_element_set
+    {
+        typedef is_element_set<Type> type;
+        BOOST_STATIC_CONSTANT(bool, value = 
+            (mpl::and_<is_set<Type>, mpl::not_<is_interval_container<Type> > >::value)
+            );
+    };
 
+    template <class Type> 
+    struct is_element_container
+    { 
+        typedef is_element_container<Type> type;
+        BOOST_STATIC_CONSTANT(bool, value = 
+            (mpl::or_<is_element_set<Type>, is_element_map<Type> >::value) 
+			);
+    };
 }} // namespace boost itl
 
 #endif

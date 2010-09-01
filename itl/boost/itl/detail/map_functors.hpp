@@ -10,18 +10,34 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/detail/associated_value.hpp>
+#include <boost/itl/type_traits/is_container.hpp>
 #include <boost/itl/type_traits/adds_inversely.hpp>
+#include <boost/itl/type_traits/absorbs_neutrons.hpp>
 #include <boost/itl/functors.hpp>
-#include <boost/itl/map_functions.hpp>
+//CL #include <boost/itl/map_functions.hpp>
 
 namespace boost{namespace itl
 {
 
+//------------------------------------------------------------------------------
+//JODO The forward declarations are needed by gcc-3.4.4 here
+template<class Type>
+typename enable_if<is_container<Type>, void>::type
+clear(Type&);
+
+template <class MapT>
+typename enable_if<is_element_map<MapT>, MapT>::type&
+add(MapT&, const typename MapT::value_type&);
+
+template<class MapT>
+typename enable_if<is_element_map<MapT>, 
+                   std::pair<typename MapT::iterator,bool> >::type
+insert(MapT&, const typename MapT::element_type&);
+
 template<class MapT, class Predicate>
-inline typename enable_if<is_element_map<MapT>, MapT>::type&
-erase_if(const Predicate& pred, MapT& object);//JODO gcc-3.4.4 does not recognize some functions from map_functions.hpp
-                                              //JODO e.g. erase_if and subtract. Forward decl should not be necessary
-                                              //JODO but may be it is better to use forward decls only instead of inlclues here.
+typename enable_if<is_element_map<MapT>, MapT>::type&
+erase_if(const Predicate&, MapT&);
+//------------------------------------------------------------------------------
 
 template<class MapT, class Combiner, bool creates_inverse>
 struct element_version
@@ -643,27 +659,24 @@ struct map_flip_<MapT, true>
 template<class MapT, bool absorbs_neutrons>
 struct map_absorb_neutrons
 {
-    typedef MapT map_type;
-    static void apply(map_type&);
+    static MapT& apply(MapT&);
 };
 
 template<class MapT>
 struct map_absorb_neutrons<MapT, false> 
 {                 // !absorbs_neutrons     
-    typedef MapT map_type;
-    static void absorb_neutrons(map_type&){}
+    static MapT& apply(MapT& object){ return object; }
 };
 
 
 template<class MapT>
 struct map_absorb_neutrons<MapT, true>
 {                 // absorbs_neutrons
-    typedef MapT map_type;
 	typedef typename MapT::element_type element_type;
 
-    static void absorb_neutrons(map_type& object)
+    static MapT& apply(MapT& object)
     {
-		itl::erase_if(content_is_neutron<element_type>(), object);
+		return itl::erase_if(content_is_neutron<element_type>(), object);
     }
 };
 

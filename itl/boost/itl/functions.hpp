@@ -17,30 +17,14 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 #include <boost/itl/detail/interval_map_functors.hpp>
 #include <boost/itl/detail/interval_map_algo.hpp>
 
+#include <boost/itl/functions/container.hpp>
+
 namespace boost{namespace itl
 {
 
 //==========================================================================
 //= Containedness
 //==========================================================================
-
-/** All content of the container is dropped. 
-    Complexity: linear. */
-template<class ObjectT>
-typename enable_if<is_interval_container<ObjectT>, void>::type
-clear(ObjectT& object) //JODO test
-{
-    object.erase(object.begin(), object.end());
-}
-
-/** Tests if the container is empty. 
-    Complexity: constant. */
-template<class ObjectT>
-typename enable_if<is_interval_container<ObjectT>, bool>::type
-is_empty(const ObjectT& object)
-{
-    return object.begin() == object.end();
-}
 
 
 //------------------------------------------------------------------------------
@@ -110,7 +94,7 @@ template<class SubT, class SuperT>
 typename enable_if<is_interval_container<SuperT>, bool>::type 
 within(const SubT& sub, const SuperT& super)
 {
-    return contains(super, sub); 
+	return itl::contains(super, sub); 
 }
 
 

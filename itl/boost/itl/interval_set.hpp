@@ -136,6 +136,9 @@ public:
             prior_ = this->add(prior_, *it_);
     }
 
+	//std::pair<iterator,bool> _insert(const value_type& value){ return this->_set.insert(value); }
+	//iterator _insert(iterator prior, const value_type& value){ return this->_set.insert(prior, value); }
+
 private:
     friend class 
         interval_base_set<interval_set<DomainT,Compare,Interval,Alloc>,
@@ -152,171 +155,31 @@ private:
     /// Removal of an interval <tt>minuend</tt>
     void subtract_(const value_type& minuend);
 
-private:
-    /// Treatment of adjoint intervals on insertion
-    iterator handle_neighbours(iterator it_);
-
-    iterator join_on_left(iterator& left_, const iterator& right_);
 } ;
-
-
-template <typename DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-inline typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
-    interval_set<DomainT,Compare,Interval,Alloc>::handle_neighbours(iterator it_)
-{
-    if(it_ == this->_set.begin())
-    {
-        iterator it_nxt=it_; it_nxt++;
-        if(it_nxt!=this->_set.end() && touches(*it_, *it_nxt)) 
-            return join_on_left(it_, it_nxt);
-    }
-    else
-    {
-        // there is a predecessor
-        iterator pred_ = it_; pred_-- ;
-
-        if(touches(*pred_, *it_)) 
-        {
-            iterator it_extended = join_on_left(pred_, it_);
-
-            iterator succ_=it_extended; succ_++;
-            if(succ_!=this->_set.end())
-            {
-                // it's a non border element that might have two touching neighbours
-                if(touches(*it_extended, *succ_)) 
-                    return join_on_left(it_extended, succ_);
-                else
-                    return it_extended;
-            }
-            else
-                return it_extended;
-        }
-        else
-        {
-            iterator succ_=it_; succ_++;
-            if(succ_!=this->_set.end())
-            {
-                // it's a non border element that might have a right touching neighbour
-                if(touches(*it_, *succ_)) 
-                    return join_on_left(it_, succ_);
-            }
-        }
-    }
-
-    return it_;
-}
-
-
-
-template <typename DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-inline typename interval_set<DomainT,Compare,Interval,Alloc>::iterator 
-    interval_set<DomainT,Compare,Interval,Alloc>
-    ::join_on_left(iterator& left_, const iterator& right_)
-{
-    // both left and right are in the set and they are neighbours
-    BOOST_ASSERT(exclusive_less(*left_, *right_));
-    BOOST_ASSERT(touches(*left_, *right_));
-
-    interval_type right_itv = (*right_);
-    this->_set.erase(right_);
-    const_cast<value_type&>(*left_) = hull(*left_, right_itv);
-
-    return left_;
-}
 
 
 template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 void interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend)
 {
-    if(itl::is_empty(addend)) return;
-
-    std::pair<iterator,bool> insertion = this->_set.insert(addend);
-
-    if(insertion.second)
-        handle_neighbours(insertion.first);
-    else
-    {
-        iterator first_ = this->_set.lower_bound(addend),
-                 last_  = insertion.first,
-                 end_   = insertion.first; ++end_;
-        //BOOST_ASSERT(end_ == this->_map.upper_bound(inter_val));
-        iterator second_= first_; ++second_;
-
-        interval_type left_resid  = right_subtract(*first_, addend);
-        interval_type right_resid =  left_subtract(*last_ , addend);
-
-        this->_set.erase(second_, end_  );
-
-        const_cast<value_type&>(*first_) = hull(hull(left_resid, addend), right_resid);
-        handle_neighbours(first_);
-    }
+	detail::joining_add(*this, addend);
 }
+
 
 template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 typename interval_set<DomainT,Compare,Interval,Alloc>::iterator 
     interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
 {
-    if(boost::itl::is_empty(addend)) 
-        return prior_;
-
-    iterator insertion = this->_set.insert(prior_, addend);
-
-    if(*insertion == addend)
-        return handle_neighbours(insertion);
-    else
-    {
-        std::pair<iterator,iterator> overlap = this->_set.equal_range(addend);
-        iterator first_ = overlap.first,
-                 end_   = overlap.second,
-                 last_  = end_; --last_;
-
-        iterator second_= first_; ++second_;
-
-        //JODO code replication here: search hull(hull
-        interval_type left_resid  = right_subtract(*first_, addend);
-        interval_type right_resid =  left_subtract(*last_ , addend);
-
-        this->_set.erase(second_, end_);
-
-        const_cast<value_type&>(*first_) = hull(hull(left_resid, addend), right_resid);
-        return handle_neighbours(first_);
-    }
+	return detail::joining_add(*this, prior_, addend);
 }
+
+
 
 template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 void interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
 {
-    if(itl::is_empty(minuend)) return;
-    iterator first_ = this->_set.lower_bound(minuend);
-    if(first_==this->_set.end()) return;
-    iterator end_   = this->_set.upper_bound(minuend);
-    iterator last_  = end_; --last_;
-
-    interval_type leftResid = right_subtract(*first_, minuend);
-    interval_type rightResid; 
-    if(first_ != end_  )
-        rightResid = left_subtract(*last_ , minuend);
-
-    this->_set.erase(first_, end_  );
-
-    if(!itl::is_empty(leftResid))
-        this->_set.insert(leftResid);
-
-    if(!itl::is_empty(rightResid))
-        this->_set.insert(rightResid);
+	detail::subtract(*this, minuend);
 }
 
-
-//-----------------------------------------------------------------------------
-// equality of elements
-//-----------------------------------------------------------------------------
-template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-inline bool is_element_equal(const interval_set<DomainT,Compare,Interval,Alloc>& lhs,
-                             const interval_set<DomainT,Compare,Interval,Alloc>& rhs)
-{
-    // Since both are joining interval sets we can use the simpler Set::lexicographical_equal
-    return &lhs == &rhs || Set::lexicographical_equal(lhs, rhs);
-}
 
 //-----------------------------------------------------------------------------
 // type traits

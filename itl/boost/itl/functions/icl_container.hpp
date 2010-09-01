@@ -1,0 +1,48 @@
+/*-----------------------------------------------------------------------------+
+Copyright (c) 2010-2010: Joachim Faulhaber
++------------------------------------------------------------------------------+
+   Distributed under the Boost Software License, Version 1.0.
+      (See accompanying file LICENCE.txt or copy at
+           http://www.boost.org/LICENSE_1_0.txt)
++-----------------------------------------------------------------------------*/
+#ifndef BOOST_ITL_FUNCTIONS_ICL_CONTAINER_HPP_JOFA_100831
+#define BOOST_ITL_FUNCTIONS_ICL_CONTAINER_HPP_JOFA_100831
+
+#include <boost/itl/detail/design_config.hpp>
+#include <boost/itl/type_traits/is_icl_container.hpp>
+
+namespace boost{namespace itl
+{
+
+//==============================================================================
+//= Equivalences and Orderings
+//==============================================================================
+
+template<class Type>
+inline typename enable_if<is_icl_container<Type>, bool>::type
+operator != (const Type& left, const Type& right)
+{ return !(left == right); }
+
+template<class Type>
+inline typename enable_if<is_icl_container<Type>, bool>::type
+operator > (const Type& left, const Type& right)
+{ return right < left; }
+
+/** Partial ordering which is induced by Compare */
+template<class Type>
+inline typename enable_if<is_icl_container<Type>, bool>::type
+operator <= (const Type& left, const Type& right)
+{ return !(left > right); }
+
+template<class Type>
+inline typename enable_if<is_icl_container<Type>, bool>::type
+operator >= (const Type& left, const Type& right)
+{ return !(left < right); }
+
+
+}} // namespace itl boost
+
+
+#endif
+
+

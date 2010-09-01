@@ -24,16 +24,21 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/detail/concept_check.hpp>
 #include <boost/itl/type_traits/is_map.hpp>
+#include <boost/itl/type_traits/absorbs_neutrons.hpp>
+#include <boost/itl/type_traits/is_total.hpp>
 #include <boost/itl/type_traits/is_element_container.hpp>
 #include <boost/itl/type_traits/has_inverse.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
-//CL #include <boost/itl/seqs.hpp>
 #include <boost/itl/functors.hpp>
 #include <boost/itl/predicates.hpp>
 #include <boost/itl/set.hpp>
-#include <boost/itl/map_functions.hpp>
+
+#include <boost/itl/functions/container.hpp>
+#include <boost/itl/functions/icl_container.hpp>
+#include <boost/itl/functions/associative_element_container.hpp>
 #include <boost/itl/detail/map_algo.hpp>
-#include <boost/itl/detail/map_functors.hpp>
+//CL #include <boost/itl/detail/map_functors.hpp>
+#include <boost/itl/map_functions.hpp>
 
 
 namespace boost{namespace itl
