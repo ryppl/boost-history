@@ -20,15 +20,16 @@
 #include <boost/type_traits/is_same.hpp>
 
 namespace boost {
-    template <typename Type,typename Tag> 
+    
+template <typename Type,typename Tag> 
 struct tagged {
     typedef Type type;    
     typedef Tag tag;
 };
 
 namespace member_at {
-    struct left{};
-    struct right{};
+    struct left {};
+    struct right {};
 }
         
 template <typename T> 
@@ -193,24 +194,6 @@ public:
             type;
     };
 
-#if 0    
-    template <typename WTag>
-    static typename enable_if<is_same<WTag,right_tag>, right_type*> ::type
-    //~ static void
-    get(left_type& ptr)
-    {
-        return get_field<tagged<left_end_point, right_tag>, left_type>::apply(ptr).get();
-    }
-
-    template <typename WTag>
-    static typename enable_if<is_same<WTag,left_tag>, left_type*> ::type
-    //~ static void
-    get(right_type& ptr)
-    {
-        return get_field<tagged<right_end_point, left_tag>, right_type>::apply(ptr).get();
-    }
-    
-#endif
     static left_end_point& get_left_end_point(left_type& lptr) {
         return get_field<tagged<left_end_point, right_tag>, left_type>::apply(lptr);
     }
@@ -220,7 +203,6 @@ public:
 
     template <typename WTag>
     static typename enable_if<is_same<WTag,right_tag>, right_type*>::type 
-    //~ static void
     get(left_type& ptr)
     {
         return get_field<tagged<left_end_point, right_tag>, left_type>::apply(ptr).get();
@@ -228,7 +210,6 @@ public:
 
     template <typename WTag>
     static typename enable_if<is_same<WTag,left_tag>, left_type*> ::type
-    //~ static void
     get(right_type& ptr)
     {
         return get_field<tagged<right_end_point, left_tag>, right_type>::apply(ptr).get();
@@ -245,7 +226,6 @@ public:
 
     template <typename WTag>
     static typename enable_if<is_same<WTag,left_tag>, void>::type 
-    //~ static void
     disconnect(left_type& ptr)
     {
         get_left_end_point(ptr).disconnect();
@@ -253,7 +233,6 @@ public:
 
     template <typename WTag>
     static typename enable_if<is_same<WTag,right_tag>, void> ::type
-    //~ static void
     disconnect(right_type& ptr)
     {
         get_right_end_point(ptr).disconnect();
