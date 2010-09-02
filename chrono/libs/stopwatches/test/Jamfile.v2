@@ -1,0 +1,76 @@
+# Boost Chrono Library test Jamfile
+
+# Copyright Beman Dawes 2003, 2006, 2008
+
+# Distributed under the Boost Software License, Version 1.0.
+# See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt
+
+# See library home page at http://www.boost.org/libs/chrono
+
+# uncomment one if the above lines if you build outside the Boost release
+#local BOOST_ROOT = /boost_1_41_0 ;
+#local BOOST_ROOT = c:/cygwin/boost_1_41_0 ;
+
+if ! $(BOOST_ROOT)
+{
+    BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+}
+
+project
+    : requirements
+        <os>LINUX:<threading>multi
+        <library>/boost/chrono//boost_chrono
+        <library>/boost/system//boost_system
+        #<library>/boost/thread//boost_thread/<link>shared
+        # uncomment the line above if you build outside the Boost release
+        #<include>$(BOOST_ROOT) 
+        # uncomment the line above if you build outside the Boost release
+        #<include>../../..
+        <toolset>msvc:<asynch-exceptions>on
+        <define>BOOST_ENABLE_WARNINGS
+        <warnings>all
+        <toolset>gcc:<cxxflags>-Wextra
+        <toolset>gcc:<cxxflags>-Wno-long-long        
+        <toolset>gcc-mingw-4.5.0:<cxxflags>-Wno-missing-field-initializers        
+        <toolset>gcc-mingw-4.5.0:<cxxflags>-fdiagnostics-show-option
+        <toolset>msvc:<cxxflags>/wd4127
+    ;
+
+
+
+    test-suite "stopwatch"
+        :
+        [ run ../example/stopwatch_example.cpp :  :  : <link>static ]
+        [ run ../example/stopwatch_example.cpp :  :  :   : stopwatch_example_dll ]
+        [ run ../example/scoped_stopwatch_example.cpp :  :  : <link>static ]
+        [ run ../example/scoped_stopwatch_example.cpp :  :  :  : scoped_stopwatch_example_dll ]
+        [ run ../example/stopwatch_accumulator_example.cpp :  :  : <link>static ]
+        [ run ../example/stopwatch_accumulator_example.cpp :  :  :   : stopwatch_accumulator_example_dll ]
+        [ run ../example/specific_stopwatch_accumulator_example.cpp :  :  : <link>static ]
+        [ run ../example/specific_stopwatch_accumulator_example.cpp :  :  :   : specific_stopwatch_accumulator_example_dll ]
+        [ run ../example/stopclock_example.cpp :  :  : <link>static ]
+        [ run ../example/stopclock_example.cpp :  :  :   : stopclock_example_dll ]
+        [ run ../example/stopclock_accumulator_example.cpp :  :  : <link>static ]
+        [ run ../example/stopclock_accumulator_example.cpp :  :  :  : stopclock_accumulator_example_dll ]
+        [ run ../example/nested_stopclock_accumulator_example.cpp :  :  :  <link>static ]
+        [ run ../example/nested_stopclock_accumulator_example.cpp :  :  :  : nested_stopclock_accumulator_example_dll ]
+        [ run ../example/loop_stopclock_accumulator_example.cpp :  :  :  <link>static ]
+        [ run ../example/loop_stopclock_accumulator_example.cpp :  :  :  : loop_stopclock_accumulator_example_dll ]
+        [ run ../example/t24_hours_example.cpp :  :  : <link>static ]
+        [ run ../example/t24_hours_example.cpp :  :  :   : t24_hours_example_dll ]
+        [ run ../example/scoped_stopclock_example.cpp :  :  : <link>static ]
+        [ run ../example/scoped_stopclock_example.cpp :  :  :   : function_stopclock_example_dll ]
+        [ link ../example/timex.cpp :  <link>static ]
+        [ link ../example/timex.cpp :    : timex_dll ]
+        [ compile test_minmax.cpp ]
+        [ run stopclock_constructor_overload_test.cpp :  :  : <link>static ]
+        [ run stopclock_constructor_overload_test.cpp :  :  :   : stopclock_constructor_overload_test_dll ]
+        [ run wstopclock_constructor_overload_test.cpp :  :  : <link>static ]
+        [ run wstopclock_constructor_overload_test.cpp :  :  :   :  wstopclock_constructor_overload_test_dll ]
+        ;
+        
+    test-suite "perf"
+        :
+        #[ run ../perf/stopclock_perf.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
+        #[ run ../perf/stopclock_perf.cpp :  :  :  <library>/boost/thread//boost_thread : stopclock_perf_dll ]
+        ;        
