@@ -34,7 +34,6 @@ public:
         std::cout << "boy: ouch!" << '\n';
         m_girlfriend.disconnect();
     }
-    //~ friends::left_end_point m_girlfriend;
     friends::end_point<girl>::type m_girlfriend;
 };
 
@@ -56,7 +55,6 @@ public:
     void break_boyfriend() {
         std::cout << "girl: we broke up." << '\n';
     }
-    //~ friends::right_end_point m_boyfriend;
     friends::end_point<boy>::type m_boyfriend;
 };
 
