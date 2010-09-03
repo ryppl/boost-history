@@ -103,7 +103,7 @@ typename enable_if<mpl::and_< is_interval_set<ObjectT>
                    typename ObjectT::iterator>::type
 add(ObjectT& object, typename ObjectT::iterator      prior, 
                const typename ObjectT::segment_type& operand);
-
+//------------------------------------------------------------------------------
 template<class ObjectT>
 typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
 subtract(ObjectT&, const typename ObjectT::element_type&);
@@ -111,6 +111,39 @@ subtract(ObjectT&, const typename ObjectT::element_type&);
 template<class ObjectT>
 typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
 subtract(ObjectT&, const typename ObjectT::segment_type&);
+
+//------------------------------------------------------------------------------
+template<class ObjectT>
+typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
+add_intersection(ObjectT&, const ObjectT&, const typename ObjectT::domain_type&);
+
+template<class ObjectT>
+typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
+add_intersection(ObjectT&, const ObjectT&, const typename ObjectT::segment_type&);
+
+template<class ObjectT, class OperandT>
+typename enable_if<mpl::and_<is_interval_set<ObjectT>, 
+                             combines_right_to_interval_set<ObjectT, OperandT> >,
+                   ObjectT>::type&
+add_intersection(ObjectT&, const ObjectT&, const OperandT&);
+
+//------------------------------------------------------------------------------
+template<class ObjectT>
+typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
+flip(ObjectT&, const typename ObjectT::domain_type&);
+
+template<class ObjectT>
+typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
+flip(ObjectT&, const typename ObjectT::segment_type&);
+
+template<class ObjectT, class OperandT>
+typename enable_if<has_same_concept<is_interval_set, ObjectT, OperandT>, ObjectT>::type&
+JODO_flip(ObjectT&, const OperandT&);
+
+//------------------------------------------------------------------------------
+template<class ObjectT>
+typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
+join(ObjectT&);
 
 //JODO Forward 4 gcc-3.4.4 -----------------------------------------------------
 
@@ -352,6 +385,11 @@ public:
         return this->_set.find(interval_type(key)); 
     }
 
+    const_iterator find(const segment_type& segment)const
+    { 
+        return this->_set.find(segment); 
+    }
+
     //==========================================================================
     //= Addition
     //==========================================================================
@@ -453,11 +491,16 @@ public:
 
     /** The intersection of \c key in \c *this set is added to \c section. 
         The function can be used as a find function. */
-    void add_intersection(interval_base_set& section, const element_type& key)const
-    { add_intersection(section, interval_type(key)); }
+    void add_intersection(SubType& section, const element_type& key)const
+    {
+		itl::add_intersection(section, *that(), key); 
+	}
 
     /** The intersection of \c inter_val in \c *this set is added to \c section. */
-    void add_intersection(interval_base_set& section, const segment_type& inter_val)const;
+    void add_intersection(SubType& section, const segment_type& inter_val)const
+    {
+		itl::add_intersection(section, *that(), inter_val); 
+	}
 
 
     /** The intersection of set \c sectant with \c *this set is added to \c section. */
@@ -469,20 +512,27 @@ public:
     >
     void add_intersection
     (
-        interval_base_set& intersection,
-        const IntervalSet<DomainT,Compare,Interval,Alloc>& sectant
-    )const;
+        SubType& section,
+        const IntervalSet<DomainT,Compare,Interval,Alloc>& operand
+    )const
+	{
+		itl::add_intersection(section, *that(), operand);
+	}
 
 
     /** Returns \c true, if element \c key is found in \c *this map.
         Complexity: logarithmic. */
     bool intersects(const element_type& key)const
-    { return _set.find(interval_type(key)) != _set.end(); }
+    { 
+		return itl::intersects(*that(), key); 
+	}
 
     /** Returns \c true, if \c inter_val intersects with \c *this map.
         Complexity: logarithmic. */
     bool intersects(const interval_type& inter_val)const
-    { return _set.find(inter_val) != _set.end(); }
+    { 
+		return itl::intersects(*that(), inter_val); 
+	}
 
     //==========================================================================
     //= Symmetric difference
@@ -490,15 +540,23 @@ public:
 
     /** If \c *this set contains \c key it is erased, otherwise it is added. */
     SubType& flip(const element_type& key)
-    { return flip(interval_type(key)); }
+    {
+		return itl::flip(*that(), key);
+	}
 
     /** If \c *this set contains \c inter_val it is erased, otherwise it is added. */
-    SubType& flip(const segment_type& inter_val);
+    SubType& flip(const segment_type& inter_val)
+    {
+		return itl::flip(*that(), inter_val);
+	}
 
     /** The intersection of \c *this and \c operand is erased from \c *this. 
         The complemenary elements are added to \c *this. */
     template<class SubType2>
-    SubType& flip(const interval_base_set<SubType2,DomainT,Compare,Interval,Alloc>& operand);
+    SubType& flip(const interval_base_set<SubType2,DomainT,Compare,Interval,Alloc>& operand)
+	{
+		return itl::JODO_flip(*that(), operand); //JODO remove this
+	}
 
     //==========================================================================
     //= Iterator related
@@ -550,7 +608,10 @@ public:
     //==========================================================================
     
     /** Join bordering intervals */
-    interval_base_set& join();
+    SubType& join()
+	{
+		return itl::join(*that());
+	}
 
     /** Set interval bounds to the type <tt>bt</tt> for intervals in the set.
         Interval bounds of different types are created by opeations on
@@ -606,209 +667,7 @@ protected:
     ImplSetT _set;
 } ;
 
-
-/*CL
-template
-<
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-typename interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::size_type 
-interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::cardinality()const
-{
-    using namespace boost::mpl;
-    return if_<
-                bool_<is_continuous<DomainT>::value>,
-                continuous_interval_container,
-                discrete_interval_container
-              >
-              ::type::cardinality(*this);
-}
-
-template
-<
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-typename 
-    interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::difference_type 
-interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::length()const
-{
-    difference_type length = neutron<difference_type>::value();
-    const_FOR_IMPL(it_)
-        length += itl::length(*it_);
-    return length;
-}
-*/
-
-
-template<class SubType,
-         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::add_intersection(interval_base_set& section, const segment_type& inter_val)const
-{
-    // any intersection with the empty intervall is empty
-    if(itl::is_empty(inter_val)) 
-        return;
-
-    const_iterator first_ = _set.lower_bound(inter_val);
-    const_iterator end_   = _set.upper_bound(inter_val);
-
-    iterator prior_ = section.end();
-    for(const_iterator it_=first_; it_ != end_; it_++) 
-    {
-        interval_type common_interval = (*it_) & inter_val;
-        if(!itl::is_empty(common_interval))
-            prior_ = section.gap_insert(prior_, common_interval);
-    }
-}
-
-
-template<class SubType, 
-         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-    template
-    <
-        template<class DomT, ITL_COMPARE Comp,
-                 ITL_INTERVAL2(ITL_COMPARE) Interv, ITL_ALLOC Allc>
-        class IntervalSet
-    >
-void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
-    ::add_intersection
-(
-    interval_base_set& intersection,
-    const IntervalSet<DomainT,Compare,Interval,Alloc>& operand
-)const
-{
-    typedef IntervalSet<DomainT,Compare,Interval,Alloc> operand_type;
-
-    if(operand.empty())
-        return;
-
-    typename operand_type::const_iterator common_lwb;
-    typename operand_type::const_iterator common_upb;
-
-    if(!Set::common_range(common_lwb, common_upb, operand, *this))
-        return;
-
-    typename operand_type::const_iterator it_ = common_lwb;
-    while(it_ != common_upb)
-        add_intersection(intersection, *it_++);
-}
-
-//==============================================================================
-//= Symmetric difference
-//==============================================================================
-
-template<class SubType,
-         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
-    ::flip(const segment_type& inter_val)
-{
-    // That which is common shall be subtracted
-    // That which is not shall be added
-    // So x has to be 'complementary added' or flipped
-    interval_type span = inter_val;
-    typename ImplSetT::const_iterator fst_ = _set.lower_bound(span);
-    typename ImplSetT::const_iterator end_ = _set.upper_bound(span);
-
-    interval_type covered, left_over;
-    typename ImplSetT::const_iterator it_ = fst_;
-    while(it_ != end_) 
-    {
-        covered = *it_++; 
-        //[a      ...  : span
-        //     [b ...  : covered
-        //[a  b)       : left_over
-        left_over = right_subtract(span, covered);
-        subtract(span & covered); //That which is common shall be subtracted
-        add(left_over);                //That which is not shall be added
-
-        //...      d) : span
-        //... c)      : covered
-        //     [c  d) : span'
-        span = left_subtract(span, covered);
-    }
-
-    //If span is not empty here, it_ is not in the set so it_ shall be added
-    add(span);
-    return *that();
-}
-
-
-template
-<
-    class SubType, 
-    class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-    template<class SubType2>
-SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
-    ::flip(const interval_base_set<SubType2,DomainT,Compare,Interval,Alloc>& operand)
-{
-    typedef interval_base_set<SubType2,DomainT,Compare,Interval,Alloc> operand_type;
-
-    if(operand.empty())
-        return *that();
-
-    typename operand_type::const_iterator common_lwb;
-    typename operand_type::const_iterator common_upb;
-
-    if(!Set::common_range(common_lwb, common_upb, operand, *this))
-        return *that() += operand;
-
-    typename operand_type::const_iterator it_ = operand.begin();
-
-    // All elements of operand left of the common range are added
-    while(it_ != common_lwb)
-        add(*it_++);
-    // All elements of operand in the common range are symmertrically subtracted
-    while(it_ != common_upb)
-        flip(*it_++);
-    // All elements of operand right of the common range are added
-    while(it_ != operand.end())
-        add(*it_++);
-
-    return *that();
-}
-
-
-template<class SubType,
-         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& 
-interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::join()
-{
-    iterator it_=_set.begin();
-    if(it_==_set.end()) 
-        return *this;
-
-    iterator next_=it_; next_++;
-
-    while(next_ != _set.end())
-    {
-        if( touches(*it_, *next_) )
-        {
-            iterator fst_mem = it_;  // hold the first member
-            
-            // Go on while touching members are found
-            it_++; next_++;
-            while(     next_ != _set.end()
-                    && touches(*it_, *next_) )
-            { it_++; next_++; }
-
-            // finally we arrive at the end of a sequence of joinable intervals
-            // and it points to the last member of that sequence
-            const_cast<interval_type&>(*it_) = hull(*it_, *fst_mem);
-            _set.erase(fst_mem, it_);
-
-            it_++; next_=it_; 
-            if(next_!=_set.end())
-                next_++;
-        }
-        else { it_++; next_++; }
-    }
-    return *this;
-}
-
-
-
+/*JODO uniform_bounds for new interval types
 template<class SubType,
          class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::uniform_bounds(itl::bound_type bounded)
@@ -817,7 +676,7 @@ void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::uniform_bounds(i
     // ordering < on interval is invariant wrt. this transformation on bounds
     FOR_IMPL(it_) const_cast<interval_type&>(*it_).as(bounded);
 }
-
+*/
 
 //==============================================================================
 //= Equivalences and Orderings

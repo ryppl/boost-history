@@ -10,14 +10,10 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/bool.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/or.hpp>
-#include <boost/mpl/and.hpp>
+#include <boost/itl/type_traits/no_type.hpp>
 
 namespace boost{ namespace itl
 {
-	struct no_type{};
-
     namespace detail
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(codomain_type)

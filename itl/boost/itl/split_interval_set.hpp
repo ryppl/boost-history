@@ -20,10 +20,10 @@ namespace boost{namespace itl
     overlapping intervals are split */
 template 
 <
-    typename             DomainT, 
-    ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
+    typename                  DomainT, 
+    ITL_COMPARE               Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
     ITL_INTERVAL(ITL_COMPARE) Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, DomainT, Compare),
-    ITL_ALLOC   Alloc    = std::allocator
+    ITL_ALLOC                 Alloc    = std::allocator
 > 
 class split_interval_set: 
     public interval_base_set<split_interval_set<DomainT,Compare,Interval,Alloc>, 

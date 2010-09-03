@@ -377,9 +377,9 @@ template<class Type>struct segmentational_fineness
     typedef segmentational_fineness<Type> type;
     static const int value = 
         mpl::if_<is_interval_container<Type>, 
-                  known_fineness<Type>,
-                unknown_fineness<Type>
-            >::type::value;
+                        known_fineness<Type>,
+                      unknown_fineness<Type>
+                >::type::value;
 };
 
 
