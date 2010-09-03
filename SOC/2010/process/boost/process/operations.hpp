@@ -313,6 +313,14 @@ inline child create_child(const std::string &executable, Arguments args,
     {
         BOOST_ASSERT(pid > 0);
 
+        for (std::size_t i = 0; i < argv.first; ++i)
+            delete[] argv.second[i];
+        delete[] argv.second;
+
+        for (std::size_t i = 0; i < envp.first; ++i)
+            delete[] envp.second[i];
+        delete[] envp.second;
+
         ctx.stdin_behavior->get_child_end().close();
         ctx.stdout_behavior->get_child_end().close();
         ctx.stderr_behavior->get_child_end().close();
