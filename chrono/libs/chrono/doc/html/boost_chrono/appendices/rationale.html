@@ -33,7 +33,7 @@
         are an extract from this document.
       </p>
 <a name="boost_chrono.appendices.rationale.is_it_possible_for_the_user_to_pass_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__to_a_function_with_the_units_being_ambiguous_"></a><h4>
-<a name="id5131648"></a>
+<a name="id5082145"></a>
         <a href="rationale.html#boost_chrono.appendices.rationale.is_it_possible_for_the_user_to_pass_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__to_a_function_with_the_units_being_ambiguous_">Is
         it possible for the user to pass a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> to a function with the
@@ -46,7 +46,7 @@
 <pre class="programlisting"><span class="identifier">f</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>  <span class="comment">// Will not compile, 3 is not implicitly convertible to any __duration__
 </span></pre>
 <a name="boost_chrono.appendices.rationale.why_duration_needs_operator_"></a><h4>
-<a name="id5131748"></a>
+<a name="id5082245"></a>
         <a href="rationale.html#boost_chrono.appendices.rationale.why_duration_needs_operator_">Why
         duration needs operator%</a>
       </h4>
@@ -74,7 +74,7 @@
 <span class="special">};</span>
 </pre>
 <a name="boost_chrono.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form"></a><h4>
-<a name="id5132328"></a>
+<a name="id5082825"></a>
         <a href="rationale.html#boost_chrono.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form">Why
         ratio needs CopyConstruction and Assignment from ratios having the same normalized
         form</a>
@@ -109,7 +109,7 @@
         succeeds.
       </p>
 <a name="boost_chrono.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type"></a><h4>
-<a name="id5132737"></a>
+<a name="id5083234"></a>
         <a href="rationale.html#boost_chrono.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type">Why
         ratio needs the nested normalizer typedef type</a>
       </h4>
@@ -140,7 +140,7 @@
 <span class="identifier">r1</span> <span class="special">=</span> <span class="identifier">r2</span><span class="special">;</span> <span class="comment">// compiles as both types are the same.
 </span></pre>
 <a name="boost_chrono.appendices.rationale.how_reliable_are_these_measures_"></a><h4>
-<a name="id5132982"></a>
+<a name="id5083479"></a>
         <a href="rationale.html#boost_chrono.appendices.rationale.how_reliable_are_these_measures_">How
         reliable are these measures?</a>
       </h4>
@@ -162,8 +162,7 @@
 </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
     <span class="special">...</span>
-    <a href="../reference/reporters.html#boost_chrono.reference.reporters.stopclock_hpp.stopclock" title="
-          Template Class stopclock&lt;&gt;"><code class="computeroutput"><span class="identifier">stopclock</span></code></a><span class="special">&lt;</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.high_resolution_clock" title="
+    <span class="identifier">__stopclock__</span><span class="special">&lt;</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.high_resolution_clock" title="
           Class high_resolution_clock"><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a><span class="special">&gt;</span> <span class="identifier">_</span><span class="special">;</span>
 </pre>
 <p>
@@ -172,10 +171,8 @@
 <li>
             Using a process clock in a multithreaded application will give elapsed
             time for the process as a whole, including threads other than the calling
-            thread. To get time elapsed for a specific thread, use the supplied
-            <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
-          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a> which returns time
-            elapsed for the calling thread only, if supported by the platform.
+            thread. To get time elapsed for a specific thread, use the supplied __thread<span class="underline">clock</span>_ which returns time elapsed for the
+            calling thread only, if supported by the platform.
           </li>
 <li>
             When stopclocks are nested, usually from stopclocks appearing in each
@@ -199,12 +196,10 @@
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            Don't flush log information while measuring elapsed time. A <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
-          Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a> can make
-            that possible, because it don't report until all the measures have been
-            compiled and then report some statistics. Alternatively, an asynchronous
-            stream would permit normal logging but by a thread other than the one
-            being measured.
+            Don't flush log information while measuring elapsed time. A __stopwatch<span class="underline">accumulator</span>_ can make that possible, because
+            it don't report until all the measures have been compiled and then report
+            some statistics. Alternatively, an asynchronous stream would permit normal
+            logging but by a thread other than the one being measured.
           </li>
 <li>
             Add a mechanism to track the difference between the application time

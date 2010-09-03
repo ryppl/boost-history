@@ -27,7 +27,7 @@
 <a name="boost_chrono.overview.motivation"></a><a href="motivation.html" title="Motivation">Motivation</a>
 </h3></div></div></div>
 <a name="boost_chrono.overview.motivation.time"></a><h4>
-<a name="id4948840"></a>
+<a name="id4948871"></a>
         <a href="motivation.html#boost_chrono.overview.motivation.time">Time</a>
       </h4>
 <p>
@@ -46,7 +46,7 @@
         of a good deal of information in this documentation.
       </p>
 <a name="boost_chrono.overview.motivation.wall_clock_versus_system_and_user_time"></a><h4>
-<a name="id4948898"></a>
+<a name="id4948928"></a>
         <a href="motivation.html#boost_chrono.overview.motivation.wall_clock_versus_system_and_user_time">Wall
         clock versus system and user time</a>
       </h4>
@@ -57,31 +57,8 @@
         clock) time, user CPU time, and system CPU time. (On POSIX-like systems,
         this relies on times(). On Windows, it relies on GetProcessTimes().)
       </p>
-<a name="boost_chrono.overview.motivation.reporting_elapsed_time"></a><h4>
-<a name="id4948929"></a>
-        <a href="motivation.html#boost_chrono.overview.motivation.reporting_elapsed_time">Reporting
-        elapsed time</a>
-      </h4>
-<p>
-        Knowing how long a program, a function or a specific code block takes to
-        execute is useful in both test and production environments. <span class="bold"><strong>Boost.Chrono</strong></span>
-        introduces the <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
-        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> concept which is a mechanism
-        to measure the elapsed time. A Stopwatch allows to start, stop, suspend and
-        resume measuring the elapsed time. <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
-          Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a><code class="computeroutput"><span class="special">&lt;&gt;</span></code>
-        is the basic model of <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
-        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a>.
-      </p>
-<p>
-        It is often necessary to report elapsed time on a user display or in a log
-        file. <a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
-          Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a>&lt;&gt; provides
-        a runtime reporting mechanism for this purpose which can be invoked in just
-        one line of code.
-      </p>
 <a name="boost_chrono.overview.motivation.how_reliable_are_these_measures_"></a><h4>
-<a name="id4949045"></a>
+<a name="id4948959"></a>
         <a href="motivation.html#boost_chrono.overview.motivation.how_reliable_are_these_measures_">How
         reliable are these measures?</a>
       </h4>
@@ -89,10 +66,10 @@
         There are a number of things that can lead to unreliable measurement (see
         <a href="../appendices/rationale.html" title=" Appendix B: Rationale">here</a> for more details),
         but they mostly amount to reporting overhead. Boost.Chrono provides two ways
-        to improve reliability of time measurements. A <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
-          Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a> only reports
-        statistics once all measurements have been acquired, which removes reporting
-        overhead from the measurements. The other approach is to use a <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.suspendible_clock_req" title="
+        to improve reliability of time measurements. A __stopwatch<span class="underline">accumulator</span>_
+        only reports statistics once all measurements have been acquired, which removes
+        reporting overhead from the measurements. The other approach is to use a
+        <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.suspendible_clock_req" title="
         SuspendibleClock Requirements"><code class="computeroutput"><span class="identifier">SuspendibleClock</span></code></a> such that the reporting
         overhead can be ignored by suspending elapsed time tracking during reporting
         operations

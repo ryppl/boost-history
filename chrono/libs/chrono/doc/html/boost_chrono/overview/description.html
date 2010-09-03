@@ -93,62 +93,6 @@
           </li>
 </ul></div>
 <p>
-        Knowing how long a program takes to execute is useful in both test and production
-        environments. On top of the standard facilities <span class="bold"><strong>Boost.Chrono</strong></span>
-        includes:
-      </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-            Stopwatches: A facility to measure elapsed time with the ability to start,
-            stop, suspend, or resume measurement.
-            <div class="itemizedlist"><ul type="circle">
-<li>
-                  <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
-        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> concept
-                </li>
-<li>
-                  Scoped helper classes allowing to pairwise start/stop operations,
-                  suspend/resume and resume/suspend a <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
-        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a>.
-                </li>
-<li>
-                  <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
-          Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a>, model of <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
-        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> capturing elapsed
-                  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
-          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a> times.
-                </li>
-<li>
-                  <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
-          Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a>,
-                  model of <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
-        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> capturing cummulated
-                  elapsed Clock times.
-                </li>
-</ul></div>
-          </li>
-<li>
-            a Stopclocks higher layer: provide a complete stopclock reporting package
-            that can be invoked in a single line of code.
-            <div class="itemizedlist"><ul type="circle">
-<li>
-                  <a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
-          Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a>, convenient
-                  reporting to an output stream (including wide char streams) of
-                  the elapsed time of models of <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
-        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> results.
-                </li>
-<li>
-                  <a href="../reference/reporters.html#boost_chrono.reference.reporters.stopclock_hpp.stopclock" title="
-          Template Class stopclock&lt;&gt;"><code class="computeroutput"><span class="identifier">stopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code></a>
-                  shortcut of <code class="computeroutput"><a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
-          Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a><span class="special">&lt;</span><a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
-          Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;&gt;</span></code>
-                </li>
-</ul></div>
-          </li>
-</ul></div>
-<p>
         To make the timing facilities more generally useful, <span class="bold"><strong>Boost.Chrono</strong></span>
         provides a number of clocks that are thin wrappers around the operating system's
         time APIs, thereby allowing the extraction of read (wall clock) time, user
@@ -156,18 +100,15 @@
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
-          Class process_real_cpu_clock"><code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code></a>, captures
+            __process_real_cpu<span class="underline">clock</span>_, captures
             real (wall clock) CPU times.
           </li>
 <li>
-            <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock" title="
-          Class process_user_cpu_clock"><code class="computeroutput"><span class="identifier">process_user_cpu_clock</span></code></a>, captures
+            __process_user_cpu<span class="underline">clock</span>_, captures
             user-CPU times.
           </li>
 <li>
-            <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock" title="
-          Class process_system_cpu_clock"><code class="computeroutput"><span class="identifier">process_system_cpu_clock</span></code></a>, captures
+            __process_system_cpu<span class="underline">clock</span>_, captures
             system-CPU times.
           </li>
 <li>
@@ -186,7 +127,7 @@
         auto with C++03 compilers.
       </p>
 <a name="boost_chrono.overview.description.caveat_emptor"></a><h4>
-<a name="id4942228"></a>
+<a name="id4949593"></a>
         <a href="description.html#boost_chrono.overview.description.caveat_emptor">Caveat emptor</a>
       </h4>
 <p>
