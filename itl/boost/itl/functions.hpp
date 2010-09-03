@@ -185,7 +185,7 @@ typename enable_if<mpl::and_< is_interval_set<ObjectT>
                             , is_interval_joiner<ObjectT> >, ObjectT>::type&
 add(ObjectT& object, const typename ObjectT::element_type& operand)
 {
-	detail::joining_add(object, typename ObjectT::interval_type(operand));
+    detail::joining_add(object, typename ObjectT::interval_type(operand));
     return object; //JODO: May be it is better to return the iterator
 }
 
@@ -194,7 +194,7 @@ typename enable_if<mpl::and_< is_interval_set<ObjectT>
                             , is_interval_joiner<ObjectT> >, ObjectT>::type&
 add(ObjectT& object, const typename ObjectT::segment_type& operand)
 {
-	detail::joining_add(object, operand);
+    detail::joining_add(object, operand);
     return object; //JODO: May be it is better to return the iterator
 }
 
@@ -214,7 +214,7 @@ typename enable_if<mpl::and_< is_interval_set<ObjectT>
                             , is_interval_separator<ObjectT> >, ObjectT>::type&
 add(ObjectT& object, const typename ObjectT::element_type& operand)
 {
-	detail::separating_add(object, typename ObjectT::interval_type(operand));
+    detail::separating_add(object, typename ObjectT::interval_type(operand));
     return object;
 }
 
@@ -243,7 +243,7 @@ typename enable_if<mpl::and_< is_interval_set<ObjectT>
                             , is_interval_splitter<ObjectT> >, ObjectT>::type&
 add(ObjectT& object, const typename ObjectT::element_type& operand)
 {
-	detail::splitting_add(object, typename ObjectT::interval_type(operand));
+    detail::splitting_add(object, typename ObjectT::interval_type(operand));
     return object;
 }
 
@@ -278,7 +278,7 @@ operator += (ObjectT& object, const OperandT& operand)
 {
     typename ObjectT::iterator prior_ = object.end();
     ITL_const_FORALL(typename OperandT, elem_, operand) 
-		prior_ = object.add(prior_, *elem_); //JODO
+        prior_ = object.add(prior_, *elem_); //JODO
 
     return object; 
 }
@@ -308,8 +308,8 @@ template<class ObjectT, class OperandT>
 typename enable_if<is_intra_derivative<ObjectT, OperandT>, ObjectT>::type&
 operator += (ObjectT& object, const OperandT& operand)
 { 
-	//JODO return itl::add(object, operand); 
-	return object.add(operand); 
+    //JODO return itl::add(object, operand); 
+    return object.add(operand); 
 }
 
 //CL
@@ -472,7 +472,7 @@ typename enable_if<has_same_concept<is_interval_map, ObjectT, OperandT>,
 operator -=(ObjectT& object, const OperandT& operand)
 {
     ITL_const_FORALL(typename OperandT, elem_, operand) 
-		object.subtract(*elem_); //JODO 
+        object.subtract(*elem_); //JODO 
 
     return object; 
 }
@@ -481,8 +481,8 @@ template<class ObjectT, class OperandT>
 typename enable_if<is_intra_derivative<ObjectT, OperandT>, ObjectT>::type&
 operator -= (ObjectT& object, const OperandT& operand)
 { 
-	//JODO return itl::subtract(object, operand); 
-	return object.subtract(operand); 
+    //JODO return itl::subtract(object, operand); 
+    return object.subtract(operand); 
 }
 
 template<class ObjectT, class OperandT>
@@ -557,25 +557,25 @@ erase(ObjectT& object, const OperandT& operand)
 template<class ObjectT>
 typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
 add_intersection(ObjectT& section, const ObjectT& object, 
-						  const typename ObjectT::domain_type& operand)
+                          const typename ObjectT::domain_type& operand)
 {
-	typedef typename ObjectT::const_iterator const_iterator;
-	const_iterator found = object.find(operand);
-	if(found != object.end())
-		itl::add(section, operand);
+    typedef typename ObjectT::const_iterator const_iterator;
+    const_iterator found = object.find(operand);
+    if(found != object.end())
+        itl::add(section, operand);
 
-	return section;
+    return section;
 }
 
 
 template<class ObjectT>
 typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
 add_intersection(ObjectT& section, const ObjectT& object, 
-						  const typename ObjectT::segment_type& segment)
+                          const typename ObjectT::segment_type& segment)
 {
-	typedef typename ObjectT::const_iterator const_iterator;
-	typedef typename ObjectT::iterator       iterator;
-	typedef typename ObjectT::interval_type  interval_type;
+    typedef typename ObjectT::const_iterator const_iterator;
+    typedef typename ObjectT::iterator       iterator;
+    typedef typename ObjectT::interval_type  interval_type;
 
     if(itl::is_empty(segment)) 
         return section;
@@ -588,11 +588,11 @@ add_intersection(ObjectT& section, const ObjectT& object,
     iterator prior_ = section.end();
     for(const_iterator it_=exterior.first; it_ != exterior.second; it_++) 
     {
-		interval_type common_interval = ObjectT::key_value(it_) & segment;
+        interval_type common_interval = ObjectT::key_value(it_) & segment;
         if(!itl::is_empty(common_interval))
             prior_ = section._insert(prior_, common_interval);
     }
-	return section;
+    return section;
 }
 
 
@@ -602,7 +602,7 @@ typename enable_if<mpl::and_<is_interval_set<ObjectT>,
                    ObjectT>::type&
 add_intersection(ObjectT& section, const ObjectT& object, const OperandT& operand)
 {
-	typedef typename OperandT::const_iterator const_iterator;
+    typedef typename OperandT::const_iterator const_iterator;
 
     if(operand.empty())
         return section;
@@ -613,9 +613,9 @@ add_intersection(ObjectT& section, const ObjectT& object, const OperandT& operan
 
     const_iterator it_ = common_lwb;
     while(it_ != common_upb)
-		itl::add_intersection(section, object, OperandT::key_value(it_++));
+        itl::add_intersection(section, object, OperandT::key_value(it_++));
 
-	return section;
+    return section;
 }
 
 
@@ -661,7 +661,7 @@ typename enable_if<mpl::and_< is_interval_set<Type>
                    bool>::type
 intersects(const Type& left, const AssociateT& right)
 {
-	return itl::contains(left, right); 
+    return itl::contains(left, right); 
 }
 
 template<class Type, class AssociateT>
@@ -783,10 +783,10 @@ template<class ObjectT>
 typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
 flip(ObjectT& object, const typename ObjectT::domain_type& operand)
 {
-	if(itl::contains(object, operand))
-		return object -= operand;
-	else
-		return object += operand;
+    if(itl::contains(object, operand))
+        return object -= operand;
+    else
+        return object += operand;
 }
 
 //JODO MEMO: This did not compile, no idea why.
@@ -800,14 +800,14 @@ template<class ObjectT>
 typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
 flip(ObjectT& object, const typename ObjectT::segment_type& segment)
 {
-	typedef typename ObjectT::const_iterator const_iterator;
-	typedef typename ObjectT::interval_type  interval_type;
+    typedef typename ObjectT::const_iterator const_iterator;
+    typedef typename ObjectT::interval_type  interval_type;
     // That which is common shall be subtracted
     // That which is not shall be added
     // So x has to be 'complementary added' or flipped
-	interval_type span = segment;
-	std::pair<const_iterator, const_iterator> exterior 
-		= object.equal_range(span);
+    interval_type span = segment;
+    std::pair<const_iterator, const_iterator> exterior 
+        = object.equal_range(span);
 
     const_iterator fst_ = exterior.first;
     const_iterator end_ = exterior.second;
@@ -821,8 +821,8 @@ flip(ObjectT& object, const typename ObjectT::segment_type& segment)
         //     [b ...  : covered
         //[a  b)       : left_over
         left_over = right_subtract(span, covered);
-		itl::subtract(object, span & covered); //That which is common shall be subtracted
-		itl::add(object, left_over);              //That which is not shall be added
+        itl::subtract(object, span & covered); //That which is common shall be subtracted
+        itl::add(object, left_over);              //That which is not shall be added
 
         //...      d) : span
         //... c)      : covered
@@ -831,7 +831,7 @@ flip(ObjectT& object, const typename ObjectT::segment_type& segment)
     }
 
     //If span is not empty here, it_ is not in the set so it_ shall be added
-	itl::add(object, span);
+    itl::add(object, span);
     return object;
 }
 
@@ -840,7 +840,7 @@ template<class ObjectT, class OperandT>
 typename enable_if<has_same_concept<is_interval_set, ObjectT, OperandT>, ObjectT>::type&
 JODO_flip(ObjectT& object, const OperandT& operand)
 {
-	typedef typename OperandT::const_iterator const_iterator;
+    typedef typename OperandT::const_iterator const_iterator;
 
     if(operand.empty())
         return object;
@@ -854,7 +854,7 @@ JODO_flip(ObjectT& object, const OperandT& operand)
 
     // All elements of operand left of the common range are added
     while(it_ != common_lwb)
-		itl::add(object, *it_++);
+        itl::add(object, *it_++);
     // All elements of operand in the common range are symmertrically subtracted
     while(it_ != common_upb)
         itl::flip(object, *it_++);
@@ -914,8 +914,8 @@ template<class ObjectT>
 typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
 join(ObjectT& object)
 {
-	typedef typename ObjectT::interval_type interval_type;
-	typedef typename ObjectT::iterator      iterator;
+    typedef typename ObjectT::interval_type interval_type;
+    typedef typename ObjectT::iterator      iterator;
 
     iterator it_ = object.begin();
     if(it_ == object.end()) 

@@ -283,15 +283,15 @@ public:
 
     /** Number of elements in the map (cardinality). */
     size_type cardinality()const
-	{
-		return itl::cardinality(*that());
-	}
+    {
+        return itl::cardinality(*that());
+    }
 
     /** An interval map's size is it's cardinality */
     size_type size()const
-	{
-		return itl::cardinality(*that());
-	}
+    {
+        return itl::cardinality(*that());
+    }
 
     /** The length of the interval container which is the sum of 
         interval lengths */
@@ -336,6 +336,8 @@ public:
     { 
         return _map.find(interval_type(key)); 
     }
+
+    const_iterator find(const key_type& key)const{ return _map.find(key); }
 
     /** Total select function. */
     codomain_type operator()(const domain_type& key)const
@@ -413,6 +415,9 @@ public:
     //==========================================================================
     //= Insertion
     //==========================================================================
+
+    std::pair<iterator,bool> _insert(const value_type& value_pair){ return _map.insert(value_pair); }
+    iterator _insert(iterator prior, const value_type& value_pair){ return _map.insert(prior, value_pair); }
 
     /** Insertion of a \c key_value_pair into the map. */
     SubType& insert(const element_type& key_value_pair) 
@@ -828,10 +833,7 @@ protected:
         BOOST_ASSERT(this->_map.find(inter_val) == this->_map.end());
         BOOST_ASSERT(!(Traits::absorbs_neutrons && co_val==Combiner::neutron()));
 
-        if(mpl::and_<has_inverse<codomain_type>, is_negative<Combiner> >::value)
-            return this->_map.insert(prior_, value_type(inter_val, version<Combiner>()(co_val)));
-        else
-            return this->_map.insert(prior_, value_type(inter_val, co_val));
+        return this->_map.insert(prior_, value_type(inter_val, version<Combiner>()(co_val)));
     }
 
 protected:

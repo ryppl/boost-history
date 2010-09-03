@@ -166,7 +166,64 @@ bool contains(const IntervalMapT& super, const IntervalMapT& sub)
 
 
 } // namespace Interval_Map
-    
+
+
+namespace detail
+{
+
+
+template <class Type, class Combiner>
+inline typename Type::iterator
+gap_insert(               Type&                object, 
+                 typename Type::iterator       prior_, 
+           const typename Type::interval_type& inter_val, 
+           const typename Type::codomain_type& co_val)
+{
+    typedef typename Type::value_type value_type;
+    // inter_val is not conained in this map. Insertion will be successful
+    BOOST_ASSERT(object.find(inter_val) == object.end());
+    BOOST_ASSERT(!(absorbs_neutrons<Type>::value && co_val==Combiner::neutron()));
+
+    return object._insert(prior_, value_type(inter_val, version<Combiner>()(co_val)));
+}
+
+
+template<class Type, class Combiner>
+void add_segment(               Type&                object,
+                 const typename Type::interval_type& inter_val, 
+                 const typename Type::codomain_type& co_val, 
+                       typename Type::iterator&      it_       )
+{
+    typedef typename Type::interval_type interval_type;
+    typedef typename Type::iterator      iterator;
+
+    interval_type lead_gap = right_subtract(inter_val, it_->first);
+    if(!itl::is_empty(lead_gap))
+    {
+        // [lead_gap--- . . .
+        //          [-- it_ ...
+        iterator prior_ = prior(it_); 
+        iterator inserted_ = gap_insert<Type,Combiner>(object, prior_, lead_gap, co_val);
+        if(prior_ != object.end() && joinable(object, prior_, inserted_))
+            join_on_right(object, prior_, inserted_);
+    }
+
+    // . . . --------- . . . addend interval
+    //      [-- it_ --)      has a common part with the first overval
+    Combiner()(it_->second, co_val);
+	if(absorbs_neutrons<Type>::value && it_->second == Combiner::neutron())
+        object.erase(it_++);
+    else
+    {
+        detail::join_left(object, it_);
+        ++it_;
+    }
+}
+
+
+
+} // namespace detail
+
 }} // namespace itl boost
 
 #endif 

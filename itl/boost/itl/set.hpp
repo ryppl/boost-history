@@ -51,7 +51,7 @@ class set: private ITL_IMPL_SPACE::set<DomainT, ITL_COMPARE_DOMAIN(Compare,Domai
 public:
     typedef typename itl::set<DomainT, Compare, Alloc> type;
     typedef typename ITL_IMPL_SPACE::set<DomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), Alloc<DomainT> > base_type;
-	typedef type key_object_type;
+    typedef type key_object_type;
 
 public:
     typedef DomainT     domain_type;
@@ -150,11 +150,11 @@ public:
 
     /// Checks if the element \c value is in the set
     bool contains(const element_type& value)const 
-	{ return itl::contains(*this, value); }
+    { return itl::contains(*this, value); }
 
     /** Does <tt>*this</tt> contain <tt>sub</tt>? */
     bool contains(const set& sub)const 
-	{ return itl::contains(*this, sub); }
+    { return itl::contains(*this, sub); }
 
     /** Is <tt>*this</tt> contained in <tt>super</tt>? */
     bool contained_in(const set& super)const 
@@ -162,7 +162,7 @@ public:
 
     /** <tt>*this</tt> and <tt>x2</tt> are disjoint, if their intersection is empty */
     bool disjoint(const set& x2)const 
-	{ return itl::disjoint(*this, x2); }
+    { return itl::disjoint(*this, x2); }
 
     //==========================================================================
     //= Size
@@ -179,21 +179,21 @@ public:
     //==========================================================================
     /** Add an \c element to the set. */
     set& add(const element_type& element) 
-	{ return itl::insert(*this, element); } 
+    { return itl::insert(*this, element); } 
 
     /** Add an element \c element after \c prior to the set. */
     iterator add(iterator prior, const element_type& element) 
-	{ return itl::insert(*this, prior, element); } 
+    { return itl::insert(*this, prior, element); } 
 
     /** Subtract an \c element from the set. */
     set& subtract(const element_type& element)
-	{ return itl::subtract(*this, element); } 
+    { return itl::subtract(*this, element); } 
 
     //==========================================================================
     //= Insertion, erasure
     //==========================================================================
 
-	//JODO
+    //JODO
 
     //==========================================================================
     //= Intersection, symmetric difference
@@ -201,12 +201,12 @@ public:
 
     /** Add \c element to \c section, if \c element is in \c *this set */
     void add_intersection(set& section, const element_type& element)const
-	{ itl::add_intersection(section, *this, element); }
+    { itl::add_intersection(section, *this, element); }
 
     /** The intersection of set \c sectant with \c *this set is added 
         to \c section. */
     void add_intersection(set& section, const set& sectant)const
-	{ itl::add_intersection(section, *this, sectant); }
+    { itl::add_intersection(section, *this, sectant); }
 
     /** Returns true, if there is an intersection of \c element and \c *this set.
         Functions \c intersects and \c contains are identical on arguments
@@ -215,7 +215,7 @@ public:
 
     /** If \c *this set contains \c element it is erased, otherwise it is added. */
     set& flip(const element_type& element)
-	{ return itl::flip(*this, element); }
+    { return itl::flip(*this, element); }
 
 
     //==========================================================================

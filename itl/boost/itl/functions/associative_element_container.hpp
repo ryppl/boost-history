@@ -60,7 +60,7 @@ within(const SubT& sub, const SuperT& super)
         super_ = super.find(SubT::key_value(sub_));
         if(super_ == super.end()) 
             return false;
-        else if(!co_equal(sub_, super_, sub, super))
+        else if(!co_equal(sub_, super_, &sub, &super))
             return false;
 
         ++sub_;

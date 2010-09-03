@@ -39,7 +39,7 @@ template<class MapT>
 typename enable_if<is_element_map<MapT>, bool>::type
 contains(const MapT& super, const typename MapT::element_type& value_pair)
 {
-	return itl::within(value_pair, super);
+    return itl::within(value_pair, super);
 }
 
 
@@ -505,7 +505,7 @@ template<class MapT>
 inline typename enable_if<is_element_map<MapT>, MapT>::type&
 absorb_neutrons(MapT& object)
 {
-	BOOST_STATIC_CONSTANT(bool, absorbs = MapT::Traits::absorbs_neutrons);
+    BOOST_STATIC_CONSTANT(bool, absorbs = MapT::Traits::absorbs_neutrons);
     return map_absorb_neutrons<MapT,absorbs>::apply(object);
 }
 

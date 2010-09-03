@@ -17,6 +17,7 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 #include <boost/itl/interval.hpp>
 #include <boost/itl/detail/element_comparer.hpp>
 #include <boost/itl/detail/interval_subset_comparer.hpp>
+#include <boost/itl/detail/associated_value.hpp>
 
 namespace boost{namespace itl
 {
@@ -289,72 +290,97 @@ namespace detail
 {
 
 template<class Type>
-typename Type::iterator 
+inline bool joinable(const Type& _Type, typename Type::iterator& some, typename Type::iterator& next)
+{
+    // assert: next != end && some++ == next
+	return touches(Type::key_value(some), Type::key_value(next)) 
+        && co_equal(some, next, &_Type, &_Type); 
+}
+
+template<class Type>
+inline void join_nodes(Type& object, typename Type::iterator& left_, 
+					                 typename Type::iterator& right_)
+{
+    typedef typename Type::interval_type interval_type;
+    interval_type right_interval = Type::key_value(right_);
+    object.erase(right_);
+    const_cast<interval_type&>(Type::key_value(left_)) 
+        = hull(Type::key_value(left_), right_interval);
+}
+
+template<class Type>
+inline typename Type::iterator 
     join_on_left(Type& object, typename Type::iterator& left_, 
                                typename Type::iterator& right_)
 {
-    typedef typename Type::value_type    value_type;
     typedef typename Type::interval_type interval_type;
     // both left and right are in the set and they are neighbours
     BOOST_ASSERT(exclusive_less(Type::key_value(left_), Type::key_value(right_)));
-    BOOST_ASSERT(touches(Type::key_value(left_), Type::key_value(right_)));
+    BOOST_ASSERT(joinable(object, left_, right_));
 
-    interval_type right_itv = Type::key_value(right_);
-    object.erase(right_);
-    const_cast<value_type&>(Type::key_value(left_)) 
-        = hull(Type::key_value(left_), right_itv);
-
+	join_nodes(object, left_, right_);
     return left_;
 }
 
 template<class Type>
-typename Type::iterator
-    join_neighbours(Type& object, typename Type::iterator it_)
+inline typename Type::iterator 
+    join_on_right(Type& object, typename Type::iterator& left_, 
+                                typename Type::iterator& right_)
 {
-    using namespace detail;
-    typedef typename Type::iterator iterator;
+    typedef typename Type::interval_type interval_type;
+    // both left and right are in the map and they are neighbours
+    BOOST_ASSERT(exclusive_less(Type::key_value(left_), Type::key_value(right_)));
+    BOOST_ASSERT(joinable(object, left_, right_));
+
+	join_nodes(object, left_, right_);
+    right_ = left_;
+    return right_;
+}
+
+
+
+
+
+template<class Type>
+typename Type::iterator join_left(Type& object, typename Type::iterator& it_)
+{
+	typedef typename Type::iterator iterator;
 
     if(it_ == object.begin())
-    {
-        iterator it_nxt=it_; it_nxt++;
-        if(it_nxt!=object.end() && touches(Type::key_value(it_), 
-                                           Type::key_value(it_nxt))) 
-            return join_on_left(object, it_, it_nxt);
-    }
-    else
-    {
-        // there is a predecessor
-        iterator pred_ = it_; pred_-- ;
+        return it_;
 
-        if(touches(Type::key_value(pred_), Type::key_value(it_))) 
-        {
-            iterator it_extended = join_on_left(object, pred_, it_);
-
-            iterator succ_=it_extended; succ_++;
-            if(succ_!=object.end())
-            {
-                // it's a non border element that might have two touching neighbours
-                if(touches(Type::key_value(it_extended), Type::key_value(succ_))) 
-                    return join_on_left(object, it_extended, succ_);
-                else
-                    return it_extended;
-            }
-            else
-                return it_extended;
-        }
-        else
-        {
-            iterator succ_=it_; succ_++;
-            if(succ_!=object.end())
-            {
-                // it's a non border element that might have a right touching neighbour
-                if(touches(Type::key_value(it_), Type::key_value(succ_))) 
-                    return join_on_left(object, it_, succ_);
-            }
-        }
-    }
+    // there is a predecessor
+    iterator pred_ = it_;
+	if(joinable(object, --pred_, it_)) 
+		return join_on_right(object, pred_, it_); 
 
     return it_;
+}
+
+
+template<class Type>
+typename Type::iterator join_right(Type& object, typename Type::iterator& it_)
+{
+	typedef typename Type::iterator iterator;
+
+    if(it_ == object.end())
+        return it_;
+
+    // there is a successor
+    iterator succ_ = it_;
+
+	if(++succ_ != object.end() && joinable(object, it_, succ_)) 
+        return join_on_left(object, it_, succ_);
+
+    return it_;
+}
+
+
+template<class Type>
+typename Type::iterator join_neighbours(Type& object, typename Type::iterator& it_)
+{
+           join_left (object, it_); 
+	return join_right(object, it_);
 }
 
 
@@ -403,7 +429,10 @@ typename Type::iterator
     if(insertion.second)
         return join_neighbours(object, insertion.first);
     else
-        return join_neighbours(object, join_under(object, addend));
+	{
+		iterator joined_ = join_under(object, addend);
+        return join_neighbours(object, joined_);
+	}
 }
 
 template<class Type>
@@ -423,7 +452,10 @@ typename Type::iterator
     if(*insertion == addend)
         return join_neighbours(object, insertion);
     else
-        return join_neighbours(object, join_under(object, addend));
+	{
+		iterator joined_ = join_under(object, addend);
+        return join_neighbours(object, joined_);
+	}
 }
 
 

@@ -20,8 +20,8 @@ template<class Type, class CoType> //JODO Only maps of equal iterability shall m
 typename enable_if< mpl::and_< is_domain_compare_equal<Type,CoType>
                              , mpl::and_<is_map<Type>, is_map<CoType> > >, 
                     bool>::type
-co_equal(typename Type::const_iterator left_, typename CoType::const_iterator right_,
-		 const Type&, const CoType&)
+co_equal(typename Type::const_iterator left_, typename CoType::const_iterator right_, 
+		 const Type* = 0, const CoType* = 0)
 {
 	return Type::co_value(left_) == CoType::co_value(right_);
 }
@@ -31,7 +31,7 @@ typename enable_if< mpl::and_< is_domain_compare_equal<Type,CoType>
                              , mpl::not_<mpl::and_<is_map<Type>, is_map<CoType> > > >,
                   bool>::type
 co_equal(typename Type::const_iterator, typename CoType::const_iterator,
-		 const Type&, const CoType&)
+		 const Type* = 0, const CoType* = 0)
 {
 	return true;
 }

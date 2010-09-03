@@ -287,28 +287,28 @@ public:
     //==========================================================================
 
     /** sets the container empty */
-	void clear() { itl::clear(*that()); }
+    void clear() { itl::clear(*that()); }
     /** is the container empty? */
-	bool empty()const { return itl::is_empty(*that()); }
+    bool empty()const { return itl::is_empty(*that()); }
 
     /** Does the container contain the element \c key ? */
     bool contains(const element_type& key)const
-	{ 
-		return itl::contains(*that(), key); 
-	}
+    { 
+        return itl::contains(*that(), key); 
+    }
 
     /** Does the container contain the interval \c sub_interval ? */
     bool contains(const segment_type& sub_interval)const
     { 
-		return itl::contains(*that(), sub_interval);
+        return itl::contains(*that(), sub_interval);
     }
 
 
     /** Does the container contain the subcontainer \c sub ? */
     bool contains(const interval_base_set& sub)const 
-	{ 
-		return itl::within(sub, *that()); 
-	}
+    { 
+        return itl::within(sub, *that()); 
+    }
 
     /** Does <tt>*this</tt> container contain <tt>sub</tt>? */
     template
@@ -319,8 +319,8 @@ public:
     >
     bool contains(const IntervalSet<DomainT,Compare,Interval,Alloc>& sub)const 
     { 
-		return itl::within(sub,*that()); 
-	}
+        return itl::within(sub,*that()); 
+    }
 
     /** Is <tt>*this</tt> container contained in <tt>super</tt>? */
     template
@@ -341,39 +341,39 @@ public:
     /** Number of elements in the set (cardinality). 
         Infinite for continuous domain datatyps    */
     size_type cardinality()const
-	{
-		return itl::cardinality(*that());
-	}
+    {
+        return itl::cardinality(*that());
+    }
 
     /** An interval set's size is it's cardinality */
     size_type size()const
-	{
-		return itl::cardinality(*that());
-	}
+    {
+        return itl::cardinality(*that());
+    }
 
     /** The length of the interval container which is the sum of interval lengths */
     difference_type length()const
-	{
-		return itl::length(*that());
-	}
+    {
+        return itl::length(*that());
+    }
 
     /** Number of intervals which is also the size of the iteration over the object */
     std::size_t interval_count()const 
-	{ 
-		return itl::interval_count(*that()); 
-	}
+    { 
+        return itl::interval_count(*that()); 
+    }
 
     /** Size of the iteration over this container */
     std::size_t iterative_size()const 
-	{ 
-		return _set.size(); 
-	}
+    { 
+        return _set.size(); 
+    }
 
     //==========================================================================
     //= Range
     //==========================================================================
 
-	//JODO remove lower, upper, first, last from the interface of all interval containers and docs
+    //JODO remove lower, upper, first, last from the interface of all interval containers and docs
 
     //==========================================================================
     //= Selection
@@ -397,22 +397,22 @@ public:
     /** Add a single element \c key to the set */
     SubType& add(const element_type& key) 
     {
-		return itl::add(*that(), key);
-	}
+        return itl::add(*that(), key);
+    }
 
     /** Add an interval of elements \c inter_val to the set */
     SubType& add(const segment_type& inter_val) 
     {
-		return itl::add(*that(), inter_val);
-	}
+        return itl::add(*that(), inter_val);
+    }
 
     /** Add an interval of elements \c inter_val to the set. Iterator 
         \c prior_ is a hint to the position \c inter_val can be 
         inserted after. */
     iterator add(iterator prior_, const segment_type& inter_val) 
     { 
-		return itl::add(*that(), prior_, inter_val);
-	}
+        return itl::add(*that(), prior_, inter_val);
+    }
 
     //==========================================================================
     //= Subtraction
@@ -421,68 +421,68 @@ public:
     /** Subtract a single element \c key from the set */
     SubType& subtract(const element_type& key) 
     { 
-		return itl::subtract(*that(), key);
-	}
+        return itl::subtract(*that(), key);
+    }
 
     /** Subtract an interval of elements \c inter_val from the set */
     SubType& subtract(const segment_type& inter_val) 
     { 
-		return itl::subtract(*that(), inter_val);
-	}
+        return itl::subtract(*that(), inter_val);
+    }
 
     //==========================================================================
     //= Insertion, erasure
     //==========================================================================
 
-	std::pair<iterator,bool> _insert(const value_type& value){ return this->_set.insert(value); }
-	iterator _insert(iterator prior, const value_type& value){ return this->_set.insert(prior, value); }
+    std::pair<iterator,bool> _insert(const value_type& value){ return this->_set.insert(value); }
+    iterator _insert(iterator prior, const value_type& value){ return this->_set.insert(prior, value); }
 
 
     /** Insert an element \c key into the set */
     SubType& insert(const element_type& key) 
-	{ 
-		return itl::add(*that(), key); 
-	}
+    { 
+        return itl::add(*that(), key); 
+    }
 
     /** Insert an interval of elements \c inter_val to the set */
     SubType& insert(const segment_type& inter_val) 
-	{ 
-		return itl::add(*that(), inter_val); 
-	}
+    { 
+        return itl::add(*that(), inter_val); 
+    }
 
     /** Insert an interval of elements \c inter_val to the set. Iterator 
         \c prior_ is a hint to the position \c inter_val can be 
         inserted after. */
     iterator insert(iterator prior_, const segment_type& inter_val) 
     { 
-		return itl::add(*that(), prior_, inter_val); 
-	}
+        return itl::add(*that(), prior_, inter_val); 
+    }
 
 
 
     /** Erase an element \c key from the set */
     SubType& erase(const element_type& key) 
     { 
-		return itl::subtract(*that(), key); 
-	}
+        return itl::subtract(*that(), key); 
+    }
 
     /** Erase an interval of elements \c inter_val from the set */
     SubType& erase(const segment_type& inter_val) 
     { 
-		return itl::subtract(*that(), inter_val); 
-	}
+        return itl::subtract(*that(), inter_val); 
+    }
 
     /** Erase the interval that iterator \c position points to. */
     void erase(iterator position)
-	{ 
-		_set.erase(position); 
-	}
+    { 
+        _set.erase(position); 
+    }
 
     /** Erase all intervals in the range <tt>[first,past)</tt> of iterators. */
     void erase(iterator first, iterator past)
-	{ 
-		_set.erase(first, past); 
-	}
+    { 
+        _set.erase(first, past); 
+    }
 
 
     //==========================================================================
@@ -493,14 +493,14 @@ public:
         The function can be used as a find function. */
     void add_intersection(SubType& section, const element_type& key)const
     {
-		itl::add_intersection(section, *that(), key); 
-	}
+        itl::add_intersection(section, *that(), key); 
+    }
 
     /** The intersection of \c inter_val in \c *this set is added to \c section. */
     void add_intersection(SubType& section, const segment_type& inter_val)const
     {
-		itl::add_intersection(section, *that(), inter_val); 
-	}
+        itl::add_intersection(section, *that(), inter_val); 
+    }
 
 
     /** The intersection of set \c sectant with \c *this set is added to \c section. */
@@ -515,24 +515,24 @@ public:
         SubType& section,
         const IntervalSet<DomainT,Compare,Interval,Alloc>& operand
     )const
-	{
-		itl::add_intersection(section, *that(), operand);
-	}
+    {
+        itl::add_intersection(section, *that(), operand);
+    }
 
 
     /** Returns \c true, if element \c key is found in \c *this map.
         Complexity: logarithmic. */
     bool intersects(const element_type& key)const
     { 
-		return itl::intersects(*that(), key); 
-	}
+        return itl::intersects(*that(), key); 
+    }
 
     /** Returns \c true, if \c inter_val intersects with \c *this map.
         Complexity: logarithmic. */
     bool intersects(const interval_type& inter_val)const
     { 
-		return itl::intersects(*that(), inter_val); 
-	}
+        return itl::intersects(*that(), inter_val); 
+    }
 
     //==========================================================================
     //= Symmetric difference
@@ -541,22 +541,22 @@ public:
     /** If \c *this set contains \c key it is erased, otherwise it is added. */
     SubType& flip(const element_type& key)
     {
-		return itl::flip(*that(), key);
-	}
+        return itl::flip(*that(), key);
+    }
 
     /** If \c *this set contains \c inter_val it is erased, otherwise it is added. */
     SubType& flip(const segment_type& inter_val)
     {
-		return itl::flip(*that(), inter_val);
-	}
+        return itl::flip(*that(), inter_val);
+    }
 
     /** The intersection of \c *this and \c operand is erased from \c *this. 
         The complemenary elements are added to \c *this. */
     template<class SubType2>
     SubType& flip(const interval_base_set<SubType2,DomainT,Compare,Interval,Alloc>& operand)
-	{
-		return itl::JODO_flip(*that(), operand); //JODO remove this
-	}
+    {
+        return itl::JODO_flip(*that(), operand); //JODO remove this
+    }
 
     //==========================================================================
     //= Iterator related
@@ -609,9 +609,9 @@ public:
     
     /** Join bordering intervals */
     SubType& join()
-	{
-		return itl::join(*that());
-	}
+    {
+        return itl::join(*that());
+    }
 
     /** Set interval bounds to the type <tt>bt</tt> for intervals in the set.
         Interval bounds of different types are created by opeations on

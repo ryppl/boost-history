@@ -324,7 +324,7 @@ public:
 
     map& flip(const element_type& operand)
     { 
-		return itl::flip(*this, operand); 
+        return itl::flip(*this, operand); 
     }
 
     //==========================================================================

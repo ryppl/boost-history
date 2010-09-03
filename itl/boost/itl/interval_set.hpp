@@ -138,8 +138,8 @@ public:
             prior_ = this->add(prior_, *it_);
     }
 
-	//std::pair<iterator,bool> _insert(const value_type& value){ return this->_set.insert(value); }
-	//iterator _insert(iterator prior, const value_type& value){ return this->_set.insert(prior, value); }
+    //std::pair<iterator,bool> _insert(const value_type& value){ return this->_set.insert(value); }
+    //iterator _insert(iterator prior, const value_type& value){ return this->_set.insert(prior, value); }
 
 private:
     friend class 
@@ -163,7 +163,7 @@ private:
 template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 void interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend)
 {
-	detail::joining_add(*this, addend);
+    detail::joining_add(*this, addend);
 }
 
 
@@ -171,7 +171,7 @@ template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval
 typename interval_set<DomainT,Compare,Interval,Alloc>::iterator 
     interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
 {
-	return detail::joining_add(*this, prior_, addend);
+    return detail::joining_add(*this, prior_, addend);
 }
 
 
@@ -179,7 +179,7 @@ typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
 template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 void interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
 {
-	detail::subtract(*this, minuend);
+    detail::subtract(*this, minuend);
 }
 
 
