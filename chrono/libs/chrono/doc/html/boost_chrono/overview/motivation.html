@@ -27,7 +27,7 @@
 <a name="boost_chrono.overview.motivation"></a><a href="motivation.html" title="Motivation">Motivation</a>
 </h3></div></div></div>
 <a name="boost_chrono.overview.motivation.time"></a><h4>
-<a name="id4948871"></a>
+<a name="id4948868"></a>
         <a href="motivation.html#boost_chrono.overview.motivation.time">Time</a>
       </h4>
 <p>
@@ -46,7 +46,7 @@
         of a good deal of information in this documentation.
       </p>
 <a name="boost_chrono.overview.motivation.wall_clock_versus_system_and_user_time"></a><h4>
-<a name="id4948928"></a>
+<a name="id4948925"></a>
         <a href="motivation.html#boost_chrono.overview.motivation.wall_clock_versus_system_and_user_time">Wall
         clock versus system and user time</a>
       </h4>
@@ -56,23 +56,6 @@
         system's process time API, thereby allowing the extraction of read (wall
         clock) time, user CPU time, and system CPU time. (On POSIX-like systems,
         this relies on times(). On Windows, it relies on GetProcessTimes().)
-      </p>
-<a name="boost_chrono.overview.motivation.how_reliable_are_these_measures_"></a><h4>
-<a name="id4948959"></a>
-        <a href="motivation.html#boost_chrono.overview.motivation.how_reliable_are_these_measures_">How
-        reliable are these measures?</a>
-      </h4>
-<p>
-        There are a number of things that can lead to unreliable measurement (see
-        <a href="../appendices/rationale.html" title=" Appendix B: Rationale">here</a> for more details),
-        but they mostly amount to reporting overhead. Boost.Chrono provides two ways
-        to improve reliability of time measurements. A __stopwatch<span class="underline">accumulator</span>_
-        only reports statistics once all measurements have been acquired, which removes
-        reporting overhead from the measurements. The other approach is to use a
-        <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.suspendible_clock_req" title="
-        SuspendibleClock Requirements"><code class="computeroutput"><span class="identifier">SuspendibleClock</span></code></a> such that the reporting
-        overhead can be ignored by suspending elapsed time tracking during reporting
-        operations
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

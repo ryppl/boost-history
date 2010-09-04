@@ -15,7 +15,6 @@
     [copyright 2008 Howard Hinnant]
     [copyright 2006, 2008 Beman Dawes]
     [copyright 2009-2010 Vicente J. Botet Escriba]
-    [purpose Time utilities]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
@@ -164,6 +163,21 @@
 [def __SuspendibleClock__ [SuspendibleClock_concept_link `SuspendibleClock`]]
 
 
+[def __process_real_cpu_clock__ [link boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock `process_real_cpu_clock`]]
+
+[def __process_system_cpu_clock__ [link boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock `process_system_cpu_clock`]]
+
+[def __process_user_cpu_clock__ [link boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock `process_user_cpu_clock`]]
+
+[def __thread_clock__ [link boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock `thread_clock`]]
+[def __suspendible_clock__ [link boost_chrono.reference.other_clocks.suspendible_clock_hpp.suspendible_clock `suspendible_clock`]]
+
+
+[template thread_clock_link[link_text] [link boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock [link_text]]]
+[def __thread_clock__ [thread_clock_link `thread_clock`]]
+
+
+
 [warning Chrono is not part of the Boost libraries.]
 
 [/===============]
@@ -229,9 +243,9 @@ It is also helpful if such timing information is broken down into real (wall clo
 [/
 3 concrete process clocks:
 
-# __process_real_CPU_clock__,
-# __process_user_CPU_clock__,
-# __process_system_CPU_clock__
+# __process_real_cpu_clock__,
+# __process_user_cpu_clock__,
+# __process_system_cpu_clock__
 
 providing a 
 ]
@@ -243,10 +257,6 @@ thin wrappers around the operating system's process timer API. For POSIX-like sy
 [/These clocks capture the specific time unitarily. __Boost_Chrono__ provides also a clock __process_cpu_clock__ that captures the three times at once.
 ]
 
-
-[heading How reliable are these measures?]
-
-There are a number of things that can lead to unreliable measurement (see [link boost_chrono.appendices.rationale here] for more details), but they mostly amount to reporting overhead.  Boost.Chrono provides two ways to improve reliability of time measurements.  A __stopwatch_accumulator__ only reports statistics once all measurements have been acquired, which removes reporting overhead from the measurements.  The other approach is to use a __SuspendibleClock__ such that the reporting overhead can be ignored by suspending elapsed time tracking during reporting operations
 
 [endsect]
 
@@ -356,22 +366,25 @@ In particular, __Boost_Chrono__ depends on:
     [[@http://www.boost.org/libs/integer [*Boost.Integer]]] [for cstdint conformance, ...]
 ]
 [
+    [[@http://www.boost.org/libs/mpl [*Boost.MPL]]] [for MPL Assert and bool, logical ...]
+]
+[
+    [[@http://www.boost.org/libs/operators [*Boost.Operators]]] [for operators, ...]
+]
+[
     [[@http://www.boost.org/libs/system [*Boost.System]]] [for error_code, ...]
 ]
 [
-    [[@http://www.boost.org/libs/type_traits [*Boost.TypeTraits]]] [for is_base, ...]
+    [[@http://www.boost.org/libs/type_traits [*Boost.TypeTraits]]] [for is_base, is_convertible ...]
 ]
 [
-    [[@http://www.boost.org/libs/utility [*Boost.UtiliTy/EnableIf]]] [for enable_if, ...]
+    [[@http://www.boost.org/libs/utility [*Boost.Utility/EnableIf]]] [for enable_if, ...]
 ]
 ]
 
 __Boost_Chrono__ depends optionaly on:
 
 [variablelist
-[
-    [[@http://www.boost.org/libs/accumulator [*Boost.Accumulator]]] [for accumulator_set, and statistics features when stopwatch_accumulator.hpp is included]
-]
 [
     [[@http://www.boost.org/libs/thread [*Boost.Thread]]] [for thread_specific_ptr when suspendible_clock.hpp is included]
 ]
@@ -443,36 +456,27 @@ Ubuntu Linux with GCC 4.2.4
 [section Hello World! ]
 [/====================]
 
-If all you want to do is to time a program's execution:
+If all you want to do is to time a program's execution, here is a complete program (stopclock_example.cpp):
 
-    #include <boost/chrono/stopclock.hpp>
-
-    ...
-
-    // add this in the scope you want to time,
-    // at the point you want the timer to start.
-    boost::chrono::__stopclock__<> rt;
-
-Here is a complete program (stopclock_example.cpp):
-
-    #include <boost/chrono/stopclock.hpp>
+    #include <boost/chrono.hpp>
     #include <cmath>
 
     int main()
     {
-      boost::chrono::__stopclock__<> t;
+        system_clock::time_point start = system_clock::now();
 
-      for ( long i = 0; i < 10000000; ++i )
+        for ( long i = 0; i < 10000000; ++i )
         std::sqrt( 123.456L ); // burn some time
 
-      return 0;
+        __duration__<double> sec = system_clock::now() - start;
+        cout << "tooks " << sec.count() << " seconds\n";
+        return 0;
     }
 
-Debug build output was:
+Output was:
 
-    real 0.832s, cpu 0.813s (97.7%), user 0.813s, system 0.000s
+    tooks 0.832 seconds
 
-In other words, the program took 0.832 real-time (i.e. wall clock) seconds to execute, while the operating system (Windows in this case) charged 0.813 seconds of CPU time to the user and 0 seconds to the system. The total CPU time reported was 0.813 seconds, and that represented utilization of 97.7% of the real-time seconds.
 
 [endsect]
 
@@ -577,9 +581,9 @@ The most immediate positive impact is that the library can immediately generate 
 
 A secondary benefit is that by publishing the class template __duration__ interface, user code can very easily create __duration_s__ with any precision they desire. The __ratio__ utility is used to specify the precision, so as long as the precision can be expressed by a rational constant with respect to seconds, this framework can exactly represent it (one third of a second is no problem, and neither is one third of a __femto second). All of this utility and flexibility comes at no cost just by making use of the no-run-time-overhead __ratio__ facility.
 
-In Boost.DateTime, __hours does not have the same representation as __nanoseconds__. The former is usually represented with a `long` whereas a `long long` is required for the latter. The reason for this is simply range. You don't need many hours to cover an extremely large range of time. But this isn't true of nanoseconds. Being able to reduce the sizeof overhead for some units when possible, can be a significant performance advantage.
+In Boost.DateTime, __hours__ does not have the same representation as __nanoseconds__. The former is usually represented with a `long` whereas a `long long` is required for the latter. The reason for this is simply range. You don't need many hours to cover an extremely large range of time. But this isn't true of nanoseconds. Being able to reduce the sizeof overhead for some units when possible, can be a significant performance advantage.
 
-__Boost_Chrono__ continues, and generalizes that philosophy. Not only can one specify the precision of a __duration__, one can also specify its representation. This can be any integral type, or even a floating point type. Or it can be a user-defined type which emulates an arithmetic type. The six predefined units all use signed integral types as their representation. And they all have a minimum range of +/- 292 years. __nanoseconds__ needs 64 bits to cover that range. __hours needs only 23 bits to cover that range.
+__Boost_Chrono__ continues, and generalizes that philosophy. Not only can one specify the precision of a __duration__, one can also specify its representation. This can be any integral type, or even a floating point type. Or it can be a user-defined type which emulates an arithmetic type. The six predefined units all use signed integral types as their representation. And they all have a minimum range of +/- 292 years. __nanoseconds__ needs 64 bits to cover that range. __hours__ needs only 23 bits to cover that range.
 
 
 [section  So What Exactly is a `duration` and How Do I Use One?]
@@ -826,7 +830,7 @@ As `boost::chrono::__thread_clock__::duration` is __nanoseconds__, we can conver
     ns d = end - start;
     std::cout << ns.count() << "ns\n";
 
-If you need seconds with a floating point representation you can also eliminate the __duration_cast_`<>`:
+If you need seconds with a floating point representation you can also eliminate the __duration_cast__`<>`:
 
     typedef boost::chrono::__duration__<double> sec;  // seconds, stored with a double
     sec d = end - start;
@@ -1187,7 +1191,7 @@ Though input can be arbitrary (but type-safe) units, output is always in SI-unit
         std::cout << "* testUser1 *\n";
         std::cout << "*************\n";
         User1::Distance d( User1::mile(110) );
-        User1::Time t( boost::chrono::__hours(2) );
+        User1::Time t( boost::chrono::__hours__(2) );
 
         RR r=d / t;
         //r.set(d.get() / t.get());
@@ -4179,43 +4183,6 @@ If the CopyConstruction and Assignment ([[@http://home.roadrunner.com/~hinnant/i
     __ratio__<1,3>::type r1;
     __ratio__<3,9>::type r2;
     r1 = r2; // compiles as both types are the same.
-
-
-[heading How reliable are these measures?]
-
-[/note this section need to be reworked, the ideas are there, but ...]
-
-
-There are three cases which can lead to get unreliable measures:
-
-* It is not possible to measure events that transpire at rates of the same order of magnitude as the clock's precision with any reliability.  For example, a 10ms clock cannot be used reliably to measure elapsed times of tens of milliseconds.  The library provides a [high_resolution_clock] that gives you the highest resolution time available on your platform.  That will give the best precision, but can only be used for reliable measurement of events that elapse about an order of magnitude slower than that clock's precision.
-
-
-``
-#include <boost/chrono/chrono.hpp>
-    ...
-    __stopclock__<__high_resolution_clock__> _;
-``
-
-* Using a process clock in a multithreaded application will give elapsed time for the process as a whole, including threads other than the calling thread.  To get time elapsed for a specific thread, use the supplied __thread_clock__ which returns time elapsed for the calling thread only, if supported by the platform.
-
-* When stopclocks are nested, usually from stopclocks appearing in each of several nested function calls, the overhead of the stopclock processing begins to be significant relative to run time of the code being measured.  The innermost measurements remain accurate, but those in the outermost layers can measure too much overhead to be trustworthy.
-
-* Nested stopclocks (usually nested function calls where each function contains a stopclock). When the nesting is deep enough, the cumulative overhead of all the stopclock functionality make the data unreliable except for the inner-most trace points. The question is, how much time is related to the application code we want to measure and how much to the fact we are meassuring and logging in inner blocks?
-
-
-Most of the stopclock overhead is likely due to logging. There are two things we can do to make the difference :
-
-* Don't flush log information while measuring elapsed time.  A __stopwatch_accumulator__ can make that possible, because it don't report until all the measures have been compiled and then report some statistics.  Alternatively, an asynchronous stream would permit normal logging but by a thread other than the one being measured.
-
-* Add a mechanism to track the difference between the application time and stopclock time.  If a __Clock__ models __SuspendibleClock__ and its precision is sufficiently fine, this mechanism could suspend the __Clock_s__ counting while reporting measurements and resume it thereafter.
-
-[/
-    stopclock<suspendible_clock<Clock> > _;
-
-
-See the performances section for more deep details.
-]
 
 [endsect]
 
