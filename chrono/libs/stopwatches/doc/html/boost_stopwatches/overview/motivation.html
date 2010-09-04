@@ -26,14 +26,14 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_stopwatches.overview.motivation"></a><a href="motivation.html" title="Motivation">Motivation</a>
 </h3></div></div></div>
-<a name="boost_stopwatches.overview.motivation.reporting_elapsed_time"></a><h4>
-<a name="id4948840"></a>
-        <a href="motivation.html#boost_stopwatches.overview.motivation.reporting_elapsed_time">Reporting
+<a name="boost_stopwatches.overview.motivation.measuring_elapsed_time"></a><h4>
+<a name="id4948837"></a>
+        <a href="motivation.html#boost_stopwatches.overview.motivation.measuring_elapsed_time">Measuring
         elapsed time</a>
       </h4>
 <p>
         Knowing how long a program, a function or a specific code block takes to
-        execute is useful in both test and production environments. <span class="bold"><strong>Boost.Chrono</strong></span>
+        execute is useful in both test and production environments. <span class="bold"><strong>Boost.Stopwatches</strong></span>
         introduces the <a href="../reference/stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_req" title="
         Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> concept which is a mechanism
         to measure the elapsed time. A Stopwatch allows to start, stop, suspend and
@@ -42,6 +42,11 @@
         is the basic model of <a href="../reference/stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_req" title="
         Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a>.
       </p>
+<a name="boost_stopwatches.overview.motivation.reporting_elapsed_time"></a><h4>
+<a name="id4948927"></a>
+        <a href="motivation.html#boost_stopwatches.overview.motivation.reporting_elapsed_time">Reporting
+        elapsed time</a>
+      </h4>
 <p>
         It is often necessary to report elapsed time on a user display or in a log
         file. <a href="../reference/reporters.html#boost_stopwatches.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
@@ -49,8 +54,33 @@
         a runtime reporting mechanism for this purpose which can be invoked in just
         one line of code.
       </p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stopwatches</span><span class="special">;</span>
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">process_cpu_clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">_</span><span class="special">;</span>
+  <span class="comment">// ...
+</span><span class="special">}</span>
+</pre>
+<p>
+        Will produce the following output
+      </p>
+<pre class="programlisting"><span class="identifier">real</span> <span class="number">0.034</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">cpu</span> <span class="number">0.031</span><span class="identifier">s</span> <span class="special">(</span><span class="number">93.0</span><span class="special">%),</span> <span class="identifier">user</span> <span class="number">0.031</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">system</span> <span class="number">0.000</span><span class="identifier">s</span>
+</pre>
+<p>
+        As this is one of the expression more commonly use, the library provides
+        a stopclock shortcut so the preceding can be writen as
+      </p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stopwatches</span><span class="special">;</span>
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <a href="../reference/reporters.html#boost_stopwatches.reference.reporters.stopclock_hpp.stopclock" title="
+          Template Class stopclock&lt;&gt;"><code class="computeroutput"><span class="identifier">stopclock</span></code></a><span class="special">&lt;&gt;</span> <span class="identifier">_</span><span class="special">;</span>
+  <span class="comment">// ...
+</span><span class="special">}</span>
+</pre>
 <a name="boost_stopwatches.overview.motivation.how_reliable_are_these_measures_"></a><h4>
-<a name="id4948958"></a>
+<a name="id4949316"></a>
         <a href="motivation.html#boost_stopwatches.overview.motivation.how_reliable_are_these_measures_">How
         reliable are these measures?</a>
       </h4>
@@ -62,7 +92,7 @@
         two ways to improve reliability of time measurements. A <a href="../reference/stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
           Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a> only reports
         statistics once all measurements have been acquired, which removes reporting
-        overhead from the measurements. The other approach is to use a <a href="../../"><code class="computeroutput"><span class="identifier">SuspendibleClock</span></code></a> such that the reporting
+        overhead from the measurements. The other approach is to use a <code class="computeroutput"><span class="identifier">SuspendibleClock</span></code> such that the reporting
         overhead can be ignored by suspending elapsed time tracking during reporting
         operations
       </p>

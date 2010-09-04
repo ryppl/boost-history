@@ -9,7 +9,6 @@
     [quickbook 1.5]
     [authors [Botet Escriba, Vicente J.]]
     [copyright 2009-2010 Vicente J. Botet Escriba]
-    [purpose Stopwatches utilities]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
@@ -154,7 +153,8 @@
 
 
 [/==================]
-[template SuspendibleClock_concept_link[link_text] [link boost_stopwatches.reference.other_clocks.suspendible_clock_req [link_text]]]
+[/template SuspendibleClock_concept_link[link_text] [link boost_stopwatches.reference.other_clocks.suspendible_clock_req [link_text]]]
+[template SuspendibleClock_concept_link[link_text] [link_text]]
 [def __SuspendibleClock_concept__ [SuspendibleClock_concept_link `SuspendibleClock` concept]]
 [def __SuspendibleClock_concept_type__ [SuspendibleClock_concept_link `SuspendibleClock`]]
 [def __SuspendibleClock_req__ [SuspendibleClock_concept_link `SuspendibleClock` requirements]]
@@ -189,14 +189,15 @@
 
 [def __scoped_stopclock__ [link boost_stopwatches.reference.reporters.scoped_stopclock_hpp.scoped_stopclock `scoped_stopclock`]]
 
-[def __process_real_cpu_clock__ [link boost_stopwatches.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock `process_real_cpu_clock`]]
+[def __process_real_cpu_clock__  `process_real_cpu_clock`]
 
-[def __process_system_cpu_clock__ [link boost_stopwatches.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock `process_system_cpu_clock`]]
+[def __process_system_cpu_clock__ `process_system_cpu_clock`]
 
-[def __process_user_cpu_clock__ [link boost_stopwatches.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock `process_user_cpu_clock`]]
+[def __process_user_cpu_clock__  `process_user_cpu_clock`]
 
-[def __thread_clock__ [link boost_stopwatches.reference.other_clocks.thread_clock_hpp.thread_clock `thread_clock`]]
-[def __suspendible_clock__ [link boost_stopwatches.reference.other_clocks.suspendible_clock_hpp.suspendible_clock `suspendible_clock`]]
+[def __thread_clock__  `thread_clock`]
+
+[def __suspendible_clock__  `suspendible_clock`]
 
 [def __stopwatch_accumulator_formatter__ [link boost_stopwatches.reference.formatters.stopwatch_accumulator_formatter_hpp.basic_stopwatch_accumulator_formatter `stopwatch_accumulator_formatter`]]
 
@@ -247,8 +248,20 @@ Finally, you can mentally add the following to any code fragments in this docume
 [/=================]
 
 
-[/
+
+[heading Measuring elapsed time]
+
+Knowing how long a program, a function or a specific code block takes to execute is useful in both test and production environments.
+__Boost_Stopwatches__ introduces the __Stopwatch__ concept which is a mechanism to measure the elapsed time.
+A Stopwatch allows to start, stop, suspend and resume measuring the elapsed time.
+__stopwatch__`<>` is the basic model of __Stopwatch__.
+
+[heading Reporting elapsed time]
+
+It is often necessary to report elapsed time on a user display or in a log file.  __stopwatch_reporter__<> provides a runtime reporting mechanism for this purpose which can be invoked in just one line of code.
+
     using namespace boost::chrono;
+    using namespace boost::stopwatches;
     int main()
     {
         stopwatch_reporter<stopwatch<process_cpu_clock> > _;
@@ -261,22 +274,13 @@ Will produce the following output
 
 As this is one of the expression more commonly use, the library provides a stopclock shortcut so the preceding can be writen as
 
-    using namespace boost::chrono;
+    using namespace boost::stopwatches;
     int main()
     {
         __stopclock__<> _;
       // ...
     }
-]
 
-[heading Reporting elapsed time]
-
-Knowing how long a program, a function or a specific code block takes to execute is useful in both test and production environments.
-__Boost_Chrono__ introduces the __Stopwatch__ concept which is a mechanism to measure the elapsed time.
-A Stopwatch allows to start, stop, suspend and resume measuring the elapsed time.
-__stopwatch__`<>` is the basic model of __Stopwatch__.
-
-It is often necessary to report elapsed time on a user display or in a log file.  __stopwatch_reporter__<> provides a runtime reporting mechanism for this purpose which can be invoked in just one line of code.
 
 [heading How reliable are these measures?]
 
@@ -289,8 +293,7 @@ There are a number of things that can lead to unreliable measurement (see [link 
 [/==================]
 
 
-
-Knowing how long a program takes to execute is useful in both test and production environments. On top of the standard facilities __Boost_Chrono__ __Boost_Stopwatches__ provides:
+On top of the standard facilities of __Boost_Chrono__, __Boost_Stopwatches__ provides:
 
 * Stopwatches: A facility to measure elapsed time with the ability to start, stop, suspend, or resume measurement.
     * __Stopwatch__ concept
@@ -324,10 +327,10 @@ Knowing how long a program takes to execute is useful in both test and productio
 [heading Getting __Boost_Stopwatches__ ]
 [/=================================]
 
-You can get the last stable release of __Boost_Stopwatches__ by downloading [^stopwatches.zip] from the
-[@http://www.boost-consulting.com/vault/index.php?directory=System Boost Vault]
+You can get the last stable release of __Boost_Stopwatches__ by downloading [^chrono.zip] from the
+[@http://www.boost-consulting.com/vault/index.php?directory=System Boost Vault], directories boost/stopwatches and libs/stopwatches.
 
-You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/chrono Boost Sandbox]. Just go to [@http://svn.boost.org/trac/boost/wiki/BoostSubversion here] and follow the instructions there for anonymous SVN access.
+You can also access the latest (unstable?) state from the [@http://svn.boost.org/svn/boost/sandbox/chrono Boost Sandbox], directories boost/stopwatches and libs/stopwatches. Just go to [@http://svn.boost.org/trac/boost/wiki/BoostSubversion here] and follow the instructions there for anonymous SVN access.
 
 [/==========================================]
 [heading Where to install __Boost_Stopwatches__? ]
@@ -353,7 +356,7 @@ In particular, __Boost_Stopwatches__ depends on:
 
 [variablelist
 [
-    [[@http://www.boost.org/libs/chrono [*Boost.Chrono]]] [for ratio, ...]
+    [[@http://www.boost.org/libs/chrono [*Boost.Chrono]]] [for duration, time_point and clocks, ...]
 ]
 [
     [[@http://www.boost.org/libs/config [*Boost.Config]]] [for configuration purposes, ...]
@@ -362,13 +365,22 @@ In particular, __Boost_Stopwatches__ depends on:
     [[@http://www.boost.org/libs/exception [*Boost.Exception]]] [for throw_exception, ...]
 ]
 [
+    [[@http://www.boost.org/libs/mpl [*Boost.MPL]]] [for MPL Assert and bool, ...]
+]
+[
     [[@http://www.boost.org/libs/system [*Boost.System]]] [for error_code, ...]
 ]
 [
-    [[@http://www.boost.org/libs/type_traits [*Boost.TypeTraits]]] [for is_base, ...]
+    [[@http://www.boost.org/libs/io [*Boost.Input/Outpu]]] [for io_state, ...]
 ]
 [
-    [[@http://www.boost.org/libs/utility [*Boost.UtiliTy/EnableIf]]] [for enable_if, ...]
+    [[@http://www.boost.org/libs/static_assert [*Boost.StaticAssert]]] [for STATIC_ASSERT, ...]
+]
+[
+    [[@http://www.boost.org/libs/type_traits [*Boost.TypeTraits]]] [for is_same, ...]
+]
+[
+    [[@http://www.boost.org/libs/utility [*Boost.Utility]]] [for base_from_memeber, ...]
 ]
 ]
 
@@ -444,22 +456,22 @@ Ubuntu Linux with GCC 4.2.4
 
 If all you want to do is to time a program's execution:
 
-    #include <boost/chrono/stopclock.hpp>
+    #include <boost/stopwatches/stopclock.hpp>
 
     ...
 
     // add this in the scope you want to time,
     // at the point you want the timer to start.
-    boost::chrono::__stopclock__<> rt;
+    boost::stopwatches::__stopclock__<> rt;
 
 Here is a complete program (stopclock_example.cpp):
 
-    #include <boost/chrono/stopclock.hpp>
+    #include <boost/stopwatches/stopclock.hpp>
     #include <cmath>
 
     int main()
     {
-      boost::chrono::__stopclock__<> t;
+      boost::stopwatches::__stopclock__<> t;
 
       for ( long i = 0; i < 10000000; ++i )
         std::sqrt( 123.456L ); // burn some time
@@ -486,7 +498,7 @@ In other words, the program took 0.832 real-time (i.e. wall clock) seconds to ex
 [section Stopwatches and Stopclocks]
 
 Knowing how long a program, a function or a specific block takes to execute is useful in both test and production environments.
-__Boost_Chrono__ introduces the __Stopwatch__ concept which captures the mechanism to measure the elapsed time.
+__Boost_Stopwatches__ introduces the __Stopwatch__ concept which captures the mechanism to measure the elapsed time.
 A __Stopwatch__ allows to `start`, `stop`, `suspend` and `resume` measuring the elapsed time.
 __stopwatch__`<>` is the basic model of __Stopwatch__ allowing to make a single measure.
 
@@ -495,6 +507,8 @@ __stopwatch_reporter__`<>` provides a run time reporting package that can be inv
 For example
 
     using namespace boost::chrono;
+    using namespace boost::stopwatches;
+    
     int f1(long j) {
         __stopwatch_reporter__<__stopwatch__<> > _;
 
@@ -523,7 +537,8 @@ The preceding stopwatch manage only with a measure. It is also interesting to ha
 
 For example
 
-    using namespace boost::chrono;
+    using namespace boost::stopwatches;
+    
     int f1(long j) {
         static __stopwatch_reporter__<__stopwatch_accumulator__<> > sw;
         __stopwatch_reporter__<__stopwatch_accumulator__<> >::scoped_run _(sw);
@@ -565,12 +580,12 @@ For example, for a __stopclock_accumulator__ the default formatter is __stopwatc
 Some of you will say that this is too long to type just to get the a report. You can of course define your own macro as
 
     #define REPORT_FUNCTION_ACCUMULATED_LIFETIME\
-        static boost::chrono::__stopclock_accumulator__<> \
+        static boost::stopwatches::__stopclock_accumulator__<> \
                 BOOST_JOIN(_accumulator_, __LINE__)_
             ( std::string(BOOST_CURRENT_FUNCTION) + ":  " + \
-                boost::chrono::__stopwatch_accumulator_formatter__::default_format() \
+                boost::stopwatches::__stopwatch_accumulator_formatter__::default_format() \
         ); \
-        boost::chrono::__stopclock_accumulator__<>::scoped_run \
+        boost::stopwatches::__stopclock_accumulator__<>::scoped_run \
                 BOOST_JOIN(_accumulator_run_, __LINE__) \
             (BOOST_JOIN(_accumulator_, __LINE__))
 
@@ -633,16 +648,16 @@ The typical example of stopclock_accumulator is to get statistical measures of t
 
 [section How can I suspend a stopwatch?]
 
-    #include <boost/chrono/stopwatch.hpp>
+    #include <boost/stopwatches/stopwatch.hpp>
     #include <cmath>
     #include <boost/thread.hpp>
 
 
-    using namespace boost::chrono;
+    using namespace boost::stopwatches;
     double res;
     void f1(long j)
     {
-        __stopwatch_reporter__<__stopwatch__<> >:: _(BOOST_CHRONO_STOPWATCH_FUNCTION_FORMAT);
+        __stopwatch_reporter__<__stopwatch__<> >:: _(BOOST_STOPWATCHES_STOPWATCH_FUNCTION_FORMAT);
         for (long i =0; i< j; i+=1)
             res+=std::sqrt( res+123.456L+i );  // burn some time
         __stopwatch_reporter__<__stopwatch__<> >::scoped_suspend s(_);
@@ -796,7 +811,6 @@ Next follow the definition of a formatter taking care of count, sum, mean and va
 
 
 [endsect]
-[endsect]
 [/===============]
 [section Examples]
 [/===============]
@@ -816,12 +830,12 @@ Here is the stopclock_example.cpp program supplied with the Boost Chrono library
 
 When the `stopclock<> t` object is created, it starts timing. When it is destroyed at the end of the program, its destructor stops the time counting and displays timing information on cout.
 
-    #include <boost/chrono/stopclock.hpp>
+    #include <boost/stopwatches/stopclock.hpp>
     #include <cmath>
 
     int main()
     {
-      boost::chrono::__stopclock__<> t;
+      boost::stopwatches::__stopclock__<> t;
 
       for ( long i = 0; i < 10000000; ++i )
         std::sqrt( 123.456L );  // burn some time
@@ -845,7 +859,7 @@ In other words, this program ran in 0.42 seconds as would be measured by a clock
 
 The stopclock_example2.cpp program is the same, except that it supplies additional constructor arguments from the command line:
 
-    #include <boost/chrono/stopclock.hpp>
+    #include <boost/stopwatches/stopclock.hpp>
     #include <cmath>
 
     int main( int argc, char * argv[] )
@@ -853,7 +867,7 @@ The stopclock_example2.cpp program is the same, except that it supplies addition
       const char * format = argc > 1 ? argv[1] : "%t cpu seconds\n";
       int          places = argc > 2 ? std::atoi( argv[2] ) : 2;
 
-      boost::chrono::__stopclock__<> t( format, places );
+      boost::stopwatches::__stopclock__<> t( format, places );
 
       for ( long i = 0; i < 10000000; ++i )
         std::sqrt( 123.456L ); // burn some time
@@ -882,7 +896,7 @@ Here is the output for this program for several sets of command line arguments:
 [/===============================================================]
 [section time command]
 
-    #include <boost/chrono/stopclock.hpp>
+    #include <boost/stopwatches/stopclock.hpp>
     #include <cstdlib>
     #include <string>
     #include <iostream>
@@ -916,13 +930,14 @@ Here is the output for this program for several sets of command line arguments:
       if ( verbose )
         { std::cout << "command: \"" << s.c_str() << "\"\n"; }
 
-      boost::chrono::__stopclock__<> t;
+      boost::stopwatches::__stopclock__<> t;
 
       return std::system( s.c_str() );
     }
 
 ['See the source file [@../../example/timex.cpp example/timex.cpp]]
 
+[endsect]
 [endsect]
 [endsect]
 
@@ -983,30 +998,30 @@ Here is the output for this program for several sets of command line arguments:
 
 This file include all the stopwatches related files
 
-    #include <boost/chrono/stopwatches.hpp>
+    #include <boost/stopwatches/stopwatches.hpp>
 
 [endsect]
 
 [/=============================================]
-[section:chrono_stopwatches_hpp Header `<boost/chrono/stopwatches.hpp>`]
+[section:chrono_stopwatches_hpp Header `<boost/stopwatches/stopwatches.hpp>`]
 [/=============================================]
 
 This file include all the stopwatches related files
 
-    #include <boost/chrono/scoped_stopclock.hpp>
-    #include <boost/chrono/process_cpu_clocks.hpp>
-    #include <boost/chrono/stopclock.hpp>
-    #include <boost/chrono/stopclock_accumulator.hpp>
-    #include <boost/chrono/stopwatch.hpp>
-    #include <boost/chrono/stopwatch_accumulator.hpp>
-    #include <boost/chrono/stopwatch_accumulator_formatter.hpp>
-    #include <boost/chrono/stopwatch_accumulator_time_formatter.hpp>
-    #include <boost/chrono/stopwatch_formatter.hpp>
-    #include <boost/chrono/stopwatch_reporter.hpp>
-    #include <boost/chrono/stopwatch_scoped.hpp>
-    #include <boost/chrono/time_formatter.hpp>
-    #include <boost/chrono/t24_hours.hpp>
-    #include <boost/chrono/t24_hours_formatter.hpp>
+    #include <boost/stopwatches/scoped_stopclock.hpp>
+    #include <boost/stopwatches/process_cpu_clocks.hpp>
+    #include <boost/stopwatches/stopclock.hpp>
+    #include <boost/stopwatches/stopclock_accumulator.hpp>
+    #include <boost/stopwatches/stopwatch.hpp>
+    #include <boost/stopwatches/stopwatch_accumulator.hpp>
+    #include <boost/stopwatches/stopwatch_accumulator_formatter.hpp>
+    #include <boost/stopwatches/stopwatch_accumulator_time_formatter.hpp>
+    #include <boost/stopwatches/stopwatch_formatter.hpp>
+    #include <boost/stopwatches/stopwatch_reporter.hpp>
+    #include <boost/stopwatches/stopwatch_scoped.hpp>
+    #include <boost/stopwatches/time_formatter.hpp>
+    #include <boost/stopwatches/t24_hours.hpp>
+    #include <boost/stopwatches/t24_hours_formatter.hpp>
 
 [endsect]
 
@@ -1097,11 +1112,11 @@ Models of `Stopwatch`:
 
 
 [/==================================================]
-[section:lightweight_stopwatch_hpp Header `<boost/chrono/lightweight_stopwatch.hpp>`]
+[section:lightweight_stopwatch_hpp Header `<boost/stopwatches/lightweight_stopwatch.hpp>`]
 [/==================================================]
 
 
-    namespace boost { namespace chrono  {
+    namespace boost { namespace stopwatches  {
         struct dont_start_t;
         static const dont_start_t dont_start;
 
@@ -1235,11 +1250,11 @@ accuracy of timing information provided the Clock, and this coudl varies a great
 
 
 [/==================================================]
-[section:stopwatch_hpp Header `<boost/chrono/stopwatch.hpp>`]
+[section:stopwatch_hpp Header `<boost/stopwatches/stopwatch.hpp>`]
 [/==================================================]
 
 
-    namespace boost { namespace chrono  {
+    namespace boost { namespace stopwatches  {
         template <class Clock=high_resolution_clock> class __stopwatch__;
 
         template <class Clock>
@@ -1323,23 +1338,23 @@ The `wstopwatch_reporter_default_formatter` of a `stopwatch<Clock>` is a `wstopw
 
 The library provides stopwatch short cuts for all the models of __Clock__, replacing clock by stopwatch.
 
-        typedef boost::chrono::stopwatch< boost::chrono::system_clock > 
+        typedef boost::stopwatches::stopwatch< boost::chrono::system_clock > 
             system_stopwatch;
         #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::chrono::stopwatch< boost::chrono::monotonic_clock > 
+        typedef boost::stopwatches::stopwatch< boost::chrono::monotonic_clock > 
             monotonic_stopwatch;
         #endif
-        typedef boost::chrono::stopwatch< boost::chrono::high_resolution_clock > 
+        typedef boost::stopwatches::stopwatch< boost::chrono::high_resolution_clock > 
             high_resolution_stopwatch;
 
 [endsect]
 [endsect]
 
 [/==================================================]
-[section:stopwatch_accumulator_hpp Header `<boost/chrono/stopwatch_accumulator.hpp>`]
+[section:stopwatch_accumulator_hpp Header `<boost/stopwatches/stopwatch_accumulator.hpp>`]
 [/==================================================]
 
-    namespace boost { namespace chrono  {
+    namespace boost { namespace stopwatches  {
         template <class Clock, 
                     typename Features=accumulators::features<
                         accumulators::tag::count,
@@ -1415,23 +1430,23 @@ The `wstopwatch_reporter_default_formatter` of a `stopwatch_accumulator<Clock>` 
 
 The library provides stopwatch_accumulator shortcuts for all the models of __Clock__, replacing clock by stopwatch_accumulator.
 
-    typedef boost::chrono::stopwatch_accumulator< boost::chrono::system_clock > 
+    typedef boost::stopwatches::stopwatch_accumulator< boost::chrono::system_clock > 
         system_stopwatch_accumulator;
     #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-    typedef boost::chrono::stopwatch_accumulator< boost::chrono::monotonic_clock > 
+    typedef boost::stopwatches::stopwatch_accumulator< boost::chrono::monotonic_clock > 
         monotonic_stopwatch_accumulator;
     #endif
-    typedef boost::chrono::stopwatch_accumulator< boost::chrono::high_resolution_clock > 
+    typedef boost::stopwatches::stopwatch_accumulator< boost::chrono::high_resolution_clock > 
         high_resolution_stopwatch_accumulator;
 
 [endsect]
 [endsect]
 
 [/==================================================]
-[section:stopwatch_scoped_hpp Header `<boost/chrono/stopwatch_scoped.hpp>`]
+[section:stopwatch_scoped_hpp Header `<boost/stopwatches/stopwatch_scoped.hpp>`]
 [/==================================================]
 
-    namespace boost { namespace chrono  {
+    namespace boost { namespace stopwatches  {
         template <class Stopwatch> class stopwatch_runner;
         template <class Stopwatch> class stopwatch_suspender;
         template <class Stopwatch> class stopwatch_resumer;
@@ -1570,10 +1585,10 @@ The nested typedef `type` defines the default formatter used by the __stopwatch_
 [endsect]
 
 [/==================================================]
-[section:stopwatch_reporter_hpp Header `<boost/chrono/stopwatch_reporter.hpp>`]
+[section:stopwatch_reporter_hpp Header `<boost/stopwatches/stopwatch_reporter.hpp>`]
 [/==================================================]
 
-    namespace boost { namespace chrono  {
+    namespace boost { namespace stopwatches  {
         template <class Stopwatch, class Formatter>
         class basic_stopwatch_reporter;
 
@@ -1792,10 +1807,10 @@ Usage
 [endsect]
 
 [/==================================================]
-[section:stopclock_hpp Header `<boost/chrono/stopclock.hpp>`]
+[section:stopclock_hpp Header `<boost/stopwatches/stopclock.hpp>`]
 [/==================================================]
 
-    namespace boost { namespace chrono {
+    namespace boost { namespace stopwatches {
         template < class Clock, class Formatter > class basic_stopclock;
         template < class Clock, class Formatter > class __stopclock__;
         template < class Clock, class Formatter > class wstopclock;
@@ -1913,19 +1928,19 @@ A stopclock is a stopwatch with the ability to report elapsed time on an output 
 
 The library provides stopclock shortcuts for all the models of __Clock__, replacing clock by stopclock.
 
-        typedef boost::chrono::stopclock< boost::chrono::system_clock > 
+        typedef boost::stopwatches::stopclock< boost::chrono::system_clock > 
             system_stopwatch_stopclock;
         #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::chrono::stopclock< boost::chrono::monotonic_clock > 
+        typedef boost::stopwatches::stopclock< boost::chrono::monotonic_clock > 
             monotonic_stopwatch_stopclock;
         #endif
-        typedef boost::chrono::stopclock< boost::chrono::high_resolution_clock > 
+        typedef boost::stopwatches::stopclock< boost::chrono::high_resolution_clock > 
             high_resolution_stopclock;
-        typedef boost::chrono::stopclock< boost::chrono::process_real_cpu_clock > 
+        typedef boost::stopwatches::stopclock< boost::chrono::process_real_cpu_clock > 
             process_real_cpu_stopclock;
-        typedef boost::chrono::stopclock< boost::chrono::process_user_cpu_clock > 
+        typedef boost::stopwatches::stopclock< boost::chrono::process_user_cpu_clock > 
             process_user_cpu_stopclock;
-        typedef boost::chrono::stopclock< boost::chrono::process_system_cpu_clock > 
+        typedef boost::stopwatches::stopclock< boost::chrono::process_system_cpu_clock > 
             process_system_cpu_stopclock;
 
 [endsect]
@@ -1979,19 +1994,19 @@ The library provides stopclock shortcuts for all the models of __Clock__, replac
 
 The library provides wstopclock shortcuts for all the models of __Clock__, replacing clock by wstopclock.
 
-        typedef boost::chrono::wstopclock< boost::chrono::system_clock > 
+        typedef boost::stopwatches::wstopclock< boost::chrono::system_clock > 
             system_wstopclock;
         #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::chrono::wstopclock< boost::chrono::monotonic_clock > 
+        typedef boost::stopwatches::wstopclock< boost::chrono::monotonic_clock > 
             monotonic_wstopclock;
         #endif
-        typedef boost::chrono::wstopclock< boost::chrono::high_resolution_clock > 
+        typedef boost::stopwatches::wstopclock< boost::chrono::high_resolution_clock > 
             high_resolution_wstopclock;
-        typedef boost::chrono::wstopclock< boost::chrono::process_real_cpu_clock > 
+        typedef boost::stopwatches::wstopclock< boost::chrono::process_real_cpu_clock > 
             process_real_cpu_wstopclock;
-        typedef boost::chrono::wstopclock< boost::chrono::process_user_cpu_clock > 
+        typedef boost::stopwatches::wstopclock< boost::chrono::process_user_cpu_clock > 
             process_user_cpu_wstopclock;
-        typedef boost::chrono::wstopclock< boost::chrono::process_system_cpu_clock > 
+        typedef boost::stopwatches::wstopclock< boost::chrono::process_system_cpu_clock > 
             process_system_cpu_wstopclock;
 
 [endsect]
@@ -2000,10 +2015,10 @@ The library provides wstopclock shortcuts for all the models of __Clock__, repla
 [endsect]
 
 [/==================================================]
-[section:stopclock_accumulator_hpp Header `<boost/chrono/stopclock_accumulator.hpp>`]
+[section:stopclock_accumulator_hpp Header `<boost/stopwatches/stopclock_accumulator.hpp>`]
 [/==================================================]
 
-    namespace boost { namespace chrono {
+    namespace boost { namespace stopwatches {
         template < class Clock, class Formatter >
         class basic_stopclock_accumulator;
         template < class Clock, class Formatter >
@@ -2130,19 +2145,19 @@ The library provides wstopclock shortcuts for all the models of __Clock__, repla
 The library provides stopclock_accumulator shortcuts for all the models of __Clock__, replacing clock by stopclock_accumulator.
 
 
-        typedef boost::chrono::stopclock_accumulator< boost::chrono::system_clock > 
+        typedef boost::stopwatches::stopclock_accumulator< boost::chrono::system_clock > 
             system_stopclock_accumulator;
         #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::chrono::stopclock_accumulator< boost::chrono::monotonic_clock > 
+        typedef boost::stopwatches::stopclock_accumulator< boost::chrono::monotonic_clock > 
             monotonic_stopclock_accumulator;
         #endif
-        typedef boost::chrono::stopclock_accumulator< boost::chrono::high_resolution_clock > 
+        typedef boost::stopwatches::stopclock_accumulator< boost::chrono::high_resolution_clock > 
             high_resolution_stopclock_accumulator;
-        typedef boost::chrono::stopclock_accumulator< boost::chrono::process_real_cpu_clock > 
+        typedef boost::stopwatches::stopclock_accumulator< boost::chrono::process_real_cpu_clock > 
             process_real_cpu_stopclock_accumulator;
-        typedef boost::chrono::stopclock_accumulator< boost::chrono::process_user_cpu_clock > 
+        typedef boost::stopwatches::stopclock_accumulator< boost::chrono::process_user_cpu_clock > 
             process_user_cpu_stopclock_accumulator;
-        typedef boost::chrono::stopclock_accumulator< boost::chrono::process_system_cpu_clock > 
+        typedef boost::stopwatches::stopclock_accumulator< boost::chrono::process_system_cpu_clock > 
             process_system_cpu_stopclock_accumulator;
 
 [endsect]
@@ -2197,29 +2212,29 @@ The library provides stopclock_accumulator shortcuts for all the models of __Clo
 
 The library provides wstopclock_accumulator shortcuts for all the models of __Clock__, replacing clock by wstopclock_accumulator.
 
-        typedef boost::chrono::wstopclock_accumulator< boost::chrono::system_clock > 
+        typedef boost::stopwatches::wstopclock_accumulator< boost::chrono::system_clock > 
             system_wstopclock_accumulator;
         #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::chrono::wstopclock_accumulator< boost::chrono::monotonic_clock > 
+        typedef boost::stopwatches::wstopclock_accumulator< boost::chrono::monotonic_clock > 
             monotonic_wstopclock_accumulator;
         #endif
-        typedef boost::chrono::wstopclock_accumulator< boost::chrono::high_resolution_clock > 
+        typedef boost::stopwatches::wstopclock_accumulator< boost::chrono::high_resolution_clock > 
             high_resolution_wstopclock_accumulator;
-        typedef boost::chrono::wstopclock_accumulator< boost::chrono::process_real_cpu_clock > 
+        typedef boost::stopwatches::wstopclock_accumulator< boost::chrono::process_real_cpu_clock > 
             process_real_cpu_wstopclock_accumulator;
-        typedef boost::chrono::wstopclock_accumulator< boost::chrono::process_user_cpu_clock > 
+        typedef boost::stopwatches::wstopclock_accumulator< boost::chrono::process_user_cpu_clock > 
             process_user_cpu_wstopclock_accumulator;
-        typedef boost::chrono::wstopclock_accumulator< boost::chrono::process_system_cpu_clock > 
+        typedef boost::stopwatches::wstopclock_accumulator< boost::chrono::process_system_cpu_clock > 
             process_system_cpu_wstopclock_accumulator;
 
 [endsect]
 [endsect]
 
 [/==================================================]
-[section:scoped_stopclock_hpp Header `<boost/chrono/scoped_stopclock.hpp>`]
+[section:scoped_stopclock_hpp Header `<boost/stopwatches/scoped_stopclock.hpp>`]
 [/==================================================]
 
-    namespace boost { namespace chrono {
+    namespace boost { namespace stopwatches {
         template < class Clock, class Formatter > class scoped_stopclock;
     }}
 
@@ -2305,10 +2320,10 @@ A typical ussage of this class is
 [section:formatters Stopwatch Formatters]
 
 [/==================================================]
-[section:stopwatch_formatter_hpp Header `<boost/chrono/stopwatch_formatter.hpp>`]
+[section:stopwatch_formatter_hpp Header `<boost/stopwatches/stopwatch_formatter.hpp>`]
 [/==================================================]
 
-    namespace boost { namespace chrono  {
+    namespace boost { namespace stopwatches  {
         template <
             typename CharT=char,
             typename Traits=std::char_traits<CharT>,
@@ -2355,10 +2370,10 @@ The time is given using the suffix "s" following the System International d'Unit
 [endsect]
 
 [/==================================================]
-[section:stopwatch_accumulator_formatter_hpp Header `<boost/chrono/stopwatch_accumulator_formatter.hpp>`]
+[section:stopwatch_accumulator_formatter_hpp Header `<boost/stopwatches/stopwatch_accumulator_formatter.hpp>`]
 [/==================================================]
 
-    namespace boost { namespace chrono  {
+    namespace boost { namespace stopwatches  {
         template <
             typename CharT=char,
             typename Traits=std::char_traits<CharT>,
@@ -2420,10 +2435,10 @@ The library provides basic_stopwatch_accumulator_formatter shortcuts for char an
 [endsect]
 [endsect]
 [/==================================================================]
-[section:time_formatter_hpp Header `<boost/chrono/time_formatter.hpp>`]
+[section:time_formatter_hpp Header `<boost/stopwatches/time_formatter.hpp>`]
 [/==================================================================]
 
-    namespace boost { namespace chrono {
+    namespace boost { namespace stopwatches {
 
         template <
             typename CharT=char,
@@ -2498,10 +2513,10 @@ The library provides basic_time_formatter shortcuts for char and wchar_t.
 [endsect]
 
 [/==================================================]
-[section:stopwatch_accumulator_time_formatter_hpp Header `<boost/chrono/stopwatch_accumulator_time_formatter.hpp>`]
+[section:stopwatch_accumulator_time_formatter_hpp Header `<boost/stopwatches/stopwatch_accumulator_time_formatter.hpp>`]
 [/==================================================]
 
-    namespace boost { namespace chrono  {
+    namespace boost { namespace stopwatches  {
         template <
             typename CharT=char,
             typename Traits=std::char_traits<CharT>,
@@ -2573,10 +2588,10 @@ The library provides basic_stopwatch_accumulator_time_formatter shortcuts for ch
 [endsect]
 
 [/==================================================]
-[section:t24_hours_hpp Header `<boost/chrono/t24_hours.hpp>`]
+[section:t24_hours_hpp Header `<boost/stopwatches/t24_hours.hpp>`]
 [/==================================================]
 
-    namespace boost { namespace chrono {
+    namespace boost { namespace stopwatches {
         class t24_hours;
     }}
 
@@ -2621,11 +2636,11 @@ The library provides basic_stopwatch_accumulator_time_formatter shortcuts for ch
 [endsect]
 
 [/==================================================================]
-[section:t24_hours_formatter_hpp Header `<boost/chrono/t24_hours_formatter.hpp>`]
+[section:t24_hours_formatter_hpp Header `<boost/stopwatches/t24_hours_formatter.hpp>`]
 [/==================================================================]
 
 
-    namespace boost { namespace chrono {
+    namespace boost { namespace stopwatches {
 
         template <
             typename CharT=char,
@@ -2957,6 +2972,42 @@ More updated documentation.
 [/======================================]
 [section:rationale Appendix B: Rationale]
 
+[heading How reliable are these measures?]
+
+[/note this section need to be reworked, the ideas are there, but ...]
+
+
+There are three cases which can lead to get unreliable measures:
+
+* It is not possible to measure events that transpire at rates of the same order of magnitude as the clock's precision with any reliability.  For example, a 10ms clock cannot be used reliably to measure elapsed times of tens of milliseconds.  The library provides a [high_resolution_clock] that gives you the highest resolution time available on your platform.  That will give the best precision, but can only be used for reliable measurement of events that elapse about an order of magnitude slower than that clock's precision.
+
+
+``
+#include <boost/chrono/chrono.hpp>
+    ...
+    __stopclock__<__high_resolution_clock__> _;
+``
+
+* Using a process clock in a multithreaded application will give elapsed time for the process as a whole, including threads other than the calling thread.  To get time elapsed for a specific thread, use the supplied __thread_clock__ which returns time elapsed for the calling thread only, if supported by the platform.
+
+* When stopclocks are nested, usually from stopclocks appearing in each of several nested function calls, the overhead of the stopclock processing begins to be significant relative to run time of the code being measured.  The innermost measurements remain accurate, but those in the outermost layers can measure too much overhead to be trustworthy.
+
+* Nested stopclocks (usually nested function calls where each function contains a stopclock). When the nesting is deep enough, the cumulative overhead of all the stopclock functionality make the data unreliable except for the inner-most trace points. The question is, how much time is related to the application code we want to measure and how much to the fact we are meassuring and logging in inner blocks?
+
+
+Most of the stopclock overhead is likely due to logging. There are two things we can do to make the difference :
+
+* Don't flush log information while measuring elapsed time.  A __stopwatch_accumulator__ can make that possible, because it don't report until all the measures have been compiled and then report some statistics.  Alternatively, an asynchronous stream would permit normal logging but by a thread other than the one being measured.
+
+* Add a mechanism to track the difference between the application time and stopclock time.  If a __Clock__ models __SuspendibleClock__ and its precision is sufficiently fine, this mechanism could suspend the __Clock_s__ counting while reporting measurements and resume it thereafter.
+
+[/
+    stopclock<suspendible_clock<Clock> > _;
+
+
+See the performances section for more deep details.
+]
+
 
 [endsect]
 
@@ -2983,7 +3034,7 @@ Ask your operating system supplier. The results have been inspected with a debug
 
 The library do not provides this feature.
 
-[heading What happens if I press Ctrl+C and program terminates? What log would Boost.chrono output?]
+[heading What happens if I press Ctrl+C and program terminates? What log would Boost.Stopwatches output?]
 
 
 [endsect]
