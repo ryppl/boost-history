@@ -33,12 +33,12 @@
 #include <boost/mpl/bool.hpp>
 #define BOOST_COMMON_TYPE_STATIC_ASSERT(CND, MSG, TYPES)                                 \
     BOOST_MPL_ASSERT_MSG(boost::mpl::bool_< (CND) >::type::value, MSG, TYPES)
-#elif defined(BOOST_COMMON_TYPE_USES_ARRAY_ASSERT)
+#else
+//~ #elif defined(BOOST_COMMON_TYPE_USES_ARRAY_ASSERT)
 #define BOOST_COMMON_TYPE_CONCAT(A,B) A##B
 #define BOOST_COMMON_TYPE_NAME(A,B) BOOST_COMMON_TYPE_CONCAT(A,B)
 #define BOOST_COMMON_TYPE_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_COMMON_TYPE_NAME(__boost_common_type_test_,__LINE__)[CND]
-#else
-#define BOOST_COMMON_TYPE_STATIC_ASSERT(CND, MSG, TYPES)
+//~ #define BOOST_COMMON_TYPE_STATIC_ASSERT(CND, MSG, TYPES)
 #endif
 
 #if !defined(BOOST_NO_STATIC_ASSERT) || !defined(BOOST_COMMON_TYPE_USES_MPL_ASSERT)
