@@ -14,7 +14,7 @@
 #define BOOST_STOPWATCHES_HPP
 
 //-----------------------------------------------------------------------------
-#include <boost/chrono/stopwatches.hpp>
+#include <boost/stopwatches/stopwatches.hpp>
 //-----------------------------------------------------------------------------
 
 #endif // BOOST_STOPWATCHES_HPP
