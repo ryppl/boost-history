@@ -517,15 +517,17 @@ void add_front(Type& object, const typename Type::interval_type& inter_val,
     // The addend interval 'inter_val' covers the beginning of the collision sequence.
 
     // only for the first there can be a left_resid: a part of *first_ left of inter_val
-    interval_type left_resid = right_subtract(*first_, inter_val);
+	interval_type left_resid = right_subtract(Type::key_value(first_), inter_val);
 
     if(!itl::is_empty(left_resid))
     {   //            [------------ . . .
         // [left_resid---first_ --- . . .
         iterator prior_ = object.prior(first_);
-        const_cast<interval_type&>(*first_) = left_subtract(*first_, left_resid);
+        const_cast<interval_type&>(Type::key_value(first_)) 
+			= left_subtract(Type::key_value(first_), left_resid);
         //NOTE: Only splitting
-        iterator insertion_ = object._insert(prior_, left_resid);
+        //CL iterator insertion_ = 
+		object._insert(prior_, Type::make_value(left_resid, Type::co_value(first_)));
     }
 
     //POST:

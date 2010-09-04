@@ -171,7 +171,6 @@ bool contains(const IntervalMapT& super, const IntervalMapT& sub)
 namespace detail
 {
 
-
 template <class Type, class Combiner>
 inline typename Type::iterator
 gap_insert(               Type&                object, 
@@ -186,6 +185,86 @@ gap_insert(               Type&                object,
 
     return object._insert(prior_, value_type(inter_val, version<Combiner>()(co_val)));
 }
+
+
+
+//------------------------------------------------------------------------------
+template<class Type, class Combiner, bool abosorbs_neutrons>
+struct last_segment
+{
+	typedef last_segment type;
+
+	typedef typename Type::iterator      iterator;
+	typedef typename Type::interval_type interval_type;
+	typedef typename Type::codomain_type codomain_type;
+
+	static void join(Type&, iterator&, iterator);
+	static void insert_at(Type&, iterator&, iterator, 
+		                  const interval_type&, const codomain_type&);
+};
+
+template<class Type, class Combiner>
+struct last_segment<Type, Combiner, false>
+{
+	typedef last_segment type;
+
+	typedef typename Type::iterator iterator;
+	typedef typename Type::interval_type interval_type;
+	typedef typename Type::codomain_type codomain_type;
+
+	static void join(Type& object, iterator& it_, iterator)
+	{
+		join_neighbours(object, it_);
+	}
+
+	static void insert_at(Type& object, iterator& it_, iterator,
+		                  const interval_type& end_gap, const codomain_type& co_val)
+	{
+        join_left(object, it_);
+        iterator inserted_ = gap_insert<Type,Combiner>(object, it_, end_gap, co_val);
+        it_ = join_neighbours(object, inserted_);
+	}
+};
+
+
+template<class Type, class Combiner>
+struct last_segment<Type, Combiner, true>
+{
+	typedef last_segment type;
+
+	typedef typename Type::iterator iterator;
+	typedef typename Type::interval_type interval_type;
+	typedef typename Type::codomain_type codomain_type;
+
+	static void join(Type& object, iterator& it_, iterator inserted_)
+	{
+		if(it_->second == Combiner::neutron())
+		{
+			object.erase(it_);
+			it_ = inserted_;
+		}
+		else 
+			join_neighbours(object, it_);
+	}
+
+	static void insert_at(Type& object, iterator& it_, iterator prior_, 
+		                  const interval_type& end_gap, const codomain_type& co_val)
+	{
+		if(it_->second == Combiner::neutron())
+		{
+            object.erase(it_);
+            it_ = gap_insert<Type,Combiner>(object, prior_, end_gap, co_val);
+            join_right(object, it_);
+		}
+		else 
+        {
+            join_left(object, it_);
+            iterator inserted_ = gap_insert<Type,Combiner>(object, it_, end_gap, co_val);
+            it_ = join_neighbours(object, inserted_);
+        }
+	}
+};
+
 
 
 template<class Type, class Combiner>
@@ -215,10 +294,96 @@ void add_segment(               Type&                object,
         object.erase(it_++);
     else
     {
-        detail::join_left(object, it_);
+        join_left(object, it_);
         ++it_;
     }
 }
+
+
+
+template<class Type, class Combiner>
+void add_main(               Type&                object,
+                    typename Type::interval_type& rest_interval, 
+              const typename Type::codomain_type& co_val, 
+                    typename Type::iterator&      it_,       
+              const typename Type::iterator&      last_         )
+{
+    typedef typename Type::interval_type interval_type;
+    typedef typename Type::iterator      iterator;
+
+    interval_type cur_interval;
+    while(it_!=last_)
+    {
+        cur_interval = it_->first ;
+        add_segment<Type,Combiner>(object, rest_interval, co_val, it_);
+        // shrink interval
+        rest_interval = left_subtract(rest_interval, cur_interval);
+    }
+}
+
+
+
+template<class Type, class Combiner>
+void add_rear(               Type&                object,
+                    typename Type::interval_type& inter_val, 
+              const typename Type::codomain_type& co_val, 
+                    typename Type::iterator&      it_      )     
+{
+    typedef typename Type::interval_type interval_type;
+    typedef typename Type::value_type    value_type;
+    typedef typename Type::iterator      iterator;
+	typedef typename last_segment<Type,Combiner,absorbs_neutrons<Type>::value>::type last_segment_;
+
+    iterator prior_ = object.prior(it_);
+    interval_type cur_itv = it_->first ;
+
+    interval_type lead_gap = right_subtract(inter_val, cur_itv);
+    if(!itl::is_empty(lead_gap))
+    {   //         [lead_gap--- . . .
+        // [prior)          [-- it_ ...
+        iterator inserted_ = gap_insert<Type,Combiner>(object, prior_, lead_gap, co_val);
+        if(prior_ != object.end() && joinable(object, prior_, inserted_))
+            join_on_left(object, prior_, inserted_);
+    }
+
+    interval_type end_gap = left_subtract(inter_val, cur_itv);
+    if(!itl::is_empty(end_gap))
+    {
+        // [----------------end_gap)
+        //  . . . -- it_ --)
+        Combiner()(it_->second, co_val);
+		last_segment_::insert_at(object, it_, prior_, end_gap, co_val);
+    }
+    else
+    {
+        // only for the last there can be a right_resid: a part of *it_ right of x
+        interval_type right_resid = left_subtract(cur_itv, inter_val);
+
+        if(itl::is_empty(right_resid))
+        {
+            // [---------------)
+            //      [-- it_ ---)
+            Combiner()(it_->second, co_val);
+			last_segment_::join(object, it_, prior_);
+        }
+        else
+        {
+            // [--------------)
+            //      [-- it_ --right_resid)
+            const_cast<interval_type&>(it_->first) = right_subtract(it_->first, right_resid);
+
+            //NOTE: This is NOT an insertion that has to take care for correct application of
+            // the Combiner functor. It only reestablished that state after splitting the
+            // 'it_' interval value pair. Using _map_insert<Combiner> does not work here.
+            iterator insertion_ = object._insert(it_, value_type(right_resid, it_->second));
+            join_right(object, insertion_);
+
+            Combiner()(it_->second, co_val);
+			last_segment_::join(object, it_, insertion_);
+        }
+    }
+}
+
 
 
 

@@ -673,6 +673,13 @@ public:
     const_reverse_iterator rbegin()const { return _map.rbegin(); }
     const_reverse_iterator rend()const   { return _map.rend(); }
 
+    iterator prior(iterator it_)
+    { return it_ == this->_map.begin() ? this->_map.end() : --it_; }
+
+    const_iterator prior(const_iterator it_)const
+    { return it_ == this->_map.begin() ? this->_map.end() : --it_; }
+
+
     //==========================================================================
     //= Element iterator related
     //==========================================================================
@@ -740,6 +747,7 @@ public:
     { codomain_type total; sum(total); return total; }
 
 
+
     //==========================================================================
     //= Algorithm unifiers
     //==========================================================================
@@ -765,12 +773,6 @@ public:
     sub_type& self() { return *that(); }
 
 protected:
-
-    iterator prior(iterator it_)
-    { return it_ == this->_map.begin() ? this->_map.end() : --it_; }
-
-    const_iterator prior(const_iterator it_)const
-    { return it_ == this->_map.begin() ? this->_map.end() : --it_; }
 
     template <class Combiner>
     bool combine(iterator& it_, const codomain_type& co_val)
