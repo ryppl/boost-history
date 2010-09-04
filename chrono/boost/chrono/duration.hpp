@@ -35,7 +35,6 @@ time2_demo contained this comment:
 
 //~ #include <iostream>
 
-#include <ctime>
 #include <climits>
 #include <limits>
 
@@ -43,7 +42,6 @@ time2_demo contained this comment:
 #include <boost/mpl/logical.hpp>
 #include <boost/ratio.hpp>
 #include <boost/type_traits/common_type.hpp>
-//~ #include <boost/system/error_code.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -70,8 +68,6 @@ namespace chrono {
 
   template <class Rep, class Period = ratio<1> >
     class duration;
-  template <class Clock, class Duration = typename Clock::duration>
-    class time_point;
 
     namespace detail
     {
@@ -187,9 +183,6 @@ template <class Rep1, class Period1, class Rep2, class Period2>
   struct common_type<chrono::duration<Rep1, Period1>,
                      chrono::duration<Rep2, Period2> >;
 
-template <class Clock, class Duration1, class Duration2>
-  struct common_type<chrono::time_point<Clock, Duration1>,
-                     chrono::time_point<Clock, Duration2> >;
 
 namespace chrono {
 
@@ -257,45 +250,6 @@ namespace chrono {
   typedef duration<boost::int_least64_t> seconds;              // at least 35 bits needed
   typedef duration<boost::int_least32_t, ratio< 60> > minutes; // at least 29 bits needed
   typedef duration<boost::int_least32_t, ratio<3600> > hours;  // at least 23 bits needed
-
-  // time_point arithmetic
-  template <class Clock, class Duration1, class Rep2, class Period2>
-    time_point<Clock, typename common_type<Duration1, duration<Rep2, Period2> >::type>
-    operator+(const time_point<Clock, Duration1>& lhs, const duration<Rep2, Period2>& rhs);
-  template <class Rep1, class Period1, class Clock, class Duration2>
-    time_point<Clock, typename common_type<duration<Rep1, Period1>, Duration2>::type>
-    operator+(const duration<Rep1, Period1>& lhs, const time_point<Clock, Duration2>& rhs);
-  template <class Clock, class Duration1, class Rep2, class Period2>
-    time_point<Clock, typename common_type<Duration1, duration<Rep2, Period2> >::type>
-    operator-(const time_point<Clock, Duration1>& lhs, const duration<Rep2, Period2>& rhs);
-  template <class Clock, class Duration1, class Duration2>
-    typename common_type<Duration1, Duration2>::type
-    operator-(const time_point<Clock, Duration1>& lhs, const time_point<Clock,
-            Duration2>& rhs);
-
-  // time_point comparisons
-  template <class Clock, class Duration1, class Duration2>
-  bool operator==(const time_point<Clock, Duration1>& lhs, const time_point<Clock,
-                  Duration2>& rhs);
-  template <class Clock, class Duration1, class Duration2>
-  bool operator!=(const time_point<Clock, Duration1>& lhs, const time_point<Clock,
-                  Duration2>& rhs);
-  template <class Clock, class Duration1, class Duration2>
-  bool operator< (const time_point<Clock, Duration1>& lhs, const time_point<Clock,
-                  Duration2>& rhs);
-  template <class Clock, class Duration1, class Duration2>
-  bool operator<=(const time_point<Clock, Duration1>& lhs, const time_point<Clock,
-                  Duration2>& rhs);
-  template <class Clock, class Duration1, class Duration2>
-  bool operator> (const time_point<Clock, Duration1>& lhs, const time_point<Clock,
-                  Duration2>& rhs);
-  template <class Clock, class Duration1, class Duration2>
-  bool operator>=(const time_point<Clock, Duration1>& lhs, const time_point<Clock,
-                  Duration2>& rhs);
-
-  // time_point_cast
-  template <class ToDuration, class Clock, class Duration>
-  time_point<Clock, ToDuration> time_point_cast(const time_point<Clock, Duration>& t);
 
 //----------------------------------------------------------------------------//
 //                          duration helpers                                  //
@@ -444,13 +398,6 @@ struct common_type<chrono::duration<Rep1, Period1>,
                       typename boost::detail::ratio_gcd<Period1, Period2>::type> type;
 };
 
-template <class Clock, class Duration1, class Duration2>
-struct common_type<chrono::time_point<Clock, Duration1>,
-                   chrono::time_point<Clock, Duration2> >
-{
-  typedef chrono::time_point<Clock,
-    typename common_type<Duration1, Duration2>::type> type;
-};
 
 //----------------------------------------------------------------------------//
 //                                                                            //
@@ -788,188 +735,6 @@ namespace chrono {
       return boost::chrono::detail::duration_cast<duration<Rep, Period>, ToDuration>()(fd);
   }
 
-//----------------------------------------------------------------------------//
-//                                                                            //
-//      20.9.4 Class template time_point [time.point]                         //
-//                                                                            //
-//----------------------------------------------------------------------------//
-
-template <class Clock, class Duration>
-  class time_point
-  {
-  BOOST_CHRONO_STATIC_ASSERT(boost::chrono::detail::is_duration<Duration>::value,
-      BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_TIME_POINT_MUST_BE_A_BOOST_CHRONO_DURATION, (Duration));
-  public:
-      typedef Clock                     clock;
-      typedef Duration                  duration;
-      typedef typename duration::rep    rep;
-      typedef typename duration::period period;
-  private:
-      duration d_;
-
-  public:
-      time_point() : d_(duration::zero()) {}
-      explicit time_point(const duration& d) : d_(d) {}
-
-      // conversions
-      template <class Duration2>
-      time_point(const time_point<clock, Duration2>& t,
-          typename boost::enable_if
-          <
-              boost::is_convertible<Duration2, duration>
-          >::type* = 0)
-              : d_(t.time_since_epoch()) {}
-
-      // observer
-
-      duration time_since_epoch() const {return d_;}
-
-      // arithmetic
-
-      time_point& operator+=(const duration& d) {d_ += d; return *this;}
-      time_point& operator-=(const duration& d) {d_ -= d; return *this;}
-
-      // special values
-
-      static BOOST_CHRONO_CONSTEXPR time_point min BOOST_PREVENT_MACRO_SUBSTITUTION () {return time_point((duration::min)());}
-      static BOOST_CHRONO_CONSTEXPR time_point max BOOST_PREVENT_MACRO_SUBSTITUTION () {return time_point((duration::max)());}
-  };
-
-//----------------------------------------------------------------------------//
-//      20.9.4.5 time_point non-member arithmetic [time.point.nonmember]      //
-//----------------------------------------------------------------------------//
-
-  // time_point operator+(time_point x, duration y);
-
-  template <class Clock, class Duration1, class Rep2, class Period2>
-  inline
-  time_point<Clock, typename common_type<Duration1, duration<Rep2, Period2> >::type>
-  operator+(const time_point<Clock, Duration1>& lhs,
-            const duration<Rep2, Period2>& rhs)
-  {
-      typedef time_point<Clock,
-        typename common_type<Duration1, duration<Rep2, Period2> >::type> TimeResult;
-      TimeResult r(lhs);
-      r += rhs;
-      return r;
-  }
-
-  // time_point operator+(duration x, time_point y);
-
-  template <class Rep1, class Period1, class Clock, class Duration2>
-  inline
-  time_point<Clock, typename common_type<duration<Rep1, Period1>, Duration2>::type>
-  operator+(const duration<Rep1, Period1>& lhs,
-            const time_point<Clock, Duration2>& rhs)
-  {
-      return rhs + lhs;
-  }
-
-  // time_point operator-(time_point x, duration y);
-
-  template <class Clock, class Duration1, class Rep2, class Period2>
-  inline
-  time_point<Clock, typename common_type<Duration1, duration<Rep2, Period2> >::type>
-  operator-(const time_point<Clock, Duration1>& lhs,
-            const duration<Rep2, Period2>& rhs)
-  {
-      return lhs + (-rhs);
-  }
-
-  // duration operator-(time_point x, time_point y);
-
-  template <class Clock, class Duration1, class Duration2>
-  inline
-  typename common_type<Duration1, Duration2>::type
-  operator-(const time_point<Clock, Duration1>& lhs,
-            const time_point<Clock, Duration2>& rhs)
-  {
-      return lhs.time_since_epoch() - rhs.time_since_epoch();
-  }
-
-//----------------------------------------------------------------------------//
-//      20.9.4.6 time_point comparisons [time.point.comparisons]              //
-//----------------------------------------------------------------------------//
-
-  // time_point ==
-
-  template <class Clock, class Duration1, class Duration2>
-  inline
-  bool
-  operator==(const time_point<Clock, Duration1>& lhs,
-             const time_point<Clock, Duration2>& rhs)
-  {
-      return lhs.time_since_epoch() == rhs.time_since_epoch();
-  }
-
-  // time_point !=
-
-  template <class Clock, class Duration1, class Duration2>
-  inline
-  bool
-  operator!=(const time_point<Clock, Duration1>& lhs,
-             const time_point<Clock, Duration2>& rhs)
-  {
-      return !(lhs == rhs);
-  }
-
-  // time_point <
-
-  template <class Clock, class Duration1, class Duration2>
-  inline
-  bool
-  operator<(const time_point<Clock, Duration1>& lhs,
-            const time_point<Clock, Duration2>& rhs)
-  {
-      return lhs.time_since_epoch() < rhs.time_since_epoch();
-  }
-
-  // time_point >
-
-  template <class Clock, class Duration1, class Duration2>
-  inline
-  bool
-  operator>(const time_point<Clock, Duration1>& lhs,
-            const time_point<Clock, Duration2>& rhs)
-  {
-      return rhs < lhs;
-  }
-
-  // time_point <=
-
-  template <class Clock, class Duration1, class Duration2>
-  inline
-  bool
-  operator<=(const time_point<Clock, Duration1>& lhs,
-             const time_point<Clock, Duration2>& rhs)
-  {
-      return !(rhs < lhs);
-  }
-
-  // time_point >=
-
-  template <class Clock, class Duration1, class Duration2>
-  inline
-  bool
-  operator>=(const time_point<Clock, Duration1>& lhs,
-             const time_point<Clock, Duration2>& rhs)
-  {
-      return !(lhs < rhs);
-  }
-
-//----------------------------------------------------------------------------//
-//      20.9.4.7 time_point_cast [time.point.cast]                            //
-//----------------------------------------------------------------------------//
-
-  template <class ToDuration, class Clock, class Duration>
-  inline
-  time_point<Clock, ToDuration>
-  time_point_cast(const time_point<Clock, Duration>& t)
-  {
-      return time_point<Clock, ToDuration>(
-        duration_cast<ToDuration>(t.time_since_epoch()));
-  }
-
 
 //----------------------------------------------------------------------------//
 //                 duration constructor implementation                        //
@@ -996,4 +761,4 @@ template <class Clock, class Duration>
 } // namespace chrono
 } // namespace boost
 
-#endif // BOOST_CHRONO_CHRONO_HPP
+#endif // BOOST_CHRONO_DURATION_HPP

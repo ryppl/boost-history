@@ -17,7 +17,7 @@
 #include <boost/thread/tss.hpp>
 #include <memory>
 
-#include <boost/config/abi_prefix.hpp> // must be the last #include
+//~ #include <boost/config/abi_prefix.hpp> // must be the last #include
 
 namespace boost { namespace chrono {
 
@@ -190,6 +190,6 @@ namespace boost { namespace chrono {
 } // namespace chrono
 } // namespace boost
 
-#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
+//~ #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif  // BOOST_CHRONO_SUSPENDIBLE_CLOCK_HPP

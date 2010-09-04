@@ -10,7 +10,8 @@
 #ifndef BOOST_CHRONO_PROCESS_CPU_CLOCKS_HPP
 #define BOOST_CHRONO_PROCESS_CPU_CLOCKS_HPP
 
-#include <boost/chrono/chrono.hpp>
+#include <boost/chrono/duration.hpp>
+#include <boost/chrono/time_point.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/operators.hpp>
 

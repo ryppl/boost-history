@@ -11,10 +11,11 @@
 #define BOOST_CHRONO_THREAD_CLOCK_HPP
 
 #include <boost/chrono/config.hpp>
-#include <boost/chrono/chrono.hpp>
+#include <boost/chrono/duration.hpp>
+#include <boost/chrono/time_point.hpp>
 #include <boost/system/error_code.hpp>
-#include <boost/throw_exception.hpp>
-#include <boost/system/system_error.hpp>
+//~ #include <boost/throw_exception.hpp>
+//~ #include <boost/system/system_error.hpp>
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
