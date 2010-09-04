@@ -1,0 +1,41 @@
+# Boost Ratio Library test Jamfile
+
+# Copyright Beman Dawes 2003, 2006, 2008
+
+# Distributed under the Boost Software License, Version 1.0.
+# See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt
+
+# See library home page at http://www.boost.org/libs/ratio
+
+# uncomment one if the above lines if you build outside the Boost release
+#local BOOST_ROOT = /boost_1_41_0 ;
+#local BOOST_ROOT = c:/cygwin/boost_1_41_0 ;
+
+if ! $(BOOST_ROOT)
+{
+    BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+}
+
+project
+    : requirements
+        <os>LINUX:<threading>multi
+        # uncomment the line above if you build outside the Boost release
+        #<include>$(BOOST_ROOT) 
+        # uncomment the line above if you build outside the Boost release
+        #<include>../../..
+        <toolset>msvc:<asynch-exceptions>on
+        <define>BOOST_ENABLE_WARNINGS
+        <warnings>all
+        <toolset>gcc:<cxxflags>-Wextra
+        <toolset>gcc:<cxxflags>-Wno-long-long        
+        <toolset>gcc-mingw-4.5.0:<cxxflags>-Wno-missing-field-initializers        
+        <toolset>gcc-mingw-4.5.0:<cxxflags>-fdiagnostics-show-option
+        <toolset>msvc:<cxxflags>/wd4127
+    ;
+
+    test-suite "ratio"
+        :
+        [ compile-fail ratio_fail_test1.cpp  ]
+        [ run ratio_test.cpp  :  :  : <link>static ]
+        [ run ratio_test.cpp  :  :  :  : ratio_test_dll ]
+        ;
