@@ -59,12 +59,12 @@ time2_demo contained this comment:
 #include <boost/mpl/bool.hpp>
 #define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES)                                 \
     BOOST_MPL_ASSERT_MSG(boost::mpl::bool_< (CND) >::type::value, MSG, TYPES)
-#elif defined(BOOST_RATIO_USES_ARRAY_ASSERT)
+#else
+//~ #elif defined(BOOST_RATIO_USES_ARRAY_ASSERT)
 #define BOOST_RATIO_CONCAT(A,B) A##B
 #define BOOST_RATIO_NAME(A,B) BOOST_RATIO_CONCAT(A,B)
 #define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_RATIO_NAME(__boost_ratio_test_,__LINE__)[CND]
-#else
-#define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES)
+//~ #define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES)
 #endif
 
 #ifdef INTMAX_C
