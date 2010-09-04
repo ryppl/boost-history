@@ -102,45 +102,7 @@ project
         :
         [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
         [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread : test_suspendible_clock_dll  ]
-        [ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
-        [ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread : suspendible_stopclock_example_dll ]
         [ run test_thread_clock.cpp :  :  : <link>static ]
         [ run test_thread_clock.cpp :  :  :  : test_thread_clock_dll ]
         ;
        
-    test-suite "stopwatch"
-        :
-        [ run ../example/stopwatch_example.cpp :  :  : <link>static ]
-        [ run ../example/stopwatch_example.cpp :  :  :   : stopwatch_example_dll ]
-        [ run ../example/scoped_stopwatch_example.cpp :  :  : <link>static ]
-        [ run ../example/scoped_stopwatch_example.cpp :  :  :  : scoped_stopwatch_example_dll ]
-        [ run ../example/stopwatch_accumulator_example.cpp :  :  : <link>static ]
-        [ run ../example/stopwatch_accumulator_example.cpp :  :  :   : stopwatch_accumulator_example_dll ]
-        [ run ../example/specific_stopwatch_accumulator_example.cpp :  :  : <link>static ]
-        [ run ../example/specific_stopwatch_accumulator_example.cpp :  :  :   : specific_stopwatch_accumulator_example_dll ]
-        [ run ../example/stopclock_example.cpp :  :  : <link>static ]
-        [ run ../example/stopclock_example.cpp :  :  :   : stopclock_example_dll ]
-        [ run ../example/stopclock_accumulator_example.cpp :  :  : <link>static ]
-        [ run ../example/stopclock_accumulator_example.cpp :  :  :  : stopclock_accumulator_example_dll ]
-        [ run ../example/nested_stopclock_accumulator_example.cpp :  :  :  <link>static ]
-        [ run ../example/nested_stopclock_accumulator_example.cpp :  :  :  : nested_stopclock_accumulator_example_dll ]
-        [ run ../example/loop_stopclock_accumulator_example.cpp :  :  :  <link>static ]
-        [ run ../example/loop_stopclock_accumulator_example.cpp :  :  :  : loop_stopclock_accumulator_example_dll ]
-        [ run ../example/t24_hours_example.cpp :  :  : <link>static ]
-        [ run ../example/t24_hours_example.cpp :  :  :   : t24_hours_example_dll ]
-        [ run ../example/scoped_stopclock_example.cpp :  :  : <link>static ]
-        [ run ../example/scoped_stopclock_example.cpp :  :  :   : function_stopclock_example_dll ]
-        [ link ../example/timex.cpp :  <link>static ]
-        [ link ../example/timex.cpp :    : timex_dll ]
-        [ compile test_minmax.cpp ]
-        [ run stopclock_constructor_overload_test.cpp :  :  : <link>static ]
-        [ run stopclock_constructor_overload_test.cpp :  :  :   : stopclock_constructor_overload_test_dll ]
-        [ run wstopclock_constructor_overload_test.cpp :  :  : <link>static ]
-        [ run wstopclock_constructor_overload_test.cpp :  :  :   :  wstopclock_constructor_overload_test_dll ]
-        ;
-        
-    test-suite "perf"
-        :
-        #[ run ../perf/stopclock_perf.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
-        #[ run ../perf/stopclock_perf.cpp :  :  :  <library>/boost/thread//boost_thread : stopclock_perf_dll ]
-        ;        
