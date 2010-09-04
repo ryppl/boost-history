@@ -8,11 +8,12 @@
 //  See http://www.boost.org/libs/chrono for documentation.
 
 #include <boost/thread.hpp>
-#include <boost/chrono/stopclock.hpp>
+#include <boost/stopwatches/stopclock.hpp>
 #include <boost/chrono/suspendible_clock.hpp>
 #include <cmath>
 
 using namespace boost::chrono;
+using namespace boost::stopwatches;
 long double res;
 
 int f1(long j)
