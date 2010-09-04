@@ -74,7 +74,7 @@ TODO:
 #include <boost/type_traits/common_type.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/cstdint.hpp>
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/integer_traits.hpp>
