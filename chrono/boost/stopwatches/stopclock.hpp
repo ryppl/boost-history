@@ -10,7 +10,7 @@
 #ifndef BOOST_STOPWATCHES_STOPCLOCK_HPP
 #define BOOST_STOPWATCHES_STOPCLOCK_HPP
 
-#include <boost/chrono/config.hpp>
+#include <boost/stopwatches/config.hpp>
 #include <boost/stopwatches/detail/static_assert.hpp>
 #include <boost/stopwatches/stopwatch_reporter.hpp>
 #include <boost/stopwatches/stopwatch_formatter.hpp>
