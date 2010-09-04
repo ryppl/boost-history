@@ -45,19 +45,19 @@
 #define BOOST_COMMON_TYPE_MUST_BE_A_COMPLE_TYPE "must be complete type"
 #endif
 
+#if defined(BOOST_NO_DECLTYPE) && defined(BOOST_COMMON_TYPE_DONT_USE_TYPEOF)
 #include <boost/type_traits/ext/detail/common_type.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/type_traits/is_void.hpp>
-#include <boost/type_traits/is_reference.hpp>
-#include <boost/type_traits/is_pointer.hpp>
 #include <boost/type_traits/remove_cv.hpp>
+#endif
+#include <boost/mpl/if.hpp>
+#include <boost/type_traits/declval.hpp>
 
 //----------------------------------------------------------------------------//
 //                                                                            //
 //                           C++03 implementation of                          //
 //             20.6.7 Other transformations [meta.trans.other]                //
 //                          Written by Howard Hinnant                         //
-//                       Adapted for Boost by Beman Dawes                     //
+//      Adapted for Boost by Beman Dawes, Vicente Botet and  Jeffrey Hellrung //
 //                                                                            //
 //----------------------------------------------------------------------------//
 
@@ -92,39 +92,7 @@ namespace boost {
     };
 
 // 2 args
-
-
-    namespace type_traits_detail {
-
-    template <typename T,
-        bool = !is_reference<T>::value && ! is_pointer<T>::value &&  !is_void<T>::value>
-    struct add_rvalue_reference_helper
-    { typedef T   type; };
-
-    template <typename T>
-    struct add_rvalue_reference_helper<T, true>
-    {
-#if !defined(BOOST_NO_RVALUE_REFERENCES)
-        typedef T&&   type;
-#else
-        typedef T   type;
-#endif
-    };
-
-    /// add_rvalue_reference
-    template <typename T>
-    struct add_rvalue_reference
-    : public add_rvalue_reference_helper<T>
-    { };
-
-    template <typename T>
-    struct add_rvalue_reference<T&>
-    { typedef T& type;
-        };
-
-
-    template <typename T>
-    typename add_rvalue_reference<T>::type declval();
+namespace type_traits_detail {
 
     template <class T, class U>
     struct common_type_2
@@ -133,36 +101,22 @@ namespace boost {
         BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(T) > 0, BOOST_COMMON_TYPE_MUST_BE_A_COMPLE_TYPE, (T));
         BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(U) > 0, BOOST_COMMON_TYPE_MUST_BE_A_COMPLE_TYPE, (U));
         static bool declval_bool();  // workaround gcc bug; not required by std
-        static typename add_rvalue_reference_helper<T>::type declval_T();  // workaround gcc bug; not required by std
-        static typename add_rvalue_reference_helper<U>::type declval_U();  // workaround gcc bug; not required by std
+        static typename add_rvalue_reference<T>::type declval_T();  // workaround gcc bug; not required by std
+        static typename add_rvalue_reference<U>::type declval_U();  // workaround gcc bug; not required by std
 
 #if !defined(BOOST_NO_DECLTYPE)
     public:
         typedef decltype(declval<bool>() ? declval<T>() : declval<U>()) type;
 #elif defined(BOOST_COMMON_TYPE_DONT_USE_TYPEOF)
-#if 0    
-        typedef char (&yes)[1];
-        typedef char (&no)[2];
-        //~ static yes deduce(typename add_rvalue_reference_helper<T>::type);
-        //~ static no deduce(typename add_rvalue_reference_helper<U>::type);
-        static yes deduce(T);
-        static no deduce(U);
-    public:
-        typedef typename mpl::if_c<
-            sizeof( deduce( declval_bool() ? declval_T() : declval_U() ) ) == sizeof( yes ),
-            T,
-            U
-        >::type type;
-#else
     public:
     typedef typename detail_type_traits_common_type::common_type_impl<
           typename remove_cv<T>::type,
           typename remove_cv<U>::type
       >::type type;
-#endif    
 #else
     public:
-        typedef BOOST_TYPEOF_TPL(declval_bool() ? declval_T() : declval_U()) type;
+        //~ typedef BOOST_TYPEOF_TPL(declval_bool() ? declval_T() : declval_U()) type;
+        typedef BOOST_TYPEOF_TPL(declval<bool>() ? declval<T>() : declval<U>()) type;
 #endif
     };
 

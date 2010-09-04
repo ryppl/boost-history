@@ -44,6 +44,7 @@
 #include <boost/type_traits/make_unsigned.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/declval.hpp>
 
 namespace boost
 {
@@ -85,16 +86,6 @@ template<>
 struct is_signable_integral< bool >
     : false_type
 { };
-
-/*******************************************************************************
- * anon_obj<T>() -> T
- *
- * This dummy function only serves to generate an expression of type T.  This
- * will be an rvalue expression if T is a non-reference type, and will be an
- * lvalue expression if T is a reference type.
- ******************************************************************************/
-
-template< class T > T anon_obj();
 
 /*******************************************************************************
  * struct sizeof_t<N>
@@ -186,7 +177,7 @@ struct select< Sequence, N, N >
  *
  * These classes and structs implement the logic behind common_type, which goes
  * roughly as follows.  Let C be the type of the conditional expression
- *     anon_obj< bool >() ? anon_obj<T>() : anon_obj<U>()
+ *     declval< bool >() ? declval<T>() : declval<U>()
  * if C is an rvalue, then:
  *     let T' and U' be T and U stripped of reference- and cv-qualifiers
  *     if T' and U' are pointer types, say, T' = V* and U' = W*, then:
@@ -230,7 +221,7 @@ class deduce_common_type
     >::type candidate_types;
     static const int best_candidate_index =
         sizeof( conversion_test_overloads< candidate_types >::apply(
-            anon_obj< bool >() ? anon_obj<T>() : anon_obj<U>()
+            declval< bool >() ? declval<T>() : declval<U>()
         ) ) - 1;
 public:
     typedef typename select< candidate_types, best_candidate_index >::type type;
@@ -272,7 +263,7 @@ struct nominal_candidates< T, U, V*, W*, false >
 template<
     class T, class U,
     bool = sizeof( ::boost::detail_type_traits_common_type::rvalue_test(
-        anon_obj< bool >() ? anon_obj<T>() : anon_obj<U>()
+        declval< bool >() ? declval<T>() : declval<U>()
     ) ) == sizeof( yes_type )
 >
 struct common_type_dispatch_on_rvalueness;
@@ -311,13 +302,6 @@ template<> struct common_type_impl< void, void > { typedef void type; };
 
 } // namespace detail_type_traits_common_type
 
-//~ template< class T, class U >
-//~ struct common_type
-    //~ : detail_type_traits_common_type::common_type_impl<
-          //~ typename remove_cv<T>::type,
-          //~ typename remove_cv<U>::type
-      //~ >
-//~ { };
 
 } // namespace boost
 
