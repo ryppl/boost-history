@@ -9,7 +9,7 @@
 
 #include <boost/thread.hpp>
 #include <boost/stopwatches/stopclock.hpp>
-#include <boost/chrono/suspendible_clock.hpp>
+#include <boost/stopwatches/suspendible_clock.hpp>
 #include <cmath>
 
 using namespace boost::chrono;

@@ -36,7 +36,16 @@ project
         <toolset>msvc:<cxxflags>/wd4127
     ;
 
+   test-suite "minmax"
+        :
+        [ compile test_minmax.cpp ]
+        ;
 
+    test-suite "other_clocks"
+        :        
+        [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
+        [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread : test_suspendible_clock_dll  ]
+        ;
 
     test-suite "stopwatch"
         :
@@ -62,7 +71,6 @@ project
         [ run ../example/scoped_stopclock_example.cpp :  :  :   : function_stopclock_example_dll ]
         [ link ../example/timex.cpp :  <link>static ]
         [ link ../example/timex.cpp :    : timex_dll ]
-        [ compile test_minmax.cpp ]
         [ run stopclock_constructor_overload_test.cpp :  :  : <link>static ]
         [ run stopclock_constructor_overload_test.cpp :  :  :   : stopclock_constructor_overload_test_dll ]
         [ run wstopclock_constructor_overload_test.cpp :  :  : <link>static ]
