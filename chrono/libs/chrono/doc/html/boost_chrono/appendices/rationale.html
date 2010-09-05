@@ -32,10 +32,10 @@
         and provides motivation for key design decisions. The following sections
         are an extract from this document.
       </p>
-<a name="boost_chrono.appendices.rationale.is_it_possible_for_the_user_to_pass_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__to_a_function_with_the_units_being_ambiguous_"></a><h4>
-<a name="id5079563"></a>
-        <a href="rationale.html#boost_chrono.appendices.rationale.is_it_possible_for_the_user_to_pass_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__to_a_function_with_the_units_being_ambiguous_">Is
-        it possible for the user to pass a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+<a name="boost_chrono.appendices.rationale.is_it_possible_for_the_user_to_pass_a___link_linkend__boost_chrono_reference_cpp0x_duration_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__to_a_function_with_the_units_being_ambiguous_"></a><h4>
+<a name="id5062329"></a>
+        <a href="rationale.html#boost_chrono.appendices.rationale.is_it_possible_for_the_user_to_pass_a___link_linkend__boost_chrono_reference_cpp0x_duration_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__to_a_function_with_the_units_being_ambiguous_">Is
+        it possible for the user to pass a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> to a function with the
         units being ambiguous?</a>
       </h4>
@@ -46,7 +46,7 @@
 <pre class="programlisting"><span class="identifier">f</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>  <span class="comment">// Will not compile, 3 is not implicitly convertible to any __duration__
 </span></pre>
 <a name="boost_chrono.appendices.rationale.why_duration_needs_operator_"></a><h4>
-<a name="id5079663"></a>
+<a name="id5062427"></a>
         <a href="rationale.html#boost_chrono.appendices.rationale.why_duration_needs_operator_">Why
         duration needs operator%</a>
       </h4>
@@ -74,7 +74,7 @@
 <span class="special">};</span>
 </pre>
 <a name="boost_chrono.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form"></a><h4>
-<a name="id5080243"></a>
+<a name="id5063007"></a>
         <a href="rationale.html#boost_chrono.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form">Why
         ratio needs CopyConstruction and Assignment from ratios having the same normalized
         form</a>
@@ -86,30 +86,23 @@
 <p>
         This simple example
       </p>
-<pre class="programlisting"><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;</span> <span class="identifier">r1</span><span class="special">;</span>
-<a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">3</span><span class="special">,</span><span class="number">9</span><span class="special">&gt;</span> <span class="identifier">r2</span><span class="special">;</span>
+<pre class="programlisting"><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;</span> <span class="identifier">r1</span><span class="special">;</span>
+<code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">3</span><span class="special">,</span><span class="number">9</span><span class="special">&gt;</span> <span class="identifier">r2</span><span class="special">;</span>
 <span class="identifier">r1</span> <span class="special">=</span> <span class="identifier">r2</span><span class="special">;</span> <span class="comment">// (1)
 </span></pre>
 <p>
         fails to compile in (1). Other example
       </p>
-<pre class="programlisting"><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;</span> <span class="identifier">r1</span><span class="special">;</span>
-<span class="identifier">ratio_substract</span><span class="special">&lt;</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">2</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;,</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">r2</span><span class="special">=</span><span class="identifier">r1</span><span class="special">;</span>  <span class="comment">// (2)
+<pre class="programlisting"><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;</span> <span class="identifier">r1</span><span class="special">;</span>
+<span class="identifier">ratio_substract</span><span class="special">&lt;</span><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">2</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;,</span><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">r2</span><span class="special">=</span><span class="identifier">r1</span><span class="special">;</span>  <span class="comment">// (2)
 </span></pre>
 <p>
-        The type of ratio<span class="underline">substract&lt;</span><span class="underline">ratio</span><span class="underline">&lt;2,3&gt;,</span><span class="underline">ratio</span>_&lt;1,3&gt; &gt; could be <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a>&lt;3,9&gt; so the compilation
-        could fail in (2). It could also be <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a>&lt;1,3&gt; and the compilation
-        succeeds.
+        The type of ratio<span class="underline">substract&lt;</span><span class="underline">ratio</span><span class="underline">&lt;2,3&gt;,</span><span class="underline">ratio</span>_&lt;1,3&gt; &gt; could be <code class="computeroutput"><span class="identifier">ratio</span></code>&lt;3,9&gt; so the compilation could
+        fail in (2). It could also be <code class="computeroutput"><span class="identifier">ratio</span></code>&lt;1,3&gt;
+        and the compilation succeeds.
       </p>
 <a name="boost_chrono.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type"></a><h4>
-<a name="id5080653"></a>
+<a name="id5063376"></a>
         <a href="rationale.html#boost_chrono.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type">Why
         ratio needs the nested normalizer typedef type</a>
       </h4>
@@ -117,26 +110,22 @@
         In <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n3000.pdf" target="_top"><span class="bold"><strong>N3000</strong></span></a> 20.4.2 and similar clauses
       </p>
 <p>
-        <span class="emphasis"><em>3 The nested typedef type shall be a synonym for <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a>&lt;T1, T2&gt; where T1 has
-        the value R1::num * R2::den - R2::num * R1::den and T2 has the value R1::den
-        * R2::den.</em></span>
+        <span class="emphasis"><em>3 The nested typedef type shall be a synonym for <code class="computeroutput"><span class="identifier">ratio</span></code>&lt;T1, T2&gt; where T1 has the value
+        R1::num * R2::den - R2::num * R1::den and T2 has the value R1::den * R2::den.</em></span>
       </p>
 <p>
         The meaning of synonym let think that the result should be a normalized ratio
-        equivalent to <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a>&lt;T1, T2&gt;, but there is
-        not an explicit definition of what synonym means in this context.
+        equivalent to <code class="computeroutput"><span class="identifier">ratio</span></code>&lt;T1,
+        T2&gt;, but there is not an explicit definition of what synonym means in
+        this context.
       </p>
 <p>
         If the CopyConstruction and Assignment ([<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#12811281" target="_top"><span class="bold"><strong>LWG 1281</strong></span></a>) is not added we need a typedef for
         accessing the normalized ratio, and change 20.4.2 to return only this normalized
         result. In this case the user will need to
       </p>
-<pre class="programlisting"><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">r1</span><span class="special">;</span>
-<a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">3</span><span class="special">,</span><span class="number">9</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">r2</span><span class="special">;</span>
+<pre class="programlisting"><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">r1</span><span class="special">;</span>
+<code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">3</span><span class="special">,</span><span class="number">9</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">r2</span><span class="special">;</span>
 <span class="identifier">r1</span> <span class="special">=</span> <span class="identifier">r2</span><span class="special">;</span> <span class="comment">// compiles as both types are the same.
 </span></pre>
 </div>

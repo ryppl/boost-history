@@ -61,7 +61,8 @@
           <span class="bold"><strong>Features:</strong></span>
         </p>
 <div class="itemizedlist"><ul type="disc"><li>
-              Stopwatches have been moved to a separated library: Boost.Stopwatches.
+              Stopwatches, Ratio and CommonType have been moved to separated libraries:
+              Boost.Stopwatches, Boost.Ratio and Boost.TypeTraits.
             </li></ul></div>
 </div>
 <div class="section" lang="en">
@@ -84,9 +85,8 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-              Implementation of <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> without using
-              Boost.TypeOf.
+              Implementation of <code class="computeroutput"><span class="identifier">common_type</span></code>
+              without using Boost.TypeOf.
             </li>
 <li>
               Added __stopwatch_accumulator_time<span class="underline">formatter</span>_
@@ -249,7 +249,7 @@
             </li>
 <li>
               Added <code class="computeroutput"><span class="identifier">scope_suspend</span></code>
-              which do <code class="computeroutput"><span class="identifier">suspend</span></code>/<code class="computeroutput"><span class="identifier">resume</span></code> if the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
+              which do <code class="computeroutput"><span class="identifier">suspend</span></code>/<code class="computeroutput"><span class="identifier">resume</span></code> if the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.clock" title="
           Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a> is a model of <code class="computeroutput"><span class="identifier">SuspendibleClock</span></code> concept, and nothing
               otherwise.
             </li>
@@ -419,8 +419,8 @@
             </li>
 <li>
               Added <code class="computeroutput"><span class="identifier">typeof</span></code> registration
-              for classes <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+              for classes <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>
             </li>
 <li>
@@ -536,32 +536,31 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-              Added <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> construction and assignment
-              from an equivalent <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281" target="_top"><span class="bold"><strong>LWG 1281. CopyConstruction and Assignment between ratios
+              Added <code class="computeroutput"><span class="identifier">ratio</span></code> construction
+              and assignment from an equivalent <code class="computeroutput"><span class="identifier">ratio</span></code>
+              (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281" target="_top"><span class="bold"><strong>LWG 1281. CopyConstruction and Assignment between ratios
               having the same normalized form</strong></span></a>)
             </li>
 <li>
-              Added nested <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> typedef type (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281" target="_top"><span class="bold"><strong>LWG 1281. CopyConstruction and Assignment between ratios
+              Added nested <code class="computeroutput"><span class="identifier">ratio</span></code>
+              typedef type (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281" target="_top"><span class="bold"><strong>LWG 1281. CopyConstruction and Assignment between ratios
               having the same normalized form</strong></span></a>)
             </li>
 <li>
               Added __BOOST_CHRONO_HAS_CLOCK<span class="underline">MONOTONIC</span>_
-              macro to state if <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.monotonic_clock" title="
+              macro to state if <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
           Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a> is provided
               on this platform.
             </li>
 <li>
-              Added <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+              Added <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> <code class="computeroutput"><span class="keyword">operator</span><span class="special">%</span></code> (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934" target="_top"><span class="bold"><strong>LGW 934. duration is missing operator%</strong></span></a>)
             </li>
 <li>
               Added BOOST_CHRONO_CONSTEXPR when constexpr should be used.
             </li>
 <li>
-              Complete <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+              Complete <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> <code class="computeroutput"><span class="keyword">operator</span><span class="special">*</span></code> and <code class="computeroutput"><span class="keyword">operator</span><span class="special">/</span></code>.
             </li>
 </ul></div>
@@ -620,12 +619,12 @@
 <li>
               result of metafunctions <code class="computeroutput"><span class="identifier">ratio_multiply</span></code>
               and <code class="computeroutput"><span class="identifier">ratio_divide</span></code> were
-              not normalized ratios: Use of the nested <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> typedef type on <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> arithmetic operations.
+              not normalized ratios: Use of the nested <code class="computeroutput"><span class="identifier">ratio</span></code>
+              typedef type on <code class="computeroutput"><span class="identifier">ratio</span></code>
+              arithmetic operations.
             </li>
 <li>
-              Copy constructor from similar <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+              Copy constructor from similar <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> masked the defaulted
               operations: Added duration defaulted implementations
             </li>
@@ -642,8 +641,7 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-              The C++0x Standard Library's <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>.
+              The C++0x Standard Library's <code class="computeroutput"><span class="identifier">common_type</span></code>.
             </li>
 <li>
               The C++0x Standard Library's compile-time rational arithmetic.
@@ -652,11 +650,11 @@
               The C++0x Standard Library's time utilities, including:
               <div class="itemizedlist"><ul type="circle">
 <li>
-                    Class template <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+                    Class template <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>
                   </li>
 <li>
-                    Class template <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+                    Class template <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>
                   </li>
 <li>
@@ -666,7 +664,7 @@
                           <code class="computeroutput"><span class="identifier">system_clock</span></code>
                         </li>
 <li>
-                          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.monotonic_clock" title="
+                          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
           Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a>
                         </li>
 <li>

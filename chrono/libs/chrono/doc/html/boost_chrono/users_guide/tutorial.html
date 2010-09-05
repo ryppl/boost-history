@@ -27,16 +27,6 @@
 <a name="boost_chrono.users_guide.tutorial"></a><a href="tutorial.html" title="Tutorial">Tutorial</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.common_type">Common
-        Type</a></span></dt>
-<dd><dl>
-<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.common_type.so_what_is__common_type__and_how_can_i_use_it_">So
-          What is <code class="computeroutput"><span class="identifier">common_type</span></code> and
-          How can I use it?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.common_type.how_to_get_the_common_type_of_inter_type_with_explicit_conversions_">How
-          to get the common type of inter-type with explicit conversions?</a></span></dt>
-</dl></dd>
-<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.ratio">Ratio</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.duration">Duration</a></span></dt>
 <dd><dl>
 <dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.duration.so_what_exactly_is_a__duration__and_how_do_i_use_one_">So
@@ -71,172 +61,6 @@
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.users_guide.tutorial.common_type"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.common_type" title="Common
-        Type">Common
-        Type</a>
-</h4></div></div></div>
-<div class="toc"><dl>
-<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.common_type.so_what_is__common_type__and_how_can_i_use_it_">So
-          What is <code class="computeroutput"><span class="identifier">common_type</span></code> and
-          How can I use it?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.common_type.how_to_get_the_common_type_of_inter_type_with_explicit_conversions_">How
-          to get the common type of inter-type with explicit conversions?</a></span></dt>
-</dl></div>
-<p>
-          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> has been a recurring
-          theme in many places for many years. We've previously known it as promote
-          and examples of it are spread throughout boost. It has been reinvented
-          independently several times, because it is so useful.
-        </p>
-<p>
-          Andrei Alexandrescu recently pointed us at a D library: std.traits - D
-          Programming Language - Digital Mars, which became the motivation for this
-          particular name, and the variadic nature of <a href="http://www.digitalmars.com/d/2.0/phobos/std_traits.html#CommonType" target="_top">this
-          trait</a>.
-        </p>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h5 class="title">
-<a name="boost_chrono.users_guide.tutorial.common_type.so_what_is__common_type__and_how_can_i_use_it_"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.common_type.so_what_is__common_type__and_how_can_i_use_it_" title="So
-          What is common_type and
-          How can I use it?">So
-          What is <code class="computeroutput"><span class="identifier">common_type</span></code> and
-          How can I use it?</a>
-</h5></div></div></div>
-<p>
-            In a nutshell, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> is a trait that
-            takes 1 or more types, and returns a type which all of the types will
-            convert to. The default definition demands this conversion be implicit.
-            However the trait can be specialized for user-defined types which want
-            to limit their inter-type conversions to explicit, and yet still want
-            to interoperate with the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> facility.
-          </p>
-<p>
-            <span class="bold"><strong>Example:</strong></span>
-          </p>
-<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U</span><span class="special">&gt;</span>
-<span class="keyword">typename</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a><span class="special">&lt;</span><span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span> <span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span>
-<span class="keyword">operator</span><span class="special">+(</span><span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span> <span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;);</span>
-</pre>
-<p>
-            In the above example, "mixed-mode" complex arithmetic is allowed.
-            The return type is described by <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>. For example the
-            resulting type of adding a <code class="computeroutput"><span class="identifier">complex</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span></code> and <code class="computeroutput"><span class="identifier">complex</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span></code> might be a <code class="computeroutput"><span class="identifier">complex</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span></code>. Another choice for the author might
-            be:
-          </p>
-<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U</span><span class="special">&gt;</span>
-<span class="identifier">complex</span><span class="special">&lt;</span><span class="keyword">typename</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">U</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span>
-<span class="keyword">operator</span><span class="special">+(</span><span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span> <span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;);</span>
-</pre>
-<p>
-            Here is how someone might produce a variadic comparison function:
-          </p>
-<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="special">...</span><span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">typename</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a><span class="special">&lt;</span><span class="identifier">T</span><span class="special">...&gt;::</span><span class="identifier">type</span>
-<span class="identifier">min</span><span class="special">(</span><span class="identifier">T</span><span class="special">...</span> <span class="identifier">t</span><span class="special">);</span>
-</pre>
-<p>
-            This is a very useful and broadly applicable utility. The <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> facilities use it
-            to make multi-precision arithmetic seamless and exact.
-          </p>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h5 class="title">
-<a name="boost_chrono.users_guide.tutorial.common_type.how_to_get_the_common_type_of_inter_type_with_explicit_conversions_"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.common_type.how_to_get_the_common_type_of_inter_type_with_explicit_conversions_" title="How
-          to get the common type of inter-type with explicit conversions?">How
-          to get the common type of inter-type with explicit conversions?</a>
-</h5></div></div></div>
-<p>
-            The default definition of <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> demands the conversion
-            be implicit. However the trait can be specialized for user-defined types
-            which want to limit their inter-type conversions to explicit, and yet
-            still want to interoperate with the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> facility.
-          </p>
-</div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.users_guide.tutorial.ratio"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.ratio" title="Ratio">Ratio</a>
-</h4></div></div></div>
-<p>
-          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> is a general purpose utility
-          inspired by Walter Brown allowing one to easily and safely compute rational
-          values at compile time. The <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> class catches all errors
-          (such as divide by zero and overflow) at compile time. It is used in the
-          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> classes to efficiently
-          create units of time. It can also be used in other "quantity"
-          libraries (both std-defined and user-defined), or anywhere there is a rational
-          constant which is known at compile time. The use of this utility can greatly
-          reduce the chances of run time overflow because the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> (and any ratios resulting
-          from <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> arithmetic) are always reduced
-          to lowest terms.
-        </p>
-<p>
-          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> is a template taking two
-          intmax_ts, with the second defaulted to 1. In addition to copy constructors
-          and assignement, it only has two public members, both of which are static
-          const intmax_t. One is the numerator of the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> and the other is the denominator.
-          The <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> is always normalized such
-          that it is expressed in lowest terms, and the denominator is always positive.
-          When the numerator is 0, the denominator is always 1.
-        </p>
-<p>
-          <span class="bold"><strong>Example:</strong></span>
-        </p>
-<pre class="programlisting"><span class="keyword">typedef</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">5</span><span class="special">,</span> <span class="number">3</span><span class="special">&gt;</span>   <span class="identifier">five_thirds</span><span class="special">;</span>       
-<span class="comment">// five_thirds::num == 5, five_thirds::den == 3
-</span>
-<span class="keyword">typedef</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">25</span><span class="special">,</span> <span class="number">15</span><span class="special">&gt;</span> <span class="identifier">also_five_thirds</span><span class="special">;</span>  
-<span class="comment">// also_five_thirds::num == 5, also_five_thirds::den == 3
-</span>
-<span class="keyword">typedef</span> <span class="identifier">ratio_divide</span><span class="special">&lt;</span><span class="identifier">five_thirds</span><span class="special">,</span> <span class="identifier">also_five_thirds</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">one</span><span class="special">;</span>  
-<span class="comment">// one::num == 1, one::den == 1
-</span></pre>
-<p>
-          This facility also includes convenience typedefs for the SI prefixes <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio_si_typedefs" title="
-          SI typedefs"><code class="computeroutput"><span class="identifier">atto</span></code></a> through <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio_si_typedefs" title="
-          SI typedefs"><code class="computeroutput"><span class="identifier">exa</span></code></a> corresponding to their internationally
-          recognized definitions (in terms of <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a>). This is a tremendous syntactic
-          convenience. It will prevent errors in specifying constants as one no longer
-          has to double count the number of zeros when trying to write million or
-          billion.
-        </p>
-<p>
-          <span class="bold"><strong>Example:</strong></span>
-        </p>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">ratio_multiply</span><span class="special">&lt;</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">5</span><span class="special">&gt;,</span> <span class="identifier">giga</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">_5giga</span><span class="special">;</span>  
-<span class="comment">// _5giga::num == 5000000000, _5giga::den == 1
-</span>
-<span class="keyword">typedef</span> <span class="identifier">ratio_multiply</span><span class="special">&lt;</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">5</span><span class="special">&gt;,</span> <span class="identifier">nano</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">_5nano</span><span class="special">;</span>  
-<span class="comment">// _5nano::num == 1, _5nano::den == 200000000
-</span></pre>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
 <a name="boost_chrono.users_guide.tutorial.duration"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.duration" title="Duration">Duration</a>
 </h4></div></div></div>
 <div class="toc"><dl>
@@ -259,41 +83,41 @@
           parameter?</a></span></dt>
 </dl></div>
 <p>
-          The <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          The <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> is the heart of this
           library. The interface that the user will see in everyday use is nearly
-          identical to that of Boost.DateTime time <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          identical to that of Boost.DateTime time <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a> authored by Jeff Garland,
           both in syntax and in behavior. This has been a very popular boost library
           for 7 years. There is an enormous positive history with this interface.
         </p>
 <p>
-          The library consists of six units of time <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          The library consists of six units of time <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>:
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-              <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+              <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">hours</span></code></a>
             </li>
 <li>
-              <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+              <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">minutes</span></code></a>
             </li>
 <li>
-              <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+              <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">seconds</span></code></a>
             </li>
 <li>
-              <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+              <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">milliseconds</span></code></a>
             </li>
 <li>
-              <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+              <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a>
             </li>
 <li>
-              <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+              <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">nanoseconds</span></code></a>
             </li>
 </ul></div>
@@ -302,13 +126,13 @@
           the most common units used when sleeping, waiting on a condition variable,
           or waiting to obtain the lock on a mutex. Each of these units is nothing
           but a thin wrapper around a signed integral count. That is, when you construct
-          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">minutes</span></code></a><code class="computeroutput"><span class="special">(</span><span class="number">3</span><span class="special">)</span></code>, all that
           happens is a <code class="computeroutput"><span class="number">3</span></code> is stored inside
-          of minutes. When you construct <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+          of minutes. When you construct <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a><code class="computeroutput"><span class="special">(</span><span class="number">3</span><span class="special">)</span></code>, all that
           happens is a <code class="computeroutput"><span class="number">3</span></code> is stored inside
-          of <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+          of <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a>.
         </p>
 <p>
@@ -316,16 +140,16 @@
           to one another. At this time, unit-specific compile-time conversion constants
           are used to convert the source unit to the target unit. Only conversions
           from coarser units to finer units are allowed (in boost). This restriction
-          ensures that all conversions are always exact. That is, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+          ensures that all conversions are always exact. That is, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a> can always represent
-          any value <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+          any value <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">minutes</span></code></a> has.
         </p>
 <p>
           In Boost.DateTime, these units are united via inheritance. <span class="bold"><strong>Boost.Chrono</strong></span>
-          instead unites these units through the class template <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          instead unites these units through the class template <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>. That is, in <span class="bold"><strong>Boost.Chrono</strong></span> all six of the above units are nothing
-          but typedefs to different instantiations of <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          but typedefs to different instantiations of <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>. This change from Boost.DateTime
           has a far reaching positive impact, while not changing the syntax of the
           everyday use at all.
@@ -333,30 +157,28 @@
 <p>
           The most immediate positive impact is that the library can immediately
           generate any unit, any precision it needs. This is sometimes necessary
-          when doing comparisons or arithmetic between <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          when doing comparisons or arithmetic between <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a> of differing precision,
           assuming one wants the comparison and arithmetic to be exactly correct.
         </p>
 <p>
-          A secondary benefit is that by publishing the class template <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          A secondary benefit is that by publishing the class template <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> interface, user code
-          can very easily create <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          can very easily create <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a> with any precision
-          they desire. The <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> utility is used to specify
-          the precision, so as long as the precision can be expressed by a rational
-          constant with respect to seconds, this framework can exactly represent
-          it (one third of a second is no problem, and neither is one third of a
-          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio_si_typedefs" title="
-          SI typedefs"><code class="computeroutput"><span class="identifier">femto</span></code></a> second). All of this utility
-          and flexibility comes at no cost just by making use of the no-run-time-overhead
-          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> facility.
+          they desire. The <code class="computeroutput"><span class="identifier">ratio</span></code>
+          utility is used to specify the precision, so as long as the precision can
+          be expressed by a rational constant with respect to seconds, this framework
+          can exactly represent it (one third of a second is no problem, and neither
+          is one third of a <code class="computeroutput"><span class="identifier">femto</span></code>
+          second). All of this utility and flexibility comes at no cost just by making
+          use of the no-run-time-overhead <code class="computeroutput"><span class="identifier">ratio</span></code>
+          facility.
         </p>
 <p>
-          In Boost.DateTime, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+          In Boost.DateTime, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">hours</span></code></a> does not have the same representation
-          as <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+          as <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">nanoseconds</span></code></a>. The former is usually
           represented with a <code class="computeroutput"><span class="keyword">long</span></code> whereas
           a <code class="computeroutput"><span class="keyword">long</span> <span class="keyword">long</span></code>
@@ -367,14 +189,14 @@
         </p>
 <p>
           <span class="bold"><strong>Boost.Chrono</strong></span> continues, and generalizes
-          that philosophy. Not only can one specify the precision of a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          that philosophy. Not only can one specify the precision of a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>, one can also specify
           its representation. This can be any integral type, or even a floating point
           type. Or it can be a user-defined type which emulates an arithmetic type.
           The six predefined units all use signed integral types as their representation.
-          And they all have a minimum range of +/- 292 years. <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+          And they all have a minimum range of +/- 292 years. <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">nanoseconds</span></code></a> needs 64 bits to cover
-          that range. <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+          that range. <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">hours</span></code></a> needs only 23 bits to cover
           that range.
         </p>
@@ -387,42 +209,38 @@
           and How Do I Use One?</a>
 </h5></div></div></div>
 <p>
-            A <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            A <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> has a representation
             and a tick period (precision).
           </p>
-<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">duration</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span> <span class="special">=</span> <code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">duration</span><span class="special">;</span>
 </pre>
 <p>
             The representation is simply any arithmetic type, or an emulation of
             such a type. The representation stores a count of ticks. This count is
-            the only data member stored in a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            the only data member stored in a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>. If the representation
             is floating point, it can store fractions of a tick to the precision
-            of the representation. The tick period is represented by a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> and is encoded into the
-            <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            of the representation. The tick period is represented by a <code class="computeroutput"><span class="identifier">ratio</span></code> and is encoded into the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>'s type, instead of
-            stored. The tick period only has an impact on the behavior of the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            stored. The tick period only has an impact on the behavior of the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> when a conversion between
-            different <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            different <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>'s is attempted. The
             tick period is completely ignored when simply doing arithmetic among
-            like <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            like <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a>.
           </p>
 <p>
             <span class="bold"><strong>Example:</strong></span>
           </p>
-<pre class="programlisting"><span class="keyword">typedef</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">,</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">60</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">minutes</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">typedef</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">,</span> <code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">60</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">minutes</span><span class="special">;</span>
 <span class="identifier">minutes</span> <span class="identifier">m1</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>                 <span class="comment">// m1 stores 3
 </span><span class="identifier">minutes</span> <span class="identifier">m2</span><span class="special">(</span><span class="number">2</span><span class="special">);</span>                 <span class="comment">// m2 stores 2
 </span><span class="identifier">minutes</span> <span class="identifier">m3</span> <span class="special">=</span> <span class="identifier">m1</span> <span class="special">+</span> <span class="identifier">m2</span><span class="special">;</span>          <span class="comment">// m3 stores 5
 </span>
-<span class="keyword">typedef</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+<span class="keyword">typedef</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">,</span> <span class="identifier">micro</span><span class="special">&gt;</span> <span class="identifier">microseconds</span><span class="special">;</span>
 <span class="identifier">microseconds</span> <span class="identifier">us1</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>           <span class="comment">// us1 stores 3
 </span><span class="identifier">microseconds</span> <span class="identifier">us2</span><span class="special">(</span><span class="number">2</span><span class="special">);</span>           <span class="comment">// us2 stores 2
@@ -435,7 +253,7 @@
             minutes to microseconds, resulting in a relatively large number of microseconds.
           </p>
 <p>
-            If you need to access the tick count within a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            If you need to access the tick count within a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>, there is a member
             <code class="computeroutput"><span class="identifier">count</span><span class="special">()</span></code>
             which simply returns the stored tick count.
@@ -443,10 +261,10 @@
 <pre class="programlisting"><span class="keyword">long</span> <span class="keyword">long</span> <span class="identifier">tc</span> <span class="special">=</span> <span class="identifier">us4</span><span class="special">.</span><span class="identifier">count</span><span class="special">();</span>    <span class="comment">// tc is 300000005
 </span></pre>
 <p>
-            These <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            These <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a> have very simple,
             very predictable, and very observable behavior. After all, this is really
-            nothing but the time tested interface of Jeff's boost time <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            nothing but the time tested interface of Jeff's boost time <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> library (unified with
             templates instead of inheritance).
           </p>
@@ -473,27 +291,27 @@
             fractional part gets silently discarded.
           </p>
 <a name="boost_chrono.users_guide.tutorial.duration.what_happens_if_i_assign__m3___us3__to__minutes__instead_of__microseconds__.but_what_if_the_truncation_behavior_is_what_i_want_to_do_"></a><h6>
-<a name="id4998851"></a>
+<a name="id4997417"></a>
             <a href="tutorial.html#boost_chrono.users_guide.tutorial.duration.what_happens_if_i_assign__m3___us3__to__minutes__instead_of__microseconds__.but_what_if_the_truncation_behavior_is_what_i_want_to_do_">But
             what if the truncation behavior is what I want to do?</a>
           </h6>
 <p>
-            There is a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+            There is a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
           Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a> facility to explicitly
             ask for this behavior:
           </p>
-<pre class="programlisting"><span class="identifier">minutes</span> <span class="identifier">m4</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+<pre class="programlisting"><span class="identifier">minutes</span> <span class="identifier">m4</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
           Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><span class="identifier">minutes</span><span class="special">&gt;(</span><span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span><span class="special">);</span>  <span class="comment">// m4.count() == 5
 </span></pre>
 <p>
-            In general, one can perform <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            In general, one can perform <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> arithmetic at will.
-            If <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+            If <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
           Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a> isn't used, and
             it compiles, the arithmetic is exact. Any place one wants to override
-            this exact arithmetic behavior, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+            this exact arithmetic behavior, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
           Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a> can be used to
-            explicitly specify that desire. The <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+            explicitly specify that desire. The <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
           Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a> has the same efficiency
             as the implicit conversion, and will even be exact as often as it can.
           </p>
@@ -514,9 +332,8 @@
             Not a problem. When the destination of a conversion has floating point
             representation, all conversions are allowed to happen implicitly.
           </p>
-<pre class="programlisting"><span class="keyword">typedef</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">60</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">dminutes</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">typedef</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">60</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">dminutes</span><span class="special">;</span>
 <span class="identifier">dminutes</span> <span class="identifier">dm4</span> <span class="special">=</span> <span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span><span class="special">;</span>  <span class="comment">// dm4.count() == 5.000000083333333
 </span></pre>
 </div>
@@ -528,12 +345,12 @@
 </h5></div></div></div>
 <p>
             If you were writing these conversions by hand, you could not make it
-            more efficient. The use of <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> ensures that all conversion
-            constants are simplified as much as possible at compile time. This usually
-            results in the numerator or denominator of the conversion factor simplifying
-            to <code class="computeroutput"><span class="number">1</span></code>, and being subsequently
-            ignored in converting the run time values of the tick counts.
+            more efficient. The use of <code class="computeroutput"><span class="identifier">ratio</span></code>
+            ensures that all conversion constants are simplified as much as possible
+            at compile time. This usually results in the numerator or denominator
+            of the conversion factor simplifying to <code class="computeroutput"><span class="number">1</span></code>,
+            and being subsequently ignored in converting the run time values of the
+            tick counts.
           </p>
 </div>
 <div class="section" lang="en">
@@ -548,11 +365,11 @@
             There are several options open to the user:
           </p>
 <div class="itemizedlist"><ul type="disc"><li>
-                If the author of the function wants to accept any <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+                If the author of the function wants to accept any <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>, and is willing
-                to work in floating point <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+                to work in floating point <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a>, he can simply
-                use any floating point <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+                use any floating point <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> as the parameter:
               </li></ul></div>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">)</span>  <span class="comment">// accept floating point seconds
@@ -564,7 +381,7 @@
 </pre>
 <div class="itemizedlist"><ul type="disc"><li>
                 If the author of the function wants to traffic only in integral
-                <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+                <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a>, and is content
                 with handling nothing finer than say nanoseconds (just as an example),
                 he can simply specify nanoseconds as the parameter:
@@ -577,20 +394,20 @@
 <span class="identifier">f</span><span class="special">(</span><span class="identifier">microseconds</span><span class="special">(</span><span class="number">3</span><span class="special">));</span>
 </pre>
 <p>
-            In this design, if the client wants to pass in a floating point <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>, or a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            In this design, if the client wants to pass in a floating point <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>, or a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> of finer precision
             than nanoseconds, then the client is responsible for choosing his own
             rounding mode in the conversion to nanoseconds.
           </p>
-<pre class="programlisting"> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+<pre class="programlisting"> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">s</span><span class="special">(</span><span class="number">1.</span><span class="special">/</span><span class="number">3</span><span class="special">);</span>  <span class="comment">// 1/3 of a second
 </span><span class="identifier">f</span><span class="special">(</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">nanoseconds</span><span class="special">&gt;(</span><span class="identifier">s</span><span class="special">));</span>  <span class="comment">// round towards zero in conversion to nanoseconds
 </span></pre>
 <p>
             In the example above, the client of f has chosen "round towards
             zero" as the desired rounding mode to nanoseconds. If the client
-            has a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            has a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> that won't exactly
             convert to nanoseconds, and fails to choose how the conversion will take
             place, the compiler will refuse the call:
@@ -598,13 +415,13 @@
 <pre class="programlisting"><span class="identifier">f</span><span class="special">(</span><span class="identifier">s</span><span class="special">);</span>  <span class="comment">// does not compile
 </span></pre>
 <div class="itemizedlist"><ul type="disc"><li>
-                If the author of the function wants to accept any <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+                If the author of the function wants to accept any <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>, but wants to work
                 with integral representations and wants to control the rounding mode
                 internally, then he can template the function:
               </li></ul></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+<span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">)</span>
 <span class="special">{</span>
     <span class="comment">// convert d to nanoseconds, rounding up if it is not an exact conversion
@@ -614,17 +431,17 @@
     <span class="comment">// ns.count() == 333333334 when passed 1/3 of a floating point second
 </span><span class="special">}</span>
 
-<span class="identifier">f</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+<span class="identifier">f</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;(</span><span class="number">1.</span><span class="special">/</span><span class="number">3</span><span class="special">));</span>
 </pre>
 <div class="itemizedlist"><ul type="disc"><li>
                 If the author in the example does not want to accept floating point
-                based <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+                based <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a>, he can enforce
                 that behavior like so:
               </li></ul></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+<span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">)</span>
 <span class="special">{</span>
     <span class="comment">// convert d to nanoseconds, rounding up if it is not an exact conversion
@@ -634,20 +451,20 @@
     <span class="comment">// ns.count() == 333333334 when passed 333333333333 picoseconds
 </span><span class="special">}</span>
 
-<span class="identifier">f</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+<span class="identifier">f</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">,</span> <span class="identifier">pico</span><span class="special">&gt;(</span><span class="number">333333333333</span><span class="special">));</span>  <span class="comment">// About 1/3 of a second worth of picoseconds
 </span></pre>
 <p>
-            Clients with floating point <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            Clients with floating point <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a> who want to use f
-            will now have to convert to an integral <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            will now have to convert to an integral <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> themselves before passing
             the result to f.
           </p>
 <p>
             In summary, the author of f has quite a bit of flexibility and control
             in the interface he wants to provide his clients with, and easy options
-            for manipulating that <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            for manipulating that <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> internal to his function.
           </p>
 </div>
@@ -657,14 +474,14 @@
 <a name="boost_chrono.users_guide.tutorial.clocks"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.clocks" title="Clocks">Clocks</a>
 </h4></div></div></div>
 <p>
-          While <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          While <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a> only have precision
-          and representation to concern themselves, clocks and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+          and representation to concern themselves, clocks and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code>'s</a> are intimately related
           and refer to one another. Because clocks are simpler to explain, we will
-          do so first without fully explaining <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+          do so first without fully explaining <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code>'s</a>. Once clocks are
-          introduced, it will be easier to then fill in what a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+          introduced, it will be easier to then fill in what a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> is.
         </p>
 <p>
@@ -672,15 +489,15 @@
         </p>
 <div class="orderedlist"><ol type="1">
 <li>
-              A concrete <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+              A concrete <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> type.
             </li>
 <li>
-              A concrete <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+              A concrete <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> type.
             </li>
 <li>
-              A function called now() which returns the concrete <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+              A function called now() which returns the concrete <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>.
             </li>
 </ol></div>
@@ -710,10 +527,10 @@
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">typedef</span> <span class="identifier">an</span> <span class="identifier">arithmetic</span><span class="special">-</span><span class="identifier">like</span> <span class="identifier">type</span>            <span class="identifier">rep</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">an</span> <span class="identifier">instantiation</span> <span class="identifier">of</span> <span class="identifier">ratio</span>          <span class="identifier">period</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">rep</span><span class="special">,</span> <span class="identifier">period</span><span class="special">&gt;</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">rep</span><span class="special">,</span> <span class="identifier">period</span><span class="special">&gt;</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span>     <span class="identifier">time_point</span><span class="special">;</span>
     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>           <span class="keyword">true</span> <span class="keyword">or</span> <span class="keyword">false</span><span class="special">;</span>
 
@@ -726,15 +543,15 @@
 <pre class="programlisting"><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t1</span> <span class="special">=</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
 </pre>
 <p>
-          And one can get the time <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> between two <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+          And one can get the time <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> between two <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code>'s</a> associated with Clock
           with:
         </p>
 <pre class="programlisting"><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">duration</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">t1</span> <span class="special">-</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
 </pre>
 <p>
-          And one can specify a past or future <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+          And one can specify a past or future <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> with:
         </p>
 <pre class="programlisting"><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t2</span> <span class="special">=</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">d</span><span class="special">;</span>
@@ -743,8 +560,8 @@
           Note how even if a particular clock becomes obsolete, the next clock in
           line will have the same API. There is no new learning curve to come up.
           The only source code changes will be simply changing the type of the clock.
-          The same <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+          The same <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> framework continues
           to work as new clocks are introduced. And multiple clocks are safely and
           easily handled within the same program.
@@ -765,14 +582,14 @@
           thread between end and start?</a></span></dt>
 </dl></div>
 <p>
-          A <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+          A <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> represents a point
-          in time, as opposed to a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          in time, as opposed to a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> of time. Another way
-          of saying the same thing, is that a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+          of saying the same thing, is that a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> represents an epoch
-          plus or minus a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>. Examples of <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+          plus or minus a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>. Examples of <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code>'s</a> include:
         </p>
 <div class="itemizedlist"><ul type="disc">
@@ -790,20 +607,20 @@
           In each of the examples above, a different epoch is implied. Sometimes
           an epoch has meaning for several millennia. Other times the meaning of
           an epoch is lost after a while (such as the start of a timer, or when the
-          computer booted). However, if two <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+          computer booted). However, if two <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code>'s</a> are known to share
-          the same epoch, they can be subtracted, yielding a valid <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          the same epoch, they can be subtracted, yielding a valid <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>, even if the definition
           of the epoch no longer has meaning.
         </p>
 <p>
           In <span class="bold"><strong>Boost.Chrono</strong></span>, an epoch is a purely
           abstract and unspecified concept. There is no type representing an epoch.
-          It is simply an idea that relates (or doesn't) <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+          It is simply an idea that relates (or doesn't) <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code>'s</a> to a clock, and in
-          the case that they share a clock, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+          the case that they share a clock, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code>'s</a> to one another.
-          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code>'s</a> associated with different
           clocks are generally not interoperable unless the relationship between
           the epochs associated with each clock is known.
@@ -817,47 +634,47 @@
           and How Do I Use One?</a>
 </h5></div></div></div>
 <p>
-            A <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+            A <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> has a clock and a
-            <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>.
           </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">time_point</span><span class="special">;</span>
 </pre>
 <p>
-            The <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+            The <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>'s clock is not stored.
-            It is simply embedded into the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+            It is simply embedded into the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>'s type and serves
             two purposes:
           </p>
 <div class="orderedlist"><ol type="1">
 <li>
-                Because <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+                Because <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code>'s</a> originating
                 from different clocks have different types, the compiler can be instructed
-                to fail if incompatible <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+                to fail if incompatible <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code>'s</a> are used in
                 inappropriate ways.
               </li>
 <li>
-                Given a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+                Given a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>, one often needs
-                to compare that <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+                to compare that <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> to "now".
-                This is very simple as long as the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+                This is very simple as long as the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> knows what clock
                 it is defined with respect to.
               </li>
 </ol></div>
 <p>
-            A <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>'s <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            A <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>'s <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> is stored as the only
-            data member of the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>. Thus <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+            data member of the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>. Thus <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code>'s</a> and their corresponding
-            <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> have exactly the same
             layout. But they have very different meanings. For example, it is one
             thing to say I want to sleep for 3 minutes. It is a completely different
@@ -875,20 +692,20 @@
     <span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">start</span> <span class="special">=</span> <span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
     <span class="identifier">g</span><span class="special">();</span>
     <span class="identifier">h</span><span class="special">();</span>
-     <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+     <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">sec</span> <span class="special">=</span> <span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">;</span>
     <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"f() took "</span> <span class="special">&lt;&lt;</span> <span class="identifier">sec</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" seconds\n"</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
-            Note that if one is using the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            Note that if one is using the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> between two clock
-            <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
+            <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code>'s</a> in a way where
-            the precision of the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            the precision of the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> matters, it is good
-            practice to convert the clock's native <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> to a known <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            practice to convert the clock's native <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> to a known <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>. This insulates the
             code from future changes which may be made to the clock's native precision
             in the future. For example monotonic_clock could easily be based on the
@@ -908,7 +725,7 @@
 <p>
             The above code will delay as close as possible to half a microsecond,
             no matter what the precision of monotonic_clock is. The more precise
-            <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.monotonic_clock" title="
+            <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
           Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a> becomes, the
             more accurate will be the delay to 500 nanoseconds.
           </p>
@@ -922,16 +739,16 @@
           thread between end and start?</a>
 </h5></div></div></div>
 <p>
-            You can use <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+            You can use <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
           Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><code class="computeroutput"><span class="special">&lt;&gt;</span></code>
             to convert the <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
           Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a><code class="computeroutput"><span class="special">::</span><span class="identifier">duration</span></code> into whatever units you desire.
             This facility will round down (truncate) if an exact conversion is not
             possible. Ex:
           </p>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">milliseconds</span></code></a> <span class="identifier">ms</span><span class="special">;</span>
-<span class="identifier">ms</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+<span class="identifier">ms</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
           Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><span class="identifier">ms</span><span class="special">&gt;(</span><span class="identifier">end</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">);</span>
 
 <span class="comment">// d now holds the number of milliseconds from start to end.
@@ -940,33 +757,33 @@
 </pre>
 <p>
             As <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
-          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a><span class="special">::</span><span class="identifier">duration</span></code> is <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a><span class="special">::</span><span class="identifier">duration</span></code> is <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">nanoseconds</span></code></a>, we can convert
-            to <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+            to <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">nanoseconds</span></code></a>, or some integral-based
-            duration which <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+            duration which <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">nanoseconds</span></code></a> will always exactly
-            convert to, then <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+            convert to, then <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
           Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><code class="computeroutput"><span class="special">&lt;&gt;</span></code>
             is unnecessary:
           </p>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">nanoseconds</span></code></a> <span class="identifier">ns</span><span class="special">;</span>
 <span class="identifier">ns</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">end</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">;</span>
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">ns</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"ns\n"</span><span class="special">;</span>
 </pre>
 <p>
             If you need seconds with a floating point representation you can also
-            eliminate the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+            eliminate the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
           Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><code class="computeroutput"><span class="special">&lt;&gt;</span></code>:
           </p>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">sec</span><span class="special">;</span>  <span class="comment">// seconds, stored with a double
 </span><span class="identifier">sec</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">end</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">;</span>
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">sec</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"s\n"</span><span class="special">;</span>
 </pre>
 <p>
-            If you're not sure if you need <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+            If you're not sure if you need <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
           Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><code class="computeroutput"><span class="special">&lt;&gt;</span></code>
             or not, feel free to try it without. If the conversion is exact, or if
             the destination has a floating point representation, it will compile.
@@ -977,11 +794,8 @@
           Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a><span class="special">::</span><span class="identifier">duration</span></code>, you can get the representation
             type with <code class="computeroutput"><a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
           Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a><span class="special">::</span><span class="identifier">rep</span></code>, and the tick period with <code class="computeroutput"><a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
-          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a><span class="special">::</span><span class="identifier">period</span></code> (which should be a type <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> which has nested values
-            <code class="computeroutput"><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">::</span><span class="identifier">num</span></code> and <code class="computeroutput"><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
-          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">::</span><span class="identifier">den</span></code>). The tick period of <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
+          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a><span class="special">::</span><span class="identifier">period</span></code> (which should be a type <code class="computeroutput"><span class="identifier">ratio</span></code> which has nested values <code class="computeroutput"><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">::</span><span class="identifier">num</span></code> and <code class="computeroutput"><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">::</span><span class="identifier">den</span></code>).
+            The tick period of <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
           Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a> is <code class="computeroutput"><a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
           Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">num</span> <span class="special">/</span> <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
           Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">den</span></code> seconds: 1/1000000000 in this case
@@ -989,7 +803,7 @@
             stored in a <code class="computeroutput"><span class="keyword">long</span> <span class="keyword">long</span></code>.
           </p>
 <p>
-            If you need to use <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+            If you need to use <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
           Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><code class="computeroutput"><span class="special">&lt;&gt;</span></code>,
             but want to round up, instead of down when the conversion is inexact,
             here is a handy little helper function to do so. Writing it is actually
@@ -997,18 +811,18 @@
           </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">ToDuration</span><span class="special">,</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span>
 <span class="identifier">ToDuration</span>
-<span class="identifier">round_up</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+<span class="identifier">round_up</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">)</span>
 <span class="special">{</span>
     <span class="comment">// first round down
-</span>    <span class="identifier">ToDuration</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+</span>    <span class="identifier">ToDuration</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
           Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><span class="identifier">ToDuration</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
     <span class="keyword">if</span> <span class="special">(</span><span class="identifier">result</span> <span class="special">&lt;</span> <span class="identifier">d</span><span class="special">)</span>  <span class="comment">// comparisons are *always* exact
 </span>       <span class="special">++</span><span class="identifier">result</span><span class="special">;</span>     <span class="comment">// increment by one tick period
 </span>    <span class="keyword">return</span> <span class="identifier">result</span><span class="special">;</span>
 <span class="special">}</span>
 
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">milliseconds</span></code></a> <span class="identifier">ms</span><span class="special">;</span>
 <span class="identifier">ms</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">round_up</span><span class="special">&lt;</span><span class="identifier">ms</span><span class="special">&gt;(</span><span class="identifier">end</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">);</span>
 <span class="comment">// d now holds the number of milliseconds from start to end, rounded up.
