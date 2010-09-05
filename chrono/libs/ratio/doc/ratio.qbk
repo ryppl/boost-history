@@ -1,0 +1,1012 @@
+[/
+ / Copyright (c) 2008 Howard Hinnant
+ / Copyright (c) 2006, 2008 Beman Dawes
+ / Copyright (c) 2009-20010 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[article Boost.Ratio
+    [quickbook 1.5]
+    [authors [Hinnant, Howard]]
+    [authors [Dawes, Beman]]
+    [authors [Botet Escriba, Vicente J.]]
+    [copyright 2008 Howard Hinnant]
+    [copyright 2006, 2008 Beman Dawes]
+    [copyright 2009-2010 Vicente J. Botet Escriba]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+[/==================]
+[def __Boost_Chrono__ [*Boost.Chrono]]
+[def __Boost_Ratio__ [*Boost.Ratio]]
+
+[/===============================================]
+
+[template common_type_link[link_text] [link_text]]
+[def __common_type__ [common_type_link `common_type`]]
+
+[template common_type_macros[link_text] [link_text]]
+
+[template common_type_pp[link_text] [link_text]]
+
+[def __common_type__BOOST_COMMON_TYPE_USES_STATIC_ASSERT [common_type_macros `BOOST_COMMON_TYPE_USES_STATIC_ASSERT`]]
+[def __common_type__BOOST_COMMON_TYPE_USES_MPL_ASSERT [common_type_macros `BOOST_COMMON_TYPE_USES_MPL_ASSERT`]]
+[def __common_type__BOOST_COMMON_TYPE_USES_ARRAY_ASSERT [common_type_macros `BOOST_COMMON_TYPE_USES_ARRAY_ASSERT`]]
+[def __common_type__BOOST_COMMON_TYPE_ARITY [common_type_pp `BOOST_COMMON_TYPE_ARITY`]]
+[def __common_type__BOOST_COMMON_TYPE_DONT_USE_TYPEOF [common_type_pp `BOOST_COMMON_TYPE_DONT_USE_TYPEOF`]]
+
+[def __common_type_spe__ `common_type`]
+
+[/===============================================]
+[def __ratio__ [link boost_ratio.reference.ratio_hpp.ratio `ratio`]]
+
+
+[template ratio_conf[link_text] [link boost_ratio.reference.ratio_hpp.conf [link_text]]]
+
+[template ratio_pp[link_text] [link boost_ratio.reference.ratio_hpp.pp [link_text]]]
+
+[def __BOOST_RATIO_USES_STATIC_ASSERT [ratio_conf `BOOST_RATIO_USES_STATIC_ASSERT`]]
+[def __BOOST_RATIO_USES_MPL_ASSERT [ratio_conf `BOOST_RATIO_USES_MPL_ASSERT`]]
+[def __BOOST_RATIO_USES_ARRAY_ASSERT [ratio_conf `BOOST_RATIO_USES_ARRAY_ASSERT`]]
+
+[template ratio_arithmetic[link_text] [link boost_ratio.reference.ratio_hpp.ratio_arithmetic [link_text]]]
+[def __ratio_add [ratio_arithmetic `ratio_add`]]
+[def __ratio_subtract [ratio_arithmetic `ratio_subtract`]]
+[def __ratio_multiply [ratio_arithmetic `ratio_multiply`]]
+[def __ratio_divide [ratio_arithmetic `ratio_divide`]]
+
+
+[template ratio_comparison[link_text] [link boost_ratio.reference.ratio_hpp.ratio_comparison [link_text]]]
+[def __ratio_equal [ratio_comparison `ratio_equal`]]
+[def __ratio_not_equal [ratio_comparison `ratio_not_equal`]]
+[def __ratio_less [ratio_comparison `ratio_less`]]
+[def __ratio_less_equal [ratio_comparison `ratio_less_equal`]]
+[def __ratio_greater [ratio_comparison `ratio_greater`]]
+[def __ratio_greater_equal [ratio_comparison `ratio_greater_equal`]]
+
+
+[template ratio_si_typedefs[link_text] [link boost_ratio.reference.ratio_hpp.ratio_si_typedefs [link_text]]]
+[def __atto [ratio_si_typedefs `atto`]]
+[def __femto [ratio_si_typedefs `femto`]]
+[def __pico [ratio_si_typedefs `pico`]]
+[def __nano [ratio_si_typedefs `nano`]]
+[def __micro [ratio_si_typedefs `micro`]]
+[def __milli [ratio_si_typedefs `milli`]]
+[def __centi [ratio_si_typedefs `centi`]]
+[def __deci [ratio_si_typedefs `deci`]]
+[def __deca [ratio_si_typedefs `deca`]]
+[def __hecto [ratio_si_typedefs `hecto`]]
+[def __kilo [ratio_si_typedefs `kilo`]]
+[def __mega [ratio_si_typedefs `mega`]]
+[def __giga [ratio_si_typedefs `giga`]]
+[def __tera [ratio_si_typedefs `tera`]]
+[def __peta [ratio_si_typedefs `peta`]]
+[def __exa [ratio_si_typedefs `exa`]]
+
+
+[/==================]
+
+
+[template chrono_conf[link_text] [link_text]]
+
+
+[def __BOOST_CHRONO_USES_STATIC_ASSERT [chrono_conf `BOOST_CHRONO_USES_STATIC_ASSERT`]]
+[def __BOOST_CHRONO_USES_MPL_ASSERT [chrono_conf `BOOST_CHRONO_USES_MPL_ASSERT`]]
+[def __BOOST_CHRONO_USES_ARRAY_ASSERT [chrono_conf `BOOST_CHRONO_USES_ARRAY_ASSERT`]]
+
+[def __BOOST_CHRONO_HAS_CLOCK_MONOTONIC `BOOST_CHRONO_HAS_CLOCK_MONOTONIC`]
+
+
+
+[template clock_concept_link[link_text] [link_text]]
+[def __clock_concept__ [clock_concept_link `Clock` concept]]
+[def __clock_concept_type__ [clock_concept_link `Clock`]]
+[def __clock_req__ [clock_concept_link `Clock` requirements]]
+[def __Clock__ [clock_concept_link `Clock`]]
+[def __Clock_s__ [clock_concept_link `Clock`'s]]
+
+
+[template duration_link[link_text] [link_text]]
+[def __duration__ [duration_link `duration`]]
+[def __duration_s__ [duration_link `duration`'s]]
+
+[/==================]
+[template time_point_link[link_text] [link_text]]
+[def __time_point__ [time_point_link `time_point`]]
+[def __time_point_s__ [time_point_link `time_point`'s]]
+
+[/==================]
+[template system_clock_link[link_text] [link_text]]
+[def __system_clock__ [system_clock_link `system_clock`]]
+
+[/==================]
+[template monotonic_clock_link[link_text] [link_text]]
+[def __monotonic_clock__ [monotonic_clock_link `monotonic_clock`]]
+
+[/==================]
+[template high_resolution_clock_link[link_text] [link_text]]
+[def __high_resolution_clock__ [high_resolution_clock_link `high_resolution_clock`]]
+
+[def __duration_cast__ `duration_cast`]
+
+[def __time_point_cast__ `time_point_cast`]
+
+
+[template duration_typedefs[link_text] [link_text]]
+[def __nanoseconds__ [duration_typedefs `nanoseconds`]]
+[def __microseconds__ [duration_typedefs `microseconds`]]
+[def __milliseconds__ [duration_typedefs `milliseconds`]]
+[def __seconds__ [duration_typedefs `seconds`]]
+[def __minutes__ [duration_typedefs `minutes`]]
+[def __hours__ [duration_typedefs `hours`]]
+[def __days__ [duration_typedefs `days`]]
+
+
+[/==================]
+[def __treat_as_floating_point__ `treat_as_floating_point`]
+[def __duration_values__ `duration_values`]
+[def __zero__ `zero`]
+[def __max__ `max`]
+[def __min__ `min`]
+
+
+[/==================]
+[template SuspendibleClock_concept_link[link_text] [link_text]]
+[def __SuspendibleClock_concept__ [SuspendibleClock_concept_link `SuspendibleClock` concept]]
+[def __SuspendibleClock_concept_type__ [SuspendibleClock_concept_link `SuspendibleClock`]]
+[def __SuspendibleClock_req__ [SuspendibleClock_concept_link `SuspendibleClock` requirements]]
+[def __SuspendibleClock__ [SuspendibleClock_concept_link `SuspendibleClock`]]
+
+
+[def __process_real_cpu_clock__ [link boost_ratio.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock `process_real_cpu_clock`]]
+
+[def __process_system_cpu_clock__ [link boost_ratio.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock `process_system_cpu_clock`]]
+
+[def __process_user_cpu_clock__ [link boost_ratio.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock `process_user_cpu_clock`]]
+
+[def __thread_clock__ `thread_clock`]
+[def __suspendible_clock__ `suspendible_clock`]
+
+
+
+[warning Ratio is not part of the Boost libraries.]
+
+[/===============]
+[section Overview]
+[/===============]
+
+
+[/====================================]
+[heading How to Use This Documentation]
+[/====================================]
+
+This documentation makes use of the following naming and formatting conventions.
+
+* Code is in `fixed width font` and is syntax-highlighted.
+* Replaceable text that you will need to supply is in [~italics].
+* Free functions are rendered in the code font followed by (), as in free_function().
+* If a name refers to a class template, it is specified like this:   `class_template<>`; that is, it is in code font and its name is followed by `<>`   to indicate that it is a class template.
+* If a name refers to a function-like macro, it is specified like this: `MACRO()`;
+  that is, it is uppercase in code font and its name is followed by `()` to   indicate that it is a function-like macro. Object-like macros appear without the   trailing `()`.
+* Names that refer to /concepts/ in the generic programming sense are  specified in CamelCase.
+
+[note In addition, notes such as this one specify non-essential information that provides additional background or rationale.]
+
+Finally, you can mentally add the following to any code fragments in this document:
+
+    // Include all of Ratio files
+    #include <boost/ratio.hpp>
+    using namespace boost;
+
+[/=================]
+[section Motivation]
+[/=================]
+
+__Boost_Ratio__ aims to implement the compile time ratio facility in C++0x, as proposed in [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]].  That document provides background and motivation for key design decisions and is the source of a good deal of information in this documentation.
+
+[endsect]
+
+[/==================]
+[section Description]
+[/==================]
+
+The __Boost_Ratio__ library provides:
+
+* A class template, __ratio__, for specifying compile time rational constants such as 1/3 of a nanosecond or the number of inches per meter.  __ratio__ represents a compile time ratio of compile time constants with support for compile time arithmetic with overflow and division by zero protection
+
+[endsect]
+
+[endsect]
+
+
+[/==============================]
+[section:users_guide Users'Guide]
+[/==============================]
+
+[/======================================]
+[section:getting_started Getting Started]
+[/======================================]
+
+[/======================================]
+[section:install Installing Ratio]
+[/======================================]
+
+[/=================================]
+[heading Getting Boost.Ratio ]
+[/=================================]
+
+You can get the last stable release of __Boost_Chrono__ by downloading [^chrono.zip] from the
+[@http://www.boost-consulting.com/vault/index.php?directory=System Boost Vault]. Directories ratio.
+
+You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/chrono Boost Sandbox]. Just go to [@http://svn.boost.org/trac/boost/wiki/BoostSubversion here] and follow the instructions there for anonymous SVN access.
+
+[/==========================================]
+[heading Where to install Boost.Ratio? ]
+[/==========================================]
+
+The simple way is to decompress (or checkout from SVN) the file in your BOOST_ROOT directory.
+
+Othesewise, if you decompress in a different directory, you will need to comment some lines, and uncomment and change others in the build/Jamfile and test/Jamfile. Sorry for this, but I have not reached yet to write a Jamfile that is able to work in both environements and use the BOOST_ROOT variable. Any help is welcome.
+
+[/=================================]
+[heading Building Boost.Ratio ]
+[/=================================]
+
+__Boost_Ratio__ is a header only library, so no need to compile anything.
+
+
+[/===================]
+[heading Requirements]
+[/===================]
+
+__Boost_Ratio__ depends on some Boost libraries. For these specific parts you must use either Boost version 1.39.0 or the version in SVN trunk (even if older versions should works also).
+
+In particular, __Boost_Ratio__ depends on:
+
+[variablelist
+[
+    [[@http://www.boost.org/libs/config [*Boost.Config]]] [for configuration purposes, ...]
+]
+[
+    [[@http://www.boost.org/libs/integer [*Boost.Integer]]] [for cstdint conformance, and integer traits ...]
+]
+[
+    [[@http://www.boost.org/libs/mpl [*Boost.MPL]]] [for MPL Assert and bool, logical ...]
+]
+[
+    [[@http://www.boost.org/libs/static_assert [*Boost.StaticAssert]]] [for STATIC_ASSERT, ...]
+]
+[
+    [[@http://www.boost.org/libs/type_traits [*Boost.TypeTraits]]] [for is_base, is_convertible ...]
+]
+[
+    [[@http://www.boost.org/libs/utility [*Boost.Utility/EnableIf]]] [for enable_if, ...]
+]
+]
+
+
+[/=========================================================]
+[heading Building an executable that uses __Boost_Ratio__ ]
+[/=========================================================]
+
+No link is needed.
+
+
+[/=========================]
+[heading Exceptions safety ]
+[/=========================]
+
+All functions in the library are exception-neutral and provide strong guarantee of exception safety as long as the underlying parameters provide it.
+
+[/=====================]
+[heading Thread safety ]
+[/=====================]
+
+All functions in the library are thread-unsafe except when noted explicitly.
+
+[/========================]
+[heading Tested compilers ]
+[/========================]
+
+The implementation will eventually work with most C++03 conforming compilers.
+Current version has been tested on:
+
+Windows with
+
+* MSVC 10.0
+* MSVC 9.0 Express
+* MSVC 8.0
+
+[/* Intel 11.0]
+
+Scientific Linux with
+
+* GCC 4.1.2
+
+Cygwin with
+
+* GCC 3.4.4
+* GCC 4.3.2
+
+MinGW with
+
+* GCC 4.4.0
+
+Initial version was tested on:
+
+MacOS with GCC 4.2.4
+
+Ubuntu Linux with GCC 4.2.4
+
+[note Please let us know how this works on other platforms/compilers.]
+
+[note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
+
+[endsect]
+[/
+[/====================]
+[section Hello World! ]
+[/====================]
+
+If all you want to do is to time a program's execution, here is a complete program (stopclock_example.cpp):
+
+    #include <boost/ratio.hpp>
+
+
+[endsect]
+]
+[endsect]
+
+
+[section Tutorial]
+
+__ratio__ is a general purpose utility inspired by Walter Brown allowing one to easily and safely compute rational values at compile time. The __ratio__ class catches all errors (such as divide by zero and overflow) at compile time. It is used in the __duration__ and __time_point__ classes to efficiently create units of time. It can also be used in other "quantity" libraries (both std-defined and user-defined), or anywhere there is a rational constant which is known at compile time. The use of this utility can greatly reduce the chances of run time overflow because the __ratio__ (and any ratios resulting from __ratio__ arithmetic) are always reduced to lowest terms.
+
+__ratio__ is a template taking two intmax_ts, with the second defaulted to 1. In addition to copy constructors and assignement, it only has two public members, both of which are static const intmax_t. One is the numerator of the __ratio__ and the other is the denominator. The __ratio__ is always normalized such that it is expressed in lowest terms, and the denominator is always positive. When the numerator is 0, the denominator is always 1.
+
+[*Example:]
+
+    typedef __ratio__<5, 3>   five_thirds;       
+    // five_thirds::num == 5, five_thirds::den == 3
+    
+    typedef __ratio__<25, 15> also_five_thirds;  
+    // also_five_thirds::num == 5, also_five_thirds::den == 3
+    
+    typedef ratio_divide<five_thirds, also_five_thirds>::type one;  
+    // one::num == 1, one::den == 1
+
+This facility also includes convenience typedefs for the SI prefixes __atto through __exa corresponding to their internationally recognized definitions (in terms of __ratio__). This is a tremendous syntactic convenience. It will prevent errors in specifying constants as one no longer has to double count the number of zeros when trying to write million or billion.
+
+[*Example:]
+
+    typedef ratio_multiply<__ratio__<5>, giga>::type _5giga;  
+    // _5giga::num == 5000000000, _5giga::den == 1
+    
+    typedef ratio_multiply<__ratio__<5>, nano>::type _5nano;  
+    // _5nano::num == 1, _5nano::den == 200000000
+
+
+[endsect]
+[/===============]
+[section Examples]
+[/===============]
+
+[/===============]
+[section SI-units]
+[/===============]
+
+Type-safe "physics" code interoperating with boost::chrono::__duration__ types and taking advantage of the boost::__ratio__ infrastructure and design philosophy.
+
+length - mimics boost::chrono::__duration__ except restricts representation to double.
+Uses boost::__ratio__ facilities for length units conversions.
+
+    template <class Ratio>
+    class length {
+    private:
+        double len_;
+    public:
+        typedef Ratio ratio;
+        length() : len_(1) {}
+        length(const double& len) : len_(len) {}
+
+        template <class R>
+        length(const length<R>& d)
+                : len_(d.count() * boost::ratio_divide<Ratio, R>::type::den /
+                                   boost::ratio_divide<Ratio, R>::type::num) {}
+
+        double count() const {return len_;}
+
+        length& operator+=(const length& d) {len_ += d.count(); return *this;}
+        length& operator-=(const length& d) {len_ -= d.count(); return *this;}
+
+        length operator+() const {return *this;}
+        length operator-() const {return length(-len_);}
+
+        length& operator*=(double rhs) {len_ *= rhs; return *this;}
+        length& operator/=(double rhs) {len_ /= rhs; return *this;}
+    };
+
+
+Sparse sampling of length units
+
+    typedef length<boost::__ratio__<1> >          meter;        // set meter as "unity"
+    typedef length<boost::__centi>              centimeter;   // 1/100 meter
+    typedef length<boost::__kilo>               kilometer;    // 1000  meters
+    typedef length<boost::__ratio__<254, 10000> > inch;         // 254/10000 meters
+
+length takes __ratio__ instead of two integral types so that definitions can be made like so:
+
+    typedef length<boost::ratio_multiply<boost::__ratio__<12>, inch::__ratio__>::type>   foot;  // 12 inchs
+    typedef length<boost::ratio_multiply<boost::__ratio__<5280>, foot::__ratio__>::type> mile;  // 5280 feet
+
+Need a floating point definition of seconds
+
+    typedef boost::chrono::__duration__<double> seconds;                         // unity
+
+Demo of (scientific) support for sub-nanosecond resolutions
+
+    typedef boost::chrono::__duration__<double,  boost::__pico> picosecond;  // 10^-12 seconds
+    typedef boost::chrono::__duration__<double, boost::__femto> femtosecond; // 10^-15 seconds
+    typedef boost::chrono::__duration__<double,  boost::__atto> attosecond;  // 10^-18 seconds
+
+A very brief proof-of-concept for SIUnits-like library. Hard-wired to floating point seconds and meters, but accepts other units.
+
+    template <class R1, class R2>
+    class quantity
+    {
+        double q_;
+    public:
+        typedef R1 time_dim;
+        typedef R2 distance_dim;
+        quantity() : q_(1) {}
+
+        double get() const {return q_;}
+        void set(double q) {q_ = q;}
+    };
+
+    template <>
+    class quantity<boost::__ratio__<1>, boost::__ratio__<0> >
+    {
+        double q_;
+    public:
+        quantity() : q_(1) {}
+        quantity(seconds d) : q_(d.count()) {}  // note:  only User1::seconds needed here
+
+        double get() const {return q_;}
+        void set(double q) {q_ = q;}
+    };
+
+    template <>
+    class quantity<boost::__ratio__<0>, boost::__ratio__<1> >
+    {
+        double q_;
+    public:
+        quantity() : q_(1) {}
+        quantity(meter d) : q_(d.count()) {}  // note:  only User1::meter needed here
+
+        double get() const {return q_;}
+        void set(double q) {q_ = q;}
+    };
+
+    template <>
+    class quantity<boost::__ratio__<0>, boost::__ratio__<0> >
+    {
+        double q_;
+    public:
+        quantity() : q_(1) {}
+        quantity(double d) : q_(d) {}
+
+        double get() const {return q_;}
+        void set(double q) {q_ = q;}
+    };
+
+Example of SI-Units
+
+    typedef quantity<boost::__ratio__<0>, boost::__ratio__<0> >  Scalar;
+    typedef quantity<boost::__ratio__<1>, boost::__ratio__<0> >  Time;         // second
+    typedef quantity<boost::__ratio__<0>, boost::__ratio__<1> >  Distance;     // meter
+    typedef quantity<boost::__ratio__<-1>, boost::__ratio__<1> > Speed;        // meter/second
+    typedef quantity<boost::__ratio__<-2>, boost::__ratio__<1> > Acceleration; // meter/second^2
+
+Quantity arithmetics
+
+    template <class R1, class R2, class R3, class R4>
+    quantity<typename boost::ratio_subtract<R1, R3>::type, 
+             typename boost::ratio_subtract<R2, R4>::type>
+    operator/(const quantity<R1, R2>& x, const quantity<R3, R4>& y)
+    {
+        typedef quantity<typename boost::ratio_subtract<R1, R3>::type,
+                        typename boost::ratio_subtract<R2, R4>::type> R;
+        R r;
+        r.set(x.get() / y.get());
+        return r;
+    }
+
+    template <class R1, class R2, class R3, class R4>
+    quantity<typename boost::ratio_add<R1, R3>::type, 
+             typename boost::ratio_add<R2, R4>::type>
+    operator*(const quantity<R1, R2>& x, const quantity<R3, R4>& y)
+    {
+        typedef quantity<typename boost::ratio_add<R1, R3>::type,
+                        typename boost::ratio_add<R2, R4>::type> R;
+        R r;
+        r.set(x.get() * y.get());
+        return r;
+    }
+
+    template <class R1, class R2>
+    quantity<R1, R2>
+    operator+(const quantity<R1, R2>& x, const quantity<R1, R2>& y)
+    {
+        typedef quantity<R1, R2> R;
+        R r;
+        r.set(x.get() + y.get());
+        return r;
+    }
+
+    template <class R1, class R2>
+    quantity<R1, R2>
+    operator-(const quantity<R1, R2>& x, const quantity<R1, R2>& y)
+    {
+        typedef quantity<R1, R2> R;
+        R r;
+        r.set(x.get() - y.get());
+        return r;
+    }
+
+Example type-safe physics function
+
+    Distance
+    compute_distance(Speed v0, Time t, Acceleration a)
+    {
+        return v0 * t + Scalar(.5) * a * t * t;  // if a units mistake is made here it won't compile
+    }
+
+
+Exercise example type-safe physics function and show interoperation
+of custom time durations (User1::seconds) and standard time durations (boost::hours).
+Though input can be arbitrary (but type-safe) units, output is always in SI-units
+(a limitation of the simplified Units lib demoed here).
+
+    int main()
+    {
+        typedef boost::__ratio__<8, BOOST_INTMAX_C(0x7FFFFFFFD)> R1;
+        typedef boost::__ratio__<3, BOOST_INTMAX_C(0x7FFFFFFFD)> R2;
+        typedef User1::quantity<boost::ratio_subtract<boost::__ratio__<0>, boost::__ratio__<1> >::type,
+                                 boost::ratio_subtract<boost::__ratio__<1>, boost::__ratio__<0> >::type > RR;
+        typedef boost::ratio_subtract<R1, R2>::type RS;
+        std::cout << RS::num << '/' << RS::den << '\n';
+
+
+        std::cout << "*************\n";
+        std::cout << "* testUser1 *\n";
+        std::cout << "*************\n";
+        User1::Distance d( User1::mile(110) );
+        User1::Time t( boost::chrono::__hours__(2) );
+
+        RR r=d / t;
+        //r.set(d.get() / t.get());
+
+        User1::Speed rc= r;
+
+        User1::Speed s = d / t;
+        std::cout << "Speed = " << s.get() << " meters/sec\n";
+        User1::Acceleration a = User1::Distance( User1::foot(32.2) ) / User1::Time() / User1::Time();
+        std::cout << "Acceleration = " << a.get() << " meters/sec^2\n";
+        User1::Distance df = compute_distance(s, User1::Time( User1::seconds(0.5) ), a);
+        std::cout << "Distance = " << df.get() << " meters\n";
+        std::cout << "There are " 
+            << User1::mile::ratio::den << '/' << User1::mile::ratio::num << " miles/meter";
+        User1::meter mt = 1;
+        User1::mile mi = mt;
+        std::cout << " which is approximately " << mi.count() << '\n';
+        std::cout << "There are " 
+            << User1::mile::ratio::num << '/' << User1::mile::ratio::den << " meters/mile";
+        mi = 1;
+        mt = mi;
+        std::cout << " which is approximately " << mt.count() << '\n';
+        User1::attosecond as(1);
+        User1::seconds sec = as;
+        std::cout << "1 attosecond is " << sec.count() << " seconds\n";
+        std::cout << "sec = as;  // compiles\n";
+        sec = User1::seconds(1);
+        as = sec;
+        std::cout << "1 second is " << as.count() << " attoseconds\n";
+        std::cout << "as = sec;  // compiles\n";
+        std::cout << "\n";
+      return 0;
+    }
+
+['See the source file [@../../test/ratio_test.cpp test/ratio_test.cpp]]
+
+[endsect]
+
+
+[endsect]
+
+[/================================]
+[section:ext_references External Resources]
+[/================================]
+
+[variablelist
+
+[
+    [[@http://www.open-std.org/jtc1/sc22/wg21 [*C++ Standards Committee's current Working Paper]]]
+    [The most authoritative reference material for the library is the C++ Standards Committee's current Working Paper (WP).  20.9 Time utilities "time", 20.4 Compile-time rational arithmetic "ratio", 20.6.7 Other transformations "meta.trans.other"]
+]
+
+[
+    [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]]]
+    [From Howard E. Hinnant, Walter E. Brown, Jeff Garland  and Marc Paterno. Is very informative and provides motivation for key design decisions]
+]
+
+
+[
+    [[@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]]]
+    [From Vicente Juan Botet Escriba.]
+]
+]
+
+[endsect]
+
+[endsect]
+
+[/=================]
+[section:reference Reference ]
+[/=================]
+
+[/===========================================]
+[section:ratio_hpp Header `<boost/ratio.hpp>`]
+[/===========================================]
+
+__ratio__ is a facility which is useful in specifying compile time rational constants. Compile time rational arithmetic is supported with protection against overflow and divide by zero. Such a facility is very handy when needing to efficiently represent  1/3 of a nanosecond, or specifying an inch in terms of meters (for example 254/10000 meters - which __ratio__ will reduce to 127/5000 meters).
+
+    // configuration macros
+    #define __BOOST_RATIO_USES_STATIC_ASSERT
+    #define __BOOST_RATIO_USES_MPL_ASSERT
+    #define __BOOST_RATIO_USES_ARRAY_ASSERT
+
+    namespace boost  {
+
+        template <boost::intmax_t N, boost::intmax_t D = 1> class __ratio__;
+
+        // ratio arithmetic
+        template <class R1, class R2> struct __ratio_add;
+        template <class R1, class R2> struct __ratio_subtract;
+        template <class R1, class R2> struct __ratio_multiply;
+        template <class R1, class R2> struct __ratio_divide;
+
+        // ratio comparison
+        template <class R1, class R2> struct __ratio_equal;
+        template <class R1, class R2> struct __ratio_not_equal;
+        template <class R1, class R2> struct __ratio_less;
+        template <class R1, class R2> struct __ratio_less_equal;
+        template <class R1, class R2> struct __ratio_greater;
+        template <class R1, class R2> struct __ratio_greater_equal;
+
+        // convenience SI typedefs
+        typedef ratio<1LL, 1000000000000000000LL> __atto;
+        typedef ratio<1LL,    1000000000000000LL> __femto;
+        typedef ratio<1LL,       1000000000000LL> __pico;
+        typedef ratio<1LL,          1000000000LL> __nano;
+        typedef ratio<1LL,             1000000LL> __micro;
+        typedef ratio<1LL,                1000LL> __milli;
+        typedef ratio<1LL,                 100LL> __centi;
+        typedef ratio<1LL,                  10LL> __deci;
+        typedef ratio<                 10LL, 1LL> __deca;
+        typedef ratio<                100LL, 1LL> __hecto;
+        typedef ratio<               1000LL, 1LL> __kilo;
+        typedef ratio<            1000000LL, 1LL> __mega;
+        typedef ratio<         1000000000LL, 1LL> __giga;
+        typedef ratio<      1000000000000LL, 1LL> __tera;
+        typedef ratio<   1000000000000000LL, 1LL> __peta;
+        typedef ratio<1000000000000000000LL, 1LL> __exa;
+    }
+
+
+[section:conf Configuration macros]
+
+When BOOST_NO_STATIC_ASSERT is defined, the user can select the way static assertions are reported. Define
+
+* BOOST_RATIO_USES_STATIC_ASSERT: define it if you want to use Boost.StaticAssert
+* BOOST_RATIO_USES_MPL_ASSERT: define it if you want to use Boost.MPL static asertions
+* BOOST_RATIO_USES_ARRAY_ASSERT: define it if you want to use internal static asertions
+* nothing if you don't want static asertions
+
+When BOOST_RATIO_USES_MPL_ASSERT is not defined the following symbols are defined as
+
+    #define BOOST_RATIO_OVERFLOW_IN_ADD "overflow in ratio add"
+    #define BOOST_RATIO_OVERFLOW_IN_SUB "overflow in ratio sub"
+    #define BOOST_RATIO_OVERFLOW_IN_MUL "overflow in ratio mul"
+    #define BOOST_RATIO_OVERFLOW_IN_DIV "overflow in ratio div"
+    #define BOOST_RATIO_RATIO_NUMERATOR_IS_OUT_OF_RANGE "ratio numerator is out of range"
+    #define BOOST_RATIO_RATIO_DIVIDE_BY_0 "ratio divide by 0"
+    #define BOOST_RATIO_RATIO_DENOMINATOR_IS_OUT_OF_RANGE "ratio denominator is out of range"
+
+Depending on the static assertion used system you will have an hint of the failing assertion either through the symbol or through the texte.
+
+[endsect]
+
+[section:ratio Class Template `ratio<>`]
+
+        template <boost::intmax_t N, boost::intmax_t D>
+        class ratio {
+        public:
+            static const boost::intmax_t num;
+            static const boost::intmax_t den;
+            typedef ratio<num, den> type;
+
+            ratio() = default;
+
+            template <intmax_t _N2, intmax_t _D2>
+            ratio(const ratio<_N2, _D2>&);
+
+            template <intmax_t _N2, intmax_t _D2>
+            ratio& operator=(const ratio<_N2, _D2>&) {return *this;}
+        };
+
+A diagnostic will be emitted if __ratio__ is instantiated with `D == 0`, or if the absolute value of `N` or `D` can not be represented. [*Note:] These rules ensure that infinite ratios are avoided and that for any negative input, there exists a representable value of its absolute value which is positive. In a two's complement representation, this excludes the most negative value.
+
+Let `gcd` denote the greatest common divisor of `N`'s absolute value and of `D`'s absolute value.
+
+* `num` has the value `sign(N)*sign(D)*abs(N)/gcd`.
+
+* `den` has the value `abs(D)/gcd`.
+
+The nested typedef `type` denotes the normalized form of this __ratio__ type. It should be used when the template parameters doesn't give a normalized form.
+
+Two __ratio__ classes `__ratio__<N1,D1>` and `__ratio__<N2,D2>` have the same normalized form if `__ratio__<N1,D1>::type` is the same type as `__ratio__<N2,D2>::type`
+
+[section:ca Construction and assignment]
+
+    template <intmax_t N2, intmax_t D2>
+      ratio(const __ratio__<N2, D2>& r);
+
+[*Effects:] Constructs a __ratio__ object.
+
+[*Remarks:] This constructor will not participate in overload resolution unless `r` has the same normalized form as `*this`.
+
+    template <intmax_t N2, intmax_t D2>
+      __ratio__& operator=(const __ratio__<N2, D2>& r);
+
+[*Effects:] Assigns a __ratio__ object.
+
+[*Returns:] *this.
+
+[*Remarks:] This operator will not participate in overload resolution unless `r` has the same normalized form as `*this`.
+
+[endsect]
+
+
+[endsect]
+
+
+[section:ratio_arithmetic `ratio` arithmetic]
+
+For each of the class templates in this clause, each template parameter refers to a `ratio`. If the implementation is unable to form the indicated __ratio__ due to overflow, a diagnostic will be issued.
+
+        template <class R1, class R2> struct ratio_add {
+           typedef [/see below] type;
+        };
+
+The nested typedef `type` is a synonym for `__ratio__<R1::num * R2::den + R2::num * R1::den, R1::den * R2::den>::type`.
+
+        template <class R1, class R2> struct ratio_subtract {
+           typedef  [/see below]  type;
+        };
+
+The nested typedef `type` is a synonym for `__ratio__<R1::num * R2::den - R2::num * R1::den, R1::den * R2::den>::type`.
+
+        template <class R1, class R2> struct ratio_multiply {
+           typedef  [/see below]  type;
+        };
+
+The nested typedef `type` is a synonym for `__ratio__<R1::num * R2::num, R1::den * R2::den>::type`.
+
+        template <class R1, class R2> struct ratio_divide {
+           typedef  [/see below]  type;
+        };
+
+The nested typedef `type` is a synonym for `__ratio__<R1::num * R2::den, R2::num * R1::den>::type`.
+
+[endsect]
+
+[section:ratio_comparison `ratio` comparison]
+
+        template <class R1, class R2>  struct ratio_equal
+            : public boost::integral_constant<bool, [/see below] > {};
+
+If R1::num == R2::num && R1::den == R2::den, ratio_equal derives from true_type, else derives from false_type.
+
+        template <class R1, class R2>
+        struct ratio_less
+            : public boost::integral_constant<bool, [/see below] > {};
+
+If R1::num * R2::den < R2::num * R1::den, ratio_less derives from true_type, else derives from false_type.
+
+    template <class R1, class R2>  struct ratio_not_equal
+        : public boost::integral_constant<bool, !ratio_equal<R1, R2>::value> {};
+
+    template <class R1, class R2> struct ratio_less_equal
+        : public boost::integral_constant<bool, !ratio_less<R2, R1>::value> {};
+
+    template <class R1, class R2> struct ratio_greater
+        : public boost::integral_constant<bool, ratio_less<R2, R1>::value> {};
+
+    template <class R1, class R2> struct ratio_greater_equal
+        : public boost::integral_constant<bool, !ratio_less<R1, R2>::value> {};
+
+
+[endsect]
+
+[section:ratio_si_typedefs SI typedefs]
+
+        // convenience SI typedefs
+        typedef __ratio__<1LL, 1000000000000000000LL> atto;
+        typedef __ratio__<1LL,    1000000000000000LL> femto;
+        typedef __ratio__<1LL,       1000000000000LL> pico;
+        typedef __ratio__<1LL,          1000000000LL> nano;
+        typedef __ratio__<1LL,             1000000LL> micro;
+        typedef __ratio__<1LL,                1000LL> milli;
+        typedef __ratio__<1LL,                 100LL> centi;
+        typedef __ratio__<1LL,                  10LL> deci;
+        typedef __ratio__<                 10LL, 1LL> deca;
+        typedef __ratio__<                100LL, 1LL> hecto;
+        typedef __ratio__<               1000LL, 1LL> kilo;
+        typedef __ratio__<            1000000LL, 1LL> mega;
+        typedef __ratio__<         1000000000LL, 1LL> giga;
+        typedef __ratio__<      1000000000000LL, 1LL> tera;
+        typedef __ratio__<   1000000000000000LL, 1LL> peta;
+        typedef __ratio__<1000000000000000000LL, 1LL> exa;
+
+
+Four of the typedefs in the recomendation which can be conditionally supported are not supported: yocto, zepto, zetta and yotta.
+
+    typedef __ratio__<1, 1000000000000000000000000> yocto;  // conditionally supported
+    typedef __ratio__<1,    1000000000000000000000> zepto;  // conditionally supported
+    typedef __ratio__<   1000000000000000000000, 1> zetta;  // conditionally supported
+    typedef __ratio__<1000000000000000000000000, 1> yotta;  // conditionally supported
+
+[endsect]
+
+[endsect]
+
+
+[endsect]
+
+
+[/=================]
+[section Appendices]
+[/=================]
+[/==================================]
+[section:history Appendix A: History]
+[/==================================]
+
+[section [*Version 0.1.0, September 10, 2010] ]
+
+[*Features:]
+
+* Ratio has been extracted from Boost.Chrono.
+
+[endsect]
+
+
+
+[endsect]
+
+[/======================================]
+[section:rationale Appendix B: Rationale]
+
+[heading Why ratio needs CopyConstruction and Assignment from ratios having the same normalized form]
+
+Current [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n3000.pdf [*N3000]] doesn't allows to copy-construct or assign ratio instances of ratio classes having the same normalized form.
+
+This simple example
+
+    __ratio__<1,3> r1;
+    __ratio__<3,9> r2;
+    r1 = r2; // (1)
+
+fails to compile in (1). Other example
+
+    __ratio__<1,3> r1;
+    ratio_substract<__ratio__<2,3>,__ratio__<1,3> > r2=r1;  // (2)
+
+The type of ratio_substract<__ratio__<2,3>,__ratio__<1,3> > could be __ratio__<3,9> so the compilation could fail in (2). It could also be __ratio__<1,3> and the compilation succeeds.
+
+[heading Why ratio needs the nested normalizer typedef type]
+
+In [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n3000.pdf [*N3000]] 20.4.2 and similar clauses
+
+['3 The nested typedef type shall be a synonym for __ratio__<T1, T2> where T1 has the value R1::num * R2::den - R2::num * R1::den and T2 has the value R1::den * R2::den.]
+
+The meaning of synonym let think that the result should be a normalized ratio equivalent to __ratio__<T1, T2>, but there is not an explicit definition of what synonym means in this context.
+
+If the CopyConstruction and Assignment ([[@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#12811281 [*LWG 1281]]) is not added we need a typedef for accessing the normalized ratio, and change 20.4.2 to return only this normalized result. In this case the user will need to
+
+    __ratio__<1,3>::type r1;
+    __ratio__<3,9>::type r2;
+    r1 = r2; // compiles as both types are the same.
+
+[endsect]
+
+[/======================================================]
+[section:implementation Appendix C: Implementation Notes]
+
+
+[endsect]
+
+[/======================================================]
+[section:faq Appendix D: FAQ]
+
+
+[endsect]
+
+[/====================================================]
+[section:acknowledgements Appendix E: Acknowledgements]
+
+The library's code was derived from Howard Hinnant's time2_demo prototype. Many thanks to Howard for making his code available under the Boost license. The original code was modified by Beman Dawes to conform to Boost conventions.
+
+time2_demo contained this comment:
+
+Much thanks to Andrei Alexandrescu, Walter Brown, Peter Dimov, Jeff Garland, Terry Golubiewski, Daniel Krugler, Anthony Williams.
+
+Thanks to Adrew Chinoff for his help polishing the documentation.
+
+[endsect]
+
+[/====================================================]
+[section:tests  Appendix F: Tests]
+
+In order to test you need to do.
+
+    bjam libs/ratio/test
+
+You can also run a specific suite of test by doing
+
+    cd libs/chrono/test
+    bjam ratio
+
+
+[section `ratio`]
+[table
+    [[Name]             [kind]          [Description]          [Result] [Ticket]]
+    [[ratio_fail_test1]    [compile-fails] [...]                  [Pass]   [#]]
+    [[ratio_test]       [run]           [...]                  [Pass]   [#]]
+]
+[endsect]
+
+
+[endsect]
+[/=====================================]
+[section:tickets  Appendix G: Tickets]
+
+[table
+    [[Ticket]             [Description]          [Resolution] [State]]
+    [[1]    [result of metafunctions ratio_multiply and ratio_divide were not normalized ratios] [Use of the nested ratio typedef type on ratio arithmetic operations.]                  [Closed]]
+    [[2]    [INTMAX_C is not always defined] [Replace INTMAX_C by BOOST_INTMAX_C until boost/cstdint.hpp ensures INTMAX_C is always defined.]                  [Closed]]
+    
+    [[3]    [MSVC reports a warning instead of an error when there is an integral constant overflow] [manage with MSVC reporting a warning instead of an error when there is an integral constant overflow]                  [Closed]]
+    [/[#]    [XXXX] [XXXX]                  [Closed]]
+]
+
+
+[endsect]
+
+[/
+[/=====================================]
+[section:todo  Appendix H: Future plans]
+[/=====================================]
+
+[heading For later releases]
+
+
+[endsect]
+]
+[endsect]
