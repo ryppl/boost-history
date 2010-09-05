@@ -10,6 +10,7 @@
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_utility.hpp>
+#include <boost/graph/labeled_graph.hpp>
 
 using namespace boost;
 using namespace std;
@@ -27,8 +28,12 @@ typedef adjacency_list < vecS, vecS, bidirectionalS, Vertex_Type2, no_property, 
 // Hack: Instead of using Graph definition here to define the
 // descriptors, we define them using the same parameters used to
 // define Graph1 and Graph2:
-typedef adjacency_list_traits< vecS, vecS, bidirectionalS, listS>::vertex_descriptor Vertex;
-typedef adjacency_list_traits< vecS, vecS, bidirectionalS, listS>::edge_descriptor Edge;
+typedef adjacency_list_traits<vecS, vecS, bidirectionalS, listS>::vertex_descriptor Vertex;
+typedef adjacency_list_traits<vecS, vecS, bidirectionalS, listS>::edge_descriptor Edge;
+
+// Types for vertex and edge labels
+typedef unordered_map<size_t, Vertex> VertexLabel;
+typedef unordered_map<size_t, Edge> EdgeLabel;
 
 struct Vertex_Type1 {
   size_t name;
@@ -40,9 +45,35 @@ struct Edge_Type1 {
   size_t name;
 };
 struct Graph_Type1 {
-  unordered_map<size_t, Vertex> vertices;
-  unordered_map<size_t, Edge> edges;
+  VertexLabel vertices;
+  EdgeLabel edges;
 };
+
+// Specialize label traits for the graph.
+namespace boost {
+template<>
+struct vertex_label_traits<Graph1> {
+  typedef vertex_label_map<Graph1, VertexLabel> map_type;
+};
+template<>
+struct edge_label_traits<Graph1> {
+  typedef vertex_label_map<Graph1, EdgeLabel> map_type;
+};
+} // namespace boost
+
+inline property_map<Graph1, graph_vertex_label_t>::type
+get_vertex_label(Graph1& g)
+{
+  typedef property_map<Graph1, graph_vertex_label_t>::type Map;
+  return Map(get_property(g).vertices);
+}
+
+inline property_map<Graph1, graph_edge_label_t>::type
+get_edge_label(Graph1& g)
+{
+  typedef property_map<Graph1, graph_edge_label_t>::type Map;
+  return Map(get_property(g).edges);
+}
 
 struct Vertex_Type2 {
   size_t name;
@@ -51,9 +82,16 @@ struct Vertex_Type2 {
   float value;
 };
 struct Graph_Type2 {
-  unordered_map<size_t, Vertex> vertices;
+  VertexLabel vertices;
 };
 
+// Specialize label traits for graph 2.
+namespace boost {
+template<>
+struct vertex_label_traits<Graph2> {
+  typedef vertex_label_map<Graph2, VertexLabel> map_type;
+};
+} // namespace boost
 
 // Vertex copier
 template <typename G1, typename G2>
@@ -121,7 +159,23 @@ struct my_vertex_merger {
   float factor;
 };
 
+// FIXME: This should replace the merge above.
+template <typename InGraph, typename OutGraph>
+struct my_binary_merge {
+  my_binary_merge(int _add = 0, float _factor = 1)
+    : add(_add), factor(_factor) { }
 
+  template <typename InVertex, typename OutVertex>
+  void operator()(const InVertex&  vin, const InGraph& gin,
+                  OutVertex& vout, OutGraph& gout) {
+    // FIXME: I'm probably not doing this right.
+    gout[vout].str += gin[vin].str;
+    gout[vout].id += gin[vin].id;
+    gout[vout].value *= gin[vin].value;
+  }
+  int add;
+  float factor;
+};
 
 // edge visitor for new edges
 // set a name for the new edge

@@ -9,11 +9,13 @@
 //
 
 #include <iostream>
-
 #include <ctime>
+
+#include <boost/type_traits.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/graph/random.hpp>
 
+#include "typestr.hpp"
 #include "graph_op_common.hpp"
 
 #include <boost/graph/sum.hpp>
@@ -23,6 +25,9 @@ using namespace std;
 
 int main(int,char*[])
 {
+  test_defaults();
+
+
   boost::mt19937 gen;
   gen.seed(uint32_t(time(0)));
 
@@ -45,15 +50,15 @@ int main(int,char*[])
   cout << "g2:" << endl;
   print_named_edges(g2);
 
-  cout << "Sum of g1 and g2:" << endl;
-  graph_sum(g1, g2, gs1);
-  check_vertex_and_edge_naming(gs1);
-  print_named_edges(gs1);
+//   cout << "Sum of g1 and g2:" << endl;
+//   graph_sum(g1, g2, gs1);
+//   check_vertex_and_edge_naming(gs1);
+//   print_named_edges(gs1);
 
-  cout << "Sum of g2 and g1:" << endl;
-  graph_sum(g2, g1, gs2);
-  check_vertex_and_edge_naming(gs2);
-  print_named_edges(gs2);
+//   cout << "Sum of g2 and g1:" << endl;
+//   graph_sum(g2, g1, gs2);
+//   check_vertex_and_edge_naming(gs2);
+//   print_named_edges(gs2);
 
   cout << "h1:" << endl;
   print(h1);
@@ -67,14 +72,14 @@ int main(int,char*[])
 
   cout << "Other tests..." << endl;
 
-  graph_sum(g1, g2, gs3, vertex_copy(my_vertex_copier<Graph1, Graph1>(100, 10)));
-  check_vertex_and_edge_naming(gs3);
+//   graph_sum(g1, g2, gs3, vertex_copy(my_vertex_copier<Graph1, Graph1>(100, 10)));
+//   check_vertex_and_edge_naming(gs3);
 
-  graph_sum(g1, g2, gs4,
-            vertex_copy(my_vertex_copier<Graph1, Graph1>(100, 10))
-            .vertices_merge(my_vertex_merger<Graph1, Graph1>(100, 10))
-            );
-  check_vertex_and_edge_naming(gs4);
+//   graph_sum(g1, g2, gs4,
+//             vertex_copy(my_vertex_copier<Graph1, Graph1>(100, 10))
+//             .vertices_merge(my_vertex_merger<Graph1, Graph1>(100, 10))
+//             );
+//   check_vertex_and_edge_naming(gs4);
   //  print_named_edges(gs4);
 
   // For the following tests, this:
@@ -83,11 +88,11 @@ int main(int,char*[])
   // But after the graph is copied to gd, the edge name mapping does not work properly anymore.
   // For vertex it is ok: check_vertex_naming(gs)
 
-  gs = graph_sum(g1, g2);
-  check_vertex_naming(gs);
+//   gs = graph_sum(g1, g2);
+//   check_vertex_naming(gs);
 
-  gs = graph_sum(g1, g2, vertex_copy(my_vertex_copier<Graph1, Graph1>(100, 10)));
-  check_vertex_naming(gs);
+//   gs = graph_sum(g1, g2, vertex_copy(my_vertex_copier<Graph1, Graph1>(100, 10)));
+//   check_vertex_naming(gs);
 
   // simple_graph_sum
 

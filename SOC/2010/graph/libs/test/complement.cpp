@@ -9,8 +9,10 @@
 //
 
 #include <iostream>
-
 #include <ctime>
+
+#include <typeinfo>
+
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/graph/random.hpp>
 

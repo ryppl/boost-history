@@ -56,6 +56,19 @@ namespace boost {
       }
     };
 
+    // The default action is to simply preserve the properties of the original
+    // edge, ignoring the other edge. In short, this is a no-op.
+    // FIXME: This should replace the version above.
+    template<typename InGraph, typename OutGraph>
+    struct default_binary_vertex_merge
+    {
+      typedef typename graph_traits<InGraph>::vertex_descriptor InVertex;
+      typedef typename graph_traits<OutGraph>::vertex_descriptor OutVertex;
+      void operator()(InVertex vin, InGraph const& gin,
+                      OutVertex vout, OutGraph& gout) const
+      { }
+    };
+
     template <typename InGraph, typename OutGraph>
     struct default_edges_merge {
       typedef typename graph_traits<InGraph>::edge_descriptor InEdge;
@@ -66,6 +79,19 @@ namespace boost {
       {
         put(get(edge_all, g_out), e_out, get(get(edge_all, g1), e1));
       }
+    };
+
+    // The default action is to simply preserve the properties of the original
+    // edge, ignoring the other edge. In short, this is a no-op.
+    // FIXME: This should replace the version above.
+    template<typename InGraph, typename OutGraph>
+    struct default_binary_edge_merge
+    {
+      typedef typename graph_traits<InGraph>::edge_descriptor InEdge;
+      typedef typename graph_traits<OutGraph>::edge_descriptor OutEdge;
+      void operator()(InEdge ein, const InGraph& gin,
+                      OutEdge& eout, OutGraph& gout) const
+      { }
     };
 
     // To copy vertex and edge properties. Similar to code in copy.hpp,

@@ -2,10 +2,6 @@
 # Import the testing module so we can generate test cases.
 import testing ;
 
-# If you really want to see the values of the path constants...
-ECHO $(BOOST_ROOT) ;
-ECHO $(SOC_ROOT) ;
-
 # Declaring a project causes targets within this module to inherit the
 # properties of the target. Here, we're adding to the include paths. Note that
 # the order may matter. If you're creating new versions of existing files,
@@ -26,5 +22,6 @@ test-suite graph_test
     [ run join.cpp ]
     [ run difference.cpp ]
     [ run intersection.cpp ]
-    [ run sum.cpp ]
+#    [ run sum.cpp ]
+    [ run test_sum.cpp ]
   ;

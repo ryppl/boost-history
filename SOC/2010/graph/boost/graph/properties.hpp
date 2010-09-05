@@ -14,6 +14,7 @@
 #include <cassert>
 #include <boost/pending/property.hpp>
 #include <boost/detail/workaround.hpp>
+#include <boost/static_assert.hpp>
 
 // Include the property map library and extensions in the BGL.
 #include <boost/property_map/property_map.hpp>
@@ -129,6 +130,12 @@ namespace boost {
   BOOST_DEF_PROPERTY(graph, bundle);
   BOOST_DEF_PROPERTY(vertex, bundle);
   BOOST_DEF_PROPERTY(edge, bundle);
+
+  // These tags support the mapping of labels (names) to vertices and edges.
+  // These do not return property maps in quite the same way.
+  // FIXME: Make sure that these work with old-style properties.
+  BOOST_DEF_PROPERTY(graph, named_vertices);
+  BOOST_DEF_PROPERTY(graph, named_edges);
 
   // These tags are used to denote the owners and local descriptors
   // for the vertices and edges of a distributed graph.
@@ -281,6 +288,20 @@ namespace boost {
     typedef typename Graph::edge_property_type type;
   };
 
+  // Support for named vertices and edges
+  struct not_named { };
+
+  // Support for vetex names.
+  // Specalize the name templates to define the type of name since they can't
+  // easily deduced in C++03. These could be specialized for volatile also,
+  // but that's quite rare in practice.
+  template<typename G> struct vertex_name_traits { typedef not_named type; };
+  template<typename G> struct vertex_name_traits<G const> : vertex_name_traits<G> { };
+
+  template<typename G> struct edge_name_traits { typedef not_named nme; };
+  template<typename G> struct edge_name_traits<G const> : edge_name_traits<G> { };
+
+  // Define a readable property map for vertex degrees.
   template <typename Graph>
   class degree_property_map
     : public put_get_helper<typename graph_traits<Graph>::degree_size_type,
@@ -368,6 +389,7 @@ namespace boost {
   {
     return make_iterator_vertex_map(c.begin());
   }
+
 
 #if defined (BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 #  define BOOST_GRAPH_NO_BUNDLED_PROPERTIES
@@ -506,6 +528,11 @@ get_property(Graph const& g) {
 // Stay out of the way of the concept checking class
 # undef Graph
 # undef RandomAccessIterator
+#endif
+
+// Include property maps and accessors for use with bundled properties/
+#ifndef BOOST_GRAPH_NO_BUNDLED_PROPERTIES
+#  include <boost/graph/bundled_properties.hpp>
 #endif
 
 #endif /* BOOST_GRAPH_PROPERTIES_HPPA */
