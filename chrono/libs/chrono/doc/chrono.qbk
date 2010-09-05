@@ -156,7 +156,7 @@
 
 
 [/==================]
-[template SuspendibleClock_concept_link[link_text] [link boost_chrono.reference.other_clocks.suspendible_clock_req [link_text]]]
+[template SuspendibleClock_concept_link[link_text] [link_text]]
 [def __SuspendibleClock_concept__ [SuspendibleClock_concept_link `SuspendibleClock` concept]]
 [def __SuspendibleClock_concept_type__ [SuspendibleClock_concept_link `SuspendibleClock`]]
 [def __SuspendibleClock_req__ [SuspendibleClock_concept_link `SuspendibleClock` requirements]]
@@ -289,15 +289,6 @@ To make the timing facilities more generally useful, __Boost_Chrono__ provides a
 [/It is also helpful if such timing information is broken down into real (wall clock) time, CPU time spent by the user, and CPU time spent by the operating system servicing user requests. process clocks provide a thin wrapper around the operating system's process timer API. For POSIX-like systems, that's the times() function, while for Windows, it's the GetProcessTimes() function.
 ]
 
-
-[/
-
-* Suspendible clock
-    * __SuspendibleClock__ concept
-    * scope_suspend which do suspend/resume if the __Clock__ is a model of __SuspendibleClock__ concept, and nothing otherwise.
-    * template class __suspendible_clock__
-]
-
 Lastly, __Boost_Chrono__ includes [@http://www.boost.org/libs/typeof typeof] registration for __duration__ and __time_point__ to permit using emulated auto with C++03 compilers.
 
 
@@ -386,9 +377,6 @@ __Boost_Chrono__ depends optionaly on:
 
 [variablelist
 [
-    [[@http://www.boost.org/libs/thread [*Boost.Thread]]] [for thread_specific_ptr when suspendible_clock.hpp is included]
-]
-[
     [[@http://www.boost.org/libs/typeof [*Boost.Typeof]]] [for duration and time_point registration when typeof/boost/chrono/chrono.hpp is include or when BOOST_COMMON_TYPE_DONT_USE_TYPEOF is not defined]
 ]
 ]
@@ -398,7 +386,7 @@ __Boost_Chrono__ depends optionaly on:
 [heading Building an executable that uses __Boost_Chrono__ ]
 [/=========================================================]
 
-In addition to link with the Boost Chrono library you need also to link with the Boost System library. If you use Suspendibles clocks you will need also with Boos Thread.
+In addition to link with the Boost.Chrono library you need also to link with the Boost.System library.
 
 
 [/=========================]
@@ -917,53 +905,6 @@ On posix systems for which the macro _POSIX_THREAD_CPUTIME is defined we can get
 
 
 [endsect]
-
-
-
-[/
-[section How reliable are these measures?]
-
-[note this section need to be reworked, the ideas are there, but ...]
-
-There are three context on which you can get unreliable measures:
-
-* precision of your clock. If the precision of your clock is 10ms you can not be able to measure the time spent by blocks of code that takes the same order of magnitude. The library provides a hig_resolution_clock that gives you the higher resolution available on your platform. Respect to the precision, nothing to do except to take the clock with the highest resolution and measures blocks of code that will spent time having more than one order of magnitude the precision of the clock.
-
-``
-#include <boost/chrono/chrono.hpp>
-    ...
-    __stopclock__<__high_resolution_clock__> _;
-``
-
-* When your application is multithreaded, and you use a process clock, the time you get is the delay during which your block has been executed, in concurrency with the other threads of execution. If what you want is the time spent by this specific thread another clock is needed. The library provide a __thread_clock__ that returns the time spent by the thread on platforms providing this kind of data. It can be used as follows
-
-``
-#include <boost/chrono/thread_clock.hpp>
-...
-#if defined(__BOOST_CHRONO_HAS_THREAD_CLOCK)
-    __stopclock__<__thread_clock__> _;
-#else
-    __stopclock__<__process_real_cpu_clock__> _;
-#endif
-``
-
-* Nested stopclocks (usually nested function calls where each function contains a __stopclock__). When the nesting is deep enough, the cumulative overhead of all the stopclock functionality make the data unreliable except for the inner-most trace points. The question is, how much time is related to the application code we want to measure and how much to the fact we are meassuring and logging in inner blocks?
-
-Some measures let us think that most of the time spent by the __stopclock__ mechanism is associated to the logging part. There are two things we can do to make the difference :
-
-* Avoid expensive operations as logging while doing the measures. Note that reporting in itself is not too expensive as far as we don't need to flush the buffer. This can be achieved either using a __stopclock_accumulator__, 'i.e. don't report until all the measures have been compiled and then report some statistics or using an asynchronous stream.
-
-* Introduce some cheap mechanism that allows us to make the difference between the application time and the intrinsic __stopclock__ time. When the precision of the clock is enough, we can suspend the counting of the Clock while we are spending time reporting the measures, and resume it once the work is done. The library provide a Clock wrapper __suspendible_clock__ that make the resulting clock suspendible. The __stopwatch_reporter__ is able to detect if the __Clock__ is Suspendible and then `suspend`/`resume` the __Clock__ while doing the report.
-
-    __stopclock__<__suspendible_clock__<Clock> > _;
-
-
-See the performances section for more deep details.
-
-[endsect]
-]
-
-
 
 [endsect]
 [/===============]
@@ -3498,143 +3439,6 @@ __thread_clock__ class provides access to the real thread wall-clock, i.e. the r
 [endsect]
 
 
-
-[section:suspendible_clock_req `SuspendibleClock` Requirements]
-
-A `SuspendibleClock` is a Clock that in addition supports `suspend`/`resume` operations.
-
-A `SuspendibleClock` must meet the requirements in the following Table.
-
-In this table `C`  denote `clock` types.
-
-[table SuspendibleClock Requirements
-    [[expression]        [return type]  [operational semantics]]
-    [[`C::suspend()`]   [`void`]  [Suspends the time counting of the clock C.]]
-    [[`C::resume()`]   [`void`]  [Resumes the time counting of the clock C.]]
-    [[`C::suspended()`]   [__duration__]  [Returns the delay(duration during which the clock has been suspended.]]
-]
-
-[section:SuspendibleClock_suspend Static Member Function `suspend()`]
-
-    void suspend( system::error_code & ec = system::throws );
-
-[*Effect:] Suspends the SuspendibleClock.
-
-[*Throw:] Any exception the `Clock::now(ec)` function can throw. Otherwise `ec` is set with the correspoding error code set by `Clock::now(ec)`.
-
-[endsect]
-[section:SuspendibleClock_resume Static Member Function `resume()`]
-
-    void resume( system::error_code & ec = system::throws );
-
-[*Effect:] Resumes the `SuspendibleClock`.
-
-[*Throw:] Any exception the `Clock::now(ec)` can throw. Otherwise `ec` is set with the correspoding error code set by `Clock::now(ec)`.
-
-[endsect]
-
-[section:SuspendibleClock_suspended Static Member Function `suspended()`]
-
-    duration suspended( system::error_code & ec = system::throws );
-
-[*Returns:] the cumalative elapsed duration during which the `SuspendibleClock` has been suspendeed.
-
-[*Throw:] Any exception the Clock::now function can throw if `ec == system::throws`. Otherwise `ec` is set with the correspoding error code set by `Clock::now(ec)`.
-
-[endsect]
-
-Models of `SuspendibleClock`:
-
-* __suspendible_clock__]
-
-
-[endsect]
-
-[/==================================================================]
-[section:scoped_suspend_hpp Header `<boost/chrono/scoped_suspend.hpp>`]
-[/==================================================================]
-
-    namespace boost { namespace chrono {
-        template <class Clock> struct is_suspendible;
-        template <class Clock> class scoped_suspend;
-    }}
-
-[section:is_suspendible Meta Function Class `is_suspendible`]
-
-    template <class Clock>
-    struct is_suspendible : mpl:: false_ {};
-
-[endsect]
-
-[section:scoped_suspend Template Class `scoped_suspend`]
-
-    template <class Clock>
-    class scoped_suspend {
-    public:
-        scoped_suspend(system::error_code & ec = system::throws) {}
-        ~scoped_suspend() {}
-    private:
-        scoped_suspend(); // = delete;
-        scoped_suspend(const scoped_suspend&); // = delete;
-        scoped_suspend& operator=(const scoped_suspend&); // = delete;
-    };
-
-[endsect]
-
-[endsect]
-
-
-[/==================================================================]
-[section:suspendible_clock_hpp Header `<boost/chrono/suspendible_clock.hpp>`]
-[/==================================================================]
-
-    namespace boost { namespace chrono {
-
-        template <class Clock>
-        class suspendible_clock;
-
-        template <class Clock>
-        struct is_suspendible<suspendible_clock<Clock> > : mpl:: true_ {};
-
-        template <class Clock>
-        class scoped_suspend<suspendible_clock<Clock> >;
-
-    }}
-
-[section:suspendible_clock Template Class `suspendible_clock<>`]
-
-Given a __Clock__, __suspendible_clock__ <__Clock__> is a model of __SuspendibleClock__.
-
-    template < class Clock >
-    class suspendible_clock {
-    public:
-        typedef typename Clock::duration                           duration;
-        typedef typename Clock::rep                                       rep;
-        typedef typename Clock::period                                    period;
-        typedef chrono::__time_point__<suspendible_clock<Clock> >  time_point;
-        static const bool is_monotonic =             true;
-
-        static time_point now( system::error_code & ec = system::throws );
-
-        static void suspend( system::error_code & ec = system::throws );
-        static void resume( system::error_code & ec = system::throws );
-        static duration suspended(system::error_code & ec = system::throws);
-    };
-
-[section `scoped_suspend` specialization for `suspendible_clock<>`]
-
-        template <class Clock>
-        class scoped_suspend<suspendible_clock<Clock> > {
-        public:
-            scoped_suspend(system::error_code & ec = system::throws);
-            ~scoped_suspend();
-        };
-
-[endsect]
-
-[endsect]
-
-[endsect]
 
 [endsect]
 
