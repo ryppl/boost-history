@@ -37,11 +37,6 @@ project
         <toolset>msvc:<cxxflags>/wd4127
     ;
 
-   test-suite "common_type"
-        :
-        [ run common_type_test.cpp ]
-        [ compile-fail common_type_fails.cpp  ]
-        ;
 
    test-suite "minmax"
         :
