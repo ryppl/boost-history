@@ -248,12 +248,13 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
 
     iterator last_  = end_; --last_;
     iterator it_    = first_;
-    subtract_front         (inter_val,         it_);
-    subtract_main<Combiner>(           co_val, it_, last_);
-    subtract_rear<Combiner>(inter_val, co_val, it_);
+    detail::subtract_front<type>         (*this, inter_val,         it_       );
+    detail::subtract_main <type,Combiner>(*this,            co_val, it_, last_);
+    detail::subtract_rear <type,Combiner>(*this, inter_val, co_val, it_       );
 }
 
 
+/*CL
 template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::subtract_front(const interval_type& inter_val, iterator& it_)
@@ -310,7 +311,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
             this->_map.erase(it_);
     }
 }
-
+*/
 
 //-----------------------------------------------------------------------------
 // insert(pair(interval,value)):

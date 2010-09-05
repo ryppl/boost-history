@@ -197,14 +197,14 @@ struct style_dependent;
 template<class Type, class Combiner, int combining_style>
 struct style_dependent<Type, Combiner, interval_combine::splitting>
 {
-	static void handle_reinserted(Type& object, iterator insertion_){}
+    static void handle_reinserted(Type& object, iterator insertion_){}
 };
 
 template<class Type, class Combiner, int combining_style>
 struct style_dependent<Type, Combiner, interval_combine::joining>
 {
-	static void handle_reinserted(Type& object, iterator insertion_)
-	{ join_right(object, insertion_); }
+    static void handle_reinserted(Type& object, iterator insertion_)
+    { join_right(object, insertion_); }
 };
 */
 
@@ -221,10 +221,12 @@ struct on_segment<Type, Combiner, false, interval_combine::splitting>
     typedef typename Type::interval_type interval_type;
     typedef typename Type::codomain_type codomain_type;
 
-	static void handle_combined(Type&, iterator){}
-	static void handle_preceeded_combined(Type&, iterator, iterator&){}
-	static void handle_inserted(Type&, iterator, iterator){}
-	static void handle_reinserted(Type&, iterator insertion_){}
+    static void handle_left_combined(Type&, iterator){}
+    static void handle_combined(Type&, iterator){}
+    static void handle_succeeded_combined(Type&, iterator, iterator){}
+    static void handle_preceeded_combined(Type&, iterator, iterator&){}
+    static void handle_inserted(Type&, iterator, iterator){}
+    static void handle_reinserted(Type&, iterator insertion_){}
 
     static void insert_at(Type& object, iterator& it_, iterator,
                           const interval_type& end_gap, const codomain_type& co_val)
@@ -242,11 +244,17 @@ struct on_segment<Type, Combiner, true, interval_combine::splitting>
     typedef typename Type::interval_type interval_type;
     typedef typename Type::codomain_type codomain_type;
 
-	static void handle_combined(Type& object, iterator it_)
-	{
-		if(it_->second == Combiner::neutron())
-			object.erase(it_);
-	}
+    static void handle_left_combined(Type& object, iterator it_)
+    {
+        if(it_->second == Combiner::neutron())
+            object.erase(it_);
+    }
+
+    static void handle_combined(Type& object, iterator it_)
+    {
+        if(it_->second == Combiner::neutron())
+            object.erase(it_);
+    }
 
     static void handle_preceeded_combined(Type& object, iterator prior_, iterator& it_)
     {
@@ -257,8 +265,14 @@ struct on_segment<Type, Combiner, true, interval_combine::splitting>
         }
     }
 
-	static void handle_inserted(Type&, iterator, iterator){}
-	static void handle_reinserted(Type&, iterator insertion_){}
+    static void handle_succeeded_combined(Type& object, iterator it_, iterator)
+    {
+        if(it_->second == Combiner::neutron())
+            object.erase(it_);
+    }
+
+    static void handle_inserted(Type&, iterator, iterator){}
+    static void handle_reinserted(Type&, iterator insertion_){}
 
     static void insert_at(Type& object, iterator& it_, iterator prior_,
                           const interval_type& end_gap, const codomain_type& co_val)
@@ -282,28 +296,39 @@ struct on_segment<Type, Combiner, false, interval_combine::joining>
     typedef typename Type::interval_type interval_type;
     typedef typename Type::codomain_type codomain_type;
 
-	static void handle_combined(Type& object, iterator it_)
-	{
-		detail::join_left(object, it_);
-	}
+    static void handle_left_combined(Type& object, iterator it_)
+    {
+        join_left(object, it_);
+    }
+
+    static void handle_combined(Type& object, iterator it_)
+    {
+        join_neighbours(object, it_);
+    }
 
     static void handle_preceeded_combined(Type& object, iterator, iterator& it_)
     {
         join_neighbours(object, it_);
     }
 
-	static void handle_inserted(Type& object, iterator prior_, iterator inserted_)
-	{
+    static void handle_succeeded_combined(Type& object, iterator it_, iterator next_)
+    {
+        join_left(object, it_);
+        join_neighbours(object, next_);
+    }
+
+    static void handle_inserted(Type& object, iterator prior_, iterator inserted_)
+    {
         if(prior_ != object.end() && joinable(object, prior_, inserted_))
             join_on_right(object, prior_, inserted_);
-	}
-	static void handle_reinserted(Type& object, iterator insertion_)
-	{ join_right(object, insertion_); }
+    }
+    static void handle_reinserted(Type& object, iterator insertion_)
+    { join_right(object, insertion_); }
 
     static void insert_at(Type& object, iterator& it_, iterator,
                           const interval_type& end_gap, const codomain_type& co_val)
     {
-		detail::join_left(object, it_);
+        detail::join_left(object, it_);
         iterator inserted_ = gap_insert<Type,Combiner>(object, it_, end_gap, co_val);
         it_ = join_neighbours(object, inserted_);
     }
@@ -317,13 +342,21 @@ struct on_segment<Type, Combiner, true, interval_combine::joining>
     typedef typename Type::interval_type interval_type;
     typedef typename Type::codomain_type codomain_type;
 
-	static void handle_combined(Type& object, iterator it_)
-	{
-		if(it_->second == Combiner::neutron())
-			object.erase(it_);
-		else
-			detail::join_left(object, it_);
-	}
+    static void handle_left_combined(Type& object, iterator it_)
+    {
+        if(it_->second == Combiner::neutron())
+            object.erase(it_);
+        else
+            join_left(object, it_);
+    }
+
+    static void handle_combined(Type& object, iterator it_)
+    {
+        if(it_->second == Combiner::neutron())
+            object.erase(it_);
+        else
+            join_neighbours(object, it_);
+    }
 
     static void handle_preceeded_combined(Type& object, iterator prior_, iterator& it_)
     {
@@ -336,16 +369,28 @@ struct on_segment<Type, Combiner, true, interval_combine::joining>
             join_neighbours(object, it_);
     }
 
+    static void handle_succeeded_combined(Type& object, iterator it_, iterator next_)
+    {
+        if(it_->second==Combiner::neutron())
+        {
+            object.erase(it_);
+            join_right(object, next_);
+        }
+        else
+        {
+            join_left(object, it_);
+            join_neighbours(object, next_);
+        }
+    }
 
-
-	static void handle_inserted(Type& object, iterator prior_, iterator inserted_)
-	{
+    static void handle_inserted(Type& object, iterator prior_, iterator inserted_)
+    {
         if(prior_ != object.end() && joinable(object, prior_, inserted_))
             join_on_right(object, prior_, inserted_);
-	}
+    }
 
-	static void handle_reinserted(Type& object, iterator insertion_)
-	{ join_right(object, insertion_); }
+    static void handle_reinserted(Type& object, iterator insertion_)
+    { join_right(object, insertion_); }
 
     static void insert_at(Type& object, iterator& it_, iterator prior_, 
                           const interval_type& end_gap, const codomain_type& co_val)
@@ -358,7 +403,7 @@ struct on_segment<Type, Combiner, true, interval_combine::joining>
         }
         else 
         {
-			detail::join_left(object, it_);
+            detail::join_left(object, it_);
             iterator inserted_ = gap_insert<Type,Combiner>(object, it_, end_gap, co_val);
             it_ = join_neighbours(object, inserted_);
         }
@@ -366,6 +411,9 @@ struct on_segment<Type, Combiner, true, interval_combine::joining>
 };
 //------------------------------------------------------------------------------
 
+//==============================================================================
+//= Addition
+//==============================================================================
 
 template<class Type, class Combiner>
 void add_segment(               Type&                object,
@@ -376,8 +424,8 @@ void add_segment(               Type&                object,
     typedef typename Type::interval_type interval_type;
     typedef typename Type::iterator      iterator;
     typedef typename on_segment<Type,Combiner,
-		                        absorbs_neutrons<Type>::value,
-								Type::fineness>::type on_segment_;
+                                absorbs_neutrons<Type>::value,
+                                Type::fineness>::type on_segment_;
 
     interval_type lead_gap = right_subtract(inter_val, it_->first);
     if(!itl::is_empty(lead_gap))
@@ -386,13 +434,13 @@ void add_segment(               Type&                object,
         //          [-- it_ ...
         iterator prior_ = prior(it_); 
         iterator inserted_ = gap_insert<Type,Combiner>(object, prior_, lead_gap, co_val);
-		on_segment_::handle_inserted(object, prior_, inserted_);
+        on_segment_::handle_inserted(object, prior_, inserted_);
     }
 
     // . . . --------- . . . addend interval
     //      [-- it_ --)      has a common part with the first overval
     Combiner()(it_->second, co_val);
-	on_segment_::handle_combined(object, it_++);
+    on_segment_::handle_left_combined(object, it_++);
 }
 
 
@@ -429,8 +477,8 @@ void add_rear(               Type&                object,
     typedef typename Type::value_type    value_type;
     typedef typename Type::iterator      iterator;
     typedef typename on_segment<Type,Combiner,
-		                        absorbs_neutrons<Type>::value,
-								Type::fineness>::type on_segment_;
+                                absorbs_neutrons<Type>::value,
+                                Type::fineness>::type on_segment_;
 
     iterator prior_ = object.prior(it_);
     interval_type cur_itv = it_->first ;
@@ -440,7 +488,7 @@ void add_rear(               Type&                object,
     {   //         [lead_gap--- . . .
         // [prior)          [-- it_ ...
         iterator inserted_ = gap_insert<Type,Combiner>(object, prior_, lead_gap, co_val);
-		on_segment_::handle_inserted(object, prior_, inserted_);
+        on_segment_::handle_inserted(object, prior_, inserted_);
     }
 
     interval_type end_gap = left_subtract(inter_val, cur_itv);
@@ -480,6 +528,77 @@ void add_rear(               Type&                object,
         }
     }
 }
+
+//==============================================================================
+//= Subtract
+//==============================================================================
+
+template<class Type>
+void subtract_front(               Type&                object,
+                    const typename Type::interval_type& inter_val, 
+                          typename Type::iterator&      it_       )
+{
+    typedef typename Type::interval_type interval_type;
+    typedef typename Type::value_type    value_type;
+    typedef typename Type::iterator      iterator;
+
+    interval_type left_resid = right_subtract(it_->first, inter_val);
+
+    if(!itl::is_empty(left_resid))
+    {
+        iterator prior_ = object.prior(it_);
+        const_cast<interval_type&>(it_->first) = left_subtract(it_->first, left_resid);
+        object._insert(prior_, value_type(left_resid, it_->second));
+    }
+}
+
+
+template<class Type, class Combiner>
+void subtract_main(               Type&                object,
+                   const typename Type::codomain_type& co_val, 
+                         typename Type::iterator&      it_,       
+                   const typename Type::iterator&      last_         )
+{
+    typedef typename on_segment<Type,Combiner,
+                                absorbs_neutrons<Type>::value,
+                                Type::fineness>::type on_segment_;
+    while(it_ != last_)
+    {
+        Combiner()(it_->second, co_val);
+        on_segment_::handle_left_combined(object, it_++);
+    }
+}
+
+
+template<class Type, class Combiner>
+void subtract_rear(               Type&                object,
+                         typename Type::interval_type& inter_val, 
+                   const typename Type::codomain_type& co_val, 
+                         typename Type::iterator&      it_      )     
+{
+    typedef typename Type::interval_type interval_type;
+    typedef typename Type::value_type    value_type;
+    typedef typename Type::iterator      iterator;
+    typedef typename on_segment<Type,Combiner,
+                                absorbs_neutrons<Type>::value,
+                                Type::fineness>::type on_segment_;
+
+    interval_type right_resid = left_subtract(it_->first, inter_val);
+
+    if(itl::is_empty(right_resid))
+    {
+        Combiner()(it_->second, co_val);
+        on_segment_::handle_combined(object, it_);
+    }
+    else
+    {
+        const_cast<interval_type&>(it_->first) = right_subtract(it_->first, right_resid);
+        iterator next_ = object._insert(it_, value_type(right_resid, it_->second));
+        Combiner()(it_->second, co_val);
+        on_segment_::handle_succeeded_combined(object, it_, next_);
+    }
+}
+
 
 
 } // namespace detail
