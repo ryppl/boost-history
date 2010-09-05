@@ -1,11 +1,11 @@
-# Boost Chrono Library test Jamfile
+# Boost TypeTraits.Ext Library test Jamfile
 
-# Copyright Beman Dawes 2003, 2006, 2008
+# Copyright Vicente J. Botet Excriba 2010
 
 # Distributed under the Boost Software License, Version 1.0.
 # See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt
 
-# See library home page at http://www.boost.org/libs/chrono
+# See library home page at http://www.boost.org/libs/type_traits
 
 # uncomment one if the above lines if you build outside the Boost release
 #local BOOST_ROOT = /boost_1_41_0 ;

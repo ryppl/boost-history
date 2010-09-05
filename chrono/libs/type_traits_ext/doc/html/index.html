@@ -873,17 +873,50 @@
         and provides motivation for key design decisions.
       </p>
 </div>
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
 <a name="boost_typetraits_ext.appendices.implementation"></a><a href="index.html#boost_typetraits_ext.appendices.implementation" title=" Appendix
       C: Implementation Notes"> Appendix
       C: Implementation Notes</a>
-</h3></div></div></div></div>
+</h3></div></div></div>
+<a name="boost_typetraits_ext.appendices.implementation.common_type_c__03_implementation"></a><h4>
+<a name="id4997993"></a>
+        <a href="index.html#boost_typetraits_ext.appendices.implementation.common_type_c__03_implementation">common_type
+        C++03 implementation</a>
+      </h4>
+<p>
+        The C++03 implementation of <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> has some limitations.
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            Absence of variadic template: The number of template parameters is limited
+            to 3.
+          </li>
+<li>
+            decltype and rvalue references missing: the default common-type is based
+            on these C++0x features. When these are not present, BoostTypeOf is used
+            instead of decltype, and rvalue references are not used at all, and replaced
+            by the type itself.
+          </li>
+</ul></div>
+<p>
+        Jeffrey Lee Hellrung, Jr. has reache dto implement <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> without using Boost.TypeOf.
+        The idea is that the number of possible types of the expression <a href="index.html#boost_typetraits_ext.reference.declval_hpp.declval" title="
+        Function Template declval&lt;&gt;"><code class="computeroutput"><span class="identifier">declval</span></code></a>&lt;bool&gt;() ? <a href="index.html#boost_typetraits_ext.reference.declval_hpp.declval" title="
+        Function Template declval&lt;&gt;"><code class="computeroutput"><span class="identifier">declval</span></code></a>&lt;T&gt;() : <a href="index.html#boost_typetraits_ext.reference.declval_hpp.declval" title="
+        Function Template declval&lt;&gt;"><code class="computeroutput"><span class="identifier">declval</span></code></a>&lt;U&gt;() are limited.
+        His implementation enumerates the possible types and check if there is only
+        one common type.
+      </p>
+</div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_typetraits_ext.appendices.faq"></a><a href="index.html#boost_typetraits_ext.appendices.faq" title=" Appendix D: FAQ"> Appendix D: FAQ</a>
 </h3></div></div></div>
 <a name="boost_typetraits_ext.appendices.faq.how_important_is_the_order_of_the_common_type_lt__gt__template_arguments_"></a><h4>
-<a name="id4998009"></a>
+<a name="id4998146"></a>
         <a href="index.html#boost_typetraits_ext.appendices.faq.how_important_is_the_order_of_the_common_type_lt__gt__template_arguments_">How
         important is the order of the common_type&lt;&gt; template arguments?</a>
       </h4>
@@ -923,7 +956,7 @@
         also undefined.
       </p>
 <a name="boost_typetraits_ext.appendices.faq.can_you_explain_the_pros_cons_of_common_type_against_boost_typeof_"></a><h4>
-<a name="id4998492"></a>
+<a name="id4998629"></a>
         <a href="index.html#boost_typetraits_ext.appendices.faq.can_you_explain_the_pros_cons_of_common_type_against_boost_typeof_">Can
         you explain the pros/cons of common_type against Boost.Typeof?</a>
       </h4>
@@ -1213,7 +1246,7 @@
       plans</a>
 </h3></div></div></div>
 <a name="boost_typetraits_ext.appendices.todo.for_later_releases"></a><h4>
-<a name="id4999121"></a>
+<a name="id4999257"></a>
         <a href="index.html#boost_typetraits_ext.appendices.todo.for_later_releases">For
         later releases</a>
       </h4>
@@ -1225,7 +1258,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: September 05, 2010 at 18:47:29 GMT</small></p></td>
+<td align="left"><p><small>Last revised: September 05, 2010 at 18:59:19 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

@@ -491,6 +491,14 @@ See [http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 -
 [/======================================================]
 [section:implementation Appendix C: Implementation Notes]
 
+[heading common_type C++03 implementation]
+
+The C++03 implementation of __common_type__ has some limitations.
+
+* Absence of variadic template: The number of template parameters is limited to 3.
+* decltype and rvalue references missing: the default common-type is based on these C++0x features. When these are not present, BoostTypeOf is used instead of decltype, and rvalue references are not used at all, and replaced by the type itself.
+
+Jeffrey Lee Hellrung, Jr. has reache dto implement __common_type__ without using Boost.TypeOf. The idea is that the number of possible types of the expression __declval__<bool>() ? __declval__<T>() : __declval__<U>() are limited. His implementation enumerates the possible types and check if there is only one common type.
 
 [endsect]
 
