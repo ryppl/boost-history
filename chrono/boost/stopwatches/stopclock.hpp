@@ -16,6 +16,7 @@
 #include <boost/stopwatches/stopwatch_formatter.hpp>
 #include <boost/stopwatches/time_formatter.hpp>
 #include <boost/stopwatches/stopwatch.hpp>
+#include <boost/stopwatches/suspendible_clock.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
 #include <boost/type_traits/is_same.hpp>
 
@@ -64,12 +65,12 @@ namespace boost { namespace stopwatches  {
     };
 
     template <>
-    struct stopwatch_reporter_default_formatter<stopwatch<chrono::suspendible_clock<chrono::process_cpu_clock> > > {
+    struct stopwatch_reporter_default_formatter<stopwatch<stopwatches::suspendible_clock<chrono::process_cpu_clock> > > {
         typedef stopwatch_reporter_default_formatter<stopwatch<chrono::process_cpu_clock> >::type  type;
     };
 
     template <>
-    struct wstopwatch_reporter_default_formatter<stopwatch<chrono::suspendible_clock<chrono::process_cpu_clock> > > {
+    struct wstopwatch_reporter_default_formatter<stopwatch<stopwatches::suspendible_clock<chrono::process_cpu_clock> > > {
         typedef wstopwatch_reporter_default_formatter<stopwatch<chrono::process_cpu_clock> >::type  type;
     };
 

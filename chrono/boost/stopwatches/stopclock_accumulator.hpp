@@ -17,6 +17,7 @@
 #include <boost/stopwatches/stopwatch_accumulator.hpp>
 #include <boost/stopwatches/stopwatch_accumulator_formatter.hpp>
 #include <boost/stopwatches/stopwatch_accumulator_time_formatter.hpp>
+#include <boost/stopwatches/suspendible_clock.hpp>
 #include <boost/chrono/chrono.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -66,12 +67,12 @@ namespace boost { namespace stopwatches  {
     };
 
     template <typename Features, typename Weight>
-    struct stopwatch_reporter_default_formatter<stopwatch_accumulator<chrono::suspendible_clock<chrono::process_cpu_clock>, Features,Weight> > {
+    struct stopwatch_reporter_default_formatter<stopwatch_accumulator<stopwatches::suspendible_clock<chrono::process_cpu_clock>, Features,Weight> > {
         typedef stopwatch_reporter_default_formatter<stopwatch_accumulator<chrono::process_cpu_clock> >::type  type;
     };
 
     template <typename Features, typename Weight>
-    struct wstopwatch_reporter_default_formatter<stopwatch_accumulator<chrono::suspendible_clock<chrono::process_cpu_clock>, Features,Weight> > {
+    struct wstopwatch_reporter_default_formatter<stopwatch_accumulator<stopwatches::suspendible_clock<chrono::process_cpu_clock>, Features,Weight> > {
         typedef wstopwatch_reporter_default_formatter<stopwatch_accumulator<chrono::process_cpu_clock> >::type  type;
     };
 

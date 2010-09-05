@@ -15,7 +15,6 @@
 #include <boost/current_function.hpp>
 #include <boost/stopwatches/detail/default_out.hpp>
 #include <boost/stopwatches/detail/adaptive_string.hpp>
-#include <boost/chrono/suspendible_clock.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/cstdint.hpp>
 #include <string>

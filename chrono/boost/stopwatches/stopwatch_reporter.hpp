@@ -23,7 +23,7 @@
 #include <boost/chrono/chrono.hpp>
 #include <boost/stopwatches/stopwatch_scoped.hpp>
 #include <boost/system/error_code.hpp>
-#include <boost/chrono/scoped_suspend.hpp>
+#include <boost/stopwatches/scoped_suspend.hpp>
 #include <boost/cstdint.hpp>
 #include <string>
 #include <iostream>
@@ -175,7 +175,7 @@ namespace boost { namespace stopwatches  {
 
     template <class Stopwatch, class Formatter>
     void basic_stopwatch_reporter<Stopwatch, Formatter>::report( system::error_code & ec ) {
-        chrono::scoped_suspend<typename Stopwatch::clock> _(ec);
+        stopwatches::scoped_suspend<typename Stopwatch::clock> _(ec);
         if (ec) return;
         if ( m_format.empty() ) m_format = Formatter::default_format();
 
