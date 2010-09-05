@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
 <link rel="start" href="../../index.html" title="Boost.Stopwatches">
 <link rel="up" href="../reference.html" title=" Reference ">
-<link rel="prev" href="../reference.html" title=" Reference ">
+<link rel="prev" href="other_clocks.html" title=" Other clocks">
 <link rel="next" href="reporters.html" title=" Stopwatch Reporters">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,17 +20,13 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../reference.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reporters.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="other_clocks.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reporters.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_stopwatches.reference.stopwatches"></a><a href="stopwatches.html" title=" Stopwatches"> Stopwatches</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatches_hpp">
-        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
-<dt><span class="section"><a href="stopwatches.html#boost_stopwatches.reference.stopwatches.chrono_stopwatches_hpp">
-        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_req">
         <code class="computeroutput"><span class="identifier">Stopwatch</span></code> Requirements</a></span></dt>
 <dd><dl>
@@ -89,43 +85,6 @@
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_stopwatches.reference.stopwatches.stopwatches_hpp"></a><a href="stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatches_hpp" title="
-        Header &lt;boost/stopwatches.hpp&gt;">
-        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
-</h4></div></div></div>
-<p>
-          This file include all the stopwatches related files
-        </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-</pre>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_stopwatches.reference.stopwatches.chrono_stopwatches_hpp"></a><a href="stopwatches.html#boost_stopwatches.reference.stopwatches.chrono_stopwatches_hpp" title="
-        Header &lt;boost/stopwatches/stopwatches.hpp&gt;">
-        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
-</h4></div></div></div>
-<p>
-          This file include all the stopwatches related files
-        </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">scoped_stopclock</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">process_cpu_clocks</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">stopclock</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">stopclock_accumulator</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">stopwatch</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">stopwatch_accumulator</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">stopwatch_accumulator_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">stopwatch_accumulator_time_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">stopwatch_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">stopwatch_reporter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">stopwatch_scoped</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">time_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">t24_hours</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">t24_hours_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-</pre>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
 <a name="boost_stopwatches.reference.stopwatches.stopwatch_req"></a><a href="stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_req" title="
         Stopwatch Requirements">
         <code class="computeroutput"><span class="identifier">Stopwatch</span></code> Requirements</a>
@@ -154,7 +113,7 @@
           is an instance of <code class="computeroutput"><span class="identifier">S</span></code>.
         </p>
 <div class="table">
-<a name="boost_stopwatches.reference.stopwatches.stopwatch_req.stopwatch_requirements"></a><p class="title"><b>Table&#160;1.&#160;Stopwatch Requirements</b></p>
+<a name="boost_stopwatches.reference.stopwatches.stopwatch_req.stopwatch_requirements"></a><p class="title"><b>Table&#160;2.&#160;Stopwatch Requirements</b></p>
 <table class="table" summary="Stopwatch Requirements">
 <colgroup>
 <col>
@@ -1143,7 +1102,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../reference.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reporters.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="other_clocks.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reporters.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
