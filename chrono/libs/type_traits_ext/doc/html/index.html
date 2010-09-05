@@ -1,0 +1,1138 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Boost.TypeTraits.Ext</title>
+<link rel="stylesheet" href="../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="index.html" title="Boost.TypeTraits.Ext">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"></div>
+<div class="article" lang="en">
+<div class="titlepage">
+<div>
+<div><h2 class="title">
+<a name="boost_typetraits_ext"></a>Boost.TypeTraits.Ext</h2></div>
+<div><div class="authorgroup">
+<div class="author"><h3 class="author">
+<span class="firstname">Howard</span> <span class="surname">Hinnant</span>
+</h3></div>
+<div class="author"><h3 class="author">
+<span class="firstname">Beman</span> <span class="surname">Dawes</span>
+</h3></div>
+<div class="author"><h3 class="author">
+<span class="firstname">Vicente J.</span> <span class="surname">Botet Escriba</span>
+</h3></div>
+</div></div>
+<div><p class="copyright">Copyright &#169; 2008 Howard Hinnant</p></div>
+<div><p class="copyright">Copyright &#169; 2006 , 2008 Beman Dawes</p></div>
+<div><p class="copyright">Copyright &#169; 2009 -2010 Vicente J. Botet Escriba</p></div>
+<div><div class="legalnotice">
+<a name="id4986971"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div>
+<hr>
+</div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.overview">Overview</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.overview.motivation">Motivation</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.overview.description">Description</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide"> Users'Guide</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.getting_started"> Getting
+      Started</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.tutorial">Tutorial</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.examples">Examples</a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.examples.common_type">Common type</a></span></dt></dl></dd>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.reference"> Reference </a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.add_rvalue_reference_hpp">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">add_rvalue_reference</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.common_type_hpp"> Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">common_type</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.declval_hpp"> Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">declval</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices">Appendices</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.history"> Appendix A:
+      History</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.rationale"> Appendix
+      B: Rationale</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.implementation"> Appendix
+      C: Implementation Notes</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.faq"> Appendix D: FAQ</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.acknowledgements"> Appendix
+      E: Acknowledgements</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.tests"> Appendix F: Tests</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.tickets"> Appendix G:
+      Tickets</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.todo"> Appendix H: Future
+      plans</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+      TypeTraits.Ext is not part of the Boost libraries.
+    </p></td></tr>
+</table></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_typetraits_ext.overview"></a><a href="index.html#boost_typetraits_ext.overview" title="Overview">Overview</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.overview.motivation">Motivation</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.overview.description">Description</a></span></dt>
+</dl></div>
+<a name="boost_typetraits_ext.overview.how_to_use_this_documentation"></a><h3>
+<a name="id4948575"></a>
+      <a href="index.html#boost_typetraits_ext.overview.how_to_use_this_documentation">How
+      to Use This Documentation</a>
+    </h3>
+<p>
+      This documentation makes use of the following naming and formatting conventions.
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          Code is in <code class="computeroutput"><span class="identifier">fixed</span> <span class="identifier">width</span>
+          <span class="identifier">font</span></code> and is syntax-highlighted.
+        </li>
+<li>
+          Replaceable text that you will need to supply is in <em class="replaceable"><code>italics</code></em>.
+        </li>
+<li>
+          Free functions are rendered in the code font followed by (), as in free_function().
+        </li>
+<li>
+          If a name refers to a class template, it is specified like this: <code class="computeroutput"><span class="identifier">class_template</span><span class="special">&lt;&gt;</span></code>;
+          that is, it is in code font and its name is followed by <code class="computeroutput"><span class="special">&lt;&gt;</span></code>
+          to indicate that it is a class template.
+        </li>
+<li>
+          If a name refers to a function-like macro, it is specified like this:
+          <code class="computeroutput"><span class="identifier">MACRO</span><span class="special">()</span></code>;
+          that is, it is uppercase in code font and its name is followed by <code class="computeroutput"><span class="special">()</span></code> to indicate that it is a function-like
+          macro. Object-like macros appear without the trailing <code class="computeroutput"><span class="special">()</span></code>.
+        </li>
+<li>
+          Names that refer to <span class="emphasis"><em>concepts</em></span> in the generic programming
+          sense are specified in CamelCase.
+        </li>
+</ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        In addition, notes such as this one specify non-essential information that
+        provides additional background or rationale.
+      </p></td></tr>
+</table></div>
+<p>
+      Finally, you can mentally add the following to any code fragments in this document:
+    </p>
+<pre class="programlisting"><span class="comment">// Include all of TypeTraits.Ext files
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.overview.motivation"></a><a href="index.html#boost_typetraits_ext.overview.motivation" title="Motivation">Motivation</a>
+</h3></div></div></div>
+<a name="boost_typetraits_ext.overview.motivation.time"></a><h4>
+<a name="id4948838"></a>
+        <a href="index.html#boost_typetraits_ext.overview.motivation.time">Time</a>
+      </h4>
+<p>
+        See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm" target="_top"><span class="bold"><strong>N2661 - A Foundation to Sleep On</strong></span></a> which is
+        very informative and provides motivation for key design decisions for <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.overview.description"></a><a href="index.html#boost_typetraits_ext.overview.description" title="Description">Description</a>
+</h3></div></div></div>
+<p>
+        The <span class="bold"><strong>Boost.TypeTraits.Ext</strong></span> library provides:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> is a traits class
+            used to deduce a type common to a several types, useful as the return
+            type of functions operating on multiple input types such as in mixed-mode
+            arithmetic.
+          </li>
+<li>
+            <a href="index.html#boost_typetraits_ext.reference.add_rvalue_reference_hpp.add_rvalue_reference" title="
+        Class Template add_rvalue_reference&lt;&gt;"><code class="computeroutput"><span class="identifier">add_rvalue_reference</span></code></a> add a rvalue
+            reference when appropiated.
+          </li>
+<li>
+            <a href="index.html#boost_typetraits_ext.reference.declval_hpp.declval" title="
+        Function Template declval&lt;&gt;"><code class="computeroutput"><span class="identifier">declval</span></code></a> utility to simplify
+            the definition of expressions which occur as unevaluated operands.
+          </li>
+</ul></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_typetraits_ext.users_guide"></a><a href="index.html#boost_typetraits_ext.users_guide" title=" Users'Guide"> Users'Guide</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.getting_started"> Getting
+      Started</a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.getting_started.install">
+        Installing Boost.TypeTraits.Ext</a></span></dt></dl></dd>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.tutorial">Tutorial</a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.tutorial.common_type">Common
+        Type</a></span></dt></dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.users_guide.getting_started"></a><a href="index.html#boost_typetraits_ext.users_guide.getting_started" title=" Getting
+      Started"> Getting
+      Started</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.getting_started.install">
+        Installing Boost.TypeTraits.Ext</a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_typetraits_ext.users_guide.getting_started.install"></a><a href="index.html#boost_typetraits_ext.users_guide.getting_started.install" title="
+        Installing Boost.TypeTraits.Ext">
+        Installing Boost.TypeTraits.Ext</a>
+</h4></div></div></div>
+<a name="boost_typetraits_ext.users_guide.getting_started.install.getting_boost_typetraits_ext_"></a><h5>
+<a name="id4949041"></a>
+          <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.getting_boost_typetraits_ext_">Getting
+          Boost.TypeTraits.Ext </a>
+        </h5>
+<p>
+          You can get the last stable release of <span class="bold"><strong>Boost.TypeTraits.Ext</strong></span>
+          by downloading <code class="literal">chrono.zip</code> from the <a href="http://www.boost-consulting.com/vault/index.php?directory=System" target="_top">Boost
+          Vault</a>
+        </p>
+<p>
+          You can also access the latest (unstable?) state from the <a href="https://svn.boost.org/svn/boost/sandbox/chrono" target="_top">Boost
+          Sandbox</a>. Just go to <a href="http://svn.boost.org/trac/boost/wiki/BoostSubversion" target="_top">here</a>
+          and follow the instructions there for anonymous SVN access.
+        </p>
+<a name="boost_typetraits_ext.users_guide.getting_started.install.where_to_install_boost_typetraits_ext__"></a><h5>
+<a name="id4949104"></a>
+          <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.where_to_install_boost_typetraits_ext__">Where
+          to install Boost.TypeTraits.Ext? </a>
+        </h5>
+<p>
+          The simple way is to decompress (or checkout from SVN) the file in your
+          BOOST_ROOT directory.
+        </p>
+<p>
+          Othesewise, if you decompress in a different directory, you will need to
+          comment some lines, and uncomment and change others in the build/Jamfile
+          and test/Jamfile. Sorry for this, but I have not reached yet to write a
+          Jamfile that is able to work in both environements and use the BOOST_ROOT
+          variable. Any help is welcome.
+        </p>
+<a name="boost_typetraits_ext.users_guide.getting_started.install.building_boost_typetraits_ext_"></a><h5>
+<a name="id4949142"></a>
+          <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.building_boost_typetraits_ext_">Building
+          Boost.TypeTraits.Ext </a>
+        </h5>
+<p>
+          <span class="bold"><strong>Boost.TypeTraits.Ext</strong></span> is a header only
+          library. You don't need to compile it before use.
+        </p>
+<a name="boost_typetraits_ext.users_guide.getting_started.install.requirements"></a><h5>
+<a name="id4949174"></a>
+          <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.requirements">Requirements</a>
+        </h5>
+<p>
+          <span class="bold"><strong>Boost.TypeTraits.Ext</strong></span> depends on some Boost
+          libraries. For these specific parts you must use either Boost version 1.39.0
+          or the version in SVN trunk (even if older versions should works also).
+        </p>
+<p>
+          In particular, <span class="bold"><strong>Boost.TypeTraits.Ext</strong></span> depends
+          on:
+        </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><a href="http://www.boost.org/libs/config" target="_top"><span class="bold"><strong>Boost.Config</strong></span></a></span></dt>
+<dd><p>
+                for configuration purposes, ...
+              </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/integer" target="_top"><span class="bold"><strong>Boost.Integer</strong></span></a></span></dt>
+<dd><p>
+                for cstdint conformance, ...
+              </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/mpl" target="_top"><span class="bold"><strong>Boost.MPL</strong></span></a></span></dt>
+<dd><p>
+                for MPL Assert and bool, logical ...
+              </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/type_traits" target="_top"><span class="bold"><strong>Boost.TypeTraits</strong></span></a></span></dt>
+<dd><p>
+                for is_base, is_convertible ...
+              </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/utility" target="_top"><span class="bold"><strong>Boost.Utility/EnableIf</strong></span></a></span></dt>
+<dd><p>
+                for enable_if, ...
+              </p></dd>
+</dl>
+</div>
+<a name="boost_typetraits_ext.users_guide.getting_started.install.building_an_executable_that_uses_boost_typetraits_ext_"></a><h5>
+<a name="id4949329"></a>
+          <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.building_an_executable_that_uses_boost_typetraits_ext_">Building
+          an executable that uses Boost.TypeTraits.Ext </a>
+        </h5>
+<p>
+          You don't need to link with any library.
+        </p>
+<a name="boost_typetraits_ext.users_guide.getting_started.install.exceptions_safety_"></a><h5>
+<a name="id4949358"></a>
+          <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.exceptions_safety_">Exceptions
+          safety </a>
+        </h5>
+<p>
+          All functions in the library are exception-neutral and provide strong guarantee
+          of exception safety as long as the underlying parameters provide it.
+        </p>
+<a name="boost_typetraits_ext.users_guide.getting_started.install.thread_safety_"></a><h5>
+<a name="id4949386"></a>
+          <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.thread_safety_">Thread
+          safety </a>
+        </h5>
+<p>
+          All functions in the library are thread-unsafe except when noted explicitly.
+        </p>
+<a name="boost_typetraits_ext.users_guide.getting_started.install.tested_compilers_"></a><h5>
+<a name="id4949412"></a>
+          <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.tested_compilers_">Tested
+          compilers </a>
+        </h5>
+<p>
+          The implementation will eventually work with most C++03 conforming compilers.
+          Current version has been tested on:
+        </p>
+<p>
+          Windows with
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              MSVC 10.0
+            </li>
+<li>
+              MSVC 9.0 Express
+            </li>
+<li>
+              MSVC 8.0
+            </li>
+</ul></div>
+<p>
+          Scientific Linux with
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+              GCC 4.1.2
+            </li></ul></div>
+<p>
+          Cygwin with
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              GCC 3.4.4
+            </li>
+<li>
+              GCC 4.3.2
+            </li>
+</ul></div>
+<p>
+          MinGW with
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+              GCC 4.4.0
+            </li></ul></div>
+<p>
+          Initial version was tested on:
+        </p>
+<p>
+          MacOS with GCC 4.2.4
+        </p>
+<p>
+          Ubuntu Linux with GCC 4.2.4
+        </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Please let us know how this works on other platforms/compilers.
+          </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Please send any questions, comments and bug reports to boost &lt;at&gt;
+            lists &lt;dot&gt; boost &lt;dot&gt; org.
+          </p></td></tr>
+</table></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.users_guide.tutorial"></a><a href="index.html#boost_typetraits_ext.users_guide.tutorial" title="Tutorial">Tutorial</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.tutorial.common_type">Common
+        Type</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.tutorial.common_type.so_what_is__common_type__and_how_can_i_use_it_">So
+          What is <code class="computeroutput"><span class="identifier">common_type</span></code> and
+          How can I use it?</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.tutorial.common_type.how_to_get_the_common_type_of_inter_type_with_explicit_conversions_">How
+          to get the common type of inter-type with explicit conversions?</a></span></dt>
+</dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_typetraits_ext.users_guide.tutorial.common_type"></a><a href="index.html#boost_typetraits_ext.users_guide.tutorial.common_type" title="Common
+        Type">Common
+        Type</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.tutorial.common_type.so_what_is__common_type__and_how_can_i_use_it_">So
+          What is <code class="computeroutput"><span class="identifier">common_type</span></code> and
+          How can I use it?</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.tutorial.common_type.how_to_get_the_common_type_of_inter_type_with_explicit_conversions_">How
+          to get the common type of inter-type with explicit conversions?</a></span></dt>
+</dl></div>
+<p>
+          <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> has been a recurring
+          theme in many places for many years. We've previously known it as promote
+          and examples of it are spread throughout boost. It has been reinvented
+          independently several times, because it is so useful.
+        </p>
+<p>
+          Andrei Alexandrescu recently pointed us at a D library: std.traits - D
+          Programming Language - Digital Mars, which became the motivation for this
+          particular name, and the variadic nature of <a href="http://www.digitalmars.com/d/2.0/phobos/std_traits.html#CommonType" target="_top">this
+          trait</a>.
+        </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_typetraits_ext.users_guide.tutorial.common_type.so_what_is__common_type__and_how_can_i_use_it_"></a><a href="index.html#boost_typetraits_ext.users_guide.tutorial.common_type.so_what_is__common_type__and_how_can_i_use_it_" title="So
+          What is common_type and
+          How can I use it?">So
+          What is <code class="computeroutput"><span class="identifier">common_type</span></code> and
+          How can I use it?</a>
+</h5></div></div></div>
+<p>
+            In a nutshell, <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> is a trait that
+            takes 1 or more types, and returns a type which all of the types will
+            convert to. The default definition demands this conversion be implicit.
+            However the trait can be specialized for user-defined types which want
+            to limit their inter-type conversions to explicit, and yet still want
+            to interoperate with the <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> facility.
+          </p>
+<p>
+            <span class="bold"><strong>Example:</strong></span>
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U</span><span class="special">&gt;</span>
+<span class="keyword">typename</span>  <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a><span class="special">&lt;</span><span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span> <span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="keyword">operator</span><span class="special">+(</span><span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span> <span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;);</span>
+</pre>
+<p>
+            In the above example, "mixed-mode" complex arithmetic is allowed.
+            The return type is described by <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>. For example the
+            resulting type of adding a <code class="computeroutput"><span class="identifier">complex</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span></code> and <code class="computeroutput"><span class="identifier">complex</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span></code> might be a <code class="computeroutput"><span class="identifier">complex</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span></code>. Another choice for the author might
+            be:
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U</span><span class="special">&gt;</span>
+<span class="identifier">complex</span><span class="special">&lt;</span><span class="keyword">typename</span>  <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">U</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span>
+<span class="keyword">operator</span><span class="special">+(</span><span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span> <span class="identifier">complex</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;);</span>
+</pre>
+<p>
+            Here is how someone might produce a variadic comparison function:
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="special">...</span><span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">typename</span>  <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a><span class="special">&lt;</span><span class="identifier">T</span><span class="special">...&gt;::</span><span class="identifier">type</span>
+<span class="identifier">min</span><span class="special">(</span><span class="identifier">T</span><span class="special">...</span> <span class="identifier">t</span><span class="special">);</span>
+</pre>
+<p>
+            This is a very useful and broadly applicable utility. The duration&lt;&gt;
+            and time_point&lt;&gt; facilities use it to make multi-precision arithmetic
+            seamless and exact.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_typetraits_ext.users_guide.tutorial.common_type.how_to_get_the_common_type_of_inter_type_with_explicit_conversions_"></a><a href="index.html#boost_typetraits_ext.users_guide.tutorial.common_type.how_to_get_the_common_type_of_inter_type_with_explicit_conversions_" title="How
+          to get the common type of inter-type with explicit conversions?">How
+          to get the common type of inter-type with explicit conversions?</a>
+</h5></div></div></div>
+<p>
+            The default definition of <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> demands the conversion
+            be implicit. However the trait can be specialized for user-defined types
+            which want to limit their inter-type conversions to explicit, and yet
+            still want to interoperate with the <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> facility.
+          </p>
+</div>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_typetraits_ext.examples"></a><a href="index.html#boost_typetraits_ext.examples" title="Examples">Examples</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.examples.common_type">Common type</a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.examples.common_type.min_utility">min
+        utility</a></span></dt></dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.examples.common_type"></a><a href="index.html#boost_typetraits_ext.examples.common_type" title="Common type">Common type</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.examples.common_type.min_utility">min
+        utility</a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_typetraits_ext.examples.common_type.min_utility"></a><a href="index.html#boost_typetraits_ext.examples.common_type.min_utility" title="min
+        utility">min
+        utility</a>
+</h4></div></div></div>
+<p>
+          Returns the earliest time_point.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration2</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span> <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a><span class="special">&lt;</span><span class="identifier">__time_point__</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;,</span>
+                     <span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="identifier">min</span><span class="special">(</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;</span> <span class="identifier">t1</span><span class="special">,</span> <span class="identifier">__time_point__</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;</span> <span class="identifier">t2</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">t2</span> <span class="special">&lt;</span> <span class="identifier">t1</span> <span class="special">?</span> <span class="identifier">t2</span> <span class="special">:</span> <span class="identifier">t1</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Being able to <span class="bold"><strong>easily</strong></span> write this function
+          is a major feature!
+        </p>
+<pre class="programlisting"><span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t1</span><span class="special">,</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">seconds</span><span class="special">(</span><span class="number">3</span><span class="special">));</span>
+<span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t2</span><span class="special">,</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">nanoseconds</span><span class="special">(</span><span class="number">3</span><span class="special">));</span>
+<span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t3</span><span class="special">,</span> <span class="special">(</span><span class="identifier">min</span><span class="special">)(</span><span class="identifier">t1</span><span class="special">,</span> <span class="identifier">t2</span><span class="special">));</span>
+</pre>
+<p>
+          <span class="emphasis"><em>See the source file <a href="../../example/min_time_point.cpp" target="_top">example/min_time_point.cpp</a></em></span>
+        </p>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_typetraits_ext.reference"></a><a href="index.html#boost_typetraits_ext.reference" title=" Reference "> Reference </a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.add_rvalue_reference_hpp">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">add_rvalue_reference</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.add_rvalue_reference_hpp.add_rvalue_reference">
+        Class Template <code class="computeroutput"><span class="identifier">add_rvalue_reference</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.common_type_hpp"> Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">common_type</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.common_type_hpp.conf">
+        Configuration macros</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.common_type_hpp.pp">
+        Preprocessor info</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type">
+        Class Template <code class="computeroutput"><span class="identifier">common_type</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.declval_hpp"> Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">declval</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.declval_hpp.declval">
+        Function Template <code class="computeroutput"><span class="identifier">declval</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.reference.add_rvalue_reference_hpp"></a><a href="index.html#boost_typetraits_ext.reference.add_rvalue_reference_hpp" title="
+      Header &lt;boost/type_traits/add_rvalue_reference.hpp&gt;">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">add_rvalue_reference</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.add_rvalue_reference_hpp.add_rvalue_reference">
+        Class Template <code class="computeroutput"><span class="identifier">add_rvalue_reference</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">add_rvalue_reference</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_typetraits_ext.reference.add_rvalue_reference_hpp.add_rvalue_reference"></a><a href="index.html#boost_typetraits_ext.reference.add_rvalue_reference_hpp.add_rvalue_reference" title="
+        Class Template add_rvalue_reference&lt;&gt;">
+        Class Template <code class="computeroutput"><span class="identifier">add_rvalue_reference</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          The following template transform one type to another, based upon a well-defined
+          rule, see below. The class has a single member called type that is the
+          result of applying the transformation to the template argument T.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">add_rvalue_reference</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              type:* If T names an object or function type then the member typedef
+              type shall name T&amp;&amp;; otherwise, type shall name T.
+            </li>
+<li>
+              Note:* This rule reflects the semantics of reference collapsing. For
+              example, when a type T names a type T1&amp;, the type add_rvalue_reference&lt;T&gt;::type
+              is not an rvalue reference.
+            </li>
+<li>
+              C++ Standard Reference:* 20.7.6.2
+            </li>
+</ul></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.reference.common_type_hpp"></a><a href="index.html#boost_typetraits_ext.reference.common_type_hpp" title=" Header
+      &lt;boost/type_traits/common_type.hpp&gt;"> Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">common_type</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.common_type_hpp.conf">
+        Configuration macros</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.common_type_hpp.pp">
+        Preprocessor info</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type">
+        Class Template <code class="computeroutput"><span class="identifier">common_type</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="comment">// configuration macros
+</span><span class="preprocessor">#define</span>  <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.conf" title="
+        Configuration macros"><code class="computeroutput"><span class="identifier">BOOST_COMMON_TYPE_USES_STATIC_ASSERT</span></code></a>
+<span class="preprocessor">#define</span>  <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.conf" title="
+        Configuration macros"><code class="computeroutput"><span class="identifier">BOOST_COMMON_TYPE_USES_MPL_ASSERT</span></code></a>
+<span class="preprocessor">#define</span>  <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.conf" title="
+        Configuration macros"><code class="computeroutput"><span class="identifier">BOOST_COMMON_TYPE_USES_ARRAY_ASSERT</span></code></a>
+<span class="preprocessor">#define</span>  <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.pp" title="
+        Preprocessor info"><code class="computeroutput"><span class="identifier">BOOST_COMMON_TYPE_DONT_USE_TYPEOF</span></code></a>
+
+<span class="comment">// preprocessor info
+</span><span class="preprocessor">#define</span>  <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.pp" title="
+        Preprocessor info"><code class="computeroutput"><span class="identifier">BOOST_COMMON_TYPE_ARITY</span></code></a>
+
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+  <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="special">...</span><span class="identifier">T</span><span class="special">&gt;</span>  <span class="keyword">struct</span>  <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_typetraits_ext.reference.common_type_hpp.conf"></a><a href="index.html#boost_typetraits_ext.reference.common_type_hpp.conf" title="
+        Configuration macros">
+        Configuration macros</a>
+</h4></div></div></div>
+<p>
+          When BOOST_NO_STATIC_ASSERT is defined, the user can select the way static
+          assertions are reported. Define
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              BOOST_COMMON_TYPE_USES_STATIC_ASSERT: define it if you want to use
+              Boost.StaticAssert
+            </li>
+<li>
+              BOOST_COMMON_TYPE_USES_MPL_ASSERT: define it if you want to use Boost.MPL
+              static asertions
+            </li>
+<li>
+              BOOST_COMMON_TYPE_USES_ARRAY_ASSERT: define it if you want to use internal
+              static asertions
+            </li>
+<li>
+              nothing if you don't want static asertions
+            </li>
+</ul></div>
+<p>
+          When BOOST_COMMON_TYPE_USES_MPL_ASSERT is not defined the following symbols
+          are defined as
+        </p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_COMMON_TYPE_MUST_BE_A_COMPLETE_TYPE</span> <span class="special">\</span>
+    <span class="string">"must be complete type"</span>
+</pre>
+<p>
+          Depending on the static assertion used system you will have an hint of
+          the failing assertion either through the symbol or through the texte.
+        </p>
+<p>
+          When BOOST_NO_DECLTYPE is not defined common_type is implemented using
+          decltype. Otherwise when BOOST_COMMON_TYPE_DONT_USE_TYPEOF is not defined
+          it uses Boost.TypeOf.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_typetraits_ext.reference.common_type_hpp.pp"></a><a href="index.html#boost_typetraits_ext.reference.common_type_hpp.pp" title="
+        Preprocessor info">
+        Preprocessor info</a>
+</h4></div></div></div>
+<p>
+          When BOOST_NO_VARIADIC_TEMPLATES is defined BOOST_COMMON_TYPE_ARITY gives
+          the maximum number of template parameters for <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_typetraits_ext.reference.common_type_hpp.common_type"></a><a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;">
+        Class Template <code class="computeroutput"><span class="identifier">common_type</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> is a traits class
+          used to deduce a type common to a several types, useful as the return type
+          of functions operating on multiple input types such as in mixed-mode arithmetic..
+        </p>
+<p>
+          The nested typedef <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>::type` could be defined
+          as follows:
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="special">...</span><span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">common_type</span><span class="special">;</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U</span><span class="special">,</span> <span class="keyword">class</span> <span class="special">...</span><span class="identifier">V</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">common_type</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="identifier">U</span><span class="special">,...</span><span class="identifier">V</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span>  <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a><span class="special">&lt;</span><span class="keyword">typename</span>  <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">U</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">V</span><span class="special">...&gt;::</span><span class="identifier">type</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">common_type</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">common_type</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">decltype</span><span class="special">(</span> <a href="index.html#boost_typetraits_ext.reference.declval_hpp.declval" title="
+        Function Template declval&lt;&gt;"><code class="computeroutput"><span class="identifier">declval</span></code></a><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">&gt;()</span> <span class="special">?</span>  <a href="index.html#boost_typetraits_ext.reference.declval_hpp.declval" title="
+        Function Template declval&lt;&gt;"><code class="computeroutput"><span class="identifier">declval</span></code></a><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;()</span> <span class="special">:</span>  <a href="index.html#boost_typetraits_ext.reference.declval_hpp.declval" title="
+        Function Template declval&lt;&gt;"><code class="computeroutput"><span class="identifier">declval</span></code></a><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;())</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+          All parameter types must be complete. This trait is permitted to be specialized
+          by a user if at least one template parameter is a user-defined type. <span class="bold"><strong>Note:</strong></span> Such specializations are required when only
+          explicit conversions are desired among the <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> arguments.
+        </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.reference.declval_hpp"></a><a href="index.html#boost_typetraits_ext.reference.declval_hpp" title=" Header
+      &lt;boost/type_traits/declval.hpp&gt;"> Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">declval</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.declval_hpp.declval">
+        Function Template <code class="computeroutput"><span class="identifier">declval</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">add_rvalue_reference</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">declval</span><span class="special">();</span> <span class="comment">//noexcept; // as unevaluated operand
+</span>
+<span class="special">}</span>  <span class="comment">// namespace boost
+</span></pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_typetraits_ext.reference.declval_hpp.declval"></a><a href="index.html#boost_typetraits_ext.reference.declval_hpp.declval" title="
+        Function Template declval&lt;&gt;">
+        Function Template <code class="computeroutput"><span class="identifier">declval</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          The library provides the function template declval to simplify the definition
+          of expressions which occur as unevaluated operands.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">add_rvalue_reference</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">declval</span><span class="special">();</span>
+</pre>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              Remarks:* If this function is used, the program is ill-formed.
+            </li>
+<li>
+              Remarks:* The template parameter T of declval may be an incomplete
+              type.
+            </li>
+<li>
+              Example:*
+            </li>
+</ul></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">From</span><span class="special">&gt;</span>
+<span class="identifier">decltype</span><span class="special">(</span><span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;(</span><span class="identifier">declval</span><span class="special">&lt;</span><span class="identifier">From</span><span class="special">&gt;()))</span> <span class="identifier">convert</span><span class="special">(</span><span class="identifier">From</span><span class="special">&amp;&amp;);</span>
+</pre>
+<p>
+          Declares a function template convert which only participats in overloading
+          if the type From can be explicitly converted to type To. For another example
+          see class template <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>.
+        </p>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_typetraits_ext.appendices"></a><a href="index.html#boost_typetraits_ext.appendices" title="Appendices">Appendices</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.history"> Appendix A:
+      History</a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.history.__version_0_1__september_10__2010__"><span class="bold"><strong>Version 0.1, September 10, 2010</strong></span> </a></span></dt></dl></dd>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.rationale"> Appendix
+      B: Rationale</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.implementation"> Appendix
+      C: Implementation Notes</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.faq"> Appendix D: FAQ</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.acknowledgements"> Appendix
+      E: Acknowledgements</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.tests"> Appendix F: Tests</a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.tests._common_type_"><code class="computeroutput"><span class="identifier">common_type</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.tickets"> Appendix G:
+      Tickets</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.todo"> Appendix H: Future
+      plans</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.appendices.history"></a><a href="index.html#boost_typetraits_ext.appendices.history" title=" Appendix A:
+      History"> Appendix A:
+      History</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.history.__version_0_1__september_10__2010__"><span class="bold"><strong>Version 0.1, September 10, 2010</strong></span> </a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_typetraits_ext.appendices.history.__version_0_1__september_10__2010__"></a><a href="index.html#boost_typetraits_ext.appendices.history.__version_0_1__september_10__2010__" title="Version 0.1, September 10, 2010 "><span class="bold"><strong>Version 0.1, September 10, 2010</strong></span> </a>
+</h4></div></div></div>
+<p>
+          <span class="bold"><strong>Features:</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+              Extraction of <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> from Boost.Chrono.
+            </li></ul></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.appendices.rationale"></a><a href="index.html#boost_typetraits_ext.appendices.rationale" title=" Appendix
+      B: Rationale"> Appendix
+      B: Rationale</a>
+</h3></div></div></div>
+<p>
+        See [http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm <span class="bold"><strong>N2661 - A Foundation to Sleep On</strong></span>] which is very informative
+        and provides motivation for key design decisions.
+      </p>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.appendices.implementation"></a><a href="index.html#boost_typetraits_ext.appendices.implementation" title=" Appendix
+      C: Implementation Notes"> Appendix
+      C: Implementation Notes</a>
+</h3></div></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.appendices.faq"></a><a href="index.html#boost_typetraits_ext.appendices.faq" title=" Appendix D: FAQ"> Appendix D: FAQ</a>
+</h3></div></div></div>
+<a name="boost_typetraits_ext.appendices.faq.how_important_is_the_order_of_the___link_linkend__boost_typetraits_ext_reference_common_type_hpp_common_type___code__phrase_role__identifier__common_type__phrase___code___link__lt__gt__template_arguments_"></a><h4>
+<a name="id4997995"></a>
+        <a href="index.html#boost_typetraits_ext.appendices.faq.how_important_is_the_order_of_the___link_linkend__boost_typetraits_ext_reference_common_type_hpp_common_type___code__phrase_role__identifier__common_type__phrase___code___link__lt__gt__template_arguments_">How
+        important is the order of the <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>&lt;&gt; template arguments?</a>
+      </h4>
+<p>
+        The order of the template parameters is important. First <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>&lt;&gt; is not able
+        to find out common type if it is not present and second <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>&lt;A,B,C&gt;::type is
+        equivalent to <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>&lt; <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>&lt;A,B&gt;::type, C&gt;::type.
+      </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">A</span> <span class="special">{};</span>
+<span class="keyword">struct</span> <span class="identifier">B</span> <span class="special">{};</span>
+<span class="keyword">struct</span> <span class="identifier">C</span> <span class="special">{</span>
+    <span class="identifier">C</span><span class="special">()</span> <span class="special">{}</span>
+    <span class="identifier">C</span><span class="special">(</span><span class="identifier">A</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="special">{}</span>
+    <span class="identifier">C</span><span class="special">(</span><span class="identifier">B</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="special">{}</span>
+    <span class="identifier">C</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">C</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="special">*</span><span class="keyword">this</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="preprocessor">#if</span> <span class="number">0</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span> <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span> <span class="identifier">B</span><span class="special">,</span> <span class="identifier">C</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">ABC</span><span class="special">;</span> <span class="comment">// DO not compile
+</span><span class="preprocessor">#else</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span> <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span> <span class="identifier">B</span><span class="special">,</span> <span class="identifier">A</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">ABC</span><span class="special">;</span>
+<span class="preprocessor">#endif</span>
+</pre>
+<p>
+        Thus, as <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>&lt;A,B&gt;::type is
+        undefined, <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>&lt;A,B,C&gt;::type is
+        also undefined.
+      </p>
+<a name="boost_typetraits_ext.appendices.faq.can_you_explain_the_pros_cons_of___link_linkend__boost_typetraits_ext_reference_common_type_hpp_common_type___code__phrase_role__identifier__common_type__phrase___code___link__against_boost_typeof_"></a><h4>
+<a name="id4998501"></a>
+        <a href="index.html#boost_typetraits_ext.appendices.faq.can_you_explain_the_pros_cons_of___link_linkend__boost_typetraits_ext_reference_common_type_hpp_common_type___code__phrase_role__identifier__common_type__phrase___code___link__against_boost_typeof_">Can
+        you explain the pros/cons of <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> against Boost.Typeof?</a>
+      </h4>
+<p>
+        Even if in a first look they sound to be close, <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> and typeof have different
+        purposes. You use typeof to get the type of an expression, while you use
+        <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> to set explicitly the
+        type returned of a template function. Both are complementary. For example
+        with the preceding declaration and the needed Typeof registrations, you can
+        do
+      </p>
+<p>
+        Suppose I have a mixed type vector2 class with a magnitude_squared function
+        defined as:
+      </p>
+<p>
+        template &lt;typename X, typename Y&gt; BOOST_TYPEOF_TPL(X() * X() + Y()
+        * Y()) magnitude_squared(const vector2&lt;X, Y&gt; &amp;v) { return v.x *
+        v.x + v.y * v.y; }
+      </p>
+<p>
+        <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> is closer in nature
+        to promote_args&lt;class ...T&gt; in boost/math/tools/promotion.hpp than
+        it is to Boost.Typeof, though it is not exactly the same as promote_args
+        either. <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>&lt;T1, T2&gt;::type
+        simply represents the result of some operation on T1 and T2, and defaults
+        to the type obtained by putting T1 and T2 into a conditional statement.
+      </p>
+<p>
+        It is meant to be customizable (via specialization) if this default is not
+        appropriate.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.appendices.acknowledgements"></a><a href="index.html#boost_typetraits_ext.appendices.acknowledgements" title=" Appendix
+      E: Acknowledgements"> Appendix
+      E: Acknowledgements</a>
+</h3></div></div></div>
+<p>
+        The library's code was derived from Howard Hinnant's time2_demo prototype.
+        Many thanks to Howard for making his code available under the Boost license.
+        The original code was modified by Beman Dawes to conform to Boost conventions.
+      </p>
+<p>
+        time2_demo contained this comment:
+      </p>
+<p>
+        Much thanks to Andrei Alexandrescu, Walter Brown, Peter Dimov, Jeff Garland,
+        Terry Golubiewski, Daniel Krugler, Anthony Williams.
+      </p>
+<p>
+        Thansk to Jeffrey Lee Hellrung, Jr. for sharing his implementation of <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> without using Boost.TypeOf.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.appendices.tests"></a><a href="index.html#boost_typetraits_ext.appendices.tests" title=" Appendix F: Tests"> Appendix F: Tests</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.tests._common_type_"><code class="computeroutput"><span class="identifier">common_type</span></code></a></span></dt></dl></div>
+<p>
+        In order to test you need to do.
+      </p>
+<pre class="programlisting"><span class="identifier">bjam</span> <span class="identifier">libs</span><span class="special">/</span><span class="identifier">type_traits_ext</span><span class="special">/</span><span class="identifier">test</span>
+</pre>
+<p>
+        You can also run a specific suite of test by doing
+      </p>
+<pre class="programlisting"><span class="identifier">cd</span> <span class="identifier">libs</span><span class="special">/</span><span class="identifier">type_traits_ext</span><span class="special">/</span><span class="identifier">test</span>
+<span class="identifier">bjam</span> <span class="identifier">common_type</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_typetraits_ext.appendices.tests._common_type_"></a><a href="index.html#boost_typetraits_ext.appendices.tests._common_type_" title="common_type"><code class="computeroutput"><span class="identifier">common_type</span></code></a>
+</h4></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    kind
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Result
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Ticket
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    common_type_test
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    ...
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.appendices.tickets"></a><a href="index.html#boost_typetraits_ext.appendices.tickets" title=" Appendix G:
+      Tickets"> Appendix G:
+      Tickets</a>
+</h3></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td>
+                <p>
+                  Ticket
+                </p>
+              </td>
+<td>
+                <p>
+                  Description
+                </p>
+              </td>
+<td>
+                <p>
+                  Resolution
+                </p>
+              </td>
+<td>
+                <p>
+                  State
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_typetraits_ext.appendices.todo"></a><a href="index.html#boost_typetraits_ext.appendices.todo" title=" Appendix H: Future
+      plans"> Appendix H: Future
+      plans</a>
+</h3></div></div></div>
+<a name="boost_typetraits_ext.appendices.todo.for_later_releases"></a><h4>
+<a name="id4998992"></a>
+        <a href="index.html#boost_typetraits_ext.appendices.todo.for_later_releases">For
+        later releases</a>
+      </h4>
+<div class="itemizedlist"><ul type="disc"><li>
+            Define a C++98 variadic template emmulation of <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>
+          </li></ul></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: September 05, 2010 at 16:47:04 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"></div>
+</body>
+</html>
