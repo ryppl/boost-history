@@ -23,7 +23,7 @@
     BOOST_MPL_ASSERT_MSG(boost::mpl::bool_< (CND) >::type::value, MSG, TYPES)
 #else
 //~ #elif defined(BOOST_CHRONO_USES_ARRAY_ASSERT)
-#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_JOIN(boost_chrono_test_,__LINE__)[CND]
+#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_JOIN(boost_chrono_test_,__LINE__)[(CND)?1:-1]
 //~ #define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES)
 #endif
 

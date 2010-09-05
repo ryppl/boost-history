@@ -42,8 +42,11 @@ time2_demo contained this comment:
 #include <boost/mpl/logical.hpp>
 #include <boost/ratio.hpp>
 #include <boost/type_traits/common_type.hpp>
-#include <boost/cstdint.hpp>
 #include <boost/type_traits/is_convertible.hpp>
+#include <boost/type_traits/is_floating_point.hpp>
+#include <boost/type_traits/is_unsigned.hpp>
+
+#include <boost/cstdint.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/integer_traits.hpp>
@@ -357,7 +360,7 @@ namespace chrono {
 //                                                                            //
 //----------------------------------------------------------------------------//
 //----------------------------------------------------------------------------//
-//      20.9.2.1 is_floating_point [time.traits.is_fp]                        //
+//      20.9.2.1 treat_as_floating_point [time.traits.is_fp]                        //
 //      Probably should have been treat_as_floating_point. Editor notifed.    //
 //----------------------------------------------------------------------------//
 
