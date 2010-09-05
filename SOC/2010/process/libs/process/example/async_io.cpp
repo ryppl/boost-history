@@ -11,8 +11,8 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt) 
 // 
 
-#include <boost/process/all.hpp> 
 #include <boost/asio.hpp> 
+#include <boost/process/all.hpp> 
 #include <boost/array.hpp> 
 #include <string> 
 #include <vector> 
@@ -30,8 +30,7 @@ int main()
     std::string exe = boost::process::find_executable_in_path("hostname"); 
     std::vector<std::string> args; 
     boost::process::context ctx; 
-    ctx.stdout_behavior = boost::process::behavior::named_pipe::create(
-        boost::process::behavior::named_pipe::output_stream); 
+    ctx.stdout_behavior = boost::process::behavior::async_pipe(); 
     boost::process::child c = boost::process::create_child(exe, args, ctx); 
     boost::process::pistream &is = c.get_stdout(); 
     boost::process::handle h = is.handle(); 

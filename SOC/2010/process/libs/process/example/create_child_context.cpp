@@ -36,8 +36,7 @@ void create_child_context_null()
     std::string exe = boost::process::find_executable_in_path("hostname"); 
     std::vector<std::string> args; 
     boost::process::context ctx; 
-    ctx.stdout_behavior = boost::process::behavior::null::create( 
-        boost::process::behavior::null::output_stream); 
+    ctx.stdout_behavior = boost::process::behavior::null(); 
     boost::process::create_child(exe, args, ctx); 
 //] 
 } 
@@ -48,8 +47,7 @@ void create_child_context_pipe()
     std::string exe = boost::process::find_executable_in_path("hostname"); 
     std::vector<std::string> args; 
     boost::process::context ctx; 
-    ctx.stdout_behavior = boost::process::behavior::pipe::create(
-        boost::process::behavior::pipe::output_stream); 
+    ctx.stdout_behavior = boost::process::behavior::pipe(); 
     boost::process::child c = boost::process::create_child(exe, args, ctx); 
     boost::process::pistream &is = c.get_stdout(); 
     std::cout << is.rdbuf() << std::flush; 

@@ -21,47 +21,37 @@
 #   error "Unsupported platform." 
 #endif 
 
-#include <boost/shared_ptr.hpp> 
-#include <boost/make_shared.hpp> 
+#include <boost/bind.hpp> 
 #include <iostream> 
+#include <utility> 
 #include <stdexcept> 
 
 //[redirect_to_stream 
-class redirect_to : public boost::process::behavior::stream 
+std::pair<boost::process::handle, boost::process::handle> redirect_to(
+    boost::process::handle h) 
 { 
-public: 
-    redirect_to(boost::process::handle child_end) 
-    { 
 #if defined(BOOST_POSIX_API) 
-        child_end_ = dup(child_end.native()); 
-        if (!child_end_.valid()) 
-            throw std::runtime_error("dup(2) failed"); 
+    h = dup(h.native()); 
+    if (!h.valid()) 
+        throw std::runtime_error("dup(2) failed"); 
 #elif defined(BOOST_WINDOWS_API) 
-        HANDLE h;
-        if (!DuplicateHandle(GetCurrentProcess(), child_end.native(), 
-            GetCurrentProcess(), &h, 0, TRUE, DUPLICATE_SAME_ACCESS)) 
-            throw std::runtime_error("DuplicateHandle() failed"); 
-        child_end_ = h; 
+    HANDLE h2; 
+    if (!DuplicateHandle(GetCurrentProcess(), h.native(), 
+        GetCurrentProcess(), &h2, 0, TRUE, DUPLICATE_SAME_ACCESS)) 
+        throw std::runtime_error("DuplicateHandle() failed"); 
+    h = h2; 
 #endif 
-    } 
-
-    static boost::shared_ptr<redirect_to> create( 
-        boost::process::handle stream_end) 
-    { 
-        return boost::make_shared<redirect_to>(redirect_to(stream_end)); 
-    } 
-
-    boost::process::handle get_child_end() 
-    { 
-        return child_end_; 
-    } 
-
-private: 
-    boost::process::handle child_end_; 
-}; 
+    return std::make_pair(h, boost::process::handle()); 
+} 
 //] 
 
 //[redirect_to_main 
+std::pair<boost::process::handle, boost::process::handle> forward(
+    std::pair<boost::process::handle, boost::process::handle> p) 
+{ 
+    return p; 
+} 
+
 int main() 
 { 
     std::string executable = boost::process::find_executable_in_path( 
@@ -69,11 +59,12 @@ int main()
 
     std::vector<std::string> args; 
 
+    std::pair<boost::process::handle, boost::process::handle> p = 
+        boost::process::behavior::pipe()(false); 
+
     boost::process::context ctx; 
-    ctx.stdout_behavior = boost::process::behavior::pipe::create( 
-        boost::process::behavior::pipe::output_stream); 
-    ctx.stderr_behavior = redirect_to::create( 
-        ctx.stdout_behavior->get_child_end()); 
+    ctx.stdout_behavior = boost::bind(forward, p); 
+    ctx.stderr_behavior = boost::bind(redirect_to, p.first); 
 
     boost::process::child c = boost::process::create_child( 
         executable, args, ctx); 

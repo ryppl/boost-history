@@ -28,11 +28,13 @@
 #   include <windows.h>
 #endif
 
-#include <boost/process/stream_behavior.hpp>
+#include <boost/process/handle.hpp>
 #include <boost/process/environment.hpp>
 #include <boost/process/self.hpp>
-#include <boost/shared_ptr.hpp>
+#include <boost/process/stream_behavior.hpp>
+#include <boost/function.hpp>
 #include <string>
+#include <utility>
 
 namespace boost {
 namespace process {
@@ -49,17 +51,17 @@ struct context
     /**
      * Behavior of the standard input stream.
      */
-    boost::shared_ptr<behavior::stream> stdin_behavior;
+    boost::function<std::pair<handle, handle> (bool)> stdin_behavior;
 
     /**
      * Behavior of the standard output stream.
      */
-    boost::shared_ptr<behavior::stream> stdout_behavior;
+    boost::function<std::pair<handle, handle> (bool)> stdout_behavior;
 
     /**
      * Behavior of the standard error stream.
      */
-    boost::shared_ptr<behavior::stream> stderr_behavior;
+    boost::function<std::pair<handle, handle> (bool)> stderr_behavior;
 
     /**
      * Process name.
@@ -88,16 +90,13 @@ struct context
      */
     context()
 #if defined(BOOST_POSIX_API)
-        : stdin_behavior(behavior::inherit::create(STDIN_FILENO)),
-        stdout_behavior(behavior::inherit::create(STDOUT_FILENO)),
-        stderr_behavior(behavior::inherit::create(STDERR_FILENO)),
+        : stdin_behavior(behavior::inherit(STDIN_FILENO)),
+        stdout_behavior(behavior::inherit(STDOUT_FILENO)),
+        stderr_behavior(behavior::inherit(STDERR_FILENO)),
 #elif defined(BOOST_WINDOWS_API)
-        : stdin_behavior(behavior::inherit::create(GetStdHandle(
-            STD_INPUT_HANDLE))),
-        stdout_behavior(behavior::inherit::create(GetStdHandle(
-            STD_OUTPUT_HANDLE))),
-        stderr_behavior(behavior::inherit::create(GetStdHandle(
-            STD_ERROR_HANDLE))),
+        : stdin_behavior(behavior::inherit(GetStdHandle(STD_INPUT_HANDLE))),
+        stdout_behavior(behavior::inherit(GetStdHandle(STD_OUTPUT_HANDLE))),
+        stderr_behavior(behavior::inherit(GetStdHandle(STD_ERROR_HANDLE))),
 #endif
         work_dir(self::get_work_dir()),
         env(self::get_environment())

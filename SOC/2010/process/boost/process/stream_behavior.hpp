@@ -28,109 +28,63 @@
 #   include <unistd.h>
 #elif defined(BOOST_WINDOWS_API)
 #   include <windows.h>
+#   include <rpc.h>
 #endif
 
 #include <boost/process/handle.hpp>
-#include <boost/uuid/uuid.hpp>
-#include <boost/uuid/random_generator.hpp>
-#include <boost/uuid/uuid_io.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
 #include <string>
 #include <algorithm>
+#include <utility>
 
 namespace boost {
 namespace process {
 namespace behavior {
 
 /**
- * Base class for stream behaviors.
- *
- * Stream behavior classes are used to configure streams of a child process.
- * They must be derived from this class.
- */
-class stream
-{
-public:
-    /**
-     * Empty virtual destructor.
-     */
-    virtual ~stream()
-    {
-    }
-
-    /**
-     * Factory function to create a stream behavior object.
-     *
-     * Returns a shared pointer to the stream behavior object as this is
-     * what a context object expects. The shared pointer guarantees that
-     * the object is cleaned up.
-     */
-    static boost::shared_ptr<stream> create()
-    {
-        return boost::make_shared<stream>();
-    }
-
-    /**
-     * Returns the child's end of the stream.
-     */
-    virtual handle get_child_end()
-    {
-        return handle();
-    }
-
-    /**
-     * Returns the parent's end of the stream.
-     */
-    virtual handle get_parent_end()
-    {
-        return handle();
-    }
-};
-
-/**
  * Stream behavior to close streams of a child process.
  *
  * A child process will not be able to use the stream.
  */
-typedef stream close;
+class close
+{
+public:
+    std::pair<handle, handle> operator()(bool) const
+    {
+        return std::make_pair(handle(), handle());
+    }
+};
 
 /**
  * Stream behavior to make a child process inherit streams.
  *
  * A child process will use the very same stream of its parent process.
  */
-class inherit : public stream
+class inherit
 {
 public:
-    inherit(handle::native_type child_end)
+    inherit(handle::native_type h)
+    : h_(h)
+    {
+    }
+
+    std::pair<handle, handle> operator()(bool) const
     {
 #if defined(BOOST_POSIX_API)
-        child_end_ = dup(child_end);
-        if (!child_end_.valid())
+        int h = dup(h_);
+        if (h == -1)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup(2) failed");
 #elif defined(BOOST_WINDOWS_API)
         HANDLE h;
-        if (!DuplicateHandle(GetCurrentProcess(), child_end,
-            GetCurrentProcess(), &h, 0, TRUE, DUPLICATE_SAME_ACCESS))
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("DuplicateHandle() failed");
-        child_end_ = h;
+        if (!DuplicateHandle(GetCurrentProcess(), h_, GetCurrentProcess(),
+            &h, 0, TRUE, DUPLICATE_SAME_ACCESS))
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
+                "SetHandleInformation() failed");
 #endif
-    }
-
-    static boost::shared_ptr<inherit> create(handle::native_type child_end)
-    {
-        return boost::make_shared<inherit>(child_end);
-    }
-
-    handle get_child_end()
-    {
-        return child_end_;
+        return std::make_pair(h, handle());
     }
 
 private:
-    handle child_end_;
+    handle::native_type h_;
 };
 
 /**
@@ -138,12 +92,10 @@ private:
  *
  * A child process will be able to communicate with its parent process.
  */
-class pipe : public stream
+class pipe
 {
 public:
-    enum stream_type { input_stream, output_stream };
-
-    pipe(stream_type stream)
+    std::pair<handle, handle> operator()(bool in) const
     {
         handle::native_type ends[2];
 #if defined(BOOST_POSIX_API)
@@ -158,34 +110,16 @@ public:
         if (!CreatePipe(&ends[0], &ends[1], &sa, 0))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreatePipe() failed");
 #endif 
-        child_end_ = ends[(stream == input_stream) ? 0 : 1];
-        parent_end_ = ends[(stream == input_stream) ? 1 : 0];
+        handle child_end = ends[in ? 0 : 1];
+        handle parent_end = ends[in ? 1 : 0];
 #if defined(BOOST_WINDOWS_API)
-        if (!SetHandleInformation(child_end_.native(), HANDLE_FLAG_INHERIT,
+        if (!SetHandleInformation(child_end.native(), HANDLE_FLAG_INHERIT,
             HANDLE_FLAG_INHERIT))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
                 "SetHandleInformation() failed");
 #endif
+        return std::make_pair(child_end, parent_end);
     }
-
-    static boost::shared_ptr<behavior::pipe> create(stream_type stream)
-    {
-        return boost::make_shared<pipe>(stream);
-    }
-
-    handle get_child_end()
-    {
-        return child_end_;
-    }
-
-    handle get_parent_end()
-    {
-        return parent_end_;
-    }
-
-private:
-    handle child_end_;
-    handle parent_end_;
 };
 
 /**
@@ -195,98 +129,101 @@ private:
  * On Windows this stream behavior must be used for asynchronous I/O (as only
  * named pipes support asynchronous I/O on Windows).
  */
-class named_pipe : public stream
+class named_pipe
 {
 public:
-    enum stream_type { input_stream, output_stream };
+    named_pipe(const std::string &name)
+    : name_(name)
+    {
+    }
 
-    named_pipe(stream_type stream, std::string *name = 0)
+    std::pair<handle, handle> operator()(bool in) const
     {
 #if defined(BOOST_POSIX_API)
-        std::string s;
-        if (name && !name->empty())
-            s = *name;
-        else
-        {
-            boost::uuids::random_generator gen;
-            boost::uuids::uuid u = gen();
-            s = "/tmp/boost_process_" + boost::lexical_cast<std::string>(u);
-            if (name)
-                *name = s;
-        }
-
-        if (mkfifo(s.c_str(), S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) == -1)
+        if (mkfifo(name_.c_str(), S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) == -1)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("mkfifo(3) failed");
-        child_end_ = open(s.c_str(), O_RDONLY | O_NONBLOCK);
-        if (!child_end_.valid())
+        handle child_end = open(name_.c_str(), O_RDONLY | O_NONBLOCK);
+        if (!child_end.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
-        int opts = fcntl(child_end_.native(), F_GETFL);
+        int opts = fcntl(child_end.native(), F_GETFL);
         if (opts == -1)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("fcntl(2) failed");
         opts ^= O_NONBLOCK;
-        if (fcntl(child_end_.native(), F_SETFL, opts) == -1)
+        if (fcntl(child_end.native(), F_SETFL, opts) == -1)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("fcntl(2) failed");
-        parent_end_ = open(s.c_str(), O_WRONLY);
-        if (!parent_end_.valid())
+        handle parent_end = open(name_.c_str(), O_WRONLY);
+        if (!parent_end.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
 #elif defined(BOOST_WINDOWS_API)
-        std::string s;
-        if (name && !name->empty())
-            s = *name;
-        else
-        {
-            boost::uuids::random_generator gen;
-            boost::uuids::uuid u = gen();
-            s = "\\\\.\\pipe\\boost_process_" +
-                boost::lexical_cast<std::string>(u);
-            if (name)
-                *name = s;
-        }
-
         SECURITY_ATTRIBUTES sa;
         ZeroMemory(&sa, sizeof(sa));
         sa.nLength = sizeof(sa);
         sa.lpSecurityDescriptor = NULL;
         sa.bInheritHandle = TRUE;
-        child_end_ = CreateNamedPipeA(s.c_str(), PIPE_ACCESS_INBOUND |
+        handle child_end = CreateNamedPipeA(name_.c_str(), PIPE_ACCESS_INBOUND |
             FILE_FLAG_OVERLAPPED, 0, 1, 8192, 8192, 0, &sa);
-        if (!child_end_.valid())
+        if (!child_end.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateNamedPipe() failed");
-        parent_end_ = CreateFileA(s.c_str(), GENERIC_WRITE, 0, NULL,
+        handle parent_end = CreateFileA(name_.c_str(), GENERIC_WRITE, 0, NULL,
             OPEN_EXISTING, FILE_FLAG_OVERLAPPED, NULL);
-        if (!parent_end_.valid())
+        if (!parent_end.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateFile() failed");
 #endif
-        if (stream == output_stream)
-            std::swap(child_end_, parent_end_);
+        if (!in)
+            std::swap(child_end, parent_end);
 #if defined(BOOST_WINDOWS_API)
-        if (!SetHandleInformation(child_end_.native(), HANDLE_FLAG_INHERIT,
+        if (!SetHandleInformation(child_end.native(), HANDLE_FLAG_INHERIT,
             HANDLE_FLAG_INHERIT))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
                 "SetHandleInformation() failed");
 #endif
-    }
-
-    static boost::shared_ptr<named_pipe> create(stream_type stream,
-        std::string *name = 0)
-    {
-        return boost::make_shared<named_pipe>(stream, name);
-    }
-
-    handle get_child_end()
-    {
-        return child_end_;
-    }
-
-    handle get_parent_end()
-    {
-        return parent_end_;
+        return std::make_pair(child_end, parent_end);
     }
 
 private:
-    handle child_end_;
-    handle parent_end_;
+    std::string name_;
 };
+
+/**
+ * Stream behavior to redirect streams with a pipe which supports asynchronous
+ * I/O.
+ *
+ * As platforms require different types of pipes for asynchronous I/O this
+ * stream behavior is provided for convenience. It uses the minimum required
+ * pipe type on a platform in order to be able to use asynchronous I/O.
+ */
+#if defined(BOOST_POSIX_API)
+typedef pipe async_pipe;
+#elif defined(BOOST_WINDOWS_API)
+class async_pipe
+{
+public:
+    std::pair<handle, handle> operator()(bool in) const
+    {
+        UUID uuid;
+        RPC_STATUS s = UuidCreateSequential(&uuid);
+        if (s != RPC_S_OK && s != RPC_S_UUID_LOCAL_ONLY)
+            BOOST_PROCESS_THROW_ERROR(s, "UuidCreateSequential() failed");
+        unsigned char *c;
+        s = UuidToStringA(&uuid, &c);
+        if (s != RPC_S_OK)
+            BOOST_PROCESS_THROW_ERROR(s, "UuidToString() failed");
+        std::string name;
+        try
+        {
+            name = reinterpret_cast<char*>(c);
+        }
+        catch (...)
+        {
+            RpcStringFreeA(&c);
+            throw;
+        }
+        RpcStringFreeA(&c);
+        named_pipe p("\\\\.\\pipe\\boost_process_" + name);
+        return p(in);
+    }
+};
+#endif
 
 /**
  * Stream behavior to mute streams.
@@ -294,45 +231,29 @@ private:
  * A child process will be able to use streams. But data written to an
  * output stream is discarded and data read from an input stream is 0.
  */
-class null : public stream
+class null
 {
 public:
-    enum stream_type { input_stream, output_stream };
-
-    null(stream_type stream)
+    std::pair<handle, handle> operator()(bool in) const
     {
 #if defined(BOOST_POSIX_API)
-        std::string filename = (stream == input_stream) ? "/dev/zero" :
-            "/dev/null";
-        int flag = (stream == input_stream) ? O_RDONLY : O_WRONLY;
-        child_end_ = open(filename.c_str(), flag);
-        if (!child_end_.valid())
+        std::string filename = in ? "/dev/zero" : "/dev/null";
+        int flag = in ? O_RDONLY : O_WRONLY;
+        handle child_end = open(filename.c_str(), flag);
+        if (!child_end.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
 #elif defined(BOOST_WINDOWS_API)
-        DWORD access = (stream == input_stream) ? GENERIC_READ : GENERIC_WRITE;
-        child_end_ = CreateFileA("NUL", access, 0, NULL, OPEN_EXISTING,
+        DWORD access = in ? GENERIC_READ : GENERIC_WRITE;
+        handle child_end = CreateFileA("NUL", access, 0, NULL, OPEN_EXISTING,
             FILE_ATTRIBUTE_NORMAL, NULL);
-        if (!child_end_.valid())
+        if (!child_end.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateFile() failed");
-        if (!SetHandleInformation(child_end_.native(), HANDLE_FLAG_INHERIT,
+        if (!SetHandleInformation(child_end.native(), HANDLE_FLAG_INHERIT,
             HANDLE_FLAG_INHERIT))
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
-                "SetHandleInformation() failed");
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("SetHandleInformation() failed");
 #endif
+        return std::make_pair(child_end, handle());
     }
-
-    static boost::shared_ptr<null> create(stream_type stream)
-    {
-        return boost::make_shared<null>(stream);
-    }
-
-    handle get_child_end()
-    {
-        return child_end_;
-    }
-
-private:
-    handle child_end_;
 };
 
 }

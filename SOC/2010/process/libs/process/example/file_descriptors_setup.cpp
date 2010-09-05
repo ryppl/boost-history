@@ -18,28 +18,29 @@
 #include <boost/assign/list_of.hpp> 
 #include <string> 
 #include <vector> 
+#include <utility> 
 #include <iostream> 
 #include <unistd.h> 
 
 //[file_descriptors_context 
-boost::process::behavior::pipe address( 
-    boost::process::behavior::pipe::output_stream); 
-boost::process::behavior::pipe pid( 
-    boost::process::behavior::pipe::output_stream); 
+std::pair<boost::process::handle, boost::process::handle> address = 
+    boost::process::behavior::pipe()(false); 
+std::pair<boost::process::handle, boost::process::handle> pid = 
+    boost::process::behavior::pipe()(false); 
 
 class context : public boost::process::context 
 { 
 public: 
     void setup(std::vector<bool> &closeflags) 
     { 
-        if (dup2(address.get_child_end().native(), 3) == -1) 
+        if (dup2(address.first.native(), 3) == -1) 
         { 
             write(STDERR_FILENO, "dup2() failed\n", 14); 
             _exit(127); 
         } 
         closeflags[3] = false; 
 
-        if (dup2(pid.get_child_end().native(), 4) == -1) 
+        if (dup2(pid.first.native(), 4) == -1) 
         { 
             write(STDERR_FILENO, "dup2() failed\n", 14); 
             _exit(127); 
@@ -57,11 +58,11 @@ int main()
         ("--session")("--print-address=3")("--print-pid=4"); 
     context ctx; 
     boost::process::create_child(exe, args, ctx); 
-    address.get_child_end().close(); 
-    pid.get_child_end().close(); 
-    boost::process::pistream isaddress(address.get_parent_end()); 
+    address.first.close(); 
+    pid.first.close(); 
+    boost::process::pistream isaddress(address.second); 
     std::cout << isaddress.rdbuf() << std::endl; 
-    boost::process::pistream ispid(pid.get_parent_end()); 
+    boost::process::pistream ispid(pid.second); 
     std::cout << ispid.rdbuf() << std::endl; 
 //] 
 } 

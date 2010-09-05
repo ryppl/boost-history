@@ -24,13 +24,14 @@
 
 #define BOOST_TEST_MAIN 
 #include "util/boost.hpp" 
+#include <utility> 
 
 BOOST_AUTO_TEST_CASE(test_handle_readwrite) 
 { 
-    bpb::pipe p(bpb::pipe::input_stream); 
+    std::pair<bp::handle, bp::handle> p = bpb::pipe()(true); 
 
-    bp::handle read_end = p.get_child_end(); 
-    bp::handle write_end = p.get_parent_end(); 
+    bp::handle read_end = p.first; 
+    bp::handle write_end = p.second; 
 
     bp::handle read_end2 = read_end; 
     bp::handle write_end2 = write_end; 

@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(test_close_stdin)
     args.push_back("is-closed-stdin"); 
 
     bp::context ctx; 
-    ctx.stdin_behavior = bpb::close::create(); 
+    ctx.stdin_behavior = bpb::close(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(test_close_stdout)
     args.push_back("is-closed-stdout"); 
 
     bp::context ctx1; 
-    ctx1.stdout_behavior = bpb::close::create(); 
+    ctx1.stdout_behavior = bpb::close(); 
 
     bp::child c1 = bp::create_child(get_helpers_path(), args, ctx1); 
 
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE(test_close_stdout)
 #endif 
 
     bp::context ctx2; 
-    ctx2.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+    ctx2.stdout_behavior = bpb::pipe(); 
 
     bp::child c2 = bp::create_child(get_helpers_path(), args, ctx2); 
 
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(test_close_stderr)
     args.push_back("is-closed-stderr"); 
 
     bp::context ctx1; 
-    ctx1.stderr_behavior = bpb::close::create(); 
+    ctx1.stderr_behavior = bpb::close(); 
 
     bp::child c1 = bp::create_child(get_helpers_path(), args, ctx1); 
 
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE(test_close_stderr)
 #endif 
 
     bp::context ctx2; 
-    ctx2.stderr_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+    ctx2.stderr_behavior = bpb::pipe(); 
 
     bp::child c2 = bp::create_child(get_helpers_path(), args, ctx2); 
 
@@ -129,8 +129,8 @@ BOOST_AUTO_TEST_CASE(test_input)
     args.push_back("stdin-to-stdout"); 
 
     bp::context ctx; 
-    ctx.stdin_behavior = bpb::pipe::create(bpb::pipe::input_stream); 
-    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+    ctx.stdin_behavior = bpb::pipe(); 
+    ctx.stdout_behavior = bpb::pipe(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -160,7 +160,7 @@ BOOST_AUTO_TEST_CASE(test_output)
     args.push_back("message-stdout"); 
 
     bp::context ctx; 
-    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+    ctx.stdout_behavior = bpb::pipe(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_CASE(test_output_error)
     args.push_back("message-stderr"); 
 
     bp::context ctx; 
-    ctx.stderr_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+    ctx.stderr_behavior = bpb::pipe(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -210,8 +210,8 @@ BOOST_AUTO_TEST_CASE(test_output_stdout_stderr)
     args.push_back("message-to-two-streams"); 
 
     bp::context ctx; 
-    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
-    ctx.stderr_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+    ctx.stdout_behavior = bpb::pipe(); 
+    ctx.stderr_behavior = bpb::pipe(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -236,37 +236,26 @@ BOOST_AUTO_TEST_CASE(test_output_stdout_stderr)
 #endif 
 } 
 
-class redirect_to : public bpb::stream 
+std::pair<bp::handle, bp::handle> redirect_to(bp::handle h) 
 { 
-public: 
-    redirect_to(bp::handle child_end) 
-    { 
 #if defined(BOOST_POSIX_API) 
-        child_end_ = dup(child_end.native()); 
-        if (!child_end_.valid()) 
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup(2) failed"); 
+    h = dup(h.native()); 
+    if (!h.valid()) 
+        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup(2) failed"); 
 #elif defined(BOOST_WINDOWS_API) 
-        HANDLE h;
-        if (!DuplicateHandle(GetCurrentProcess(), child_end.native(), 
-            GetCurrentProcess(), &h, 0, TRUE, DUPLICATE_SAME_ACCESS)) 
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("DuplicateHandle() failed"); 
-        child_end_ = h; 
+    HANDLE h2; 
+    if (!DuplicateHandle(GetCurrentProcess(), h.native(), 
+        GetCurrentProcess(), &h2, 0, TRUE, DUPLICATE_SAME_ACCESS)) 
+        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("DuplicateHandle() failed"); 
+    h = h2; 
 #endif 
-    } 
+    return std::make_pair(h, bp::handle()); 
+} 
 
-    static boost::shared_ptr<redirect_to> create(bp::handle stream_end) 
-    { 
-        return boost::make_shared<redirect_to>(redirect_to(stream_end)); 
-    } 
-
-    bp::handle get_child_end() 
-    { 
-        return child_end_; 
-    } 
-
-private: 
-    bp::handle child_end_; 
-}; 
+std::pair<bp::handle, bp::handle> forward(std::pair<bp::handle, bp::handle> p) 
+{ 
+    return p; 
+} 
 
 BOOST_AUTO_TEST_CASE(test_redirect_err_to_out) 
 { 
@@ -274,10 +263,11 @@ BOOST_AUTO_TEST_CASE(test_redirect_err_to_out)
     args.push_back("echo-stdout-stderr"); 
     args.push_back("message-to-two-streams"); 
 
+    std::pair<bp::handle, bp::handle> p = bpb::pipe()(false); 
+
     bp::context ctx; 
-    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
-    ctx.stderr_behavior = redirect_to::create( 
-        ctx.stdout_behavior->get_child_end()); 
+    ctx.stdout_behavior = boost::bind(forward, p); 
+    ctx.stderr_behavior = boost::bind(redirect_to, p.first); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -309,7 +299,7 @@ BOOST_AUTO_TEST_CASE(check_work_directory)
     bp::context ctx; 
     BOOST_CHECK(bfs::equivalent(ctx.work_dir, bfs::current_path().string())); 
 
-    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+    ctx.stdout_behavior = bpb::pipe(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -343,7 +333,7 @@ BOOST_AUTO_TEST_CASE(check_work_directory2)
     { 
         bp::context ctx; 
         ctx.work_dir = wdir.string(); 
-        ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+        ctx.stdout_behavior = bpb::pipe(); 
 
         bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -378,7 +368,7 @@ std::pair<bool, std::string> get_var_value(bp::context &ctx, const std::string &
     args.push_back("query-env"); 
     args.push_back(var); 
 
-    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+    ctx.stdout_behavior = bpb::pipe(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -498,10 +488,8 @@ BOOST_AUTO_TEST_CASE(test_async)
     args.push_back("async-"); 
 
     bp::context ctx; 
-    ctx.stdin_behavior = bp::behavior::named_pipe::create( 
-        bp::behavior::named_pipe::input_stream); 
-    ctx.stdout_behavior = bp::behavior::named_pipe::create( 
-        bp::behavior::named_pipe::output_stream); 
+    ctx.stdin_behavior = bpb::async_pipe(); 
+    ctx.stdout_behavior = bpb::async_pipe(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
     bp::postream &os = c.get_stdin(); 
@@ -536,7 +524,7 @@ BOOST_AUTO_TEST_CASE(test_shell)
 #endif 
 
     bp::context ctx; 
-    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+    ctx.stdout_behavior = bpb::pipe(); 
 
     bp::child c = bp::shell(cmd, ctx); 
 
@@ -562,7 +550,7 @@ BOOST_AUTO_TEST_CASE(test_null_stdin)
     args.push_back("is-nul-stdin"); 
 
     bp::context ctx; 
-    ctx.stdin_behavior = bpb::null::create(bpb::null::input_stream); 
+    ctx.stdin_behavior = bpb::null(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -583,7 +571,7 @@ BOOST_AUTO_TEST_CASE(test_null_stdout)
     args.push_back("is-nul-stdout"); 
 
     bp::context ctx; 
-    ctx.stdout_behavior = bpb::null::create(bpb::null::output_stream); 
+    ctx.stdout_behavior = bpb::null(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -604,7 +592,7 @@ BOOST_AUTO_TEST_CASE(test_null_stderr)
     args.push_back("is-nul-stderr"); 
 
     bp::context ctx; 
-    ctx.stderr_behavior = bpb::null::create(bpb::null::output_stream); 
+    ctx.stderr_behavior = bpb::null(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -622,13 +610,13 @@ class context : public bp::context
 { 
 public: 
     context() 
-    : p(bpb::pipe::output_stream) 
+    : p(bpb::pipe()(false)) 
     { 
     } 
 
     void setup(std::vector<bool> &closeflags) 
     { 
-        if (dup2(p.get_child_end().native(), 10) == -1) 
+        if (dup2(p.first.native(), 10) == -1) 
         { 
             write(STDERR_FILENO, "dup2() failed\n", 14); 
             _exit(127); 
@@ -636,7 +624,7 @@ public:
         closeflags[10] = false; 
     } 
 
-    bpb::pipe p; 
+    std::pair<bp::handle, bp::handle> p; 
 }; 
 
 BOOST_AUTO_TEST_CASE(test_posix) 
@@ -652,7 +640,7 @@ BOOST_AUTO_TEST_CASE(test_posix)
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
     std::string word; 
-    bp::pistream is(ctx.p.get_parent_end()); 
+    bp::pistream is(ctx.p.second); 
     is >> word; 
     BOOST_CHECK_EQUAL(word, "test"); 
 
@@ -710,8 +698,9 @@ BOOST_AUTO_TEST_CASE(test_posix_daemon)
     raii_dup2 raii_stderr(STDERR_FILENO, 102); 
     close(STDERR_FILENO); 
 
-    ctx.stderr_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
-    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+    ctx.stdin_behavior = bpb::null(); 
+    ctx.stderr_behavior = bpb::pipe(); 
+    ctx.stdout_behavior = bpb::pipe(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -760,7 +749,7 @@ BOOST_AUTO_TEST_CASE(test_windows)
     args.push_back("windows-print-startupinfo"); 
 
     context ctx; 
-    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+    ctx.stdout_behavior = bpb::pipe(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -786,6 +775,18 @@ BOOST_AUTO_TEST_CASE(test_windows)
     BOOST_CHECK_EQUAL(s, EXIT_SUCCESS); 
 } 
 
+std::string create_unique_pipe_name() 
+{ 
+    bu::random_generator gen; 
+    bu::uuid u = gen(); 
+#if defined(BOOST_POSIX_API) 
+    std::string name = "/tmp/boost_process_test_"; 
+#elif defined(BOOST_WINDOWS_API) 
+    std::string name = "\\\\.\\pipe\\boost_process_test_"; 
+#endif 
+    return name + boost::lexical_cast<std::string>(u); 
+} 
+
 BOOST_AUTO_TEST_CASE(test_sync_io_with_named_pipe) 
 { 
     check_helpers(); 
@@ -794,10 +795,8 @@ BOOST_AUTO_TEST_CASE(test_sync_io_with_named_pipe)
     args.push_back("stdin-to-stdout"); 
 
     bp::context ctx; 
-    ctx.stdin_behavior = bpb::named_pipe::create( 
-        bpb::named_pipe::input_stream); 
-    ctx.stdout_behavior = bpb::named_pipe::create( 
-        bpb::named_pipe::output_stream); 
+    ctx.stdin_behavior = bpb::named_pipe(create_unique_pipe_name()); 
+    ctx.stdout_behavior = bpb::named_pipe(create_unique_pipe_name()); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 

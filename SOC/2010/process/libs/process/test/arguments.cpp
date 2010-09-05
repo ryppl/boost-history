@@ -37,7 +37,7 @@ std::string get_argument(const std::string &word)
     args.push_back(word); 
 
     bp::context ctx; 
-    ctx.stdout_behavior = bpb::pipe::create(bpb::pipe::output_stream); 
+    ctx.stdout_behavior = bpb::pipe(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
     bp::pistream &is = c.get_stdout(); 

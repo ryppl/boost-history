@@ -52,6 +52,7 @@
 #include <boost/assert.hpp>
 #include <string>
 #include <vector>
+#include <utility>
 
 namespace boost {
 namespace process {
@@ -163,7 +164,7 @@ inline std::string executable_to_progname(const std::string &exe)
 #if defined(BOOST_WINDOWS_API)
     if (exe.size() > 4 && (boost::algorithm::iends_with(exe, ".exe") ||
         boost::algorithm::iends_with(exe, ".com") ||
-        boost::algorithm::iends_with(exe, ".bat"))) 
+        boost::algorithm::iends_with(exe, ".bat")))
         end = exe.size() - 4;
 #endif
 
@@ -186,11 +187,17 @@ template <typename Arguments, typename Context>
 inline child create_child(const std::string &executable, Arguments args,
     Context ctx)
 {
-#if !defined(NDEBUG)
-    BOOST_ASSERT(ctx.stdin_behavior.get());
-    BOOST_ASSERT(ctx.stdout_behavior.get());
-    BOOST_ASSERT(ctx.stderr_behavior.get());
-#endif
+    std::pair<handle, handle> stdin_pair;
+    if (ctx.stdin_behavior)
+        stdin_pair = ctx.stdin_behavior(true);
+
+    std::pair<handle, handle> stdout_pair;
+    if (ctx.stdout_behavior)
+        stdout_pair = ctx.stdout_behavior(false);
+
+    std::pair<handle, handle> stderr_pair;
+    if (ctx.stderr_behavior)
+        stderr_pair = ctx.stderr_behavior(false);
 
     std::string p_name = ctx.process_name.empty() ?
         executable_to_progname(executable) : ctx.process_name;
@@ -227,9 +234,9 @@ inline child create_child(const std::string &executable, Arguments args,
             _exit(127);
         }
 
-        handle hstdin = ctx.stdin_behavior->get_child_end();
-        handle hstdout = ctx.stdout_behavior->get_child_end();
-        handle hstderr = ctx.stderr_behavior->get_child_end();
+        handle hstdin = stdin_pair.first;
+        handle hstdout = stdout_pair.first;
+        handle hstderr = stderr_pair.first;
 
         if (hstdin.valid())
         {
@@ -321,23 +328,23 @@ inline child create_child(const std::string &executable, Arguments args,
             delete[] envp.second[i];
         delete[] envp.second;
 
-        ctx.stdin_behavior->get_child_end().close();
-        ctx.stdout_behavior->get_child_end().close();
-        ctx.stderr_behavior->get_child_end().close();
+        stdin_pair.first.close();
+        stdout_pair.first.close();
+        stderr_pair.first.close();
 
         return child(pid,
-            ctx.stdin_behavior->get_parent_end(),
-            ctx.stdout_behavior->get_parent_end(),
-            ctx.stderr_behavior->get_parent_end());
+            stdin_pair.second,
+            stdout_pair.second,
+            stderr_pair.second);
     }
 #elif defined(BOOST_WINDOWS_API)
     STARTUPINFOA startup_info;
     ZeroMemory(&startup_info, sizeof(startup_info));
     startup_info.cb = sizeof(startup_info);
     startup_info.dwFlags |= STARTF_USESTDHANDLES;
-    startup_info.hStdInput = ctx.stdin_behavior->get_child_end().native();
-    startup_info.hStdOutput = ctx.stdout_behavior->get_child_end().native();
-    startup_info.hStdError = ctx.stderr_behavior->get_child_end().native();
+    startup_info.hStdInput = stdin_pair.first.native();
+    startup_info.hStdOutput = stdout_pair.first.native();
+    startup_info.hStdError = stderr_pair.first.native();
 
     ctx.setup(startup_info);
 
@@ -360,9 +367,9 @@ inline child create_child(const std::string &executable, Arguments args,
         envstrs.get(), workdir.get(), &startup_info, &pi) == 0)
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateProcess() failed");
 
-    ctx.stdin_behavior->get_child_end().close();
-    ctx.stdout_behavior->get_child_end().close();
-    ctx.stderr_behavior->get_child_end().close();
+    stdin_pair.first.close();
+    stdout_pair.first.close();
+    stderr_pair.first.close();
 
     handle hprocess(pi.hProcess);
 
@@ -370,9 +377,9 @@ inline child create_child(const std::string &executable, Arguments args,
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");
 
     return child(hprocess,
-        ctx.stdin_behavior->get_parent_end(),
-        ctx.stdout_behavior->get_parent_end(),
-        ctx.stderr_behavior->get_parent_end());
+        stdin_pair.second,
+        stdout_pair.second,
+        stderr_pair.second);
 #endif
 }
 

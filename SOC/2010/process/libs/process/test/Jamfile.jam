@@ -24,6 +24,8 @@ project : requirements
 exe helpers : util/helpers.cpp bfs ; 
 explicit helpers ; 
 
+lib rpcrt4 : : <name>rpcrt4 ; 
+
 using testing ; 
 
 for local i in [ glob inclusion/*.cpp ] 
@@ -37,7 +39,7 @@ run self.cpp bfs ;
 run systembuf.cpp bfs ; 
 
 run arguments.cpp bfs : : helpers : <dependency>helpers ; 
-run child.cpp bfs : : helpers : <dependency>helpers ; 
+run child.cpp bfs : : helpers : <dependency>helpers <target-os>windows:<library>rpcrt4 ; 
 run executable.cpp bfs : : helpers : <dependency>helpers ; 
 run process.cpp bfs : : helpers : <dependency>helpers ; 
 run status.cpp bfs : : helpers : <dependency>helpers ; 

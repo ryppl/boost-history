@@ -63,6 +63,12 @@
         boost::system::error_code(BOOST_PROCESS_LAST_ERROR, \
             boost::system::get_system_category()), \
         BOOST_PROCESS_SOURCE_LOCATION what))
+
+#define BOOST_PROCESS_THROW_ERROR(error, what) \
+    boost::throw_exception(boost::system::system_error( \
+        boost::system::error_code(error, \
+            boost::system::get_system_category()), \
+        BOOST_PROCESS_SOURCE_LOCATION what))
 /** \endcond */
 
 #endif

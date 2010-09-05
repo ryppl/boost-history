@@ -22,6 +22,9 @@
 #include <boost/bind.hpp> 
 #include <boost/ref.hpp> 
 #include <boost/lexical_cast.hpp> 
+#include <boost/uuid/uuid.hpp> 
+#include <boost/uuid/random_generator.hpp> 
+#include <boost/uuid/uuid_io.hpp> 
 
 namespace bp = boost::process; 
 namespace bpb = boost::process::behavior; 
@@ -30,5 +33,6 @@ namespace but = boost::unit_test;
 namespace butf = boost::unit_test::framework; 
 namespace bfs = boost::filesystem; 
 namespace ba = boost::asio; 
+namespace bu = boost::uuids; 
 
 #endif 
