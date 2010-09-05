@@ -146,16 +146,6 @@ private:
             && !(Traits::absorbs_neutrons && value.second == codomain_combine::neutron()); 
     }
 
-    /*CL
-    template<class Combiner>
-    void add_main(interval_type& inter_val, const CodomainT& co_val, 
-                  iterator& it_, const iterator& last_);
-
-    template<class Combiner>
-    void add_rear(const interval_type& inter_val, const CodomainT& co_val, iterator& it_);
-
-    void add_front(const interval_type& inter_val, iterator& first_);
-    */
     template<class Combiner>
     void subtract_main(const CodomainT& co_val, iterator& it_, iterator& end_  );
 
@@ -276,7 +266,6 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     subtract_main<Combiner>(           co_val, it_, last_);
     subtract_rear<Combiner>(inter_val, co_val, it_);
 }
-
 
 
 template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
