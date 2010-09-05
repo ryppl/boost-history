@@ -43,6 +43,11 @@ project
         [ compile-fail common_type_fails.cpp  ]
         ;
 
+   test-suite "minmax"
+        :
+        [ compile test_minmax.cpp ]
+        ;
+
     test-suite "chrono"
         :
         [ run chrono_unit_test.cpp :  :  : <link>static ]
@@ -61,7 +66,8 @@ project
         [ run manipulate_clock_object.cpp :  :  :  : manipulate_clock_object_dll ]
         [ run chrono_accuracy_test.cpp :  :  : <link>static ]
         [ run chrono_accuracy_test.cpp :  :  :  : chrono_accuracy_test_dll ]
-        
+
+
         [ run ../example/cycle_count.cpp :  :  : <link>static ]
         [ run ../example/cycle_count.cpp :  :  :  : cycle_count_dll ]
         [ run ../example/runtime_resolution.cpp :  :  : <link>static ]
