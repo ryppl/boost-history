@@ -34,7 +34,7 @@
 </h3></div>
 </div></div>
 <div><p class="copyright">Copyright &#169; 2008 Howard Hinnant</p></div>
-<div><p class="copyright">Copyright &#169; 2006 , 2008 Beman Dawes</p></div>
+<div><p class="copyright">Copyright &#169; 2008 Beman Dawes</p></div>
 <div><p class="copyright">Copyright &#169; 2009 -2010 Vicente J. Botet Escriba</p></div>
 <div><div class="legalnotice">
 <a name="id4986971"></a><p>
@@ -163,7 +163,7 @@
 <a name="boost_typetraits_ext.overview.motivation"></a><a href="index.html#boost_typetraits_ext.overview.motivation" title="Motivation">Motivation</a>
 </h3></div></div></div>
 <a name="boost_typetraits_ext.overview.motivation.time"></a><h4>
-<a name="id4948838"></a>
+<a name="id4948839"></a>
         <a href="index.html#boost_typetraits_ext.overview.motivation.time">Time</a>
       </h4>
 <p>
@@ -268,7 +268,7 @@
           library. You don't need to compile it before use.
         </p>
 <a name="boost_typetraits_ext.users_guide.getting_started.install.requirements"></a><h5>
-<a name="id4949174"></a>
+<a name="id4949175"></a>
           <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.requirements">Requirements</a>
         </h5>
 <p>
@@ -314,7 +314,7 @@
           You don't need to link with any library.
         </p>
 <a name="boost_typetraits_ext.users_guide.getting_started.install.exceptions_safety_"></a><h5>
-<a name="id4949358"></a>
+<a name="id4949359"></a>
           <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.exceptions_safety_">Exceptions
           safety </a>
         </h5>
@@ -542,10 +542,10 @@
           Returns the earliest time_point.
         </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration2</span><span class="special">&gt;</span>
-<span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span> <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
-        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a><span class="special">&lt;</span><span class="identifier">__time_point__</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;,</span>
-                     <span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span>
-<span class="identifier">min</span><span class="special">(</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;</span> <span class="identifier">t1</span><span class="special">,</span> <span class="identifier">__time_point__</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;</span> <span class="identifier">t2</span><span class="special">)</span>
+<span class="keyword">typename</span>  <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
+        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;,</span>
+                     <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="identifier">min</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;</span> <span class="identifier">t1</span><span class="special">,</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;</span> <span class="identifier">t2</span><span class="special">)</span>
 <span class="special">{</span>
     <span class="keyword">return</span> <span class="identifier">t2</span> <span class="special">&lt;</span> <span class="identifier">t1</span> <span class="special">?</span> <span class="identifier">t2</span> <span class="special">:</span> <span class="identifier">t1</span><span class="special">;</span>
 <span class="special">}</span>
@@ -556,11 +556,8 @@
         </p>
 <pre class="programlisting"><span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t1</span><span class="special">,</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">seconds</span><span class="special">(</span><span class="number">3</span><span class="special">));</span>
 <span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t2</span><span class="special">,</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">nanoseconds</span><span class="special">(</span><span class="number">3</span><span class="special">));</span>
-<span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t3</span><span class="special">,</span> <span class="special">(</span><span class="identifier">min</span><span class="special">)(</span><span class="identifier">t1</span><span class="special">,</span> <span class="identifier">t2</span><span class="special">));</span>
+<span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t3</span><span class="special">,</span> <span class="identifier">min</span><span class="special">(</span><span class="identifier">t1</span><span class="special">,</span> <span class="identifier">t2</span><span class="special">));</span>
 </pre>
-<p>
-          <span class="emphasis"><em>See the source file <a href="../../example/min_time_point.cpp" target="_top">example/min_time_point.cpp</a></em></span>
-        </p>
 </div>
 </div>
 </div>
@@ -617,20 +614,19 @@
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
-<div class="itemizedlist"><ul type="disc">
-<li>
-              type:* If T names an object or function type then the member typedef
-              type shall name T&amp;&amp;; otherwise, type shall name T.
-            </li>
-<li>
-              Note:* This rule reflects the semantics of reference collapsing. For
-              example, when a type T names a type T1&amp;, the type add_rvalue_reference&lt;T&gt;::type
-              is not an rvalue reference.
-            </li>
-<li>
-              C++ Standard Reference:* 20.7.6.2
-            </li>
-</ul></div>
+<p>
+          <span class="bold"><strong>type:</strong></span> If T names an object or function
+          type then the member typedef type shall name T&amp;&amp;; otherwise, type
+          shall name T.
+        </p>
+<p>
+          <span class="bold"><strong>Note:</strong></span> This rule reflects the semantics
+          of reference collapsing. For example, when a type T names a type T1&amp;,
+          the type add_rvalue_reference&lt;T&gt;::type is not an rvalue reference.
+        </p>
+<p>
+          <span class="bold"><strong>C++ Standard Reference:</strong></span> 20.7.6.2
+        </p>
 </div>
 </div>
 <div class="section" lang="en">
@@ -798,18 +794,17 @@
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">typename</span> <span class="identifier">add_rvalue_reference</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">declval</span><span class="special">();</span>
 </pre>
-<div class="itemizedlist"><ul type="disc">
-<li>
-              Remarks:* If this function is used, the program is ill-formed.
-            </li>
-<li>
-              Remarks:* The template parameter T of declval may be an incomplete
-              type.
-            </li>
-<li>
-              Example:*
-            </li>
-</ul></div>
+<p>
+          <span class="bold"><strong>Remarks:</strong></span> If this function is used, the
+          program is ill-formed.
+        </p>
+<p>
+          <span class="bold"><strong>Remarks:</strong></span> The template parameter T of declval
+          may be an incomplete type.
+        </p>
+<p>
+          <span class="bold"><strong>Example:</strong></span>
+        </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">From</span><span class="special">&gt;</span>
 <span class="identifier">decltype</span><span class="special">(</span><span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;(</span><span class="identifier">declval</span><span class="special">&lt;</span><span class="identifier">From</span><span class="special">&gt;()))</span> <span class="identifier">convert</span><span class="special">(</span><span class="identifier">From</span><span class="special">&amp;&amp;);</span>
 </pre>
@@ -838,7 +833,10 @@
 <dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.acknowledgements"> Appendix
       E: Acknowledgements</a></span></dt>
 <dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.tests"> Appendix F: Tests</a></span></dt>
-<dd><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.tests._common_type_"><code class="computeroutput"><span class="identifier">common_type</span></code></a></span></dt></dl></dd>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.tests._common_type_"><code class="computeroutput"><span class="identifier">common_type</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.tests._add_rvalue_reference_"><code class="computeroutput"><span class="identifier">add_rvalue_reference</span></code></a></span></dt>
+</dl></dd>
 <dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.tickets"> Appendix G:
       Tickets</a></span></dt>
 <dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.todo"> Appendix H: Future
@@ -884,11 +882,10 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_typetraits_ext.appendices.faq"></a><a href="index.html#boost_typetraits_ext.appendices.faq" title=" Appendix D: FAQ"> Appendix D: FAQ</a>
 </h3></div></div></div>
-<a name="boost_typetraits_ext.appendices.faq.how_important_is_the_order_of_the___link_linkend__boost_typetraits_ext_reference_common_type_hpp_common_type___code__phrase_role__identifier__common_type__phrase___code___link__lt__gt__template_arguments_"></a><h4>
-<a name="id4997995"></a>
-        <a href="index.html#boost_typetraits_ext.appendices.faq.how_important_is_the_order_of_the___link_linkend__boost_typetraits_ext_reference_common_type_hpp_common_type___code__phrase_role__identifier__common_type__phrase___code___link__lt__gt__template_arguments_">How
-        important is the order of the <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
-        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>&lt;&gt; template arguments?</a>
+<a name="boost_typetraits_ext.appendices.faq.how_important_is_the_order_of_the_common_type_lt__gt__template_arguments_"></a><h4>
+<a name="id4998009"></a>
+        <a href="index.html#boost_typetraits_ext.appendices.faq.how_important_is_the_order_of_the_common_type_lt__gt__template_arguments_">How
+        important is the order of the common_type&lt;&gt; template arguments?</a>
       </h4>
 <p>
         The order of the template parameters is important. First <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
@@ -925,11 +922,10 @@
         Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>&lt;A,B,C&gt;::type is
         also undefined.
       </p>
-<a name="boost_typetraits_ext.appendices.faq.can_you_explain_the_pros_cons_of___link_linkend__boost_typetraits_ext_reference_common_type_hpp_common_type___code__phrase_role__identifier__common_type__phrase___code___link__against_boost_typeof_"></a><h4>
-<a name="id4998501"></a>
-        <a href="index.html#boost_typetraits_ext.appendices.faq.can_you_explain_the_pros_cons_of___link_linkend__boost_typetraits_ext_reference_common_type_hpp_common_type___code__phrase_role__identifier__common_type__phrase___code___link__against_boost_typeof_">Can
-        you explain the pros/cons of <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
-        Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> against Boost.Typeof?</a>
+<a name="boost_typetraits_ext.appendices.faq.can_you_explain_the_pros_cons_of_common_type_against_boost_typeof_"></a><h4>
+<a name="id4998492"></a>
+        <a href="index.html#boost_typetraits_ext.appendices.faq.can_you_explain_the_pros_cons_of_common_type_against_boost_typeof_">Can
+        you explain the pros/cons of common_type against Boost.Typeof?</a>
       </h4>
 <p>
         Even if in a first look they sound to be close, <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
@@ -992,7 +988,10 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_typetraits_ext.appendices.tests"></a><a href="index.html#boost_typetraits_ext.appendices.tests" title=" Appendix F: Tests"> Appendix F: Tests</a>
 </h3></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.tests._common_type_"><code class="computeroutput"><span class="identifier">common_type</span></code></a></span></dt></dl></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.tests._common_type_"><code class="computeroutput"><span class="identifier">common_type</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.appendices.tests._add_rvalue_reference_"><code class="computeroutput"><span class="identifier">add_rvalue_reference</span></code></a></span></dt>
+</dl></div>
 <p>
         In order to test you need to do.
       </p>
@@ -1043,10 +1042,107 @@
                   </p>
                 </th>
 </tr></thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>
                   <p>
                     common_type_test
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    ...
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    common_type_fails
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fails
+                  </p>
+                </td>
+<td>
+                  <p>
+                    ...
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_typetraits_ext.appendices.tests._add_rvalue_reference_"></a><a href="index.html#boost_typetraits_ext.appendices.tests._add_rvalue_reference_" title="add_rvalue_reference"><code class="computeroutput"><span class="identifier">add_rvalue_reference</span></code></a>
+</h4></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    kind
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Result
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Ticket
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    add_rvalue_reference_test
                   </p>
                 </td>
 <td>
@@ -1117,7 +1213,7 @@
       plans</a>
 </h3></div></div></div>
 <a name="boost_typetraits_ext.appendices.todo.for_later_releases"></a><h4>
-<a name="id4998992"></a>
+<a name="id4999121"></a>
         <a href="index.html#boost_typetraits_ext.appendices.todo.for_later_releases">For
         later releases</a>
       </h4>
@@ -1129,7 +1225,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: September 05, 2010 at 16:47:04 GMT</small></p></td>
+<td align="left"><p><small>Last revised: September 05, 2010 at 18:47:29 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
