@@ -34,7 +34,7 @@ time2_demo contained this comment:
 #include <climits>
 #include <limits>
 #include <boost/cstdint.hpp>
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/integer_traits.hpp>
 
@@ -63,7 +63,7 @@ time2_demo contained this comment:
 //~ #elif defined(BOOST_RATIO_USES_ARRAY_ASSERT)
 #define BOOST_RATIO_CONCAT(A,B) A##B
 #define BOOST_RATIO_NAME(A,B) BOOST_RATIO_CONCAT(A,B)
-#define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_RATIO_NAME(__boost_ratio_test_,__LINE__)[CND]
+#define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_RATIO_NAME(__boost_ratio_test_,__LINE__)[(CND)?1:-1]
 //~ #define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES)
 #endif
 
@@ -275,6 +275,8 @@ namespace detail
 
       BOOST_RATIO_STATIC_ASSERT(X != nan, BOOST_RATIO_OVERFLOW_IN_MUL, ());
       BOOST_RATIO_STATIC_ASSERT(Y != nan, BOOST_RATIO_OVERFLOW_IN_MUL, ());
+      //~ BOOST_MPL_ASSERT_MSG(boost::mpl::bool_< (a_x <= max / a_y) >::type::value, BOOST_RATIO_OVERFLOW_IN_MUL, (boost::mpl::integral_c< int, (a_x <= max / a_y) >));
+      //~ BOOST_MPL_ASSERT_MSG(boost::mpl::bool_< (a_x <= max / a_y) >::type::value, BOOST_RATIO_OVERFLOW_IN_MUL, (boost::mpl::bool_< (a_x <= max / a_y) >::type));
       BOOST_RATIO_STATIC_ASSERT(a_x <= max / a_y, BOOST_RATIO_OVERFLOW_IN_MUL, ());
   public:
       static const boost::intmax_t value = X * Y;
@@ -590,19 +592,19 @@ namespace detail
 
 template <class R1, class R2>
 struct ratio_less
-  : public boost::integral_constant<bool, boost::detail::ratio_less<R1, R2>::value> {};
+    : boost::integral_constant<bool, boost::detail::ratio_less<R1, R2>::value> {};
 
 template <class R1, class R2>
 struct ratio_less_equal
-    : public boost::integral_constant<bool, !ratio_less<R2, R1>::value> {};
+    : boost::integral_constant<bool, !ratio_less<R2, R1>::value> {};
 
 template <class R1, class R2>
 struct ratio_greater
-    : public boost::integral_constant<bool, ratio_less<R2, R1>::value> {};
+    : boost::integral_constant<bool, ratio_less<R2, R1>::value> {};
 
 template <class R1, class R2>
 struct ratio_greater_equal
-    : public boost::integral_constant<bool, !ratio_less<R1, R2>::value> {};
+    : boost::integral_constant<bool, !ratio_less<R1, R2>::value> {};
 
 }  // namespace boost
 
