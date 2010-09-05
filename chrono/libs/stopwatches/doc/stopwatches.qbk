@@ -2897,7 +2897,7 @@ The library provides basic_24_hours_formatter shortcuts for char and wchar_t.
 [section:history Appendix A: History]
 [/==================================]
 
-[section [*Version 0.5.0, September 10, 2010] ]
+[section [*Version 0.1.0, September 10, 2010] ]
 
 [*Features:]
 
@@ -2905,259 +2905,7 @@ The library provides basic_24_hours_formatter shortcuts for char and wchar_t.
 
 [endsect]
 
-[section [*Version 0.4.7, September 1, 2010] ]
 
-[*New Features:]
-
-* Added __lightweight_stopwatch__.
-
-[endsect]
-
-[section [*Version 0.4.6, August 28, 2010] ]
-
-[*New Features:]
-
-* Implementation of __common_type__ without using Boost.TypeOf.
-* Added __stopwatch_accumulator_time_formatter__ class.
-
-[*Old Features:]
-
-* Type reporter removed from Stopwatches as well as the get_reporter metafunction.
-
-[*Bug Fixes]
-
-* __process_cpu_clock__ is now a valid model of Clock that can be used with __stopclocks_accumulator__.
-* eliminate or suppress a lot of warnings appearing with with warnings=all -Wextra
-* improve the error code handling
-
-[endsect]
-
-[section [*Version 0.4.5, July 6, 2010] ['Documentation update]]
-
-[*Documentation]
-
-* Overview rewriting
-* Added missing __thread_clock__ reference.
-* How to implement a __thread_clock__ tutorial removed.
-* References section renamed to External Resources.
-* Added links to source examples.
-* Added links between Models and Concepts.
-* Added macros descriptions.
-* Cleanup.
-
-[*Bug Fixes]
-
-* Valgrind fixes: "Conditional jump or move depends on uninitialised value(s)"
-* Take care of Boost.System break on version 1.44
-* gcc.4.4 "warning: suggest parentheses around '&&' within '||' " removal.
-
-[endsect]
-
-[section [*Version 0.4.4, February 22, 2010] [' Warning fixes]]
-
-[*Bug Fixes]
-
-* `scoped_suspend` warning removal
-* `error_code` management completed
-
-[endsect]
-
-[section [*Version 0.4.3, June 18, 2010] ['Missing file fixe]]
-
-[*Bug Fixes]
-
-* boost/thread/detail/cv_status.hpp file was not commited.
-
-[endsect]
-
-[section [*Version 0.4.2, June 18, 2010] ['Packaging fixe]]
-
-* Boost.Conversion library, used by Boost.Thread porting to Boost.Chrono was not packaged.
-
-[endsect]
-
-[section [*Version 0.4.1, June 17, 2010] ['Added thread clock implementation on Windows]]
-
-[*New Features:]
-
-* Added __thread_clock__ implementation on Windows.
-* Added *Boost.Thread* using *Boost.Chrono*.
-
-[endsect]
-
-[section [*Version 0.4, February 28, 2010] ['New thread clock and Suspendible clock ]]
-
-[*New Features:]
-
-* __SuspendibleClock__ concept + template class _suspendible_clock__.
-* Added `scope_suspend` which do `suspend`/`resume` if the __Clock__ is a model of __SuspendibleClock__ concept, and nothing otherwise.
-* __thread_clock__ support on platforms providing it natively.
-* Added support for wide character for __stopwatch_reporter__, `stopclock`, and `stopclock_accumulator`.
-* `digital_time` renamed `t24_hours`.
-
-[*Perf]
-
-Added performances measures.
-
-[*Bug Fixes]
-
-* Bug on timeval_demo.
-
-    time_point t(duration(xtime(0)));  // this was taken as a function declaration
-    gettimeofday((timeval*)&t, 0);
-    return t;
-by
-
-    timeval tv;
-    gettimeofday(&tv, 0);
-    xtime xt( tv.tv_sec, tv.tv_usec);
-    return time_point(duration(xt));
-
-* Bug on run_timer_test (add a global variable to avoid optimization that removes completely the code to be  measured
-
-[endsect]
-
-[section [*Version 0.3.2, January 25, 2010] ['New frequency, lifetime and percentage stopwatch_accumulator features]]
-[*Features:]
-
-* Added overloading for `operator/(Integer/Duration)`
-* Added frequency, lifetime and percentage to the default `stopwatch_accumulator_formatter`.
-
-[*Bug Fixes]
-* Specific formatters didn't work completly.
-* Replace `duration(0)` by `duration::zero()` on template classes.
-* `suspend` doesn't works: `partial_` not initialized neither taken in account by the elapsed function.
-
-[endsect]
-
-[section [*Version 0.3.1, January 20, 2010] ['New support for wide characters]]
-[*Features:]
-
-* Support for wide characters on formatters and stopclocks
-* added `chrono.hpp` and `stopwatches.hpp` at the boost level
-
-
-[endsect]
-
-[section [*Version 0.3.0, January 17, 2010] ['New stopwatch/stopclock feature + Bug fixes]]
-[*Features:]
-
-* Added independent process cpu clocks for real, user, system process CPU time
-* Added global process cpu clock for real, user, system process CPU time
-* Added `digital_time` (looking for a better name)
-* Added new __Stopwatch__ concept measuring elapsed time between different points in time associated to the operations `start`, `stop`, `suspend` and `resume`.
-* Added __stopwatch__ is a model __Stopwatch__ measuring the elapsed time between the `start` and the `stop` operations.
-* Added __stopwatch_accumulator__ is a model __Stopwatch__ allowing to accumulate several time samples and gives the average, ...
-* Added scoped helper classes allowing to pairwise `start`/`stop` operations, `suspend`/`resume` and `resume`/`suspend` a __Stopwatch__.
-* Added new stopwatch __Formatter__ concept
-    * Added stopwatch formatter "%ds\\n"
-    * Added stopwatch accumulator formatter "%c times, sum=%ss, min=%ms, max=%Ms, mean=%as\\n"
-    * Added time formatter "real %rs, cpu %cs (%p%), user %us, system %ss\\n"
-    * Added digital_time formatter "%d days(s) %h:%m:%s.%n\\n"
-* __stopwatch_reporter__ is a convenient generic class reporting elapsed time for the Stopwatch concept.
-* Added `stopclock<Clock>` shortcut `stopwatch_reporter<stopwatch<Clock>>`
-* Added __scoped_stopclock__ which trace at the constuctor and destructor.
-* Added `typeof` registration for classes __duration__ and __time_point__
-
-* The old classes `process_times`, `process_clock`, `process_timer`, `timer` and `run_timer` are deprecated as the preceding additions are more generic. However for backward compatibility they preserved until inclusion of the library in Boost. Next follows the equivalences:
-    * `timer<>` ~ `stopwatch<>`
-    * `process_timer` ~ `stopwatch<process_cpu_clock>`
-    * `run_timer` ~ `stopclock<>`
-
-[*Bug Fixes]
-
-* Try to correct warning "C4251: 'boost::chrono::run_timer::m_format' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'boost::chrono::run_timer'", by don't including inlines functions using the std::string `m_format`.
-
-[endsect]
-
-[section [*Version 0.2.1, December 13, 2009] ['Bug fixes]]
-
-[*Bug Fixes]
-
-* Replace `INTMAX_C` by `BOOST_INTMAX_C` until `boost/cstdint.hpp` ensures `INTMAX_C` is always defined.
-* Define __BOOST_CHRONO_HAS_CLOCK_MONOTONIC__ when `BOOST_CHRONO_WINDOWS_API`
-* Commenting invalid operator declarations
-* Take care of Boost `min`/`max` recommendations
-* Complete qualification when defining nested typedef duration on clocks to avoid the following compile error:
-
-    ./boost/chrono/chrono.hpp:945: error: declaration of 'typedef class boost::chrono::duration<long long int, boost::__ratio__<1ll, 10000000ll> > boost::chrono::system_clock::duration'
-    ./boost/chrono/chrono.hpp:458: error: changes meaning of 'duration' from 'class boost::chrono::duration<long long int, boost::__ratio__<1ll, 10000000ll> >'
-
-* cleanup of simulated...
-* warning removal on `posix/process_clock.cpp`.
-* disable VC++ foolishness.
-* Update Jamfiles to manage with dll.
-* removal of conversion warning in test_duration.
-* manage with MSVC reporting a warning instead of an error when there is an integral constant overflow.
-* Use `STATIC_ASSERT` specific macro to solve the compile failing issue.
-* Qualify with `boost::detail` `boost::chrono::detail` to avoid ambiguities with MSVC.
-
-
-[*Documentation:]
-
-More updated documentation.
-
-[endsect]
-
-[section [*Version 0.2.0, December 8, 2009] ['+ Features + Bug fixes + Updated documentation]]
-
-[*Features:]
-
-* Added __ratio__ construction and assignment from an equivalent __ratio__ ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]])
-* Added nested __ratio__ typedef type ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]])
-* Added __BOOST_CHRONO_HAS_CLOCK_MONOTONIC__ macro to state if __monotonic_clock__ is provided on this platform.
-* Added __duration__ `operator%` ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934 [*LGW 934. duration is missing operator%]])
-* Added BOOST_CHRONO_CONSTEXPR when constexpr should be used.
-* Complete __duration__ `operator*` and `operator/`.
-
-
-[*Implementation:]
-
-* Use `INTMAC_C` to name `intmax_t` constants instead of `LL`.
-* Separate `chrono.cpp` on # files `win/chrono.cpp`, `mac/chrono.cpp` and `posix/chrono.cpp` to make easier the maintenance on different platforms.
-* Separate `process_clock.cpp` on # files `win/process_clock.cpp`, `mac/process_clock.cpp` and `posix/process_clock.cpp` to make easier the maintenace on different platforms.
-* Added the `error_code` prototype for `monotonic_clock::now` for `mac/chrono.cpp`.
-* Fully implement `mac/chrono.cpp` with error handling.
-* Take care on POSIX systems when `CLOCK_MONOTONIC` is not defined.
-
-[*Documentation:]
-
-* The documentation is written now using quick-book using as base [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] .
-
-[*Bug Fixes]
-
-* `operator/` was ambiguous: Disambiguate duration `operator/`.
-* `CLOCK_MONOTONIC` is not defined with cygwin/gcc 3.4: Disable code when __BOOST_CHRONO_HAS_CLOCK_MONOTONIC__ is not defined.
-* result of metafunctions `ratio_multiply` and `ratio_divide` were not normalized ratios: Use of the nested __ratio__ typedef type on __ratio__ arithmetic operations.
-* Copy constructor from similar __duration__ masked the defaulted operations: Added duration defaulted implementations
-
-
-[endsect]
-[section [*Version 0.1.0, April 29, 2009] ['Beman's boostified version Chrono]]
-
-[*Features:]
-
-*  The C++0x Standard Library's __common_type__.
-*  The C++0x Standard Library's compile-time rational arithmetic.
-*  The C++0x Standard Library's time utilities, including:
-    * Class template __duration__
-    * Class template __time_point__
-    * Clocks:
-        * `system_clock`
-        * __monotonic_clock__
-        * `high_resolution_clock`
-
-* Class template timer, with typedefs:
-    * `system_timer`
-    * `monotonic_timer`
-    * `high_resolution_timer`
-
-* Process clocks and timers:
-    * `process_clock`, capturing real, user-CPU, and system-CPU times.
-    * `process_timer`, capturing elapsed real, user-CPU, and system-CPU times.
-    * `run_timer`, convenient reporting of process_timer results.
-
-[endsect]
 [endsect]
 
 [/======================================]
@@ -3223,7 +2971,7 @@ Ask your operating system supplier. The results have been inspected with a debug
 
 [heading  Can I obtain statistics of the time elapsed between calls to a function?]
 
-The library do not provides this feature.
+The library does not provides this feature.
 
 [heading What happens if I press Ctrl+C and program terminates? What log would Boost.Stopwatches output?]
 
@@ -3283,66 +3031,17 @@ You can also run a specific suite of test by doing
 
 [table
     [[Ticket]             [Description]          [Resolution] [State]]
-    [[0]    [ Issues raised by Michael Marcin:  In the past I've seen QueryPerformanceCounter give incorrect results,
-    especially with SpeedStep processors on laptops. This was many years ago and
-    might have been fixed by service packs and drivers.
-
-    Typically you check the results of QPC against GetTickCount to see if the
-    results are reasonable.
-    http://support.microsoft.com/kb/274323
-
-    I've also heard of problems with QueryPerformanceCounter in multi-processor
-    systems.
-
-    I know some people SetThreadAffinityMask to 1 for the current thread call
-    their QueryPerformance* functions then restore SetThreadAffinityMask. This
-    seems horrible to me because it forces your program to jump to another
-    physical processor if it isn't already on cpu0 but they claim it worked well
-    in practice because they called the timing functions infrequently.
-
-    In the past I have chosen to use timeGetTime with timeBeginPeriod(1) for
-    high resolution timers to avoid these issues.
-    ] [???] [*Open*]]
-    [[1]    [operator/ was ambiguous] [Disambiguate duration operator/]                  [Closed]]
-    [[2]    [CLOCK_MONOTONIC is not defined with cygwin/gcc 3.4] [Disable code when BOOST_CHRONO_HAS_CLOCK_MONOTONIC is not defined.]                  [Closed]]
-    [[3]    [result of metafunctions ratio_multiply and ratio_divide were not normalized ratios] [Use of the nested ratio typedef type on ratio arithmetic operations.]                  [Closed]]
-    [[4]    [Copy constructor from similar duration masked the defaulted operations] [Added duration defaulted implementations]                  [Closed]]
-    [[5]    [INTMAX_C is not always defined] [Replace INTMAX_C by BOOST_INTMAX_C until boost/cstdint.hpp ensures INTMAX_C is always defined.]                  [Closed]]
-    [[6]    [undefined BOOST_CHRONO_HAS_CLOCK_MONOTONIC when BOOST_CHRONO_WINDOWS_API] [Define BOOST_CHRONO_HAS_CLOCK_MONOTONIC when BOOST_CHRONO_WINDOWS_API]                  [Closed]]
-    [[7]    [min/max macros intrussion] [Take care of Boost min/max recommendations]                  [Closed]]
-    [[8]    [declaration of 'typedef class boost::chrono::duration<..> changes meaning of 'duration'] [complete qualification when defining nested typedef duration on clocks to avoid the following compile error:]                  [Closed]]
-    [[9]    [VC++ warnings] [disable VC++ foolishness]                  [Closed]]
-]    
-[table
-    [[Ticket]             [Description]          [Resolution] [State]]
     
-    [[10]    [conversion warning in test_duration] [removal of conversion warning in test_duration]                  [Closed]]
-    [[11]    [MSVC reports a warning instead of an error when there is an integral constant overflow] [manage with MSVC reporting a warning instead of an error when there is an integral constant overflow]                  [Closed]]
-    [[12]    [ambiguities with MSVC when using detail:: namespace] [Qualify with boost::detail boost::chrono::detail ]                  [Closed]]
-    [[13]    [warning C4251: 'boost::chrono::run_timer::m_format' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'boost::chrono::run_timer'] [don't include inlines functions using the std::string m_format]                  [Closed]]
-    [[14]    [Bad use of duration(0) on template classes] [remplace by duration::zero()]                  [Closed]]
-    [[15]    [suspend doesn't works: partial_ not initialized] [initialize with duration::zero()]                  [Closed]]
-    [[16]    [suspend doesn't works: elapsed doesn't take care of partial_] [take care of partial]                  [Closed]]
-    [[17]    [suspend doesn't works: bad use of system::error_code & ec] [replace by system::error_code ec]                  [Closed]]
-    [[18]    [warnings on mingw-gcc.4.4:
+    [[1]    [suspend doesn't works: partial_ not initialized] [initialize with duration::zero()]                  [Closed]]
+    [[2]    [suspend doesn't works: elapsed doesn't take care of partial_] [take care of partial]                  [Closed]]
+    [[3]    [suspend doesn't works: bad use of system::error_code & ec] [replace by system::error_code ec]                  [Closed]]
+    [[4]    [Use of Specific formatters doesn't works] []                  [Closed]]
 
-..\..\../boost/chrono/chrono.hpp: In copy constructor 'boost::chrono::time_point<boost::chrono::process_cpu_clock,
-boost::chrono::duration<boost::chrono::process_cpu_clock::times, boost::ratio<1ll, 1000000000ll> > 
->::time_point(const boost::chrono::time_point<boost::chrono::process_cpu_clock,
-boost::chrono::duration<boost::chrono::process_cpu_clock::times, boost::ratio<1ll, 1000000000ll> > >&)':
-..\..\../boost/chrono/chrono.hpp:816: warning: suggest parentheses around '&&' within '||'
-..\..\../boost/chrono/chrono.hpp:816: warning: suggest parentheses around '&&' within '||'
-
-] [???]                  [Closed]]
-    [[19]    [Use of Specific formatters doesn't works] []                  [Closed]]
-
-    [[20]    [boost/chrono/scoped_suspend.hpp(31) : warning C4520: 'boost::chrono::scoped_suspend<Clock>' : multiple default constructors specified
+    [[5]    [boost/chrono/scoped_suspend.hpp(31) : warning C4520: 'boost::chrono::scoped_suspend<Clock>' : multiple default constructors specified
 ] [Remove the default constructor deletion ]                  [Closed]]
-    [[21]    [suspendible_clock_test doesn't works in my mingw environement] [(issue with tss)]                  [*Open*]]
-    [[22]    [error_code not initialized] [Use ec.clear() before throwing a exception.]                  [Closed]]
-    [[23]    [boost/thread/detail/cv_status.hpp file was not commited] [commit file]                  [Closed]]
-    [[24]    [Boost.Conversion was not packaged] [Package it]                  [Closed]]
-    [[25]    [Valgrind issue: Conditional jump or move depends on uninitialised value(s)] [Replace the test]                  [Closed]]
+    [[6]    [suspendible_clock_test doesn't works in my mingw environement] [(issue with tss)]                  [*Open*]]
+    [[7]    [error_code not initialized] [Use ec.clear() before throwing a exception.]                  [Closed]]
+    [[8]    [Valgrind issue: Conditional jump or move depends on uninitialised value(s)] [Replace the test]                  [Closed]]
     [/[#]    [XXXX] [XXXX]                  [Closed]]
 ]
 
