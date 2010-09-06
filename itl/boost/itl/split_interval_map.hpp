@@ -253,66 +253,6 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
     detail::subtract_rear <type,Combiner>(*this, inter_val, co_val, it_       );
 }
 
-
-/*CL
-template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::subtract_front(const interval_type& inter_val, iterator& it_)
-{
-    interval_type left_resid = right_subtract(it_->first, inter_val);
-
-    if(!itl::is_empty(left_resid))
-    {
-        iterator prior_ = it_;
-        if(prior_ != this->_map.begin())
-            --prior_;
-        const_cast<interval_type&>(it_->first) = left_subtract(it_->first, left_resid);
-        this->_map.insert(prior_, value_type(left_resid, it_->second));
-    }
-}
-
-
-template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-    template<class Combiner>
-inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::subtract_main(const CodomainT& co_val, iterator& it_, iterator& last_)
-{
-    while(it_ != last_)
-    {
-        Combiner()(it_->second, co_val);
-        if(Traits::absorbs_neutrons && it_->second==Combiner::neutron())
-            this->_map.erase(it_++); 
-        else ++it_;
-    }
-}
-
-
-template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-    template<class Combiner>
-inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::subtract_rear(const interval_type& inter_val, const CodomainT& co_val, iterator& it_)
-{
-    interval_type right_resid = left_subtract(it_->first, inter_val);
-
-    if(itl::is_empty(right_resid))
-    {
-        CodomainT& cur_val = it_->second ;
-        Combiner()(cur_val, co_val);
-        if(Traits::absorbs_neutrons && cur_val==Combiner::neutron())
-            this->_map.erase(it_);
-    }
-    else
-    {   // . . . ---)
-        // . . . ---right_resid) : split it_
-        const_cast<interval_type&>(it_->first) = right_subtract(it_->first, right_resid);
-        iterator next_ = this->_map.insert(it_, value_type(right_resid, it_->second));
-        Combiner()(it_->second, co_val);
-        if(Traits::absorbs_neutrons && it_->second==Combiner::neutron())
-            this->_map.erase(it_);
-    }
-}
-*/
-
 //-----------------------------------------------------------------------------
 // insert(pair(interval,value)):
 //-----------------------------------------------------------------------------
@@ -338,7 +278,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
                  last_  = insertion.first;
         //assert((++last_) == this->_map.upper_bound(inter_val));
         iterator it_ = first_;
-        insert_range(inter_val, co_val, it_, last_);
+        detail::insert_main(*this, inter_val, co_val, it_, last_);
     }
 }
 
@@ -367,47 +307,10 @@ inline typename split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Sect
         iterator it_    = overlap.first,
                  last_  = overlap.second;
                  --last_;
-        insert_range(inter_val, co_val, it_, last_);
+        detail::insert_main(*this, inter_val, co_val, it_, last_);
         return it_;
     }
 }
-
-
-template <typename DomainT, typename CodomainT, class Traits,
-          ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::insert_range(const interval_type& inter_val, const CodomainT& co_val, iterator& it_, iterator& last_)
-{
-    iterator end_   = last_ ; ++end_;
-    iterator prior_ = it_, inserted_;
-    if(prior_ != this->_map.end())
-        --prior_;
-    interval_type rest_interval = inter_val, left_gap, cur_itv;
-    interval_type last_interval = last_ ->first;
-
-    while(it_ != end_  )
-    {
-        cur_itv = it_->first ;            
-        left_gap = right_subtract(rest_interval, cur_itv);
-
-        if(!itl::is_empty(left_gap))
-            inserted_ = this->_map.insert(prior_, value_type(left_gap, co_val));
-
-        // shrink interval
-        rest_interval = left_subtract(rest_interval, cur_itv);
-        prior_ = it_;
-        ++it_;
-    }
-
-    //insert_rear(rest_interval, co_val, last_):
-    interval_type end_gap = left_subtract(rest_interval, last_interval);
-    if(!itl::is_empty(end_gap))
-        it_ = this->_map.insert(prior_, value_type(end_gap, co_val));
-    else
-        it_ = prior_;
-
-}
-
 
 //-----------------------------------------------------------------------------
 // erase(pair(interval,value)):

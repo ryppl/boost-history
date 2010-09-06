@@ -365,7 +365,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
                  last_  = insertion.first;
         //assert((++last_) == this->_map.upper_bound(inter_val));
         iterator it_ = first_;
-        insert_range(inter_val, co_val, it_, last_);
+        detail::insert_main(*this, inter_val, co_val, it_, last_);
     }
 }
 
@@ -394,54 +394,10 @@ inline typename interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,In
         iterator it_    = overlap.first,
                  last_  = overlap.second;
                  --last_;
-        insert_range(inter_val, co_val, it_, last_);
+        detail::insert_main(*this, inter_val, co_val, it_, last_);
         return it_;
     }
 }
-
-
-template <typename DomainT, typename CodomainT, class Traits,
-          ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::insert_range(const interval_type& inter_val, const CodomainT& co_val, iterator& it_, iterator& last_)
-{
-    iterator end_   = last_ ; ++end_;
-    iterator prior_ = it_, inserted_;
-    if(prior_ != this->_map.end())
-        --prior_;
-    interval_type rest_interval = inter_val, left_gap, cur_itv;
-    interval_type last_interval = last_ ->first;
-
-    while(it_ != end_  )
-    {
-        cur_itv = it_->first ;            
-        left_gap = right_subtract(rest_interval, cur_itv);
-
-        if(!itl::is_empty(left_gap))
-        {
-            inserted_ = this->_map.insert(prior_, value_type(left_gap, co_val));
-            detail::join_left(*this, inserted_);
-            // after filling that gap there may be another joining opportunity
-            detail::join_left(*this, it_);
-        }
-
-        // shrink interval
-        rest_interval = left_subtract(rest_interval, cur_itv);
-        prior_ = it_;
-        ++it_;
-    }
-
-    //insert_rear(rest_interval, co_val, last_):
-    interval_type end_gap = left_subtract(rest_interval, last_interval);
-    if(!itl::is_empty(end_gap))
-    {
-        inserted_ = this->_map.insert(prior_, value_type(end_gap, co_val));
-        it_ = detail::join_neighbours(*this, inserted_);
-    }
-    else
-        it_ = prior_;
-}
-
 
 //-----------------------------------------------------------------------------
 // erase(pair(interval,value)):

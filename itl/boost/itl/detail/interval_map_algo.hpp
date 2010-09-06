@@ -190,23 +190,38 @@ gap_insert(               Type&                object,
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-/*JODO or CL?
-template<class Type, class Combiner, int combining_style>
-struct style_dependent;
+template<class Type, int combining_style>
+struct on_style;
 
-template<class Type, class Combiner, int combining_style>
-struct style_dependent<Type, Combiner, interval_combine::splitting>
+template<class Type>
+struct on_style<Type, interval_combine::splitting>
 {
-    static void handle_reinserted(Type& object, iterator insertion_){}
+    typedef on_style type;
+    typedef typename Type::iterator iterator;
+    static void handle_inserted(Type&, iterator, iterator&){}
+    static iterator handle_end_inserted(Type&, iterator it_){ return it_; }
 };
 
-template<class Type, class Combiner, int combining_style>
-struct style_dependent<Type, Combiner, interval_combine::joining>
+template<class Type>
+struct on_style<Type, interval_combine::joining>
 {
-    static void handle_reinserted(Type& object, iterator insertion_)
-    { join_right(object, insertion_); }
+    typedef on_style type;
+    typedef typename Type::iterator iterator;
+
+    static void handle_inserted(Type& object, iterator inserted_, iterator& it_)
+    {
+        join_left(object, inserted_);
+        // after filling that gap there may be another joining opportunity
+        join_left(object, it_);
+	}
+
+    static iterator handle_end_inserted(Type& object, iterator inserted_)
+	{
+        return join_neighbours(object, inserted_);
+	}
+
 };
-*/
+
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -598,6 +613,60 @@ void subtract_rear(               Type&                object,
         on_segment_::handle_succeeded_combined(object, it_, next_);
     }
 }
+
+//==============================================================================
+//= Insertion
+//==============================================================================
+
+template<class Type>
+void insert_main(               Type&                object,
+                       typename Type::interval_type& inter_val, 
+                 const typename Type::codomain_type& co_val, 
+                       typename Type::iterator&      it_,       
+                 const typename Type::iterator&      last_    )
+{
+    typedef typename Type::interval_type interval_type;
+    typedef typename Type::value_type    value_type;
+    typedef typename Type::iterator      iterator;
+    typedef typename on_style<Type,Type::fineness>::type on_style_;
+
+    iterator end_   = last_ ; ++end_;
+    iterator prior_ = it_, inserted_;
+    if(prior_ != object.end())
+        --prior_;
+    interval_type rest_interval = inter_val, left_gap, cur_itv;
+    interval_type last_interval = last_ ->first;
+
+    while(it_ != end_  )
+    {
+        cur_itv = it_->first ;            
+        left_gap = right_subtract(rest_interval, cur_itv);
+
+        if(!itl::is_empty(left_gap))
+        {
+            inserted_ = object._insert(prior_, value_type(left_gap, co_val));
+			on_style_::handle_inserted(object, inserted_, it_);
+
+
+        }
+
+        // shrink interval
+        rest_interval = left_subtract(rest_interval, cur_itv);
+        prior_ = it_;
+        ++it_;
+    }
+
+    //insert_rear(rest_interval, co_val, last_):
+    interval_type end_gap = left_subtract(rest_interval, last_interval);
+    if(!itl::is_empty(end_gap))
+    {
+        inserted_ =    object._insert(prior_, value_type(end_gap, co_val));
+		it_ = on_style_::handle_end_inserted(object, inserted_);
+    }
+    else
+        it_ = prior_;
+}
+
 
 
 
