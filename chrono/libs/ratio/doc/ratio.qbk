@@ -9,6 +9,7 @@
 
 [article Boost.Ratio
     [quickbook 1.5]
+    [version 0.1.0]
     [authors [Hinnant, Howard]]
     [authors [Dawes, Beman]]
     [authors [Botet Escriba, Vicente J.]]
@@ -717,7 +718,9 @@ When BOOST_NO_STATIC_ASSERT is defined, the user can select the way static asser
 * BOOST_RATIO_USES_STATIC_ASSERT: define it if you want to use Boost.StaticAssert
 * BOOST_RATIO_USES_MPL_ASSERT: define it if you want to use Boost.MPL static asertions
 * BOOST_RATIO_USES_ARRAY_ASSERT: define it if you want to use internal static asertions
-* nothing if you don't want static asertions
+
+The default vaule behavior is as BOOST_RATIO_USES_ARRAY_ASSERT was defined.
+
 
 When BOOST_RATIO_USES_MPL_ASSERT is not defined the following symbols are defined as
 
