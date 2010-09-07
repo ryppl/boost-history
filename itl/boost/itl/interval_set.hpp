@@ -163,7 +163,7 @@ private:
 template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 void interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend)
 {
-    Interval_Set::joining_add(*this, addend);
+    Interval_Set::add(*this, addend);
 }
 
 
@@ -171,7 +171,7 @@ template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval
 typename interval_set<DomainT,Compare,Interval,Alloc>::iterator 
     interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
 {
-    return Interval_Set::joining_add(*this, prior_, addend);
+    return Interval_Set::add(*this, prior_, addend);
 }
 
 

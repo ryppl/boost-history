@@ -178,92 +178,28 @@ inclusion_compare(const LeftT& left, const RightT& right)
 //==============================================================================
 //= Addition
 //==============================================================================
-
-//- joining_add ----------------------------------------------------------------
 template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_joiner<ObjectT> >, ObjectT>::type&
+typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
 add(ObjectT& object, const typename ObjectT::element_type& operand)
 {
-    Interval_Set::joining_add(object, typename ObjectT::interval_type(operand));
-    return object; //JODO: May be it is better to return the iterator
-}
-
-template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_joiner<ObjectT> >, ObjectT>::type&
-add(ObjectT& object, const typename ObjectT::segment_type& operand)
-{
-    Interval_Set::joining_add(object, operand);
-    return object; //JODO: May be it is better to return the iterator
-}
-
-template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_joiner<ObjectT> >, 
-                   typename ObjectT::iterator>::type
-add(ObjectT& object, typename ObjectT::iterator      prior, 
-               const typename ObjectT::segment_type& operand)
-{
-    return Interval_Set::joining_add(object, prior, operand);
-}
-
-//- separating_add -------------------------------------------------------------
-template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_separator<ObjectT> >, ObjectT>::type&
-add(ObjectT& object, const typename ObjectT::element_type& operand)
-{
-    Interval_Set::separating_add(object, typename ObjectT::interval_type(operand));
+    Interval_Set::add(object, typename ObjectT::interval_type(operand));
     return object;
 }
 
 template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_separator<ObjectT> >, ObjectT>::type&
+typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
 add(ObjectT& object, const typename ObjectT::segment_type& operand)
 {
-    Interval_Set::separating_add(object, operand);
-    return object; //JODO: May be it is better to return the iterator
-}
-
-template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_separator<ObjectT> >,
-                   typename ObjectT::iterator>::type
-add(ObjectT& object, typename ObjectT::iterator      prior, 
-               const typename ObjectT::segment_type& operand)
-{
-    return Interval_Set::separating_add(object, prior, operand);
-}
-
-//- splitting_add -------------------------------------------------------------
-template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_splitter<ObjectT> >, ObjectT>::type&
-add(ObjectT& object, const typename ObjectT::element_type& operand)
-{
-    Interval_Set::splitting_add(object, typename ObjectT::interval_type(operand));
+    Interval_Set::add(object, operand);
     return object;
 }
 
 template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_splitter<ObjectT> >, ObjectT>::type&
-add(ObjectT& object, const typename ObjectT::segment_type& operand)
-{
-    Interval_Set::splitting_add(object, operand);
-    return object; //JODO: May be it is better to return the iterator
-}
-
-template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_splitter<ObjectT> >,
-                   typename ObjectT::iterator>::type
+typename enable_if<is_interval_set<ObjectT>, typename ObjectT::iterator>::type
 add(ObjectT& object, typename ObjectT::iterator      prior, 
                const typename ObjectT::segment_type& operand)
 {
-    return Interval_Set::splitting_add(object, prior, operand);
+    return Interval_Set::add(object, prior, operand);
 }
 //------------------------------------------------------------------------------
 

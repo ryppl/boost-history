@@ -50,60 +50,21 @@ template<class ObjectT>
 typename enable_if<is_interval_set<ObjectT>, bool>::type
 contains(const ObjectT& super, const typename ObjectT::element_type&);
 
-//- joining_add -------------------------------------------------------------
+//- add ------------------------------------------------------------------------
 template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_joiner<ObjectT> >, ObjectT>::type&
+typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
 add(ObjectT&, const typename ObjectT::element_type&);
 
 template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_joiner<ObjectT> >, ObjectT>::type&
+typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
 add(ObjectT&, const typename ObjectT::segment_type&);
 
 template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_joiner<ObjectT> >, 
-                   typename ObjectT::iterator>::type
+typename enable_if<is_interval_set<ObjectT>, typename ObjectT::iterator>::type
 add(ObjectT&, typename ObjectT::iterator, 
         const typename ObjectT::segment_type&);
 
-//- separating_add -------------------------------------------------------------
-template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_separator<ObjectT> >, ObjectT>::type&
-add(ObjectT&, const typename ObjectT::element_type&);
 
-template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_separator<ObjectT> >, ObjectT>::type&
-add(ObjectT& object, const typename ObjectT::segment_type& operand);
-
-template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_separator<ObjectT> >,
-                   typename ObjectT::iterator>::type
-add(ObjectT& object, typename ObjectT::iterator      prior, 
-               const typename ObjectT::segment_type& operand);
-
-//- splitting_add -------------------------------------------------------------
-template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_splitter<ObjectT> >, ObjectT>::type&
-add(ObjectT&, const typename ObjectT::element_type&);
-
-template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_splitter<ObjectT> >, ObjectT>::type&
-add(ObjectT& object, const typename ObjectT::segment_type& operand);
-
-template<class ObjectT>
-typename enable_if<mpl::and_< is_interval_set<ObjectT>
-                            , is_interval_splitter<ObjectT> >,
-                   typename ObjectT::iterator>::type
-add(ObjectT& object, typename ObjectT::iterator      prior, 
-               const typename ObjectT::segment_type& operand);
-//------------------------------------------------------------------------------
 template<class ObjectT>
 typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
 subtract(ObjectT&, const typename ObjectT::element_type&);

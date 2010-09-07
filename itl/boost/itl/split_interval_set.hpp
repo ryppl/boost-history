@@ -149,7 +149,7 @@ private:
 template <typename DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend)
 {
-    Interval_Set::splitting_add(*this, addend);
+    Interval_Set::add(*this, addend);
 }
 
 
@@ -157,7 +157,7 @@ template <typename DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Inte
 inline typename split_interval_set<DomainT,Compare,Interval,Alloc>::iterator
     split_interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
 {
-    return Interval_Set::splitting_add(*this, prior_, addend);
+    return Interval_Set::add(*this, prior_, addend);
 }
 
 template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
