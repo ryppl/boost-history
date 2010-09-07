@@ -9,6 +9,7 @@
 
 [article Boost.Chrono
     [quickbook 1.5]
+    [version 0.5.0]
     [authors [Hinnant, Howard]]
     [authors [Dawes, Beman]]
     [authors [Botet Escriba, Vicente J.]]
@@ -102,7 +103,7 @@
 
 
 
-[template clock_concept_link[link_text] [link boost_chrono.reference.cpp0x.system_clocks_hpp.clock [link_text]]]
+[template clock_concept_link[link_text] [link boost_chrono.reference.cpp0x.clock [link_text]]]
 [def __clock_concept__ [clock_concept_link `Clock` concept]]
 [def __clock_concept_type__ [clock_concept_link `Clock`]]
 [def __clock_req__ [clock_concept_link `Clock` requirements]]
@@ -1008,7 +1009,7 @@ A "saturating" signed integral type  is developed.  This type has +/- infinity a
 Users can easily create their own clocks, with both points in time and time durations which have a representation and precision of their own choosing. For example if there is a hardware counter which simply increments a count with each cycle of the cpu, one can very easily build clocks, time points and durations on top of that, using only a few tens of lines of code. Such systems can be used to call the time-sensitive threading API's such as sleep, wait on a condition variable, or wait for a mutex lock. The API proposed herein is not sensitive as to whether this is a 300MHz clock (with a 3 1/3 nanosecond tick period) or a 3GHz clock (with a tick period of  1/3 of a nanosecond). And the resulting code will be just as efficient as if the user wrote a special purpose clock cycle counter.
 
 
-    #include <boost/chrono/chrono.hpp>
+    #include <boost/chrono.hpp>
     #include <boost/type_traits.hpp>
 
     #include <iostream>
@@ -1207,7 +1208,7 @@ Usage of xtime_clock
 Example round_up utility:  converts d to To, rounding up for inexact conversions
 Being able to *easily* write this function is a major feature!
 
-    #include <boost/chrono/chrono.hpp>
+    #include <boost/chrono.hpp>
     #include <boost/type_traits.hpp>
 
     #include <iostream>
@@ -1299,7 +1300,7 @@ Usage
 [/===============================================================]
 [section A tiny program that times how long until a key is struck]
 
-    #include <boost/chrono/chrono.hpp>
+    #include <boost/chrono.hpp>
     #include <iostream>
     #include <iomanip>
 
@@ -1611,21 +1612,10 @@ Usage
 [section:chrono_hpp Header `<boost/chrono.hpp>`]
 [/=============================================]
 
-This file is a redirection to `boost/chrono/chrono.hpp` including in addition registration for __duration__ and __time_point__ class templates to Boost.Typeof.
-
-
-    #include <boost/chrono/chrono.hpp>
-    #include <boost/chrono/typeof/boost/chrono/chrono.hpp>
-
-[endsect]
-
-[/=============================================]
-[section:chrono_chrono_hpp Header `<boost/chrono/chrono.hpp>`]
-[/=============================================]
-
     #include <boost/chrono/duration.hpp>
     #include <boost/chrono/time_point.hpp>
     #include <boost/chrono/system_clocks.hpp>
+    #include <boost/chrono/typeof/boost/chrono/chrono.hpp>
 
 [section:conf Configuration macros]
 
@@ -1635,7 +1625,8 @@ When BOOST_NO_STATIC_ASSERT is defined, the user can select the way static asser
 * BOOST_CHRONO_USES_STATIC_ASSERT: define it if you want to use Boost.StaticAssert
 * BOOST_CHRONO_USES_MPL_ASSERT: define it if you want to use Boost.MPL static asertions
 * BOOST_CHRONO_USES_ARRAY_ASSERT: define it if you want to use internal static asertions
-* nothing if you don't want static asertions
+
+The default vaule behavior is as BOOST_CHRONO_USES_ARRAY_ASSERT was defined.
 
 When BOOST_CHRONO_USES_MPL_ASSERT is not defined the following symbols are defined as
 
@@ -2242,6 +2233,35 @@ If these constraints are not met, this constructor will not participate in overl
 
 [endsect]
 
+[section:clock `Clock` Requirements]
+
+A clock represents a bundle consisting of a native __duration__, a native __time_point__, and a function `now()` to get the current __time_point__. A clock must meet the requirements in the following Table.
+
+In this table `C1` and `C2` denote `clock` types. `t1` and `t2` are values returned from `C1::now()` where the call returning `t1` happens before the call returning `t2` and both of these calls happen before `C1::time_point::max()`.
+
+[table Clock Requirements
+    [[expression]        [return type]  [operational semantics]]
+    [[`C1::rep`]        [An arithmetic type or class emulating an arithmetic type. ]  [The representation type of the native __duration__ and __time_point__.]]
+    [[`C1::period`]        [`ratio`]  [The tick period of the clock in seconds.]]
+    [[`C1::duration`]        [`chrono::duration<C1::rep, C1::period>`]  [The native __duration__ type of the `clock`.]]
+    [[`C1::time_point`]        [`chrono::time_point<C1> or chrono::time_point<C2, C1::duration>`]  [The native __time_point__ type of the `clock`. Different clocks are permitted to share a __time_point__ definition if it is valid to compare their time_points by comparing their respective __duration_s__. `C1` and `C2` must refer to the same epoch.]]
+    [[`C1::is_monotonic`]        [`const bool`]  [`true` if `t1 <= t2` is always `true`, else `false`. *Note*: A `clock` that can be adjusted backwards is not monotonic]]
+    [[`C1::now()`]        [`C1::time_point`]  [Returns a __time_point__ representing the current point in time.]]
+]
+
+
+Models of Clock:
+
+* __system_clock__
+* __monotonic_clock__
+* __high_resolution_clock__
+* __process_real_cpu_clock__
+* __process_user_cpu_clock__
+* __process_system_cpu_clock__
+* __thread_clock__
+
+[endsect]
+
 [/=============================================]
 [section:time_point_hpp Header `<boost/chrono/time_point.hpp>`]
 [/=============================================]
@@ -2554,34 +2574,6 @@ template <class Clock, class Duration1, class Duration2>
       }
     }
 
-[section:clock `Clock` Requirements]
-
-A clock represents a bundle consisting of a native __duration__, a native __time_point__, and a function `now()` to get the current __time_point__. A clock must meet the requirements in the following Table.
-
-In this table `C1` and `C2` denote `clock` types. `t1` and `t2` are values returned from `C1::now()` where the call returning `t1` happens before the call returning `t2` and both of these calls happen before `C1::time_point::max()`.
-
-[table Clock Requirements
-    [[expression]        [return type]  [operational semantics]]
-    [[`C1::rep`]        [An arithmetic type or class emulating an arithmetic type. ]  [The representation type of the native __duration__ and __time_point__.]]
-    [[`C1::period`]        [`ratio`]  [The tick period of the clock in seconds.]]
-    [[`C1::duration`]        [`chrono::duration<C1::rep, C1::period>`]  [The native __duration__ type of the `clock`.]]
-    [[`C1::time_point`]        [`chrono::time_point<C1> or chrono::time_point<C2, C1::duration>`]  [The native __time_point__ type of the `clock`. Different clocks are permitted to share a __time_point__ definition if it is valid to compare their time_points by comparing their respective __duration_s__. `C1` and `C2` must refer to the same epoch.]]
-    [[`C1::is_monotonic`]        [`const bool`]  [`true` if `t1 <= t2` is always `true`, else `false`. *Note*: A `clock` that can be adjusted backwards is not monotonic]]
-    [[`C1::now()`]        [`C1::time_point`]  [Returns a __time_point__ representing the current point in time.]]
-]
-
-
-Models of Clock:
-
-* __system_clock__
-* __monotonic_clock__
-* __high_resolution_clock__
-* __process_real_cpu_clock__
-* __process_user_cpu_clock__
-* __process_system_cpu_clock__
-* __thread_clock__
-
-[endsect]
 
 [section:system_clock Class `system_clock`]
 

@@ -5,7 +5,7 @@
       recommendation</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
-<link rel="start" href="../../index.html" title="Boost.Chrono">
+<link rel="start" href="../../index.html" title="Boost.Chrono 0.5.0">
 <link rel="up" href="../reference.html" title=" Reference ">
 <link rel="prev" href="../reference.html" title=" Reference ">
 <link rel="next" href="other_clocks.html" title=" Other clocks">
@@ -31,10 +31,8 @@
 </h3></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
-<dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp"> Header
-        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
-<dd><dl><dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.conf">
-          Configuration macros</a></span></dt></dl></dd>
+<dd><dl><dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.conf"> Configuration
+          macros</a></span></dt></dl></dd>
 <dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp"> Header
         <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">duration</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
 <dd><dl>
@@ -51,6 +49,7 @@
 <dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs">
           <code class="computeroutput"><span class="identifier">duration</span></code> typedefs</a></span></dt>
 </dl></dd>
+<dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.clock"> <code class="computeroutput"><span class="identifier">Clock</span></code> Requirements</a></span></dt>
 <dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp"> Header
         <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">time_point</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
 <dd><dl>
@@ -66,8 +65,6 @@
 <dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp"> Header
         <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">system_clocks</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.clock">
-          <code class="computeroutput"><span class="identifier">Clock</span></code> Requirements</a></span></dt>
 <dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock">
           Class <code class="computeroutput"><span class="identifier">system_clock</span></code></a></span></dt>
 <dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC">
@@ -84,34 +81,18 @@
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_chrono.reference.cpp0x.chrono_hpp"></a><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp" title=" Header &lt;boost/chrono.hpp&gt;"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
 </h4></div></div></div>
-<p>
-          This file is a redirection to <code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span></code>
-          including in addition registration for <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> class templates to
-          Boost.Typeof.
-        </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">typeof</span><span class="special">/</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-</pre>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.reference.cpp0x.chrono_chrono_hpp"></a><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp" title=" Header
-        &lt;boost/chrono/chrono.hpp&gt;"> Header
-        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
-</h4></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.conf">
-          Configuration macros</a></span></dt></dl></div>
+<div class="toc"><dl><dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.conf"> Configuration
+          macros</a></span></dt></dl></div>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">duration</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">time_point</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">system_clocks</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">typeof</span><span class="special">/</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 </pre>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="boost_chrono.reference.cpp0x.chrono_chrono_hpp.conf"></a><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.conf" title="
-          Configuration macros">
-          Configuration macros</a>
+<a name="boost_chrono.reference.cpp0x.chrono_hpp.conf"></a><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.conf" title=" Configuration
+          macros"> Configuration
+          macros</a>
 </h5></div></div></div>
 <p>
             When BOOST_NO_STATIC_ASSERT is defined, the user can select the way static
@@ -129,10 +110,10 @@
                 BOOST_CHRONO_USES_ARRAY_ASSERT: define it if you want to use internal
                 static asertions
               </li>
-<li>
-                nothing if you don't want static asertions
-              </li>
 </ul></div>
+<p>
+            The default vaule behavior is as BOOST_CHRONO_USES_ARRAY_ASSERT was defined.
+          </p>
 <p>
             When BOOST_CHRONO_USES_MPL_ASSERT is not defined the following symbols
             are defined as
@@ -1368,6 +1349,209 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.reference.cpp0x.clock"></a><a href="cpp0x.html#boost_chrono.reference.cpp0x.clock" title=" Clock Requirements"> <code class="computeroutput"><span class="identifier">Clock</span></code> Requirements</a>
+</h4></div></div></div>
+<p>
+          A clock represents a bundle consisting of a native <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>, a native <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>, and a function <code class="computeroutput"><span class="identifier">now</span><span class="special">()</span></code>
+          to get the current <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>. A clock must meet
+          the requirements in the following Table.
+        </p>
+<p>
+          In this table <code class="computeroutput"><span class="identifier">C1</span></code> and <code class="computeroutput"><span class="identifier">C2</span></code> denote <code class="computeroutput"><span class="identifier">clock</span></code>
+          types. <code class="computeroutput"><span class="identifier">t1</span></code> and <code class="computeroutput"><span class="identifier">t2</span></code> are values returned from <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>
+          where the call returning <code class="computeroutput"><span class="identifier">t1</span></code>
+          happens before the call returning <code class="computeroutput"><span class="identifier">t2</span></code>
+          and both of these calls happen before <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">::</span><span class="identifier">max</span><span class="special">()</span></code>.
+        </p>
+<div class="table">
+<a name="boost_chrono.reference.cpp0x.clock.clock_requirements"></a><p class="title"><b>Table&#160;1.&#160;Clock Requirements</b></p>
+<table class="table" summary="Clock Requirements">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    expression
+                  </p>
+                </th>
+<th>
+                  <p>
+                    return type
+                  </p>
+                </th>
+<th>
+                  <p>
+                    operational semantics
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">rep</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    An arithmetic type or class emulating an arithmetic type.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    The representation type of the native <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">period</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">ratio</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    The tick period of the clock in seconds.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">duration</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">C1</span><span class="special">::</span><span class="identifier">rep</span><span class="special">,</span>
+                    <span class="identifier">C1</span><span class="special">::</span><span class="identifier">period</span><span class="special">&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    The native <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> type of the
+                    <code class="computeroutput"><span class="identifier">clock</span></code>.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">time_point</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">C1</span><span class="special">&gt;</span>
+                    <span class="keyword">or</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">C2</span><span class="special">,</span> <span class="identifier">C1</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    The native <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> type of the
+                    <code class="computeroutput"><span class="identifier">clock</span></code>. Different
+                    clocks are permitted to share a <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> definition
+                    if it is valid to compare their time_points by comparing their
+                    respective <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a>. <code class="computeroutput"><span class="identifier">C1</span></code> and <code class="computeroutput"><span class="identifier">C2</span></code>
+                    must refer to the same epoch.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">is_monotonic</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">const</span> <span class="keyword">bool</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">true</span></code> if <code class="computeroutput"><span class="identifier">t1</span> <span class="special">&lt;=</span>
+                    <span class="identifier">t2</span></code> is always <code class="computeroutput"><span class="keyword">true</span></code>, else <code class="computeroutput"><span class="keyword">false</span></code>.
+                    <span class="bold"><strong>Note</strong></span>: A <code class="computeroutput"><span class="identifier">clock</span></code>
+                    that can be adjusted backwards is not monotonic
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">time_point</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Returns a <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> representing
+                    the current point in time.
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>
+          Models of Clock:
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              <a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+          Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a>
+            </li>
+<li>
+              <a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
+          Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a>
+            </li>
+<li>
+              <a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.high_resolution_clock" title="
+          Class high_resolution_clock"><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a>
+            </li>
+<li>
+              <a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
+          Class process_real_cpu_clock"><code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code></a>
+            </li>
+<li>
+              <a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock" title="
+          Class process_user_cpu_clock"><code class="computeroutput"><span class="identifier">process_user_cpu_clock</span></code></a>
+            </li>
+<li>
+              <a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock" title="
+          Class process_system_cpu_clock"><code class="computeroutput"><span class="identifier">process_system_cpu_clock</span></code></a>
+            </li>
+<li>
+              <a href="other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
+          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a>
+            </li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
 <a name="boost_chrono.reference.cpp0x.time_point_hpp"></a><a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp" title=" Header
         &lt;boost/chrono/time_point.hpp&gt;"> Header
         <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">time_point</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
@@ -1529,8 +1713,7 @@
 <span class="special">};</span>
 </pre>
 <p>
-            Clock must meet the <a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.clock" title="
-          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code> requirements</a>.
+            Clock must meet the <a href="cpp0x.html#boost_chrono.reference.cpp0x.clock" title=" Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code> requirements</a>.
           </p>
 <p>
             Duration must be an instantiation of <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
@@ -1903,8 +2086,6 @@
         <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">system_clocks</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
 </h4></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.clock">
-          <code class="computeroutput"><span class="identifier">Clock</span></code> Requirements</a></span></dt>
 <dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock">
           Class <code class="computeroutput"><span class="identifier">system_clock</span></code></a></span></dt>
 <dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC">
@@ -1928,214 +2109,6 @@
   <span class="special">}</span>
 <span class="special">}</span>
 </pre>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h5 class="title">
-<a name="boost_chrono.reference.cpp0x.system_clocks_hpp.clock"></a><a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.clock" title="
-          Clock Requirements">
-          <code class="computeroutput"><span class="identifier">Clock</span></code> Requirements</a>
-</h5></div></div></div>
-<p>
-            A clock represents a bundle consisting of a native <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>, a native <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>, and a function
-            <code class="computeroutput"><span class="identifier">now</span><span class="special">()</span></code>
-            to get the current <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>. A clock must meet
-            the requirements in the following Table.
-          </p>
-<p>
-            In this table <code class="computeroutput"><span class="identifier">C1</span></code> and
-            <code class="computeroutput"><span class="identifier">C2</span></code> denote <code class="computeroutput"><span class="identifier">clock</span></code> types. <code class="computeroutput"><span class="identifier">t1</span></code>
-            and <code class="computeroutput"><span class="identifier">t2</span></code> are values returned
-            from <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>
-            where the call returning <code class="computeroutput"><span class="identifier">t1</span></code>
-            happens before the call returning <code class="computeroutput"><span class="identifier">t2</span></code>
-            and both of these calls happen before <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">::</span><span class="identifier">max</span><span class="special">()</span></code>.
-          </p>
-<div class="table">
-<a name="boost_chrono.reference.cpp0x.system_clocks_hpp.clock.clock_requirements"></a><p class="title"><b>Table&#160;1.&#160;Clock Requirements</b></p>
-<table class="table" summary="Clock Requirements">
-<colgroup>
-<col>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>
-                    <p>
-                      expression
-                    </p>
-                  </th>
-<th>
-                    <p>
-                      return type
-                    </p>
-                  </th>
-<th>
-                    <p>
-                      operational semantics
-                    </p>
-                  </th>
-</tr></thead>
-<tbody>
-<tr>
-<td>
-                    <p>
-                      <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">rep</span></code>
-                    </p>
-                  </td>
-<td>
-                    <p>
-                      An arithmetic type or class emulating an arithmetic type.
-                    </p>
-                  </td>
-<td>
-                    <p>
-                      The representation type of the native <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>.
-                    </p>
-                  </td>
-</tr>
-<tr>
-<td>
-                    <p>
-                      <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">period</span></code>
-                    </p>
-                  </td>
-<td>
-                    <p>
-                      <code class="computeroutput"><span class="identifier">ratio</span></code>
-                    </p>
-                  </td>
-<td>
-                    <p>
-                      The tick period of the clock in seconds.
-                    </p>
-                  </td>
-</tr>
-<tr>
-<td>
-                    <p>
-                      <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">duration</span></code>
-                    </p>
-                  </td>
-<td>
-                    <p>
-                      <code class="computeroutput"><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">C1</span><span class="special">::</span><span class="identifier">rep</span><span class="special">,</span>
-                      <span class="identifier">C1</span><span class="special">::</span><span class="identifier">period</span><span class="special">&gt;</span></code>
-                    </p>
-                  </td>
-<td>
-                    <p>
-                      The native <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> type of the
-                      <code class="computeroutput"><span class="identifier">clock</span></code>.
-                    </p>
-                  </td>
-</tr>
-<tr>
-<td>
-                    <p>
-                      <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">time_point</span></code>
-                    </p>
-                  </td>
-<td>
-                    <p>
-                      <code class="computeroutput"><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">C1</span><span class="special">&gt;</span>
-                      <span class="keyword">or</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">C2</span><span class="special">,</span> <span class="identifier">C1</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&gt;</span></code>
-                    </p>
-                  </td>
-<td>
-                    <p>
-                      The native <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> type of
-                      the <code class="computeroutput"><span class="identifier">clock</span></code>.
-                      Different clocks are permitted to share a <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> definition
-                      if it is valid to compare their time_points by comparing their
-                      respective <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>'s</a>. <code class="computeroutput"><span class="identifier">C1</span></code> and <code class="computeroutput"><span class="identifier">C2</span></code>
-                      must refer to the same epoch.
-                    </p>
-                  </td>
-</tr>
-<tr>
-<td>
-                    <p>
-                      <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">is_monotonic</span></code>
-                    </p>
-                  </td>
-<td>
-                    <p>
-                      <code class="computeroutput"><span class="keyword">const</span> <span class="keyword">bool</span></code>
-                    </p>
-                  </td>
-<td>
-                    <p>
-                      <code class="computeroutput"><span class="keyword">true</span></code> if <code class="computeroutput"><span class="identifier">t1</span> <span class="special">&lt;=</span>
-                      <span class="identifier">t2</span></code> is always <code class="computeroutput"><span class="keyword">true</span></code>, else <code class="computeroutput"><span class="keyword">false</span></code>.
-                      <span class="bold"><strong>Note</strong></span>: A <code class="computeroutput"><span class="identifier">clock</span></code>
-                      that can be adjusted backwards is not monotonic
-                    </p>
-                  </td>
-</tr>
-<tr>
-<td>
-                    <p>
-                      <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>
-                    </p>
-                  </td>
-<td>
-                    <p>
-                      <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">time_point</span></code>
-                    </p>
-                  </td>
-<td>
-                    <p>
-                      Returns a <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> representing
-                      the current point in time.
-                    </p>
-                  </td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>
-            Models of Clock:
-          </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-                <a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
-          Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a>
-              </li>
-<li>
-                <a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
-          Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a>
-              </li>
-<li>
-                <a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.high_resolution_clock" title="
-          Class high_resolution_clock"><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a>
-              </li>
-<li>
-                <a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
-          Class process_real_cpu_clock"><code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code></a>
-              </li>
-<li>
-                <a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock" title="
-          Class process_user_cpu_clock"><code class="computeroutput"><span class="identifier">process_user_cpu_clock</span></code></a>
-              </li>
-<li>
-                <a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock" title="
-          Class process_system_cpu_clock"><code class="computeroutput"><span class="identifier">process_system_cpu_clock</span></code></a>
-              </li>
-<li>
-                <a href="other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
-          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a>
-              </li>
-</ul></div>
-</div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock"></a><a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
@@ -2175,8 +2148,7 @@
 </pre>
 <p>
             <code class="computeroutput"><span class="identifier">system_clock</span></code> satisfy
-            the <a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.clock" title="
-          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code> requirements</a>:
+            the <a href="cpp0x.html#boost_chrono.reference.cpp0x.clock" title=" Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code> requirements</a>:
           </p>
 <div class="itemizedlist"><ul type="disc"><li>
                 <code class="computeroutput"><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">duration</span><span class="special">::</span><span class="identifier">min</span><span class="special">()</span>
@@ -2236,8 +2208,8 @@
 <p>
             <a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
           Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a> satisfy the
-            <a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.clock" title="
-          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code> requirements</a>.
+            <a href="cpp0x.html#boost_chrono.reference.cpp0x.clock" title=" Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code>
+            requirements</a>.
           </p>
 <p>
             <a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
@@ -2269,8 +2241,7 @@
 </h5></div></div></div>
 <p>
             <code class="computeroutput"><span class="identifier">high_resolution_clock</span></code>
-            satisfy the <a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.clock" title="
-          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code> requirements</a>.
+            satisfy the <a href="cpp0x.html#boost_chrono.reference.cpp0x.clock" title=" Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code> requirements</a>.
           </p>
 <pre class="programlisting"><span class="preprocessor">#ifdef</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC" title="
           Macro BOOST_CHRONO_HAS_CLOCK_MONOTONIC"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code></a>
