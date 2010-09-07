@@ -9,6 +9,7 @@
 
 [article Boost.TypeTraits.Ext
     [quickbook 1.5]
+    [version 0.1.0]
     [authors [Hinnant, Howard]]
     [authors [Dawes, Beman]]
     [authors [Botet Escriba, Vicente J.]]
@@ -80,8 +81,11 @@ Finally, you can mentally add the following to any code fragments in this docume
 [section Motivation]
 [/=================]
 
-[heading Time]
+[heading common_type]
 
+__common_type__ has been a recurring theme in many places for many years. We've previously known it as `promote` and examples of it are spread throughout boost. It has been reinvented independently several times, because it is so useful.
+
+Andrei Alexandrescu recently pointed us at a D library: std.traits - D Programming Language - Digital Mars, which became the motivation for this particular name, and the variadic nature of [@http://www.digitalmars.com/d/2.0/phobos/std_traits.html#CommonType this trait].
 
 See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] which is very informative and provides motivation for key design decisions for __common_type__.
 
@@ -238,9 +242,6 @@ Ubuntu Linux with GCC 4.2.4
 
 [section Common Type]
 
-__common_type__ has been a recurring theme in many places for many years. We've previously known it as promote and examples of it are spread throughout boost. It has been reinvented independently several times, because it is so useful.
-
-Andrei Alexandrescu recently pointed us at a D library: std.traits - D Programming Language - Digital Mars, which became the motivation for this particular name, and the variadic nature of [@http://www.digitalmars.com/d/2.0/phobos/std_traits.html#CommonType this trait].
 
 [section So What is `common_type` and How can I use it?]
 
@@ -249,14 +250,13 @@ In a nutshell, __common_type__ is a trait that takes 1 or more types, and return
 [*Example:]
 
     template <class T, class U>
-    typename __common_type__<complex<T>, complex<U> >::type
-    operator+(complex<T>, complex<U>);
-
-In the above example, "mixed-mode" complex arithmetic is allowed. The return type is described by __common_type__. For example the resulting type of adding a `complex<int>` and `complex<double>` might be a `complex<double>`. Another choice for the author might be:
-
-    template <class T, class U>
     complex<typename __common_type__<T, U>::type>
     operator+(complex<T>, complex<U>);
+
+
+In the above example, "mixed-mode" complex arithmetic is allowed. The return type is described by __common_type__. For example the resulting type of adding a `complex<int>` and `complex<double>` might be a `complex<double>`. 
+
+
 
 Here is how someone might produce a variadic comparison function:
 
@@ -268,9 +268,20 @@ This is a very useful and broadly applicable utility. The duration<> and time_po
 
 [endsect]
 
-[section How to get the common type of inter-type with explicit conversions?]
+[section How to get the common type of types with explicit conversions?]
 
-The default definition of __common_type__ demands the conversion be implicit. However the trait can be specialized for user-defined types which want to limit their inter-type conversions to explicit, and yet still want to interoperate with the __common_type__ facility.
+Another choice for the author of the preceding operator could be
+
+    template <class T, class U>
+    typename __common_type__<complex<T>, complex<U> >::type
+    operator+(complex<T>, complex<U>);
+
+As the default definition of __common_type__ demands the conversion be implicit, we need to specialize the trait for complex types as follows.
+
+    template <class T, class U>
+    struct __common_type__<complex<T>, complex<U> > {
+        typedef complex< __common_type__<T, U> > type;
+    };
 
 
 [endsect]
@@ -374,7 +385,8 @@ When BOOST_NO_STATIC_ASSERT is defined, the user can select the way static asser
 * BOOST_COMMON_TYPE_USES_STATIC_ASSERT: define it if you want to use Boost.StaticAssert
 * BOOST_COMMON_TYPE_USES_MPL_ASSERT: define it if you want to use Boost.MPL static asertions
 * BOOST_COMMON_TYPE_USES_ARRAY_ASSERT: define it if you want to use internal static asertions
-* nothing if you don't want static asertions
+
+The default vaule behavior is as BOOST_COMMON_TYPE_USES_ARRAY_ASSERT was defined.
 
 When BOOST_COMMON_TYPE_USES_MPL_ASSERT is not defined the following symbols are defined as
 
@@ -484,7 +496,7 @@ Declares a function template convert which only participats in overloading if th
 [/======================================]
 [section:rationale Appendix B: Rationale]
 
-See [http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] which is very informative and provides motivation for key design decisions. 
+See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] which is very informative and provides motivation for key design decisions. 
 
 [endsect]
 
@@ -498,18 +510,21 @@ The C++03 implementation of __common_type__ has some limitations.
 * Absence of variadic template: The number of template parameters is limited to 3.
 * decltype and rvalue references missing: the default common-type is based on these C++0x features. When these are not present, BoostTypeOf is used instead of decltype, and rvalue references are not used at all, and replaced by the type itself.
 
-Jeffrey Lee Hellrung, Jr. has reache dto implement __common_type__ without using Boost.TypeOf. The idea is that the number of possible types of the expression __declval__<bool>() ? __declval__<T>() : __declval__<U>() are limited. His implementation enumerates the possible types and check if there is only one common type.
+Jeffrey Lee Hellrung, Jr. has reache dto implement __common_type__ without using Boost.TypeOf. The idea is that the number of possible types of the expression `__declval__<bool>() ? __declval__<T>() : __declval__<U>()` are limited. His implementation enumerates the possible types and check if there is only one common type.
 
 [endsect]
 
 [/======================================================]
 [section:faq Appendix D: FAQ]
 
+
 [heading How important is the order of the common_type<> template arguments?]
 
-The order of the template parameters is important. First __common_type__<> is not able to find out common type if it is not present and second
-__common_type__<A,B,C>::type is equivalent to __common_type__<__common_type__<A,B>::type, C>::type.
+The order of the template parameters is important. 
 
+`common_type<A,B,C>::type` is not equivalent to `common_type<C,A,B>::type`, but to `common_type<common_type<A,B>::type, C>::type`.
+
+Consider
 
     struct A {};
     struct B {};
@@ -522,15 +537,88 @@ __common_type__<A,B,C>::type is equivalent to __common_type__<__common_type__<A,
         }
     };
 
-    #if 0
-    typedef boost::__common_type__<A, B, C>::type ABC; // DO not compile
-    #else
-    typedef boost::__common_type__<C, B, A>::type ABC;
-    #endif
+The following doesn't compile
+
+    typedef boost::common_type<A, B, C>::type ABC; // Does not compile
+
+while 
+
+    typedef boost::common_type<C, A, B>::type ABC;
+
+compiles.
+
+Thus, as `common_type<A,B>::type` is undefined,  `common_type__<A,B,C>::type` is also undefined.
+
+It is intended that clients who wish for `common_type<A, B>` to be well
+defined to define it themselves:
+
+    namespace boost
+    {
+
+    template <>
+    struct common_type<A, B> {typedef C type;};
+
+    } 
+
+Now this client can ask for `common_type<A, B, C>` (and get
+the same answer).
+
+Clients wanting to ask `common_type<A, B, C>` in any order and get the same result need to add in addition:
+
+    namespace boost
+    {
+
+    template <> struct common_type<B, A>
+    : public common_type<A, B> {};
+
+    } 
+
+This is needed as the specialization of `common_type<A, B>` is not be used implicitly for `common_type<B, A>`.
+
+[heading Can the common_type of two types be a third type?]
+
+Given the preceding example, one might expect `common_type<A,B>::type` to be `C` without any intervention from the user. But the default `common_type<>` implementation doesn't grant that. It is intended that clients who wish for `common_type<A, B>` to be well defined to define it themselves:
+
+    namespace boost
+    {
+
+    template <>
+    struct common_type<A, B> {typedef C type;};
+
+    template <> struct common_type<B, A>
+    : public common_type<A, B> {};
+
+    } 
+
+Now this client can ask for `common_type<A, B>`.
+
+[heading How common_type behaves with pointers?]
+
+Consider
+
+    struct C { }:
+    struct B : C { };
+    struct A : C { };
 
 
-Thus, as __common_type__<A,B>::type is undefined,  __common_type__<A,B,C>::type is also undefined.
+Shouldn't `common_type<A*,B*>::type` be `C*`? I would say yes, but the default implementation make it ill-formed.
 
+The library could add a specialization for pointers, as
+
+    namespace boost
+    {
+
+        template <typename A, typename B>
+        struct common_type<A*, B*> {
+            typedef common_type<A, B>* type;
+        };
+    }
+    
+But tin the absence of a motivating use cases, we prefere to don't add more than what the standard specifies. 
+
+Of course the user can always make this specialization.
+
+[/
 [heading Can you explain the pros/cons of common_type against Boost.Typeof?]
 
 Even if in a first look they sound to be close, __common_type__ and typeof have
@@ -542,16 +630,17 @@ and the needed Typeof registrations, you can do
 
 Suppose I have a mixed type vector2 class with a magnitude_squared function defined as:
 
-template <typename X, typename Y>
-BOOST_TYPEOF_TPL(X() * X() + Y() * Y()) magnitude_squared(const
-vector2<X, Y> &v) {
-   return v.x * v.x + v.y * v.y;
-}
+    template <typename X, typename Y>
+    BOOST_TYPEOF_TPL(X() * X() + Y() * Y()) magnitude_squared(const
+    vector2<X, Y> &v) {
+       return v.x * v.x + v.y * v.y;
+    }
 
 
 __common_type__ is closer in nature to promote_args<class ...T> in boost/math/tools/promotion.hpp than it is to Boost.Typeof, though it is not exactly the same as promote_args either.  __common_type__<T1, T2>::type simply represents the result of some operation on T1 and T2, and defaults to the type obtained by putting T1 and T2 into a conditional statement.
 
 It is meant to be customizable (via specialization) if this default is not appropriate.
+]
 
 
 [endsect]
