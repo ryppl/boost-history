@@ -860,53 +860,10 @@ bool interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
     return Interval_Map::contains(*this, sub_segment);
 }
 
-//CL JODO unify
-//{
-//    interval_type sub_interval = sub_segment.first;
-//    if(itl::is_empty(sub_interval)) 
-//        return true;
-//
-//    std::pair<const_iterator, const_iterator> exterior = equal_range(sub_interval);
-//    if(exterior.first == exterior.second)
-//        return false;
-//
-//    const_iterator last_overlap = prior(exterior.second);
-//
-//    if(!(sub_segment.second == exterior.first->second) )
-//        return false;
-//
-//    return
-//          itl::contains(hull(exterior.first->first, last_overlap->first), sub_interval)
-//      &&  Interval_Map::is_joinable(*this, exterior.first, last_overlap);
-//}
-
-
 
 //==============================================================================
 //= Size
 //==============================================================================
-
-/*CL
-template 
-<
-    class SubType, class DomainT, class CodomainT, class Traits, 
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, 
-    ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-typename interval_base_map<SubType,DomainT,CodomainT,Traits,
-                           Compare,Combine,Section,Interval,Alloc>::size_type 
-interval_base_map<SubType,DomainT,CodomainT,Traits,
-                  Compare,Combine,Section,Interval,Alloc>::cardinality()const
-{
-    using namespace boost::mpl;
-    return if_<
-                bool_<is_continuous<DomainT>::value>,
-                continuous_interval_container,
-                discrete_interval_container
-              >
-              ::type::cardinality(*this);
-}
-*/
 
 template 
 <

@@ -182,14 +182,84 @@ gap_insert(               Type&                object,
     return object._insert(prior_, value_type(inter_val, version<Combiner>()(co_val)));
 }
 
+template <class Type, class Combiner>
+inline typename Type::iterator
+_map_insert(               Type&                object, 
+                  typename Type::iterator       prior_, 
+            const typename Type::interval_type& inter_val, 
+            const typename Type::codomain_type& co_val)
+{
+    typedef typename Type::value_type value_type;
 
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-template<class Type, int absorbs_neutrons>
+    return object._insert(prior_, value_type(inter_val, version<Combiner>()(co_val)));
+}
+
+template <class Type, class Combiner>
+inline std::pair<typename Type::iterator, bool>
+_map_insert(               Type&                object, 
+            const typename Type::interval_type& inter_val, 
+            const typename Type::codomain_type& co_val)
+{
+    typedef typename Type::value_type value_type;
+
+    return object._insert(value_type(inter_val, version<Combiner>()(co_val)));
+}
+
+template<class Type, class Combiner, int absorbs_neutrons>
 struct on_neutric;
 
-template<class Type>
-struct on_neutric<Type, false>
+template <class Type, class Combiner>
+inline std::pair<typename Type::iterator, bool>
+informing_add(          Type&                object,
+		 const typename Type::iterator&      prior_, 
+         const typename Type::interval_type& inter_val, 
+		 const typename Type::codomain_type& co_val   )
+{
+    typedef typename Type::value_type value_type;
+    typedef typename Type::iterator   iterator;
+	typedef typename on_neutric<Type,Combiner,
+		                        absorbs_neutrons<Type>::value>::type on_neutric_;
+
+    // Never try to insert a neutron into a neutron absorber here:
+	BOOST_ASSERT(!(on_neutric_::is_absorbable(co_val)));
+
+    iterator inserted_ 
+        = object._insert(prior_, value_type(inter_val, Combiner::neutron()));
+
+    if(inserted_->first == inter_val && inserted_->second == Combiner::neutron())
+    {
+        Combiner()(inserted_->second, co_val);
+        return std::pair<iterator,bool>(inserted_, true);
+    }
+    else
+        return std::pair<iterator,bool>(inserted_, false);
+}
+
+template <class Type>
+inline std::pair<typename Type::iterator, bool>
+informing_insert(       Type&                object,
+		 const typename Type::iterator&      prior_, 
+         const typename Type::interval_type& inter_val, 
+		 const typename Type::codomain_type& co_val   )
+{
+    typedef typename Type::value_type value_type;
+    typedef typename Type::iterator   iterator;
+
+	iterator inserted_
+        = object._insert(prior_, value_type(inter_val, co_val));
+
+    if(inserted_ == prior_)
+        return std::pair<iterator,bool>(inserted_, false);
+    else if(inserted_->first == inter_val)
+        return std::pair<iterator,bool>(inserted_, true);
+    else
+        return std::pair<iterator,bool>(inserted_, false);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+template<class Type, class Combiner>
+struct on_neutric<Type, Combiner, false>
 {
     typedef on_neutric type;
     typedef typename Type::codomain_type codomain_type;
@@ -197,8 +267,8 @@ struct on_neutric<Type, false>
     static bool is_absorbable(const codomain_type&){ return false; }
 };
 
-template<class Type>
-struct on_neutric<Type, true>
+template<class Type, class Combiner>
+struct on_neutric<Type, Combiner, true>
 {
     typedef on_neutric type;
     typedef typename Type::codomain_type codomain_type;
@@ -207,7 +277,7 @@ struct on_neutric<Type, true>
     static bool is_absorbable(const codomain_type& co_value)
     {
         return absorbs_neutrons<Type>::value 
-            && co_value == codomain_combine::neutron();
+            && co_value == Combiner::neutron();
     }
 };
 
@@ -221,8 +291,9 @@ struct on_style<Type, interval_combine::splitting>
 {
     typedef on_style type;
     typedef typename Type::iterator iterator;
-    static void handle_inserted(Type&, iterator, iterator&){}
-    static iterator handle_end_inserted(Type&, iterator it_){ return it_; }
+
+    static iterator handle_inserted(Type&, iterator it_){ return it_; }
+    static void handle_inserted(Type&, iterator, iterator&)      {}
 };
 
 template<class Type>
@@ -231,18 +302,17 @@ struct on_style<Type, interval_combine::joining>
     typedef on_style type;
     typedef typename Type::iterator iterator;
 
+    static iterator handle_inserted(Type& object, iterator it_)
+    { 
+		return join_neighbours(object, it_); 
+	}
+
     static void handle_inserted(Type& object, iterator inserted_, iterator& it_)
     {
         join_left(object, inserted_);
         // after filling that gap there may be another joining opportunity
         join_left(object, it_);
     }
-
-    static iterator handle_end_inserted(Type& object, iterator inserted_)
-    {
-        return join_neighbours(object, inserted_);
-    }
-
 };
 
 
@@ -450,7 +520,7 @@ struct on_segment<Type, Combiner, true, interval_combine::joining>
 //------------------------------------------------------------------------------
 
 //==============================================================================
-//= Addition
+//= Addition detail
 //==============================================================================
 
 template<class Type, class Combiner>
@@ -568,7 +638,98 @@ void add_rear(               Type&                object,
 }
 
 //==============================================================================
-//= Subtract
+//= Addition
+//==============================================================================
+template<class Type, class Combiner>
+typename Type::iterator add(               Type&             object,
+                            const typename Type::value_type& addend)
+{
+    typedef typename Type::interval_type interval_type;
+    typedef typename Type::value_type    value_type;
+    typedef typename Type::codomain_type codomain_type;
+    typedef typename Type::iterator      iterator;
+    typedef typename on_style<Type,Type::fineness>::type on_style_;
+    typedef typename on_neutric<Type,Combiner,
+                                absorbs_neutrons<Type>::value>::type on_neutric_;
+
+    const interval_type& inter_val = addend.first;
+    if(itl::is_empty(inter_val)) 
+        return object.end();
+
+    const codomain_type& co_val = addend.second;
+	if(on_neutric_::is_absorbable(co_val))
+        return object.end();
+
+    std::pair<iterator,bool> insertion 
+        = _map_insert<Type,Combiner>(object, inter_val, co_val);
+
+    if(insertion.second)
+		return on_style_::handle_inserted(object, insertion.first);
+    else
+    {
+        // Detect the first and the end iterator of the collision sequence
+        iterator first_ = object.lower_bound(inter_val),
+                 last_  = insertion.first;
+        //assert(end_ == this->_map.upper_bound(inter_val));
+
+        iterator it_ = first_;
+        interval_type rest_interval = inter_val;
+
+        Interval_Set::add_front              (object, rest_interval,         it_       );
+        Interval_Map::add_main<Type,Combiner>(object, rest_interval, co_val, it_, last_);
+        Interval_Map::add_rear<Type,Combiner>(object, rest_interval, co_val, it_       );
+		return it_;
+    }
+}
+
+
+template<class Type, class Combiner>
+typename Type::iterator add(               Type&             object,
+                                  typename Type::iterator    prior_,
+                            const typename Type::value_type& addend)
+{
+    typedef typename Type::interval_type interval_type;
+    typedef typename Type::value_type    value_type;
+    typedef typename Type::codomain_type codomain_type;
+    typedef typename Type::iterator      iterator;
+    typedef typename on_style<Type,Type::fineness>::type on_style_;
+    typedef typename on_neutric<Type,Combiner,
+                                absorbs_neutrons<Type>::value>::type on_neutric_;
+
+    const interval_type& inter_val = addend.first;
+    if(itl::is_empty(inter_val)) 
+        return prior_;
+
+    const codomain_type& co_val = addend.second;
+	if(on_neutric_::is_absorbable(co_val))
+        return prior_;
+
+    std::pair<iterator,bool> insertion 
+        = informing_add<Type,Combiner>(object,prior_, inter_val, co_val);
+
+    if(insertion.second)
+		return on_style_::handle_inserted(object, insertion.first);
+    else
+    {
+        // Detect the first and the end iterator of the collision sequence
+        std::pair<iterator,iterator> overlap = object.equal_range(inter_val);
+        iterator it_   = overlap.first,
+                 last_ = overlap.second;
+                 --last_;
+        interval_type rest_interval = inter_val;
+
+        Interval_Set::add_front              (object, rest_interval,         it_       );
+        Interval_Map::add_main<Type,Combiner>(object, rest_interval, co_val, it_, last_);
+        Interval_Map::add_rear<Type,Combiner>(object, rest_interval, co_val, it_       );
+
+        return it_;
+    }
+}
+
+
+
+//==============================================================================
+//= Subtract detail
 //==============================================================================
 
 template<class Type>
@@ -587,8 +748,8 @@ void subtract_front(               Type&                object,
         iterator prior_ = object.prior(it_); 
         const_cast<interval_type&>(it_->first) = left_subtract(it_->first, left_resid);
         object._insert(prior_, value_type(left_resid, it_->second));
-		// The segemnt *it_ is split at inter_val.first(), so as an invariant
-		// segment *it_ is always "under" inter_val and a left_resid is empty.
+        // The segemnt *it_ is split at inter_val.first(), so as an invariant
+        // segment *it_ is always "under" inter_val and a left_resid is empty.
     }
 }
 
@@ -640,6 +801,41 @@ void subtract_rear(               Type&                object,
 }
 
 //==============================================================================
+//= Subtract
+//==============================================================================
+template<class Type, class Combiner>
+void subtract(               Type&             object,
+              const typename Type::value_type& minuend)
+{
+    typedef typename Type::interval_type interval_type;
+    typedef typename Type::value_type    value_type;
+    typedef typename Type::codomain_type codomain_type;
+    typedef typename Type::iterator      iterator;
+    typedef typename on_style<Type,Type::fineness>::type on_style_;
+    typedef typename on_neutric<Type,Combiner,
+                                absorbs_neutrons<Type>::value>::type on_neutric_;
+
+    interval_type inter_val = minuend.first;
+    if(itl::is_empty(inter_val)) 
+        return;
+
+    const codomain_type& co_val = minuend.second;
+    if(on_neutric_::is_absorbable(co_val)) 
+        return;
+
+    std::pair<iterator, iterator> exterior = object.equal_range(inter_val);
+    if(exterior.first == exterior.second)
+        return;
+
+    iterator last_  = prior(exterior.second);
+    iterator it_    = exterior.first;
+    Interval_Map::subtract_front<Type>         (object, inter_val,         it_       );
+    Interval_Map::subtract_main <Type,Combiner>(object,            co_val, it_, last_);
+    Interval_Map::subtract_rear <Type,Combiner>(object, inter_val, co_val, it_       );
+}
+
+
+//==============================================================================
 //= Insertion
 //==============================================================================
 
@@ -671,8 +867,6 @@ void insert_main(               Type&                object,
         {
             inserted_ = object._insert(prior_, value_type(left_gap, co_val));
             on_style_::handle_inserted(object, inserted_, it_);
-
-
         }
 
         // shrink interval
@@ -685,12 +879,89 @@ void insert_main(               Type&                object,
     interval_type end_gap = left_subtract(rest_interval, last_interval);
     if(!itl::is_empty(end_gap))
     {
-        inserted_ =    object._insert(prior_, value_type(end_gap, co_val));
-        it_ = on_style_::handle_end_inserted(object, inserted_);
+        inserted_ = object._insert(prior_, value_type(end_gap, co_val));
+        it_ = on_style_::handle_inserted(object, inserted_);
     }
     else
         it_ = prior_;
 }
+
+
+
+template<class Type>
+typename Type::iterator insert(               Type&             object,
+                               const typename Type::value_type& addend)
+{
+    typedef typename Type::interval_type    interval_type;
+    typedef typename Type::codomain_type    codomain_type;
+    typedef typename Type::iterator         iterator;
+    typedef typename Type::codomain_combine codomain_combine;
+    typedef typename on_style<Type,Type::fineness>::type on_style_;
+    typedef typename on_neutric<Type, codomain_combine,
+                                absorbs_neutrons<Type>::value>::type on_neutric_;
+
+    interval_type inter_val = addend.first;
+    if(itl::is_empty(inter_val)) 
+        return object.end();
+
+    const codomain_type& co_val = addend.second;
+    if(on_neutric_::is_absorbable(co_val)) 
+        return object.end();
+
+    std::pair<iterator,bool> insertion = object._insert(addend);
+
+    if(insertion.second)
+		return on_style_::handle_inserted(object, insertion.first);
+    else
+    {
+        // Detect the first and the end iterator of the collision sequence
+        iterator first_ = object.lower_bound(inter_val),
+                 last_  = insertion.first;
+        //assert((++last_) == this->_map.upper_bound(inter_val));
+        iterator it_ = first_;
+        Interval_Map::insert_main(object, inter_val, co_val, it_, last_);
+		return it_;
+    }
+}
+
+
+template<class Type>
+typename Type::iterator insert(               Type&             object,
+                                     typename Type::iterator    prior_,
+                               const typename Type::value_type& addend)
+{
+    typedef typename Type::interval_type    interval_type;
+    typedef typename Type::codomain_type    codomain_type;
+    typedef typename Type::iterator         iterator;
+    typedef typename Type::codomain_combine codomain_combine;
+    typedef typename on_style<Type,Type::fineness>::type on_style_;
+    typedef typename on_neutric<Type, codomain_combine,
+                                absorbs_neutrons<Type>::value>::type on_neutric_;
+
+    interval_type inter_val = addend.first;
+    if(itl::is_empty(inter_val)) 
+        return prior_;
+
+    const codomain_type& co_val = addend.second;
+    if(on_neutric_::is_absorbable(co_val)) 
+        return prior_;
+
+    std::pair<iterator,bool> insertion 
+        = informing_insert(object, prior_, inter_val, co_val);
+
+    if(insertion.second)
+		return on_style_::handle_inserted(object, insertion.first);
+    {
+        // Detect the first and the end iterator of the collision sequence
+        std::pair<iterator,iterator> overlap = object.equal_range(inter_val);
+        iterator it_    = overlap.first,
+                 last_  = prior(overlap.second);
+        Interval_Map::insert_main(object, inter_val, co_val, it_, last_);
+        return it_;
+    }
+}
+
+
 
 
 //==============================================================================
@@ -704,7 +975,9 @@ void erase(Type& object, const typename Type::value_type& minuend)
     typedef typename Type::codomain_type codomain_type;
     typedef typename Type::value_type    value_type;
     typedef typename Type::iterator      iterator;
-    typedef typename on_neutric<Type,absorbs_neutrons<Type>::value>::type
+    typedef typename on_neutric<Type,
+                                typename Type::codomain_combine,
+                                absorbs_neutrons<Type>::value>::type
                                          on_neutric_;
 
     interval_type inter_val = minuend.first;

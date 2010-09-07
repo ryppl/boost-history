@@ -138,26 +138,6 @@ private:
     void insert_(const value_type& value);
     iterator insert_(iterator prior_, const value_type& value);
     void erase_(const value_type& value);
-
-private:
-    bool insertable(const value_type& value)const
-    { 
-        return !empty(value.first) 
-            && !(Traits::absorbs_neutrons && value.second == codomain_combine::neutron()); 
-    }
-
-    template<class Combiner>
-    void subtract_main(const CodomainT& co_val, iterator& it_, iterator& end_  );
-
-    void subtract_front(const interval_type& inter_val, const CodomainT& co_val, iterator& it_);
-
-    template<class Combiner>
-    void subtract_rear(const interval_type& inter_val, const CodomainT& co_val, iterator& it_);
-
-    void insert_range(const interval_type& inter_val, const CodomainT& co_val, iterator& it_, iterator& end_  );
-
-    void erase_rest(const interval_type& inter_val, const CodomainT& co_val, iterator& it_, iterator& last_);
-
 } ;
 
 
@@ -169,33 +149,7 @@ template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compar
 inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::add_(const value_type& addend)
 {
-    const interval_type& inter_val = addend.first;
-    if(itl::is_empty(inter_val)) 
-        return;
-
-    const CodomainT& co_val = addend.second;
-    if(Traits::absorbs_neutrons && co_val==Combiner::neutron()) 
-        return;
-
-    std::pair<iterator,bool> insertion 
-        = this->template _map_insert<Combiner>(inter_val, co_val);
-
-    if(insertion.second)
-        segmental::join_neighbours(*this, insertion.first);
-    else
-    {
-        // Detect the first and the end iterator of the collision sequence
-        iterator first_ = this->_map.lower_bound(inter_val),
-                 last_  = insertion.first;
-        //assert(end_ == this->_map.upper_bound(inter_val));
-
-        iterator it_ = first_;
-        interval_type rest_interval = inter_val;
-
-        Interval_Set::add_front              (*this, rest_interval,         it_       );
-        Interval_Map::add_main<type,Combiner>(*this, rest_interval, co_val, it_, last_);
-        Interval_Map::add_rear<type,Combiner>(*this, rest_interval, co_val, it_       );
-    }
+    Interval_Map::add<type,Combiner>(*this, addend);
 }
 
 
@@ -205,34 +159,7 @@ inline typename interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,In
     interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::add_(iterator prior_, const value_type& addend)
 {
-    const interval_type& inter_val = addend.first;
-    if(itl::is_empty(inter_val)) 
-        return prior_;
-
-    const CodomainT& co_val = addend.second;
-    if(Traits::absorbs_neutrons && co_val==Combiner::neutron()) 
-        return prior_;
-
-    std::pair<iterator,bool> insertion 
-        = this->template _map_add<Combiner>(prior_, inter_val, co_val);
-
-    if(insertion.second)
-        return segmental::join_neighbours(*this, insertion.first);
-    else
-    {
-        // Detect the first and the end iterator of the collision sequence
-        std::pair<iterator,iterator> overlap = this->_map.equal_range(inter_val);
-        iterator it_   = overlap.first,
-                 last_ = overlap.second;
-                 --last_;
-        interval_type rest_interval = inter_val;
-
-        Interval_Set::add_front              (*this, rest_interval,         it_       );
-        Interval_Map::add_main<type,Combiner>(*this, rest_interval, co_val, it_, last_);
-        Interval_Map::add_rear<type,Combiner>(*this, rest_interval, co_val, it_       );
-
-        return it_;
-    }
+    return Interval_Map::add<type,Combiner>(*this, prior_, addend);
 }
 
 
@@ -244,27 +171,7 @@ template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compar
 void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::subtract_(const value_type& minuend)
 {
-    interval_type inter_val = minuend.first;
-
-    if(itl::is_empty(inter_val)) 
-        return;
-
-    const CodomainT& co_val = minuend.second;
-    if(Traits::absorbs_neutrons && co_val==Combiner::neutron()) 
-        return;
-
-    iterator first_ = this->_map.lower_bound(inter_val);
-    if(first_==this->_map.end()) 
-        return;
-    iterator end_   = this->_map.upper_bound(inter_val);
-    if(first_==end_  ) 
-        return;
-
-    iterator last_  = end_; --last_;
-    iterator it_    = first_;
-    Interval_Map::subtract_front<type>         (*this, inter_val,         it_       );
-    Interval_Map::subtract_main <type,Combiner>(*this,            co_val, it_, last_);
-    Interval_Map::subtract_rear <type,Combiner>(*this, inter_val, co_val, it_       );
+    Interval_Map::subtract<type,Combiner>(*this, minuend);
 }
 
 
@@ -276,27 +183,7 @@ template <typename DomainT, typename CodomainT, class Traits,
 void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::insert_(const value_type& addend)
 {
-    interval_type inter_val = addend.first;
-    if(itl::is_empty(inter_val)) 
-        return;
-
-    const CodomainT& co_val = addend.second;
-    if(Traits::absorbs_neutrons && co_val==codomain_combine::neutron()) 
-        return;
-
-    std::pair<iterator,bool> insertion = this->_map.insert(addend);
-
-    if(insertion.second)
-        segmental::join_neighbours(*this, insertion.first);
-    else
-    {
-        // Detect the first and the end iterator of the collision sequence
-        iterator first_ = this->_map.lower_bound(inter_val),
-                 last_  = insertion.first;
-        //assert((++last_) == this->_map.upper_bound(inter_val));
-        iterator it_ = first_;
-        Interval_Map::insert_main(*this, inter_val, co_val, it_, last_);
-    }
+    Interval_Map::insert(*this, addend);
 }
 
 template <typename DomainT, typename CodomainT, class Traits,
@@ -305,28 +192,7 @@ inline typename interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,In
     interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::insert_(iterator prior_, const value_type& addend)
 {
-    interval_type inter_val = addend.first;
-    if(itl::is_empty(inter_val)) 
-        return prior_;
-
-    const CodomainT& co_val = addend.second;
-    if(Traits::absorbs_neutrons && co_val==codomain_combine::neutron()) 
-        return prior_;
-
-    std::pair<iterator,bool> insertion 
-        = this->template _map_insert<codomain_combine>(prior_, inter_val, co_val);
-
-    if(insertion.second)
-        return segmental::join_neighbours(*this, insertion.first);
-    {
-        // Detect the first and the end iterator of the collision sequence
-        std::pair<iterator,iterator> overlap = this->_map.equal_range(inter_val);
-        iterator it_    = overlap.first,
-                 last_  = overlap.second;
-                 --last_;
-        Interval_Map::insert_main(*this, inter_val, co_val, it_, last_);
-        return it_;
-    }
+    return Interval_Map::insert(*this, prior_, addend);
 }
 
 //-----------------------------------------------------------------------------
