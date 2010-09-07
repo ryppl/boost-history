@@ -42,69 +42,69 @@ template<class Type>
 typename enable_if<is_interval_container<Type>, typename Type::difference_type>::type
 length(const Type&);
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, bool>::type
-contains(const ObjectT& super, const typename ObjectT::segment_type&);
+template<class Type>
+typename enable_if<is_interval_set<Type>, bool>::type
+contains(const Type& super, const typename Type::segment_type&);
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, bool>::type
-contains(const ObjectT& super, const typename ObjectT::element_type&);
+template<class Type>
+typename enable_if<is_interval_set<Type>, bool>::type
+contains(const Type& super, const typename Type::element_type&);
 
 //- add ------------------------------------------------------------------------
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-add(ObjectT&, const typename ObjectT::element_type&);
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+add(Type&, const typename Type::element_type&);
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-add(ObjectT&, const typename ObjectT::segment_type&);
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+add(Type&, const typename Type::segment_type&);
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, typename ObjectT::iterator>::type
-add(ObjectT&, typename ObjectT::iterator, 
-        const typename ObjectT::segment_type&);
+template<class Type>
+typename enable_if<is_interval_set<Type>, typename Type::iterator>::type
+add(Type&, typename Type::iterator, 
+     const typename Type::segment_type&);
 
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-subtract(ObjectT&, const typename ObjectT::element_type&);
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+subtract(Type&, const typename Type::element_type&);
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-subtract(ObjectT&, const typename ObjectT::segment_type&);
-
-//------------------------------------------------------------------------------
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-add_intersection(ObjectT&, const ObjectT&, const typename ObjectT::domain_type&);
-
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-add_intersection(ObjectT&, const ObjectT&, const typename ObjectT::segment_type&);
-
-template<class ObjectT, class OperandT>
-typename enable_if<mpl::and_<is_interval_set<ObjectT>, 
-                             combines_right_to_interval_set<ObjectT, OperandT> >,
-                   ObjectT>::type&
-add_intersection(ObjectT&, const ObjectT&, const OperandT&);
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+subtract(Type&, const typename Type::segment_type&);
 
 //------------------------------------------------------------------------------
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-flip(ObjectT&, const typename ObjectT::domain_type&);
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+add_intersection(Type&, const Type&, const typename Type::domain_type&);
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-flip(ObjectT&, const typename ObjectT::segment_type&);
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+add_intersection(Type&, const Type&, const typename Type::segment_type&);
 
-template<class ObjectT, class OperandT>
-typename enable_if<has_same_concept<is_interval_set, ObjectT, OperandT>, ObjectT>::type&
-JODO_flip(ObjectT&, const OperandT&);
+template<class Type, class OperandT>
+typename enable_if<mpl::and_<is_interval_set<Type>, 
+                             combines_right_to_interval_set<Type, OperandT> >,
+                   Type>::type&
+add_intersection(Type&, const Type&, const OperandT&);
 
 //------------------------------------------------------------------------------
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-join(ObjectT&);
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+flip(Type&, const typename Type::domain_type&);
+
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+flip(Type&, const typename Type::segment_type&);
+
+template<class Type, class OperandT>
+typename enable_if<has_same_concept<is_interval_set, Type, OperandT>, Type>::type&
+JODO_flip(Type&, const OperandT&);
+
+//------------------------------------------------------------------------------
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+join(Type&);
 
 //JODO Forward 4 gcc-3.4.4 -----------------------------------------------------
 

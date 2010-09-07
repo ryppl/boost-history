@@ -366,17 +366,26 @@ private:
 public:
     /** Addition of a key value pair to the map */
     SubType& add(const element_type& key_value_pair) 
-    { return add( value_type(interval_type(key_value_pair.key), key_value_pair.data) ); }
+    {
+        return itl::add(*that(), key_value_pair);
+    }
+    //CL { return add( value_type(interval_type(key_value_pair.key), key_value_pair.data) ); }
 
     /** Addition of an interval value pair to the map. */
     SubType& add(const segment_type& interval_value_pair) 
-    { that()->template add_<codomain_combine>(interval_value_pair); return *that(); }
+    {
+        return itl::add(*that(), interval_value_pair);
+    }
+    //CL { that()->template add_<codomain_combine>(interval_value_pair); return *that(); }
 
     /** Addition of an interval value pair \c interval_value_pair to the map. 
         Iterator \c prior_ is a hint to the position \c interval_value_pair can be 
         inserted after. */
     iterator add(iterator prior_, const segment_type& interval_value_pair) 
-    { return that()->template add_<codomain_combine>(prior_, interval_value_pair); }
+    {
+        return itl::add(*that(), prior_, interval_value_pair);
+    }
+    //CL { return that()->template add_<codomain_combine>(prior_, interval_value_pair); }
 
     //==========================================================================
     //= Subtraction

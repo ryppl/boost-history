@@ -36,38 +36,38 @@ namespace boost{namespace itl
 //- contains
 //------------------------------------------------------------------------------
 
-template<class ObjectT, class OperandT>
-typename enable_if<has_same_concept<is_interval_map, ObjectT, OperandT>, 
+template<class Type, class OperandT>
+typename enable_if<has_same_concept<is_interval_map, Type, OperandT>, 
                    bool>::type 
-contains(const ObjectT& super, const OperandT& sub)
+contains(const Type& super, const OperandT& sub)
 {
-    return interval_map_contains<ObjectT>::apply(super, sub);
+    return interval_map_contains<Type>::apply(super, sub);
     //CL?? return Interval_Set::contains(super, sub);
 }
 
-template<class ObjectT, class OperandT>
-typename enable_if<has_same_concept<is_interval_set, ObjectT, OperandT>, 
+template<class Type, class OperandT>
+typename enable_if<has_same_concept<is_interval_set, Type, OperandT>, 
                    bool>::type 
-contains(const ObjectT& super, const OperandT& sub)
+contains(const Type& super, const OperandT& sub)
 {
     return Interval_Set::contains(super, sub);
 }
 
-template<class ObjectT, class OperandT>
-typename enable_if<mpl::and_<is_interval_map<ObjectT>,
-                             is_intra_derivative<ObjectT, OperandT> >, 
+template<class Type, class OperandT>
+typename enable_if<mpl::and_<is_interval_map<Type>,
+                             is_intra_derivative<Type, OperandT> >, 
                    bool>::type
-contains(const ObjectT& super, const OperandT& sub)
+contains(const Type& super, const OperandT& sub)
 { 
-    return interval_map_contains<ObjectT>::apply(super, sub);
+    return interval_map_contains<Type>::apply(super, sub);
     //CL?? return Interval_Map::contains(super, sub);
 }
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, bool>::type
-contains(const ObjectT& super, const typename ObjectT::segment_type& inter_val)
+template<class Type>
+typename enable_if<is_interval_set<Type>, bool>::type
+contains(const Type& super, const typename Type::segment_type& inter_val)
 { 
-    typedef typename ObjectT::const_iterator const_iterator;
+    typedef typename Type::const_iterator const_iterator;
     if(itl::is_empty(inter_val)) 
         return true;
 
@@ -83,29 +83,29 @@ contains(const ObjectT& super, const typename ObjectT::segment_type& inter_val)
     &&  Interval_Set::is_joinable(super, exterior.first, last_overlap);
 }
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, bool>::type
-contains(const ObjectT& super, const typename ObjectT::element_type& element)
+template<class Type>
+typename enable_if<is_interval_set<Type>, bool>::type
+contains(const Type& super, const typename Type::element_type& element)
 {
     return !(super.find(element) == super.end());
 }
 
-template<class ObjectT, class OperandT>
-typename enable_if<is_cross_derivative<ObjectT, OperandT>, 
+template<class Type, class OperandT>
+typename enable_if<is_cross_derivative<Type, OperandT>, 
                    bool>::type
-contains(const ObjectT& super, const OperandT& sub)
+contains(const Type& super, const OperandT& sub)
 { 
-    return interval_map_contains_key<ObjectT, is_total<ObjectT>::value>::apply(super, sub);
+    return interval_map_contains_key<Type, is_total<Type>::value>::apply(super, sub);
     //CL?? return Interval_Map::contains(super, sub);
 }
 
-template<class ObjectT, class IntervalSetT>
-typename enable_if<mpl::and_<is_interval_map<ObjectT>, 
-                             combines_right_to_interval_set<ObjectT, IntervalSetT> >,
+template<class Type, class IntervalSetT>
+typename enable_if<mpl::and_<is_interval_map<Type>, 
+                             combines_right_to_interval_set<Type, IntervalSetT> >,
                    bool>::type
-contains(const ObjectT& super, const IntervalSetT& sub)
+contains(const Type& super, const IntervalSetT& sub)
 {
-    return interval_map_contains_key<ObjectT, is_total<ObjectT>::value>::apply(super, sub);
+    return interval_map_contains_key<Type, is_total<Type>::value>::apply(super, sub);
     //CL?? return Interval_Map::contains(super, sub);
 }
 
@@ -178,55 +178,92 @@ inclusion_compare(const LeftT& left, const RightT& right)
 //==============================================================================
 //= Addition
 //==============================================================================
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-add(ObjectT& object, const typename ObjectT::element_type& operand)
+//- add(interval_sets, [prior], {element, segment}) ----------------------------
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+add(Type& object, const typename Type::element_type& operand)
 {
-    Interval_Set::add(object, typename ObjectT::interval_type(operand));
+    Interval_Set::add(object, typename Type::interval_type(operand));
     return object;
 }
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-add(ObjectT& object, const typename ObjectT::segment_type& operand)
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+add(Type& object, const typename Type::segment_type& operand)
 {
     Interval_Set::add(object, operand);
     return object;
 }
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, typename ObjectT::iterator>::type
-add(ObjectT& object, typename ObjectT::iterator      prior, 
-               const typename ObjectT::segment_type& operand)
+template<class Type>
+typename enable_if<is_interval_set<Type>, typename Type::iterator>::type
+add(Type& object, typename Type::iterator      prior, 
+               const typename Type::segment_type& operand)
 {
     return Interval_Set::add(object, prior, operand);
 }
+
+//------------------------------------------------------------------------------
+//- add(interval_maps, [prior], {element, segment}) ----------------------------
+template<class Type>
+typename enable_if<is_interval_map<Type>, Type>::type&
+add(Type& object, const typename Type::element_type& operand)
+{
+    typedef typename Type::value_type       value_type;
+    typedef typename Type::interval_type    interval_type;
+    typedef typename Type::codomain_combine codomain_combine;
+    Interval_Map::add<Type,codomain_combine>
+        (object, value_type(interval_type(operand.key), 
+                            operand.data               ) );
+    return object;
+}
+
+template<class Type>
+typename enable_if<is_interval_map<Type>, Type>::type&
+add(Type& object, const typename Type::segment_type& operand)
+{
+    typedef typename Type::codomain_combine codomain_combine;
+    Interval_Map::add<Type,codomain_combine>(object, operand);
+    return object;
+}
+
+template<class Type>
+typename enable_if<is_interval_map<Type>, typename Type::iterator >::type
+add(Type& object, typename Type::iterator      prior_,
+            const typename Type::segment_type& operand)
+{
+    typedef typename Type::codomain_combine codomain_combine;
+    return Interval_Map::add<Type,codomain_combine>(object, prior_, operand);
+}
 //------------------------------------------------------------------------------
 
-
-/** \par \b Requires: \c OperandT is an interval container addable to \c ObjectT. 
+/** \par \b Requires: \c OperandT is an interval container addable to \c Type. 
     \b Effects: \c operand is added to \c object.
     \par \b Returns: A reference to \c object.
     \b Complexity: loglinear */
-template<class ObjectT, class OperandT>
-typename enable_if<is_intra_combinable<ObjectT, OperandT>, ObjectT>::type&
-operator += (ObjectT& object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<is_intra_combinable<Type, OperandT>, Type>::type&
+operator += (Type& object, const OperandT& operand)
 {
-    typename ObjectT::iterator prior_ = object.end();
+    typename Type::iterator prior_ = object.end();
     ITL_const_FORALL(typename OperandT, elem_, operand) 
-        prior_ = object.add(prior_, *elem_); //JODO
+        prior_ = object.add(prior_, *elem_);
+        //JODO prior_ = itl::add(object, prior_, *elem_); 
+        //JODO Problems with missing combining style of interval_base_map.
+        //JODO Prior to this, we have to implement the Trait class for
+        //JODO combining styles for interval_base_maps.
 
     return object; 
 }
 
-/* \par \b Requires: \c OperandT is an addable derivative type of \c ObjectT. 
+/* \par \b Requires: \c OperandT is an addable derivative type of \c Type. 
     \b Effects: \c operand is added to \c object.
     \par \b Returns: A reference to \c object.
     \b Complexity:
 \code
                   \ OperandT:                    
                    \         element     segment 
-ObjectT:
+Type:
        interval container    O(log n)     O(n)   
 
              interval_set               amortized
@@ -240,29 +277,22 @@ complexity is \b logarithmic or \b linear respectively.
 For \c interval_sets and \c separate_interval_sets addition of segments
 is \b amortized \b logarithmic.
 */
-template<class ObjectT, class OperandT>
-typename enable_if<is_intra_derivative<ObjectT, OperandT>, ObjectT>::type&
-operator += (ObjectT& object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<is_intra_derivative<Type, OperandT>, Type>::type&
+operator += (Type& object, const OperandT& operand)
 { 
     //JODO return itl::add(object, operand); 
     return object.add(operand); 
 }
 
-//CL
-//template<class ObjectT, class OperandT>
-//typename enable_if<is_intra_derivative<ObjectT, OperandT>, ObjectT>::type&
-//add(ObjectT& object, const OperandT& operand)
-//{ 
-//    return object.add(operand); 
-//}
 
 /** \par \b Requires: \c object and \c operand are addable.
     \b Effects: \c operand is added to \c object.
     \par \b Efficieny: There is one additional copy of 
-    \c ObjectT \c object compared to inplace \c operator \c += */
-template<class ObjectT, class OperandT>
-typename enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
-operator + (ObjectT object, const OperandT& operand)
+    \c Type \c object compared to inplace \c operator \c += */
+template<class Type, class OperandT>
+typename enable_if<is_binary_intra_combinable<Type, OperandT>, Type>::type
+operator + (Type object, const OperandT& operand)
 {
     return object += operand; 
 }
@@ -270,10 +300,10 @@ operator + (ObjectT object, const OperandT& operand)
 /** \par \b Requires: \c object and \c operand are addable.
     \b Effects: \c operand is added to \c object.
     \par \b Efficieny: There is one additional copy of 
-    \c ObjectT \c object compared to inplace \c operator \c += */
-template<class ObjectT, class OperandT>
-typename enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
-operator + (const OperandT& operand, ObjectT object)
+    \c Type \c object compared to inplace \c operator \c += */
+template<class Type, class OperandT>
+typename enable_if<is_binary_intra_combinable<Type, OperandT>, Type>::type
+operator + (const OperandT& operand, Type object)
 {
     return object += operand; 
 }
@@ -282,9 +312,9 @@ operator + (const OperandT& operand, ObjectT object)
 /** \par \b Requires: \c object and \c operand are addable.
     \b Effects: \c operand is added to \c object.
     \par \b Efficieny: There is one additional copy of 
-    \c ObjectT \c object compared to inplace \c operator \c += */
-template<class ObjectT>
-ObjectT operator + (typename ObjectT::overloadable_type object, const ObjectT& operand)
+    \c Type \c object compared to inplace \c operator \c += */
+template<class Type>
+Type operator + (typename Type::overloadable_type object, const Type& operand)
 {
     return object += operand; 
 }
@@ -294,14 +324,14 @@ ObjectT operator + (typename ObjectT::overloadable_type object, const ObjectT& o
 //- Addition |=, | 
 //------------------------------------------------------------------------------
 
-/** \par \b Requires: Types \c ObjectT and \c OperandT are addable.
+/** \par \b Requires: Types \c Type and \c OperandT are addable.
     \par \b Effects: \c operand is added to \c object.
     \par \b Returns: A reference to \c object.
     \b Complexity:
 \code
                   \ OperandT:                      interval
                    \         element     segment   container
-ObjectT:
+Type:
        interval container    O(log n)     O(n)     O(m log(n+m))
 
              interval_set               amortized
@@ -316,9 +346,9 @@ complexity is \b logarithmic, \b linear and \b loglinear respectively.
 For \c interval_sets and \c separate_interval_sets addition of segments
 is \b amortized \b logarithmic.
 */
-template<class ObjectT, class OperandT>
-typename enable_if<is_right_intra_combinable<ObjectT, OperandT>, ObjectT>::type&
-operator |= (ObjectT& object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<is_right_intra_combinable<Type, OperandT>, Type>::type&
+operator |= (Type& object, const OperandT& operand)
 { 
     return object += operand; 
 }
@@ -326,10 +356,10 @@ operator |= (ObjectT& object, const OperandT& operand)
 /** \par \b Requires: \c object and \c operand are addable.
     \b Effects: \c operand is added to \c object.
     \par \b Efficieny: There is one additional copy of 
-    \c ObjectT \c object compared to inplace \c operator \c |= */
-template<class ObjectT, class OperandT>
-typename enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
-operator | (ObjectT object, const OperandT& operand)
+    \c Type \c object compared to inplace \c operator \c |= */
+template<class Type, class OperandT>
+typename enable_if<is_binary_intra_combinable<Type, OperandT>, Type>::type
+operator | (Type object, const OperandT& operand)
 {
     return object += operand; 
 }
@@ -337,10 +367,10 @@ operator | (ObjectT object, const OperandT& operand)
 /** \par \b Requires: \c object and \c operand are addable.
     \b Effects: \c operand is added to \c object.
     \par \b Efficieny: There is one additional copy of 
-    \c ObjectT \c object compared to inplace \c operator \c |= */
-template<class ObjectT, class OperandT>
-typename enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
-operator | (const OperandT& operand, ObjectT object)
+    \c Type \c object compared to inplace \c operator \c |= */
+template<class Type, class OperandT>
+typename enable_if<is_binary_intra_combinable<Type, OperandT>, Type>::type
+operator | (const OperandT& operand, Type object)
 {
     return object += operand; 
 }
@@ -348,9 +378,9 @@ operator | (const OperandT& operand, ObjectT object)
 /** \par \b Requires: \c object and \c operand are addable.
     \b Effects: \c operand is added to \c object.
     \par \b Efficieny: There is one additional copy of 
-    \c ObjectT \c object compared to inplace \c operator \c |= */
-template<class ObjectT>
-ObjectT operator | (typename ObjectT::overloadable_type object, const ObjectT& operand)
+    \c Type \c object compared to inplace \c operator \c |= */
+template<class Type>
+Type operator | (typename Type::overloadable_type object, const Type& operand)
 {
     return object += operand; 
 }
@@ -360,17 +390,17 @@ ObjectT operator | (typename ObjectT::overloadable_type object, const ObjectT& o
 //= Subtraction
 //==============================================================================
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-subtract(ObjectT& object, const typename ObjectT::element_type& operand)
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+subtract(Type& object, const typename Type::element_type& operand)
 {
-    Interval_Set::subtract(object, typename ObjectT::segment_type(operand));
+    Interval_Set::subtract(object, typename Type::segment_type(operand));
     return object; //JODO: May be it is better to return the iterator
 }
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-subtract(ObjectT& object, const typename ObjectT::segment_type& operand)
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+subtract(Type& object, const typename Type::segment_type& operand)
 {
     Interval_Set::subtract(object, operand);
     return object; //JODO: May be it is better to return the iterator
@@ -380,14 +410,14 @@ subtract(ObjectT& object, const typename ObjectT::segment_type& operand)
 //- Subtraction -=, -
 //------------------------------------------------------------------------------
 
-/** \par \b Requires: Types \c ObjectT and \c OperandT are subtractable.
+/** \par \b Requires: Types \c Type and \c OperandT are subtractable.
     \par \b Effects: \c operand is subtracted from \c object.
     \par \b Returns: A reference to \c object.
     \b Complexity:
 \code
                   \ OperandT:                      interval
                    \         element    segment    container
-ObjectT:
+Type:
        interval container    O(log n)     O(n)     O(m log(n+m))
 
                                        amortized
@@ -402,10 +432,10 @@ complexity is \b logarithmic, \b linear and \b loglinear respectively.
 For interval sets subtraction of segments
 is \b amortized \b logarithmic.
 */
-template<class ObjectT, class OperandT>
-typename enable_if<has_same_concept<is_interval_map, ObjectT, OperandT>, 
-                   ObjectT>::type& 
-operator -=(ObjectT& object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<has_same_concept<is_interval_map, Type, OperandT>, 
+                   Type>::type& 
+operator -=(Type& object, const OperandT& operand)
 {
     ITL_const_FORALL(typename OperandT, elem_, operand) 
         object.subtract(*elem_); //JODO 
@@ -413,33 +443,33 @@ operator -=(ObjectT& object, const OperandT& operand)
     return object; 
 }
 
-template<class ObjectT, class OperandT>
-typename enable_if<is_intra_derivative<ObjectT, OperandT>, ObjectT>::type&
-operator -= (ObjectT& object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<is_intra_derivative<Type, OperandT>, Type>::type&
+operator -= (Type& object, const OperandT& operand)
 { 
     //JODO return itl::subtract(object, operand); 
     return object.subtract(operand); 
 }
 
-template<class ObjectT, class OperandT>
-typename enable_if<is_cross_derivative<ObjectT, OperandT>, ObjectT>::type&
-operator -= (ObjectT& object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<is_cross_derivative<Type, OperandT>, Type>::type&
+operator -= (Type& object, const OperandT& operand)
 { 
     return object.erase(operand); 
 }
 
-template<class ObjectT, class IntervalSetT>
-typename enable_if<combines_right_to_interval_set<ObjectT, IntervalSetT>,
-                   ObjectT>::type&
-operator -= (ObjectT& object, const IntervalSetT& operand)
+template<class Type, class IntervalSetT>
+typename enable_if<combines_right_to_interval_set<Type, IntervalSetT>,
+                   Type>::type&
+operator -= (Type& object, const IntervalSetT& operand)
 {
     return erase(object, operand);
 }
 
 
-template<class ObjectT, class OperandT>
-typename enable_if<is_right_inter_combinable<ObjectT, OperandT>, ObjectT>::type
-operator - (ObjectT object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<is_right_inter_combinable<Type, OperandT>, Type>::type
+operator - (Type object, const OperandT& operand)
 {
     return object -= operand; 
 }
@@ -447,11 +477,11 @@ operator - (ObjectT object, const OperandT& operand)
 //==============================================================================
 //= Insertion
 //==============================================================================
-template<class ObjectT, class OperandT>
-typename enable_if<is_intra_combinable<ObjectT, OperandT>, ObjectT>::type&
-insert(ObjectT& object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<is_intra_combinable<Type, OperandT>, Type>::type&
+insert(Type& object, const OperandT& operand)
 {
-    typename ObjectT::iterator prior_ = object.end();
+    typename Type::iterator prior_ = object.end();
     ITL_const_FORALL(typename OperandT, elem_, operand) 
         object.insert(*elem_); 
 
@@ -462,10 +492,10 @@ insert(ObjectT& object, const OperandT& operand)
 //==============================================================================
 //= Erasure
 //==============================================================================
-template<class ObjectT, class OperandT>
-typename enable_if<combines_right_to_interval_container<ObjectT, OperandT>,
-                   ObjectT>::type&
-erase(ObjectT& object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<combines_right_to_interval_container<Type, OperandT>,
+                   Type>::type&
+erase(Type& object, const OperandT& operand)
 {
     if(itl::is_empty(operand))
         return object;
@@ -490,12 +520,12 @@ erase(ObjectT& object, const OperandT& operand)
 //------------------------------------------------------------------------------
 //- Intersection add_intersection
 //------------------------------------------------------------------------------
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-add_intersection(ObjectT& section, const ObjectT& object, 
-                          const typename ObjectT::domain_type& operand)
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+add_intersection(Type& section, const Type& object, 
+                          const typename Type::domain_type& operand)
 {
-    typedef typename ObjectT::const_iterator const_iterator;
+    typedef typename Type::const_iterator const_iterator;
     const_iterator found = object.find(operand);
     if(found != object.end())
         itl::add(section, operand);
@@ -504,14 +534,14 @@ add_intersection(ObjectT& section, const ObjectT& object,
 }
 
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-add_intersection(ObjectT& section, const ObjectT& object, 
-                          const typename ObjectT::segment_type& segment)
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+add_intersection(Type& section, const Type& object, 
+                          const typename Type::segment_type& segment)
 {
-    typedef typename ObjectT::const_iterator const_iterator;
-    typedef typename ObjectT::iterator       iterator;
-    typedef typename ObjectT::interval_type  interval_type;
+    typedef typename Type::const_iterator const_iterator;
+    typedef typename Type::iterator       iterator;
+    typedef typename Type::interval_type  interval_type;
 
     if(itl::is_empty(segment)) 
         return section;
@@ -524,7 +554,7 @@ add_intersection(ObjectT& section, const ObjectT& object,
     iterator prior_ = section.end();
     for(const_iterator it_=exterior.first; it_ != exterior.second; it_++) 
     {
-        interval_type common_interval = ObjectT::key_value(it_) & segment;
+        interval_type common_interval = Type::key_value(it_) & segment;
         if(!itl::is_empty(common_interval))
             prior_ = section._insert(prior_, common_interval);
     }
@@ -532,11 +562,11 @@ add_intersection(ObjectT& section, const ObjectT& object,
 }
 
 
-template<class ObjectT, class OperandT>
-typename enable_if<mpl::and_<is_interval_set<ObjectT>, 
-                             combines_right_to_interval_set<ObjectT, OperandT> >,
-                   ObjectT>::type&
-add_intersection(ObjectT& section, const ObjectT& object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<mpl::and_<is_interval_set<Type>, 
+                             combines_right_to_interval_set<Type, OperandT> >,
+                   Type>::type&
+add_intersection(Type& section, const Type& object, const OperandT& operand)
 {
     typedef typename OperandT::const_iterator const_iterator;
 
@@ -558,32 +588,32 @@ add_intersection(ObjectT& section, const ObjectT& object, const OperandT& operan
 //------------------------------------------------------------------------------
 //- Intersection &=, &
 //------------------------------------------------------------------------------
-template<class ObjectT, class OperandT>
-typename enable_if<is_right_inter_combinable<ObjectT, OperandT>, ObjectT>::type&
-operator &= (ObjectT& object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<is_right_inter_combinable<Type, OperandT>, Type>::type&
+operator &= (Type& object, const OperandT& operand)
 {
-    ObjectT intersection;
+    Type intersection;
     object.add_intersection(intersection, operand);
     object.swap(intersection);
     return object;
 }
 
-template<class ObjectT, class OperandT>
-typename enable_if<is_binary_inter_combinable<ObjectT, OperandT>, ObjectT>::type
-operator & (ObjectT object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<is_binary_inter_combinable<Type, OperandT>, Type>::type
+operator & (Type object, const OperandT& operand)
 {
     return object &= operand; 
 }
 
-template<class ObjectT, class OperandT>
-typename enable_if<is_binary_inter_combinable<ObjectT, OperandT>, ObjectT>::type
-operator & (const OperandT& operand, ObjectT object)
+template<class Type, class OperandT>
+typename enable_if<is_binary_inter_combinable<Type, OperandT>, Type>::type
+operator & (const OperandT& operand, Type object)
 {
     return object &= operand; 
 }
 
-template<class ObjectT>
-ObjectT operator & (typename ObjectT::overloadable_type object, const ObjectT& operand)
+template<class Type>
+Type operator & (typename Type::overloadable_type object, const Type& operand)
 {
     return object &= operand; 
 }
@@ -715,9 +745,9 @@ is_disjoint(const Type& left, const AssociateT& right)
 //- Symmetric difference flip
 //------------------------------------------------------------------------------
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-flip(ObjectT& object, const typename ObjectT::domain_type& operand)
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+flip(Type& object, const typename Type::domain_type& operand)
 {
     if(itl::contains(object, operand))
         return object -= operand;
@@ -726,18 +756,18 @@ flip(ObjectT& object, const typename ObjectT::domain_type& operand)
 }
 
 //JODO MEMO: This did not compile, no idea why.
-//template<class ObjectT, class OperandT>
-//typename enable_if<mpl::and_< is_interval_set<ObjectT>
-//                            , is_same<segment_type_of<ObjectT>, OperandT> >, 
-//                          ObjectT>::type&
-//flip(ObjectT& object, const OperandT& segment)
+//template<class Type, class OperandT>
+//typename enable_if<mpl::and_< is_interval_set<Type>
+//                            , is_same<segment_type_of<Type>, OperandT> >, 
+//                          Type>::type&
+//flip(Type& object, const OperandT& segment)
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-flip(ObjectT& object, const typename ObjectT::segment_type& segment)
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+flip(Type& object, const typename Type::segment_type& segment)
 {
-    typedef typename ObjectT::const_iterator const_iterator;
-    typedef typename ObjectT::interval_type  interval_type;
+    typedef typename Type::const_iterator const_iterator;
+    typedef typename Type::interval_type  interval_type;
     // That which is common shall be subtracted
     // That which is not shall be added
     // So x has to be 'complementary added' or flipped
@@ -772,9 +802,9 @@ flip(ObjectT& object, const typename ObjectT::segment_type& segment)
 }
 
 
-template<class ObjectT, class OperandT>
-typename enable_if<has_same_concept<is_interval_set, ObjectT, OperandT>, ObjectT>::type&
-JODO_flip(ObjectT& object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<has_same_concept<is_interval_set, Type, OperandT>, Type>::type&
+JODO_flip(Type& object, const OperandT& operand)
 {
     typedef typename OperandT::const_iterator const_iterator;
 
@@ -805,39 +835,39 @@ JODO_flip(ObjectT& object, const OperandT& operand)
 //------------------------------------------------------------------------------
 //- Symmetric difference ^=, ^
 //------------------------------------------------------------------------------
-template<class ObjectT, class OperandT>
-typename enable_if<is_intra_combinable<ObjectT, OperandT>, 
-                          ObjectT>::type&
-operator ^= (ObjectT& object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<is_intra_combinable<Type, OperandT>, 
+                          Type>::type&
+operator ^= (Type& object, const OperandT& operand)
 { 
     return object.flip(operand); 
 }
 
-template<class ObjectT, class OperandT>
-typename enable_if<is_intra_derivative<ObjectT, OperandT>, 
-                          ObjectT>::type&
-operator ^= (ObjectT& object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<is_intra_derivative<Type, OperandT>, 
+                          Type>::type&
+operator ^= (Type& object, const OperandT& operand)
 { 
     return object.flip(operand); 
 }
 
-template<class ObjectT, class OperandT>
-typename enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
-operator ^ (ObjectT object, const OperandT& operand)
+template<class Type, class OperandT>
+typename enable_if<is_binary_intra_combinable<Type, OperandT>, Type>::type
+operator ^ (Type object, const OperandT& operand)
 {
     return object ^= operand; 
 }
 
-template<class ObjectT, class OperandT>
-typename enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
-operator ^ (const OperandT& operand, ObjectT object)
+template<class Type, class OperandT>
+typename enable_if<is_binary_intra_combinable<Type, OperandT>, Type>::type
+operator ^ (const OperandT& operand, Type object)
 {
     return object ^= operand; 
 }
 
 
-template<class ObjectT>
-ObjectT operator ^ (typename ObjectT::overloadable_type object, const ObjectT& operand)
+template<class Type>
+Type operator ^ (typename Type::overloadable_type object, const Type& operand)
 {
     return object ^= operand; 
 }
@@ -846,12 +876,12 @@ ObjectT operator ^ (typename ObjectT::overloadable_type object, const ObjectT& o
 //= Morphisms
 //==============================================================================
 
-template<class ObjectT>
-typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
-join(ObjectT& object)
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+join(Type& object)
 {
-    typedef typename ObjectT::interval_type interval_type;
-    typedef typename ObjectT::iterator      iterator;
+    typedef typename Type::interval_type interval_type;
+    typedef typename Type::iterator      iterator;
 
     iterator it_ = object.begin();
     if(it_ == object.end()) 
