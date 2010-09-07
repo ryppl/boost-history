@@ -286,7 +286,7 @@ bool is_dense(const IntervalContainerT& container,
 
 } // namespace Interval_Set
 
-namespace detail
+namespace segmental
 {
 
 template<class Type>
@@ -410,6 +410,12 @@ typename Type::iterator
     return first_;
 }
 
+} // namespace segmental
+
+namespace Interval_Set
+{
+using namespace segmental;
+
 //==============================================================================
 //= Addition joining
 //==============================================================================
@@ -427,7 +433,7 @@ typename Type::iterator
     std::pair<iterator,bool> insertion = object._insert(addend);
 
     if(insertion.second)
-        return join_neighbours(object, insertion.first);
+		return join_neighbours(object, insertion.first);
     else
 	{
 		iterator joined_ = join_under(object, addend);
@@ -704,8 +710,7 @@ void subtract(Type& object, const typename Type::value_type& minuend)
 }
 
 
-
-} // namespace detail
+} // namespace Interval_Set
 
 }} // namespace itl boost
 

@@ -27,6 +27,7 @@ namespace boost{namespace itl
 
 namespace Interval_Map
 {
+using namespace segmental;
 
 //JODO CLEAN UP for: #pragma warning(disable:4127) // conditional expression is constant
 
@@ -166,12 +167,6 @@ bool contains(const IntervalMapT& super, const IntervalMapT& sub)
 }
 
 
-} // namespace Interval_Map
-
-
-namespace detail
-{
-
 template <class Type, class Combiner>
 inline typename Type::iterator
 gap_insert(               Type&                object, 
@@ -187,6 +182,34 @@ gap_insert(               Type&                object,
     return object._insert(prior_, value_type(inter_val, version<Combiner>()(co_val)));
 }
 
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+template<class Type, int absorbs_neutrons>
+struct on_neutric;
+
+template<class Type>
+struct on_neutric<Type, false>
+{
+    typedef on_neutric type;
+    typedef typename Type::codomain_type codomain_type;
+
+    static bool is_absorbable(const codomain_type&){ return false; }
+};
+
+template<class Type>
+struct on_neutric<Type, true>
+{
+    typedef on_neutric type;
+    typedef typename Type::codomain_type codomain_type;
+    typedef typename Type::codomain_combine codomain_combine;
+
+    static bool is_absorbable(const codomain_type& co_value)
+    {
+        return absorbs_neutrons<Type>::value 
+            && co_value == codomain_combine::neutron();
+    }
+};
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -213,12 +236,12 @@ struct on_style<Type, interval_combine::joining>
         join_left(object, inserted_);
         // after filling that gap there may be another joining opportunity
         join_left(object, it_);
-	}
+    }
 
     static iterator handle_end_inserted(Type& object, iterator inserted_)
-	{
+    {
         return join_neighbours(object, inserted_);
-	}
+    }
 
 };
 
@@ -343,7 +366,7 @@ struct on_segment<Type, Combiner, false, interval_combine::joining>
     static void insert_at(Type& object, iterator& it_, iterator,
                           const interval_type& end_gap, const codomain_type& co_val)
     {
-        detail::join_left(object, it_);
+        join_left(object, it_);
         iterator inserted_ = gap_insert<Type,Combiner>(object, it_, end_gap, co_val);
         it_ = join_neighbours(object, inserted_);
     }
@@ -418,7 +441,7 @@ struct on_segment<Type, Combiner, true, interval_combine::joining>
         }
         else 
         {
-            detail::join_left(object, it_);
+            join_left(object, it_);
             iterator inserted_ = gap_insert<Type,Combiner>(object, it_, end_gap, co_val);
             it_ = join_neighbours(object, inserted_);
         }
@@ -559,11 +582,13 @@ void subtract_front(               Type&                object,
 
     interval_type left_resid = right_subtract(it_->first, inter_val);
 
-    if(!itl::is_empty(left_resid))
-    {
-        iterator prior_ = object.prior(it_);
+    if(!itl::is_empty(left_resid)) //                     [--- inter_val ---)
+    {                              //[prior_) [left_resid)[--- it_ . . .
+        iterator prior_ = object.prior(it_); 
         const_cast<interval_type&>(it_->first) = left_subtract(it_->first, left_resid);
         object._insert(prior_, value_type(left_resid, it_->second));
+		// The segemnt *it_ is split at inter_val.first(), so as an invariant
+		// segment *it_ is always "under" inter_val and a left_resid is empty.
     }
 }
 
@@ -645,7 +670,7 @@ void insert_main(               Type&                object,
         if(!itl::is_empty(left_gap))
         {
             inserted_ = object._insert(prior_, value_type(left_gap, co_val));
-			on_style_::handle_inserted(object, inserted_, it_);
+            on_style_::handle_inserted(object, inserted_, it_);
 
 
         }
@@ -661,16 +686,110 @@ void insert_main(               Type&                object,
     if(!itl::is_empty(end_gap))
     {
         inserted_ =    object._insert(prior_, value_type(end_gap, co_val));
-		it_ = on_style_::handle_end_inserted(object, inserted_);
+        it_ = on_style_::handle_end_inserted(object, inserted_);
     }
     else
         it_ = prior_;
 }
 
 
+//==============================================================================
+//= Erasure
+//==============================================================================
+
+template<class Type>
+void erase(Type& object, const typename Type::value_type& minuend)
+{
+    typedef typename Type::interval_type interval_type;
+    typedef typename Type::codomain_type codomain_type;
+    typedef typename Type::value_type    value_type;
+    typedef typename Type::iterator      iterator;
+    typedef typename on_neutric<Type,absorbs_neutrons<Type>::value>::type
+                                         on_neutric_;
+
+    interval_type inter_val = minuend.first;
+    if(itl::is_empty(inter_val)) 
+        return;
+
+    const codomain_type& co_val = minuend.second;
+    if(on_neutric_::is_absorbable(co_val))
+        return;
+
+    std::pair<iterator,iterator> exterior = object.equal_range(inter_val);
+    if(exterior.first == exterior.second)
+        return;
+
+    iterator first_ = exterior.first, end_ = exterior.second, 
+             last_  = object.prior(end_);
+    iterator second_= first_; ++second_;
+
+    if(first_ == last_) 
+    {   //     [----inter_val----)
+        //   .....first_==last_.....
+        // only for the last there can be a right_resid: a part of *it_ right of minuend
+        interval_type right_resid = left_subtract(first_->first, inter_val);
+
+        if(first_->second == co_val)
+        {   
+            interval_type left_resid = right_subtract(first_->first, inter_val);
+            if(!itl::is_empty(left_resid)) //            [----inter_val----)
+            {                              // [left_resid)..first_==last_......
+                const_cast<interval_type&>(first_->first) = left_resid;
+                if(!itl::is_empty(right_resid))
+                    object._insert(first_, value_type(right_resid, co_val));
+            }
+            else if(!itl::is_empty(right_resid))
+                const_cast<interval_type&>(first_->first) = right_resid;
+            else
+                object.erase(first_);
+        }
+    }
+    else
+    {
+        // first AND NOT last
+        if(first_->second == co_val)
+        {
+            interval_type left_resid = right_subtract(first_->first, inter_val);
+            if(itl::is_empty(left_resid))
+                object.erase(first_);
+            else
+                const_cast<interval_type&>(first_->first) = left_resid;
+        }
+
+        erase_rest(object, inter_val, co_val, second_, last_);
+    }
+}
+
+template<class Type>
+void erase_rest(               Type&                object,
+                      typename Type::interval_type& inter_val, 
+                const typename Type::codomain_type& co_val, 
+                      typename Type::iterator&      it_,       
+                const typename Type::iterator&      last_    )
+{
+    typedef typename Type::interval_type interval_type;
+    typedef typename Type::iterator      iterator;
+
+    // For all intervals within loop: it_->first are contained_in inter_val
+    while(it_ != last_)
+        if(it_->second == co_val)
+            object.erase(it_++); 
+        else it_++;
+
+    //erase_rear:
+    if(it_->second == co_val)
+    {
+        interval_type right_resid = left_subtract(it_->first, inter_val);
+        if(itl::is_empty(right_resid))
+            object.erase(it_);
+        else
+            const_cast<interval_type&>(it_->first) = right_resid;
+    }
+}
 
 
-} // namespace detail
+
+} // namespace Interval_Map
 
 }} // namespace itl boost
 

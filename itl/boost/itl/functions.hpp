@@ -185,7 +185,7 @@ typename enable_if<mpl::and_< is_interval_set<ObjectT>
                             , is_interval_joiner<ObjectT> >, ObjectT>::type&
 add(ObjectT& object, const typename ObjectT::element_type& operand)
 {
-    detail::joining_add(object, typename ObjectT::interval_type(operand));
+    Interval_Set::joining_add(object, typename ObjectT::interval_type(operand));
     return object; //JODO: May be it is better to return the iterator
 }
 
@@ -194,7 +194,7 @@ typename enable_if<mpl::and_< is_interval_set<ObjectT>
                             , is_interval_joiner<ObjectT> >, ObjectT>::type&
 add(ObjectT& object, const typename ObjectT::segment_type& operand)
 {
-    detail::joining_add(object, operand);
+    Interval_Set::joining_add(object, operand);
     return object; //JODO: May be it is better to return the iterator
 }
 
@@ -205,7 +205,7 @@ typename enable_if<mpl::and_< is_interval_set<ObjectT>
 add(ObjectT& object, typename ObjectT::iterator      prior, 
                const typename ObjectT::segment_type& operand)
 {
-    return detail::joining_add(object, prior, operand);
+    return Interval_Set::joining_add(object, prior, operand);
 }
 
 //- separating_add -------------------------------------------------------------
@@ -214,7 +214,7 @@ typename enable_if<mpl::and_< is_interval_set<ObjectT>
                             , is_interval_separator<ObjectT> >, ObjectT>::type&
 add(ObjectT& object, const typename ObjectT::element_type& operand)
 {
-    detail::separating_add(object, typename ObjectT::interval_type(operand));
+    Interval_Set::separating_add(object, typename ObjectT::interval_type(operand));
     return object;
 }
 
@@ -223,7 +223,7 @@ typename enable_if<mpl::and_< is_interval_set<ObjectT>
                             , is_interval_separator<ObjectT> >, ObjectT>::type&
 add(ObjectT& object, const typename ObjectT::segment_type& operand)
 {
-    detail::separating_add(object, operand);
+    Interval_Set::separating_add(object, operand);
     return object; //JODO: May be it is better to return the iterator
 }
 
@@ -234,7 +234,7 @@ typename enable_if<mpl::and_< is_interval_set<ObjectT>
 add(ObjectT& object, typename ObjectT::iterator      prior, 
                const typename ObjectT::segment_type& operand)
 {
-    return detail::separating_add(object, prior, operand);
+    return Interval_Set::separating_add(object, prior, operand);
 }
 
 //- splitting_add -------------------------------------------------------------
@@ -243,7 +243,7 @@ typename enable_if<mpl::and_< is_interval_set<ObjectT>
                             , is_interval_splitter<ObjectT> >, ObjectT>::type&
 add(ObjectT& object, const typename ObjectT::element_type& operand)
 {
-    detail::splitting_add(object, typename ObjectT::interval_type(operand));
+    Interval_Set::splitting_add(object, typename ObjectT::interval_type(operand));
     return object;
 }
 
@@ -252,7 +252,7 @@ typename enable_if<mpl::and_< is_interval_set<ObjectT>
                             , is_interval_splitter<ObjectT> >, ObjectT>::type&
 add(ObjectT& object, const typename ObjectT::segment_type& operand)
 {
-    detail::splitting_add(object, operand);
+    Interval_Set::splitting_add(object, operand);
     return object; //JODO: May be it is better to return the iterator
 }
 
@@ -263,7 +263,7 @@ typename enable_if<mpl::and_< is_interval_set<ObjectT>
 add(ObjectT& object, typename ObjectT::iterator      prior, 
                const typename ObjectT::segment_type& operand)
 {
-    return detail::splitting_add(object, prior, operand);
+    return Interval_Set::splitting_add(object, prior, operand);
 }
 //------------------------------------------------------------------------------
 
@@ -428,7 +428,7 @@ template<class ObjectT>
 typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
 subtract(ObjectT& object, const typename ObjectT::element_type& operand)
 {
-    detail::subtract(object, typename ObjectT::segment_type(operand));
+    Interval_Set::subtract(object, typename ObjectT::segment_type(operand));
     return object; //JODO: May be it is better to return the iterator
 }
 
@@ -436,7 +436,7 @@ template<class ObjectT>
 typename enable_if<is_interval_set<ObjectT>, ObjectT>::type&
 subtract(ObjectT& object, const typename ObjectT::segment_type& operand)
 {
-    detail::subtract(object, operand);
+    Interval_Set::subtract(object, operand);
     return object; //JODO: May be it is better to return the iterator
 }
 
