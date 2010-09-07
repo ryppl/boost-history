@@ -1,0 +1,250 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title> Appendix G: Tickets</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Boost.Stopwatches 0.1.0">
+<link rel="up" href="../appendices.html" title="Appendices">
+<link rel="prev" href="tests.html" title=" Appendix F: Tests">
+<link rel="next" href="perf.html" title=" Appendix H: Performances">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tests.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="perf.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_stopwatches.appendices.tickets"></a><a href="tickets.html" title=" Appendix G: Tickets"> Appendix G: Tickets</a>
+</h3></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Ticket
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+<th>
+                <p>
+                  Resolution
+                </p>
+              </th>
+<th>
+                <p>
+                  State
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  1
+                </p>
+              </td>
+<td>
+                <p>
+                  suspend doesn't works: partial_ not initialized
+                </p>
+              </td>
+<td>
+                <p>
+                  initialize with duration::zero()
+                </p>
+              </td>
+<td>
+                <p>
+                  Closed
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  2
+                </p>
+              </td>
+<td>
+                <p>
+                  suspend doesn't works: elapsed doesn't take care of partial_
+                </p>
+              </td>
+<td>
+                <p>
+                  take care of partial
+                </p>
+              </td>
+<td>
+                <p>
+                  Closed
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  3
+                </p>
+              </td>
+<td>
+                <p>
+                  suspend doesn't works: bad use of system::error_code &amp; ec
+                </p>
+              </td>
+<td>
+                <p>
+                  replace by system::error_code ec
+                </p>
+              </td>
+<td>
+                <p>
+                  Closed
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  4
+                </p>
+              </td>
+<td>
+                <p>
+                  Use of Specific formatters doesn't works
+                </p>
+              </td>
+<td>
+              </td>
+<td>
+                <p>
+                  Closed
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  5
+                </p>
+              </td>
+<td>
+                <p>
+                  boost/chrono/scoped_suspend.hpp(31) : warning C4520: 'boost::chrono::scoped_suspend&lt;Clock&gt;'
+                  : multiple default constructors specified
+                </p>
+              </td>
+<td>
+                <p>
+                  Remove the default constructor deletion
+                </p>
+              </td>
+<td>
+                <p>
+                  Closed
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  6
+                </p>
+              </td>
+<td>
+                <p>
+                  suspendible_clock_test doesn't works in my mingw environement
+                </p>
+              </td>
+<td>
+                <p>
+                  (issue with tss)
+                </p>
+              </td>
+<td>
+                <p>
+                  <span class="bold"><strong>Open</strong></span>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  7
+                </p>
+              </td>
+<td>
+                <p>
+                  error_code not initialized
+                </p>
+              </td>
+<td>
+                <p>
+                  Use ec.clear() before throwing a exception.
+                </p>
+              </td>
+<td>
+                <p>
+                  Closed
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  8
+                </p>
+              </td>
+<td>
+                <p>
+                  Valgrind issue: Conditional jump or move depends on uninitialised
+                  value(s)
+                </p>
+              </td>
+<td>
+                <p>
+                  Replace the test
+                </p>
+              </td>
+<td>
+                <p>
+                  Closed
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2010 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tests.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="perf.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
