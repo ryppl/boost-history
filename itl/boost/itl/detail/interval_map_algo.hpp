@@ -211,17 +211,17 @@ struct on_neutric;
 template <class Type, class Combiner>
 inline std::pair<typename Type::iterator, bool>
 informing_add(          Type&                object,
-		 const typename Type::iterator&      prior_, 
+         const typename Type::iterator&      prior_, 
          const typename Type::interval_type& inter_val, 
-		 const typename Type::codomain_type& co_val   )
+         const typename Type::codomain_type& co_val   )
 {
     typedef typename Type::value_type value_type;
     typedef typename Type::iterator   iterator;
-	typedef typename on_neutric<Type,Combiner,
-		                        absorbs_neutrons<Type>::value>::type on_neutric_;
+    typedef typename on_neutric<Type,Combiner,
+                                absorbs_neutrons<Type>::value>::type on_neutric_;
 
     // Never try to insert a neutron into a neutron absorber here:
-	BOOST_ASSERT(!(on_neutric_::is_absorbable(co_val)));
+    BOOST_ASSERT(!(on_neutric_::is_absorbable(co_val)));
 
     iterator inserted_ 
         = object._insert(prior_, value_type(inter_val, Combiner::neutron()));
@@ -238,14 +238,14 @@ informing_add(          Type&                object,
 template <class Type>
 inline std::pair<typename Type::iterator, bool>
 informing_insert(       Type&                object,
-		 const typename Type::iterator&      prior_, 
+         const typename Type::iterator&      prior_, 
          const typename Type::interval_type& inter_val, 
-		 const typename Type::codomain_type& co_val   )
+         const typename Type::codomain_type& co_val   )
 {
     typedef typename Type::value_type value_type;
     typedef typename Type::iterator   iterator;
 
-	iterator inserted_
+    iterator inserted_
         = object._insert(prior_, value_type(inter_val, co_val));
 
     if(inserted_ == prior_)
@@ -304,8 +304,8 @@ struct on_style<Type, interval_combine::joining>
 
     static iterator handle_inserted(Type& object, iterator it_)
     { 
-		return join_neighbours(object, it_); 
-	}
+        return join_neighbours(object, it_); 
+    }
 
     static void handle_inserted(Type& object, iterator inserted_, iterator& it_)
     {
@@ -657,14 +657,14 @@ typename Type::iterator add(               Type&             object,
         return object.end();
 
     const codomain_type& co_val = addend.second;
-	if(on_neutric_::is_absorbable(co_val))
+    if(on_neutric_::is_absorbable(co_val))
         return object.end();
 
     std::pair<iterator,bool> insertion 
         = _map_insert<Type,Combiner>(object, inter_val, co_val);
 
     if(insertion.second)
-		return on_style_::handle_inserted(object, insertion.first);
+        return on_style_::handle_inserted(object, insertion.first);
     else
     {
         // Detect the first and the end iterator of the collision sequence
@@ -678,7 +678,7 @@ typename Type::iterator add(               Type&             object,
         Interval_Set::add_front              (object, rest_interval,         it_       );
         Interval_Map::add_main<Type,Combiner>(object, rest_interval, co_val, it_, last_);
         Interval_Map::add_rear<Type,Combiner>(object, rest_interval, co_val, it_       );
-		return it_;
+        return it_;
     }
 }
 
@@ -701,14 +701,14 @@ typename Type::iterator add(               Type&             object,
         return prior_;
 
     const codomain_type& co_val = addend.second;
-	if(on_neutric_::is_absorbable(co_val))
+    if(on_neutric_::is_absorbable(co_val))
         return prior_;
 
     std::pair<iterator,bool> insertion 
         = informing_add<Type,Combiner>(object,prior_, inter_val, co_val);
 
     if(insertion.second)
-		return on_style_::handle_inserted(object, insertion.first);
+        return on_style_::handle_inserted(object, insertion.first);
     else
     {
         // Detect the first and the end iterator of the collision sequence
@@ -909,7 +909,7 @@ typename Type::iterator insert(               Type&             object,
     std::pair<iterator,bool> insertion = object._insert(addend);
 
     if(insertion.second)
-		return on_style_::handle_inserted(object, insertion.first);
+        return on_style_::handle_inserted(object, insertion.first);
     else
     {
         // Detect the first and the end iterator of the collision sequence
@@ -918,7 +918,7 @@ typename Type::iterator insert(               Type&             object,
         //assert((++last_) == this->_map.upper_bound(inter_val));
         iterator it_ = first_;
         Interval_Map::insert_main(object, inter_val, co_val, it_, last_);
-		return it_;
+        return it_;
     }
 }
 
@@ -948,7 +948,7 @@ typename Type::iterator insert(               Type&             object,
         = informing_insert(object, prior_, inter_val, co_val);
 
     if(insertion.second)
-		return on_style_::handle_inserted(object, insertion.first);
+        return on_style_::handle_inserted(object, insertion.first);
     {
         // Detect the first and the end iterator of the collision sequence
         std::pair<iterator,iterator> overlap = object.equal_range(inter_val);
@@ -960,11 +960,36 @@ typename Type::iterator insert(               Type&             object,
 }
 
 
-
-
 //==============================================================================
 //= Erasure
 //==============================================================================
+
+template<class Type>
+void erase_rest(               Type&                object,
+                      typename Type::interval_type& inter_val, 
+                const typename Type::codomain_type& co_val, 
+                      typename Type::iterator&      it_,       
+                const typename Type::iterator&      last_    )
+{
+    typedef typename Type::interval_type interval_type;
+    typedef typename Type::iterator      iterator;
+
+    // For all intervals within loop: it_->first are contained_in inter_val
+    while(it_ != last_)
+        if(it_->second == co_val)
+            object.erase(it_++); 
+        else it_++;
+
+    //erase_rear:
+    if(it_->second == co_val)
+    {
+        interval_type right_resid = left_subtract(it_->first, inter_val);
+        if(itl::is_empty(right_resid))
+            object.erase(it_);
+        else
+            const_cast<interval_type&>(it_->first) = right_resid;
+    }
+}
 
 template<class Type>
 void erase(Type& object, const typename Type::value_type& minuend)
@@ -1030,35 +1055,6 @@ void erase(Type& object, const typename Type::value_type& minuend)
         erase_rest(object, inter_val, co_val, second_, last_);
     }
 }
-
-template<class Type>
-void erase_rest(               Type&                object,
-                      typename Type::interval_type& inter_val, 
-                const typename Type::codomain_type& co_val, 
-                      typename Type::iterator&      it_,       
-                const typename Type::iterator&      last_    )
-{
-    typedef typename Type::interval_type interval_type;
-    typedef typename Type::iterator      iterator;
-
-    // For all intervals within loop: it_->first are contained_in inter_val
-    while(it_ != last_)
-        if(it_->second == co_val)
-            object.erase(it_++); 
-        else it_++;
-
-    //erase_rear:
-    if(it_->second == co_val)
-    {
-        interval_type right_resid = left_subtract(it_->first, inter_val);
-        if(itl::is_empty(right_resid))
-            object.erase(it_);
-        else
-            const_cast<interval_type&>(it_->first) = right_resid;
-    }
-}
-
-
 
 } // namespace Interval_Map
 

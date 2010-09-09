@@ -70,18 +70,6 @@ public:
     domain_type     upper()const { return _upb; }
     interval_bounds bounds()const{ return _bounds; }
 
-    /*CL
-    domain_type first()const
-    { 
-        return _bounds.left().bits()==2 ? _lwb : succ(_lwb);
-    }
-
-    DomainT last()const
-    {
-        return _bounds.right().bits()==1 ? _upb : pred(_upb);
-    }
-    */
-
     static discrete_interval open     (const DomainT& lo, const DomainT& up){ return discrete_interval(lo, up, interval_bounds::open());      }
     static discrete_interval rightopen(const DomainT& lo, const DomainT& up){ return discrete_interval(lo, up, interval_bounds::right_open());}
     static discrete_interval leftopen (const DomainT& lo, const DomainT& up){ return discrete_interval(lo, up, interval_bounds::left_open()); }

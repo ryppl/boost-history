@@ -322,14 +322,11 @@ struct map_add_intersection<MapT, true>
     typedef typename map_type::codomain_combine codomain_combine;
     typedef typename map_type::const_iterator   const_iterator;
 
-    BOOST_STATIC_CONSTANT(bool, absorbs = (absorbs_neutrons<MapT>::value));
-
     static map_type& apply(map_type& section, const map_type& object, const domain_type& key_value)
     {
         const_iterator it_ = object.find(key_value);
         if(it_ != object.end())
-            //itl::add(section, *it_);
-			map_add<map_type,codomain_combine,absorbs>::apply(section, *it_);
+            itl::add(section, *it_);
         return section;
     }
 
@@ -391,13 +388,22 @@ struct map_inplace_intersect
 
 template<class MapT>
 struct map_inplace_intersect<MapT, true> 
-{                       // is_total     
+{                           // is_total     
     typedef          MapT                   map_type;
     typedef typename map_type::domain_type  domain_type;
     typedef typename map_type::element_type element_type;
 
-    static map_type& apply(map_type& object, const element_type& operand){return object += operand;}
-    static map_type& apply(map_type& object, const map_type& operand)    {return object += operand;}
+    static map_type& apply(map_type& object, const element_type& operand)
+	{
+		object += operand;
+		return object;
+	}
+
+    static map_type& apply(map_type& object, const map_type& operand)    
+	{
+		object += operand;
+		return object;
+	}
 };
 
 template<class MapT>

@@ -9,6 +9,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #define BOOST_ITL_TEST_VALUE_MAKER_HPP_JOFA_080916
 
 #include <boost/itl/type_traits/neutron.hpp>
+#include "test_calls.hpp"
 
 namespace boost{ namespace itl
 {

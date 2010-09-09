@@ -56,8 +56,8 @@ void interval_ctor_4_bicremental_types()
     BOOST_CHECK_EQUAL( I4_4I.lower(),             v4    );
     BOOST_CHECK_EQUAL( I4_4I.upper(),             v4    );
 
-    BOOST_CHECK_EQUAL( contains(I4_4I, v4),       true  );
-    BOOST_CHECK_EQUAL( contains(I4_4I, I4_4I),    true  );
+    BOOST_CHECK_EQUAL( call::contains(I4_4I, v4),       true  );
+    BOOST_CHECK_EQUAL( call::contains(I4_4I, I4_4I),    true  );
     BOOST_CHECK_EQUAL( within(I4_4I, I4_4I),      true  );
     BOOST_CHECK_EQUAL( I4_4I,                     I4_4I );
     BOOST_CHECK_EQUAL( cardinality(I4_4I),        unon<typename interval<T>::size_type>::value() );

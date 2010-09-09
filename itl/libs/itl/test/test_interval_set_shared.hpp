@@ -121,18 +121,19 @@ void interval_set_fundamentals_4_ordered_types()
     BOOST_CHECK_EQUAL(hull(single_I0_1I).upper(), I0_1I.upper());
 
     //contains predicate
-    BOOST_CHECK_EQUAL(contains(single_I0_0I, v0), true);
-    BOOST_CHECK_EQUAL(contains(single_I0_0I, I0_0I), true);
-    BOOST_CHECK_EQUAL(contains(single_I1_1I, v1), true);
-    BOOST_CHECK_EQUAL(contains(single_I1_1I, I1_1I), true);
+    BOOST_CHECK_EQUAL(call::contains(single_I0_0I, v0), true);
+    BOOST_CHECK_EQUAL(call::contains(single_I0_0I, I0_0I), true);
+    BOOST_CHECK_EQUAL(call::contains(single_I1_1I, v1), true);
+    BOOST_CHECK_EQUAL(call::contains(single_I1_1I, I1_1I), true);
 
-    BOOST_CHECK_EQUAL(contains(single_I0_1I, v0), true);
-    BOOST_CHECK_EQUAL(contains(single_I0_1I, I0_1I), true);
-    BOOST_CHECK_EQUAL(contains(single_I0_1I, v1), true);
-    BOOST_CHECK_EQUAL(contains(single_I0_1I, I1_1I), true);
-    BOOST_CHECK_EQUAL(contains(single_I0_1I, single_I0_0I), true);
-    BOOST_CHECK_EQUAL(contains(single_I0_1I, single_I1_1I), true);
-    BOOST_CHECK_EQUAL(contains(single_I0_1I, single_I0_1I), true);
+    BOOST_CHECK_EQUAL(call::contains(single_I0_1I, v0), true);
+    BOOST_CHECK_EQUAL(call::contains(single_I0_1I, I0_1I), true);
+    BOOST_CHECK_EQUAL(call::contains(single_I0_1I, v1), true);
+    BOOST_CHECK_EQUAL(call::contains(single_I0_1I, I1_1I), true);
+
+    BOOST_CHECK_EQUAL(call::contains(single_I0_1I, single_I0_0I), true);
+    BOOST_CHECK_EQUAL(call::contains(single_I0_1I, single_I1_1I), true);
+    BOOST_CHECK_EQUAL(call::contains(single_I0_1I, single_I0_1I), true);
 
     BOOST_CHECK_EQUAL(single_I0_0I.cardinality(), unon<size_T>::value());
     BOOST_CHECK_EQUAL(single_I0_0I.size(), unon<size_T>::value());
@@ -423,7 +424,7 @@ void interval_set_contains_4_bicremental_types()
     T v9 = make<T>(9);
     T v11 = make<T>(11);
     IntervalSet<T> is(v1);    
-    BOOST_CHECK_EQUAL( contains(is, v1), true );
+    BOOST_CHECK_EQUAL( call::contains(is, v1), true );
 
     BOOST_CHECK_EQUAL( IntervalSet<T>().add(make<T>(2)).contains(make<T>(2)), true );
     BOOST_CHECK_EQUAL( IntervalSet<T>().insert(make<T>(2)).contains(make<T>(2)), true );
@@ -474,18 +475,18 @@ void interval_set_operators_4_bicremental_types()
     BOOST_CHECK_EQUAL( is_disjoint(section, complement), true );
     BOOST_CHECK_EQUAL( all, all2 );
 
-    BOOST_CHECK_EQUAL( contains(all, left), true );
-    BOOST_CHECK_EQUAL( contains(all, right), true );
-    BOOST_CHECK_EQUAL( contains(all, complement), true );
+    BOOST_CHECK_EQUAL( call::contains(all, left), true );
+    BOOST_CHECK_EQUAL( call::contains(all, right), true );
+    BOOST_CHECK_EQUAL( call::contains(all, complement), true );
 
-    BOOST_CHECK_EQUAL( contains(left, section), true );
-    BOOST_CHECK_EQUAL( contains(right, section), true );
+    BOOST_CHECK_EQUAL( call::contains(left, section), true );
+    BOOST_CHECK_EQUAL( call::contains(right, section), true );
 
-    BOOST_CHECK_EQUAL( left.contained_in(all), true );
-    BOOST_CHECK_EQUAL( right.contained_in(all), true );
-    BOOST_CHECK_EQUAL( complement.contained_in(all), true );
-    BOOST_CHECK_EQUAL( section.contained_in(left), true );
-    BOOST_CHECK_EQUAL( section.contained_in(right), true );
+    BOOST_CHECK_EQUAL( within(left, all), true );
+    BOOST_CHECK_EQUAL( within(right, all), true );
+    BOOST_CHECK_EQUAL( within(complement, all), true );
+    BOOST_CHECK_EQUAL( within(section, left), true );
+    BOOST_CHECK_EQUAL( within(section, right), true );
 }
 
 

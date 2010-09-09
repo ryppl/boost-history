@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+    
-Copyright (c) 2008-2009: Joachim Faulhaber
+Copyright (c) 2010-2010: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
@@ -15,7 +15,7 @@ namespace boost{ namespace itl
 {
 
     template<class KeyT, class ObjectT>
-    struct is_strict_key_container_of
+    struct is_strict_key_container_of // set is_strict_key_container_of map
     {
         typedef is_strict_key_container_of<KeyT, ObjectT> type;
         BOOST_STATIC_CONSTANT(bool, value =
@@ -25,7 +25,7 @@ namespace boost{ namespace itl
     };
 
     template<class KeyT, class ObjectT>
-    struct is_key_container_of
+    struct is_key_container_of // set is_key_container_of (set or map)
     {
         typedef is_key_container_of<KeyT, ObjectT> type;
         BOOST_STATIC_CONSTANT(bool, value =

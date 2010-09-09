@@ -126,7 +126,16 @@ public:
     /// Inverse Combine functor for codomain value aggregation
     typedef typename inverse<codomain_combine>::type inverse_codomain_combine;
     /// Intersection functor for codomain values
-    typedef ITL_SECTION_CODOMAIN(Section,CodomainT) codomain_intersect;
+    //CL typedef ITL_SECTION_CODOMAIN(Section,CodomainT) codomain_intersect;
+
+    typedef typename mpl::if_
+    <has_set_semantics<codomain_type>
+    , ITL_SECTION_CODOMAIN(Section,CodomainT)     
+    , codomain_combine
+    >::type                                            codomain_intersect; //JODO extra metafuction?
+    //JODO What, if codomain is not a set but the user want's to use a special intersection functor?
+
+
     /// Inverse Combine functor for codomain value intersection
     typedef typename inverse<codomain_intersect>::type inverse_codomain_intersect;
 
@@ -225,56 +234,24 @@ public:
     //= Containedness
     //==========================================================================
     /** clear the map */
-    void clear() { _map.clear(); }
+    void clear() { itl::clear(*that()); }
 
     /** is the map empty? */
-    bool empty()const { return _map.empty(); }
+    bool empty()const { return itl::is_empty(*that()); }
 
-    //--- contains: set view ---------------------------------------------------
-    /** Does the map contain the domain element \c key? */
-    bool contains(const domain_type& key)const
-    { 
-        return Interval_Map::contains(*this, key);
-    }
-
-    /** Does the map contain the interval \c sub_interval ? */
-    bool contains(const interval_type& sub_interval)const
+    
+    /** Does the map contain some object \c sub of type \c CoType */
+    template<class CoType>
+    bool contains(const CoType& sub)const
     {
-        return Interval_Map::contains(*this, sub_interval);
+        return itl::contains(*that(), sub);
     }
 
-    /** Does the map contain the key key set \c sub_set ? */
-    template<class SetType>
-    bool contains(const interval_base_set<SetType,DomainT,Compare,Interval,Alloc>& sub_set)const
+    /** Is <tt>*this</tt> container within <tt>super</tt>? */
+    template<class CoType>
+    bool within(const CoType& super)const
     {
-        return Interval_Set::within(sub_set, *this); 
-    }
-
-    /** Does the map contain the <tt>key_value_pair = (key,value)</tt>? */
-    bool contains(const element_type& key_value_pair)const
-    { 
-        return contains(value_type(interval_type(key_value_pair.key), 
-                                                 key_value_pair.data));    
-    }
-
-    /** Does the map contain all element value pairs represented by the 
-        \c interval_value_pair ? */
-    bool contains(const segment_type& interval_value_pair)const;
-
-    /** Does <tt>*this</tt> container contain <tt>sub</tt>? */
-    template<class MapType>
-    bool contains(const interval_base_map<MapType,DomainT,CodomainT,Traits,
-                                          Compare,Combine,Section,Interval,Alloc>& sub)const 
-    { 
-        return sub.contained_in(*this); 
-    }
-
-    /** <tt>*this</tt> is subset of <tt>super</tt>? */
-    template<class MapType>
-    bool contained_in(const interval_base_map<MapType,DomainT,CodomainT,Traits,
-                                              Compare,Combine,Section,Interval,Alloc>& super)const
-    { 
-        return Interval_Set::within(*this, super); 
+        return itl::within(*that(), super);
     }
 
     //==========================================================================
@@ -293,38 +270,48 @@ public:
         return itl::cardinality(*that());
     }
 
-    /** The length of the interval container which is the sum of 
-        interval lengths */
-    difference_type length()const;
+    /** The length of the interval container which is the sum of interval lengths */
+    difference_type length()const
+    {
+        return itl::length(*that());
+    }
 
     /** Number of intervals which is also the size of the 
         iteration over the object */
-    size_t interval_count()const { return _map.size(); }
+    size_t interval_count()const 
+    { 
+        return itl::interval_count(*that()); 
+    }
 
     /** Size of the iteration over this container */
-    size_t iterative_size()const { return _map.size(); }
+    size_t iterative_size()const 
+    { 
+        return _map.size(); 
+    }
 
     //==========================================================================
     //= Range
     //==========================================================================
 
-    /** Lower bound of the first interval */
-    DomainT lower()const 
-    { return empty()? interval_type().lower() : (*(_map.begin())).first.lower(); }
+    //JODO remove lower, upper, first, last from the interface of all interval containers and docs
 
-    /** Upper bound of the last interval */
-    DomainT upper()const 
-    { return empty()? interval_type().upper() : (*(_map.rbegin())).first.upper(); }
+    //CL .. /** Lower bound of the first interval */
+    //DomainT lower()const 
+    //{ return empty()? interval_type().lower() : (*(_map.begin())).first.lower(); }
 
-    /** Smallest element of the map (wrt. the partial ordering on DomainT).
-        first() does not exist for continuous datatypes and open interval 
-        bounds. */
-    DomainT first()const { return (*(_map.begin())).first.first(); }
+    ///** Upper bound of the last interval */
+    //DomainT upper()const 
+    //{ return empty()? interval_type().upper() : (*(_map.rbegin())).first.upper(); }
 
-    /** Largest element of the map (wrt. the partial ordering on DomainT).
-        last() does not exist for continuous datatypes and open interval
-        bounds. */
-    DomainT last()const { return (*(_map.rbegin())).first.last(); }
+    ///** Smallest element of the map (wrt. the partial ordering on DomainT).
+    //    first() does not exist for continuous datatypes and open interval 
+    //    bounds. */
+    //DomainT first()const { return (*(_map.begin())).first.first(); }
+
+    ///** Largest element of the map (wrt. the partial ordering on DomainT).
+    //    last() does not exist for continuous datatypes and open interval
+    //    bounds. */
+    //DomainT last()const { return (*(_map.rbegin())).first.last(); }
 
 
     //==========================================================================
@@ -337,7 +324,10 @@ public:
         return _map.find(interval_type(key)); 
     }
 
-    const_iterator find(const key_type& key)const{ return _map.find(key); }
+    const_iterator find(const key_type& key)const
+    { 
+        return _map.find(key); 
+    }
 
     /** Total select function. */
     codomain_type operator()(const domain_type& key)const
@@ -357,7 +347,7 @@ private:
         This function is not public, because the `codomain_combine` shall be
         an invariant for all itl maps.*/
     template<class Combiner>
-    SubType& _add(const segment_type& interval_value_pair) 
+    SubType& _add(const segment_type& interval_value_pair)
     { 
         that()->template add_<Combiner>(interval_value_pair); 
         return *that(); 
@@ -852,7 +842,7 @@ protected:
 } ;
 
 
-
+/*CL
 //==============================================================================
 //= Containedness
 //==============================================================================
@@ -868,12 +858,12 @@ bool interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
 {
     return Interval_Map::contains(*this, sub_segment);
 }
-
+*/
 
 //==============================================================================
 //= Size
 //==============================================================================
-
+/*CL
 template 
 <
     class SubType, class DomainT, class CodomainT, class Traits, 
@@ -890,7 +880,7 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,
         length += itl::length(it_->first);
     return length;
 }
-
+*/
 //==============================================================================
 //= Intersection
 //==============================================================================

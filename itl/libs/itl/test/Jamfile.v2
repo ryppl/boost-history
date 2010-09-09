@@ -49,4 +49,6 @@ test-suite "itl"
       # Concept Map 
       [ run fastest_partial_interval_quantifier_/fastest_partial_interval_quantifier.cpp ]
       [ run fastest_total_interval_quantifier_/fastest_total_interval_quantifier.cpp ]            
+      [ run fastest_partial_icl_quantifier_/fastest_partial_icl_quantifier.cpp ]
+      [ run fastest_total_icl_quantifier_/fastest_total_icl_quantifier.cpp ]            
     ;

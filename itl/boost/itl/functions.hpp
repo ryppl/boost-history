@@ -19,6 +19,7 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/is_interval_joiner.hpp>
 #include <boost/itl/type_traits/is_element_container.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
+#include <boost/itl/type_traits/is_fragment_type_of.hpp>
 #include <boost/itl/detail/interval_map_functors.hpp>
 #include <boost/itl/detail/interval_map_algo.hpp>
 
@@ -37,7 +38,7 @@ namespace boost{namespace itl
 //------------------------------------------------------------------------------
 
 template<class Type, class OperandT>
-typename enable_if<has_same_concept<is_interval_map, Type, OperandT>, 
+typename enable_if<has_same_concept<is_interval_map, Type, OperandT>, //JODO parameter compatibility
                    bool>::type 
 contains(const Type& super, const OperandT& sub)
 {
@@ -518,38 +519,36 @@ erase(Type& object, const OperandT& operand)
 //= Intersection
 //==============================================================================
 //------------------------------------------------------------------------------
-//- Intersection add_intersection
+//- Intersection add_intersection <interval_set>
 //------------------------------------------------------------------------------
 template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
+typename enable_if<is_interval_set<Type>, void>::type
 add_intersection(Type& section, const Type& object, 
-                          const typename Type::domain_type& operand)
+                 const typename Type::domain_type& operand)
 {
     typedef typename Type::const_iterator const_iterator;
     const_iterator found = object.find(operand);
     if(found != object.end())
         itl::add(section, operand);
-
-    return section;
 }
 
 
 template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
+typename enable_if<is_interval_set<Type>, void>::type
 add_intersection(Type& section, const Type& object, 
-                          const typename Type::segment_type& segment)
+                 const typename Type::segment_type& segment)
 {
     typedef typename Type::const_iterator const_iterator;
     typedef typename Type::iterator       iterator;
     typedef typename Type::interval_type  interval_type;
 
     if(itl::is_empty(segment)) 
-        return section;
+        return;
 
     std::pair<const_iterator, const_iterator> exterior 
         = object.equal_range(segment);
     if(exterior.first == exterior.second)
-        return section;
+        return;
 
     iterator prior_ = section.end();
     for(const_iterator it_=exterior.first; it_ != exterior.second; it_++) 
@@ -558,31 +557,168 @@ add_intersection(Type& section, const Type& object,
         if(!itl::is_empty(common_interval))
             prior_ = section._insert(prior_, common_interval);
     }
-    return section;
 }
 
 
 template<class Type, class OperandT>
 typename enable_if<mpl::and_<is_interval_set<Type>, 
                              combines_right_to_interval_set<Type, OperandT> >,
-                   Type>::type&
+                   void>::type
 add_intersection(Type& section, const Type& object, const OperandT& operand)
 {
     typedef typename OperandT::const_iterator const_iterator;
 
     if(operand.empty())
-        return section;
+        return;
 
     const_iterator common_lwb, common_upb;
     if(!Set::common_range(common_lwb, common_upb, operand, object))
-        return section;
+        return;
 
     const_iterator it_ = common_lwb;
     while(it_ != common_upb)
         itl::add_intersection(section, object, OperandT::key_value(it_++));
-
-    return section;
 }
+
+
+//------------------------------------------------------------------------------
+//- Intersection add_intersection<IntervalMaps> for key_types
+//------------------------------------------------------------------------------
+
+//CL? JODO
+template<class Type, class OperandT>
+typename enable_if<mpl::and_< is_total<Type>
+                            , is_interval_map_fragment_type_of<OperandT, Type> >, void>::type
+add_intersection(Type& section, const Type& object, const OperandT& operand)
+{
+    section += object;
+    section += operand;
+}
+
+template<class Type>
+typename enable_if<mpl::and_< mpl::not_<is_total<Type> >, is_interval_map<Type> >, void>::type
+add_intersection(Type& section, const Type& object, const typename Type::element_type& operand)
+{
+    typedef typename Type::segment_type  segment_type;
+    typedef typename Type::interval_type interval_type;
+    add_intersection(section, object, 
+                     segment_type(interval_type(operand.key), operand.data));
+}
+
+template<class Type>
+typename enable_if<mpl::and_< mpl::not_<is_total<Type> >, is_interval_map<Type> >, void>::type
+add_intersection(Type& section, const Type& object, const typename Type::segment_type& operand)
+{
+    typedef typename Type::segment_type       segment_type;
+    typedef typename Type::interval_type      interval_type;
+    typedef typename Type::value_type         value_type;
+    typedef typename Type::const_iterator     const_iterator;
+    typedef typename Type::codomain_combine   codomain_combine;
+    typedef typename Type::codomain_intersect codomain_intersect;
+
+    interval_type inter_val = operand.first;
+    if(itl::is_empty(inter_val)) 
+        return;
+
+    std::pair<const_iterator, const_iterator> exterior 
+        = object.equal_range(inter_val);
+    if(exterior.first == exterior.second)
+        return;
+
+    for(const_iterator it_=exterior.first; it_ != exterior.second; it_++) 
+    {
+        interval_type common_interval = it_->first & inter_val; 
+        if(!itl::is_empty(common_interval))
+        {
+            Interval_Map::add<Type,codomain_combine>  (section, value_type(common_interval, it_->second) );
+            Interval_Map::add<Type,codomain_intersect>(section, value_type(common_interval, operand.second));
+        }
+    }
+}
+
+template<class Type, class MapT>
+typename enable_if<mpl::and_< mpl::not_<is_total<Type> >
+                            , is_concept_compatible<is_interval_map, Type, MapT> >, void>::type
+add_intersection(Type& section, const Type& object, const MapT& operand)
+{
+    typedef typename Type::segment_type   segment_type;
+    typedef typename Type::interval_type  interval_type;
+    typedef typename MapT::const_iterator const_iterator;
+
+    if(operand.empty()) 
+        return;
+    const_iterator common_lwb, common_upb;
+    if(!Set::common_range(common_lwb, common_upb, operand, object))
+        return;
+    const_iterator it_ = common_lwb;
+    while(it_ != common_upb)
+        add_intersection(section, object, *it_++);
+}
+
+//------------------------------------------------------------------------------
+//- Intersection add_intersection<IntervalMaps> for fragment_types
+//------------------------------------------------------------------------------
+
+template<class Type>
+typename enable_if<is_interval_map<Type>, void>::type
+add_intersection(Type& section, const Type& object, 
+                 const typename Type::domain_type& key_value)
+{
+    typedef typename Type::interval_type  interval_type;
+    typedef typename Type::segment_type   segment_type;
+    typedef typename Type::const_iterator const_iterator;
+
+    const_iterator it_ = object.find(key_value);
+    if(it_ != object.end())
+        add(section, segment_type(interval_type(key_value),it_->second));
+}
+
+template<class Type>
+typename enable_if<is_interval_map<Type>, void>::type
+add_intersection(Type& section, const Type& object, 
+                 const typename Type::interval_type& inter_val)
+{
+    typedef typename Type::interval_type  interval_type;
+    typedef typename Type::value_type     value_type;
+    typedef typename Type::const_iterator const_iterator;
+    typedef typename Type::iterator       iterator;
+
+    if(itl::is_empty(inter_val)) 
+        return;
+
+    std::pair<const_iterator, const_iterator> exterior 
+        = object.equal_range(inter_val);
+    if(exterior.first == exterior.second)
+        return;
+
+    iterator prior_ = section.end();
+    for(const_iterator it_=exterior.first; it_ != exterior.second; it_++) 
+    {
+        interval_type common_interval = it_->first & inter_val; 
+        if(!itl::is_empty(common_interval))
+            prior_ = add(section, prior_, 
+                         value_type(common_interval, it_->second) );
+    }
+}
+
+template<class Type, class KeySetT>
+typename enable_if<is_concept_combinable<is_interval_map, is_interval_set, Type, KeySetT>, void>::type
+add_intersection(Type& section, const Type& object, const KeySetT& key_set)
+{
+    typedef typename KeySetT::const_iterator const_iterator;
+
+    if(itl::is_empty(key_set)) 
+        return;
+
+    const_iterator common_lwb, common_upb;
+    if(!Set::common_range(common_lwb, common_upb, key_set, object))
+        return;
+
+    const_iterator it_ = common_lwb;
+    while(it_ != common_upb)
+        add_intersection(section, object, *it_++);
+}
+
 
 
 //------------------------------------------------------------------------------
@@ -593,7 +729,7 @@ typename enable_if<is_right_inter_combinable<Type, OperandT>, Type>::type&
 operator &= (Type& object, const OperandT& operand)
 {
     Type intersection;
-    object.add_intersection(intersection, operand);
+    add_intersection(intersection, object, operand);
     object.swap(intersection);
     return object;
 }

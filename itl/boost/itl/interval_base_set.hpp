@@ -30,6 +30,12 @@ namespace boost{namespace itl
 {
 
 //JODO Forward 4 gcc-3.4.4 -----------------------------------------------------
+
+template<class Type, class OperandT>
+typename enable_if<has_same_concept<is_interval_set, Type, OperandT>, bool>::type 
+contains(const Type& super, const OperandT& sub);
+
+
 template<class Type>
 typename enable_if<is_interval_container<Type>, std::size_t>::type
 interval_count(const Type&);
@@ -75,17 +81,17 @@ subtract(Type&, const typename Type::segment_type&);
 
 //------------------------------------------------------------------------------
 template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
+typename enable_if<is_interval_set<Type>, void>::type
 add_intersection(Type&, const Type&, const typename Type::domain_type&);
 
 template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
+typename enable_if<is_interval_set<Type>, void>::type
 add_intersection(Type&, const Type&, const typename Type::segment_type&);
 
 template<class Type, class OperandT>
 typename enable_if<mpl::and_<is_interval_set<Type>, 
                              combines_right_to_interval_set<Type, OperandT> >,
-                   Type>::type&
+                   void>::type
 add_intersection(Type&, const Type&, const OperandT&);
 
 //------------------------------------------------------------------------------
@@ -252,48 +258,22 @@ public:
     /** is the container empty? */
     bool empty()const { return itl::is_empty(*that()); }
 
-    /** Does the container contain the element \c key ? */
-    bool contains(const element_type& key)const
-    { 
-        return itl::contains(*that(), key); 
-    }
 
-    /** Does the container contain the interval \c sub_interval ? */
-    bool contains(const segment_type& sub_interval)const
-    { 
-        return itl::contains(*that(), sub_interval);
-    }
-
-
-    /** Does the container contain the subcontainer \c sub ? */
-    bool contains(const interval_base_set& sub)const 
-    { 
-        return itl::within(sub, *that()); 
-    }
-
-    /** Does <tt>*this</tt> container contain <tt>sub</tt>? */
-    template
-    <
-        template<class DomT, ITL_COMPARE Comp, 
-                 ITL_INTERVAL2(ITL_COMPARE) Interv, ITL_ALLOC Allc>
-        class IntervalSet
-    >
-    bool contains(const IntervalSet<DomainT,Compare,Interval,Alloc>& sub)const 
-    { 
-        return itl::within(sub,*that()); 
-    }
-
-    /** Is <tt>*this</tt> container contained in <tt>super</tt>? */
-    template
-    <
-        template<class DomT, ITL_COMPARE Comp, 
-                 ITL_INTERVAL2(ITL_COMPARE) Interv, ITL_ALLOC Allc>
-        class IntervalSet
-    >
-    bool contained_in(const IntervalSet<DomainT,Compare,Interval,Alloc>& super)const
+    /** Does the set contain some object \c sub of type \c CoType */
+    template<class CoType>
+    bool contains(const CoType& sub)const
     {
-        return Interval_Set::within(*this, super);
+        return itl::contains(*that(), sub);
     }
+
+    /** Is <tt>*this</tt> container within <tt>super</tt>? */
+    template<class CoType>
+    bool within(const CoType& super)const
+    {
+        return itl::within(*that(), super);
+    }
+
+
 
     //==========================================================================
     //= Size

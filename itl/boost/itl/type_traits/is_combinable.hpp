@@ -255,7 +255,7 @@ struct is_interval_set_right_combinable
 };
 
 template<class GuideT, class CompanionT>
-struct is_interval_map_right_intra_combinable
+struct is_interval_map_right_intra_combinable //JODO equivalent to is_fragment_type_of
 {
     typedef is_interval_map_right_intra_combinable<GuideT, CompanionT> type;
     BOOST_STATIC_CONSTANT(bool, value = 
@@ -272,7 +272,7 @@ struct is_interval_map_right_intra_combinable
 };
 
 template<class GuideT, class CompanionT>
-struct is_interval_map_right_cross_combinable
+struct is_interval_map_right_cross_combinable //JODO == key_type_of<Comp, Guide>
 {
     typedef is_interval_map_right_cross_combinable<GuideT, CompanionT> type;
     BOOST_STATIC_CONSTANT(bool, value = 

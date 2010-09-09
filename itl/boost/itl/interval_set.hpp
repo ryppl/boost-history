@@ -14,6 +14,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/type_traits/is_interval_joiner.hpp>
 #include <boost/itl/interval_base_set.hpp>
 #include <boost/itl/functions/associative_interval_container.hpp>
+                   //JODO    /interval_set_or_map.hpp ?
 #include <boost/itl/functions.hpp>
 
 namespace boost{namespace itl
