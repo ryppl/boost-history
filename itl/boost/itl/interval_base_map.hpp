@@ -50,6 +50,14 @@ struct mapping_pair
         :key(std_pair.first), data(std_pair.second){}
 };
 
+template<class Type>
+inline typename enable_if<is_interval_map<Type>, typename Type::segment_type>::type
+make_segment(const typename Type::element_type& element)
+{
+    typedef typename Type::interval_type interval_type;
+    typedef typename Type::segment_type  segment_type;
+    return segment_type(interval_type(element.key), element.data);
+}
 
 /** \brief Implements a map as a map of intervals (base class) */
 template
@@ -295,25 +303,6 @@ public:
 
     //JODO remove lower, upper, first, last from the interface of all interval containers and docs
 
-    //CL .. /** Lower bound of the first interval */
-    //DomainT lower()const 
-    //{ return empty()? interval_type().lower() : (*(_map.begin())).first.lower(); }
-
-    ///** Upper bound of the last interval */
-    //DomainT upper()const 
-    //{ return empty()? interval_type().upper() : (*(_map.rbegin())).first.upper(); }
-
-    ///** Smallest element of the map (wrt. the partial ordering on DomainT).
-    //    first() does not exist for continuous datatypes and open interval 
-    //    bounds. */
-    //DomainT first()const { return (*(_map.begin())).first.first(); }
-
-    ///** Largest element of the map (wrt. the partial ordering on DomainT).
-    //    last() does not exist for continuous datatypes and open interval
-    //    bounds. */
-    //DomainT last()const { return (*(_map.rbegin())).first.last(); }
-
-
     //==========================================================================
     //= Selection
     //==========================================================================
@@ -359,14 +348,12 @@ public:
     {
         return itl::add(*that(), key_value_pair);
     }
-    //CL { return add( value_type(interval_type(key_value_pair.key), key_value_pair.data) ); }
 
     /** Addition of an interval value pair to the map. */
     SubType& add(const segment_type& interval_value_pair) 
     {
         return itl::add(*that(), interval_value_pair);
     }
-    //CL { that()->template add_<codomain_combine>(interval_value_pair); return *that(); }
 
     /** Addition of an interval value pair \c interval_value_pair to the map. 
         Iterator \c prior_ is a hint to the position \c interval_value_pair can be 
@@ -375,7 +362,6 @@ public:
     {
         return itl::add(*that(), prior_, interval_value_pair);
     }
-    //CL { return that()->template add_<codomain_combine>(prior_, interval_value_pair); }
 
     //==========================================================================
     //= Subtraction
@@ -396,19 +382,13 @@ public:
     /** Subtraction of a key value pair from the map */
     SubType& subtract(const element_type& key_value_pair)
     { 
-        return subtract( value_type(interval_type(key_value_pair.key), 
-                                                  key_value_pair.data) ); 
+        return itl::subtract(*that(), key_value_pair);
     }
 
     /** Subtraction of an interval value pair from the map. */
     SubType& subtract(const segment_type& interval_value_pair)
     {
-        if(mpl::and_<is_total<type>, has_inverse<codomain_type> >::value)
-            that()->template add_<inverse_codomain_combine>(interval_value_pair); 
-        else 
-            that()->template subtract_<inverse_codomain_combine>(interval_value_pair); 
-    
-        return *that();
+        return itl::subtract(*that(), interval_value_pair);
     }
 
     //==========================================================================
@@ -420,41 +400,34 @@ public:
 
     /** Insertion of a \c key_value_pair into the map. */
     SubType& insert(const element_type& key_value_pair) 
-    { 
-        that()->insert(value_type(interval_type(key_value_pair.key), 
-                                                key_value_pair.data)); 
-        return *that();
+    {
+        return itl::insert(*that(), key_value_pair);
     }
 
     /** Insertion of an \c interval_value_pair into the map. */
     SubType& insert(const segment_type& interval_value_pair)
     { 
-        that()->insert_(interval_value_pair); 
-        return *that(); 
+        return itl::insert(*that(), interval_value_pair);
     }
 
     /** Insertion of an \c interval_value_pair into the map. Iterator \c prior_. 
         serves as a hint to insert after the element \c prior point to. */
-    iterator insert(iterator prior_, const segment_type& interval_value_pair)
+    iterator insert(iterator prior, const segment_type& interval_value_pair)
     { 
-        return that()->insert_(prior_, interval_value_pair);
+        return itl::insert(*that(), prior, interval_value_pair);
     }
 
     /** With <tt>key_value_pair = (k,v)</tt> set value \c v for key \c k */
     SubType& set(const element_type& key_value_pair) 
     { 
-        that()->set(value_type(interval_type(key_value_pair.key), 
-                                             key_value_pair.data)); 
-        return *that();
+        return itl::set_at(*that(), key_value_pair);
     }
 
     /** With <tt>interval_value_pair = (I,v)</tt> set value \c v 
         for all keys in interval \c I in the map. */
     SubType& set(const segment_type& interval_value_pair)
     { 
-        erase(interval_value_pair.first); 
-        that()->insert_(interval_value_pair); 
-        return *that(); 
+        return itl::set_at(*that(), interval_value_pair);
     }
 
 
@@ -462,53 +435,11 @@ public:
     //= Erasure
     //==========================================================================
 
-    /** Erase a \c key_value_pair from the map. */
-    SubType& erase(const element_type& key_value_pair) 
-    { 
-        that()->erase_(value_type(interval_type(key_value_pair.key), key_value_pair.data));
-        return *that();
-    }
-
-
-    /** Erase an \c interval_value_pair from the map. */
-    SubType& erase(const segment_type& interval_value_pair)
-    { that()->erase_(interval_value_pair); return *that(); }
-
-
-    /** Erase a key value pair for \c key. */
-    SubType& erase(const domain_type& key) 
-    { erase(interval_type(key)); return *that(); }
-
-
-    /** Erase all value pairs within the range of the 
-        interval <tt>inter_val</tt> from the map.   */
-    SubType& erase(const interval_type& inter_val);
-
-    /** Erase all value pairs for a set of intervals. */
-    template<class SetSubType>
-    SubType& erase(const interval_base_set<SetSubType,DomainT,Compare,Interval,Alloc>& operand)
+    template<class CoType>
+    SubType& erase(const CoType& operand) 
     {
-        typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> operand_type;
-
-        if(itl::is_empty(operand))
-            return *that();
-
-        typename operand_type::const_iterator common_lwb;
-        typename operand_type::const_iterator common_upb;
-
-        if(!Set::common_range(common_lwb, common_upb, operand, *this))
-            return *that();
-
-        typename operand_type::const_iterator it_ = common_lwb;
-        while(it_ != common_upb)
-            erase(*it_++);
-
-        return *that(); 
+        return itl::erase(*that(), operand);
     }
-
-
-    /** Erase all value pairs from \c *this map that are elements of map \eraser */
-    SubType& erase(const interval_base_map& eraser);
 
     /** Erase all value pairs within the range of the interval that iterator 
         \c position points to. */
@@ -524,105 +455,33 @@ public:
     //==========================================================================
     //= Intersection
     //==========================================================================
-
-    /** The intersection of \c key in \c *this map is added to \c section.
-        This can also be used to find \c key in \c *this map */
-    void add_intersection(interval_base_map& section, const domain_type& key)const
-    { add_intersection(section, interval_type(key)); }
-
-    /** The intersection of \c key_value_pair and \c *this map is added to \c section. */
-    void add_intersection(interval_base_map& section, const element_type& key_value_pair)const
-    { add_intersection(section, value_type(interval_type(key_value_pair.key), key_value_pair.data)); }
-
-    /** The intersection of \c interval_value_pair and \c *this map is added to \c section. */
-    void add_intersection(interval_base_map& section, const segment_type& interval_value_pair)const;
-
-    /** The intersection of \c inter_val with \c *this map is added to \c section. */
-    void add_intersection(interval_base_map& section, const interval_type& inter_val)const;
-
-    /** The intersection of set \c sectant with \c *this map is added to \c section. */
-    template
-    <
-        template
-        <class DomT, ITL_COMPARE Comp, ITL_INTERVAL2(ITL_COMPARE) Interv, ITL_ALLOC Allc>
-        class IntervalSet
-    >
-    void add_intersection
-    (
-              interval_base_map& section, 
-        const IntervalSet<DomainT,Compare,Interval,Alloc>& sectant
-    )const
-    {
-        typedef IntervalSet<DomainT,Compare,Interval,Alloc> sectant_type;
-        if(itl::is_empty(sectant)) 
-            return;
-
-        typename sectant_type::const_iterator common_lwb;
-        typename sectant_type::const_iterator common_upb;
-        if(!Set::common_range(common_lwb, common_upb, sectant, *this))
-            return;
-
-        typename sectant_type::const_iterator it_ = common_lwb;
-        while(it_ != common_upb)
-            add_intersection(section, *it_++);
-    }
-
-
-    /** The intersection of map \c sectant with \c *this map is added to \c section. */
-    template
-    <
-        template
-        <    
-            class DomT, class CodomT, class Trts, 
-            ITL_COMPARE Comp, ITL_COMBINE Combi, ITL_SECTION Sect,
-            ITL_INTERVAL2(ITL_COMPARE) Interv, ITL_ALLOC Allc
-        >
-        class IntervalMap
-    >
-    void add_intersection
-    (
-        interval_base_map& intersection,
-        const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& sectant
-    )const;
-
-
     /** Returns \c true, if element \c key is found in \c *this map.
         Complexity: logarithmic. */
     bool intersects(const domain_type& key)const
     {
-        return contains(key);
+		return itl::intersects(*that(), key);
     }
 
     /** Returns \c true, if \c inter_val intersects with \c *this map.
         Complexity: Logarithmic in iterative size. */
     bool intersects(const interval_type& inter_val)const
     { 
-        if(Traits::is_total)
-            return true;
-        std::pair<const_iterator,const_iterator> overlap = equal_range(inter_val);
-        return overlap.first == overlap.second;
+		return itl::intersects(*that(), inter_val);
     }
 
     /** Returns \c true, if \c key_value_pair is found in \c *this map.
         Complexity: logarithmic. */
     bool intersects(const element_type& key_value_pair)const
     { 
-        return intersects(segment_type(interval_type(key_value_pair.key), key_value_pair.data));
+		return itl::intersects(*that(), key_value_pair);
     }
 
     /** Returns \c true, if \c interval_value_pair intersects with \c *this map:
         Complexity: Linear in iterative_size. */
     bool intersects(const segment_type& interval_value_pair)const
     {
-        if(traits::is_total)
-            return true;
-
-        type intersection;
-        add_intersection(intersection, interval_value_pair);
-        return !itl::is_empty(intersection); 
+		return itl::intersects(*that(), interval_value_pair);
     }
-
-
 
     //==========================================================================
     //= Symmetric difference
@@ -842,171 +701,6 @@ protected:
 } ;
 
 
-/*CL
-//==============================================================================
-//= Containedness
-//==============================================================================
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-bool interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::contains(const typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-               ::segment_type& sub_segment)const
-{
-    return Interval_Map::contains(*this, sub_segment);
-}
-*/
-
-//==============================================================================
-//= Size
-//==============================================================================
-/*CL
-template 
-<
-    class SubType, class DomainT, class CodomainT, class Traits, 
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, 
-    ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-typename interval_base_map<SubType,DomainT,CodomainT,Traits,
-                           Compare,Combine,Section,Interval,Alloc>::difference_type 
-interval_base_map<SubType,DomainT,CodomainT,Traits,
-                  Compare,Combine,Section,Interval,Alloc>::length()const
-{
-    difference_type length = neutron<difference_type>::value();
-    const_FOR_IMPLMAP(it_)
-        length += itl::length(it_->first);
-    return length;
-}
-*/
-//==============================================================================
-//= Intersection
-//==============================================================================
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, 
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, 
-    ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-    template
-    <
-        template
-        <    
-            class DomT, class CodomT, class Trts, 
-            ITL_COMPARE Comp, ITL_COMBINE Combi, ITL_SECTION Sect,
-            ITL_INTERVAL2(ITL_COMPARE) Interv, ITL_ALLOC Allc
-        >
-        class IntervalMap
-    >
-void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::add_intersection
-(
-    interval_base_map& intersection,
-    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& sectant
-)const
-{
-    typedef IntervalMap<DomainT,CodomainT,
-                        Traits,Compare,Combine,Section,Interval,Alloc> sectant_type;
-
-    if(Traits::is_total)
-    {
-        intersection = *this;
-        intersection += sectant;
-    }
-    else
-    {
-        if(sectant.empty()) 
-            return;
-        typename sectant_type::const_iterator common_lwb;
-        typename sectant_type::const_iterator common_upb;
-        if(!Set::common_range(common_lwb, common_upb, sectant, *this))
-            return;
-        typename sectant_type::const_iterator it_ = common_lwb;
-        while(it_ != common_upb)
-            add_intersection(intersection, *it_++);
-    }
-}
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::add_intersection(interval_base_map& section, 
-                    const typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-                    ::segment_type& sectant)const
-{
-    if(Traits::is_total)
-    {
-        section = *this;
-        section.add(sectant);
-    }
-    else
-    {
-        interval_type sectant_interval = sectant.first;
-        if(itl::is_empty(sectant_interval)) 
-            return;
-
-        const_iterator first_ = _map.lower_bound(sectant_interval);
-        const_iterator end_   = _map.upper_bound(sectant_interval);
-
-        const_iterator it_;
-        iterator prior_ = section.end();
-
-        if(has_set_semantics<CodomainT>::value)
-            for(it_=first_; it_ != end_; it_++) 
-            {
-                interval_type common_interval = it_->first & sectant_interval; 
-                if(!itl::is_empty(common_interval))
-                {
-                    section.that()->add(value_type(common_interval, it_->second));
-                    section.that()->template _add<codomain_intersect>(value_type(common_interval, sectant.second)); 
-                }
-            }
-        else
-            for(it_=first_; it_ != end_; it_++) 
-            {
-                interval_type common_interval = it_->first & sectant_interval; 
-                if(!itl::is_empty(common_interval))
-                {
-                    section.that()->add(value_type(common_interval, it_->second) );
-                    section.that()->template _add<codomain_combine>(value_type(common_interval, sectant.second));
-                }
-            }
-
-    }
-}
-
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::add_intersection(interval_base_map& section, 
-                    const typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-                    ::interval_type& sectant_interval)const
-{
-    if(itl::is_empty(sectant_interval)) 
-        return;
-
-    typename ImplMapT::const_iterator first_ = _map.lower_bound(sectant_interval);
-    typename ImplMapT::const_iterator end_   = _map.upper_bound(sectant_interval);
-
-    iterator prior_ = section.end();
-    for(typename ImplMapT::const_iterator it_=first_; it_ != end_; it_++) 
-    {
-        interval_type common_interval = it_->first & sectant_interval; 
-        if(!itl::is_empty(common_interval))
-            prior_ = section.that()->gap_insert<codomain_combine>(prior_, common_interval, it_->second );
-    }
-}
 
 //==============================================================================
 //= Symmetric difference
@@ -1224,75 +918,6 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
     // I can do this only, because I am sure that the contents and the
     // ordering < on interval is invariant wrt. this transformation on bounds
     FOR_IMPLMAP(it_) const_cast<interval_type&>(it_->first).as(bounded);
-}
-
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::erase(const interval_type& minuend)
-{
-    if(itl::is_empty(minuend)) 
-        return *that();
-
-    iterator first_ = _map.lower_bound(minuend);
-    if(first_==_map.end()) 
-        return *that();
-    iterator end_   = _map.upper_bound(minuend);
-    if(first_==end_  )
-        return *that();
-
-    iterator last_  = end_; --last_;
-
-    interval_type left_resid  = right_subtract(first_->first, minuend);
-    interval_type right_resid =  left_subtract(last_ ->first, minuend);
-
-    if(first_ == last_ )
-        if(!itl::is_empty(left_resid))
-        {
-            const_cast<interval_type&>(first_->first) = left_resid;
-            if(!itl::is_empty(right_resid))
-                this->_map.insert(first_, value_type(right_resid, first_->second));
-        }
-        else if(!itl::is_empty(right_resid))
-            const_cast<interval_type&>(first_->first) = left_subtract(first_->first, minuend);
-        else
-            this->_map.erase(first_);
-    else
-    {   //            [-------- minuend ---------)
-        // [left_resid   fst)   . . . .    [lst  right_resid)
-        iterator second_= first_; ++second_;
-
-        iterator start_ = itl::is_empty(left_resid)? first_: second_;
-        iterator stop_  = itl::is_empty(right_resid)? end_  : last_ ;
-        this->_map.erase(start_, stop_); //erase [start_, stop_)
-
-        if(!itl::is_empty(left_resid))
-            const_cast<interval_type&>(first_->first) = left_resid;
-
-        if(!itl::is_empty(right_resid))
-            const_cast<interval_type&>(last_ ->first) = right_resid;
-    }
-    return *that();
-}
-
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-SubType& 
-interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::erase(const interval_base_map& erasure)
-{
-    ITL_const_FORALL(typename interval_base_map, value_pair_, erasure)
-        that()->erase_(*value_pair_);
-
-    return *that();
 }
 
 
