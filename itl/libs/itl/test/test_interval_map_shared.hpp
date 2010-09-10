@@ -530,7 +530,7 @@ void interval_map_operators_4_bicremental_types()
     IntervalMapT left, left2, right, all, section, complement;
     left.add(I0_1I_u1).add(I3_5I_u1);
     (right += I3_5I_u1) += I7_8I_u1;
-    BOOST_CHECK_EQUAL( is_disjoint(left, right), false );
+    BOOST_CHECK_EQUAL( disjoint(left, right), false );
     BOOST_CHECK_EQUAL( intersects(left, right), true );
 
     (all += left) += right;
@@ -539,7 +539,7 @@ void interval_map_operators_4_bicremental_types()
     complement += all;
     //complement.erase(I3_5I);
     complement.erase(section);
-    BOOST_CHECK_EQUAL( is_disjoint(section, complement), true );
+    BOOST_CHECK_EQUAL( disjoint(section, complement), true );
     BOOST_CHECK_EQUAL( intersects(section, complement), false );
 }
 
@@ -820,17 +820,17 @@ void interval_map_base_is_disjoint_4_bicremental_types()
 
     map_A.add(I1_3D_1).add(I6_8D_1);
     map_B.add(I0_1D_1).add(I3_6D_1).add(I8_9D_1);
-    BOOST_CHECK_EQUAL( is_disjoint(map_A, map_B), true );
-    BOOST_CHECK_EQUAL( is_disjoint(map_B, map_A), true );
+    BOOST_CHECK_EQUAL( disjoint(map_A, map_B), true );
+    BOOST_CHECK_EQUAL( disjoint(map_B, map_A), true );
     BOOST_CHECK_EQUAL( intersects(map_A, map_B), false );
     BOOST_CHECK_EQUAL( intersects(map_B, map_A), false );
 
     map_A.domain(set_A);
     map_B.domain(set_B);
-    BOOST_CHECK_EQUAL( is_disjoint(map_A, set_B), true );
-    BOOST_CHECK_EQUAL( is_disjoint(set_B, map_A), true );
-    BOOST_CHECK_EQUAL( is_disjoint(set_A, map_B), true );
-    BOOST_CHECK_EQUAL( is_disjoint(map_B, set_A), true );
+    BOOST_CHECK_EQUAL( disjoint(map_A, set_B), true );
+    BOOST_CHECK_EQUAL( disjoint(set_B, map_A), true );
+    BOOST_CHECK_EQUAL( disjoint(set_A, map_B), true );
+    BOOST_CHECK_EQUAL( disjoint(map_B, set_A), true );
     BOOST_CHECK_EQUAL( intersects(map_A, set_B), false );
     BOOST_CHECK_EQUAL( intersects(set_B, map_A), false );
     BOOST_CHECK_EQUAL( intersects(set_A, map_B), false );
@@ -838,17 +838,17 @@ void interval_map_base_is_disjoint_4_bicremental_types()
 
     map_A += I5_7D_1;
 
-    BOOST_CHECK_EQUAL( is_disjoint(map_A, map_B), false );
-    BOOST_CHECK_EQUAL( is_disjoint(map_B, map_A), false );
+    BOOST_CHECK_EQUAL( disjoint(map_A, map_B), false );
+    BOOST_CHECK_EQUAL( disjoint(map_B, map_A), false );
     BOOST_CHECK_EQUAL( intersects(map_A, map_B),  true );
     BOOST_CHECK_EQUAL( intersects(map_B, map_A),  true );
 
     map_A.domain(set_A);
     map_B.domain(set_B);
-    BOOST_CHECK_EQUAL( is_disjoint(map_A, set_B), false );
-    BOOST_CHECK_EQUAL( is_disjoint(set_B, map_A), false );
-    BOOST_CHECK_EQUAL( is_disjoint(set_A, map_B), false );
-    BOOST_CHECK_EQUAL( is_disjoint(map_B, set_A), false );
+    BOOST_CHECK_EQUAL( disjoint(map_A, set_B), false );
+    BOOST_CHECK_EQUAL( disjoint(set_B, map_A), false );
+    BOOST_CHECK_EQUAL( disjoint(set_A, map_B), false );
+    BOOST_CHECK_EQUAL( disjoint(map_B, set_A), false );
     BOOST_CHECK_EQUAL( intersects(map_A, set_B), true );
     BOOST_CHECK_EQUAL( intersects(set_B, map_A), true );
     BOOST_CHECK_EQUAL( intersects(set_A, map_B), true );

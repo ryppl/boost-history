@@ -465,14 +465,14 @@ void interval_set_operators_4_bicremental_types()
     left.add(IntervalT::closed(v0,v1)).add(IntervalT::closed(v3,v5));
     (right += IntervalT::closed(v3,v5)) += IntervalT::closed(v7,v8);
 
-    BOOST_CHECK_EQUAL( is_disjoint(left, right), false );
+    BOOST_CHECK_EQUAL( disjoint(left, right), false );
 
     (all += left) += right;
     (section += left) &= right;
     (complement += all) -= section;
     (all2 += section) += complement; 
 
-    BOOST_CHECK_EQUAL( is_disjoint(section, complement), true );
+    BOOST_CHECK_EQUAL( disjoint(section, complement), true );
     BOOST_CHECK_EQUAL( all, all2 );
 
     BOOST_CHECK_EQUAL( call::contains(all, left), true );

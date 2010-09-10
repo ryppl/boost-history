@@ -1435,11 +1435,11 @@ void interval_map_mixed_disjoint_4_bicremental_types()
 
     IntervalMapT join_A(split_A), join_B(split_B);
 
-    BOOST_CHECK_EQUAL( is_disjoint(split_A, split_B), true );
-    BOOST_CHECK_EQUAL( is_disjoint(split_A, join_B),  true );
+    BOOST_CHECK_EQUAL( disjoint(split_A, split_B), true );
+    BOOST_CHECK_EQUAL( disjoint(split_A, join_B),  true );
 
-    BOOST_CHECK_EQUAL( is_disjoint(join_A,  split_B), true );
-    BOOST_CHECK_EQUAL( is_disjoint(join_A,  join_B),  true );
+    BOOST_CHECK_EQUAL( disjoint(join_A,  split_B), true );
+    BOOST_CHECK_EQUAL( disjoint(join_A,  join_B),  true );
 }
 
 template<class Type>

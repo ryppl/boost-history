@@ -765,17 +765,17 @@ void interval_set_mixed_disjoint_4_bicremental_types()
     separate_interval_set<T> sep_A(split_A), sep_B(split_B);
     interval_set<T> join_A(split_A), join_B(split_B);
 
-    BOOST_CHECK_EQUAL( is_disjoint(split_A, split_B), true );
-    BOOST_CHECK_EQUAL( is_disjoint(split_A, sep_B),   true );
-    BOOST_CHECK_EQUAL( is_disjoint(split_A, join_B),  true );
+    BOOST_CHECK_EQUAL( disjoint(split_A, split_B), true );
+    BOOST_CHECK_EQUAL( disjoint(split_A, sep_B),   true );
+    BOOST_CHECK_EQUAL( disjoint(split_A, join_B),  true );
 
-    BOOST_CHECK_EQUAL( is_disjoint(sep_A,   split_B), true );
-    BOOST_CHECK_EQUAL( is_disjoint(sep_A,   sep_B),   true );
-    BOOST_CHECK_EQUAL( is_disjoint(sep_A,   join_B),  true );
+    BOOST_CHECK_EQUAL( disjoint(sep_A,   split_B), true );
+    BOOST_CHECK_EQUAL( disjoint(sep_A,   sep_B),   true );
+    BOOST_CHECK_EQUAL( disjoint(sep_A,   join_B),  true );
 
-    BOOST_CHECK_EQUAL( is_disjoint(join_A,  split_B), true );
-    BOOST_CHECK_EQUAL( is_disjoint(join_A,  sep_B),   true );
-    BOOST_CHECK_EQUAL( is_disjoint(join_A,  join_B),  true );
+    BOOST_CHECK_EQUAL( disjoint(join_A,  split_B), true );
+    BOOST_CHECK_EQUAL( disjoint(join_A,  sep_B),   true );
+    BOOST_CHECK_EQUAL( disjoint(join_A,  join_B),  true );
 }
 
 template <class T> 

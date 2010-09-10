@@ -250,11 +250,7 @@ operator += (Type& object, const OperandT& operand)
 {
     typename Type::iterator prior_ = object.end();
     ITL_const_FORALL(typename OperandT, elem_, operand) 
-        prior_ = object.add(prior_, *elem_);
-        //JODO prior_ = itl::add(object, prior_, *elem_); 
-        //JODO Problems with missing combining style of interval_baseobject.
-        //JODO Prior to this, we have to implement the Trait class for
-        //JODO combining styles for interval_base_maps.
+        prior_ = itl::add(object, prior_, *elem_); 
 
     return object; 
 }
@@ -285,7 +281,7 @@ typename enable_if<is_intra_derivative<Type, OperandT>, Type>::type&
 operator += (Type& object, const OperandT& operand)
 { 
     //JODO return itl::add(object, operand); 
-    return object.add(operand); 
+	return itl::add(object, operand); 
 }
 
 
@@ -388,6 +384,186 @@ Type operator | (typename Type::overloadable_type object, const Type& operand)
     return object += operand; 
 }
 
+//==============================================================================
+//= Insertion
+//==============================================================================
+//------------------------------------------------------------------------------
+//- Insertion<Interval_Set> fragment_types
+//------------------------------------------------------------------------------
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+insert(Type& object, const typename Type::element_type& operand)
+{
+    return itl::add(object, operand);
+}
+
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+insert(Type& object, const typename Type::segment_type& operand)
+{
+    return itl::add(object, operand);
+}
+
+//------------------------------------------------------------------------------
+//- Insertion<Interval_Map> fragment_types
+//------------------------------------------------------------------------------
+template<class Type>
+typename enable_if<is_interval_map<Type>, Type>::type&
+insert(Type& object, const typename Type::element_type& operand)
+{
+    Interval_Map::insert(object, make_segment<Type>(operand));
+    return object;
+}
+
+template<class Type>
+typename enable_if<is_interval_map<Type>, Type>::type&
+insert(Type& object, const typename Type::segment_type& operand)
+{
+    Interval_Map::insert(object, operand);
+    return object;
+}
+
+template<class Type>
+typename enable_if<is_interval_map<Type>, typename Type::iterator>::type
+insert(Type& object, typename Type::iterator      prior,
+               const typename Type::segment_type& operand)
+{
+    return Interval_Map::insert(object, prior, operand);
+}
+
+//------------------------------------------------------------------------------
+template<class Type, class OperandT>
+typename enable_if<is_intra_combinable<Type, OperandT>, Type>::type&
+insert(Type& object, const OperandT& operand)
+{
+    typename Type::iterator prior_ = object.end();
+    ITL_const_FORALL(typename OperandT, elem_, operand) 
+        insert(object, *elem_); 
+
+    return object; 
+}
+
+//==============================================================================
+//= Erasure
+//==============================================================================
+//------------------------------------------------------------------------------
+//- Erasure<Interval_Set> fragment_types
+//------------------------------------------------------------------------------
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+erase(Type& object, const typename Type::segment_type& minuend)
+{
+    return itl::subtract(object, minuend);
+}
+
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+erase(Type& object, const typename Type::element_type& minuend)
+{
+    return itl::subtract(object, minuend);
+}
+
+//------------------------------------------------------------------------------
+//- Erasure<Interval_Map> key_types
+//------------------------------------------------------------------------------
+template<class Type>
+typename enable_if<is_interval_map<Type>, Type>::type&
+erase(Type& object, const typename Type::interval_type& minuend)
+{
+    typedef typename Type::interval_type  interval_type;
+    typedef typename Type::value_type     value_type;
+    typedef typename Type::iterator       iterator;
+
+    if(itl::is_empty(minuend)) 
+        return object;
+
+    std::pair<iterator, iterator> exterior = object.equal_range(minuend);
+    if(exterior.first == exterior.second)
+        return object;
+
+    iterator first_ = exterior.first,
+             end_   = exterior.second,
+             last_  = prior(end_);
+
+    interval_type left_resid  = right_subtract(first_->first, minuend);
+    interval_type right_resid =  left_subtract(last_ ->first, minuend);
+
+    if(first_ == last_ )
+        if(!itl::is_empty(left_resid))
+        {
+            const_cast<interval_type&>(first_->first) = left_resid;
+            if(!itl::is_empty(right_resid))
+				itl::insert(object, first_, value_type(right_resid, first_->second));
+        }
+        else if(!itl::is_empty(right_resid))
+            const_cast<interval_type&>(first_->first) = left_subtract(first_->first, minuend);
+        else
+            object.erase(first_);
+    else
+    {   //            [-------- minuend ---------)
+        // [left_resid   fst)   . . . .    [lst  right_resid)
+        iterator second_= first_; ++second_;
+
+        iterator start_ = itl::is_empty(left_resid)? first_: second_;
+        iterator stop_  = itl::is_empty(right_resid)? end_  : last_ ;
+        object.erase(start_, stop_); //erase [start_, stop_)
+
+        if(!itl::is_empty(left_resid))
+            const_cast<interval_type&>(first_->first) = left_resid;
+
+        if(!itl::is_empty(right_resid))
+            const_cast<interval_type&>(last_ ->first) = right_resid;
+    }
+    return object;
+}
+
+template<class Type>
+typename enable_if<is_interval_map<Type>, Type>::type&
+erase(Type& object, const typename Type::domain_type& minuend)
+{
+    typedef typename Type::interval_type interval_type;
+    return itl::erase(object, interval_type(minuend));
+}
+
+//------------------------------------------------------------------------------
+//- Erasure<Interval_Map> fragment_types
+//------------------------------------------------------------------------------
+template<class Type>
+typename enable_if<is_interval_map<Type>, Type>::type&
+erase(Type& object, const typename Type::segment_type& minuend)
+{
+    Interval_Map::erase(object, minuend);
+    return object;
+}
+
+template<class Type>
+typename enable_if<is_interval_map<Type>, Type>::type&
+erase(Type& object, const typename Type::element_type& minuend)
+{
+    return itl::erase(object, make_segment<Type>(minuend));
+}
+
+//------------------------------------------------------------------------------
+template<class Type, class OperandT>
+typename enable_if<combines_right_to_interval_container<Type, OperandT>,
+                   Type>::type&
+erase(Type& object, const OperandT& operand)
+{
+    typedef typename OperandT::const_iterator const_iterator;
+
+    if(itl::is_empty(operand))
+        return object;
+
+    const_iterator common_lwb, common_upb;
+    if(!Set::common_range(common_lwb, common_upb, operand, object))
+        return object;
+
+    const_iterator it_ = common_lwb;
+    while(it_ != common_upb)
+        itl::erase(object, *it_++);
+
+    return object; 
+}
 
 //==============================================================================
 //= Subtraction
@@ -504,7 +680,7 @@ typename enable_if<has_same_concept<is_interval_map, Type, OperandT>,
 operator -=(Type& object, const OperandT& operand)
 {
     ITL_const_FORALL(typename OperandT, elem_, operand) 
-        object.subtract(*elem_); //JODO 
+		itl::subtract(object, *elem_);
 
     return object; 
 }
@@ -513,15 +689,14 @@ template<class Type, class OperandT>
 typename enable_if<is_intra_derivative<Type, OperandT>, Type>::type&
 operator -= (Type& object, const OperandT& operand)
 { 
-    //JODO return itl::subtract(object, operand); 
-    return object.subtract(operand); 
+	return itl::subtract(object, operand); 
 }
 
 template<class Type, class OperandT>
 typename enable_if<is_cross_derivative<Type, OperandT>, Type>::type&
 operator -= (Type& object, const OperandT& operand)
 { 
-    return object.erase(operand); 
+	return itl::erase(object, operand); 
 }
 
 template<class Type, class IntervalSetT>
@@ -540,187 +715,6 @@ operator - (Type object, const OperandT& operand)
     return object -= operand; 
 }
 
-//==============================================================================
-//= Insertion
-//==============================================================================
-//------------------------------------------------------------------------------
-//- Insertion<Interval_Set> fragment_types
-//------------------------------------------------------------------------------
-template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
-insert(Type& object, const typename Type::element_type& operand)
-{
-    return itl::add(object, operand);
-}
-
-template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
-insert(Type& object, const typename Type::segment_type& operand)
-{
-    return itl::add(object, operand);
-}
-
-//------------------------------------------------------------------------------
-//- Insertion<Interval_Map> fragment_types
-//------------------------------------------------------------------------------
-template<class Type>
-typename enable_if<is_interval_map<Type>, Type>::type&
-insert(Type& object, const typename Type::element_type& operand)
-{
-    Interval_Map::insert(object, make_segment<Type>(operand));
-    return object;
-}
-
-template<class Type>
-typename enable_if<is_interval_map<Type>, Type>::type&
-insert(Type& object, const typename Type::segment_type& operand)
-{
-    Interval_Map::insert(object, operand);
-    return object;
-}
-
-template<class Type>
-typename enable_if<is_interval_map<Type>, typename Type::iterator>::type
-insert(Type& object, typename Type::iterator      prior,
-               const typename Type::segment_type& operand)
-{
-    return Interval_Map::insert(object, prior, operand);
-}
-
-//------------------------------------------------------------------------------
-template<class Type, class OperandT>
-typename enable_if<is_intra_combinable<Type, OperandT>, Type>::type&
-insert(Type& object, const OperandT& operand)
-{
-    typename Type::iterator prior_ = object.end();
-    ITL_const_FORALL(typename OperandT, elem_, operand) 
-        insert(object, *elem_); 
-
-    return object; 
-}
-
-
-//==============================================================================
-//= Erasure
-//==============================================================================
-//------------------------------------------------------------------------------
-//- Erasure<Interval_Set> fragment_types
-//------------------------------------------------------------------------------
-template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
-erase(Type& object, const typename Type::segment_type& minuend)
-{
-	return itl::subtract(object, minuend);
-}
-
-template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
-erase(Type& object, const typename Type::element_type& minuend)
-{
-	return itl::subtract(object, minuend);
-}
-
-//------------------------------------------------------------------------------
-//- Erasure<Interval_Map> key_types
-//------------------------------------------------------------------------------
-template<class Type>
-typename enable_if<is_interval_map<Type>, Type>::type&
-erase(Type& object, const typename Type::interval_type& minuend)
-{
-    typedef typename Type::interval_type  interval_type;
-    typedef typename Type::value_type     value_type;
-    typedef typename Type::iterator       iterator;
-
-    if(itl::is_empty(minuend)) 
-        return object;
-
-    std::pair<iterator, iterator> exterior = object.equal_range(minuend);
-    if(exterior.first == exterior.second)
-        return object;
-
-	iterator first_ = exterior.first,
-		     end_   = exterior.second,
-		     last_  = prior(end_);
-
-    interval_type left_resid  = right_subtract(first_->first, minuend);
-    interval_type right_resid =  left_subtract(last_ ->first, minuend);
-
-    if(first_ == last_ )
-        if(!itl::is_empty(left_resid))
-        {
-            const_cast<interval_type&>(first_->first) = left_resid;
-            if(!itl::is_empty(right_resid))
-                object.insert(first_, value_type(right_resid, first_->second));
-        }
-        else if(!itl::is_empty(right_resid))
-            const_cast<interval_type&>(first_->first) = left_subtract(first_->first, minuend);
-        else
-            object.erase(first_);
-    else
-    {   //            [-------- minuend ---------)
-        // [left_resid   fst)   . . . .    [lst  right_resid)
-        iterator second_= first_; ++second_;
-
-        iterator start_ = itl::is_empty(left_resid)? first_: second_;
-        iterator stop_  = itl::is_empty(right_resid)? end_  : last_ ;
-        object.erase(start_, stop_); //erase [start_, stop_)
-
-        if(!itl::is_empty(left_resid))
-            const_cast<interval_type&>(first_->first) = left_resid;
-
-        if(!itl::is_empty(right_resid))
-            const_cast<interval_type&>(last_ ->first) = right_resid;
-    }
-    return object;
-}
-
-template<class Type>
-typename enable_if<is_interval_map<Type>, Type>::type&
-erase(Type& object, const typename Type::domain_type& minuend)
-{
-    typedef typename Type::interval_type interval_type;
-	return itl::erase(object, interval_type(minuend));
-}
-
-//------------------------------------------------------------------------------
-//- Erasure<Interval_Map> fragment_types
-//------------------------------------------------------------------------------
-template<class Type>
-typename enable_if<is_interval_map<Type>, Type>::type&
-erase(Type& object, const typename Type::segment_type& minuend)
-{
-	Interval_Map::erase(object, minuend);
-	return object;
-}
-
-template<class Type>
-typename enable_if<is_interval_map<Type>, Type>::type&
-erase(Type& object, const typename Type::element_type& minuend)
-{
-	return itl::erase(object, make_segment<Type>(minuend));
-}
-
-//------------------------------------------------------------------------------
-template<class Type, class OperandT>
-typename enable_if<combines_right_to_interval_container<Type, OperandT>,
-                   Type>::type&
-erase(Type& object, const OperandT& operand)
-{
-	typedef typename OperandT::const_iterator const_iterator;
-
-    if(itl::is_empty(operand))
-        return object;
-
-    const_iterator common_lwb, common_upb;
-    if(!Set::common_range(common_lwb, common_upb, operand, object))
-        return object;
-
-    const_iterator it_ = common_lwb;
-    while(it_ != common_upb)
-		itl::erase(object, *it_++);
-
-    return object; 
-}
 
 //------------------------------------------------------------------------------
 //- set (selective update)
@@ -1107,16 +1101,15 @@ typename enable_if<mpl::and_< is_interval_map<Type>
                    bool>::type
 intersects(const Type& left, const AssociateT& right)
 {
-    return left.intersects(right);
+	return itl::intersects(left, right);
 }
 
 /** \b Returns true, if \c left and \c right have no common elements.
     Intervals are interpreted as sequence of elements.
     \b Complexity: loglinear, if \c left and \c right are interval containers. */
 template<class LeftT, class RightT>
-typename enable_if<is_inter_combinable<LeftT, RightT>, 
-                          bool>::type
-is_disjoint(const LeftT& left, const RightT& right)
+typename enable_if<is_inter_combinable<LeftT, RightT>, bool>::type
+disjoint(const LeftT& left, const RightT& right)
 {
     return !intersects(left, right);
 }
@@ -1126,9 +1119,8 @@ is_disjoint(const LeftT& left, const RightT& right)
     \b Complexity: logarithmic, if \c AssociateT is an element type \c Type::element_type. 
     linear, if \c AssociateT is a segment type \c Type::segment_type. */
 template<class Type, class AssociateT>
-typename enable_if<is_inter_derivative<Type, AssociateT>, 
-                          bool>::type
-is_disjoint(const Type& left, const AssociateT& right)
+typename enable_if<is_inter_derivative<Type, AssociateT>, bool>::type
+disjoint(const Type& left, const AssociateT& right)
 {
     return !left.intersects(right);
 }
@@ -1138,25 +1130,17 @@ is_disjoint(const Type& left, const AssociateT& right)
 //= Symmetric difference
 //==============================================================================
 //------------------------------------------------------------------------------
-//- Symmetric difference flip
+//- Symmetric difference flip<Interval_Set> fragment_types
 //------------------------------------------------------------------------------
-
 template<class Type>
 typename enable_if<is_interval_set<Type>, Type>::type&
-flip(Type& object, const typename Type::domain_type& operand)
+flip(Type& object, const typename Type::element_type& operand)
 {
     if(itl::contains(object, operand))
         return object -= operand;
     else
         return object += operand;
 }
-
-//JODO MEMO: This did not compile, no idea why.
-//template<class Type, class OperandT>
-//typename enable_if<mpl::and_< is_interval_set<Type>
-//                            , is_same<segment_type_of<Type>, OperandT> >, 
-//                          Type>::type&
-//flip(Type& object, const OperandT& segment)
 
 template<class Type>
 typename enable_if<is_interval_set<Type>, Type>::type&
@@ -1199,8 +1183,8 @@ flip(Type& object, const typename Type::segment_type& segment)
 
 
 template<class Type, class OperandT>
-typename enable_if<has_same_concept<is_interval_set, Type, OperandT>, Type>::type&
-JODO_flip(Type& object, const OperandT& operand)
+typename enable_if<is_concept_compatible<is_interval_set, Type, OperandT>, Type>::type&
+flip(Type& object, const OperandT& operand)
 {
     typedef typename OperandT::const_iterator const_iterator;
 
@@ -1227,6 +1211,156 @@ JODO_flip(Type& object, const OperandT& operand)
     return object;
 }
 
+//------------------------------------------------------------------------------
+//- Symmetric difference flip<Interval_Map> fragment_types
+//------------------------------------------------------------------------------
+template<class Type, class OperandT>
+typename enable_if< mpl::and_< is_interval_map_right_intra_combinable<Type, OperandT> //JODO =^= fragment_type_of
+                             , is_total<Type>
+                             , absorbs_neutrons<Type> >
+                  , Type >::type&
+flip(Type& object, const OperandT&)
+{
+    itl::clear(object);
+    return object;
+}
+
+
+template<class Type, class OperandT>
+typename enable_if< mpl::and_< is_interval_map_right_intra_combinable<Type, OperandT>
+                             , is_total<Type>
+                             , mpl::not_<absorbs_neutrons<Type> > >
+                  , Type >::type&
+flip(Type& object, const OperandT& operand)
+{
+    typedef typename Type::codomain_type codomain_type;
+    object += operand;
+    ITL_FORALL(typename Type, it_, object) //JODO: neutralisierendes add.
+        it_->second = neutron<codomain_type>::value();
+
+    if(mpl::not_<is_interval_splitter<Type> >::value) //JODO
+        object.join();
+
+    return object;
+}
+
+
+template<class Type>
+typename enable_if<mpl::and_< is_interval_map<Type>
+                            , mpl::not_<is_total<Type> > >, Type>::type&
+flip(Type& object, const typename Type::segment_type& interval_value_pair)
+{
+    typedef typename Type::set_type       set_type;
+    typedef typename Type::interval_type  interval_type;
+    typedef typename Type::value_type     value_type;
+    typedef typename Type::const_iterator const_iterator;
+    typedef typename Type::codomain_type  codomain_type;
+    typedef typename Type::inverse_codomain_intersect inverse_codomain_intersect;
+    // That which is common shall be subtracted
+    // That which is not shall be added
+    // So x has to be 'complementary added' or flipped
+
+    interval_type span = interval_value_pair.first;
+    std::pair<const_iterator, const_iterator> exterior 
+        = object.equal_range(span);
+
+    const_iterator first_ = exterior.first;
+    const_iterator end_   = exterior.second;
+
+    interval_type covered, left_over, common_interval;
+    const codomain_type& x_value = interval_value_pair.second;
+    const_iterator it_ = first_;
+
+    set_type eraser;
+    Type     intersection;
+
+    while(it_ != end_  ) 
+    {
+        const codomain_type& co_value = it_->second;
+        covered = (*it_++).first;
+        //[a      ...  : span
+        //     [b ...  : covered
+        //[a  b)       : left_over
+        left_over = right_subtract(span, covered);
+
+        //That which is common ...
+        common_interval = span & covered;
+        if(!itl::is_empty(common_interval))
+        {
+            // ... shall be subtracted
+            itl::add(eraser, common_interval);
+
+            if(has_set_semantics<codomain_type>::value) //JODO
+            {
+                codomain_type common_value = x_value;
+                inverse_codomain_intersect()(common_value, co_value);
+                itl::add(intersection, value_type(common_interval, common_value));
+            }
+            else
+                itl::add(intersection, value_type(common_interval, neutron<codomain_type>::value()));
+        }
+
+        itl::add(object, value_type(left_over, x_value)); //That which is not shall be added
+        // Because this is a collision free addition I don't have to distinguish codomain_types.
+
+        //...      d) : span
+        //... c)      : covered
+        //     [c  d) : span'
+        span = left_subtract(span, covered);
+    }
+
+    //If span is not empty here, it is not in the set so it shall be added
+    itl::add(object, value_type(span, x_value));
+
+    //finally rewrite the common segments
+    itl::erase(object, eraser);
+    object += intersection;
+
+    return object;
+}
+
+template<class Type>
+typename enable_if<mpl::and_< is_interval_map<Type>
+                            , mpl::not_<is_total<Type> > >, Type>::type&
+flip(Type& object, const typename Type::element_type& key_value_pair)
+{
+	return itl::flip(object, make_segment<Type>(key_value_pair));
+}
+
+
+
+template<class Type, class OperandT>
+typename enable_if< mpl::and_< mpl::not_<is_total<Type> > 
+                             , is_concept_compatible<is_interval_map, 
+                                                     Type, OperandT >
+                             >
+                  , Type>::type&
+flip(Type& object, const OperandT& operand)
+{
+    typedef typename OperandT::const_iterator const_iterator;
+    typedef typename Type::codomain_type  codomain_type;
+
+    const_iterator common_lwb, common_upb;
+
+    if(!Set::common_range(common_lwb, common_upb, operand, object))
+        return object += operand;
+
+    const_iterator it_ = operand.begin();
+
+    // All elements of operand left of the common range are added
+    while(it_ != common_lwb)
+        itl::add(object, *it_++);
+    // All elements of operand in the common range are symmetrically subtracted
+    while(it_ != common_upb)
+        itl::flip(object, *it_++);
+    // All elements of operand right of the common range are added
+    while(it_ != operand.end())
+        itl::add(object, *it_++);
+
+    return object;
+}
+
+
 
 //------------------------------------------------------------------------------
 //- Symmetric difference ^=, ^
@@ -1236,7 +1370,7 @@ typename enable_if<is_intra_combinable<Type, OperandT>,
                           Type>::type&
 operator ^= (Type& object, const OperandT& operand)
 { 
-    return object.flip(operand); 
+	return itl::flip(object, operand); 
 }
 
 template<class Type, class OperandT>
@@ -1244,7 +1378,7 @@ typename enable_if<is_intra_derivative<Type, OperandT>,
                           Type>::type&
 operator ^= (Type& object, const OperandT& operand)
 { 
-    return object.flip(operand); 
+	return itl::flip(object, operand); 
 }
 
 template<class Type, class OperandT>

@@ -82,7 +82,7 @@ void itv_quantifier_check_monoid_et_4_bicremental_types()
     make_3_itv_maps_and_derivatives_1(map_a, map_b, map_c, val_pair, map_pair);
 
     CHECK_MONOID_INSTANCE_WRT(et)   (map_a, map_b, map_c, val_pair, map_pair);
-    CHECK_MONOID_INSTANCE_WRT(caret)(map_a, map_b, map_c, val_pair, map_pair);
+    //JODO so. CHECK_MONOID_INSTANCE_WRT(caret)(map_a, map_b, map_c, val_pair, map_pair);
 }
 
 //------------------------------------------------------------------------------
@@ -131,7 +131,7 @@ void itv_quantifier_check_abelian_monoid_et_4_bicremental_types()
     make_3_itv_maps_and_derivatives_1(map_a, map_b, map_c, val_pair, map_pair);
 
     CHECK_ABELIAN_MONOID_INSTANCE_WRT(et)   (map_a, map_b, map_c, val_pair, map_pair);
-    CHECK_ABELIAN_MONOID_INSTANCE_WRT(caret)(map_a, map_b, map_c, val_pair, map_pair);
+    //JODO CHECK_ABELIAN_MONOID_INSTANCE_WRT(caret)(map_a, map_b, map_c, val_pair, map_pair); //valid 4 set codom only
 }
 
 

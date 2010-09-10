@@ -97,15 +97,15 @@ add_intersection(Type&, const Type&, const OperandT&);
 //------------------------------------------------------------------------------
 template<class Type>
 typename enable_if<is_interval_set<Type>, Type>::type&
-flip(Type&, const typename Type::domain_type&);
+flip(Type&, const typename Type::element_type&);
 
 template<class Type>
 typename enable_if<is_interval_set<Type>, Type>::type&
 flip(Type&, const typename Type::segment_type&);
 
 template<class Type, class OperandT>
-typename enable_if<has_same_concept<is_interval_set, Type, OperandT>, Type>::type&
-JODO_flip(Type&, const OperandT&);
+typename enable_if<is_concept_compatible<is_interval_set, Type, OperandT>, Type>::type&
+flip(Type&, const OperandT&);
 
 //------------------------------------------------------------------------------
 template<class Type>
@@ -496,7 +496,7 @@ public:
     template<class SubType2>
     SubType& flip(const interval_base_set<SubType2,DomainT,Compare,Interval,Alloc>& operand)
     {
-        return itl::JODO_flip(*that(), operand); //JODO remove this
+        return itl::flip(*that(), operand); //JODO remove this
     }
 
     //==========================================================================

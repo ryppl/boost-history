@@ -489,15 +489,24 @@ public:
 
     /** If \c *this map contains \c key_value_pair it is erased, otherwise it is added. */
     SubType& flip(const element_type& key_value_pair)
-    { return flip(value_type(interval_type(key_value_pair.key), key_value_pair.data)); }
+    { 
+		return itl::flip(*that(), key_value_pair); 
+	}
 
     /** If \c *this map contains \c interval_value_pair it is erased, otherwise it is added. */
-    SubType& flip(const segment_type& interval_value_pair);
+    SubType& flip(const segment_type& interval_value_pair)
+	{
+		return itl::flip(*that(), interval_value_pair);
+	}
 
     /** The intersection of \c *this and \c operand is erased from \c *this. 
         The complemenary value pairs are added to \c *this. */
     template<class SubType2>
-    SubType& flip(const interval_base_map<SubType2,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand);
+    SubType& flip(const interval_base_map<SubType2,DomainT,CodomainT,Traits,
+		                                  Compare,Combine,Section,Interval,Alloc>& operand)
+	{
+		return itl::flip(*that(), operand);
+	}
 
 
     //==========================================================================
@@ -699,156 +708,6 @@ protected:
 protected:
     ImplMapT _map;
 } ;
-
-
-
-//==============================================================================
-//= Symmetric difference
-//==============================================================================
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::flip(const segment_type& interval_value_pair)
-{
-    // That which is common shall be subtracted
-    // That which is not shall be added
-    // So x has to be 'complementary added' or flipped
-
-    if(Traits::is_total && Traits::absorbs_neutrons)
-    {
-        clear();
-        return *that();
-    }
-    if(Traits::is_total && !Traits::absorbs_neutrons)
-    {
-        (*that()) += interval_value_pair;
-        ITL_FORALL(typename ImplMapT, it_, _map)
-            it_->second = neutron<codomain_type>::value();
-
-        if(mpl::not_<is_interval_splitter<SubType> >::value)
-            join();
-
-        return *that();
-    }
-
-    interval_type span = interval_value_pair.first;
-
-    typename ImplMapT::const_iterator first_ = _map.lower_bound(span);
-    typename ImplMapT::const_iterator end_   = _map.upper_bound(span);
-
-    interval_type covered, left_over, common_interval;
-    const codomain_type& x_value = interval_value_pair.second;
-    typename ImplMapT::const_iterator it_ = first_;
-
-    interval_set<DomainT,Compare,Interval,Alloc> eraser;
-    interval_base_map intersection;
-
-    while(it_ != end_  ) 
-    {
-        const codomain_type& co_value = it_->second;
-        covered = (*it_++).first;
-        //[a      ...  : span
-        //     [b ...  : covered
-        //[a  b)       : left_over
-        left_over = right_subtract(span, covered);
-
-        //That which is common ...
-        common_interval = span & covered;
-        if(!itl::is_empty(common_interval))
-        {
-            // ... shall be subtracted
-            eraser.add(common_interval);
-
-            if(has_set_semantics<codomain_type>::value)
-            {
-                codomain_type common_value = x_value;
-                inverse_codomain_intersect()(common_value, co_value);
-                intersection.add(value_type(common_interval, common_value));
-            }
-            else
-                intersection.add(value_type(common_interval, neutron<codomain_type>::value()));
-        }
-
-        add(value_type(left_over, x_value)); //That which is not shall be added
-        // Because this is a collision free addition I don't have to distinguish codomain_types.
-
-        //...      d) : span
-        //... c)      : covered
-        //     [c  d) : span'
-        span = left_subtract(span, covered);
-    }
-
-    //If span is not empty here, it is not in the set so it shall be added
-    add(value_type(span, x_value));
-
-    //finally rewrite the common segments
-    erase(eraser);
-    (*this) += intersection;
-
-    return *that();
-}
-
-
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, 
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, 
-    ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-    template<class SubType2>
-SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::flip(const interval_base_map<SubType2,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand)
-{
-    typedef interval_base_map<SubType2,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> operand_type;
-
-    if(Traits::is_total && Traits::absorbs_neutrons)
-    {
-        clear();
-        return *that();
-    }
-    if(Traits::is_total && !Traits::absorbs_neutrons)
-    {
-        (*that()) += operand;
-        ITL_FORALL(typename ImplMapT, it_, _map)
-            it_->second = neutron<codomain_type>::value();
-
-        if(mpl::not_<is_interval_splitter<SubType> >::value)
-            join();
-
-        return *that();
-    }
-
-    typename operand_type::const_iterator common_lwb;
-    typename operand_type::const_iterator common_upb;
-
-    if(!Set::common_range(common_lwb, common_upb, operand, *this))
-        return *that() += operand;
-
-    typename operand_type::const_iterator it_ = operand.begin();
-
-    // All elements of operand left of the common range are added
-    while(it_ != common_lwb)
-        add(*it_++);
-    // All elements of operand in the common range are symmetrically subtracted
-    while(it_ != common_upb)
-        flip(*it_++);
-    // All elements of operand right of the common range are added
-    while(it_ != operand.end())
-        add(*it_++);
-
-    if(Traits::is_total && !Traits::absorbs_neutrons)
-        ITL_FORALL(typename ImplMapT, it_, _map)
-            it_->second = neutron<codomain_type>::value();
-
-    return *that();
-}
-
 
 
 template 
