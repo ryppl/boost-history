@@ -1002,14 +1002,15 @@ You can also run a specific suite of test by doing
 
 [endsect]
 
-[/
+[
 [/=====================================]
 [section:todo  Appendix H: Future plans]
 [/=====================================]
 
 [heading For later releases]
 
+Implement [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3135.html#3135 multiple arguments] ratio arithmetic.
 
 [endsect]
-]
+
 [endsect]
