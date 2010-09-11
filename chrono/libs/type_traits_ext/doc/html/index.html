@@ -58,9 +58,8 @@
 <dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.getting_started"> Getting
       Started</a></span></dt>
 <dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.tutorial">Tutorial</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.examples">Examples</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="index.html#boost_typetraits_ext.examples">Examples</a></span></dt>
-<dd><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.examples.common_type">Common type</a></span></dt></dl></dd>
 <dt><span class="section"><a href="index.html#boost_typetraits_ext.reference"> Reference </a></span></dt>
 <dd><dl>
 <dt><span class="section"><a href="index.html#boost_typetraits_ext.reference.add_rvalue_reference_hpp">
@@ -184,6 +183,64 @@
         very informative and provides motivation for key design decisions for <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
         Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>.
       </p>
+<a name="boost_typetraits_ext.overview.motivation.declval"></a><h4>
+<a name="id4948936"></a>
+        <a href="index.html#boost_typetraits_ext.overview.motivation.declval">declval</a>
+      </h4>
+<p>
+        The motivation of declval was introduced in <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2958.html#Value" target="_top">N2958:
+        Moving Swap Forward</a>. Here fowols a rewording of this chapter.
+      </p>
+<p>
+        With the provision of decltype, late-specified return types, and default
+        template-arguments for function templates a new generation of SFINAE patterns
+        will emerge to at least partially compensate the lack of concepts on the
+        C++0x timescale. Using this technique, it is sometimes necessary to obtain
+        an object of a known type in a non-using context, e.g. given the declaration
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">T</span><span class="special">&amp;&amp;</span> <span class="identifier">declval</span><span class="special">();</span> <span class="comment">// not used
+</span></pre>
+<p>
+        as part of the function template declaration
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">From</span><span class="special">&gt;</span>
+<span class="identifier">decltype</span><span class="special">(</span><span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;(</span><span class="identifier">declval</span><span class="special">&lt;</span><span class="identifier">From</span><span class="special">&gt;()))</span> <span class="identifier">convert</span><span class="special">(</span><span class="identifier">From</span><span class="special">&amp;&amp;);</span>
+</pre>
+<p>
+        or as part of a class template definition
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">result_of</span><span class="special">;</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Fn</span><span class="special">,</span> <span class="keyword">class</span><span class="special">...</span> <span class="identifier">ArgTypes</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">result_of</span><span class="special">&lt;</span><span class="identifier">Fn</span><span class="special">(</span><span class="identifier">ArgTypes</span><span class="special">...)&gt;</span> 
+<span class="special">{</span>
+  <span class="keyword">typedef</span> <span class="identifier">decltype</span><span class="special">(</span><span class="identifier">declval</span><span class="special">&lt;</span><span class="identifier">Fn</span><span class="special">&gt;()(</span><span class="identifier">declval</span><span class="special">&lt;</span><span class="identifier">ArgTypes</span><span class="special">&gt;()...))</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+        The role of the function template declval() is a transformation of a type
+        T into a value without using or evaluating this function. The name is supposed
+        to direct the reader's attention to the fact that the expression declval&lt;T&gt;()
+        is an lvalue if and only if T is an lvalue-reference, otherwise an rvalue.
+        To extend the domain of this function we can do a bit better by changing
+        its declaration to
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">add_rvalue_reference</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">declval</span><span class="special">();</span> <span class="comment">// not used
+</span></pre>
+<p>
+        which ensures that we can also use cv void as template parameter. The careful
+        reader might have noticed that declval() already exists under the name create()
+        as part of the definition of the semantics of the type trait is_convertible
+        in the C==0x standard.
+      </p>
+<p>
+        The provision of a new library component that allows the production of values
+        in unevaluated expressions is considered as important to realize constrained
+        templates in C++0x where concepts are not available. This extremely light-weight
+        function is expected to be part of the daily tool-box of the C++0x programmer.
+      </p>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -225,6 +282,8 @@
 <dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.tutorial">Tutorial</a></span></dt>
 <dd><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.tutorial.common_type">Common
         Type</a></span></dt></dl></dd>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.examples">Examples</a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.examples.common_type">common_type</a></span></dt></dl></dd>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -241,7 +300,7 @@
         Installing Boost.TypeTraits.Ext</a>
 </h4></div></div></div>
 <a name="boost_typetraits_ext.users_guide.getting_started.install.getting_boost_typetraits_ext_"></a><h5>
-<a name="id4949089"></a>
+<a name="id4949618"></a>
           <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.getting_boost_typetraits_ext_">Getting
           Boost.TypeTraits.Ext </a>
         </h5>
@@ -256,7 +315,7 @@
           and follow the instructions there for anonymous SVN access.
         </p>
 <a name="boost_typetraits_ext.users_guide.getting_started.install.where_to_install_boost_typetraits_ext__"></a><h5>
-<a name="id4949151"></a>
+<a name="id4949681"></a>
           <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.where_to_install_boost_typetraits_ext__">Where
           to install Boost.TypeTraits.Ext? </a>
         </h5>
@@ -272,7 +331,7 @@
           variable. Any help is welcome.
         </p>
 <a name="boost_typetraits_ext.users_guide.getting_started.install.building_boost_typetraits_ext_"></a><h5>
-<a name="id4949190"></a>
+<a name="id4949719"></a>
           <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.building_boost_typetraits_ext_">Building
           Boost.TypeTraits.Ext </a>
         </h5>
@@ -281,7 +340,7 @@
           library. You don't need to compile it before use.
         </p>
 <a name="boost_typetraits_ext.users_guide.getting_started.install.requirements"></a><h5>
-<a name="id4949222"></a>
+<a name="id4949751"></a>
           <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.requirements">Requirements</a>
         </h5>
 <p>
@@ -319,7 +378,7 @@
 </dl>
 </div>
 <a name="boost_typetraits_ext.users_guide.getting_started.install.building_an_executable_that_uses_boost_typetraits_ext_"></a><h5>
-<a name="id4949377"></a>
+<a name="id4942100"></a>
           <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.building_an_executable_that_uses_boost_typetraits_ext_">Building
           an executable that uses Boost.TypeTraits.Ext </a>
         </h5>
@@ -327,7 +386,7 @@
           You don't need to link with any library.
         </p>
 <a name="boost_typetraits_ext.users_guide.getting_started.install.exceptions_safety_"></a><h5>
-<a name="id4949406"></a>
+<a name="id4942129"></a>
           <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.exceptions_safety_">Exceptions
           safety </a>
         </h5>
@@ -336,7 +395,7 @@
           of exception safety as long as the underlying parameters provide it.
         </p>
 <a name="boost_typetraits_ext.users_guide.getting_started.install.thread_safety_"></a><h5>
-<a name="id4949434"></a>
+<a name="id4942157"></a>
           <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.thread_safety_">Thread
           safety </a>
         </h5>
@@ -344,7 +403,7 @@
           All functions in the library are thread-unsafe except when noted explicitly.
         </p>
 <a name="boost_typetraits_ext.users_guide.getting_started.install.tested_compilers_"></a><h5>
-<a name="id4949460"></a>
+<a name="id4942183"></a>
           <a href="index.html#boost_typetraits_ext.users_guide.getting_started.install.tested_compilers_">Tested
           compilers </a>
         </h5>
@@ -522,31 +581,46 @@
 </div>
 </div>
 </div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="boost_typetraits_ext.examples"></a><a href="index.html#boost_typetraits_ext.examples" title="Examples">Examples</a>
-</h2></div></div></div>
-<div class="toc"><dl>
-<dt><span class="section"><a href="index.html#boost_typetraits_ext.examples.common_type">Common type</a></span></dt>
-<dd><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.examples.common_type.min_utility">min
-        utility</a></span></dt></dl></dd>
-</dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_typetraits_ext.examples.common_type"></a><a href="index.html#boost_typetraits_ext.examples.common_type" title="Common type">Common type</a>
+<a name="boost_typetraits_ext.users_guide.examples"></a><a href="index.html#boost_typetraits_ext.users_guide.examples" title="Examples">Examples</a>
 </h3></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="index.html#boost_typetraits_ext.examples.common_type.min_utility">min
-        utility</a></span></dt></dl></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.examples.common_type">common_type</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.examples.common_type.min_utility">min
+          utility</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.examples.common_type.std__minmax_considered_harmful_">std::minmax
+          considered harmful </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.examples.common_type.unique_ptr_s_relational_operator_functions">unique_ptr's
+          relational operator functions</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.examples.common_type.simplified_array_construction">Simplified
+          array construction</a></span></dt>
+</dl></dd>
+</dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_typetraits_ext.examples.common_type.min_utility"></a><a href="index.html#boost_typetraits_ext.examples.common_type.min_utility" title="min
-        utility">min
-        utility</a>
+<a name="boost_typetraits_ext.users_guide.examples.common_type"></a><a href="index.html#boost_typetraits_ext.users_guide.examples.common_type" title="common_type">common_type</a>
 </h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.examples.common_type.min_utility">min
+          utility</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.examples.common_type.std__minmax_considered_harmful_">std::minmax
+          considered harmful </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.examples.common_type.unique_ptr_s_relational_operator_functions">unique_ptr's
+          relational operator functions</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_typetraits_ext.users_guide.examples.common_type.simplified_array_construction">Simplified
+          array construction</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_typetraits_ext.users_guide.examples.common_type.min_utility"></a><a href="index.html#boost_typetraits_ext.users_guide.examples.common_type.min_utility" title="min
+          utility">min
+          utility</a>
+</h5></div></div></div>
 <p>
-          Returns the earliest time_point.
-        </p>
+            Returns the earliest time_point.
+          </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration2</span><span class="special">&gt;</span>
 <span class="keyword">typename</span>  <a href="index.html#boost_typetraits_ext.reference.common_type_hpp.common_type" title="
         Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;,</span>
@@ -557,13 +631,46 @@
 <span class="special">}</span>
 </pre>
 <p>
-          Being able to <span class="bold"><strong>easily</strong></span> write this function
-          is a major feature!
-        </p>
+            Being able to <span class="bold"><strong>easily</strong></span> write this function
+            is a major feature!
+          </p>
 <pre class="programlisting"><span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t1</span><span class="special">,</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">seconds</span><span class="special">(</span><span class="number">3</span><span class="special">));</span>
 <span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t2</span><span class="special">,</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">nanoseconds</span><span class="special">(</span><span class="number">3</span><span class="special">));</span>
 <span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t3</span><span class="special">,</span> <span class="identifier">min</span><span class="special">(</span><span class="identifier">t1</span><span class="special">,</span> <span class="identifier">t2</span><span class="special">));</span>
 </pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_typetraits_ext.users_guide.examples.common_type.std__minmax_considered_harmful_"></a><a href="index.html#boost_typetraits_ext.users_guide.examples.common_type.std__minmax_considered_harmful_" title="std::minmax
+          considered harmful ">std::minmax
+          considered harmful </a>
+</h5></div></div></div>
+<p>
+            See <a href="http://groups.google.com/group/comp.std.c++/browse_thread/thread/380e9ddf99b8985c?hl=en" target="_top">std::minmax
+            considered harmful </a>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_typetraits_ext.users_guide.examples.common_type.unique_ptr_s_relational_operator_functions"></a><a href="index.html#boost_typetraits_ext.users_guide.examples.common_type.unique_ptr_s_relational_operator_functions" title="unique_ptr's
+          relational operator functions">unique_ptr's
+          relational operator functions</a>
+</h5></div></div></div>
+<p>
+            See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3133.html#1297" target="_top"><span class="bold"><strong>LGW 1297. unique_ptr's relational operator functions should
+            induce a total order</strong></span></a>.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_typetraits_ext.users_guide.examples.common_type.simplified_array_construction"></a><a href="index.html#boost_typetraits_ext.users_guide.examples.common_type.simplified_array_construction" title="Simplified
+          array construction">Simplified
+          array construction</a>
+</h5></div></div></div>
+<p>
+            See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3135.html#851" target="_top"><span class="bold"><strong>LGW 851. simplified array construction</strong></span></a>.
+          </p>
+</div>
 </div>
 </div>
 </div>
@@ -693,8 +800,7 @@
             </li>
 </ul></div>
 <p>
-          The default vaule behavior is as BOOST_COMMON_TYPE_USES_ARRAY_ASSERT was
-          defined.
+          The default behavior is as BOOST_COMMON_TYPE_USES_ARRAY_ASSERT was defined.
         </p>
 <p>
           When BOOST_COMMON_TYPE_USES_MPL_ASSERT is not defined the following symbols
@@ -887,7 +993,7 @@
       C: Implementation Notes</a>
 </h3></div></div></div>
 <a name="boost_typetraits_ext.appendices.implementation.common_type_c__03_implementation"></a><h4>
-<a name="id4998178"></a>
+<a name="id4998770"></a>
         <a href="index.html#boost_typetraits_ext.appendices.implementation.common_type_c__03_implementation">common_type
         C++03 implementation</a>
       </h4>
@@ -923,7 +1029,7 @@
 <a name="boost_typetraits_ext.appendices.faq"></a><a href="index.html#boost_typetraits_ext.appendices.faq" title=" Appendix D: FAQ"> Appendix D: FAQ</a>
 </h3></div></div></div>
 <a name="boost_typetraits_ext.appendices.faq.how_important_is_the_order_of_the_common_type_lt__gt__template_arguments_"></a><h4>
-<a name="id4998373"></a>
+<a name="id4998966"></a>
         <a href="index.html#boost_typetraits_ext.appendices.faq.how_important_is_the_order_of_the_common_type_lt__gt__template_arguments_">How
         important is the order of the common_type&lt;&gt; template arguments?</a>
       </h4>
@@ -1003,7 +1109,7 @@
         <span class="identifier">A</span><span class="special">&gt;</span></code>.
       </p>
 <a name="boost_typetraits_ext.appendices.faq.can_the_common_type_of_two_types_be_a_third_type_"></a><h4>
-<a name="id4999364"></a>
+<a name="id4999956"></a>
         <a href="index.html#boost_typetraits_ext.appendices.faq.can_the_common_type_of_two_types_be_a_third_type_">Can
         the common_type of two types be a third type?</a>
       </h4>
@@ -1030,7 +1136,7 @@
         <span class="identifier">B</span><span class="special">&gt;</span></code>.
       </p>
 <a name="boost_typetraits_ext.appendices.faq.how_common_type_behaves_with_pointers_"></a><h4>
-<a name="id4999693"></a>
+<a name="id5000285"></a>
         <a href="index.html#boost_typetraits_ext.appendices.faq.how_common_type_behaves_with_pointers_">How
         common_type behaves with pointers?</a>
       </h4>
@@ -1318,7 +1424,7 @@
       plans</a>
 </h3></div></div></div>
 <a name="boost_typetraits_ext.appendices.todo.for_later_releases"></a><h4>
-<a name="id5000523"></a>
+<a name="id5001116"></a>
         <a href="index.html#boost_typetraits_ext.appendices.todo.for_later_releases">For
         later releases</a>
       </h4>
@@ -1330,7 +1436,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: September 07, 2010 at 15:13:54 GMT</small></p></td>
+<td align="left"><p><small>Last revised: September 11, 2010 at 07:28:21 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

@@ -89,7 +89,42 @@ Andrei Alexandrescu recently pointed us at a D library: std.traits - D Programmi
 
 See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] which is very informative and provides motivation for key design decisions for __common_type__.
 
+[heading declval]
+
+The motivation of declval was introduced in [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2958.html#Value N2958: Moving Swap Forward]. Here fowols a rewording of this chapter.
+
+With the provision of decltype, late-specified return types, and default template-arguments for function templates a new generation of SFINAE patterns will emerge to at least partially compensate the lack of concepts on the C++0x timescale. Using this technique, it is sometimes necessary to obtain an object of a known type in a non-using context, e.g. given the declaration 
+
+  template<class T>
+  T&& declval(); // not used
+  
+as part of the function template declaration 
+
+  template<class To, class From>
+  decltype(static_cast<To>(declval<From>())) convert(From&&);
+  
+or as part of a class template definition 
+
+  template<class> class result_of;
+
+  template<class Fn, class... ArgTypes>
+  struct result_of<Fn(ArgTypes...)> 
+  {
+    typedef decltype(declval<Fn>()(declval<ArgTypes>()...)) type;
+  };
+  
+The role of the function template declval() is a transformation of a type T into a value without using or evaluating this function. The name is supposed to direct the reader's attention to the fact that the expression declval<T>() is an lvalue if and only if T is an lvalue-reference, otherwise an rvalue. To extend the domain of this function we can do a bit better by changing its declaration to 
+
+  template<class T>
+  typename std::add_rvalue_reference<T>::type declval(); // not used
+  
+which ensures that we can also use cv void as template parameter. The careful reader might have noticed that declval() already exists under the name create() as part of the definition of the semantics of the type trait is_convertible in the C==0x standard. 
+
+The provision of a new library component that allows the production of values in unevaluated expressions is considered as important to realize constrained templates in C++0x where concepts are not available. 
+This extremely light-weight function is expected to be part of the daily tool-box of the C++0x programmer. 
+
 [endsect]
+
 
 [/==================]
 [section Description]
@@ -293,12 +328,11 @@ As the default definition of __common_type__ demands the conversion be implicit,
 
 [endsect]
 
-[endsect]
 [/===============]
 [section Examples]
 [/===============]
 
-[section Common type]
+[section common_type]
 
 [/==================]
 [section min utility]
@@ -323,10 +357,31 @@ Being able to *easily* write this function is a major feature!
 
 
 [endsect]
+[/==================]
+[section std::minmax considered harmful ]
+
+See [@http://groups.google.com/group/comp.std.c++/browse_thread/thread/380e9ddf99b8985c?hl=en 
+std::minmax considered harmful ]
+
+[endsect]
+
+[section unique_ptr's relational operator functions]
+
+See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3133.html#1297 [*LGW 1297. unique_ptr's relational operator functions should induce a total order]].
+
+[endsect]
+
+[section Simplified array construction]
+
+See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3135.html#851 [*LGW 851. simplified array construction]].
 
 [endsect]
 
 
+[endsect]
+
+
+[endsect]
 [endsect]
 
 [/=================]
@@ -386,7 +441,7 @@ When BOOST_NO_STATIC_ASSERT is defined, the user can select the way static asser
 * BOOST_COMMON_TYPE_USES_MPL_ASSERT: define it if you want to use Boost.MPL static asertions
 * BOOST_COMMON_TYPE_USES_ARRAY_ASSERT: define it if you want to use internal static asertions
 
-The default vaule behavior is as BOOST_COMMON_TYPE_USES_ARRAY_ASSERT was defined.
+The default behavior is as BOOST_COMMON_TYPE_USES_ARRAY_ASSERT was defined.
 
 When BOOST_COMMON_TYPE_USES_MPL_ASSERT is not defined the following symbols are defined as
 
