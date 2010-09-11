@@ -704,11 +704,11 @@
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code>'s</a> in a way where
             the precision of the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> matters, it is good
-            practice to convert the clock's native <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+            practice to convert the clock's <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> to a known <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>. This insulates the
-            code from future changes which may be made to the clock's native precision
-            in the future. For example monotonic_clock could easily be based on the
+            code from future changes which may be made to the clock's precision in
+            the future. For example monotonic_clock could easily be based on the
             clock speed of the cpu. When you upgrade to a faster machine, you do
             not want your code that assumed a certain tick period of this clock to
             start experiencing run time failures because your timing code has silently

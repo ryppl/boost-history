@@ -709,7 +709,7 @@ A timer example:
         cout << "f() took " << sec.count() << " seconds\n";
     }
 
-Note that if one is using the __duration__ between two clock __time_point_s__ in a way where the precision of the __duration__ matters, it is good practice to convert the clock's native __duration__ to a known __duration__. This insulates the code from future changes which may be made to the clock's native precision in the future. For example monotonic_clock could easily be based on the clock speed of the cpu. When you upgrade to a faster machine, you do not want your code that assumed a certain tick period of this clock to start experiencing run time failures because your timing code has silently changed meaning.
+Note that if one is using the __duration__ between two clock __time_point_s__ in a way where the precision of the __duration__ matters, it is good practice to convert the clock's  __duration__ to a known __duration__. This insulates the code from future changes which may be made to the clock's  precision in the future. For example monotonic_clock could easily be based on the clock speed of the cpu. When you upgrade to a faster machine, you do not want your code that assumed a certain tick period of this clock to start experiencing run time failures because your timing code has silently changed meaning.
 
 A delay loop example:
 
@@ -1615,7 +1615,24 @@ Usage
     #include <boost/chrono/duration.hpp>
     #include <boost/chrono/time_point.hpp>
     #include <boost/chrono/system_clocks.hpp>
+    #include <boost/chrono/process_cpu_clocks.hpp>
+    #include <boost/chrono/thread_clock.hpp>
     #include <boost/chrono/typeof/boost/chrono/chrono.hpp>
+
+[section:limitations Limitations and Extensions]
+
+Next follows limitation respect to the C++0x recomendations:
+
+* [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3135.html#1121 Ratio values should be constexpr]: `constexpr` don't used as no compiler supports it today. `const` is used instead when appropiated.
+
+* [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3134.html#921 Rational Arithmetic should use template aliases]: In the absence of compiler support of template aliases the C++03 emulation define a nested typedef `type`.
+
+The current implementation provides in addition:
+
+* clock error handling as specified in [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3135.html#3155 clock error handling needs to be specified].
+
+
+[endsect]
 
 [section:conf Configuration macros]
 
@@ -1670,47 +1687,47 @@ Depending on the static assertion used system you will have an hint of the faili
         // duration arithmetic
         template <class Rep1, class Period1, class Rep2, class Period2>
         typename common_type<duration<Rep1, Period1>, duration<Rep2, Period2> >::type
-        operator+(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        BOOST_CHRONO_CONSTEXPR operator+(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period1, class Rep2, class Period2>
         typename common_type<duration<Rep1, Period1>, duration<Rep2, Period2> >::type
-        operator-(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        BOOST_CHRONO_CONSTEXPR operator-(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period, class Rep2>
         duration<typename common_type<Rep1, Rep2>::type, Period>
-        operator*(const duration<Rep1, Period>& d, const Rep2& s);
+        BOOST_CHRONO_CONSTEXPR operator*(const duration<Rep1, Period>& d, const Rep2& s);
 
         template <class Rep1, class Period, class Rep2>
         duration<typename common_type<Rep1, Rep2>::type, Period>
-        operator*(const Rep1& s, const duration<Rep2, Period>& d);
+        BOOST_CHRONO_CONSTEXPR operator*(const Rep1& s, const duration<Rep2, Period>& d);
 
         template <class Rep1, class Period, class Rep2>
         duration<typename common_type<Rep1, Rep2>::type, Period>
-        operator/(const duration<Rep1, Period>& d, const Rep2& s);
+        BOOST_CHRONO_CONSTEXPR operator/(const duration<Rep1, Period>& d, const Rep2& s);
 
         template <class Rep1, class Period1, class Rep2, class Period2>
         typename common_type<Rep1, Rep2>::type
-        operator/(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        BOOST_CHRONO_CONSTEXPR operator/(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Rep2, class Period>
-        double operator/(const Rep1& s, const duration<Rep2, Period>& d);
+        BOOST_CHRONO_CONSTEXPR double operator/(const Rep1& s, const duration<Rep2, Period>& d);
 
         // duration comparisons
         template <class Rep1, class Period1, class Rep2, class Period2>
-        bool operator==(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        BOOST_CHRONO_CONSTEXPR bool operator==(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period1, class Rep2, class Period2>
-        bool operator!=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        BOOST_CHRONO_CONSTEXPR bool operator!=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period1, class Rep2, class Period2>
-        bool operator< (const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        BOOST_CHRONO_CONSTEXPR bool operator< (const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
         template <class Rep1, class Period1, class Rep2, class Period2>
-        bool operator<=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        BOOST_CHRONO_CONSTEXPR bool operator<=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period1, class Rep2, class Period2>
-        bool operator> (const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        BOOST_CHRONO_CONSTEXPR bool operator> (const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
         template <class Rep1, class Period1, class Rep2, class Period2>
-        bool operator>=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        BOOST_CHRONO_CONSTEXPR bool operator>=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
         // duration_cast
 
@@ -2235,16 +2252,16 @@ If these constraints are not met, this constructor will not participate in overl
 
 [section:clock `Clock` Requirements]
 
-A clock represents a bundle consisting of a native __duration__, a native __time_point__, and a function `now()` to get the current __time_point__. A clock must meet the requirements in the following Table.
+A clock represents a bundle consisting of a  __duration__, a  __time_point__, and a function `now()` to get the current __time_point__. A clock must meet the requirements in the following Table.
 
 In this table `C1` and `C2` denote `clock` types. `t1` and `t2` are values returned from `C1::now()` where the call returning `t1` happens before the call returning `t2` and both of these calls happen before `C1::time_point::max()`.
 
 [table Clock Requirements
     [[expression]        [return type]  [operational semantics]]
-    [[`C1::rep`]        [An arithmetic type or class emulating an arithmetic type. ]  [The representation type of the native __duration__ and __time_point__.]]
+    [[`C1::rep`]        [An arithmetic type or class emulating an arithmetic type. ]  [The representation type of the  __duration__ and __time_point__.]]
     [[`C1::period`]        [`ratio`]  [The tick period of the clock in seconds.]]
-    [[`C1::duration`]        [`chrono::duration<C1::rep, C1::period>`]  [The native __duration__ type of the `clock`.]]
-    [[`C1::time_point`]        [`chrono::time_point<C1> or chrono::time_point<C2, C1::duration>`]  [The native __time_point__ type of the `clock`. Different clocks are permitted to share a __time_point__ definition if it is valid to compare their time_points by comparing their respective __duration_s__. `C1` and `C2` must refer to the same epoch.]]
+    [[`C1::duration`]        [`chrono::duration<C1::rep, C1::period>`]  [The  __duration__ type of the `clock`.]]
+    [[`C1::time_point`]        [`chrono::time_point<C1> or chrono::time_point<C2, C1::duration>`]  [The  __time_point__ type of the `clock`. Different clocks are permitted to share a __time_point__ definition if it is valid to compare their time_points by comparing their respective __duration_s__. `C1` and `C2` must refer to the same epoch.]]
     [[`C1::is_monotonic`]        [`const bool`]  [`true` if `t1 <= t2` is always `true`, else `false`. *Note*: A `clock` that can be adjusted backwards is not monotonic]]
     [[`C1::now()`]        [`C1::time_point`]  [Returns a __time_point__ representing the current point in time.]]
 ]
