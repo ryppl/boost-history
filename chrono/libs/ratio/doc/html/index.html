@@ -783,6 +783,8 @@
         <code class="computeroutput"><span class="identifier">ratio</span></code> comparison</a></span></dt>
 <dt><span class="section"><a href="index.html#boost_ratio.reference.ratio_hpp.ratio_si_typedefs">
         SI typedefs</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_ratio.reference.ratio_hpp.limitations"> Limitations
+        and Extensions</a></span></dt>
 </dl></dd>
 </dl></div>
 <div class="section" lang="en">
@@ -802,6 +804,8 @@
         <code class="computeroutput"><span class="identifier">ratio</span></code> comparison</a></span></dt>
 <dt><span class="section"><a href="index.html#boost_ratio.reference.ratio_hpp.ratio_si_typedefs">
         SI typedefs</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_ratio.reference.ratio_hpp.limitations"> Limitations
+        and Extensions</a></span></dt>
 </dl></div>
 <p>
         <a href="index.html#boost_ratio.reference.ratio_hpp.ratio" title=" Class Template
@@ -909,7 +913,7 @@
             </li>
 </ul></div>
 <p>
-          The default vaule behavior is as BOOST_RATIO_USES_ARRAY_ASSERT was defined.
+          The default behavior is as BOOST_RATIO_USES_ARRAY_ASSERT was defined.
         </p>
 <p>
           When BOOST_RATIO_USES_MPL_ASSERT is not defined the following symbols are
@@ -1152,10 +1156,21 @@
 <span class="keyword">typedef</span> <a href="index.html#boost_ratio.reference.ratio_hpp.ratio" title=" Class Template
         ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">1000000000000000000LL</span><span class="special">,</span> <span class="number">1LL</span><span class="special">&gt;</span> <span class="identifier">exa</span><span class="special">;</span>
 </pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_ratio.reference.ratio_hpp.limitations"></a><a href="index.html#boost_ratio.reference.ratio_hpp.limitations" title=" Limitations
+        and Extensions"> Limitations
+        and Extensions</a>
+</h4></div></div></div>
 <p>
-          Four of the typedefs in the recomendation which can be conditionally supported
-          are not supported: yocto, zepto, zetta and yotta.
+          Next follows limitation respect to the C++0x recomendations:
         </p>
+<div class="itemizedlist"><ul type="disc"><li>
+              Four of the typedefs in the recomendation which can be conditionally
+              supported are not supported: <code class="computeroutput"><span class="identifier">yocto</span></code>,
+              <code class="computeroutput"><span class="identifier">zepto</span></code>, <code class="computeroutput"><span class="identifier">zetta</span></code> and <code class="computeroutput"><span class="identifier">yotta</span></code>.
+            </li></ul></div>
 <pre class="programlisting"><span class="keyword">typedef</span> <a href="index.html#boost_ratio.reference.ratio_hpp.ratio" title=" Class Template
         ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span> <span class="number">1000000000000000000000000</span><span class="special">&gt;</span> <span class="identifier">yocto</span><span class="special">;</span>  <span class="comment">// conditionally supported
 </span><span class="keyword">typedef</span> <a href="index.html#boost_ratio.reference.ratio_hpp.ratio" title=" Class Template
@@ -1165,6 +1180,28 @@
 </span><span class="keyword">typedef</span> <a href="index.html#boost_ratio.reference.ratio_hpp.ratio" title=" Class Template
         ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="number">1000000000000000000000000</span><span class="special">,</span> <span class="number">1</span><span class="special">&gt;</span> <span class="identifier">yotta</span><span class="special">;</span>  <span class="comment">// conditionally supported
 </span></pre>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3135.html#1121" target="_top">Ratio
+              values should be constexpr</a>: <code class="computeroutput"><span class="identifier">constexpr</span></code>
+              don't used as no compiler supports it today. <code class="computeroutput"><span class="keyword">const</span></code>
+              is used instead when appropiated.
+            </li>
+<li>
+              <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3134.html#921" target="_top">Rational
+              Arithmetic should use template aliases</a>: In the absence of compiler
+              support of template aliases the C++03 emulation define a nested typedef
+              <code class="computeroutput"><span class="identifier">type</span></code>.
+            </li>
+</ul></div>
+<p>
+          The current implementation provides in addition:
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+              the <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3133.html#1281" target="_top">copy
+              constructor and assignement between ratios having the same normalized
+              form</a>.
+            </li></ul></div>
 </div>
 </div>
 </div>
@@ -1208,7 +1245,7 @@
 <a name="boost_ratio.appendices.rationale"></a><a href="index.html#boost_ratio.appendices.rationale" title=" Appendix B: Rationale"> Appendix B: Rationale</a>
 </h3></div></div></div>
 <a name="boost_ratio.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form"></a><h4>
-<a name="id5008987"></a>
+<a name="id5009150"></a>
         <a href="index.html#boost_ratio.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form">Why
         ratio needs CopyConstruction and Assignment from ratios having the same normalized
         form</a>
@@ -1243,7 +1280,7 @@
         succeeds.
       </p>
 <a name="boost_ratio.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type"></a><h4>
-<a name="id5009392"></a>
+<a name="id5009555"></a>
         <a href="index.html#boost_ratio.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type">Why
         ratio needs the nested normalizer typedef type</a>
       </h4>
@@ -1533,7 +1570,7 @@
 <a name="boost_ratio.appendices.todo"></a><a href="index.html#boost_ratio.appendices.todo" title=" Appendix H: Future plans"> Appendix H: Future plans</a>
 </h3></div></div></div>
 <a name="boost_ratio.appendices.todo.for_later_releases"></a><h4>
-<a name="id5010169"></a>
+<a name="id5010332"></a>
         <a href="index.html#boost_ratio.appendices.todo.for_later_releases">For later
         releases</a>
       </h4>
@@ -1545,7 +1582,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: September 11, 2010 at 07:40:13 GMT</small></p></td>
+<td align="left"><p><small>Last revised: September 11, 2010 at 09:03:26 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

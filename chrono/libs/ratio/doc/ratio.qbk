@@ -719,7 +719,7 @@ When BOOST_NO_STATIC_ASSERT is defined, the user can select the way static asser
 * BOOST_RATIO_USES_MPL_ASSERT: define it if you want to use Boost.MPL static asertions
 * BOOST_RATIO_USES_ARRAY_ASSERT: define it if you want to use internal static asertions
 
-The default vaule behavior is as BOOST_RATIO_USES_ARRAY_ASSERT was defined.
+The default behavior is as BOOST_RATIO_USES_ARRAY_ASSERT was defined.
 
 
 When BOOST_RATIO_USES_MPL_ASSERT is not defined the following symbols are defined as
@@ -868,13 +868,28 @@ If R1::num * R2::den < R2::num * R1::den, ratio_less derives from true_type, els
         typedef __ratio__<   1000000000000000LL, 1LL> peta;
         typedef __ratio__<1000000000000000000LL, 1LL> exa;
 
+[endsect]
 
-Four of the typedefs in the recomendation which can be conditionally supported are not supported: yocto, zepto, zetta and yotta.
+
+[section:limitations Limitations and Extensions]
+
+Next follows limitation respect to the C++0x recomendations:
+
+* Four of the typedefs in the recomendation which can be conditionally supported are not supported: `yocto`, `zepto`, `zetta` and `yotta`.
 
     typedef __ratio__<1, 1000000000000000000000000> yocto;  // conditionally supported
     typedef __ratio__<1,    1000000000000000000000> zepto;  // conditionally supported
     typedef __ratio__<   1000000000000000000000, 1> zetta;  // conditionally supported
     typedef __ratio__<1000000000000000000000000, 1> yotta;  // conditionally supported
+
+* [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3135.html#1121 Ratio values should be constexpr]: `constexpr` don't used as no compiler supports it today. `const` is used instead when appropiated.
+
+* [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3134.html#921 Rational Arithmetic should use template aliases]: In the absence of compiler support of template aliases the C++03 emulation define a nested typedef `type`.
+
+The current implementation provides in addition:
+
+* the [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3133.html#1281 copy constructor and assignement between ratios having the same normalized form].
+
 
 [endsect]
 
