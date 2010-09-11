@@ -1580,12 +1580,12 @@ Usage
 
 
 [
-    [[@http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934 [*LGW 934. duration is missing operator%]]]
+    [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3134.html#934 [*LGW 934. duration is missing operator%]]]
     [From Terry Golubiewski. Is very informative and provides motivation for key design decisions]
 ]
 
 [
-    [[@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]]]
+    [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3133.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]]]
     [From Vicente Juan Botet Escriba.]
 ]
 
