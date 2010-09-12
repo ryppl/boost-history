@@ -40,7 +40,7 @@ struct BasicLockableConcept {
         l.lock();
         l.unlock();
     }
-    Lockable& l;
+    Lockable l;
 };
 //]
 /**
@@ -58,7 +58,7 @@ struct TryLockableConcept {
     BOOST_CONCEPT_USAGE(TryLockableConcept) {
         b=l.try_lock();
     }
-    Lockable& l;
+    Lockable l;
     bool b;
 };
 //]
@@ -78,7 +78,7 @@ struct TimedLockableConcept {
         b=l.try_lock_until(t);
         b=l.try_lock_for(d);
     }
-    Lockable& l;
+    Lockable l;
     //~ boost::chrono::system_clock::time_point t;
     //~ boost::chrono::system_clock::duration d;
     boost::posix_time::ptime t;
@@ -108,8 +108,8 @@ struct ConditionLockableConcept {
         c.notify_one();
         c.notify_all();
     }
-    Lockable& l;
-    Condition& c;
+    Lockable l;
+    Condition c;
     //~ boost::chrono::system_clock::time_point t;
     //~ boost::chrono::system_clock::duration d;
     boost::posix_time::ptime t;
@@ -137,7 +137,7 @@ struct ShareLockableConcept {
         b=l.try_lock_shared_for(d);
         l.unlock_shared();
     }
-    Lockable& l;
+    Lockable l;
     //~ boost::chrono::system_clock::time_point t;
     //~ boost::chrono::system_clock::duration d;
     boost::posix_time::ptime t;
@@ -168,7 +168,7 @@ struct UpgradeBasicLockableConcept {
         l.unlock_upgrade_and_lock_shared();
         
     }
-    Lockable& l;
+    Lockable l;
 
 };
 //]
@@ -186,7 +186,7 @@ struct UpgradeLockableConcept {
         b=l.try_unlock_share_and_lock_upgrade();
         
     }
-    Lockable& l;
+    Lockable l;
     bool b;
 
 };
@@ -205,7 +205,7 @@ struct UpgradeTimedLockableConcept {
         b=l.try_unlock_upgrade_and_lock_until(t);
         
     }
-    Lockable& l;
+    Lockable l;
     //~ boost::chrono::system_clock::time_point t;
     //~ boost::chrono::system_clock::duration d;
     boost::posix_time::ptime t;
