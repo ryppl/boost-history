@@ -177,12 +177,12 @@ Index: pthread/recursive_mutex.hpp
  {
 -    class recursive_mutex
 +    class recursive_mutex : public sync::lockable_base<
-+    sync::multi_threaded_tag,
-+    sync::exclusive_try_lockable_tag,
-+    sync::recursive_tag,
-+    sync::owned_tag,
-+    sync::process_lifetime_tag,
-+    sync::anonymous_tag
++        sync::multi_threaded_tag,
++        sync::exclusive_try_lockable_tag,
++        sync::recursive_tag,
++        sync::owned_tag,
++        sync::process_lifetime_tag,
++        sync::anonymous_tag
 +    >
      {
      private:
@@ -243,12 +243,12 @@ Index: pthread/recursive_mutex.hpp
  
 -    class recursive_timed_mutex
 +    class recursive_timed_mutex  : public sync::lockable_base<
-+    sync::multi_threaded_tag,
-+    sync::exclusive_timed_lockable_tag,
-+    sync::recursive_tag,
-+    sync::owned_tag,
-+    sync::process_lifetime_tag,
-+    sync::anonymous_tag
++        sync::multi_threaded_tag,
++        sync::exclusive_timed_lockable_tag,
++        sync::recursive_tag,
++        sync::owned_tag,
++        sync::process_lifetime_tag,
++        sync::anonymous_tag
 +    >
      {
      private:
@@ -493,6 +493,194 @@ Index: pthread/shared_mutex.hpp
      };
  }
  
+Index: win32/mutex.hpp
+===================================================================
+--- win32/mutex.hpp	(revision 65374)
++++ win32/mutex.hpp	(working copy)
+@@ -9,6 +9,7 @@
+ #include <boost/utility.hpp>
+ #include <boost/thread/exceptions.hpp>
+ #include <boost/thread/locks.hpp>
++#include <boost/sync/lockable_traits.hpp>
+ 
+ #include <boost/config/abi_prefix.hpp>
+ 
+@@ -19,8 +20,15 @@
+         typedef ::boost::detail::basic_timed_mutex underlying_mutex;
+     }
+ 
+-    class mutex:
+-        public ::boost::detail::underlying_mutex
++    class mutex: public sync::lockable_base<
++        sync::multi_threaded_tag,
++        sync::exclusive_try_lockable_tag,
++        sync::non_recursive_tag,
++        sync::owned_tag,
++        sync::process_lifetime_tag,
++        sync::anonymous_tag,
++        ::boost::detail::underlying_mutex
++    >
+     {
+     private:
+         mutex(mutex const&);
+@@ -41,8 +49,15 @@
+ 
+     typedef mutex try_mutex;
+ 
+-    class timed_mutex:
+-        public ::boost::detail::basic_timed_mutex
++    class timed_mutex: public sync::lockable_base<
++        sync::multi_threaded_tag,
++        sync::exclusive_timed_lockable_tag,
++        sync::non_recursive_tag,
++        sync::owned_tag,
++        sync::process_lifetime_tag,
++        sync::anonymous_tag,
++        ::boost::detail::basic_timed_mutex
++    >
+     {
+     private:
+         timed_mutex(timed_mutex const&);
+@@ -58,6 +73,16 @@
+             destroy();
+         }
+ 
++        bool try_lock_until(system_time const & abs_time) {
++            return timed_lock(abs_time);
++        }
++
++        template <typename Duration>
++        bool try_lock_for(Duration const & rel_time) {
++            return timed_lock(get_system_time()+rel_time);
++        }
++
++        
+         typedef unique_lock<timed_mutex> scoped_timed_lock;
+         typedef detail::try_lock_wrapper<timed_mutex> scoped_try_lock;
+         typedef scoped_timed_lock scoped_lock;
+Index: win32/recursive_mutex.hpp
+===================================================================
+--- win32/recursive_mutex.hpp	(revision 65374)
++++ win32/recursive_mutex.hpp	(working copy)
+@@ -14,13 +14,21 @@
+ #include "basic_recursive_mutex.hpp"
+ #include <boost/thread/exceptions.hpp>
+ #include <boost/thread/locks.hpp>
++#include <boost/sync/lockable_traits.hpp>
+ 
+ #include <boost/config/abi_prefix.hpp>
+ 
+ namespace boost
+ {
+-    class recursive_mutex:
+-        public ::boost::detail::basic_recursive_mutex
++    class recursive_mutex:public sync::lockable_base<
++        sync::multi_threaded_tag,
++        sync::exclusive_try_lockable_tag,
++        sync::recursive_tag,
++        sync::owned_tag,
++        sync::process_lifetime_tag,
++        sync::anonymous_tag,
++        ::boost::detail::basic_recursive_mutex
++    >
+     {
+     private:
+         recursive_mutex(recursive_mutex const&);
+@@ -41,8 +49,15 @@
+ 
+     typedef recursive_mutex recursive_try_mutex;
+ 
+-    class recursive_timed_mutex:
+-        public ::boost::detail::basic_recursive_timed_mutex
++    class recursive_timed_mutex:  public sync::lockable_base<
++        sync::multi_threaded_tag,
++        sync::exclusive_timed_lockable_tag,
++        sync::recursive_tag,
++        sync::owned_tag,
++        sync::process_lifetime_tag,
++        sync::anonymous_tag,
++        ::boost::detail::basic_recursive_timed_mutex
++    >
+     {
+     private:
+         recursive_timed_mutex(recursive_timed_mutex const&);
+@@ -57,6 +72,16 @@
+             ::boost::detail::basic_recursive_timed_mutex::destroy();
+         }
+ 
++        bool try_lock_until(system_time const & abs_time) {
++            return timed_lock(abs_time);
++        }
++
++        template <typename Duration>
++        bool try_lock_for(Duration const & rel_time) {
++            return timed_lock(get_system_time()+rel_time);
++        }
++
++        
+         typedef unique_lock<recursive_timed_mutex> scoped_timed_lock;
+         typedef detail::try_lock_wrapper<recursive_timed_mutex> scoped_try_lock;
+         typedef scoped_timed_lock scoped_lock;
+Index: win32/shared_mutex.hpp
+===================================================================
+--- win32/shared_mutex.hpp	(revision 65374)
++++ win32/shared_mutex.hpp	(working copy)
+@@ -14,12 +14,20 @@
+ #include <limits.h>
+ #include <boost/utility.hpp>
+ #include <boost/thread/thread_time.hpp>
++#include <boost/sync/lockable_traits.hpp>
+ 
+ #include <boost/config/abi_prefix.hpp>
+ 
+ namespace boost
+ {
+-    class shared_mutex
++    class shared_mutex : public sync::lockable_base<
++        sync::multi_threaded_tag,
++        sync::upgradable_basic_lockable_tag,
++        sync::non_recursive_tag,
++        sync::owned_tag,
++        sync::process_lifetime_tag,
++        sync::anonymous_tag
++    >
+     {
+     private:
+         shared_mutex(shared_mutex const&);
+@@ -594,6 +602,33 @@
+             }
+             release_waiters(old_state);
+         }
++
++        bool try_lock_until(system_time const & abs_time) {
++            return timed_lock(abs_time);
++        }
++
++        template <typename Duration>
++        bool try_lock_for(Duration const & rel_time) {
++            return timed_lock(get_system_time()+rel_time);
++        }
++
++        bool try_lock_shared_until(system_time const & abs_time) {
++            return timed_lock_shared(abs_time);
++        }
++
++        template <typename Duration>
++        bool try_lock_shared_for(Duration const & rel_time) {
++            return timed_lock_shared(get_system_time()+rel_time);
++        }
++
++        //~ bool try_lock_upgrade_until(system_time const & abs_time) {
++            //~ return timed_lock_upgrade(abs_time);
++        //~ }
++
++        //~ template <typename Duration>
++        //~ bool try_lock_upgrade_for(Duration const & rel_time) {
++            //~ return timed_lock_upgrade(get_system_time()+rel_time);
++        //~ }
+         
+     };
+ }
 Index: win32/thread_data.hpp
 ===================================================================
 --- win32/thread_data.hpp	(revision 65374)
