@@ -13,7 +13,7 @@
 #ifndef BOOST_SYNC_LOCK_GUARD_HPP
 #define BOOST_SYNC_LOCK_GUARD_HPP
 
-#include <boost/sync/lock_options.hpp>
+#include <boost/sync/locks/lock_options.hpp>
 
 namespace boost {
 
