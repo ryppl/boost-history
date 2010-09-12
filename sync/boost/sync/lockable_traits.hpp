@@ -138,9 +138,19 @@ struct naming {
  * exclusive_lock_tag <- sharable_lock_tag <- upgradable_lock_tag
  */
 //[category_tag_hierarchy
-struct exclusive_lock_tag {};
-struct sharable_lock_tag : exclusive_lock_tag {};
-struct upgradable_lock_tag : sharable_lock_tag  {};
+struct exclusive_basic_lockable_tag {};
+struct exclusive_try_lockable_tag : exclusive_basic_lockable_tag {};
+struct exclusive_timed_lockable_tag : exclusive_try_lockable_tag {};
+struct exclusive_condition_lockable_tag : exclusive_timed_lockable_tag {};
+
+struct sharable_basic_lockable_tag : exclusive_timed_lockable_tag {};
+struct sharable_try_lockable_tag : sharable_basic_lockable_tag {};
+struct sharable_timed_lockable_tag : sharable_try_lockable_tag {};
+
+struct upgradable_basic_lockable_tag : sharable_basic_lockable_tag  {};
+struct upgradable_try_lockable_tag : upgradable_basic_lockable_tag, sharable_try_lockable_tag  {};
+struct upgradable_timed_lockable_tag : upgradable_try_lockable_tag, sharable_timed_lockable_tag  {};
+
 //]
 /**
  * A lockable implementer must either
@@ -161,9 +171,9 @@ struct category {
  */
 
 template <typename Lockable>
-struct is_exclusive_lock
+struct is_exclusive
     : sync_detail::is_same_or_is_base_and_derived<
-        exclusive_lock_tag,
+        exclusive_basic_lockable_tag,
         typename category<Lockable>::type
     >
 {};
@@ -175,9 +185,9 @@ struct is_exclusive_lock
  */
 
 template <typename Lockable>
-struct is_sharable_lock
+struct is_sharable
     : sync_detail::is_same_or_is_base_and_derived<
-        sharable_lock_tag,
+        sharable_basic_lockable_tag,
         typename category<Lockable>::type
     >
 {};
@@ -189,13 +199,102 @@ struct is_sharable_lock
  */
 
 template <typename Lockable>
-struct is_upgradable_lock
+struct is_upgradable
     : sync_detail::is_same_or_is_base_and_derived<
-        upgradable_lock_tag,
+        upgradable_basic_lockable_tag,
         typename category<Lockable>::type
     >
 {};
 
+    
+/**
+ * Inherits: If Lockable has a cathegory that inherits from
+ * then XXX then inherits from true_type,
+ * otherwise inherits from false_type.
+ */
+
+template <typename Lockable>
+struct is_exclusive_basic_lockable
+    : sync_detail::is_same_or_is_base_and_derived<
+        exclusive_basic_lockable_tag,
+        typename category<Lockable>::type
+    >
+{};
+
+
+template <typename Lockable>
+struct is_exclusive_try_lockable
+    : sync_detail::is_same_or_is_base_and_derived<
+        exclusive_try_lockable_tag,
+        typename category<Lockable>::type
+    >
+{};
+
+template <typename Lockable>
+struct is_exclusive_timed_lockable
+    : sync_detail::is_same_or_is_base_and_derived<
+        exclusive_timed_lockable_tag,
+        typename category<Lockable>::type
+    >
+{};
+    
+template <typename Lockable>
+struct is_exclusive_condition_lockable
+    : sync_detail::is_same_or_is_base_and_derived<
+        exclusive_condition_lockable_tag,
+        typename category<Lockable>::type
+    >
+{};
+    
+template <typename Lockable>
+struct is_sharable_basic_lockable
+    : sync_detail::is_same_or_is_base_and_derived<
+        sharable_basic_lockable_tag,
+        typename category<Lockable>::type
+    >
+{};
+    
+template <typename Lockable>
+struct is_sharable_try_lockable
+    : sync_detail::is_same_or_is_base_and_derived<
+        sharable_try_lockable_tag,
+        typename category<Lockable>::type
+    >
+{};
+    
+template <typename Lockable>
+struct is_sharable_timed_lockable
+    : sync_detail::is_same_or_is_base_and_derived<
+        sharable_timed_lockable_tag,
+        typename category<Lockable>::type
+    >
+{};
+    
+template <typename Lockable>
+struct is_upgradable_basic_lockable
+    : sync_detail::is_same_or_is_base_and_derived<
+        upgradable_basic_lockable_tag,
+        typename category<Lockable>::type
+    >
+{};
+    
+template <typename Lockable>
+struct is_upgradable_try_lockable
+    : sync_detail::is_same_or_is_base_and_derived<
+        upgradable_try_lockable_tag,
+        typename category<Lockable>::type
+    >
+{};
+    
+template <typename Lockable>
+struct is_upgradable_timed_lockable
+    : sync_detail::is_same_or_is_base_and_derived<
+        upgradable_timed_lockable_tag,
+        typename category<Lockable>::type
+    >
+{};
+    
+    
 /**
  * a reentrancy_tag formas a hierarchy
  * non_recursive_tag <- recursive_tag
@@ -223,7 +322,7 @@ struct reentrancy {
  * otherwise inherits from false_type.
  */
 template <typename Lockable>
-struct is_recursive_lock
+struct is_recursive
     : sync_detail::is_same_or_is_base_and_derived<
         recursive_tag,
         typename reentrancy<Lockable>::type
@@ -231,68 +330,41 @@ struct is_recursive_lock
 {};
 
 /**
- * a kind forms a hierarchy
- * basic_lockable_tag <- try_lockable_tag <- timed_lockable_tag
+ * a ownership tags formas a hierarchy
+ * owned_tag <- unowned_tag
  */
-
-//[kind_hierarchy
-struct basic_lockable_tag {};
-struct try_lockable_tag : basic_lockable_tag {};
-struct timed_lockable_tag : try_lockable_tag {};
+//[ownership_tags
+struct owned_tag {};
+struct unowned_tag {};
 //]
+
 /**
  * A lockable implementer must either
  * inherit from the helper lockable_base or
- * have a nested type kind or
- * specialize the kind template class
+ * have a nested type ownership or
+ * specialize the ownership template class
  */
 
 template <typename Lockable>
-struct kind {
-    typedef typename Lockable::kind type;
+struct ownership {
+    typedef typename Lockable::ownership type;
 };
 
 /**
- * Inherits: If Lockable has a kind that inherits from
- * then lockable_tag then inherits from true_type,
+ * Inherits: If Lockable has a reentrancy_tag that inherits from
+ * then recursive_tag then inherits from true_type,
  * otherwise inherits from false_type.
  */
-
 template <typename Lockable>
-struct is_basic_lockable
+struct is_owned
     : sync_detail::is_same_or_is_base_and_derived<
-        basic_lockable_tag,
-        typename kind<Lockable>::type
+        owned_tag,
+        typename ownership<Lockable>::type
     >
 {};
 
-/**
- * Inherits: If Lockable has a kind that inherits from
- * then try_lockable_tag then inherits from true_type,
- * otherwise inherits from false_type.
- */
-
-template <typename Lockable>
-struct is_try_lockable
-    : sync_detail::is_same_or_is_base_and_derived<
-        try_lockable_tag,
-        typename kind<Lockable>::type
-    >
-{};
-
-/**
- * Inherits: If Lockable has a kind that inherits from
- * then timed_lockable_tag then inherits from true_type,
- * otherwise inherits from false_type.
- */
-
-template <typename Lockable>
-struct is_timed_lockable
-    : sync_detail::is_same_or_is_base_and_derived<
-        timed_lockable_tag,
-        typename kind<Lockable>::type
-    >
-{};
+    
+/** */
 
 template <typename Lockable>
 struct best_condition {
@@ -320,9 +392,9 @@ struct default_lifetime<multi_process_tag> {
 //[lockable_base_defaults
 template<
     typename Scope=multi_threaded_tag,
-    typename Category=exclusive_lock_tag,
+    typename Category=exclusive_try_lockable_tag,
     typename Reentrancy=non_recursive_tag,
-    typename Kind=try_lockable_tag,
+    typename Ownership=owned_tag,
     //~ typename Lifetime=typename default_lifetime<Scope>::type,
     typename Lifetime=process_lifetime_tag,
     typename Naming=anonymous_tag,
@@ -338,7 +410,7 @@ template<
     typename Scope,
     typename Category,
     typename Reentrancy,
-    typename Kind,
+    typename Ownership,
     typename Lifetime,
     typename Naming,
     typename Base
@@ -348,7 +420,7 @@ struct lockable_base : Base {
     typedef Scope scope;
     typedef Category category;
     typedef Reentrancy reentrancy;
-    typedef Kind kind;
+    typedef Ownership ownership;
     typedef Lifetime lifetime;
     typedef Naming naming;
 };
@@ -359,15 +431,15 @@ template<
     typename Scope,
     typename Category,
     typename Reentrancy,
-    typename Kind,
+    typename Ownership,
     typename Lifetime,
     typename Naming
 >
-struct lockable_base<Scope, Category, Reentrancy, Kind, Lifetime, Naming, void> {
+struct lockable_base<Scope, Category, Reentrancy, Ownership, Lifetime, Naming, void> {
     typedef Scope scope;
     typedef Category category;
     typedef Reentrancy reentrancy;
-    typedef Kind kind;
+    typedef Ownership ownership;
     typedef Lifetime lifetime;
     typedef Naming naming;
 };

@@ -30,9 +30,9 @@ class null_condition;
 class null_mutex
 : public lockable_base<
     mono_threaded_tag,
-    upgradable_lock_tag,
+    upgradable_timed_lockable_tag,
     recursive_tag,
-    timed_lockable_tag, void
+    unowned_tag
 >
 {
     //~ null_mutex(const null_mutex &); // = delete

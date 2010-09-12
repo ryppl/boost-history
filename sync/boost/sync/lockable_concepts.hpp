@@ -30,7 +30,7 @@ namespace boost {  namespace sync {
 template <typename Lockable>
 struct BasicLockableConcept {
     typedef typename category<Lockable>::type category;
-    typedef typename kind<Lockable>::type kind;
+    typedef typename ownership<Lockable>::type ownership;
     typedef typename reentrancy<Lockable>::type reentrancy;
     typedef typename scope<Lockable>::type  scope;
     typedef typename lifetime<Lockable>::type  lifetime;
@@ -156,26 +156,53 @@ struct ShareLockableConcept {
 //[UpgradeLockableConcept
 
 template <typename Lockable>
-struct UpgradeLockableConcept {
+struct UpgradeBasicLockableConcept {
     BOOST_CONCEPT_ASSERT((ShareLockableConcept<Lockable>));
 
-    BOOST_CONCEPT_USAGE(UpgradeLockableConcept) {
+    BOOST_CONCEPT_USAGE(UpgradeBasicLockableConcept) {
         l.lock_upgrade();
         l.unlock_upgrade();
-        //~ l.lock_upgrade_until(t);
-        //~ l.lock_upgrade_for(d);
-        b=l.try_lock_upgrade();
-        b=l.try_lock_upgrade_until(t);
-        b=l.try_lock_upgrade_for(d);
         l.unlock_upgrade_and_lock();
         l.unlock_and_lock_upgrade();
         l.unlock_and_lock_shared();
         l.unlock_upgrade_and_lock_shared();
-        //~ b=try_unlock_upgrade_and_lock();
-        //~ b=try_unlock_upgradable_and_lock_for(d);
-        //~ b=try_unlock_upgradable_and_lock_until(t);
-        //~ b=try_unlock_share_and_lock();
-        //~ b=try_unlock_share_and_lock_upgrade();
+        
+    }
+    Lockable& l;
+
+};
+//]
+
+//[UpgradeLockableConcept
+
+template <typename Lockable>
+struct UpgradeLockableConcept {
+    BOOST_CONCEPT_ASSERT((UpgradeBasicLockableConcept<Lockable>));
+
+    BOOST_CONCEPT_USAGE(UpgradeLockableConcept) {
+        b=l.try_lock_upgrade();
+        b=l.try_unlock_upgrade_and_lock();
+        b=l.try_unlock_share_and_lock();
+        b=l.try_unlock_share_and_lock_upgrade();
+        
+    }
+    Lockable& l;
+    bool b;
+
+};
+//]
+
+//[UpgradeLockableConcept
+
+template <typename Lockable>
+struct UpgradeTimedLockableConcept {
+    BOOST_CONCEPT_ASSERT((UpgradeLockableConcept<Lockable>));
+
+    BOOST_CONCEPT_USAGE(UpgradeTimedLockableConcept) {
+        b=l.try_lock_upgrade_until(t);
+        b=l.try_lock_upgrade_for(d);
+        b=l.try_unlock_upgrade_and_lock_for(d);
+        b=l.try_unlock_upgrade_and_lock_until(t);
         
     }
     Lockable& l;
