@@ -25,9 +25,9 @@ Index: interprocess_mutex.hpp
 -class interprocess_mutex
 +class interprocess_mutex : public sync::lockable_base<
 +        sync::multi_process_tag,
-+        sync::exclusive_lock_tag,
++        sync::exclusive_timed_lockable_tag,
 +        sync::non_recursive_tag,
-+        sync::timed_lockable_tag,
++        sync::owned_tag,
 +        sync::kernel_lifetime_tag,
 +        sync::anonymous_tag
 +    >
@@ -93,9 +93,9 @@ Index: interprocess_recursive_mutex.hpp
 -class interprocess_recursive_mutex
 +class interprocess_recursive_mutex  : public sync::lockable_base<
 +        sync::multi_process_tag,
-+        sync::exclusive_lock_tag,
++        sync::exclusive_timed_lockable_tag,
 +        sync::recursive_tag,
-+        sync::timed_lockable_tag,
++        sync::owned_tag,
 +        sync::kernel_lifetime_tag,
 +        sync::anonymous_tag
 +    >
@@ -150,9 +150,9 @@ Index: interprocess_upgradable_mutex.hpp
 -class interprocess_upgradable_mutex
 +class interprocess_upgradable_mutex  : public sync::lockable_base<
 +        sync::multi_process_tag,
-+        sync::upgradable_lock_tag,
++        sync::upgradable_timed_lockable_tag,
 +        sync::non_recursive_tag,
-+        sync::timed_lockable_tag,
++        sync::owned_tag,
 +        sync::kernel_lifetime_tag,
 +        sync::anonymous_tag
 +    >
@@ -214,7 +214,7 @@ Index: interprocess_upgradable_mutex.hpp
     //!Returns: If it can acquire upgradable ownership immediately returns true.
     //!   If it has to wait, returns false.
     //!Throws: interprocess_exception on error.
-@@ -123,77 +131,144 @@
+@@ -123,77 +131,166 @@
     //!Effects: The calling thread tries to acquire upgradable ownership of the mutex
     //!   waiting if necessary until no other thread has has exclusive or upgradable
     //!   ownership of the mutex or abs_time is reached.
@@ -334,6 +334,18 @@ Index: interprocess_upgradable_mutex.hpp
 +            return try_lock_upgradable();
 +        }
 +
++        bool try_unlock_upgrade_and_lock() {
++            return try_unlock_upgradable_and_lock();
++        }
++
++        bool try_unlock_share_and_lock() {
++            return try_unlock_sharable_and_lock();
++        }
++
++        bool try_unlock_share_and_lock_upgrade() {
++            return try_unlock_sharable_and_lock_upgradable();
++        }
++
 +        void unlock_upgrade_and_lock() {
 +            unlock_and_lock_upgradable();
 +        }
@@ -377,10 +389,20 @@ Index: interprocess_upgradable_mutex.hpp
 +            return timed_lock_upgradable(get_system_time()+rel_time);
 +        }
 +
++        bool try_unlock_upgrade_and_lock_until(system_time const & abs_time) {
++            return timed_unlock_upgradable_and_lock(abs_time);
++        }
++
++        template <typename Duration>
++        bool try_unlock_upgrade_and_lock_for(Duration const & rel_time) {
++            return timed_unlock_upgradable_and_lock(get_system_time()+rel_time);
++        }
++
++
     /// @cond
     private:
     typedef scoped_lock<interprocess_mutex> scoped_lock_t;
-@@ -248,7 +323,7 @@
+@@ -248,7 +345,7 @@
           if(mp_ctrl){
              //Recover upgradable lock
              mp_ctrl->upgradable_in = 1;
@@ -389,7 +411,7 @@ Index: interprocess_upgradable_mutex.hpp
              //Execute the second half of exclusive locking
              mp_ctrl->exclusive_in = 0;
           }
-@@ -259,7 +334,7 @@
+@@ -259,7 +356,7 @@
     template<int Dummy>
     struct base_constants_t
     {
@@ -398,7 +420,7 @@ Index: interprocess_upgradable_mutex.hpp
           = ~(unsigned(3) << (sizeof(unsigned)*CHAR_BIT-2));
     };
     typedef base_constants_t<0> constants;
-@@ -308,10 +383,10 @@
+@@ -308,10 +405,10 @@
  {
     scoped_lock_t lock(m_mut, try_to_lock);
  
@@ -412,7 +434,7 @@ Index: interprocess_upgradable_mutex.hpp
        || this->m_ctrl.num_upr_shar){
        return false;
     }
-@@ -386,9 +461,9 @@
+@@ -386,9 +483,9 @@
     //The upgradable lock must fail
     //if an exclusive or upgradable lock has been acquired
     //or there are too many sharable locks
@@ -425,7 +447,7 @@ Index: interprocess_upgradable_mutex.hpp
        || this->m_ctrl.num_upr_shar == constants::max_readers){
        return false;
     }
-@@ -413,11 +488,11 @@
+@@ -413,11 +510,11 @@
     //The upgradable lock must block in the first gate
     //if an exclusive or upgradable lock has been acquired
     //or there are too many sharable locks
@@ -439,7 +461,7 @@ Index: interprocess_upgradable_mutex.hpp
                 || this->m_ctrl.upgradable_in
                 || this->m_ctrl.num_upr_shar == constants::max_readers);
        }
-@@ -560,7 +635,7 @@
+@@ -560,7 +657,7 @@
     //Simulate unlock_upgradable() without
     //notifying sharables.
     this->m_ctrl.upgradable_in = 0;
@@ -448,7 +470,7 @@ Index: interprocess_upgradable_mutex.hpp
     //Execute the second half of exclusive locking
     this->m_ctrl.exclusive_in = 1;
  
-@@ -583,7 +658,7 @@
+@@ -583,7 +680,7 @@
     }
     //Now unlock upgradable and mark exclusive
     this->m_ctrl.upgradable_in = 0;
@@ -457,7 +479,7 @@ Index: interprocess_upgradable_mutex.hpp
     this->m_ctrl.exclusive_in = 1;
     return true;
  }
-@@ -597,7 +672,7 @@
+@@ -597,7 +694,7 @@
     //Simulate unlock_upgradable() without
     //notifying sharables.
     this->m_ctrl.upgradable_in = 0;
@@ -466,7 +488,7 @@ Index: interprocess_upgradable_mutex.hpp
     //Execute the second half of exclusive locking
     this->m_ctrl.exclusive_in = 1;
  
-@@ -617,10 +692,10 @@
+@@ -617,10 +714,10 @@
  {
     scoped_lock_t lock(m_mut, try_to_lock);
  
@@ -480,7 +502,7 @@ Index: interprocess_upgradable_mutex.hpp
        || this->m_ctrl.upgradable_in
        || this->m_ctrl.num_upr_shar != 1){
        return false;
-@@ -637,7 +712,7 @@
+@@ -637,7 +734,7 @@
     //The upgradable lock must fail
     //if an exclusive or upgradable lock has been acquired
     if(!lock.owns()
@@ -540,9 +562,9 @@ Index: named_mutex.hpp
 -class named_mutex
 +class named_mutex : public sync::lockable_base<
 +        sync::multi_process_tag,
-+        sync::exclusive_lock_tag,
++        sync::exclusive_timed_lockable_tag,
 +        sync::non_recursive_tag,
-+        sync::timed_lockable_tag,
++        sync::owned_tag,
 +        sync::kernel_lifetime_tag,
 +        sync::named_tag
 +    >
@@ -607,9 +629,9 @@ Index: named_recursive_mutex.hpp
 -class named_recursive_mutex
 +class named_recursive_mutex : public sync::lockable_base<
 +        sync::multi_process_tag,
-+        sync::exclusive_lock_tag,
++        sync::exclusive_timed_lockable_tag,
 +        sync::recursive_tag,
-+        sync::timed_lockable_tag,
++        sync::owned_tag,
 +        sync::kernel_lifetime_tag,
 +        sync::named_tag
 +    >
@@ -673,9 +695,9 @@ Index: named_upgradable_mutex.hpp
 -class named_upgradable_mutex
 +class named_upgradable_mutex : public sync::lockable_base<
 +        sync::multi_process_tag,
-+        sync::upgradable_lock_tag,
++        sync::upgradable_timed_lockable_tag,
 +        sync::non_recursive_tag,
-+        sync::timed_lockable_tag,
++        sync::owned_tag,
 +        sync::kernel_lifetime_tag,
 +        sync::named_tag
 +    >
@@ -836,7 +858,7 @@ Index: named_upgradable_mutex.hpp
     //!Throws: An exception derived from interprocess_exception on error.
     bool try_unlock_sharable_and_lock();
  
-@@ -221,6 +229,75 @@
+@@ -221,6 +229,97 @@
     //!Returns false on error. Never throws.
     static bool remove(const char *name);
  
@@ -863,6 +885,19 @@ Index: named_upgradable_mutex.hpp
 +        bool try_lock_upgrade() {
 +            return try_lock_upgradable();
 +        }
++
++        bool try_unlock_upgrade_and_lock() {
++            return try_unlock_upgradable_and_lock();
++        }
++
++        bool try_unlock_share_and_lock() {
++            return try_unlock_sharable_and_lock();
++        }
++
++        bool try_unlock_share_and_lock_upgrade() {
++            return try_unlock_sharable_and_lock_upgradable();
++        }
++
 +
 +        void unlock_upgrade_and_lock() {
 +            unlock_and_lock_upgradable();
@@ -906,6 +941,15 @@ Index: named_upgradable_mutex.hpp
 +        template <typename Duration>
 +        bool try_lock_upgrade_for(Duration const & rel_time) {
 +            return timed_lock_upgradable(get_system_time()+rel_time);
++        }
++
++        bool try_unlock_upgrade_and_lock_until(system_time const & abs_time) {
++            return timed_unlock_upgradable_and_lock(abs_time);
++        }
++
++        template <typename Duration>
++        bool try_unlock_upgrade_and_lock_for(Duration const & rel_time) {
++            return timed_unlock_upgradable_and_lock(get_system_time()+rel_time);
 +        }
 +
 +
