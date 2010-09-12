@@ -6,7 +6,7 @@ Index: locks.hpp
  #include <boost/thread/thread_time.hpp>
  #include <boost/detail/workaround.hpp>
  #include <boost/type_traits/is_class.hpp>
-+#include <boost/sync/lock_options.hpp>
++#include <boost/sync/locks/lock_options.hpp>
 +#include <boost/sync/locks/lock_guard.hpp>
  
  #include <boost/config/abi_prefix.hpp>

@@ -520,7 +520,7 @@ Index: lock_options.hpp
  //!\file
  //!Describes the lock options with associated with interprocess_mutex lock constructors.
 -
-+#include <boost/sync/lock_options.hpp>
++#include <boost/sync/locks/lock_options.hpp>
  namespace boost {
  
  namespace posix_time
