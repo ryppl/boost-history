@@ -50,7 +50,7 @@ Index: interprocess_mutex.hpp
     //!Throws: interprocess_exception on error.
     void unlock();
 +
-+        bool try_lock_until(system_time const & abs_time) {
++        bool try_lock_until(boost::posix_time::ptime const & abs_time) {
 +            return timed_lock(abs_time);
 +        }
 +
@@ -116,7 +116,7 @@ Index: interprocess_recursive_mutex.hpp
     //!Throws: interprocess_exception on error.
     void unlock();
 +
-+        bool try_lock_until(system_time const & abs_time) {
++        bool try_lock_until(boost::posix_time::ptime const & abs_time) {
 +            return timed_lock(abs_time);
 +        }
 +
@@ -362,7 +362,7 @@ Index: interprocess_upgradable_mutex.hpp
 +            unlock_upgradable_and_lock_sharable();
 +        }
 +
-+        bool try_lock_until(system_time const & abs_time) {
++        bool try_lock_until(boost::posix_time::ptime const & abs_time) {
 +            return timed_lock(abs_time);
 +        }
 +
@@ -371,7 +371,7 @@ Index: interprocess_upgradable_mutex.hpp
 +            return timed_lock(get_system_time()+rel_time);
 +        }
 +
-+        bool try_lock_shared_until(system_time const & abs_time) {
++        bool try_lock_shared_until(boost::posix_time::ptime const & abs_time) {
 +            return timed_lock_sharable(abs_time);
 +        }
 +
@@ -380,7 +380,7 @@ Index: interprocess_upgradable_mutex.hpp
 +            return timed_lock_sharable(get_system_time()+rel_time);
 +        }
 +
-+        bool try_lock_upgrade_until(system_time const & abs_time) {
++        bool try_lock_upgrade_until(boost::posix_time::ptime const & abs_time) {
 +            return timed_lock_upgradable(abs_time);
 +        }
 +
@@ -389,7 +389,7 @@ Index: interprocess_upgradable_mutex.hpp
 +            return timed_lock_upgradable(get_system_time()+rel_time);
 +        }
 +
-+        bool try_unlock_upgrade_and_lock_until(system_time const & abs_time) {
++        bool try_unlock_upgrade_and_lock_until(boost::posix_time::ptime const & abs_time) {
 +            return timed_unlock_upgradable_and_lock(abs_time);
 +        }
 +
@@ -593,7 +593,7 @@ Index: named_mutex.hpp
     //!Returns false on error. Never throws.
     static bool remove(const char *name);
  
-+        bool try_lock_until(system_time const & abs_time) {
++        bool try_lock_until(boost::posix_time::ptime const & abs_time) {
 +            return timed_lock(abs_time);
 +        }
 +
@@ -660,7 +660,7 @@ Index: named_recursive_mutex.hpp
     //!from the system
     static bool remove(const char *name);
  
-+        bool try_lock_until(system_time const & abs_time) {
++        bool try_lock_until(boost::posix_time::ptime const & abs_time) {
 +            return timed_lock(abs_time);
 +        }
 +
@@ -916,7 +916,7 @@ Index: named_upgradable_mutex.hpp
 +        }
 +
 +
-+        bool try_lock_until(system_time const & abs_time) {
++        bool try_lock_until(boost::posix_time::ptime const & abs_time) {
 +            return timed_lock(abs_time);
 +        }
 +
@@ -925,7 +925,7 @@ Index: named_upgradable_mutex.hpp
 +            return timed_lock(get_system_time()+rel_time);
 +        }
 +
-+        bool try_lock_shared_until(system_time const & abs_time) {
++        bool try_lock_shared_until(boost::posix_time::ptime const & abs_time) {
 +            return timed_lock_sharable(abs_time);
 +        }
 +
@@ -934,7 +934,7 @@ Index: named_upgradable_mutex.hpp
 +            return timed_lock_sharable(get_system_time()+rel_time);
 +        }
 +
-+        bool try_lock_upgrade_until(system_time const & abs_time) {
++        bool try_lock_upgrade_until(boost::posix_time::ptime const & abs_time) {
 +            return timed_lock_upgradable(abs_time);
 +        }
 +
@@ -943,7 +943,7 @@ Index: named_upgradable_mutex.hpp
 +            return timed_lock_upgradable(get_system_time()+rel_time);
 +        }
 +
-+        bool try_unlock_upgrade_and_lock_until(system_time const & abs_time) {
++        bool try_unlock_upgrade_and_lock_until(boost::posix_time::ptime const & abs_time) {
 +            return timed_unlock_upgradable_and_lock(abs_time);
 +        }
 +
