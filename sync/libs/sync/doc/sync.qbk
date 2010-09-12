@@ -1,0 +1,1214 @@
+[/
+ / Copyright (c) 2008 Howard Hinnant
+ / Copyright (c) 2006, 2008 Beman Dawes
+ / Copyright (c) 2009-20010 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[article Boost.Sync
+    [quickbook 1.5]
+    [version 0.1.0]
+    [authors [Botet Escriba, Vicente J.]]
+    [copyright 2009-2010 Vicente J. Botet Escriba]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+[template basic_lockable_req_link[link_text] [link boost_sync.reference.Locables.BasicLockable [link_text]]]
+[def __basic_lockable_req__ [basic_lockable_req_link `BasicLockable`]]
+
+[template lockable_req_link[link_text] [link boost_sync.reference.Locables.Lockable [link_text]]]
+[def __lockable_req__ [lockable_req_link `Lockable`]]
+
+
+[def __lock_guard__ [link boost_sync.reference.locks_hpp.lock_guard_hpp `lock_guard`]]
+
+[template lock_ref_link[link_text] [link boost_sync.reference.Locables.BasicLockable [link_text]]]
+[def __lock_ref__ [lock_ref_link `lock()`]]
+
+[template unlock_ref_link[link_text] [link boost_sync.reference.Locables.BasicLockable [link_text]]]
+[def __unlock_ref__ [unlock_ref_link `unlock()`]]
+
+
+[/==================]
+[def __Boost_Sync__ [*Boost.Sync]]
+
+
+[warning Sync is not part of the Boost libraries.]
+
+[/===============]
+[section Overview]
+[/===============]
+
+
+[/====================================]
+[heading How to Use This Documentation]
+[/====================================]
+
+This documentation makes use of the following naming and formatting conventions.
+
+* Code is in `fixed width font` and is syntax-highlighted.
+* Replaceable text that you will need to supply is in [~italics].
+* Free functions are rendered in the code font followed by (), as in free_function().
+* If a name refers to a class template, it is specified like this:   `class_template<>`; that is, it is in code font and its name is followed by `<>`   to indicate that it is a class template.
+* If a name refers to a function-like macro, it is specified like this: `MACRO()`;
+  that is, it is uppercase in code font and its name is followed by `()` to   indicate that it is a function-like macro. Object-like macros appear without the   trailing `()`.
+* Names that refer to /concepts/ in the generic programming sense are  specified in CamelCase.
+
+[note In addition, notes such as this one specify non-essential information that provides additional background or rationale.]
+
+Finally, you can mentally add the following to any code fragments in this document:
+
+    // Include all of Sync files
+    #include <boost/sync.hpp>
+    using namespace boost::sync;
+
+[/=================]
+[section Motivation]
+[/=================]
+
+
+The goal of Boost.Sync is to remove the syntactic differences between the synchronization mechanisms of the Boost.Thread and Boost::Interprocess libraries and be a holder of common mechanism and algorithms working on the common concepts.
+
+The differences I have identified up to now are:
+
+    * The scoped locks can be initialized with static const variables in order to overload the constructor for lock adoption, lock deferral or try to lock. Even if the name of these variables is almost the same, these variables live in different namespace. It would be nice if both libraries use the same type and the same variables. 
+
+    * The shared mutex provide similar service with different names. In addition each implementation provide some functions that are not provided by the other. 
+
+    * The scoped locks live in a different namespace and some have different names with the same semantic. IMO these should be shared. 
+
+    * The exception thrown lives in a different name space and different names with equivalent semantics If we follow the C++0x standard the exception to throw should be system_error. Both libraries could adapt his hierarchy to Boost.System. The drawback is that users of Boost.Thread and Boost.Interprocess will need to link with Boost.System which is not a header only library. 
+
+    * The move semantics (&&) of Boost.Thread should be adapted to the forthcoming Boost.Move library as soon as integrated on the release branch. Boost.Interprocess uses already a detail implementation equivalent to the provided by Boost.Move, so the change will be simpler. 
+
+    * Adapt both libraries interface to use Boost.Chrono, which is yet a non header only library, once it is accepted. 
+
+Of course, this needs some adaptation of the Thread and Interprocess libraries.
+
+    
+This library proposes some classes that make easier to write code that can be used indistinguishably with thread or interprocess synchronization mechanisms. This section is inspired on the work from [*C++ Threading - A Generic-Programming Approach] - Kevlin Henney.
+
+
+
+[endsect]
+
+[/==================]
+[section Description]
+[/==================]
+
+__Boost_Sync__ provides a uniform usage of Boost.Thread and Boost.Interprocess synchronization mechanisms based on:
+
+* share the lock options between both libraries
+* lockable concepts.
+* lockable traits
+* null_mutex and null_condition classes,
+
+
+[/* 
+    * lockable inverse traits
+    * Add some common locks as
+          o strict_lock, nested_strict_lock,
+          o reverse_lock, nested_reverse_lock, 
+    * A polymorphic lockable hierarchy. 
+]
+
+[endsect]
+
+[endsect]
+
+
+[/==============================]
+[section:users_guide Users'Guide]
+[/==============================]
+
+[/======================================]
+[section:getting_started Getting Started]
+[/======================================]
+
+[/======================================]
+[section:install Installing Sync]
+[/======================================]
+
+[/=================================]
+[heading Getting Boost.Sync ]
+[/=================================]
+
+You can get the last stable release of __Boost_Sync__ by downloading [^sync.zip] from the
+[@http://www.boost-consulting.com/vault/index.php?directory=ConcurrentProgramming Boost Vault].
+
+You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/sync Boost Sandbox]. Just go to [@http://svn.boost.org/trac/boost/wiki/BoostSubversion here] and follow the instructions there for anonymous SVN access.
+
+[/==========================================]
+[heading Where to install Boost.Sync? ]
+[/==========================================]
+
+The simple way is to decompress (or checkout from SVN) the file in your BOOST_ROOT directory.
+
+Othesewise, if you decompress in a different directory, you will need to comment some lines, and uncomment and change others in the build/Jamfile and test/Jamfile. Sorry for this, but I have not reached yet to write a Jamfile that is able to work in both environements and use the BOOST_ROOT variable. Any help is welcome.
+
+[/=================================]
+[heading Building Boost.Sync ]
+[/=================================]
+
+__Boost_Sync__ is a header only library, so no need to compile anything.
+
+
+[/===================]
+[heading Requirements]
+[/===================]
+
+__Boost_Sync__ depends on some Boost libraries. For these specific parts you must use either Boost version 1.39.0 or the version in SVN trunk (even if older versions should works also).
+
+In particular, __Boost_Sync__ depends on:
+
+[variablelist
+[
+    [[@http://www.boost.org/libs/config [*Boost.Config]]] [for configuration purposes, ...]
+]
+[
+    [[@http://www.boost.org/libs/integer [*Boost.Integer]]] [for cstdint conformance, and integer traits ...]
+]
+[
+    [[@http://www.boost.org/libs/mpl [*Boost.MPL]]] [for MPL Assert and bool, logical ...]
+]
+[
+    [[@http://www.boost.org/libs/static_assert [*Boost.StaticAssert]]] [for STATIC_ASSERT, ...]
+]
+[
+    [[@http://www.boost.org/libs/type_traits [*Boost.TypeTraits]]] [for is_base, is_convertible ...]
+]
+[
+    [[@http://www.boost.org/libs/utility [*Boost.Utility/EnableIf]]] [for enable_if, ...]
+]
+]
+
+
+[/=========================================================]
+[heading Building an executable that uses __Boost_Sync__ ]
+[/=========================================================]
+
+No link is needed.
+
+
+[/=========================]
+[heading Exceptions safety ]
+[/=========================]
+
+All functions in the library are exception-neutral and provide strong guarantee of exception safety as long as the underlying parameters provide it.
+
+[/=====================]
+[heading Thread safety ]
+[/=====================]
+
+All functions in the library are thread-unsafe except when noted explicitly.
+
+[/========================]
+[heading Tested compilers ]
+[/========================]
+
+The implementation will eventually work with most C++03 conforming compilers. Current version has been tested on:
+
+Windows with
+
+* MSVC 10.0
+* MSVC 9.0 Express
+* MSVC 8.0
+
+[/* Intel 11.0]
+
+Scientific Linux with
+
+* GCC 4.1.2
+
+Cygwin with
+
+* GCC 3.4.4
+* GCC 4.3.4
+
+MinGW with
+
+* GCC 4.4.0
+
+Initial version was tested on:
+
+MacOS with GCC 4.2.4
+
+Ubuntu Linux with GCC 4.2.4
+
+[note Please let us know how this works on other platforms/compilers.]
+
+[note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
+
+[endsect]
+[/
+[/====================]
+[section Hello World! ]
+[/====================]
+
+
+    #include <boost/lockable_traits.hpp>
+
+
+[endsect]
+]
+[endsect]
+
+[/===============]
+[section Tutorial]
+[/===============]
+
+[section Lockable traits]
+
+[*Lockable substitutability]
+
+The Boost mutexes have associated an implicit category which form a sub-typing hierarchy:
+
+    BasicLockable > TryLockable <- TimedLockable
+
+Locking behavior can be further categorized as:
+
+* Ownership: (concurrent agent affinity): owned or unowned
+
+An owned lockable can be sustituted by any unowned lockable.
+
+    owned <- unowned
+    
+* Share: When a lockable is owned by the concurrent agent, this ownership can be either exclusive or shared. When shared ownership is considered there is yet the possibility to change at run-time from shared to exclusive and viceversa. We talk of upgradable lockables.
+
+    ExclusiveLockable <- SharedLockable <- UpgradeLockable
+
+* Re-entrancy: When a lockable is owned by the concurrent agent, the ownership can be done recursively or not
+
+    non_recursive <- recursive
+
+* Scope: This is related to the kind of concurrent agents that can own the lockable. Currently the library takes in account mono-threaded, multi-threaded or multi-process contexts.
+
+    mono_threaded <- multi_threaded <- multi_process
+
+* Lifetime: The lifetime of a lock could be associated to the process, the kernel or the file-system
+
+    process_lifetime <- kernel_lifetime <- filesystem_lifetime
+
+
+Substitutability applies both to the degree of syntactic support and to the locking semantics
+
+* A recursive mutex and binary semaphore are substitutable in code written against a exclusive mutex
+* A null mutex is substitutable for all others in a single-threaded environment
+
+
+We can see these axes of variation expressed against some Boost synchronization mechanisms (from now bip stands for boost::interprocess):
+
+* `boost::mutex`: ExclusiveLockable, owned, non-recursive, multi-threaded
+* `boost::shared_mutex`: UpgradeableBasicLockable, owned, non-recursive, multi-threaded
+* `bip::sync::null_mutex`: UpgradableTimedLockable, unowned, recursive, mono-threaded
+* `bip::sync::interprocess_recursive_mutex`: ExclusiveTimedLockable, owned, recursive, multi_process.
+
+
+__Boost_Sync__ provides a set of very specific traits classes, some of them encapsulate a single trait for a `Lockable` type; for example, is a lockable recursive (`is_recursive`), is useful in a multi threaded context
+(`is_multi_threaded`).
+
+The __Boost_Sync__ lockable traits classes share a unified design that mimic the one of Boost.TypeTraits: each class inherits from a the type `true_type` if the type has the specified property and inherits from `false_type` otherwise.
+
+The __Boost_Sync__ library also contains a set of classes that perform a specific transformation on a type. Each class that performs a transformation defines a single typedef-member type that is the result of the transformation. 
+
+All of the locakble traits classes are defined inside namespace boost::lockable. 
+
+[*tag trait implementation]
+
+Most of the implementation is fairly repetitive anyway, so here we will just give you a flavor for how some of the classes are implemented. See the reference section for the full details.
+
+The library defines a tag hierarchy associated to a trait. For example for the scope trait:
+
+    struct mono_threaded_tag {};
+    struct multi_threaded_tag : mono_threaded_tag {};
+    struct multi_process_tag : multi_threaded_tag  {};
+
+By default the `scope` trait forward to a nested type `scope`.
+
+    template <typename Lockable>
+    struct scope {
+        typedef typename Lockable::scope type;
+    };
+
+In order to make a type a model of `Lockable` we have two possibilities:
+
+* declare the nested type `scope`
+
+    class my_mutex  {
+    public:
+        typedef <a scope tag> scope;
+        // ...
+    };
+
+* specialize the class template `sync::scope`
+
+    template<>
+    struct scope_tag<my_mutex> {
+        typedef multi_threaded_tag type; 
+    };
+
+[*lockable_base helper]
+
+The library provis also a mixin class `lockable_base` which will define all the needed nested typedefs.
+
+        template<
+            typename Scope=multi_threaded_tag,
+            typename Category=exclusive_tag,
+            typename Reentrancy=non_recursive_tag,
+            typename Kind=timed_lockable_tag,
+            typename Lifetime=typename default_lifetime<Scope>,
+            typename Named=anonymous_tag,
+            typename Base=void
+        > struct lockable_base;
+
+which defines the correct types. The `lockable_base` has a lot of parameters, and the defaults are the ones associated to `boost::mutex`. So Boost.Thread could use it as follows
+
+    class mutex : public lockable_base<> {
+        // ...
+    };
+
+[/
+Waiting for that __Boost_Sync__ specialize the scope in the locable_traits/adapters/thread/mutex.hpp file.
+
+    template<>
+    struct scope<boost::mutex> {
+        typedef multi_threaded_tag type; 
+    };
+
+So the user must include this file to make `boost::mutex` a model of `Lockable` for `__Boost_Sync__`.
+]
+
+[*is_trait implementation]
+
+For example the trait `is_multi_threaded` is defined as : If Lockable has `scope` trait is the same or inherits from `multi_threaded_tag` then it is `true_type`, otherwise it is `false_type`. 
+
+    template <typename Lockable>
+    struct is_multi_threaded
+        : is_same_or_is_base_and_derived<
+            multi_threaded_tag,
+            typename scope<Lockable>::type
+        >
+    {};
+    
+[endsect]
+
+[section Lockable generators]
+[*Finding the best lock]
+
+Inverse traits can match a lockable type based on specific traits, form a given family of lockable types.
+
+It is also possible to specify characteristics to perform a reverse lookup to find a primitive lockable type, either by exact match or by substitutable match.
+
+    find_best_lock<>::type == boost::mutex
+    find_best_lock<mono_threaded_tag>::type == bsync::null_mutex
+    find_best_lock<multi_threaded_tag>::type == bsync::thread_mutex
+    find_best_lock<multi_process_tag>::type == bsync::interprocess_mutex
+      
+The user can also find a lockable using mpl constraints as follows
+    
+    typedef find_best_lock_between<Lockables, 
+            mpl::and<is_multi_threaded<_>, is_recursive<_> > >::type best;
+
+[endsect]
+
+[section Lockable concepts]
+
+For the main category clasification, the library provides concept classes that can be used with Boost.ConceptCheck. For example `LockableConcept` object supports the basic features required to delimit a critical region. Supports the basic `lock`, `unlock` and `try_lock` functions and defines the lock traits.
+
+    template <typename Lockable>
+    struct BasicLockableConcept {
+        typedef typename category<Lockable>::type category;
+        typedef typename kind<Lockable>::type kind;
+        typedef typename reentrancy<Lockable>::type reentrancy;
+        typedef typename scope<Lockable>::type  scope;
+        typedef typename lifetime<Lockable>::type  lifetime;
+        typedef typename named<Lockable>::type  named;
+
+        BOOST_CONCEPT_USAGE(BasicLockableConcept) {
+            l.lock();
+            l.unlock();
+        }
+        Lockable& l;
+    };
+
+The user can now check staticaly that the template parameter is a model of BasicLocable as follows
+
+    #include "boost/sync/lockable_concepts.hpp"
+    template <typename Lockable> 
+    class my_class {
+      BOOST_CONCEPT_ASSERT((BasicLockableConcept<Lockable>));    
+        // ...
+    };
+
+The same can be done for `TimedLockableConcept`, `ShareLockableConcept` and `UpgradeLockableConcept` (See the reference section for more details).
+
+[endsect]
+
+[endsect]
+[/===============]
+[section Examples]
+[/===============]
+
+
+[/'See the source file [@../../test/ratio_test.cpp test/ratio_test.cpp]]
+
+[endsect]
+
+
+
+
+[/================================]
+[section:ext_references External Resources]
+[/================================]
+
+[variablelist
+
+[
+    [[@http://www.open-std.org/jtc1/sc22/wg21 [*C++ Standards Committee's current Working Paper]]]
+    [The most authoritative reference material for the library is the C++ Standards Committee's current Working Paper (WP).  30 - Thread support library ]
+]
+
+[
+    [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3130.html [*N3130 - Lockable requirements for C++0x]]]
+    [From Anthony Williams.]
+]
+
+[
+    [[@http:/www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf 
+    [*N1833 - Preliminary Threading Library Proposal for TR2]]]
+    [Kevlin Henney, 2005]
+]
+
+[
+    [[@http://www.two-sdg.demon.co.uk/curbralan/papers/accu/MoreC++Threading.pdf
+    [*More C++ Threading - From Procedural to Generic, by Example]]]
+    [Kevlin Henney]
+]
+[
+    [[@http://www.two-sdg.demon.co.uk/curbralan/papers/accu/C++Threading.pdf
+    [*C++ Threading - A Generic-Programming Approach]]]
+    [Kevlin Henney, April 16, 2004]
+]
+
+]
+
+[endsect]
+
+[endsect]
+
+[/=================]
+[section:reference Reference ]
+[/=================]
+
+[/===========================================]
+[section:sync_hpp Header `<boost/sync.hpp>`]
+[/===========================================]
+
+    #include <boost/sync/lockable_traits.hpp>
+    #include <boost/sync/lockable_concepts.hpp>
+    #include <boost/sync/locks.hpp>
+
+[endsect]
+
+
+[/===========================================]
+[section:lockable_traits_hpp Header `<boost/sync/lockable_traits.hpp>`]
+[/===========================================]
+
+    #include <boost/sync/lockable_traits/category.hpp>
+    #include <boost/sync/lockable_traits/reentrancy.hpp>
+    #include <boost/sync/lockable_traits/scope.hpp>
+    #include <boost/sync/lockable_traits/ownership.hpp>
+    #include <boost/sync/lockable_traits/lifetime.hpp>
+    #include <boost/sync/lockable_traits/naming.hpp>
+    #include <boost/sync/lockable_traits/lock_traits_base.hpp>
+    #include <boost/sync/lockable_traits/best_condition_variable.hpp>
+    #include <boost/sync/lockable_traits/generic_condition_variable.hpp>
+
+
+
+[/===========================================]
+[section:category_hpp Header `<boost/sync/lockable_traits/category.hpp>`]
+[/===========================================]
+
+    namespace boost { namespace sync {
+
+        struct exclusive_basic_lockable_tag;
+        struct exclusive_try_lockable_tag;
+        struct exclusive_timed_lockable_tag;
+        struct sharable_basic_lockable_tag;
+        struct sharable_try_lockable_tag;
+        struct sharable_timed_lockable_tag;
+        struct upgradable_basic_lockable_tag;
+        struct upgradable_try_lockable_tag;
+        struct upgradable_timed_lockable_tag;
+        template <typename Lockable> struct category;
+
+        template <typename Lockable> struct is_basic_lockable;
+        template <typename Lockable> struct is_try_lockable;
+        template <typename Lockable> struct is_timed_lockable;
+        template <typename Lockable> struct is_exclusive;
+        template <typename Lockable> struct is_sharable;
+        template <typename Lockable> struct is_upgradable;
+    }
+
+[endsect]
+
+[/===========================================]
+[section:reentrancy_hpp Header `<boost/sync/lockable_traits/reentrancy.hpp>`]
+[/===========================================]
+
+    namespace boost { namespace sync {
+
+        struct non_recursive_tag;
+        struct recursive_tag;
+        template <typename Lockable> struct reentrancy;
+        
+        template <typename Lockable> struct is_recursive;
+    }
+
+[endsect]
+
+[/===========================================]
+[section:scope_hpp Header `<boost/sync/lockable_traits/scope.hpp>`]
+[/===========================================]
+
+    namespace boost { namespace sync {
+
+        struct mono_threaded_tag;
+        struct multi_threaded_tag;
+        struct multi_process_tag;
+        template <typename Lockable> struct scope;
+
+        template <typename Lockable> struct is_mono_threaded;
+        template <typename Lockable> struct is_multi_threaded;
+        template <typename Lockable> struct is_multi_process;
+    }
+
+
+[endsect]
+
+[/===========================================]
+[section:ownership_hpp Header `<boost/sync/lockable_traits/ownership.hpp>`]
+[/===========================================]
+
+    namespace boost { namespace sync {
+
+        struct unowned_tag;
+        struct owned_tag;
+        template <typename Lockable> struct ownership;
+        
+        template <typename Lockable> struct is_owned;
+    }
+
+[endsect]
+
+[/===========================================]
+[section:lifetime_hpp Header `<boost/sync/lockable_traits/lifetime.hpp>`]
+[/===========================================]
+
+    namespace boost { namespace sync {
+
+        struct process_lifetime_tag;
+        struct kernel_lifetime_tag;
+        struct filesystem_lifetime_tag;
+        template <typename Lockable> struct lifetime;
+
+        template <typename Lockable> struct has_process_lifetime;
+        template <typename Lockable> struct has_kernel_lifetime;
+        template <typename Lockable> struct has_filesystem_lifetime;
+
+    }
+
+[endsect]
+
+[/===========================================]
+[section:name_hpp Header `<boost/sync/lockable_traits/naming.hpp>`]
+[/===========================================]
+
+    namespace boost { namespace sync {
+
+        struct anonymous_tag;
+        struct named_tag;
+        template <typename Lockable> struct naming;
+        template <typename Lockable> struct is_named;
+
+    }
+
+[endsect]
+
+
+[/===========================================]
+[section:lockable_base_hpp Header `<boost/sync/lockable_traits/lockable_base.hpp>`]
+[/===========================================]
+
+    namespace boost { namespace sync {
+
+        template<typename Scope> struct default_lifetime;
+        
+        template<
+            typename Scope=multi_threaded_tag,
+            typename Category=exclusive_tag,
+            typename Reentrancy=non_recursive_tag,
+            typename Kind=timed_lockable_tag,
+            typename Lifetime=typename default_lifetime<Scope>,
+            typename Named=anonymous_tag,
+            typename Base=void
+        > struct lockable_base;
+    }
+
+[endsect]
+
+[endsect]
+
+[/===========================================]
+[section:Locables Requirements for Lockable types ]
+[/===========================================]
+
+A concurrent agent is a an entity (such as a thread, process, or packaged task) that may perform work in parallel with other concurrent agents. The calling agent is determined by context, e.g. the calling thread or the packaged task that contains the call, etc.
+
+The standard and also the Boost.Thread and Boost.Interprocess library templates `unique_lock`, `lock_guard`, `lock`, `try_lock` and `condition_variable_any` all operate on user-supplied lockable objects. Such an object must support the member functions specified for either the `BasicLockable` requirements, the `Lockable` requirements or the `TimedLockable` requirements as appropriate to acquire or release ownership of a lock by a given concurrent agent. 
+
+[note The nature of any lock ownership and any synchronization it may entail are not part of these requirements.]
+
+[note Some lockable objects are "agent-oblivious" in that they work for any concurrent-agent model because they do not determine or store the agent's ID (e.g., an ordinary spin-lock).]
+
+[/===========================================]
+[section:BasicLockable BasicLockable Requirements ]
+[/===========================================]
+
+In order for a type `L` to qualify as a `BasicLockable` type, the following expressions must be supported, with the specified semantics, where `m` denotes a value of type `L`:
+
+The expression `m.lock()` shall be well-formed and have the following semantics:
+
+[*Effects:] Block until a lock can be acquired for the current concurrent agent. If an exception is thrown then a lock shall not have been acquired for the current concurrent agent.
+
+[*Return type:] void
+
+The expression `m.unlock()` shall be well-formed and have the following semantics:
+
+[*Requires:] The current concurrent agent shall hold a lock on `m`.
+
+[*Effects:] Release a lock on `m` held by the current concurrent agent.
+
+[*Return type:] `void`
+
+[*Throws:] Nothing.
+
+[endsect]
+
+[/===========================================]
+[section:TryLockable Lockable Requirements ]
+[/===========================================]
+
+In order for a type `L` to qualify as a `Lockable` type, it must meet the `BasicLockable` requirements. In addition, the following expressions must be supported, with the specified semantics, where m denotes a value of type `L`:
+
+The expression `m.try_lock()` shall be well-formed and have the following semantics:
+
+[*Effects:] Attempt to acquire a lock for the current concurrent agent without blocking. If an exception is thrown then a lock shall not have been acquired for the current concurrent agent.
+
+[*Return type:] `bool`
+
+[*Returns:] `true` if the lock was acquired, `false` otherwise.
+
+[endsect]
+
+[/===========================================]
+[section:TimedLockable TimedLockable Requirements ]
+[/===========================================]
+
+For a type `TL` to qualify as `TimedLockable` it must meet the Lockable requirements, and additionally the following expressions must be well-formed, with the specified semantics, where `m` is an instance of a type `TL`, `rel_time` denotes instantiation of `duration` and `abs_time` denotes an instantiation of `time_point`.
+
+The expression `m.try_lock_for(rel_time)` shall be well-formed and have the following semantics:
+
+[*Effects:] Attempt to acquire a lock for the current concurrent agent within the relative timeout specified by `rel_time`. The function shall return within the timeout specified by `rel_time` only if it has obtained a lock on `m` for the current concurrent agent. If an exception is thrown then a lock shall not have been acquired for the current concurrent agent.
+
+[*Return type:] `bool`
+
+[*Returns:] `true` if the lock was acquired, `false` otherwise.
+
+The expression `m.try_lock_until(abs_time)` shall be well-formed and have the following semantics:
+
+[*Effects:] Attempt to acquire a lock for the current concurrent agent before the absolute timeout specified by `abs_time`. The function shall return before the timeout specified by `abs_time` only if it has obtained a lock on `m` for the current concurrent agent. If an exception is thrown then a lock shall not have been acquired for the current concurrent agent.
+    
+[*Return type:] `bool`
+
+[*Returns:] `true` if the lock was acquired, `false` otherwise.
+
+[endsect]
+
+[/===========================================]
+[section:SharedBasicLockable SharedBasicLockable Requirements ]
+[/===========================================]
+
+In order for a type `L` to qualify as a `SharedBasicLockable` type, it must meet the `BasicLockable` requirements. In addition, the following expressions must be supported, with the specified semantics, where `m` denotes a value of type `L`:
+
+The expression `is_shared_lockable<L>` is `true_type`.
+
+The expression `m.lock_shared()` shall be well-formed and have the following semantics:
+
+[*Effects:] Block until shared ownership can be acquired for the current concurrent agent. If an exception is thrown then a lock shall not have been acquired for the current concurrent agent.
+
+[*Return type:] `void`
+
+The expression `m.unlock_shared()` shall be well-formed and have the following semantics:
+
+[*Requires:] The current concurrent agent has shared onership on `m`.
+
+[*Effects:] Release shared ownership on `m` held by the current concurrent agent.
+
+[*Return type:] `void`
+
+[*Throws:] Nothing.
+
+[endsect]
+
+[/===========================================]
+[section:SharedLockable SharedLockable Requirements ]
+[/===========================================]
+
+In order for a type `L` to qualify as a `SharedLockable` type, it must meet the `SharedBasicLockable` and `Locable` requirements. In addition, the following expressions must be supported, with the specified semantics, where `m` denotes a value of type `L`:
+
+The expression `m.try_lock_shared()` shall be well-formed and have the following semantics:
+
+[*Effects:] Attempt to obtain shared ownership for the current concurrent agent without blocking. If an exception is thrown then a lock shall not have been acquired for the current concurrent agent.
+
+[*Return type:] `bool`
+
+[*Returns:] `true` if shared ownership was obtained for the current thread, `false` otherwise.
+
+[endsect]
+
+[/===========================================]
+[section:SharedTimedLockable SharedTimedLockable Requirements ]
+[/===========================================]
+
+For a type `TL` to qualify as `SharedTimedLockable` it must meet the `SharedLockable` and the `TimedLockable`   requirements, and additionally the following expressions must be well-formed, with the specified semantics, where `m` is an instance of a type `TL`, `rel_time` denotes instantiation of duration and `abs_time` denotes an instantiation of time_point.
+
+The expression `m.try_lock_shared_for(rel_time)` shall be well-formed and have the following semantics:
+
+[*Effects:] Attempt to acquire a lock for the current concurrent agent within the relative timeout specified by `rel_time`. The function shall return within the timeout specified by rel_time only if it has obtained a lock on `m` for the current concurrent agent. If an exception is thrown then a lock shall not have been acquired for the current concurrent agent.
+
+[*Return type:] `bool`
+
+[*Returns:] `true` if the lock was acquired, `false` otherwise.
+
+The expression `m.try_lock_shared_until(abs_time)` shall be well-formed and have the following semantics:
+
+[*Effects:] Attempt to  obtain shared ownership for the current concurrent agent before the absolute timeout  specified by `abs_time`. The function shall return before the timeout specified by `abs_time` only if it has obtained shared ownership on m for the current concurrent agent. If an exception is thrown then shared ownership shall not have been acquired for the current concurrent agent.
+
+[*Return type:] `bool`
+
+[*Returns:] `true` if shared ownership was acquired, `false` otherwise. 
+
+[endsect]
+
+[endsect]
+
+[/==========================================================================================]
+[section:lockable_concept_hpp Header `<boost/sync/lockable_concepts.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace sync {
+
+        template <typename Lockable> struct BasicLockableConcept;
+        template <typename Lockable> struct LockableConcept;
+        template <typename Lockable> struct TimedLockableConcept;
+        template <typename Lockable> struct ShareBasicLockableConcept;
+        template <typename Lockable> struct ShareLockableConcept;
+        template <typename Lockable> struct ShareTimedLockableConcept;
+        template <typename Lockable> struct UpgradeBasicLockableConcept;
+        template <typename Lockable> struct UpgradeLockableConcept;
+        template <typename Lockable> struct UpgradeTimedLockableConcept;
+
+    }}
+    
+[section:BasicLockableConcept Template Class `BasicLockableConcept<>`]
+
+The `boost::mutex` and `boost:interprocess mutex family classes are a non-polymorphic classes that encapsulates a system primitive and portion of C API. Clearly, many of the synchronisation
+primitives support common operations, and hence a Concept.
+The `ExclusiveLockableConcept` class can be used with the Boost.ConceptCheck in templates that work with a exclusive synchronisation.
+
+`LockableConcept` object supports the basic features required to delimit a critical region. Supports the basic `lock`, `unlock` and `try_lock` functions and defines the lockable traits
+
+    template <typename Lockable>
+    struct BasicLockableConcept {
+        typedef typename category<Lockable>::type category;
+        typedef typename kind<Lockable>::type kind;
+        typedef typename reentrancy<Lockable>::type reentrancy;
+        typedef typename scope<Lockable>::type  scope;
+        typedef typename lifetime<Lockable>::type  lifetime;
+        typedef typename named<Lockable>::type  named;
+
+        BOOST_CONCEPT_USAGE(LockableConcept) {
+            l.lock();
+            l.unlock();
+        }
+        Lockable l;
+    };
+
+[endsect]
+[section:LockableConcept Template Class `LockableConcept<>`]
+
+The `boost::mutex` and `boost:interprocess mutex family classes are a non-polymorphic classes that encapsulates a system primitive and portion of C API. Clearly, many of the synchronisation
+primitives support common operations, and hence a Concept.
+The `ExclusiveLockableConcept` class can be used with the Boost.ConceptCheck in templates that work with a exclusive synchronisation.
+
+`LockableConcept` object supports the basic features required to delimit a critical region. Supports the basic `lock`, `unlock` and `try_lock` functions and defines the lockable traits
+
+    template <typename Lockable>
+    struct LockableConcept {
+        BOOST_CONCEPT_ASSERT((BasicLockableConcept<Lockable>));
+
+        BOOST_CONCEPT_USAGE(LockableConcept) {
+            b=l.try_lock();
+        }
+        Lockable l;
+        bool b;
+    };
+
+[endsect]
+[section:TimedLockableConcept Template Class `TimedLockableConcept<>`]
+
+`TimedLockableConcept` object extends `ExclusiveLockConcept` with the `try_lock_until` and `try_lock_for` functions.
+
+    template <typename Lockable>
+    struct TimedLockableConcept {
+        BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
+
+        BOOST_CONCEPT_USAGE(TimedLockableConcept) {
+            b=l.try_lock_until(t);
+            b=l.try_lock_for(boost::chrono::seconds(1));
+        }
+        Lockable l;
+        boost::chrono::system_clock::time_point t;
+        bool b;
+    };
+
+[endsect]
+[section:ShareBasicLockableConcept Template Class `ShareBasicLockableConcept<>`]
+
+`ShareBasicLockableConcept` object extends `BasicLockableConcept` with the `lock_shared` and `unlock_shared` functions
+
+    template <typename Lockable>
+    struct ShareBasicLockableConcept {
+        BOOST_CONCEPT_ASSERT((BasicLockableConcept<Lockable>));
+
+        BOOST_CONCEPT_USAGE(ShareBasicLockableConcept) {
+            l.lock_shared();
+            l.unlock_shared();
+        }
+        Lockable l;
+    };
+
+
+[endsect]
+[section:ShareLockableConcept Template Class `ShareLockableConcept<>`]
+
+`ShareLockableConcept` object extends `ShareBasicLockableConcept` and `LockableConcept` with the `try_lock_shared` functions.
+
+    template <typename Lockable>
+    struct ShareLockableConcept {
+        BOOST_CONCEPT_ASSERT((ShareBasicLockableConcept<Lockable>));
+        BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
+
+        BOOST_CONCEPT_USAGE(ShareLockableConcept) {
+            b=l=.try_lock_shared();
+        }
+        Lockable l;
+        boost::chrono::system_clock::time_point t;
+        bool b;
+    };
+
+
+[endsect]
+[section:ShareTimedLockableConcept Template Class `ShareTimedLockableConcept<>`]
+
+`ShareTimedLockableConcept` object extends `ShareBasicLockableConcept` and  `LockableConcept` with the `try_lock_shared_until` and `try_lock_shared_for` functions
+
+    template <typename Lockable>
+    struct ShareLockableConcept {
+        BOOST_CONCEPT_ASSERT((ShareBasicLockableConcept<Lockable>));
+        BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
+
+        BOOST_CONCEPT_USAGE(ShareLockableConcept) {
+            b=l.try_lock_shared_until(t);
+            b=l.try_lock_shared_for(boost::chrono::seconds(1));
+        }
+        Lockable& l;
+        boost::chrono::system_clock::time_point t;
+        bool b;
+    };
+
+
+[endsect]
+[section:UpgradeBasicLockableConcept Template Class `UpgradeBasicLockableConcept<>`]
+
+`UpgradeBasicLockableConcept` object extends `SharedBasicLockableConcept` with the `lock_upgrade`, `unlock_upgrade`, `unlock_upgrade_and_lock`, `unlock_and_lock_shared` and `unlock_upgrade_and_lock_shared` functions.
+
+    template <typename Lockable>
+    struct UpgradeBasicLockableConcept {
+        BOOST_CONCEPT_ASSERT((SharedBasicLockableConcept<Lockable>));
+
+        BOOST_CONCEPT_USAGE(UpgradeBasicLockableConcept) {
+            l.lock_upgrade();
+            l.unlock_upgrade();
+            l.unlock_upgrade_and_lock();
+            l.unlock_and_lock_upgrade();
+            l.unlock_and_lock_shared();
+            l.unlock_upgrade_and_lock_shared();
+        }
+        Lockable& l;
+        boost::chrono::system_clock::time_point t;
+    };
+
+[endsect]
+[section:UpgradeLockableConcept Template Class `UpgradeLockableConcept<>`]
+
+`UpgradeLockableConcept` object extends `UpgradeBasicLockableConcept` and `SharedLockableConcept` with the `try_lock_upgrade`,  `try_unlock_upgrade_and_lock`, `try_unlock_share_and_lock` and `try_unlock_share_and_lock_upgrade` functions.
+
+
+    template <typename Lockable>
+    struct UpgradeLockableConcept {
+        BOOST_CONCEPT_ASSERT((UpgradeBasicLockableConcept<Lockable>));
+
+        BOOST_CONCEPT_USAGE(UpgradeLockableConcept) {
+            b=l.try_lock_upgrade();
+            b=l.try_unlock_upgrade_and_lock();
+            b=l.try_unlock_share_and_lock();
+            b=l.try_unlock_share_and_lock_upgrade();
+        }
+        Lockable& l;
+        boost::chrono::system_clock::time_point t;
+        bool b;
+    };
+
+
+
+[endsect]
+[section:UpgradeTimedLockableConcept Template Class `UpgradeTimedLockableConcept<>`]
+
+`UpgradeTimedLockableConcept` object extends `UpgradeLockableConcept` and `SharedTimedLockableConcept` with the `try_lock_upgrade_until`,  `try_lock_upgrade_for`, `try_unlock_upgrade_and_lock_for` and `try_unlock_upgrade_and_lock_until` functions.
+
+
+    template <typename Lockable>
+    struct UpgradeLockableConcept {
+        BOOST_CONCEPT_ASSERT((UpgradeBasicLockableConcept<Lockable>));
+
+        BOOST_CONCEPT_USAGE(UpgradeLockableConcept) {
+            b=l.try_lock_upgrade_until(t);
+            b=l.try_lock_upgrade_for(d);
+            b=l.try_unlock_upgrade_and_lock_for(d);
+            b=l.try_unlock_upgrade_and_lock_until(t);
+        }
+        Lockable& l;
+        boost::chrono::system_clock::time_point t;
+        bool b;
+    };
+
+
+
+[endsect]
+[endsect]
+
+[/===========================================]
+[section:locks_hpp Header `<boost/sync/locks.hpp>`]
+[/===========================================]
+
+    #include <boost/sync/locks/lock_options.hpp>
+    #include <boost/sync/locks/lock_guard.hpp>
+
+
+
+[/===========================================]
+[section:lock_options_hpp Header `<boost/sync/locks/lock_options.hpp>`]
+[/===========================================]
+
+Some lock constructors take tag types which describe what should be done with the lockable object during
+the lock's construction.
+
+    namespace boost {
+
+        //!Type to indicate to a mutex lock constructor that must not lock the mutex.
+        struct defer_lock_t{};
+        //!Type to indicate to a mutex lock constructor that must try to lock the mutex.
+        struct try_to_lock_t {};
+        //!Type to indicate to a mutex lock constructor that the mutex is already locked.
+        struct adopt_lock_t{};
+
+        //!An object indicating that the locking
+        //!must be deferred.
+        static const defer_lock_t      defer_lock      = {};
+
+        //!An object indicating that a try_lock()
+        //!operation must be executed.
+        static const try_to_lock_t     try_to_lock    = {};
+
+        //!An object indicating that the ownership of lockable
+        //!object must be accepted by the new owner.
+        static const adopt_lock_t  adopt_lock = {};
+
+    } // namespace boost
+
+
+
+[endsect]
+
+[/===========================================]
+[section:lock_guard_hpp Header `<boost/sync/locks/lock_guard.hpp>`]
+[/===========================================]
+
+    namespace boost {
+
+        template<typename BasicLockable>
+        class lock_guard
+        {
+        public:
+            typedef BasicLockable lockable_type;
+            explicit lock_guard(lockable_type& m_);
+            lock_guard(lockable_type& m_,boost::adopt_lock_t);
+            ~lock_guard();
+            
+            lock_guard(lock_guard const&) = delete;
+            lock_guard& operator=(lock_guard const&) = delete;
+        private:
+            lockable_type& pm; // exposition only
+        };
+
+    } // namespace boost
+
+An object of type __lock_guard__ controls the ownership of a lockable object within a scope. A __lock_guard__ object maintains ownership of a lockable object throughout the __lock_guard__ object's lifetime. The behavior of a program is undefined if the lockable object referenced by `pm` does not exist for the entire lifetime of the __lock_guard__ object. `BasicLockable` shall meet the __basic_lockable_req__ requirements.
+
+__lock_guard__ is very simple: on construction it acquires ownership of the implementation of the __basic_lockable_req__ concept supplied as the constructor parameter. On destruction, the ownership is released. This provides simple RAII-style locking of a __basic_lockable_req__ object, to facilitate exception-safe locking and unlocking. In addition, the [link boost_sync.reference.locks_hpp.lock_guard_hpp.constructor_adopt `lock_guard(Lockable & m,boost::adopt_lock_t)` constructor] allows the __lock_guard__ object to take ownership of a lock already held by the current concurrent agent.
+
+[section:constructor Constructor `lock_guard(Lockable & m)`]
+
+
+[*Effects:] Stores a reference to `m`. Invokes [lock_ref_link `m.lock()`].
+
+[*Throws:] Any exception thrown by the call to [lock_ref_link `m.lock()`].
+
+[endsect]
+
+[section:constructor_adopt Constructor `lock_guard(Lockable & m,boost::adopt_lock_t)`]
+
+
+[*Precondition:] The current thread owns a lock on `m` equivalent to one
+obtained by a call to [lock_ref_link `m.lock()`].
+
+[*Effects:] Stores a reference to `m`. Takes ownership of the lock state of
+`m`.
+
+[*Throws:] Nothing.
+
+
+[endsect]
+
+[section:destructor Destructor `~lock_guard()`]
+
+[*Effects:] Invokes [unlock_ref_link `m.unlock()`] on the __basic_lockable_req__
+object passed to the constructor.
+
+[*Throws:] Nothing.
+
+
+[endsect]
+[endsect]
+
+[endsect]
+
+[endsect]
+
+
+[/=================]
+[section Appendices]
+[/=================]
+[/==================================]
+[section:history Appendix A: History]
+[/==================================]
+
+[section [*Version 0.1.0, September 10, 2010] ]
+
+[*Features:]
+
+* 
+
+[endsect]
+
+[endsect]
+
+[/======================================]
+[section:rationale Appendix B: Rationale]
+
+
+[endsect]
+
+[/======================================================]
+[section:implementation Appendix C: Implementation Notes]
+
+
+[endsect]
+
+[/======================================================]
+[section:faq Appendix D: FAQ]
+
+
+[endsect]
+
+[/====================================================]
+[section:acknowledgements Appendix E: Acknowledgements]
+
+
+[endsect]
+
+[/====================================================]
+[section:tests  Appendix F: Tests]
+
+In order to test you need to do.
+
+    bjam libs/lockable_traits/test
+
+You can also run a specific suite of test by doing
+
+    cd libs/lockable_traits/test
+    bjam lockable_traits
+
+
+[section `lockable_traits`]
+[table
+    [[Name]             [kind]          [Description]          [Result] [Ticket]]
+    [[ratio_fail_test1]    [compile-fails] [...]                  [Pass]   [#]]
+    [[ratio_test]       [run]           [...]                  [Pass]   [#]]
+]
+[endsect]
+
+
+[endsect]
+[/=====================================]
+[section:tickets  Appendix G: Tickets]
+
+[table
+    [[Ticket]             [Description]          [Resolution] [State]]
+    [/[#]    [XXXX] [XXXX]                  [Closed]]
+]
+
+
+[endsect]
+
+[/
+[/=====================================]
+[section:todo  Appendix H: Future plans]
+[/=====================================]
+
+[heading For later releases]
+
+
+[endsect]
+]
+[endsect]

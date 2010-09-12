@@ -1,0 +1,2035 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Boost.Sync 0.1.0</title>
+<link rel="stylesheet" href="../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="index.html" title="Boost.Sync 0.1.0">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"></div>
+<div class="article" lang="en">
+<div class="titlepage">
+<div>
+<div><h2 class="title">
+<a name="boost_sync"></a>Boost.Sync 0.1.0</h2></div>
+<div><div class="authorgroup"><div class="author"><h3 class="author">
+<span class="firstname">Vicente J.</span> <span class="surname">Botet Escriba</span>
+</h3></div></div></div>
+<div><p class="copyright">Copyright &#169; 2009 -2010 Vicente J. Botet Escriba</p></div>
+<div><div class="legalnotice">
+<a name="id4987067"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div>
+<hr>
+</div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#boost_sync.overview">Overview</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_sync.overview.motivation">Motivation</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.overview.description">Description</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_sync.users_guide"> Users'Guide</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_sync.users_guide.getting_started"> Getting Started</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.users_guide.tutorial">Tutorial</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.users_guide.examples">Examples</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.users_guide.ext_references"> External Resources</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_sync.reference"> Reference </a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_sync.reference.sync_hpp"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.Locables"> Requirements for Lockable
+      types </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_concepts</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.locks_hpp"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">locks</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_sync.appendices">Appendices</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_sync.appendices.history"> Appendix A: History</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.appendices.rationale"> Appendix B: Rationale</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.appendices.implementation"> Appendix C: Implementation
+      Notes</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.appendices.faq"> Appendix D: FAQ</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.appendices.acknowledgements"> Appendix E:
+      Acknowledgements</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.appendices.tests"> Appendix F: Tests</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.appendices.tickets"> Appendix G: Tickets</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+      Sync is not part of the Boost libraries.
+    </p></td></tr>
+</table></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_sync.overview"></a><a href="index.html#boost_sync.overview" title="Overview">Overview</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_sync.overview.motivation">Motivation</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.overview.description">Description</a></span></dt>
+</dl></div>
+<a name="boost_sync.overview.how_to_use_this_documentation"></a><h3>
+<a name="id4986973"></a>
+      <a href="index.html#boost_sync.overview.how_to_use_this_documentation">How to Use
+      This Documentation</a>
+    </h3>
+<p>
+      This documentation makes use of the following naming and formatting conventions.
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          Code is in <code class="computeroutput"><span class="identifier">fixed</span> <span class="identifier">width</span>
+          <span class="identifier">font</span></code> and is syntax-highlighted.
+        </li>
+<li>
+          Replaceable text that you will need to supply is in <em class="replaceable"><code>italics</code></em>.
+        </li>
+<li>
+          Free functions are rendered in the code font followed by (), as in free_function().
+        </li>
+<li>
+          If a name refers to a class template, it is specified like this: <code class="computeroutput"><span class="identifier">class_template</span><span class="special">&lt;&gt;</span></code>;
+          that is, it is in code font and its name is followed by <code class="computeroutput"><span class="special">&lt;&gt;</span></code>
+          to indicate that it is a class template.
+        </li>
+<li>
+          If a name refers to a function-like macro, it is specified like this:
+          <code class="computeroutput"><span class="identifier">MACRO</span><span class="special">()</span></code>;
+          that is, it is uppercase in code font and its name is followed by <code class="computeroutput"><span class="special">()</span></code> to indicate that it is a function-like
+          macro. Object-like macros appear without the trailing <code class="computeroutput"><span class="special">()</span></code>.
+        </li>
+<li>
+          Names that refer to <span class="emphasis"><em>concepts</em></span> in the generic programming
+          sense are specified in CamelCase.
+        </li>
+</ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        In addition, notes such as this one specify non-essential information that
+        provides additional background or rationale.
+      </p></td></tr>
+</table></div>
+<p>
+      Finally, you can mentally add the following to any code fragments in this document:
+    </p>
+<pre class="programlisting"><span class="comment">// Include all of Sync files
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">sync</span><span class="special">;</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.overview.motivation"></a><a href="index.html#boost_sync.overview.motivation" title="Motivation">Motivation</a>
+</h3></div></div></div>
+<p>
+        The goal of Boost.Sync is to remove the syntactic differences between the
+        synchronization mechanisms of the Boost.Thread and Boost::Interprocess libraries
+        and be a holder of common mechanism and algorithms working on the common
+        concepts.
+      </p>
+<p>
+        The differences I have identified up to now are:
+      </p>
+<pre class="programlisting"><span class="special">*</span> <span class="identifier">The</span> <span class="identifier">scoped</span> <span class="identifier">locks</span> <span class="identifier">can</span> <span class="identifier">be</span> <span class="identifier">initialized</span> <span class="identifier">with</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">variables</span> <span class="identifier">in</span> <span class="identifier">order</span> <span class="identifier">to</span> <span class="identifier">overload</span> <span class="identifier">the</span> <span class="identifier">constructor</span> <span class="keyword">for</span> <span class="identifier">lock</span> <span class="identifier">adoption</span><span class="special">,</span> <span class="identifier">lock</span> <span class="identifier">deferral</span> <span class="keyword">or</span> <span class="keyword">try</span> <span class="identifier">to</span> <span class="identifier">lock</span><span class="special">.</span> <span class="identifier">Even</span> <span class="keyword">if</span> <span class="identifier">the</span> <span class="identifier">name</span> <span class="identifier">of</span> <span class="identifier">these</span> <span class="identifier">variables</span> <span class="identifier">is</span> <span class="identifier">almost</span> <span class="identifier">the</span> <span class="identifier">same</span><span class="special">,</span> <span class="identifier">these</span> <span class="identifier">variables</span> <span class="identifier">live</span> <span class="identifier">in</span> <span class="identifier">different</span> <span class="keyword">namespace</span><span class="special">.</span> <span class="identifier">It</span> <span class="identifier">would</span> <span class="identifier">be</span> <span class="identifier">nice</span> <span class="keyword">if</span> <span class="identifier">both</span> <span class="identifier">libraries</span> <span class="identifier">use</span> <span class="identifier">the</span> <span class="identifier">same</span> <span class="identifier">type</span> <span class="keyword">and</span> <span class="identifier">the</span> <span class="identifier">same</span> <span class="identifier">variables</span><span class="special">.</span> 
+
+<span class="special">*</span> <span class="identifier">The</span> <span class="identifier">shared</span> <span class="identifier">mutex</span> <span class="identifier">provide</span> <span class="identifier">similar</span> <span class="identifier">service</span> <span class="identifier">with</span> <span class="identifier">different</span> <span class="identifier">names</span><span class="special">.</span> <span class="identifier">In</span> <span class="identifier">addition</span> <span class="identifier">each</span> <span class="identifier">implementation</span> <span class="identifier">provide</span> <span class="identifier">some</span> <span class="identifier">functions</span> <span class="identifier">that</span> <span class="identifier">are</span> <span class="keyword">not</span> <span class="identifier">provided</span> <span class="identifier">by</span> <span class="identifier">the</span> <span class="identifier">other</span><span class="special">.</span> 
+
+<span class="special">*</span> <span class="identifier">The</span> <span class="identifier">scoped</span> <span class="identifier">locks</span> <span class="identifier">live</span> <span class="identifier">in</span> <span class="identifier">a</span> <span class="identifier">different</span> <span class="keyword">namespace</span> <span class="keyword">and</span> <span class="identifier">some</span> <span class="identifier">have</span> <span class="identifier">different</span> <span class="identifier">names</span> <span class="identifier">with</span> <span class="identifier">the</span> <span class="identifier">same</span> <span class="identifier">semantic</span><span class="special">.</span> <span class="identifier">IMO</span> <span class="identifier">these</span> <span class="identifier">should</span> <span class="identifier">be</span> <span class="identifier">shared</span><span class="special">.</span> 
+
+<span class="special">*</span> <span class="identifier">The</span> <span class="identifier">exception</span> <span class="identifier">thrown</span> <span class="identifier">lives</span> <span class="identifier">in</span> <span class="identifier">a</span> <span class="identifier">different</span> <span class="identifier">name</span> <span class="identifier">space</span> <span class="keyword">and</span> <span class="identifier">different</span> <span class="identifier">names</span> <span class="identifier">with</span> <span class="identifier">equivalent</span> <span class="identifier">semantics</span> <span class="identifier">If</span> <span class="identifier">we</span> <span class="identifier">follow</span> <span class="identifier">the</span> <span class="identifier">C</span><span class="special">++</span><span class="number">0</span><span class="identifier">x</span> <span class="identifier">standard</span> <span class="identifier">the</span> <span class="identifier">exception</span> <span class="identifier">to</span> <span class="keyword">throw</span> <span class="identifier">should</span> <span class="identifier">be</span> <span class="identifier">system_error</span><span class="special">.</span> <span class="identifier">Both</span> <span class="identifier">libraries</span> <span class="identifier">could</span> <span class="identifier">adapt</span> <span class="identifier">his</span> <span class="identifier">hierarchy</span> <span class="identifier">to</span> <span class="identifier">Boost</span><span class="special">.</span><span class="identifier">System</span><span class="special">.</span> <span class="identifier">The</span> <span class="identifier">drawback</span> <span class="identifier">is</span> <span class="identifier">that</span> <span class="identifier">users</span> <span class="identifier">of</span> <span class="identifier">Boost</span><span class="special">.</span><span class="identifier">Thread</span> <span class="keyword">and</span> <span class="identifier">Boost</span><span class="special">.</span><span class="identifier">Interprocess</span> <span class="identifier">will</span> <span class="identifier">need</span> <span class="identifier">to</span> <span class="identifier">link</span> <span class="identifier">with</span> <span class="identifier">Boost</span><span class="special">.</span><span class="identifier">System</span> <span class="identifier">which</span> <span class="identifier">is</span> <span class="keyword">not</span> <span class="identifier">a</span> <span class="identifier">header</span> <span class="identifier">only</span> <span class="identifier">library</span><span class="special">.</span> 
+
+<span class="special">*</span> <span class="identifier">The</span> <span class="identifier">move</span> <span class="identifier">semantics</span> <span class="special">(&amp;&amp;)</span> <span class="identifier">of</span> <span class="identifier">Boost</span><span class="special">.</span><span class="identifier">Thread</span> <span class="identifier">should</span> <span class="identifier">be</span> <span class="identifier">adapted</span> <span class="identifier">to</span> <span class="identifier">the</span> <span class="identifier">forthcoming</span> <span class="identifier">Boost</span><span class="special">.</span><span class="identifier">Move</span> <span class="identifier">library</span> <span class="identifier">as</span> <span class="identifier">soon</span> <span class="identifier">as</span> <span class="identifier">integrated</span> <span class="identifier">on</span> <span class="identifier">the</span> <span class="identifier">release</span> <span class="identifier">branch</span><span class="special">.</span> <span class="identifier">Boost</span><span class="special">.</span><span class="identifier">Interprocess</span> <span class="identifier">uses</span> <span class="identifier">already</span> <span class="identifier">a</span> <span class="identifier">detail</span> <span class="identifier">implementation</span> <span class="identifier">equivalent</span> <span class="identifier">to</span> <span class="identifier">the</span> <span class="identifier">provided</span> <span class="identifier">by</span> <span class="identifier">Boost</span><span class="special">.</span><span class="identifier">Move</span><span class="special">,</span> <span class="identifier">so</span> <span class="identifier">the</span> <span class="identifier">change</span> <span class="identifier">will</span> <span class="identifier">be</span> <span class="identifier">simpler</span><span class="special">.</span> 
+
+<span class="special">*</span> <span class="identifier">Adapt</span> <span class="identifier">both</span> <span class="identifier">libraries</span> <span class="identifier">interface</span> <span class="identifier">to</span> <span class="identifier">use</span> <span class="identifier">Boost</span><span class="special">.</span><span class="identifier">Chrono</span><span class="special">,</span> <span class="identifier">which</span> <span class="identifier">is</span> <span class="identifier">yet</span> <span class="identifier">a</span> <span class="identifier">non</span> <span class="identifier">header</span> <span class="identifier">only</span> <span class="identifier">library</span><span class="special">,</span> <span class="identifier">once</span> <span class="identifier">it</span> <span class="identifier">is</span> <span class="identifier">accepted</span><span class="special">.</span> 
+</pre>
+<p>
+        Of course, this needs some adaptation of the Thread and Interprocess libraries.
+      </p>
+<p>
+        This library proposes some classes that make easier to write code that can
+        be used indistinguishably with thread or interprocess synchronization mechanisms.
+        This section is inspired on the work from <span class="bold"><strong>C++ Threading
+        - A Generic-Programming Approach</strong></span> - Kevlin Henney.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.overview.description"></a><a href="index.html#boost_sync.overview.description" title="Description">Description</a>
+</h3></div></div></div>
+<p>
+        <span class="bold"><strong>Boost.Sync</strong></span> provides a uniform usage of Boost.Thread
+        and Boost.Interprocess synchronization mechanisms based on:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            share the lock options between both libraries
+          </li>
+<li>
+            lockable concepts.
+          </li>
+<li>
+            lockable traits
+          </li>
+<li>
+            null_mutex and null_condition classes,
+          </li>
+</ul></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_sync.users_guide"></a><a href="index.html#boost_sync.users_guide" title=" Users'Guide"> Users'Guide</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_sync.users_guide.getting_started"> Getting Started</a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#boost_sync.users_guide.getting_started.install"> Installing
+        Sync</a></span></dt></dl></dd>
+<dt><span class="section"><a href="index.html#boost_sync.users_guide.tutorial">Tutorial</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_sync.users_guide.tutorial.lockable_traits">Lockable
+        traits</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.users_guide.tutorial.lockable_generators">Lockable
+        generators</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.users_guide.tutorial.lockable_concepts">Lockable
+        concepts</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_sync.users_guide.examples">Examples</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.users_guide.ext_references"> External Resources</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.users_guide.getting_started"></a><a href="index.html#boost_sync.users_guide.getting_started" title=" Getting Started"> Getting Started</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="index.html#boost_sync.users_guide.getting_started.install"> Installing
+        Sync</a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.users_guide.getting_started.install"></a><a href="index.html#boost_sync.users_guide.getting_started.install" title=" Installing
+        Sync"> Installing
+        Sync</a>
+</h4></div></div></div>
+<a name="boost_sync.users_guide.getting_started.install.getting_boost_sync_"></a><h5>
+<a name="id4942576"></a>
+          <a href="index.html#boost_sync.users_guide.getting_started.install.getting_boost_sync_">Getting
+          Boost.Sync </a>
+        </h5>
+<p>
+          You can get the last stable release of <span class="bold"><strong>Boost.Sync</strong></span>
+          by downloading <code class="literal">sync.zip</code> from the <a href="http://www.boost-consulting.com/vault/index.php?directory=ConcurrentProgramming" target="_top">Boost
+          Vault</a>.
+        </p>
+<p>
+          You can also access the latest (unstable?) state from the <a href="https://svn.boost.org/svn/boost/sandbox/sync" target="_top">Boost
+          Sandbox</a>. Just go to <a href="http://svn.boost.org/trac/boost/wiki/BoostSubversion" target="_top">here</a>
+          and follow the instructions there for anonymous SVN access.
+        </p>
+<a name="boost_sync.users_guide.getting_started.install.where_to_install_boost_sync__"></a><h5>
+<a name="id4942640"></a>
+          <a href="index.html#boost_sync.users_guide.getting_started.install.where_to_install_boost_sync__">Where
+          to install Boost.Sync? </a>
+        </h5>
+<p>
+          The simple way is to decompress (or checkout from SVN) the file in your
+          BOOST_ROOT directory.
+        </p>
+<p>
+          Othesewise, if you decompress in a different directory, you will need to
+          comment some lines, and uncomment and change others in the build/Jamfile
+          and test/Jamfile. Sorry for this, but I have not reached yet to write a
+          Jamfile that is able to work in both environements and use the BOOST_ROOT
+          variable. Any help is welcome.
+        </p>
+<a name="boost_sync.users_guide.getting_started.install.building_boost_sync_"></a><h5>
+<a name="id4942676"></a>
+          <a href="index.html#boost_sync.users_guide.getting_started.install.building_boost_sync_">Building
+          Boost.Sync </a>
+        </h5>
+<p>
+          <span class="bold"><strong>Boost.Sync</strong></span> is a header only library, so
+          no need to compile anything.
+        </p>
+<a name="boost_sync.users_guide.getting_started.install.requirements"></a><h5>
+<a name="id4942706"></a>
+          <a href="index.html#boost_sync.users_guide.getting_started.install.requirements">Requirements</a>
+        </h5>
+<p>
+          <span class="bold"><strong>Boost.Sync</strong></span> depends on some Boost libraries.
+          For these specific parts you must use either Boost version 1.39.0 or the
+          version in SVN trunk (even if older versions should works also).
+        </p>
+<p>
+          In particular, <span class="bold"><strong>Boost.Sync</strong></span> depends on:
+        </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><a href="http://www.boost.org/libs/config" target="_top"><span class="bold"><strong>Boost.Config</strong></span></a></span></dt>
+<dd><p>
+                for configuration purposes, ...
+              </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/integer" target="_top"><span class="bold"><strong>Boost.Integer</strong></span></a></span></dt>
+<dd><p>
+                for cstdint conformance, and integer traits ...
+              </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/mpl" target="_top"><span class="bold"><strong>Boost.MPL</strong></span></a></span></dt>
+<dd><p>
+                for MPL Assert and bool, logical ...
+              </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/static_assert" target="_top"><span class="bold"><strong>Boost.StaticAssert</strong></span></a></span></dt>
+<dd><p>
+                for STATIC_ASSERT, ...
+              </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/type_traits" target="_top"><span class="bold"><strong>Boost.TypeTraits</strong></span></a></span></dt>
+<dd><p>
+                for is_base, is_convertible ...
+              </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/utility" target="_top"><span class="bold"><strong>Boost.Utility/EnableIf</strong></span></a></span></dt>
+<dd><p>
+                for enable_if, ...
+              </p></dd>
+</dl>
+</div>
+<a name="boost_sync.users_guide.getting_started.install.building_an_executable_that_uses__emphasis_role__bold__boost_sync__emphasis__"></a><h5>
+<a name="id4942884"></a>
+          <a href="index.html#boost_sync.users_guide.getting_started.install.building_an_executable_that_uses__emphasis_role__bold__boost_sync__emphasis__">Building
+          an executable that uses <span class="bold"><strong>Boost.Sync</strong></span> </a>
+        </h5>
+<p>
+          No link is needed.
+        </p>
+<a name="boost_sync.users_guide.getting_started.install.exceptions_safety_"></a><h5>
+<a name="id4942918"></a>
+          <a href="index.html#boost_sync.users_guide.getting_started.install.exceptions_safety_">Exceptions
+          safety </a>
+        </h5>
+<p>
+          All functions in the library are exception-neutral and provide strong guarantee
+          of exception safety as long as the underlying parameters provide it.
+        </p>
+<a name="boost_sync.users_guide.getting_started.install.thread_safety_"></a><h5>
+<a name="id4942945"></a>
+          <a href="index.html#boost_sync.users_guide.getting_started.install.thread_safety_">Thread
+          safety </a>
+        </h5>
+<p>
+          All functions in the library are thread-unsafe except when noted explicitly.
+        </p>
+<a name="boost_sync.users_guide.getting_started.install.tested_compilers_"></a><h5>
+<a name="id4942971"></a>
+          <a href="index.html#boost_sync.users_guide.getting_started.install.tested_compilers_">Tested
+          compilers </a>
+        </h5>
+<p>
+          The implementation will eventually work with most C++03 conforming compilers.
+          Current version has been tested on:
+        </p>
+<p>
+          Windows with
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              MSVC 10.0
+            </li>
+<li>
+              MSVC 9.0 Express
+            </li>
+<li>
+              MSVC 8.0
+            </li>
+</ul></div>
+<p>
+          Scientific Linux with
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+              GCC 4.1.2
+            </li></ul></div>
+<p>
+          Cygwin with
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              GCC 3.4.4
+            </li>
+<li>
+              GCC 4.3.4
+            </li>
+</ul></div>
+<p>
+          MinGW with
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+              GCC 4.4.0
+            </li></ul></div>
+<p>
+          Initial version was tested on:
+        </p>
+<p>
+          MacOS with GCC 4.2.4
+        </p>
+<p>
+          Ubuntu Linux with GCC 4.2.4
+        </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Please let us know how this works on other platforms/compilers.
+          </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Please send any questions, comments and bug reports to boost &lt;at&gt;
+            lists &lt;dot&gt; boost &lt;dot&gt; org.
+          </p></td></tr>
+</table></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.users_guide.tutorial"></a><a href="index.html#boost_sync.users_guide.tutorial" title="Tutorial">Tutorial</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_sync.users_guide.tutorial.lockable_traits">Lockable
+        traits</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.users_guide.tutorial.lockable_generators">Lockable
+        generators</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.users_guide.tutorial.lockable_concepts">Lockable
+        concepts</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.users_guide.tutorial.lockable_traits"></a><a href="index.html#boost_sync.users_guide.tutorial.lockable_traits" title="Lockable
+        traits">Lockable
+        traits</a>
+</h4></div></div></div>
+<p>
+          <span class="bold"><strong>Lockable substitutability</strong></span>
+        </p>
+<p>
+          The Boost mutexes have associated an implicit category which form a sub-typing
+          hierarchy:
+        </p>
+<pre class="programlisting"><span class="identifier">BasicLockable</span> <span class="special">&gt;</span> <span class="identifier">TryLockable</span> <span class="special">&lt;-</span> <span class="identifier">TimedLockable</span>
+</pre>
+<p>
+          Locking behavior can be further categorized as:
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+              Ownership: (concurrent agent affinity): owned or unowned
+            </li></ul></div>
+<p>
+          An owned lockable can be sustituted by any unowned lockable.
+        </p>
+<pre class="programlisting"><span class="identifier">owned</span> <span class="special">&lt;-</span> <span class="identifier">unowned</span>
+</pre>
+<div class="itemizedlist"><ul type="disc"><li>
+              Share: When a lockable is owned by the concurrent agent, this ownership
+              can be either exclusive or shared. When shared ownership is considered
+              there is yet the possibility to change at run-time from shared to exclusive
+              and viceversa. We talk of upgradable lockables.
+            </li></ul></div>
+<pre class="programlisting"><span class="identifier">ExclusiveLockable</span> <span class="special">&lt;-</span> <span class="identifier">SharedLockable</span> <span class="special">&lt;-</span> <span class="identifier">UpgradeLockable</span>
+</pre>
+<div class="itemizedlist"><ul type="disc"><li>
+              Re-entrancy: When a lockable is owned by the concurrent agent, the
+              ownership can be done recursively or not
+            </li></ul></div>
+<pre class="programlisting"><span class="identifier">non_recursive</span> <span class="special">&lt;-</span> <span class="identifier">recursive</span>
+</pre>
+<div class="itemizedlist"><ul type="disc"><li>
+              Scope: This is related to the kind of concurrent agents that can own
+              the lockable. Currently the library takes in account mono-threaded,
+              multi-threaded or multi-process contexts.
+            </li></ul></div>
+<pre class="programlisting"><span class="identifier">mono_threaded</span> <span class="special">&lt;-</span> <span class="identifier">multi_threaded</span> <span class="special">&lt;-</span> <span class="identifier">multi_process</span>
+</pre>
+<div class="itemizedlist"><ul type="disc"><li>
+              Lifetime: The lifetime of a lock could be associated to the process,
+              the kernel or the file-system
+            </li></ul></div>
+<pre class="programlisting"><span class="identifier">process_lifetime</span> <span class="special">&lt;-</span> <span class="identifier">kernel_lifetime</span> <span class="special">&lt;-</span> <span class="identifier">filesystem_lifetime</span>
+</pre>
+<p>
+          Substitutability applies both to the degree of syntactic support and to
+          the locking semantics
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              A recursive mutex and binary semaphore are substitutable in code written
+              against a exclusive mutex
+            </li>
+<li>
+              A null mutex is substitutable for all others in a single-threaded environment
+            </li>
+</ul></div>
+<p>
+          We can see these axes of variation expressed against some Boost synchronization
+          mechanisms (from now bip stands for boost::interprocess):
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span></code>: ExclusiveLockable, owned,
+              non-recursive, multi-threaded
+            </li>
+<li>
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_mutex</span></code>: UpgradeableBasicLockable,
+              owned, non-recursive, multi-threaded
+            </li>
+<li>
+              <code class="computeroutput"><span class="identifier">bip</span><span class="special">::</span><span class="identifier">sync</span><span class="special">::</span><span class="identifier">null_mutex</span></code>: UpgradableTimedLockable,
+              unowned, recursive, mono-threaded
+            </li>
+<li>
+              <code class="computeroutput"><span class="identifier">bip</span><span class="special">::</span><span class="identifier">sync</span><span class="special">::</span><span class="identifier">interprocess_recursive_mutex</span></code>: ExclusiveTimedLockable,
+              owned, recursive, multi_process.
+            </li>
+</ul></div>
+<p>
+          <span class="bold"><strong>Boost.Sync</strong></span> provides a set of very specific
+          traits classes, some of them encapsulate a single trait for a <code class="computeroutput"><span class="identifier">Lockable</span></code> type; for example, is a lockable
+          recursive (<code class="computeroutput"><span class="identifier">is_recursive</span></code>),
+          is useful in a multi threaded context (<code class="computeroutput"><span class="identifier">is_multi_threaded</span></code>).
+        </p>
+<p>
+          The <span class="bold"><strong>Boost.Sync</strong></span> lockable traits classes
+          share a unified design that mimic the one of Boost.TypeTraits: each class
+          inherits from a the type <code class="computeroutput"><span class="identifier">true_type</span></code>
+          if the type has the specified property and inherits from <code class="computeroutput"><span class="identifier">false_type</span></code> otherwise.
+        </p>
+<p>
+          The <span class="bold"><strong>Boost.Sync</strong></span> library also contains a
+          set of classes that perform a specific transformation on a type. Each class
+          that performs a transformation defines a single typedef-member type that
+          is the result of the transformation.
+        </p>
+<p>
+          All of the locakble traits classes are defined inside namespace boost::lockable.
+        </p>
+<p>
+          <span class="bold"><strong>tag trait implementation</strong></span>
+        </p>
+<p>
+          Most of the implementation is fairly repetitive anyway, so here we will
+          just give you a flavor for how some of the classes are implemented. See
+          the reference section for the full details.
+        </p>
+<p>
+          The library defines a tag hierarchy associated to a trait. For example
+          for the scope trait:
+        </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">mono_threaded_tag</span> <span class="special">{};</span>
+<span class="keyword">struct</span> <span class="identifier">multi_threaded_tag</span> <span class="special">:</span> <span class="identifier">mono_threaded_tag</span> <span class="special">{};</span>
+<span class="keyword">struct</span> <span class="identifier">multi_process_tag</span> <span class="special">:</span> <span class="identifier">multi_threaded_tag</span>  <span class="special">{};</span>
+</pre>
+<p>
+          By default the <code class="computeroutput"><span class="identifier">scope</span></code> trait
+          forward to a nested type <code class="computeroutput"><span class="identifier">scope</span></code>.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">scope</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">::</span><span class="identifier">scope</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+          In order to make a type a model of <code class="computeroutput"><span class="identifier">Lockable</span></code>
+          we have two possibilities:
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+              declare the nested type <code class="computeroutput"><span class="identifier">scope</span></code>
+            </li></ul></div>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">my_mutex</span>  <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">a</span> <span class="identifier">scope</span> <span class="identifier">tag</span><span class="special">&gt;</span> <span class="identifier">scope</span><span class="special">;</span>
+    <span class="comment">// ...
+</span><span class="special">};</span>
+</pre>
+<div class="itemizedlist"><ul type="disc"><li>
+              specialize the class template <code class="computeroutput"><span class="identifier">sync</span><span class="special">::</span><span class="identifier">scope</span></code>
+            </li></ul></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">scope_tag</span><span class="special">&lt;</span><span class="identifier">my_mutex</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">multi_threaded_tag</span> <span class="identifier">type</span><span class="special">;</span> 
+<span class="special">};</span>
+</pre>
+<p>
+          <span class="bold"><strong>lockable_base helper</strong></span>
+        </p>
+<p>
+          The library provis also a mixin class <code class="computeroutput"><span class="identifier">lockable_base</span></code>
+          which will define all the needed nested typedefs.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span>
+    <span class="keyword">typename</span> <span class="identifier">Scope</span><span class="special">=</span><span class="identifier">multi_threaded_tag</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Category</span><span class="special">=</span><span class="identifier">exclusive_tag</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Reentrancy</span><span class="special">=</span><span class="identifier">non_recursive_tag</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Kind</span><span class="special">=</span><span class="identifier">timed_lockable_tag</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Lifetime</span><span class="special">=</span><span class="keyword">typename</span> <span class="identifier">default_lifetime</span><span class="special">&lt;</span><span class="identifier">Scope</span><span class="special">&gt;,</span>
+    <span class="keyword">typename</span> <span class="identifier">Named</span><span class="special">=</span><span class="identifier">anonymous_tag</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Base</span><span class="special">=</span><span class="keyword">void</span>
+<span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">lockable_base</span><span class="special">;</span>
+</pre>
+<p>
+          which defines the correct types. The <code class="computeroutput"><span class="identifier">lockable_base</span></code>
+          has a lot of parameters, and the defaults are the ones associated to <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span></code>. So Boost.Thread could use it as
+          follows
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">mutex</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">lockable_base</span><span class="special">&lt;&gt;</span> <span class="special">{</span>
+    <span class="comment">// ...
+</span><span class="special">};</span>
+</pre>
+<p>
+          <span class="bold"><strong>is_trait implementation</strong></span>
+        </p>
+<p>
+          For example the trait <code class="computeroutput"><span class="identifier">is_multi_threaded</span></code>
+          is defined as : If Lockable has <code class="computeroutput"><span class="identifier">scope</span></code>
+          trait is the same or inherits from <code class="computeroutput"><span class="identifier">multi_threaded_tag</span></code>
+          then it is <code class="computeroutput"><span class="identifier">true_type</span></code>, otherwise
+          it is <code class="computeroutput"><span class="identifier">false_type</span></code>.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">is_multi_threaded</span>
+    <span class="special">:</span> <span class="identifier">is_same_or_is_base_and_derived</span><span class="special">&lt;</span>
+        <span class="identifier">multi_threaded_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="special">&gt;</span>
+<span class="special">{};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.users_guide.tutorial.lockable_generators"></a><a href="index.html#boost_sync.users_guide.tutorial.lockable_generators" title="Lockable
+        generators">Lockable
+        generators</a>
+</h4></div></div></div>
+<p>
+          <span class="bold"><strong>Finding the best lock</strong></span>
+        </p>
+<p>
+          Inverse traits can match a lockable type based on specific traits, form
+          a given family of lockable types.
+        </p>
+<p>
+          It is also possible to specify characteristics to perform a reverse lookup
+          to find a primitive lockable type, either by exact match or by substitutable
+          match.
+        </p>
+<pre class="programlisting"><span class="identifier">find_best_lock</span><span class="special">&lt;&gt;::</span><span class="identifier">type</span> <span class="special">==</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span>
+<span class="identifier">find_best_lock</span><span class="special">&lt;</span><span class="identifier">mono_threaded_tag</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">==</span> <span class="identifier">bsync</span><span class="special">::</span><span class="identifier">null_mutex</span>
+<span class="identifier">find_best_lock</span><span class="special">&lt;</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">==</span> <span class="identifier">bsync</span><span class="special">::</span><span class="identifier">thread_mutex</span>
+<span class="identifier">find_best_lock</span><span class="special">&lt;</span><span class="identifier">multi_process_tag</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">==</span> <span class="identifier">bsync</span><span class="special">::</span><span class="identifier">interprocess_mutex</span>
+</pre>
+<p>
+          The user can also find a lockable using mpl constraints as follows
+        </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">find_best_lock_between</span><span class="special">&lt;</span><span class="identifier">Lockables</span><span class="special">,</span> 
+        <span class="identifier">mpl</span><span class="special">::</span><span class="keyword">and</span><span class="special">&lt;</span><span class="identifier">is_multi_threaded</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&gt;,</span> <span class="identifier">is_recursive</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">best</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.users_guide.tutorial.lockable_concepts"></a><a href="index.html#boost_sync.users_guide.tutorial.lockable_concepts" title="Lockable
+        concepts">Lockable
+        concepts</a>
+</h4></div></div></div>
+<p>
+          For the main category clasification, the library provides concept classes
+          that can be used with Boost.ConceptCheck. For example <code class="computeroutput"><span class="identifier">LockableConcept</span></code>
+          object supports the basic features required to delimit a critical region.
+          Supports the basic <code class="computeroutput"><span class="identifier">lock</span></code>,
+          <code class="computeroutput"><span class="identifier">unlock</span></code> and <code class="computeroutput"><span class="identifier">try_lock</span></code> functions and defines the lock
+          traits.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">BasicLockableConcept</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">category</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">category</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">kind</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">kind</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">reentrancy</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">reentrancy</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span>  <span class="identifier">scope</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">lifetime</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span>  <span class="identifier">lifetime</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span>  <span class="identifier">named</span><span class="special">;</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">BasicLockableConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">l</span><span class="special">.</span><span class="identifier">lock</span><span class="special">();</span>
+        <span class="identifier">l</span><span class="special">.</span><span class="identifier">unlock</span><span class="special">();</span>
+    <span class="special">}</span>
+    <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">l</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+          The user can now check staticaly that the template parameter is a model
+          of BasicLocable as follows
+        </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="string">"boost/sync/lockable_concepts.hpp"</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> 
+<span class="keyword">class</span> <span class="identifier">my_class</span> <span class="special">{</span>
+  <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">BasicLockableConcept</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;));</span>    
+    <span class="comment">// ...
+</span><span class="special">};</span>
+</pre>
+<p>
+          The same can be done for <code class="computeroutput"><span class="identifier">TimedLockableConcept</span></code>,
+          <code class="computeroutput"><span class="identifier">ShareLockableConcept</span></code> and
+          <code class="computeroutput"><span class="identifier">UpgradeLockableConcept</span></code>
+          (See the reference section for more details).
+        </p>
+</div>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.users_guide.examples"></a><a href="index.html#boost_sync.users_guide.examples" title="Examples">Examples</a>
+</h3></div></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.users_guide.ext_references"></a><a href="index.html#boost_sync.users_guide.ext_references" title=" External Resources"> External Resources</a>
+</h3></div></div></div>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><a href="http://www.open-std.org/jtc1/sc22/wg21" target="_top"><span class="bold"><strong>C++
+          Standards Committee's current Working Paper</strong></span></a></span></dt>
+<dd><p>
+              The most authoritative reference material for the library is the C++
+              Standards Committee's current Working Paper (WP). 30 - Thread support
+              library
+            </p></dd>
+<dt><span class="term"><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3130.html" target="_top"><span class="bold"><strong>N3130 - Lockable requirements for C++0x</strong></span></a></span></dt>
+<dd><p>
+              From Anthony Williams.
+            </p></dd>
+<dt><span class="term"><a href="http:/www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf" target="_top"><span class="bold"><strong>N1833 - Preliminary Threading Library Proposal for TR2</strong></span></a></span></dt>
+<dd><p>
+              Kevlin Henney, 2005
+            </p></dd>
+<dt><span class="term"><a href="http://www.two-sdg.demon.co.uk/curbralan/papers/accu/MoreC++Threading.pdf" target="_top"><span class="bold"><strong>More C++ Threading - From Procedural to Generic, by Example</strong></span></a></span></dt>
+<dd><p>
+              Kevlin Henney
+            </p></dd>
+<dt><span class="term"><a href="http://www.two-sdg.demon.co.uk/curbralan/papers/accu/C++Threading.pdf" target="_top"><span class="bold"><strong>C++ Threading - A Generic-Programming Approach</strong></span></a></span></dt>
+<dd><p>
+              Kevlin Henney, April 16, 2004
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_sync.reference"></a><a href="index.html#boost_sync.reference" title=" Reference "> Reference </a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_sync.reference.sync_hpp"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp.category_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">category</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp.reentrancy_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">reentrancy</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp.scope_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">scope</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp.ownership_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">ownership</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp.lifetime_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">lifetime</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp.name_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">naming</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp.lockable_base_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">lockable_base</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_sync.reference.Locables"> Requirements for Lockable
+      types </a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_sync.reference.Locables.BasicLockable"> BasicLockable
+        Requirements </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.Locables.TryLockable"> Lockable
+        Requirements </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.Locables.TimedLockable"> TimedLockable
+        Requirements </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.Locables.SharedBasicLockable">
+        SharedBasicLockable Requirements </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.Locables.SharedLockable"> SharedLockable
+        Requirements </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.Locables.SharedTimedLockable">
+        SharedTimedLockable Requirements </a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_concepts</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.BasicLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">BasicLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.LockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">LockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.TimedLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">TimedLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.ShareBasicLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">ShareBasicLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.ShareLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">ShareLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.ShareTimedLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">ShareTimedLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.UpgradeBasicLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">UpgradeBasicLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.UpgradeLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">UpgradeLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.UpgradeTimedLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">UpgradeTimedLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_sync.reference.locks_hpp"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">locks</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_sync.reference.locks_hpp.lock_options_hpp"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">locks</span><span class="special">/</span><span class="identifier">lock_options</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">locks</span><span class="special">/</span><span class="identifier">lock_guard</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+</dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.reference.sync_hpp"></a><a href="index.html#boost_sync.reference.sync_hpp" title=" Header &lt;boost/sync.hpp&gt;"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_concepts</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">locks</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.reference.lockable_traits_hpp"></a><a href="index.html#boost_sync.reference.lockable_traits_hpp" title=" Header &lt;boost/sync/lockable_traits.hpp&gt;"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp.category_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">category</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp.reentrancy_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">reentrancy</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp.scope_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">scope</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp.ownership_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">ownership</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp.lifetime_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">lifetime</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp.name_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">naming</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_traits_hpp.lockable_base_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">lockable_base</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">category</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">reentrancy</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">scope</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">ownership</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">lifetime</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">naming</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">lock_traits_base</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">best_condition_variable</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">generic_condition_variable</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_traits_hpp.category_hpp"></a><a href="index.html#boost_sync.reference.lockable_traits_hpp.category_hpp" title="
+        Header &lt;boost/sync/lockable_traits/category.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">category</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">sync</span> <span class="special">{</span>
+
+    <span class="keyword">struct</span> <span class="identifier">exclusive_basic_lockable_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">exclusive_try_lockable_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">exclusive_timed_lockable_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">sharable_basic_lockable_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">sharable_try_lockable_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">sharable_timed_lockable_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">upgradable_basic_lockable_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">upgradable_try_lockable_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">upgradable_timed_lockable_tag</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">category</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_basic_lockable</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_try_lockable</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_timed_lockable</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_exclusive</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_sharable</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_upgradable</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_traits_hpp.reentrancy_hpp"></a><a href="index.html#boost_sync.reference.lockable_traits_hpp.reentrancy_hpp" title="
+        Header &lt;boost/sync/lockable_traits/reentrancy.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">reentrancy</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">sync</span> <span class="special">{</span>
+
+    <span class="keyword">struct</span> <span class="identifier">non_recursive_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">recursive_tag</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">reentrancy</span><span class="special">;</span>
+    
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_recursive</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_traits_hpp.scope_hpp"></a><a href="index.html#boost_sync.reference.lockable_traits_hpp.scope_hpp" title="
+        Header &lt;boost/sync/lockable_traits/scope.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">scope</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">sync</span> <span class="special">{</span>
+
+    <span class="keyword">struct</span> <span class="identifier">mono_threaded_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">multi_threaded_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">multi_process_tag</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">scope</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_mono_threaded</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_multi_threaded</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_multi_process</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_traits_hpp.ownership_hpp"></a><a href="index.html#boost_sync.reference.lockable_traits_hpp.ownership_hpp" title="
+        Header &lt;boost/sync/lockable_traits/ownership.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">ownership</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">sync</span> <span class="special">{</span>
+
+    <span class="keyword">struct</span> <span class="identifier">unowned_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">owned_tag</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ownership</span><span class="special">;</span>
+    
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_owned</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_traits_hpp.lifetime_hpp"></a><a href="index.html#boost_sync.reference.lockable_traits_hpp.lifetime_hpp" title="
+        Header &lt;boost/sync/lockable_traits/lifetime.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">lifetime</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">sync</span> <span class="special">{</span>
+
+    <span class="keyword">struct</span> <span class="identifier">process_lifetime_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">kernel_lifetime_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">filesystem_lifetime_tag</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">lifetime</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">has_process_lifetime</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">has_kernel_lifetime</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">has_filesystem_lifetime</span><span class="special">;</span>
+
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_traits_hpp.name_hpp"></a><a href="index.html#boost_sync.reference.lockable_traits_hpp.name_hpp" title="
+        Header &lt;boost/sync/lockable_traits/naming.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">naming</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">sync</span> <span class="special">{</span>
+
+    <span class="keyword">struct</span> <span class="identifier">anonymous_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">named_tag</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">naming</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_named</span><span class="special">;</span>
+
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_traits_hpp.lockable_base_hpp"></a><a href="index.html#boost_sync.reference.lockable_traits_hpp.lockable_base_hpp" title="
+        Header &lt;boost/sync/lockable_traits/lockable_base.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">lockable_base</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">sync</span> <span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Scope</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">default_lifetime</span><span class="special">;</span>
+    
+    <span class="keyword">template</span><span class="special">&lt;</span>
+        <span class="keyword">typename</span> <span class="identifier">Scope</span><span class="special">=</span><span class="identifier">multi_threaded_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">Category</span><span class="special">=</span><span class="identifier">exclusive_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">Reentrancy</span><span class="special">=</span><span class="identifier">non_recursive_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">Kind</span><span class="special">=</span><span class="identifier">timed_lockable_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">Lifetime</span><span class="special">=</span><span class="keyword">typename</span> <span class="identifier">default_lifetime</span><span class="special">&lt;</span><span class="identifier">Scope</span><span class="special">&gt;,</span>
+        <span class="keyword">typename</span> <span class="identifier">Named</span><span class="special">=</span><span class="identifier">anonymous_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">Base</span><span class="special">=</span><span class="keyword">void</span>
+    <span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">lockable_base</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.reference.Locables"></a><a href="index.html#boost_sync.reference.Locables" title=" Requirements for Lockable
+      types "> Requirements for Lockable
+      types </a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_sync.reference.Locables.BasicLockable"> BasicLockable
+        Requirements </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.Locables.TryLockable"> Lockable
+        Requirements </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.Locables.TimedLockable"> TimedLockable
+        Requirements </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.Locables.SharedBasicLockable">
+        SharedBasicLockable Requirements </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.Locables.SharedLockable"> SharedLockable
+        Requirements </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.Locables.SharedTimedLockable">
+        SharedTimedLockable Requirements </a></span></dt>
+</dl></div>
+<p>
+        A concurrent agent is a an entity (such as a thread, process, or packaged
+        task) that may perform work in parallel with other concurrent agents. The
+        calling agent is determined by context, e.g. the calling thread or the packaged
+        task that contains the call, etc.
+      </p>
+<p>
+        The standard and also the Boost.Thread and Boost.Interprocess library templates
+        <code class="computeroutput"><span class="identifier">unique_lock</span></code>, <code class="computeroutput"><span class="identifier">lock_guard</span></code>, <code class="computeroutput"><span class="identifier">lock</span></code>,
+        <code class="computeroutput"><span class="identifier">try_lock</span></code> and <code class="computeroutput"><span class="identifier">condition_variable_any</span></code> all operate on user-supplied
+        lockable objects. Such an object must support the member functions specified
+        for either the <code class="computeroutput"><span class="identifier">BasicLockable</span></code>
+        requirements, the <code class="computeroutput"><span class="identifier">Lockable</span></code>
+        requirements or the <code class="computeroutput"><span class="identifier">TimedLockable</span></code>
+        requirements as appropriate to acquire or release ownership of a lock by
+        a given concurrent agent.
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          The nature of any lock ownership and any synchronization it may entail
+          are not part of these requirements.
+        </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Some lockable objects are "agent-oblivious" in that they work
+          for any concurrent-agent model because they do not determine or store the
+          agent's ID (e.g., an ordinary spin-lock).
+        </p></td></tr>
+</table></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.Locables.BasicLockable"></a><a href="index.html#boost_sync.reference.Locables.BasicLockable" title=" BasicLockable
+        Requirements "> BasicLockable
+        Requirements </a>
+</h4></div></div></div>
+<p>
+          In order for a type <code class="computeroutput"><span class="identifier">L</span></code> to
+          qualify as a <code class="computeroutput"><span class="identifier">BasicLockable</span></code>
+          type, the following expressions must be supported, with the specified semantics,
+          where <code class="computeroutput"><span class="identifier">m</span></code> denotes a value
+          of type <code class="computeroutput"><span class="identifier">L</span></code>:
+        </p>
+<p>
+          The expression <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">lock</span><span class="special">()</span></code>
+          shall be well-formed and have the following semantics:
+        </p>
+<p>
+          <span class="bold"><strong>Effects:</strong></span> Block until a lock can be acquired
+          for the current concurrent agent. If an exception is thrown then a lock
+          shall not have been acquired for the current concurrent agent.
+        </p>
+<p>
+          <span class="bold"><strong>Return type:</strong></span> void
+        </p>
+<p>
+          The expression <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">unlock</span><span class="special">()</span></code>
+          shall be well-formed and have the following semantics:
+        </p>
+<p>
+          <span class="bold"><strong>Requires:</strong></span> The current concurrent agent
+          shall hold a lock on <code class="computeroutput"><span class="identifier">m</span></code>.
+        </p>
+<p>
+          <span class="bold"><strong>Effects:</strong></span> Release a lock on <code class="computeroutput"><span class="identifier">m</span></code> held by the current concurrent agent.
+        </p>
+<p>
+          <span class="bold"><strong>Return type:</strong></span> <code class="computeroutput"><span class="keyword">void</span></code>
+        </p>
+<p>
+          <span class="bold"><strong>Throws:</strong></span> Nothing.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.Locables.TryLockable"></a><a href="index.html#boost_sync.reference.Locables.TryLockable" title=" Lockable
+        Requirements "> Lockable
+        Requirements </a>
+</h4></div></div></div>
+<p>
+          In order for a type <code class="computeroutput"><span class="identifier">L</span></code> to
+          qualify as a <code class="computeroutput"><span class="identifier">Lockable</span></code> type,
+          it must meet the <code class="computeroutput"><span class="identifier">BasicLockable</span></code>
+          requirements. In addition, the following expressions must be supported,
+          with the specified semantics, where m denotes a value of type <code class="computeroutput"><span class="identifier">L</span></code>:
+        </p>
+<p>
+          The expression <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">try_lock</span><span class="special">()</span></code>
+          shall be well-formed and have the following semantics:
+        </p>
+<p>
+          <span class="bold"><strong>Effects:</strong></span> Attempt to acquire a lock for
+          the current concurrent agent without blocking. If an exception is thrown
+          then a lock shall not have been acquired for the current concurrent agent.
+        </p>
+<p>
+          <span class="bold"><strong>Return type:</strong></span> <code class="computeroutput"><span class="keyword">bool</span></code>
+        </p>
+<p>
+          <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="keyword">true</span></code>
+          if the lock was acquired, <code class="computeroutput"><span class="keyword">false</span></code>
+          otherwise.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.Locables.TimedLockable"></a><a href="index.html#boost_sync.reference.Locables.TimedLockable" title=" TimedLockable
+        Requirements "> TimedLockable
+        Requirements </a>
+</h4></div></div></div>
+<p>
+          For a type <code class="computeroutput"><span class="identifier">TL</span></code> to qualify
+          as <code class="computeroutput"><span class="identifier">TimedLockable</span></code> it must
+          meet the Lockable requirements, and additionally the following expressions
+          must be well-formed, with the specified semantics, where <code class="computeroutput"><span class="identifier">m</span></code> is an instance of a type <code class="computeroutput"><span class="identifier">TL</span></code>, <code class="computeroutput"><span class="identifier">rel_time</span></code>
+          denotes instantiation of <code class="computeroutput"><span class="identifier">duration</span></code>
+          and <code class="computeroutput"><span class="identifier">abs_time</span></code> denotes an
+          instantiation of <code class="computeroutput"><span class="identifier">time_point</span></code>.
+        </p>
+<p>
+          The expression <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">rel_time</span><span class="special">)</span></code>
+          shall be well-formed and have the following semantics:
+        </p>
+<p>
+          <span class="bold"><strong>Effects:</strong></span> Attempt to acquire a lock for
+          the current concurrent agent within the relative timeout specified by
+          <code class="computeroutput"><span class="identifier">rel_time</span></code>. The function
+          shall return within the timeout specified by <code class="computeroutput"><span class="identifier">rel_time</span></code>
+          only if it has obtained a lock on <code class="computeroutput"><span class="identifier">m</span></code>
+          for the current concurrent agent. If an exception is thrown then a lock
+          shall not have been acquired for the current concurrent agent.
+        </p>
+<p>
+          <span class="bold"><strong>Return type:</strong></span> <code class="computeroutput"><span class="keyword">bool</span></code>
+        </p>
+<p>
+          <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="keyword">true</span></code>
+          if the lock was acquired, <code class="computeroutput"><span class="keyword">false</span></code>
+          otherwise.
+        </p>
+<p>
+          The expression <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">abs_time</span><span class="special">)</span></code>
+          shall be well-formed and have the following semantics:
+        </p>
+<p>
+          <span class="bold"><strong>Effects:</strong></span> Attempt to acquire a lock for
+          the current concurrent agent before the absolute timeout specified by
+          <code class="computeroutput"><span class="identifier">abs_time</span></code>. The function
+          shall return before the timeout specified by <code class="computeroutput"><span class="identifier">abs_time</span></code>
+          only if it has obtained a lock on <code class="computeroutput"><span class="identifier">m</span></code>
+          for the current concurrent agent. If an exception is thrown then a lock
+          shall not have been acquired for the current concurrent agent.
+        </p>
+<p>
+          <span class="bold"><strong>Return type:</strong></span> <code class="computeroutput"><span class="keyword">bool</span></code>
+        </p>
+<p>
+          <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="keyword">true</span></code>
+          if the lock was acquired, <code class="computeroutput"><span class="keyword">false</span></code>
+          otherwise.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.Locables.SharedBasicLockable"></a><a href="index.html#boost_sync.reference.Locables.SharedBasicLockable" title="
+        SharedBasicLockable Requirements ">
+        SharedBasicLockable Requirements </a>
+</h4></div></div></div>
+<p>
+          In order for a type <code class="computeroutput"><span class="identifier">L</span></code> to
+          qualify as a <code class="computeroutput"><span class="identifier">SharedBasicLockable</span></code>
+          type, it must meet the <code class="computeroutput"><span class="identifier">BasicLockable</span></code>
+          requirements. In addition, the following expressions must be supported,
+          with the specified semantics, where <code class="computeroutput"><span class="identifier">m</span></code>
+          denotes a value of type <code class="computeroutput"><span class="identifier">L</span></code>:
+        </p>
+<p>
+          The expression <code class="computeroutput"><span class="identifier">is_shared_lockable</span><span class="special">&lt;</span><span class="identifier">L</span><span class="special">&gt;</span></code> is <code class="computeroutput"><span class="identifier">true_type</span></code>.
+        </p>
+<p>
+          The expression <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">lock_shared</span><span class="special">()</span></code>
+          shall be well-formed and have the following semantics:
+        </p>
+<p>
+          <span class="bold"><strong>Effects:</strong></span> Block until shared ownership
+          can be acquired for the current concurrent agent. If an exception is thrown
+          then a lock shall not have been acquired for the current concurrent agent.
+        </p>
+<p>
+          <span class="bold"><strong>Return type:</strong></span> <code class="computeroutput"><span class="keyword">void</span></code>
+        </p>
+<p>
+          The expression <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">unlock_shared</span><span class="special">()</span></code>
+          shall be well-formed and have the following semantics:
+        </p>
+<p>
+          <span class="bold"><strong>Requires:</strong></span> The current concurrent agent
+          has shared onership on <code class="computeroutput"><span class="identifier">m</span></code>.
+        </p>
+<p>
+          <span class="bold"><strong>Effects:</strong></span> Release shared ownership on
+          <code class="computeroutput"><span class="identifier">m</span></code> held by the current concurrent
+          agent.
+        </p>
+<p>
+          <span class="bold"><strong>Return type:</strong></span> <code class="computeroutput"><span class="keyword">void</span></code>
+        </p>
+<p>
+          <span class="bold"><strong>Throws:</strong></span> Nothing.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.Locables.SharedLockable"></a><a href="index.html#boost_sync.reference.Locables.SharedLockable" title=" SharedLockable
+        Requirements "> SharedLockable
+        Requirements </a>
+</h4></div></div></div>
+<p>
+          In order for a type <code class="computeroutput"><span class="identifier">L</span></code> to
+          qualify as a <code class="computeroutput"><span class="identifier">SharedLockable</span></code>
+          type, it must meet the <code class="computeroutput"><span class="identifier">SharedBasicLockable</span></code>
+          and <code class="computeroutput"><span class="identifier">Locable</span></code> requirements.
+          In addition, the following expressions must be supported, with the specified
+          semantics, where <code class="computeroutput"><span class="identifier">m</span></code> denotes
+          a value of type <code class="computeroutput"><span class="identifier">L</span></code>:
+        </p>
+<p>
+          The expression <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">try_lock_shared</span><span class="special">()</span></code>
+          shall be well-formed and have the following semantics:
+        </p>
+<p>
+          <span class="bold"><strong>Effects:</strong></span> Attempt to obtain shared ownership
+          for the current concurrent agent without blocking. If an exception is thrown
+          then a lock shall not have been acquired for the current concurrent agent.
+        </p>
+<p>
+          <span class="bold"><strong>Return type:</strong></span> <code class="computeroutput"><span class="keyword">bool</span></code>
+        </p>
+<p>
+          <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="keyword">true</span></code>
+          if shared ownership was obtained for the current thread, <code class="computeroutput"><span class="keyword">false</span></code> otherwise.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.Locables.SharedTimedLockable"></a><a href="index.html#boost_sync.reference.Locables.SharedTimedLockable" title="
+        SharedTimedLockable Requirements ">
+        SharedTimedLockable Requirements </a>
+</h4></div></div></div>
+<p>
+          For a type <code class="computeroutput"><span class="identifier">TL</span></code> to qualify
+          as <code class="computeroutput"><span class="identifier">SharedTimedLockable</span></code>
+          it must meet the <code class="computeroutput"><span class="identifier">SharedLockable</span></code>
+          and the <code class="computeroutput"><span class="identifier">TimedLockable</span></code> requirements,
+          and additionally the following expressions must be well-formed, with the
+          specified semantics, where <code class="computeroutput"><span class="identifier">m</span></code>
+          is an instance of a type <code class="computeroutput"><span class="identifier">TL</span></code>,
+          <code class="computeroutput"><span class="identifier">rel_time</span></code> denotes instantiation
+          of duration and <code class="computeroutput"><span class="identifier">abs_time</span></code>
+          denotes an instantiation of time_point.
+        </p>
+<p>
+          The expression <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">try_lock_shared_for</span><span class="special">(</span><span class="identifier">rel_time</span><span class="special">)</span></code>
+          shall be well-formed and have the following semantics:
+        </p>
+<p>
+          <span class="bold"><strong>Effects:</strong></span> Attempt to acquire a lock for
+          the current concurrent agent within the relative timeout specified by
+          <code class="computeroutput"><span class="identifier">rel_time</span></code>. The function
+          shall return within the timeout specified by rel_time only if it has obtained
+          a lock on <code class="computeroutput"><span class="identifier">m</span></code> for the current
+          concurrent agent. If an exception is thrown then a lock shall not have
+          been acquired for the current concurrent agent.
+        </p>
+<p>
+          <span class="bold"><strong>Return type:</strong></span> <code class="computeroutput"><span class="keyword">bool</span></code>
+        </p>
+<p>
+          <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="keyword">true</span></code>
+          if the lock was acquired, <code class="computeroutput"><span class="keyword">false</span></code>
+          otherwise.
+        </p>
+<p>
+          The expression <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">try_lock_shared_until</span><span class="special">(</span><span class="identifier">abs_time</span><span class="special">)</span></code>
+          shall be well-formed and have the following semantics:
+        </p>
+<p>
+          <span class="bold"><strong>Effects:</strong></span> Attempt to obtain shared ownership
+          for the current concurrent agent before the absolute timeout specified
+          by <code class="computeroutput"><span class="identifier">abs_time</span></code>. The function
+          shall return before the timeout specified by <code class="computeroutput"><span class="identifier">abs_time</span></code>
+          only if it has obtained shared ownership on m for the current concurrent
+          agent. If an exception is thrown then shared ownership shall not have been
+          acquired for the current concurrent agent.
+        </p>
+<p>
+          <span class="bold"><strong>Return type:</strong></span> <code class="computeroutput"><span class="keyword">bool</span></code>
+        </p>
+<p>
+          <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="keyword">true</span></code>
+          if shared ownership was acquired, <code class="computeroutput"><span class="keyword">false</span></code>
+          otherwise.
+        </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.reference.lockable_concept_hpp"></a><a href="index.html#boost_sync.reference.lockable_concept_hpp" title=" Header &lt;boost/sync/lockable_concepts.hpp&gt;"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">lockable_concepts</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.BasicLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">BasicLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.LockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">LockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.TimedLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">TimedLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.ShareBasicLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">ShareBasicLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.ShareLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">ShareLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.ShareTimedLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">ShareTimedLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.UpgradeBasicLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">UpgradeBasicLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.UpgradeLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">UpgradeLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.lockable_concept_hpp.UpgradeTimedLockableConcept">
+        Template Class <code class="computeroutput"><span class="identifier">UpgradeTimedLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">sync</span> <span class="special">{</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">BasicLockableConcept</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">LockableConcept</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">TimedLockableConcept</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ShareBasicLockableConcept</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ShareLockableConcept</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ShareTimedLockableConcept</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">UpgradeBasicLockableConcept</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">UpgradeLockableConcept</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">UpgradeTimedLockableConcept</span><span class="special">;</span>
+
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_concept_hpp.BasicLockableConcept"></a><a href="index.html#boost_sync.reference.lockable_concept_hpp.BasicLockableConcept" title="
+        Template Class BasicLockableConcept&lt;&gt;">
+        Template Class <code class="computeroutput"><span class="identifier">BasicLockableConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span></code> and <code class="computeroutput"><span class="identifier">boost</span><span class="special">:</span><span class="identifier">interprocess</span>
+          <span class="identifier">mutex</span> <span class="identifier">family</span>
+          <span class="identifier">classes</span> <span class="identifier">are</span>
+          <span class="identifier">a</span> <span class="identifier">non</span><span class="special">-</span><span class="identifier">polymorphic</span>
+          <span class="identifier">classes</span> <span class="identifier">that</span>
+          <span class="identifier">encapsulates</span> <span class="identifier">a</span>
+          <span class="identifier">system</span> <span class="identifier">primitive</span>
+          <span class="keyword">and</span> <span class="identifier">portion</span>
+          <span class="identifier">of</span> <span class="identifier">C</span>
+          <span class="identifier">API</span><span class="special">.</span>
+          <span class="identifier">Clearly</span><span class="special">,</span>
+          <span class="identifier">many</span> <span class="identifier">of</span>
+          <span class="identifier">the</span> <span class="identifier">synchronisation</span>
+          <span class="identifier">primitives</span> <span class="identifier">support</span>
+          <span class="identifier">common</span> <span class="identifier">operations</span><span class="special">,</span> <span class="keyword">and</span> <span class="identifier">hence</span>
+          <span class="identifier">a</span> <span class="identifier">Concept</span><span class="special">.</span> <span class="identifier">The</span> </code>ExclusiveLockableConcept`
+          class can be used with the Boost.ConceptCheck in templates that work with
+          a exclusive synchronisation.
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">LockableConcept</span></code> object
+          supports the basic features required to delimit a critical region. Supports
+          the basic <code class="computeroutput"><span class="identifier">lock</span></code>, <code class="computeroutput"><span class="identifier">unlock</span></code> and <code class="computeroutput"><span class="identifier">try_lock</span></code>
+          functions and defines the lockable traits
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">BasicLockableConcept</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">category</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">category</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">kind</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">kind</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">reentrancy</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">reentrancy</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span>  <span class="identifier">scope</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">lifetime</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span>  <span class="identifier">lifetime</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span>  <span class="identifier">named</span><span class="special">;</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">LockableConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">l</span><span class="special">.</span><span class="identifier">lock</span><span class="special">();</span>
+        <span class="identifier">l</span><span class="special">.</span><span class="identifier">unlock</span><span class="special">();</span>
+    <span class="special">}</span>
+    <span class="identifier">Lockable</span> <span class="identifier">l</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_concept_hpp.LockableConcept"></a><a href="index.html#boost_sync.reference.lockable_concept_hpp.LockableConcept" title="
+        Template Class LockableConcept&lt;&gt;">
+        Template Class <code class="computeroutput"><span class="identifier">LockableConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span></code> and <code class="computeroutput"><span class="identifier">boost</span><span class="special">:</span><span class="identifier">interprocess</span>
+          <span class="identifier">mutex</span> <span class="identifier">family</span>
+          <span class="identifier">classes</span> <span class="identifier">are</span>
+          <span class="identifier">a</span> <span class="identifier">non</span><span class="special">-</span><span class="identifier">polymorphic</span>
+          <span class="identifier">classes</span> <span class="identifier">that</span>
+          <span class="identifier">encapsulates</span> <span class="identifier">a</span>
+          <span class="identifier">system</span> <span class="identifier">primitive</span>
+          <span class="keyword">and</span> <span class="identifier">portion</span>
+          <span class="identifier">of</span> <span class="identifier">C</span>
+          <span class="identifier">API</span><span class="special">.</span>
+          <span class="identifier">Clearly</span><span class="special">,</span>
+          <span class="identifier">many</span> <span class="identifier">of</span>
+          <span class="identifier">the</span> <span class="identifier">synchronisation</span>
+          <span class="identifier">primitives</span> <span class="identifier">support</span>
+          <span class="identifier">common</span> <span class="identifier">operations</span><span class="special">,</span> <span class="keyword">and</span> <span class="identifier">hence</span>
+          <span class="identifier">a</span> <span class="identifier">Concept</span><span class="special">.</span> <span class="identifier">The</span> </code>ExclusiveLockableConcept`
+          class can be used with the Boost.ConceptCheck in templates that work with
+          a exclusive synchronisation.
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">LockableConcept</span></code> object
+          supports the basic features required to delimit a critical region. Supports
+          the basic <code class="computeroutput"><span class="identifier">lock</span></code>, <code class="computeroutput"><span class="identifier">unlock</span></code> and <code class="computeroutput"><span class="identifier">try_lock</span></code>
+          functions and defines the lockable traits
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">LockableConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">BasicLockableConcept</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;));</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">LockableConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">b</span><span class="special">=</span><span class="identifier">l</span><span class="special">.</span><span class="identifier">try_lock</span><span class="special">();</span>
+    <span class="special">}</span>
+    <span class="identifier">Lockable</span> <span class="identifier">l</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">b</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_concept_hpp.TimedLockableConcept"></a><a href="index.html#boost_sync.reference.lockable_concept_hpp.TimedLockableConcept" title="
+        Template Class TimedLockableConcept&lt;&gt;">
+        Template Class <code class="computeroutput"><span class="identifier">TimedLockableConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          <code class="computeroutput"><span class="identifier">TimedLockableConcept</span></code> object
+          extends <code class="computeroutput"><span class="identifier">ExclusiveLockConcept</span></code>
+          with the <code class="computeroutput"><span class="identifier">try_lock_until</span></code>
+          and <code class="computeroutput"><span class="identifier">try_lock_for</span></code> functions.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">TimedLockableConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">LockableConcept</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;));</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">TimedLockableConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">b</span><span class="special">=</span><span class="identifier">l</span><span class="special">.</span><span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
+        <span class="identifier">b</span><span class="special">=</span><span class="identifier">l</span><span class="special">.</span><span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">1</span><span class="special">));</span>
+    <span class="special">}</span>
+    <span class="identifier">Lockable</span> <span class="identifier">l</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">b</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_concept_hpp.ShareBasicLockableConcept"></a><a href="index.html#boost_sync.reference.lockable_concept_hpp.ShareBasicLockableConcept" title="
+        Template Class ShareBasicLockableConcept&lt;&gt;">
+        Template Class <code class="computeroutput"><span class="identifier">ShareBasicLockableConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          <code class="computeroutput"><span class="identifier">ShareBasicLockableConcept</span></code>
+          object extends <code class="computeroutput"><span class="identifier">BasicLockableConcept</span></code>
+          with the <code class="computeroutput"><span class="identifier">lock_shared</span></code> and
+          <code class="computeroutput"><span class="identifier">unlock_shared</span></code> functions
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">ShareBasicLockableConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">BasicLockableConcept</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;));</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">ShareBasicLockableConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">l</span><span class="special">.</span><span class="identifier">lock_shared</span><span class="special">();</span>
+        <span class="identifier">l</span><span class="special">.</span><span class="identifier">unlock_shared</span><span class="special">();</span>
+    <span class="special">}</span>
+    <span class="identifier">Lockable</span> <span class="identifier">l</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_concept_hpp.ShareLockableConcept"></a><a href="index.html#boost_sync.reference.lockable_concept_hpp.ShareLockableConcept" title="
+        Template Class ShareLockableConcept&lt;&gt;">
+        Template Class <code class="computeroutput"><span class="identifier">ShareLockableConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          <code class="computeroutput"><span class="identifier">ShareLockableConcept</span></code> object
+          extends <code class="computeroutput"><span class="identifier">ShareBasicLockableConcept</span></code>
+          and <code class="computeroutput"><span class="identifier">LockableConcept</span></code> with
+          the <code class="computeroutput"><span class="identifier">try_lock_shared</span></code> functions.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">ShareLockableConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">ShareBasicLockableConcept</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;));</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">LockableConcept</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;));</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">ShareLockableConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">b</span><span class="special">=</span><span class="identifier">l</span><span class="special">=.</span><span class="identifier">try_lock_shared</span><span class="special">();</span>
+    <span class="special">}</span>
+    <span class="identifier">Lockable</span> <span class="identifier">l</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">b</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_concept_hpp.ShareTimedLockableConcept"></a><a href="index.html#boost_sync.reference.lockable_concept_hpp.ShareTimedLockableConcept" title="
+        Template Class ShareTimedLockableConcept&lt;&gt;">
+        Template Class <code class="computeroutput"><span class="identifier">ShareTimedLockableConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          <code class="computeroutput"><span class="identifier">ShareTimedLockableConcept</span></code>
+          object extends <code class="computeroutput"><span class="identifier">ShareBasicLockableConcept</span></code>
+          and <code class="computeroutput"><span class="identifier">LockableConcept</span></code> with
+          the <code class="computeroutput"><span class="identifier">try_lock_shared_until</span></code>
+          and <code class="computeroutput"><span class="identifier">try_lock_shared_for</span></code>
+          functions
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">ShareLockableConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">ShareBasicLockableConcept</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;));</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">LockableConcept</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;));</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">ShareLockableConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">b</span><span class="special">=</span><span class="identifier">l</span><span class="special">.</span><span class="identifier">try_lock_shared_until</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
+        <span class="identifier">b</span><span class="special">=</span><span class="identifier">l</span><span class="special">.</span><span class="identifier">try_lock_shared_for</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">1</span><span class="special">));</span>
+    <span class="special">}</span>
+    <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">l</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">b</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_concept_hpp.UpgradeBasicLockableConcept"></a><a href="index.html#boost_sync.reference.lockable_concept_hpp.UpgradeBasicLockableConcept" title="
+        Template Class UpgradeBasicLockableConcept&lt;&gt;">
+        Template Class <code class="computeroutput"><span class="identifier">UpgradeBasicLockableConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          <code class="computeroutput"><span class="identifier">UpgradeBasicLockableConcept</span></code>
+          object extends <code class="computeroutput"><span class="identifier">SharedBasicLockableConcept</span></code>
+          with the <code class="computeroutput"><span class="identifier">lock_upgrade</span></code>,
+          <code class="computeroutput"><span class="identifier">unlock_upgrade_and_lock</span></code>,
+          <code class="computeroutput"><span class="identifier">unlock_and_lock_shared</span></code>
+          and <code class="computeroutput"><span class="identifier">unlock_upgrade_and_lock_shared</span></code>
+          functions.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">UpgradeLockableConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">SharedBasicLockableConcept</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;));</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">UpgradeLockableConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">l</span><span class="special">.</span><span class="identifier">lock_upgrade</span><span class="special">();</span>
+        <span class="identifier">l</span><span class="special">.</span><span class="identifier">unlock_upgrade_and_lock</span><span class="special">();</span>
+        <span class="identifier">l</span><span class="special">.</span><span class="identifier">unlock_and_lock_upgrade</span><span class="special">();</span>
+        <span class="identifier">l</span><span class="special">.</span><span class="identifier">unlock_and_lock_shared</span><span class="special">();</span>
+        <span class="identifier">l</span><span class="special">.</span><span class="identifier">unlock_upgrade_and_lock_shared</span><span class="special">();</span>
+    <span class="special">}</span>
+    <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">l</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_concept_hpp.UpgradeLockableConcept"></a><a href="index.html#boost_sync.reference.lockable_concept_hpp.UpgradeLockableConcept" title="
+        Template Class UpgradeLockableConcept&lt;&gt;">
+        Template Class <code class="computeroutput"><span class="identifier">UpgradeLockableConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          <code class="computeroutput"><span class="identifier">UpgradeLockableConcept</span></code>
+          object extends <code class="computeroutput"><span class="identifier">UpgradeBasicLockableConcept</span></code>
+          and <code class="computeroutput"><span class="identifier">SharedLockableConcept</span></code>
+          with the <code class="computeroutput"><span class="identifier">try_lock_upgrade</span></code>,
+          <code class="computeroutput"><span class="identifier">try_unlock_upgrade_and_lock</span></code>,
+          <code class="computeroutput"><span class="identifier">try_unlock_share_and_lock</span></code>
+          and <code class="computeroutput"><span class="identifier">try_unlock_share_and_lock_upgrade</span></code>
+          functions.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">UpgradeLockableConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">UpgradeBasicLockableConcept</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;));</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">UpgradeLockableConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">b</span><span class="special">=</span><span class="identifier">l</span><span class="special">.</span><span class="identifier">try_lock_upgrade</span><span class="special">();</span>
+        <span class="identifier">b</span><span class="special">=</span><span class="identifier">l</span><span class="special">.</span><span class="identifier">try_unlock_upgrade_and_lock</span><span class="special">();</span>
+        <span class="identifier">b</span><span class="special">=</span><span class="identifier">l</span><span class="special">.</span><span class="identifier">try_unlock_share_and_lock</span><span class="special">();</span>
+        <span class="identifier">b</span><span class="special">=</span><span class="identifier">l</span><span class="special">.</span><span class="identifier">try_unlock_share_and_lock_upgrade</span><span class="special">();</span>
+    <span class="special">}</span>
+    <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">l</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">b</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.lockable_concept_hpp.UpgradeTimedLockableConcept"></a><a href="index.html#boost_sync.reference.lockable_concept_hpp.UpgradeTimedLockableConcept" title="
+        Template Class UpgradeTimedLockableConcept&lt;&gt;">
+        Template Class <code class="computeroutput"><span class="identifier">UpgradeTimedLockableConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          <code class="computeroutput"><span class="identifier">UpgradeTimedLockableConcept</span></code>
+          object extends <code class="computeroutput"><span class="identifier">UpgradeLockableConcept</span></code>
+          and <code class="computeroutput"><span class="identifier">SharedTimedLockableConcept</span></code>
+          with the <code class="computeroutput"><span class="identifier">try_lock_upgrade_until</span></code>,
+          <code class="computeroutput"><span class="identifier">try_lock_upgrade_for</span></code>,
+          <code class="computeroutput"><span class="identifier">try_unlock_upgrade_and_lock_for</span></code>
+          and <code class="computeroutput"><span class="identifier">try_unlock_upgrade_and_lock_until</span></code>
+          functions.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">UpgradeLockableConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">UpgradeBasicLockableConcept</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;));</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">UpgradeLockableConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">b</span><span class="special">=</span><span class="identifier">l</span><span class="special">.</span><span class="identifier">try_lock_upgrade_until</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
+        <span class="identifier">b</span><span class="special">=</span><span class="identifier">l</span><span class="special">.</span><span class="identifier">try_lock_upgrade_for</span><span class="special">(</span><span class="identifier">d</span><span class="special">);</span>
+        <span class="identifier">b</span><span class="special">=</span><span class="identifier">l</span><span class="special">.</span><span class="identifier">try_unlock_upgrade_and_lock_for</span><span class="special">(</span><span class="identifier">d</span><span class="special">);</span>
+        <span class="identifier">b</span><span class="special">=</span><span class="identifier">l</span><span class="special">.</span><span class="identifier">try_unlock_upgrade_and_lock_until</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
+    <span class="special">}</span>
+    <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">l</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">b</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.reference.locks_hpp"></a><a href="index.html#boost_sync.reference.locks_hpp" title=" Header &lt;boost/sync/locks.hpp&gt;"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">locks</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_sync.reference.locks_hpp.lock_options_hpp"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">locks</span><span class="special">/</span><span class="identifier">lock_options</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">locks</span><span class="special">/</span><span class="identifier">lock_guard</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp.constructor">
+          Constructor <code class="computeroutput"><span class="identifier">lock_guard</span><span class="special">(</span><span class="identifier">Lockable</span> <span class="special">&amp;</span> <span class="identifier">m</span><span class="special">)</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp.constructor_adopt">
+          Constructor <code class="computeroutput"><span class="identifier">lock_guard</span><span class="special">(</span><span class="identifier">Lockable</span> <span class="special">&amp;</span> <span class="identifier">m</span><span class="special">,</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">adopt_lock_t</span><span class="special">)</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp.destructor">
+          Destructor <code class="computeroutput"><span class="special">~</span><span class="identifier">lock_guard</span><span class="special">()</span></code></a></span></dt>
+</dl></dd>
+</dl></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">locks</span><span class="special">/</span><span class="identifier">lock_options</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">locks</span><span class="special">/</span><span class="identifier">lock_guard</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.locks_hpp.lock_options_hpp"></a><a href="index.html#boost_sync.reference.locks_hpp.lock_options_hpp" title=" Header
+        &lt;boost/sync/locks/lock_options.hpp&gt;"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">locks</span><span class="special">/</span><span class="identifier">lock_options</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          Some lock constructors take tag types which describe what should be done
+          with the lockable object during the lock's construction.
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+
+    <span class="comment">//!Type to indicate to a mutex lock constructor that must not lock the mutex.
+</span>    <span class="keyword">struct</span> <span class="identifier">defer_lock_t</span><span class="special">{};</span>
+    <span class="comment">//!Type to indicate to a mutex lock constructor that must try to lock the mutex.
+</span>    <span class="keyword">struct</span> <span class="identifier">try_to_lock_t</span> <span class="special">{};</span>
+    <span class="comment">//!Type to indicate to a mutex lock constructor that the mutex is already locked.
+</span>    <span class="keyword">struct</span> <span class="identifier">adopt_lock_t</span><span class="special">{};</span>
+
+    <span class="comment">//!An object indicating that the locking
+</span>    <span class="comment">//!must be deferred.
+</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">defer_lock_t</span>      <span class="identifier">defer_lock</span>      <span class="special">=</span> <span class="special">{};</span>
+
+    <span class="comment">//!An object indicating that a try_lock()
+</span>    <span class="comment">//!operation must be executed.
+</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">try_to_lock_t</span>     <span class="identifier">try_to_lock</span>    <span class="special">=</span> <span class="special">{};</span>
+
+    <span class="comment">//!An object indicating that the ownership of lockable
+</span>    <span class="comment">//!object must be accepted by the new owner.
+</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">adopt_lock_t</span>  <span class="identifier">adopt_lock</span> <span class="special">=</span> <span class="special">{};</span>
+
+<span class="special">}</span> <span class="comment">// namespace boost
+</span></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.reference.locks_hpp.lock_guard_hpp"></a><a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp" title=" Header
+        &lt;boost/sync/locks/lock_guard.hpp&gt;"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">sync</span><span class="special">/</span><span class="identifier">locks</span><span class="special">/</span><span class="identifier">lock_guard</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp.constructor">
+          Constructor <code class="computeroutput"><span class="identifier">lock_guard</span><span class="special">(</span><span class="identifier">Lockable</span> <span class="special">&amp;</span> <span class="identifier">m</span><span class="special">)</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp.constructor_adopt">
+          Constructor <code class="computeroutput"><span class="identifier">lock_guard</span><span class="special">(</span><span class="identifier">Lockable</span> <span class="special">&amp;</span> <span class="identifier">m</span><span class="special">,</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">adopt_lock_t</span><span class="special">)</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp.destructor">
+          Destructor <code class="computeroutput"><span class="special">~</span><span class="identifier">lock_guard</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">BasicLockable</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">lock_guard</span>
+    <span class="special">{</span>
+    <span class="keyword">public</span><span class="special">:</span>
+        <span class="keyword">typedef</span> <span class="identifier">BasicLockable</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+        <span class="keyword">explicit</span> <span class="identifier">lock_guard</span><span class="special">(</span><span class="identifier">lockable_type</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">);</span>
+        <span class="identifier">lock_guard</span><span class="special">(</span><span class="identifier">lockable_type</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">adopt_lock_t</span><span class="special">);</span>
+        <span class="special">~</span><span class="identifier">lock_guard</span><span class="special">();</span>
+        
+        <span class="identifier">lock_guard</span><span class="special">(</span><span class="identifier">lock_guard</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="special">=</span> <span class="keyword">delete</span><span class="special">;</span>
+        <span class="identifier">lock_guard</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">lock_guard</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="special">=</span> <span class="keyword">delete</span><span class="special">;</span>
+    <span class="keyword">private</span><span class="special">:</span>
+        <span class="identifier">lockable_type</span><span class="special">&amp;</span> <span class="identifier">pm</span><span class="special">;</span> <span class="comment">// exposition only
+</span>    <span class="special">};</span>
+
+<span class="special">}</span> <span class="comment">// namespace boost
+</span></pre>
+<p>
+          An object of type <a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp" title=" Header
+        &lt;boost/sync/locks/lock_guard.hpp&gt;"><code class="computeroutput"><span class="identifier">lock_guard</span></code></a> controls the ownership
+          of a lockable object within a scope. A <a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp" title=" Header
+        &lt;boost/sync/locks/lock_guard.hpp&gt;"><code class="computeroutput"><span class="identifier">lock_guard</span></code></a> object maintains ownership
+          of a lockable object throughout the <a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp" title=" Header
+        &lt;boost/sync/locks/lock_guard.hpp&gt;"><code class="computeroutput"><span class="identifier">lock_guard</span></code></a> object's lifetime.
+          The behavior of a program is undefined if the lockable object referenced
+          by <code class="computeroutput"><span class="identifier">pm</span></code> does not exist for
+          the entire lifetime of the <a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp" title=" Header
+        &lt;boost/sync/locks/lock_guard.hpp&gt;"><code class="computeroutput"><span class="identifier">lock_guard</span></code></a> object. <code class="computeroutput"><span class="identifier">BasicLockable</span></code> shall meet the <a href="index.html#boost_sync.reference.Locables.BasicLockable" title=" BasicLockable
+        Requirements "><code class="computeroutput"><span class="identifier">BasicLockable</span></code></a> requirements.
+        </p>
+<p>
+          <a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp" title=" Header
+        &lt;boost/sync/locks/lock_guard.hpp&gt;"><code class="computeroutput"><span class="identifier">lock_guard</span></code></a> is very simple: on
+          construction it acquires ownership of the implementation of the <a href="index.html#boost_sync.reference.Locables.BasicLockable" title=" BasicLockable
+        Requirements "><code class="computeroutput"><span class="identifier">BasicLockable</span></code></a> concept supplied
+          as the constructor parameter. On destruction, the ownership is released.
+          This provides simple RAII-style locking of a <a href="index.html#boost_sync.reference.Locables.BasicLockable" title=" BasicLockable
+        Requirements "><code class="computeroutput"><span class="identifier">BasicLockable</span></code></a> object, to facilitate
+          exception-safe locking and unlocking. In addition, the <a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp.constructor_adopt" title="
+          Constructor lock_guard(Lockable &amp; m,boost::adopt_lock_t)"><code class="computeroutput"><span class="identifier">lock_guard</span><span class="special">(</span><span class="identifier">Lockable</span> <span class="special">&amp;</span>
+          <span class="identifier">m</span><span class="special">,</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">adopt_lock_t</span><span class="special">)</span></code>
+          constructor</a> allows the <a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp" title=" Header
+        &lt;boost/sync/locks/lock_guard.hpp&gt;"><code class="computeroutput"><span class="identifier">lock_guard</span></code></a> object to take ownership
+          of a lock already held by the current concurrent agent.
+        </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_sync.reference.locks_hpp.lock_guard_hpp.constructor"></a><a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp.constructor" title="
+          Constructor lock_guard(Lockable &amp; m)">
+          Constructor <code class="computeroutput"><span class="identifier">lock_guard</span><span class="special">(</span><span class="identifier">Lockable</span> <span class="special">&amp;</span> <span class="identifier">m</span><span class="special">)</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Effects:</strong></span> Stores a reference to <code class="computeroutput"><span class="identifier">m</span></code>. Invokes <a href="index.html#boost_sync.reference.Locables.BasicLockable" title=" BasicLockable
+        Requirements "><code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">lock</span><span class="special">()</span></code></a>.
+          </p>
+<p>
+            <span class="bold"><strong>Throws:</strong></span> Any exception thrown by the
+            call to <a href="index.html#boost_sync.reference.Locables.BasicLockable" title=" BasicLockable
+        Requirements "><code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">lock</span><span class="special">()</span></code></a>.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_sync.reference.locks_hpp.lock_guard_hpp.constructor_adopt"></a><a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp.constructor_adopt" title="
+          Constructor lock_guard(Lockable &amp; m,boost::adopt_lock_t)">
+          Constructor <code class="computeroutput"><span class="identifier">lock_guard</span><span class="special">(</span><span class="identifier">Lockable</span> <span class="special">&amp;</span> <span class="identifier">m</span><span class="special">,</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">adopt_lock_t</span><span class="special">)</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Precondition:</strong></span> The current thread owns
+            a lock on <code class="computeroutput"><span class="identifier">m</span></code> equivalent
+            to one obtained by a call to <a href="index.html#boost_sync.reference.Locables.BasicLockable" title=" BasicLockable
+        Requirements "><code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">lock</span><span class="special">()</span></code></a>.
+          </p>
+<p>
+            <span class="bold"><strong>Effects:</strong></span> Stores a reference to <code class="computeroutput"><span class="identifier">m</span></code>. Takes ownership of the lock state
+            of <code class="computeroutput"><span class="identifier">m</span></code>.
+          </p>
+<p>
+            <span class="bold"><strong>Throws:</strong></span> Nothing.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_sync.reference.locks_hpp.lock_guard_hpp.destructor"></a><a href="index.html#boost_sync.reference.locks_hpp.lock_guard_hpp.destructor" title="
+          Destructor ~lock_guard()">
+          Destructor <code class="computeroutput"><span class="special">~</span><span class="identifier">lock_guard</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Effects:</strong></span> Invokes <a href="index.html#boost_sync.reference.Locables.BasicLockable" title=" BasicLockable
+        Requirements "><code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">unlock</span><span class="special">()</span></code></a>
+            on the <a href="index.html#boost_sync.reference.Locables.BasicLockable" title=" BasicLockable
+        Requirements "><code class="computeroutput"><span class="identifier">BasicLockable</span></code></a> object passed
+            to the constructor.
+          </p>
+<p>
+            <span class="bold"><strong>Throws:</strong></span> Nothing.
+          </p>
+</div>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_sync.appendices"></a><a href="index.html#boost_sync.appendices" title="Appendices">Appendices</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_sync.appendices.history"> Appendix A: History</a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#boost_sync.appendices.history.__version_0_1_0__september_10__2010__"><span class="bold"><strong>Version 0.1.0, September 10, 2010</strong></span> </a></span></dt></dl></dd>
+<dt><span class="section"><a href="index.html#boost_sync.appendices.rationale"> Appendix B: Rationale</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.appendices.implementation"> Appendix C: Implementation
+      Notes</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.appendices.faq"> Appendix D: FAQ</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.appendices.acknowledgements"> Appendix E:
+      Acknowledgements</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_sync.appendices.tests"> Appendix F: Tests</a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#boost_sync.appendices.tests._lockable_traits_"><code class="computeroutput"><span class="identifier">lockable_traits</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="index.html#boost_sync.appendices.tickets"> Appendix G: Tickets</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.appendices.history"></a><a href="index.html#boost_sync.appendices.history" title=" Appendix A: History"> Appendix A: History</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="index.html#boost_sync.appendices.history.__version_0_1_0__september_10__2010__"><span class="bold"><strong>Version 0.1.0, September 10, 2010</strong></span> </a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.appendices.history.__version_0_1_0__september_10__2010__"></a><a href="index.html#boost_sync.appendices.history.__version_0_1_0__september_10__2010__" title="Version 0.1.0, September 10, 2010 "><span class="bold"><strong>Version 0.1.0, September 10, 2010</strong></span> </a>
+</h4></div></div></div>
+<p>
+          <span class="bold"><strong>Features:</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+            </li></ul></div>
+</div>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.appendices.rationale"></a><a href="index.html#boost_sync.appendices.rationale" title=" Appendix B: Rationale"> Appendix B: Rationale</a>
+</h3></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.appendices.implementation"></a><a href="index.html#boost_sync.appendices.implementation" title=" Appendix C: Implementation
+      Notes"> Appendix C: Implementation
+      Notes</a>
+</h3></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.appendices.faq"></a><a href="index.html#boost_sync.appendices.faq" title=" Appendix D: FAQ"> Appendix D: FAQ</a>
+</h3></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.appendices.acknowledgements"></a><a href="index.html#boost_sync.appendices.acknowledgements" title=" Appendix E:
+      Acknowledgements"> Appendix E:
+      Acknowledgements</a>
+</h3></div></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.appendices.tests"></a><a href="index.html#boost_sync.appendices.tests" title=" Appendix F: Tests"> Appendix F: Tests</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="index.html#boost_sync.appendices.tests._lockable_traits_"><code class="computeroutput"><span class="identifier">lockable_traits</span></code></a></span></dt></dl></div>
+<p>
+        In order to test you need to do.
+      </p>
+<pre class="programlisting"><span class="identifier">bjam</span> <span class="identifier">libs</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">test</span>
+</pre>
+<p>
+        You can also run a specific suite of test by doing
+      </p>
+<pre class="programlisting"><span class="identifier">cd</span> <span class="identifier">libs</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">/</span><span class="identifier">test</span>
+<span class="identifier">bjam</span> <span class="identifier">lockable_traits</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sync.appendices.tests._lockable_traits_"></a><a href="index.html#boost_sync.appendices.tests._lockable_traits_" title="lockable_traits"><code class="computeroutput"><span class="identifier">lockable_traits</span></code></a>
+</h4></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    kind
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Result
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Ticket
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    ratio_fail_test1
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fails
+                  </p>
+                </td>
+<td>
+                  <p>
+                    ...
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio_test
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    ...
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sync.appendices.tickets"></a><a href="index.html#boost_sync.appendices.tickets" title=" Appendix G: Tickets"> Appendix G: Tickets</a>
+</h3></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td>
+                <p>
+                  Ticket
+                </p>
+              </td>
+<td>
+                <p>
+                  Description
+                </p>
+              </td>
+<td>
+                <p>
+                  Resolution
+                </p>
+              </td>
+<td>
+                <p>
+                  State
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: September 12, 2010 at 16:29:47 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"></div>
+</body>
+</html>
