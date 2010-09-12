@@ -153,7 +153,7 @@ struct ShareLockableConcept {
  * unlock_and_lock_shared and unlock_upgrade_and_lock_shared functions
  */
 
-//[UpgradeLockableConcept
+//[UpgradeBasicLockableConcept
 
 template <typename Lockable>
 struct UpgradeBasicLockableConcept {
@@ -192,7 +192,7 @@ struct UpgradeLockableConcept {
 };
 //]
 
-//[UpgradeLockableConcept
+//[UpgradeTimedLockableConcept
 
 template <typename Lockable>
 struct UpgradeTimedLockableConcept {
