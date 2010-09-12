@@ -118,53 +118,8 @@ public:
         this->_set.insert(src.begin(), src.end());
     }
     
-private:
-    friend class 
-        interval_base_set<split_interval_set<DomainT,Compare,Interval,Alloc>,
-                                             DomainT,Compare,Interval,Alloc>;
-
-    /// Does the set contain the interval  <tt>sub</tt>?
-    bool contains_(const interval_type& sub)const;
-
-    /// Addition of an interval <tt>addend</tt>
-    void add_(const value_type& addend);
-    iterator add_(iterator prior_, const value_type& addend);
-
-    /// Subtraction of an interval <tt>minuend</tt>
-    void subtract_(const value_type& minuend);
-
-private:
-    /// Treatment of adjoint intervals on insertion
-    void handle_neighbours(const iterator& it_){}
-
-    void add_front(const interval_type& inter_val, iterator& first_);
-    void add_main(interval_type& inter_val, iterator& it_, const iterator& last_);
-    void add_segment(const interval_type& inter_val, iterator& it_);
-    void add_rear(const interval_type& inter_val, iterator& it_);
-
-    void subtract_rest(const interval_type& x_itv, iterator& it_, iterator& end_  );
 } ;
 
-
-template <typename DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-inline void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend)
-{
-    Interval_Set::add(*this, addend);
-}
-
-
-template <typename DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-inline typename split_interval_set<DomainT,Compare,Interval,Alloc>::iterator
-    split_interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
-{
-    return Interval_Set::add(*this, prior_, addend);
-}
-
-template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-inline void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
-{
-    Interval_Set::subtract(*this, minuend);
-}
 
 //-----------------------------------------------------------------------------
 // type traits

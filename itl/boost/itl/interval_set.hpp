@@ -138,50 +138,7 @@ public:
         ITL_const_FORALL(typename base_set_type, it_, src) 
             prior_ = this->add(prior_, *it_);
     }
-
-    //std::pair<iterator,bool> _insert(const value_type& value){ return this->_set.insert(value); }
-    //iterator _insert(iterator prior, const value_type& value){ return this->_set.insert(prior, value); }
-
-private:
-    friend class 
-        interval_base_set<interval_set<DomainT,Compare,Interval,Alloc>,
-                                       DomainT,Compare,Interval,Alloc>;
-
-    /// Does the set contain the interval  <tt>sub</tt>?
-    bool contains_(const interval_type& sub)const;
-
-    /// Insertion of an interval <tt>addend</tt>
-    void add_(const value_type& addend);
-
-    iterator add_(iterator prior_, const value_type& addend);
-
-    /// Removal of an interval <tt>minuend</tt>
-    void subtract_(const value_type& minuend);
-
 } ;
-
-
-template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-void interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend)
-{
-    Interval_Set::add(*this, addend);
-}
-
-
-template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-typename interval_set<DomainT,Compare,Interval,Alloc>::iterator 
-    interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
-{
-    return Interval_Set::add(*this, prior_, addend);
-}
-
-
-
-template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-void interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
-{
-    Interval_Set::subtract(*this, minuend);
-}
 
 
 //-----------------------------------------------------------------------------

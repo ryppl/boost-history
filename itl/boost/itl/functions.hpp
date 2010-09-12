@@ -83,7 +83,7 @@ contains(const Type& super, const typename Type::segment_type& inter_val)
     if(exterior.first == exterior.second)
         return false;
 
-    const_iterator last_overlap = super.prior(exterior.second);
+    const_iterator last_overlap = cyclic_prior(super, exterior.second);
 
     return 
         itl::contains(hull(*(exterior.first), *last_overlap), inter_val)
@@ -281,7 +281,7 @@ typename enable_if<is_intra_derivative<Type, OperandT>, Type>::type&
 operator += (Type& object, const OperandT& operand)
 { 
     //JODO return itl::add(object, operand); 
-	return itl::add(object, operand); 
+    return itl::add(object, operand); 
 }
 
 
@@ -493,7 +493,7 @@ erase(Type& object, const typename Type::interval_type& minuend)
         {
             const_cast<interval_type&>(first_->first) = left_resid;
             if(!itl::is_empty(right_resid))
-				itl::insert(object, first_, value_type(right_resid, first_->second));
+                itl::insert(object, first_, value_type(right_resid, first_->second));
         }
         else if(!itl::is_empty(right_resid))
             const_cast<interval_type&>(first_->first) = left_subtract(first_->first, minuend);
@@ -680,7 +680,7 @@ typename enable_if<has_same_concept<is_interval_map, Type, OperandT>,
 operator -=(Type& object, const OperandT& operand)
 {
     ITL_const_FORALL(typename OperandT, elem_, operand) 
-		itl::subtract(object, *elem_);
+        itl::subtract(object, *elem_);
 
     return object; 
 }
@@ -689,14 +689,14 @@ template<class Type, class OperandT>
 typename enable_if<is_intra_derivative<Type, OperandT>, Type>::type&
 operator -= (Type& object, const OperandT& operand)
 { 
-	return itl::subtract(object, operand); 
+    return itl::subtract(object, operand); 
 }
 
 template<class Type, class OperandT>
 typename enable_if<is_cross_derivative<Type, OperandT>, Type>::type&
 operator -= (Type& object, const OperandT& operand)
 { 
-	return itl::erase(object, operand); 
+    return itl::erase(object, operand); 
 }
 
 template<class Type, class IntervalSetT>
@@ -1101,7 +1101,7 @@ typename enable_if<mpl::and_< is_interval_map<Type>
                    bool>::type
 intersects(const Type& left, const AssociateT& right)
 {
-	return itl::intersects(left, right);
+    return itl::intersects(left, right);
 }
 
 /** \b Returns true, if \c left and \c right have no common elements.
@@ -1168,7 +1168,7 @@ flip(Type& object, const typename Type::segment_type& segment)
         //[a  b)       : left_over
         left_over = right_subtract(span, covered);
         itl::subtract(object, span & covered); //That which is common shall be subtracted
-        itl::add(object, left_over);              //That which is not shall be added
+        itl::add(object, left_over);           //That which is not shall be added
 
         //...      d) : span
         //... c)      : covered
@@ -1239,7 +1239,7 @@ flip(Type& object, const OperandT& operand)
         it_->second = neutron<codomain_type>::value();
 
     if(mpl::not_<is_interval_splitter<Type> >::value) //JODO
-        object.join();
+        itl::join(object);
 
     return object;
 }
@@ -1258,7 +1258,7 @@ flip(Type& object, const typename Type::segment_type& interval_value_pair)
     typedef typename Type::inverse_codomain_intersect inverse_codomain_intersect;
     // That which is common shall be subtracted
     // That which is not shall be added
-    // So x has to be 'complementary added' or flipped
+    // So interval_value_pair has to be 'complementary added' or flipped
 
     interval_type span = interval_value_pair.first;
     std::pair<const_iterator, const_iterator> exterior 
@@ -1290,14 +1290,8 @@ flip(Type& object, const typename Type::segment_type& interval_value_pair)
             // ... shall be subtracted
             itl::add(eraser, common_interval);
 
-            if(has_set_semantics<codomain_type>::value) //JODO
-            {
-                codomain_type common_value = x_value;
-                inverse_codomain_intersect()(common_value, co_value);
-                itl::add(intersection, value_type(common_interval, common_value));
-            }
-            else
-                itl::add(intersection, value_type(common_interval, neutron<codomain_type>::value()));
+            Interval_Map::on_codomain_model<Type, has_set_semantics<codomain_type>::value>
+                ::add(intersection, common_interval, x_value, co_value);
         }
 
         itl::add(object, value_type(left_over, x_value)); //That which is not shall be added
@@ -1324,7 +1318,7 @@ typename enable_if<mpl::and_< is_interval_map<Type>
                             , mpl::not_<is_total<Type> > >, Type>::type&
 flip(Type& object, const typename Type::element_type& key_value_pair)
 {
-	return itl::flip(object, make_segment<Type>(key_value_pair));
+    return itl::flip(object, make_segment<Type>(key_value_pair));
 }
 
 
@@ -1370,7 +1364,7 @@ typename enable_if<is_intra_combinable<Type, OperandT>,
                           Type>::type&
 operator ^= (Type& object, const OperandT& operand)
 { 
-	return itl::flip(object, operand); 
+    return itl::flip(object, operand); 
 }
 
 template<class Type, class OperandT>
@@ -1378,7 +1372,7 @@ typename enable_if<is_intra_derivative<Type, OperandT>,
                           Type>::type&
 operator ^= (Type& object, const OperandT& operand)
 { 
-	return itl::flip(object, operand); 
+    return itl::flip(object, operand); 
 }
 
 template<class Type, class OperandT>
@@ -1395,7 +1389,6 @@ operator ^ (const OperandT& operand, Type object)
     return object ^= operand; 
 }
 
-
 template<class Type>
 Type operator ^ (typename Type::overloadable_type object, const Type& operand)
 {
@@ -1403,11 +1396,79 @@ Type operator ^ (typename Type::overloadable_type object, const Type& operand)
 }
 
 //==============================================================================
+//= Domain
+//==============================================================================
+template<class Type, class SetT>
+typename enable_if<is_concept_combinable<is_interval_set, is_interval_map, SetT, Type>, SetT>::type&
+domain(SetT& result, const Type& object)
+{
+    result.clear(); 
+    ITL_const_FORALL(typename Type, it_, object) 
+        result += it_->first; 
+    
+    return result;
+}
+
+
+//==============================================================================
+//= Manipulation by predicates
+//==============================================================================
+template<class MapT, class Predicate> //JODO unify with element_map . . .
+typename enable_if<is_interval_map<MapT>, MapT>::type&
+erase_if(const Predicate& pred, MapT& object)
+{
+    typename MapT::iterator it_ = object.begin();
+    while(it_ != object.end())
+        if(pred(*it_))
+            object.erase(it_++); 
+        else ++it_;
+    return object;
+}
+
+template<class MapT, class Predicate>
+inline typename enable_if<is_interval_map<MapT>, MapT>::type&
+add_if(const Predicate& pred, MapT& object, const MapT& src)
+{
+    typename MapT::const_iterator it_ = src.begin();
+    while(it_ != src.end())
+        if(pred(*it_)) 
+            itl::add(object, *it_++); 
+    
+    return object;
+}
+
+template<class MapT, class Predicate>
+inline typename enable_if<is_interval_map<MapT>, MapT>::type&
+assign_if(const Predicate& pred, MapT& object, const MapT& src)
+{
+    itl::clear(object);
+    return add_if(object, src, pred);
+}
+
+//==============================================================================
 //= Morphisms
 //==============================================================================
 
+namespace segmental
+{
+    template<class Type>
+    typename enable_if<is_interval_set<Type>, bool>::type
+    is_joinable(typename Type::iterator it_, typename Type::iterator next_, Type* = 0)
+    {
+        return touches(*it_, *next_);
+    }
+
+    template<class Type>
+    typename enable_if<is_interval_map<Type>, bool>::type
+    is_joinable(typename Type::iterator it_, typename Type::iterator next_, Type* = 0)
+    {
+        return touches(it_->first, next_->first)
+            && it_->second == next_->second    ;
+    }
+}
+
 template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
+typename enable_if<is_interval_container<Type>, Type>::type&
 join(Type& object)
 {
     typedef typename Type::interval_type interval_type;
@@ -1421,19 +1482,20 @@ join(Type& object)
 
     while(next_ != object.end())
     {
-        if( touches(*it_, *next_) )
+        if( segmental::is_joinable<Type>(it_, next_) )
         {
             iterator fst_mem = it_;  // hold the first member
             
             // Go on while touching members are found
             it_++; next_++;
             while(     next_ != object.end()
-                    && touches(*it_, *next_) )
+                    && segmental::is_joinable<Type>(it_, next_) )
             { it_++; next_++; }
 
             // finally we arrive at the end of a sequence of joinable intervals
             // and it points to the last member of that sequence
-            const_cast<interval_type&>(*it_) = hull(*it_, *fst_mem);
+            const_cast<interval_type&>(Type::key_value(it_)) 
+                = hull(Type::key_value(it_), Type::key_value(fst_mem));
             object.erase(fst_mem, it_);
 
             it_++; next_=it_; 
@@ -1446,6 +1508,22 @@ join(Type& object)
 }
 
 
+template<class Type>
+typename enable_if<mpl::and_< is_interval_map<Type>
+                            , absorbs_neutrons<Type> >, Type>::type&
+absorb_neutrons(Type& object)
+{
+    return object;
+}
+
+template<class Type>
+typename enable_if<mpl::and_< is_interval_map<Type>
+                            , mpl::not_<absorbs_neutrons<Type> > >, Type>::type&
+absorb_neutrons(Type& object)
+{
+	typedef typename Type::segment_type segment_type;
+    return itl::erase_if(content_is_neutron<segment_type>(), object);
+}
 
 }} // namespace itl boost
 

@@ -93,7 +93,7 @@ void mapTestShell()
                 break;
             case 'j':
                 {
-                    m1.join();
+					itl::join(m1);
                     cout << "{" << m1 << "}" << endl;
                 }
                 break;

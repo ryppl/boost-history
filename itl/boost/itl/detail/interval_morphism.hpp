@@ -65,7 +65,7 @@ namespace boost{namespace itl
         {
             void operator()(JointType& joint, SplitType& split)
             {
-                split.join();
+				itl::join(split);
                 ITL_FORALL(typename SplitType, split_, split)
                     joint.insert(*split_);
             }
@@ -76,7 +76,7 @@ namespace boost{namespace itl
         {
             void operator()(AbsorberType& absorber, EnricherType& enricher)
             {
-                enricher.absorb_neutrons();
+				itl::absorb_neutrons(enricher);
                 ITL_FORALL(typename EnricherType, enricher_, enricher)
                     absorber.insert(*enricher_);
             }

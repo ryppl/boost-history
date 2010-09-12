@@ -234,10 +234,6 @@ public:
     /** swap the content of containers */
     void swap(interval_base_map& object) { _map.swap(object._map); }
 
-    /** Copy all elements if predicate <tt>pred</tt> holds */
-    template<class Predicate>
-    SubType& assign_if(const interval_base_map& src, const Predicate& pred);
-
     //==========================================================================
     //= Containedness
     //==========================================================================
@@ -330,19 +326,7 @@ public:
     //==========================================================================
     //= Addition
     //==========================================================================
-private:
-    /** Addition of an interval value pair to the map.
-        On overlap an aggregation is performed using functor \c Combiner.
-        This function is not public, because the `codomain_combine` shall be
-        an invariant for all itl maps.*/
-    template<class Combiner>
-    SubType& _add(const segment_type& interval_value_pair)
-    { 
-        that()->template add_<Combiner>(interval_value_pair); 
-        return *that(); 
-    }
 
-public:
     /** Addition of a key value pair to the map */
     SubType& add(const element_type& key_value_pair) 
     {
@@ -366,19 +350,7 @@ public:
     //==========================================================================
     //= Subtraction
     //==========================================================================
-private:
-    /** Subtraction of an interval value pair from the map.
-        On overlap an aggregation is performed using functor Combiner.
-        This function is not public, because the `codomain_combine` shall be
-        an invariant for all itl maps.*/
-    template<class Combiner>
-    SubType& _subtract(const segment_type& interval_value_pair)
-    { 
-        that()->template subtract_<Combiner>(interval_value_pair); 
-        return *that(); 
-    }
 
-public:
     /** Subtraction of a key value pair from the map */
     SubType& subtract(const element_type& key_value_pair)
     { 
@@ -448,10 +420,6 @@ public:
     /** Erase all value pairs for a range of iterators <tt>[first,past)</tt>. */
     void erase(iterator first, iterator past){ _map.erase(first, past); }
 
-    /** Remove all elements where property <tt>p</tt> holds, keep all others */
-    template<class Predicate>
-    SubType& erase_if(const Predicate& pred);
-
     //==========================================================================
     //= Intersection
     //==========================================================================
@@ -459,28 +427,28 @@ public:
         Complexity: logarithmic. */
     bool intersects(const domain_type& key)const
     {
-		return itl::intersects(*that(), key);
+        return itl::intersects(*that(), key);
     }
 
     /** Returns \c true, if \c inter_val intersects with \c *this map.
         Complexity: Logarithmic in iterative size. */
     bool intersects(const interval_type& inter_val)const
     { 
-		return itl::intersects(*that(), inter_val);
+        return itl::intersects(*that(), inter_val);
     }
 
     /** Returns \c true, if \c key_value_pair is found in \c *this map.
         Complexity: logarithmic. */
     bool intersects(const element_type& key_value_pair)const
     { 
-		return itl::intersects(*that(), key_value_pair);
+        return itl::intersects(*that(), key_value_pair);
     }
 
     /** Returns \c true, if \c interval_value_pair intersects with \c *this map:
         Complexity: Linear in iterative_size. */
     bool intersects(const segment_type& interval_value_pair)const
     {
-		return itl::intersects(*that(), interval_value_pair);
+        return itl::intersects(*that(), interval_value_pair);
     }
 
     //==========================================================================
@@ -490,24 +458,14 @@ public:
     /** If \c *this map contains \c key_value_pair it is erased, otherwise it is added. */
     SubType& flip(const element_type& key_value_pair)
     { 
-		return itl::flip(*that(), key_value_pair); 
-	}
+        return itl::flip(*that(), key_value_pair); 
+    }
 
     /** If \c *this map contains \c interval_value_pair it is erased, otherwise it is added. */
     SubType& flip(const segment_type& interval_value_pair)
-	{
-		return itl::flip(*that(), interval_value_pair);
-	}
-
-    /** The intersection of \c *this and \c operand is erased from \c *this. 
-        The complemenary value pairs are added to \c *this. */
-    template<class SubType2>
-    SubType& flip(const interval_base_map<SubType2,DomainT,CodomainT,Traits,
-		                                  Compare,Combine,Section,Interval,Alloc>& operand)
-	{
-		return itl::flip(*that(), operand);
-	}
-
+    {
+        return itl::flip(*that(), interval_value_pair);
+    }
 
     //==========================================================================
     //= Iterator related
@@ -560,60 +518,24 @@ public:
     element_const_reverse_iterator elements_rbegin()const{ return element_const_reverse_iterator(this->rbegin()); }
     element_const_reverse_iterator elements_rend()  const{ return element_const_reverse_iterator(this->rend());   }
 
-
-    //==========================================================================
-    //= Morphisms
-    //==========================================================================
-
-    /** Join bounding intervals */
-    interval_base_map& join();
-            
-    /** All value pairs \c (I,y) that have neutral elements \c y==codomain_type()
-        as associated values are removed form the map.    */
-    void absorb_neutrons()
-    {
-        //content_is_neutron<key_type, data_type> neutron_dropper;
-        if(!Traits::absorbs_neutrons)
-            erase_if(content_is_neutron<value_type>());
-    }
-
-    /** Set all intervals in the map to be of type <tt>bounded</tt>. 
-        Requires Integral<domain_type>.
-
-        Interval bounds of different types are created by opeations on
-        interval maps. This function allows to reset them uniformly without,
-        of course, changing their value. This is only possible for discrete
-        domain datatypes.
-    */
-    void uniform_bounds(itl::bound_type bounded);
-
-
     //==========================================================================
     //= Domain, sum
     //==========================================================================
 
     /** Gives the domain of the map as interval set */
-    template 
-    <
-        template
-        <class DomT, ITL_COMPARE Comp, ITL_INTERVAL2(ITL_COMPARE) Interv, ITL_ALLOC Allc>
-        class IntervalSet
-    >
-    void domain(IntervalSet<DomainT,Compare,Interval,Alloc>& dom)const 
-    { 
-        dom.clear(); 
-        const_FOR_IMPLMAP(it_) 
-            dom += it_->first; 
-    } 
-
-    /* Sum of associated elements of the map */
-    void sum(codomain_type& total)const;
-
-    /* Sum of associated elements of the map */
-    codomain_type sum()const
-    { codomain_type total; sum(total); return total; }
-
-
+  //  template 
+  //  <
+  //      template
+  //      <class DomT, ITL_COMPARE Comp, ITL_INTERVAL2(ITL_COMPARE) Interv, ITL_ALLOC Allc>
+  //      class IntervalSet
+  //  >
+  //  void domain(IntervalSet<DomainT,Compare,Interval,Alloc>& dom)const 
+  //  { 
+        //itl::domain(dom, *that());
+  //      //CL dom.clear(); 
+  //      //const_FOR_IMPLMAP(it_) 
+  //      //    dom += it_->first; 
+  //  } 
 
     //==========================================================================
     //= Algorithm unifiers
@@ -636,189 +558,9 @@ protected:
     sub_type* that() { return static_cast<sub_type*>(this); }
     const sub_type* that()const { return static_cast<const sub_type*>(this); }
 
-public:
-    sub_type& self() { return *that(); }
-
-protected:
-
-    template <class Combiner>
-    bool combine(iterator& it_, const codomain_type& co_val)
-    { 
-        Combiner()(it_->second, co_val);
-        if(Traits::absorbs_neutrons && it_->second == Combiner::neutron())
-        { this->_map.erase(it_); it_ = _map.end(); return false; }
-        return true;
-    }
-
-    template <class Combiner>
-    std::pair<iterator,bool> _map_insert(const interval_type& inter_val, const codomain_type& co_val)
-    {
-        if(mpl::and_<is_total<type>, has_inverse<codomain_type>, is_negative<Combiner> >::value)
-            return this->_map.insert(value_type(inter_val, version<Combiner>()(co_val)));
-        else
-            return this->_map.insert(value_type(inter_val, co_val));
-    }
-
-    // Insertion with hint, that does report insertion failure
-    template <class Combiner>
-    std::pair<iterator, bool> 
-        _map_insert(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
-    {
-        iterator inserted_
-            = this->_map.insert(prior_, value_type(inter_val, co_val));
-
-        if(inserted_ == prior_)
-            return std::pair<iterator,bool>(inserted_, false);
-        else if(inserted_->first == inter_val)
-            return std::pair<iterator,bool>(inserted_, true);
-        else
-            return std::pair<iterator,bool>(inserted_, false);
-    }
-
-    template <class Combiner>
-    std::pair<iterator, bool> 
-        _map_add(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
-    {
-        // Never try to insert a neutron into a neutron absorber here:
-        BOOST_ASSERT(!(Traits::absorbs_neutrons && co_val==Combiner::neutron()));
-
-        iterator inserted_ 
-            = this->_map.insert(prior_, value_type(inter_val, Combiner::neutron()));
-
-        if(inserted_->first == inter_val && inserted_->second == Combiner::neutron())
-        {
-            Combiner()(inserted_->second, co_val);
-            return std::pair<iterator,bool>(inserted_, true);
-        }
-        else
-            return std::pair<iterator,bool>(inserted_, false);
-    }
-
-
-    template <class Combiner>
-    iterator gap_insert(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
-    {
-        // inter_val is not conained in this map. Insertion will be successful
-        BOOST_ASSERT(this->_map.find(inter_val) == this->_map.end());
-        BOOST_ASSERT(!(Traits::absorbs_neutrons && co_val==Combiner::neutron()));
-
-        return this->_map.insert(prior_, value_type(inter_val, version<Combiner>()(co_val)));
-    }
-
 protected:
     ImplMapT _map;
 } ;
-
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::join()
-{
-    iterator it_ = _map.begin();
-    if(it_==_map.end()) 
-        return *this;
-
-    iterator next_ = it_; next_++;
-
-    while(next_ != _map.end())
-    {
-        if(    touches(it_->first, next_->first)
-            && it_->second == next_->second      )
-        {
-            iterator fst_mem = it_;  // hold the first member
-            
-            // Go on while touching members are found
-            it_++; next_++;
-            while(     next_ != _map.end()
-                    && touches(it_->first, next_->first)
-                    && it_->second == next_->second     )
-            { it_++; next_++; }
-
-            // finally we arrive at the end of a sequence of joinable intervals
-            // and it points to the last member of that sequence            
-            const_cast<interval_type&>(it_->first) = hull(it_->first, fst_mem->first);
-            _map.erase(fst_mem, it_);
-
-            it_++; next_=it_; 
-            if(next_!=_map.end())
-                next_++;
-        }
-        else { it_++; next_++; }
-    }
-    return *this;
-}
-
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::sum(codomain_type& total)const
-{
-    total = codomain_combine::neutron();
-    const_FOR_IMPLMAP(it_) 
-        total += it_->second;
-}
-
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::uniform_bounds(itl::bound_type bounded)
-{
-    // I can do this only, because I am sure that the contents and the
-    // ordering < on interval is invariant wrt. this transformation on bounds
-    FOR_IMPLMAP(it_) const_cast<interval_type&>(it_->first).as(bounded);
-}
-
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-    template<class Predicate>
-SubType& 
-interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::erase_if(const Predicate& pred)
-{
-    iterator it = _map.begin();
-    while(it != _map.end())
-        if(pred(*it))
-            _map.erase(it++); 
-        else ++it;
-    return *that();
-}
-
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-    template<class Predicate>
-SubType& 
-interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::assign_if(const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& src, 
-                const Predicate& pred)
-{
-    clear();
-    const_iterator it = src.begin();
-    while(it != src.end()) {
-        if(Predicate()(*it)) 
-            add(*it++); 
-    }
-    return *that();
-}
-
 
 
 //==============================================================================

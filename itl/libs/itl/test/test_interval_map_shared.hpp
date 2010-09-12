@@ -456,7 +456,7 @@ void interval_map_contains_4_bicremental_types()
     itv_map += itv_map2;
     BOOST_CHECK_EQUAL( call::contains(itv_map, itv_map2), true );    
     IntervalSetT itv_set2;
-    itv_map2.domain(itv_set2);
+	itl::domain(itv_set2, itv_map2);
     BOOST_CHECK_EQUAL( call::contains(itv_map, itv_set2), true );    
 }
 
@@ -825,8 +825,8 @@ void interval_map_base_is_disjoint_4_bicremental_types()
     BOOST_CHECK_EQUAL( intersects(map_A, map_B), false );
     BOOST_CHECK_EQUAL( intersects(map_B, map_A), false );
 
-    map_A.domain(set_A);
-    map_B.domain(set_B);
+    itl::domain(set_A, map_A);
+    itl::domain(set_B, map_B);
     BOOST_CHECK_EQUAL( disjoint(map_A, set_B), true );
     BOOST_CHECK_EQUAL( disjoint(set_B, map_A), true );
     BOOST_CHECK_EQUAL( disjoint(set_A, map_B), true );
@@ -843,8 +843,8 @@ void interval_map_base_is_disjoint_4_bicremental_types()
     BOOST_CHECK_EQUAL( intersects(map_A, map_B),  true );
     BOOST_CHECK_EQUAL( intersects(map_B, map_A),  true );
 
-    map_A.domain(set_A);
-    map_B.domain(set_B);
+    itl::domain(set_A, map_A);
+    itl::domain(set_B, map_B);
     BOOST_CHECK_EQUAL( disjoint(map_A, set_B), false );
     BOOST_CHECK_EQUAL( disjoint(set_B, map_A), false );
     BOOST_CHECK_EQUAL( disjoint(set_A, map_B), false );
@@ -1187,9 +1187,9 @@ void interval_map_inclusion_compare_4_bicremental_types()
     BOOST_CHECK_EQUAL( inclusion_compare(itv_map_a, itv_map_c), inclusion::unrelated );
 
     IntervalSetT set_sub_a, set_a, set_a2, set_b, set_c;
-    itv_map_a.domain(set_a);
-    itv_map_a2.domain(set_a2);
-    itv_map_sub_a.domain(set_sub_a);
+    itl::domain(set_a, itv_map_a);
+    itl::domain(set_a2, itv_map_a2);
+    itl::domain(set_sub_a, itv_map_sub_a);
 
     BOOST_CHECK_EQUAL( inclusion_compare(IntervalMapT(), IntervalSetT()), inclusion::equal );
     BOOST_CHECK_EQUAL( inclusion_compare(IntervalSetT(), IntervalMapT()), inclusion::equal );

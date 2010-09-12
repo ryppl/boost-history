@@ -59,6 +59,21 @@ swap(Type& left, Type& right)
     left.swap(right); //JODO test
 }
 
+//==============================================================================
+//= Iteration
+//==============================================================================
+
+template<class Type>
+typename enable_if<is_container<Type>, typename Type::iterator>::type
+cyclic_prior(Type& object, typename Type::iterator it_)
+{ return it_ == object.begin() ? object.end() : --it_; }
+
+template<class Type>
+typename enable_if<is_container<Type>, typename Type::const_iterator>::type
+cyclic_prior(const Type& object, typename Type::const_iterator it_)
+{ return it_ == object.begin() ? object.end() : --it_; }
+
+
 }} // namespace itl boost
 
 

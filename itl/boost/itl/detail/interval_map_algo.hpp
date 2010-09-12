@@ -588,7 +588,7 @@ void add_rear(               Type&                object,
                                 absorbs_neutrons<Type>::value,
                                 Type::fineness>::type on_segment_;
 
-    iterator prior_ = object.prior(it_);
+    iterator prior_ = cyclic_prior(object, it_);
     interval_type cur_itv = it_->first ;
 
     interval_type lead_gap = right_subtract(inter_val, cur_itv);
@@ -743,7 +743,7 @@ void subtract_front(               Type&                object,
 
     if(!itl::is_empty(left_resid)) //                     [--- inter_val ---)
     {                              //[prior_) [left_resid)[--- it_ . . .
-        iterator prior_ = object.prior(it_); 
+        iterator prior_ = cyclic_prior(object, it_); 
         const_cast<interval_type&>(it_->first) = left_subtract(it_->first, left_resid);
         object._insert(prior_, value_type(left_resid, it_->second));
         // The segemnt *it_ is split at inter_val.first(), so as an invariant
@@ -1016,7 +1016,7 @@ void erase(Type& object, const typename Type::value_type& minuend)
         return;
 
     iterator first_ = exterior.first, end_ = exterior.second, 
-             last_  = object.prior(end_);
+             last_  = cyclic_prior(object, end_);
     iterator second_= first_; ++second_;
 
     if(first_ == last_) 
@@ -1055,6 +1055,50 @@ void erase(Type& object, const typename Type::value_type& minuend)
         erase_rest(object, inter_val, co_val, second_, last_);
     }
 }
+
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+template<class Type, bool has_set_semantics>
+struct on_codomain_model;
+
+template<class Type>
+struct on_codomain_model<Type, true>
+{
+	typedef typename Type::interval_type interval_type;
+	typedef typename Type::codomain_type codomain_type;
+	typedef typename Type::value_type    value_type;
+	typedef typename Type::codomain_combine codomain_combine;
+	typedef typename Type::inverse_codomain_intersect inverse_codomain_intersect;
+
+	static void add(Type& intersection, interval_type& common_interval, 
+		     const codomain_type& flip_value, const codomain_type& co_value)
+	{
+        codomain_type common_value = flip_value;
+        inverse_codomain_intersect()(common_value, co_value);
+		Interval_Map::add<Type,codomain_combine>
+			(intersection, value_type(common_interval, common_value));
+	}
+};
+
+template<class Type>
+struct on_codomain_model<Type, false>
+{
+	typedef typename Type::interval_type interval_type;
+	typedef typename Type::codomain_type codomain_type;
+	typedef typename Type::value_type    value_type;
+	typedef typename Type::codomain_combine codomain_combine;
+
+	static void add(Type& intersection, interval_type& common_interval, 
+		     const codomain_type&, const codomain_type&)
+	{
+        Interval_Map::add<Type,codomain_combine>
+			(intersection, value_type(common_interval, 
+			                          neutron<codomain_type>::value()));
+	}
+};
+
+
 
 } // namespace Interval_Map
 

@@ -553,7 +553,7 @@ void add_front(Type& object, const typename Type::interval_type& inter_val,
     if(!itl::is_empty(left_resid))
     {   //            [------------ . . .
         // [left_resid---first_ --- . . .
-        iterator prior_ = object.prior(first_);
+        iterator prior_ = cyclic_prior(object, first_);
         const_cast<interval_type&>(Type::key_value(first_)) 
             = left_subtract(Type::key_value(first_), left_resid);
         //NOTE: Only splitting
@@ -608,7 +608,7 @@ void add_rear(Type& object, const typename Type::interval_type& inter_val,
     typedef typename Type::interval_type interval_type;
     typedef typename Type::iterator      iterator;
 
-    iterator prior_ = object.prior(it_);
+    iterator prior_ = cyclic_prior(object, it_);
     interval_type cur_itv = *it_;
 
     interval_type lead_gap = right_subtract(inter_val, cur_itv);

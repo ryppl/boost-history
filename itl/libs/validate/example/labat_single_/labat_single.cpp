@@ -84,8 +84,9 @@ void test_LawValidater()
     //TestLawT;
 
     //typedef Antisymmetry<itl::map<int,int>, itl::sub_super_set, itl::element_equal> TestLawT;
+	//typedef InplaceAssociativity<itl::interval_map<int,itl::set<int> >, itl::inplace_caret, itl::element_equal> TestLawT;
 
-	typedef InplaceAssociativity<itl::interval_map<int,itl::set<int> >, itl::inplace_caret, itl::element_equal> TestLawT;
+	typedef InplaceFlip<itl::interval_map<int,int> > TestLawT;
 
     LawValidater<TestLawT> test_law;
 

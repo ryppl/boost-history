@@ -109,7 +109,7 @@ flip(Type&, const OperandT&);
 
 //------------------------------------------------------------------------------
 template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
+typename enable_if<is_interval_container<Type>, Type>::type&
 join(Type&);
 
 //JODO Forward 4 gcc-3.4.4 -----------------------------------------------------
@@ -530,7 +530,6 @@ public:
     std::pair<const_iterator,const_iterator> equal_range(const key_type& interval)const
     { return _set.equal_range(interval); }
 
-
     //==========================================================================
     //= Element iterator related
     //==========================================================================
@@ -543,25 +542,6 @@ public:
     element_reverse_iterator elements_rend()  { return element_reverse_iterator(this->rend());   }
     element_const_reverse_iterator elements_rbegin()const{ return element_const_reverse_iterator(this->rbegin()); }
     element_const_reverse_iterator elements_rend()  const{ return element_const_reverse_iterator(this->rend());   }
-
-    //==========================================================================
-    //= Morphisms
-    //==========================================================================
-    
-    /** Join bordering intervals */
-    SubType& join()
-    {
-        return itl::join(*that());
-    }
-
-    /** Set interval bounds to the type <tt>bt</tt> for intervals in the set.
-        Interval bounds of different types are created by opeations on
-        interval sets. This function allows to reset them uniformly without,
-        of course, changing their value. This is only possible for discrete
-        domain datatypes.
-    */
-    void uniform_bounds(itl::bound_type bounded);
-
     
     //==========================================================================
     //= Algorithm unifiers
@@ -585,39 +565,10 @@ protected:
     sub_type* that() { return static_cast<sub_type*>(this); }
     const sub_type* that()const { return static_cast<const sub_type*>(this); }
 
-public:
-    sub_type& self() { return *that(); }
-
-public:
-    iterator prior(iterator it_)
-    { return it_ == this->_set.begin() ? this->_set.end() : --it_; }
-
-    const_iterator prior(const_iterator it_)const
-    { return it_ == this->_set.begin() ? this->_set.end() : --it_; }
-
-protected:
-
-    iterator gap_insert(iterator prior_, const interval_type& inter_val)
-    {
-        // inter_val is not conained in this map. Insertion will be successful
-        BOOST_ASSERT(this->_set.find(inter_val) == this->_set.end());
-        return this->_set.insert(prior_, inter_val);
-    }
-
 protected:
     ImplSetT _set;
 } ;
 
-/*JODO uniform_bounds for new interval types
-template<class SubType,
-         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::uniform_bounds(itl::bound_type bounded)
-{
-    // I can do this only, because I am sure that the contents and the
-    // ordering < on interval is invariant wrt. this transformation on bounds
-    FOR_IMPL(it_) const_cast<interval_type&>(*it_).as(bounded);
-}
-*/
 
 //==============================================================================
 //= Equivalences and Orderings
