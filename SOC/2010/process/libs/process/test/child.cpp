@@ -678,6 +678,71 @@ private:
     int fd2_; 
 }; 
 
+class context2 : public bp::context 
+{ 
+public: 
+    context2() 
+    : p(bpb::pipe()(false)) 
+    { 
+    } 
+
+    void setup(std::vector<bool> &closeflags) 
+    { 
+        if (dup2(p.first.native(), 3) == -1) 
+        { 
+            write(STDERR_FILENO, "dup2() failed\n", 14); 
+            _exit(127); 
+        } 
+        closeflags[3] = false; 
+    } 
+
+    std::pair<bp::handle, bp::handle> p; 
+}; 
+
+BOOST_AUTO_TEST_CASE(test_posix2) 
+{ 
+    check_helpers(); 
+
+    std::vector<std::string> args; 
+    args.push_back("posix-echo-one"); 
+    args.push_back("3"); 
+    args.push_back("test"); 
+
+    context2 ctx; 
+
+    // File descriptors must be closed after context is instantiated as the 
+    // context constructor uses the behavior inherit which tries to dup() 
+    // stdin, stdout and stderr. 
+    raii_dup2 raii_stdin(STDIN_FILENO, 100); 
+    close(STDIN_FILENO); 
+    raii_dup2 raii_stdout(STDOUT_FILENO, 101); 
+    close(STDOUT_FILENO); 
+    raii_dup2 raii_stderr(STDERR_FILENO, 102); 
+    close(STDERR_FILENO); 
+
+    ctx.stdin_behavior = bpb::null(); 
+    ctx.stdout_behavior = bpb::null(); 
+    ctx.stderr_behavior = bpb::null(); 
+
+    bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
+
+    int res = dup2(ctx.p.second.native(), 0); 
+    std::string word; 
+    if (res != -1) 
+        std::cin >> word; 
+
+    raii_stdin.revert(); 
+    raii_stdout.revert(); 
+    raii_stderr.revert(); 
+
+    int s = c.wait(); 
+    BOOST_REQUIRE(WIFEXITED(s)); 
+    BOOST_CHECK_EQUAL(WEXITSTATUS(s), EXIT_SUCCESS); 
+
+    BOOST_REQUIRE(res != -1); 
+    BOOST_CHECK_EQUAL(word, "test"); 
+} 
+
 BOOST_AUTO_TEST_CASE(test_posix_daemon) 
 { 
     check_helpers(); 
