@@ -47,63 +47,63 @@ using namespace boost;
 using namespace boost::sync;
 using namespace boost::interprocess;
 
-BOOST_CONCEPT_ASSERT((BasicLockableConcept<sync::null_mutex>));    
-BOOST_CONCEPT_ASSERT((TryLockableConcept<sync::null_mutex>));    
-BOOST_CONCEPT_ASSERT((TimedLockableConcept<sync::null_mutex>));    
-BOOST_CONCEPT_ASSERT((ShareLockableConcept<sync::null_mutex>));    
-BOOST_CONCEPT_ASSERT((UpgradeLockableConcept<sync::null_mutex>));    
+BOOST_CONCEPT_ASSERT((BasicLockableConcept< ::boost::sync::null_mutex>));    
+BOOST_CONCEPT_ASSERT((LockableConcept< ::boost::sync::null_mutex>));    
+BOOST_CONCEPT_ASSERT((TimedLockableConcept< ::boost::sync::null_mutex>));    
+BOOST_CONCEPT_ASSERT((SharedLockableConcept< ::boost::sync::null_mutex>));    
+BOOST_CONCEPT_ASSERT((UpgradeLockableConcept< ::boost::sync::null_mutex>));    
 
-//~ BOOST_CONCEPT_ASSERT((TryLockableConcept<exclusive_lockable_adapter<null_mutex> >));    
+//~ BOOST_CONCEPT_ASSERT((LockableConcept<exclusive_lockable_adapter<null_mutex> >));    
 //~ BOOST_CONCEPT_ASSERT((TimedLockableConcept<timed_lockable_adapter<null_mutex> >));    
-//~ BOOST_CONCEPT_ASSERT((ShareLockableConcept<shared_lockable_adapter<null_mutex> >));    
+//~ BOOST_CONCEPT_ASSERT((SharedLockableConcept<shared_lockable_adapter<null_mutex> >));    
 //~ BOOST_CONCEPT_ASSERT((UpgradeLockableConcept<upgrade_lockable_adapter<null_mutex> >));    
 
-//~ BOOST_CONCEPT_ASSERT((TryLockableConcept<poly::exclusive_lock_adapter<null_mutex> >));    
+//~ BOOST_CONCEPT_ASSERT((LockableConcept<poly::exclusive_lock_adapter<null_mutex> >));    
 //~ BOOST_CONCEPT_ASSERT((TimedLockableConcept<poly::timed_lock_adapter<null_mutex> >));    
-//~ BOOST_CONCEPT_ASSERT((ShareLockableConcept<poly::sharable_lock_adapter<null_mutex> >));    
+//~ BOOST_CONCEPT_ASSERT((SharedLockableConcept<poly::sharable_lock_adapter<null_mutex> >));    
 //~ BOOST_CONCEPT_ASSERT((UpgradeLockableConcept<poly::upgradable_lock_adapter<null_mutex> >));    
 
 BOOST_CONCEPT_ASSERT((BasicLockableConcept<boost::mutex>));    
-BOOST_CONCEPT_ASSERT((TryLockableConcept<boost::mutex>));    
+BOOST_CONCEPT_ASSERT((LockableConcept<boost::mutex>));    
 
 BOOST_CONCEPT_ASSERT((BasicLockableConcept<boost::timed_mutex>));    
-BOOST_CONCEPT_ASSERT((TryLockableConcept<boost::timed_mutex>));    
+BOOST_CONCEPT_ASSERT((LockableConcept<boost::timed_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<boost::timed_mutex>));    
 
 BOOST_CONCEPT_ASSERT((BasicLockableConcept<boost::recursive_mutex>));    
-BOOST_CONCEPT_ASSERT((TryLockableConcept<boost::recursive_mutex>));    
+BOOST_CONCEPT_ASSERT((LockableConcept<boost::recursive_mutex>));    
 
 BOOST_CONCEPT_ASSERT((BasicLockableConcept<boost::recursive_timed_mutex>));    
-BOOST_CONCEPT_ASSERT((TryLockableConcept<boost::recursive_timed_mutex>));    
+BOOST_CONCEPT_ASSERT((LockableConcept<boost::recursive_timed_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<boost::recursive_timed_mutex>));    
 
 BOOST_CONCEPT_ASSERT((BasicLockableConcept<boost::shared_mutex>));    
-BOOST_CONCEPT_ASSERT((TryLockableConcept<boost::shared_mutex>));    
+BOOST_CONCEPT_ASSERT((LockableConcept<boost::shared_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<boost::shared_mutex>));    
-BOOST_CONCEPT_ASSERT((ShareLockableConcept<boost::shared_mutex>));    
+BOOST_CONCEPT_ASSERT((SharedLockableConcept<boost::shared_mutex>));    
 BOOST_CONCEPT_ASSERT((UpgradeBasicLockableConcept<boost::shared_mutex>));   
 
 BOOST_CONCEPT_ASSERT((BasicLockableConcept<interprocess_mutex>));    
-BOOST_CONCEPT_ASSERT((TryLockableConcept<interprocess_mutex>));    
+BOOST_CONCEPT_ASSERT((LockableConcept<interprocess_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<interprocess_mutex>));    
 
 BOOST_CONCEPT_ASSERT((BasicLockableConcept<interprocess_recursive_mutex>));    
-BOOST_CONCEPT_ASSERT((TryLockableConcept<interprocess_recursive_mutex>));    
+BOOST_CONCEPT_ASSERT((LockableConcept<interprocess_recursive_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<interprocess_recursive_mutex>));    
 
 BOOST_CONCEPT_ASSERT((BasicLockableConcept<named_mutex>));    
-BOOST_CONCEPT_ASSERT((TryLockableConcept<named_mutex>));    
+BOOST_CONCEPT_ASSERT((LockableConcept<named_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<named_mutex>));    
 
-BOOST_CONCEPT_ASSERT((TryLockableConcept<interprocess_upgradable_mutex>));    
+BOOST_CONCEPT_ASSERT((LockableConcept<interprocess_upgradable_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<interprocess_upgradable_mutex>));    
-BOOST_CONCEPT_ASSERT((ShareLockableConcept<interprocess_upgradable_mutex>));    
+BOOST_CONCEPT_ASSERT((SharedLockableConcept<interprocess_upgradable_mutex>));    
 BOOST_CONCEPT_ASSERT((UpgradeLockableConcept<interprocess_upgradable_mutex>));    
 BOOST_CONCEPT_ASSERT((UpgradeTimedLockableConcept<interprocess_upgradable_mutex>));    
 
-BOOST_CONCEPT_ASSERT((TryLockableConcept<named_upgradable_mutex>));    
+BOOST_CONCEPT_ASSERT((LockableConcept<named_upgradable_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<named_upgradable_mutex>));    
-BOOST_CONCEPT_ASSERT((ShareLockableConcept<named_upgradable_mutex>));    
+BOOST_CONCEPT_ASSERT((SharedLockableConcept<named_upgradable_mutex>));    
 BOOST_CONCEPT_ASSERT((UpgradeLockableConcept<named_upgradable_mutex>));    
 BOOST_CONCEPT_ASSERT((UpgradeTimedLockableConcept<named_upgradable_mutex>));    
 

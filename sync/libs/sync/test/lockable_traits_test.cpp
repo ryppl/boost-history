@@ -47,18 +47,18 @@ using namespace boost::sync;
 using namespace boost::interprocess;
 
 
-BOOST_STATIC_ASSERT((is_same<best_condition<sync::null_mutex>::type, null_condition>::value));
-BOOST_STATIC_ASSERT((is_same<scope<sync::null_mutex>::type, mono_threaded_tag>::value));
-BOOST_STATIC_ASSERT((is_same<category<sync::null_mutex>::type, upgradable_timed_lockable_tag>::value));
-BOOST_STATIC_ASSERT((is_same<reentrancy<sync::null_mutex>::type, recursive_tag>::value));
-BOOST_STATIC_ASSERT((is_exclusive<sync::null_mutex>::value));
-BOOST_STATIC_ASSERT((is_sharable<sync::null_mutex>::value));
-BOOST_STATIC_ASSERT((is_upgradable<sync::null_mutex>::value));
-BOOST_STATIC_ASSERT((is_mono_threaded<sync::null_mutex>::value));
-BOOST_STATIC_ASSERT((!is_multi_threaded<sync::null_mutex>::value));
-BOOST_STATIC_ASSERT((!is_multi_process<sync::null_mutex>::value));
-BOOST_STATIC_ASSERT((is_recursive<sync::null_mutex>::value));
-BOOST_STATIC_ASSERT((!is_owned<sync::null_mutex>::value));
+BOOST_STATIC_ASSERT((is_same<best_condition< ::boost::sync::null_mutex>::type, null_condition>::value));
+BOOST_STATIC_ASSERT((is_same<scope< ::boost::sync::null_mutex>::type, mono_threaded_tag>::value));
+BOOST_STATIC_ASSERT((is_same<category< ::boost::sync::null_mutex>::type, upgradable_timed_lockable_tag>::value));
+BOOST_STATIC_ASSERT((is_same<reentrancy< ::boost::sync::null_mutex>::type, recursive_tag>::value));
+BOOST_STATIC_ASSERT((is_exclusive< ::boost::sync::null_mutex>::value));
+BOOST_STATIC_ASSERT((is_sharable< ::boost::sync::null_mutex>::value));
+BOOST_STATIC_ASSERT((is_upgradable< ::boost::sync::null_mutex>::value));
+BOOST_STATIC_ASSERT((is_mono_threaded< ::boost::sync::null_mutex>::value));
+BOOST_STATIC_ASSERT((!is_multi_threaded< ::boost::sync::null_mutex>::value));
+BOOST_STATIC_ASSERT((!is_multi_process< ::boost::sync::null_mutex>::value));
+BOOST_STATIC_ASSERT((is_recursive< ::boost::sync::null_mutex>::value));
+BOOST_STATIC_ASSERT((!is_owned< ::boost::sync::null_mutex>::value));
 
 //~ BOOST_STATIC_ASSERT((is_same<best_condition<mutex>::type, boost::condition_variable>::value));
 BOOST_STATIC_ASSERT((is_same<scope<mutex>::type, multi_threaded_tag>::value));
