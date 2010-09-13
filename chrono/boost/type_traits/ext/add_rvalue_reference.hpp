@@ -1,4 +1,4 @@
-//  common_type.hpp  ---------------------------------------------------------//
+//  add_rvalue_reference.hpp  ---------------------------------------------------------//
 
 //  Copyright 2010 Vicente J. Botet Escriba
 
@@ -14,7 +14,9 @@
 
 #include <boost/type_traits/is_void.hpp>
 #include <boost/type_traits/is_reference.hpp>
-#include <boost/type_traits/is_pointer.hpp>
+
+// should be the last #include
+#include <boost/type_traits/detail/type_trait_def.hpp>
 
 //----------------------------------------------------------------------------//
 //                                                                            //
@@ -33,10 +35,7 @@ namespace boost {
 
 namespace type_traits_detail {
 
-    template <typename T,
-        bool = !is_reference<T>::value 
-                && ! is_pointer<T>::value 
-                &&  !is_void<T>::value>
+    template <typename T, bool b>
     struct add_rvalue_reference_helper
     { typedef T   type; };
 
@@ -49,20 +48,20 @@ namespace type_traits_detail {
         typedef T   type;
 #endif
     };
-}
-    /// add_rvalue_reference
-    template <typename T>
-    struct add_rvalue_reference
-    : public type_traits_detail::add_rvalue_reference_helper<T>
-    { };
 
     template <typename T>
-    struct add_rvalue_reference<T&>
+    struct add_rvalue_reference_imp
     { 
-        typedef T& type;
+       typedef typename boost::type_traits_detail::add_rvalue_reference_helper
+                  <T, (!is_void<T>::value && !is_reference<T>::value) >::type type; 
     };
 
+}
+
+BOOST_TT_AUX_TYPE_TRAIT_DEF1(add_rvalue_reference,T,typename boost::type_traits_detail::add_rvalue_reference_imp<T>::type)
 
 }  // namespace boost
+
+#include <boost/type_traits/detail/type_trait_undef.hpp>
 
 #endif  // BOOST_TYPE_TRAITS_EXT_ADD_RVALUE_REFERENCE__HPP
