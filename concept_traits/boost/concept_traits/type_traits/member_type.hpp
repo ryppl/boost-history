@@ -1,0 +1,46 @@
+///////////////////////////////////////////////////////////////////////////////
+// Concept traits
+//
+// (C) Copyright Terje Slettebø and Tobias Schwinger 2004.
+// Use, modification and distribution are subject to the Boost Software License,
+// Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt).
+///////////////////////////////////////////////////////////////////////////////
+
+#ifndef BOOST_CT_TT_EXT_MEMBER_TYPE_HPP
+#define BOOST_CT_TT_EXT_MEMBER_TYPE_HPP
+
+///////////////////////////////////////////////////////////////////////////////
+// BOOST_CT_TT_EXT_MEMBER_TYPE
+///////////////////////////////////////////////////////////////////////////////
+
+#define BOOST_CT_TT_EXT_MEMBER_TYPE(name)\
+template<class T>\
+struct member_type_##name\
+{\
+  typedef typename T::name type;\
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// BOOST_CT_TT_EXT_MEMBER_TYPE_CONST
+///////////////////////////////////////////////////////////////////////////////
+
+#define BOOST_CT_TT_EXT_MEMBER_TYPE_CONST(name)\
+template<class T>\
+struct member_type_const_##name\
+{\
+  typedef const typename T::name type;\
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// BOOST_CT_TT_EXT_MEMBER_TYPE_CONST_REF
+///////////////////////////////////////////////////////////////////////////////
+
+#define BOOST_CT_TT_EXT_MEMBER_TYPE_CONST_REF(name)\
+template<class T>\
+struct member_type_const_ref_##name\
+{\
+  typedef const typename T::name & type;\
+};
+
+#endif // BOOST_CT_TT_EXT_MEMBER_TYPE_HPP
