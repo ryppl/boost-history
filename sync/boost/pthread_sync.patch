@@ -2,18 +2,32 @@ Index: locks.hpp
 ===================================================================
 --- locks.hpp	(revision 65374)
 +++ locks.hpp	(working copy)
-@@ -12,6 +12,8 @@
+@@ -12,13 +12,16 @@
  #include <boost/thread/thread_time.hpp>
  #include <boost/detail/workaround.hpp>
  #include <boost/type_traits/is_class.hpp>
 +#include <boost/sync/locks/lock_options.hpp>
 +#include <boost/sync/locks/lock_guard.hpp>
++#include <boost/sync/lockable_traits/is_lockable_type.hpp>
  
  #include <boost/config/abi_prefix.hpp>
  
-@@ -157,16 +159,16 @@
+ namespace boost
+ {
+     struct xtime;
+-
++#if 0
+ #if defined(BOOST_NO_SFINAE) ||                           \
+     BOOST_WORKAROUND(__IBMCPP__, BOOST_TESTED_AT(600)) || \
+     BOOST_WORKAROUND(__SUNPRO_CC, BOOST_TESTED_AT(0x590))
+@@ -156,17 +159,21 @@
+         BOOST_STATIC_CONSTANT(bool, value = false);
      };
  #endif    
++#endif
++#ifdef BOOST_SYNC_NO_AUTO_DETECT_TYPES
++#define BOOST_THREAD_NO_AUTO_DETECT_MUTEX_TYPES
++#endif
  
 -    struct defer_lock_t
 -    {};
@@ -37,7 +51,7 @@ Index: locks.hpp
  
      template<typename Mutex>
      class shared_lock;
-@@ -242,30 +244,29 @@
+@@ -242,30 +249,29 @@
  
  #endif
  
