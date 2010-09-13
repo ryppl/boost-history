@@ -52,10 +52,10 @@ struct BasicLockableConcept {
 
 //[LockableConcept
 template <typename Lockable>
-struct TryLockableConcept {
+struct LockableConcept {
     BOOST_CONCEPT_ASSERT((BasicLockableConcept<Lockable>));
 
-    BOOST_CONCEPT_USAGE(TryLockableConcept) {
+    BOOST_CONCEPT_USAGE(LockableConcept) {
         b=l.try_lock();
     }
     Lockable l;
@@ -70,7 +70,7 @@ struct TryLockableConcept {
 //[TimedLockableConcept
 template <typename Lockable>
 struct TimedLockableConcept {
-    BOOST_CONCEPT_ASSERT((TryLockableConcept<Lockable>));
+    BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
 
     BOOST_CONCEPT_USAGE(TimedLockableConcept) {
         //~ l.lock_until(t);
@@ -119,16 +119,16 @@ struct ConditionLockableConcept {
 
 //]
 /**
- * ShareLockableConcept object extends TimedLockableConcept
+ * SharedLockableConcept object extends TimedLockableConcept
  * with the lock_shared, lock_shared_until, lock_shared_for, try_lock_shared_until, try_lock_shared
  * and unlock_shared functions
  */
-//[ShareLockableConcept
+//[SharedLockableConcept
 template <typename Lockable>
-struct ShareLockableConcept {
+struct SharedLockableConcept {
     BOOST_CONCEPT_ASSERT((TimedLockableConcept<Lockable>));
 
-    BOOST_CONCEPT_USAGE(ShareLockableConcept) {
+    BOOST_CONCEPT_USAGE(SharedLockableConcept) {
         l.lock_shared();
         //~ l.lock_shared_until(t);
         //~ l.lock_shared_for(d);
@@ -157,7 +157,7 @@ struct ShareLockableConcept {
 
 template <typename Lockable>
 struct UpgradeBasicLockableConcept {
-    BOOST_CONCEPT_ASSERT((ShareLockableConcept<Lockable>));
+    BOOST_CONCEPT_ASSERT((SharedLockableConcept<Lockable>));
 
     BOOST_CONCEPT_USAGE(UpgradeBasicLockableConcept) {
         l.lock_upgrade();
