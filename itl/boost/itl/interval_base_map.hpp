@@ -128,9 +128,10 @@ public:
     //- Associated types: Functors
     //--------------------------------------------------------------------------
     /// Comparison functor for domain values
-    typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
+    typedef ITL_COMPARE_DOMAIN(Compare,DomainT)      domain_compare;
+    typedef ITL_COMPARE_DOMAIN(Compare,segment_type) segment_compare;
     /// Combine functor for codomain value aggregation
-    typedef ITL_COMBINE_CODOMAIN(Combine,CodomainT) codomain_combine;
+    typedef ITL_COMBINE_CODOMAIN(Combine,CodomainT)  codomain_combine;
     /// Inverse Combine functor for codomain value aggregation
     typedef typename inverse<codomain_combine>::type inverse_codomain_combine;
     /// Intersection functor for codomain values
@@ -498,45 +499,6 @@ public:
     const_reverse_iterator rbegin()const { return _map.rbegin(); }
     const_reverse_iterator rend()const   { return _map.rend(); }
 
-    iterator prior(iterator it_)
-    { return it_ == this->_map.begin() ? this->_map.end() : --it_; }
-
-    const_iterator prior(const_iterator it_)const
-    { return it_ == this->_map.begin() ? this->_map.end() : --it_; }
-
-
-    //==========================================================================
-    //= Element iterator related
-    //==========================================================================
-    element_iterator elements_begin(){ return element_iterator(this->begin()); }
-    element_iterator elements_end()  { return element_iterator(this->end());   }
-    element_const_iterator elements_begin()const{ return element_const_iterator(this->begin()); }
-    element_const_iterator elements_end()  const{ return element_const_iterator(this->end());   }
-
-    element_reverse_iterator elements_rbegin(){ return element_reverse_iterator(this->rbegin()); }
-    element_reverse_iterator elements_rend()  { return element_reverse_iterator(this->rend());   }
-    element_const_reverse_iterator elements_rbegin()const{ return element_const_reverse_iterator(this->rbegin()); }
-    element_const_reverse_iterator elements_rend()  const{ return element_const_reverse_iterator(this->rend());   }
-
-    //==========================================================================
-    //= Domain, sum
-    //==========================================================================
-
-    /** Gives the domain of the map as interval set */
-  //  template 
-  //  <
-  //      template
-  //      <class DomT, ITL_COMPARE Comp, ITL_INTERVAL2(ITL_COMPARE) Interv, ITL_ALLOC Allc>
-  //      class IntervalSet
-  //  >
-  //  void domain(IntervalSet<DomainT,Compare,Interval,Alloc>& dom)const 
-  //  { 
-        //itl::domain(dom, *that());
-  //      //CL dom.clear(); 
-  //      //const_FOR_IMPLMAP(it_) 
-  //      //    dom += it_->first; 
-  //  } 
-
     //==========================================================================
     //= Algorithm unifiers
     //==========================================================================
@@ -561,187 +523,6 @@ protected:
 protected:
     ImplMapT _map;
 } ;
-
-
-//==============================================================================
-//= Equivalences and Orderings
-//==============================================================================
-//-----------------------------------------------------------------------------
-// equality
-//-----------------------------------------------------------------------------
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-inline bool operator == (const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& lhs,
-                         const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& rhs)
-{
-    return Set::lexicographical_equal(lhs, rhs);
-}
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-inline bool operator != (const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& lhs,
-                         const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& rhs)
-{
-    return !(lhs == rhs);
-}
-
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-inline bool is_protonic_equal(const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& lhs,
-                              const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& rhs)
-{
-    return Map::lexicographical_protonic_equal(lhs, rhs);
-}
-
-
-template 
-<
-    class DomainT, class CodomainT, class Traits,
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, ITL_INTERVAL(ITL_COMPARE), ITL_ALLOC
-    >
-    class IntervalMap
->
-bool is_protonic_equal
-(
-    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& left,
-    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& right
-)
-{
-    return Map::lexicographical_protonic_equal(left, right);
-}
-
-
-
-//-----------------------------------------------------------------------------
-// order
-//-----------------------------------------------------------------------------
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-inline bool operator < (const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& lhs,
-                        const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& rhs)
-{
-    return std::lexicographical_compare(
-        lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), 
-        Compare<std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare),CodomainT> >()//NOTE DESIGN TTP: Why template template parameter Compare is needed
-        );
-}
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-inline bool operator > (const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& lhs,
-                        const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& rhs)
-{ return rhs < lhs; }
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-inline bool operator <= (const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& lhs,
-                        const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& rhs)
-{ return !(lhs > rhs); }
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-inline bool operator >= (const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& lhs,
-                        const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& rhs)
-{ return !(lhs < rhs); }
-
-//-----------------------------------------------------------------------------
-// min, max
-//-----------------------------------------------------------------------------
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, 
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, 
-    ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-interval_base_map<SubType,DomainT,CodomainT,
-                  Traits,Compare,Combine,Section,Interval,Alloc>& 
-min_assign
-(
-          interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Compare,Combine,Section,Interval,Alloc>& operand
-)
-{
-    typedef interval_base_map<SubType,DomainT,CodomainT,
-                              Traits,Compare,Combine,Section,Interval,Alloc> map_type;
-    ITL_const_FORALL(typename map_type, elem_, operand) 
-        object.template _add<inplace_min >(*elem_); 
-
-    return object; 
-}
-
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, 
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, 
-    ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-interval_base_map<SubType,DomainT,CodomainT,
-                  Traits,Compare,Combine,Section,Interval,Alloc>& 
-max_assign
-(
-          interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const interval_base_map<SubType,DomainT,CodomainT,
-                            Traits,Compare,Combine,Section,Interval,Alloc>& operand
-)
-{
-    typedef interval_base_map<SubType,DomainT,CodomainT,
-                              Traits,Compare,Combine,Section,Interval,Alloc>    map_type;
-    ITL_const_FORALL(typename map_type, elem_, operand) 
-        object.template _add<inplace_max>(*elem_); 
-
-    return object; 
-}
-
-//---------------------------------------------------------------------------------
-
-template<class CharType, class CharTraits, 
-    class SubType, class DomainT, class CodomainT, class Traits, 
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, 
-    ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-std::basic_ostream<CharType, CharTraits>& operator <<
-  (std::basic_ostream<CharType, CharTraits>& stream, 
-   const interval_base_map<SubType,DomainT,CodomainT,Traits,
-                           Compare,Combine,Section,Interval,Alloc>& object)
-{
-    typedef interval_base_map<SubType,DomainT,CodomainT,
-                              Traits,Compare,Combine,Section,Interval,Alloc> IntervalMapT;
-    stream << "{";
-    ITL_const_FORALL(typename IntervalMapT, it_, object)
-        stream << "(" << it_->first << "->" << it_->second << ")";
-
-    return stream << "}";
-}
 
 
 //-----------------------------------------------------------------------------

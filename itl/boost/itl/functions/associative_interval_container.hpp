@@ -70,6 +70,119 @@ hull(const ObjectT& object)
 }
 
 
+//==========================================================================
+//= Element iterator related
+//==========================================================================
+//--------------------------------------------------------------------------
+//- Forward
+//--------------------------------------------------------------------------
+template<class Type>
+typename enable_if
+<mpl::and_< is_interval_container<Type> 
+          , mpl::not_<is_continuous_interval<typename Type::interval_type> > >,
+typename Type::element_iterator>::type
+elements_begin(Type& object)
+{
+	return typename Type::element_iterator(object.begin());
+}
+
+template<class Type>
+typename enable_if
+<mpl::and_< is_interval_container<Type> 
+          , mpl::not_<is_continuous_interval<typename Type::interval_type> > >,
+typename Type::element_iterator>::type
+elements_end(Type& object)
+{ 
+    return typename Type::element_iterator(object.end()); 
+}
+
+template<class Type>
+typename enable_if
+<mpl::and_< is_interval_container<Type> 
+          , mpl::not_<is_continuous_interval<typename Type::interval_type> > >,
+typename Type::element_const_iterator>::type
+elements_begin(const Type& object)
+{ 
+	return typename Type::element_const_iterator(object.begin());
+}
+
+template<class Type>
+typename enable_if
+<mpl::and_< is_interval_container<Type> 
+          , mpl::not_<is_continuous_interval<typename Type::interval_type> > >,
+typename Type::element_const_iterator>::type
+elements_end(const Type& object)
+{ 
+	return typename Type::element_const_iterator(object.end());
+}
+
+//--------------------------------------------------------------------------
+//- Reverse
+//--------------------------------------------------------------------------
+template<class Type>
+typename enable_if
+<mpl::and_< is_interval_container<Type> 
+          , mpl::not_<is_continuous_interval<typename Type::interval_type> > >,
+typename Type::element_reverse_iterator>::type
+elements_rbegin(Type& object)
+{
+	return typename Type::element_reverse_iterator(object.rbegin());
+}
+
+template<class Type>
+typename enable_if
+<mpl::and_< is_interval_container<Type> 
+          , mpl::not_<is_continuous_interval<typename Type::interval_type> > >,
+typename Type::element_reverse_iterator>::type
+elements_rend(Type& object)
+{ 
+	return typename Type::element_reverse_iterator(object.rend());
+}
+
+template<class Type>
+typename enable_if
+<mpl::and_< is_interval_container<Type> 
+          , mpl::not_<is_continuous_interval<typename Type::interval_type> > >,
+typename Type::element_const_reverse_iterator>::type
+elements_rbegin(const Type& object)
+{ 
+	return typename Type::element_const_reverse_iterator(object.rbegin());
+}
+
+template<class Type>
+typename enable_if
+<mpl::and_< is_interval_container<Type> 
+          , mpl::not_<is_continuous_interval<typename Type::interval_type> > >,
+typename Type::element_const_reverse_iterator>::type
+elements_rend(const Type& object)
+{ 
+	return typename Type::element_const_reverse_iterator(object.rend());
+}
+
+//==============================================================================
+//= Equivalences and Orderings
+//==============================================================================
+
+template<class Type>
+inline typename enable_if<is_interval_container<Type>, bool>::type
+operator == (const Type& left, const Type& right)
+{
+    return Set::lexicographical_equal(left, right);
+}
+
+
+template<class Type>
+inline typename enable_if<is_interval_container<Type>, bool>::type
+operator < (const Type& left, const Type& right)
+{
+	typedef typename Type::segment_compare segment_compare;
+    return std::lexicographical_compare(
+        left.begin(), left.end(), right.begin(), right.end(), 
+        segment_compare()
+        );
+}
+
+
 }} // namespace itl boost
 
 

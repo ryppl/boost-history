@@ -42,8 +42,8 @@ public:
     TargetT operator()(const SegmentalT& source)const
     {
         typename SegmentalT::element_const_iterator found 
-            = std::find(source.elements_begin(), source.elements_end(), _comparand); 
-        if(found == source.elements_end())
+            = std::find(elements_begin(source), elements_end(source), _comparand); 
+        if(found == elements_end(source))
             return neutron<TargetT>::value();
         else
             return *found;
@@ -81,8 +81,8 @@ public:
     TargetT operator()(const SegmentalT& source)const
     {
         typename SegmentalT::element_const_reverse_iterator found 
-            = std::find(source.elements_rbegin(), source.elements_rend(), _comparand); 
-        if(found == source.elements_rend())
+            = std::find(elements_rbegin(source), elements_rend(source), _comparand); 
+        if(found == elements_rend(source))
             return neutron<TargetT>::value();
         else
             return *found;
@@ -122,8 +122,8 @@ public:
     TargetT operator()(const SegmentalT& source)const
     {
         typename SegmentalT::element_const_iterator found 
-            = std::lower_bound(source.elements_begin(), source.elements_end(), _comparand); 
-        if(found == source.elements_end())
+            = std::lower_bound(elements_begin(source), elements_end(source), _comparand); 
+        if(found == elements_end(source))
             return neutron<TargetT>::value();
         else
             return *found;
@@ -161,8 +161,8 @@ public:
     TargetT operator()(const SegmentalT& source)const
     {
         typename SegmentalT::element_const_reverse_iterator found 
-            = std::lower_bound(source.elements_rbegin(), source.elements_rend(), _comparand); 
-        if(found == source.elements_rend())
+            = std::lower_bound(elements_rbegin(source), elements_rend(source), _comparand); 
+        if(found == elements_rend(source))
             return neutron<TargetT>::value();
         else
             return *found;
@@ -202,8 +202,8 @@ public:
     TargetT operator()(const SegmentalT& source)const
     {
         typename SegmentalT::element_const_iterator found 
-            = std::upper_bound(source.elements_begin(), source.elements_end(), _comparand); 
-        if(found == source.elements_end())
+            = std::upper_bound(elements_begin(source), elements_end(source), _comparand); 
+        if(found == elements_end(source))
             return neutron<TargetT>::value();
         else
             return *found;
@@ -241,8 +241,8 @@ public:
     TargetT operator()(const SegmentalT& source)const
     {
         typename SegmentalT::element_const_reverse_iterator found 
-            = std::upper_bound(source.elements_rbegin(), source.elements_rend(), _comparand); 
-        if(found == source.elements_rend())
+            = std::upper_bound(elements_rbegin(source), elements_rend(source), _comparand); 
+        if(found == elements_rend(source))
             return neutron<TargetT>::value();
         else
             return *found;

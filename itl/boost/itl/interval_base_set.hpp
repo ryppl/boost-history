@@ -174,9 +174,10 @@ public:
     //- Associated types: Order
     //--------------------------------------------------------------------------
     /// Comparison functor for domain values
-    typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
+    typedef ITL_COMPARE_DOMAIN(Compare,DomainT)      domain_compare;
+    typedef ITL_COMPARE_DOMAIN(Compare,segment_type) segment_compare;
     /// Comparison functor for intervals
-    typedef exclusive_less_than<interval_type> interval_compare;
+    typedef exclusive_less_than<interval_type>       interval_compare;
 
     /// Comparison functor for keys
     typedef exclusive_less_than<interval_type> key_compare;
@@ -531,19 +532,6 @@ public:
     { return _set.equal_range(interval); }
 
     //==========================================================================
-    //= Element iterator related
-    //==========================================================================
-    element_iterator elements_begin(){ return element_iterator(this->begin()); }
-    element_iterator elements_end()  { return element_iterator(this->end());   }
-    element_const_iterator elements_begin()const{ return element_const_iterator(this->begin()); }
-    element_const_iterator elements_end()  const{ return element_const_iterator(this->end());   }
-
-    element_reverse_iterator elements_rbegin(){ return element_reverse_iterator(this->rbegin()); }
-    element_reverse_iterator elements_rend()  { return element_reverse_iterator(this->rend());   }
-    element_const_reverse_iterator elements_rbegin()const{ return element_const_reverse_iterator(this->rbegin()); }
-    element_const_reverse_iterator elements_rend()  const{ return element_const_reverse_iterator(this->rend());   }
-    
-    //==========================================================================
     //= Algorithm unifiers
     //==========================================================================
 
@@ -569,68 +557,6 @@ protected:
     ImplSetT _set;
 } ;
 
-
-//==============================================================================
-//= Equivalences and Orderings
-//==============================================================================
-template<class SubType,
-         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-inline bool operator == (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
-                         const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
-{
-    return Set::lexicographical_equal(lhs, rhs);
-}
-
-template<class SubType,
-         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-inline bool operator != (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
-                         const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
-{ return !(lhs == rhs); }
-
-
-template<class SubType,
-         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-inline bool operator < (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
-                        const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
-{
-    return std::lexicographical_compare(
-        lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), 
-        Compare<ITL_INTERVAL_TYPE(Interval,DomainT,Compare) >()//NOTE DESIGN TTP: Why Compare needs to be ttp
-        );
-}
-
-template<class SubType,
-         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-inline bool operator > (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
-                        const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
-{ return rhs < lhs; }
-
-template<class SubType,
-         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-inline bool operator <= (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
-                         const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
-{ return !(lhs > rhs); }
-
-template<class SubType,
-         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-inline bool operator >= (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
-                         const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
-{ return !(lhs < rhs); }
-
-template<class CharType, class CharTraits, 
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-std::basic_ostream<CharType, CharTraits>& operator <<
-  (std::basic_ostream<CharType, CharTraits>& stream, 
-   const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object)
-{
-    typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> IntervalSetT;
-    stream << "{";
-    ITL_const_FORALL(typename IntervalSetT, it_, object)
-        stream << (*it_);
-
-    return stream << "}";
-}
 
 //-----------------------------------------------------------------------------
 // type traits

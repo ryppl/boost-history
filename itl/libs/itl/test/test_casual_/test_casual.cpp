@@ -50,15 +50,15 @@ BOOST_AUTO_TEST_CASE(reverse_iter)
     map_a += make_pair(interval<int>::rightopen(0,3),1);
     cout << map_a << endl;
 
-    for(interval_map<int,int>::element_iterator elem = map_a.elements_begin();
-        elem != map_a.elements_end(); elem++)
+    for(interval_map<int,int>::element_iterator elem = elements_begin(map_a);
+        elem != elements_end(map_a); elem++)
         cout << "(" << elem->first << "," << elem->second << ")";
     cout << "\n-------------------------------------\n";
 
     std::pair<const int, int> search_pair(2,1);
 
     interval_map<int,int>::element_const_iterator found 
-        = std::find(map_a.elements_begin(), map_a.elements_end(), search_pair);
+        = std::find(elements_begin(map_a), elements_end(map_a), search_pair);
     cout << "(" << found->first << "," << found->second << ")\n";
 
     const_cast<int&>(found->second) = 2;

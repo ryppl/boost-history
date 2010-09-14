@@ -246,6 +246,7 @@ class element_iterator
     >
 {
 public:
+	typedef element_iterator                                type;
     typedef SegmentIteratorT                                segment_iterator;
     typedef typename SegmentIteratorT::value_type           segment_type;
     typedef typename first_element<segment_type>::type      interval_type;

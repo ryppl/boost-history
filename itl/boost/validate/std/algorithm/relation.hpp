@@ -39,7 +39,7 @@ struct std_equals
     {
         target = false;
         if(left.size() <= right.size())
-            target = std::equal(left.elements_begin(),  left.elements_end(), right.elements_begin()); 
+            target = std::equal(elements_begin(left),  elements_end(left), elements_begin(right)); 
     }
 
     static std::string struct_abbreviation(){ return "==f"; }
@@ -61,7 +61,7 @@ struct std_equals_back
     {
         target = false;
         if(left.size() <= right.size())
-            target = std::equal(left.elements_rbegin(),  left.elements_rend(), right.elements_rbegin()); 
+            target = std::equal(elements_rbegin(left),  elements_rend(left), elements_rbegin(right)); 
     }
 
     static std::string struct_abbreviation(){ return "==b"; }
@@ -88,8 +88,8 @@ struct std_lexicographical_compare
     void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         target = std::lexicographical_compare
-            (left.elements_begin(),  left.elements_end(), 
-             right.elements_begin(), right.elements_end()); 
+            (elements_begin(left),  elements_end(left), 
+             elements_begin(right), elements_end(right)); 
     }
 
     static std::string struct_abbreviation(){ return "<L_f"; }
@@ -110,8 +110,8 @@ struct std_lexicographical_compare_back
     void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         target = std::lexicographical_compare
-            (left.elements_rbegin(),  left.elements_rend(), 
-             right.elements_rbegin(), right.elements_rend()); 
+            (elements_rbegin(left),  elements_rend(left), 
+             elements_rbegin(right), elements_rend(right)); 
     }
 
     static std::string struct_abbreviation(){ return "<L_b"; }
@@ -133,8 +133,8 @@ struct std_includes
 
     void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
-        target = std::includes(left.elements_begin(),  left.elements_end(), 
-                               right.elements_begin(), right.elements_end()); 
+        target = std::includes(elements_begin(left),  elements_end(left), 
+                               elements_begin(right), elements_end(right)); 
     }
 
     static std::string struct_abbreviation(){ return "C=f"; }
@@ -154,8 +154,8 @@ struct std_includes_back
 
     void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
-        target = std::includes(left.elements_rbegin(),  left.elements_rend(), 
-                               right.elements_rbegin(), right.elements_rend()); 
+        target = std::includes(elements_rbegin(left),  elements_rend(left), 
+                               elements_rbegin(right), elements_rend(right)); 
     }
 
     static std::string struct_abbreviation(){ return "C=b"; }

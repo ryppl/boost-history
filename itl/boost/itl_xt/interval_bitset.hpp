@@ -294,7 +294,7 @@ private:
 };
 
 
-template<class DomainT,    class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
 typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::PartsT
 interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::partition
 (
@@ -348,7 +348,7 @@ interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::partition
 
 
 
-template<class DomainT,    class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
 bool interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::contains(const segment_type& segment)const
 { 
     if(segment.empty())
@@ -374,7 +374,7 @@ bool interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::contains(const seg
 }
 
 
-template<class DomainT,    class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
 typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::size_type 
     interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::cardinality()const    
 {
@@ -397,7 +397,7 @@ void interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::show_segments()con
     }
 }
 
-template<class DomainT,    class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
 void interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::show_matrix(const char off_on[2])const
 {
     typename interval_bitmap_type::const_iterator iter = _map.begin();
@@ -410,7 +410,52 @@ void interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::show_matrix(const 
     }
 }
 
-template<class DomainT,    class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+//------------------------------------------------------------------------------
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator
+elements_begin(interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
+{ return object.elements_begin(); }
+
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator
+elements_end(interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
+{ return object.elements_end(); }
+
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_iterator
+elements_begin(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
+{ return object.elements_begin(); }
+
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_iterator
+elements_end(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
+{ return object.elements_end(); }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_reverse_iterator
+elements_rbegin(interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
+{ return object.elements_rbegin(); }
+
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_reverse_iterator
+elements_rend(interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
+{ return object.elements_rend(); }
+
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_reverse_iterator
+elements_rbegin(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
+{ return object.elements_rbegin(); }
+
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
+typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_reverse_iterator
+elements_rend(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
+{ return object.elements_rend(); }
+
+//------------------------------------------------------------------------------
+
+template<class DomainT, class BitSetT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc> 
 bool is_element_equal(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& left, 
                       const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& right)
 { return left == right; }
@@ -487,8 +532,8 @@ namespace segmental
                         const interval_bitset<DomainT, BitSetT>& clustered)
         {
             typedef interval_bitset<DomainT, BitSetT> InterBitsetT;
-            typename InterBitsetT::element_const_iterator bit_ = clustered.elements_begin();
-            while(bit_ != clustered.elements_end())
+            typename InterBitsetT::element_const_iterator bit_ = elements_begin(clustered);
+            while(bit_ != elements_end(clustered))
                 atomized.insert(*bit_++);
         }
     };

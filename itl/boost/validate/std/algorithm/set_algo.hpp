@@ -32,8 +32,8 @@ struct std_set_union
     void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         std::set_union(
-            left.elements_begin(),  left.elements_end(), 
-            right.elements_begin(), right.elements_end(), 
+            elements_begin(left),  elements_end(left), 
+            elements_begin(right), elements_end(right), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end()))
         );
     }
@@ -56,8 +56,8 @@ struct std_set_union_back
     void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         std::set_union(
-            left.elements_rbegin(),  left.elements_rend(), 
-            right.elements_rbegin(), right.elements_rend(), 
+            elements_rbegin(left),  elements_rend(left), 
+            elements_rbegin(right), elements_rend(right), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end()))
         );
     }
@@ -82,8 +82,8 @@ struct std_set_difference
     void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         std::set_difference(
-            left.elements_begin(),  left.elements_end(), 
-            right.elements_begin(), right.elements_end(), 
+            elements_begin(left),  elements_end(left), 
+            elements_begin(right), elements_end(right), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end()))
         );
     }
@@ -106,8 +106,8 @@ struct std_set_difference_back
     void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         std::set_difference(
-            left.elements_rbegin(),  left.elements_rend(), 
-            right.elements_rbegin(), right.elements_rend(), 
+            elements_rbegin(left),  elements_rend(left), 
+            elements_rbegin(right), elements_rend(right), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end()))
         );
     }
@@ -132,8 +132,8 @@ struct std_set_intersection
     void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         std::set_intersection(
-            left.elements_begin(),  left.elements_end(), 
-            right.elements_begin(), right.elements_end(), 
+            elements_begin(left),  elements_end(left), 
+            elements_begin(right), elements_end(right), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end()))
         );
     }
@@ -156,8 +156,8 @@ struct std_set_intersection_back
     void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         std::set_intersection(
-            left.elements_rbegin(),  left.elements_rend(), 
-            right.elements_rbegin(), right.elements_rend(), 
+            elements_rbegin(left),  elements_rend(left), 
+            elements_rbegin(right), elements_rend(right), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end()))
         );
     }
@@ -182,8 +182,8 @@ struct std_set_symmetric_difference
     void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         std::set_symmetric_difference(
-            left.elements_begin(),  left.elements_end(), 
-            right.elements_begin(), right.elements_end(), 
+            elements_begin(left),  elements_end(left), 
+            elements_begin(right), elements_end(right), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end()))
         );
     }
@@ -206,8 +206,8 @@ struct std_set_symmetric_difference_back
     void operator()(const SourceT& left, const SourceT& right, TargetT& target)
     {
         std::set_symmetric_difference(
-            left.elements_rbegin(),  left.elements_rend(), 
-            right.elements_rbegin(), right.elements_rend(), 
+            elements_rbegin(left),  elements_rend(left), 
+            elements_rbegin(right), elements_rend(right), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end()))
         );
     }

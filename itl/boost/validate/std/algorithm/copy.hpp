@@ -30,7 +30,7 @@ struct std_copy
 
     void operator()(const SourceT& source, TargetT& target)const
     {
-        std::copy(source.elements_begin(), source.elements_end(), 
+        std::copy(elements_begin(source), elements_end(source), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
     }
 
@@ -50,7 +50,7 @@ struct std_copy_back
 
     void operator()(const SourceT& source, TargetT& target)
     {
-        std::copy(source.elements_rbegin(), source.elements_rend(), 
+        std::copy(elements_rbegin(source), elements_rend(source), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
     }
 
@@ -72,7 +72,7 @@ struct std_reverse_copy
 
     void operator()(const SourceT& source, TargetT& target)
     {
-        std::reverse_copy(source.elements_begin(), source.elements_end(), 
+        std::reverse_copy(elements_begin(source), elements_end(source), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
     }
 
@@ -92,7 +92,7 @@ struct std_reverse_copy_back
 
     void operator()(const SourceT& source, TargetT& target)
     {
-        std::reverse_copy(source.elements_rbegin(), source.elements_rend(), 
+        std::reverse_copy(elements_rbegin(source), elements_rend(source), 
             InsertIterator<TargetT>(target, typename TargetT::iterator(target.end())));
     }
 
@@ -117,7 +117,7 @@ struct std_copy_backward
     void operator()(const SourceT& source, TargetT& target)
     {
         fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), neutron<value_type>::value());
-        std::copy_backward(source.elements_begin(), source.elements_end(), target.end());
+        std::copy_backward(elements_begin(source), elements_end(source), target.end());
     }
 
     static std::string struct_abbreviation(){ return "cpyb_f"; }
@@ -138,7 +138,7 @@ struct std_copy_backward_back
     void operator()(const SourceT& source, TargetT& target)
     {
         fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), neutron<value_type>::value());
-        std::copy_backward(source.elements_rbegin(), source.elements_rend(), target.end());
+        std::copy_backward(elements_rbegin(source), elements_rend(source), target.end());
     }
 
     static std::string struct_abbreviation(){ return "cpyb_b"; }

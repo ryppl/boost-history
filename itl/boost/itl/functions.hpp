@@ -181,6 +181,16 @@ inclusion_compare(const LeftT& left, const RightT& right)
 }
 //------------------------------------------------------------------------------
 
+template<class LeftT, class RightT>
+typename enable_if< is_concept_compatible<is_interval_map, LeftT, RightT>,
+                    bool >::type
+is_protonic_equal(const LeftT& left, const RightT& right)
+{
+    return Map::lexicographical_protonic_equal(left, right);
+}
+
+
+
 
 //==============================================================================
 //= Addition
@@ -205,7 +215,7 @@ add(Type& object, const typename Type::segment_type& operand)
 template<class Type>
 typename enable_if<is_interval_set<Type>, typename Type::iterator>::type
 add(Type& object, typename Type::iterator      prior, 
-               const typename Type::segment_type& operand)
+            const typename Type::segment_type& operand)
 {
     return Interval_Set::add(object, prior, operand);
 }
@@ -1521,9 +1531,37 @@ typename enable_if<mpl::and_< is_interval_map<Type>
                             , mpl::not_<absorbs_neutrons<Type> > >, Type>::type&
 absorb_neutrons(Type& object)
 {
-	typedef typename Type::segment_type segment_type;
+    typedef typename Type::segment_type segment_type;
     return itl::erase_if(content_is_neutron<segment_type>(), object);
 }
+
+//==============================================================================
+//= Streaming
+//==============================================================================
+template<class CharType, class CharTraits, class Type>
+typename enable_if<is_interval_set<Type>, 
+                   std::basic_ostream<CharType, CharTraits> >::type& 
+operator << (std::basic_ostream<CharType, CharTraits>& stream, const Type& object)
+{
+    stream << "{";
+    ITL_const_FORALL(typename Type, it_, object)
+        stream << (*it_);
+
+    return stream << "}";
+}
+
+template<class CharType, class CharTraits, class Type>
+typename enable_if<is_interval_map<Type>, 
+                   std::basic_ostream<CharType, CharTraits> >::type& 
+operator << (std::basic_ostream<CharType, CharTraits>& stream, const Type& object)
+{
+    stream << "{";
+    ITL_const_FORALL(typename Type, it_, object)
+        stream << "(" << it_->first << "->" << it_->second << ")";
+
+    return stream << "}";
+}
+
 
 }} // namespace itl boost
 

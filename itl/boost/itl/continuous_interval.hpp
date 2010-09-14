@@ -156,7 +156,7 @@ template <class DomainT, ITL_COMPARE Compare>
 struct is_continuous_interval<continuous_interval<DomainT,Compare> >
 {
     typedef is_continuous_interval<continuous_interval<DomainT,Compare> > type;
-    BOOST_STATIC_CONSTANT(bool, value = is_continuous<DomainT>::value);
+    BOOST_STATIC_CONSTANT(bool, value = true);
 };
 
 template <class DomainT, ITL_COMPARE Compare> 
