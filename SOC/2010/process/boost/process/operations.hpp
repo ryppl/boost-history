@@ -328,10 +328,6 @@ inline child create_child(const std::string &executable, Arguments args,
             delete[] envp.second[i];
         delete[] envp.second;
 
-        stdin_pair.first.close();
-        stdout_pair.first.close();
-        stderr_pair.first.close();
-
         return child(pid,
             stdin_pair.second,
             stdout_pair.second,
@@ -366,10 +362,6 @@ inline child create_child(const std::string &executable, Arguments args,
     if (CreateProcessA(exe.get(), cmdline.get(), NULL, NULL, TRUE, 0,
         envstrs.get(), workdir.get(), &startup_info, &pi) == 0)
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateProcess() failed");
-
-    stdin_pair.first.close();
-    stdout_pair.first.close();
-    stderr_pair.first.close();
 
     handle hprocess(pi.hProcess);
 

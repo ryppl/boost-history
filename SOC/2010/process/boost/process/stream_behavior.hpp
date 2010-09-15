@@ -63,28 +63,17 @@ class inherit
 {
 public:
     inherit(handle::native_type h)
-    : h_(h)
+    : h_(h, handle::dont_close)
     {
     }
 
     std::pair<handle, handle> operator()(bool) const
     {
-#if defined(BOOST_POSIX_API)
-        int h = dup(h_);
-        if (h == -1)
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup(2) failed");
-#elif defined(BOOST_WINDOWS_API)
-        HANDLE h;
-        if (!DuplicateHandle(GetCurrentProcess(), h_, GetCurrentProcess(),
-            &h, 0, TRUE, DUPLICATE_SAME_ACCESS))
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
-                "SetHandleInformation() failed");
-#endif
-        return std::make_pair(h, handle());
+        return std::make_pair(h_, handle());
     }
 
 private:
-    handle::native_type h_;
+    handle h_;
 };
 
 /**

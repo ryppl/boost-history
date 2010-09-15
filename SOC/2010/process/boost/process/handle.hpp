@@ -71,6 +71,11 @@ public:
     }
 
     /**
+     * RAII settings to specify if handle should be automatically closed.
+     */
+    enum close_type { do_close, dont_close };
+
+    /**
      * Constructs a handle from a native handle.
      *
      * This constructor creates a new \a handle object that takes
@@ -80,8 +85,8 @@ public:
      *
      * \see release()
      */
-    handle(native_type native)
-    : impl_(boost::make_shared<impl>(native))
+    handle(native_type native, close_type close = handle::do_close)
+    : impl_(boost::make_shared<impl>(native, close))
     {
     }
 
@@ -139,14 +144,15 @@ private:
     public:
         typedef handle::native_type native_type;
 
-        impl(native_type native)
-        : native_(native)
+        impl(native_type native, close_type close)
+        : native_(native),
+        close_(close)
         {
         }
 
         ~impl()
         {
-            if (valid())
+            if (valid() && close_ == handle::do_close)
             {
 #if defined(BOOST_POSIX_API)
                 ::close(native_);
@@ -188,6 +194,7 @@ private:
 
     private:
         native_type native_;
+        close_type close_;
     };
 
     /**
