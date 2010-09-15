@@ -44,6 +44,7 @@
 
 #include <boost/process/child.hpp>
 #include <boost/process/context.hpp>
+#include <boost/process/stream_ends.hpp>
 #include <boost/process/handle.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -187,15 +188,15 @@ template <typename Arguments, typename Context>
 inline child create_child(const std::string &executable, Arguments args,
     Context ctx)
 {
-    std::pair<handle, handle> stdin_pair;
+    stream_ends stdin_pair;
     if (ctx.stdin_behavior)
         stdin_pair = ctx.stdin_behavior(true);
 
-    std::pair<handle, handle> stdout_pair;
+    stream_ends stdout_pair;
     if (ctx.stdout_behavior)
         stdout_pair = ctx.stdout_behavior(false);
 
-    std::pair<handle, handle> stderr_pair;
+    stream_ends stderr_pair;
     if (ctx.stderr_behavior)
         stderr_pair = ctx.stderr_behavior(false);
 
@@ -234,9 +235,9 @@ inline child create_child(const std::string &executable, Arguments args,
             _exit(127);
         }
 
-        handle hstdin = stdin_pair.first;
-        handle hstdout = stdout_pair.first;
-        handle hstderr = stderr_pair.first;
+        handle hstdin = stdin_pair.child;
+        handle hstdout = stdout_pair.child;
+        handle hstderr = stderr_pair.child;
 
         if (hstdin.valid())
         {
@@ -329,18 +330,18 @@ inline child create_child(const std::string &executable, Arguments args,
         delete[] envp.second;
 
         return child(pid,
-            stdin_pair.second,
-            stdout_pair.second,
-            stderr_pair.second);
+            stdin_pair.parent,
+            stdout_pair.parent,
+            stderr_pair.parent);
     }
 #elif defined(BOOST_WINDOWS_API)
     STARTUPINFOA startup_info;
     ZeroMemory(&startup_info, sizeof(startup_info));
     startup_info.cb = sizeof(startup_info);
     startup_info.dwFlags |= STARTF_USESTDHANDLES;
-    startup_info.hStdInput = stdin_pair.first.native();
-    startup_info.hStdOutput = stdout_pair.first.native();
-    startup_info.hStdError = stderr_pair.first.native();
+    startup_info.hStdInput = stdin_pair.child.native();
+    startup_info.hStdOutput = stdout_pair.child.native();
+    startup_info.hStdError = stderr_pair.child.native();
 
     ctx.setup(startup_info);
 
@@ -369,9 +370,9 @@ inline child create_child(const std::string &executable, Arguments args,
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");
 
     return child(hprocess,
-        stdin_pair.second,
-        stdout_pair.second,
-        stderr_pair.second);
+        stdin_pair.parent,
+        stdout_pair.parent,
+        stderr_pair.parent);
 #endif
 }
 

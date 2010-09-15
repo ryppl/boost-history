@@ -31,10 +31,10 @@
 #   include <rpc.h>
 #endif
 
+#include <boost/process/stream_ends.hpp>
 #include <boost/process/handle.hpp>
 #include <string>
 #include <algorithm>
-#include <utility>
 
 namespace boost {
 namespace process {
@@ -48,9 +48,9 @@ namespace behavior {
 class close
 {
 public:
-    std::pair<handle, handle> operator()(bool) const
+    stream_ends operator()(bool) const
     {
-        return std::make_pair(handle(), handle());
+        return stream_ends();
     }
 };
 
@@ -67,9 +67,9 @@ public:
     {
     }
 
-    std::pair<handle, handle> operator()(bool) const
+    stream_ends operator()(bool) const
     {
-        return std::make_pair(h_, handle());
+        return stream_ends(h_, handle());
     }
 
 private:
@@ -84,7 +84,7 @@ private:
 class pipe
 {
 public:
-    std::pair<handle, handle> operator()(bool in) const
+    stream_ends operator()(bool in) const
     {
         handle::native_type ends[2];
 #if defined(BOOST_POSIX_API)
@@ -107,7 +107,7 @@ public:
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
                 "SetHandleInformation() failed");
 #endif
-        return std::make_pair(child_end, parent_end);
+        return stream_ends(child_end, parent_end);
     }
 };
 
@@ -126,7 +126,7 @@ public:
     {
     }
 
-    std::pair<handle, handle> operator()(bool in) const
+    stream_ends operator()(bool in) const
     {
 #if defined(BOOST_POSIX_API)
         if (mkfifo(name_.c_str(), S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) == -1)
@@ -166,7 +166,7 @@ public:
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
                 "SetHandleInformation() failed");
 #endif
-        return std::make_pair(child_end, parent_end);
+        return stream_ends(child_end, parent_end);
     }
 
 private:
@@ -187,7 +187,7 @@ typedef pipe async_pipe;
 class async_pipe
 {
 public:
-    std::pair<handle, handle> operator()(bool in) const
+    stream_ends operator()(bool in) const
     {
         UUID uuid;
         RPC_STATUS s = UuidCreateSequential(&uuid);
@@ -223,7 +223,7 @@ public:
 class null
 {
 public:
-    std::pair<handle, handle> operator()(bool in) const
+    stream_ends operator()(bool in) const
     {
 #if defined(BOOST_POSIX_API)
         std::string filename = in ? "/dev/zero" : "/dev/null";
@@ -241,7 +241,7 @@ public:
             HANDLE_FLAG_INHERIT))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("SetHandleInformation() failed");
 #endif
-        return std::make_pair(child_end, handle());
+        return stream_ends(child_end, handle());
     }
 };
 

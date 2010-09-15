@@ -236,25 +236,19 @@ BOOST_AUTO_TEST_CASE(test_output_stdout_stderr)
 #endif 
 } 
 
-std::pair<bp::handle, bp::handle> redirect_to(bp::handle h) 
+bp::stream_ends redirect_to(bp::handle h) 
 { 
-#if defined(BOOST_POSIX_API) 
-    h = dup(h.native()); 
-    if (!h.valid()) 
-        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup(2) failed"); 
-#elif defined(BOOST_WINDOWS_API) 
-    HANDLE h2; 
-    if (!DuplicateHandle(GetCurrentProcess(), h.native(), 
-        GetCurrentProcess(), &h2, 0, TRUE, DUPLICATE_SAME_ACCESS)) 
-        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("DuplicateHandle() failed"); 
-    h = h2; 
+#if defined(BOOST_WINDOWS_API) 
+    if (!SetHandleInformation(h.native(), HANDLE_FLAG_INHERIT, 
+        HANDLE_FLAG_INHERIT)) 
+        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("SetHandleInformation() failed"); 
 #endif 
-    return std::make_pair(h, bp::handle()); 
+    return bp::stream_ends(h, bp::handle()); 
 } 
 
-std::pair<bp::handle, bp::handle> forward(std::pair<bp::handle, bp::handle> p) 
+bp::stream_ends forward(bp::stream_ends ends) 
 { 
-    return p; 
+    return ends; 
 } 
 
 BOOST_AUTO_TEST_CASE(test_redirect_err_to_out) 
@@ -263,11 +257,11 @@ BOOST_AUTO_TEST_CASE(test_redirect_err_to_out)
     args.push_back("echo-stdout-stderr"); 
     args.push_back("message-to-two-streams"); 
 
-    std::pair<bp::handle, bp::handle> p = bpb::pipe()(false); 
+    bp::stream_ends ends = bpb::pipe()(false); 
 
     bp::context ctx; 
-    ctx.stdout_behavior = boost::bind(forward, p); 
-    ctx.stderr_behavior = boost::bind(redirect_to, p.first); 
+    ctx.stdout_behavior = boost::bind(forward, ends); 
+    ctx.stderr_behavior = boost::bind(redirect_to, ends.child); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
@@ -610,13 +604,13 @@ class context : public bp::context
 { 
 public: 
     context() 
-    : p(bpb::pipe()(false)) 
+    : ends(bpb::pipe()(false)) 
     { 
     } 
 
     void setup(std::vector<bool> &closeflags) 
     { 
-        if (dup2(p.first.native(), 10) == -1) 
+        if (dup2(ends.child.native(), 10) == -1) 
         { 
             write(STDERR_FILENO, "dup2() failed\n", 14); 
             _exit(127); 
@@ -624,7 +618,7 @@ public:
         closeflags[10] = false; 
     } 
 
-    std::pair<bp::handle, bp::handle> p; 
+    bp::stream_ends ends; 
 }; 
 
 BOOST_AUTO_TEST_CASE(test_posix) 
@@ -640,7 +634,7 @@ BOOST_AUTO_TEST_CASE(test_posix)
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
     std::string word; 
-    bp::pistream is(ctx.p.second); 
+    bp::pistream is(ctx.ends.parent); 
     is >> word; 
     BOOST_CHECK_EQUAL(word, "test"); 
 
@@ -682,13 +676,13 @@ class context2 : public bp::context
 { 
 public: 
     context2() 
-    : p(bpb::pipe()(false)) 
+    : ends(bpb::pipe()(false)) 
     { 
     } 
 
     void setup(std::vector<bool> &closeflags) 
     { 
-        if (dup2(p.first.native(), 3) == -1) 
+        if (dup2(ends.child.native(), 3) == -1) 
         { 
             write(STDERR_FILENO, "dup2() failed\n", 14); 
             _exit(127); 
@@ -696,7 +690,7 @@ public:
         closeflags[3] = false; 
     } 
 
-    std::pair<bp::handle, bp::handle> p; 
+    bp::stream_ends ends; 
 }; 
 
 BOOST_AUTO_TEST_CASE(test_posix2) 
@@ -726,7 +720,7 @@ BOOST_AUTO_TEST_CASE(test_posix2)
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
-    int res = dup2(ctx.p.second.native(), 0); 
+    int res = dup2(ctx.ends.parent.native(), 0); 
     std::string word; 
     if (res != -1) 
         std::cin >> word; 

@@ -28,10 +28,10 @@
 
 BOOST_AUTO_TEST_CASE(test_handle_readwrite) 
 { 
-    std::pair<bp::handle, bp::handle> p = bpb::pipe()(true); 
+    bp::stream_ends ends = bpb::pipe()(true); 
 
-    bp::handle read_end = p.first; 
-    bp::handle write_end = p.second; 
+    bp::handle read_end = ends.child; 
+    bp::handle write_end = ends.parent; 
 
     bp::handle read_end2 = read_end; 
     bp::handle write_end2 = write_end; 

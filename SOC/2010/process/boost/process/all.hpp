@@ -33,5 +33,6 @@
 #include <boost/process/self.hpp>
 #include <boost/process/status.hpp>
 #include <boost/process/stream_behavior.hpp>
+#include <boost/process/stream_ends.hpp>
 
 #endif

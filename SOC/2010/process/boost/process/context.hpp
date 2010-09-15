@@ -28,13 +28,12 @@
 #   include <windows.h>
 #endif
 
-#include <boost/process/handle.hpp>
+#include <boost/process/stream_ends.hpp>
 #include <boost/process/environment.hpp>
 #include <boost/process/self.hpp>
 #include <boost/process/stream_behavior.hpp>
 #include <boost/function.hpp>
 #include <string>
-#include <utility>
 
 namespace boost {
 namespace process {
@@ -51,17 +50,17 @@ struct context
     /**
      * Behavior of the standard input stream.
      */
-    boost::function<std::pair<handle, handle> (bool)> stdin_behavior;
+    boost::function<stream_ends (bool)> stdin_behavior;
 
     /**
      * Behavior of the standard output stream.
      */
-    boost::function<std::pair<handle, handle> (bool)> stdout_behavior;
+    boost::function<stream_ends (bool)> stdout_behavior;
 
     /**
      * Behavior of the standard error stream.
      */
-    boost::function<std::pair<handle, handle> (bool)> stderr_behavior;
+    boost::function<stream_ends (bool)> stderr_behavior;
 
     /**
      * Process name.
