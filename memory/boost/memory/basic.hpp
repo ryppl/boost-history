@@ -252,7 +252,60 @@ NS_BOOST_MEMORY_END
 // =========================================================================
 // function enableMemoryLeakCheck
 
+#if !defined(_MAP_) || defined(_MAP)
+#include <map>
+#endif
+
 NS_BOOST_MEMORY_BEGIN
+
+class DbgMemoryState
+{
+private:
+	typedef std::pair<const char*, int> FileLine;
+	typedef std::map<void*, FileLine> Container;
+
+	Container m_data;
+
+public:
+	void BOOST_MEMORY_CALL allocate(void* p, const char* file = NULL, int line = 0)
+	{
+		BOOST_MEMORY_ASSERT(m_data.count(p) == 0);
+		const Container::value_type v = Container::value_type(p, FileLine(file, line));
+		m_data.insert(v);
+	}
+
+	void BOOST_MEMORY_CALL deallocate(void* p)
+	{
+		const Container::iterator it = m_data.find(p);
+		BOOST_MEMORY_ASSERT(it != m_data.end() && !"deallocate memory twice!");
+		m_data.erase(it);
+	}
+
+	void BOOST_MEMORY_CALL clear()
+	{
+		m_data.clear();
+	}
+
+	void BOOST_MEMORY_CALL reportMemoryLeak()
+	{
+		// todo;
+	}
+};
+
+class FakeMemoryState
+{
+public:
+	void BOOST_MEMORY_CALL allocate(void* p, const char* file = NULL, int line = 0) {}
+	void BOOST_MEMORY_CALL deallocate(void* p) {}
+	void BOOST_MEMORY_CALL clear() {}
+	void BOOST_MEMORY_CALL reportMemoryLeak() {}
+};
+
+#if defined(_DEBUG)
+typedef DbgMemoryState MemoryState;
+#else
+typedef FakeMemoryState MemoryState;
+#endif
 
 inline void BOOST_MEMORY_CALL enableMemoryLeakCheck()
 {

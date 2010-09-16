@@ -70,6 +70,7 @@ protected:
 	size_type m_cbChunk;
 	size_type m_nChunkPerBlock;
 	alloc_type m_alloc;
+	MemoryState m_mstate;
 	BOOST_MEMORY_THREAD_CHECKER;
 
 private:
@@ -122,6 +123,7 @@ public:
 		}
 		m_blks = NULL;
 		m_freelist = NULL;
+		m_mstate.clear();
 	}
 
 private:
@@ -142,6 +144,7 @@ private:
 		m_freelist = p->pPrev;
 
 		BOOST_MEMORY_DBG_FILL(p, alloc_size());
+		m_mstate.allocate(p);
 		return p;
 	}
 
@@ -154,6 +157,7 @@ public:
 			FreeChunk* p = m_freelist;
 			m_freelist = p->pPrev;
 			BOOST_MEMORY_DBG_FILL(p, alloc_size());
+			m_mstate.allocate(p);
 			return p;
 		}
 		return do_allocate_();
@@ -170,6 +174,7 @@ public:
 	{
 		BOOST_MEMORY_DBG_FILL(p, alloc_size());
 		BOOST_MEMORY_CHECK_THREAD();
+		m_mstate.deallocate(p);
 
 		((FreeChunk*)p)->pPrev = m_freelist;
 		m_freelist = (FreeChunk*)p;
@@ -180,6 +185,7 @@ public:
 		BOOST_MEMORY_ASSERT(cb <= alloc_size());
 		BOOST_MEMORY_DBG_FILL(p, alloc_size());
 		BOOST_MEMORY_CHECK_THREAD();
+		m_mstate.deallocate(p);
 
 		((FreeChunk*)p)->pPrev = m_freelist;
 		m_freelist = (FreeChunk*)p;

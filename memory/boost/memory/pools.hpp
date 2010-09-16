@@ -23,7 +23,7 @@ NS_BOOST_MEMORY_BEGIN
 
 namespace detail {
 
-#if defined(_MSC_VER) // vc++
+#if defined(_MSC_VER) && defined(_M_IX86) // vc++, x86
 
 #if _MSC_VER > 1200
 #pragma warning(push)
@@ -42,6 +42,10 @@ __forceinline unsigned int log2(unsigned int val) {
 #if _MSC_VER > 1200
 #pragma warning(pop)
 #endif
+
+#elif (0) // defined(_MSC_VER) && defined(_M_X64) // vc++, x64
+
+// 
 
 #elif defined(__GNUG__) || defined(__GNUC__) // g++/gcc
 
@@ -73,7 +77,7 @@ __forceinline unsigned int log2(unsigned int val)
 	}
 }
 
-#pragma message("Warning: unknown compiler and use a slow log2 algorithm!"
+#pragma message("Warning: unknown compiler and use a slow log2 algorithm!")
 
 #endif
 
