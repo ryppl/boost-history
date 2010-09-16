@@ -277,7 +277,7 @@ public:
 	void BOOST_MEMORY_CALL deallocate(void* p)
 	{
 		const Container::iterator it = m_data.find(p);
-		BOOST_MEMORY_ASSERT(it != m_data.end() && !"deallocate memory twice!");
+		BOOST_MEMORY_ASSERT(it != m_data.end() || !"deallocate invalid memory address!");
 		m_data.erase(it);
 	}
 
