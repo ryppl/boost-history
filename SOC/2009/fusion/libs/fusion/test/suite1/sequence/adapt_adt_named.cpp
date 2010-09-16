@@ -1,11 +1,11 @@
-/*==============================================================================
+/*=============================================================================
     Copyright (c) 2001-2009 Joel de Guzman
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
-#include <boost/fusion/adapted/class/adapt_class_named.hpp>
+#include <boost/fusion/adapted/adt/adapt_adt_named.hpp>
 #include <boost/fusion/sequence/intrinsic/at.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/sequence/intrinsic/empty.hpp>
@@ -39,7 +39,7 @@ namespace ns
     public:
     
         point() : x(0), y(0) {}
-        point(int x, int y) : x(x), y(y) {}
+        point(int in_x, int in_y) : x(in_x), y(in_y) {}
             
         int get_x() const { return x; }
         int get_y() const { return y; }
@@ -54,7 +54,7 @@ namespace ns
 }
 
 // this creates a fusion view: boost::fusion::adapted::point
-BOOST_FUSION_ADAPT_CLASS_NAMED(
+BOOST_FUSION_ADAPT_ADT_NAMED(
     ns::point, point,
     (int, int, obj.obj.get_x(), obj.obj.set_x(val))
     (int, int, obj.obj.get_y(), obj.obj.set_y(val))
@@ -91,7 +91,6 @@ main()
     }
 
     {
-        //TODO
         vector<int, float> v1(4, 2.0f);
         ns::point basep(5, 3);
         adapted::point v2(basep);

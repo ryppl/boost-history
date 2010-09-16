@@ -10,10 +10,10 @@
 #include "../internal/base.hpp"
 #undef BOOST_FUSION_TEST_NO_ADAPTED_MPL
 
+#include <boost/fusion/adapted/adt.hpp>
 #include <boost/fusion/adapted/array.hpp>
 #include <boost/fusion/adapted/boost_array.hpp>
 #include <boost/fusion/adapted/boost_tuple.hpp>
-#include <boost/fusion/adapted/class.hpp>
 #include <boost/fusion/adapted/std_array.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>
 #include <boost/fusion/adapted/std_tuple.hpp>

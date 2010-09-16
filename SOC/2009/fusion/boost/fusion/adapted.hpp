@@ -10,10 +10,10 @@
 #ifndef BOOST_FUSION_ADAPTED_HPP
 #define BOOST_FUSION_ADAPTED_HPP
 
+#include <boost/fusion/adapted/adt.hpp>
 #include <boost/fusion/adapted/array.hpp>
 #include <boost/fusion/adapted/boost_array.hpp>
 #include <boost/fusion/adapted/boost_tuple.hpp>
-#include <boost/fusion/adapted/class.hpp>
 #include <boost/fusion/adapted/mpl.hpp>
 #include <boost/fusion/adapted/std_array.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>

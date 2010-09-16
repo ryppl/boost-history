@@ -44,9 +44,10 @@ namespace boost { namespace fusion { namespace detail
         static bool
         call(It1 const& it1, It2 const& it2)
         {
-            return call(it1,
-                    it2,
-                    typename result_of::equal_to<It1, end1_type>::type());
+            return call(
+                it1,
+                it2,
+                typename result_of::equal_to<It1, end1_type>::type());
         }
     };
 

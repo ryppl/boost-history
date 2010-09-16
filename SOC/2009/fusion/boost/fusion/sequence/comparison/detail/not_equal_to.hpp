@@ -36,7 +36,7 @@ namespace boost { namespace fusion { namespace detail
         call(It1 const& it1, It2 const& it2, mpl::false_)
         {
             return fusion::deref(it1) != fusion::deref(it2) ||
-                   call(fusion::next(it1), fusion::next(it2));
+               call(fusion::next(it1), fusion::next(it2));
         }
 
         template<typename It1, typename It2>
@@ -44,9 +44,9 @@ namespace boost { namespace fusion { namespace detail
         call(It1 const& it1, It2 const& it2)
         {
             return call(
-                    it1,
-                    it2,
-                    typename result_of::equal_to<It1, end1_type>::type());
+                it1,
+                it2,
+                typename result_of::equal_to<It1, end1_type>::type());
         }
     };
 

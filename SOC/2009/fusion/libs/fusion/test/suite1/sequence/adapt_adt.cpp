@@ -1,11 +1,11 @@
-/*==============================================================================
+/*=============================================================================
     Copyright (c) 2001-2009 Joel de Guzman
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
-#include <boost/fusion/adapted/class/adapt_class.hpp>
+#include <boost/fusion/adapted/adt/adapt_adt.hpp>
 #include <boost/fusion/sequence/intrinsic/at.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/sequence/intrinsic/empty.hpp>
@@ -39,7 +39,7 @@ namespace ns
     public:
     
         point() : x(0), y(0) {}
-        point(int x, int y) : x(x), y(y) {}
+        point(int in_x, int in_y) : x(in_x), y(in_y) {}
             
         int get_x() const { return x; }
         int get_y() const { return y; }
@@ -73,14 +73,14 @@ namespace ns
 #endif
 }
 
-BOOST_FUSION_ADAPT_CLASS(
+BOOST_FUSION_ADAPT_ADT(
     ns::point,
     (int, int, obj.get_x(), obj.set_x(val))
     (int, int, obj.get_y(), obj.set_y(val))
 )
 
 #if !BOOST_WORKAROUND(__GNUC__,<4)
-BOOST_FUSION_ADAPT_CLASS(
+BOOST_FUSION_ADAPT_ADT(
     ns::point_with_private_members,
     (int, int, obj.get_x(), obj.set_x(val))
     (int, int, obj.get_y(), obj.set_y(val))
@@ -91,7 +91,6 @@ int
 main()
 {
     using namespace boost::fusion;
-    using namespace std;
 
     std::cout << tuple_open('[');
     std::cout << tuple_close(']');
@@ -118,10 +117,9 @@ main()
     }
 
     {
-        //TODO
-        boost::fusion::vector<int, float> v1(4, 2.0f);
+        vector<int, float> v1(4, 2);
         ns::point v2(5, 3);
-        boost::fusion::vector<long, double> v3(5, 4);
+        vector<long, double> v3(5, 4);
         BOOST_TEST(v1 < v2);
         BOOST_TEST(v1 <= v2);
         BOOST_TEST(v2 > v1);
@@ -135,21 +133,21 @@ main()
     {
         // conversion from ns::point to vector
         ns::point p(5, 3);
-        boost::fusion::vector<int, long> v(p);
+        vector<int, long> v(p);
         v = p;
     }
 
     {
         // conversion from ns::point to list
         ns::point p(5, 3);
-        boost::fusion::list<int, long> l(p);
+        list<int, long> l(p);
         l = p;
     }
 
     {
         BOOST_MPL_ASSERT((boost::mpl::is_sequence<ns::point>));
         BOOST_MPL_ASSERT((boost::is_same<
-            boost::fusion::result_of::value_at_c<ns::point,0>::type
+            result_of::value_at_c<ns::point,0>::type
           , boost::mpl::front<ns::point>::type>));
     }
 

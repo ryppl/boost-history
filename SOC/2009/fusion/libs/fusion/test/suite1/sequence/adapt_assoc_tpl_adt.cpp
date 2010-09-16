@@ -1,46 +1,38 @@
-/*==============================================================================
+/*=============================================================================
     Copyright (c) 2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
-#include <boost/fusion/adapted/class/adapt_class.hpp>
-#include <boost/fusion/sequence/intrinsic/at.hpp>
-#include <boost/fusion/sequence/intrinsic/size.hpp>
-#include <boost/fusion/sequence/intrinsic/empty.hpp>
-#include <boost/fusion/sequence/intrinsic/front.hpp>
-#include <boost/fusion/sequence/intrinsic/back.hpp>
-#include <boost/fusion/sequence/intrinsic/value_at.hpp>
-#include <boost/fusion/sequence/io/out.hpp>
-#include <boost/fusion/container/vector/vector.hpp>
-#include <boost/fusion/container/list/list.hpp>
+#include <boost/fusion/sequence.hpp>
+#include <boost/fusion/support.hpp>
+#include <boost/fusion/container/list.hpp>
+#include <boost/fusion/container/vector.hpp>
 #include <boost/fusion/container/generation/make_vector.hpp>
-#include <boost/fusion/container/vector/convert.hpp>
-#include <boost/fusion/sequence/comparison/equal_to.hpp>
-#include <boost/fusion/sequence/comparison/not_equal_to.hpp>
-#include <boost/fusion/sequence/comparison/less.hpp>
-#include <boost/fusion/sequence/comparison/less_equal.hpp>
-#include <boost/fusion/sequence/comparison/greater.hpp>
-#include <boost/fusion/sequence/comparison/greater_equal.hpp>
-#include <boost/fusion/mpl.hpp>
-#include <boost/fusion/support/is_view.hpp>
+#include <boost/fusion/adapted/adt/adapt_assoc_adt.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/is_sequence.hpp>
-#include <boost/mpl/assert.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/static_assert.hpp>
 #include <iostream>
 #include <string>
 
 namespace ns
 {
+    struct x_member;
+    struct y_member;
+    struct z_member;
+
     template<typename X, typename Y>
     class point
     {
     public:
     
         point() : x(0), y(0) {}
-        point(X x, Y y) : x(x), y(y) {}
+        point(X in_x, Y in_y) : x(in_x), y(in_y) {}
             
         X get_x() const { return x; }
         Y get_y() const { return y; }
@@ -54,11 +46,11 @@ namespace ns
     };
 }
 
-BOOST_FUSION_ADAPT_TPL_CLASS(
+BOOST_FUSION_ADAPT_ASSOC_TPL_ADT(
     (X)(Y),
     (ns::point)(X)(Y),
-    (X, X, obj.get_x(), obj.set_x(val))
-    (Y, Y, obj.get_y(), obj.set_y(val))
+    (X, X, obj.get_x(), obj.set_x(val), ns::x_member)
+    (Y, Y, obj.get_y(), obj.set_y(val), ns::y_member)
 )
 
 int
@@ -67,7 +59,7 @@ main()
     using namespace boost::fusion;
     using namespace std;
 
-    typedef ns::point<int, int> point;
+    typedef ns::point<int,int> point;
 
     std::cout << tuple_open('[');
     std::cout << tuple_close(']');
@@ -94,8 +86,7 @@ main()
     }
 
     {
-        //TODO
-        boost::fusion::vector<int, float> v1(4, 2.0f);
+        boost::fusion::vector<int, float> v1(4, 2);
         point v2(5, 3);
         boost::fusion::vector<long, double> v3(5, 4);
         BOOST_TEST(v1 < v2);
@@ -127,6 +118,21 @@ main()
         BOOST_MPL_ASSERT((boost::is_same<
             boost::fusion::result_of::value_at_c<point,0>::type
           , boost::mpl::front<point>::type>));
+    }
+
+    {
+        // assoc stuff
+        BOOST_MPL_ASSERT((result_of::has_key<point, ns::x_member>));
+        BOOST_MPL_ASSERT((result_of::has_key<point, ns::y_member>));
+        BOOST_MPL_ASSERT((boost::mpl::not_<result_of::has_key<point, ns::z_member> >));
+
+        BOOST_MPL_ASSERT((boost::is_same<result_of::value_at_key<point, ns::x_member>::type, int>));
+        BOOST_MPL_ASSERT((boost::is_same<result_of::value_at_key<point, ns::y_member>::type, int>));
+
+        point p(5, 3);
+
+        BOOST_TEST(at_key<ns::x_member>(p) == 5);
+        BOOST_TEST(at_key<ns::y_member>(p) == 3);
     }
 
     return boost::report_errors();
