@@ -21,7 +21,6 @@
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/comparison/not_equal.hpp>
-#include <boost/preprocessor/control/expr_if.hpp>
 #include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
@@ -73,15 +72,14 @@ namespace boost { namespace fusion { namespace detail
     {                                                                           \
         template<typename It0, typename F>                                      \
         static void                                                             \
-        call(                                                                   \
-            It0 const& BOOST_PP_EXPR_IF(N_,it0),                                \
-            BOOST_FUSION_RREF_ELSE_OBJ(F) BOOST_PP_EXPR_IF(N_,f))               \
+        call(It0 const& it0,BOOST_FUSION_RREF_ELSE_OBJ(F) f)                    \
         {                                                                       \
             BOOST_PP_REPEAT(                                                    \
                 BOOST_PP_DEC(N_),                                               \
                 BOOST_FUSION_UNROLLED_FOR_EACH_IMPL_N,_)                        \
                                                                                 \
             f(fusion::deref(BOOST_PP_CAT(it,BOOST_PP_DEC(N_))));                \
+                                                                                \
             BOOST_PP_IIF(                                                       \
                 BOOST_PP_EQUAL(N_,BOOST_FUSION_UNROLLED_DEPTH),                 \
                 BOOST_FUSION_UNROLLED_FOR_EACH_IMPL_NEXT,                       \

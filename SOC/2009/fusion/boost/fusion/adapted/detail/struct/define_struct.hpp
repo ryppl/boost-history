@@ -62,8 +62,9 @@
             BOOST_PP_TUPLE_ELEM(3,1,DATA))                                      \
     {}
 
-#define BOOST_FUSION_DEFINE_STRUCT_ASSIGN_FILLER_I(                             \
-    R, ATTRIBUTE_TUPEL_SIZE, I_, ATTRIBUTE)                                     \
+#ifdef BOOST_NO_AUTO_DECLARATIONS
+#   define BOOST_FUSION_DEFINE_STRUCT_ASSIGN_FILLER_I(                          \
+        R, ATTRIBUTE_TUPEL_SIZE, I_, ATTRIBUTE)                                 \
                                                                                 \
     BOOST_PP_EXPR_IF(                                                           \
         I_,                                                                     \
@@ -72,11 +73,23 @@
                 BOOST_PP_CAT(I,BOOST_PP_DEC(I_))&                               \
             >::type                                                             \
         BOOST_PP_CAT(I,I_);                                                     \
-        BOOST_PP_CAT(I,I_) BOOST_PP_CAT(i,I_)=                                  \
+        BOOST_PP_CAT(I,I_) const BOOST_PP_CAT(i,I_)=                            \
             boost::fusion::next(BOOST_PP_CAT(i,BOOST_PP_DEC(I_)));)             \
                                                                                 \
     BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE,1,ATTRIBUTE)=                      \
         boost::fusion::deref(BOOST_PP_CAT(i,I_));
+#else
+#   define BOOST_FUSION_DEFINE_STRUCT_ASSIGN_FILLER_I(                          \
+        R, ATTRIBUTE_TUPEL_SIZE, I_, ATTRIBUTE)                                 \
+                                                                                \
+    BOOST_PP_EXPR_IF(                                                           \
+        I_,                                                                     \
+        auto const BOOST_PP_CAT(i,I_)=                                          \
+            boost::fusion::next(BOOST_PP_CAT(i,BOOST_PP_DEC(I_)));)             \
+                                                                                \
+    BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE,1,ATTRIBUTE)=                      \
+        boost::fusion::deref(BOOST_PP_CAT(i,I_));
+#endif
 
 #define BOOST_FUSION_DEFINE_STRUCT_ASSIGN_OP(                                   \
     ATTRIBUTES_SEQ, ATTRIBUTE_TUPEL_SIZE)                                       \
