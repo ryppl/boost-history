@@ -77,7 +77,7 @@ private:
 	void BOOST_MEMORY_CALL init_(size_type cbElem)
 	{
 		cbElem = ROUND(cbElem, sizeof(void*));
-		m_cbChunk = MAX(cbElem, MinElemBytes);
+		m_cbChunk = MAX(cbElem, (size_type)MinElemBytes);
 		m_nChunkPerBlock = BlockSize/m_cbChunk;
 		m_freelist = NULL;
 		m_blks = NULL;

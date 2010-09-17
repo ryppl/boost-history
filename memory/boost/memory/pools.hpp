@@ -124,7 +124,7 @@ private:
 
 public:
 	pools_alloc()
-		: m_poolAlloc(sizeof(pool_type))
+		: m_poolAlloc(ROUND(sizeof(pool_type), 1 << ALIGN_BITS1))
 	{
 		memset(m_pools, 0, sizeof(pool_type*)*NPOOL);
 
