@@ -24,6 +24,7 @@
 
 #if defined(BOOST_POSIX_API)
 #   include <boost/process/operations.hpp>
+#   include <string>
 #   include <sys/types.h>
 #   include <sys/wait.h>
 #elif defined(BOOST_WINDOWS_API)
@@ -77,7 +78,10 @@ public:
     ~basic_status_service()
     {
 #if defined(BOOST_POSIX_API)
-        if (work_thread_.joinable())
+        boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
+        bool worker_thread_active = (pids_ != 0);
+        lock.unlock();
+        if (worker_thread_active)
         {
             stop_work_thread();
             work_thread_.join();
@@ -121,14 +125,14 @@ public:
     {
 #if defined(BOOST_POSIX_API)
         boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
-        if (!work_)
+        if (++pids_ == 1)
+        {
             work_.reset(new boost::asio::io_service::work(
                 this->get_io_service()));
-        ++pids_;
-        if (!work_thread_.joinable())
             work_thread_ = boost::thread(
                 &basic_status_service<StatusImplementation>::work_thread,
                 this);
+        }
         impl->async_wait(pid, this->get_io_service().wrap(handler));
 #elif defined(BOOST_WINDOWS_API)
         HANDLE handle = OpenProcess(SYNCHRONIZE | PROCESS_QUERY_INFORMATION,
@@ -155,7 +159,7 @@ private:
     void work_thread()
     {
 #if defined(BOOST_POSIX_API)
-        while (pids_)
+        for (;;)
         {
             int status;
             pid_t pid = ::wait(&status);
@@ -176,7 +180,10 @@ private:
                     impls_.begin(); it != impls_.end(); ++it)
                     (*it)->complete(pid, status);
                 if (--pids_ == 0)
+                {
                     work_.reset();
+                    break;
+                }
             }
         }
 #elif defined(BOOST_WINDOWS_API)
@@ -221,7 +228,10 @@ private:
 #if defined(BOOST_POSIX_API)
         // By creating a child process which immediately exits
         // we interrupt wait().
-        interrupt_pid_ = create_child("/bin/sh").get_id();
+        std::vector<std::string> args;
+        args.push_back("-c");
+        args.push_back("'exit'");
+        interrupt_pid_ = create_child("/bin/sh", args).get_id();
 #elif defined(BOOST_WINDOWS_API)
         // By signaling the event in the first slot WaitForMultipleObjects()
         // will return. The work thread won't do anything except checking if

@@ -91,3 +91,57 @@ BOOST_AUTO_TEST_CASE(test_status_async_wait)
     s.async_wait(c.get_id(), handler); 
     ioservice.run(); 
 } 
+
+BOOST_AUTO_TEST_CASE(test_status_async_wait_for_two_child_processes) 
+{ 
+    check_helpers(); 
+
+    std::vector<std::string> args; 
+    args.push_back("exit-success"); 
+
+    bp::child c1 = bp::create_child(get_helpers_path(), args); 
+    bp::child c2 = bp::create_child(get_helpers_path(), args); 
+
+    ba::io_service ioservice; 
+    bp::status s(ioservice); 
+    s.async_wait(c1.get_id(), handler); 
+    s.async_wait(c2.get_id(), handler); 
+    ioservice.run(); 
+} 
+
+BOOST_AUTO_TEST_CASE(test_status_async_wait_twice) 
+{ 
+    check_helpers(); 
+
+    std::vector<std::string> args; 
+    args.push_back("exit-success"); 
+
+    ba::io_service ioservice; 
+    bp::status s(ioservice); 
+
+    bp::child c1 = bp::create_child(get_helpers_path(), args); 
+    s.async_wait(c1.get_id(), handler); 
+    ioservice.run(); 
+
+    bp::child c2 = bp::create_child(get_helpers_path(), args); 
+    s.async_wait(c2.get_id(), handler); 
+    ioservice.run(); 
+} 
+
+BOOST_AUTO_TEST_CASE(test_status_async_wait_shutdown) 
+{ 
+    check_helpers(); 
+
+    std::vector<std::string> args; 
+    args.push_back("loop"); 
+
+    bp::child c = bp::create_child(get_helpers_path(), args); 
+
+    { 
+        ba::io_service ioservice; 
+        bp::status s(ioservice); 
+        s.async_wait(c.get_id(), handler); 
+    } 
+
+    c.terminate(); 
+} 
