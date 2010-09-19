@@ -33,6 +33,11 @@ project
         <toolset>msvc:<cxxflags>/wd4127
     ;
 
+   test-suite "examples"
+        :
+        [ run ../example/complex.cpp ]
+        ;
+
    test-suite "common_type"
         :
         [ run common_type_test.cpp ]
