@@ -49,8 +49,8 @@ namespace boost
                 typedef typename detail::identity<T>::type identity_t;
 
                 typedef typename
-                    mpl::eval_if<
-                        mpl::is_sequence<identity_t>
+                    mpl::eval_if_c<
+                        mpl::is_sequence<identity_t>::value
                       , mpl::identity<mpl_sequence_tag>
                       , mpl::eval_if<
                             mpl::and_<

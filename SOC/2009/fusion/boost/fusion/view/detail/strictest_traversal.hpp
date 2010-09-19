@@ -34,8 +34,8 @@ namespace boost { namespace fusion
                 strictest_so_far_identity;
 
                 typedef typename
-                    mpl::if_<
-                        is_base_of<strictest_so_far_identity,next_tag>
+                    mpl::if_c<
+                        is_base_of<strictest_so_far_identity,next_tag>::value
                       , strictest_so_far_identity
                       , next_tag
                     >::type

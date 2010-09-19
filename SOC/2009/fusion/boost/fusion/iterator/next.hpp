@@ -32,7 +32,7 @@ namespace boost { namespace fusion
     }
 
     template<typename It>
-    typename result_of::next<It const&>::type const
+    typename result_of::next<It const&>::type
     next(It const& it)
     {
         return result_of::next<It const&>::call(it);

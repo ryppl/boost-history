@@ -25,8 +25,8 @@ namespace boost { namespace fusion
         typedef FRef transform_type;
         typedef It it_type;
         typedef typename
-            mpl::eval_if<
-                traits::is_random_access<it_type>
+            mpl::eval_if_c<
+                traits::is_random_access<it_type>::value
               , random_access_traversal_tag
               , mpl::if_<
                     traits::is_bidirectional<it_type>
@@ -39,8 +39,8 @@ namespace boost { namespace fusion
 
         typedef transform_view_iterator_tag fusion_tag;
         typedef typename
-            mpl::eval_if<
-                is_associative
+            mpl::eval_if_c<
+                is_associative::value
               , mpl::inherit2<it_category,associative_tag>
               , it_category
             >::type
@@ -97,8 +97,8 @@ namespace boost { namespace fusion
 
         typedef transform_view_iterator2_tag fusion_tag;
         typedef typename
-            mpl::eval_if<
-                is_associative
+            mpl::eval_if_c<
+                is_associative::value
               , mpl::inherit2<strictest_traversal,associative_tag>
               , strictest_traversal
             >::type

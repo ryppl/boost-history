@@ -20,8 +20,8 @@ namespace boost { namespace fusion { namespace detail
 
     template<typename It, typename Begin,typename End>
     struct is_in_range
-      : mpl::eval_if<
-            result_of::equal_to<It,Begin>
+      : mpl::eval_if_c<
+            result_of::equal_to<It,Begin>::value
           , mpl::identity<mpl::true_>
           , mpl::eval_if<
                 result_of::equal_to<Begin,End>

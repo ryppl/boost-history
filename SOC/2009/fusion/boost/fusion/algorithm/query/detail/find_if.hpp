@@ -46,11 +46,11 @@ namespace boost { namespace fusion
 
         template<typename Begin, typename End, typename Pred>
         struct main_find_if
-          : mpl::eval_if<
+          : mpl::eval_if_c<
                 mpl::or_<
                     result_of::equal_to<Begin, End>
                   , mpl::apply1<Pred,Begin>
-                >
+                >::value
               , mpl::identity<Begin>
               , next_find_if<Begin, End, Pred>
             >
@@ -98,8 +98,8 @@ namespace boost { namespace fusion
         struct unrolled_find_if<It0, Pred, N>
 
 #define BOOST_FUSION_UNROLLED_FIND_IF_HIERARCHY(Z,N,_)                          \
-      , mpl::eval_if<                                                           \
-            apply_offset_filter<It0, Pred, N>                                   \
+      , mpl::eval_if_c<                                                         \
+            apply_offset_filter<It0, Pred, N>::value                            \
           , result_of::advance_c<It0,N>
 
 #define BOOST_FUSION_UNROLLED_FIND_IF_HIERARCHY_CLOSE(Z,N,_) >
@@ -109,8 +109,8 @@ namespace boost { namespace fusion
             BOOST_PP_EQUAL(BOOST_PP_INC(N_),BOOST_FUSION_UNROLLED_DEPTH),       \
             BOOST_FUSION_UNROLLED_FIND_IF_IMPL_DECLERATION,                     \
             BOOST_FUSION_UNROLLED_FIND_IF_IMPL_SPECIALIZATION)(N_)              \
-          : mpl::eval_if<                                                       \
-                typename mpl::apply1<Pred,It0>::type                            \
+          : mpl::eval_if_c<                                                     \
+                mpl::apply1<Pred,It0>::type::value                              \
               , mpl::identity<It0>                                              \
               , mpl::eval_if<                                                   \
                     apply_offset_filter<It0, Pred, 1>                           \
@@ -139,8 +139,8 @@ namespace boost { namespace fusion
 
         template<typename It, typename Pred>
         struct unrolled_find_if<It, Pred, 1>
-          : mpl::eval_if<
-                typename mpl::apply1<Pred,It>::type
+          : mpl::eval_if_c<
+                mpl::apply1<Pred,It>::type::value
               , mpl::identity<It>
               , result_of::next<It>
             >

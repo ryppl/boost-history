@@ -92,8 +92,8 @@ namespace boost { namespace fusion
         typedef fusion_sequence_tag tag;
         typedef mpl::true_ is_view;
         typedef typename
-            mpl::eval_if<
-                is_associative
+            mpl::eval_if_c<
+                is_associative::value
               , mpl::inherit2<strictest_traversal,associative_tag>
               , strictest_traversal
             >::type
@@ -157,8 +157,8 @@ namespace boost { namespace fusion
         typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq) storage_type;
         typedef typename storage_type::type seq_type;
         typedef typename
-            mpl::eval_if<
-                traits::is_random_access<seq_type>
+            mpl::eval_if_c<
+                traits::is_random_access<seq_type>::value
               , random_access_traversal_tag
               , mpl::if_<
                     traits::is_bidirectional<seq_type>
@@ -170,8 +170,8 @@ namespace boost { namespace fusion
         typedef F transform_type;
 
         typedef typename
-            mpl::eval_if<
-                is_associative
+            mpl::eval_if_c<
+                is_associative::value
               , mpl::inherit2<seq_category,associative_tag>
               , seq_category
             >::type

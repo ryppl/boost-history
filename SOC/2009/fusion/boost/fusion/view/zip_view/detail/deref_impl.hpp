@@ -31,8 +31,8 @@ namespace boost { namespace fusion
 
             template<typename Self, typename It>
             struct result<Self(It)>
-              : mpl::eval_if<
-                    is_same<It, unused_type const&>
+              : mpl::eval_if_c<
+                    is_same<It, unused_type const&>::value
                   , mpl::identity<unused_type const&>
                   , result_of::deref<It>
                 >

@@ -71,7 +71,7 @@ namespace boost { namespace fusion { namespace detail
         is_directly_convertible;
 
         typedef typename
-            mpl::if_<
+            mpl::if_c<
                 mpl::or_<
                     is_const<object_type>
                   , mpl::and_<
@@ -82,13 +82,13 @@ namespace boost { namespace fusion { namespace detail
                         mpl::not_<is_directly_convertible>
                       , const_pointee<Instance>
                     >
-                >
+                >::value
               , class_type const
               , class_type
             >::type
         const_class_type;
         typedef typename
-            mpl::if_<
+            mpl::if_c<
                 mpl::or_<
                     is_volatile<object_type>
                   , mpl::and_<
@@ -99,7 +99,7 @@ namespace boost { namespace fusion { namespace detail
                         mpl::not_<is_directly_convertible>
                       , volatile_pointee<Instance>
                     >
-                >
+                >::value
               , const_class_type volatile
               , const_class_type
             >::type

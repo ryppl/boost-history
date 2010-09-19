@@ -53,29 +53,29 @@ namespace boost { namespace fusion
             typedef T& type;
         };
 
-#define BOOST_FUSION_DEDUCE_CV_REF_SPECIALIZATION(MODIFIER,DEDUCE)\
-        template<typename T>\
-        struct DEDUCE<T MODIFIER>\
-        {\
-            typedef detail::is_po_callable<T MODIFIER> is_po_callable;\
-            \
-            typedef typename\
-                mpl::eval_if<\
-                    typename is_po_callable::type\
-                  , mpl::if_<\
-                        typename is_po_callable::is_pointer\
-                      , T\
-                      , T MODIFIER\
-                    >\
-                  , deduce<T>\
-                >::type\
-            type;\
-        };\
-        \
-        template<typename T>\
-        struct deduce<reference_wrapper<T> MODIFIER>\
-        {\
-            typedef T& type;\
+#define BOOST_FUSION_DEDUCE_CV_REF_SPECIALIZATION(MODIFIER,DEDUCE)              \
+        template<typename T>                                                    \
+        struct DEDUCE<T MODIFIER>                                               \
+        {                                                                       \
+            typedef detail::is_po_callable<T MODIFIER> is_po_callable;          \
+                                                                                \
+            typedef typename                                                    \
+                mpl::eval_if_c<                                                 \
+                    is_po_callable::type::value                                 \
+                  , mpl::if_c<                                                  \
+                        is_po_callable::is_pointer::value                       \
+                      , T                                                       \
+                      , T MODIFIER                                              \
+                    >                                                           \
+                  , deduce<T>                                                   \
+                >::type                                                         \
+            type;                                                               \
+        };                                                                      \
+                                                                                \
+        template<typename T>                                                    \
+        struct deduce<reference_wrapper<T> MODIFIER>                            \
+        {                                                                       \
+            typedef T& type;                                                    \
         };
 
         BOOST_FUSION_DEDUCE_CV_REF_SPECIALIZATION(volatile&,deduce)
@@ -144,8 +144,8 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
             typedef typename
-                mpl::if_<
-                    is_regular_reference
+                mpl::if_c<
+                    is_regular_reference::value
                   , T
                   , typename add_lref<deduced>::type
                 >::type
@@ -153,14 +153,14 @@ namespace boost { namespace fusion
 #else
             //8.5.3p5...
             typedef typename
-                mpl::eval_if<
-                    is_regular_reference
-                  , mpl::if_<
+                mpl::eval_if_c<
+                    is_regular_reference::value
+                  , mpl::if_c<
                         mpl::or_<
                             mpl::not_<is_rref<T> >
                           , is_class<deduced>
                           , is_array<deduced>
-                        >
+                        >::value
                       , T
                       , deduced&
                     >

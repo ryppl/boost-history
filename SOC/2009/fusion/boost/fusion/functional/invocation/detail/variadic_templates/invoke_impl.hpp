@@ -346,8 +346,8 @@ namespace boost { namespace fusion { namespace detail
         typedef void type;
 #else
         typedef
-            mpl::eval_if<
-                traits::is_bidirectional<SeqRef>
+            mpl::eval_if_c<
+                traits::is_bidirectional<SeqRef>::value
               , bidirectional_impl::
                     BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME)<
                     result_of::size<SeqRef>::value
@@ -366,8 +366,8 @@ namespace boost { namespace fusion { namespace detail
         typedef preevaluate<F> preevaluater;
 
         typedef typename
-            mpl::eval_if<
-                typename preevaluater::is_preevaluable
+            mpl::eval_if_c<
+                preevaluater::is_preevaluable::value
               , preevaluater
 #   ifndef BOOST_FUSION_NO_MEMBER_PTR
               , mpl::eval_if<

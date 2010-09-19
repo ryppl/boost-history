@@ -60,14 +60,14 @@ namespace boost { namespace fusion
     }
 
     template<int N, typename It>
-    inline typename result_of::advance_c<It const&, N>::type const
+    inline typename result_of::advance_c<It const&, N>::type
     advance_c(It const& it)
     {
         return result_of::advance_c<It const&, N>::call(it);
     }
 
     template<typename N, typename It>
-    inline typename result_of::advance<It const&, N>::type const
+    inline typename result_of::advance<It const&, N>::type
     advance(It const& it)
     {
         return result_of::advance<It const&, N>::call(it);

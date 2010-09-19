@@ -29,8 +29,8 @@ namespace boost { namespace fusion { namespace extension
             typedef typename result_of::empty<Seq>::type empty;
 
             typedef typename
-                mpl::if_<
-                    empty
+                mpl::if_c<
+                    empty::value
                   , nil_iterator
                   , cons_iterator<typename detail::add_lref<Seq>::type>
                 >::type

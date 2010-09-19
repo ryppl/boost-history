@@ -224,8 +224,8 @@ namespace boost { namespace fusion { namespace detail
         typedef typename remove_reference<TestType>::type test_type;
 
         typedef typename
-            mpl::if_<
-                is_const<test_type>
+            mpl::if_c<
+                is_const<test_type>::value
               , typename add_const<Type>::type
               , Type
             >::type
@@ -233,8 +233,8 @@ namespace boost { namespace fusion { namespace detail
         const_type;
 
         typedef typename
-            mpl::if_<
-                is_volatile<test_type>
+            mpl::if_c<
+                is_volatile<test_type>::value
               , typename add_volatile<const_type>::type
               , const_type
             >::type
@@ -245,11 +245,11 @@ namespace boost { namespace fusion { namespace detail
         cv_type;
 
         typedef typename
-            mpl::eval_if<
+            mpl::eval_if_c<
                 //8.5.3p5...
-                is_rref<TestType>
-              , mpl::if_<
-                    mpl::or_<is_class<Type>, is_array<Type> >
+                is_rref<TestType>::value
+              , mpl::if_c<
+                    mpl::or_<is_class<Type>, is_array<Type> >::value
                   , cv_type&&
                   , cv_type
                 >
@@ -271,12 +271,12 @@ namespace boost { namespace fusion { namespace detail
     //8.5.3p5...
     template<typename TestType,typename Type>
     struct forward_as<TestType,Type&&>
-      : mpl::if_<
-            mpl::or_<is_class<Type>, is_array<Type> >
+      : mpl::if_c<
+            mpl::or_<is_class<Type>, is_array<Type> >::value
           , Type&&
 #if BOOST_WORKAROUND(BOOST_MSVC,==1600)
-          , typename mpl::if_<
-                is_function<Type>
+          , typename mpl::if_c<
+                is_function<Type>::value
               , Type&
               , Type
             >::type

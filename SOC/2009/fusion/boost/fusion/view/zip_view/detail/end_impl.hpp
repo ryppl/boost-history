@@ -38,8 +38,8 @@ namespace boost { namespace fusion
 
             template<typename Self, typename SeqRef>
             struct result<Self(SeqRef)>
-              : mpl::eval_if<
-                    is_same<SeqRef, unused_type const&>
+              : mpl::eval_if_c<
+                    is_same<SeqRef, unused_type const&>::value
                   , mpl::identity<unused_type const&>
                   , get_endpoint<SeqRef, M>
                 >

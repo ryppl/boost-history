@@ -64,8 +64,8 @@ namespace boost { namespace fusion
             typedef mpl::true_ is_view;
             typedef Iterator iterator_type;
 
-            typedef typename mpl::if_<
-                traits::is_view<sequence_non_ref_type>
+            typedef typename mpl::if_c<
+                traits::is_view<sequence_non_ref_type>::value
               , sequence_non_ref_type
               , sequence_non_ref_type &
             >::type sequence_type;

@@ -130,7 +130,7 @@ namespace boost { namespace fusion
             not_found;
 
             typedef typename
-                mpl::eval_if<is_found_, found, not_found>::type
+                mpl::eval_if_c<is_found_::value, found, not_found>::type
             type;
 
             static type

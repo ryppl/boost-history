@@ -31,8 +31,8 @@ namespace boost { namespace fusion
             typedef typename result_of::end<Seq>::type end_type;
 
             typedef typename
-                mpl::eval_if<
-                    result_of::equal_to<BeginRef, end_type>
+                mpl::eval_if_c<
+                    result_of::equal_to<BeginRef, end_type>::value
                   , mpl::identity<BeginRef>
                   , result_of::next<BeginRef>
                 >::type

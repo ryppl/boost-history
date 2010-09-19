@@ -56,7 +56,9 @@ namespace boost { namespace fusion
        typedef Left left_type;
        typedef Right right_type;
        typedef typename
-           mpl::if_<traits::is_sequence<Data>, Data, single_view<Data> >::type
+           mpl::if_c<
+               traits::is_sequence<Data>, Data, single_view<Data>::value
+           >::type
        data_view;
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
        typedef vector3<Left, data_view, Right> segments_type;

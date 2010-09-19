@@ -40,8 +40,8 @@ namespace boost { namespace fusion { namespace extension
             typedef typename result_of::empty<cdr_type>::type empty;
 
             typedef typename
-                mpl::if_<
-                    empty
+                mpl::if_c<
+                    empty::value
                   , nil_iterator
                   , cons_iterator<cdr_type>
                 >::type

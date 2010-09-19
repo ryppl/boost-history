@@ -21,13 +21,11 @@ namespace boost { namespace fusion { namespace extension
         template<typename Seq, typename N>
         struct apply
         {
-            typedef typename
-                detail::remove_reference<Seq>::type
-            seq;
+            typedef typename detail::remove_reference<Seq>::type seq;
 
             typedef typename
-                mpl::eval_if<
-                    N
+                mpl::eval_if_c<
+                    N::value ? true : false
                   , apply<typename seq::cdr_type, mpl::int_<N::value-1> >
                   , mpl::identity<typename seq::car_type>
                 >::type

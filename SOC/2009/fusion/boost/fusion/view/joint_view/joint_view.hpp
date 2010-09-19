@@ -56,11 +56,11 @@ namespace boost { namespace fusion
         typedef typename storage2_type::type seq2_type;
 
         typedef typename
-            mpl::eval_if<
+            mpl::eval_if_c<
                 mpl::and_<
                     traits::is_associative<seq1_type>
                   , traits::is_associative<seq2_type>
-                >
+                >::value
               , mpl::inherit2<forward_traversal_tag,associative_tag>
               , forward_traversal_tag
             >::type

@@ -37,8 +37,8 @@ namespace boost { namespace fusion { namespace distance_detail
 
     template<typename Begin, typename End>
     struct linear_distance
-      : mpl::eval_if<
-            result_of::equal_to<Begin, End>
+      : mpl::eval_if_c<
+            result_of::equal_to<Begin, End>::value
           , mpl::identity<mpl::int_<0> >
           , next_distance<Begin, End>
         >::type

@@ -38,8 +38,8 @@ namespace boost { namespace fusion { namespace detail
         typedef typename
             mpl::apply1<
                 mpl::unpack_args<variadic_quote<BOOST_FUSION_SEQ_NAME> >
-              , typename mpl::eval_if<
-                    traits::is_random_access<Seq>
+              , typename mpl::eval_if_c<
+                    traits::is_random_access<Seq>::value
                   , mpl::identity<seq>
                   , mpl::fold<
                         seq

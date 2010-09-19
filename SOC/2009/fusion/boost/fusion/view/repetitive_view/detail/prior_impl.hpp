@@ -40,8 +40,8 @@ namespace boost { namespace fusion { namespace extension
                 repetitive_view_iterator<
                     typename it::seq_type
                   , typename result_of::prior<
-                        typename mpl::if_<
-                            new_iterator
+                        typename mpl::if_c<
+                            new_iterator::value
                           , seq_end
                           , typename it::it_type
                         >::type

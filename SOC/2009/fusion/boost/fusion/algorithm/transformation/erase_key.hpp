@@ -37,8 +37,8 @@ namespace boost { namespace fusion
             BOOST_FUSION_MPL_ASSERT((has_key<Seq,Key>));
 
             typedef typename
-                mpl::eval_if<
-                    traits::is_forward<Seq>
+                mpl::eval_if_c<
+                    traits::is_forward<Seq>::value
                   , erase<
                         Seq
                       , typename find_key<Seq, Key>::type

@@ -44,8 +44,8 @@ namespace boost { namespace fusion
                 Begin
               , End
               , mpl::bind1<
-                    typename mpl::eval_if<
-                        pred_is_metafunction
+                    typename mpl::eval_if_c<
+                        pred_is_metafunction::value
                       , mpl::lambda<Pred>
                       , mpl::identity<Pred>
                     >::type

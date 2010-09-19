@@ -59,11 +59,11 @@ namespace boost { namespace fusion
             found_it;
 
             typedef typename
-                mpl::eval_if<
+                mpl::eval_if_c<
                     is_same<
                         found_it
                       , typename result_of::end<typename It1::iterators>::type
-                    >
+                    >::value
                   , detail::default_distance<It1, It2>
                   , detail::best_distance<found_it, It2>
                 >::type

@@ -156,8 +156,8 @@ namespace boost { namespace fusion
         typedef fusion_sequence_tag tag; 
         typedef mpl::true_ is_view;
         typedef typename
-            mpl::eval_if<
-                result_of::size<Seqs>
+            mpl::eval_if_c<
+                result_of::size<Seqs>::value ? true : false
               , detail::min_size<real_seqs>
               , mpl::int_<0>
             >::type

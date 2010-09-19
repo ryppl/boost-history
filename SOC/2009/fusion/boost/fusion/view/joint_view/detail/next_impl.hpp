@@ -35,8 +35,8 @@ namespace boost { namespace fusion { namespace extension
             equal_to;
 
             typedef typename
-                mpl::if_<
-                    equal_to
+                mpl::if_c<
+                    equal_to::value
                   , concat_iterator<typename it::category, concat_type>
                   , joint_view_iterator<
                         typename it::category

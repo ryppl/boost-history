@@ -89,8 +89,8 @@ namespace boost { namespace fusion { namespace detail
     {
         typedef typename has_result_type<F>::type is_preevaluable;
         typedef typename
-            mpl::eval_if<
-                is_preevaluable
+            mpl::eval_if_c<
+                is_preevaluable::value
               , get_result_type<F>
               , mpl::identity<void>
             >::type
@@ -199,8 +199,8 @@ namespace boost { namespace fusion { namespace detail
         typedef is_po_callable<F> is_po_callable_;
 
         typedef typename
-            mpl::if_<
-                typename is_po_callable_::type
+            mpl::if_c<
+                is_po_callable_::type::value
               , typename is_po_callable_::f&
               , typename is_po_callable_::identity_f
             >::type

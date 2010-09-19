@@ -58,8 +58,8 @@ namespace boost { namespace fusion
 #else
     template<typename FQualified=void,typename F=void, typename Seq=void>
     inline typename result_of::BOOST_FUSION_INVOKE_NAME<
-        typename mpl::if_<
-            is_same<FQualified, void>
+        typename mpl::if_c<
+            is_same<FQualified, void>::value
           , F&&
           , FQualified
         >::type
@@ -68,8 +68,8 @@ namespace boost { namespace fusion
     BOOST_FUSION_INVOKE_NAME(F&& f, Seq&& seq)
     {
          return result_of::BOOST_FUSION_INVOKE_NAME<
-             typename mpl::if_<
-                 is_same<FQualified, void>
+             typename mpl::if_c<
+                 is_same<FQualified, void>::value
                , F&&
                , FQualified
              >::type

@@ -55,8 +55,8 @@ namespace boost { namespace fusion
         typedef PredIsMetafunction pred_is_metafunction;
 
         typedef typename
-            mpl::eval_if<
-                traits::is_associative<seq_type>
+            mpl::eval_if_c<
+                traits::is_associative<seq_type>::value
               , mpl::inherit2<forward_traversal_tag,associative_tag>
               , mpl::identity<forward_traversal_tag>
             >::type

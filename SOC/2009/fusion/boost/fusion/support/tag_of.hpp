@@ -45,8 +45,8 @@ namespace boost { namespace fusion
             typedef typename detail::identity<T>::type identity_t;
 
             typedef typename
-                mpl::eval_if<
-                    detail::has_fusion_tag<identity_t>
+                mpl::eval_if_c<
+                    detail::has_fusion_tag<identity_t>::value
                   , detail::get_fusion_tag<identity_t>
                   , detail::tag_of_fallback<T>
                 >::type

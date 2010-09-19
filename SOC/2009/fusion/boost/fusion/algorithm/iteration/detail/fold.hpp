@@ -326,8 +326,8 @@ namespace boost { namespace fusion
             typedef preevaluate<F> preevaluater;
 
             typedef typename
-                mpl::eval_if<
-                    typename preevaluater::is_preevaluable
+                mpl::eval_if_c<
+                    preevaluater::is_preevaluable::value
                   , preevaluater
                   , BOOST_PP_CAT(
                         result_of_first_unrolled,BOOST_FUSION_FOLD_NAME)<

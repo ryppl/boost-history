@@ -29,8 +29,8 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<Seq>::type seq;
 
             typedef typename
-                mpl::eval_if<
-                    mpl::apply1<typename seq::pred_type,Key>
+                mpl::eval_if_c<
+                    mpl::apply1<typename seq::pred_type,Key>::value
                   , mpl::identity<mpl::false_>
                   , result_of::has_key<typename seq::storage_type,Key>
                 >::type

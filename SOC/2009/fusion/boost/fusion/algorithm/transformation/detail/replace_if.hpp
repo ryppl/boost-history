@@ -30,7 +30,7 @@ namespace boost { namespace fusion { namespace detail
         };
 #else
         //TODO!!!
-          : mpl::if_<
+          : mpl::if_c<
                 mpl::and_<
                     is_convertible<
                         typename remove_reference<NewValue>::type*
@@ -38,7 +38,7 @@ namespace boost { namespace fusion { namespace detail
                     >
                   , is_rref<NewValue>
                   , is_lrref<U>
-                >
+                >::value
               , typename remove_reference<U>::type&
               , U
             >

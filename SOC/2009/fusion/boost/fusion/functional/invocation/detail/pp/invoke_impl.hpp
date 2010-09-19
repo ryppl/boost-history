@@ -94,8 +94,8 @@ namespace boost { namespace fusion { namespace detail
         typedef void type;
 #else
         typedef
-            mpl::eval_if<
-                traits::is_random_access<SeqRef>
+            mpl::eval_if_c<
+                traits::is_random_access<SeqRef>::value
               , random_access_impl::
                     BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME)<
                     result_of::size<SeqRef>::value
@@ -114,8 +114,8 @@ namespace boost { namespace fusion { namespace detail
         typedef preevaluate<F> preevaluater;
 
         typedef typename
-            mpl::eval_if<
-                typename preevaluater::is_preevaluable
+            mpl::eval_if_c<
+                preevaluater::is_preevaluable::value
               , preevaluater
 #   ifndef BOOST_FUSION_NO_MEMBER_PTR
               , mpl::eval_if<
@@ -141,11 +141,11 @@ namespace boost { namespace fusion { namespace detail
 #ifdef BOOST_FUSION_NO_MEMBER_PTR
                 function_object
 #else
-                typename mpl::eval_if<
-                    is_member_function_pointer<f>
+                typename mpl::eval_if_c<
+                    is_member_function_pointer<f>::value
                   , mpl::identity<member_function_ptr>
-                  , mpl::if_<
-                        is_member_object_pointer<f>
+                  , mpl::if_c<
+                        is_member_object_pointer<f>::value
                       , member_object_ptr
                       , function_object
                     >
@@ -153,8 +153,8 @@ namespace boost { namespace fusion { namespace detail
 #endif
             f_type;
 
-            return mpl::if_<
-                traits::is_random_access<SeqRef>
+            return mpl::if_c<
+                traits::is_random_access<SeqRef>::value
               , random_access_impl::
                     BOOST_PP_CAT(BOOST_FUSION_INVOKE_NAME,_impl)<
                     f_type
