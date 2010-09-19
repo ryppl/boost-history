@@ -39,3 +39,9 @@ project
         [ run ratio_test.cpp  :  :  : <link>static ]
         [ run ratio_test.cpp  :  :  :  : ratio_test_dll ]
         ;
+
+   test-suite "examples"
+        :
+        [ run ../example/si_physics.cpp ]
+        ;
+
