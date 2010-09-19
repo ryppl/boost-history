@@ -28,7 +28,7 @@
 
 BOOST_AUTO_TEST_CASE(test_handle_readwrite) 
 { 
-    bp::stream_ends ends = bpb::pipe()(true); 
+    bp::stream_ends ends = bpb::pipe()(bp::input_stream); 
 
     bp::handle read_end = ends.child; 
     bp::handle write_end = ends.parent; 

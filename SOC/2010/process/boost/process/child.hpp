@@ -26,16 +26,16 @@
 #elif defined(BOOST_WINDOWS_API)
 #   include <windows.h>
 #else
-#   error "Unsupported platform." 
+#   error "Unsupported platform."
 #endif
 
 #include <boost/process/process.hpp>
 #include <boost/process/pid_type.hpp>
-#include <boost/process/pistream.hpp>
-#include <boost/process/postream.hpp>
+#include <boost/process/stream_id.hpp>
 #include <boost/process/handle.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/assert.hpp>
+#include <map>
 
 namespace boost {
 namespace process {
@@ -49,22 +49,11 @@ public:
     /**
      * Creates a new child object that represents the just spawned child
      * process \a id.
-     *
-     * The \a hstdin, \a hstdout and \a hstderr file handles represent
-     * the parent's handles used to communicate with the corresponding
-     * data streams. They needn't be valid but their availability must
-     * match the redirections configured by the launcher that spawned this
-     * process.
      */
-    child(pid_type id, handle hstdin, handle hstdout, handle hstderr)
-        : process(id)
+    child(pid_type id, std::map<stream_id, handle> handles)
+        : process(id),
+        handles_(handles)
     {
-        if (hstdin.valid())
-            stdin_.reset(new postream(hstdin));
-        if (hstdout.valid())
-            stdout_.reset(new pistream(hstdout));
-        if (hstderr.valid())
-            stderr_.reset(new pistream(hstderr));
     }
 
 #if defined(BOOST_WINDOWS_API)
@@ -80,84 +69,29 @@ public:
      *
      * This operation is only available on Windows systems.
      */
-    child(handle hprocess, handle hstdin, handle hstdout, handle hstderr)
-        : process(hprocess)
+    child(handle hprocess, std::map<stream_id, handle> handles)
+        : process(hprocess),
+        handles_(handles)
     {
-        if (hstdin.valid())
-            stdin_.reset(new postream(hstdin));
-        if (hstdout.valid())
-            stdout_.reset(new pistream(hstdout));
-        if (hstderr.valid())
-            stderr_.reset(new pistream(hstderr));
     }
 #endif
 
     /**
-     * Gets a reference to the child's standard input stream.
+     * Gets a handle to a stream attached to the child.
      *
-     * Returns a reference to a postream object that represents the
-     * standard input communication channel with the child process.
+     * If the handle doesn't exist an invalid handle is returned.
      */
-    postream &get_stdin() const
+    handle get_handle(stream_id id) const
     {
-        BOOST_ASSERT(stdin_);
-        return *stdin_;
-    }
-
-    /**
-     * Gets a reference to the child's standard output stream.
-     *
-     * Returns a reference to a pistream object that represents the
-     * standard output communication channel with the child process.
-     */
-    pistream &get_stdout() const
-    {
-        BOOST_ASSERT(stdout_);
-        return *stdout_;
-    }
-
-    /**
-     * Gets a reference to the child's standard error stream.
-     *
-     * Returns a reference to a pistream object that represents the
-     * standard error communication channel with the child process.
-     */
-    pistream &get_stderr() const
-    {
-        BOOST_ASSERT(stderr_);
-        return *stderr_;
+        std::map<stream_id, handle>::const_iterator it = handles_.find(id);
+        return (it != handles_.end()) ? it->second : handle();
     }
 
 private:
     /**
-     * The standard input stream attached to the child process.
-     *
-     * This postream object holds the communication channel with the
-     * child's process standard input. It is stored in a pointer because
-     * this field is only valid when the user requested to redirect this
-     * data stream.
+     * Handles providing access to streams attached to the child process.
      */
-    boost::shared_ptr<postream> stdin_;
-
-    /**
-     * The standard output stream attached to the child process.
-     *
-     * This postream object holds the communication channel with the
-     * child's process standard output. It is stored in a pointer because
-     * this field is only valid when the user requested to redirect this
-     * data stream.
-     */
-    boost::shared_ptr<pistream> stdout_;
-
-    /**
-     * The standard error stream attached to the child process.
-     *
-     * This postream object holds the communication channel with the
-     * child's process standard error. It is stored in a pointer because
-     * this field is only valid when the user requested to redirect this
-     * data stream.
-     */
-    boost::shared_ptr<pistream> stderr_;
+    std::map<stream_id, handle> handles_;
 };
 
 }

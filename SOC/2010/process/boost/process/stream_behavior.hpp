@@ -32,6 +32,7 @@
 #endif
 
 #include <boost/process/stream_ends.hpp>
+#include <boost/process/stream_type.hpp>
 #include <boost/process/handle.hpp>
 #include <string>
 #include <algorithm>
@@ -48,7 +49,7 @@ namespace behavior {
 class close
 {
 public:
-    stream_ends operator()(bool) const
+    stream_ends operator()(stream_type) const
     {
         return stream_ends();
     }
@@ -67,7 +68,7 @@ public:
     {
     }
 
-    stream_ends operator()(bool) const
+    stream_ends operator()(stream_type) const
     {
         return stream_ends(h_, handle());
     }
@@ -84,12 +85,26 @@ private:
 class pipe
 {
 public:
-    stream_ends operator()(bool in) const
+#if defined(BOOST_POSIX_API)
+    pipe()
+    : stype_(unknown_stream)
+    {
+    }
+
+    pipe(stream_type stype)
+    : stype_(stype)
+    {
+    }
+#endif
+
+    stream_ends operator()(stream_type stype) const
     {
         handle::native_type ends[2];
 #if defined(BOOST_POSIX_API)
         if (::pipe(ends) == -1)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("pipe(2) failed");
+        if (stype_ != unknown_stream)
+            stype = stype_;
 #elif defined(BOOST_WINDOWS_API)
         SECURITY_ATTRIBUTES sa;
         ZeroMemory(&sa, sizeof(sa));
@@ -99,8 +114,8 @@ public:
         if (!CreatePipe(&ends[0], &ends[1], &sa, 0))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreatePipe() failed");
 #endif 
-        handle child_end = ends[in ? 0 : 1];
-        handle parent_end = ends[in ? 1 : 0];
+        handle child_end = ends[stype == input_stream ? 0 : 1];
+        handle parent_end = ends[stype == input_stream ? 1 : 0];
 #if defined(BOOST_WINDOWS_API)
         if (!SetHandleInformation(child_end.native(), HANDLE_FLAG_INHERIT,
             HANDLE_FLAG_INHERIT))
@@ -109,6 +124,11 @@ public:
 #endif
         return stream_ends(child_end, parent_end);
     }
+
+#if defined(BOOST_POSIX_API)
+private:
+    stream_type stype_;
+#endif
 };
 
 /**
@@ -123,10 +143,21 @@ class named_pipe
 public:
     named_pipe(const std::string &name)
     : name_(name)
+#if defined(BOOST_POSIX_API)
+    , stype_(unknown_stream)
+#endif
     {
     }
 
-    stream_ends operator()(bool in) const
+#if defined(BOOST_POSIX_API)
+    named_pipe(const std::string &name, stream_type stype)
+    : name_(name),
+    stype_(stype)
+    {
+    }
+#endif
+
+    stream_ends operator()(stream_type stype) const
     {
 #if defined(BOOST_POSIX_API)
         if (mkfifo(name_.c_str(), S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) == -1)
@@ -143,6 +174,8 @@ public:
         handle parent_end = open(name_.c_str(), O_WRONLY);
         if (!parent_end.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
+        if (stype_ != unknown_stream)
+            stype = stype_;
 #elif defined(BOOST_WINDOWS_API)
         SECURITY_ATTRIBUTES sa;
         ZeroMemory(&sa, sizeof(sa));
@@ -158,7 +191,7 @@ public:
         if (!parent_end.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateFile() failed");
 #endif
-        if (!in)
+        if (stype == output_stream)
             std::swap(child_end, parent_end);
 #if defined(BOOST_WINDOWS_API)
         if (!SetHandleInformation(child_end.native(), HANDLE_FLAG_INHERIT,
@@ -171,6 +204,10 @@ public:
 
 private:
     std::string name_;
+
+#if defined(BOOST_POSIX_API)
+    stream_type stype_;
+#endif
 };
 
 /**
@@ -187,7 +224,7 @@ typedef pipe async_pipe;
 class async_pipe
 {
 public:
-    stream_ends operator()(bool in) const
+    stream_ends operator()(stream_type stype) const
     {
         UUID uuid;
         RPC_STATUS s = UuidCreateSequential(&uuid);
@@ -209,7 +246,7 @@ public:
         }
         RpcStringFreeA(&c);
         named_pipe p("\\\\.\\pipe\\boost_process_" + name);
-        return p(in);
+        return p(stype);
     }
 };
 #endif
@@ -223,26 +260,47 @@ public:
 class null
 {
 public:
-    stream_ends operator()(bool in) const
+#if defined(BOOST_POSIX_API)
+    null()
+    : stype_(unknown_stream)
+    {
+    }
+
+    null(stream_type stype)
+    : stype_(stype)
+    {
+    }
+#endif
+
+    stream_ends operator()(stream_type stype) const
     {
 #if defined(BOOST_POSIX_API)
-        std::string filename = in ? "/dev/zero" : "/dev/null";
-        int flag = in ? O_RDONLY : O_WRONLY;
+        if (stype_ != unknown_stream)
+            stype = stype_;
+        std::string filename = (stype == input_stream) ? "/dev/zero" :
+            "/dev/null";
+        int flag = (stype == input_stream) ? O_RDONLY : O_WRONLY;
         handle child_end = open(filename.c_str(), flag);
         if (!child_end.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
 #elif defined(BOOST_WINDOWS_API)
-        DWORD access = in ? GENERIC_READ : GENERIC_WRITE;
+        DWORD access = (stype == input_stream) ? GENERIC_READ : GENERIC_WRITE;
         handle child_end = CreateFileA("NUL", access, 0, NULL, OPEN_EXISTING,
             FILE_ATTRIBUTE_NORMAL, NULL);
         if (!child_end.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateFile() failed");
         if (!SetHandleInformation(child_end.native(), HANDLE_FLAG_INHERIT,
             HANDLE_FLAG_INHERIT))
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("SetHandleInformation() failed");
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
+                "SetHandleInformation() failed");
 #endif
         return stream_ends(child_end, handle());
     }
+
+#if defined(BOOST_POSIX_API)
+private:
+    stream_type stype_;
+#endif
 };
 
 }

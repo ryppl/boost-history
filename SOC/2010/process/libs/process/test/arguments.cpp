@@ -37,10 +37,10 @@ std::string get_argument(const std::string &word)
     args.push_back(word); 
 
     bp::context ctx; 
-    ctx.stdout_behavior = bpb::pipe(); 
+    ctx.streams[bp::stdout_id] = bpb::pipe(); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
-    bp::pistream &is = c.get_stdout(); 
+    bp::pistream is(c.get_handle(bp::stdout_id)); 
 
     std::string result; 
     std::getline(is, result); 

@@ -44,6 +44,7 @@
 
 #include <boost/process/child.hpp>
 #include <boost/process/context.hpp>
+#include <boost/process/stream_id.hpp>
 #include <boost/process/stream_ends.hpp>
 #include <boost/process/handle.hpp>
 #include <boost/filesystem/path.hpp>
@@ -53,6 +54,7 @@
 #include <boost/assert.hpp>
 #include <string>
 #include <vector>
+#include <map>
 #include <utility>
 
 namespace boost {
@@ -188,17 +190,22 @@ template <typename Arguments, typename Context>
 inline child create_child(const std::string &executable, Arguments args,
     Context ctx)
 {
-    stream_ends stdin_pair;
-    if (ctx.stdin_behavior)
-        stdin_pair = ctx.stdin_behavior(true);
-
-    stream_ends stdout_pair;
-    if (ctx.stdout_behavior)
-        stdout_pair = ctx.stdout_behavior(false);
-
-    stream_ends stderr_pair;
-    if (ctx.stderr_behavior)
-        stderr_pair = ctx.stderr_behavior(false);
+    typedef std::map<stream_id, stream_ends> handles_t;
+    handles_t handles;
+    typename Context::streams_t::iterator it = ctx.streams.begin();
+    for (; it != ctx.streams.end(); ++it)
+    {
+        if (it->first == stdin_id)
+            handles[it->first] = it->second(input_stream);
+        else if (it->first == stdout_id)
+            handles[it->first] = it->second(output_stream);
+        else if (it->first == stderr_id)
+            handles[it->first] = it->second(output_stream);
+#if defined(BOOST_POSIX_API)
+        else
+            handles[it->first] = it->second(unknown_stream);
+#endif
+    }
 
     std::string p_name = ctx.process_name.empty() ?
         executable_to_progname(executable) : ctx.process_name;
@@ -235,71 +242,35 @@ inline child create_child(const std::string &executable, Arguments args,
             _exit(127);
         }
 
-        handle hstdin = stdin_pair.child;
-        handle hstdout = stdout_pair.child;
-        handle hstderr = stderr_pair.child;
-
-        if (hstdin.valid())
+        for (handles_t::iterator it = handles.begin(); it != handles.end();
+            ++it)
         {
-            if (hstdout.native() == STDIN_FILENO)
+            if (it->second.child.valid())
             {
-                int fd = fcntl(hstdout.native(), F_DUPFD, 3);
-                if (fd == -1)
+                handles_t::iterator it2 = it;
+                ++it2;
+                for (; it2 != handles.end(); ++it2)
                 {
-                    write(STDERR_FILENO, "fcntl() failed\n", 15);
+                    if (it2->second.child.native() == it->first)
+                    {
+                        int fd = fcntl(it2->second.child.native(), F_DUPFD,
+                            it->first + 1);
+                        if (fd == -1)
+                        {
+                            write(STDERR_FILENO, "fcntl() failed\n", 15);
+                            _exit(127);
+                        }
+                        it2->second.child = fd;
+                    }
+                }
+
+                if (dup2(it->second.child.native(), it->first) == -1)
+                {
+                    write(STDERR_FILENO, "dup2() failed\n", 14);
                     _exit(127);
                 }
-                hstdout = fd;
+                closeflags[it->first] = false;
             }
-
-            if (hstderr.native() == STDIN_FILENO)
-            {
-                int fd = fcntl(hstderr.native(), F_DUPFD, 3);
-                if (fd == -1)
-                {
-                    write(STDERR_FILENO, "fcntl() failed\n", 15);
-                    _exit(127);
-                }
-                hstderr = fd;
-            }
-
-            if (dup2(hstdin.native(), STDIN_FILENO) == -1)
-            {
-                write(STDERR_FILENO, "dup2() failed\n", 14);
-                _exit(127);
-            }
-            closeflags[STDIN_FILENO] = false;
-        }
-
-        if (hstdout.valid())
-        {
-            if (hstderr.native() == STDOUT_FILENO)
-            {
-                int fd = fcntl(hstderr.native(), F_DUPFD, 3);
-                if (fd == -1)
-                {
-                    write(STDERR_FILENO, "fcntl() failed\n", 15);
-                    _exit(127);
-                }
-                hstderr = fd;
-            }
-
-            if (dup2(hstdout.native(), STDOUT_FILENO) == -1)
-            {
-                write(STDERR_FILENO, "dup2() failed\n", 14);
-                _exit(127);
-            }
-            closeflags[STDOUT_FILENO] = false;
-        }
-
-        if (hstderr.valid())
-        {
-            if (dup2(hstderr.native(), STDERR_FILENO) == -1)
-            {
-                write(STDERR_FILENO, "dup2() failed\n", 14);
-                _exit(127);
-            }
-            closeflags[STDERR_FILENO] = false;
         }
 
         ctx.setup(closeflags);
@@ -329,19 +300,21 @@ inline child create_child(const std::string &executable, Arguments args,
             delete[] envp.second[i];
         delete[] envp.second;
 
-        return child(pid,
-            stdin_pair.parent,
-            stdout_pair.parent,
-            stderr_pair.parent);
+        std::map<stream_id, handle> parent_ends;
+        for (handles_t::iterator it = handles.begin(); it != handles.end();
+            ++it)
+            parent_ends[it->first] = it->second.parent;
+
+        return child(pid, parent_ends);
     }
 #elif defined(BOOST_WINDOWS_API)
     STARTUPINFOA startup_info;
     ZeroMemory(&startup_info, sizeof(startup_info));
     startup_info.cb = sizeof(startup_info);
     startup_info.dwFlags |= STARTF_USESTDHANDLES;
-    startup_info.hStdInput = stdin_pair.child.native();
-    startup_info.hStdOutput = stdout_pair.child.native();
-    startup_info.hStdError = stderr_pair.child.native();
+    startup_info.hStdInput = handles[stdin_id].child.native();
+    startup_info.hStdOutput = handles[stdout_id].child.native();
+    startup_info.hStdError = handles[stderr_id].child.native();
 
     ctx.setup(startup_info);
 
@@ -369,10 +342,12 @@ inline child create_child(const std::string &executable, Arguments args,
     if (CloseHandle(pi.hThread) == 0)
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");
 
-    return child(hprocess,
-        stdin_pair.parent,
-        stdout_pair.parent,
-        stderr_pair.parent);
+    std::map<stream_id, handle> parent_ends;
+    parent_ends[stdin_id] = handles[stdin_id].parent;
+    parent_ends[stdout_id] = handles[stdout_id].parent;
+    parent_ends[stderr_id] = handles[stderr_id].parent;
+
+    return child(hprocess, parent_ends);
 #endif
 }
 
