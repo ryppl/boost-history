@@ -123,6 +123,29 @@ public:
         this->clear();
         this->_set.insert(src.begin(), src.end());
     }
+
+
+private:
+    // Private functions that shall be accessible by the baseclass:
+    friend class
+        interval_base_set<separate_interval_set<DomainT,Compare,Interval,Alloc>, 
+                                                DomainT,Compare,Interval,Alloc>;
+
+    iterator handle_inserted(iterator inserted_)
+    { 
+        return inserted_; 
+    }
+
+    iterator add_over(const interval_type& addend, iterator last_)
+    {
+        return segmental::join_under(*this, addend, last_);
+    }
+
+    iterator add_over(const interval_type& addend)
+    {
+        return segmental::join_under(*this, addend);
+    }
+
 } ;
 
 

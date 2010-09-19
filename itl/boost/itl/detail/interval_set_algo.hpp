@@ -304,7 +304,7 @@ inline void join_nodes(Type& object, typename Type::iterator& left_,
 {
     typedef typename Type::interval_type interval_type;
     interval_type right_interval = Type::key_value(right_);
-    object.erase(right_);
+	((typename Type::base_type&)object).erase(right_); //JODO
     const_cast<interval_type&>(Type::key_value(left_)) 
         = hull(Type::key_value(left_), right_interval);
 }
@@ -338,10 +338,6 @@ inline typename Type::iterator
     return right_;
 }
 
-
-
-
-
 template<class Type>
 typename Type::iterator join_left(Type& object, typename Type::iterator& it_)
 {
@@ -357,7 +353,6 @@ typename Type::iterator join_left(Type& object, typename Type::iterator& it_)
 
     return it_;
 }
-
 
 template<class Type>
 typename Type::iterator join_right(Type& object, typename Type::iterator& it_)
@@ -376,14 +371,12 @@ typename Type::iterator join_right(Type& object, typename Type::iterator& it_)
     return it_;
 }
 
-
 template<class Type>
 typename Type::iterator join_neighbours(Type& object, typename Type::iterator& it_)
 {
            join_left (object, it_); 
     return join_right(object, it_);
 }
-
 
 template<class Type>
 inline typename Type::iterator 

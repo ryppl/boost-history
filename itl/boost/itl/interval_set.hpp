@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Copyright (c) 2007-2009: Joachim Faulhaber
+Copyright (c) 2007-2010: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
@@ -138,6 +138,31 @@ public:
         ITL_const_FORALL(typename base_set_type, it_, src) 
             prior_ = this->add(prior_, *it_);
     }
+
+
+private:
+    // Private functions that shall be accessible by the baseclass:
+    friend class
+        interval_base_set <interval_set<DomainT,Compare,Interval,Alloc>, 
+                                        DomainT,Compare,Interval,Alloc>;
+
+    iterator handle_inserted(iterator it_)
+    {
+        return segmental::join_neighbours(*this, it_); 
+    }
+
+    iterator add_over(const interval_type& addend, iterator last_)
+    {
+        iterator joined_ = segmental::join_under(*this, addend, last_);
+        return segmental::join_neighbours(*this, joined_);
+    }
+
+    iterator add_over(const interval_type& addend)
+    {
+        iterator joined_ = segmental::join_under(*this, addend);
+        return segmental::join_neighbours(*this, joined_);
+    }
+
 } ;
 
 

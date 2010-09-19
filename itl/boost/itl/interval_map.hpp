@@ -49,10 +49,12 @@ public:
                               DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> base_type;
 
     typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) interval_type;
-    typedef typename base_type::iterator iterator;
-    typedef typename base_type::value_type value_type;
-    typedef typename base_type::element_type element_type;
-    typedef typename base_type::segment_type segment_type;
+    typedef typename base_type::iterator      iterator;
+    typedef typename base_type::value_type    value_type;
+    typedef typename base_type::element_type  element_type;
+    typedef typename base_type::segment_type  segment_type;
+    typedef typename base_type::domain_type   domain_type;
+    typedef typename base_type::codomain_type codomain_type;
     typedef typename base_type::domain_mapping_type domain_mapping_type;
     typedef typename base_type::interval_mapping_type interval_mapping_type;
     typedef typename base_type::ImplMapT ImplMapT;
@@ -107,6 +109,94 @@ public:
         iterator prior_ = this->_map.end();
         ITL_const_FORALL(typename base_map_type, it_, src) 
             prior_ = this->add(prior_, *it_); 
+    }
+
+private:
+    // Private functions that shall be accessible by the baseclass:
+    friend class
+        interval_base_map <interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>, 
+                                        DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>;
+
+    iterator handle_inserted(iterator it_)
+    {
+        return segmental::join_neighbours(*this, it_); 
+    }
+
+    void handle_inserted(iterator prior_, iterator it_)
+    {
+        if(prior_ != this->_map.end() && segmental::joinable(*this, prior_, it_))
+            segmental::join_on_right(*this, prior_, it_);
+    }
+
+    template<class Combiner>
+    void handle_left_combined(iterator it_)
+    {
+        if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+            this->_map.erase(it_);
+        else
+            segmental::join_left(*this, it_);
+    }
+
+    template<class Combiner>
+    void handle_combined(iterator it_)
+    {
+        if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+            this->_map.erase(it_);
+        else
+            segmental::join_neighbours(*this, it_);
+    }
+
+    template<class Combiner>
+    void handle_preceeded_combined(iterator prior_, iterator& it_)
+    {
+        if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+        {
+            this->_map.erase(it_);
+            it_ = prior_;
+        }
+        else // After a new combination (e.g. combiner=max) joining neighbours may be possible
+            segmental::join_neighbours(*this, it_);
+    }
+
+    template<class Combiner>
+    void handle_succeeded_combined(iterator it_, iterator next_)
+    {
+        if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+        {
+            this->_map.erase(it_);
+            segmental::join_right(*this, next_);
+        }
+        else
+        {
+            segmental::join_left(*this, it_);
+            segmental::join_neighbours(*this, next_);
+        }
+    }
+
+
+
+    void handle_reinserted(iterator insertion_)
+    { 
+        segmental::join_right(*this, insertion_); 
+    }
+
+
+    template<class Combiner>
+    void gap_insert_at(iterator& it_, iterator prior_, 
+                       const interval_type& end_gap, const codomain_type& co_val)
+    {
+        if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+        {
+            this->_map.erase(it_);
+            it_ = this->template gap_insert<Combiner>(prior_, end_gap, co_val);
+            segmental::join_right(*this, it_);
+        }
+        else 
+        {
+            segmental::join_left(*this, it_);
+            iterator inserted_ = this->template gap_insert<Combiner>(it_, end_gap, co_val);
+            it_ = segmental::join_neighbours(*this, inserted_);
+        }
     }
 
 } ;

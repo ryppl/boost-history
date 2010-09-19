@@ -93,17 +93,60 @@ public:
         this->_map.insert(src.begin(), src.end());
     }
 
-    //==========================================================================
-    //= Selection
-    //==========================================================================
+private:
+    // Private functions that shall be accessible by the baseclass:
+    friend class
+        interval_base_map <split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>, 
+                                              DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>;
 
-    //MEMO DESIGN DECISION: split_interval_map::operator[](interval): 
-    // If used for selection will deliver a set of associated
-    // values. It could only implemented for a single key value. But this 
-    // would mislead the unexperienced user to hash a split_interval_map into 
-    // singular intervals by inapt usage of op[]. So op[] will not be implemented
-    // codomain_type& operator[](const interval_type& interval_of_keys)
+    iterator handle_inserted(iterator it_)const { return it_; }
+    void handle_inserted(iterator prior_, iterator it_)const{ }
 
+    template<class Combiner>
+    void handle_left_combined(iterator it_)
+    {
+        if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+            this->_map.erase(it_);
+    }
+
+    template<class Combiner>
+    void handle_combined(iterator it_)
+    {
+        if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+            this->_map.erase(it_);
+    }
+
+    template<class Combiner>
+    void handle_preceeded_combined(iterator prior_, iterator& it_)
+    {
+        if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+        {
+            this->_map.erase(it_);
+            it_ = prior_;
+        }
+    }
+
+    template<class Combiner>
+    void handle_succeeded_combined(iterator it_, iterator)
+    {
+        if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+            this->_map.erase(it_);
+    }
+
+    void handle_reinserted(iterator insertion_){}
+
+    template<class Combiner>
+    void gap_insert_at(iterator& it_, iterator prior_, 
+                       const interval_type& end_gap, const codomain_type& co_val)
+    {
+        if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+        {
+            this->_map.erase(it_);
+            it_ = this->template gap_insert<Combiner>(prior_, end_gap, co_val);
+        }
+        else
+            it_ = this->template gap_insert<Combiner>(it_, end_gap, co_val);
+    }
 } ;
 
 //-----------------------------------------------------------------------------

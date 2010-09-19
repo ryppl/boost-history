@@ -226,18 +226,14 @@ template<class Type>
 typename enable_if<is_interval_map<Type>, Type>::type&
 add(Type& object, const typename Type::element_type& operand)
 {
-    typedef typename Type::codomain_combine codomain_combine;
-    Interval_Map::add<Type,codomain_combine>(object, make_segment<Type>(operand));
-    return object;
+    return object.add(operand);
 }
 
 template<class Type>
 typename enable_if<is_interval_map<Type>, Type>::type&
 add(Type& object, const typename Type::segment_type& operand)
 {
-    typedef typename Type::codomain_combine codomain_combine;
-    Interval_Map::add<Type,codomain_combine>(object, operand);
-    return object;
+    return object.add(operand);
 }
 
 template<class Type>
@@ -245,8 +241,9 @@ typename enable_if<is_interval_map<Type>, typename Type::iterator >::type
 add(Type& object, typename Type::iterator      prior_,
             const typename Type::segment_type& operand)
 {
-    typedef typename Type::codomain_combine codomain_combine;
-    return Interval_Map::add<Type,codomain_combine>(object, prior_, operand);
+    //CL typedef typename Type::codomain_combine codomain_combine;
+    //CL return Interval_Map::add<Type,codomain_combine>(object, prior_, operand);
+    return object.add(prior_, operand);
 }
 //------------------------------------------------------------------------------
 
@@ -421,16 +418,14 @@ template<class Type>
 typename enable_if<is_interval_map<Type>, Type>::type&
 insert(Type& object, const typename Type::element_type& operand)
 {
-    Interval_Map::insert(object, make_segment<Type>(operand));
-    return object;
+    return object.insert(operand);
 }
 
 template<class Type>
 typename enable_if<is_interval_map<Type>, Type>::type&
 insert(Type& object, const typename Type::segment_type& operand)
 {
-    Interval_Map::insert(object, operand);
-    return object;
+    return object.insert(operand);
 }
 
 template<class Type>
@@ -438,7 +433,7 @@ typename enable_if<is_interval_map<Type>, typename Type::iterator>::type
 insert(Type& object, typename Type::iterator      prior,
                const typename Type::segment_type& operand)
 {
-    return Interval_Map::insert(object, prior, operand);
+    return object.insert(prior, operand);
 }
 
 //------------------------------------------------------------------------------
@@ -480,59 +475,14 @@ template<class Type>
 typename enable_if<is_interval_map<Type>, Type>::type&
 erase(Type& object, const typename Type::interval_type& minuend)
 {
-    typedef typename Type::interval_type  interval_type;
-    typedef typename Type::value_type     value_type;
-    typedef typename Type::iterator       iterator;
-
-    if(itl::is_empty(minuend)) 
-        return object;
-
-    std::pair<iterator, iterator> exterior = object.equal_range(minuend);
-    if(exterior.first == exterior.second)
-        return object;
-
-    iterator first_ = exterior.first,
-             end_   = exterior.second,
-             last_  = prior(end_);
-
-    interval_type left_resid  = right_subtract(first_->first, minuend);
-    interval_type right_resid =  left_subtract(last_ ->first, minuend);
-
-    if(first_ == last_ )
-        if(!itl::is_empty(left_resid))
-        {
-            const_cast<interval_type&>(first_->first) = left_resid;
-            if(!itl::is_empty(right_resid))
-                itl::insert(object, first_, value_type(right_resid, first_->second));
-        }
-        else if(!itl::is_empty(right_resid))
-            const_cast<interval_type&>(first_->first) = left_subtract(first_->first, minuend);
-        else
-            object.erase(first_);
-    else
-    {   //            [-------- minuend ---------)
-        // [left_resid   fst)   . . . .    [lst  right_resid)
-        iterator second_= first_; ++second_;
-
-        iterator start_ = itl::is_empty(left_resid)? first_: second_;
-        iterator stop_  = itl::is_empty(right_resid)? end_  : last_ ;
-        object.erase(start_, stop_); //erase [start_, stop_)
-
-        if(!itl::is_empty(left_resid))
-            const_cast<interval_type&>(first_->first) = left_resid;
-
-        if(!itl::is_empty(right_resid))
-            const_cast<interval_type&>(last_ ->first) = right_resid;
-    }
-    return object;
+    return object.erase(minuend);
 }
 
 template<class Type>
 typename enable_if<is_interval_map<Type>, Type>::type&
 erase(Type& object, const typename Type::domain_type& minuend)
 {
-    typedef typename Type::interval_type interval_type;
-    return itl::erase(object, interval_type(minuend));
+    return object.erase(minuend);
 }
 
 //------------------------------------------------------------------------------
@@ -542,15 +492,14 @@ template<class Type>
 typename enable_if<is_interval_map<Type>, Type>::type&
 erase(Type& object, const typename Type::segment_type& minuend)
 {
-    Interval_Map::erase(object, minuend);
-    return object;
+    return object.erase(minuend);
 }
 
 template<class Type>
 typename enable_if<is_interval_map<Type>, Type>::type&
 erase(Type& object, const typename Type::element_type& minuend)
 {
-    return itl::erase(object, make_segment<Type>(minuend));
+    return object.erase(minuend);
 }
 
 //------------------------------------------------------------------------------
@@ -601,33 +550,11 @@ subtract(Type& object, const typename Type::segment_type& operand)
 //- Subtraction<Interval_Map> fragment_types
 //------------------------------------------------------------------------------
 template<class Type>
-typename enable_if
-    <mpl::and_< is_interval_map<Type>
-              , mpl::and_< is_total<Type> 
-                         , has_inverse<typename Type::codomain_type> >
-              >, 
-    Type>::type&
+typename enable_if<is_interval_map<Type>, Type>::type& 
 subtract(Type& object, const typename Type::segment_type& operand)
 {
-    typedef typename Type::inverse_codomain_combine inverse_codomain_combine;
-    Interval_Map::add<Type,inverse_codomain_combine>(object, operand);
-    return object;
+    return object.subtract(operand);
 }
-
-template<class Type>
-typename enable_if
-    <mpl::and_< is_interval_map<Type>
-              , mpl::not_<mpl::and_< is_total<Type> 
-                                   , has_inverse<typename Type::codomain_type> > >
-              >, 
-    Type>::type&
-subtract(Type& object, const typename Type::segment_type& operand)
-{
-    typedef typename Type::inverse_codomain_combine inverse_codomain_combine;
-    Interval_Map::subtract<Type,inverse_codomain_combine>(object, operand);
-    return object;
-}
-
 
 template<class Type>
 typename enable_if<is_interval_map<Type>, Type>::type&
@@ -644,17 +571,14 @@ template<class Type>
 typename enable_if<is_interval_map<Type>, Type>::type&
 subtract(Type& object, const typename Type::domain_type& operand)
 {
-    typedef typename Type::interval_type interval_type;
-    Interval_Map::erase(object, interval_type(operand));
-    return object;
+    return object.erase(operand);
 }
 
 template<class Type>
 typename enable_if<is_interval_map<Type>, Type>::type&
 subtract(Type& object, const typename Type::interval_type& operand)
 {
-    Interval_Map::erase(object, operand);
-    return object;
+    return object.erase(operand);
 }
 
 
@@ -786,7 +710,7 @@ add_intersection(Type& section, const Type& object,
     {
         interval_type common_interval = Type::key_value(it_) & segment;
         if(!itl::is_empty(common_interval))
-            prior_ = section._insert(prior_, common_interval);
+            prior_ = section.insert(prior_, common_interval);
     }
 }
 
@@ -813,58 +737,44 @@ add_intersection(Type& section, const Type& object, const OperandT& operand)
 
 
 //------------------------------------------------------------------------------
-//- Intersection add_intersection<IntervalMaps> for key_types
+//- Intersection add_intersection<IntervalMaps> for fragment_types
 //------------------------------------------------------------------------------
-template<class Type, class OperandT>
-typename enable_if<mpl::and_< is_total<Type>
-                            , is_interval_map_fragment_type_of<OperandT, Type> >, void>::type
-add_intersection(Type& section, const Type& object, const OperandT& operand)
+template<class Type>
+typename enable_if<is_interval_map<Type>, void>::type
+add_intersection(Type& section, const Type& object, 
+                 const typename Type::element_type& operand)
+{
+    object.add_intersection(section, operand);
+}
+
+template<class Type>
+typename enable_if<is_interval_map<Type>, void>::type
+add_intersection(Type& section, const Type& object, 
+                 const typename Type::segment_type& operand)
+{
+    object.add_intersection(section, operand);
+}
+
+template<class Type, class MapT>
+typename enable_if
+<
+    mpl::and_< is_total<Type>
+             , is_concept_compatible<is_interval_map, Type, MapT> >
+  , void
+>::type
+add_intersection(Type& section, const Type& object, const MapT& operand)
 {
     section += object;
     section += operand;
 }
 
-template<class Type>
-typename enable_if<mpl::and_< mpl::not_<is_total<Type> >, is_interval_map<Type> >, void>::type
-add_intersection(Type& section, const Type& object, const typename Type::element_type& operand)
-{
-    add_intersection(section, object, make_segment<Type>(operand));
-}
-
-template<class Type>
-typename enable_if<mpl::and_< mpl::not_<is_total<Type> >, is_interval_map<Type> >, void>::type
-add_intersection(Type& section, const Type& object, const typename Type::segment_type& operand)
-{
-    typedef typename Type::segment_type       segment_type;
-    typedef typename Type::interval_type      interval_type;
-    typedef typename Type::value_type         value_type;
-    typedef typename Type::const_iterator     const_iterator;
-    typedef typename Type::codomain_combine   codomain_combine;
-    typedef typename Type::codomain_intersect codomain_intersect;
-
-    interval_type inter_val = operand.first;
-    if(itl::is_empty(inter_val)) 
-        return;
-
-    std::pair<const_iterator, const_iterator> exterior 
-        = object.equal_range(inter_val);
-    if(exterior.first == exterior.second)
-        return;
-
-    for(const_iterator it_=exterior.first; it_ != exterior.second; it_++) 
-    {
-        interval_type common_interval = it_->first & inter_val; 
-        if(!itl::is_empty(common_interval))
-        {
-            Interval_Map::add<Type,codomain_combine>  (section, value_type(common_interval, it_->second) );
-            Interval_Map::add<Type,codomain_intersect>(section, value_type(common_interval, operand.second));
-        }
-    }
-}
-
 template<class Type, class MapT>
-typename enable_if<mpl::and_< mpl::not_<is_total<Type> >
-                            , is_concept_compatible<is_interval_map, Type, MapT> >, void>::type
+typename enable_if
+<
+    mpl::and_< mpl::not_<is_total<Type> >
+             , is_concept_compatible<is_interval_map, Type, MapT> >
+  , void
+>::type
 add_intersection(Type& section, const Type& object, const MapT& operand)
 {
     typedef typename Type::segment_type   segment_type;
@@ -882,7 +792,7 @@ add_intersection(Type& section, const Type& object, const MapT& operand)
 }
 
 //------------------------------------------------------------------------------
-//- Intersection add_intersection<IntervalMaps> for fragment_types
+//- Intersection add_intersection<IntervalMaps> for key_types
 //------------------------------------------------------------------------------
 
 template<class Type>
@@ -1041,56 +951,51 @@ intersects(const Type& object, const OperandT& operand)
 
 //------------------------------------------------------------------------------
 
-#ifdef BOOST_MSVC 
-#pragma warning(push)
-#pragma warning(disable:4127) // conditional expression is constant
-#endif                        
-
 template<class LeftT, class RightT>
-typename enable_if<is_intra_combinable<LeftT, RightT>, 
-                          bool>::type
+typename enable_if< mpl::and_< is_intra_combinable<LeftT, RightT> 
+                             , mpl::or_<is_total<LeftT>, is_total<RightT> > >
+                  , bool>::type
 intersects(const LeftT& left, const RightT& right)
 {
-    if(mpl::or_<is_total<LeftT>, is_total<RightT> >::value)
-        return true;
+    return true;
+}
 
+template<class LeftT, class RightT>
+typename enable_if< mpl::and_< is_intra_combinable<LeftT, RightT> 
+                             , mpl::not_<mpl::or_< is_total<LeftT>
+                                                 , is_total<RightT> > > >
+                  , bool>::type
+intersects(const LeftT& left, const RightT& right)
+{
+    typedef typename RightT::const_iterator const_iterator;
     LeftT intersection;
 
-    typename RightT::const_iterator right_common_lower_;
-    typename RightT::const_iterator right_common_upper_;
-
+    const_iterator right_common_lower_, right_common_upper_;
     if(!Set::common_range(right_common_lower_, right_common_upper_, right, left))
         return false;
 
-    typename RightT::const_iterator it_ = right_common_lower_;
+    const_iterator it_ = right_common_lower_;
     while(it_ != right_common_upper_)
     {
         itl::add_intersection(intersection, left, *it_++);
         if(!itl::is_empty(intersection))
             return true;
     }
-
     return false; 
 }
 
-#ifdef BOOST_MSVC
-#pragma warning(pop)
-#endif
-
 
 template<class LeftT, class RightT>
-typename enable_if<is_cross_combinable<LeftT, RightT>, 
-                          bool>::type
+typename enable_if<is_cross_combinable<LeftT, RightT>, bool>::type
 intersects(const LeftT& left, const RightT& right)
 {
+    typedef typename RightT::const_iterator const_iterator;
     LeftT intersection;
 
     if(itl::is_empty(left) || itl::is_empty(right))
         return false;
 
-    typename RightT::const_iterator right_common_lower_;
-    typename RightT::const_iterator right_common_upper_;
-
+    const_iterator right_common_lower_, right_common_upper_;
     if(!Set::common_range(right_common_lower_, right_common_upper_, right, left))
         return false;
 
@@ -1224,26 +1129,46 @@ flip(Type& object, const OperandT& operand)
 //------------------------------------------------------------------------------
 //- Symmetric difference flip<Interval_Map> fragment_types
 //------------------------------------------------------------------------------
-template<class Type, class OperandT>
-typename enable_if< mpl::and_< is_interval_map_right_intra_combinable<Type, OperandT> //JODO =^= fragment_type_of
-                             , is_total<Type>
-                             , absorbs_neutrons<Type> >
-                  , Type >::type&
-flip(Type& object, const OperandT&)
+//JODO NOTE: typename enable_if< mpl::and_< is_interval_map_right_intra_combinable<Type, OperandT> //JODO =^= fragment_type_of
+
+template<class Type>
+typename enable_if<is_interval_map<Type>, Type>::type&
+flip(Type& object, const typename Type::element_type& operand)
 {
-    itl::clear(object);
+    return object.flip(operand);
+}
+
+template<class Type>
+typename enable_if<is_interval_map<Type>, Type>::type&
+flip(Type& object, const typename Type::segment_type& operand)
+{
+    return object.flip(operand);
+}
+
+template<class Type, class OperandT>
+typename enable_if< mpl::and_< is_total<Type>
+                             , absorbs_neutrons<Type>
+                             , is_concept_compatible<is_interval_map, 
+                                                     Type, OperandT >
+                             >
+                  , Type>::type&
+flip(Type& object, const OperandT& operand)
+{
+    object.clear();
     return object;
 }
 
-
 template<class Type, class OperandT>
-typename enable_if< mpl::and_< is_interval_map_right_intra_combinable<Type, OperandT>
-                             , is_total<Type>
-                             , mpl::not_<absorbs_neutrons<Type> > >
-                  , Type >::type&
+typename enable_if< mpl::and_< is_total<Type>
+                             , mpl::not_<absorbs_neutrons<Type> >
+                             , is_concept_compatible<is_interval_map, 
+                                                     Type, OperandT >
+                             >
+                  , Type>::type&
 flip(Type& object, const OperandT& operand)
 {
-    typedef typename Type::codomain_type codomain_type;
+    typedef typename Type::codomain_type  codomain_type;
+
     object += operand;
     ITL_FORALL(typename Type, it_, object) //JODO: neutralisierendes add.
         it_->second = neutron<codomain_type>::value();
@@ -1253,85 +1178,6 @@ flip(Type& object, const OperandT& operand)
 
     return object;
 }
-
-
-template<class Type>
-typename enable_if<mpl::and_< is_interval_map<Type>
-                            , mpl::not_<is_total<Type> > >, Type>::type&
-flip(Type& object, const typename Type::segment_type& interval_value_pair)
-{
-    typedef typename Type::set_type       set_type;
-    typedef typename Type::interval_type  interval_type;
-    typedef typename Type::value_type     value_type;
-    typedef typename Type::const_iterator const_iterator;
-    typedef typename Type::codomain_type  codomain_type;
-    typedef typename Type::inverse_codomain_intersect inverse_codomain_intersect;
-    // That which is common shall be subtracted
-    // That which is not shall be added
-    // So interval_value_pair has to be 'complementary added' or flipped
-
-    interval_type span = interval_value_pair.first;
-    std::pair<const_iterator, const_iterator> exterior 
-        = object.equal_range(span);
-
-    const_iterator first_ = exterior.first;
-    const_iterator end_   = exterior.second;
-
-    interval_type covered, left_over, common_interval;
-    const codomain_type& x_value = interval_value_pair.second;
-    const_iterator it_ = first_;
-
-    set_type eraser;
-    Type     intersection;
-
-    while(it_ != end_  ) 
-    {
-        const codomain_type& co_value = it_->second;
-        covered = (*it_++).first;
-        //[a      ...  : span
-        //     [b ...  : covered
-        //[a  b)       : left_over
-        left_over = right_subtract(span, covered);
-
-        //That which is common ...
-        common_interval = span & covered;
-        if(!itl::is_empty(common_interval))
-        {
-            // ... shall be subtracted
-            itl::add(eraser, common_interval);
-
-            Interval_Map::on_codomain_model<Type, has_set_semantics<codomain_type>::value>
-                ::add(intersection, common_interval, x_value, co_value);
-        }
-
-        itl::add(object, value_type(left_over, x_value)); //That which is not shall be added
-        // Because this is a collision free addition I don't have to distinguish codomain_types.
-
-        //...      d) : span
-        //... c)      : covered
-        //     [c  d) : span'
-        span = left_subtract(span, covered);
-    }
-
-    //If span is not empty here, it is not in the set so it shall be added
-    itl::add(object, value_type(span, x_value));
-
-    //finally rewrite the common segments
-    itl::erase(object, eraser);
-    object += intersection;
-
-    return object;
-}
-
-template<class Type>
-typename enable_if<mpl::and_< is_interval_map<Type>
-                            , mpl::not_<is_total<Type> > >, Type>::type&
-flip(Type& object, const typename Type::element_type& key_value_pair)
-{
-    return itl::flip(object, make_segment<Type>(key_value_pair));
-}
-
-
 
 template<class Type, class OperandT>
 typename enable_if< mpl::and_< mpl::not_<is_total<Type> > 

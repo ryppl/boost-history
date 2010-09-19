@@ -117,7 +117,50 @@ public:
         this->clear();
         this->_set.insert(src.begin(), src.end());
     }
+
     
+private:
+    // Private functions that shall be accessible by the baseclass:
+    friend class
+        interval_base_set<split_interval_set<DomainT,Compare,Interval,Alloc>, 
+                                             DomainT,Compare,Interval,Alloc>;
+
+    iterator handle_inserted(iterator inserted_)
+    { 
+        return inserted_; 
+    }
+
+    iterator add_over(const interval_type& addend, iterator last_)
+    {
+        iterator first_ = this->_set.lower_bound(addend);
+        //BOOST_ASSERT(next(last_) == this->_set.upper_bound(inter_val));
+
+        iterator it_ = first_;
+        interval_type rest_interval = addend;
+
+        add_front(rest_interval, it_);
+        add_main (rest_interval, it_, last_);
+        add_rear (rest_interval, it_);
+        return it_;
+    }
+
+    iterator add_over(const interval_type& addend)
+    {
+        std::pair<iterator,iterator> overlap = this->_set.equal_range(addend);
+        iterator first_ = overlap.first,
+                 end_   = overlap.second,
+                 last_  = end_; --last_;
+
+        iterator it_ = first_;
+        interval_type rest_interval = addend;
+
+        add_front(rest_interval, it_);
+        add_main (rest_interval, it_, last_);
+        add_rear (rest_interval, it_);
+
+        return it_;
+    }
+
 } ;
 
 

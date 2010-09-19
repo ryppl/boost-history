@@ -538,7 +538,7 @@ void interval_map_operators_4_bicremental_types()
     all -= section;
     complement += all;
     //complement.erase(I3_5I);
-    complement.erase(section);
+	itl::erase(complement, section);
     BOOST_CHECK_EQUAL( disjoint(section, complement), true );
     BOOST_CHECK_EQUAL( intersects(section, complement), false );
 }
