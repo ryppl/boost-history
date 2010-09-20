@@ -25,6 +25,7 @@ project
         #<include>../../..
         <toolset>msvc:<asynch-exceptions>on
         <define>BOOST_ENABLE_WARNINGS
+        <define>BOOST_RATIO_USES_MPL_ASSERT
         <warnings>all
         <toolset>gcc:<cxxflags>-Wextra
         <toolset>gcc:<cxxflags>-Wno-long-long        
@@ -33,11 +34,22 @@ project
         <toolset>msvc:<cxxflags>/wd4127
     ;
 
-    test-suite "ratio"
+    test-suite "ratio.ratio"
         :
+        [ compile-fail ratio_fail_test2.cpp  ]
+        [ compile-fail ratio_fail_test3.cpp  ]
+        [ compile-fail ratio_fail_test4.cpp  ]
+        [ run ratio_test.cpp ]
+        ;
+
+    test-suite "ratio.ope"
+        :
+        [ run ratio_ope_test.cpp ]
         [ compile-fail ratio_fail_test1.cpp  ]
-        [ run ratio_test.cpp  :  :  : <link>static ]
-        [ run ratio_test.cpp  :  :  :  : ratio_test_dll ]
+        [ compile-fail ratio_add_fail.cpp  ]
+        [ compile-fail ratio_substract_fail.cpp  ]
+        [ compile-fail ratio_multiply_fail.cpp  ]
+        [ compile-fail ratio_divide_fail.cpp  ]
         ;
 
    test-suite "examples"
