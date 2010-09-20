@@ -20,7 +20,7 @@
 #include <boost/ratio.hpp>
 #include <iostream>
 
-#if !defined(BOOST_NO_STATIC_ASSERT) || !defined(BOOST_RATIO_USES_MPL_ASSERT)
+#if !defined(BOOST_NO_STATIC_ASSERT)
 #define NOTHING ""
 #endif
 
