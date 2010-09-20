@@ -27,6 +27,16 @@ time2_demo contained this comment:
                    Anthony Williams.
 */
 
+// The way overflow is managed for ratio_less is taken from llvm/libcxx/include/ratio
+//===---------------------------- ratio -----------------------------------===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+
 #ifndef BOOST_RATIO_RATIO__HPP
 #define BOOST_RATIO_RATIO_HPP
 
@@ -505,57 +515,41 @@ struct ratio_not_equal
 
 namespace detail
 {
-  // Protect against overflow, and still get the right answer as much as possible.
-  //   This just demonstrates for fun how far you can push things without hitting
-  //   overflow.  The obvious and simple implementation is conforming.
 
-  template <class R1, class R2, bool ok1, bool ok2>
-  struct ratio_less3 // true, true and false, false
+  template <class R1, class R2, bool Odd = false,
+          intmax_t Q1 = R1::num / R1::den, intmax_t M1 = R1::num % R1::den,
+          intmax_t Q2 = R2::num / R2::den, intmax_t M2 = R2::num % R2::den>
+  struct ratio_less1
   {
-      static const bool value = ll_mul<R1::num,
-        R2::den>::value < ll_mul<R2::num, R1::den>::value;
+    static const bool value = Odd ? Q2 < Q1 : Q1 < Q2;
   };
 
-  template <class R1, class R2>
-  struct ratio_less3<R1, R2, true, false>
+  template <class R1, class R2, bool Odd, intmax_t Q>
+  struct ratio_less1<R1, R2, Odd, Q, 0, Q, 0>
   {
-      static const bool value = true;
+    static const bool value = false;
   };
 
-  template <class R1, class R2>
-  struct ratio_less3<R1, R2, false, true>
+  template <class R1, class R2, bool Odd, intmax_t Q, intmax_t M2>
+  struct ratio_less1<R1, R2, Odd, Q, 0, Q, M2>
   {
-      static const bool value = false;
+    static const bool value = !Odd;
   };
 
-  template <class R1, class R2, bool = (R1::num < R1::den == R2::num < R2::den) >
-  struct ratio_less2  // N1 < D1 == N2 < D2
+  template <class R1, class R2, bool Odd, intmax_t Q, intmax_t M1>
+  struct ratio_less1<R1, R2, Odd, Q, M1, Q, 0>
   {
-      static const intmax_t max = -((1LL << (sizeof(intmax_t) * CHAR_BIT - 1)) + 1);
-      static const bool ok1 = R1::num <= max / R2::den;
-      static const bool ok2 = R2::num <= max / R1::den;
-      static const bool value = ratio_less3<R1, R2, ok1, ok2>::value;
+    static const bool value = Odd;
   };
 
-  template <class R1, class R2>
-  struct ratio_less2<R1, R2, false>  // N1 < D1 != N2 < D2
+  template <class R1, class R2, bool Odd, intmax_t Q, intmax_t M1,
+                                                        intmax_t M2>
+  struct ratio_less1<R1, R2, Odd, Q, M1, Q, M2>
   {
-      static const bool value = R1::num < R1::den;
-  };
-
-  template <class R1, class R2, bool = (R1::num < R1::den == R2::num < R2::den) >
-  struct ratio_less1  // N1 < D1 == N2 < D2
-  {
-      static const bool value = ratio_less2<ratio<R1::num, R2::num>,
-                                            ratio<R1::den, R2::den> >::value;
-  };
-
-  template <class R1, class R2>
-  struct ratio_less1<R1, R2, false>  // N1 < D1 != N2 < D2
-  {
-      static const bool value = R1::num < R1::den;
-  };
-
+    static const bool value = ratio_less1<ratio<R1::den, M1>,
+                                            ratio<R2::den, M2>, !Odd>::value;
+  };  
+  
   template <class R1, class R2, intmax_t S1 = static_sign<R1::num>::value,
                                 intmax_t S2 = static_sign<R2::num>::value>
   struct ratio_less
