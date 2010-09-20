@@ -29,6 +29,7 @@ project
         #<include>../../..
         <toolset>msvc:<asynch-exceptions>on
         <define>BOOST_ENABLE_WARNINGS
+        <define>BOOST_CHRONO_USES_MPL_ASSERT
         <warnings>all
         <toolset>gcc:<cxxflags>-Wextra
         <toolset>gcc:<cxxflags>-Wno-long-long        
@@ -95,5 +96,26 @@ project
         :
         [ run test_thread_clock.cpp :  :  : <link>static ]
         [ run test_thread_clock.cpp :  :  :  : test_thread_clock_dll ]
+        ;
+       
+    test-suite "typedefs"
+        :
+        [ run hours.pass.cpp :  :  : <link>static ]
+        [ run minutes.pass.cpp :  :  : <link>static ]
+        [ run seconds.pass.cpp :  :  : <link>static ]
+        [ run milliseconds.pass.cpp :  :  : <link>static ]
+        [ run microseconds.pass.cpp :  :  : <link>static ]
+        [ run nanoseconds.pass.cpp :  :  : <link>static ]
+        #[ run milliseconds.pass.cpp :  :  :  : milliseconds.pass.dll ]
+        ;
+       
+    test-suite "traits"
+        :
+        [ run traits/specializations/duration.pass.cpp :  :  : <link>static ]
+        [ run traits/specializations/time_point.pass.cpp :  :  : <link>static ]
+        [ run traits/is_fp/treat_as_floating_point.pass.cpp :  :  : <link>static ]
+        [ run traits/duration_values/max.pass.cpp :  :  : <link>static ]
+        [ run traits/duration_values/zero.pass.cpp :  :  : <link>static ]
+        [ run traits/duration_values/min.pass.cpp :  :  : <link>static ]
         ;
        
