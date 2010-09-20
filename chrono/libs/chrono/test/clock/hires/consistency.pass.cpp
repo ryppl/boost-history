@@ -12,16 +12,25 @@
 //
 //===----------------------------------------------------------------------===//
 
-// duration
+// <chrono>
 
-// If a program instantiates duration with a duration type for the template
-// argument Rep a diagnostic is required.
+// high_resolution_clock
+
+// check clock invariants
 
 #include <boost/chrono.hpp>
+#include <boost/type_traits/is_same.hpp>
+
+#if !defined(BOOST_NO_STATIC_ASSERT)
+#define NOTHING ""
+#endif
 
 int main()
 {
-    typedef boost::chrono::duration<boost::chrono::milliseconds> D;
-    D d;
+    typedef boost::chrono::high_resolution_clock C;
+    BOOST_CHRONO_STATIC_ASSERT((boost::is_same<C::rep, C::duration::rep>::value), NOTHING, ());
+    BOOST_CHRONO_STATIC_ASSERT((boost::is_same<C::period, C::duration::period>::value), NOTHING, ());
+    BOOST_CHRONO_STATIC_ASSERT((boost::is_same<C::duration, C::time_point::duration>::value), NOTHING, ());
+    BOOST_CHRONO_STATIC_ASSERT(C::is_monotonic || !C::is_monotonic, NOTHING, ());
     return 0;    
 }

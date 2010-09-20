@@ -12,16 +12,18 @@
 //
 //===----------------------------------------------------------------------===//
 
-// duration
+// <chrono>
 
-// If a program instantiates duration with a duration type for the template
-// argument Rep a diagnostic is required.
+// system_clock
+
+// static time_point from_time_t(time_t t);
 
 #include <boost/chrono.hpp>
+#include <ctime>
 
 int main()
 {
-    typedef boost::chrono::duration<boost::chrono::milliseconds> D;
-    D d;
+    typedef boost::chrono::system_clock C;
+    C::time_point t1 = C::from_time_t(C::to_time_t(C::now()));
     return 0;    
 }

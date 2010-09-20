@@ -12,16 +12,22 @@
 //
 //===----------------------------------------------------------------------===//
 
-// duration
+// <chrono>
 
-// If a program instantiates duration with a duration type for the template
-// argument Rep a diagnostic is required.
+// monotonic_clock
+
+// static time_point now();
 
 #include <boost/chrono.hpp>
+#include <cassert>
 
 int main()
 {
-    typedef boost::chrono::duration<boost::chrono::milliseconds> D;
-    D d;
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
+    typedef boost::chrono::monotonic_clock C;
+    C::time_point t1 = C::now();
+    C::time_point t2 = C::now();
+    assert(t2 >= t1);
+#endif
     return 0;    
 }

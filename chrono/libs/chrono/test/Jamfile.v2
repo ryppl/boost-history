@@ -24,7 +24,7 @@ project
         <library>/boost/system//boost_system
         #<library>/boost/thread//boost_thread/<link>shared
         # uncomment the line above if you build outside the Boost release
-        #<include>$(BOOST_ROOT) 
+        #<include>$(BOOST_ROOT)
         # uncomment the line above if you build outside the Boost release
         #<include>../../..
         <toolset>msvc:<asynch-exceptions>on
@@ -32,8 +32,8 @@ project
         <define>BOOST_CHRONO_USES_MPL_ASSERT
         <warnings>all
         <toolset>gcc:<cxxflags>-Wextra
-        <toolset>gcc:<cxxflags>-Wno-long-long        
-        <toolset>gcc-mingw-4.5.0:<cxxflags>-Wno-missing-field-initializers        
+        <toolset>gcc:<cxxflags>-Wno-long-long
+        <toolset>gcc-mingw-4.5.0:<cxxflags>-Wno-missing-field-initializers
         <toolset>gcc-mingw-4.5.0:<cxxflags>-fdiagnostics-show-option
         <toolset>msvc:<cxxflags>/wd4127
     ;
@@ -97,7 +97,7 @@ project
         [ run test_thread_clock.cpp :  :  : <link>static ]
         [ run test_thread_clock.cpp :  :  :  : test_thread_clock_dll ]
         ;
-       
+
     test-suite "typedefs"
         :
         [ run hours.pass.cpp :  :  : <link>static ]
@@ -108,7 +108,7 @@ project
         [ run nanoseconds.pass.cpp :  :  : <link>static ]
         #[ run milliseconds.pass.cpp :  :  :  : milliseconds.pass.dll ]
         ;
-       
+
     test-suite "traits"
         :
         [ run traits/specializations/duration.pass.cpp :  :  : <link>static ]
@@ -118,7 +118,7 @@ project
         [ run traits/duration_values/zero.pass.cpp :  :  : <link>static ]
         [ run traits/duration_values/min.pass.cpp :  :  : <link>static ]
         ;
-       
+
     test-suite "duration"
         :
         [ compile-fail duration/duration.fail.cpp  ]
@@ -126,6 +126,7 @@ project
         [ compile-fail duration/positive_num.fail.cpp  ]
         [ run duration/default_ratio.pass.cpp :  :  : <link>static ]
         [ run duration/types.pass.cpp :  :  : <link>static ]
+        
         [ run duration/arithmetic/op_divide_ass.pass.cpp :  :  : <link>static ]
         [ run duration/arithmetic/op_minusminusint.pass.cpp :  :  : <link>static ]
         [ run duration/arithmetic/op_plus_ass.pass.cpp :  :  : <link>static ]
@@ -138,11 +139,13 @@ project
         [ run duration/arithmetic/op_minusminus.pass.cpp :  :  : <link>static ]
         [ run duration/arithmetic/op_plus.pass.cpp :  :  : <link>static ]
         [ run duration/arithmetic/op_times_ass.pass.cpp :  :  : <link>static ]
+        
         [ run duration/cast/duration_cast.pass.cpp :  :  : <link>static ]
         [ compile-fail duration/cast/toduration.fail.cpp  ]
+        
         [ run duration/comparisons/op_equal.pass.cpp :  :  : <link>static ]
         [ run duration/comparisons/op_less.pass.cpp :  :  : <link>static ]
-
+        
         [ run duration/cons/convert_exact.pass.cpp :  :  : <link>static ]
         [ compile-fail duration/cons/convert_float_to_int.fail.cpp  ]
         [ compile-fail duration/cons/convert_inexact.fail.cpp  ]
@@ -166,40 +169,54 @@ project
         [ run duration/nonmember/op_times_rep.pass.cpp :  :  : <link>static : nonmember_op_times_rep.pass  ]
         [ compile-fail duration/nonmember/op_times_rep1.fail.cpp : : nonmember_op_times_rep1.fail   ]
         [ compile-fail duration/nonmember/op_times_rep2.fail.cpp : : nonmember_op_times_rep2.fail   ]
-        
+
         [ run duration/special/max.pass.cpp :  :  : <link>static : duration_special_max.pass  ]
         [ run duration/special/min.pass.cpp :  :  : <link>static : duration_special_min.pass  ]
         [ run duration/special/zero.pass.cpp :  :  : <link>static : duration_special_zero.pass  ]
         ;
-       
-       
 
-#time_point/arithmetic/op_+=.pass.cpp
-#time_point/arithmetic/op_-=.pass.cpp
-#time_point/cast/time_point_cast.pass.cpp
-#time_point/cast/toduration.fail.cpp
-#time_point/comparisons/op_equal.fail.cpp
-#time_point/comparisons/op_equal.pass.cpp
-#time_point/comparisons/op_less.fail.cpp
-#time_point/comparisons/op_less.pass.cpp
-#time_point/cons/convert.fail.cpp
-#time_point/cons/convert.pass.cpp
-#time_point/cons/default.pass.cpp
-#time_point/cons/duration.fail.cpp
-#time_point/cons/duration.pass.cpp
-#time_point/nonmember/op_+.pass.cpp
-#time_point/nonmember/op_-duration.pass.cpp
-#time_point/nonmember/op_-time_point.pass.cpp
-#time_point/observer/tested_elsewhere.pass.cpp
-#time_point/special/max.pass.cpp
-#time_point/special/min.pass.cpp
-#clock/hires/consistency.pass.cpp
-#clock/hires/now.pass.cpp
-#clock/monotonic/consistency.pass.cpp
-#clock/monotonic/now.pass.cpp
-#clock/system/consistency.pass.cpp
-#clock/system/from_time_t.pass.cpp
-#clock/system/now.pass.cpp
-#clock/system/rep_signed.pass.cpp
-#clock/system/to_time_t.pass.cpp
-       
+    test-suite "time_point"
+        :
+        [ run time_point/default_duration.pass.cpp :  :  : <link>static : time_point.default_duration.pass ]
+        [ compile-fail time_point/duration.fail.cpp : : time_point.duration.fail   ]
+
+        [ run time_point/arithmetic/op_plus_ass.pass.cpp :  :  : <link>static : time_point.op_plus_ass.pass ]
+        [ run time_point/arithmetic/op_minus_ass.pass.cpp :  :  : <link>static : time_point.op_minus_ass.pass ]
+        
+        [ run time_point/cast/time_point_cast.pass.cpp :  :  : <link>static : time_point.time_point_cast.pass ]
+        [ compile-fail time_point/cast/toduration.fail.cpp : : time_point.toduration.fail   ]
+        
+        [ compile-fail time_point/comparisons/op_equal.fail.cpp : : time_point.op_equal.fail   ]
+        [ run time_point/comparisons/op_equal.pass.cpp :  :  : <link>static : time_point.op_equal.pass ]
+        [ compile-fail time_point/comparisons/op_less.fail.cpp : : time_point.op_less.fail   ]
+        [ run time_point/comparisons/op_less.pass.cpp :  :  : <link>static : time_point.op_less.pass ]
+        
+        [ compile-fail time_point/cons/convert.fail.cpp : : time_point.convert.fail   ]
+        [ run time_point/cons/convert.pass.cpp :  :  : <link>static : time_point.convert.pass ]
+        [ run time_point/cons/default.pass.cpp :  :  : <link>static : time_point.default.pass ]
+        [ compile-fail time_point/cons/duration.fail.cpp : : time_point.cons.duration.fail   ]
+        [ run time_point/cons/duration.pass.cpp :  :  : <link>static : time_point.duration.pass ]
+        
+        [ run time_point/nonmember/op_plus.pass.cpp :  :  : <link>static : time_point.op_plus.pass ]
+        [ run time_point/nonmember/op_minus_time_point.pass.cpp :  :  : <link>static : time_point.op_minus_time_point.pass ]
+        [ run time_point/nonmember/op_minus_duration.pass.cpp :  :  : <link>static : time_point.op_minus_duration.pass ]
+        
+        [ run time_point/special/max.pass.cpp :  :  : <link>static : time_point.max.pass ]
+        [ run time_point/special/min.pass.cpp :  :  : <link>static : time_point.min.pass ]
+        ;
+
+    test-suite "clock"
+        :
+        [ run clock/hires/consistency.pass.cpp :  :  : <link>static : clock.hires.consistency.pass ]
+        [ run clock/hires/now.pass.cpp :  :  : <link>static : clock.hires.now.pass ]
+        
+        [ run clock/monotonic/consistency.pass.cpp :  :  : <link>static : clock.monotonic.consistency.pass ]
+        [ run clock/monotonic/now.pass.cpp :  :  : <link>static : clock.monotonic.now.pass ]
+        
+        [ run clock/system/consistency.pass.cpp :  :  : <link>static : clock.system.consistency.pass ]
+        [ run clock/system/now.pass.cpp :  :  : <link>static : clock.system.now.pass ]
+        [ run clock/system/from_time_t.pass.cpp :  :  : <link>static : clock.system.from_time_t.pass ]
+        [ run clock/system/rep_signed.pass.cpp :  :  : <link>static : clock.system.rep_signed.pass ]
+        [ run clock/system/to_time_t.pass.cpp :  :  : <link>static : clock.system.to_time_t.pass ]
+        ;
+

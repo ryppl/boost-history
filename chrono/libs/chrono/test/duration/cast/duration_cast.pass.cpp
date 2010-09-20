@@ -1,3 +1,8 @@
+//  Copyright 2010 Vicente J. Botet Escriba
+//  Distributed under the Boost Software License, Version 1.0.
+//  See http://www.boost.org/LICENSE_1_0.txt
+
+// Adapted from llvm/libcxx/test/utilities/chrono
 //===----------------------------------------------------------------------===//
 //
 //                     The LLVM Compiler Infrastructure
@@ -47,4 +52,5 @@ int main()
          boost::chrono::duration<double, boost::ratio<3600> >(7265./3600));
     test(boost::chrono::duration<int, boost::ratio<2, 3> >(9),
          boost::chrono::duration<int, boost::ratio<3, 5> >(10));
+    return 0;    
 }

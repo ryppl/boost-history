@@ -12,16 +12,18 @@
 //
 //===----------------------------------------------------------------------===//
 
-// duration
+// <chrono>
 
-// If a program instantiates duration with a duration type for the template
-// argument Rep a diagnostic is required.
+// system_clock
+
+// rep should be signed
 
 #include <boost/chrono.hpp>
+#include <cassert>
 
 int main()
 {
-    typedef boost::chrono::duration<boost::chrono::milliseconds> D;
-    D d;
+    assert(boost::chrono::system_clock::duration::min() <
+           boost::chrono::system_clock::duration::zero());
     return 0;    
 }
