@@ -27,6 +27,13 @@
 [def __Boost_Chrono__ [*Boost.Chrono]]
 
 [/===============================================]
+[def __inherit [*Inherits:]]
+[def __std_ref [*C++ Standard Reference:]]
+[def __header [*Header:]]
+[def __compat [*Compiler Compatibility:]]
+[def __examples [*Examples:]]
+[def __type [*type:]]
+
 
 [template common_type_link[link_text] [link_text]]
 [def __common_type__ [common_type_link `common_type`]]
@@ -3103,6 +3110,18 @@ All the units are given using the suffix "s" following the System International 
 [section:history Appendix A: History]
 [/==================================]
 
+[section [*Version 0.5.1, September 20, 2010] ]
+
+[*Fixes:]
+
+* Fix duration values min implementation.
+
+[*Test:]
+
+* Adapted test from libc++/chrono
+
+[endsect]
+
 [section [*Version 0.5.0, September 10, 2010] ]
 
 [*Features:]
@@ -3551,6 +3570,12 @@ You can also run a specific suite of test by doing
     [[manipulate_clock_object]      [run]           [...]                  [Pass]   [#]]
     [[chrono_accuracy_test]      [run]           [...]                  [Pass]   [#]]
 
+]
+[endsect]
+
+[section examples]
+[table
+    [[Name]             [kind]          [Description]          [Result] [Ticket]]
     [[cycle_count]      [run]           [...]                  [Pass]   [#]]
     [[runtime_resolution]      [run]           [...]                  [Pass]   [#]]
     [[xtime]      [run]           [...]                  [Pass]   [#]]
@@ -3566,10 +3591,87 @@ You can also run a specific suite of test by doing
 [section Other Clocks]
 [table
     [[Name]                         [kind]          [Description]           [Result] [Ticket]]
-    [[test_suspendible_clock]               [run]           [test basic uses of suspendible_clock.]                   [Pass]   [#]]
     [[test_thread_clock]               [run]           [test basic uses of thread_clock.]                   [Pass]   [#]]
 ]
 [endsect]
+
+[section:typedefs Duration Typedef's]
+[table
+    [[Name]                         [kind]          [Description]           [Result] [Ticket]]
+    [[hours.pass]               [run]           [check how many hours we can count.]                   [Pass]   [#]]
+    [[minutes.pass]               [run]           [check how many minutes we can count.]                   [Pass]   [#]]
+    [[seconds.pass]               [run]           [check how many seconds we can count.]                   [Pass]   [#]]
+    [[milliseconds.pass]               [run]           [check how many milliseconds we can count.]                   [Pass]   [#]]
+    [[microseconds.pass]               [run]           [check how many microseconds we can count.]                   [Pass]   [#]]
+    [[nanoseconds.pass]               [run]           [check how many nanoseconds we can count.]                   [Pass]   [#]]
+]
+[endsect]
+
+[section traits]
+[table
+    [[Name]                         [kind]          [Description]           [Result] [Ticket]]
+    [[specialization.duration.pass]               [run]           [check the correct specialization has been done for duration.]                   [Pass]   [#]]
+    [[specialization.time_point.pass]               [run]           [check the correct specialization has been done for time_point.]                   [Pass]   [#]]
+    [[is_fp.treat_as_floating_point.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[duration_values.max.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[duration_values.min.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[duration_values.zero.pass]               [run]           [check .]                   [Pass]   [#]]
+]
+[endsect]
+
+[section duration]
+[table
+    [[Name]                         [kind]          [Description]           [Result] [Ticket]]
+    [[duration.fail]               [compile-fail]           [check .]                   [Pass]   [#]]
+    [[ratio.fail]               [compile-fail]           [check .]                   [Pass]   [#]]
+    [[positive.fail]               [compile-fail]           [check .]                   [Pass]   [#]]
+    [[defaul_ratio.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[types.pass]               [run]           [check .]                   [Pass]   [#]]
+    
+    [[arithmetic.op_divide_ass.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[arithmetic.op_minusminusint.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[arithmetic.op_plus_ass.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[arithmetic.op_minus.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[arithmetic.op_mod_ass_duration.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[arithmetic.op_plusplus.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[arithmetic.op_minus_ass.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[arithmetic.op_mod_ass_rep.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[arithmetic.op_plusplusint.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[arithmetic.op_minusminus.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[arithmetic.op_plus.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[arithmetic.op_times_ass.pass]               [run]           [check .]                   [Pass]   [#]]
+    
+    [[cast.duration_cast.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[cast.toduration.fail]               [compile-fail]           [check .]                   [Pass]   [#]]
+    [[comparisons.op_equal.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[comparisons.op_less.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[cons.convert_exact.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[cons.convert_float_to_int.fail]               [compile-fail]           [check .]                   [Pass]   [#]]
+    [[cons.convert_inexact.fail]               [compile-fail]           [check .]                   [Pass]   [#]]
+    [[cons.convert_inexact.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[cons.convert_int_to_float.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[cons.default.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[cons.rep.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[cons.rep01.fail]               [compile-fail]           [check .]                   [Pass]   [#]]
+    [[cons.rep02.fail]               [compile-fail]           [check .]                   [Pass]   [#]]
+    [[cons.rep02.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[cons.rep03.fail]               [compile-fail]           [check .]                   [Pass]   [#]]
+    [[nonmember.op_plus.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[nonmember.op_minus.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[nonmember.op_divide_duration.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[nonmember.op_divide_rep.fail]               [compile-fail]           [check .]                   [Pass]   [#]]
+    [[nonmember.op_divide_rep.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[nonmember.op_mod_duration.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[nonmember.op_mod_rep.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[nonmember.op_times_rep.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[nonmember.op_times_rep1.fail]               [compile-fail]           [check .]                   [Pass]   [#]]
+    [[nonmember.op_times_rep2.fail]               [compile-fail]           [check .]                   [Pass]   [#]]
+    [[special.max.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[special.min.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[special.zero.pass]               [run]           [check .]                   [Pass]   [#]]
+]
+[endsect]
+
 
 
 [endsect]
