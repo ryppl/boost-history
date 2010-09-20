@@ -373,6 +373,36 @@ namespace chrono {
 //      20.9.2.2 duration_values [time.traits.duration_values]                //
 //----------------------------------------------------------------------------//
 
+  namespace detail {
+    template <class T, bool = is_arithmetic<T>::value>
+    struct chrono_numeric_limits {
+        static T lowest() throw() {return (std::numeric_limits<T>::min)  ();}
+    };
+    
+    template <class T>
+    struct chrono_numeric_limits<T,true> {
+        static T lowest() throw() {return (std::numeric_limits<T>::min)  ();}
+    };
+    
+    template <>
+    struct chrono_numeric_limits<float,true> {
+        static float lowest() throw() {return -(std::numeric_limits<float>::max) ();}
+    };
+    
+    template <>
+    struct chrono_numeric_limits<double,true> {
+        static double lowest() throw() {return -(std::numeric_limits<double>::max) ();}
+    };
+    
+    template <>
+    struct chrono_numeric_limits<long double,true> {
+        static long double lowest() throw() {return -(std::numeric_limits<long double>::max)();}
+    };
+
+    template <class T>
+    struct numeric_limits : chrono_numeric_limits<typename remove_cv<T>::type> {};
+    
+  }        
   template <class Rep>
   struct duration_values
   {
@@ -383,7 +413,8 @@ namespace chrono {
       //~ static const Rep const_zero = Rep(0);
       static BOOST_CHRONO_CONSTEXPR Rep max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return (std::numeric_limits<Rep>::max)();}
       //~ static const Rep const_max = integer_traits<Rep>::const_max;
-      static BOOST_CHRONO_CONSTEXPR Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return m_min_imp(boost::is_unsigned<Rep>());}
+      //~ static BOOST_CHRONO_CONSTEXPR Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return m_min_imp(boost::is_unsigned<Rep>());}
+      static BOOST_CHRONO_CONSTEXPR Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return detail::numeric_limits<Rep>::lowest();}
       //~ static const Rep const_min = integer_traits<Rep>::const_min;
   };
 
