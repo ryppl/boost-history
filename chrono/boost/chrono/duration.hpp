@@ -380,11 +380,11 @@ namespace chrono {
       static BOOST_CHRONO_CONSTEXPR Rep m_min_imp(boost::true_type)  {return zero();}
   public:
       static BOOST_CHRONO_CONSTEXPR Rep zero() {return Rep(0);}
-      static const Rep const_zero = Rep(0);
+      //~ static const Rep const_zero = Rep(0);
       static BOOST_CHRONO_CONSTEXPR Rep max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return (std::numeric_limits<Rep>::max)();}
-      static const Rep const_max = integer_traits<Rep>::const_max;
+      //~ static const Rep const_max = integer_traits<Rep>::const_max;
       static BOOST_CHRONO_CONSTEXPR Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return m_min_imp(boost::is_unsigned<Rep>());}
-      static const Rep const_min = integer_traits<Rep>::const_min;
+      //~ static const Rep const_min = integer_traits<Rep>::const_min;
   };
 
 }  // namespace chrono
