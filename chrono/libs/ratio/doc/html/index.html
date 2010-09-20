@@ -1211,7 +1211,10 @@
 </h2></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.history"> Appendix A: History</a></span></dt>
-<dd><dl><dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_1_0__september_10__2010__"><span class="bold"><strong>Version 0.1.0, September 10, 2010</strong></span> </a></span></dt></dl></dd>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_1_1__september_20__2010__"><span class="bold"><strong>Version 0.1.1, September 20, 2010</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_1_0__september_10__2010__"><span class="bold"><strong>Version 0.1.0, September 10, 2010</strong></span> </a></span></dt>
+</dl></dd>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.rationale"> Appendix B: Rationale</a></span></dt>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.implementation"> Appendix C: Implementation
       Notes</a></span></dt>
@@ -1219,7 +1222,11 @@
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.acknowledgements"> Appendix E:
       Acknowledgements</a></span></dt>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.tests"> Appendix F: Tests</a></span></dt>
-<dd><dl><dt><span class="section"><a href="index.html#boost_ratio.appendices.tests._ratio_"><code class="computeroutput"><span class="identifier">ratio</span></code></a></span></dt></dl></dd>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_ratio.appendices.tests._ratio_"><code class="computeroutput"><span class="identifier">ratio</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_ratio.appendices.tests._comparison_"><code class="computeroutput"><span class="identifier">comparison</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_ratio.appendices.tests._arithmetic_"><code class="computeroutput"><span class="identifier">arithmetic</span></code></a></span></dt>
+</dl></dd>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.tickets"> Appendix G: Tickets</a></span></dt>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.todo"> Appendix H: Future plans</a></span></dt>
 </dl></div>
@@ -1227,7 +1234,28 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_ratio.appendices.history"></a><a href="index.html#boost_ratio.appendices.history" title=" Appendix A: History"> Appendix A: History</a>
 </h3></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_1_0__september_10__2010__"><span class="bold"><strong>Version 0.1.0, September 10, 2010</strong></span> </a></span></dt></dl></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_1_1__september_20__2010__"><span class="bold"><strong>Version 0.1.1, September 20, 2010</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_1_0__september_10__2010__"><span class="bold"><strong>Version 0.1.0, September 10, 2010</strong></span> </a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_ratio.appendices.history.__version_0_1_1__september_20__2010__"></a><a href="index.html#boost_ratio.appendices.history.__version_0_1_1__september_20__2010__" title="Version 0.1.1, September 20, 2010 "><span class="bold"><strong>Version 0.1.1, September 20, 2010</strong></span> </a>
+</h4></div></div></div>
+<p>
+          <span class="bold"><strong>Fixes:</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+              ratio_less overflow avoided following the algorithm from libc++.
+            </li></ul></div>
+<p>
+          <span class="bold"><strong>Test:</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+              A more complete test has been included adapted from the test of from
+              libc++/ratio.
+            </li></ul></div>
+</div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_ratio.appendices.history.__version_0_1_0__september_10__2010__"></a><a href="index.html#boost_ratio.appendices.history.__version_0_1_0__september_10__2010__" title="Version 0.1.0, September 10, 2010 "><span class="bold"><strong>Version 0.1.0, September 10, 2010</strong></span> </a>
@@ -1245,7 +1273,7 @@
 <a name="boost_ratio.appendices.rationale"></a><a href="index.html#boost_ratio.appendices.rationale" title=" Appendix B: Rationale"> Appendix B: Rationale</a>
 </h3></div></div></div>
 <a name="boost_ratio.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form"></a><h4>
-<a name="id5009150"></a>
+<a name="id5009215"></a>
         <a href="index.html#boost_ratio.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form">Why
         ratio needs CopyConstruction and Assignment from ratios having the same normalized
         form</a>
@@ -1280,7 +1308,7 @@
         succeeds.
       </p>
 <a name="boost_ratio.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type"></a><h4>
-<a name="id5009555"></a>
+<a name="id5009620"></a>
         <a href="index.html#boost_ratio.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type">Why
         ratio needs the nested normalizer typedef type</a>
       </h4>
@@ -1345,7 +1373,11 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_ratio.appendices.tests"></a><a href="index.html#boost_ratio.appendices.tests" title=" Appendix F: Tests"> Appendix F: Tests</a>
 </h3></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="index.html#boost_ratio.appendices.tests._ratio_"><code class="computeroutput"><span class="identifier">ratio</span></code></a></span></dt></dl></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_ratio.appendices.tests._ratio_"><code class="computeroutput"><span class="identifier">ratio</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_ratio.appendices.tests._comparison_"><code class="computeroutput"><span class="identifier">comparison</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_ratio.appendices.tests._arithmetic_"><code class="computeroutput"><span class="identifier">arithmetic</span></code></a></span></dt>
+</dl></div>
 <p>
         In order to test you need to do.
       </p>
@@ -1400,17 +1432,17 @@
 <tr>
 <td>
                   <p>
-                    ratio_fail_test1
+                    typedefs.pass
                   </p>
                 </td>
 <td>
                   <p>
-                    compile-fails
+                    run
                   </p>
                 </td>
 <td>
                   <p>
-                    ...
+                    check the num/den are correct for the predefined typedefs
                   </p>
                 </td>
 <td>
@@ -1427,7 +1459,7 @@
 <tr>
 <td>
                   <p>
-                    ratio_test
+                    ratio.pass
                   </p>
                 </td>
 <td>
@@ -1437,7 +1469,554 @@
                 </td>
 <td>
                   <p>
-                    ...
+                    check the num/den are correctly simplified
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio1.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fails
+                  </p>
+                </td>
+<td>
+                  <p>
+                    The template argument D shall not be zero
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio2.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fails
+                  </p>
+                </td>
+<td>
+                  <p>
+                    the absolute values of the template arguments N and D shall be
+                    representable by type intmax_t
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio3.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fails
+                  </p>
+                </td>
+<td>
+                  <p>
+                    the absolute values of the template arguments N and D shall be
+                    representable by type intmax_t
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_ratio.appendices.tests._comparison_"></a><a href="index.html#boost_ratio.appendices.tests._comparison_" title="comparison"><code class="computeroutput"><span class="identifier">comparison</span></code></a>
+</h4></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    kind
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Result
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Ticket
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    ratio_equal.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check ratio_equal metafunction class
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio_not_equal.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check ratio_not_equal metafunction class
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio_less.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check ratio_less metafunction class
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio_less_equal.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check ratio_less_equal metafunction class
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio_greater.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check ratio_greater metafunction class
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio_greater_equal.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check ratio_greater_equal metafunction class
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_ratio.appendices.tests._arithmetic_"></a><a href="index.html#boost_ratio.appendices.tests._arithmetic_" title="arithmetic"><code class="computeroutput"><span class="identifier">arithmetic</span></code></a>
+</h4></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    kind
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Result
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Ticket
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    ratio_add.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check ratio_add metafunction class
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio_substract.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check ratio_substract metafunction class
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio_multiply.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check ratio_multiply metafunction class
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio_divide.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check ratio_divide metafunction class
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio_add.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fails
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check ratio_add overflow metafunction class
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio_substract.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fails
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check ratio_substract underflow metafunction class
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio_multiply.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fails
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check ratio_multiply overflow metafunction class
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    ratio_divide.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fails
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check ratio_divide overflow metafunction class
                   </p>
                 </td>
 <td>
@@ -1559,6 +2138,28 @@
                 </p>
               </td>
 </tr>
+<tr>
+<td>
+                <p>
+                  4
+                </p>
+              </td>
+<td>
+                <p>
+                  ration_less overflow on cases where it can be avoided
+                </p>
+              </td>
+<td>
+                <p>
+                  Change the algorithm as implemented in libc++
+                </p>
+              </td>
+<td>
+                <p>
+                  Closed
+                </p>
+              </td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -1570,7 +2171,7 @@
 <a name="boost_ratio.appendices.todo"></a><a href="index.html#boost_ratio.appendices.todo" title=" Appendix H: Future plans"> Appendix H: Future plans</a>
 </h3></div></div></div>
 <a name="boost_ratio.appendices.todo.for_later_releases"></a><h4>
-<a name="id5010332"></a>
+<a name="id5011285"></a>
         <a href="index.html#boost_ratio.appendices.todo.for_later_releases">For later
         releases</a>
       </h4>
@@ -1582,7 +2183,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: September 11, 2010 at 09:03:26 GMT</small></p></td>
+<td align="left"><p><small>Last revised: September 20, 2010 at 09:53:32 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

@@ -906,6 +906,18 @@ The current implementation provides in addition:
 [section:history Appendix A: History]
 [/==================================]
 
+[section [*Version 0.1.1, September 20, 2010] ]
+
+[*Fixes:]
+
+* ratio_less overflow avoided following the algorithm from libc++.
+
+[*Test:]
+
+* A more complete test has been included adapted from the test of from libc++/ratio.
+
+[endsect]
+
 [section [*Version 0.1.0, September 10, 2010] ]
 
 [*Features:]
@@ -994,9 +1006,38 @@ You can also run a specific suite of test by doing
 
 [section `ratio`]
 [table
-    [[Name]             [kind]          [Description]          [Result] [Ticket]]
-    [[ratio_fail_test1]    [compile-fails] [...]                  [Pass]   [#]]
-    [[ratio_test]       [run]           [...]                  [Pass]   [#]]
+    [[Name]         [kind]          [Description]                                                                                   [Result] [Ticket]]
+    [[typedefs.pass] [run]          [check the num/den are correct for the predefined typedefs]                                     [Pass]   [#]]
+    [[ratio.pass]   [run]           [check the num/den are correctly simplified]                                                    [Pass]   [#]]
+    [[ratio1.fail]  [compile-fails] [The template argument D shall not be zero]                                                     [Pass]   [#]]
+    [[ratio2.fail]  [compile-fails] [the absolute values of the template arguments N and D shall be representable by type intmax_t] [Pass]   [#]]
+    [[ratio3.fail]  [compile-fails] [the absolute values of the template arguments N and D shall be representable by type intmax_t] [Pass]   [#]]
+]
+[endsect]
+
+[section `comparison`]
+[table
+    [[Name]                     [kind]  [Description]                                   [Result] [Ticket]]
+    [[ratio_equal.pass]         [run]   [check ratio_equal metafunction class]          [Pass]   [#]]
+    [[ratio_not_equal.pass]     [run]   [check ratio_not_equal metafunction  class]     [Pass]   [#]]
+    [[ratio_less.pass]          [run]   [check ratio_less metafunction class]           [Pass]   [#]]
+    [[ratio_less_equal.pass]    [run]   [check ratio_less_equal metafunction class]     [Pass]   [#]]
+    [[ratio_greater.pass]       [run]   [check ratio_greater metafunction class]        [Pass]   [#]]
+    [[ratio_greater_equal.pass] [run]   [check ratio_greater_equal metafunction class]  [Pass]   [#]]
+]
+[endsect]
+
+[section `arithmetic`]
+[table
+    [[Name]                 [kind]          [Description]                                           [Result] [Ticket]]
+    [[ratio_add.pass]       [run]           [check ratio_add metafunction class]                    [Pass]   [#]]
+    [[ratio_substract.pass] [run]           [check ratio_substract metafunction  class]             [Pass]   [#]]
+    [[ratio_multiply.pass]  [run]           [check ratio_multiply metafunction class]               [Pass]   [#]]
+    [[ratio_divide.pass]    [run]           [check ratio_divide metafunction class]                 [Pass]   [#]]
+    [[ratio_add.fail]       [compile-fails] [check ratio_add overflow metafunction class]           [Pass]   [#]]
+    [[ratio_substract.fail] [compile-fails] [check ratio_substract underflow metafunction  class]   [Pass]   [#]]
+    [[ratio_multiply.fail]  [compile-fails] [check ratio_multiply overflow metafunction class]      [Pass]   [#]]
+    [[ratio_divide.fail]    [compile-fails] [check ratio_divide overflow metafunction class]        [Pass]   [#]]
 ]
 [endsect]
 
@@ -1011,6 +1052,7 @@ You can also run a specific suite of test by doing
     [[2]    [INTMAX_C is not always defined] [Replace INTMAX_C by BOOST_INTMAX_C until boost/cstdint.hpp ensures INTMAX_C is always defined.]                  [Closed]]
     
     [[3]    [MSVC reports a warning instead of an error when there is an integral constant overflow] [manage with MSVC reporting a warning instead of an error when there is an integral constant overflow]                  [Closed]]
+    [[4]    [ration_less overflow on cases where it can be avoided] [Change the algorithm as implemented in libc++]                  [Closed]]
     [/[#]    [XXXX] [XXXX]                  [Closed]]
 ]
 
