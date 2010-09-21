@@ -27,7 +27,7 @@ int main()
     cout << "hours(3) + minutes(10) = "
          <<  hours(3) + minutes(10) << '\n';
 
-    typedef duration<long long, ratio<1, 2500000000> > ClockTick;
+    typedef duration<long long, ratio<1, 2500000000ULL> > ClockTick;
     cout << "ClockTick(3) + nanoseconds(10) = "
          <<  ClockTick(3) + nanoseconds(10) << '\n';
 
