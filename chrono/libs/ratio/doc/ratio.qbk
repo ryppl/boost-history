@@ -340,6 +340,7 @@ Cygwin with
 MinGW with
 
 * GCC 4.4.0
+* GCC 4.5.0
 
 Initial version was tested on:
 
@@ -910,7 +911,7 @@ The current implementation provides in addition:
 
 It provides a textual representation of `boost::ratio<N, D>` in the form of a `std::basic_string`. Other types such as `boost::duration` can use these strings to aid in their I/O.
 
-This source is has been adapted from the experimental header `<ratio_io>` from Howard Hinnant. The current implementation makes use of a few utilities in libc++. Porting to Boost has been trivial. 
+This source has been adapted from the experimental header `<ratio_io>` from Howard Hinnant. Porting to Boost has been trivial. 
 
     namespace boost {
         
