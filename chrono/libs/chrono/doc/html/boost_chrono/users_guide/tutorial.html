@@ -4,7 +4,7 @@
 <title>Tutorial</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
-<link rel="start" href="../../index.html" title="Boost.Chrono 0.5.0">
+<link rel="start" href="../../index.html" title="Boost.Chrono 0.6.0">
 <link rel="up" href="../users_guide.html" title=" Users'Guide">
 <link rel="prev" href="getting_started.html" title=" Getting Started">
 <link rel="next" href="examples.html" title="Examples">
@@ -58,6 +58,7 @@
           to get the actual CPU milliseconds (or other units?) used by the current
           thread between end and start?</a></span></dt>
 </dl></dd>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.i_o">I/O</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -291,7 +292,7 @@
             fractional part gets silently discarded.
           </p>
 <a name="boost_chrono.users_guide.tutorial.duration.what_happens_if_i_assign__m3___us3__to__minutes__instead_of__microseconds__.but_what_if_the_truncation_behavior_is_what_i_want_to_do_"></a><h6>
-<a name="id4997417"></a>
+<a name="id4997493"></a>
             <a href="tutorial.html#boost_chrono.users_guide.tutorial.duration.what_happens_if_i_assign__m3___us3__to__minutes__instead_of__microseconds__.but_what_if_the_truncation_behavior_is_what_i_want_to_do_">But
             what if the truncation behavior is what I want to do?</a>
           </h6>
@@ -829,6 +830,238 @@
 </span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">ms</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"ms\n"</span><span class="special">;</span>
 </pre>
 </div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.users_guide.tutorial.i_o"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.i_o" title="I/O">I/O</a>
+</h4></div></div></div>
+<p>
+          Any <code class="computeroutput"><span class="identifier">duration</span></code> can be streamed
+          out to a <code class="computeroutput"><span class="identifier">basic_ostream</span></code>.
+          The run time value of the <code class="computeroutput"><span class="identifier">duration</span></code>
+          is formatted according to the rules and current format settings for <code class="computeroutput"><span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span></code>. This is followed by a single space
+          and then the compile time unit name of the <code class="computeroutput"><span class="identifier">duration</span></code>.
+          This unit name is built on the string returned from <code class="computeroutput"><span class="identifier">ratio_string</span></code>
+          and the data used to construct the <code class="computeroutput"><span class="identifier">duration_punct</span></code>
+          which was inserted into the stream's locale. If a <code class="computeroutput"><span class="identifier">duration_punct</span></code>
+          has not been inserted into the stream's locale, a default constructed
+          <code class="computeroutput"><span class="identifier">duration_punct</span></code> will be
+          added to the stream's locale.
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">duration</span></code> unit names come
+          in two varieties: long and short. The default constructed <code class="computeroutput"><span class="identifier">duration_punct</span></code> provides names in the
+          long format. These names are English descriptions. Other languages are
+          supported by constructing a <code class="computeroutput"><span class="identifier">duration_punct</span></code>
+          with the proper spellings for "hours", "minutes" and
+          "seconds", and their abbreviations (for the short format). The
+          short or long format can be easily chosen by streaming a <code class="computeroutput"><span class="identifier">duration_short</span></code> or <code class="computeroutput"><span class="identifier">duration_long</span></code>
+          manipulator respectively.
+        </p>
+<p>
+          A <code class="computeroutput"><span class="identifier">time_point</span></code> is formatted
+          by outputting its internal <code class="computeroutput"><span class="identifier">duration</span></code>
+          followed by a string that describes the <code class="computeroutput"><span class="identifier">time_point</span><span class="special">::</span><span class="identifier">clock</span></code>
+          epoch. This string will vary for each distinct clock, and for each implementation
+          of the supplied clocks.
+        </p>
+<p>
+          <span class="bold"><strong>Example:</strong></span>
+        </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono_io</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">std</span><span class="special">;</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"milliseconds(3) + microseconds(10) = "</span>
+         <span class="special">&lt;&lt;</span>  <span class="identifier">milliseconds</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">microseconds</span><span class="special">(</span><span class="number">10</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"hours(3) + minutes(10) = "</span>
+         <span class="special">&lt;&lt;</span>  <span class="identifier">hours</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">minutes</span><span class="special">(</span><span class="number">10</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">,</span> <span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span> <span class="number">2500000000</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">ClockTick</span><span class="special">;</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"ClockTick(3) + nanoseconds(10) = "</span>
+         <span class="special">&lt;&lt;</span>  <span class="identifier">ClockTick</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">nanoseconds</span><span class="special">(</span><span class="number">10</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nSet cout to use short names:\n"</span><span class="special">;</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">duration_short</span><span class="special">;</span>
+
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"milliseconds(3) + microseconds(10) = "</span>
+         <span class="special">&lt;&lt;</span>  <span class="identifier">milliseconds</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">microseconds</span><span class="special">(</span><span class="number">10</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"hours(3) + minutes(10) = "</span>
+         <span class="special">&lt;&lt;</span>  <span class="identifier">hours</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">minutes</span><span class="special">(</span><span class="number">10</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"ClockTick(3) + nanoseconds(10) = "</span>
+         <span class="special">&lt;&lt;</span>  <span class="identifier">ClockTick</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">nanoseconds</span><span class="special">(</span><span class="number">10</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nsystem_clock::now() = "</span> <span class="special">&lt;&lt;</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"monotonic_clock::now() = "</span> <span class="special">&lt;&lt;</span> <span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+<span class="preprocessor">#endif</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nSet cout to use long names:\n"</span> <span class="special">&lt;&lt;</span> <span class="identifier">duration_long</span>
+         <span class="special">&lt;&lt;</span> <span class="string">"high_resolution_clock::now() = "</span> <span class="special">&lt;&lt;</span> <span class="identifier">high_resolution_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The output could be
+        </p>
+<pre class="programlisting"><span class="identifier">milliseconds</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">microseconds</span><span class="special">(</span><span class="number">10</span><span class="special">)</span> <span class="special">=</span> <span class="number">3010</span> <span class="identifier">microseconds</span>
+<span class="identifier">hours</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">minutes</span><span class="special">(</span><span class="number">10</span><span class="special">)</span> <span class="special">=</span> <span class="number">190</span> <span class="identifier">minutes</span>
+<span class="identifier">ClockTick</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">nanoseconds</span><span class="special">(</span><span class="number">10</span><span class="special">)</span> <span class="special">=</span> <span class="number">56</span> <span class="special">[</span><span class="number">1</span><span class="special">/</span><span class="number">5000000000</span><span class="special">]</span><span class="identifier">seconds</span>
+
+<span class="identifier">Set</span> <span class="identifier">cout</span> <span class="identifier">to</span> <span class="identifier">use</span> <span class="keyword">short</span> <span class="identifier">names</span><span class="special">:</span>
+<span class="identifier">milliseconds</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">microseconds</span><span class="special">(</span><span class="number">10</span><span class="special">)</span> <span class="special">=</span> <span class="number">3010</span> <span class="identifier">us</span>
+<span class="identifier">hours</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">minutes</span><span class="special">(</span><span class="number">10</span><span class="special">)</span> <span class="special">=</span> <span class="number">190</span> <span class="identifier">m</span>
+<span class="identifier">ClockTick</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">nanoseconds</span><span class="special">(</span><span class="number">10</span><span class="special">)</span> <span class="special">=</span> <span class="number">56</span> <span class="special">[</span><span class="number">1</span><span class="special">/</span><span class="number">5000000000</span><span class="special">]</span><span class="identifier">s</span>
+
+<span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">=</span> <span class="number">1284923218301231</span> <span class="identifier">us</span> <span class="identifier">since</span> <span class="identifier">Jan</span> <span class="number">1</span><span class="special">,</span> <span class="number">1970</span>
+<span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">=</span> <span class="number">18588963676886</span> <span class="identifier">ns</span> <span class="identifier">since</span> <span class="identifier">boot</span>
+
+<span class="identifier">Set</span> <span class="identifier">cout</span> <span class="identifier">to</span> <span class="identifier">use</span> <span class="keyword">long</span> <span class="identifier">names</span><span class="special">:</span>
+<span class="identifier">high_resolution_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">=</span> <span class="number">18588963785548</span> <span class="identifier">nanoseconds</span> <span class="identifier">since</span> <span class="identifier">boot</span>
+</pre>
+<p>
+          Parsing a <code class="computeroutput"><span class="identifier">duration</span></code> follows
+          rules analogous to the <code class="computeroutput"><span class="identifier">duration</span></code>
+          converting constructor. A value and a unit (short or long) are read from
+          the <code class="computeroutput"><span class="identifier">basic_istream</span></code>. If the
+          <code class="computeroutput"><span class="identifier">duration</span></code> has an integral
+          representation, then the value parsed must be exactly representable in
+          the target <code class="computeroutput"><span class="identifier">duration</span></code> (after
+          conversion to the target <code class="computeroutput"><span class="identifier">duration</span></code>
+          units), else <code class="computeroutput"><span class="identifier">failbit</span></code> is
+          set. <code class="computeroutput"><span class="identifier">duration</span></code>s based on
+          floating point representations can be parsed using any units that do not
+          cause overflow.
+        </p>
+<p>
+          For example a stream containing "5000 milliseconds" can be parsed
+          into seconds, but if the stream contains "5001 milliseconds",
+          parsing into <code class="computeroutput"><span class="identifier">seconds</span></code> will
+          cause <code class="computeroutput"><span class="identifier">failbit</span></code> to be set.
+        </p>
+<p>
+          <span class="bold"><strong>Example:</strong></span>
+        </p>
+<div class="orderedlist"><ol type="1">
+<li>
+              include &lt;boost/chrono/chrono_io.hpp&gt;
+            </li>
+<li>
+              include &lt;sstream&gt;
+            </li>
+<li>
+              include &lt;cassert&gt;
+            </li>
+</ol></div>
+<p>
+          int main() { using namespace std; using namespace boost::chrono;
+        </p>
+<pre class="programlisting"><span class="identifier">istringstream</span> <span class="identifier">in</span><span class="special">(</span><span class="string">"5000 milliseconds 4000 ms 3001 ms"</span><span class="special">);</span>
+<span class="identifier">seconds</span> <span class="identifier">d</span><span class="special">(</span><span class="number">0</span><span class="special">);</span>
+<span class="identifier">in</span> <span class="special">&gt;&gt;</span> <span class="identifier">d</span><span class="special">;</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">in</span><span class="special">.</span><span class="identifier">good</span><span class="special">());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">d</span> <span class="special">==</span> <span class="identifier">seconds</span><span class="special">(</span><span class="number">5</span><span class="special">));</span>
+<span class="identifier">in</span> <span class="special">&gt;&gt;</span> <span class="identifier">d</span><span class="special">;</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">in</span><span class="special">.</span><span class="identifier">good</span><span class="special">());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">d</span> <span class="special">==</span> <span class="identifier">seconds</span><span class="special">(</span><span class="number">4</span><span class="special">));</span>
+<span class="identifier">in</span> <span class="special">&gt;&gt;</span> <span class="identifier">d</span><span class="special">;</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">in</span><span class="special">.</span><span class="identifier">fail</span><span class="special">());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">d</span> <span class="special">==</span> <span class="identifier">seconds</span><span class="special">(</span><span class="number">4</span><span class="special">));</span>
+
+<span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+</pre>
+<p>
+          istringstream in("5000 milliseconds 4000 ms 3001 ms"); seconds
+          d(0); in &gt;&gt; d; assert(in.good()); assert(d <code class="literal">= seconds(5));
+          in &gt;&gt; d; assert(in.good()); assert(d =</code> seconds(4)); in
+          &gt;&gt; d; assert(in.fail()); assert(d == seconds(4));
+        </p>
+<pre class="programlisting"><span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+</pre>
+<p>
+          return 0; }
+        </p>
+<p>
+          Note that a <code class="computeroutput"><span class="identifier">duration</span></code> failure
+          may occur late in the parsing process. This means that the characters making
+          up the failed parse in the stream are usually consumed despite the failure
+          to successfully parse.
+        </p>
+<p>
+          Parsing a <code class="computeroutput"><span class="identifier">time_point</span></code> involves
+          first parsing a <code class="computeroutput"><span class="identifier">duration</span></code>
+          and then parsing the epoch string. If the epoch string does not match that
+          associated with <code class="computeroutput"><span class="identifier">time_point</span><span class="special">::</span><span class="identifier">clock</span></code>
+          then failbit will be set.
+        </p>
+<p>
+          <span class="bold"><strong>Example:</strong></span>
+        </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono_io</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">sstream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cassert</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">std</span><span class="special">;</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+
+    <span class="identifier">high_resolution_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t0</span> <span class="special">=</span> <span class="identifier">high_resolution_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+    <span class="identifier">stringstream</span> <span class="identifier">io</span><span class="special">;</span>
+    <span class="identifier">io</span> <span class="special">&lt;&lt;</span> <span class="identifier">t0</span><span class="special">;</span>
+    <span class="identifier">high_resolution_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t1</span><span class="special">;</span>
+    <span class="identifier">io</span> <span class="special">&gt;&gt;</span> <span class="identifier">t1</span><span class="special">;</span>
+    <span class="identifier">assert</span><span class="special">(!</span><span class="identifier">io</span><span class="special">.</span><span class="identifier">fail</span><span class="special">());</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">io</span><span class="special">.</span><span class="identifier">str</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t0</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t1</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="identifier">high_resolution_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t</span> <span class="special">=</span> <span class="identifier">high_resolution_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"That took "</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span> <span class="special">-</span> <span class="identifier">t0</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"That took "</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span> <span class="special">-</span> <span class="identifier">t1</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The output could be:
+        </p>
+<pre class="programlisting"><span class="number">50908679121461</span> <span class="identifier">nanoseconds</span> <span class="identifier">since</span> <span class="identifier">boot</span>
+<span class="identifier">That</span> <span class="identifier">took</span> <span class="number">649630</span> <span class="identifier">nanoseconds</span>
+</pre>
+<p>
+          Here's a simple example to find out how many hours the computer has been
+          up (on this platform):
+        </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono_io</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">std</span><span class="special">;</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">monotonic_clock</span><span class="special">,</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">3600</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">T</span><span class="special">;</span>
+    <span class="identifier">T</span> <span class="identifier">tp</span> <span class="special">=</span> <span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">tp</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The output could be:
+        </p>
+<pre class="programlisting"><span class="number">17.8666</span> <span class="identifier">hours</span> <span class="identifier">since</span> <span class="identifier">boot</span>
+</pre>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

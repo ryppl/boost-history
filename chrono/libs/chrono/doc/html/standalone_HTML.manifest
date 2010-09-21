@@ -9,6 +9,7 @@ boost_chrono/users_guide/examples.html
 boost_chrono/users_guide/ext_references.html
 boost_chrono/reference.html
 boost_chrono/reference/cpp0x.html
+boost_chrono/reference/io.html
 boost_chrono/reference/other_clocks.html
 boost_chrono/reference/deprecated.html
 boost_chrono/appendices.html
