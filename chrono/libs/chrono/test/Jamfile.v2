@@ -62,8 +62,11 @@ project
         [ run manipulate_clock_object.cpp :  :  :  : manipulate_clock_object_dll ]
         [ run chrono_accuracy_test.cpp :  :  : <link>static ]
         [ run chrono_accuracy_test.cpp :  :  :  : chrono_accuracy_test_dll ]
+        ;
 
 
+    test-suite "examples"
+        :
         [ run ../example/cycle_count.cpp :  :  : <link>static ]
         [ run ../example/cycle_count.cpp :  :  :  : cycle_count_dll ]
         [ run ../example/runtime_resolution.cpp :  :  : <link>static ]
@@ -220,3 +223,12 @@ project
         [ run clock/system/to_time_t.pass.cpp :  :  : <link>static : clock.system.to_time_t.pass ]
         ;
 
+
+    test-suite "io"
+        :
+        [ run ../example/io_ex1.cpp :  :  : <link>static ]
+        [ run ../example/io_ex2.cpp :  :  : <link>static ]
+        [ run ../example/io_ex3.cpp :  :  : <link>static ]
+        [ run ../example/io_ex4.cpp :  :  : <link>static ]
+        [ run ../example/io_ex5.cpp :  :  : <link>static ]
+        ;
