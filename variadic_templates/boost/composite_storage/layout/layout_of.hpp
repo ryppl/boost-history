@@ -9,6 +9,9 @@
 //  warranty, and with no claim as to its suitability for any purpose.
 //
 #include <boost/composite_storage/buffers/char_buf.hpp>
+#include <boost/mpl/integral_c.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/type_traits/is_empty.hpp>
 
 namespace boost
 {
@@ -57,12 +60,19 @@ struct alignment_of
   >
   struct
 size_of
+: mpl::if_
+  < is_empty<T>
+  , mpl::integral_c<std::size_t,0>
+  , mpl::integral_c<std::size_t,sizeof(T)>
+  >::type
 {
+  #if 0
         static
       std::size_t const
     value
     =sizeof(T)
     ;
+  #endif
 };
 
 struct components_aligned_yes
