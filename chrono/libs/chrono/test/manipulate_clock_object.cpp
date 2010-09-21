@@ -45,7 +45,7 @@ void manipulate_clock_object(system_clock clock)
     system_clock::duration delay = milliseconds(5);
     system_clock::time_point start = clock.now();
 
-    while (clock.now() - start <= delay);
+    while ((clock.now() - start) <= delay) {}
         
     system_clock::time_point stop = clock.now();
     system_clock::duration elapsed = stop - start;
