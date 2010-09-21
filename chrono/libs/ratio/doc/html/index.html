@@ -1,10 +1,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Boost.Ratio 0.1.0</title>
+<title>Boost.Ratio 0.2.0</title>
 <link rel="stylesheet" href="../../../../doc/html/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
-<link rel="start" href="index.html" title="Boost.Ratio 0.1.0">
+<link rel="start" href="index.html" title="Boost.Ratio 0.2.0">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -21,7 +21,7 @@
 <div class="titlepage">
 <div>
 <div><h2 class="title">
-<a name="boost_ratio"></a>Boost.Ratio 0.1.0</h2></div>
+<a name="boost_ratio"></a>Boost.Ratio 0.2.0</h2></div>
 <div><div class="authorgroup">
 <div class="author"><h3 class="author">
 <span class="firstname">Howard</span> <span class="surname">Hinnant</span>
@@ -61,7 +61,10 @@
 <dt><span class="section"><a href="index.html#boost_ratio.users_guide.ext_references"> External Resources</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="index.html#boost_ratio.reference"> Reference </a></span></dt>
-<dd><dl><dt><span class="section"><a href="index.html#boost_ratio.reference.ratio_hpp"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">ratio</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt></dl></dd>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_ratio.reference.ratio_hpp"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">ratio</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_ratio.reference.ratio_io_hpp"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">ratio_io</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+</dl></dd>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices">Appendices</a></span></dt>
 <dd><dl>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.history"> Appendix A: History</a></span></dt>
@@ -164,7 +167,8 @@
 <p>
         The <span class="bold"><strong>Boost.Ratio</strong></span> library provides:
       </p>
-<div class="itemizedlist"><ul type="disc"><li>
+<div class="itemizedlist"><ul type="disc">
+<li>
             A class template, <a href="index.html#boost_ratio.reference.ratio_hpp.ratio" title=" Class Template
         ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a>, for specifying compile
             time rational constants such as 1/3 of a nanosecond or the number of
@@ -172,7 +176,13 @@
         ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> represents a compile time
             ratio of compile time constants with support for compile time arithmetic
             with overflow and division by zero protection
-          </li></ul></div>
+          </li>
+<li>
+            It provides a textual representation of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">,</span> <span class="identifier">D</span><span class="special">&gt;</span></code> in the form of a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span></code>.
+            Other types such as <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">duration</span></code>
+            can use these strings to aid in their I/O.
+          </li>
+</ul></div>
 </div>
 </div>
 <div class="section" lang="en">
@@ -201,7 +211,7 @@
         Ratio</a>
 </h4></div></div></div>
 <a name="boost_ratio.users_guide.getting_started.install.getting_boost_ratio_"></a><h5>
-<a name="id4948974"></a>
+<a name="id4949064"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.getting_boost_ratio_">Getting
           Boost.Ratio </a>
         </h5>
@@ -216,7 +226,7 @@
           and follow the instructions there for anonymous SVN access.
         </p>
 <a name="boost_ratio.users_guide.getting_started.install.where_to_install_boost_ratio__"></a><h5>
-<a name="id4949037"></a>
+<a name="id4949126"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.where_to_install_boost_ratio__">Where
           to install Boost.Ratio? </a>
         </h5>
@@ -232,7 +242,7 @@
           variable. Any help is welcome.
         </p>
 <a name="boost_ratio.users_guide.getting_started.install.building_boost_ratio_"></a><h5>
-<a name="id4949074"></a>
+<a name="id4949164"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.building_boost_ratio_">Building
           Boost.Ratio </a>
         </h5>
@@ -241,7 +251,7 @@
           so no need to compile anything.
         </p>
 <a name="boost_ratio.users_guide.getting_started.install.requirements"></a><h5>
-<a name="id4949105"></a>
+<a name="id4949194"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.requirements">Requirements</a>
         </h5>
 <p>
@@ -282,7 +292,7 @@
 </dl>
 </div>
 <a name="boost_ratio.users_guide.getting_started.install.building_an_executable_that_uses__emphasis_role__bold__boost_ratio__emphasis__"></a><h5>
-<a name="id4949283"></a>
+<a name="id4949373"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.building_an_executable_that_uses__emphasis_role__bold__boost_ratio__emphasis__">Building
           an executable that uses <span class="bold"><strong>Boost.Ratio</strong></span> </a>
         </h5>
@@ -290,7 +300,7 @@
           No link is needed.
         </p>
 <a name="boost_ratio.users_guide.getting_started.install.exceptions_safety_"></a><h5>
-<a name="id4949316"></a>
+<a name="id4949406"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.exceptions_safety_">Exceptions
           safety </a>
         </h5>
@@ -299,7 +309,7 @@
           of exception safety as long as the underlying parameters provide it.
         </p>
 <a name="boost_ratio.users_guide.getting_started.install.thread_safety_"></a><h5>
-<a name="id4949344"></a>
+<a name="id4949434"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.thread_safety_">Thread
           safety </a>
         </h5>
@@ -307,7 +317,7 @@
           All functions in the library are thread-unsafe except when noted explicitly.
         </p>
 <a name="boost_ratio.users_guide.getting_started.install.tested_compilers_"></a><h5>
-<a name="id4949370"></a>
+<a name="id4949459"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.tested_compilers_">Tested
           compilers </a>
         </h5>
@@ -762,6 +772,10 @@
 <dd><p>
               From Vicente Juan Botet Escriba.
             </p></dd>
+<dt><span class="term"><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3131.html" target="_top"><span class="bold"><strong>N3131: Compile-time rational arithmetic and overflow</strong></span></a></span></dt>
+<dd><p>
+              From Anthony Williams.
+            </p></dd>
 </dl>
 </div>
 </div>
@@ -786,6 +800,7 @@
 <dt><span class="section"><a href="index.html#boost_ratio.reference.ratio_hpp.limitations"> Limitations
         and Extensions</a></span></dt>
 </dl></dd>
+<dt><span class="section"><a href="index.html#boost_ratio.reference.ratio_io_hpp"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">ratio_io</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -1204,6 +1219,122 @@
             </li></ul></div>
 </div>
 </div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_ratio.reference.ratio_io_hpp"></a><a href="index.html#boost_ratio.reference.ratio_io_hpp" title=" Header &lt;boost/ratio_io.hpp&gt;"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">ratio_io</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<p>
+        It provides a textual representation of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">,</span>
+        <span class="identifier">D</span><span class="special">&gt;</span></code>
+        in the form of a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span></code>. Other types such as <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">duration</span></code> can use these strings to aid in
+        their I/O.
+      </p>
+<p>
+        This source is has been adapted from the experimental header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">ratio_io</span><span class="special">&gt;</span></code> from Howard Hinnant. The current implementation
+        makes use of a few utilities in libc++. Porting to Boost has been trivial.
+      </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+    
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Ratio</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">CharT</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">ratio_string</span>
+    <span class="special">{</span>
+        <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">&gt;</span> <span class="identifier">short_name</span><span class="special">()</span> <span class="special">{</span><span class="keyword">return</span> <span class="identifier">long_name</span><span class="special">();}</span>
+        <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">&gt;</span> <span class="identifier">long_name</span><span class="special">();</span>
+    <span class="special">};</span>
+
+<span class="special">}</span>
+</pre>
+<p>
+        For each <code class="computeroutput"><span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">,</span> <span class="identifier">D</span><span class="special">&gt;</span></code> there exists a <code class="computeroutput"><span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">,</span>
+        <span class="identifier">D</span><span class="special">&gt;,</span>
+        <span class="identifier">CharT</span><span class="special">&gt;</span></code>
+        for which you can query two strings: <code class="computeroutput"><span class="identifier">short_name</span></code>
+        and <code class="computeroutput"><span class="identifier">long_name</span></code>. For those
+        <code class="computeroutput"><span class="identifier">ratio</span></code>'s that correspond to
+        an <a href="http://en.wikipedia.org/wiki/SI_prefix#List_of_SI_prefixes" target="_top">SI
+        prefix</a> long_name corresponds to the internationally recognized prefix,
+        stored as a <code class="computeroutput"><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">&gt;</span></code>. For example <code class="computeroutput"><span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">mega</span><span class="special">,</span> <span class="keyword">char</span><span class="special">&gt;::</span><span class="identifier">long_name</span><span class="special">()</span></code>
+        returns <code class="computeroutput"><span class="identifier">string</span><span class="special">(</span><span class="string">"mega"</span><span class="special">)</span></code>.
+        For those <code class="computeroutput"><span class="identifier">ratio</span></code>'s that correspond
+        to an <a href="http://en.wikipedia.org/wiki/SI_prefix#List_of_SI_prefixes" target="_top">SI
+        prefix</a> <code class="computeroutput"><span class="identifier">short_name</span></code>
+        corresponds to the internationally recognized symbol, stored as a <code class="computeroutput"><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">&gt;</span></code>.
+        For example <code class="computeroutput"><span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">mega</span><span class="special">,</span> <span class="keyword">char</span><span class="special">&gt;::</span><span class="identifier">short_name</span><span class="special">()</span></code>
+        returns <code class="computeroutput"><span class="identifier">string</span><span class="special">(</span><span class="string">"M"</span><span class="special">)</span></code>.
+        For all other <code class="computeroutput"><span class="identifier">ratio</span></code>'s, both
+        <code class="computeroutput"><span class="identifier">long_name</span><span class="special">()</span></code>
+        and <code class="computeroutput"><span class="identifier">short_name</span><span class="special">()</span></code>
+        return a <code class="computeroutput"><span class="identifier">basic_string</span></code> containing
+        "[<code class="computeroutput"><span class="identifier">ratio</span><span class="special">::</span><span class="identifier">num</span><span class="special">/</span><span class="identifier">ratio</span><span class="special">::</span><span class="identifier">den</span></code>]".
+      </p>
+<p>
+        <code class="computeroutput"><span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">,</span> <span class="identifier">D</span><span class="special">&gt;,</span> <span class="identifier">CharT</span><span class="special">&gt;</span></code> is only defined for four character types:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            <code class="computeroutput"><span class="keyword">char</span></code>
+          </li>
+<li>
+            <code class="computeroutput"><span class="identifier">char16_t</span></code>
+          </li>
+<li>
+            <code class="computeroutput"><span class="identifier">char32_t</span></code>
+          </li>
+<li>
+            <code class="computeroutput"><span class="keyword">wchar_t</span></code>
+          </li>
+</ul></div>
+<p>
+        When the character is char, UTF-8 will be used to encode the names. When
+        the character is <code class="computeroutput"><span class="identifier">char16_t</span></code>,
+        UTF-16 will be used to encode the names. When the character is <code class="computeroutput"><span class="identifier">char32_t</span></code>, UTF-32 will be used to encode
+        the names. When the character is <code class="computeroutput"><span class="keyword">wchar_t</span></code>,
+        the encoding will be UTF-16 if <code class="computeroutput"><span class="keyword">wchar_t</span></code>
+        is 16 bits, and otherwise UTF-32.
+      </p>
+<p>
+        The <code class="computeroutput"><span class="identifier">short_name</span></code> for micro
+        is defined by <a href="http://www.unicode.org/charts/PDF/U0080.pdf" target="_top">Unicode</a>
+        to be U+00B5.
+      </p>
+<p>
+        <span class="bold"><strong>Examples:</strong></span>
+      </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">ratio</span><span class="special">/</span><span class="identifier">ratio_io</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">std</span><span class="special">;</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"ratio_string&lt;deca, char&gt;::long_name() = "</span>
+         <span class="special">&lt;&lt;</span>  <span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">deca</span><span class="special">,</span> <span class="keyword">char</span><span class="special">&gt;::</span><span class="identifier">long_name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"ratio_string&lt;deca, char&gt;::short_name() = "</span>
+         <span class="special">&lt;&lt;</span>  <span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">deca</span><span class="special">,</span> <span class="keyword">char</span><span class="special">&gt;::</span><span class="identifier">short_name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"ratio_string&lt;giga, char&gt;::long_name() = "</span>
+         <span class="special">&lt;&lt;</span>  <span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">giga</span><span class="special">,</span> <span class="keyword">char</span><span class="special">&gt;::</span><span class="identifier">long_name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"ratio_string&lt;giga, char&gt;::short_name() = "</span>
+         <span class="special">&lt;&lt;</span>  <span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">giga</span><span class="special">,</span> <span class="keyword">char</span><span class="special">&gt;::</span><span class="identifier">short_name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"ratio_string&lt;ratio&lt;4, 6&gt;, char&gt;::long_name() = "</span>
+         <span class="special">&lt;&lt;</span>  <span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">4</span><span class="special">,</span> <span class="number">6</span><span class="special">&gt;,</span> <span class="keyword">char</span><span class="special">&gt;::</span><span class="identifier">long_name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"ratio_string&lt;ratio&lt;4, 6&gt;, char&gt;::short_name() = "</span>
+         <span class="special">&lt;&lt;</span>  <span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">4</span><span class="special">,</span> <span class="number">6</span><span class="special">&gt;,</span> <span class="keyword">char</span><span class="special">&gt;::</span><span class="identifier">short_name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        The output will be
+      </p>
+<pre class="programlisting"><span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">deca</span><span class="special">,</span> <span class="keyword">char</span><span class="special">&gt;::</span><span class="identifier">long_name</span><span class="special">()</span> <span class="special">=</span> <span class="identifier">deca</span>
+<span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">deca</span><span class="special">,</span> <span class="keyword">char</span><span class="special">&gt;::</span><span class="identifier">short_name</span><span class="special">()</span> <span class="special">=</span> <span class="identifier">da</span>
+<span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">giga</span><span class="special">,</span> <span class="keyword">char</span><span class="special">&gt;::</span><span class="identifier">long_name</span><span class="special">()</span> <span class="special">=</span> <span class="identifier">giga</span>
+<span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">giga</span><span class="special">,</span> <span class="keyword">char</span><span class="special">&gt;::</span><span class="identifier">short_name</span><span class="special">()</span> <span class="special">=</span> <span class="identifier">G</span>
+<span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">4</span><span class="special">,</span> <span class="number">6</span><span class="special">&gt;,</span> <span class="keyword">char</span><span class="special">&gt;::</span><span class="identifier">long_name</span><span class="special">()</span> <span class="special">=</span> <span class="special">[</span><span class="number">2</span><span class="special">/</span><span class="number">3</span><span class="special">]</span>
+<span class="identifier">ratio_string</span><span class="special">&lt;</span><span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">4</span><span class="special">,</span> <span class="number">6</span><span class="special">&gt;,</span> <span class="keyword">char</span><span class="special">&gt;::</span><span class="identifier">short_name</span><span class="special">()</span> <span class="special">=</span> <span class="special">[</span><span class="number">2</span><span class="special">/</span><span class="number">3</span><span class="special">]</span>
+</pre>
+</div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -1212,7 +1343,7 @@
 <div class="toc"><dl>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.history"> Appendix A: History</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_1_1__september_20__2010__"><span class="bold"><strong>Version 0.1.1, September 20, 2010</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_2_0__september_20__2010__"><span class="bold"><strong>Version 0.2.0, September 20, 2010</strong></span> </a></span></dt>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_1_0__september_10__2010__"><span class="bold"><strong>Version 0.1.0, September 10, 2010</strong></span> </a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.rationale"> Appendix B: Rationale</a></span></dt>
@@ -1235,13 +1366,19 @@
 <a name="boost_ratio.appendices.history"></a><a href="index.html#boost_ratio.appendices.history" title=" Appendix A: History"> Appendix A: History</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_1_1__september_20__2010__"><span class="bold"><strong>Version 0.1.1, September 20, 2010</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_2_0__september_20__2010__"><span class="bold"><strong>Version 0.2.0, September 20, 2010</strong></span> </a></span></dt>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_1_0__september_10__2010__"><span class="bold"><strong>Version 0.1.0, September 10, 2010</strong></span> </a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_ratio.appendices.history.__version_0_1_1__september_20__2010__"></a><a href="index.html#boost_ratio.appendices.history.__version_0_1_1__september_20__2010__" title="Version 0.1.1, September 20, 2010 "><span class="bold"><strong>Version 0.1.1, September 20, 2010</strong></span> </a>
+<a name="boost_ratio.appendices.history.__version_0_2_0__september_20__2010__"></a><a href="index.html#boost_ratio.appendices.history.__version_0_2_0__september_20__2010__" title="Version 0.2.0, September 20, 2010 "><span class="bold"><strong>Version 0.2.0, September 20, 2010</strong></span> </a>
 </h4></div></div></div>
+<p>
+          <span class="bold"><strong>Featurs:</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+              Added ratio_string traits.
+            </li></ul></div>
 <p>
           <span class="bold"><strong>Fixes:</strong></span>
         </p>
@@ -1273,7 +1410,7 @@
 <a name="boost_ratio.appendices.rationale"></a><a href="index.html#boost_ratio.appendices.rationale" title=" Appendix B: Rationale"> Appendix B: Rationale</a>
 </h3></div></div></div>
 <a name="boost_ratio.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form"></a><h4>
-<a name="id5009215"></a>
+<a name="id5011421"></a>
         <a href="index.html#boost_ratio.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form">Why
         ratio needs CopyConstruction and Assignment from ratios having the same normalized
         form</a>
@@ -1308,7 +1445,7 @@
         succeeds.
       </p>
 <a name="boost_ratio.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type"></a><h4>
-<a name="id5009620"></a>
+<a name="id5011826"></a>
         <a href="index.html#boost_ratio.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type">Why
         ratio needs the nested normalizer typedef type</a>
       </h4>
@@ -2171,7 +2308,7 @@
 <a name="boost_ratio.appendices.todo"></a><a href="index.html#boost_ratio.appendices.todo" title=" Appendix H: Future plans"> Appendix H: Future plans</a>
 </h3></div></div></div>
 <a name="boost_ratio.appendices.todo.for_later_releases"></a><h4>
-<a name="id5011285"></a>
+<a name="id5013492"></a>
         <a href="index.html#boost_ratio.appendices.todo.for_later_releases">For later
         releases</a>
       </h4>
@@ -2183,7 +2320,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: September 20, 2010 at 11:23:48 GMT</small></p></td>
+<td align="left"><p><small>Last revised: September 21, 2010 at 07:53:11 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

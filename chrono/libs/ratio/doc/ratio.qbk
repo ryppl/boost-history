@@ -9,7 +9,7 @@
 
 [article Boost.Ratio
     [quickbook 1.5]
-    [version 0.1.0]
+    [version 0.2.0]
     [authors [Hinnant, Howard]]
     [authors [Dawes, Beman]]
     [authors [Botet Escriba, Vicente J.]]
@@ -220,6 +220,8 @@ __Boost_Ratio__ aims to implement the compile time ratio facility in C++0x, as p
 The __Boost_Ratio__ library provides:
 
 * A class template, __ratio__, for specifying compile time rational constants such as 1/3 of a nanosecond or the number of inches per meter.  __ratio__ represents a compile time ratio of compile time constants with support for compile time arithmetic with overflow and division by zero protection
+
+* It provides a textual representation of `boost::ratio<N, D>` in the form of a `std::basic_string`. Other types such as `boost::duration` can use these strings to aid in their I/O.
 
 [endsect]
 
@@ -652,6 +654,13 @@ Though input can be arbitrary (but type-safe) units, output is always in SI-unit
     [[@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]]]
     [From Vicente Juan Botet Escriba.]
 ]
+
+[
+    [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3131.html [*N3131: Compile-time rational arithmetic and overflow]]]
+    [From 	Anthony Williams.]
+]
+
+
 ]
 
 [endsect]
@@ -895,7 +904,74 @@ The current implementation provides in addition:
 
 [endsect]
 
+[/===========================================]
+[section:ratio_io_hpp Header `<boost/ratio_io.hpp>`]
+[/===========================================]
 
+It provides a textual representation of `boost::ratio<N, D>` in the form of a `std::basic_string`. Other types such as `boost::duration` can use these strings to aid in their I/O.
+
+This source is has been adapted from the experimental header `<ratio_io>` from Howard Hinnant. The current implementation makes use of a few utilities in libc++. Porting to Boost has been trivial. 
+
+    namespace boost {
+        
+        template <class Ratio, class CharT>
+        struct ratio_string
+        {
+            static std::basic_string<CharT> short_name() {return long_name();}
+            static std::basic_string<CharT> long_name();
+        };
+
+    }
+
+For each `ratio<N, D>` there exists a `ratio_string<ratio<N, D>, CharT>` for which you can query two strings: `short_name` and `long_name`. For those `ratio`'s that correspond to an [@http://en.wikipedia.org/wiki/SI_prefix#List_of_SI_prefixes SI prefix] long_name corresponds to the internationally recognized prefix, stored as a `basic_string<CharT>`. For example `ratio_string<mega, char>::long_name()` returns `string("mega")`. For those `ratio`'s that correspond to an [@http://en.wikipedia.org/wiki/SI_prefix#List_of_SI_prefixes SI prefix] `short_name` corresponds to the internationally recognized symbol, stored as a `basic_string<CharT>`. For example `ratio_string<mega, char>::short_name()` returns `string("M")`. For all other `ratio`'s, both `long_name()` and `short_name()` return a `basic_string` containing "[`ratio::num/ratio::den`]".
+
+`ratio_string<ratio<N, D>, CharT>` is only defined for four character types:
+
+* `char`
+* `char16_t`
+* `char32_t`
+* `wchar_t`
+
+When the character is char, UTF-8 will be used to encode the names. When the character is `char16_t`, UTF-16 will be used to encode the names. When the character is `char32_t`, UTF-32 will be used to encode the names. When the character is `wchar_t`, the encoding will be UTF-16 if `wchar_t` is 16 bits, and otherwise UTF-32.
+
+The `short_name` for micro is defined by [@http://www.unicode.org/charts/PDF/U0080.pdf Unicode] to be U+00B5. 
+
+[*Examples:]
+
+    #include <boost/ratio/ratio_io.hpp>
+    #include <iostream>
+
+    int main()
+    {
+        using namespace std;
+        using namespace boost;
+
+        cout << "ratio_string<deca, char>::long_name() = "
+             <<  ratio_string<deca, char>::long_name() << '\n';
+        cout << "ratio_string<deca, char>::short_name() = "
+             <<  ratio_string<deca, char>::short_name() << '\n';
+
+        cout << "ratio_string<giga, char>::long_name() = "
+             <<  ratio_string<giga, char>::long_name() << '\n';
+        cout << "ratio_string<giga, char>::short_name() = "
+             <<  ratio_string<giga, char>::short_name() << '\n';
+
+        cout << "ratio_string<ratio<4, 6>, char>::long_name() = "
+             <<  ratio_string<ratio<4, 6>, char>::long_name() << '\n';
+        cout << "ratio_string<ratio<4, 6>, char>::short_name() = "
+             <<  ratio_string<ratio<4, 6>, char>::short_name() << '\n';
+    }
+
+The output will be
+
+    ratio_string<deca, char>::long_name() = deca
+    ratio_string<deca, char>::short_name() = da
+    ratio_string<giga, char>::long_name() = giga
+    ratio_string<giga, char>::short_name() = G
+    ratio_string<ratio<4, 6>, char>::long_name() = [2/3]
+    ratio_string<ratio<4, 6>, char>::short_name() = [2/3]
+
+[endsect]
 [endsect]
 
 
@@ -906,7 +982,11 @@ The current implementation provides in addition:
 [section:history Appendix A: History]
 [/==================================]
 
-[section [*Version 0.1.1, September 20, 2010] ]
+[section [*Version 0.2.0, September 20, 2010] ]
+
+[*Featurs:]
+
+* Added ratio_string traits.
 
 [*Fixes:]
 
@@ -969,7 +1049,27 @@ If the CopyConstruction and Assignment ([[@http://home.roadrunner.com/~hinnant/i
 [/======================================================]
 [section:implementation Appendix C: Implementation Notes]
 
+[/
+How compile-time rational arithmetic has been done in Boost.Ratio when the result is representable, but a simple application of arithmetic rules would result in overflow, e.g. `ratio_multiply<ratio<INTMAX_MAX,2>,ratio<2,INTMAX_MAX>>` can be reduced to `ratio<1,1>`, but the direct result of `ratio<INTMAX_MAX*2,INTMAX_MAX*2>` would result in overflow.
 
+The Boost.Ratio implementation try to handle with such overflow if the final result can be representable. In order to do that a simplify operation on the product of intmax_t is used.
+
+simplify< times<A,B>, times<C,D> >::value
+    if gcd(A,C) > 1 symplify< times<A/gcd(A,C),B>, times<C/gcd(A,C),D> >
+    if gcd(A,D) > 1 symplify< times<A/gcd(A,D),B>, times<C,D/gcd(A,D)> >
+    if gcd(B,C) > 1 symplify< times<A,B/gcd(B,C)>, times<C/gcd(B,C),D> >
+    if gcd(B,D) > 1 symplify< times<A,B/gcd(B,D)>, times<C,D/gcd(B,D)> >
+    ratio<A*B, C*D>
+    
+factorize<0> =  0
+factorize<1> =  2
+
+factorize<N> = factorize_n<N, 2> 
+    
+factorize_n<N, A, R=N%2> = factorize_n<N, A+1>
+factorize_n<N, N, 1> N 
+factorize_n<N, A, 0> = times<A, factorize_n<N/A>, A>
+]
 [endsect]
 
 [/======================================================]
