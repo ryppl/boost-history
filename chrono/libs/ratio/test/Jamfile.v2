@@ -70,5 +70,6 @@ project
     test-suite "examples"
         :
         [ run ../example/si_physics.cpp ]
+        [ run ../example/display_ex.cpp ]
         ;
 
