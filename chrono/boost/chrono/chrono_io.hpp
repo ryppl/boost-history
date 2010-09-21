@@ -159,7 +159,7 @@ public:
     static std::locale::id id;
 
     explicit duration_punct(int use = use_long)
-        : use_short_(use) {init_C();}
+        : use_short_(use==use_short) {init_C();}
 
     duration_punct(int use,
         const string_type& long_seconds, const string_type& long_minutes,
@@ -177,8 +177,10 @@ public:
             {return long_name(typename Period::type());}
 
     template <class Period>
-        string_type name() const
-            {return use_short_ ? short_name<Period>() : long_name<Period>();}
+        string_type name() const {
+            if (use_short_) return short_name<Period>() 
+            else return long_name<Period>();
+        }
 
     bool is_short_name() const {return use_short_;}
     bool is_long_name() const {return !use_short_;}
@@ -208,7 +210,7 @@ duration_punct<CharT>::duration_punct(int use,
         const string_type& long_seconds, const string_type& long_minutes,
         const string_type& long_hours, const string_type& short_seconds,
         const string_type& short_minutes, const string_type& short_hours)
-    : use_short_(use),
+    : use_short_(use==use_short),
       long_seconds_(long_seconds),
       long_minutes_(long_minutes),
       long_hours_(long_hours),
@@ -219,7 +221,7 @@ duration_punct<CharT>::duration_punct(int use,
 
 template <class CharT>
 duration_punct<CharT>::duration_punct(int use, const duration_punct& d)
-    : use_short_(use),
+    : use_short_(use==use_short),
       long_seconds_(d.long_seconds_),
       long_minutes_(d.long_minutes_),
       long_hours_(d.long_hours_),
@@ -351,7 +353,7 @@ operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
                     ++i;
                     CharT x;
                     is >> num >> x >> den;
-                    if (!is.good() || x != '/')
+                    if (!is.good() || (x != '/'))
                     {
                         is.setstate(is.failbit);
                         return is;
@@ -547,7 +549,7 @@ operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
                         return is;
                     }
                 }
-                if (r > duration_values<common_type_t>::max() / num)
+                if (r > (duration_values<common_type_t>::max() / num))
                 {
                     // Conversion to Period overflowed
                     is.setstate(is.failbit);
