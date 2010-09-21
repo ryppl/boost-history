@@ -232,16 +232,16 @@ template <class CharT, class Traits>
 std::basic_ostream<CharT, Traits>&
 duration_short(std::basic_ostream<CharT, Traits>& os)
 {
-    typedef duration_punct<CharT> _F;
+    typedef duration_punct<CharT> Facet;
     std::locale loc = os.getloc();
-    if (std::has_facet<_F>(loc))
+    if (std::has_facet<Facet>(loc))
     {
-        const _F& f = std::use_facet<_F>(loc);
+        const Facet& f = std::use_facet<Facet>(loc);
         if (f.is_long_name())
-            os.imbue(std::locale(loc, new _F(_F::use_short, f)));
+            os.imbue(std::locale(loc, new Facet(Facet::use_short, f)));
     }
     else
-        os.imbue(std::locale(loc, new _F(_F::use_short)));
+        os.imbue(std::locale(loc, new Facet(Facet::use_short)));
     return os;
 }
 
@@ -249,13 +249,13 @@ template <class CharT, class Traits>
 std::basic_ostream<CharT, Traits>&
 duration_long(std::basic_ostream<CharT, Traits>& os)
 {
-    typedef duration_punct<CharT> _F;
+    typedef duration_punct<CharT> Facet;
     std::locale loc = os.getloc();
-    if (std::has_facet<_F>(loc))
+    if (std::has_facet<Facet>(loc))
     {
-        const _F& f = std::use_facet<_F>(loc);
+        const Facet& f = std::use_facet<Facet>(loc);
         if (f.is_short_name())
-            os.imbue(std::locale(loc, new _F(_F::use_long, f)));
+            os.imbue(std::locale(loc, new Facet(Facet::use_long, f)));
     }
     return os;
 }
@@ -264,11 +264,11 @@ template <class CharT, class Traits, class Rep, class Period>
 std::basic_ostream<CharT, Traits>&
 operator<<(std::basic_ostream<CharT, Traits>& os, const duration<Rep, Period>& d)
 {
-    typedef duration_punct<CharT> _F;
+    typedef duration_punct<CharT> Facet;
     std::locale loc = os.getloc();
-    if (!std::has_facet<_F>(loc))
-        os.imbue(std::locale(loc, new _F));
-    const _F& f = std::use_facet<_F>(os.getloc());
+    if (!std::has_facet<Facet>(loc))
+        os.imbue(std::locale(loc, new Facet));
+    const Facet& f = std::use_facet<Facet>(os.getloc());
     return os << d.count() << ' ' << f.template name<Period>();
 }
 
@@ -321,22 +321,22 @@ template <class CharT, class Traits, class Rep, class Period>
 std::basic_istream<CharT, Traits>&
 operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
 {
-    typedef duration_punct<CharT> _F;
+    typedef duration_punct<CharT> Facet;
     std::locale loc = is.getloc();
-    if (!std::has_facet<_F>(loc))
-        is.imbue(std::locale(loc, new _F));
+    if (!std::has_facet<Facet>(loc))
+        is.imbue(std::locale(loc, new Facet));
     loc = is.getloc();
-    const _F& f = std::use_facet<_F>(loc);
-    typedef typename chrono_detail::duration_io_intermediate<Rep>::type _IR;
-    _IR r;
+    const Facet& f = std::use_facet<Facet>(loc);
+    typedef typename chrono_detail::duration_io_intermediate<Rep>::type intermediate_type;
+    intermediate_type r;
     // read value into r
     is >> r;
     if (is.good())
     {
         // now determine unit
-        typedef std::istreambuf_iterator<CharT, Traits> _I;
-        _I i(is);
-        _I e;
+        typedef std::istreambuf_iterator<CharT, Traits> in_iterator;
+        in_iterator i(is);
+        in_iterator e;
         if (i != e && *i == ' ')  // mandatory ' ' after value
         {
             ++i;
@@ -356,7 +356,7 @@ operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
                         is.setstate(is.failbit);
                         return is;
                     }
-                    i = _I(is);
+                    i = in_iterator(is);
                     if (*i != ']')
                     {
                         is.setstate(is.failbit);
@@ -533,11 +533,11 @@ operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
                 num *= d2;
                 den *= n2;
                 // num / den is now factor to multiply by r
-                typedef typename common_type<_IR, unsigned long long>::type _CT;
-                if (is_integral<_IR>::value)
+                typedef typename common_type<intermediate_type, unsigned long long>::type common_type_t;
+                if (is_integral<intermediate_type>::value)
                 {
                     // Reduce r * num / den
-                    _CT t = chrono_detail::gcd<_CT>(r, den);
+                    common_type_t t = chrono_detail::gcd<common_type_t>(r, den);
                     r /= t;
                     den /= t;
                     if (den != 1)
@@ -547,13 +547,13 @@ operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
                         return is;
                     }
                 }
-                if (r > duration_values<_CT>::max() / num)
+                if (r > duration_values<common_type_t>::max() / num)
                 {
                     // Conversion to Period overflowed
                     is.setstate(is.failbit);
                     return is;
                 }
-                _CT t = r * num;
+                common_type_t t = r * num;
                 t /= den;
                 if (duration_values<Rep>::max() < t)
                 {
@@ -601,9 +601,9 @@ operator>>(std::basic_istream<CharT, Traits>& is,
         const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 'b', 'o', 'o', 't'};
         const std::basic_string<CharT> units(u, u + sizeof(u)/sizeof(u[0]));
         std::ios_base::iostate err = std::ios_base::goodbit;
-        typedef std::istreambuf_iterator<CharT, Traits> _I;
-        _I i(is);
-        _I e;
+        typedef std::istreambuf_iterator<CharT, Traits> in_iterator;
+        in_iterator i(is);
+        in_iterator e;
         std::ptrdiff_t k = chrono_detail::scan_keyword(i, e,
                       &units, &units + 1,
                       std::use_facet<std::ctype<CharT> >(is.getloc()),
@@ -643,9 +643,9 @@ operator>>(std::basic_istream<CharT, Traits>& is,
                               'n', ' ', '1', ',', ' ', '1', '9', '7', '0'};
         const std::basic_string<CharT> units(u, u + sizeof(u)/sizeof(u[0]));
         std::ios_base::iostate err = std::ios_base::goodbit;
-        typedef std::istreambuf_iterator<CharT, Traits> _I;
-        _I i(is);
-        _I e;
+        typedef std::istreambuf_iterator<CharT, Traits> in_iterator;
+        in_iterator i(is);
+        in_iterator e;
         std::ptrdiff_t k = chrono_detail::scan_keyword(i, e,
                       &units, &units + 1,
                       std::use_facet<std::ctype<CharT> >(is.getloc()),
