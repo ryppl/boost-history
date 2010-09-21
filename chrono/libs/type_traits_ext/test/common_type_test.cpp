@@ -9,6 +9,8 @@
 
 #include <boost/type_traits/common_type.hpp>
 #include <iostream>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/static_assert.hpp>
 
 #include <boost/test/minimal.hpp>
 
@@ -86,7 +88,24 @@ int test_main( int /*argc*/, char * /*argv*/[] )
     typedef boost::common_type<int volatile*, int const*>::type T4; // fails if BOOST_COMMON_TYPE_DONT_USE_TYPEOF
     typedef boost::common_type<int*, int volatile*>::type T5;
     //~ typedef boost::common_type<short volatile*, int const*>::type T5; // fails
+    //~ BOOST_STATIC_ASSERT((boost::is_same<boost::common_type<unsigned char, unsigned short>::type, unsigned int>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<boost::common_type<char, short>::type, int>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<boost::common_type<short, char>::type, int>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<boost::common_type<unsigned char, short>::type, int>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<boost::common_type<short, unsigned char>::type, int>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<boost::common_type<char, unsigned short>::type, int>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<boost::common_type<unsigned short, char>::type, int>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<boost::common_type<unsigned char, unsigned short>::type, int>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<boost::common_type<unsigned short, unsigned char>::type, int>::value));
 
+    BOOST_STATIC_ASSERT((boost::is_same<boost::common_type<int>::type, int>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<boost::common_type<char>::type, char>::value));
+
+    BOOST_STATIC_ASSERT((boost::is_same<boost::common_type<double, char>::type, double>::value));
+
+    BOOST_STATIC_ASSERT((boost::is_same<boost::common_type<double, char, long long>::type, double>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<boost::common_type<unsigned, char, long long>::type, long long>::value));
+    
     assignation_2<C1, C1C2>();
     assignation_2<C1C2, C2>();
     assignation_2<C2, C1C2>();

@@ -25,6 +25,7 @@ project
         #<include>../../..
         <toolset>msvc:<asynch-exceptions>on
         <define>BOOST_ENABLE_WARNINGS
+        <define>BOOST_COMMON_TYPE_DONT_USE_TYPEOF
         <warnings>all
         <toolset>gcc:<cxxflags>-Wextra
         <toolset>gcc:<cxxflags>-Wno-long-long        

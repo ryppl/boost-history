@@ -33,5 +33,5 @@ typedef boost::common_type<C1, C2>::type AC;
 typedef std::common_type<C1, C2>::type AC;
 #endif    
 //~ AC* ac;
-   
+
     
