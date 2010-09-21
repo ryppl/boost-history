@@ -7,7 +7,7 @@
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt).
 //
-// This code was adapted by Vicente from Howard Hinnant's experimental work 
+// This code was adapted by Vicente from Howard Hinnant's experimental work
 // on chrono i/o under lvm/libc++  to Boost
 
 #ifndef BOOST_CHRONO_CHRONO_IO_HPP
@@ -117,7 +117,7 @@ template <class CharT, class Traits, class Duration>
 
 namespace boost
 {
-    
+
 namespace chrono
 {
 
@@ -178,7 +178,7 @@ public:
 
     template <class Period>
         string_type name() const {
-            if (use_short_) return short_name<Period>() 
+            if (use_short_) return short_name<Period>();
             else return long_name<Period>();
         }
 
@@ -217,7 +217,7 @@ duration_punct<CharT>::duration_punct(int use,
       short_seconds_(short_seconds),
       short_minutes_(short_minutes),
       short_hours_(short_hours)
-{}      
+{}
 
 template <class CharT>
 duration_punct<CharT>::duration_punct(int use, const duration_punct& d)
@@ -228,7 +228,7 @@ duration_punct<CharT>::duration_punct(int use, const duration_punct& d)
       short_seconds_(d.short_seconds_),
       short_minutes_(d.short_minutes_),
       short_hours_(d.short_hours_)
-{}      
+{}
 
 template <class CharT, class Traits>
 std::basic_ostream<CharT, Traits>&
