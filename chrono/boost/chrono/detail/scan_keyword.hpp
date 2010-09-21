@@ -14,8 +14,6 @@
 //===----------------------------------------------------------------------===//
 // This code was adapted to Boost by Vicente from locale file on llvm/libc++
 
-#ifndef _LIBCPP_LOCALE
-
 #ifndef BOOST_CHRONO_DETAIL_SCAN_KEYWORD_HPP
 #define BOOST_CHRONO_DETAIL_SCAN_KEYWORD_HPP
 
