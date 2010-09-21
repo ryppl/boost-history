@@ -34,6 +34,9 @@
 <dt><span class="section"><a href="tests.html#boost_chrono.appendices.tests.typedefs"> Duration Typedef's</a></span></dt>
 <dt><span class="section"><a href="tests.html#boost_chrono.appendices.tests.traits">traits</a></span></dt>
 <dt><span class="section"><a href="tests.html#boost_chrono.appendices.tests.duration">duration</a></span></dt>
+<dt><span class="section"><a href="tests.html#boost_chrono.appendices.tests.time_point">time_point</a></span></dt>
+<dt><span class="section"><a href="tests.html#boost_chrono.appendices.tests.clock">clock</a></span></dt>
+<dt><span class="section"><a href="tests.html#boost_chrono.appendices.tests.io_examples">io examples</a></span></dt>
 </dl></div>
 <p>
         In order to test you need to do.
@@ -890,7 +893,8 @@
                 </td>
 <td>
                   <p>
-                    check the correct specialization has been done for duration.
+                    check the correct common_type specialization has been done for
+                    duration.
                   </p>
                 </td>
 <td>
@@ -917,7 +921,8 @@
                 </td>
 <td>
                   <p>
-                    check the correct specialization has been done for time_point.
+                    check the correct common_type specialization has been done for
+                    time_point.
                   </p>
                 </td>
 <td>
@@ -944,7 +949,7 @@
                 </td>
 <td>
                   <p>
-                    check .
+                    check treat_as_floating_point&lt;T&gt; inherits from is_floating_point&lt;T&gt;.
                   </p>
                 </td>
 <td>
@@ -971,7 +976,7 @@
                 </td>
 <td>
                   <p>
-                    check .
+                    check max() corresponds to std::numeric_limits&lt;T&gt;::max().
                   </p>
                 </td>
 <td>
@@ -998,7 +1003,7 @@
                 </td>
 <td>
                   <p>
-                    check .
+                    check min() corresponds to std::numeric_limits&lt;T&gt;::lowest().
                   </p>
                 </td>
 <td>
@@ -1025,7 +1030,7 @@
                 </td>
 <td>
                   <p>
-                    check .
+                    check zero is 0.
                   </p>
                 </td>
 <td>
@@ -1095,7 +1100,8 @@
                 </td>
 <td>
                   <p>
-                    check .
+                    If a program instantiates duration with a duration type for the
+                    template argument Rep a diagnostic is required.
                   </p>
                 </td>
 <td>
@@ -1122,7 +1128,7 @@
                 </td>
 <td>
                   <p>
-                    check .
+                    Period shall be a specialization of ratio, diagnostic required..
                   </p>
                 </td>
 <td>
@@ -1149,7 +1155,7 @@
                 </td>
 <td>
                   <p>
-                    check .
+                    Period::num shall be positive, diagnostic required..
                   </p>
                 </td>
 <td>
@@ -1176,7 +1182,7 @@
                 </td>
 <td>
                   <p>
-                    check .
+                    Test default template arg.
                   </p>
                 </td>
 <td>
@@ -1203,7 +1209,7 @@
                 </td>
 <td>
                   <p>
-                    check .
+                    Test nested types.
                   </p>
                 </td>
 <td>
@@ -1230,7 +1236,7 @@
                 </td>
 <td>
                   <p>
-                    check .
+                    check duration&amp; operator/=(const rep&amp; rhs);
                   </p>
                 </td>
 <td>
@@ -1248,6 +1254,1196 @@
 <td>
                   <p>
                     arithmetic.op_minusminusint.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check duration operator--(int);
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    arithmetic.op_plus_ass.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check duration&amp; operator+=(const duration&amp; d);
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    arithmetic.op_minus.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check duration operator-() const;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    arithmetic.op_mod_ass_duration.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check duration&amp; operator%=(const duration&amp; rhs);
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    arithmetic.op_plusplus.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check duration&amp; operator++();.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    arithmetic.op_minus_ass.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check duration&amp; operator-=(const duration&amp; d);
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    arithmetic.op_mod_ass_rep.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check duration&amp; operator%=(const rep&amp; rhs)
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    arithmetic.op_plusplusint.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check duration operator++(int);
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    arithmetic.op_minusminus.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check duration operator--();
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    arithmetic.op_plus.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check duration operator+() const;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    arithmetic.op_times_ass.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check duration&amp; operator*=(const rep&amp; rhs);.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    cast.duration_cast.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check template &lt;class ToDuration, class Rep, class Period&gt;
+                    ToDuration duration_cast(const duration&lt;Rep, Period&gt;&amp;
+                    d);
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    cast.toduration.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check ToDuration shall be an instantiation of duration.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    comparisons.op_equal.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check operator<code class="literal">=() and operator!</code>().
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    comparisons.op_less.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check operators &lt;,&lt;<code class="literal">,&gt;,&gt;</code>.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    kind
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Result
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Ticket
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    cons.convert_exact.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check exact conversions allowed for integral reps.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    cons.convert_float_to_int.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check conversions from floating point to integral durations disallowed.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    cons.convert_inexact.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check inexact conversions disallowed for integral reps.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    cons.convert_inexact.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check inexact conversions allowed for floating point reps.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    cons.convert_int_to_float.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check conversions from integral to floating point durations allowed.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    cons.default.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check Rep must be default initialized, not initialized with 0.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    cons.rep.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check explicit duration(const Rep2&amp; r).
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    cons.rep01.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    test for explicit.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    cons.rep02.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check Rep2 shall be implicitly convertible to rep.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    cons.rep02.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check construct double with int.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    cons.rep03.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    treat_as_floating_point&lt;Rep2&gt;::value shall be false.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    nonmember.op_plus.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check operator+(d,d).
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    nonmember.op_minus.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check operator-(d,d).
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    nonmember.op_divide_duration.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check operator/(d,d).
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    nonmember.op_divide_rep.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check operator/(d,r) fails with different rep.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    nonmember.op_divide_rep.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check operator/(d,r).
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    nonmember.op_mod_duration.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check operator%(d,d).
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    nonmember.op_mod_rep.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check operator%(d,r).
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    nonmember.op_times_rep.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check operator*(d,r).
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    nonmember.op_times_rep1.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check operator*(d,r) fails with different rep.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    nonmember.op_times_rep2.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check operator*(r,d) fails with different rep.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    special.max.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check coherency between max and duration_values traits.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    special.min.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check coherency between min and duration_values traits.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    special.zero.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check coherency between zero and duration_values traits.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.appendices.tests.time_point"></a><a href="tests.html#boost_chrono.appendices.tests.time_point" title="time_point">time_point</a>
+</h4></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    kind
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Result
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Ticket
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    default_duration.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    duration.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    arithmetic.op_plus_ass.pass
                   </p>
                 </td>
 <td>
@@ -1301,250 +2497,7 @@
 <tr>
 <td>
                   <p>
-                    arithmetic.op_minus.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    arithmetic.op_mod_ass_duration.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    arithmetic.op_plusplus.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    arithmetic.op_minus_ass.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    arithmetic.op_mod_ass_rep.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    arithmetic.op_plusplusint.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    arithmetic.op_minusminus.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    arithmetic.op_plus.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    arithmetic.op_times_ass.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    cast.duration_cast.pass
+                    cast.time_point_cast.pass
                   </p>
                 </td>
 <td>
@@ -1598,12 +2551,66 @@
 <tr>
 <td>
                   <p>
+                    comparisons.op_equal.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
                     comparisons.op_equal.pass
                   </p>
                 </td>
 <td>
                   <p>
                     run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    comparisons.op_less.fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fail
                   </p>
                 </td>
 <td>
@@ -1652,34 +2659,7 @@
 <tr>
 <td>
                   <p>
-                    cons.convert_exact.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    cons.convert_float_to_int.fail
+                    cons.convert.fail
                   </p>
                 </td>
 <td>
@@ -1706,61 +2686,7 @@
 <tr>
 <td>
                   <p>
-                    cons.convert_inexact.fail
-                  </p>
-                </td>
-<td>
-                  <p>
-                    compile-fail
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    cons.convert_inexact.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    cons.convert_int_to_float.pass
+                    cons.convert.pass
                   </p>
                 </td>
 <td>
@@ -1814,120 +2740,39 @@
 <tr>
 <td>
                   <p>
-                    cons.rep.pass
+                    cons.duration..fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    compile-fail
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    cons.duration.pass
                   </p>
                 </td>
 <td>
                   <p>
                     run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    cons.rep01.fail
-                  </p>
-                </td>
-<td>
-                  <p>
-                    compile-fail
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    cons.rep02.fail
-                  </p>
-                </td>
-<td>
-                  <p>
-                    compile-fail
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    cons.rep02.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    cons.rep03.fail
-                  </p>
-                </td>
-<td>
-                  <p>
-                    compile-fail
                   </p>
                 </td>
 <td>
@@ -1976,7 +2821,7 @@
 <tr>
 <td>
                   <p>
-                    nonmember.op_minus.pass
+                    nonmember.op_minus_time_point.pass
                   </p>
                 </td>
 <td>
@@ -2003,201 +2848,12 @@
 <tr>
 <td>
                   <p>
-                    nonmember.op_divide_duration.pass
+                    nonmember.op_minus_duration.pass
                   </p>
                 </td>
 <td>
                   <p>
                     run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    nonmember.op_divide_rep.fail
-                  </p>
-                </td>
-<td>
-                  <p>
-                    compile-fail
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    nonmember.op_divide_rep.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    nonmember.op_mod_duration.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    nonmember.op_mod_rep.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    nonmember.op_times_rep.pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    run
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    nonmember.op_times_rep1.fail
-                  </p>
-                </td>
-<td>
-                  <p>
-                    compile-fail
-                  </p>
-                </td>
-<td>
-                  <p>
-                    check .
-                  </p>
-                </td>
-<td>
-                  <p>
-                    Pass
-                  </p>
-                </td>
-<td>
-                  <p>
-                    #
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    nonmember.op_times_rep2.fail
-                  </p>
-                </td>
-<td>
-                  <p>
-                    compile-fail
                   </p>
                 </td>
 <td>
@@ -2270,10 +2926,447 @@
                   </p>
                 </td>
 </tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.appendices.tests.clock"></a><a href="tests.html#boost_chrono.appendices.tests.clock" title="clock">clock</a>
+</h4></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    kind
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Result
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Ticket
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
 <tr>
 <td>
                   <p>
-                    special.zero.pass
+                    hires.consistency.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    hires.now.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    monotonic.consistency.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    monotonic.now.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    system.consistency.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    system.now.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    system.from_time_t.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    system.rep_signed.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    system.rep_signed.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.appendices.tests.io_examples"></a><a href="tests.html#boost_chrono.appendices.tests.io_examples" title="io examples">io examples</a>
+</h4></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    kind
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Result
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Ticket
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    io_ex1.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    io_ex2.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    io_ex3.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    io_ex4.pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    run
+                  </p>
+                </td>
+<td>
+                  <p>
+                    check .
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Pass
+                  </p>
+                </td>
+<td>
+                  <p>
+                    #
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    io_ex5.pass
                   </p>
                 </td>
 <td>
