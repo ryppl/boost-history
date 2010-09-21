@@ -299,6 +299,14 @@ struct common_type_impl
 template< class T > struct common_type_impl< T, void > { typedef void type; };
 template< class T > struct common_type_impl< void, T > { typedef void type; };
 template<> struct common_type_impl< void, void > { typedef void type; };
+template< > struct common_type_impl< char, short> { typedef int type; };
+template< > struct common_type_impl< short, char> { typedef int type; };
+template< > struct common_type_impl< unsigned char, short> { typedef int type; };
+template< > struct common_type_impl< short, unsigned char> { typedef int type; };
+template< > struct common_type_impl< unsigned char, unsigned short> { typedef int type; };
+template< > struct common_type_impl< unsigned short, unsigned char> { typedef int type; };
+template< > struct common_type_impl< char, unsigned short> { typedef int type; };
+template< > struct common_type_impl< unsigned short, char> { typedef int type; };
 
 } // namespace detail_type_traits_common_type
 
