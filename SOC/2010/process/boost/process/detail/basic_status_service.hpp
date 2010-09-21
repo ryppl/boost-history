@@ -154,6 +154,10 @@ public:
 private:
     void shutdown_service()
     {
+#if defined(BOOST_WINDOWS_API)
+        boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
+        work_.reset();
+#endif
     }
 
     void work_thread()
