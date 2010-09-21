@@ -67,18 +67,3 @@ int main()
 //~ Set cout to use long names:
 //~ high_resolution_clock::now() = 18588963785548 nanoseconds since boot
 
-//~ milliseconds(3) + microseconds(10) = 3010 microseconds
-//~ hours(3) + minutes(10) = 190 minutes
-//~ ClockTick(3) + nanoseconds(10) = 56 [1/5000000000]seconds
-
-//~ Set cout to use short names:
-//~ milliseconds(3) + microseconds(10) = 3010 µs
-//~ hours(3) + minutes(10) = 190 m
-//~ ClockTick(3) + nanoseconds(10) = 56 [1/5000000000]s
-
-//~ system_clock::now() = 1285041215052875000 ns since Jan 1, 1970
-//~ monotonic_clock::now() = 2793 ns since boot
-
-//~ Set cout to use long names:
-//~ high_resolution_clock::now() = 8660 nanoseconds since boot
-

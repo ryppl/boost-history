@@ -43,9 +43,3 @@ int main()
 //~ 50908679121461 nanoseconds since boot
 //~ That took 649630 nanoseconds
 
-//~ 2793 nanoseconds since boot
-//~ That took 5410464 nanoseconds
-//~ That took 5454045 nanoseconds
-
-//~ 1285042579381375000 nanoseconds since Jan 1, 1970
-//~ That took 15000000 nanoseconds
