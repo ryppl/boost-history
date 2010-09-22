@@ -236,15 +236,22 @@ BOOST_AUTO_TEST_CASE(test_output_stdout_stderr)
 #endif 
 } 
 
-bp::stream_ends redirect_to(bp::handle h) 
+class redirect_to 
 { 
-#if defined(BOOST_WINDOWS_API) 
-    if (!SetHandleInformation(h.native(), HANDLE_FLAG_INHERIT, 
-        HANDLE_FLAG_INHERIT)) 
-        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("SetHandleInformation() failed"); 
-#endif 
-    return bp::stream_ends(h, bp::handle()); 
-} 
+public: 
+    redirect_to(bp::handle h) 
+    : h_(h) 
+    { 
+    } 
+
+    bp::stream_ends operator()(bp::stream_type) const 
+    { 
+        return bp::stream_ends(h_, bp::handle()); 
+    } 
+
+private: 
+    bp::handle h_; 
+}; 
 
 bp::stream_ends forward(bp::stream_ends ends) 
 { 
@@ -261,7 +268,7 @@ BOOST_AUTO_TEST_CASE(test_redirect_err_to_out)
 
     bp::context ctx; 
     ctx.streams[bp::stdout_id] = boost::bind(forward, ends); 
-    ctx.streams[bp::stderr_id] = boost::bind(redirect_to, ends.child); 
+    ctx.streams[bp::stderr_id] = redirect_to(ends.child); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
