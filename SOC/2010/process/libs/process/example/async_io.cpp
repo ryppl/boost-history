@@ -30,10 +30,10 @@ int main()
     std::string exe = boost::process::find_executable_in_path("hostname"); 
     std::vector<std::string> args; 
     boost::process::context ctx; 
-    ctx.stdout_behavior = boost::process::behavior::async_pipe(); 
+    ctx.streams[boost::process::stdout_id] = 
+        boost::process::behavior::async_pipe(); 
     boost::process::child c = boost::process::create_child(exe, args, ctx); 
-    boost::process::pistream &is = c.get_stdout(); 
-    boost::process::handle h = is.handle(); 
+    boost::process::handle h = c.get_handle(boost::process::stdout_id); 
     boost::process::pipe read_end(ioservice, h.release()); 
     read_end.async_read_some(boost::asio::buffer(buf), handler); 
     ioservice.run(); 

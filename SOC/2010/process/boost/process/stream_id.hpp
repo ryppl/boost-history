@@ -39,9 +39,9 @@ enum std_stream_id { stdin_id, stdout_id, stderr_id };
  */
 typedef NativeStreamId stream_id;
 #elif defined(BOOST_POSIX_API)
-typedef std_stream_id stream_id;
-#elif defined(BOOST_WINDOWS_API)
 typedef int stream_id;
+#elif defined(BOOST_WINDOWS_API)
+typedef std_stream_id stream_id;
 #endif
 
 }

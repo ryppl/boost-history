@@ -610,12 +610,12 @@ BOOST_AUTO_TEST_CASE(test_posix)
     args.push_back("test"); 
 
     bp::context ctx; 
-    ctx.streams[static_cast<bp::stream_id>(10)] = bpb::pipe(bp::output_stream); 
+    ctx.streams[10] = bpb::pipe(bp::output_stream); 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
     std::string word; 
-    bp::pistream is(c.get_handle(static_cast<bp::stream_id>(10))); 
+    bp::pistream is(c.get_handle(10)); 
     is >> word; 
     BOOST_CHECK_EQUAL(word, "test"); 
 
@@ -663,8 +663,7 @@ BOOST_AUTO_TEST_CASE(test_posix2)
     args.push_back("test"); 
 
     bp::context ctx; 
-    ctx.streams[static_cast<bp::std_stream_id>(3)] = 
-        bpb::pipe(bp::output_stream); 
+    ctx.streams[3] = bpb::pipe(bp::output_stream); 
 
     // File descriptors must be closed after context is instantiated as the 
     // context constructor uses the behavior inherit which tries to dup() 
@@ -682,7 +681,7 @@ BOOST_AUTO_TEST_CASE(test_posix2)
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
-    int res = dup2(c.get_handle(static_cast<bp::std_stream_id>(3)).native(), 0); 
+    int res = dup2(c.get_handle(3).native(), 0); 
     std::string word; 
     if (res != -1) 
         std::cin >> word; 

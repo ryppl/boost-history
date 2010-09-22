@@ -12,30 +12,26 @@
 // 
 
 #include <boost/process/all.hpp> 
-
-#if defined(BOOST_POSIX_API) 
-#   include <unistd.h> 
-#elif defined(BOOST_WINDOWS_API) 
-#   include <windows.h> 
-#else 
-#   error "Unsupported platform." 
-#endif 
-
 #include <boost/bind.hpp> 
 #include <iostream> 
-#include <utility> 
-#include <stdexcept> 
 
 //[redirect_to_stream 
-boost::process::stream_ends redirect_to(boost::process::handle h) 
+class redirect_to 
 { 
-#if defined(BOOST_WINDOWS_API) 
-    if (!SetHandleInformation(h.native(), HANDLE_FLAG_INHERIT, 
-        HANDLE_FLAG_INHERIT)) 
-        throw std::runtime_error("DuplicateHandle() failed"); 
-#endif 
-    return boost::process::stream_ends(h, boost::process::handle()); 
-} 
+public: 
+    redirect_to(boost::process::handle h) 
+    : h_(h) 
+    { 
+    } 
+
+    boost::process::stream_ends operator()(boost::process::stream_type) const 
+    { 
+        return boost::process::stream_ends(h_, boost::process::handle()); 
+    } 
+
+private: 
+    boost::process::handle h_; 
+}; 
 //] 
 
 //[redirect_to_main 
@@ -51,16 +47,17 @@ int main()
 
     std::vector<std::string> args; 
 
-    boost::process::stream_ends ends = boost::process::behavior::pipe()(false); 
+    boost::process::stream_ends ends = boost::process::behavior::pipe()
+        (boost::process::output_stream); 
 
     boost::process::context ctx; 
-    ctx.stdout_behavior = boost::bind(forward, ends); 
-    ctx.stderr_behavior = boost::bind(redirect_to, ends.child); 
+    ctx.streams[boost::process::stdout_id] = boost::bind(forward, ends); 
+    ctx.streams[boost::process::stderr_id] = redirect_to(ends.child); 
 
     boost::process::child c = boost::process::create_child( 
         executable, args, ctx); 
 
-    boost::process::pistream &is = c.get_stdout(); 
+    boost::process::pistream is(c.get_handle(boost::process::stdout_id)); 
     std::cout << is.rdbuf() << std::flush; 
 } 
 //] 

@@ -18,49 +18,28 @@
 #include <boost/assign/list_of.hpp> 
 #include <string> 
 #include <vector> 
-#include <utility> 
 #include <iostream> 
-#include <unistd.h> 
-
-//[file_descriptors_context 
-boost::process::stream_ends address = boost::process::behavior::pipe()(false); 
-boost::process::stream_ends pid = boost::process::behavior::pipe()(false); 
-
-class context : public boost::process::context 
-{ 
-public: 
-    void setup(std::vector<bool> &closeflags) 
-    { 
-        if (dup2(address.child.native(), 3) == -1) 
-        { 
-            write(STDERR_FILENO, "dup2() failed\n", 14); 
-            _exit(127); 
-        } 
-        closeflags[3] = false; 
-
-        if (dup2(pid.child.native(), 4) == -1) 
-        { 
-            write(STDERR_FILENO, "dup2() failed\n", 14); 
-            _exit(127); 
-        } 
-        closeflags[4] = false; 
-    } 
-}; 
-//] 
 
 int main() 
 { 
 //[file_descriptors_main 
     std::string exe = boost::process::find_executable_in_path("dbus-daemon"); 
+
     std::vector<std::string> args = boost::assign::list_of("--fork")
         ("--session")("--print-address=3")("--print-pid=4"); 
-    context ctx; 
-    boost::process::create_child(exe, args, ctx); 
-    address.child.close(); 
-    pid.child.close(); 
-    boost::process::pistream isaddress(address.parent); 
+
+    boost::process::context ctx; 
+    ctx.streams[3] = boost::process::behavior::pipe(
+        boost::process::output_stream); 
+    ctx.streams[4] = boost::process::behavior::pipe(
+        boost::process::output_stream); 
+
+    boost::process::child c = boost::process::create_child(exe, args, ctx); 
+
+    boost::process::pistream isaddress(c.get_handle(3)); 
     std::cout << isaddress.rdbuf() << std::endl; 
-    boost::process::pistream ispid(pid.parent); 
+
+    boost::process::pistream ispid(c.get_handle(4)); 
     std::cout << ispid.rdbuf() << std::endl; 
 //] 
 } 
