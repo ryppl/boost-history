@@ -242,7 +242,7 @@
           variable. Any help is welcome.
         </p>
 <a name="boost_ratio.users_guide.getting_started.install.building_boost_ratio_"></a><h5>
-<a name="id4949164"></a>
+<a name="id4949163"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.building_boost_ratio_">Building
           Boost.Ratio </a>
         </h5>
@@ -309,7 +309,7 @@
           of exception safety as long as the underlying parameters provide it.
         </p>
 <a name="boost_ratio.users_guide.getting_started.install.thread_safety_"></a><h5>
-<a name="id4949434"></a>
+<a name="id4949433"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.thread_safety_">Thread
           safety </a>
         </h5>
@@ -1348,7 +1348,7 @@
 <div class="toc"><dl>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.history"> Appendix A: History</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_2_0__september_20__2010__"><span class="bold"><strong>Version 0.2.0, September 20, 2010</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_2_0__september_22__2010__"><span class="bold"><strong>Version 0.2.0, September 22, 2010</strong></span> </a></span></dt>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_1_0__september_10__2010__"><span class="bold"><strong>Version 0.1.0, September 10, 2010</strong></span> </a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.rationale"> Appendix B: Rationale</a></span></dt>
@@ -1371,12 +1371,12 @@
 <a name="boost_ratio.appendices.history"></a><a href="index.html#boost_ratio.appendices.history" title=" Appendix A: History"> Appendix A: History</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_2_0__september_20__2010__"><span class="bold"><strong>Version 0.2.0, September 20, 2010</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_2_0__september_22__2010__"><span class="bold"><strong>Version 0.2.0, September 22, 2010</strong></span> </a></span></dt>
 <dt><span class="section"><a href="index.html#boost_ratio.appendices.history.__version_0_1_0__september_10__2010__"><span class="bold"><strong>Version 0.1.0, September 10, 2010</strong></span> </a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_ratio.appendices.history.__version_0_2_0__september_20__2010__"></a><a href="index.html#boost_ratio.appendices.history.__version_0_2_0__september_20__2010__" title="Version 0.2.0, September 20, 2010 "><span class="bold"><strong>Version 0.2.0, September 20, 2010</strong></span> </a>
+<a name="boost_ratio.appendices.history.__version_0_2_0__september_22__2010__"></a><a href="index.html#boost_ratio.appendices.history.__version_0_2_0__september_22__2010__" title="Version 0.2.0, September 22, 2010 "><span class="bold"><strong>Version 0.2.0, September 22, 2010</strong></span> </a>
 </h4></div></div></div>
 <p>
           <span class="bold"><strong>Featurs:</strong></span>
@@ -1481,11 +1481,45 @@
 <span class="identifier">r1</span> <span class="special">=</span> <span class="identifier">r2</span><span class="special">;</span> <span class="comment">// compiles as both types are the same.
 </span></pre>
 </div>
-<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
 <a name="boost_ratio.appendices.implementation"></a><a href="index.html#boost_ratio.appendices.implementation" title=" Appendix C: Implementation
       Notes"> Appendix C: Implementation
       Notes</a>
-</h3></div></div></div></div>
+</h3></div></div></div>
+<a name="boost_ratio.appendices.implementation.how_boost_ratio_manage_with_compile_time_rational_arithmetic_overflow_"></a><h4>
+<a name="id5012090"></a>
+        <a href="index.html#boost_ratio.appendices.implementation.how_boost_ratio_manage_with_compile_time_rational_arithmetic_overflow_">How
+        Boost.Ratio manage with compile-time rational arithmetic overflow?</a>
+      </h4>
+<p>
+        When the result is representable, but a simple application of arithmetic
+        rules would result in overflow, e.g. <code class="computeroutput"><span class="identifier">ratio_multiply</span><span class="special">&lt;</span><span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">INTMAX_MAX</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;,</span><span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">2</span><span class="special">,</span><span class="identifier">INTMAX_MAX</span><span class="special">&gt;&gt;</span></code> can be reduced to <code class="computeroutput"><span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;</span></code>, but
+        the direct result of <code class="computeroutput"><span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">INTMAX_MAX</span><span class="special">*</span><span class="number">2</span><span class="special">,</span><span class="identifier">INTMAX_MAX</span><span class="special">*</span><span class="number">2</span><span class="special">&gt;</span></code> would
+        result in overflow.
+      </p>
+<p>
+        Boost.Ratio has implemented some simplifications in order to reduce the possibility
+        of overflow, but these don't take care of all possible cases. For example
+        the preceding example doesn't works now.
+      </p>
+<p>
+        In order to take care of this case we could apply this kind of simplification:
+      </p>
+<pre class="programlisting"><span class="identifier">simplify</span><span class="special">&lt;</span> <span class="identifier">fraction</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">B</span><span class="special">&gt;,</span> <span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span><span class="identifier">D</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">::=</span>
+    <span class="keyword">case</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">C</span><span class="special">)</span> <span class="special">&gt;</span> <span class="number">1</span> <span class="identifier">simplify</span><span class="special">&lt;</span> <span class="identifier">fraction</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">C</span><span class="special">),</span><span class="identifier">B</span><span class="special">&gt;,</span> <span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">C</span><span class="special">),</span><span class="identifier">D</span><span class="special">&gt;&gt;&gt;</span>
+    <span class="keyword">case</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">D</span><span class="special">)</span> <span class="special">&gt;</span> <span class="number">1</span> <span class="identifier">simplify</span><span class="special">&lt;</span> <span class="identifier">fraction</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">D</span><span class="special">),</span><span class="identifier">B</span><span class="special">&gt;,</span> <span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span><span class="identifier">D</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">D</span><span class="special">)&gt;&gt;&gt;</span>
+    <span class="keyword">case</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">B</span><span class="special">,</span><span class="identifier">C</span><span class="special">)</span> <span class="special">&gt;</span> <span class="number">1</span> <span class="identifier">simplify</span><span class="special">&lt;</span> <span class="identifier">fraction</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">B</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">B</span><span class="special">,</span><span class="identifier">C</span><span class="special">)&gt;,</span> <span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">B</span><span class="special">,</span><span class="identifier">C</span><span class="special">),</span><span class="identifier">D</span><span class="special">&gt;&gt;&gt;</span>
+    <span class="keyword">case</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">B</span><span class="special">,</span><span class="identifier">D</span><span class="special">)</span> <span class="special">&gt;</span> <span class="number">1</span> <span class="identifier">simplify</span><span class="special">&lt;</span> <span class="identifier">fraction</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">B</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">B</span><span class="special">,</span><span class="identifier">D</span><span class="special">)&gt;,</span> <span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span><span class="identifier">D</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">B</span><span class="special">,</span><span class="identifier">D</span><span class="special">)&gt;&gt;&gt;</span>
+    <span class="identifier">otherwise</span> <span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">*</span><span class="identifier">B</span><span class="special">,</span> <span class="identifier">C</span><span class="special">*</span><span class="identifier">D</span><span class="special">&gt;</span>
+</pre>
+<p>
+        While this works in some cases, a more general factorization algorithm will
+        be needed to manage with all the cases. Whether we should manage with them
+        is an open question, as the compile times will be increassed strongly to
+        cover some causual cases.
+      </p>
+</div>
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
 <a name="boost_ratio.appendices.faq"></a><a href="index.html#boost_ratio.appendices.faq" title=" Appendix D: FAQ"> Appendix D: FAQ</a>
 </h3></div></div></div></div>
@@ -2313,7 +2347,7 @@
 <a name="boost_ratio.appendices.todo"></a><a href="index.html#boost_ratio.appendices.todo" title=" Appendix H: Future plans"> Appendix H: Future plans</a>
 </h3></div></div></div>
 <a name="boost_ratio.appendices.todo.for_later_releases"></a><h4>
-<a name="id5013493"></a>
+<a name="id5014547"></a>
         <a href="index.html#boost_ratio.appendices.todo.for_later_releases">For later
         releases</a>
       </h4>
@@ -2325,7 +2359,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: September 21, 2010 at 08:49:44 GMT</small></p></td>
+<td align="left"><p><small>Last revised: September 22, 2010 at 16:05:04 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
