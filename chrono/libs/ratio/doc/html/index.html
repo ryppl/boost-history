@@ -1499,25 +1499,9 @@
         result in overflow.
       </p>
 <p>
-        Boost.Ratio has implemented some simplifications in order to reduce the possibility
-        of overflow, but these don't take care of all possible cases. For example
-        the preceding example doesn't works now.
-      </p>
-<p>
-        In order to take care of this case we could apply this kind of simplification:
-      </p>
-<pre class="programlisting"><span class="identifier">simplify</span><span class="special">&lt;</span> <span class="identifier">fraction</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">B</span><span class="special">&gt;,</span> <span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span><span class="identifier">D</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">::=</span>
-    <span class="keyword">case</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">C</span><span class="special">)</span> <span class="special">&gt;</span> <span class="number">1</span> <span class="identifier">simplify</span><span class="special">&lt;</span> <span class="identifier">fraction</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">C</span><span class="special">),</span><span class="identifier">B</span><span class="special">&gt;,</span> <span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">C</span><span class="special">),</span><span class="identifier">D</span><span class="special">&gt;&gt;&gt;</span>
-    <span class="keyword">case</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">D</span><span class="special">)</span> <span class="special">&gt;</span> <span class="number">1</span> <span class="identifier">simplify</span><span class="special">&lt;</span> <span class="identifier">fraction</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">D</span><span class="special">),</span><span class="identifier">B</span><span class="special">&gt;,</span> <span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span><span class="identifier">D</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">D</span><span class="special">)&gt;&gt;&gt;</span>
-    <span class="keyword">case</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">B</span><span class="special">,</span><span class="identifier">C</span><span class="special">)</span> <span class="special">&gt;</span> <span class="number">1</span> <span class="identifier">simplify</span><span class="special">&lt;</span> <span class="identifier">fraction</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">B</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">B</span><span class="special">,</span><span class="identifier">C</span><span class="special">)&gt;,</span> <span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">B</span><span class="special">,</span><span class="identifier">C</span><span class="special">),</span><span class="identifier">D</span><span class="special">&gt;&gt;&gt;</span>
-    <span class="keyword">case</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">B</span><span class="special">,</span><span class="identifier">D</span><span class="special">)</span> <span class="special">&gt;</span> <span class="number">1</span> <span class="identifier">simplify</span><span class="special">&lt;</span> <span class="identifier">fraction</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">B</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">B</span><span class="special">,</span><span class="identifier">D</span><span class="special">)&gt;,</span> <span class="identifier">times</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span><span class="identifier">D</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">B</span><span class="special">,</span><span class="identifier">D</span><span class="special">)&gt;&gt;&gt;</span>
-    <span class="identifier">otherwise</span> <span class="identifier">ratio</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">*</span><span class="identifier">B</span><span class="special">,</span> <span class="identifier">C</span><span class="special">*</span><span class="identifier">D</span><span class="special">&gt;</span>
-</pre>
-<p>
-        While this works in some cases, a more general factorization algorithm will
-        be needed to manage with all the cases. Whether we should manage with them
-        is an open question, as the compile times will be increassed strongly to
-        cover some causual cases.
+        Boost.Ratio implementes some simplifications in order to reduce the possibility
+        of overflow. The general idea is to use the gcd of some of the possible products
+        that can overflow, and simplify before doing the product.
       </p>
 </div>
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
@@ -2347,7 +2331,7 @@
 <a name="boost_ratio.appendices.todo"></a><a href="index.html#boost_ratio.appendices.todo" title=" Appendix H: Future plans"> Appendix H: Future plans</a>
 </h3></div></div></div>
 <a name="boost_ratio.appendices.todo.for_later_releases"></a><h4>
-<a name="id5014547"></a>
+<a name="id5013689"></a>
         <a href="index.html#boost_ratio.appendices.todo.for_later_releases">For later
         releases</a>
       </h4>
@@ -2359,7 +2343,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: September 22, 2010 at 16:05:04 GMT</small></p></td>
+<td align="left"><p><small>Last revised: September 23, 2010 at 05:36:54 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

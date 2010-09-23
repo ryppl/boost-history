@@ -1054,48 +1054,9 @@ If the CopyConstruction and Assignment ([[@http://home.roadrunner.com/~hinnant/i
 
 When the result is representable, but a simple application of arithmetic rules would result in overflow, e.g. `ratio_multiply<ratio<INTMAX_MAX,2>,ratio<2,INTMAX_MAX>>` can be reduced to `ratio<1,1>`, but the direct result of `ratio<INTMAX_MAX*2,INTMAX_MAX*2>` would result in overflow. 
 
-Boost.Ratio has implemented some simplifications in order to reduce the possibility of overflow, but these don't take care of all possible cases. For example the preceding example doesn't works now.
+Boost.Ratio implementes some simplifications in order to reduce the possibility of overflow. The general idea is to use the gcd of some of the possible products that can overflow, and simplify before doing the product.
 
-In order to take care of this case we could apply this kind of simplification:
 
-    simplify< fraction<times<A,B>, times<C,D> > > ::=
-        case gcd(A,C) > 1 simplify< fraction<times<A/gcd(A,C),B>, times<C/gcd(A,C),D>>>
-        case gcd(A,D) > 1 simplify< fraction<times<A/gcd(A,D),B>, times<C,D/gcd(A,D)>>>
-        case gcd(B,C) > 1 simplify< fraction<times<A,B/gcd(B,C)>, times<C/gcd(B,C),D>>>
-        case gcd(B,D) > 1 simplify< fraction<times<A,B/gcd(B,D)>, times<C,D/gcd(B,D)>>>
-        otherwise ratio<A*B, C*D>
-
-While this works in some cases, a more general factorization algorithm will be needed to manage with all the cases. Whether we should manage with them is an open question, as the compile times will be increassed strongly to cover some causual cases.
-
-[/
-simplify< fraction<times<A,B>, times<C,D> > > ::=
-simplify< fraction<times<factorize<A>,factorize<B>>,
-                times<factorize<C>,factorize<D>> > > ::=
-simplify< fraction<factors<AxB>,
-                factors<CxD> > > ::=
-simplify< factors<AxB>, factors<CxD>  > 
-
-simplify< void, B > > ::= ratio< 1, B >
-simplify< A, void > > ::= ratio< A, 1 >
-simplify< factors<N, A>, factors<N, B> > > ::= simplify< A, B >
-
-simplify< factors<N, A>, factors<N+M, B> > > ::=
-let xx = simplify< A, factors<N+M, B> > > 
-    ratio<N*xx.num, xx.den>
-
-simplify< factors<N+M, A>, factors<M, B> > > ::=
-let xx = simplify< N+M, factors<M, B> > > 
-    ratio<xx.num, M*xx.den>
-    
-factorize<0> =  0
-factorize<1> =  2
-
-factorize<N> = factorize_n<N, 2> 
-    
-factorize_n<N, A, R=N%2> = factorize_n<N, A+1>
-factorize_n<N, N, 1> N 
-factorize_n<N, A, 0> = times<A, factorize_n<N/A>, A>
-]
 [endsect]
 
 [/======================================================]
