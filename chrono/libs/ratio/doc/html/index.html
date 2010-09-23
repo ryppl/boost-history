@@ -1500,9 +1500,459 @@
       </p>
 <p>
         Boost.Ratio implementes some simplifications in order to reduce the possibility
-        of overflow. The general idea is to use the gcd of some of the possible products
-        that can overflow, and simplify before doing the product.
+        of overflow. The general ideas are:
       </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            The <code class="computeroutput"><span class="identifier">num</span></code> and <code class="computeroutput"><span class="identifier">den</span></code> <code class="computeroutput"><span class="identifier">ratio</span><span class="special">&lt;&gt;</span></code> fields are normalized.
+          </li>
+<li>
+            Use the gcd of some of the possible products that can overflow, and simplify
+            before doing the product.
+          </li>
+<li>
+            Use some equivalences relations that avoid addition or substraction can
+            overflow or underflow.
+          </li>
+</ul></div>
+<p>
+        Next follows more detail:
+      </p>
+<p>
+        <span class="bold"><strong>ratio_add</strong></span>
+      </p>
+<p>
+        In
+      </p>
+<pre class="programlisting"><span class="special">(</span><span class="identifier">n1</span><span class="special">/</span><span class="identifier">d1</span><span class="special">)+(</span><span class="identifier">n2</span><span class="special">/</span><span class="identifier">d2</span><span class="special">)=(</span><span class="identifier">n1</span><span class="special">*</span><span class="identifier">d2</span><span class="special">+</span><span class="identifier">n2</span><span class="special">*</span><span class="identifier">d1</span><span class="special">)/(</span><span class="identifier">d1</span><span class="special">*</span><span class="identifier">d2</span><span class="special">)</span>
+</pre>
+<p>
+        either n1*d2+n2*d1 or d1*d2 can overflow.
+      </p>
+<pre class="programlisting">  <span class="special">(</span> <span class="special">(</span><span class="identifier">n1</span> <span class="special">*</span> <span class="identifier">d2</span><span class="special">)</span>  <span class="special">+</span> <span class="special">(</span><span class="identifier">n2</span> <span class="special">*</span> <span class="identifier">d1</span><span class="special">)</span> <span class="special">)</span>
+<span class="special">/</span> <span class="special">(</span><span class="identifier">d1</span> <span class="special">*</span> <span class="identifier">d2</span><span class="special">)</span>   
+</pre>
+<p>
+        Dividing by gcd(d1,d2) on both num and den
+      </p>
+<pre class="programlisting">  <span class="special">(</span> <span class="special">(</span><span class="identifier">n1</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">d2</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">)))</span>  <span class="special">+</span> 
+    <span class="special">(</span><span class="identifier">n2</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">d1</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">)))</span> 
+  <span class="special">)</span>
+<span class="special">/</span> <span class="special">((</span><span class="identifier">d1</span> <span class="special">*</span> <span class="identifier">d2</span><span class="special">)</span> <span class="special">/</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">))</span>  
+</pre>
+<p>
+        Multipliying and diving by gcd(n1,n2) in numerator
+      </p>
+<pre class="programlisting">  <span class="special">(</span> <span class="special">((</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">)*(</span><span class="identifier">n1</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">)))</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">d2</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">)))</span>  <span class="special">+</span> 
+    <span class="special">((</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">)*(</span><span class="identifier">n2</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">)))</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">d1</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">)))</span> 
+  <span class="special">)</span>
+<span class="special">/</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">d1</span> <span class="special">*</span> <span class="identifier">d2</span><span class="special">)</span> <span class="special">/</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">)</span> <span class="special">)</span>
+</pre>
+<p>
+        Factorizing gcd(n1,n2)
+      </p>
+<pre class="programlisting">  <span class="special">(</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">)</span> <span class="special">*</span> 
+    <span class="special">(</span> <span class="special">((</span><span class="identifier">n1</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">))</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">d2</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">)))</span> <span class="special">+</span> <span class="special">((</span><span class="identifier">n2</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">))</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">d1</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">)))</span> <span class="special">)</span>
+  <span class="special">)</span>
+<span class="special">/</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">d1</span> <span class="special">*</span> <span class="identifier">d2</span><span class="special">)</span> <span class="special">/</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">)</span> <span class="special">)</span>
+</pre>
+<p>
+        Regrouping
+      </p>
+<pre class="programlisting">  <span class="special">(</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">)</span> <span class="special">*</span> 
+    <span class="special">(</span> <span class="special">((</span><span class="identifier">n1</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">))</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">d2</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">)))</span> <span class="special">+</span> <span class="special">((</span><span class="identifier">n2</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">))</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">d1</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">)))</span> <span class="special">)</span>
+  <span class="special">)</span>
+<span class="special">/</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">d1</span> <span class="special">/</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">))</span> <span class="special">*</span> <span class="identifier">d2</span> <span class="special">)</span>
+</pre>
+<p>
+        Dividing by (d1 / gcd(d1,d2))
+      </p>
+<pre class="programlisting">  <span class="special">(</span> <span class="special">(</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">)</span> <span class="special">/</span> <span class="special">(</span><span class="identifier">d1</span> <span class="special">/</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">))</span> <span class="special">)</span> <span class="special">*</span> 
+    <span class="special">(</span> <span class="special">((</span><span class="identifier">n1</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">))</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">d2</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">)))</span> <span class="special">+</span> <span class="special">((</span><span class="identifier">n2</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">))</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">d1</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">)))</span> <span class="special">)</span>
+  <span class="special">)</span>
+<span class="special">/</span> <span class="identifier">d2</span>
+</pre>
+<p>
+        Dividing by d2
+      </p>
+<pre class="programlisting"><span class="special">(</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">)</span> <span class="special">/</span> <span class="special">(</span><span class="identifier">d1</span> <span class="special">/</span> <span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">))</span> <span class="special">)</span> <span class="special">*</span> 
+<span class="special">(</span> <span class="special">((</span><span class="identifier">n1</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">))</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">d2</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">)))</span> <span class="special">+</span> <span class="special">((</span><span class="identifier">n2</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">n2</span><span class="special">))</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">d1</span><span class="special">/</span><span class="identifier">gcd</span><span class="special">(</span><span class="identifier">d1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">)))</span> <span class="special">/</span> <span class="identifier">d2</span> <span class="special">)</span>
+</pre>
+<p>
+        This expression correspond to the multiply of two ratios that have less risk
+        of overflow as the initial numerators and denomitators appear now in most
+        of the cases divided by a gcd.
+      </p>
+<p>
+        For ratio_subtract the reasoning is the same
+      </p>
+<p>
+        <span class="bold"><strong>ratio_multiply</strong></span>
+      </p>
+<p>
+        In
+      </p>
+<pre class="programlisting"><span class="special">(</span><span class="identifier">n1</span><span class="special">/</span><span class="identifier">d1</span><span class="special">)*(</span><span class="identifier">n2</span><span class="special">/</span><span class="identifier">d2</span><span class="special">)=((</span><span class="identifier">n1</span><span class="special">*</span><span class="identifier">n2</span><span class="special">)/(</span><span class="identifier">d1</span><span class="special">*</span><span class="identifier">d2</span><span class="special">))</span>
+</pre>
+<p>
+        either n1*n2 or d1*d2 can overflow.
+      </p>
+<p>
+        Dividing by gcc(n1,d2) numerator and denominator
+      </p>
+<pre class="programlisting">    <span class="special">(((</span><span class="identifier">n1</span><span class="special">/</span><span class="identifier">gcc</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">))*</span><span class="identifier">n2</span><span class="special">)</span>
+<span class="special">/</span>   <span class="special">(</span><span class="identifier">d1</span><span class="special">*(</span><span class="identifier">d2</span><span class="special">/</span><span class="identifier">gcc</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">))))</span>
+</pre>
+<p>
+        Dividing by gcc(n2,d1)
+      </p>
+<pre class="programlisting">    <span class="special">((</span><span class="identifier">n1</span><span class="special">/</span><span class="identifier">gcc</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">))*(</span><span class="identifier">n2</span><span class="special">/</span><span class="identifier">gcc</span><span class="special">(</span><span class="identifier">n2</span><span class="special">,</span><span class="identifier">d1</span><span class="special">)))</span>
+<span class="special">/</span>   <span class="special">((</span><span class="identifier">d1</span><span class="special">/</span><span class="identifier">gcc</span><span class="special">(</span><span class="identifier">n2</span><span class="special">,</span><span class="identifier">d1</span><span class="special">))*(</span><span class="identifier">d2</span><span class="special">/</span><span class="identifier">gcc</span><span class="special">(</span><span class="identifier">n1</span><span class="special">,</span><span class="identifier">d2</span><span class="special">)))</span>
+</pre>
+<p>
+        And now all the initial numerator and denominators have been reduced, avoiding
+        the overflow.
+      </p>
+<p>
+        For ratio_divide the reasoning is similar.
+      </p>
+<p>
+        <span class="bold"><strong>ratio_less</strong></span>
+      </p>
+<p>
+        In order to evaluate
+      </p>
+<pre class="programlisting"><span class="special">(</span><span class="identifier">n1</span><span class="special">/</span><span class="identifier">d1</span><span class="special">)&lt;(</span><span class="identifier">n2</span><span class="special">/</span><span class="identifier">d2</span><span class="special">)</span>
+</pre>
+<p>
+        without moving to floating point numbers, two techniques are used:
+      </p>
+<div class="itemizedlist"><ul type="disc"><li>
+            First compare the sign of the numerators
+          </li></ul></div>
+<p>
+        If sign(n1) &lt; sign(n2) the result is true.
+      </p>
+<p>
+        If sign(n1) == sign(n2) the result depends on the following after making
+        the numerators positive
+      </p>
+<div class="itemizedlist"><ul type="disc"><li>
+            When the sign is equal the technique used is to work with integer division
+            and modulo when the signs are equal.
+          </li></ul></div>
+<p>
+        Let call Qi the integer division of ni and di and Mi the modulo of ni and
+        di.
+      </p>
+<pre class="programlisting"><span class="identifier">ni</span> <span class="special">=</span> <span class="identifier">Qi</span> <span class="special">*</span> <span class="identifier">di</span> <span class="special">+</span> <span class="identifier">Mi</span> <span class="keyword">and</span> <span class="identifier">Mi</span> <span class="special">&lt;</span> <span class="identifier">di</span>
+</pre>
+<p>
+        Form
+      </p>
+<pre class="programlisting"><span class="special">((</span><span class="identifier">n1</span><span class="special">*</span><span class="identifier">d2</span><span class="special">)&lt;(</span><span class="identifier">d1</span><span class="special">*</span><span class="identifier">n2</span><span class="special">))</span>
+</pre>
+<p>
+        we get
+      </p>
+<pre class="programlisting"><span class="special">(((</span><span class="identifier">Q1</span> <span class="special">*</span> <span class="identifier">d1</span> <span class="special">+</span> <span class="identifier">M1</span><span class="special">)*</span><span class="identifier">d2</span><span class="special">)&lt;(</span><span class="identifier">d1</span><span class="special">*((</span><span class="identifier">Q2</span> <span class="special">*</span> <span class="identifier">d2</span> <span class="special">+</span> <span class="identifier">M2</span><span class="special">))))</span>
+</pre>
+<p>
+        Developing
+      </p>
+<pre class="programlisting"><span class="special">((</span><span class="identifier">Q1</span> <span class="special">*</span> <span class="identifier">d1</span> <span class="special">*</span> <span class="identifier">d2</span><span class="special">)+</span> <span class="special">(</span><span class="identifier">M1</span><span class="special">*</span><span class="identifier">d2</span><span class="special">))&lt;((</span><span class="identifier">d1</span> <span class="special">*</span> <span class="identifier">Q2</span> <span class="special">*</span> <span class="identifier">d2</span><span class="special">)</span> <span class="special">+</span> <span class="special">(</span><span class="identifier">d1</span><span class="special">*</span><span class="identifier">M2</span><span class="special">))</span>
+</pre>
+<p>
+        Dividing by d1*d2
+      </p>
+<pre class="programlisting"><span class="identifier">Q1</span> <span class="special">+</span> <span class="special">(</span><span class="identifier">M1</span><span class="special">/</span><span class="identifier">d1</span><span class="special">)</span> <span class="special">&lt;</span> <span class="identifier">Q2</span> <span class="special">+</span> <span class="special">(</span><span class="identifier">M2</span><span class="special">/</span><span class="identifier">d2</span><span class="special">)</span>
+</pre>
+<p>
+        If Q1=Q2 the result depends on
+      </p>
+<pre class="programlisting"><span class="special">(</span><span class="identifier">M1</span><span class="special">/</span><span class="identifier">d1</span><span class="special">)</span> <span class="special">&lt;</span> <span class="special">(</span><span class="identifier">M2</span><span class="special">/</span><span class="identifier">d2</span><span class="special">)</span>
+</pre>
+<p>
+        If M1<code class="literal">=0</code>=M2 the result is false
+      </p>
+<p>
+        If M1=0 M2!=0 the result is true
+      </p>
+<p>
+        If M1!<code class="literal">0 M2</code>=0 the result is false
+      </p>
+<p>
+        If M1!=0 M2!=0 the result depends on
+      </p>
+<pre class="programlisting"><span class="special">(</span><span class="identifier">d2</span><span class="special">/</span><span class="identifier">M2</span><span class="special">)</span> <span class="special">&lt;</span> <span class="special">(</span><span class="identifier">d1</span><span class="special">/</span><span class="identifier">M1</span><span class="special">)</span>
+</pre>
+<p>
+        If Q1!=Q2, the result of
+      </p>
+<pre class="programlisting"><span class="identifier">Q1</span> <span class="special">+</span> <span class="special">(</span><span class="identifier">M1</span><span class="special">/</span><span class="identifier">d1</span><span class="special">)</span> <span class="special">&lt;</span> <span class="identifier">Q2</span> <span class="special">+</span> <span class="special">(</span><span class="identifier">M2</span><span class="special">/</span><span class="identifier">d2</span><span class="special">)</span>
+</pre>
+<p>
+        depends only on Q1 and Q2 as Qi are integers and (Mi/di) &lt;1 because Mi&lt;di.
+      </p>
+<p>
+        if Q1&gt;Q2, Q1==Q2+k, k&gt;=1
+      </p>
+<pre class="programlisting"><span class="identifier">Q2</span><span class="special">+</span><span class="identifier">k</span> <span class="special">+</span> <span class="special">(</span><span class="identifier">M1</span><span class="special">/</span><span class="identifier">d1</span><span class="special">)</span> <span class="special">&lt;</span> <span class="identifier">Q2</span> <span class="special">+</span> <span class="special">(</span><span class="identifier">M2</span><span class="special">/</span><span class="identifier">d2</span><span class="special">)</span>
+<span class="identifier">k</span> <span class="special">+</span> <span class="special">(</span><span class="identifier">M1</span><span class="special">/</span><span class="identifier">d1</span><span class="special">)</span> <span class="special">&lt;</span> <span class="special">(</span><span class="identifier">M2</span><span class="special">/</span><span class="identifier">d2</span><span class="special">)</span>
+<span class="identifier">k</span> <span class="special">&lt;</span> <span class="special">(</span><span class="identifier">M2</span><span class="special">/</span><span class="identifier">d2</span><span class="special">)</span> <span class="special">-</span> <span class="special">(</span><span class="identifier">M1</span><span class="special">/</span><span class="identifier">d1</span><span class="special">)</span> 
+</pre>
+<p>
+        but the difference between two numbers between 0 and 1 can not be greater
+        than 1, so the result is false.
+      </p>
+<p>
+        if Q2&gt;Q1, Q2==Q1+k, k&gt;=1
+      </p>
+<pre class="programlisting"><span class="identifier">Q1</span> <span class="special">+</span> <span class="special">(</span><span class="identifier">M1</span><span class="special">/</span><span class="identifier">d1</span><span class="special">)</span> <span class="special">&lt;</span> <span class="identifier">Q1</span><span class="special">+</span><span class="identifier">k</span> <span class="special">+</span> <span class="special">(</span><span class="identifier">M2</span><span class="special">/</span><span class="identifier">d2</span><span class="special">)</span>
+<span class="special">(</span><span class="identifier">M1</span><span class="special">/</span><span class="identifier">d1</span><span class="special">)</span> <span class="special">&lt;</span> <span class="identifier">k</span> <span class="special">+</span> <span class="special">(</span><span class="identifier">M2</span><span class="special">/</span><span class="identifier">d2</span><span class="special">)</span>
+<span class="special">(</span><span class="identifier">M1</span><span class="special">/</span><span class="identifier">d1</span><span class="special">)</span> <span class="special">-</span> <span class="special">(</span><span class="identifier">M2</span><span class="special">/</span><span class="identifier">d2</span><span class="special">)</span> <span class="special">&lt;</span> <span class="identifier">k</span>
+</pre>
+<p>
+        which is always true, so the result is true.
+      </p>
+<p>
+        The following table recapitulates this analisys
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  ratio&lt;n1,d1&gt;
+                </p>
+              </th>
+<th>
+                <p>
+                  ratio&lt;n2,d2&gt;
+                </p>
+              </th>
+<th>
+                <p>
+                  Q1
+                </p>
+              </th>
+<th>
+                <p>
+                  Q2
+                </p>
+              </th>
+<th>
+                <p>
+                  M1
+                </p>
+              </th>
+<th>
+                <p>
+                  M2
+                </p>
+              </th>
+<th>
+                <p>
+                  Result
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  ratio&lt;n1,d1&gt;
+                </p>
+              </td>
+<td>
+                <p>
+                  ratio&lt;n2,d2&gt;
+                </p>
+              </td>
+<td>
+                <p>
+                  Q1
+                </p>
+              </td>
+<td>
+                <p>
+                  Q2
+                </p>
+              </td>
+<td>
+                <p>
+                  !=0
+                </p>
+              </td>
+<td>
+                <p>
+                  !=0
+                </p>
+              </td>
+<td>
+                <p>
+                  Odd ? Q2 &lt; Q1 : Q1 &lt; Q2
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  ratio&lt;n1,d1&gt;
+                </p>
+              </td>
+<td>
+                <p>
+                  ratio&lt;n2,d2&gt;
+                </p>
+              </td>
+<td>
+                <p>
+                  Q
+                </p>
+              </td>
+<td>
+                <p>
+                  Q
+                </p>
+              </td>
+<td>
+                <p>
+                  0
+                </p>
+              </td>
+<td>
+                <p>
+                  0
+                </p>
+              </td>
+<td>
+                <p>
+                  false
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  ratio&lt;n1,d1&gt;
+                </p>
+              </td>
+<td>
+                <p>
+                  ratio&lt;n2,d2&gt;
+                </p>
+              </td>
+<td>
+                <p>
+                  Q
+                </p>
+              </td>
+<td>
+                <p>
+                  Q
+                </p>
+              </td>
+<td>
+                <p>
+                  0
+                </p>
+              </td>
+<td>
+                <p>
+                  !=0
+                </p>
+              </td>
+<td>
+                <p>
+                  true
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  ratio&lt;n1,d1&gt;
+                </p>
+              </td>
+<td>
+                <p>
+                  ratio&lt;n2,d2&gt;
+                </p>
+              </td>
+<td>
+                <p>
+                  Q
+                </p>
+              </td>
+<td>
+                <p>
+                  Q
+                </p>
+              </td>
+<td>
+                <p>
+                  !=0
+                </p>
+              </td>
+<td>
+                <p>
+                  0
+                </p>
+              </td>
+<td>
+                <p>
+                  false
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  ratio&lt;n1,d1&gt;
+                </p>
+              </td>
+<td>
+                <p>
+                  ratio&lt;n2,d2&gt;
+                </p>
+              </td>
+<td>
+                <p>
+                  Q
+                </p>
+              </td>
+<td>
+                <p>
+                  Q
+                </p>
+              </td>
+<td>
+                <p>
+                  !=0
+                </p>
+              </td>
+<td>
+                <p>
+                  !=0
+                </p>
+              </td>
+<td>
+                <p>
+                  ratio_less&lt;ratio&lt;d2,M2&gt;, ratio&lt;d1/M1&gt;&gt;
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
 <a name="boost_ratio.appendices.faq"></a><a href="index.html#boost_ratio.appendices.faq" title=" Appendix D: FAQ"> Appendix D: FAQ</a>
@@ -2331,7 +2781,7 @@
 <a name="boost_ratio.appendices.todo"></a><a href="index.html#boost_ratio.appendices.todo" title=" Appendix H: Future plans"> Appendix H: Future plans</a>
 </h3></div></div></div>
 <a name="boost_ratio.appendices.todo.for_later_releases"></a><h4>
-<a name="id5013689"></a>
+<a name="id5017727"></a>
         <a href="index.html#boost_ratio.appendices.todo.for_later_releases">For later
         releases</a>
       </h4>
@@ -2343,7 +2793,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: September 23, 2010 at 05:36:54 GMT</small></p></td>
+<td align="left"><p><small>Last revised: September 23, 2010 at 10:28:54 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

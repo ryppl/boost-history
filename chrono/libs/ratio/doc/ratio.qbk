@@ -1054,7 +1054,178 @@ If the CopyConstruction and Assignment ([[@http://home.roadrunner.com/~hinnant/i
 
 When the result is representable, but a simple application of arithmetic rules would result in overflow, e.g. `ratio_multiply<ratio<INTMAX_MAX,2>,ratio<2,INTMAX_MAX>>` can be reduced to `ratio<1,1>`, but the direct result of `ratio<INTMAX_MAX*2,INTMAX_MAX*2>` would result in overflow. 
 
-Boost.Ratio implementes some simplifications in order to reduce the possibility of overflow. The general idea is to use the gcd of some of the possible products that can overflow, and simplify before doing the product.
+Boost.Ratio implementes some simplifications in order to reduce the possibility of overflow. The general ideas are:
+
+* The `num` and `den` `ratio<>` fields are normalized.
+* Use the gcd of some of the possible products that can overflow, and simplify before doing the product.
+* Use some equivalences relations that avoid addition or substraction can overflow or underflow.
+
+
+Next follows more detail:
+
+[*ratio_add]
+
+In 
+
+    (n1/d1)+(n2/d2)=(n1*d2+n2*d1)/(d1*d2)
+
+either n1*d2+n2*d1 or d1*d2 can overflow. 
+
+      ( (n1 * d2)  + (n2 * d1) )
+    / (d1 * d2)   
+
+Dividing by gcd(d1,d2) on both num and den
+
+      ( (n1 * (d2/gcd(d1,d2)))  + 
+        (n2 * (d1/gcd(d1,d2))) 
+      )
+    / ((d1 * d2) / gcd(d1,d2))  
+
+
+Multipliying and diving by gcd(n1,n2) in numerator
+
+      ( ((gcd(n1,n2)*(n1/gcd(n1,n2))) * (d2/gcd(d1,d2)))  + 
+        ((gcd(n1,n2)*(n2/gcd(n1,n2))) * (d1/gcd(d1,d2))) 
+      )
+    / ( (d1 * d2) / gcd(d1,d2) )
+
+Factorizing gcd(n1,n2)
+
+      ( gcd(n1,n2) * 
+        ( ((n1/gcd(n1,n2)) * (d2/gcd(d1,d2))) + ((n2/gcd(n1,n2)) * (d1/gcd(d1,d2))) )
+      )
+    / ( (d1 * d2) / gcd(d1,d2) )
+
+Regrouping
+
+      ( gcd(n1,n2) * 
+        ( ((n1/gcd(n1,n2)) * (d2/gcd(d1,d2))) + ((n2/gcd(n1,n2)) * (d1/gcd(d1,d2))) )
+      )
+    / ( (d1 / gcd(d1,d2)) * d2 )
+
+Dividing by (d1 / gcd(d1,d2))
+
+      ( ( gcd(n1,n2) / (d1 / gcd(d1,d2)) ) * 
+        ( ((n1/gcd(n1,n2)) * (d2/gcd(d1,d2))) + ((n2/gcd(n1,n2)) * (d1/gcd(d1,d2))) )
+      )
+    / d2
+
+
+Dividing by d2
+
+    ( gcd(n1,n2) / (d1 / gcd(d1,d2)) ) * 
+    ( ((n1/gcd(n1,n2)) * (d2/gcd(d1,d2))) + ((n2/gcd(n1,n2)) * (d1/gcd(d1,d2))) / d2 )
+
+This expression correspond to the multiply of two ratios that have less risk of overflow as the initial numerators and denomitators appear now in most of the cases divided by a gcd.
+
+
+For ratio_subtract the reasoning is the same
+
+[*ratio_multiply]
+
+In 
+
+    (n1/d1)*(n2/d2)=((n1*n2)/(d1*d2))
+
+either n1*n2 or d1*d2 can overflow. 
+
+Dividing by gcc(n1,d2) numerator and denominator
+
+        (((n1/gcc(n1,d2))*n2)
+    /   (d1*(d2/gcc(n1,d2))))
+
+Dividing by gcc(n2,d1)
+
+        ((n1/gcc(n1,d2))*(n2/gcc(n2,d1)))
+    /   ((d1/gcc(n2,d1))*(d2/gcc(n1,d2)))
+
+And now all the initial numerator and denominators have been reduced, avoiding the overflow.
+
+For ratio_divide the reasoning is similar.
+
+[*ratio_less]
+
+In order to evaluate 
+
+    (n1/d1)<(n2/d2)
+    
+without moving to floating point numbers, two techniques are used:
+
+* First compare the sign of the numerators
+
+If sign(n1) < sign(n2) the result is true.
+
+If sign(n1) == sign(n2) the result depends on the following after making the numerators positive
+
+* When the sign is equal the technique used is to work with integer division and modulo when the signs are equal.
+
+Let call Qi the integer division of ni and di and Mi the modulo of ni and di.
+
+    ni = Qi * di + Mi and Mi < di
+    
+Form
+
+    ((n1*d2)<(d1*n2))
+
+we get
+
+    (((Q1 * d1 + M1)*d2)<(d1*((Q2 * d2 + M2))))
+
+Developing
+
+    ((Q1 * d1 * d2)+ (M1*d2))<((d1 * Q2 * d2) + (d1*M2))
+    
+Dividing by d1*d2    
+
+    Q1 + (M1/d1) < Q2 + (M2/d2)
+
+If Q1=Q2 the result depends on
+
+    (M1/d1) < (M2/d2)
+
+If M1==0==M2 the result is false
+
+If M1=0 M2!=0 the result is true
+
+If M1!=0 M2==0 the result is false
+
+If M1!=0 M2!=0 the result depends on
+
+    (d2/M2) < (d1/M1)
+
+If Q1!=Q2, the result of
+
+    Q1 + (M1/d1) < Q2 + (M2/d2)
+
+depends only on Q1 and Q2 as Qi are integers and (Mi/di) <1 because Mi<di.
+
+if Q1>Q2, Q1==Q2+k, k>=1
+
+    Q2+k + (M1/d1) < Q2 + (M2/d2)
+    k + (M1/d1) < (M2/d2)
+    k < (M2/d2) - (M1/d1) 
+
+but the difference between two numbers between 0 and 1 can not be greater than 1, so the result is false.
+
+if Q2>Q1, Q2==Q1+k, k>=1
+
+    Q1 + (M1/d1) < Q1+k + (M2/d2)
+    (M1/d1) < k + (M2/d2)
+    (M1/d1) - (M2/d2) < k
+    
+which is always true, so the result is true.  
+
+The following table recapitulates this analisys
+
+[table
+    [[ratio<n1,d1>][ratio<n2,d2>] [Q1] [Q2] [M1] [M2] [Result]]
+    [[ratio<n1,d1>][ratio<n2,d2>] [Q1] [Q2] [!=0] [!=0] [Odd ? Q2 < Q1 : Q1 < Q2]]
+    [[ratio<n1,d1>][ratio<n2,d2>] [Q] [Q] [0] [0] [false]]
+    [[ratio<n1,d1>][ratio<n2,d2>] [Q] [Q] [0] [!=0] [true]]
+    [[ratio<n1,d1>][ratio<n2,d2>] [Q] [Q] [!=0] [0] [false]]
+    [[ratio<n1,d1>][ratio<n2,d2>] [Q] [Q] [!=0] [!=0] [ratio_less<ratio<d2,M2>, ratio<d1/M1>>]]
+]
+
 
 
 [endsect]
