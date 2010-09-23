@@ -19,19 +19,19 @@
     ]
 ]
 
-[template basic_lockable_req_link[link_text] [link boost_sync.reference.Locables.BasicLockable [link_text]]]
+[template basic_lockable_req_link[link_text] [link boost_sync.reference.Lockables.BasicLockable [link_text]]]
 [def __basic_lockable_req__ [basic_lockable_req_link `BasicLockable`]]
 
-[template lockable_req_link[link_text] [link boost_sync.reference.Locables.Lockable [link_text]]]
+[template lockable_req_link[link_text] [link boost_sync.reference.Lockables.TryLockable [link_text]]]
 [def __lockable_req__ [lockable_req_link `Lockable`]]
 
 
 [def __lock_guard__ [link boost_sync.reference.locks_hpp.lock_guard_hpp `lock_guard`]]
 
-[template lock_ref_link[link_text] [link boost_sync.reference.Locables.BasicLockable [link_text]]]
+[template lock_ref_link[link_text] [link boost_sync.reference.Lockables.BasicLockable [link_text]]]
 [def __lock_ref__ [lock_ref_link `lock()`]]
 
-[template unlock_ref_link[link_text] [link boost_sync.reference.Locables.BasicLockable [link_text]]]
+[template unlock_ref_link[link_text] [link boost_sync.reference.Lockables.BasicLockable [link_text]]]
 [def __unlock_ref__ [unlock_ref_link `unlock()`]]
 
 
@@ -77,17 +77,17 @@ The goal of Boost.Sync is to remove the syntactic differences between the synchr
 
 The differences I have identified up to now are:
 
-    * The scoped locks can be initialized with static const variables in order to overload the constructor for lock adoption, lock deferral or try to lock. Even if the name of these variables is almost the same, these variables live in different namespace. It would be nice if both libraries use the same type and the same variables. 
+* The scoped locks can be initialized with static const variables in order to overload the constructor for lock adoption, lock deferral or try to lock. Even if the name of these variables is almost the same, these variables live in different namespace. It would be nice if both libraries use the same type and the same variables. 
 
-    * The shared mutex provide similar service with different names. In addition each implementation provide some functions that are not provided by the other. 
+* The shared mutex provide similar service with different names. In addition each implementation provide some functions that are not provided by the other. 
 
-    * The scoped locks live in a different namespace and some have different names with the same semantic. IMO these should be shared. 
+* The scoped locks live in a different namespace and some have different names with the same semantic. IMO these should be shared. 
 
-    * The exception thrown lives in a different name space and different names with equivalent semantics If we follow the C++0x standard the exception to throw should be system_error. Both libraries could adapt his hierarchy to Boost.System. The drawback is that users of Boost.Thread and Boost.Interprocess will need to link with Boost.System which is not a header only library. 
+* The exception thrown lives in a different name space and different names with equivalent semantics If we follow the C++0x standard the exception to throw should be system_error. Both libraries could adapt his hierarchy to Boost.System. The drawback is that users of Boost.Thread and Boost.Interprocess will need to link with Boost.System which is not a header only library. 
 
-    * The move semantics (&&) of Boost.Thread should be adapted to the forthcoming Boost.Move library as soon as integrated on the release branch. Boost.Interprocess uses already a detail implementation equivalent to the provided by Boost.Move, so the change will be simpler. 
+* The move semantics (&&) of Boost.Thread should be adapted to the forthcoming Boost.Move library as soon as integrated on the release branch. Boost.Interprocess uses already a detail implementation equivalent to the provided by Boost.Move, so the change will be simpler. 
 
-    * Adapt both libraries interface to use Boost.Chrono, which is yet a non header only library, once it is accepted. 
+* Adapt both libraries interface to use Boost.Chrono, which is yet a non header only library, once it is accepted. 
 
 Of course, this needs some adaptation of the Thread and Interprocess libraries.
 
@@ -446,7 +446,7 @@ The user can now check staticaly that the template parameter is a model of Basic
         // ...
     };
 
-The same can be done for `TimedLockableConcept`, `ShareLockableConcept` and `UpgradeLockableConcept` (See the reference section for more details).
+The same can be done for `TimedLockableConcept`, `SharedLockableConcept` and `UpgradeLockableConcept` (See the reference section for more details).
 
 [endsect]
 
@@ -668,7 +668,7 @@ The same can be done for `TimedLockableConcept`, `ShareLockableConcept` and `Upg
 [endsect]
 
 [/===========================================]
-[section:Locables Requirements for Lockable types ]
+[section:Lockables Requirements for Lockable types ]
 [/===========================================]
 
 A concurrent agent is a an entity (such as a thread, process, or packaged task) that may perform work in parallel with other concurrent agents. The calling agent is determined by context, e.g. the calling thread or the packaged task that contains the call, etc.
@@ -820,9 +820,9 @@ The expression `m.try_lock_shared_until(abs_time)` shall be well-formed and have
         template <typename Lockable> struct BasicLockableConcept;
         template <typename Lockable> struct LockableConcept;
         template <typename Lockable> struct TimedLockableConcept;
-        template <typename Lockable> struct ShareBasicLockableConcept;
-        template <typename Lockable> struct ShareLockableConcept;
-        template <typename Lockable> struct ShareTimedLockableConcept;
+        template <typename Lockable> struct SharedBasicLockableConcept;
+        template <typename Lockable> struct SharedLockableConcept;
+        template <typename Lockable> struct SharedTimedLockableConcept;
         template <typename Lockable> struct UpgradeBasicLockableConcept;
         template <typename Lockable> struct UpgradeLockableConcept;
         template <typename Lockable> struct UpgradeTimedLockableConcept;
@@ -892,15 +892,15 @@ The `ExclusiveLockableConcept` class can be used with the Boost.ConceptCheck in 
     };
 
 [endsect]
-[section:ShareBasicLockableConcept Template Class `ShareBasicLockableConcept<>`]
+[section:SharedBasicLockableConcept Template Class `SharedBasicLockableConcept<>`]
 
-`ShareBasicLockableConcept` object extends `BasicLockableConcept` with the `lock_shared` and `unlock_shared` functions
+`SharedBasicLockableConcept` object extends `BasicLockableConcept` with the `lock_shared` and `unlock_shared` functions
 
     template <typename Lockable>
-    struct ShareBasicLockableConcept {
+    struct SharedBasicLockableConcept {
         BOOST_CONCEPT_ASSERT((BasicLockableConcept<Lockable>));
 
-        BOOST_CONCEPT_USAGE(ShareBasicLockableConcept) {
+        BOOST_CONCEPT_USAGE(SharedBasicLockableConcept) {
             l.lock_shared();
             l.unlock_shared();
         }
@@ -909,16 +909,16 @@ The `ExclusiveLockableConcept` class can be used with the Boost.ConceptCheck in 
 
 
 [endsect]
-[section:ShareLockableConcept Template Class `ShareLockableConcept<>`]
+[section:SharedLockableConcept Template Class `SharedLockableConcept<>`]
 
-`ShareLockableConcept` object extends `ShareBasicLockableConcept` and `LockableConcept` with the `try_lock_shared` functions.
+`SharedLockableConcept` object extends `SharedBasicLockableConcept` and `LockableConcept` with the `try_lock_shared` functions.
 
     template <typename Lockable>
-    struct ShareLockableConcept {
-        BOOST_CONCEPT_ASSERT((ShareBasicLockableConcept<Lockable>));
+    struct SharedLockableConcept {
+        BOOST_CONCEPT_ASSERT((SharedBasicLockableConcept<Lockable>));
         BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
 
-        BOOST_CONCEPT_USAGE(ShareLockableConcept) {
+        BOOST_CONCEPT_USAGE(SharedLockableConcept) {
             b=l=.try_lock_shared();
         }
         Lockable l;
@@ -928,16 +928,16 @@ The `ExclusiveLockableConcept` class can be used with the Boost.ConceptCheck in 
 
 
 [endsect]
-[section:ShareTimedLockableConcept Template Class `ShareTimedLockableConcept<>`]
+[section:SharedTimedLockableConcept Template Class `SharedTimedLockableConcept<>`]
 
-`ShareTimedLockableConcept` object extends `ShareBasicLockableConcept` and  `LockableConcept` with the `try_lock_shared_until` and `try_lock_shared_for` functions
+`SharedTimedLockableConcept` object extends `SharedBasicLockableConcept` and  `LockableConcept` with the `try_lock_shared_until` and `try_lock_shared_for` functions
 
     template <typename Lockable>
-    struct ShareLockableConcept {
-        BOOST_CONCEPT_ASSERT((ShareBasicLockableConcept<Lockable>));
+    struct SharedLockableConcept {
+        BOOST_CONCEPT_ASSERT((SharedBasicLockableConcept<Lockable>));
         BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
 
-        BOOST_CONCEPT_USAGE(ShareLockableConcept) {
+        BOOST_CONCEPT_USAGE(SharedLockableConcept) {
             b=l.try_lock_shared_until(t);
             b=l.try_lock_shared_for(boost::chrono::seconds(1));
         }
