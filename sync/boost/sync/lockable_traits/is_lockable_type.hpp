@@ -19,9 +19,9 @@ namespace boost
     struct is_mutex_type
     {
         BOOST_STATIC_CONSTANT(bool, value = 
-            detail::has_member_lock<T>::value &&
-            detail::has_member_unlock<T>::value &&
-            detail::has_member_try_lock<T>::value);
+            boost::sync::detail::has_member_lock<T>::value &&
+            boost::sync::detail::has_member_unlock<T>::value &&
+            boost::sync::detail::has_member_try_lock<T>::value);
         
     };
 #else

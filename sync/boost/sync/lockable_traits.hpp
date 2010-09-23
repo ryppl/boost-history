@@ -13,6 +13,7 @@
 
 #include <boost/type_traits.hpp>
 #include <boost/mpl/or.hpp>
+#include <boost/sync/lockable_traits/is_lockable.hpp>
 
 namespace boost { namespace sync {
 

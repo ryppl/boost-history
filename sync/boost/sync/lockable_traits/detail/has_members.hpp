@@ -10,9 +10,12 @@
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/type_traits/is_class.hpp>
+#include <boost/date_time/posix_time/ptime.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 
 namespace boost
 {
+    namespace sync {
 
 #ifndef BOOST_SYNC_NO_AUTO_DETECT_TYPES
 #if defined(BOOST_NO_SFINAE) ||                           \
@@ -59,9 +62,17 @@ namespace boost
                 bool, value=sizeof(has_member<derived>(0))==sizeof(true_type)); \
         }
 
+        typedef char true_type;
+        struct false_type
+        {
+            true_type dummy[2];
+        };
+
         BOOST_DEFINE_HAS_MEMBER_CALLED(lock);
         BOOST_DEFINE_HAS_MEMBER_CALLED(unlock);
         BOOST_DEFINE_HAS_MEMBER_CALLED(try_lock);
+        BOOST_DEFINE_HAS_MEMBER_CALLED(try_lock_until);
+        BOOST_DEFINE_HAS_MEMBER_CALLED(try_lock_for);
 
         template<typename T,bool=has_member_called_lock<T>::value >
         struct has_member_lock
@@ -72,11 +83,6 @@ namespace boost
         template<typename T>
         struct has_member_lock<T,true>
         {
-            typedef char true_type;
-            struct false_type
-            {
-                true_type dummy[2];
-            };
             
             template<typename U,typename V>
             static true_type has_member(V (U::*)());
@@ -96,11 +102,6 @@ namespace boost
         template<typename T>
         struct has_member_unlock<T,true>
         {
-            typedef char true_type;
-            struct false_type
-            {
-                true_type dummy[2];
-            };
             
             template<typename U,typename V>
             static true_type has_member(V (U::*)());
@@ -120,11 +121,6 @@ namespace boost
         template<typename T>
         struct has_member_try_lock<T,true>
         {
-            typedef char true_type;
-            struct false_type
-            {
-                true_type dummy[2];
-            };
             
             template<typename U>
             static true_type has_member(bool (U::*)());
@@ -135,11 +131,19 @@ namespace boost
                 bool,value=sizeof(has_member_try_lock<T>::has_member(&T::try_lock))==sizeof(true_type));
         };
 
+
+        
+        template<typename T>
+        struct has_member_try_lock_until : boost::false_type {};
+
+        template<typename T>
+        struct has_member_try_lock_for : boost::false_type {};
+        
     }
     
 #endif    
 
-    
+}    
 }
 
 

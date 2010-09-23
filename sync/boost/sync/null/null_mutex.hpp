@@ -14,6 +14,7 @@
 
 #include <boost/sync/lockable_traits.hpp>
 //~ #include <boost/chrono/chrono.hpp>
+#include <boost/sync/lockable_traits/detail/has_members.hpp>
 
 //!\file
 //!Describes null_mutex classes
@@ -227,6 +228,14 @@ public:
    {  return true;   }
 };
 
+
+// this is needed because we can not detect if a class has a template function.
+namespace detail {
+    template<>
+    struct has_member_try_lock_until<null_mutex> : boost::true_type {};
+    template<>
+    struct has_member_try_lock_for<null_mutex> : boost::true_type {};
+}
 
 }
 }
