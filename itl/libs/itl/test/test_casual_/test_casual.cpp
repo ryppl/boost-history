@@ -92,7 +92,6 @@ BOOST_AUTO_TEST_CASE(digits_to_check_numerics) //JODO Proto: properties of infin
 BOOST_AUTO_TEST_CASE(interval_type_traits)
 {
     BOOST_CHECK_EQUAL(is_interval<continuous_interval<int> >::value, true);
-    BOOST_CHECK_EQUAL(is_continuous_interval<continuous_interval<int> >::value, false);
     BOOST_CHECK_EQUAL(is_continuous_interval<continuous_interval<double> >::value, true);
 
     BOOST_CHECK_EQUAL((is_interval_set<interval_map<int,int> >::value), false);
@@ -232,6 +231,10 @@ BOOST_AUTO_TEST_CASE(casual)
 	BOOST_CHECK_EQUAL((is_map<MapII>::value), true);
 	BOOST_CHECK_EQUAL((is_icl_container<MapII>::value), true);
 
+	BOOST_CHECK_EQUAL((is_fragment_of<IntervalSetT::element_type, IntervalSetT>::value), true);
+	BOOST_CHECK_EQUAL((is_fragment_of<IntervalSetT::segment_type, IntervalSetT>::value), true);
+	BOOST_CHECK_EQUAL((is_fragment_of<discrete_interval<T>, IntervalSetT>::value), true);
+	BOOST_CHECK_EQUAL((is_fragment_of<double, IntervalSetT>::value), false);
 
 	//BOOST_CHECK_EQUAL(xx, true); 
 		                        

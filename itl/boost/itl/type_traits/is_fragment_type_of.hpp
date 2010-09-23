@@ -14,7 +14,7 @@ namespace boost{ namespace itl
 {
 
 
-template<class CompanionT, class GuideT>
+template<class CompanionT, class GuideT>//CL unused
 struct is_interval_map_fragment_type_of //JODO equivalent to is_interval_map_right_intra_combinable
 {                                       //JODO generalize
     typedef is_interval_map_fragment_type_of<CompanionT, GuideT> type;

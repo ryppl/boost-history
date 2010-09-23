@@ -23,6 +23,7 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/detail/concept_check.hpp>
+#include <boost/itl/detail/on_neutric.hpp>
 #include <boost/itl/type_traits/is_map.hpp>
 #include <boost/itl/type_traits/absorbs_neutrons.hpp>
 #include <boost/itl/type_traits/is_total.hpp>
@@ -33,13 +34,10 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/itl/predicates.hpp>
 #include <boost/itl/set.hpp>
 
-#include <boost/itl/functions/container.hpp>
-#include <boost/itl/functions/icl_container.hpp>
-#include <boost/itl/functions/associative_element_container.hpp>
 #include <boost/itl/detail/map_algo.hpp>
-//CL #include <boost/itl/detail/map_functors.hpp>
-#include <boost/itl/map_functions.hpp>
-
+#include <boost/itl/concept/abstract/container.hpp>
+#include <boost/itl/concept/element/map.hpp>
+#include <boost/itl/concept/element/set_or_map.hpp>
 
 namespace boost{namespace itl
 {
@@ -136,17 +134,8 @@ public:
     BOOST_STATIC_CONSTANT(bool, 
         total_invertible = (mpl::and_<is_total<type>, has_inverse<codomain_type> >::value));
 
-    typedef map_add<type,codomain_combine,_absorbs>     add_;  
-    typedef map_subtract<type,total_invertible>         subtract_;  
-
-    typedef map_insert<type,codomain_combine,_absorbs>  insert_;  
-    typedef map_erase<type,codomain_combine,_absorbs>   erase_;  
-
-    typedef map_add_intersection<type,_total>           add_intersection_;  
-    typedef map_inplace_intersect<type,_total>          inplace_intersect_;  
-    typedef map_intersects<type,_total>                 intersects_;  
-
-    typedef map_flip<type,_total,_absorbs>              flip_;  
+    typedef on_neutric<type,codomain_combine,Traits::absorbs_neutrons> 
+                                                        on_neutron_absorbtion;
 
 public:
     typedef typename base_type::pointer                 pointer;
@@ -159,8 +148,13 @@ public:
     typedef typename base_type::difference_type         difference_type;
     typedef typename base_type::reverse_iterator        reverse_iterator;
     typedef typename base_type::const_reverse_iterator  const_reverse_iterator;
-    
-    enum { fineness = 4 };
+
+public:
+    BOOST_STATIC_CONSTANT(bool, 
+        is_total_invertible = (   Traits::is_total 
+                               && has_inverse<codomain_type>::value));
+
+    BOOST_STATIC_CONSTANT(int, fineness = 4); 
 
 public:
     //==========================================================================
@@ -262,7 +256,7 @@ public:
     }
 
     //==========================================================================
-    //= Addition, subtraction
+    //= Addition
     //==========================================================================
     /** \c add inserts \c value_pair into the map if it's key does 
         not exist in the map.    
@@ -270,26 +264,52 @@ public:
         value is added to the data value already found in the map. */
     map& add(const value_type& value_pair) 
     { 
-        return itl::add(*this, value_pair); 
+        return _add<codomain_combine>(value_pair); 
     }
 
     /** \c add add \c value_pair into the map using \c prior as a hint to
         insert \c value_pair after the position \c prior is pointing to. */
     iterator add(iterator prior, const value_type& value_pair) 
     { 
-        return itl::add(*this, prior, value_pair); 
+        return _add<codomain_combine>(prior, value_pair); 
     }
 
+    //==========================================================================
+    //= Subtraction
+    //==========================================================================
     /** If the \c value_pair's key value is in the map, it's data value is
         subtraced from the data value stored in the map. */
-    map& subtract(const value_type& value_pair)
+    map& subtract(const element_type& value_pair)
     {
-        return itl::subtract(*this, value_pair);
+        on_invertible<type, is_total_invertible>
+            ::subtract(*this, value_pair);
+        return *this;
+    }
+
+    map& subtract(const domain_type& key)
+    {
+        itl::erase(*this, key);
+        return *this;
     }
 
     //==========================================================================
     //= Insertion, erasure
     //==========================================================================
+    std::pair<iterator,bool> insert(const value_type& value_pair)
+    {
+        if(on_neutron_absorbtion::is_absorbable(value_pair.second)) 
+            return std::pair<iterator,bool>(end(),true);
+        else
+            return base_type::insert(value_pair);
+    }
+    
+    iterator insert(iterator prior, const value_type& value_pair)
+    {
+        if(on_neutron_absorbtion::is_absorbable(value_pair.second)) 
+            return end();
+        else
+            return base_type::insert(prior, value_pair);
+    }
 
     /** With <tt>key_value_pair = (k,v)</tt> set value \c v for key \c k */
     map& set(const element_type& key_value_pair)
@@ -300,16 +320,23 @@ public:
 
     /** erase \c key_value_pair from the map.
         Erase only if, the exact value content \c val is stored for the given key. */
-    size_type erase(const element_type& key_value_pair);
+    size_type erase(const element_type& key_value_pair)
+    { return itl::erase(*this, key_value_pair); }
 
     //==========================================================================
     //= Intersection
     //==========================================================================
+    /** The intersection of \c key_value_pair and \c *this map is added to \c section. */
+    void add_intersection(map& section, const element_type& key_value_pair)const
+    {
+        on_definedness<type, Traits::is_total>
+            ::add_intersection(section, *this, key_value_pair);
+    }
 
     /** The intersection of \c operand in \c *this map is added to \c section. */
-    template<class OperandT>
-    map& add_intersection(map& section, const OperandT& operand)const
-    { return itl::add_intersection(section, *this, operand); }
+    //CL template<class OperandT>
+    //map& add_intersection(map& section, const OperandT& operand)const
+    //{ return itl::add_intersection(section, *this, operand); }
 
     /** Returns true, if there is an intersection of \c operand and \c *this map. */
     template<class OperandT>
@@ -323,8 +350,8 @@ public:
     //==========================================================================
 
     map& flip(const element_type& operand)
-    { 
-        return itl::flip(*this, operand); 
+    {
+        return on_total_absorbable<type,_total,_absorbs>::flip(*this, operand);
     }
 
     //==========================================================================
@@ -357,9 +384,287 @@ public:
         ITL_const_FORALL_THIS(it_)
             prior_ = domain_set.insert(prior_, it_->first);
     }
+
+private:
+    template<class Combiner>
+    map& _add(const element_type& value_pair);
+
+    template<class Combiner>
+    iterator _add(iterator prior, const element_type& value_pair);
+
+    template<class Combiner>
+    map& _subtract(const element_type& value_pair);
+
+    template<class FragmentT>
+    void total_add_intersection(type& section, const FragmentT& fragment)const
+    {
+        section += *this;
+        section.add(fragment);
+    }
+
+    void partial_add_intersection(type& section, const element_type& operand)const
+    {
+        const_iterator it_ = find(operand.first);
+        if(it_ != end())
+        {
+            section.template _add<codomain_combine  >(*it_);
+            section.template _add<codomain_intersect>(operand); 
+        }
+    }
+
+
+private:
+    //--------------------------------------------------------------------------
+    template<class Type, bool is_total_invertible>
+    struct on_invertible;
+
+    template<class Type>
+    struct on_invertible<Type, true>
+    {
+        typedef typename Type::element_type element_type;
+        typedef typename Type::inverse_codomain_combine inverse_codomain_combine;
+
+        static void subtract(Type& object, const element_type& operand)
+        { object.template _add<inverse_codomain_combine>(operand); }
+    };
+
+    template<class Type>
+    struct on_invertible<Type, false>
+    {
+        typedef typename Type::element_type element_type;
+        typedef typename Type::inverse_codomain_combine inverse_codomain_combine;
+
+        static void subtract(Type& object, const element_type& operand)
+        { object.template _subtract<inverse_codomain_combine>(operand); }
+    };
+
+    friend struct on_invertible<type, true>;
+    friend struct on_invertible<type, false>;
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
+    template<class Type, bool is_total>
+    struct on_definedness;
+
+    template<class Type>
+    struct on_definedness<Type, true>
+    {
+        static void add_intersection(Type& section, const Type& object, 
+                                     const element_type& operand)
+        { object.total_add_intersection(section, operand); }
+    };
+
+    template<class Type>
+    struct on_definedness<Type, false>
+    {
+        static void add_intersection(Type& section, const Type& object, 
+                                     const element_type& operand)
+        { object.partial_add_intersection(section, operand); }
+    };
+
+    friend struct on_definedness<type, true>;
+    friend struct on_definedness<type, false>;
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
+    template<class Type, bool has_set_semantics, bool absorbs_neutrons>
+    struct on_codomain_model;
+
+    template<class Type>
+    struct on_codomain_model<Type, false, false>
+    {                // !codomain_is_set, !absorbs_neutrons
+        static void subtract(Type& object, typename Type::iterator       it_, 
+                                     const typename Type::codomain_type&     )
+        { it_->second = neutron<typename Type::codomain_type>::value(); }
+    };
+
+    template<class Type>
+    struct on_codomain_model<Type, false, true>
+    {                // !codomain_is_set, absorbs_neutrons
+        static void subtract(Type& object, typename Type::iterator       it_, 
+                                     const typename Type::codomain_type&     )
+        { object.erase(it_); }
+    };
+
+    template<class Type>
+    struct on_codomain_model<Type, true, false>
+    {                // !codomain_is_set, !absorbs_neutrons
+        typedef typename Type::inverse_codomain_intersect inverse_codomain_intersect;
+        static void subtract(Type& object, typename Type::iterator       it_, 
+                                     const typename Type::codomain_type& co_value)
+        { 
+            inverse_codomain_intersect()(it_->second, co_value); 
+        }
+    };
+
+    template<class Type>
+    struct on_codomain_model<Type, true, true>
+    {                // !codomain_is_set, absorbs_neutrons
+        typedef typename Type::inverse_codomain_intersect inverse_codomain_intersect;
+        static void subtract(Type& object, typename Type::iterator       it_, 
+                                     const typename Type::codomain_type& co_value)
+        { 
+            inverse_codomain_intersect()(it_->second, co_value); 
+            if(it_->second == neutron<codomain_type>::value())
+                object.erase(it_);
+        }
+    };
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
+    template<class Type, bool is_total, bool absorbs_neutrons>
+    struct on_total_absorbable;
+
+    template<class Type>
+    struct on_total_absorbable<Type, true, true>
+    {
+        typedef typename Type::element_type  element_type;
+        static Type& flip(Type& object, const typename Type::element_type&)
+        { itl::clear(object); return object; }
+    };
+
+    template<class Type>
+    struct on_total_absorbable<Type, true, false>
+    {
+        typedef typename Type::element_type  element_type;
+        typedef typename Type::codomain_type codomain_type;
+
+        static Type& flip(Type& object, const element_type& operand)
+        { 
+            object.add(operand);
+            ITL_FORALL(typename Type, it_, object)//JODO URG sollte man vorher abfangen
+                it_->second = neutron<codomain_type>::value();
+
+            return object;
+        }
+    };
+
+    template<class Type>
+    struct on_total_absorbable<Type, false, true>
+    {                         // !is_total, absorbs_neutrons
+        typedef typename Type::element_type   element_type;
+        typedef typename Type::codomain_type  codomain_type;
+        typedef typename Type::iterator       iterator;
+        typedef typename Type::inverse_codomain_intersect inverse_codomain_intersect;
+
+        static Type& flip(Type& object, const element_type& operand)
+        {
+            std::pair<iterator,bool> insertion = object.insert(operand);
+            if(!insertion.second)
+                on_codomain_model<Type, has_set_semantics<codomain_type>::value, true>
+                ::subtract(object, insertion.first, operand.second);
+
+            return object; //JODO return of Type& not necessary
+        }
+    };
+
+    template<class Type>
+    struct on_total_absorbable<Type, false, false>
+    {                         // !is_total  !absorbs_neutrons
+        typedef typename Type::element_type   element_type;
+        typedef typename Type::codomain_type  codomain_type;
+        typedef typename Type::iterator       iterator;
+        typedef typename Type::inverse_codomain_intersect inverse_codomain_intersect;
+
+        static Type& flip(Type& object, const element_type& operand)
+        {
+            std::pair<iterator,bool> insertion = object.insert(operand);
+            if(!insertion.second)
+                on_codomain_model<Type, has_set_semantics<codomain_type>::value, false>
+                ::subtract(object, insertion.first, operand.second);
+
+            return object; //JODO return of Type& not necessary
+        }
+    };
+
+    friend struct on_total_absorbable<type, true,  true >;
+    friend struct on_total_absorbable<type, false, true >;
+    friend struct on_total_absorbable<type, true,  false>;
+    friend struct on_total_absorbable<type, false, false>;
+    //--------------------------------------------------------------------------
 };
 
 
+
+//==============================================================================
+//= Addition<ElementMap>
+//==============================================================================
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    template <class Combiner>
+map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
+    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+    ::_add(const element_type& addend)
+{
+    typedef typename on_neutric
+        <type,Combiner,absorbs_neutrons<type>::value>::type on_neutric_;
+
+    const codomain_type& co_val    = addend.second;
+    if(on_neutric_::is_absorbable(co_val))
+        return *this;
+
+    std::pair<iterator,bool> insertion 
+        = base_type::insert(value_type(addend.first, version<Combiner>()(co_val)));
+
+    if(!insertion.second)
+    {
+        iterator it = insertion.first;
+        Combiner()((*it).second, co_val);
+
+        if(on_neutric_::is_absorbable((*it).second))
+            erase(it);
+    }
+    return *this;
+}
+
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    template <class Combiner>
+typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
+    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+    ::_add(iterator prior_, const value_type& addend)
+{
+    typedef typename on_neutric
+        <type,Combiner,absorbs_neutrons<type>::value>::type on_neutric_;
+
+    const codomain_type& co_val    = addend.second;
+    if(on_neutric_::is_absorbable(co_val))
+        return end();
+
+    iterator inserted_ 
+        = base_type::insert(prior_, 
+                            value_type(addend.first, Combiner::neutron()));
+    Combiner()(inserted_->second, addend.second);
+
+    if(on_neutric_::is_absorbable(inserted_->second))
+    {
+        erase(inserted_);
+        return end();
+    }
+    else
+        return inserted_;
+}
+
+
+//==============================================================================
+//= Subtraction<ElementMap>
+//==============================================================================
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    template <class Combiner>
+map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
+    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::_subtract(const value_type& minuend)
+{
+    typedef typename on_neutric
+        <type,Combiner,absorbs_neutrons<type>::value>::type on_neutric_;
+
+    iterator it_ = find(minuend.first);
+    if(it_ != end())
+    {
+        Combiner()(it_->second, minuend.second);
+        if(on_neutric_::is_absorbable(it_->second))
+            erase(it_);
+    }
+    return *this;
+}
 
 
 //-----------------------------------------------------------------------------

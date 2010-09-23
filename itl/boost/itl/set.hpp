@@ -26,15 +26,15 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/itl/detail/subset_comparer.hpp>
 #include <boost/itl/detail/set_algo.hpp>
 #include <boost/itl/predicates.hpp>
-#include <boost/itl/set_functions.hpp>
 #include <boost/mpl/or.hpp> 
 #include <boost/mpl/not.hpp> 
 #include <boost/type_traits/is_same.hpp>
 
-#include <boost/itl/functions/container.hpp>
-#include <boost/itl/functions/icl_container.hpp>
-#include <boost/itl/functions/associative_element_container.hpp>
-#include <boost/itl/set_functions.hpp>
+#include <boost/itl/concept/abstract/container.hpp>
+#include <boost/itl/concept/element/set.hpp>
+#include <boost/itl/concept/element/set_or_map.hpp>
+#include <boost/itl/concept/abstract/comparable.hpp>
+
 
 namespace boost{namespace itl
 {

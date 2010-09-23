@@ -82,7 +82,7 @@ subtract(Type&, const typename Type::segment_type&);
 //------------------------------------------------------------------------------
 template<class Type>
 typename enable_if<is_interval_set<Type>, void>::type
-add_intersection(Type&, const Type&, const typename Type::domain_type&);
+add_intersection(Type&, const Type&, const typename Type::element_type&);
 
 template<class Type>
 typename enable_if<is_interval_set<Type>, void>::type
@@ -374,8 +374,8 @@ public:
     //= Insertion, erasure
     //==========================================================================
 
-    std::pair<iterator,bool> _insert(const value_type& value){ return this->_set.insert(value); }
-    iterator _insert(iterator prior, const value_type& value){ return this->_set.insert(prior, value); }
+    //CL std::pair<iterator,bool> _insert(const value_type& value){ return this->_set.insert(value); } //CL
+    //CL iterator _insert(iterator prior, const value_type& value){ return this->_set.insert(prior, value); } //CL
 
 
     /** Insert an element \c key into the set */

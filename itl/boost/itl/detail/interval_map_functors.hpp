@@ -20,7 +20,7 @@ namespace boost{namespace itl
 //=P Containment
 //==============================================================================
 
-
+/*CL
 template<class MapT>
 struct interval_map_contains
 {
@@ -134,6 +134,8 @@ struct interval_map_contains_key<MapT, false>
         return Interval_Set::within(sub, super);
     }
 };
+CL delete whole file
+*/
 
 }} // namespace itl boost
 

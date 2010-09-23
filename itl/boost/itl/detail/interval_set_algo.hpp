@@ -245,6 +245,7 @@ contains(const LeftT& super, const RightT& sub)
     return result == inclusion::superset || result == inclusion::equal;
 }
 
+/*CL
 //JODO check if this is still needed
 template<class IntervalContainerT>
 bool contains(const IntervalContainerT& container, 
@@ -264,7 +265,7 @@ bool contains(const IntervalContainerT& container,
           itl::contains(hull(*(exterior.first), *last_overlap), sub_interval)
       &&  Interval_Set::is_joinable(container, exterior.first, last_overlap);
 }
-
+*/
 
 template<class IntervalContainerT>
 bool is_dense(const IntervalContainerT& container, 

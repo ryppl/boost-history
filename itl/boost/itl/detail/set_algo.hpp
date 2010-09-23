@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Copyright (c) 2007-2009: Joachim Faulhaber
+Copyright (c) 2007-2010: Joachim Faulhaber
 +------------------------------------------------------------------------------+
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 +------------------------------------------------------------------------------+
@@ -24,145 +24,150 @@ used with other set-implementations like e.g. hash_set.
 namespace boost{namespace itl
 {
 
-    namespace Set
+namespace Set
+{
+
+template<class ObjectT, class ConstObjectT, class IteratorT>
+bool common_range(IteratorT& lwb, IteratorT& upb, ObjectT& x1, const ConstObjectT& x2)
+{
+    // lwb and upb are iterator of x1 marking the lower and upper bound of
+    // the common range of x1 and x2.
+    typedef typename ConstObjectT::const_iterator ConstObject_iterator;
+
+    lwb = x1.end();
+    upb = x1.end();
+
+    //JODO gcc.3.4.4 :(  if(itl::is_empty(x1) || itl::is_empty(x2)) 
+    if(x1.empty() || x2.empty()) 
+        return false;
+
+    IteratorT x1_fst_ = x1.begin();
+    IteratorT x1_lst_ = x1.end(); x1_lst_--;
+
+    ConstObject_iterator x2_fst_ = x2.begin();
+    ConstObject_iterator x2_lst_ = x2.end(); x2_lst_--;
+
+    typename ObjectT::key_compare key_less;
+
+    if(key_less(ObjectT::key_value(x1_lst_), ConstObjectT::key_value(x2_fst_))) // {x1}   {x2}
+        return false;
+    if(key_less(ConstObjectT::key_value(x2_lst_), ObjectT::key_value(x1_fst_))) // {x2}   {x1} 
+        return false;
+
+    // We do have a common range
+    lwb = x1.lower_bound(ConstObjectT::key_value(x2_fst_));
+    upb = x1.upper_bound(ConstObjectT::key_value(x2_lst_));
+
+    return true;
+}
+
+template<class ObjectT>
+ObjectT& add(ObjectT& result, const ObjectT& x2)
+{
+    if(&result == &x2)
+        return result;
+
+    typedef typename ObjectT::const_iterator Object_const_iterator;
+    typename ObjectT::iterator prior_ = result.end();
+    for(Object_const_iterator x2_ = x2.begin(); x2_ != x2.end(); x2_++)
+        prior_ = add(result, prior_, *x2_);
+
+    return result;
+}
+
+
+template<class ObjectT, class CoObjectT>
+ObjectT& subtract(ObjectT& result, const CoObjectT& x2)
+{
+    typename CoObjectT::const_iterator common_lwb_, common_upb_;
+    if(!common_range(common_lwb_, common_upb_, x2, result))
+        return result;
+
+    typename CoObjectT::const_iterator x2_ = common_lwb_;
+    typename ObjectT::iterator common_;
+
+    while(x2_ != common_upb_)
+        result.subtract(*x2_++);
+
+    return result;
+}
+
+template<class ObjectT, class CoObjectT>
+ObjectT& erase(ObjectT& result, const CoObjectT& x2)
+{
+    typename CoObjectT::const_iterator common_lwb_;
+    typename CoObjectT::const_iterator common_upb_;
+    if(!common_range(common_lwb_, common_upb_, x2, result))
+        return result;
+
+    typename CoObjectT::const_iterator x2_ = common_lwb_;
+    typename ObjectT::iterator common_;
+
+    while(x2_ != common_upb_)
+        result.erase(*x2_++);
+
+    return result;
+}
+
+
+/** Function template <tt>contained_in</tt> implements the subset relation. 
+<tt>contained_in(sub, super)</tt> is true if <tt>sub</tt> is contained in <tt>super</tt> */
+template<class SetType>
+bool within(const SetType& sub, const SetType& super)
+{
+    if(&super == &sub)                   return true;
+    if(itl::is_empty(sub))               return true;
+    if(itl::is_empty(super))             return false;
+
+    typename SetType::const_iterator common_lwb_, common_upb_;
+    if(!common_range(common_lwb_, common_upb_, sub, super))
+        return false;
+
+    typename SetType::const_iterator sub_ = common_lwb_, super_;
+    while(sub_ != common_upb_)
     {
+        super_ = super.find(*sub_++);
+        if(super_ == super.end()) 
+            return false;
+    }
+    return true;
+}
 
-        template<class ObjectT, class ConstObjectT, class IteratorT>
-        bool common_range(IteratorT& lwb, IteratorT& upb, ObjectT& x1, const ConstObjectT& x2)
-        {
-            // lwb and upb are iterator of x1 marking the lower and upper bound of
-            // the common range of x1 and x2.
-            typedef typename ConstObjectT::const_iterator ConstObject_iterator;
+template<class SetType>
+bool intersects(const SetType& left, const SetType& right)
+{
+    typename SetType::const_iterator common_lwb_right_, common_upb_right_;
+    if(!common_range(common_lwb_right_, common_upb_right_, right, left))
+        return false;
 
-            lwb = x1.end();
-            upb = x1.end();
+    typename SetType::const_iterator right_ = common_lwb_right_, found_;
+    while(right_ != common_upb_right_)
+    {
+        found_ = left.find(*right_++);
+        if(found_ != left.end()) 
+            return true; // found a common element
+    }
+    // found no common element
+    return false;    
+}
 
-            //JODO gcc.3.4.4 :(  if(itl::is_empty(x1) || itl::is_empty(x2)) 
-            if(x1.empty() || x2.empty()) 
-                return false;
+template<class SetType>
+inline bool is_disjoint(const SetType& left, const SetType& right)
+{
+    return !intersects(left, right);
+}
 
-            IteratorT x1_fst_ = x1.begin();
-            IteratorT x1_lst_ = x1.end(); x1_lst_--;
-
-            ConstObject_iterator x2_fst_ = x2.begin();
-            ConstObject_iterator x2_lst_ = x2.end(); x2_lst_--;
-
-            typename ObjectT::key_compare key_less;
-
-            if(key_less(ObjectT::key_value(x1_lst_), ConstObjectT::key_value(x2_fst_))) // {x1}   {x2}
-                return false;
-            if(key_less(ConstObjectT::key_value(x2_lst_), ObjectT::key_value(x1_fst_))) // {x2}   {x1} 
-                return false;
-
-            // We do have a common range
-            lwb = x1.lower_bound(ConstObjectT::key_value(x2_fst_));
-            upb = x1.upper_bound(ConstObjectT::key_value(x2_lst_));
-
-            return true;
-        }
-
-        template<class ObjectT>
-        ObjectT& add(ObjectT& result, const ObjectT& x2)
-        {
-            if(&result == &x2)
-                return result;
-
-            typedef typename ObjectT::const_iterator Object_const_iterator;
-            typename ObjectT::iterator prior_ = result.end();
-            for(Object_const_iterator x2_ = x2.begin(); x2_ != x2.end(); x2_++)
-                prior_ = add(result, prior_, *x2_);
-
-            return result;
-        }
-
-
-        template<class ObjectT, class CoObjectT>
-        ObjectT& subtract(ObjectT& result, const CoObjectT& x2)
-        {
-            typename CoObjectT::const_iterator common_lwb_;
-            typename CoObjectT::const_iterator common_upb_;
-            if(!common_range(common_lwb_, common_upb_, x2, result))
-                return result;
-
-            typename CoObjectT::const_iterator x2_ = common_lwb_;
-            typename ObjectT::iterator common_;
-
-            while(x2_ != common_upb_)
-                result.subtract(*x2_++);
-
-            return result;
-        }
-
-        template<class ObjectT, class CoObjectT>
-        ObjectT& erase(ObjectT& result, const CoObjectT& x2)
-        {
-            typename CoObjectT::const_iterator common_lwb_;
-            typename CoObjectT::const_iterator common_upb_;
-            if(!common_range(common_lwb_, common_upb_, x2, result))
-                return result;
-
-            typename CoObjectT::const_iterator x2_ = common_lwb_;
-            typename ObjectT::iterator common_;
-
-            while(x2_ != common_upb_)
-                result.erase(*x2_++);
-
-            return result;
-        }
-
-
-        /** Function template <tt>contained_in</tt> implements the subset relation. 
-        <tt>contained_in(sub, super)</tt> is true if <tt>sub</tt> is contained in <tt>super</tt> */
-        template<class SetType>
-        bool within(const SetType& sub, const SetType& super)
-        {
-            if(&super == &sub)                   return true;
-            if(itl::is_empty(sub))               return true;
-            if(itl::is_empty(super))             return false;
-            if(*sub.begin()    < *super.begin()) return false;
-            if(*super.rbegin() < *sub.rbegin() ) return false;
-
-            typename SetType::const_iterator common_lwb_;
-            typename SetType::const_iterator common_upb_;
-            if(!common_range(common_lwb_, common_upb_, sub, super))
-                return false;
-
-            typename SetType::const_iterator sub_ = common_lwb_, super_;
-            while(sub_ != common_upb_)
-            {
-                super_ = super.find(*sub_++);
-                if(super_ == super.end()) 
-                    return false;
-            }
-            return true;
-        }
-
-        template<class SetType>
-        bool intersects(const SetType& left, const SetType& right)
-        {
-            typename SetType::const_iterator common_lwb_right_;
-            typename SetType::const_iterator common_upb_right_;
-
-            if(!common_range(common_lwb_right_, common_upb_right_, right, left))
-                return false;
-
-            typename SetType::const_iterator right_ = common_lwb_right_, found_;
-
-            while(right_ != common_upb_right_)
-            {
-                found_ = left.find(*right_++);
-                if(found_ != left.end()) 
-                    return true; // found a common element
-            }
-            // found no common element
-            return false;    
-        }
-
-        template<class SetType>
-        inline bool is_disjoint(const SetType& left, const SetType& right)
-        {
-            return !intersects(left, right);
-        }
+template<class SetType>
+void flip(SetType& result, const SetType& x2)
+{
+    typename SetType::const_iterator x2_ = x2.begin(), x1_;
+    while(x2_ != x2.end()) 
+    {
+        std::pair<typename SetType::iterator,bool> insertion = result.insert(*x2_++);
+        if(!insertion.second)
+            result.erase(insertion.first);
+    }
+}
 
 
 #ifdef BOOST_MSVC 
@@ -170,35 +175,23 @@ namespace boost{namespace itl
 #pragma warning(disable:4996) //'std::equal': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
 #endif                        // I do guarantee here that I am using the parameters correctly :)
 
-        /** Function template <tt>lexicographical_equal</tt> implements 
-            lexicographical equality. */
-        template<class SetType>
-        bool lexicographical_equal(const SetType& left, const SetType& right)
-        {
-            if(&left == &right)
-                return true;
-            else return left.iterative_size() == right.iterative_size()
-                     && std::equal(left.begin(), left.end(), right.begin()); 
-        }
+/** Function template <tt>lexicographical_equal</tt> implements 
+    lexicographical equality. */
+template<class SetType>
+bool lexicographical_equal(const SetType& left, const SetType& right)
+{
+    if(&left == &right)
+        return true;
+    else return left.iterative_size() == right.iterative_size()
+             && std::equal(left.begin(), left.end(), right.begin()); 
+}
 
 #ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
 
 
-        template<class SetType>
-        void flip(SetType& result, const SetType& x2)
-        {
-            typename SetType::const_iterator x2_ = x2.begin(), x1_;
-            while(x2_ != x2.end()) 
-            {
-                std::pair<typename SetType::iterator,bool> insertion = result.insert(*x2_++);
-                if(!insertion.second)
-                    result.erase(insertion.first);
-            }
-        }
-
-    } // namespace Set
+} // namespace Set
 
 }} // namespace itl boost
 

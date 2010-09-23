@@ -53,15 +53,6 @@ struct mapping_pair
         :key(std_pair.first), data(std_pair.second){}
 };
 
-template<class Type>
-inline typename enable_if<is_interval_map<Type>, typename Type::segment_type>::type
-make_segment(const typename Type::element_type& element)
-{
-    typedef typename Type::interval_type interval_type;
-    typedef typename Type::segment_type  segment_type;
-    return segment_type(interval_type(element.key), element.data);
-}
-
 /** \brief Implements a map as a map of intervals (base class) */
 template
 <
@@ -144,7 +135,7 @@ public:
     <has_set_semantics<codomain_type>
     , ITL_SECTION_CODOMAIN(Section,CodomainT)     
     , codomain_combine
-    >::type                                            codomain_intersect; //JODO extra metafuction?
+    >::type                                            codomain_intersect; //JODO extra metafunction?
     //JODO What, if codomain is not a set but the user want's to use a special intersection functor?
 
 

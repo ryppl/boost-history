@@ -86,7 +86,9 @@ void test_LawValidater()
     //typedef Antisymmetry<itl::map<int,int>, itl::sub_super_set, itl::element_equal> TestLawT;
 	//typedef InplaceAssociativity<itl::interval_map<int,itl::set<int> >, itl::inplace_caret, itl::element_equal> TestLawT;
 
-	typedef InplaceFlip<itl::interval_map<int,int,total_enricher> > TestLawT;
+	typedef InplaceFlip< itl::map<int,int,partial_enricher> > TestLawT;
+	//typedef InplaceFlip< itl::map<int,int> > TestLawT;
+	//typedef InplaceFlip< itl::map<int, itl::set<int> > > TestLawT;
 
     LawValidater<TestLawT> test_law;
 
@@ -104,7 +106,7 @@ void test_LawValidater()
     start = ptime(microsec_clock::local_time());
     test_law.run();
     stop = ptime(microsec_clock::local_time());
-    std::cout << "Stop. Time elapsed: " << stop - start << endl;
+    std::cout << "Stop. Time elapsed: " << stop - start << " for " << test_count << " tests\n";
 }
 
 

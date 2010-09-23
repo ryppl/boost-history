@@ -14,7 +14,6 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/adds_inversely.hpp>
 #include <boost/itl/type_traits/absorbs_neutrons.hpp>
 #include <boost/itl/functors.hpp>
-//CL #include <boost/itl/map_functions.hpp>
 
 namespace boost{namespace itl
 {
@@ -29,10 +28,10 @@ template <class MapT>
 typename enable_if<is_element_map<MapT>, MapT>::type&
 add(MapT&, const typename MapT::value_type&);
 
-template<class MapT>
-typename enable_if<is_element_map<MapT>, 
-                   std::pair<typename MapT::iterator,bool> >::type
-insert(MapT&, const typename MapT::element_type&);
+//CL template<class MapT>
+//typename enable_if<is_element_map<MapT>, 
+//                   std::pair<typename MapT::iterator,bool> >::type
+//insert(MapT&, const typename MapT::element_type&);
 
 template<class MapT, class Predicate>
 typename enable_if<is_element_map<MapT>, MapT>::type&
@@ -194,6 +193,7 @@ struct map_subtract<MapT, true>
 
     static map_type& apply(map_type& object, const element_type& value_pair)
     {
+		cout << "1";
         return map_add<map_type
                       ,inverse_codomain_combine
                       ,absorbs_neutrons<MapT>::value
@@ -214,6 +214,7 @@ struct map_subtract<MapT, false>
 
     static map_type& apply(map_type& object, const element_type& value_pair)
     {
+		cout << "2";
         iterator it_ = object.find(value_pair.first);
         if(it_ != object.end())
         {

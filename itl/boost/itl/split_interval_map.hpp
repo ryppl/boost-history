@@ -100,7 +100,7 @@ private:
                                               DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>;
 
     iterator handle_inserted(iterator it_)const { return it_; }
-    void handle_inserted(iterator prior_, iterator it_)const{ }
+    void handle_inserted(iterator, iterator)const{ }
 
     template<class Combiner>
     void handle_left_combined(iterator it_)
@@ -133,7 +133,7 @@ private:
             this->_map.erase(it_);
     }
 
-    void handle_reinserted(iterator insertion_){}
+    void handle_reinserted(iterator){}
 
     template<class Combiner>
     void gap_insert_at(iterator& it_, iterator prior_, 

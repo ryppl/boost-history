@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Copyright (c) 2007-2009: Joachim Faulhaber
+Copyright (c) 2007-2010: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
@@ -27,14 +27,14 @@ namespace Map
 template <class ObjectT, class CoObjectT>
 bool intersects(const ObjectT& left, const CoObjectT& right)
 {
-    typename CoObjectT::const_iterator right_common_lower_;
-    typename CoObjectT::const_iterator right_common_upper_;
+	typedef typename CoObjectT::const_iterator co_iterator;
+    co_iterator right_common_lower_, right_common_upper_;
     if(!Set::common_range(right_common_lower_, right_common_upper_, right, left))
         return false;
 
-    typename CoObjectT::const_iterator right_ = right_common_lower_;
+    co_iterator right_ = right_common_lower_;
     while(right_ != right_common_upper_)
-        if(left.intersects(CoObjectT::key_value(right_++)))
+		if(itl::intersects(left, CoObjectT::key_value(right_++)))
             return true;
 
     return false;
