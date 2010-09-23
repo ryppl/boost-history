@@ -8,6 +8,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #ifndef BOOST_ITL_CONCEPT_INTERVAL_SET_OR_MAP_HPP_JOFA_100920
 #define BOOST_ITL_CONCEPT_INTERVAL_SET_OR_MAP_HPP_JOFA_100920
 
+#include <boost/itl/type_traits/domain_type_of.hpp>
+#include <boost/itl/type_traits/interval_type_of.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
 
 namespace boost{ namespace itl

@@ -13,7 +13,12 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/rightopen_interval.hpp> //JODO REV?
 #include <boost/itl/type_traits/is_interval_joiner.hpp>
 #include <boost/itl/interval_base_set.hpp>
-#include <boost/itl/functions.hpp>
+//CL #include <boost/itl/functions.hpp>
+#include <boost/itl/concept/interval/base.hpp>
+#include <boost/itl/concept/interval/set.hpp>
+#include <boost/itl/concept/interval/map.hpp>
+#include <boost/itl/concept/interval/set_or_map.hpp>
+
 
 namespace boost{namespace itl
 {
