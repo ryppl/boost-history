@@ -59,6 +59,9 @@ BOOST_STATIC_ASSERT((!is_multi_threaded< ::boost::sync::null_mutex>::value));
 BOOST_STATIC_ASSERT((!is_multi_process< ::boost::sync::null_mutex>::value));
 BOOST_STATIC_ASSERT((is_recursive< ::boost::sync::null_mutex>::value));
 BOOST_STATIC_ASSERT((!is_owned< ::boost::sync::null_mutex>::value));
+BOOST_STATIC_ASSERT((is_basic_lockable< ::boost::sync::null_mutex>::value));
+BOOST_STATIC_ASSERT((is_try_lockable< ::boost::sync::null_mutex>::value));
+BOOST_STATIC_ASSERT((is_timed_lockable< ::boost::sync::null_mutex>::value));
 
 //~ BOOST_STATIC_ASSERT((is_same<best_condition<mutex>::type, boost::condition_variable>::value));
 BOOST_STATIC_ASSERT((is_same<scope<mutex>::type, multi_threaded_tag>::value));
@@ -72,6 +75,9 @@ BOOST_STATIC_ASSERT((is_multi_threaded<mutex>::value));
 BOOST_STATIC_ASSERT((!is_multi_process<mutex>::value));
 BOOST_STATIC_ASSERT((!is_recursive<mutex>::value));
 BOOST_STATIC_ASSERT((is_owned<mutex>::value));
+BOOST_STATIC_ASSERT((is_basic_lockable< mutex>::value));
+BOOST_STATIC_ASSERT((is_try_lockable< mutex>::value));
+BOOST_STATIC_ASSERT((!is_timed_lockable< mutex>::value));
 
 
 BOOST_STATIC_ASSERT((is_same<scope<timed_mutex>::type, multi_threaded_tag>::value));
@@ -85,6 +91,9 @@ BOOST_STATIC_ASSERT((is_multi_threaded<timed_mutex>::value));
 BOOST_STATIC_ASSERT((!is_multi_process<timed_mutex>::value));
 BOOST_STATIC_ASSERT((!is_recursive<timed_mutex>::value));
 BOOST_STATIC_ASSERT((is_owned<timed_mutex>::value));
+BOOST_STATIC_ASSERT((is_basic_lockable< timed_mutex>::value));
+BOOST_STATIC_ASSERT((is_try_lockable< timed_mutex>::value));
+BOOST_STATIC_ASSERT((is_timed_lockable< timed_mutex>::value));
 
 BOOST_STATIC_ASSERT((is_same<scope<recursive_mutex>::type, multi_threaded_tag>::value));
 BOOST_STATIC_ASSERT((is_same<category<recursive_mutex>::type, exclusive_try_lockable_tag>::value));
@@ -97,6 +106,9 @@ BOOST_STATIC_ASSERT((is_multi_threaded<recursive_mutex>::value));
 BOOST_STATIC_ASSERT((!is_multi_process<recursive_mutex>::value));
 BOOST_STATIC_ASSERT((is_recursive<recursive_mutex>::value));
 BOOST_STATIC_ASSERT((is_owned<recursive_mutex>::value));
+BOOST_STATIC_ASSERT((is_basic_lockable< recursive_mutex>::value));
+BOOST_STATIC_ASSERT((is_try_lockable< recursive_mutex>::value));
+BOOST_STATIC_ASSERT((!is_timed_lockable< recursive_mutex>::value));
 
 BOOST_STATIC_ASSERT((is_same<scope<recursive_timed_mutex>::type, multi_threaded_tag>::value));
 BOOST_STATIC_ASSERT((is_same<category<recursive_timed_mutex>::type, exclusive_timed_lockable_tag>::value));
