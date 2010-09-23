@@ -52,7 +52,7 @@ char_buf
     }
  private:    
       ::boost::aligned_storage
-      < Size
+      < Size?Size:1
       , Align
       >
     buffer
