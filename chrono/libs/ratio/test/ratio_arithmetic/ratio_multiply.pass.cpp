@@ -63,4 +63,10 @@ int main()
     typedef boost::ratio_multiply<R1, R2>::type R;
     BOOST_RATIO_STATIC_ASSERT(R::num == 15519594064236LL && R::den == 5177331081415LL, NOTHING, ());
     }
+    {
+    typedef boost::ratio<1, 0x7FFFFFFFFFFFFFFFLL> R1;
+    typedef boost::ratio<0x7FFFFFFFFFFFFFFFLL, 1> R2;
+    typedef boost::ratio_multiply<R1, R2>::type R;
+    BOOST_RATIO_STATIC_ASSERT(R::num == 1 && R::den == 1, NOTHING, (R));
+    }
 }
