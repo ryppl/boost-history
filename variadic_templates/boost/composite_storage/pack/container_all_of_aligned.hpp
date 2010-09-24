@@ -13,6 +13,7 @@
 #include <boost/mpl/arg.hpp>
 #include <boost/composite_storage/pack/container_fwd.hpp>
 #include <boost/composite_storage/methods/all_of.hpp>
+#include <boost/composite_storage/buffers/layout_buf.hpp>
 
 namespace boost
 {
@@ -30,10 +31,12 @@ container
   , Index0
   , Components...
   >
-: layout_composite
-  < tags::all_of_aligned
-  , Index0
-  , Components...
+: buffers::layout_buf
+  < layout_composite
+    < tags::all_of_aligned
+    , Index0
+    , Components...
+    >
   >
 {
         typedef
@@ -64,27 +67,16 @@ container
       methods::all_of<scanned,Index0>
     methods_all
     ;
- private:
-        typedef
-      buffers::char_buf
-      < scanned::comp_part::size
-      , scanned::comp_part::align
-      >
-    buffer_type
-    ;
-      buffer_type
-    buffer
-    ;
  public:
     container(void)
     {
-        char*to_buf=buffer.address();
+        char*to_buf=this->address();
         methods_all::ctor_default_all(to_buf);
     }
     container( container& from)
     {
-        char      *to_buf=buffer.address();
-        char const*fr_buf=from.buffer.address();
+        char      *to_buf=this->address();
+        char const*fr_buf=from.address();
           methods_all::
         ctor_copy_all
         ( to_buf
@@ -93,8 +85,8 @@ container
     }
     container( container&& from)
     {
-        char      *to_buf=buffer.address();
-        char      *fr_buf=from.buffer.address();
+        char      *to_buf=this->address();
+        char      *fr_buf=from.address();
           methods_all::
         ctor_copy_all
         ( to_buf
@@ -104,8 +96,8 @@ container
       container const&
     operator=(container const& from)
     {
-        char      *to_buf=buffer.address();
-        char const*fr_buf=from.buffer.address();
+        char      *to_buf=this->address();
+        char const*fr_buf=from.address();
           methods_all::
         assign_all
         ( to_buf
@@ -116,8 +108,8 @@ container
       container const&
     operator=(container&& from)
     {
-        char      *to_buf=buffer.address();
-        buffers::rval_ref_buf fr_buf(from.buffer.address());
+        char      *to_buf=this->address();
+        buffers::rval_ref_buf fr_buf(from.address());
           methods_all::
         assign_all
         ( to_buf
@@ -127,7 +119,7 @@ container
     }
     ~container(void)
     {
-        scanned::destroy( buffer.address());
+        scanned::destroy( this->address());
     }   
  
       template
@@ -147,7 +139,7 @@ container
     project(void)const
     {
         mpl::integral_c<index_base,IndexValu> index;
-        return scanned::project(index,buffer.address());
+        return scanned::project(index,this->address());
     }        
       template
       < index_type IndexValu
@@ -156,7 +148,7 @@ container
     project(void)
     {
         mpl::integral_c<index_base,IndexValu> index;
-        return scanned::project(index,buffer.address());
+        return scanned::project(index,this->address());
     }        
 };
 

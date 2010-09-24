@@ -18,15 +18,73 @@ namespace composite_storage
 namespace buffers
 {
 
-enum is_aligned
-{ yes_aligned
-, not_aligned
+  template
+  < std::size_t Size
+  , std::size_t Align=1
+  >
+  struct
+char_buf
+;
+  template
+  < std::size_t Align
+  >
+  struct
+char_buf
+  < 0
+  , Align
+  >
+{  
+    char_buf( void)
+    {}
+    char_buf( char_buf const&)
+    {}
+      void
+    operator=( char_buf const&)
+    {}
+      char const*
+    address(void)const
+    {
+        return reinterpret_cast<char const*>(this);
+    }
+      char*
+    address(void)
+    {
+        return reinterpret_cast<char*>(this);
+    }
 };
-  
+  template
+  < std::size_t Size
+  >
+  struct
+char_buf
+  < Size
+  , 0
+  >
+{  
+    char_buf( void)
+    {}
+    char_buf( char_buf const&)
+    {}
+      void
+    operator=( char_buf const&)
+    {}
+      char const*
+    address(void)const
+    {
+        return buffer;
+    }
+      char*
+    address(void)
+    {
+        return buffer;
+    }
+ private:    
+    char buffer[Size]
+    ;
+};
   template
   < std::size_t Size
   , std::size_t Align
-  , is_aligned IsAligned=yes_aligned
   >
   struct
 char_buf
@@ -52,43 +110,10 @@ char_buf
     }
  private:    
       ::boost::aligned_storage
-      < Size?Size:1
+      < Size
       , Align
       >
     buffer
-    ;
-};
-  
-  template
-  < std::size_t Size
-  , std::size_t Align //only used by specialization of layout::alignment_of
-  >
-  struct
-char_buf
-  < Size
-  , Align
-  , not_aligned
-  >
-{
-    char_buf( void)
-    {}
-    char_buf( char_buf const&)
-    {}
-      void
-    operator=( char_buf const&)
-    {}
-      char const*
-    address(void)const
-    {
-        return buffer;
-    }
-      char*
-    address(void)
-    {
-        return buffer;
-    }
- private:    
-    char buffer[Size]
     ;
 };
 

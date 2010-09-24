@@ -8,10 +8,11 @@
 //  This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
 //
-#include <boost/composite_storage/buffers/char_buf.hpp>
+//#include <boost/composite_storage/buffers/char_buf.hpp>
 #include <boost/mpl/integral_c.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_empty.hpp>
+#include <boost/type_traits/alignment_of.hpp>
 
 namespace boost
 {
@@ -39,21 +40,6 @@ alignment_of
 : public ::boost::alignment_of<T>
 {
 };
-  template
-  < std::size_t Size
-  , std::size_t Align
-  , buffers::is_aligned IsAligned
-  >
-struct alignment_of
-  < buffers::char_buf<Size,Align,IsAligned>
-  >
-{
-        static
-      std::size_t const
-    value
-    =Align
-    ;
-};    
 
   template
   < typename T
@@ -66,13 +52,6 @@ size_of
   , mpl::integral_c<std::size_t,sizeof(T)>
   >::type
 {
-  #if 0
-        static
-      std::size_t const
-    value
-    =sizeof(T)
-    ;
-  #endif
 };
 
 struct components_aligned_yes
