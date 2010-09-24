@@ -10,6 +10,8 @@
 //    sizeof(empties_all_of)=1
 //
 #include <boost/composite_storage/pack/container_all_of_aligned.hpp>
+#include <boost/composite_storage/pack/container_one_of_maybe.hpp>
+#include <boost/variant.hpp>
 #include <iostream>
 
   template
@@ -43,26 +45,72 @@ struct empties_inherit
 , empty_class<1>
 {};
 
+template<unsigned I, typename T>
+struct index_inherit
+: T
+{};
+
+struct empties_tree_inherit
+: index_inherit<0,empties_inherit>
+, index_inherit<1,empties_inherit>
+{};
+
 struct empties_member
 {
   empty_class<0> m0;
   empty_class<1> m1;
 };
     typedef
+  boost::mpl::integral_c<unsigned,0>
+index0
+;  
+    typedef
   boost::composite_storage::pack::container
   < boost::composite_storage::tags::all_of_aligned
-  , boost::mpl::integral_c<unsigned,0>
+  , index0
   , empty_class<0>
   , empty_class<1>
   >
 empties_all_of
 ;
+    typedef
+  boost::composite_storage::pack::container
+  < boost::composite_storage::tags::all_of_aligned
+  , index0
+  , empties_all_of
+  , empties_all_of
+  >
+empties_tree_all_of
+;
+    typedef
+  boost::composite_storage::pack::container
+  < boost::composite_storage::tags::one_of_maybe
+  , index0
+  , empty_class<0>
+  , empty_class<1>
+  >
+empties_one_of
+;
+    typedef
+  boost::variant
+  < empty_class<0>
+  , empty_class<1>
+  >
+empties_variant
+;
 int main(void)
 {
     std::cout<<"sizeof(empty_class<0>)="<<sizeof(empty_class<0>)<<"\n";
     std::cout<<"sizeof(empties_inherit)="<<sizeof(empties_inherit)<<"\n";
+    std::cout<<"sizeof(empties_tree_inherit)="<<sizeof(empties_tree_inherit)<<"\n";
     std::cout<<"sizeof(empties_member)="<<sizeof(empties_member)<<"\n";
     std::cout<<"sizeof(empties_all_of)="<<sizeof(empties_all_of)<<"\n";
+    std::cout<<"sizeof(empties_tree_all_of)="<<sizeof(empties_tree_all_of)<<"\n";
+    std::cout<<"sizeof(empties_one_of)="<<sizeof(empties_one_of)<<"\n";
+    std::cout<<"sizeof(empties_variant)="<<sizeof(empties_variant)<<"\n";
+    std::cout
+      <<"sizeof(enum_base<index0>::type)="
+      <<sizeof(boost::composite_storage::enum_base<index0>::type)<<"\n";
     {
         empties_inherit ei_v;
         empty_class<0>*p0=&ei_v;
