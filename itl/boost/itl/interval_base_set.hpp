@@ -149,6 +149,7 @@ public:
     //--------------------------------------------------------------------------
     /// The domain type of the set
     typedef DomainT   domain_type;
+    typedef typename boost::call_traits<DomainT>::param_type domain_param;
     /// The codomaintype is the same as domain_type
     typedef DomainT   codomain_type;
 
@@ -371,13 +372,8 @@ public:
     SubType& subtract(const segment_type& inter_val); 
 
     //==========================================================================
-    //= Insertion, erasure
+    //= Insertion
     //==========================================================================
-
-    //CL std::pair<iterator,bool> _insert(const value_type& value){ return this->_set.insert(value); } //CL
-    //CL iterator _insert(iterator prior, const value_type& value){ return this->_set.insert(prior, value); } //CL
-
-
     /** Insert an element \c key into the set */
     SubType& insert(const element_type& key) 
     { 
@@ -400,6 +396,9 @@ public:
 
 
 
+    //==========================================================================
+    //= Erasure
+    //==========================================================================
     /** Erase an element \c key from the set */
     SubType& erase(const element_type& key) 
     { 
@@ -528,24 +527,6 @@ public:
 
     std::pair<const_iterator,const_iterator> equal_range(const key_type& interval)const
     { return _set.equal_range(interval); }
-
-    //==========================================================================
-    //= Algorithm unifiers
-    //==========================================================================
-
-    template<typename IteratorT>
-    static const key_type& key_value(IteratorT value_){ return (*value_); }
-
-    template<typename IteratorT>
-    static codomain_type co_value(IteratorT value_)
-    { return itl::is_empty(*value_)? codomain_type() : (*value_).lower(); }
-
-    template<typename LeftIterT, typename RightIterT>
-    static bool key_less(LeftIterT lhs_, RightIterT rhs_) 
-    { return key_compare()(*lhs_, *rhs_); }
-
-    static value_type make_value(const key_type& key_value, const codomain_type&)
-    { return value_type(key_value); }
 
 private:
     iterator _add(const segment_type& addend);

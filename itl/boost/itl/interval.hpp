@@ -34,7 +34,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl/type_traits/is_universal_interval.hpp>
 #include <boost/itl/interval_bounds.hpp>
-#include <boost/itl/interval_functions.hpp>
+#include <boost/itl/concept/interval.hpp>
 
 //JODO For the migration from old to new itl::intervals activate this code:
 //

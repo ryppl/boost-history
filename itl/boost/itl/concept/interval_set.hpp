@@ -10,6 +10,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/itl/type_traits/is_combinable.hpp>
 
+
 namespace boost{ namespace itl
 {
 
@@ -194,7 +195,7 @@ add_intersection(Type& section, const Type& object,
     iterator prior_ = section.end();
     for(const_iterator it_=exterior.first; it_ != exterior.second; it_++) 
     {
-        interval_type common_interval = Type::key_value(it_) & segment;
+        interval_type common_interval = key_value<Type>(it_) & segment;
         if(!itl::is_empty(common_interval))
             prior_ = section.insert(prior_, common_interval);
     }

@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_CASE
 (fastest_itl_itl_map_find_4_bicremental_types)
 {            itl_map_find_4_bicremental_types<discrete_type_1, int, partial_absorber, INTERVAL_MAP>();}
 
-//CL or repair
+//JODO CL or repair
 //BOOST_AUTO_TEST_CASE
 //(fastest_itl_itl_map_inclusion_compare_4_bicremental_types)
 //{            itl_map_inclusion_compare_4_bicremental_types<discrete_type_1, int, partial_absorber, INTERVAL_MAP>();}

@@ -19,6 +19,7 @@ The shell also gives you a good idea how interval container are working.
 #include <boost/itl/interval_map.hpp>
 
 using namespace std;
+using namespace boost;
 using namespace boost::itl;
 
 void instructions()

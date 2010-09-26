@@ -19,6 +19,7 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #endif
 
 #include <string>
+#include <boost/call_traits.hpp> 
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/detail/concept_check.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
@@ -30,10 +31,10 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/mpl/not.hpp> 
 #include <boost/type_traits/is_same.hpp>
 
-#include <boost/itl/concept/abstract/container.hpp>
-#include <boost/itl/concept/element/set.hpp>
-#include <boost/itl/concept/element/set_or_map.hpp>
-#include <boost/itl/concept/abstract/comparable.hpp>
+#include <boost/itl/concept/container.hpp>
+#include <boost/itl/concept/element_set.hpp>
+#include <boost/itl/concept/element_associator.hpp>
+#include <boost/itl/concept/comparable.hpp>
 
 
 namespace boost{namespace itl
@@ -55,6 +56,7 @@ public:
 
 public:
     typedef DomainT     domain_type;
+    typedef typename boost::call_traits<DomainT>::param_type domain_param;
     typedef DomainT     codomain_type;
     typedef DomainT     element_type;
     typedef DomainT     key_type;
@@ -216,33 +218,6 @@ public:
     /** If \c *this set contains \c element it is erased, otherwise it is added. */
     set& flip(const element_type& element)
     { return itl::flip(*this, element); }
-
-
-    //==========================================================================
-    //= Algorithm unifiers
-    //==========================================================================
-
-    /** \c key_value allows for a uniform access to \c key_values which is
-        is used for common algorithms on sets and maps. */
-    template<typename IteratorT>
-    static const key_type& key_value(IteratorT value_){ return (*value_); }
-
-    /** \c codomain_value allows for a uniform access to \c data_values which is
-        is used for common algorithms on sets and maps. */
-    template<typename IteratorT>
-    static const codomain_type& co_value(IteratorT value_){ return (*value_); }
-
-    /** \c key_less allows for a uniform notation of key comparison which
-        is used for common algorithms on sets and maps. */
-    template<typename LeftIterT, typename RightIterT>
-    static bool key_less(LeftIterT lhs_, RightIterT rhs_) 
-    { return key_compare()(*lhs_, *rhs_); }
-
-    /** \c make_element allows for a uniform notation of key comparison which
-        is used for common algorithms on sets and maps. */
-    static value_type make_value(const key_type& key_value, const codomain_type&)
-    { return key_value; }
-
 };
 
 

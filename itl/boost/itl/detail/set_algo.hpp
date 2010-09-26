@@ -10,16 +10,16 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #ifndef BOOST_ITL_SET_ALGO_HPP_JOFA_990225
 #define BOOST_ITL_SET_ALGO_HPP_JOFA_990225
 
+#include <boost/type_traits/remove_const.hpp>
+
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/predicates.hpp>
 #include <boost/itl/functors.hpp>
-//CL #include <boost/itl/seqs.hpp>
 
-/*
-<b>SetAlgo </b>
-SetAlgo is a collection of algorithms that work with sets but may also
-used with other set-implementations like e.g. hash_set.
-*/
+#include <boost/itl/concept/container.hpp>
+#include <boost/itl/concept/set_value.hpp>
+#include <boost/itl/concept/map_value.hpp>
+
 
 namespace boost{namespace itl
 {
@@ -30,15 +30,16 @@ namespace Set
 template<class ObjectT, class ConstObjectT, class IteratorT>
 bool common_range(IteratorT& lwb, IteratorT& upb, ObjectT& x1, const ConstObjectT& x2)
 {
-    // lwb and upb are iterator of x1 marking the lower and upper bound of
+    // lwb and upb are iterators of x1 marking the lower and upper bound of
     // the common range of x1 and x2.
     typedef typename ConstObjectT::const_iterator ConstObject_iterator;
+	// ObjectT may be const or non const. 
+	typedef typename remove_const<ObjectT>::type  PureObjectT;
 
     lwb = x1.end();
     upb = x1.end();
 
-    //JODO gcc.3.4.4 :(  if(itl::is_empty(x1) || itl::is_empty(x2)) 
-    if(x1.empty() || x2.empty()) 
+	if(itl::is_empty(x1) || itl::is_empty(x2)) 
         return false;
 
     IteratorT x1_fst_ = x1.begin();
@@ -48,15 +49,16 @@ bool common_range(IteratorT& lwb, IteratorT& upb, ObjectT& x1, const ConstObject
     ConstObject_iterator x2_lst_ = x2.end(); x2_lst_--;
 
     typename ObjectT::key_compare key_less;
-
-    if(key_less(ObjectT::key_value(x1_lst_), ConstObjectT::key_value(x2_fst_))) // {x1}   {x2}
+    if(key_less(itl::key_value< PureObjectT>(x1_lst_), 
+		        itl::key_value<ConstObjectT>(x2_fst_))) // {x1}   {x2}
         return false;
-    if(key_less(ConstObjectT::key_value(x2_lst_), ObjectT::key_value(x1_fst_))) // {x2}   {x1} 
+	if(key_less(itl::key_value<ConstObjectT>(x2_lst_), 
+		        itl::key_value< PureObjectT>(x1_fst_))) // {x2}   {x1} 
         return false;
 
     // We do have a common range
-    lwb = x1.lower_bound(ConstObjectT::key_value(x2_fst_));
-    upb = x1.upper_bound(ConstObjectT::key_value(x2_lst_));
+    lwb = x1.lower_bound(itl::key_value<ConstObjectT>(x2_fst_));
+    upb = x1.upper_bound(itl::key_value<ConstObjectT>(x2_lst_));
 
     return true;
 }

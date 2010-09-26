@@ -109,7 +109,6 @@ struct map_val
     {
         return interval_type(test_value<domain_type>::make(lower), 
                              test_value<domain_type>::make(upper), interval_bounds(bounds));
-                             //CL test_value<domain_type>::make(upper), static_cast<bound_type>(bounds));
     }
 
     static segment_type val_pair(int lower, int upper, int val, int bounds = 2)

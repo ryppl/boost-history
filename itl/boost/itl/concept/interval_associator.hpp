@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_CONCEPT_INTERVAL_SET_OR_MAP_HPP_JOFA_100920
-#define BOOST_ITL_CONCEPT_INTERVAL_SET_OR_MAP_HPP_JOFA_100920
+#ifndef BOOST_ITL_CONCEPT_INTERVAL_ASSOCIATOR_HPP_JOFA_100920
+#define BOOST_ITL_CONCEPT_INTERVAL_ASSOCIATOR_HPP_JOFA_100920
 
 #include <boost/itl/type_traits/domain_type_of.hpp>
 #include <boost/itl/type_traits/interval_type_of.hpp>
@@ -135,7 +135,7 @@ length(const Type& object)
 	const_iterator it_ = object.begin();
 
 	while(it_ != object.end())
-		length += itl::length(Type::key_value(it_++));
+		length += itl::length(key_value<Type>(it_++));
     return length;
 }
 
@@ -156,7 +156,7 @@ hull(const ObjectT& object)
 {
     return 
         itl::is_empty(object) ? neutron<typename ObjectT::interval_type>::value()
-        : hull((ObjectT::key_value(object.begin())), ObjectT::key_value(object.rbegin()));
+        : hull((key_value<ObjectT>(object.begin())), key_value<ObjectT>(object.rbegin()));
 }
 
 //==============================================================================
@@ -483,7 +483,7 @@ add_intersection(Type& section, const Type& object, const OperandT& operand)
 
     const_iterator it_ = common_lwb;
     while(it_ != common_upb)
-        itl::add_intersection(section, object, OperandT::key_value(it_++));
+        itl::add_intersection(section, object, key_value<OperandT>(it_++));
 }
 
 //------------------------------------------------------------------------------
@@ -603,7 +603,7 @@ intersects(const LeftT& left, const RightT& right)
     typename RightT::const_iterator it_ = right_common_lower_;
     while(it_ != right_common_upper_)
     {
-        itl::add_intersection(intersection, left, RightT::key_value(it_++));
+        itl::add_intersection(intersection, left, key_value<RightT>(it_++));
         if(!itl::is_empty(intersection))
             return true;
     }
@@ -816,8 +816,8 @@ join(Type& object)
 
             // finally we arrive at the end of a sequence of joinable intervals
             // and it points to the last member of that sequence
-            const_cast<interval_type&>(Type::key_value(it_)) 
-                = hull(Type::key_value(it_), Type::key_value(fst_mem));
+            const_cast<interval_type&>(key_value<Type>(it_)) 
+                = hull(key_value<Type>(it_), key_value<Type>(fst_mem));
             object.erase(fst_mem, it_);
 
             it_++; next_=it_; 

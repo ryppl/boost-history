@@ -16,7 +16,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
                                          //Two partitions of interval_functions
                                          //  (dependen on i_b ( independent on i_b ))
 #include <boost/itl/detail/base_interval.hpp>
-#include <boost/itl/interval_functions.hpp>
+#include <boost/itl/concept/interval.hpp>
 
 namespace boost{namespace itl
 {
@@ -62,16 +62,6 @@ public:
 
     domain_type lower()const{ return _lwb; }
     domain_type upper()const{ return _upb; }
-
-    /*CL
-    domain_type first()const{ return _lwb; }
-
-    DomainT last()const
-    {   //JODO first and last as global functions?
-        BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
-        return pred(_upb);
-    }
-    */
 
 private:
     domain_type _lwb;

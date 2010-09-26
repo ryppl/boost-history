@@ -51,22 +51,22 @@ public:
 
     bool covalues_are_equal(LeftIterT& left, RightIterT& right)
     {
-        if(LeftT::co_value(left) < RightT::co_value(right))
+        if(co_value<LeftT>(left) < co_value<RightT>(right))
             _result = less;
-        if(RightT::co_value(right) < LeftT::co_value(left))
+        if(co_value<RightT>(right) < co_value<LeftT>(left))
             _result = greater;
         return _result == equal;
     }
 
     int proceed(LeftIterT& left, RightIterT& right)
     {
-        if(upper_less(LeftT::key_value(left), RightT::key_value(right)))
+        if(upper_less(key_value<LeftT>(left), key_value<RightT>(right)))
         {
             _prior_left = left;
             ++left;
             return nextleft;
         }
-        else if(upper_less(RightT::key_value(right), LeftT::key_value(left)))
+        else if(upper_less(key_value<RightT>(right), key_value<LeftT>(left)))
         {
             _prior_right = right;
             ++right;
@@ -96,14 +96,14 @@ public:
         }
 
         // The starting intervals have to begin equally
-        if(lower_less(LeftT::key_value(left), RightT::key_value(right)))
+        if(lower_less(key_value<LeftT>(left), key_value<RightT>(right)))
         {   // left: same A... = sameA...
             // right:same  B.. = sameB...
             _result = less;
             return stop;
         }
 
-        if(lower_less(LeftT::key_value(right), RightT::key_value(left)))
+        if(lower_less(key_value<LeftT>(right), key_value<RightT>(left)))
         {   // left: same  B.. = sameB...
             // right:same A... = sameA...
             _result = greater;
@@ -125,7 +125,7 @@ public:
             return stop;
         }
 
-        if(!LeftT::key_value(_prior_left).touches(LeftT::key_value(left)))
+        if(!key_value<LeftT>(_prior_left).touches(key_value<LeftT>(left)))
         {   // left: same B = sameB...
             // right:sameA  = sameA...
             _result = greater;
@@ -147,7 +147,7 @@ public:
             return stop;
         }
 
-        if(!RightT::key_value(_prior_right).touches(RightT::key_value(right)))
+        if(!key_value<RightT>(_prior_right).touches(key_value<RightT>(right)))
         {
             // left: sameA... = sameA...
             // right:same B.. = sameB...

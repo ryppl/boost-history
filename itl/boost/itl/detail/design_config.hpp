@@ -141,9 +141,6 @@ by setting defines in this file.
 
 
 //------------------------------------------------------------------------------
-//CL #define ITL_INTERVAL_DEFAULT itl::rightopen_interval
-//CL #define ITL_INTERVAL_DEFAULT itl::continuous_interval
-
 #ifdef ITL_NEW_INTERVAL_IMPL
 #   define ITL_INTERVAL_DEFAULT boost::itl::interval_type_default
 #else

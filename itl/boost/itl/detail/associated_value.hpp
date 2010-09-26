@@ -23,7 +23,7 @@ typename enable_if< mpl::and_< is_domain_compare_equal<Type,CoType>
 co_equal(typename Type::const_iterator left_, typename CoType::const_iterator right_, 
 		 const Type* = 0, const CoType* = 0)
 {
-	return Type::co_value(left_) == CoType::co_value(right_);
+	return co_value<Type>(left_) == co_value<CoType>(right_);
 }
 
 template<class Type, class CoType> 

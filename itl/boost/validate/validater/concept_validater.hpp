@@ -25,7 +25,6 @@ namespace boost{namespace itl
         // the choice probability, and also the availability of laws is individual to each type
         // Somehow it has to be defined in conjunction to every type. So it is an aspect of
         // type traits.
-        //CL virtual void setProfile()=0;
         virtual LawValidaterI* chooseValidater()=0;
         virtual bool hasValidProfile()const{ return true; }
 

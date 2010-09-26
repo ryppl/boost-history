@@ -16,6 +16,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/is_interval_container.hpp>
 #include <boost/itl/type_traits/is_set.hpp>
 #include <boost/itl/interval.hpp>
+#include <boost/itl/concept/interval_set_value.hpp>
 
 namespace boost{namespace itl
 {
@@ -34,8 +35,8 @@ struct settic_codomain_compare
 {
     static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
     {
-        return inclusion_compare( LeftT::co_value(left_), 
-                                 RightT::co_value(right_));
+        return inclusion_compare( itl::co_value<LeftT>(left_), 
+                                 itl::co_value<RightT>(right_));
     }
 };
 
@@ -44,7 +45,7 @@ struct atomic_codomain_compare
 {
     static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
     {
-        if(LeftT::co_value(left_) == RightT::co_value(right_))
+        if(itl::co_value<LeftT>(left_) == itl::co_value<RightT>(right_))
             return inclusion::equal;
         else
             return inclusion::unrelated;
@@ -133,21 +134,21 @@ public:
 
     int proceed(LeftIterT& left, RightIterT& right)
     {
-        if(upper_less(LeftT::key_value(left), RightT::key_value(right)))
+        if(upper_less(key_value<LeftT>(left), key_value<RightT>(right)))
         {   // left  ..)  
             // right .....)
             _prior_left = left;
             ++left;
             return nextleft;
         }
-        else if(upper_less(RightT::key_value(right), LeftT::key_value(left)))
+        else if(upper_less(key_value<RightT>(right), key_value<LeftT>(left)))
         {   // left  .....)
             // right ..)
             _prior_right = right;
             ++right;
             return nextright;
         }
-        else//LeftT::key_value(left).upper_equal(RightT::key_value(right))
+        else//key_value<LeftT>(left).upper_equal(key_value<RightT>(right))
         {   // left  ..)
             // right ..)
             ++left; 
@@ -172,7 +173,7 @@ public:
             restrict_result(superset);
             return stop;
         }
-        else if(exclusive_less(LeftT::key_value(left), RightT::key_value(right)))
+        else if(exclusive_less(key_value<LeftT>(left), key_value<RightT>(right)))
         {   // left: [..) . . .[---)      left could be superset
             // right:           [..)....  if [---) exists
             restrict_result(superset);
@@ -180,7 +181,7 @@ public:
                 return stop;
             else
             {
-                LeftIterT joint_ = _left.lower_bound(RightT::key_value(right));
+                LeftIterT joint_ = _left.lower_bound(key_value<RightT>(right));
                 if(joint_ == _left.end())
                 {
                     _result = unrelated;
@@ -193,7 +194,7 @@ public:
                 }
             }
         }
-        else if(exclusive_less(RightT::key_value(right), LeftT::key_value(left)))
+        else if(exclusive_less(key_value<RightT>(right), key_value<LeftT>(left)))
         {   // left:             [..  left could be subset
             // right:....) . . .[---) if [---) exists 
             restrict_result(subset);
@@ -201,7 +202,7 @@ public:
                 return stop;
             else
             {
-                RightIterT joint_ = _right.lower_bound(LeftT::key_value(left));
+                RightIterT joint_ = _right.lower_bound(key_value<LeftT>(left));
                 if(joint_ == _right.end())
                 {
                     _result = unrelated;
@@ -221,19 +222,19 @@ public:
                 return stop;
 
         // examine left borders only. Right borders are checked in proceed
-        if(lower_less(LeftT::key_value(left), RightT::key_value(right)))
+        if(lower_less(key_value<LeftT>(left), key_value<RightT>(right)))
         {   // left: ....[...     left could be superset
             // right:....   [..
             if(unrelated == restrict_result(superset))
                 return stop;
         }
-        else if(lower_less(RightT::key_value(right), LeftT::key_value(left)))
+        else if(lower_less(key_value<RightT>(right), key_value<LeftT>(left)))
         {   // left: ....   [..   left can be subset
             // right:....[...
             if(unrelated == restrict_result(subset))
                 return stop;
         }
-        //else LeftT::key_value(right).lower_equal(RightT::key_value(left))
+        //else key_value<LeftT>(right).lower_equal(key_value<RightT>(left))
             // left: ....[..   both can be equal
             // right:....[..
             // nothing to do: proceed
@@ -249,10 +250,10 @@ public:
             restrict_result(subset);
             return stop;            
         }
-        else if(!touches(LeftT::key_value(_prior_left), LeftT::key_value(left)))
+        else if(!touches(key_value<LeftT>(_prior_left), key_value<LeftT>(left)))
         {   // left: ..)   [..
             // right:.........)
-            if(lower_less(RightT::key_value(right), LeftT::key_value(left)))
+            if(lower_less(key_value<RightT>(right), key_value<LeftT>(left)))
             {   //   ..)   [..   left could be subset
                 //   ..........)
                 if(unrelated == restrict_result(subset))
@@ -260,14 +261,14 @@ public:
             }
             //else   ..)   [...
             //          [..
-            if(_compare_codomain && intersects(LeftT::key_value(left),RightT::key_value(right)) )
+            if(_compare_codomain && intersects(key_value<LeftT>(left),key_value<RightT>(right)) )
                 if(unrelated == restrict_result(co_compare(left,right)))
                     return stop;
         }
         else
         {   // left: ..)[..  left could be subset
             // right:.......)
-            if(_compare_codomain && intersects(LeftT::key_value(left), RightT::key_value(right)) )
+            if(_compare_codomain && intersects(key_value<LeftT>(left), key_value<RightT>(right)) )
                 if(unrelated == restrict_result(co_compare(left,right)))
                     return stop;
         }
@@ -284,10 +285,10 @@ public:
             restrict_result(superset);
             return stop;            
         }
-        else if(!touches(RightT::key_value(_prior_right), RightT::key_value(right)))
+        else if(!touches(key_value<RightT>(_prior_right), key_value<RightT>(right)))
         {   // left: .........)
             // right:..)   [..
-            if(lower_less(LeftT::key_value(left), RightT::key_value(right)))
+            if(lower_less(key_value<LeftT>(left), key_value<RightT>(right)))
             {   //       [....)  left could be superset
                 //   ..)   [..
                 if(unrelated == restrict_result(superset))
@@ -295,13 +296,13 @@ public:
             }
             //else       [....)
             //   ..)   [..
-            if(_compare_codomain && intersects(LeftT::key_value(left), RightT::key_value(right)) )
+            if(_compare_codomain && intersects(key_value<LeftT>(left), key_value<RightT>(right)) )
                 if(unrelated == restrict_result(co_compare(left,right)))
                     return stop;
         }
         else
         {
-            if(_compare_codomain && intersects(LeftT::key_value(left), RightT::key_value(right)) )
+            if(_compare_codomain && intersects(key_value<LeftT>(left), key_value<RightT>(right)) )
                 if(unrelated == restrict_result(co_compare(left,right)))
                     return stop;
         }

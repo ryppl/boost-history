@@ -20,6 +20,7 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 
 #include <string>
 #include <boost/type_traits/ice.hpp>
+#include <boost/call_traits.hpp> 
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/detail/concept_check.hpp>
@@ -35,9 +36,9 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/itl/set.hpp>
 
 #include <boost/itl/detail/map_algo.hpp>
-#include <boost/itl/concept/abstract/container.hpp>
-#include <boost/itl/concept/element/map.hpp>
-#include <boost/itl/concept/element/set_or_map.hpp>
+#include <boost/itl/concept/container.hpp>
+#include <boost/itl/concept/element_map.hpp>
+#include <boost/itl/concept/element_associator.hpp>
 
 namespace boost{namespace itl
 {
@@ -109,6 +110,7 @@ public:
 
 public:
     typedef DomainT                                     domain_type;
+    typedef typename boost::call_traits<DomainT>::param_type domain_param;
     typedef DomainT                                     key_type;
     typedef CodomainT                                   codomain_type;
     typedef CodomainT                                   mapped_type;
@@ -241,8 +243,6 @@ public:
         different from \c size(). */
     size_t iterative_size()const { return size(); } //JODO 
 
-    //CL?? size_t cardinality()const { return size(); }
-
     //==========================================================================
     //= Selection
     //==========================================================================
@@ -333,11 +333,6 @@ public:
             ::add_intersection(section, *this, key_value_pair);
     }
 
-    /** The intersection of \c operand in \c *this map is added to \c section. */
-    //CL template<class OperandT>
-    //map& add_intersection(map& section, const OperandT& operand)const
-    //{ return itl::add_intersection(section, *this, operand); }
-
     /** Returns true, if there is an intersection of \c operand and \c *this map. */
     template<class OperandT>
     bool intersects(const OperandT& operand)const
@@ -352,37 +347,6 @@ public:
     map& flip(const element_type& operand)
     {
         return on_total_absorbable<type,_total,_absorbs>::flip(*this, operand);
-    }
-
-    //==========================================================================
-    //= Algorithm unifiers
-    //==========================================================================
-
-    /** \c key_value allows for a uniform access to \c key_values which is
-        is used for common algorithms on sets and maps. */
-    template<typename IteratorT>
-    static const key_type& key_value(IteratorT value_){ return (*value_).first; }
-
-    /** \c co_value allows for a uniform access to \c codomain_values which is
-        is used for common algorithms on sets and maps. */
-    template<typename IteratorT> 
-    static const codomain_type& co_value(IteratorT value_){ return (*value_).second; }
-
-    /** \c key_less allows for a uniform notation of key comparison which
-        is used for common algorithms on sets and maps. */
-    template<typename LeftIterT, typename RightIterT>
-    static bool key_less(LeftIterT lhs_, RightIterT rhs_) 
-    { return key_compare()((*lhs_).first,(*rhs_).first); }
-
-    static value_type make_value(const key_type& key_value, const codomain_type& data_value)
-    { return value_type(key_value, data_value); }
-
-    /** Copy the key values of the map to \c domain_set. Complexity: Linear. */
-    void domain(set_type& domain_set)const
-    {
-        typename set_type::iterator prior_ = domain_set.end();
-        ITL_const_FORALL_THIS(it_)
-            prior_ = domain_set.insert(prior_, it_->first);
     }
 
 private:

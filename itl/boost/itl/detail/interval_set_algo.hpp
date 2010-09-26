@@ -14,6 +14,8 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/is_map.hpp>
 #include <boost/itl/type_traits/is_total.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
+#include <boost/itl/concept/set_value.hpp>
+#include <boost/itl/concept/map_value.hpp>
 #include <boost/itl/interval.hpp>
 #include <boost/itl/interval_combining_style.hpp>
 #include <boost/itl/detail/element_comparer.hpp>
@@ -33,8 +35,7 @@ typename IntervalContainerT::size_type continuous_cardinality(const IntervalCont
     size_type interval_size;
     ITL_const_FORALL(typename IntervalContainerT, it, object)
     {
-        //CL interval_size = continuous_interval_<interval_type>::cardinality(IntervalContainerT::key_value(it));
-        interval_size = itl::cardinality(IntervalContainerT::key_value(it));
+        interval_size = itl::cardinality(key_value<IntervalContainerT>(it));
         if(interval_size == infinity<size_type>::value())
             return interval_size;
         else
@@ -51,7 +52,7 @@ typename IntervalContainerT::size_type discrete_cardinality(const IntervalContai
 
     size_type size = neutron<size_type>::value();
     ITL_const_FORALL(typename IntervalContainerT, it, object)
-        size += discrete_interval_<interval_type>::cardinality(IntervalContainerT::key_value(it));
+        size += discrete_interval_<interval_type>::cardinality(key_value<IntervalContainerT>(it));
     return size;
 }
 
@@ -128,8 +129,8 @@ bool is_joinable(const IntervalContainerT& container,
     ++next_;
 
     while(next_ != container.end() && it_ != past)
-        if(!itl::touches(IntervalContainerT::key_value(it_++),
-                         IntervalContainerT::key_value(next_++)))
+        if(!itl::touches(key_value<IntervalContainerT>(it_++),
+                         key_value<IntervalContainerT>(next_++)))
             return false;
 
     return true;
@@ -245,28 +246,6 @@ contains(const LeftT& super, const RightT& sub)
     return result == inclusion::superset || result == inclusion::equal;
 }
 
-/*CL
-//JODO check if this is still needed
-template<class IntervalContainerT>
-bool contains(const IntervalContainerT& container, 
-              const typename IntervalContainerT::segment_type& sub_interval)
-{
-    typedef typename IntervalContainerT::const_iterator const_iterator;
-    if(itl::is_empty(sub_interval)) 
-        return true;
-
-    std::pair<const_iterator, const_iterator> exterior = container.equal_range(sub_interval);
-    if(exterior.first == exterior.second)
-        return false;
-
-    const_iterator last_overlap = prior(exterior.second);
-
-    return
-          itl::contains(hull(*(exterior.first), *last_overlap), sub_interval)
-      &&  Interval_Set::is_joinable(container, exterior.first, last_overlap);
-}
-*/
-
 template<class IntervalContainerT>
 bool is_dense(const IntervalContainerT& container, 
               typename IntervalContainerT::const_iterator first, 
@@ -279,8 +258,8 @@ bool is_dense(const IntervalContainerT& container,
     ++next_;
 
     while(next_ != container.end() && it_ != past)
-        if(!itl::touches(IntervalContainerT::key_value(it_++), 
-                         IntervalContainerT::key_value(next_++)))
+        if(!itl::touches(key_value<IntervalContainerT>(it_++), 
+                         key_value<IntervalContainerT>(next_++)))
             return false;
 
     return true;
@@ -295,7 +274,7 @@ template<class Type>
 inline bool joinable(const Type& _Type, typename Type::iterator& some, typename Type::iterator& next)
 {
     // assert: next != end && some++ == next
-    return touches(Type::key_value(some), Type::key_value(next)) 
+    return touches(key_value<Type>(some), key_value<Type>(next)) 
         && co_equal(some, next, &_Type, &_Type); 
 }
 
@@ -304,10 +283,10 @@ inline void join_nodes(Type& object, typename Type::iterator& left_,
                                      typename Type::iterator& right_)
 {
     typedef typename Type::interval_type interval_type;
-    interval_type right_interval = Type::key_value(right_);
+    interval_type right_interval = key_value<Type>(right_);
 	((typename Type::base_type&)object).erase(right_); //JODO
-    const_cast<interval_type&>(Type::key_value(left_)) 
-        = hull(Type::key_value(left_), right_interval);
+    const_cast<interval_type&>(key_value<Type>(left_)) 
+        = hull(key_value<Type>(left_), right_interval);
 }
 
 template<class Type>
@@ -317,7 +296,7 @@ inline typename Type::iterator
 {
     typedef typename Type::interval_type interval_type;
     // both left and right are in the set and they are neighbours
-    BOOST_ASSERT(exclusive_less(Type::key_value(left_), Type::key_value(right_)));
+    BOOST_ASSERT(exclusive_less(key_value<Type>(left_), key_value<Type>(right_)));
     BOOST_ASSERT(joinable(object, left_, right_));
 
     join_nodes(object, left_, right_);
@@ -331,7 +310,7 @@ inline typename Type::iterator
 {
     typedef typename Type::interval_type interval_type;
     // both left and right are in the map and they are neighbours
-    BOOST_ASSERT(exclusive_less(Type::key_value(left_), Type::key_value(right_)));
+    BOOST_ASSERT(exclusive_less(key_value<Type>(left_), key_value<Type>(right_)));
     BOOST_ASSERT(joinable(object, left_, right_));
 
     join_nodes(object, left_, right_);
@@ -395,12 +374,12 @@ inline typename Type::iterator
 
     iterator second_= first_; ++second_;
 
-    interval_type left_resid  = right_subtract(Type::key_value(first_), addend);
-    interval_type right_resid =  left_subtract(Type::key_value(last_) , addend);
+    interval_type left_resid  = right_subtract(key_value<Type>(first_), addend);
+    interval_type right_resid =  left_subtract(key_value<Type>(last_) , addend);
 
     object.erase(second_, end_);
 
-    const_cast<value_type&>(Type::key_value(first_)) 
+    const_cast<value_type&>(key_value<Type>(first_)) 
         = hull(hull(left_resid, addend), right_resid);
     return first_;
 }
@@ -419,12 +398,12 @@ inline typename Type::iterator
     //BOOST_ASSERT(next(last_) == this->_set.upper_bound(inter_val));
     iterator second_= next(first_), end_ = next(last_);
 
-    interval_type left_resid  = right_subtract(Type::key_value(first_), addend);
-    interval_type right_resid =  left_subtract(Type::key_value(last_) , addend);
+    interval_type left_resid  = right_subtract(key_value<Type>(first_), addend);
+    interval_type right_resid =  left_subtract(key_value<Type>(last_) , addend);
 
     object.erase(second_, end_);
 
-    const_cast<value_type&>(Type::key_value(first_)) 
+    const_cast<value_type&>(key_value<Type>(first_)) 
         = hull(hull(left_resid, addend), right_resid);
     return first_;
 }
@@ -542,17 +521,16 @@ void add_front(Type& object, const typename Type::interval_type& inter_val,
     // The addend interval 'inter_val' covers the beginning of the collision sequence.
 
     // only for the first there can be a left_resid: a part of *first_ left of inter_val
-    interval_type left_resid = right_subtract(Type::key_value(first_), inter_val);
+    interval_type left_resid = right_subtract(key_value<Type>(first_), inter_val);
 
     if(!itl::is_empty(left_resid))
     {   //            [------------ . . .
         // [left_resid---first_ --- . . .
         iterator prior_ = cyclic_prior(object, first_);
-        const_cast<interval_type&>(Type::key_value(first_)) 
-            = left_subtract(Type::key_value(first_), left_resid);
+        const_cast<interval_type&>(key_value<Type>(first_)) 
+            = left_subtract(key_value<Type>(first_), left_resid);
         //NOTE: Only splitting
-        //CL iterator insertion_ = 
-        object._insert(prior_, Type::make_value(left_resid, Type::co_value(first_)));
+        object._insert(prior_, itl::make_value<Type>(left_resid, co_value<Type>(first_)));
     }
 
     //POST:

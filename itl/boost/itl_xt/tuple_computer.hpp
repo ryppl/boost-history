@@ -187,7 +187,12 @@ namespace boost{namespace itl
     */
     //@{
         ///
-        std::string as_string()const { return m_map.as_string(); }
+        std::string as_string()const 
+        {
+            stringstream str;
+            str << m_map;
+            return str.str();
+        }
     //@}
 
 

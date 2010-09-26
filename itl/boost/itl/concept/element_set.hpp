@@ -9,12 +9,14 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #define BOOST_ITL_CONCEPT_ELEMENT_SET_HPP_JOFA_100921
 
 #include <boost/itl/type_traits/is_combinable.hpp>
+#include <boost/itl/concept/set_value.hpp>
+
 
 namespace boost{ namespace itl
 {
 
 //==============================================================================
-//= Addition
+//= Addition<ElementSet>
 //==============================================================================
 /** \c add inserts \c operand into the map if it's key does 
     not exist in the map.    
@@ -47,11 +49,7 @@ template<class Type>
 typename enable_if<is_element_set<Type>, Type>::type&
 subtract(Type& object, const typename Type::element_type& operand)
 {
-    typedef typename Type::iterator iterator;
-    iterator it_ = object.find(operand);
-    if(it_ != object.end())
-        object.erase(it_);
-
+	object.erase(operand);
     return object;
 }
 

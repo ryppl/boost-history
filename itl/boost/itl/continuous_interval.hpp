@@ -14,7 +14,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/is_continuous_interval.hpp>
 #include <boost/itl/detail/base_interval.hpp>
 #include <boost/itl/interval_bounds.hpp>
-#include <boost/itl/interval_functions.hpp>
+#include <boost/itl/concept/interval.hpp>
 
 namespace boost{namespace itl
 {

@@ -34,7 +34,7 @@ bool intersects(const ObjectT& left, const CoObjectT& right)
 
     co_iterator right_ = right_common_lower_;
     while(right_ != right_common_upper_)
-		if(itl::intersects(left, CoObjectT::key_value(right_++)))
+		if(itl::intersects(left, key_value<CoObjectT>(right_++)))
             return true;
 
     return false;

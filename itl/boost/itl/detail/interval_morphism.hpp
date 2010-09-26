@@ -9,6 +9,11 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #define BOOST_ITL_DETAIL_INTERVAL_MORPHISM_HPP_JOFA_080315
 
 #include <boost/itl/detail/notate.hpp>
+#include <boost/itl/concept/interval_set_value.hpp>
+#include <boost/itl/concept/element_set_value.hpp>
+#include <boost/itl/concept/set_value.hpp>
+#include <boost/itl/concept/map_value.hpp>
+
 namespace boost{namespace itl
 {
     namespace segmental
@@ -18,14 +23,11 @@ namespace boost{namespace itl
         {
             ITL_const_FORALL(typename IntervalContainerT, itv_, src)
             {
-                const typename IntervalContainerT::key_type& itv   = IntervalContainerT::key_value(itv_);
-                typename IntervalContainerT::codomain_type   coval = IntervalContainerT::co_value(itv_);
+				const typename IntervalContainerT::key_type& itv   = itl::key_value<IntervalContainerT>(itv_);
+				typename IntervalContainerT::codomain_type   coval = itl::co_value<IntervalContainerT>(itv_);
 
                 for(typename IntervalContainerT::domain_type element = first(itv); element <= last(itv); ++element)
-                {
-                    insert(result, ElementContainerT::make_value(element, coval));
-                    //CL result.insert(ElementContainerT::make_element(element, coval));
-                }
+                    insert(result, itl::make_value<ElementContainerT>(element, coval));
             }
         }
 
@@ -35,10 +37,10 @@ namespace boost{namespace itl
 			typedef typename IntervalContainerT::key_type key_type;
             ITL_const_FORALL(typename ElementContainerT, element_, src)
             {
-                const typename ElementContainerT::key_type&  key  = ElementContainerT::key_value(element_);
-                const typename ElementContainerT::data_type& data = ElementContainerT::co_value(element_);
+                const typename ElementContainerT::key_type&  key  = key_value<ElementContainerT>(element_);
+                const typename ElementContainerT::data_type& data = co_value<ElementContainerT>(element_);
 
-                result += IntervalContainerT::make_value(key_type(key), data);
+                result += itl::make_value<IntervalContainerT>(key_type(key), data);
             }
         }
 

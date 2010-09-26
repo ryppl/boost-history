@@ -10,11 +10,14 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
-#include <boost/itl/detail/map_algo.hpp>
 #include <boost/itl/type_traits/is_total.hpp>
 #include <boost/itl/type_traits/absorbs_neutrons.hpp>
 #include <boost/itl/type_traits/is_associative_element_container.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
+
+#include <boost/itl/concept/map_value.hpp>
+#include <boost/itl/detail/map_algo.hpp>
+
 
 namespace boost{ namespace itl
 {
@@ -52,7 +55,7 @@ contains(const Type& super, const typename Type::element_type& value_pair)
 }
 
 //==============================================================================
-//= Equivalences and Orderings<ElementSet|ElementMap>
+//= Equivalences and Orderings<ElementMap>
 //==============================================================================
 
 /** Protonic equality is equality on all elements that do not carry a neutron as content. */
@@ -64,7 +67,7 @@ is_protonic_equal(const Type& lhs, const Type& rhs)
 }
 
 //==============================================================================
-//= Addition
+//= Addition<ElementMap>
 //==============================================================================
 /** \c add inserts \c value_pair into the map if it's key does 
     not exist in the map.    

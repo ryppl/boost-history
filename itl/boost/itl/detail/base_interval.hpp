@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Copyright (c) 2007-2010: Joachim Faulhaber
+Copyright (c) 2010-2010: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
@@ -57,18 +57,18 @@ struct base_interval
     /// The size type of an interval which is mostly std::size_t
     typedef typename itl::size_type_of<DomainT>::type size_type;
 
-    typedef typename boost::call_traits<DomainT>::param_type DomainP;
+    typedef typename boost::call_traits<DomainT>::param_type domain_param;
 
     /** Less compare of interval elements. */
-    inline static bool domain_less(DomainP left, DomainP right)       
+    inline static bool domain_less(domain_param left, domain_param right)       
     { return domain_compare()(left, right) ;}
 
     /** Less or equal compare of interval elements. */
-    inline static bool domain_less_equal(DomainP left, DomainP right) 
+    inline static bool domain_less_equal(domain_param left, domain_param right) 
     { return !domain_compare()(right, left );}
 
     /** Equality compare of interval elements. */
-    inline static bool domain_equal(DomainP left, DomainP right)
+    inline static bool domain_equal(domain_param left, domain_param right)
     { return !domain_compare()(left, right) && !domain_compare()(right, left);}
 };
 

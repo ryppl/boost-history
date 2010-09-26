@@ -23,8 +23,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/interval_base_set.hpp>
 #include <boost/itl/detail/interval_map_algo.hpp>
 
-#include <boost/mpl/bool.hpp> //CL
-
 
 #define const_FOR_IMPLMAP(iter) for(typename ImplMapT::const_iterator iter=_map.begin(); (iter)!=_map.end(); (iter)++)
 #define FOR_IMPLMAP(iter) for(typename ImplMapT::iterator iter=_map.begin(); (iter)!=_map.end(); (iter)++)
@@ -97,6 +95,7 @@ public:
     //--------------------------------------------------------------------------
     /// Domain type (type of the keys) of the map
     typedef DomainT   domain_type;
+    typedef typename boost::call_traits<DomainT>::param_type domain_param;
     /// Domain type (type of the keys) of the map
     typedef CodomainT codomain_type;
     /// Auxiliary type to help the compiler resolve ambiguities when using std::make_pair
@@ -129,7 +128,6 @@ public:
     /// Inverse Combine functor for codomain value aggregation
     typedef typename inverse<codomain_combine>::type inverse_codomain_combine;
     /// Intersection functor for codomain values
-    //CL typedef ITL_SECTION_CODOMAIN(Section,CodomainT) codomain_intersect;
 
     typedef typename mpl::if_
     <has_set_semantics<codomain_type>
@@ -331,13 +329,12 @@ public:
     /** Addition of a key value pair to the map */
     SubType& add(const element_type& key_value_pair) 
     {
-        return add(make_segment(key_value_pair));
+        return add(make_segment<type>(key_value_pair));
     }
 
     /** Addition of an interval value pair to the map. */
     SubType& add(const segment_type& interval_value_pair) 
     {
-        //CL return itl::add(*that(), interval_value_pair);
         this->template _add<codomain_combine>(interval_value_pair);
         return *that();
     }
@@ -347,7 +344,6 @@ public:
         inserted after. */
     iterator add(iterator prior_, const segment_type& interval_value_pair) 
     {
-        //CL return itl::add(*that(), prior_, interval_value_pair);
         return this->template _add<codomain_combine>(prior_, interval_value_pair);
     }
 
@@ -358,7 +354,7 @@ public:
     /** Subtraction of a key value pair from the map */
     SubType& subtract(const element_type& key_value_pair)
     { 
-        return subtract(make_segment(key_value_pair));
+        return subtract(make_segment<type>(key_value_pair));
     }
 
     /** Subtraction of an interval value pair from the map. */
@@ -373,13 +369,13 @@ public:
     //= Insertion
     //==========================================================================
 
-    std::pair<iterator,bool> _insert(const value_type& value_pair){ return _map.insert(value_pair); } //CL
-    iterator _insert(iterator prior, const value_type& value_pair){ return _map.insert(prior, value_pair); } //CL
+    //std::pair<iterator,bool> _insert(const value_type& value_pair){ return _map.insert(value_pair); } //CL
+    //iterator _insert(iterator prior, const value_type& value_pair){ return _map.insert(prior, value_pair); } //CL
 
     /** Insertion of a \c key_value_pair into the map. */
     SubType& insert(const element_type& key_value_pair) 
     {
-        return insert(make_segment(key_value_pair));
+        return insert(make_segment<type>(key_value_pair));
     }
 
     /** Insertion of an \c interval_value_pair into the map. */
@@ -417,7 +413,7 @@ public:
     /** Erase a \c key_value_pair from the map. */
     SubType& erase(const element_type& key_value_pair) 
     { 
-        erase(make_segment(key_value_pair));
+        erase(make_segment<type>(key_value_pair));
         return *that();
     }
 
@@ -449,7 +445,7 @@ public:
     /** The intersection of \c key_value_pair and \c *this map is added to \c section. */
     void add_intersection(SubType& section, const element_type& key_value_pair)const
     {
-        add_intersection(section, make_segment(key_value_pair));
+        add_intersection(section, make_segment<type>(key_value_pair));
     }
 
     /** The intersection of \c interval_value_pair and \c *this map is added to \c section. */
@@ -494,7 +490,7 @@ public:
     /** If \c *this map contains \c key_value_pair it is erased, otherwise it is added. */
     SubType& flip(const element_type& key_value_pair)
     { 
-        return flip(make_segment(key_value_pair)); 
+        return flip(make_segment<type>(key_value_pair)); 
     }
 
     /** If \c *this map contains \c interval_value_pair it is erased, otherwise it is added. */
@@ -535,26 +531,6 @@ public:
     reverse_iterator rend()   { return _map.rend(); }
     const_reverse_iterator rbegin()const { return _map.rbegin(); }
     const_reverse_iterator rend()const   { return _map.rend(); }
-
-    //==========================================================================
-    //= Algorithm unifiers
-    //==========================================================================
-
-    template<typename IteratorT>
-    static const key_type& key_value(IteratorT value_){ return (*value_).first; }
-
-    template<typename IteratorT>
-    static codomain_type co_value(IteratorT value_){ return (*value_).second; }
-
-    template<typename LeftIterT, typename RightIterT>
-    static bool key_less(LeftIterT left_, RightIterT right_) 
-    { return key_compare()((*left_).first, (*right_).first); }
-
-    static value_type make_value(const key_type& key_value, const codomain_type& codom_val)
-    { return value_type(key_value, codom_val); }
-
-    static segment_type make_segment(const element_type& element)
-    { return segment_type(interval_type(element.key), element.data); }
 
 private:
     template<class Combiner>
@@ -626,7 +602,7 @@ private:
 
     void partial_add_intersection(SubType& section, const element_type& operand)const
     {
-        partial_add_intersection(section, make_segment(operand));
+        partial_add_intersection(section, make_segment<type>(operand));
     }
 
 
@@ -898,16 +874,16 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
     // The addend interval 'inter_val' covers the beginning of the collision sequence.
 
     // only for the first there can be a left_resid: a part of *first_ left of inter_val
-    interval_type left_resid = right_subtract(key_value(first_), inter_val);
+    interval_type left_resid = right_subtract(first_->first, inter_val);
 
     if(!itl::is_empty(left_resid))
     {   //            [------------ . . .
         // [left_resid---first_ --- . . .
         iterator prior_ = cyclic_prior(*this, first_);
-        const_cast<interval_type&>(key_value(first_)) 
-            = left_subtract(key_value(first_), left_resid);
+        const_cast<interval_type&>(first_->first) 
+            = left_subtract(first_->first, left_resid);
         //NOTE: Only splitting
-        this->_map.insert(prior_, make_value(left_resid, co_value(first_)));
+        this->_map.insert(prior_, segment_type(left_resid, first_->second));
     }
     //POST:
     // [----- inter_val ---- . . .

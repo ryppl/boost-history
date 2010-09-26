@@ -5,14 +5,14 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_CONCEPT_ELEMENT_SET_OR_MAP_HPP_JOFA_100921
-#define BOOST_ITL_CONCEPT_ELEMENT_SET_OR_MAP_HPP_JOFA_100921
+#ifndef BOOST_ITL_CONCEPT_ELEMENT_ASSOCIATOR_HPP_JOFA_100921
+#define BOOST_ITL_CONCEPT_ELEMENT_ASSOCIATOR_HPP_JOFA_100921
 
 #include <boost/itl/type_traits/is_associative_element_container.hpp>
 #include <boost/itl/type_traits/is_key_container_of.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
-#include <boost/itl/concept/element/set.hpp>
-#include <boost/itl/concept/element/map.hpp>
+#include <boost/itl/concept/element_set.hpp>
+#include <boost/itl/concept/element_map.hpp>
 
 namespace boost{ namespace itl
 {
@@ -75,7 +75,7 @@ within(const SubT& sub, const SuperT& super)
     typename SuperT::const_iterator super_;
     while(sub_ != sub.end())
     {
-        super_ = super.find(SubT::key_value(sub_));
+        super_ = super.find(key_value<SubT>(sub_));
         if(super_ == super.end()) 
             return false;
         else if(!co_equal(sub_, super_, &sub, &super))

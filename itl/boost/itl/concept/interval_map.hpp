@@ -12,6 +12,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/segment_type_of.hpp>
 #include <boost/itl/type_traits/absorbs_neutrons.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
+
+#include <boost/itl/concept/map_value.hpp>
 #include <boost/itl/detail/interval_map_algo.hpp>
 
 namespace boost{ namespace itl
