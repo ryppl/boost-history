@@ -27,8 +27,8 @@ time2_demo contained this comment:
 */
 
 
-#ifndef BOOST_CHRONO_DURATION_HPP
-#define BOOST_CHRONO_DURATION_HPP
+#ifndef BOOST_EX_CHRONO_DURATION_HPP
+#define BOOST_EX_CHRONO_DURATION_HPP
 
 #include "config.hpp"
 #include "static_assert.hpp"
@@ -41,7 +41,7 @@ time2_demo contained this comment:
 
 #include <boost/mpl/logical.hpp>
 #include <boost/ratio.hpp>
-#include <boost/type_traits/common_type.hpp>
+#include "type_traits/common_type.hpp"
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/is_floating_point.hpp>
 #include <boost/type_traits/is_unsigned.hpp>
@@ -51,11 +51,11 @@ time2_demo contained this comment:
 #include <boost/detail/workaround.hpp>
 #include <boost/integer_traits.hpp>
 
-#if !defined(BOOST_NO_STATIC_ASSERT) || !defined(BOOST_CHRONO_USES_MPL_ASSERT)
-#define BOOST_CHRONO_A_DURATION_REPRESENTATION_CAN_NOT_BE_A_DURATION        "A duration representation can not be a duration"
-#define BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_DURATION_MUST_BE_A_STD_RATIO "Second template parameter of duration must be a boost::ratio"
-#define BOOST_CHRONO_DURATION_PERIOD_MUST_BE_POSITIVE "duration period must be positive"
-#define BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_TIME_POINT_MUST_BE_A_BOOST_CHRONO_DURATION "Second template parameter of time_point must be a boost::chrono::duration"
+#if !defined(BOOST_NO_STATIC_ASSERT) || !defined(BOOST_EX_CHRONO_USES_MPL_ASSERT)
+#define BOOST_EX_CHRONO_A_DURATION_REPRESENTATION_CAN_NOT_BE_A_DURATION        "A duration representation can not be a duration"
+#define BOOST_EX_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_DURATION_MUST_BE_A_STD_RATIO "Second template parameter of duration must be a boost::ratio"
+#define BOOST_EX_CHRONO_DURATION_PERIOD_MUST_BE_POSITIVE "duration period must be positive"
+#define BOOST_EX_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_TIME_POINT_MUST_BE_A_BOOST_EX_CHRONO_DURATION "Second template parameter of time_point must be a boost_ex::chrono::duration"
 #endif
 
 
@@ -66,7 +66,9 @@ time2_demo contained this comment:
 //                                                                            //
 //----------------------------------------------------------------------------//
 
-namespace boost {
+namespace boost_ex {
+    using boost::ratio;
+    
 namespace chrono {
 
   template <class Rep, class Period = ratio<1> >
@@ -247,9 +249,9 @@ namespace chrono {
   //  ToDuration duration_cast(const duration<Rep, Period>& d);
 
   // convenience typedefs
-  typedef duration<boost::int_least64_t, nano> nanoseconds;    // at least 64 bits needed
-  typedef duration<boost::int_least64_t, micro> microseconds;  // at least 55 bits needed
-  typedef duration<boost::int_least64_t, milli> milliseconds;  // at least 45 bits needed
+  typedef duration<boost::int_least64_t, boost::nano> nanoseconds;    // at least 64 bits needed
+  typedef duration<boost::int_least64_t, boost::micro> microseconds;  // at least 55 bits needed
+  typedef duration<boost::int_least64_t, boost::milli> milliseconds;  // at least 45 bits needed
   typedef duration<boost::int_least64_t> seconds;              // at least 35 bits needed
   typedef duration<boost::int_least32_t, ratio< 60> > minutes; // at least 29 bits needed
   typedef duration<boost::int_least32_t, ratio<3600> > hours;  // at least 23 bits needed
@@ -273,7 +275,7 @@ namespace chrono {
     //   the use of common_type ensures that the most logical "intermediate"
     //   representation is used.
     template <class FromDuration, class ToDuration,
-              class Period = typename ratio_divide<typename FromDuration::period,
+              class Period = typename boost::ratio_divide<typename FromDuration::period,
               typename ToDuration::period>::type,
               bool = Period::num == 1,
               bool = Period::den == 1>
@@ -374,7 +376,7 @@ namespace chrono {
 //----------------------------------------------------------------------------//
 
   namespace detail {
-    template <class T, bool = is_arithmetic<T>::value>
+    template <class T, bool = boost::is_arithmetic<T>::value>
     struct chrono_numeric_limits {
         static T lowest() throw() {return (std::numeric_limits<T>::min)  ();}
     };
@@ -400,16 +402,16 @@ namespace chrono {
     };
 
     template <class T>
-    struct numeric_limits : chrono_numeric_limits<typename remove_cv<T>::type> {};
+    struct numeric_limits : chrono_numeric_limits<typename boost::remove_cv<T>::type> {};
     
   }        
   template <class Rep>
   struct duration_values
   {
-      static BOOST_CHRONO_CONSTEXPR Rep zero() {return Rep(0);}
-      static BOOST_CHRONO_CONSTEXPR Rep max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return (std::numeric_limits<Rep>::max)();}
+      static  Rep zero() {return Rep(0);}
+      static  Rep max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return (std::numeric_limits<Rep>::max)();}
       
-      static BOOST_CHRONO_CONSTEXPR Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return detail::numeric_limits<Rep>::lowest();}
+      static  Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return detail::numeric_limits<Rep>::lowest();}
   };
 
 }  // namespace chrono
@@ -439,9 +441,9 @@ namespace chrono {
     template <class Rep, class Period>
     class duration
     {
-    BOOST_CHRONO_STATIC_ASSERT(!boost::chrono::detail::is_duration<Rep>::value, BOOST_CHRONO_A_DURATION_REPRESENTATION_CAN_NOT_BE_A_DURATION, ());
-    BOOST_CHRONO_STATIC_ASSERT(boost::detail::is_ratio<Period>::value, BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_DURATION_MUST_BE_A_STD_RATIO, ());
-    BOOST_CHRONO_STATIC_ASSERT(Period::num>0, BOOST_CHRONO_DURATION_PERIOD_MUST_BE_POSITIVE, ());
+    BOOST_EX_CHRONO_STATIC_ASSERT(!boost_ex::chrono::detail::is_duration<Rep>::value, BOOST_EX_CHRONO_A_DURATION_REPRESENTATION_CAN_NOT_BE_A_DURATION, ());
+    BOOST_EX_CHRONO_STATIC_ASSERT(boost::detail::is_ratio<Period>::value, BOOST_EX_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_DURATION_MUST_BE_A_STD_RATIO, ());
+    BOOST_EX_CHRONO_STATIC_ASSERT(Period::num>0, BOOST_EX_CHRONO_DURATION_PERIOD_MUST_BE_POSITIVE, ());
     public:
         typedef Rep rep;
         typedef Period period;
@@ -449,17 +451,17 @@ namespace chrono {
         rep rep_;
     public:
 
-        BOOST_CHRONO_CONSTEXPR duration() { } // = default;
+         duration() { } // = default;
         template <class Rep2>
-        BOOST_CHRONO_CONSTEXPR explicit duration(const Rep2& r,
+         explicit duration(const Rep2& r,
             typename boost::enable_if <
-                    mpl::and_ <   
+                    boost::mpl::and_ <   
                         boost::is_convertible<Rep2, rep>,
-                        mpl::or_ <
+                        boost::mpl::or_ <
                             treat_as_floating_point<rep>,
-                            mpl::and_ <    
-                                mpl::not_ < treat_as_floating_point<rep> >,
-                                mpl::not_ < treat_as_floating_point<Rep2> >
+                            boost::mpl::and_ <    
+                                boost::mpl::not_ < treat_as_floating_point<rep> >,
+                                boost::mpl::not_ < treat_as_floating_point<Rep2> >
                             >
                         >
                     >
@@ -475,13 +477,13 @@ namespace chrono {
 
         // conversions
         template <class Rep2, class Period2>
-        BOOST_CHRONO_CONSTEXPR duration(const duration<Rep2, Period2>& d,
+         duration(const duration<Rep2, Period2>& d,
             typename boost::enable_if <
-                    mpl::or_ < 
+                    boost::mpl::or_ < 
                         treat_as_floating_point<rep>,
-                        mpl::and_ < 
-                            mpl::bool_ < ratio_divide<Period2, period>::type::den == 1>,
-                            mpl::not_ < treat_as_floating_point<Rep2> >
+                        boost::mpl::and_ < 
+                            boost::mpl::bool_ < boost::ratio_divide<Period2, period>::type::den == 1>,
+                            boost::mpl::not_ < treat_as_floating_point<Rep2> >
                         >
                     >
                 >::type* = 0)
@@ -498,7 +500,7 @@ namespace chrono {
 
         // observer
 
-        BOOST_CHRONO_CONSTEXPR rep count() const {return rep_;}
+         rep count() const {return rep_;}
 
         // arithmetic
 
@@ -518,9 +520,9 @@ namespace chrono {
         duration& operator%=(const duration& rhs) {rep_ %= rhs.count(); return *this;};
         // 20.9.3.4 duration special values [time.duration.special]
 
-        static BOOST_CHRONO_CONSTEXPR duration zero() {return duration(duration_values<rep>::zero());}
-        static BOOST_CHRONO_CONSTEXPR duration min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return duration((duration_values<rep>::min)());}
-        static BOOST_CHRONO_CONSTEXPR duration max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return duration((duration_values<rep>::max)());}
+        static  duration zero() {return duration(duration_values<rep>::zero());}
+        static  duration min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return duration((duration_values<rep>::min)());}
+        static  duration max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return duration((duration_values<rep>::max)());}
     };
 
 //----------------------------------------------------------------------------//
@@ -558,7 +560,7 @@ namespace chrono {
   template <class Rep1, class Period, class Rep2>
   inline
   typename boost::enable_if <
-    mpl::and_ < 
+    boost::mpl::and_ < 
         boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>, 
         boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>
     >,
@@ -575,7 +577,7 @@ namespace chrono {
   template <class Rep1, class Period, class Rep2>
   inline
   typename boost::enable_if <
-    mpl::and_ < 
+    boost::mpl::and_ < 
         boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>,
         boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>
     >,
@@ -590,8 +592,8 @@ namespace chrono {
 
   template <class Rep1, class Period, class Rep2>
   inline
-  typename boost::disable_if <boost::chrono::detail::is_duration<Rep2>,
-    typename boost::chrono::detail::duration_divide_result<duration<Rep1, Period>, Rep2>::type
+  typename boost::disable_if <boost_ex::chrono::detail::is_duration<Rep2>,
+    typename boost_ex::chrono::detail::duration_divide_result<duration<Rep1, Period>, Rep2>::type
   >::type
   operator/(const duration<Rep1, Period>& d, const Rep2& s)
   {
@@ -613,8 +615,8 @@ namespace chrono {
 
   template <class Rep1, class Rep2, class Period>
   inline
-  typename boost::disable_if <boost::chrono::detail::is_duration<Rep1>,
-    typename boost::chrono::detail::duration_divide_result2<Rep1, duration<Rep2, Period> >::type
+  typename boost::disable_if <boost_ex::chrono::detail::is_duration<Rep1>,
+    typename boost_ex::chrono::detail::duration_divide_result2<Rep1, duration<Rep2, Period> >::type
   >::type
   operator/(const Rep1& s, const duration<Rep2, Period>& d)
   {
@@ -627,8 +629,8 @@ namespace chrono {
   // Duration %
 
   template <class Rep1, class Period, class Rep2>
-  typename boost::disable_if <boost::chrono::detail::is_duration<Rep2>,
-    typename boost::chrono::detail::duration_modulo_result<duration<Rep1, Period>, Rep2>::type
+  typename boost::disable_if <boost_ex::chrono::detail::is_duration<Rep2>,
+    typename boost_ex::chrono::detail::duration_modulo_result<duration<Rep1, Period>, Rep2>::type
   >::type
   operator%(const duration<Rep1, Period>& d, const Rep2& s) {
     typedef typename common_type<Rep1, Rep2>::type CR;
@@ -697,7 +699,7 @@ namespace chrono {
   bool
   operator==(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs)
   {
-      return boost::chrono::detail::duration_eq<duration<Rep1, Period1>, duration<Rep2, Period2> >()(lhs, rhs);
+      return boost_ex::chrono::detail::duration_eq<duration<Rep1, Period1>, duration<Rep2, Period2> >()(lhs, rhs);
   }
 
   // Duration !=
@@ -717,7 +719,7 @@ namespace chrono {
   bool
   operator< (const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs)
   {
-      return boost::chrono::detail::duration_lt<duration<Rep1, Period1>, duration<Rep2, Period2> >()(lhs, rhs);
+      return boost_ex::chrono::detail::duration_lt<duration<Rep1, Period1>, duration<Rep2, Period2> >()(lhs, rhs);
   }
 
   // Duration >
@@ -757,10 +759,10 @@ namespace chrono {
   // Compile-time select the most efficient algorithm for the conversion...
   template <class ToDuration, class Rep, class Period>
   inline
-  typename boost::enable_if <boost::chrono::detail::is_duration<ToDuration>, ToDuration>::type
+  typename boost::enable_if <boost_ex::chrono::detail::is_duration<ToDuration>, ToDuration>::type
   duration_cast(const duration<Rep, Period>& fd)
   {
-      return boost::chrono::detail::duration_cast<duration<Rep, Period>, ToDuration>()(fd);
+      return boost_ex::chrono::detail::duration_cast<duration<Rep, Period>, ToDuration>()(fd);
   }
 
 
@@ -773,20 +775,19 @@ namespace chrono {
     // see comment above in section 20.9.3 Class template duration [time.duration]
     template <class Rep, class Period>
     template <class Rep2, class Period2>
-    BOOST_CHRONO_CONSTEXPR duration<Rep, Period>::duration(const duration<Rep2, Period2>& d,
+     duration<Rep, Period>::duration(const duration<Rep2, Period2>& d,
         typename boost::enable_if <
-            mpl::or_ < 
+            boost::mpl::or_ < 
                 treat_as_floating_point<rep>,
-                mpl::and_ <
-                    mpl::bool_ <ratio_divide<Period2, period>::type::den == 1>,
-                    mpl::not_ <treat_as_floating_point<Rep2> >
+                boost::mpl::and_ <
+                    boost::mpl::bool_ <boost::ratio_divide<Period2, period>::type::den == 1>,
+                    boost::mpl::not_ <treat_as_floating_point<Rep2> >
                 >
             >
             >::type*)
           : rep_(duration_cast<duration>(d).count()) {}
 #endif
 
-} // namespace chrono
-} // namespace boost
-
-#endif // BOOST_CHRONO_DURATION_HPP
+} 
+}
+#endif // BOOST_EX_CHRONO_DURATION_HPP

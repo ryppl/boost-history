@@ -12,10 +12,10 @@
 
 namespace User1
 {
-// Example type-safe "physics" code interoperating with std::chrono::duration types
+// Example type-safe "physics" code interoperating with chrono::duration types
 //  and taking advantage of the std::ratio infrastructure and design philosophy.
 
-// length - mimics std::chrono::duration except restricts representation to double.
+// length - mimics chrono::duration except restricts representation to double.
 //    Uses boost::ratio facilities for length units conversions.
 
 template <class Ratio>
@@ -62,11 +62,11 @@ typedef length<boost::ratio_multiply<boost::ratio<12>, inch::ratio>::type>   foo
 typedef length<boost::ratio_multiply<boost::ratio<5280>, foot::ratio>::type> mile;  // 5280 feet
 
 // Need a floating point definition of seconds
-typedef boost::chrono::duration<double> seconds;                         // unity
+typedef boost_ex::chrono::duration<double> seconds;                         // unity
 // Demo of (scientific) support for sub-nanosecond resolutions
-typedef boost::chrono::duration<double,  boost::pico> picosecond;  // 10^-12 seconds
-typedef boost::chrono::duration<double, boost::femto> femtosecond; // 10^-15 seconds
-typedef boost::chrono::duration<double,  boost::atto> attosecond;  // 10^-18 seconds
+typedef boost_ex::chrono::duration<double,  boost::pico> picosecond;  // 10^-12 seconds
+typedef boost_ex::chrono::duration<double, boost::femto> femtosecond; // 10^-15 seconds
+typedef boost_ex::chrono::duration<double,  boost::atto> attosecond;  // 10^-18 seconds
 
 // A very brief proof-of-concept for SIUnits-like library
 //  Hard-wired to floating point seconds and meters, but accepts other units (shown in testUser1())
@@ -196,7 +196,7 @@ int main()
     std::cout << "* testUser1 *\n";
     std::cout << "*************\n";
     User1::Distance d( User1::mile(110) );
-    User1::Time t(( boost::chrono::hours(2) ));
+    User1::Time t(( boost_ex::chrono::hours(2) ));
     
     //typedef User1::quantity<boost::ratio_subtract<User1::Distance::time_dim, User1::Time::time_dim >::type, 
     //                        boost::ratio_subtract<User1::Distance::distance_dim, User1::Time::distance_dim >::type > R;
