@@ -471,38 +471,38 @@ struct ratio_not_equal
 namespace detail
 {
 
-  template <class R1, class R2, bool Odd = false,
+  template <class R1, class R2,
           intmax_t Q1 = R1::num / R1::den, intmax_t M1 = R1::num % R1::den,
           intmax_t Q2 = R2::num / R2::den, intmax_t M2 = R2::num % R2::den>
   struct ratio_less1
   {
-    static const bool value = Odd ? Q2 < Q1 : Q1 < Q2;
+    static const bool value = Q1 < Q2;
   };
 
-  template <class R1, class R2, bool Odd, intmax_t Q>
-  struct ratio_less1<R1, R2, Odd, Q, 0, Q, 0>
+  template <class R1, class R2, intmax_t Q>
+  struct ratio_less1<R1, R2, Q, 0, Q, 0>
   {
     static const bool value = false;
   };
 
-  template <class R1, class R2, bool Odd, intmax_t Q, intmax_t M2>
-  struct ratio_less1<R1, R2, Odd, Q, 0, Q, M2>
+  template <class R1, class R2, intmax_t Q, intmax_t M2>
+  struct ratio_less1<R1, R2, Q, 0, Q, M2>
   {
-    static const bool value = !Odd;
+    static const bool value = true;
   };
 
-  template <class R1, class R2, bool Odd, intmax_t Q, intmax_t M1>
-  struct ratio_less1<R1, R2, Odd, Q, M1, Q, 0>
+  template <class R1, class R2, intmax_t Q, intmax_t M1>
+  struct ratio_less1<R1, R2, Q, M1, Q, 0>
   {
-    static const bool value = Odd;
+    static const bool value = false;
   };
 
-  template <class R1, class R2, bool Odd, intmax_t Q, intmax_t M1,
+  template <class R1, class R2, intmax_t Q, intmax_t M1,
                                                         intmax_t M2>
-  struct ratio_less1<R1, R2, Odd, Q, M1, Q, M2>
+  struct ratio_less1<R1, R2, Q, M1, Q, M2>
   {
-    static const bool value = ratio_less1<ratio<R1::den, M1>,
-                                            ratio<R2::den, M2>, !Odd>::value;
+    static const bool value = ratio_less1<ratio<R2::den, M2>, ratio<R1::den, M1>
+                                            >::value;
   };  
   
   template <class R1, class R2, intmax_t S1 = static_sign<R1::num>::value,
