@@ -34,37 +34,9 @@ project
         <toolset>msvc:<cxxflags>/wd4127
     ;
 
-    test-suite "ratio.ratio"
+    test-suite "ratio"
         :
-        [ compile typedefs.pass.cpp ]
-        [ compile ratio_ratio/ratio.pass.cpp ]
-        [ compile-fail ratio_ratio/ratio1.fail.cpp ]
-        [ compile-fail ratio_ratio/ratio2.fail.cpp ]
-        [ compile-fail ratio_ratio/ratio3.fail.cpp ]
-        ;
-
-    test-suite "ratio.arithmetic"
-        :
-        #[ run ratio_ope_test.cpp ]
-        [ compile-fail ratio_fail_test1.cpp  ]
-        [ compile ratio_arithmetic/ratio_add.pass.cpp  ]
-        [ compile ratio_arithmetic/ratio_subtract.pass.cpp  ]
-        [ compile ratio_arithmetic/ratio_multiply.pass.cpp  ]
-        [ compile ratio_arithmetic/ratio_divide.pass.cpp  ]
-        [ compile-fail ratio_arithmetic/ratio_add.fail.cpp  ]
-        [ compile-fail ratio_arithmetic/ratio_subtract.fail.cpp  ]
-        [ compile-fail ratio_arithmetic/ratio_multiply.fail.cpp  ]
-        [ compile-fail ratio_arithmetic/ratio_divide.fail.cpp  ]
-        ;
-
-    test-suite "ratio.comparison"
-        :
-        [ compile ratio_comparison/ratio_equal.pass.cpp  ]
-        [ compile ratio_comparison/ratio_not_equal.pass.cpp  ]
-        [ compile ratio_comparison/ratio_less.pass.cpp  ]
-        [ compile ratio_comparison/ratio_less_equal.pass.cpp  ]
-        [ compile ratio_comparison/ratio_greater.pass.cpp  ]
-        [ compile ratio_comparison/ratio_greater_equal.pass.cpp  ]
+        [ run ratio_test.cpp ]
         ;
 
     test-suite "examples"
