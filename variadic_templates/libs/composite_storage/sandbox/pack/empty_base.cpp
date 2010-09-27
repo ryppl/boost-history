@@ -1,13 +1,8 @@
 //Purpose:
-//  See if more than 1 empty base types contribute 
-//  more to size of derived type than just 1
-//  empty_base type.
-//Result:
-//  No. Output is:
-//    sizeof(empty_class<0>)=1
-//    sizeof(empties_inherits)=1
-//    sizeof(empties_member)=2
-//    sizeof(empties_all_of)=1
+//  Demostrate effect of using empty base class
+//  in various constructs.
+//Reference:
+//  [EBO] http://www.cantrip.org/emptyopt.html
 //
 #include <boost/composite_storage/pack/container_all_of_aligned.hpp>
 #include <boost/composite_storage/pack/container_one_of_maybe.hpp>
@@ -18,6 +13,9 @@
   < unsigned I
   >
 struct empty_class
+/**@brief
+ *  This is an empty class, according to:
+ */
 {
         friend
       std::ostream&
@@ -34,15 +32,15 @@ struct empty_class
     {
         return I;
     }
-  #if 0
-    unsigned my_i;
-    empty_class(void):my_i(I){}
-  #endif
 };
 
 struct empties_inherit
 : empty_class<0>
 , empty_class<1>
+/*@brief
+ *  According to [EBO] this class is not an empty class 
+ *  because its sequence of base class objects is not empty.
+ */
 {};
 
 template<unsigned I, typename T>
@@ -53,6 +51,11 @@ struct index_inherit
 struct empties_tree_inherit
 : index_inherit<0,empties_inherit>
 , index_inherit<1,empties_inherit>
+/**@brief
+ *  Since empties_inherit is not an empty class,
+ *  the empty-base-class-optimization doesn't apply here;
+ *  hence sizeof(empties_tree_inherit)>1.
+ */
 {};
 
 struct empties_member
@@ -60,10 +63,28 @@ struct empties_member
   empty_class<0> m0;
   empty_class<1> m1;
 };
+
     typedef
-  boost::mpl::integral_c<unsigned,0>
+  char
+index_type
+;
+    typedef
+  boost::mpl::integral_c<index_type,index_type(0)>
 index0
 ;  
+namespace boost
+{
+namespace composite_storage
+{
+  template<>
+  struct enum_base<index0>
+  {
+          typedef 
+        char //save space in one_of_maybe
+      type;
+  };
+}
+}
     typedef
   boost::composite_storage::pack::container
   < boost::composite_storage::tags::all_of_aligned
@@ -101,13 +122,15 @@ empties_variant
 int main(void)
 {
     std::cout<<"sizeof(empty_class<0>)="<<sizeof(empty_class<0>)<<"\n";
+    std::cout<<"sizeof(index_inherit<0,empties_inherit>)="
+      <<sizeof(index_inherit<0,empties_inherit>)<<"\n";
     std::cout<<"sizeof(empties_inherit)="<<sizeof(empties_inherit)<<"\n";
     std::cout<<"sizeof(empties_tree_inherit)="<<sizeof(empties_tree_inherit)<<"\n";
     std::cout<<"sizeof(empties_member)="<<sizeof(empties_member)<<"\n";
     std::cout<<"sizeof(empties_all_of)="<<sizeof(empties_all_of)<<"\n";
     std::cout<<"sizeof(empties_tree_all_of)="<<sizeof(empties_tree_all_of)<<"\n";
-    std::cout<<"sizeof(empties_one_of)="<<sizeof(empties_one_of)<<"\n";
     std::cout<<"sizeof(empties_variant)="<<sizeof(empties_variant)<<"\n";
+    std::cout<<"sizeof(empties_one_of)="<<sizeof(empties_one_of)<<"\n";
     std::cout
       <<"sizeof(enum_base<index0>::type)="
       <<sizeof(boost::composite_storage::enum_base<index0>::type)<<"\n";
