@@ -93,11 +93,11 @@ public:
     large_bitset& operator &=(const large_bitset& rhs) {_map &= rhs._map; return *this;}
     large_bitset& operator ^=(const large_bitset& rhs) {_map ^= rhs._map; return *this;}
 
-    large_bitset& operator +=(const element_type& rhs) {return add(interval_type(rhs, rhs));      }
-    large_bitset& operator |=(const element_type& rhs) {return add(interval_type(rhs, rhs));      }
-    large_bitset& operator -=(const element_type& rhs) {return subtract(interval_type(rhs, rhs)); }
-    large_bitset& operator &=(const element_type& rhs) {return intersect(interval_type(rhs, rhs));}
-    large_bitset& operator ^=(const element_type& rhs) {return flip(interval_type(rhs, rhs));     }
+    large_bitset& operator +=(const element_type& rhs) {return add(interval_type(rhs));      }
+    large_bitset& operator |=(const element_type& rhs) {return add(interval_type(rhs));      }
+    large_bitset& operator -=(const element_type& rhs) {return subtract(interval_type(rhs)); }
+    large_bitset& operator &=(const element_type& rhs) {return intersect(interval_type(rhs));}
+    large_bitset& operator ^=(const element_type& rhs) {return flip(interval_type(rhs));     }
 
     large_bitset& operator +=(const interval_type& rhs){return add(rhs);      }
     large_bitset& operator |=(const interval_type& rhs){return add(rhs);      }
@@ -131,7 +131,7 @@ public:
         typename interval_bitmap_type::const_iterator iter = _map.begin();
         while(iter != _map.end())
         {
-            element_type fst = iter->first.first(), lst = iter->first.last();
+			element_type fst = itl::first(iter->first), lst = itl::last(iter->first);
             for(element_type chunk = fst; chunk <= lst; chunk++)
                 std::cout << iter->second.as_string(off_on) << std::endl;
             ++iter;
@@ -164,11 +164,11 @@ private:                                      // Example value
 
     //[large_bitset_segment_apply
     large_bitset& segment_apply(segment_combiner combine, const interval_type& operand)
-    {                                                   // same as
-        element_type   base = operand.first() >> shift, // operand.first()/ divisor
-                       ceil = operand.last()  >> shift; // operand.last() / divisor
-        word_type base_rest = operand.first() &  mask , // operand.first()% divisor
-                  ceil_rest = operand.last()  &  mask ; // operand.last() % divisor  
+    {                                                       // same as
+        element_type   base = itl::first(operand) >> shift, // itl::first(operand) / divisor
+                       ceil = itl::last (operand) >> shift; // itl::last (operand) / divisor
+        word_type base_rest = itl::first(operand) &  mask , // itl::first(operand) % divisor
+                  ceil_rest = itl::last (operand) &  mask ; // itl::last (operand) % divisor  
 
         if(base == ceil) // [first, last] are within one bitset (chunk)
             (this->*combine)(base, base+1, bitset_type(  to_upper_from(base_rest)

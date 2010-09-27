@@ -165,10 +165,10 @@ public:
     //- Associated types: Size
     //--------------------------------------------------------------------------
     /// The difference type of an interval which is sometimes different form the data_type
-    typedef typename interval_type::difference_type difference_type;
+    typedef typename difference_type_of<domain_type>::type difference_type;
 
     /// The size type of an interval which is mostly std::size_t
-    typedef typename interval_type::size_type size_type;
+    typedef typename size_type_of<domain_type>::type size_type;
 
 
     //--------------------------------------------------------------------------
@@ -325,7 +325,7 @@ public:
     /** Find the interval value pair, that contains element \c key */
     const_iterator find(const element_type& key)const
     { 
-        return this->_set.find(interval_type(key)); 
+        return this->_set.find(itl::construct<segment_type>(key)); 
     }
 
     const_iterator find(const segment_type& segment)const
@@ -340,7 +340,7 @@ public:
     /** Add a single element \c key to the set */
     SubType& add(const element_type& key) 
     {
-        return add(segment_type(key));
+        return add(itl::construct<segment_type>(key));
     }
 
     /** Add an interval of elements \c inter_val to the set */
@@ -365,7 +365,7 @@ public:
     /** Subtract a single element \c key from the set */
     SubType& subtract(const element_type& key) 
     { 
-        return subtract(segment_type(key));
+        return subtract(itl::construct<interval_type>(key));
     }
 
     /** Subtract an interval of elements \c inter_val from the set */

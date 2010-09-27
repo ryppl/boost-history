@@ -134,7 +134,7 @@ void interval_map_fundamentals_4_ordered_types()
     BOOST_CHECK_EQUAL(hull(single_I0_1I_u1).upper(), I0_1I.upper());
 
     //contains predicate
-	BOOST_CHECK_EQUAL(call::contains(single_I0_0I_u1, v0), true);
+    BOOST_CHECK_EQUAL(call::contains(single_I0_0I_u1, v0), true);
     BOOST_CHECK_EQUAL(call::contains(single_I0_0I_u1, v0_u1), true);
     BOOST_CHECK_EQUAL(call::contains(single_I0_0I_u1, I0_0I_u1), true);
 
@@ -435,15 +435,15 @@ void interval_map_contains_4_bicremental_types()
     BOOST_CHECK_EQUAL( call::contains(itv_map, MK_v(3)), true );
     BOOST_CHECK_EQUAL( call::contains(itv_map, K_v(3,1)), true );
 
-	BOOST_CHECK_EQUAL( call::contains(IntervalMapT().add(K_v(3,1)), K_v(3,1)), true );
-	BOOST_CHECK_EQUAL( call::contains(IntervalMapT().add(K_v(3,1)), MK_v(3)), true );
+    BOOST_CHECK_EQUAL( call::contains(IntervalMapT().add(K_v(3,1)), K_v(3,1)), true );
+    BOOST_CHECK_EQUAL( call::contains(IntervalMapT().add(K_v(3,1)), MK_v(3)), true );
     BOOST_CHECK_EQUAL( call::contains(IntervalMapT().insert(K_v(3,1)), K_v(3,1)), true );
     itv_map.clear();
-	BOOST_CHECK_EQUAL( call::contains((itv_map += IIv(3,7,1)), IIv(3,7,1)), true );
+    BOOST_CHECK_EQUAL( call::contains((itv_map += IIv(3,7,1)), IIv(3,7,1)), true );
     BOOST_CHECK_EQUAL( call::contains(itv_map, IIv(3,7,2)), false );
     BOOST_CHECK_EQUAL( call::contains(itv_map, I_I(3,7)),   true );
     BOOST_CHECK_EQUAL( call::contains(itv_map, I_I(4,6)),   true );
-	BOOST_CHECK_EQUAL( call::contains((itv_map += CIv(7,9,1)),IIv(3,9,1)), true );
+    BOOST_CHECK_EQUAL( call::contains((itv_map += CIv(7,9,1)),IIv(3,9,1)), true );
     BOOST_CHECK_EQUAL( call::contains(itv_map, I_I(4,8)),   true );
     BOOST_CHECK_EQUAL( call::contains((itv_map += IIv(11,12,1)), IIv(3,12,1)), false );
     BOOST_CHECK_EQUAL( call::contains(itv_map, I_I(4,11)),  false );
@@ -456,7 +456,7 @@ void interval_map_contains_4_bicremental_types()
     itv_map += itv_map2;
     BOOST_CHECK_EQUAL( call::contains(itv_map, itv_map2), true );    
     IntervalSetT itv_set2;
-	itl::domain(itv_set2, itv_map2);
+    itl::domain(itv_set2, itv_map2);
     BOOST_CHECK_EQUAL( call::contains(itv_map, itv_set2), true );    
 }
 
@@ -538,7 +538,7 @@ void interval_map_operators_4_bicremental_types()
     all -= section;
     complement += all;
     //complement.erase(I3_5I);
-	itl::erase(complement, section);
+    itl::erase(complement, section);
     BOOST_CHECK_EQUAL( disjoint(section, complement), true );
     BOOST_CHECK_EQUAL( intersects(section, complement), false );
 }
@@ -1138,7 +1138,7 @@ void interval_map_set_4_bicremental_types()
     IntervalMapT map_a;
     map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
 
-	BOOST_CHECK_EQUAL( call::contains(map_a.set(CDv(2,10,4)), CDv(2,10,4)), true );
+    BOOST_CHECK_EQUAL( call::contains(map_a.set(CDv(2,10,4)), CDv(2,10,4)), true );
     BOOST_CHECK_EQUAL( call::contains(map_a.set(K_v(4,5)), K_v(4,5)), true );
     BOOST_CHECK_EQUAL( call::contains(map_a.set(K_v(4,5)).set(CDv(3,5,6)), CDv(3,5,6)), true );
 }

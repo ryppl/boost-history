@@ -113,9 +113,9 @@ public:
     //- Associated types: Size
     //--------------------------------------------------------------------------
     /// The difference type of an interval which is sometimes different form the domain_type
-    typedef typename interval_type::difference_type difference_type;
+    typedef typename difference_type_of<domain_type>::type difference_type;
     /// The size type of an interval which is mostly std::size_t
-    typedef typename interval_type::size_type size_type;
+    typedef typename size_type_of<domain_type>::type size_type;
 
     //--------------------------------------------------------------------------
     //- Associated types: Functors
@@ -368,10 +368,6 @@ public:
     //==========================================================================
     //= Insertion
     //==========================================================================
-
-    //std::pair<iterator,bool> _insert(const value_type& value_pair){ return _map.insert(value_pair); } //CL
-    //iterator _insert(iterator prior, const value_type& value_pair){ return _map.insert(prior, value_pair); } //CL
-
     /** Insertion of a \c key_value_pair into the map. */
     SubType& insert(const element_type& key_value_pair) 
     {

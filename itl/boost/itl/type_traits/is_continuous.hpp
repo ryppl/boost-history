@@ -9,10 +9,19 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #define BOOST_ITL_TYPE_TRAITS_IS_CONTINUOUS_HPP_JOFA_080910
 
 #include <string>
-#include <boost/mpl/and.hpp>
+#include <boost/mpl/not.hpp>
+#include <boost/itl/type_traits/is_discrete.hpp>
 
 namespace boost{ namespace itl
 {
+	//JODO Dies waere eigentlich besser, funktioniert aber nicht
+    //template <class Type> struct is_continuous
+    //{
+    //    typedef is_continuous type;
+    //    BOOST_STATIC_CONSTANT(bool, 
+    //        value = mpl::not_<is_discrete<Type> >::value);
+    //};
+
     template <class Type> struct is_continuous;
 
     template<> struct is_continuous<float>
@@ -43,12 +52,6 @@ namespace boost{ namespace itl
     {
         typedef is_continuous<Type> type;
         BOOST_STATIC_CONSTANT(bool, value = false);
-            //JODO Meta Fortsetzung des Praedikats auf interval<Type> etc.
-            //  so nicht, vielleicht anders? Meta lambda?
-            //value = (mpl::and_<has_domain<Type>::value, 
-            //                   is_continuous<typename Type::domain_type>
-            //                  >::value
-            //         ));
     };
 
 }} // namespace boost itl

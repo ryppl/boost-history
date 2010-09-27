@@ -17,7 +17,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/static_assert.hpp> 
 #include <boost/concept_check.hpp> 
 #include <boost/next_prior.hpp> 
-#include <boost/call_traits.hpp> 
 #include <boost/mpl/bool.hpp> 
 #include <boost/mpl/if.hpp> 
 #include <boost/mpl/assert.hpp> 
@@ -1140,10 +1139,10 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 
 
 //------------------------------------------------------------------------------
-//- dynamic_intervals: Adapt interval class to interval concept
+//- dynamic_interval_traits: Adapt interval class to interval concept
 //------------------------------------------------------------------------------
 template<class DomainT, ITL_COMPARE Compare>
-struct dynamic_intervals< itl::interval<DomainT,Compare> >
+struct dynamic_interval_traits< itl::interval<DomainT,Compare> >
 {
     typedef boost::itl::interval<DomainT,Compare> interval_type;
 

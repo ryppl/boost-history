@@ -94,12 +94,12 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 
 
 //==============================================================================
-//=T continuous_interval -> concept intervals
+//=T continuous_interval -> concept interval
 //==============================================================================
 template<class DomainT, ITL_COMPARE Compare>
-struct intervals< itl::continuous_interval<DomainT, Compare> >
+struct interval_traits< itl::continuous_interval<DomainT, Compare> >
 {
-    typedef intervals type;
+    typedef interval_traits type;
     typedef DomainT domain_type;
     typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
     typedef itl::continuous_interval<DomainT, Compare> interval_type;
@@ -115,14 +115,17 @@ struct intervals< itl::continuous_interval<DomainT, Compare> >
 
 
 //==============================================================================
-//=T continuous_interval -> concept dynamic_intervals
+//=T continuous_interval -> concept dynamic_interval
 //==============================================================================
 template<class DomainT, ITL_COMPARE Compare>
-struct dynamic_intervals<boost::itl::continuous_interval<DomainT,Compare> >
+struct dynamic_interval_traits<boost::itl::continuous_interval<DomainT,Compare> >
 {
+    typedef dynamic_interval_traits type;
     typedef boost::itl::continuous_interval<DomainT,Compare> interval_type;
+    typedef DomainT domain_type;
+    typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
 
-    static interval_type construct(const DomainT& lo, const DomainT& up, interval_bounds bounds)
+    static interval_type construct(const domain_type lo, const domain_type up, interval_bounds bounds)
     {
         return itl::continuous_interval<DomainT,Compare>(lo, up, bounds,
             static_cast<itl::continuous_interval<DomainT,Compare>* >(0) );
@@ -140,29 +143,20 @@ struct dynamic_intervals<boost::itl::continuous_interval<DomainT,Compare> >
     }
 };
 
-
-
 //==============================================================================
 //= Type traits
 //==============================================================================
 template <class DomainT, ITL_COMPARE Compare> 
-struct is_interval<continuous_interval<DomainT,Compare> >
+struct interval_bound_type< continuous_interval<DomainT,Compare> >
 {
-    typedef is_interval<continuous_interval<DomainT,Compare> > type;
-    BOOST_STATIC_CONSTANT(bool, value = true);
+    typedef interval_bound_type type;
+    BOOST_STATIC_CONSTANT(unsigned char, value = interval_bounds::dynamic);
 };
 
 template <class DomainT, ITL_COMPARE Compare> 
 struct is_continuous_interval<continuous_interval<DomainT,Compare> >
 {
     typedef is_continuous_interval<continuous_interval<DomainT,Compare> > type;
-    BOOST_STATIC_CONSTANT(bool, value = true);
-};
-
-template <class DomainT, ITL_COMPARE Compare> 
-struct has_dynamic_bounds<continuous_interval<DomainT,Compare> >
-{
-    typedef has_dynamic_bounds<continuous_interval<DomainT,Compare> > type;
     BOOST_STATIC_CONSTANT(bool, value = true);
 };
 

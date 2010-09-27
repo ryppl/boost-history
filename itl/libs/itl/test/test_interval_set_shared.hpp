@@ -102,7 +102,7 @@ void interval_set_fundamentals_4_ordered_types()
 
     BOOST_CHECK_EQUAL(single_I0_0I_from_element, single_I0_0I_from_interval);
     BOOST_CHECK_EQUAL(single_I0_0I_from_element, single_I0_0I);
-	BOOST_CHECK_EQUAL(itl::hull(single_I0_0I).lower(), I0_0I.lower());
+    BOOST_CHECK_EQUAL(itl::hull(single_I0_0I).lower(), I0_0I.lower());
     BOOST_CHECK_EQUAL(itl::hull(single_I0_0I).upper(), I0_0I.upper());
 
     IntervalSet<T> single_I1_1I_from_element(v1);
@@ -117,7 +117,7 @@ void interval_set_fundamentals_4_ordered_types()
 
     BOOST_CHECK_EQUAL(single_I0_1I_from_interval, single_I0_1I);
     BOOST_CHECK_EQUAL(hull(single_I0_1I), I0_1I);
-	BOOST_CHECK_EQUAL(hull(single_I0_1I).lower(), I0_1I.lower());
+    BOOST_CHECK_EQUAL(hull(single_I0_1I).lower(), I0_1I.lower());
     BOOST_CHECK_EQUAL(hull(single_I0_1I).upper(), I0_1I.upper());
 
     //contains predicate

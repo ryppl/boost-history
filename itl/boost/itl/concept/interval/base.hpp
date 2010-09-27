@@ -19,7 +19,7 @@ make_segment(const typename Type::element_type& element)
 {
     typedef typename Type::interval_type interval_type;
     typedef typename Type::segment_type  segment_type;
-    return segment_type(interval_type(element.key), element.data);
+	return segment_type(itl::construct<interval_type>(element.key), element.data);
 }
 
 namespace segmental

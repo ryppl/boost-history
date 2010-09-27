@@ -44,7 +44,7 @@ void test_large()
 { 
     const nat64 much = 0xffffffffffffffffull; 
     large_bitset<> venti; // ... the largest, I can think of ;)
-    venti += interval<nat64>(0, much);
+    venti += discrete_interval<nat64>(0, much);
 
     cout << "----- Test function test_large() -----------------------------------------------\n";
     cout << "We have just turned on the awesome amount of 18,446,744,073,709,551,616 bits ;-)\n";
@@ -69,22 +69,23 @@ void test_small()
 
     cout << "----- Test function test_small() -----------\n";
     cout << "-- Switch on all bits in range [0,64] ------\n";
-    tall += interval<nat>(0, 64);
+    tall += discrete_interval<nat>(0, 64);
     tall.show_segments();
     cout << "--------------------------------------------\n";
 
     cout << "-- Turn off bits: 25,27,28 -----------------\n";
+
     (((tall -= 25) -= 27) -= 28) ;
     tall.show_segments();
     cout << "--------------------------------------------\n";
 
     cout << "-- Flip bits in range [24,30) --------------\n";
-    tall ^= interval<nat>::rightopen(24,30);
+    tall ^= discrete_interval<nat>::rightopen(24,30);
     tall.show_segments();
     cout << "--------------------------------------------\n";
 
     cout << "-- Remove the first 10 bits ----------------\n";
-    tall -= interval<nat>::rightopen(0,10);
+    tall -= discrete_interval<nat>::rightopen(0,10);
     tall.show_segments();
 
     cout << "-- Remove even bits in range [0,72) --------\n";
@@ -107,14 +108,14 @@ void test_picturesque()
     typedef large_bitset<nat, bits8> Bit8Set;
 
     Bit8Set square, stare;
-    square += interval<nat>(0,7);
+    square += discrete_interval<nat>(0,8);
     for(int i=1; i<5; i++)
     { 
         square += 8*i; 
         square += 8*i+7; 
     }
 
-    square += interval<nat>(41,46);
+    square += discrete_interval<nat>(41,47);
 
     cout << "----- Test function test_picturesque() -----\n";
     cout << "-------- empty face:       " 
@@ -122,7 +123,7 @@ void test_picturesque()
     square.show_matrix(" *");
 
     stare += 18; stare += 21;
-    stare += interval<nat>(34,37);
+    stare += discrete_interval<nat>(34,38);
 
     cout << "-------- compressed smile: " 
          << stare.interval_count()            << " intervals -----\n";
@@ -142,7 +143,7 @@ void test_set()
     const NatT much = (numeric_limits<NatT>::max)();
 
     large_bitset<NatT, BitsT> venti; //the largest, I can think of
-    venti += interval<NatT>(0, much);
+    venti += discrete_interval<NatT>(0, much);
 
     cout << "--------------------------------------------------------------------------------\n";
     venti.show_segments();

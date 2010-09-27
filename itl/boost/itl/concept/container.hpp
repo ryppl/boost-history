@@ -8,6 +8,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #ifndef BOOST_ITL_CONCEPT_CONTAINER_HPP_JOFA_100923
 #define BOOST_ITL_CONCEPT_CONTAINER_HPP_JOFA_100923
 
+#include <boost/utility/enable_if.hpp>
 #include <boost/itl/type_traits/is_container.hpp>
 
 namespace boost{ namespace itl

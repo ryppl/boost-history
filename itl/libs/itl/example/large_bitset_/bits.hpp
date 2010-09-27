@@ -10,8 +10,9 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #define BOOST_LIBS_ITL_EXAMPLE_LARGE_BITSET_BITS_HPP_JOFA_091019
 //[mini_bits_includes
                                                // These includes are needed ...
-#include <string>                              // for conversion to output
-#include <boost/itl/type_traits/is_set.hpp>    // to define that bits is a set
+#include <string>                              // for conversion to output and to
+#include <boost/itl/type_traits/has_set_semantics.hpp>//declare that bits has the
+                                               // behavior of a set.
 //]
 
 namespace mini

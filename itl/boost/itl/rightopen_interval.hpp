@@ -84,7 +84,7 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 //=T rightopen_interval -> concept intervals
 //==============================================================================
 template<class DomainT, ITL_COMPARE Compare>
-struct intervals< itl::rightopen_interval<DomainT, Compare> >
+struct interval_traits< itl::rightopen_interval<DomainT, Compare> >
 {
     typedef DomainT domain_type;
     typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
@@ -104,31 +104,10 @@ struct intervals< itl::rightopen_interval<DomainT, Compare> >
 //= Type traits
 //==============================================================================
 template <class DomainT, ITL_COMPARE Compare> 
-struct is_interval<rightopen_interval<DomainT,Compare> >
+struct interval_bound_type< rightopen_interval<DomainT,Compare> >
 {
-    typedef is_interval<rightopen_interval<DomainT,Compare> > type;
-    BOOST_STATIC_CONSTANT(bool, value = true);
-};
-
-template <class DomainT, ITL_COMPARE Compare> 
-struct has_static_bounds<rightopen_interval<DomainT,Compare> >
-{
-    typedef has_static_bounds<rightopen_interval<DomainT,Compare> > type;
-    BOOST_STATIC_CONSTANT(bool, value = true);
-};
-
-template <class DomainT, ITL_COMPARE Compare> 
-struct has_asymmetric_bounds<rightopen_interval<DomainT,Compare> >
-{
-    typedef has_asymmetric_bounds<rightopen_interval<DomainT,Compare> > type;
-    BOOST_STATIC_CONSTANT(bool, value = true);
-};
-
-template <class DomainT, ITL_COMPARE Compare> 
-struct is_static_rightopen<rightopen_interval<DomainT,Compare> >//JODO replace this predicate static_borders in {open, leftopen, rightopen, cloded}
-{
-    typedef is_static_rightopen<rightopen_interval<DomainT,Compare> > type;
-    BOOST_STATIC_CONSTANT(bool, value = true);
+    typedef interval_bound_type type;
+    BOOST_STATIC_CONSTANT(unsigned char, value = interval_bounds::static_rightopen);
 };
 
 template <class DomainT, ITL_COMPARE Compare>
@@ -138,8 +117,8 @@ struct type_to_string<itl::rightopen_interval<DomainT,Compare> >
     { return "[I)<"+ type_to_string<DomainT>::apply() +">"; }
 };
 
-template<class DomainT> 
-struct value_size<itl::rightopen_interval<DomainT> >
+template<class DomainT, ITL_COMPARE Compare> 
+struct value_size<itl::rightopen_interval<DomainT,Compare> >
 {
     static std::size_t apply(const itl::rightopen_interval<DomainT>& value) 
     { return 2; }

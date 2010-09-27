@@ -10,11 +10,11 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/itl/detail/design_config.hpp>
-#include <boost/itl/type_traits/has_dynamic_bounds.hpp>
 
 namespace boost{namespace itl
 {
 
+//JODO CL?
 /// Constants for interval bounds
 enum BoundTypes {
     /// Both open: <tt>(x,y)</tt>
@@ -32,6 +32,13 @@ typedef unsigned char bound_type;
 class interval_bounds
 {
 public:
+    BOOST_STATIC_CONSTANT(bound_type, static_open      = 0);
+    BOOST_STATIC_CONSTANT(bound_type, static_leftopen  = 1);
+    BOOST_STATIC_CONSTANT(bound_type, static_rightopen = 2);
+    BOOST_STATIC_CONSTANT(bound_type, static_closed    = 3);
+    BOOST_STATIC_CONSTANT(bound_type, dynamic          = 4);
+    BOOST_STATIC_CONSTANT(bound_type, undefined        = 5);
+
     BOOST_STATIC_CONSTANT(bound_type, _open      = 0);
     BOOST_STATIC_CONSTANT(bound_type, _leftopen  = 1);
     BOOST_STATIC_CONSTANT(bound_type, _rightopen = 2);
@@ -60,118 +67,6 @@ public:
 public:
     bound_type _bits;
 };
-
-
-inline interval_bounds left(interval_bounds x1)
-{ return interval_bounds(x1._bits & interval_bounds::_left); }
-
-inline interval_bounds right(interval_bounds x1)
-{ return interval_bounds(x1._bits & interval_bounds::_right); }
-
-inline interval_bounds all(interval_bounds x1)
-{ return interval_bounds(x1._bits & interval_bounds::_all); }
-
-inline bool operator == (const interval_bounds x1, const interval_bounds x2)
-{ return x1._bits == x2._bits; }
-
-inline bool operator != (const interval_bounds x1, const interval_bounds x2)
-{ return x1._bits != x2._bits; }
-
-inline interval_bounds operator & (interval_bounds x1, interval_bounds x2)
-{ return interval_bounds(x1._bits & x2._bits); }
-
-inline interval_bounds operator | (interval_bounds x1, interval_bounds x2)
-{ return interval_bounds(x1._bits | x2._bits); }
-
-// left shift (multiplies by 2^shift)
-inline interval_bounds operator << (interval_bounds bounds, unsigned int shift)
-{ return interval_bounds(bounds._bits << shift); }
-
-// right shift (divides by 2^shift)
-inline interval_bounds operator >> (interval_bounds bounds, unsigned int shift)
-{ return interval_bounds(bounds._bits >> shift); }
-
-inline interval_bounds operator ~ (interval_bounds x1)
-{ return all(interval_bounds(~(x1._bits))); }
-
-inline interval_bounds outer_bounds(interval_bounds x1, interval_bounds x2)
-{ return left(x1) | right(x2); }
-
-inline interval_bounds inner_bounds(interval_bounds x1, interval_bounds x2)
-{ return interval_bounds(x1.reverse_right() | x2.reverse_left()); }
-
-inline interval_bounds left_bounds(interval_bounds x1, interval_bounds x2)
-{ return left(x1) | (left(x2) >> 1); }
-
-inline interval_bounds right_bounds(interval_bounds x1, interval_bounds x2)
-{ return (right(x1) <<1 ) | right(x2); }
-
-inline interval_bounds left_subtract_bounds(interval_bounds x1, interval_bounds x2)
-{ return right(x1) | ~(right(x2) << 1); }
-
-inline interval_bounds right_subtract_bounds(interval_bounds x1, interval_bounds x2)
-{ return left(x1) | ~(left(x2) >> 1); }
-
-inline bool is_complementary(interval_bounds x1)
-{ return x1 == interval_bounds::right_open() || x1 == interval_bounds::left_open(); }
-
-inline bool is_left_closed(interval_bounds bounds)
-{ return bounds.left().bits()==2; }
-
-inline bool is_right_closed(interval_bounds bounds)
-{ return bounds.right().bits()==1; }
-
-inline std::string left_bracket(interval_bounds bounds)
-{ return is_left_closed(bounds) ? "[" : "("; }
-
-inline std::string right_bracket(interval_bounds bounds)
-{ return is_right_closed(bounds) ? "]" : ")"; }
-
-template<class CharType, class CharTraits>
-std::basic_ostream<CharType, CharTraits>& operator <<
-  (std::basic_ostream<CharType, CharTraits> &stream, 
-   interval_bounds const& object)
-{
-    return stream << "'" << left_bracket(object) << right_bracket(object) << "'";
-}
-
-
-
-template<class IntervalT>
-inline typename 
-boost::enable_if<has_dynamic_bounds<IntervalT>, interval_bounds>::type
-outer_bounds(const IntervalT& x1, const IntervalT& x2)
-{ return outer_bounds(x1.bounds(), x2.bounds()); }
-
-template<class IntervalT>
-inline typename 
-boost::enable_if<has_dynamic_bounds<IntervalT>, interval_bounds>::type
-inner_bounds(const IntervalT& x1, const IntervalT& x2)
-{ return inner_bounds(x1.bounds(), x2.bounds()); }
-
-template<class IntervalT>
-inline typename 
-boost::enable_if<has_dynamic_bounds<IntervalT>, interval_bounds>::type
-left_bounds(const IntervalT& x1, const IntervalT& x2)
-{ return left_bounds(x1.bounds(), x2.bounds()); }
-
-template<class IntervalT>
-inline typename 
-boost::enable_if<has_dynamic_bounds<IntervalT>, interval_bounds>::type
-right_bounds(const IntervalT& x1, const IntervalT& x2)
-{ return right_bounds(x1.bounds(), x2.bounds()); }
-
-template<class IntervalT>
-inline typename 
-boost::enable_if<has_dynamic_bounds<IntervalT>, interval_bounds>::type
-left_subtract_bounds(const IntervalT& x1, const IntervalT& x2)
-{ return left_subtract_bounds(x1.bounds(), x2.bounds()); }
-
-template<class IntervalT>
-inline typename 
-boost::enable_if<has_dynamic_bounds<IntervalT>, interval_bounds>::type
-right_subtract_bounds(const IntervalT& x1, const IntervalT& x2)
-{ return right_subtract_bounds(x1.bounds(), x2.bounds()); }
 
 
 template<class DomainT>

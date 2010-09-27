@@ -18,6 +18,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include "../test_value_maker.hpp"
 
 #include <boost/type_traits/is_same.hpp>
+#include <boost/detail/is_incrementable.hpp>
+#include <boost/type_traits/is_floating_point.hpp>
 
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl/separate_interval_set.hpp>
@@ -205,38 +207,47 @@ BOOST_AUTO_TEST_CASE(casual)
     typedef interval_set<T>                   IntervalSetT;
     typedef IntervalMapT::interval_type       IntervalT;
 
-	BOOST_CHECK_EQUAL((is_key_container_of<         int ,       itl::map<int,int> >::value), false);
-	BOOST_CHECK_EQUAL((is_key_container_of<std::pair<int,int> , itl::map<int,int> >::value), false);
-	BOOST_CHECK_EQUAL((is_key_container_of<itl::set<int>,       itl::set<int>     >::value), true);
-	BOOST_CHECK_EQUAL((is_key_container_of<itl::set<int>,       itl::map<int,int> >::value), true);
-	BOOST_CHECK_EQUAL((is_key_container_of<itl::map<int,int>,   itl::map<int,int> >::value), true);
+    BOOST_CHECK_EQUAL((is_key_container_of<         int ,       itl::map<int,int> >::value), false);
+    BOOST_CHECK_EQUAL((is_key_container_of<std::pair<int,int> , itl::map<int,int> >::value), false);
+    BOOST_CHECK_EQUAL((is_key_container_of<itl::set<int>,       itl::set<int>     >::value), true);
+    BOOST_CHECK_EQUAL((is_key_container_of<itl::set<int>,       itl::map<int,int> >::value), true);
+    BOOST_CHECK_EQUAL((is_key_container_of<itl::map<int,int>,   itl::map<int,int> >::value), true);
 
-	//BOOST_CHECK_EQUAL((is_element_container<itl::map<int,int> >::value), true);
+    //BOOST_CHECK_EQUAL((is_element_container<itl::map<int,int> >::value), true);
 
-	typedef itl::map<int,int> MapII;
+    typedef itl::map<int,int> MapII;
 
-	//const bool xx = is_same< typename itl::map<int,int>::codomain_type, 
-	//	typename codomain_type_of<itl::map<int,int> >::type >::value;
+    //const bool xx = is_same< typename itl::map<int,int>::codomain_type, 
+    //    typename codomain_type_of<itl::map<int,int> >::type >::value;
 
-	BOOST_CHECK_EQUAL(has_codomain_type<MapII>::value, true);
-	BOOST_CHECK_EQUAL((is_same<MapII::codomain_type, int>::value), true);
+    BOOST_CHECK_EQUAL(has_codomain_type<MapII>::value, true);
+    BOOST_CHECK_EQUAL((is_same<MapII::codomain_type, int>::value), true);
 
-	BOOST_CHECK_EQUAL((is_same<get_codomain_type<MapII,true>::type, int>::value),  true);
-	BOOST_CHECK_EQUAL((is_same<get_codomain_type<MapII,false>::type, int>::value), false);
-	BOOST_CHECK_EQUAL((is_same<get_codomain_type<MapII,false>::type, itl::no_type>::value), true);
+    BOOST_CHECK_EQUAL((is_same<get_codomain_type<MapII,true>::type, int>::value),  true);
+    BOOST_CHECK_EQUAL((is_same<get_codomain_type<MapII,false>::type, int>::value), false);
+    BOOST_CHECK_EQUAL((is_same<get_codomain_type<MapII,false>::type, itl::no_type>::value), true);
 
-	BOOST_CHECK_EQUAL((is_same<get_codomain_type<MapII, has_codomain_type<MapII>::value >::type, int>::value), true);
-	BOOST_CHECK_EQUAL((is_same<get_codomain_type<MapII, has_codomain_type<MapII>::value >::type, itl::no_type>::value), false);
+    BOOST_CHECK_EQUAL((is_same<get_codomain_type<MapII, has_codomain_type<MapII>::value >::type, int>::value), true);
+    BOOST_CHECK_EQUAL((is_same<get_codomain_type<MapII, has_codomain_type<MapII>::value >::type, itl::no_type>::value), false);
 
-	BOOST_CHECK_EQUAL((is_map<MapII>::value), true);
-	BOOST_CHECK_EQUAL((is_icl_container<MapII>::value), true);
+    BOOST_CHECK_EQUAL((is_map<MapII>::value), true);
+    BOOST_CHECK_EQUAL((is_icl_container<MapII>::value), true);
 
-	BOOST_CHECK_EQUAL((is_fragment_of<IntervalSetT::element_type, IntervalSetT>::value), true);
-	BOOST_CHECK_EQUAL((is_fragment_of<IntervalSetT::segment_type, IntervalSetT>::value), true);
-	BOOST_CHECK_EQUAL((is_fragment_of<discrete_interval<T>, IntervalSetT>::value), true);
-	BOOST_CHECK_EQUAL((is_fragment_of<double, IntervalSetT>::value), false);
+    BOOST_CHECK_EQUAL((is_fragment_of<IntervalSetT::element_type, IntervalSetT>::value), true);
+    BOOST_CHECK_EQUAL((is_fragment_of<IntervalSetT::segment_type, IntervalSetT>::value), true);
+    BOOST_CHECK_EQUAL((is_fragment_of<discrete_interval<T>, IntervalSetT>::value), true);
+    BOOST_CHECK_EQUAL((is_fragment_of<double, IntervalSetT>::value), false);
 
-	//BOOST_CHECK_EQUAL(xx, true); 
-		                        
+
+    BOOST_CHECK_EQUAL((boost::detail::is_incrementable<int>::value), true);
+    BOOST_CHECK_EQUAL((boost::detail::is_incrementable<double>::value), true);
+    BOOST_CHECK_EQUAL((boost::detail::is_incrementable<std::string>::value), false);
+
+    BOOST_CHECK_EQUAL((is_floating_point<long double>::value), true);
+    BOOST_CHECK_EQUAL((is_floating_point<double>::value), true);
+    BOOST_CHECK_EQUAL((is_floating_point<float>::value), true);
+
+    //BOOST_CHECK_EQUAL(xx, true); 
+                                
 }
 

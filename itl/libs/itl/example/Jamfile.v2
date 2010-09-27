@@ -51,6 +51,14 @@ exe std_transform
         <include>$(BOOST_ROOT)
     ;
 
+exe custom_interval
+    :
+        custom_interval_/custom_interval.cpp
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
 # Examples using boost_date_time
 exe boost_party
     :
