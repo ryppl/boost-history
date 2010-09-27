@@ -7,7 +7,6 @@
 //  See http://www.boost.org/LICENSE_1_0.txt
 
 #include <boost/ratio.hpp>
-#include <boost/chrono/duration.hpp>
 #include <iostream>
 
 typedef boost::ratio<5, 3>   five_thirds;       // five_thirds::num == 5, five_thirds::den == 3
