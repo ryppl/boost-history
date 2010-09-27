@@ -29,7 +29,7 @@ time2_demo contained this comment:
 
 // The way overflow is managed for ratio_less is taken from llvm/libcxx/include/ratio
 
-#ifndef BOOST_RATIO_RATIO__HPP
+#ifndef BOOST_RATIO_RATIO_HPP
 #define BOOST_RATIO_RATIO_HPP
 
 #include <cstdlib>
