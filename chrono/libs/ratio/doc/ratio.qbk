@@ -24,7 +24,6 @@
 ]
 
 [/==================]
-[def __Boost_Chrono__ [*Boost.Chrono]]
 [def __Boost_Ratio__ [*Boost.Ratio]]
 
 [/===============================================]
@@ -244,10 +243,10 @@ The __Boost_Ratio__ library provides:
 [heading Getting Boost.Ratio ]
 [/=================================]
 
-You can get the last stable release of __Boost_Chrono__ by downloading [^chrono.zip] from the
-[@http://www.boost-consulting.com/vault/index.php?directory=System Boost Vault]. Directories ratio.
+You can get the last stable release of __Boost_Ratio__ by downloading [^ratio.zip] from the
+[@http://www.boostpro.com/vault/index.php?action=downloadfile&filename=ratio.zip&directory=Math%20-%20Numerics&PHPSESSID=2d7859f3e812c993f5a9e2d9900dfee8 Boost Vault].
 
-You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/chrono Boost Sandbox]. Just go to [@http://svn.boost.org/trac/boost/wiki/BoostSubversion here] and follow the instructions there for anonymous SVN access.
+You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/chrono Boost Sandbox] directories boost/ratio and libs/ratio. Just go to [@http://svn.boost.org/trac/boost/wiki/BoostSubversion here] and follow the instructions there for anonymous SVN access.
 
 [/==========================================]
 [heading Where to install Boost.Ratio? ]
