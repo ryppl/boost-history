@@ -28,14 +28,6 @@ time2_demo contained this comment:
 */
 
 // The way overflow is managed for ratio_less is taken from llvm/libcxx/include/ratio
-//===---------------------------- ratio -----------------------------------===//
-//
-//                     The LLVM Compiler Infrastructure
-//
-// This file is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
-//
-//===----------------------------------------------------------------------===//
 
 #ifndef BOOST_RATIO_RATIO__HPP
 #define BOOST_RATIO_RATIO_HPP
