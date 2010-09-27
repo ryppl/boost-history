@@ -41,7 +41,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value)); //JODO
+        BOOST_STATIC_ASSERT((itl::is_discrete<DomainT>::value));
     }
 
     //NOTE: Compiler generated copy constructor is used
@@ -52,7 +52,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        //JODO BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value)); //JODO
+        BOOST_STATIC_ASSERT((itl::is_discrete<DomainT>::value));
     }
 
     /** Interval from <tt>low</tt> to <tt>up</tt> with bounds <tt>bounds</tt> */
@@ -63,7 +63,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        //JODO BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
+        BOOST_STATIC_ASSERT((itl::is_discrete<DomainT>::value));
     }
 
     domain_type     lower()const { return _lwb; }
@@ -158,7 +158,7 @@ template <class DomainT, ITL_COMPARE Compare>
 struct is_discrete_interval<discrete_interval<DomainT,Compare> >
 {
     typedef is_discrete_interval<discrete_interval<DomainT,Compare> > type;
-    BOOST_STATIC_CONSTANT(bool, value = !is_continuous<DomainT>::value); //JODO
+    BOOST_STATIC_CONSTANT(bool, value = is_discrete<DomainT>::value);
 };
 
 template <class DomainT, ITL_COMPARE Compare>

@@ -34,7 +34,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));//JODO is_discrete?
+        BOOST_STATIC_ASSERT((itl::is_discrete<DomainT>::value));
     }
 
     //NOTE: Compiler generated copy constructor is used

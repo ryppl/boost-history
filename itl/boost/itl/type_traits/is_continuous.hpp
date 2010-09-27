@@ -14,44 +14,11 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 
 namespace boost{ namespace itl
 {
-	//JODO Dies waere eigentlich besser, funktioniert aber nicht
-    //template <class Type> struct is_continuous
-    //{
-    //    typedef is_continuous type;
-    //    BOOST_STATIC_CONSTANT(bool, 
-    //        value = mpl::not_<is_discrete<Type> >::value);
-    //};
-
-    template <class Type> struct is_continuous;
-
-    template<> struct is_continuous<float>
-    {
-        typedef is_continuous<float> type;
-        BOOST_STATIC_CONSTANT(bool, value = true);
-    };
-
-    template<> struct is_continuous<double>
-    {
-        typedef is_continuous<double> type;
-        BOOST_STATIC_CONSTANT(bool, value = true);
-    };
-
-    template<> struct is_continuous<long double>
-    {
-        typedef is_continuous<long double> type;
-        BOOST_STATIC_CONSTANT(bool, value = true);
-    };
-
-    template<> struct is_continuous<std::string>
-    {
-        typedef is_continuous<std::string> type;
-        BOOST_STATIC_CONSTANT(bool, value = true);
-    };
-
     template <class Type> struct is_continuous
     {
-        typedef is_continuous<Type> type;
-        BOOST_STATIC_CONSTANT(bool, value = false);
+        typedef is_continuous type;
+        BOOST_STATIC_CONSTANT(bool, 
+            value = mpl::not_<is_discrete<Type> >::value);
     };
 
 }} // namespace boost itl

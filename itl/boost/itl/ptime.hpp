@@ -18,6 +18,7 @@ w.r.t. addition (neutron()).
 #include <stdio.h>
 #include <string>
 #include <sstream>
+#include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
 
 #ifdef BOOST_MSVC 
@@ -34,9 +35,16 @@ w.r.t. addition (neutron()).
 #include <boost/itl/type_traits/neutron.hpp>
 #include <boost/itl/type_traits/difference_type_of.hpp>
 #include <boost/itl/type_traits/size_type_of.hpp>
+#include <boost/itl/type_traits/is_discrete.hpp>
 
 namespace boost{namespace itl
 {
+    template<> struct is_discrete<boost::posix_time::ptime>
+    {
+        typedef is_discrete type;
+        BOOST_STATIC_CONSTANT(bool, value = true);
+    };
+
     template<> 
     inline boost::posix_time::ptime neutron<boost::posix_time::ptime>::value()
     { 

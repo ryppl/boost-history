@@ -60,7 +60,7 @@ domain_equal(const typename interval_traits<Type>::domain_type& left,
 template<class Type>
 typename enable_if
 <
-	mpl::and_< is_static_rightopen<Type>
+    mpl::and_< is_static_rightopen<Type>
              , is_discrete<typename interval_traits<Type>::domain_type> >
   , Type
 >::type
@@ -73,35 +73,35 @@ construct(const typename interval_traits<Type>::domain_type& value)
 template<class Type>
 typename enable_if
 <
-	mpl::and_< is_static_leftopen<Type>
+    mpl::and_< is_static_leftopen<Type>
              , is_discrete<typename interval_traits<Type>::domain_type> >
   , Type
 >::type
 construct(const typename interval_traits<Type>::domain_type& value)
 {
     //ASSERT: This always creates an interval with exactly one element
-	BOOST_ASSERT((std::numeric_limits<Type>::min)() < value); 
+    BOOST_ASSERT((std::numeric_limits<Type>::min)() < value); 
     return interval_traits<Type>::construct(itl::pred(value), value);
 }
 
 template<class Type>
 typename enable_if
 <
-	mpl::and_< is_static_open<Type>
+    mpl::and_< is_static_open<Type>
              , is_discrete<typename interval_traits<Type>::domain_type> >
   , Type
 >::type
 construct(const typename interval_traits<Type>::domain_type& value)
 {
     //ASSERT: This always creates an interval with exactly one element
-	BOOST_ASSERT((std::numeric_limits<Type>::min)() < value); 
+    BOOST_ASSERT((std::numeric_limits<Type>::min)() < value); 
     return interval_traits<Type>::construct(itl::pred(value), itl::succ(value));
 }
 
 template<class Type>
 typename enable_if
 <
-	mpl::and_< is_static_closed<Type>
+    mpl::and_< is_static_closed<Type>
              , is_discrete<typename interval_traits<Type>::domain_type> >
   , Type
 >::type
@@ -125,7 +125,7 @@ template<class Type>
 typename enable_if<is_asymmetric_interval<Type>, Type>::type
 construct(const typename interval_traits<Type>::domain_type& low,
           const typename interval_traits<Type>::domain_type& up,
-          interval_bounds bounds = interval_bounds::right_open()) //JODO separate static intervals to avoid dependency
+          interval_bounds bounds = interval_bounds::right_open())
 {
     return interval_traits<Type>::construct(low, up);
 }
@@ -710,9 +710,8 @@ hull(Type left, const Type& right)
     else if(itl::is_empty(left))
         return right;
 
-    //JODO return construct
     return 
-        Type
+        construct<Type>
         (
             (std::min)(lower(left), lower(right), interval_traits<Type>::domain_compare()), 
             (std::max)(upper(left), upper(right), interval_traits<Type>::domain_compare())
@@ -735,7 +734,6 @@ hull(Type left, const Type& right)
     else if(itl::is_empty(left))
         return right;
 
-    //JODO return  construct<Type,std::less>
     return  dynamic_interval_traits<Type>::construct_bounded
             (
                 lower_min(left, right), 
@@ -762,8 +760,8 @@ left_subtract(Type right, const Type& left_minuend)
 {
     if(exclusive_less(left_minuend, right))
         return right; 
-    //JODO return construct(left_minuend.upper(), right.upper());
-    return Type(upper(left_minuend), upper(right));
+
+    return construct<Type>(upper(left_minuend), upper(right));
 }
 
 template<class Type>
@@ -800,8 +798,7 @@ right_subtract(Type left, const Type& right_minuend)
 {
     if(exclusive_less(left, right_minuend))
         return left; 
-    return Type(lower(left), lower(right_minuend));
-    //JODO return construct(left.lower(), right_minuend.lower());
+    return construct<Type>(lower(left), lower(right_minuend));
 }
 
 template<class Type>
@@ -815,10 +812,9 @@ template<class Type>
 typename boost::enable_if<has_dynamic_bounds<Type>, Type>::type
 right_subtract(Type left, const Type& right_minuend)
 {
-    //JODO s.o.
     if(exclusive_less(left, right_minuend))
         return left; 
-    //JODO return construct<Type,std::less>(left.lower(), right_minuend.lower(),
+
     return  dynamic_interval_traits<Type>::construct_bounded
             ( bounded_lower(left), reverse_bounded_lower(right_minuend) );
 }
@@ -833,11 +829,14 @@ typename boost::enable_if<is_asymmetric_interval<Type>, Type>::type
 operator & (Type left, const Type& right)
 {
     if(itl::is_empty(left) || itl::is_empty(right))
-        return Type(); //JODO return neutron<Type>::value; neutron for new interval_types.
+        return neutron<Type>::value();
     else
         return
-        Type((std::max)(itl::lower(left), itl::lower(right), interval_traits<Type>::domain_compare()),
-             (std::min)(itl::upper(left), itl::upper(right), interval_traits<Type>::domain_compare()));
+        construct<Type>
+        (
+            (std::max)(itl::lower(left), itl::lower(right), interval_traits<Type>::domain_compare()),
+            (std::min)(itl::upper(left), itl::upper(right), interval_traits<Type>::domain_compare())
+        );
 }
 
 template<class Type>
@@ -852,9 +851,8 @@ typename boost::enable_if<has_dynamic_bounds<Type>, Type>::type
 operator & (Type left, const Type& right)
 {
     if(itl::is_empty(left) || itl::is_empty(right))
-        return Type(); //JODO return neutron<Type>::value; neutron for new interval_types.
+        return neutron<Type>::value();
     else 
-        //JODO return  construct<Type,std::less>
         return  dynamic_interval_traits<Type>::construct_bounded
                 (
                     lower_max(left, right), 
