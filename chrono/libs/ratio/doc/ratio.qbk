@@ -9,7 +9,7 @@
 
 [article Boost.Ratio
     [quickbook 1.5]
-    [version 0.2.0]
+    [version 0.2.1]
     [authors [Hinnant, Howard]]
     [authors [Dawes, Beman]]
     [authors [Botet Escriba, Vicente J.]]
@@ -981,6 +981,14 @@ The output will be
 [/==================================]
 [section:history Appendix A: History]
 [/==================================]
+
+[section [*Version 0.2.1, September 27, 2010] ]
+
+[*Fixes:]
+
+* Removal of LLVM adapted files due to incompatible License issue.
+
+[endsect]
 
 [section [*Version 0.2.0, September 22, 2010] ]
 
