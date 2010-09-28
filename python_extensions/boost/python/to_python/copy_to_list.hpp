@@ -20,9 +20,12 @@ namespace boost { namespace python {
  */
 struct copy_to_list {
 
-    template <typename Container>
+    template <typename Container_>
     struct converter {
         
+        typedef typename boost::remove_const< 
+            typename boost::remove_reference< Container_ >::type >::type Container;
+
         typedef typename boost::range_const_iterator<Container>::type Iterator;
 
         inline bool convertible() const { return true; }

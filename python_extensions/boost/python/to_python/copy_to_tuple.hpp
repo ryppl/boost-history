@@ -3,26 +3,28 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt
 
-#ifndef BOOST_PYTHON_COPY_TO_LIST_HPP
-#define BOOST_PYTHON_COPY_TO_LIST_HPP
+#ifndef BOOST_PYTHON_TO_PYTHON_COPY_TO_TUPLE_HPP
+#define BOOST_PYTHON_TO_PYTHON_COPY_TO_TUPLE_HPP
 
-#include <boost/python.hpp>
-#include <boost/range.hpp>
+#include <boost/python/to_python/copy_to_list.hpp>
 
 namespace boost { namespace python {
 
 /**
- *  @brief A model of ResultConverterGenerator (see Boost.Python docs) that copies any valid iterator
- *         range into a Python list.
+ *  @brief A model of ResultConverterGenerator (see Boost.Python docs) that copies an arbitrary iterator
+ *         range into a Python tuple.
  *
- *  Useful for functions that return a STL container that one would like transformed into a Python list;
- *  use return_value_policy<copy_to_list>().
+ *  Useful for functions that return an STL container that one would like transformed into a Python tuple;
+ *  use return_value_policy<copy_to_tuple>().
  */
-struct copy_to_list {
+struct copy_to_tuple {
 
-    template <typename Container>
+    template <typename Container_>
     struct converter {
         
+        typedef typename boost::remove_const< 
+            typename boost::remove_reference< Container_ >::type >::type Container;
+
         typedef typename boost::range_const_iterator<Container>::type Iterator;
 
         inline bool convertible() const { return true; }
@@ -37,11 +39,10 @@ struct copy_to_list {
                 handle_exception();
                 return NULL;
             }
-            Py_INCREF(result.ptr());
-            return result.ptr();
+            return PySequence_Tuple(result.ptr());
         }
 
-        inline PyTypeObject const * get_pytype() const { return &PyList_Type; }
+        inline PyTypeObject const * get_pytype() const { return &PyTuple_Type; }
 
     };
 
@@ -54,4 +55,4 @@ struct copy_to_list {
 
 }}
 
-#endif // !BOOST_PYTHON_COPY_TO_LIST_HPP
+#endif // !BOOST_PYTHON_TO_PYTHON_COPY_TO_TUPLE_HPP
