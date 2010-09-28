@@ -172,9 +172,9 @@ public:
     /** \c iterative_size() yields the number of elements that is visited
         throu complete iteration. For interval sets \c iterative_size() is
         different from \c size(). */
-    size_t iterative_size()const { return size(); }
+    std::size_t iterative_size()const { return base_type::size(); }
 
-    size_t cardinality()const { return size(); }
+    size_t cardinality()const { return base_type::size(); }
 
     //==========================================================================
     //= Addition, subtraction
@@ -192,28 +192,21 @@ public:
     { return itl::subtract(*this, element); } 
 
     //==========================================================================
-    //= Insertion, erasure
-    //==========================================================================
-
-    //JODO
-
-    //==========================================================================
     //= Intersection, symmetric difference
     //==========================================================================
-
     /** Add \c element to \c section, if \c element is in \c *this set */
-    void add_intersection(set& section, const element_type& element)const
-    { itl::add_intersection(section, *this, element); }
+    //CL . . . void add_intersection(set& section, const element_type& element)const
+    //{ itl::add_intersection(section, *this, element); }
 
     /** The intersection of set \c sectant with \c *this set is added 
         to \c section. */
-    void add_intersection(set& section, const set& sectant)const
-    { itl::add_intersection(section, *this, sectant); }
+    //void add_intersection(set& section, const set& sectant)const
+    //{ itl::add_intersection(section, *this, sectant); }
 
     /** Returns true, if there is an intersection of \c element and \c *this set.
         Functions \c intersects and \c contains are identical on arguments
         of type \c element_type. Complexity: Logarithmic in container size. */
-    bool intersects(const element_type& element)const { return contains(element); }
+    //bool intersects(const element_type& element)const { return contains(element); }
 
     /** If \c *this set contains \c element it is erased, otherwise it is added. */
     set& flip(const element_type& element)

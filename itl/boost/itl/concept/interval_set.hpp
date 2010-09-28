@@ -63,16 +63,17 @@ contains(const Type& super, const OperandT& sub)
 //------------------------------------------------------------------------------
 template<class Type>
 typename enable_if<is_interval_set<Type>, Type>::type&
-add(Type& object, const typename Type::element_type& operand)
+add(Type& object, const typename Type::segment_type& operand)
 {
 	return object.add(operand);
 }
 
 template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
-add(Type& object, const typename Type::segment_type& operand)
+inline typename enable_if<is_interval_set<Type>, Type>::type&
+add(Type& object, const typename Type::element_type& operand)
 {
-	return object.add(operand);
+	typedef typename Type::segment_type segment_type;
+	return itl::add(object, itl::construct<segment_type>(operand));
 }
 
 //------------------------------------------------------------------------------
@@ -94,14 +95,14 @@ add(Type& object, typename Type::iterator      prior,
 //------------------------------------------------------------------------------
 template<class Type>
 typename enable_if<is_interval_set<Type>, Type>::type&
-insert(Type& object, const typename Type::element_type& operand)
+insert(Type& object, const typename Type::segment_type& operand)
 {
     return itl::add(object, operand);
 }
 
 template<class Type>
 typename enable_if<is_interval_set<Type>, Type>::type&
-insert(Type& object, const typename Type::segment_type& operand)
+insert(Type& object, const typename Type::element_type& operand)
 {
     return itl::add(object, operand);
 }
@@ -145,16 +146,17 @@ erase(Type& object, const typename Type::element_type& minuend)
 //------------------------------------------------------------------------------
 template<class Type>
 typename enable_if<is_interval_set<Type>, Type>::type&
-subtract(Type& object, const typename Type::element_type& operand)
+subtract(Type& object, const typename Type::segment_type& operand)
 {
     return object.subtract(operand);
 }
 
 template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
-subtract(Type& object, const typename Type::segment_type& operand)
+inline typename enable_if<is_interval_set<Type>, Type>::type&
+subtract(Type& object, const typename Type::element_type& operand)
 {
-    return object.subtract(operand);
+	typedef typename Type::segment_type segment_type;
+	return itl::subtract(object, itl::construct<segment_type>(operand));
 }
 
 //==============================================================================

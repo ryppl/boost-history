@@ -16,7 +16,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-template<class Type, class CoType> //JODO Only maps of equal iterability shall match!
+template<class Type, class CoType> 
 typename enable_if< mpl::and_< is_domain_compare_equal<Type,CoType>
                              , mpl::and_<is_map<Type>, is_map<CoType> > >, 
                     bool>::type

@@ -29,8 +29,6 @@ namespace Interval_Map
 {
 using namespace segmental;
 
-//JODO CLEAN UP for: #pragma warning(disable:4127) // conditional expression is constant
-
 template<class IntervalMapT>
 bool is_joinable(const IntervalMapT& container, 
                  typename IntervalMapT::const_iterator first, 

@@ -24,7 +24,7 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/detail/concept_check.hpp>
-#include <boost/itl/detail/on_neutric.hpp>
+#include <boost/itl/detail/on_absorbtion.hpp>
 #include <boost/itl/type_traits/is_map.hpp>
 #include <boost/itl/type_traits/absorbs_neutrons.hpp>
 #include <boost/itl/type_traits/is_total.hpp>
@@ -126,8 +126,7 @@ public:
         <has_set_semantics<codomain_type>
         , ITL_SECTION_CODOMAIN(Section,CodomainT)     
         , codomain_combine
-        >::type                                         codomain_intersect; //JODO extra metafuction?
-        //JODO What, if codomain is not a set but the user want's to use a special intersection functor?
+        >::type                                         codomain_intersect;
     typedef typename inverse<codomain_intersect>::type  inverse_codomain_intersect;
     typedef typename base_type::value_compare           value_compare;
 
@@ -136,7 +135,7 @@ public:
     BOOST_STATIC_CONSTANT(bool, 
         total_invertible = (mpl::and_<is_total<type>, has_inverse<codomain_type> >::value));
 
-    typedef on_neutric<type,codomain_combine,Traits::absorbs_neutrons> 
+    typedef on_absorbtion<type,codomain_combine,Traits::absorbs_neutrons> 
                                                         on_neutron_absorbtion;
 
 public:
@@ -241,7 +240,7 @@ public:
     /** \c iterative_size() yields the number of elements that is visited
         throu complete iteration. For interval sets \c iterative_size() is
         different from \c size(). */
-    size_t iterative_size()const { return size(); } //JODO 
+    std::size_t iterative_size()const { return base_type::size(); }
 
     //==========================================================================
     //= Selection
@@ -314,14 +313,15 @@ public:
     /** With <tt>key_value_pair = (k,v)</tt> set value \c v for key \c k */
     map& set(const element_type& key_value_pair)
     { 
-        (*this)[key_value_pair.first] = key_value_pair.second; //JODO absorbs_neutrons?
-        return *this; 
+        return itl::set_at(*this, key_value_pair);
     }
 
     /** erase \c key_value_pair from the map.
         Erase only if, the exact value content \c val is stored for the given key. */
     size_type erase(const element_type& key_value_pair)
-    { return itl::erase(*this, key_value_pair); }
+    {
+        return itl::erase(*this, key_value_pair); 
+    }
 
     //==========================================================================
     //= Intersection
@@ -334,11 +334,11 @@ public:
     }
 
     /** Returns true, if there is an intersection of \c operand and \c *this map. */
-    template<class OperandT>
-    bool intersects(const OperandT& operand)const
-    {
-        return itl::intersects(*this, operand);
-    }
+    //CL template<class OperandT>
+    //bool intersects(const OperandT& operand)const
+    //{
+    //    return itl::intersects(*this, operand);
+    //}
 
     //==========================================================================
     //= Symmetric difference
@@ -346,7 +346,8 @@ public:
 
     map& flip(const element_type& operand)
     {
-        return on_total_absorbable<type,_total,_absorbs>::flip(*this, operand);
+        on_total_absorbable<type,_total,_absorbs>::flip(*this, operand);
+        return *this;
     }
 
 private:
@@ -483,8 +484,8 @@ private:
     struct on_total_absorbable<Type, true, true>
     {
         typedef typename Type::element_type  element_type;
-        static Type& flip(Type& object, const typename Type::element_type&)
-        { itl::clear(object); return object; }
+        static void flip(Type& object, const typename Type::element_type&)
+        { itl::clear(object); }
     };
 
     template<class Type>
@@ -493,13 +494,11 @@ private:
         typedef typename Type::element_type  element_type;
         typedef typename Type::codomain_type codomain_type;
 
-        static Type& flip(Type& object, const element_type& operand)
+        static void flip(Type& object, const element_type& operand)
         { 
             object.add(operand);
-            ITL_FORALL(typename Type, it_, object)//JODO URG sollte man vorher abfangen
+            ITL_FORALL(typename Type, it_, object)
                 it_->second = neutron<codomain_type>::value();
-
-            return object;
         }
     };
 
@@ -511,14 +510,12 @@ private:
         typedef typename Type::iterator       iterator;
         typedef typename Type::inverse_codomain_intersect inverse_codomain_intersect;
 
-        static Type& flip(Type& object, const element_type& operand)
+        static void flip(Type& object, const element_type& operand)
         {
             std::pair<iterator,bool> insertion = object.insert(operand);
             if(!insertion.second)
                 on_codomain_model<Type, has_set_semantics<codomain_type>::value, true>
                 ::subtract(object, insertion.first, operand.second);
-
-            return object; //JODO return of Type& not necessary
         }
     };
 
@@ -530,14 +527,12 @@ private:
         typedef typename Type::iterator       iterator;
         typedef typename Type::inverse_codomain_intersect inverse_codomain_intersect;
 
-        static Type& flip(Type& object, const element_type& operand)
+        static void flip(Type& object, const element_type& operand)
         {
             std::pair<iterator,bool> insertion = object.insert(operand);
             if(!insertion.second)
                 on_codomain_model<Type, has_set_semantics<codomain_type>::value, false>
                 ::subtract(object, insertion.first, operand.second);
-
-            return object; //JODO return of Type& not necessary
         }
     };
 
@@ -559,11 +554,11 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
     ::_add(const element_type& addend)
 {
-    typedef typename on_neutric
-        <type,Combiner,absorbs_neutrons<type>::value>::type on_neutric_;
+    typedef typename on_absorbtion
+        <type,Combiner,absorbs_neutrons<type>::value>::type on_absorbtion_;
 
     const codomain_type& co_val    = addend.second;
-    if(on_neutric_::is_absorbable(co_val))
+    if(on_absorbtion_::is_absorbable(co_val))
         return *this;
 
     std::pair<iterator,bool> insertion 
@@ -574,7 +569,7 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
         iterator it = insertion.first;
         Combiner()((*it).second, co_val);
 
-        if(on_neutric_::is_absorbable((*it).second))
+        if(on_absorbtion_::is_absorbable((*it).second))
             erase(it);
     }
     return *this;
@@ -587,11 +582,11 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
     ::_add(iterator prior_, const value_type& addend)
 {
-    typedef typename on_neutric
-        <type,Combiner,absorbs_neutrons<type>::value>::type on_neutric_;
+    typedef typename on_absorbtion
+        <type,Combiner,absorbs_neutrons<type>::value>::type on_absorbtion_;
 
     const codomain_type& co_val    = addend.second;
-    if(on_neutric_::is_absorbable(co_val))
+    if(on_absorbtion_::is_absorbable(co_val))
         return end();
 
     iterator inserted_ 
@@ -599,7 +594,7 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
                             value_type(addend.first, Combiner::neutron()));
     Combiner()(inserted_->second, addend.second);
 
-    if(on_neutric_::is_absorbable(inserted_->second))
+    if(on_absorbtion_::is_absorbable(inserted_->second))
     {
         erase(inserted_);
         return end();
@@ -617,14 +612,14 @@ template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL
 map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::_subtract(const value_type& minuend)
 {
-    typedef typename on_neutric
-        <type,Combiner,absorbs_neutrons<type>::value>::type on_neutric_;
+    typedef typename on_absorbtion
+        <type,Combiner,absorbs_neutrons<type>::value>::type on_absorbtion_;
 
     iterator it_ = find(minuend.first);
     if(it_ != end())
     {
         Combiner()(it_->second, minuend.second);
-        if(on_neutric_::is_absorbable(it_->second))
+        if(on_absorbtion_::is_absorbable(it_->second))
             erase(it_);
     }
     return *this;

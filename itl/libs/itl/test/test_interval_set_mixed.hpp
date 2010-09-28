@@ -245,15 +245,15 @@ void interval_set_mixed_contains_4_bicremental_types()
 
     split_interval_set<T> split_set;
     split_set.add(I_D(0,4)).add(I_D(4,8));
-    BOOST_CHECK_EQUAL( call::contains(split_set, MK_v(4)), true );
-    BOOST_CHECK_EQUAL( call::contains(split_set, C_D(2,5)), true );
+    BOOST_CHECK_EQUAL( itl::contains(split_set, MK_v(4)), true );
+    BOOST_CHECK_EQUAL( itl::contains(split_set, C_D(2,5)), true );
 
     interval_set<T> join_set_gap4(split_set.erase(MK_v(4)));
-    BOOST_CHECK_EQUAL( call::contains(join_set_gap4, MK_v(4)), false );
-    BOOST_CHECK_EQUAL( call::contains(join_set_gap4, C_D(2,5)), false );
+    BOOST_CHECK_EQUAL( itl::contains(join_set_gap4, MK_v(4)), false );
+    BOOST_CHECK_EQUAL( itl::contains(join_set_gap4, C_D(2,5)), false );
 
-    BOOST_CHECK_EQUAL( call::contains(split_set, split_set), true );
-    BOOST_CHECK_EQUAL( call::contains(split_set, join_set_gap4), true );
+    BOOST_CHECK_EQUAL( itl::contains(split_set, split_set), true );
+    BOOST_CHECK_EQUAL( itl::contains(split_set, join_set_gap4), true );
     
 }
 

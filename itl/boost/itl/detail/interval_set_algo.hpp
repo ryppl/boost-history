@@ -174,7 +174,7 @@ within(const LeftT& sub, const RightT& super)
 }
 
 
-template<class LeftT, class RightT> //JODO Codereplication: Unify some more
+template<class LeftT, class RightT>
 typename enable_if<is_concept_combinable<is_interval_map, is_interval_map, LeftT, RightT>, 
                    bool>::type
 within(const LeftT& sub, const RightT& super)

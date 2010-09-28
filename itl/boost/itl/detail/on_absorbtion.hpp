@@ -5,28 +5,28 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TYPE_TRAITS_ON_NEUTRIC_HPP_JOFA_100915
-#define BOOST_ITL_TYPE_TRAITS_ON_NEUTRIC_HPP_JOFA_100915
+#ifndef BOOST_ITL_TYPE_TRAITS_ON_ABSORBTION_HPP_JOFA_100915
+#define BOOST_ITL_TYPE_TRAITS_ON_ABSORBTION_HPP_JOFA_100915
 
 namespace boost{ namespace itl
 {
 
 template<class Type, class Combiner, bool absorbs_neutrons>
-struct on_neutric; //JODO rename
+struct on_absorbtion;
 
 template<class Type, class Combiner>
-struct on_neutric<Type, Combiner, false>
+struct on_absorbtion<Type, Combiner, false>
 {
-    typedef on_neutric type;
+    typedef on_absorbtion type;
     typedef typename Type::codomain_type codomain_type;
 
     static bool is_absorbable(const codomain_type&){ return false; }
 };
 
 template<class Type, class Combiner>
-struct on_neutric<Type, Combiner, true>
+struct on_absorbtion<Type, Combiner, true>
 {
-    typedef on_neutric type;
+    typedef on_absorbtion type;
     typedef typename Type::codomain_type codomain_type;
     typedef typename Type::codomain_combine codomain_combine;
 

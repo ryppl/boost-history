@@ -148,17 +148,17 @@ public:
     interval_bitset& intersect(const element_type& rhs) {return segment_apply(&interval_bitset::intersect_,interval_type(rhs));}
     interval_bitset& flip     (const element_type& rhs) {return segment_apply(&interval_bitset::flip_,     interval_type(rhs));}
 
-    void clear(){ ITL_FUN_CALL(clear, _map); }
-    bool empty()const{ return ITL_FUN_REN(empty, is_empty, _map); }
+    void clear()                    { itl::clear(_map); }
+    bool empty()const               { return itl::is_empty(_map); }
     size_type cardinality()const;
     size_type size()const           { return cardinality(); }
-    size_type interval_count()const { return _map.interval_count(); }
+    size_type interval_count()const { return interval_count(_map); }
     size_type iterative_size()const { return _map.iterative_size(); }
 
     bool contains(element_type element)const{ return _map(element>>shift).contains(element & mask); }
     bool contains(const segment_type& segment)const;
-    bool contains(const interval_bitset& sub)const      { return _map.contains(sub._map); }
-    bool contained_in(const interval_bitset& super)const{ return _map.contained_in(super._map); }
+    bool contains(const interval_bitset& sub)const      { return itl::contains(_map, sub._map); }
+    bool contained_in(const interval_bitset& super)const{ return itl::within(_map, super._map); }
 
     void show_segments()const;
     void show_matrix(const char off_on[2] = " 1")const;

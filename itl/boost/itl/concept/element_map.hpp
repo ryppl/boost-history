@@ -10,6 +10,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
+#include <boost/itl/detail/on_absorbtion.hpp>
 #include <boost/itl/type_traits/is_total.hpp>
 #include <boost/itl/type_traits/absorbs_neutrons.hpp>
 #include <boost/itl/type_traits/is_associative_element_container.hpp>
@@ -156,9 +157,9 @@ subtract(Type& object, const typename Type::domain_type& key_value)
 //------------------------------------------------------------------------------
 template <class Type>
 inline typename enable_if<is_element_map<Type>, Type>::type&
-operator -= (Type& object, const typename Type::set_type& subtrahend) 
+operator -= (Type& object, const typename Type::set_type& operand) 
 { 
-    return Set::erase(object, subtrahend); //JODO
+    return Set::erase(object, operand);
 }
 
 template <class Type>
@@ -167,6 +168,31 @@ operator - (Type object, const typename Type::set_type& subtrahend)
 { 
     return object -= subtrahend; 
 }
+
+//==============================================================================
+//= Selective Update<ElementMap>
+//==============================================================================
+//------------------------------------------------------------------------------
+//- T& set_at(T&, c P&) T:{m} P:{b}
+//------------------------------------------------------------------------------
+template<class Type>
+inline typename enable_if<is_element_map<Type>, Type>::type&
+set_at(Type& object, const typename Type::element_type& operand)
+{
+	typedef typename Type::iterator         iterator;
+	typedef typename Type::codomain_combine codomain_combine;
+	typedef on_absorbtion<Type,codomain_combine,absorbs_neutrons<Type>::value>
+		                                    on_neutron_absorbtion;
+
+    if(!on_neutron_absorbtion::is_absorbable(operand.second))
+	{
+		std::pair<iterator,bool> insertion = object.insert(operand);
+		if(!insertion.second)
+			insertion->second = operand.second;
+	}
+	return object;
+}
+
 
 //==============================================================================
 //= Intersection
@@ -253,14 +279,14 @@ template<class Type>
 inline typename enable_if<is_element_map<Type>, Type>::type
 operator & (Type object, const typename Type::key_object_type& operand)
 {
-    return object &= operand; //JODO test  a - (a & s) == a - s
+    return object &= operand;
 }
 
 template<class Type>
 inline typename enable_if<is_element_map<Type>, Type>::type
 operator & (const typename Type::key_object_type& operand, Type object)
 {
-    return object &= operand; //JODO test  a - (s & a) == a - s
+    return object &= operand;
 }
 
 //==============================================================================
@@ -302,7 +328,7 @@ inline typename enable_if< mpl::and_< is_element_map<Type>
                          , bool>::type
 intersects(const Type& object, const typename Type::element_type& operand)
 {
-    Type intersection; //JODO opti
+    Type intersection;
 	itl::add_intersection(intersection, object, operand);
     return !intersection.empty();
 }

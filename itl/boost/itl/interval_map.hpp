@@ -131,7 +131,7 @@ private:
     template<class Combiner>
     void handle_left_combined(iterator it_)
     {
-        if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+        if(on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
             this->_map.erase(it_);
         else
             segmental::join_left(*this, it_);
@@ -140,7 +140,7 @@ private:
     template<class Combiner>
     void handle_combined(iterator it_)
     {
-        if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+        if(on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
             this->_map.erase(it_);
         else
             segmental::join_neighbours(*this, it_);
@@ -149,7 +149,7 @@ private:
     template<class Combiner>
     void handle_preceeded_combined(iterator prior_, iterator& it_)
     {
-        if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+        if(on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
         {
             this->_map.erase(it_);
             it_ = prior_;
@@ -161,7 +161,7 @@ private:
     template<class Combiner>
     void handle_succeeded_combined(iterator it_, iterator next_)
     {
-        if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+        if(on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
         {
             this->_map.erase(it_);
             segmental::join_right(*this, next_);
@@ -185,7 +185,7 @@ private:
     void gap_insert_at(iterator& it_, iterator prior_, 
                        const interval_type& end_gap, const codomain_type& co_val)
     {
-        if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+        if(on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
         {
             this->_map.erase(it_);
             it_ = this->template gap_insert<Combiner>(prior_, end_gap, co_val);

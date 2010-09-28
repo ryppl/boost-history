@@ -126,6 +126,13 @@ cardinality(const Type& object)
 }
 
 template<class Type>
+inline typename enable_if<is_interval_container<Type>, typename Type::size_type>::type
+size(const Type& object)
+{
+	return itl::cardinality(object);
+}
+
+template<class Type>
 typename enable_if<is_interval_container<Type>, typename Type::difference_type>::type
 length(const Type& object)
 {

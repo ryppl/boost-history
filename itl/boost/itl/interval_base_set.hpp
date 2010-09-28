@@ -6,8 +6,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __interval_base_set_h_JOFA_990223__
-#define __interval_base_set_h_JOFA_990223__
+#ifndef BOOST_ITL_INTERVAL_BASE_SET_H_JOFA_990223
+#define BOOST_ITL_INTERVAL_BASE_SET_H_JOFA_990223
 
 #include <limits>
 #include <boost/itl/type_traits/interval_type_default.hpp>
@@ -17,8 +17,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/detail/interval_set_algo.hpp>
 #include <boost/itl/set.hpp>
 #include <boost/itl/interval.hpp>
-#include <boost/itl/rightopen_interval.hpp> //JODO inclusion and customization of interval types
-#include <boost/itl/continuous_interval.hpp> //JODO inclusion and customization of interval types
+#include <boost/itl/rightopen_interval.hpp>
+#include <boost/itl/continuous_interval.hpp>
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/element_iterator.hpp>
 
@@ -34,7 +34,6 @@ namespace boost{namespace itl
 template<class Type, class OperandT>
 typename enable_if<has_same_concept<is_interval_set, Type, OperandT>, bool>::type 
 contains(const Type& super, const OperandT& sub);
-
 
 template<class Type>
 typename enable_if<is_interval_container<Type>, std::size_t>::type
@@ -229,7 +228,7 @@ public:
     /// element const reverse iterator: Depreciated, see documentation.
     typedef boost::itl::element_iterator<const_reverse_iterator> element_const_reverse_iterator; 
 
-    enum { fineness = 4 };
+    BOOST_STATIC_CONSTANT(int, fineness = 0); 
 
 public:
     //==========================================================================
@@ -254,56 +253,18 @@ public:
     //==========================================================================
     //= Containedness
     //==========================================================================
-
     /** sets the container empty */
     void clear() { itl::clear(*that()); }
     /** is the container empty? */
     bool empty()const { return itl::is_empty(*that()); }
 
-
-    /** Does the set contain some object \c sub of type \c CoType */
-    template<class CoType>
-    bool contains(const CoType& sub)const
-    {
-        return itl::contains(*that(), sub);
-    }
-
-    /** Is <tt>*this</tt> container within <tt>super</tt>? */
-    template<class CoType>
-    bool within(const CoType& super)const
-    {
-        return itl::within(*that(), super);
-    }
-
-
-
     //==========================================================================
     //= Size
     //==========================================================================
-
-    /** Number of elements in the set (cardinality). 
-        Infinite for continuous domain datatyps    */
-    size_type cardinality()const
-    {
-        return itl::cardinality(*that());
-    }
-
     /** An interval set's size is it's cardinality */
     size_type size()const
     {
         return itl::cardinality(*that());
-    }
-
-    /** The length of the interval container which is the sum of interval lengths */
-    difference_type length()const
-    {
-        return itl::length(*that());
-    }
-
-    /** Number of intervals which is also the size of the iteration over the object */
-    std::size_t interval_count()const 
-    { 
-        return itl::interval_count(*that()); 
     }
 
     /** Size of the iteration over this container */
@@ -311,12 +272,6 @@ public:
     { 
         return _set.size(); 
     }
-
-    //==========================================================================
-    //= Range
-    //==========================================================================
-
-    //JODO remove lower, upper, first, last from the interface of all interval containers and docs
 
     //==========================================================================
     //= Selection
@@ -340,7 +295,7 @@ public:
     /** Add a single element \c key to the set */
     SubType& add(const element_type& key) 
     {
-        return add(itl::construct<segment_type>(key));
+        return itl::add(*that(), key);
     }
 
     /** Add an interval of elements \c inter_val to the set */
@@ -365,7 +320,7 @@ public:
     /** Subtract a single element \c key from the set */
     SubType& subtract(const element_type& key) 
     { 
-        return subtract(itl::construct<interval_type>(key));
+        return itl::subtract(*that(), key);
     }
 
     /** Subtract an interval of elements \c inter_val from the set */
@@ -423,60 +378,9 @@ public:
         _set.erase(first, past); 
     }
 
-
-    //==========================================================================
-    //= Intersection
-    //==========================================================================
-
-    /** The intersection of \c key in \c *this set is added to \c section. 
-        The function can be used as a find function. */
-    void add_intersection(SubType& section, const element_type& key)const
-    {
-        itl::add_intersection(section, *that(), key); 
-    }
-
-    /** The intersection of \c inter_val in \c *this set is added to \c section. */
-    void add_intersection(SubType& section, const segment_type& inter_val)const
-    {
-        itl::add_intersection(section, *that(), inter_val); 
-    }
-
-
-    /** The intersection of set \c sectant with \c *this set is added to \c section. */
-    template
-    <
-        template<class DomT, ITL_COMPARE Comp, 
-                 ITL_INTERVAL2(ITL_COMPARE) Interv, ITL_ALLOC Allc>
-        class IntervalSet
-    >
-    void add_intersection
-    (
-        SubType& section,
-        const IntervalSet<DomainT,Compare,Interval,Alloc>& operand
-    )const
-    {
-        itl::add_intersection(section, *that(), operand);
-    }
-
-
-    /** Returns \c true, if element \c key is found in \c *this map.
-        Complexity: logarithmic. */
-    bool intersects(const element_type& key)const
-    { 
-        return itl::intersects(*that(), key); 
-    }
-
-    /** Returns \c true, if \c inter_val intersects with \c *this map.
-        Complexity: logarithmic. */
-    bool intersects(const interval_type& inter_val)const
-    { 
-        return itl::intersects(*that(), inter_val); 
-    }
-
     //==========================================================================
     //= Symmetric difference
     //==========================================================================
-
     /** If \c *this set contains \c key it is erased, otherwise it is added. */
     SubType& flip(const element_type& key)
     {
@@ -487,14 +391,6 @@ public:
     SubType& flip(const segment_type& inter_val)
     {
         return itl::flip(*that(), inter_val);
-    }
-
-    /** The intersection of \c *this and \c operand is erased from \c *this. 
-        The complemenary elements are added to \c *this. */
-    template<class SubType2>
-    SubType& flip(const interval_base_set<SubType2,DomainT,Compare,Interval,Alloc>& operand)
-    {
-        return itl::flip(*that(), operand); //JODO remove this
     }
 
     //==========================================================================

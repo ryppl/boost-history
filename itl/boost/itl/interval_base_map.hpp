@@ -17,7 +17,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
-#include <boost/itl/detail/on_neutric.hpp> //JODO rename
+#include <boost/itl/detail/on_absorbtion.hpp>
 #include <boost/itl/type_traits/is_interval_splitter.hpp>
 #include <boost/itl/map.hpp>
 #include <boost/itl/interval_base_set.hpp>
@@ -133,8 +133,7 @@ public:
     <has_set_semantics<codomain_type>
     , ITL_SECTION_CODOMAIN(Section,CodomainT)     
     , codomain_combine
-    >::type                                            codomain_intersect; //JODO extra metafunction?
-    //JODO What, if codomain is not a set but the user want's to use a special intersection functor?
+    >::type                                            codomain_intersect;
 
 
     /// Inverse Combine functor for codomain value intersection
@@ -191,7 +190,7 @@ public:
     /// element const reverse iterator: Depreciated, see documentation.
     typedef boost::itl::element_iterator<const_reverse_iterator> element_const_reverse_iterator; 
     
-    typedef typename on_neutric<type, codomain_combine, 
+    typedef typename on_absorbtion<type, codomain_combine, 
                                 Traits::absorbs_neutrons>::type on_codomain_absorbtion;
 
 public:
@@ -242,61 +241,20 @@ public:
     /** is the map empty? */
     bool empty()const { return itl::is_empty(*that()); }
 
-    
-    /** Does the map contain some object \c sub of type \c CoType */
-    template<class CoType>
-    bool contains(const CoType& sub)const
-    {
-        return itl::contains(*that(), sub);
-    }
-
-    /** Is <tt>*this</tt> container within <tt>super</tt>? */
-    template<class CoType>
-    bool within(const CoType& super)const
-    {
-        return itl::within(*that(), super);
-    }
-
     //==========================================================================
     //= Size
     //==========================================================================
-
-    /** Number of elements in the map (cardinality). */
-    size_type cardinality()const
-    {
-        return itl::cardinality(*that());
-    }
-
     /** An interval map's size is it's cardinality */
     size_type size()const
     {
         return itl::cardinality(*that());
     }
 
-    /** The length of the interval container which is the sum of interval lengths */
-    difference_type length()const
-    {
-        return itl::length(*that());
-    }
-
-    /** Number of intervals which is also the size of the 
-        iteration over the object */
-    size_t interval_count()const 
-    { 
-        return itl::interval_count(*that()); 
-    }
-
     /** Size of the iteration over this container */
-    size_t iterative_size()const 
+    std::size_t iterative_size()const 
     { 
         return _map.size(); 
     }
-
-    //==========================================================================
-    //= Range
-    //==========================================================================
-
-    //JODO remove lower, upper, first, last from the interface of all interval containers and docs
 
     //==========================================================================
     //= Selection
@@ -308,7 +266,7 @@ public:
         return _map.find(interval_type(key)); 
     }
 
-    const_iterator find(const key_type& key)const
+    const_iterator find(const interval_type& key)const
     { 
         return _map.find(key); 
     }
@@ -321,7 +279,6 @@ public:
                           : it_->second;
     }
 
-
     //==========================================================================
     //= Addition
     //==========================================================================
@@ -329,7 +286,7 @@ public:
     /** Addition of a key value pair to the map */
     SubType& add(const element_type& key_value_pair) 
     {
-        return add(make_segment<type>(key_value_pair));
+        return itl::add(*that(), key_value_pair);
     }
 
     /** Addition of an interval value pair to the map. */
@@ -350,11 +307,10 @@ public:
     //==========================================================================
     //= Subtraction
     //==========================================================================
-
     /** Subtraction of a key value pair from the map */
     SubType& subtract(const element_type& key_value_pair)
     { 
-        return subtract(make_segment<type>(key_value_pair));
+        return itl::subtract(*that(), key_value_pair);
     }
 
     /** Subtraction of an interval value pair from the map. */
@@ -371,7 +327,7 @@ public:
     /** Insertion of a \c key_value_pair into the map. */
     SubType& insert(const element_type& key_value_pair) 
     {
-        return insert(make_segment<type>(key_value_pair));
+        return itl::insert(*that(), key_value_pair);
     }
 
     /** Insertion of an \c interval_value_pair into the map. */
@@ -401,15 +357,13 @@ public:
         return itl::set_at(*that(), interval_value_pair);
     }
 
-
     //==========================================================================
     //= Erasure
     //==========================================================================
-
     /** Erase a \c key_value_pair from the map. */
     SubType& erase(const element_type& key_value_pair) 
     { 
-        erase(make_segment<type>(key_value_pair));
+        itl::erase(*that(), key_value_pair);
         return *that();
     }
 
@@ -419,7 +373,7 @@ public:
     /** Erase a key value pair for \c key. */
     SubType& erase(const domain_type& key) 
     { 
-        return erase(interval_type(key)); 
+        return itl::erase(*that(), key); 
     }
 
     /** Erase all value pairs within the range of the 
@@ -437,13 +391,6 @@ public:
     //==========================================================================
     //= Intersection
     //==========================================================================
-
-    /** The intersection of \c key_value_pair and \c *this map is added to \c section. */
-    void add_intersection(SubType& section, const element_type& key_value_pair)const
-    {
-        add_intersection(section, make_segment<type>(key_value_pair));
-    }
-
     /** The intersection of \c interval_value_pair and \c *this map is added to \c section. */
     void add_intersection(SubType& section, const segment_type& interval_value_pair)const
     {
@@ -451,50 +398,21 @@ public:
             ::add_intersection(section, *that(), interval_value_pair);
     }
 
-    /** Returns \c true, if element \c key is found in \c *this map.
-        Complexity: logarithmic. */
-    bool intersects(const domain_type& key)const
-    {
-        return itl::intersects(*that(), key);
-    }
-
-    /** Returns \c true, if \c inter_val intersects with \c *this map.
-        Complexity: Logarithmic in iterative size. */
-    bool intersects(const interval_type& inter_val)const
-    { 
-        return itl::intersects(*that(), inter_val);
-    }
-
-    /** Returns \c true, if \c key_value_pair is found in \c *this map.
-        Complexity: logarithmic. */
-    bool intersects(const element_type& key_value_pair)const
-    { 
-        return itl::intersects(*that(), key_value_pair);
-    }
-
-    /** Returns \c true, if \c interval_value_pair intersects with \c *this map:
-        Complexity: Linear in iterative_size. */
-    bool intersects(const segment_type& interval_value_pair)const
-    {
-        return itl::intersects(*that(), interval_value_pair);
-    }
-
     //==========================================================================
     //= Symmetric difference
     //==========================================================================
-
     /** If \c *this map contains \c key_value_pair it is erased, otherwise it is added. */
     SubType& flip(const element_type& key_value_pair)
     { 
-        return flip(make_segment<type>(key_value_pair)); 
+        return itl::flip(*that(), key_value_pair); 
     }
 
     /** If \c *this map contains \c interval_value_pair it is erased, otherwise it is added. */
     SubType& flip(const segment_type& interval_value_pair)
     {
-        return
         on_total_absorbable<SubType, Traits::is_total, Traits::absorbs_neutrons>
             ::flip(*that(), interval_value_pair);
+        return *that();
     }
 
     //==========================================================================
@@ -610,7 +528,7 @@ protected:
     {
         // inter_val is not conained in this map. Insertion will be successful
         BOOST_ASSERT(this->_map.find(inter_val) == this->_map.end());
-        BOOST_ASSERT((!on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(co_val)));
+        BOOST_ASSERT((!on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(co_val)));
         return this->_map.insert(prior_, value_type(inter_val, version<Combiner>()(co_val)));
     }
 
@@ -620,7 +538,7 @@ protected:
                                    const codomain_type& co_val   )
     {
         // Never try to insert a neutron into a neutron absorber here:
-        BOOST_ASSERT((!(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(co_val))));
+        BOOST_ASSERT((!(on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(co_val))));
 
         iterator inserted_ 
             = this->_map.insert(prior_, value_type(inter_val, Combiner::neutron()));
@@ -763,8 +681,8 @@ private:
     template<class Type>
     struct on_total_absorbable<Type, true, true>
     {
-        static Type& flip(Type& object, const typename Type::segment_type& operand)
-        { itl::clear(object); return object; }
+        static void flip(Type& object, const typename Type::segment_type& operand)
+        { itl::clear(object); }
     };
 
     template<class Type>
@@ -773,16 +691,14 @@ private:
         typedef typename Type::segment_type  segment_type;
         typedef typename Type::codomain_type codomain_type;
 
-        static Type& flip(Type& object, const segment_type& operand)
+        static void flip(Type& object, const segment_type& operand)
         { 
             object += operand;
-            ITL_FORALL(typename Type, it_, object) //JODO: neutralisierendes add.
+            ITL_FORALL(typename Type, it_, object)
                 it_->second = neutron<codomain_type>::value();
 
-            if(mpl::not_<is_interval_splitter<Type> >::value) //JODO
+            if(mpl::not_<is_interval_splitter<Type> >::value)
                 itl::join(object);
-
-            return object;
         }
     };
 
@@ -797,7 +713,7 @@ private:
         typedef typename Type::set_type       set_type;
         typedef typename Type::inverse_codomain_intersect inverse_codomain_intersect;
 
-        static Type& flip(Type& object, const segment_type& interval_value_pair)
+        static void flip(Type& object, const segment_type& interval_value_pair)
         {
             // That which is common shall be subtracted
             // That which is not shall be added
@@ -851,7 +767,6 @@ private:
             //finally rewrite the common segments
             itl::erase(object, eraser);
             object += intersection;
-            return object;
         }
     };
     //--------------------------------------------------------------------------
@@ -988,15 +903,15 @@ inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
     interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::_add(const segment_type& addend)
 {
-    typedef typename on_neutric<type,Combiner,
-                                absorbs_neutrons<type>::value>::type on_neutric_;
+    typedef typename on_absorbtion<type,Combiner,
+                                absorbs_neutrons<type>::value>::type on_absorbtion_;
 
     const interval_type& inter_val = addend.first;
     if(itl::is_empty(inter_val)) 
         return this->_map.end();
 
     const codomain_type& co_val = addend.second;
-    if(on_neutric_::is_absorbable(co_val))
+    if(on_absorbtion_::is_absorbable(co_val))
         return this->_map.end();
 
     std::pair<iterator,bool> insertion 
@@ -1026,15 +941,15 @@ inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
     interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::_add(iterator prior_, const segment_type& addend)
 {
-    typedef typename on_neutric<type,Combiner,
-                                absorbs_neutrons<type>::value>::type on_neutric_;
+    typedef typename on_absorbtion<type,Combiner,
+                                absorbs_neutrons<type>::value>::type on_absorbtion_;
 
     const interval_type& inter_val = addend.first;
     if(itl::is_empty(inter_val)) 
         return prior_;
 
     const codomain_type& co_val = addend.second;
-    if(on_neutric_::is_absorbable(co_val))
+    if(on_absorbtion_::is_absorbable(co_val))
         return prior_;
 
     std::pair<iterator,bool> insertion 
@@ -1124,7 +1039,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
         return;
 
     const codomain_type& co_val = minuend.second;
-    if(on_neutric<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(co_val)) 
+    if(on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(co_val)) 
         return;
 
     std::pair<iterator, iterator> exterior = this->_map.equal_range(inter_val);
