@@ -27,6 +27,7 @@ test-suite "sweepline_point"
 
 test-suite "sweepline_segment"
     :
+	[ run voronoi_segment/segment_circle_event_creation_test.cpp ]
 	[ run voronoi_segment/segment_event_queue_test.cpp ]
         [ run voronoi_segment/segment_event_types_test.cpp ]
 	[ run voronoi_segment/segment_node_comparer_test.cpp ]

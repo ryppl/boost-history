@@ -47,12 +47,6 @@ namespace sweepline {
             // Clear all data structures.
             reset();
 
-            // Return if there are no sites.
-            if (points.empty() && segments.empty()) {
-                site_events_iterator_ = site_events_.begin();
-                return;
-            }
-
             // TODO(asydorchuk): Add segments intersection check.
 
             // Avoid additional memory reallocations.
@@ -90,14 +84,26 @@ namespace sweepline {
             // There will be one site event for each input point and three site events
             // for each input segment: both ends of a segment and the segment itself.
             output_.init(site_events_.size());
+        }
 
-            int skip = 0;
-            if (site_events_.size() == 1) {
+        void reset() {
+            output_.reset();
+            circle_events_.reset();
+            beach_line_.clear();
+            site_events_.clear();
+            site_events_iterator_ = site_events_.begin();
+        }
+
+        void run_sweepline() {
+            // Init beach line.
+            if (site_events_.empty()) {
+                return;
+            } else if (site_events_.size() == 1) {
                 // Handle one input site case.
                 output_.process_single_site(site_events_[0]);
-                skip = 1;
                 site_events_iterator_++;
             } else {
+                int skip = 0;
                 // Init beach line.
                 while(site_events_iterator_ != site_events_.end() &&
                       site_events_iterator_->x() == site_events_.begin()->x() &&
@@ -114,29 +120,20 @@ namespace sweepline {
                     init_beach_line_collinear_sites();
                 }
             }
-        }
 
-        void reset() {
-            output_.reset();
-            circle_events_.reset();
-            beach_line_.clear();
-            site_events_.clear();
-            site_events_iterator_ = site_events_.begin();
-        }
-
-        void run_sweepline() {
             // Algorithm stops when there are no events to process.
             while (!circle_events_.empty() || 
                    !(site_events_iterator_ == site_events_.end())) {
-                if (circle_events_.empty())
+                if (circle_events_.empty()) {
                     process_site_event();
-                else if (site_events_iterator_ == site_events_.end())
+                } else if (site_events_iterator_ == site_events_.end()) {
                     process_circle_event();
-                else {
-                    if (circle_events_.top().compare(*site_events_iterator_) > 0)
+                } else {
+                    if (circle_events_.top().compare(*site_events_iterator_) > 0) {
                         process_site_event();
-                    else
+                    } else {
                         process_circle_event();
+                    }
                 }
             }
 
@@ -173,6 +170,7 @@ namespace sweepline {
         typedef typename detail::node_comparer<Key> NodeComparer;
         typedef std::map< Key, Value, NodeComparer > BeachLine;
         typedef typename std::map< Key, Value, NodeComparer >::iterator beach_line_iterator;
+        typedef typename std::pair<Point2D, beach_line_iterator> end_point_type;
 
         void init_beach_line() {
             // The first site is always a point.
@@ -181,17 +179,8 @@ namespace sweepline {
             site_events_iterator_type it_second = site_events_.begin();
             it_second++;
 
-            // The second site might be a point or a segment.
-            // Create two new beach line nodes.
-            Key new_left_node(*it_first, *it_second);
-            Key new_right_node(*it_second, *it_first);
-
-            // Update output.
-            edge_type *edge = output_.insert_new_edge(*it_first, *it_second);
-
-            // Insert two new nodes into the binary search tree.
-            beach_line_.insert(std::pair<Key, Value>(new_left_node, Value(edge)));
-            beach_line_.insert(std::pair<Key, Value>(new_right_node, Value(edge->twin)));
+            // Insert new nodes.
+            insert_new_arc(*it_first, *it_first, *it_second, beach_line_.begin());
 
             // The second site has been already processed.
             site_events_iterator_++;
@@ -222,61 +211,69 @@ namespace sweepline {
         // Uses special comparison function for the lower bound and insertion
         // operations.
         void process_site_event() {
-            const site_event_type &site_event = *site_events_iterator_;
+            site_event_type site_event = *site_events_iterator_;
             site_events_iterator_++;
+
+            // If new site is end point of some segment, remove temporary nodes from
+            // beach line data structure.
+            if (!site_event.is_segment()) {
+                while (!end_points_.empty() && end_points_.top().first == site_event.get_point0()) {
+                    beach_line_.erase(end_points_.top().second);
+                    end_points_.pop();
+                }
+            }
 
             // Find the node in the binary search tree with left arc
             // lying above the new site point.
             Key new_key(site_event);
             beach_line_iterator it = beach_line_.lower_bound(new_key);
-            beach_line_iterator position = it;
+            int it_dist = site_event.is_segment() ? 2 : 1;
 
-            site_event_type site_arc;
             if (it == beach_line_.end()) {
                 it--;
-                site_arc = it->first.get_right_site();
+                const site_event_type &site_arc = it->first.get_right_site();
 
                 // Insert new arc into the sweepline.
-                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_event, position);
-                new_node_it--;
+                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_arc, site_event, it);
+                std::advance(new_node_it, -it_dist);
 
                 // Add candidate circle to the event queue.
-                activate_circle_event(it->first.get_left_site(),
-                                      it->first.get_right_site(),
-                                      site_event,
-                                      new_node_it);
+                activate_circle_event(it->first.get_left_site(), it->first.get_right_site(),
+                                      site_event, new_node_it);
             } else if (it == beach_line_.begin()) {
-                site_arc = it->first.get_left_site();
+                const site_event_type &site_arc = it->first.get_left_site();
 
                 // Insert new arc into the sweepline.
-                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_event, position);
-                new_node_it++;
+                insert_new_arc(site_arc, site_arc, site_event, it);
 
                 // Add candidate circle to the event queue.
-                activate_circle_event(site_event,
-                                      it->first.get_left_site(),
-                                      it->first.get_right_site(),
-                                      new_node_it);
+                if (site_event.is_segment()) {
+                    site_event.set_inverse();
+                }
+                activate_circle_event(site_event, it->first.get_left_site(),
+                                      it->first.get_right_site(), it);
             } else {
-                site_arc = it->first.get_left_site();
-                const site_event_type &site2 = it->first.get_left_site();
+                const site_event_type &site_arc2 = it->first.get_left_site();
                 const site_event_type &site3 = it->first.get_right_site();
 
                 // Remove candidate circle from the event queue.
                 it->second.deactivate_circle_event();
                 it--;
+                const site_event_type &site_arc1 = it->first.get_right_site();
                 const site_event_type &site1 = it->first.get_left_site();
 
-
                 // Insert new arc into the sweepline.
-                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_event, position);
+                beach_line_iterator new_node_it =
+                    insert_new_arc(site_arc1, site_arc2, site_event, it);
 
                 // Add candidate circles to the event queue.
-                new_node_it--;
-                activate_circle_event(site1, site2, site_event, new_node_it);
-                new_node_it++;
-                new_node_it++;
-                activate_circle_event(site_event, site2, site3, new_node_it);
+                std::advance(new_node_it, -it_dist);
+                activate_circle_event(site1, site_arc1, site_event, new_node_it);
+                if (site_event.is_segment()) {
+                    site_event.set_inverse();
+                }
+                std::advance(new_node_it, it_dist + 1);
+                activate_circle_event(site_event, site_arc2, site3, new_node_it);
             }
         }
 
@@ -312,6 +309,12 @@ namespace sweepline {
             // why we use const_cast there and take all the responsibility that
             // map data structure keeps correct ordering.
             const_cast<Key &>(it_first->first).set_right_site(site3);
+            if (site1.is_segment() && site1.get_point0(true) == site3.get_point0(true)) {
+                const_cast<Key &>(it_first->first).set_left_site_inverse();
+            }
+            if (site3.is_segment() && site3.get_point1(true) == site1.get_point0(true)) {
+                const_cast<Key &>(it_first->first).set_right_site_inverse();
+            }
             it_first->second.edge = output_.insert_new_edge(site1, site2, site3, circle_event,
                                                             bisector1, bisector2);
             beach_line_.erase(it_last);
@@ -342,143 +345,31 @@ namespace sweepline {
         }
 
         // Insert new arc below site arc into the beach line.
-        beach_line_iterator insert_new_arc(const site_event_type &site_arc,
+        beach_line_iterator insert_new_arc(const site_event_type &site_arc1,
+                                           const site_event_type &site_arc2,
                                            const site_event_type &site_event,
                                            const beach_line_iterator &position) {
             // Create two new nodes.
-            Key new_left_node(site_arc, site_event);
-            Key new_right_node(site_event, site_arc);
+            Key new_left_node(site_arc1, site_event);
+            Key new_right_node(site_event, site_arc2);
+            if (site_event.is_segment()) {
+                new_right_node.set_left_site_inverse();
+            }
             
             // Insert two new nodes into the binary search tree.
             // Update output.
-            edge_type *edge = output_.insert_new_edge(site_arc, site_event);
+            edge_type *edge = output_.insert_new_edge(site_arc2, site_event);
             beach_line_iterator it = beach_line_.insert(position,
                 std::pair<Key, Value>(new_right_node, Value(edge->twin)));
-            beach_line_.insert(it, std::pair<Key, Value>(new_left_node, Value(edge)));
+            if (site_event.is_segment()) {
+                Key new_node(site_event, site_event);
+                new_node.set_right_site_inverse();
+                beach_line_iterator temp_it = beach_line_.insert(position,
+                    std::pair<Key, Value>(new_node, Value(NULL)));
+                end_points_.push(std::make_pair(site_event.get_point1(), temp_it));
+            }
+            beach_line_.insert(position, std::pair<Key, Value>(new_left_node, Value(edge)));
             return it;
-        }
-
-        // Create circle event from three point sites.
-        bool create_circle_event_ppp(const site_event_type &site1,
-                                     const site_event_type &site2,
-                                     const site_event_type &site3,
-                                     circle_event_type &c_event) const {
-            // Check if bisectors intersect.
-            if (detail::orientation_test(site1.get_point0(),site2.get_point0(),
-                site3.get_point0()) != detail::RIGHT_ORIENTATION)
-                return false;
-
-            coordinate_type a = ((site1.x() - site2.x()) * (site2.y() - site3.y()) -
-                                (site1.y() - site2.y()) * (site2.x() - site3.x())) *
-                                static_cast<coordinate_type>(2.0);
-            
-            coordinate_type b1 = (site1.x() - site2.x()) * (site1.x() + site2.x()) +
-                                 (site1.y() - site2.y()) * (site1.y() + site2.y());
-            coordinate_type b2 = (site2.x() - site3.x()) * (site2.x() + site3.x()) +
-                                 (site2.y() - site3.y()) * (site2.y() + site3.y());
-
-            // Create new circle event.
-            coordinate_type c_x = (b1*(site2.y() - site3.y()) - b2*(site1.y() - site2.y())) / a;
-            coordinate_type c_y = (b2*(site1.x() - site2.x()) - b1*(site2.x() - site3.x())) / a;
-            coordinate_type radius = sqrt((c_x-site2.x())*(c_x-site2.x()) +
-                                          (c_y-site2.y())*(c_y-site2.y()));
-            c_event = detail::make_circle_event<coordinate_type>(c_x, c_y, c_x + radius);
-            return true;
-        }
-
-        // Create circle event from two point sites and one segment site.
-        bool create_circle_event_pps(const site_event_type &site1,
-                                     const site_event_type &site2,
-                                     const site_event_type &site3,
-                                     int segment_index,
-                                     circle_event_type &c_event) const {
-            // Check if bisectors intersect.
-            detail::kOrientation orientation1 = detail::orientation_test(
-                site3.get_point0(), site3.get_point1(), site1.get_point0());
-            detail::kOrientation orientation2 = detail::orientation_test(
-                site3.get_point0(), site3.get_point1(), site2.get_point0());
-
-            // If point sites are situated on different sides of segment return false.
-            if (static_cast<int>(orientation1) * static_cast<int>(orientation2) == -1)
-                return false;
-
-            if ((orientation1 == detail::COLINEAR) && (orientation2 == detail::COLINEAR))
-                return false;
-
-            bool right_oriented = (orientation1 == detail::RIGHT_ORIENTATION) ||
-                                  (orientation2 == detail::RIGHT_ORIENTATION);
-
-            // Additional orientation test if segment index is equal to 1 or 3.
-            if (segment_index != 2) {
-                const Point2D &test_point = ((segment_index == 1) ^ right_oriented) ?
-                                            site3.get_point1() : site3.get_point0();
-                if ((segment_index == 1 && 
-                    detail::orientation_test(test_point, site1.get_point0(), site2.get_point0()) !=
-                    detail::RIGHT_ORIENTATION) ||
-                    (segment_index == 3 &&
-                    detail::orientation_test(site1.get_point0(), site2.get_point0(), test_point) !=
-                    detail::RIGHT_ORIENTATION))
-                    return false;
-            } else {
-                if (detail::orientation_test(site1.get_point0(), site3.get_point0(),
-                    site2.get_point0()) != detail::RIGHT_ORIENTATION &&
-                    detail::orientation_test(site1.get_point0(), site3.get_point1(),
-                    site2.get_point0()) != detail::RIGHT_ORIENTATION)
-                    return false;
-            }
-
-            double line_a = site3.get_point1().y() - site3.get_point0().y();
-            double line_b = site3.get_point0().x() - site3.get_point1().x();
-            double vec_x = site2.y() - site1.y();
-            double vec_y = site1.x() - site2.x();
-            double teta = line_b * vec_y + line_a * vec_x;
-            double A = line_a * (site1.x() - site3.get_point1().x()) +
-                       line_b * (site1.y() - site3.get_point1().y());
-            double B = line_a * (site2.x() - site3.get_point1().x()) +
-                       line_b * (site2.y() - site3.get_point1().y());
-            double denom = line_b * vec_x - line_a * vec_y;
-            double det = 0.0;
-            if (orientation1 != detail::COLINEAR && orientation2 != detail::COLINEAR)
-                det = sqrt((teta * teta + denom * denom) * A * B);
-            double t;
-            
-            if (detail::orientation_test(static_cast<long long>(line_a),
-                                         static_cast<long long>(line_b),
-                                         static_cast<long long>(vec_x),
-                                         static_cast<long long>(vec_y)) == detail::COLINEAR) {
-                t = (teta * teta - 4.0 * A * B) / (4.0 * teta * (A + B));
-            } else {
-                if (segment_index == 2)
-                    det = -det;
-                t = (teta * (A + B) + 2.0 * det) / (2.0 * denom * denom);
-            }
-            double c_x = 0.5 * (site1.x() + site2.x()) + t * vec_x;
-            double c_y = 0.5 * (site1.y() + site2.y()) + t * vec_y;
-            double radius = sqrt((c_x-site2.x())*(c_x-site2.x()) +
-                                 (c_y-site2.y())*(c_y-site2.y()));
-            c_event = detail::make_circle_event<coordinate_type>(c_x, c_y, c_x + radius);
-            return true;
-        }
-
-        // Create circle event from one point site and two segment sites.
-        bool create_circle_event_pss(const site_event_type &site1,
-                                     const site_event_type &site2,
-                                     const site_event_type &site3,
-                                     int point_index,
-                                     circle_event_type &c_event) const {
-            // Check if bisectors intersect.
-            // Not implemented yet.
-            return false;
-        }
-
-        // Create circle event from three segment sites.
-        bool create_circle_event_sss(const site_event_type &site1,
-                                     const site_event_type &site2,
-                                     const site_event_type &site3,
-                                     circle_event_type &c_event) const {
-            // Check if bisectors intersecto.
-            // Not implemented yet.
-            return false;
         }
 
         // Create circle event from the given three points.
@@ -489,29 +380,29 @@ namespace sweepline {
             if (!site1.is_segment()) {
                 if (!site2.is_segment()) {
                     if (!site3.is_segment()) {
-                        return create_circle_event_ppp(site1, site2, site3, c_event);
+                        return detail::create_circle_event_ppp(site1, site2, site3, c_event);
                     } else {
-                        return create_circle_event_pps(site1, site2, site3, 3, c_event);
+                        return detail::create_circle_event_pps(site1, site2, site3, 3, c_event);
                     }
                 } else {
                     if (!site3.is_segment()) {
-                        return create_circle_event_pps(site1, site3, site2, 2, c_event);
+                        return detail::create_circle_event_pps(site1, site3, site2, 2, c_event);
                     } else {
-                        return create_circle_event_pss(site1, site2, site3, 1, c_event);
+                        return detail::create_circle_event_pss(site1, site2, site3, 1, c_event);
                     }
                 }
             } else {
                 if (!site2.is_segment()) {
                     if (!site3.is_segment()) {
-                        return create_circle_event_pps(site2, site3, site1, 1, c_event);
+                        return detail::create_circle_event_pps(site2, site3, site1, 1, c_event);
                     } else {
-                        return create_circle_event_pss(site2, site1, site3, 2, c_event);
+                        return detail::create_circle_event_pss(site2, site1, site3, 2, c_event);
                     }
                 } else {
                     if (!site3.is_segment()) {
-                        return create_circle_event_pss(site3, site1, site2, 3, c_event);
+                        return detail::create_circle_event_pss(site3, site1, site2, 3, c_event);
                     } else {
-                        return create_circle_event_sss(site1, site2, site3, c_event);
+                        return detail::create_circle_event_sss(site1, site2, site3, c_event);
                     }
                 }
             }
@@ -530,8 +421,16 @@ namespace sweepline {
         }
 
     private:
+        struct end_point_comparison {
+            bool operator() (const end_point_type &end1, const end_point_type &end2) const {
+                return end1.first > end2.first;
+            }
+        };
+
         std::vector<site_event_type> site_events_;
         site_events_iterator_type site_events_iterator_;
+        std::priority_queue< end_point_type, std::vector<end_point_type>,
+                             end_point_comparison > end_points_;
         CircleEventsQueue circle_events_;
         BeachLine beach_line_;
         Output output_;

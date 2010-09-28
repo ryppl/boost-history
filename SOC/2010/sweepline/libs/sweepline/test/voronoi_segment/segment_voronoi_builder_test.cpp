@@ -635,7 +635,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(segment_sites_test1, T, test_types) {
     test_voronoi_builder.run_sweepline();
 }
 
-
 BOOST_AUTO_TEST_CASE_TEMPLATE(segment_sites_test2, T, test_types) {
     typedef T coordinate_type;
     voronoi_builder<coordinate_type> test_voronoi_builder;
@@ -708,4 +707,51 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(segment_site_test5, T, test_types) {
     test_voronoi_builder.run_sweepline();
 
     // TODO(asydorchuk): Add output checks there.
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(segment_site_test6, T, test_types) {
+    typedef T coordinate_type;
+    voronoi_builder<coordinate_type> test_voronoi_builder;
+    std::vector< point_2d<T> > point_vec;
+    std::vector< typename voronoi_builder<coordinate_type>::Segment2D > segm_vec;
+    point_2d<T> point1 = make_point_2d<T>(-1, 1);
+    point_2d<T> point2 = make_point_2d<T>(1, 0);
+    point_2d<T> point3 = make_point_2d<T>(1, 2);
+    segm_vec.push_back(std::make_pair< point_2d<T>, point_2d<T> >(point2, point3));
+    point_vec.push_back(point1);
+    test_voronoi_builder.init(point_vec, segm_vec);
+    test_voronoi_builder.run_sweepline();
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(segment_site_test7, T, test_types) {
+    typedef T coordinate_type;
+    voronoi_builder<coordinate_type> test_voronoi_builder;
+    std::vector< point_2d<T> > point_vec;
+    std::vector< typename voronoi_builder<coordinate_type>::Segment2D > segm_vec;
+    point_2d<T> point1 = make_point_2d<T>(0, 0);
+    point_2d<T> point2 = make_point_2d<T>(4, 0);
+    point_2d<T> point3 = make_point_2d<T>(0, 4);
+    point_2d<T> point4 = make_point_2d<T>(4, 4);
+    segm_vec.push_back(std::make_pair(point1, point2));
+    segm_vec.push_back(std::make_pair(point2, point3));
+    segm_vec.push_back(std::make_pair(point3, point4));
+    test_voronoi_builder.init(segm_vec);
+    test_voronoi_builder.run_sweepline();
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(segment_site_test8, T, test_types) {
+    typedef T coordinate_type;
+    voronoi_builder<coordinate_type> test_voronoi_builder;
+    std::vector< point_2d<T> > point_vec;
+    std::vector< typename voronoi_builder<coordinate_type>::Segment2D > segm_vec;
+    point_2d<T> point1 = make_point_2d<T>(0, 0);
+    point_2d<T> point2 = make_point_2d<T>(4, 0);
+    point_2d<T> point3 = make_point_2d<T>(4, 4);
+    point_2d<T> point4 = make_point_2d<T>(0, 4);
+    segm_vec.push_back(std::make_pair(point1, point2));
+    segm_vec.push_back(std::make_pair(point2, point3));
+    segm_vec.push_back(std::make_pair(point3, point4));
+    segm_vec.push_back(std::make_pair(point4, point1));
+    test_voronoi_builder.init(segm_vec);
+    test_voronoi_builder.run_sweepline();
 }

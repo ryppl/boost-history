@@ -150,13 +150,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(site_event_test3, T, test_types) {
 
     point4 = make_point_2d<T>(static_cast<T>(10), static_cast<T>(9));
     site2 = make_site_event<T>(point2, point4, 0);
-    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr1_1);
-    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr1_2);
+    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr1_2);
+    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr1_1);
 
     point4 = make_point_2d<T>(static_cast<T>(9), static_cast<T>(10));
     site2 = make_site_event<T>(point2, point4, 0);
-    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr1_2);
-    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr1_1);
+    EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr1_1);
+    EVENT_TYPES_CHECK_COMPARISON(site2, site1, arr1_2);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(circle_event_test1, T, test_types) {

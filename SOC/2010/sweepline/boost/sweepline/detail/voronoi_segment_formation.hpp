@@ -27,6 +27,408 @@ namespace sweepline {
 namespace detail {
 
     ///////////////////////////////////////////////////////////////////////////
+    // VORONOI EVENT TYPES ////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    template <typename T>
+    struct beach_line_node;
+
+    template <typename T>
+    struct beach_line_node_data;
+
+    template <typename BeachLineNode>
+    struct node_comparer;
+
+    enum kOrientation {
+        RIGHT_ORIENTATION = -1,
+        COLINEAR = 0,
+        LEFT_ORIENTATION = 1,
+    };
+
+    // Site event type. 
+    // Occurs when sweepline sweeps over one of the initial sites.
+    // Contains index of a site below the other sorted sites.
+    template <typename T>
+    struct site_event {
+    public:
+        typedef T coordinate_type;
+        typedef point_2d<T> Point2D;
+
+        site_event() : is_segment_(false),
+                       is_vertical_(true),
+                       is_inverse_(false) {}
+        
+        site_event(coordinate_type x, coordinate_type y, int index) :
+            point0_(x, y),
+            site_index_(index), 
+            is_segment_(false),
+            is_vertical_(true),
+            is_inverse_(false) {}
+
+        site_event(const Point2D &point, int index) :
+            point0_(point),
+            site_index_(index),
+            is_segment_(false),
+            is_vertical_(true),
+            is_inverse_(false) {}
+
+        site_event(const Point2D &point1, const Point2D &point2, int index) :
+            point0_(point1),
+            point1_(point2),
+            site_index_(index),
+            is_segment_(true),
+            is_inverse_(false) {
+            if (point0_ > point1_)
+                (std::swap)(point0_, point1_);
+            is_vertical_ = (point0_.x() == point1_.x());
+        }
+
+        bool operator==(const site_event &s_event) const {
+            return (point0_ == s_event.point0_) &&
+                   ((!is_segment_ && !s_event.is_segment_) ||
+                   (is_segment_ && s_event.is_segment_ && (point1_ == s_event.point1_)));
+        }
+
+        bool operator!=(const site_event &s_event) const {
+            return !((*this) == s_event);
+        }
+
+        // All the sites are sorted due to coordinates of the first point.
+        // Point sites preceed vertical segment sites with the same first point.
+        // Point sites and vertical segments preceed not vertical segments with
+        // the same x coordinate of the first point.
+        // Non vertical segments with the same first point are sorted counterclockwise.
+        bool operator<(const site_event &s_event) const {
+            // If first points have different x coordinates, compare them.
+            if (this->point0_.x() != s_event.point0_.x())
+                return this->point0_.x() < s_event.point0_.x();
+
+            if (!(this->is_segment_)) {
+                if (!s_event.is_segment_) {
+                    return this->point0_.y() < s_event.point0_.y();
+                }
+                if (s_event.is_vertical_) {
+                    return this->point0_.y() <= s_event.point0_.y();
+                }
+                return true;
+            } else {
+                if (!s_event.is_segment_ || s_event.is_vertical_) {
+                    if (this->is_vertical_) {
+                        return this->point0_.y() < s_event.point0_.y();
+                    }
+                    return false;
+                }
+                if (this->is_vertical_)
+                    return true;
+                if (this->point0_.y() != s_event.point0_.y())
+                    return this->point0_.y() < s_event.point0_.y();
+                // Sort by angle.
+                return orientation_test(this->point1_, this->point0_, s_event.point1_) ==
+                       LEFT_ORIENTATION;
+            }   
+        }
+
+        bool operator<=(const site_event &s_event) const {
+            return !(s_event < (*this));
+        }
+
+        bool operator>(const site_event &s_event) const {
+            return s_event < (*this);
+        }
+
+        bool operator>=(const site_event &s_event) const {
+            return !((*this) < s_event);
+        }
+
+        coordinate_type x(bool oriented = false) const {
+            if (!oriented)
+                return point0_.x();
+            return is_inverse_ ? point1_.x() : point0_.x();
+        }
+
+        coordinate_type y(bool oriented = false) const {
+            if (!oriented)
+                return point0_.y();
+            return is_inverse_ ? point1_.y() : point0_.y();
+        }
+
+        coordinate_type x0(bool oriented = false) const {
+            if (!oriented)
+                return point0_.x();
+            return is_inverse_ ? point1_.x() : point0_.x();
+        }
+
+        coordinate_type y0(bool oriented = false) const {
+            if (!oriented)
+                return point0_.y();
+            return is_inverse_ ? point1_.y() : point0_.y();
+        }
+
+        coordinate_type x1(bool oriented = false) const {
+            if (!oriented)
+                return point1_.x();
+            return is_inverse_ ? point0_.x() : point1_.x();
+        }
+
+        coordinate_type y1(bool oriented = false) const {
+            if (!oriented)
+                return point1_.y();
+            return is_inverse_ ? point0_.y() : point1_.y();
+        }
+
+        const Point2D &get_point0(bool oriented = false) const {
+            if (!oriented)
+                return point0_;
+            return is_inverse_ ? point1_ : point0_;
+        }
+
+        const Point2D &get_point1(bool oriented = false) const {
+            if (!oriented)
+                return point1_;
+            return is_inverse_ ? point0_ : point1_;
+        }
+
+        void set_site_index(int index) {
+            site_index_ = index;
+        }
+
+        void set_inverse() {
+            is_inverse_ ^= true;
+        }
+
+        int get_site_index() const {
+            return site_index_;
+        }
+
+        bool is_segment() const {
+            return is_segment_;
+        }
+
+        bool is_vertical() const {
+            return is_vertical_;
+        }
+
+        bool is_inverse() const {
+            return is_inverse_;
+        }
+
+    private:
+        Point2D point0_;
+        Point2D point1_;
+        int site_index_;
+        bool is_segment_;
+        bool is_vertical_;
+        bool is_inverse_;
+    };
+
+    template <typename T>
+    site_event<T> make_site_event(T x, T y, int index) {
+        return site_event<T>(x, y, index);
+    }
+
+    template <typename T>
+    site_event<T> make_site_event(const point_2d<T> &point, int index) {
+        return site_event<T>(point, index);
+    }
+
+    template <typename T>
+    site_event<T> make_site_event(const point_2d<T> &point1,
+                                  const point_2d<T> &point2, int index) {
+        return site_event<T>(point1, point2, index);
+    }
+
+    // Circle event type. Occurs when sweepline sweeps over the bottom point of
+    // the voronoi circle (with center at the bisectors intersection point).
+    // Circle event contains circle center, lowest x coordinate, event state and
+    // iterator to the corresponding bisectors.
+    template <typename T>
+    struct circle_event {
+    public:
+        typedef T coordinate_type;
+        typedef point_2d<T> Point2D;
+        typedef beach_line_node<coordinate_type> Key;
+        typedef beach_line_node_data<coordinate_type> Value;
+        typedef node_comparer<Key> NodeComparer;
+        typedef typename std::map< Key, Value, NodeComparer >::iterator beach_line_iterator;
+
+        circle_event() : is_active_(true) {}
+
+        circle_event(coordinate_type c_x, coordinate_type c_y, coordinate_type lower_x) :
+            center_(c_x, c_y), lower_x_(lower_x), is_active_(true) {}
+
+        circle_event(const Point2D &center, coordinate_type lower_x) :
+            center_(center), lower_x_(lower_x), is_active_(true) {}
+
+        circle_event(const circle_event& c_event) {
+            center_ = c_event.center_;
+            lower_x_ = c_event.lower_x_;
+            bisector_node_ = c_event.bisector_node_;
+            is_active_ = c_event.is_active_;
+        }
+
+        void operator=(const circle_event& c_event) {
+            center_ = c_event.center_;
+            lower_x_ = c_event.lower_x_;
+            bisector_node_ = c_event.bisector_node_;
+            is_active_ = c_event.is_active_;
+        }
+
+        bool operator==(const circle_event &c_event) const {
+            return (center_.y() == c_event.y()) &&
+                   (lower_x_ == c_event.lower_x_);
+        }
+
+        bool operator!=(const circle_event &c_event) const {
+            return !((*this) == c_event);
+        }
+
+        bool operator<(const circle_event &c_event) const {
+            if (lower_x_ != c_event.lower_x_)
+                return lower_x_ < c_event.lower_x_;
+            return center_.y() < c_event.y();
+        }
+
+        bool operator<=(const circle_event &c_event) const {
+            return !(c_event < (*this));
+        }
+
+        bool operator>(const circle_event &c_event) const {
+            return c_event < (*this);
+        }
+
+        bool operator>=(const circle_event &c_event) const {
+            return !((*this) < c_event);
+        }
+
+        // Compares bottom voronoi circle point with site event point.
+        // If circle point is less than site point return -1.
+        // If circle point is equal to site point return 0.
+        // If circle point is greater than site point return 1.
+        int compare(const site_event<coordinate_type> &s_event) const {
+            if (s_event.x() != lower_x_) {
+                return (lower_x_ < s_event.x()) ? -1 : 1;
+            }
+            if (s_event.y() != center_.y())
+                return (center_.y() < s_event.y()) ? -1 : 1;
+            return 0;
+        }
+
+        coordinate_type x() const {
+            return center_.x();
+        }
+
+        coordinate_type y() const {
+            return center_.y();
+        }
+
+        const Point2D &get_center() const {
+            return center_;
+        }
+
+        const coordinate_type &get_lower_x() const {
+            return lower_x_;
+        }
+
+        void set_bisector(beach_line_iterator iterator) {
+            bisector_node_ = iterator;
+        }
+
+        void deactivate() {
+            is_active_ = false;
+        }
+
+        const beach_line_iterator &get_bisector() const {
+            return bisector_node_;
+        }
+
+        bool is_active() const {
+            return is_active_;
+        }
+
+    private:
+        Point2D center_;
+        coordinate_type lower_x_;
+        beach_line_iterator bisector_node_;
+        bool is_active_;
+    };
+
+    template <typename T>
+    circle_event<T> make_circle_event(T c_x, T c_y, T lower_x) {
+        return circle_event<T>(c_x, c_y, lower_x);
+    }
+
+    template <typename T>
+    circle_event<T> make_circle_event(point_2d<T> center, T lower_x) {
+        return circle_event<T>(center, lower_x);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // VORONOI CIRCLE EVENTS QUEUE ////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    
+    // Event queue data structure, processes circle events.
+    template <typename T>
+    class circle_events_queue {
+    public:
+        typedef T coordinate_type;
+        typedef point_2d<T> Point2D;
+        typedef circle_event<T> circle_event_type;
+        typedef typename std::list<circle_event_type>::iterator circle_event_type_it;
+
+        circle_events_queue() {}
+
+        void reset() {
+            while (!circle_events_.empty())
+                circle_events_.pop();
+            circle_events_list_.clear();
+        }
+
+        bool empty() {
+            remove_not_active_events();
+            return circle_events_.empty();
+        }
+
+        const circle_event_type &top() {
+            remove_not_active_events();
+            return (*circle_events_.top());
+        }
+
+        void pop() {
+            circle_event_type_it temp_it = circle_events_.top();
+            circle_events_.pop();
+            circle_events_list_.erase(temp_it);
+        }
+
+        circle_event_type_it push(const circle_event_type &c_event) {
+            circle_events_list_.push_front(c_event);
+            circle_events_.push(circle_events_list_.begin());
+            return circle_events_list_.begin();
+        }
+
+    private:
+        struct comparison {
+            bool operator() (const circle_event_type_it &node1,
+                             const circle_event_type_it &node2) const {
+                return (*node1) > (*node2);
+            }
+        };
+
+        void remove_not_active_events() {
+            while (!circle_events_.empty() && !circle_events_.top()->is_active())
+                pop();
+        }
+
+        std::priority_queue< circle_event_type_it,
+                             std::vector<circle_event_type_it>,
+                             comparison > circle_events_;
+        std::list<circle_event_type> circle_events_list_;
+
+        //Disallow copy constructor and operator=
+        circle_events_queue(const circle_events_queue&);
+        void operator=(const circle_events_queue&);
+    };
+
+    ///////////////////////////////////////////////////////////////////////////
     // GEOMETRY PREDICATES ////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
@@ -54,12 +456,6 @@ namespace detail {
         long long dif = ll_a - ll_b;
         return (dif <= maxUlps) && (dif >= -maxUlps);
     }
-
-    enum kOrientation {
-        RIGHT_ORIENTATION = -1,
-        COLINEAR = 0,
-        LEFT_ORIENTATION = 1,
-    };
 
     // TODO(asydorchuk): Make templates specification for integer coordinate type,
     // as it is actually working with integer input.
@@ -242,18 +638,17 @@ namespace detail {
     }
 
     template <typename T>
-    kPredicateResult less_predicate_check(point_2d<T> segment_start, point_2d<T> segment_end,
-                                          point_2d<T> site_point, point_2d<T> new_point,
-                                          bool reverse_order) {
+    kPredicateResult fast_less_predicate(point_2d<T> site_point, site_event<T> segment_site,
+                                         point_2d<T> new_point, bool reverse_order) {
         typedef long long ll;
         typedef unsigned long long ull;
-        kOrientation orientation1 = orientation_test(segment_start, segment_end, site_point);
-        kOrientation orientation2 = orientation_test(segment_start, segment_end, new_point);
-        if (orientation1 == COLINEAR)
-            orientation1 = reverse_order ? LEFT_ORIENTATION : RIGHT_ORIENTATION;
-        if (orientation1 != orientation2)
-            return (orientation1 == RIGHT_ORIENTATION) ? LESS : MORE;
+        if (orientation_test(segment_site.get_point0(true), segment_site.get_point1(true),
+            new_point) != RIGHT_ORIENTATION) {
+            return (!segment_site.is_inverse()) ? LESS : MORE;
+        }
 
+        const point_2d<T> &segment_start = segment_site.get_point0();
+        const point_2d<T> &segment_end = segment_site.get_point1();
         ll dif_x = static_cast<ll>(new_point.x()) - static_cast<ll>(site_point.x());
         ll dif_y = static_cast<ll>(new_point.y()) - static_cast<ll>(site_point.y());
         ll a = static_cast<ll>(segment_end.x()) - static_cast<ll>(segment_start.x());
@@ -268,8 +663,8 @@ namespace detail {
         } else {
             kOrientation orientation = orientation_test(a, b, dif_x, dif_y);
             if ((orientation == COLINEAR) ||
-                ((orientation1 == RIGHT_ORIENTATION) ^ (orientation == RIGHT_ORIENTATION))) {
-                if (orientation1 == RIGHT_ORIENTATION)
+                (!segment_site.is_inverse() ^ (orientation == RIGHT_ORIENTATION))) {
+                if (!segment_site.is_inverse())
                     return reverse_order ? LESS : UNDEFINED;
                 return reverse_order ? UNDEFINED : MORE;
             }            
@@ -283,8 +678,7 @@ namespace detail {
                                  static_cast<double>(dif_x) *
                                  static_cast<double>(dif_y);
         if (!(almost_equal(fast_left_expr, fast_right_expr, 4))) {
-            if ((orientation1 == RIGHT_ORIENTATION) ^
-                (fast_left_expr > fast_right_expr) ^ !reverse_order)
+            if (segment_site.is_inverse() ^ (fast_left_expr > fast_right_expr) ^ reverse_order)
                 return reverse_order ? LESS : MORE;
             return UNDEFINED;
         }
@@ -342,7 +736,7 @@ namespace detail {
             }
         }
         
-        if ((orientation1 == RIGHT_ORIENTATION) ^ comparison_result ^ !reverse_order)
+        if (segment_site.is_inverse() ^ comparison_result ^ reverse_order)
             return reverse_order ? LESS : MORE;
         return UNDEFINED;
     }
@@ -387,13 +781,16 @@ namespace detail {
     // (point, segment) and (segment, point) are two distinct points, except
     // case of vertical segment.
     template <typename T>
-    bool less_predicate(point_2d<T> segment_start, point_2d<T> segment_end,
-                        point_2d<T> site_point, point_2d<T> new_point, bool reverse_order) {
-        kPredicateResult fast_res = less_predicate_check(segment_start, segment_end,
-                                                         site_point, new_point, reverse_order);
-        if (fast_res != UNDEFINED)
+    bool less_predicate(point_2d<T> site_point, site_event<T> segment_site,
+                        point_2d<T> new_point, bool reverse_order) {
+        kPredicateResult fast_res = fast_less_predicate(
+            site_point, segment_site, new_point, reverse_order);
+        if (fast_res != UNDEFINED) {
             return (fast_res == LESS);
+        }
 
+        const point_2d<T> &segment_start = segment_site.get_point0();
+        const point_2d<T> &segment_end = segment_site.get_point1();
         double dif_x = static_cast<double>(new_point.x()) -
                        static_cast<double>(site_point.x());
         double dif_y = static_cast<double>(new_point.y()) -
@@ -429,36 +826,33 @@ namespace detail {
     }
 
     template <typename T>
-    bool less_predicate(point_2d<T> segment1_start, point_2d<T> segment1_end,
-                        point_2d<T> segment2_start, point_2d<T> segment2_end,
-                        point_2d<T> new_point, bool reverse_order) {
-        typedef unsigned long long ull;
-        kOrientation orientation1 = orientation_test(segment1_start, segment1_end, segment2_start);
-        kOrientation orientation2 = orientation_test(segment1_start, segment1_end, segment2_end);
-        assert(static_cast<int>(orientation1) || static_cast<int>(orientation2));
-        if (static_cast<int>(orientation1) * static_cast<int>(orientation2) == -1) {
-            assert(!reverse_order);
-            return less_predicate(segment2_start, segment2_end, 
-                                  segment1_start, segment1_end,
-                                  new_point, true);
+    bool less_predicate(site_event<T> left_site, site_event<T> right_site, point_2d<T> new_point) {
+        if (left_site.get_site_index() == right_site.get_site_index()) {
+            return orientation_test(left_site.get_point0(), left_site.get_point1(),
+                new_point) == RIGHT_ORIENTATION;
         }
 
+        const point_2d<T> segment1_start = left_site.get_point1();
+        const point_2d<T> segment1_end = left_site.get_point0();
+        const point_2d<T> segment2_start = right_site.get_point1();
+        const point_2d<T> segment2_end = right_site.get_point0();
         double intersection_x1 = 0.0;
         double intersection_x2 = 0.0;
-        double a1 = static_cast<double>(segment1_start.x()) -
-                    static_cast<double>(segment1_end.x());
+        
+        double a1 = static_cast<double>(segment1_end.x()) -
+                    static_cast<double>(segment1_start.x());
         if (a1 == 0.0) {
             // Avoid cancellation.
-            intersection_x2 += static_cast<double>(new_point.x()) -
-                               static_cast<double>(segment1_end.x());
+            intersection_x2 += (static_cast<double>(new_point.x()) -
+                                static_cast<double>(segment1_end.x())) * 0.5;
         } else {
-            double b1 = static_cast<double>(segment1_start.y()) -
-                        static_cast<double>(segment1_end.y());
+            double b1 = static_cast<double>(segment1_end.y()) -
+                        static_cast<double>(segment1_start.y());
             double c1 = b1 * (static_cast<double>(new_point.x()) -
-                              static_cast<double>(segment1_end.x())) +
-                        a1 * segment1_end.y();
+                              static_cast<double>(segment1_start.x())) +
+                        a1 * segment1_start.y();
             double mul1 = sqrt(a1 * a1 + b1 * b1);
-            if ((orientation1 == LEFT_ORIENTATION) || (orientation2 == LEFT_ORIENTATION)) {
+            if (left_site.is_inverse()) {
                 if (b1 >= 0.0) {
                     mul1 = 1.0 / (b1 + mul1);
                 } else {
@@ -476,21 +870,20 @@ namespace detail {
             INT_PREDICATE_AVOID_CANCELLATION(-c1 * mul1, intersection_x1, intersection_x2);
         }
 
-        double a2 = static_cast<double>(segment2_start.x()) -
-                    static_cast<double>(segment2_end.x());
+        double a2 = static_cast<double>(segment2_end.x()) -
+                    static_cast<double>(segment2_start.x());
         if (a2 == 0.0) {
             // Avoid cancellation.
-            intersection_x1 += static_cast<double>(new_point.x()) - 
-                               static_cast<double>(segment2_end.x());
+            intersection_x1 += (static_cast<double>(new_point.x()) - 
+                                static_cast<double>(segment2_end.x())) * 0.5;
         } else {
-            double b2 = static_cast<double>(segment2_start.y()) -
-                        static_cast<double>(segment2_end.y());
+            double b2 = static_cast<double>(segment2_end.y()) -
+                        static_cast<double>(segment2_start.y());
             double c2 = b2 * (static_cast<double>(new_point.x()) -
-                              static_cast<double>(segment2_end.x())) +
-                        a2 * segment2_end.y();
+                              static_cast<double>(segment2_start.x())) +
+                        a2 * segment2_start.y();
             double mul2 = sqrt(a2 * a2 + b2 * b2);
-            if (((orientation1 == LEFT_ORIENTATION) || (orientation2 == LEFT_ORIENTATION)) ^
-                !reverse_order) {
+            if (right_site.is_inverse()) {
                 if (b2 >= 0.0) {
                     mul2 = 1.0 / (b2 + mul2);
                 } else {
@@ -509,377 +902,225 @@ namespace detail {
         }
 
         if (!almost_equal(intersection_x1, intersection_x2, 20)) {
-            return ((orientation1 == LEFT_ORIENTATION) || (orientation2 == LEFT_ORIENTATION)) ^
-                   reverse_order ^ (intersection_x1 > intersection_x2);
+            return intersection_x1 < intersection_x2;
         }
         
         // TODO(asydorchuk): Add mpl support there.
-        return ((orientation1 == LEFT_ORIENTATION) || (orientation2 == LEFT_ORIENTATION)) ^
-               reverse_order ^ (intersection_x1 > intersection_x2);
+        return intersection_x1 < intersection_x2;
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // VORONOI EVENT TYPES ////////////////////////////////////////////////////
+    // CIRCLE EVENTS CREATION /////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    // Create circle event from three point sites.
+    // TODO (asydorchuk): make precision optimizations.
     template <typename T>
-    struct beach_line_node;
+    static bool create_circle_event_ppp(const site_event<T> &site1,
+                                        const site_event<T> &site2,
+                                        const site_event<T> &site3,
+                                        circle_event<T> &c_event) {
+        double dif_x1 = static_cast<double>(site1.x()) -
+                        static_cast<double>(site2.x());
+        double dif_x2 = static_cast<double>(site2.x()) -
+                        static_cast<double>(site3.x());
+        double dif_y1 = static_cast<double>(site1.y()) -
+                        static_cast<double>(site2.y());
+        double dif_y2 = static_cast<double>(site2.y()) -
+                        static_cast<double>(site3.y());
+        kOrientation valid_orientation = orientation_test(
+            static_cast<long long>(dif_x1), static_cast<long long>(dif_y1),
+            static_cast<long long>(dif_x2), static_cast<long long>(dif_y2));
+        if (valid_orientation != RIGHT_ORIENTATION)
+            return false;
+        double a = 2.0 * (dif_x1 * dif_y2 - dif_x2 * dif_y1);
+        double b1 = dif_x1 * (site1.x() + site2.x()) + dif_y1 * (site1.y() + site2.y());
+        double b2 = dif_x2 * (site2.x() + site3.x()) + dif_y2 * (site2.y() + site3.y());
 
+        // Create new circle event.
+        double c_x = (b1*dif_y2 - b2*dif_y1) / a;
+        double c_y = (b2*dif_x1 - b1*dif_x2) / a;
+        double radius = sqrt((c_x-site2.x())*(c_x-site2.x()) +
+                             (c_y-site2.y())*(c_y-site2.y()));
+        c_event = make_circle_event<double>(c_x, c_y, c_x + radius);
+        return true;
+    }
+
+    // Create circle event from two point sites and one segment site.
+    // TODO (asydorchuk): make_precision optimizations.
     template <typename T>
-    struct beach_line_node_data;
+    static bool create_circle_event_pps(const site_event<T> &site1,
+                                        const site_event<T> &site2,
+                                        const site_event<T> &site3,
+                                        int segment_index,
+                                        circle_event<T> &c_event) {
+        if (segment_index != 2) {
+            if (orientation_test(site3.get_point0(), site1.get_point0(),
+                site2.get_point0()) != RIGHT_ORIENTATION &&
+                detail::orientation_test(site3.get_point1(), site1.get_point0(),
+                site2.get_point0()) != RIGHT_ORIENTATION)
+                return false;
+        } else {
+            if (orientation_test(site1.get_point0(), site3.get_point0(),
+                site2.get_point0()) != RIGHT_ORIENTATION &&
+                detail::orientation_test(site1.get_point0(), site3.get_point1(),
+                site2.get_point0()) != RIGHT_ORIENTATION)
+                return false;
+        }
 
-    template <typename BeachLineNode>
-    struct node_comparer;
-
-    // Site event type. 
-    // Occurs when sweepline sweeps over one of the initial sites.
-    // Contains index of a site below the other sorted sites.
-    template <typename T>
-    struct site_event {
-    public:
-        typedef T coordinate_type;
-        typedef point_2d<T> Point2D;
-
-        site_event() : is_segment_(false), is_vertical_(true) {}
+        double line_a = site3.get_point1().y() - site3.get_point0().y();
+        double line_b = site3.get_point0().x() - site3.get_point1().x();
+        double vec_x = site2.y() - site1.y();
+        double vec_y = site1.x() - site2.x();
+        double teta = line_b * vec_y + line_a * vec_x;
+        double A = line_a * (site1.x() - site3.get_point1().x()) +
+                   line_b * (site1.y() - site3.get_point1().y());
+        double B = line_a * (site2.x() - site3.get_point1().x()) +
+                   line_b * (site2.y() - site3.get_point1().y());
+        double denom = line_b * vec_x - line_a * vec_y;
+        double det = sqrt((teta * teta + denom * denom) * A * B);
+        double t;
         
-        site_event(coordinate_type x, coordinate_type y, int index) :
-            point0_(x, y), site_index_(index), is_segment_(false), is_vertical_(true) {}
-
-        site_event(const Point2D &point, int index) :
-            point0_(point), site_index_(index), is_segment_(false), is_vertical_(true) {}
-
-        site_event(const Point2D &point1, const Point2D &point2, int index) :
-            point0_(point1), point1_(point2), site_index_(index), is_segment_(true) {
-            if (point0_ > point1_)
-                (std::swap)(point0_, point1_);
-            is_vertical_ = (point0_.x() == point1_.x());
+        if (orientation_test(static_cast<long long>(line_a),
+                             static_cast<long long>(line_b),
+                             static_cast<long long>(vec_x),
+                             static_cast<long long>(vec_y)) == COLINEAR) {
+            t = (teta * teta - 4.0 * A * B) / (4.0 * teta * (A + B));
+        } else {
+            if (segment_index == 2)
+                det = -det;
+            t = (teta * (A + B) + 2.0 * det) / (2.0 * denom * denom);
         }
-
-        bool operator==(const site_event &s_event) const {
-            return (point0_ == s_event.point0_) &&
-                   ((!is_segment_ && !s_event.is_segment_) ||
-                   (is_segment_ && s_event.is_segment_ && (point1_ == s_event.point1_)));
-        }
-
-        bool operator!=(const site_event &s_event) const {
-            return !((*this) == s_event);
-        }
-
-        //// All the sites are sorted due to coordinates of the first point.
-        //// Point sites preceed segment sites with the same first point.
-        //// Segments with the same first point use counterclockwise comparison.
-        //bool operator<(const site_event &s_event) const {
-        //    // If first points have different x coordinates, compare them.
-        //    if (this->point0_.x() != s_event.point0_.x())
-        //        return this->point0_.x() < s_event.point0_.x();
-
-        //    // If first points have different y coordinates, compare them.
-        //    if (this->point0_.y() != s_event.point0_.y() ||
-        //        !(this->is_segment_ || s_event.is_segment_))
-        //        return this->point0_.y() < s_event.point0_.y();
-
-        //    // Point site events go before segment site events with the same first point.
-        //    if (this->is_segment_ ^ s_event.is_segment_)
-        //        return !this->is_segment;
-
-        //    // Use angle comparison for segment sites with the same first point.
-        //    return orientation_test(this->point1_, this->point0_, s_event.point1_) ==
-        //           RIGHT_ORIENTATION;
-        //}
-
-        // All the sites are sorted due to coordinates of the first point.
-        // Point sites preceed vertical segment sites with the same first point.
-        // Point sites and vertical segments preceed not vertical segments with
-        // the same x coordinate of the first point.
-        // Non vertical segments with the same first point are sorted counterclockwise.
-        bool operator<(const site_event &s_event) const {
-            // If first points have different x coordinates, compare them.
-            if (this->point0_.x() != s_event.point0_.x())
-                return this->point0_.x() < s_event.point0_.x();
-
-            if (!(this->is_segment_)) {
-                if (!s_event.is_segment_) {
-                    return this->point0_.y() < s_event.point0_.y();
-                }
-                if (s_event.is_vertical_) {
-                    return this->point0_.y() <= s_event.point0_.y();
-                }
-                return true;
-            } else {
-                if (!s_event.is_segment_ || s_event.is_vertical_) {
-                    if (this->is_vertical_) {
-                        return this->point0_.y() < s_event.point0_.y();
-                    }
-                    return false;
-                }
-                if (this->is_vertical_)
-                    return true;
-                if (this->point0_.y() != s_event.point0_.y())
-                    return this->point0_.y() < s_event.point0_.y();
-                // Sort by angle.
-                return orientation_test(this->point1_, this->point0_, s_event.point1_) ==
-                       RIGHT_ORIENTATION;
-            }   
-        }
-
-        bool operator<=(const site_event &s_event) const {
-            return !(s_event < (*this));
-        }
-
-        bool operator>(const site_event &s_event) const {
-            return s_event < (*this);
-        }
-
-        bool operator>=(const site_event &s_event) const {
-            return !((*this) < s_event);
-        }
-
-        coordinate_type x() const {
-            return point0_.x();
-        }
-
-        coordinate_type y() const {
-            return point0_.y();
-        }
-
-        const Point2D &get_point0() const {
-            return point0_;
-        }
-
-        const Point2D &get_point1() const {
-            return point1_;
-        }
-
-        void set_site_index(int index) {
-            site_index_ = index;
-        }
-
-        int get_site_index() const {
-            return site_index_;
-        }
-
-        bool is_segment() const {
-            return is_segment_;
-        }
-
-        bool is_vertical() const {
-            return is_vertical_;
-        }
-
-    private:
-        Point2D point0_;
-        Point2D point1_;
-        int site_index_;
-        bool is_segment_;
-        bool is_vertical_;
-    };
-
-    template <typename T>
-    site_event<T> make_site_event(T x, T y, int index) {
-        return site_event<T>(x, y, index);
+        double c_x = 0.5 * (site1.x() + site2.x()) + t * vec_x;
+        double c_y = 0.5 * (site1.y() + site2.y()) + t * vec_y;
+        double radius = sqrt((c_x-site2.x())*(c_x-site2.x()) +
+                             (c_y-site2.y())*(c_y-site2.y()));
+        c_event = make_circle_event<double>(c_x, c_y, c_x + radius);
+        return true;
     }
 
+    // Create circle event from one point site and two segment sites.
+    // TODO (asydorchuk): make precision optimizations.
     template <typename T>
-    site_event<T> make_site_event(const point_2d<T> &point, int index) {
-        return site_event<T>(point, index);
+    static bool create_circle_event_pss(const site_event<T> &site1,
+                                        const site_event<T> &site2,
+                                        const site_event<T> &site3,
+                                        int point_index,
+                                        circle_event<T> &c_event) {
+        // Intersection check.
+        if (site1.get_site_index() == site2.get_site_index()) {
+            return false;
+        }
+        const point_2d<T> &segm_start1 = site2.get_point1(true);
+        const point_2d<T> &segm_end1 = site2.get_point0(true);
+        const point_2d<T> &segm_start2 = site3.get_point0(true);
+        const point_2d<T> &segm_end2 = site3.get_point1(true);
+
+        kOrientation valid_orient1 = orientation_test(segm_end1, segm_start1, segm_start2);
+        kOrientation valid_orient2 = orientation_test(segm_end1, segm_start1, segm_end2);
+        if (valid_orient1 != RIGHT_ORIENTATION && valid_orient2 != RIGHT_ORIENTATION) {
+            return false;
+        }
+
+        double a1 = static_cast<double>(segm_end1.x() - segm_start1.x());
+        double b1 = static_cast<double>(segm_end1.y() - segm_start1.y());
+        double a2 = static_cast<double>(segm_end2.x() - segm_start2.x());
+        double b2 = static_cast<double>(segm_end2.y() - segm_start2.y());
+
+        kOrientation segm_orient = orientation_test(
+            static_cast<long long>(a1), static_cast<long long>(b1),
+            static_cast<long long>(a2), static_cast<long long>(b2));
+
+        if (segm_orient == COLINEAR) {
+            double a = a1 * a1 + b1 * b1;
+            double b = a1 * ((static_cast<double>(segm_start1.x()) +
+                              static_cast<double>(segm_start2.x())) * 0.5 -
+                              static_cast<double>(site1.x())) +
+                       b1 * ((static_cast<double>(segm_start1.y()) +
+                              static_cast<double>(segm_start2.y())) * 0.5 -
+                              static_cast<double>(site1.y()));
+            double c = b1 * (static_cast<double>(segm_start2.x()) -
+                             static_cast<double>(segm_start1.x())) -
+                       a1 * (static_cast<double>(segm_start2.y()) -
+                             static_cast<double>(segm_start1.y()));
+            double det = -(b1 * (static_cast<double>(site1.x()) -
+                                 static_cast<double>(segm_start1.x())) -
+                           a1 * (static_cast<double>(site1.y()) -
+                                 static_cast<double>(segm_start1.y()))) *
+                          (b1 * (static_cast<double>(site1.x()) -
+                                 static_cast<double>(segm_start2.x())) -
+                           a1 * (static_cast<double>(site1.y()) -
+                                 static_cast<double>(segm_start2.y())));
+            double t = ((point_index == 2) ? (-b + sqrt(det)) : (-b - sqrt(det))) / a;
+            double c_x = 0.5 * (static_cast<double>(segm_start1.x() + segm_start2.x())) + a1 * t;
+            double c_y = 0.5 * (static_cast<double>(segm_start1.y() + segm_start2.y())) + b1 * t;
+            double radius = 0.5 * fabs(c) / sqrt(a);
+            c_event = make_circle_event<double>(c_x, c_y, c_x + radius);
+            return true;
+        } else {
+            double c1 = b1 * static_cast<double>(segm_end1.x()) -
+                a1 * static_cast<double>(segm_end1.y());
+            double c2 = a2 * static_cast<double>(segm_end2.y()) -
+                b2 * static_cast<double>(segm_end2.x());
+            double denom = (b1 * a2 - b2 * a1);
+            double intersection_x = (c1 * a2 + a1 * c2) / denom;
+            double intersection_y = (b1 * c2 + b2 * c1) / denom;
+            double sqr_sum1 = sqrt(a1 * a1 + b1 * b1);
+            double sqr_sum2 = sqrt(a2 * a2 + b2 * b2);
+            double vec_x = a1 * sqr_sum2 + a2 * sqr_sum1;
+            double vec_y = b1 * sqr_sum2 + b2 * sqr_sum1;
+            double dx = intersection_x - site1.get_point0().x();
+            double dy = intersection_y - site1.get_point0().y();
+            double a = a1 * a2 + b1 * b2 + sqr_sum1 * sqr_sum2;
+            double b = dx * vec_x + dy * vec_y;
+            double det = -2.0 * a * (b1 * dx - a1 * dy) * (b2 * dx - a2 * dy);
+            double t = ((point_index == 2) ? (-b + sqrt(det)) : (-b - sqrt(det))) / (a * a);
+            double c_x = intersection_x + vec_x * t;
+            double c_y = intersection_y + vec_y * t;
+            double radius = fabs(denom * t);
+            c_event = make_circle_event<double>(c_x, c_y, c_x + radius);
+            return true;
+        }
     }
 
+    // Create circle event from three segment sites.
     template <typename T>
-    site_event<T> make_site_event(const point_2d<T> &point1,
-                                  const point_2d<T> &point2, int index) {
-        return site_event<T>(point1, point2, index);
+    static bool create_circle_event_sss(const site_event<T> &site1,
+                                        const site_event<T> &site2,
+                                        const site_event<T> &site3,
+                                        circle_event<T> &c_event) {
+        if (site1.get_site_index() == site2.get_site_index() ||
+            site2.get_site_index() == site3.get_site_index()) {
+            return false;
+        }
+        double a1 = static_cast<double>(site1.x1(true) - site1.x0(true));
+        double b1 = static_cast<double>(site1.y1(true) - site1.y0(true));
+        double c1 = b1 * static_cast<double>(site1.x0(true)) -
+                    a1 * static_cast<double>(site1.y0(true));
+        double a2 = static_cast<double>(site2.x1(true) - site2.x0(true));
+        double b2 = static_cast<double>(site2.y1(true) - site2.y0(true));
+        double c2 = b2 * static_cast<double>(site2.x0(true)) -
+                    a2 * static_cast<double>(site2.y0(true));
+        double a3 = static_cast<double>(site3.x1(true) - site3.x0(true));
+        double b3 = static_cast<double>(site3.y1(true) - site3.y0(true));
+        double c3 = b3 * static_cast<double>(site3.x0(true)) -
+                    a3 * static_cast<double>(site3.y0(true));
+        double sqr_sum1 = sqrt(a1 * a1 + b1 * b1);
+        double sqr_sum2 = sqrt(a2 * a2 + b2 * b2);
+        double sqr_sum3 = sqrt(a3 * a3 + b3 * b3);
+        double vec_a1 = -a1 * sqr_sum2 + a2 * sqr_sum1;
+        double vec_b1 = -b1 * sqr_sum2 + b2 * sqr_sum1;
+        double vec_c1 = -c1 * sqr_sum2 + c2 * sqr_sum1;
+        double vec_a2 = -a2 * sqr_sum3 + a3 * sqr_sum2;
+        double vec_b2 = -b2 * sqr_sum3 + b3 * sqr_sum2;
+        double vec_c2 = -c2 * sqr_sum3 + c3 * sqr_sum2;
+        double det = vec_a1 * vec_b2 - vec_b1 * vec_a2;
+        double c_x = (vec_a1 * vec_c2 - vec_c1 * vec_a2) / det;
+        double c_y = (vec_b1 * vec_c2 - vec_c1 * vec_b2) / det;
+        double radius = fabs(-b2 * c_x + a2 * c_y + c2) / sqr_sum2;
+        c_event = make_circle_event<double>(c_x, c_y, c_x + radius);
+        return true;
     }
-
-    // Circle event type. Occurs when sweepline sweeps over the bottom point of
-    // the voronoi circle (with center at the bisectors intersection point).
-    // Circle event contains circle center, lowest x coordinate, event state and
-    // iterator to the corresponding bisectors.
-    template <typename T>
-    struct circle_event {
-    public:
-        typedef T coordinate_type;
-        typedef point_2d<T> Point2D;
-        typedef beach_line_node<coordinate_type> Key;
-        typedef beach_line_node_data<coordinate_type> Value;
-        typedef node_comparer<Key> NodeComparer;
-        typedef typename std::map< Key, Value, NodeComparer >::iterator beach_line_iterator;
-
-        circle_event() : is_active_(true) {}
-
-        circle_event(coordinate_type c_x, coordinate_type c_y, coordinate_type lower_x) :
-            center_(c_x, c_y), lower_x_(lower_x), is_active_(true) {}
-
-        circle_event(const Point2D &center, coordinate_type lower_x) :
-            center_(center), lower_x_(lower_x), is_active_(true) {}
-
-        circle_event(const circle_event& c_event) {
-            center_ = c_event.center_;
-            lower_x_ = c_event.lower_x_;
-            bisector_node_ = c_event.bisector_node_;
-            is_active_ = c_event.is_active_;
-        }
-
-        void operator=(const circle_event& c_event) {
-            center_ = c_event.center_;
-            lower_x_ = c_event.lower_x_;
-            bisector_node_ = c_event.bisector_node_;
-            is_active_ = c_event.is_active_;
-        }
-
-        bool operator==(const circle_event &c_event) const {
-            return (center_.y() == c_event.y()) &&
-                   (lower_x_ == c_event.lower_x_);
-        }
-
-        bool operator!=(const circle_event &c_event) const {
-            return !((*this) == c_event);
-        }
-
-        bool operator<(const circle_event &c_event) const {
-            if (lower_x_ != c_event.lower_x_)
-                return lower_x_ < c_event.lower_x_;
-            return center_.y() < c_event.y();
-        }
-
-        bool operator<=(const circle_event &c_event) const {
-            return !(c_event < (*this));
-        }
-
-        bool operator>(const circle_event &c_event) const {
-            return c_event < (*this);
-        }
-
-        bool operator>=(const circle_event &c_event) const {
-            return !((*this) < c_event);
-        }
-
-        // Compares bottom voronoi circle point with site event point.
-        // If circle point is less than site point return -1.
-        // If circle point is equal to site point return 0.
-        // If circle point is greater than site point return 1.
-        int compare(const site_event<coordinate_type> &s_event) const {
-            if (s_event.x() != lower_x_) {
-                return (lower_x_ < s_event.x()) ? -1 : 1;
-            }
-            if (s_event.y() != center_.y())
-                return (center_.y() < s_event.y()) ? -1 : 1;
-            return 0;
-        }
-
-        coordinate_type x() const {
-            return center_.x();
-        }
-
-        coordinate_type y() const {
-            return center_.y();
-        }
-
-        const Point2D &get_center() const {
-            return center_;
-        }
-
-        const coordinate_type &get_lower_x() const {
-            return lower_x_;
-        }
-
-        void set_bisector(beach_line_iterator iterator) {
-            bisector_node_ = iterator;
-        }
-
-        void deactivate() {
-            is_active_ = false;
-        }
-
-        const beach_line_iterator &get_bisector() const {
-            return bisector_node_;
-        }
-
-        bool is_active() const {
-            return is_active_;
-        }
-
-    private:
-        Point2D center_;
-        coordinate_type lower_x_;
-        beach_line_iterator bisector_node_;
-        bool is_active_;
-    };
-
-    template <typename T>
-    circle_event<T> make_circle_event(T c_x, T c_y, T sqr_radius) {
-        return circle_event<T>(c_x, c_y, sqr_radius);
-    }
-
-    template <typename T>
-    circle_event<T> make_circle_event(point_2d<T> center, T sqr_radius) {
-        return circle_event<T>(center, sqr_radius);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // VORONOI CIRCLE EVENTS QUEUE ////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    
-    // Event queue data structure, processes circle events.
-    template <typename T>
-    class circle_events_queue {
-    public:
-        typedef T coordinate_type;
-        typedef point_2d<T> Point2D;
-        typedef circle_event<T> circle_event_type;
-        typedef typename std::list<circle_event_type>::iterator circle_event_type_it;
-
-        circle_events_queue() {}
-
-        void reset() {
-            while (!circle_events_.empty())
-                circle_events_.pop();
-            circle_events_list_.clear();
-        }
-
-        bool empty() {
-            remove_not_active_events();
-            return circle_events_.empty();
-        }
-
-        const circle_event_type &top() {
-            remove_not_active_events();
-            return (*circle_events_.top());
-        }
-
-        void pop() {
-            circle_event_type_it temp_it = circle_events_.top();
-            circle_events_.pop();
-            circle_events_list_.erase(temp_it);
-        }
-
-        circle_event_type_it push(const circle_event_type &c_event) {
-            circle_events_list_.push_front(c_event);
-            circle_events_.push(circle_events_list_.begin());
-            return circle_events_list_.begin();
-        }
-
-    private:
-        struct comparison {
-            bool operator() (const circle_event_type_it &node1,
-                             const circle_event_type_it &node2) const {
-                return (*node1) > (*node2);
-            }
-        };
-
-        void remove_not_active_events() {
-            while (!circle_events_.empty() && !circle_events_.top()->is_active())
-                pop();
-        }
-
-        std::priority_queue< circle_event_type_it,
-                             std::vector<circle_event_type_it>,
-                             comparison > circle_events_;
-        std::list<circle_event_type> circle_events_list_;
-
-        //Disallow copy constructor and operator=
-        circle_events_queue(const circle_events_queue&);
-        void operator=(const circle_events_queue&);
-    };
 
     ///////////////////////////////////////////////////////////////////////////
     // VORONOI BEACH LINE TYPES ///////////////////////////////////////////////
@@ -936,19 +1177,27 @@ namespace detail {
             right_site_ = site;
         }
 
+        void set_left_site_inverse() {
+            left_site_.set_inverse();
+        }
+
+        void set_right_site_inverse() {
+            right_site_.set_inverse();
+        }
+
         coordinate_type get_comparison_x() const {
             return (left_site_.get_site_index() >= right_site_.get_site_index()) ?
                    left_site_.x() : right_site_.x();
         }
 
-        std::pair<coordinate_type, int> get_comparison_y() const {
-            // If node is lookup node.
-            if (left_site_.get_site_index() == right_site_.get_site_index())
+        std::pair<coordinate_type, int> get_comparison_y(bool is_new_node = true) const {
+            if (left_site_.get_site_index() == right_site_.get_site_index()) {
                 return std::make_pair(left_site_.y(), 0);
+            }
             if (left_site_.get_site_index() > right_site_.get_site_index()) {
-                if (left_site_.x() != right_site_.x() &&
-                    left_site_.is_segment() && left_site_.is_vertical())
-                    return std::make_pair(left_site_.get_point1().y(), 1);
+                if (!is_new_node && left_site_.is_segment() && left_site_.is_vertical()) {
+                    return std::make_pair(left_site_.y1(), 1);
+                }
                 return std::make_pair(left_site_.y(), 1);
             }
             return std::make_pair(right_site_.y(), -1);
@@ -959,9 +1208,9 @@ namespace detail {
                    left_site_.get_site_index() : right_site_.get_site_index();
         }
 
-        const Point2D &get_comparison_point() const {
+        const site_event_type &get_comparison_site() const {
             return (left_site_.get_site_index() >= right_site_.get_site_index()) ?
-                   left_site_.get_point0() : right_site_.get_point0();
+                   left_site_ : right_site_;
         }
 
         bool less(const Point2D &new_site) const {
@@ -988,19 +1237,15 @@ namespace detail {
         }
 
         bool less_ps(const Point2D &new_site) const {
-            return less_predicate(right_site_.get_point0(), right_site_.get_point1(),
-                                  left_site_.get_point0(), new_site, false);
+            return less_predicate(left_site_.get_point0(), right_site_, new_site, false);
         }
 
         bool less_sp(const Point2D &new_site) const {
-            return less_predicate(left_site_.get_point0(), left_site_.get_point1(),
-                                  right_site_.get_point0(), new_site, true);
+            return less_predicate(right_site_.get_point0(), left_site_, new_site, true);
         }
 
         bool less_ss(const Point2D &new_site) const {
-            return less_predicate(left_site_.get_point0(), left_site_.get_point1(),
-                                  right_site_.get_point0(), right_site_.get_point1(), 
-                                  new_site, false);
+            return less_predicate(left_site_, right_site_, new_site);
         }
 
     private:
@@ -1053,16 +1298,27 @@ namespace detail {
             coordinate_type node2_x = node2.get_comparison_x();
 
             if (node1_x < node2_x) {
-                return node1.less(node2.get_comparison_point());
+                return node1.less(node2.get_comparison_site().get_point0());
             } else if (node1_x > node2_x) {
-                return !node2.less(node1.get_comparison_point());
+                return !node2.less(node1.get_comparison_site().get_point0());
             } else {
-                std::pair<coordinate_type, int> y1 = node1.get_comparison_y();
-                std::pair<coordinate_type, int> y2 = node2.get_comparison_y();
-                if (y1 != y2)
-                    return y1 < y2;
-                return (node1.get_comparison_index() > node2.get_comparison_index()) ?
-                       (y1.second > 0) : (y2.second < 0);
+                if (node1.get_comparison_index() == node2.get_comparison_index()) {
+                    return node1.get_comparison_y() < node2.get_comparison_y();
+                } else if (node1.get_comparison_index() < node2.get_comparison_index()) {
+                    std::pair<coordinate_type, int> y1 = node1.get_comparison_y(false);
+                    std::pair<coordinate_type, int> y2 = node2.get_comparison_y();
+                    if (y1.first != y2.first) {
+                        return y1.first < y2.first;
+                    }
+                    return (!node1.get_comparison_site().is_segment()) ? (y1.second < 0) : false;
+                } else {
+                    std::pair<coordinate_type, int> y1 = node1.get_comparison_y();
+                    std::pair<coordinate_type, int> y2 = node2.get_comparison_y(false);
+                    if (y1.first != y2.first) {
+                        return y1.first < y2.first;
+                    }
+                    return (!node2.get_comparison_site().is_segment()) ? (y2.second > 0) : true;
+                }
             }
         }
     };
