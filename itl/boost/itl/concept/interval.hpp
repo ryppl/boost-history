@@ -10,8 +10,16 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/and.hpp>
+#include <boost/mpl/or.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/detail/is_incrementable.hpp>
 #include <boost/itl/detail/design_config.hpp>
+#include <boost/itl/type_traits/given.hpp>
+#include <boost/itl/type_traits/unon.hpp>
+#include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/type_traits/infinity.hpp>
+#include <boost/itl/type_traits/succ_pred.hpp>
+#include <boost/itl/type_traits/is_numeric.hpp>
 #include <boost/itl/type_traits/is_discrete.hpp>
 #include <boost/itl/type_traits/is_asymmetric_interval.hpp>
 #include <boost/itl/type_traits/is_universal_interval.hpp>
@@ -80,7 +88,8 @@ typename enable_if
 construct(const typename interval_traits<Type>::domain_type& value)
 {
     //ASSERT: This always creates an interval with exactly one element
-    BOOST_ASSERT((std::numeric_limits<Type>::min)() < value); 
+    BOOST_ASSERT(given<is_numeric<Type>::value>
+                 ::then((std::numeric_limits<Type>::min)() < value)); 
     return interval_traits<Type>::construct(itl::pred(value), value);
 }
 
@@ -94,7 +103,8 @@ typename enable_if
 construct(const typename interval_traits<Type>::domain_type& value)
 {
     //ASSERT: This always creates an interval with exactly one element
-    BOOST_ASSERT((std::numeric_limits<Type>::min)() < value); 
+    BOOST_ASSERT(given<is_numeric<Type>::value>
+                 ::then((std::numeric_limits<Type>::min)() < value)); 
     return interval_traits<Type>::construct(itl::pred(value), itl::succ(value));
 }
 
@@ -185,11 +195,22 @@ upper(const Type& object)
 
 //- first ----------------------------------------------------------------------
 template<class Type>
-inline typename enable_if<is_static_rightopen<Type>, 
-                          typename interval_traits<Type>::domain_type>::type
+inline typename 
+enable_if< mpl::or_<is_static_rightopen<Type>, is_static_closed<Type> >
+         , typename interval_traits<Type>::domain_type>::type
 first(const Type& object)
 { 
     return lower(object);
+}
+
+template<class Type>
+inline typename 
+enable_if< mpl::and_< mpl::or_<is_static_leftopen<Type>, is_static_open<Type> >
+                    , is_discrete<typename interval_traits<Type>::domain_type> >
+         , typename interval_traits<Type>::domain_type>::type
+first(const Type& object)
+{ 
+    return succ(lower(object));
 }
 
 template<class Type>
@@ -204,11 +225,23 @@ first(const Type& object)
 
 //- last -----------------------------------------------------------------------
 template<class Type>
-inline typename enable_if<mpl::and_<is_static_rightopen<Type>,
-                                    is_discrete<typename interval_traits<Type>::domain_type> >,
-                          typename interval_traits<Type>::domain_type>::type
+inline typename 
+enable_if< mpl::or_<is_static_leftopen<Type>, is_static_closed<Type> >
+         , typename interval_traits<Type>::domain_type>::type
 last(const Type& object)
 { 
+    return upper(object);
+}
+
+template<class Type>
+inline typename 
+enable_if< mpl::and_< mpl::or_<is_static_rightopen<Type>, is_static_open<Type> >
+                    , is_discrete<typename interval_traits<Type>::domain_type>  >
+         , typename interval_traits<Type>::domain_type>::type
+last(const Type& object)
+{ 
+    BOOST_ASSERT(given<is_numeric<Type>::value>
+                 ::then((std::numeric_limits<Type>::min)() < upper(object))); 
     return pred(upper(object));
 }
 
@@ -606,10 +639,10 @@ touches(const Type& left, const Type& right)
 
 template<class Type>
 typename boost::enable_if<is_continuous_interval<Type>, 
-    typename Type::size_type>::type
+    typename size_type_of<interval_traits<Type> >::type>::type
 cardinality(const Type& object)
 {
-    typedef typename Type::size_type SizeT;
+    typedef typename size_type_of<interval_traits<Type> >::type SizeT;
     if(itl::is_empty(object))
         return itl::neutron<SizeT>::value();
     else if(   object.bounds() == interval_bounds::closed() 
@@ -621,19 +654,20 @@ cardinality(const Type& object)
 
 template<class Type>
 typename boost::enable_if<is_discrete_interval<Type>, 
-    typename Type::size_type>::type
+    typename size_type_of<interval_traits<Type> >::type>::type
 cardinality(const Type& object)
 {
-    return (last(object) + itl::unon<typename Type::size_type>::value()) - first(object);
+    typedef typename size_type_of<interval_traits<Type> >::type SizeT;
+    return (last(object) + itl::unon<SizeT>::value()) - first(object);
 }
 
 
 template<class Type>
 typename boost::enable_if<is_continuous_asymmetric<Type>, 
-    typename Type::size_type>::type
+    typename size_type_of<interval_traits<Type> >::type>::type
 cardinality(const Type& object)
 {
-    typedef typename Type::size_type SizeT;
+    typedef typename size_type_of<interval_traits<Type> >::type SizeT;
     if(itl::is_empty(object))
         return itl::neutron<SizeT>::value();
     else 
@@ -642,10 +676,11 @@ cardinality(const Type& object)
 
 template<class Type>
 typename boost::enable_if<is_discrete_asymmetric<Type>, 
-    typename Type::size_type>::type
+    typename size_type_of<interval_traits<Type> >::type>::type
 cardinality(const Type& object)
 {
-    return (last(object) + itl::unon<typename Type::size_type>::value()) - first(object);
+    typedef typename size_type_of<interval_traits<Type> >::type SizeT;
+    return (last(object) + itl::unon<SizeT>::value()) - first(object);
 }
 
 
@@ -655,7 +690,7 @@ cardinality(const Type& object)
 //- size -----------------------------------------------------------------------
 template<class Type>
 inline typename enable_if<is_interval<Type>, 
-                          typename Type::size_type>::type
+    typename size_type_of<interval_traits<Type> >::type>::type
 size(const Type& object)
 {
     return cardinality(object);
@@ -663,8 +698,8 @@ size(const Type& object)
 
 //- length ---------------------------------------------------------------------
 template<class Type>
-typename boost::enable_if<is_continuous_interval<Type>, 
-    typename Type::difference_type>::type
+inline typename boost::enable_if<is_continuous_interval<Type>, 
+    typename difference_type_of<interval_traits<Type> >::type>::type
 length(const Type& object)
 {
     return upper(object) - lower(object);
@@ -672,16 +707,17 @@ length(const Type& object)
 
 template<class Type>
 inline typename boost::enable_if<is_discrete_interval<Type>, 
-    typename Type::difference_type>::type
+    typename difference_type_of<interval_traits<Type> >::type>::type
 length(const Type& object)
 {
-    return    (last(object) + itl::unon<typename Type::difference_type>::value()) 
+    typedef typename difference_type_of<interval_traits<Type> >::type DiffT;
+    return    (last(object) + itl::unon<DiffT>::value()) 
             -  first(object);
 }
 
 template<class Type>
 typename boost::enable_if<is_continuous_asymmetric<Type>, 
-    typename Type::difference_type>::type
+    typename difference_type_of<interval_traits<Type> >::type>::type
 length(const Type& object)
 {
     return upper(object) - lower(object);
@@ -689,10 +725,11 @@ length(const Type& object)
 
 template<class Type>
 inline typename boost::enable_if<is_discrete_asymmetric<Type>, 
-    typename Type::difference_type>::type
+    typename difference_type_of<interval_traits<Type> >::type>::type
 length(const Type& object)
 {
-    return    (last(object) + itl::unon<typename Type::difference_type>::value()) 
+    typedef typename difference_type_of<interval_traits<Type> >::type DiffT;
+    return    (last(object) + itl::unon<DiffT>::value()) 
             -  first(object);
 }
 

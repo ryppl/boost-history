@@ -49,7 +49,7 @@ template<class Type>
 typename enable_if<is_element_set<Type>, Type>::type&
 subtract(Type& object, const typename Type::element_type& operand)
 {
-	object.erase(operand);
+    object.erase(operand);
     return object;
 }
 
@@ -68,7 +68,7 @@ template<class Type>
 inline typename enable_if<is_element_set<Type>, bool>::type
 intersects(const Type& object, const typename Type::domain_type& operand)
 {
-	return itl::contains(object, operand);
+    return itl::contains(object, operand);
 }
 
 template<class Type>

@@ -9,6 +9,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #define BOOST_ITL_TEST_VALUE_MAKER_HPP_JOFA_080916
 
 #include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/interval_bounds.hpp>
 #include "test_calls.hpp"
 
 namespace boost{ namespace itl
@@ -26,10 +27,10 @@ std::string make(int n)
 
 struct mono
 {
-	mono(){};
-	mono& operator ++ (){ return *this; }
-	mono& operator -- (){ return *this; }
-	mono& operator += (const mono&){ return *this; }
+    mono(){};
+    mono& operator ++ (){ return *this; }
+    mono& operator -- (){ return *this; }
+    mono& operator += (const mono&){ return *this; }
 };
 
 bool operator == (const mono&, const mono&){ return true; }

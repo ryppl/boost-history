@@ -20,22 +20,22 @@ template<class Type, class Iterator>
 inline typename enable_if<is_map<Type>, const typename Type::key_type>::type&
 key_value(Iterator it_)
 {
-	return it_->first;
+    return it_->first;
 }
 
 template<class Type, class Iterator>
 inline typename enable_if<is_map<Type>, const typename Type::codomain_type>::type&
 co_value(Iterator it_)
 {
-	return it_->second;
+    return it_->second;
 }
 
 template<class Type>
 inline typename enable_if<is_map<Type>, typename Type::value_type>::type
 make_value(const typename Type::     key_type& key_val, 
-		   const typename Type::codomain_type&  co_val)
+           const typename Type::codomain_type&  co_val)
 {
-	return typename Type::value_type(key_val, co_val);
+    return typename Type::value_type(key_val, co_val);
 }
 
 

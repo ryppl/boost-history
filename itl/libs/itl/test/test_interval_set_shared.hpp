@@ -37,7 +37,7 @@ void interval_set_fundamentals_4_ordered_types()
     //empty set
     //-------------------------------------------------------------------------
     BOOST_CHECK_EQUAL(IntervalSet<T>().empty(), true);
-	BOOST_CHECK_EQUAL(itl::is_empty(IntervalSet<T>()), true);
+    BOOST_CHECK_EQUAL(itl::is_empty(IntervalSet<T>()), true);
     BOOST_CHECK_EQUAL(cardinality(IntervalSet<T>()), neutron<size_T>::value());
     BOOST_CHECK_EQUAL(IntervalSet<T>().size(), neutron<size_T>::value());
     BOOST_CHECK_EQUAL(interval_count(IntervalSet<T>()), 0);
@@ -433,9 +433,9 @@ void interval_set_contains_4_bicremental_types()
     IntervalSet<T> is(v1);    
     BOOST_CHECK_EQUAL( itl::contains(is, v1), true );
 
-	BOOST_CHECK_EQUAL( itl::contains(IntervalSet<T>().add(make<T>(2)), make<T>(2)), true );
-	BOOST_CHECK_EQUAL( itl::contains(IntervalSet<T>().insert(make<T>(2)), make<T>(2)), true );
-	BOOST_CHECK_EQUAL( itl::contains((is += IntervalT(v3,v7)), IntervalT(v3,v7)), true );
+    BOOST_CHECK_EQUAL( itl::contains(IntervalSet<T>().add(make<T>(2)), make<T>(2)), true );
+    BOOST_CHECK_EQUAL( itl::contains(IntervalSet<T>().insert(make<T>(2)), make<T>(2)), true );
+    BOOST_CHECK_EQUAL( itl::contains((is += IntervalT(v3,v7)), IntervalT(v3,v7)), true );
 
     IntervalSet<T> is0 = is;    
 

@@ -25,25 +25,25 @@ namespace boost{ namespace itl
     {};
 
     template <class Type, bool has_segment_type> 
-	struct get_segment_type;
+    struct get_segment_type;
 
     template <class Type>
-	struct get_segment_type<Type, false>
+    struct get_segment_type<Type, false>
     {
-		typedef no_type type;
+        typedef no_type type;
     };
 
     template <class Type>
-	struct get_segment_type<Type, true>
+    struct get_segment_type<Type, true>
     {
-		typedef typename Type::segment_type type;
+        typedef typename Type::segment_type type;
     };
 
     template <class Type>
-	struct segment_type_of
+    struct segment_type_of
     {
-		typedef typename 
-			get_segment_type<Type, has_segment_type<Type>::value>::type type;
+        typedef typename 
+            get_segment_type<Type, has_segment_type<Type>::value>::type type;
     };
 
 }} // namespace boost itl

@@ -25,25 +25,25 @@ namespace boost{ namespace itl
     {};
 
     template <class Type, bool has_domain_type> 
-	struct get_domain_type;
+    struct get_domain_type;
 
     template <class Type>
-	struct get_domain_type<Type, false>
+    struct get_domain_type<Type, false>
     {
-		typedef no_type type;
+        typedef no_type type;
     };
 
     template <class Type>
-	struct get_domain_type<Type, true>
+    struct get_domain_type<Type, true>
     {
-		typedef typename Type::domain_type type;
+        typedef typename Type::domain_type type;
     };
 
     template <class Type>
-	struct domain_type_of
+    struct domain_type_of
     {
-		typedef typename 
-			get_domain_type<Type, has_domain_type<Type>::value>::type type;
+        typedef typename 
+            get_domain_type<Type, has_domain_type<Type>::value>::type type;
     };
 
 }} // namespace boost itl

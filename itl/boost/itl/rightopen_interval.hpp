@@ -8,6 +8,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #ifndef BOOST_ITL_RIGHTOPEN_INTERVAL_HPP_JOFA_100323
 #define BOOST_ITL_RIGHTOPEN_INTERVAL_HPP_JOFA_100323
 
+#include <functional>
+#include <boost/concept/assert.hpp>
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/type_traits/type_to_string.hpp>
 #include <boost/itl/interval_bounds.hpp> //JODO CL rightopen_interval ought to be independent on this, 
@@ -15,7 +17,6 @@ Copyright (c) 2010-2010: Joachim Faulhaber
                                          //dependencies here. There's also that point on generation.
                                          //Two partitions of interval_functions
                                          //  (dependen on i_b ( independent on i_b ))
-#include <boost/itl/detail/base_interval.hpp>
 #include <boost/itl/concept/interval.hpp>
 
 namespace boost{namespace itl
@@ -23,7 +24,7 @@ namespace boost{namespace itl
 
 template <class DomainT, 
           ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
-class rightopen_interval : public base_interval<DomainT,Compare> 
+class rightopen_interval
 {
 public:
     typedef rightopen_interval<DomainT,Compare> type;

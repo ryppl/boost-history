@@ -21,7 +21,7 @@ namespace boost{ namespace itl
     { 
         typedef is_assoc_element_container type;
         BOOST_STATIC_CONSTANT(bool, value = 
-			(mpl::or_<is_element_set<Type>, is_element_map<Type> >::value));
+            (mpl::or_<is_element_set<Type>, is_element_map<Type> >::value));
     };
 
 

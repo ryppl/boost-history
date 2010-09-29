@@ -10,15 +10,17 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #define BOOST_ITL_INTERVAL_BASE_SET_H_JOFA_990223
 
 #include <limits>
+#include <boost/next_prior.hpp> 
 #include <boost/itl/type_traits/interval_type_default.hpp>
+#include <boost/itl/type_traits/infinity.hpp>
 #include <boost/itl/type_traits/is_interval_joiner.hpp>
 #include <boost/itl/type_traits/is_interval_separator.hpp>
 #include <boost/itl/type_traits/is_interval_splitter.hpp>
 #include <boost/itl/detail/interval_set_algo.hpp>
-#include <boost/itl/set.hpp>
-#include <boost/itl/interval.hpp>
+#include <boost/itl/detail/exclusive_less_than.hpp>
 #include <boost/itl/rightopen_interval.hpp>
 #include <boost/itl/continuous_interval.hpp>
+#include <boost/itl/set.hpp>
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/element_iterator.hpp>
 
@@ -40,7 +42,19 @@ typename enable_if<is_interval_container<Type>, std::size_t>::type
 interval_count(const Type&);
 
 template<class Type>
-typename enable_if<is_interval_container<Type>, typename Type::size_type>::type
+typename enable_if
+< mpl::and_< is_interval_container<Type>
+           , is_discrete<typename Type::domain_type> >
+, typename Type::size_type
+>::type
+cardinality(const Type&);
+
+template<class Type>
+typename enable_if
+< mpl::and_< is_interval_container<Type>
+           , mpl::not_<is_discrete<typename Type::domain_type> > >
+, typename Type::size_type
+>::type
 cardinality(const Type&);
 
 template<class Type>
@@ -148,7 +162,6 @@ public:
     //--------------------------------------------------------------------------
     /// The domain type of the set
     typedef DomainT   domain_type;
-    typedef typename boost::call_traits<DomainT>::param_type domain_param;
     /// The codomaintype is the same as domain_type
     typedef DomainT   codomain_type;
 

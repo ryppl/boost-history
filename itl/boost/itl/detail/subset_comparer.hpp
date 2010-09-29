@@ -15,7 +15,6 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/neutron.hpp>
 #include <boost/itl/type_traits/is_concept_equivalent.hpp>
 #include <boost/itl/type_traits/is_element_container.hpp>
-#include <boost/itl/interval.hpp>
 #include <boost/itl/concept/interval_set_value.hpp>
 #include <boost/itl/concept/map_value.hpp>
 

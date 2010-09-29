@@ -23,7 +23,6 @@ struct dynamic_interval_traits
 {
     typedef typename Type::domain_type    domain_type;
     typedef typename Type::domain_compare domain_compare;
-    typedef typename boost::call_traits<domain_type>::param_type domain_param;
 
     static Type construct(const domain_type& lo, const domain_type& up, interval_bounds bounds);
     static Type construct_bounded(const bounded_value<domain_type>& lo, 

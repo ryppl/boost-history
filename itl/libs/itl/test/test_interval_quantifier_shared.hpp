@@ -21,10 +21,10 @@ template <class T, class U, class Trt,
           >
 void make_3_itv_maps_and_derivatives_1
                    (IntervalMap<T,U,Trt>& itv_map_a, 
-					IntervalMap<T,U,Trt>& itv_map_b, 
-					IntervalMap<T,U,Trt>& itv_map_c, 
-					typename IntervalMap<T,U,Trt>::interval_mapping_type& val_pair,
-					mapping_pair<T,U>& map_pair)
+                    IntervalMap<T,U,Trt>& itv_map_b, 
+                    IntervalMap<T,U,Trt>& itv_map_c, 
+                    typename IntervalMap<T,U,Trt>::interval_mapping_type& val_pair,
+                    mapping_pair<T,U>& map_pair)
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
 

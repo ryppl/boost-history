@@ -14,6 +14,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <limits>
 #include <string>
 #include <boost/assert.hpp> 
+#include <boost/call_traits.hpp> 
 #include <boost/static_assert.hpp> 
 #include <boost/concept_check.hpp> 
 #include <boost/next_prior.hpp> 
@@ -22,7 +23,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/mpl/assert.hpp> 
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
-#include <boost/itl/detail/base_interval.hpp>
+#include <boost/itl/detail/exclusive_less_than.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
 #include <boost/itl/type_traits/unon.hpp>
 #include <boost/itl/type_traits/infinity.hpp>
@@ -89,7 +90,7 @@ typedef unsigned char bound_type;
 
 /** \brief A class template for intervals */
 template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
-class interval : public base_interval<DomainT,Compare>
+class interval
 {
 public:
     //==========================================================================
@@ -1040,14 +1041,6 @@ template <class DomainT, ITL_COMPARE Compare>
 inline bool operator >= (const interval<DomainT,Compare>& lhs, const interval<DomainT,Compare>& rhs)
 { return !(lhs < rhs); }
 
-
-/// Comparison functor on intervals implementing an overlap free less 
-template <class IntervalT>
-struct exclusive_less_than {
-    /** Operator <tt>operator()</tt> implements a strict weak ordering on intervals. */
-    bool operator()(const IntervalT& left, const IntervalT& right)const
-    { return exclusive_less(left, right); }
-};
 
 /** Returns true if the intersection of \c left and \c right is not empty. */
 template <class DomainT, ITL_COMPARE Compare>

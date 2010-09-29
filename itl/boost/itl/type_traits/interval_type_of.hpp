@@ -25,25 +25,25 @@ namespace boost{ namespace itl
     {};
 
     template <class Type, bool has_interval_type> 
-	struct get_interval_type;
+    struct get_interval_type;
 
     template <class Type>
-	struct get_interval_type<Type, false>
+    struct get_interval_type<Type, false>
     {
-		typedef no_type type;
+        typedef no_type type;
     };
 
     template <class Type>
-	struct get_interval_type<Type, true>
+    struct get_interval_type<Type, true>
     {
-		typedef typename Type::interval_type type;
+        typedef typename Type::interval_type type;
     };
 
     template <class Type>
-	struct interval_type_of
+    struct interval_type_of
     {
-		typedef typename 
-			get_interval_type<Type, has_interval_type<Type>::value>::type type;
+        typedef typename 
+            get_interval_type<Type, has_interval_type<Type>::value>::type type;
     };
 
 }} // namespace boost itl

@@ -101,12 +101,12 @@ template <class Type>
 typename enable_if<is_element_map<Type>, typename Type::size_type>::type
 erase(Type& object, const typename Type::element_type& value_pair)
 {
-	typedef typename Type::size_type             size_type;
-	typedef typename Type::iterator              iterator;
-	typedef typename Type::on_neutron_absorbtion on_neutron_absorbtion;
+    typedef typename Type::size_type             size_type;
+    typedef typename Type::iterator              iterator;
+    typedef typename Type::on_neutron_absorbtion on_neutron_absorbtion;
 
-	if(on_neutron_absorbtion::is_absorbable(value_pair.second)) 
-		return neutron<size_type>::value();
+    if(on_neutron_absorbtion::is_absorbable(value_pair.second)) 
+        return neutron<size_type>::value();
 
     iterator it_ = object.find(value_pair.first);
     if(it_ != object.end() && value_pair.second == it_->second)
@@ -149,7 +149,7 @@ template <class Type>
 typename enable_if<is_element_map<Type>, Type>::type&
 subtract(Type& object, const typename Type::domain_type& key_value)
 {
-	return itl::erase(object, key_value);
+    return itl::erase(object, key_value);
 }
 
 //------------------------------------------------------------------------------
@@ -179,18 +179,18 @@ template<class Type>
 inline typename enable_if<is_element_map<Type>, Type>::type&
 set_at(Type& object, const typename Type::element_type& operand)
 {
-	typedef typename Type::iterator         iterator;
-	typedef typename Type::codomain_combine codomain_combine;
-	typedef on_absorbtion<Type,codomain_combine,absorbs_neutrons<Type>::value>
-		                                    on_neutron_absorbtion;
+    typedef typename Type::iterator         iterator;
+    typedef typename Type::codomain_combine codomain_combine;
+    typedef on_absorbtion<Type,codomain_combine,absorbs_neutrons<Type>::value>
+                                            on_neutron_absorbtion;
 
     if(!on_neutron_absorbtion::is_absorbable(operand.second))
-	{
-		std::pair<iterator,bool> insertion = object.insert(operand);
-		if(!insertion.second)
-			insertion->second = operand.second;
-	}
-	return object;
+    {
+        std::pair<iterator,bool> insertion = object.insert(operand);
+        if(!insertion.second)
+            insertion->second = operand.second;
+    }
+    return object;
 }
 
 
@@ -200,9 +200,9 @@ set_at(Type& object, const typename Type::element_type& operand)
 template<class Type>
 inline typename enable_if<is_element_map<Type>, void>::type
 add_intersection(Type& section, const Type&               object, 
-				       const typename Type::element_type& operand)
+                       const typename Type::element_type& operand)
 {
-	object.add_intersection(section, operand);
+    object.add_intersection(section, operand);
 }
 
 template<class Type>
@@ -221,8 +221,8 @@ template<class Type>
 inline typename enable_if<mpl::and_<is_element_map<Type>, is_total<Type> >, Type>::type&
 operator &=(Type& object, const typename Type::element_type& operand)
 {
-	object.add(operand);
-	return object;
+    object.add(operand);
+    return object;
 }
 
 template<class Type>
@@ -255,7 +255,7 @@ inline typename enable_if<mpl::and_<is_element_map<Type>, is_total<Type> >, Type
 operator &=(Type& object, const Type& operand)
 {
     object += operand; 
-	return object;
+    return object;
 }
 
 template<class Type>
@@ -298,7 +298,7 @@ inline typename enable_if< mpl::and_< is_element_map<Type>
                          , bool>::type
 intersects(const Type&, const CoType&)
 {
-	return true;
+    return true;
 }
 
 template<class Type>
@@ -307,7 +307,7 @@ inline typename enable_if< mpl::and_< is_element_map<Type>
                          , bool>::type
 intersects(const Type& object, const typename Type::domain_type& operand)
 {
-	return itl::contains(object, operand);
+    return itl::contains(object, operand);
 }
 
 template<class Type>
@@ -329,7 +329,7 @@ inline typename enable_if< mpl::and_< is_element_map<Type>
 intersects(const Type& object, const typename Type::element_type& operand)
 {
     Type intersection;
-	itl::add_intersection(intersection, object, operand);
+    itl::add_intersection(intersection, object, operand);
     return !intersection.empty();
 }
 
@@ -352,7 +352,7 @@ template<class Type>
 inline typename enable_if<is_element_map<Type>, Type>::type&
 flip(Type& object, const typename Type::element_type& operand)
 {
-	return object.flip(operand);
+    return object.flip(operand);
 }
 
 template<class Type, class CoType>
@@ -362,8 +362,8 @@ inline typename enable_if< mpl::and_< is_element_map<Type>
                          , Type>::type&
 operator ^= (Type& object, const CoType&)
 {
-	itl::clear(object);
-	return object;
+    itl::clear(object);
+    return object;
 }
 
 template<class Type>
@@ -373,7 +373,7 @@ inline typename enable_if< mpl::and_< is_element_map<Type>
                          , Type>::type&
 operator ^= (Type& object, const typename Type::element_type& operand)
 {
-	return object.flip(operand);
+    return object.flip(operand);
 }
 
 template<class Type>
@@ -383,13 +383,13 @@ inline typename enable_if< mpl::and_< is_element_map<Type>
                          , Type>::type&
 operator ^= (Type& object, const Type& operand)
 {
-	ITL_const_FORALL(typename Type, it_, operand)
-		itl::flip(object, *it_);
+    ITL_const_FORALL(typename Type, it_, operand)
+        itl::flip(object, *it_);
 
     ITL_FORALL(typename Type, it2_, object)
         it2_->second = neutron<typename Type::codomain_type>::value();
 
-	return object;
+    return object;
 }
 
 
@@ -443,14 +443,14 @@ inline typename enable_if<mpl::and_< is_element_map<Type>
                                    , absorbs_neutrons<Type> >, Type>::type&
 absorb_neutrons(Type& object)
 {
-	typedef typename Type::element_type element_type;
-	return itl::erase_if(content_is_neutron<element_type>(), object);
+    typedef typename Type::element_type element_type;
+    return itl::erase_if(content_is_neutron<element_type>(), object);
 }
 
 template<class Type>
 inline typename enable_if<mpl::and_< is_element_map<Type>
                                    , mpl::not_<absorbs_neutrons<Type> > >
-					     , Type>::type&
+                         , Type>::type&
 absorb_neutrons(Type&){}
 
 //==============================================================================

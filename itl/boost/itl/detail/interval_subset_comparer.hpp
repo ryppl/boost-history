@@ -15,7 +15,6 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/is_concept_equivalent.hpp>
 #include <boost/itl/type_traits/is_interval_container.hpp>
 #include <boost/itl/type_traits/is_set.hpp>
-#include <boost/itl/interval.hpp>
 #include <boost/itl/concept/interval_set_value.hpp>
 
 namespace boost{namespace itl

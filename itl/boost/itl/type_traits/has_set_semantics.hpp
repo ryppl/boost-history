@@ -20,12 +20,12 @@ namespace boost{ namespace itl
     { 
         typedef has_set_semantics<Type> type;
         BOOST_STATIC_CONSTANT(bool, 
-			value = (mpl::or_< is_set<Type>
-			                 , mpl::and_< is_map<Type>
-							            , has_set_semantics
-										  <typename codomain_type_of<Type>::type > 
-							            > 
-			                 >::value)); 
+            value = (mpl::or_< is_set<Type>
+                             , mpl::and_< is_map<Type>
+                                        , has_set_semantics
+                                          <typename codomain_type_of<Type>::type > 
+                                        > 
+                             >::value)); 
     };
 
 }} // namespace boost itl

@@ -65,15 +65,15 @@ template<class Type>
 typename enable_if<is_interval_set<Type>, Type>::type&
 add(Type& object, const typename Type::segment_type& operand)
 {
-	return object.add(operand);
+    return object.add(operand);
 }
 
 template<class Type>
 inline typename enable_if<is_interval_set<Type>, Type>::type&
 add(Type& object, const typename Type::element_type& operand)
 {
-	typedef typename Type::segment_type segment_type;
-	return itl::add(object, itl::construct<segment_type>(operand));
+    typedef typename Type::segment_type segment_type;
+    return itl::add(object, itl::construct<segment_type>(operand));
 }
 
 //------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ typename enable_if<is_interval_set<Type>, typename Type::iterator>::type
 add(Type& object, typename Type::iterator      prior, 
             const typename Type::segment_type& operand)
 {
-	return object.add(prior, operand);
+    return object.add(prior, operand);
 }
 
 //==============================================================================
@@ -113,7 +113,7 @@ insert(Type& object, const typename Type::element_type& operand)
 template<class Type>
 typename enable_if<is_interval_set<Type>, Type>::type&
 insert(Type& object, const typename Type::iterator      prior,
-	                 const typename Type::segment_type& operand)
+                     const typename Type::segment_type& operand)
 {
     return itl::add(object, prior, operand);
 }
@@ -155,8 +155,8 @@ template<class Type>
 inline typename enable_if<is_interval_set<Type>, Type>::type&
 subtract(Type& object, const typename Type::element_type& operand)
 {
-	typedef typename Type::segment_type segment_type;
-	return itl::subtract(object, itl::construct<segment_type>(operand));
+    typedef typename Type::segment_type segment_type;
+    return itl::subtract(object, itl::construct<segment_type>(operand));
 }
 
 //==============================================================================

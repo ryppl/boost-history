@@ -19,12 +19,12 @@ template <class T,
           >
 void make_3_interval_sets_and_derivatives_1
                    (IntervalSet<T>& set_a, 
-					IntervalSet<T>& set_b, 
-					IntervalSet<T>& set_c, 
-					typename IntervalSet<T>::segment_type& segm_d,
-					typename IntervalSet<T>::element_type& elem_e)
+                    IntervalSet<T>& set_b, 
+                    IntervalSet<T>& set_c, 
+                    typename IntervalSet<T>::segment_type& segm_d,
+                    typename IntervalSet<T>::element_type& elem_e)
 {
-	typedef IntervalSet<T> IntervalSetT;
+    typedef IntervalSet<T> IntervalSetT;
     typedef typename IntervalSetT::segment_type IntervalT;
     typedef typename IntervalSetT::segment_type segment_type;
     typedef typename IntervalSetT::element_type element_type;
@@ -187,18 +187,18 @@ void interval_set_check_containedness_4_bicremental_types()
     typedef typename IntervalSetT::segment_type segment_type;
     typedef typename IntervalSetT::element_type element_type;
 
-	IntervalSetT set_a, set_b, set_c;
-	segment_type segm_d;
-	element_type elem_e;
-	make_3_interval_sets_and_derivatives_1(set_a, set_b, set_c, segm_d, elem_e);
+    IntervalSetT set_a, set_b, set_c;
+    segment_type segm_d;
+    element_type elem_e;
+    make_3_interval_sets_and_derivatives_1(set_a, set_b, set_c, segm_d, elem_e);
 
-	check_intersection_containedness(set_a, set_c);
-	check_intersection_containedness(set_b, segm_d);
-	check_intersection_containedness(set_c, elem_e);
+    check_intersection_containedness(set_a, set_c);
+    check_intersection_containedness(set_b, segm_d);
+    check_intersection_containedness(set_c, elem_e);
 
-	check_union_containedness(set_c, set_c);
-	check_union_containedness(set_b, segm_d);
-	check_union_containedness(set_a, elem_e);
+    check_union_containedness(set_c, set_c);
+    check_union_containedness(set_b, segm_d);
+    check_union_containedness(set_a, elem_e);
 }
 
 

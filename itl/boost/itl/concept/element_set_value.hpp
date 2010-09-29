@@ -20,7 +20,7 @@ template<class Type, class Iterator>
 inline typename enable_if<is_element_set<Type>, const typename Type::key_type>::type&
 co_value(Iterator it_)
 {
-	return *it_;
+    return *it_;
 }
 
 

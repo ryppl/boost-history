@@ -230,36 +230,36 @@ DEFINE_INVERSE_CHECK_WRT_EQUAL(pipe,  | );
 template<class Type, class TypeB>
 void check_intersection_containedness(const Type& a, const TypeB& b)
 {
-	BOOST_CHECK_EQUAL(contains(a, a & b), true);
-	BOOST_CHECK_EQUAL(contains(a, b & a), true);
-	BOOST_CHECK_EQUAL(within(a & b, a), true);
-	BOOST_CHECK_EQUAL(within(b & a, a), true);
+    BOOST_CHECK_EQUAL(contains(a, a & b), true);
+    BOOST_CHECK_EQUAL(contains(a, b & a), true);
+    BOOST_CHECK_EQUAL(within(a & b, a), true);
+    BOOST_CHECK_EQUAL(within(b & a, a), true);
 }
 
 template<class Type, class TypeB>
 void check_union_containedness(const Type& a, const TypeB& b)
 {
-	BOOST_CHECK_EQUAL(within(a, a + b), true);
-	BOOST_CHECK_EQUAL(within(a, b + a), true);
-	BOOST_CHECK_EQUAL(contains(a + b, a), true);
-	BOOST_CHECK_EQUAL(contains(b + a, a), true);
+    BOOST_CHECK_EQUAL(within(a, a + b), true);
+    BOOST_CHECK_EQUAL(within(a, b + a), true);
+    BOOST_CHECK_EQUAL(contains(a + b, a), true);
+    BOOST_CHECK_EQUAL(contains(b + a, a), true);
 }
 
 template<class MapT>
 void check_domain_containedness(const MapT& a)
 {
-	typedef typename MapT::set_type set_type;
-	set_type dom;
-	domain(dom, a);
-	BOOST_CHECK_EQUAL(within(dom, a), true);
-	BOOST_CHECK_EQUAL(contains(a, dom), true);
+    typedef typename MapT::set_type set_type;
+    set_type dom;
+    domain(dom, a);
+    BOOST_CHECK_EQUAL(within(dom, a), true);
+    BOOST_CHECK_EQUAL(contains(a, dom), true);
 
-	if(!dom.empty())
-	{
-		typename MapT::domain_type a1 = *dom.begin();
-		BOOST_CHECK_EQUAL(within(a1, a), true);
-		BOOST_CHECK_EQUAL(contains(a, a1), true);
-	}
+    if(!dom.empty())
+    {
+        typename MapT::domain_type a1 = *dom.begin();
+        BOOST_CHECK_EQUAL(within(a1, a), true);
+        BOOST_CHECK_EQUAL(contains(a, a1), true);
+    }
 }
 
 //==============================================================================

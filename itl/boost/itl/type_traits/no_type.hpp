@@ -10,7 +10,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 
 namespace boost{ namespace itl
 {
-	struct no_type{};
+    struct no_type{};
 
 }} // namespace boost itl
 

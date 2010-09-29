@@ -33,13 +33,13 @@ bool common_range(IteratorT& lwb, IteratorT& upb, ObjectT& x1, const ConstObject
     // lwb and upb are iterators of x1 marking the lower and upper bound of
     // the common range of x1 and x2.
     typedef typename ConstObjectT::const_iterator ConstObject_iterator;
-	// ObjectT may be const or non const. 
-	typedef typename remove_const<ObjectT>::type  PureObjectT;
+    // ObjectT may be const or non const. 
+    typedef typename remove_const<ObjectT>::type  PureObjectT;
 
     lwb = x1.end();
     upb = x1.end();
 
-	if(itl::is_empty(x1) || itl::is_empty(x2)) 
+    if(itl::is_empty(x1) || itl::is_empty(x2)) 
         return false;
 
     IteratorT x1_fst_ = x1.begin();
@@ -50,10 +50,10 @@ bool common_range(IteratorT& lwb, IteratorT& upb, ObjectT& x1, const ConstObject
 
     typename ObjectT::key_compare key_less;
     if(key_less(itl::key_value< PureObjectT>(x1_lst_), 
-		        itl::key_value<ConstObjectT>(x2_fst_))) // {x1}   {x2}
+                itl::key_value<ConstObjectT>(x2_fst_))) // {x1}   {x2}
         return false;
-	if(key_less(itl::key_value<ConstObjectT>(x2_lst_), 
-		        itl::key_value< PureObjectT>(x1_fst_))) // {x2}   {x1} 
+    if(key_less(itl::key_value<ConstObjectT>(x2_lst_), 
+                itl::key_value< PureObjectT>(x1_fst_))) // {x2}   {x1} 
         return false;
 
     // We do have a common range

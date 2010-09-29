@@ -14,8 +14,6 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include "../test_type_lists.hpp"
 #include "../test_value_maker.hpp"
 
-#include <boost/itl/interval.hpp>
-
 using namespace std;
 using namespace boost;
 using namespace unit_test;
@@ -26,8 +24,9 @@ using namespace boost::itl;
 
 BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_ctor_4_ordered_types)
-{            interval_ctor_4_ordered_types<ordered_type_1>(); }
+{            interval_ctor_4_ordered_types<ordered_type_1, >(); }
 
+/*
 BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_ctor_4_bicremental_types)
 {            interval_ctor_4_bicremental_types<bicremental_type_2>(); }
@@ -71,6 +70,7 @@ BOOST_AUTO_TEST_CASE
 BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_subtract_4_bicremental_types)
 {            interval_subtract_4_bicremental_types<bicremental_type_5>(); }
+*/
 
 /*JODO
 BOOST_AUTO_TEST_CASE

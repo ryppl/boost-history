@@ -115,24 +115,24 @@ namespace boost{namespace itl
         }
 
         bool debug_holds()
-		{ 
+        { 
             Type a = this->template getInputValue<operand_a>();
             Type b = this->template getInputValue<operand_b>();
 
-			cout << "a    =  " << a << endl;
-			cout << "b    =  " << b << endl;
+            cout << "a    =  " << a << endl;
+            cout << "b    =  " << b << endl;
 
-			bool a_R_b = Relation<Type>()(a,b);
-			cout << "a<=b == " << a_R_b << endl;
+            bool a_R_b = Relation<Type>()(a,b);
+            cout << "a<=b == " << a_R_b << endl;
 
-			bool b_R_a = Relation<Type>()(b,a);
-			cout << "b<=a == " << b_R_a << endl;
+            bool b_R_a = Relation<Type>()(b,a);
+            cout << "b<=a == " << b_R_a << endl;
 
-			bool a_E_b = Equality<Type>()(a,b);
-			cout << "b==a == " << a_E_b << endl;
+            bool a_E_b = Equality<Type>()(a,b);
+            cout << "b==a == " << a_E_b << endl;
 
             return !(Relation<Type>()(a,b) && Relation<Type>()(b,a)) || Equality<Type>()(a,b);
-		}
+        }
 
         size_t size()const 
         { 

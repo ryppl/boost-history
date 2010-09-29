@@ -19,7 +19,7 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #endif
 
 #include <string>
-#include <boost/call_traits.hpp> 
+//CL #include <boost/call_traits.hpp> 
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/detail/concept_check.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
@@ -56,7 +56,6 @@ public:
 
 public:
     typedef DomainT     domain_type;
-    typedef typename boost::call_traits<DomainT>::param_type domain_param;
     typedef DomainT     codomain_type;
     typedef DomainT     element_type;
     typedef DomainT     key_type;
@@ -192,22 +191,8 @@ public:
     { return itl::subtract(*this, element); } 
 
     //==========================================================================
-    //= Intersection, symmetric difference
+    //= Symmetric difference
     //==========================================================================
-    /** Add \c element to \c section, if \c element is in \c *this set */
-    //CL . . . void add_intersection(set& section, const element_type& element)const
-    //{ itl::add_intersection(section, *this, element); }
-
-    /** The intersection of set \c sectant with \c *this set is added 
-        to \c section. */
-    //void add_intersection(set& section, const set& sectant)const
-    //{ itl::add_intersection(section, *this, sectant); }
-
-    /** Returns true, if there is an intersection of \c element and \c *this set.
-        Functions \c intersects and \c contains are identical on arguments
-        of type \c element_type. Complexity: Logarithmic in container size. */
-    //bool intersects(const element_type& element)const { return contains(element); }
-
     /** If \c *this set contains \c element it is erased, otherwise it is added. */
     set& flip(const element_type& element)
     { return itl::flip(*this, element); }

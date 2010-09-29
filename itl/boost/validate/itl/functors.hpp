@@ -71,8 +71,8 @@ struct base_addition
     {
         ITL_FUN_CALL(clear, collected);
         ITL_const_FORALL(typename SourceT, item_, items)
-			//JODO itl::add(collected, *item_);
-			collected.add(*item_);
+            //JODO itl::add(collected, *item_);
+            collected.add(*item_);
     }
 };
 

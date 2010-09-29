@@ -29,7 +29,7 @@ void test_signed_quantifier_driver()
     GentorProfileSgl::it()->set_range_double(-1.0, 1.0);
     GentorProfileSgl::it()->report_profile();
 
-	//validater.set_information_level(inform::never);
+    //validater.set_information_level(inform::never);
     validater.validate();
 };
 

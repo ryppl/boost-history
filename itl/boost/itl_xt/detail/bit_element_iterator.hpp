@@ -49,7 +49,6 @@ public:
     typedef SegmentIteratorT                                segment_iterator;
     typedef typename SegmentIteratorT::value_type           segment_type;
     typedef typename first_element<segment_type>::type      interval_type;
-    typedef typename interval_type::difference_type         domain_difference_type;
     typedef typename bitwise<segment_type>::bitset_type     bitset_type;
     typedef typename bitwise<segment_type>::word_type       word_type;
     typedef typename bitwise<segment_type>::domain_type     domain_type;
@@ -58,6 +57,8 @@ public:
     typedef element_type                                    value_type;
     typedef element_type                                    key_type;
     typedef element_type                                    data_type;
+    typedef typename difference_type_of<interval_traits<interval_type> >::type 
+                                                            domain_difference_type;
 
     BOOST_STATIC_CONSTANT(bit_range_type, digits = bitwise<segment_type>::digits );
     BOOST_STATIC_CONSTANT(bool,           is_forward  = mpl::not_<is_reverse<SegmentIteratorT> >::value );
@@ -439,8 +440,9 @@ struct proceed<IteratorT,true>
     typedef IteratorT                                    iterator;
     typedef typename iterator::value_type                segment_type;
     typedef typename first_element<segment_type>::type   interval_type;
-    typedef typename interval_type::difference_type      difference_type;
     typedef typename bitwise<segment_type>::word_type    word_type;
+    typedef typename difference_type_of<interval_traits<interval_type> >::type      
+                                                         difference_type;
 
     BOOST_STATIC_CONSTANT(bit_range_type, digits = bitwise<segment_type>::digits );
     BOOST_STATIC_CONSTANT(bit_range_type, before = -2       );
@@ -476,8 +478,9 @@ struct proceed<IteratorT,false>
     typedef IteratorT                                    iterator;
     typedef typename iterator::value_type                segment_type;
     typedef typename first_element<segment_type>::type   interval_type;
-    typedef typename interval_type::difference_type      difference_type;
     typedef typename bitwise<segment_type>::word_type    word_type;
+    typedef typename difference_type_of<interval_traits<interval_type> >::type      
+                                                         difference_type;
 
     BOOST_STATIC_CONSTANT(bit_range_type, digits = bitwise<segment_type>::digits );
     BOOST_STATIC_CONSTANT(bit_range_type, beyond = -2       );

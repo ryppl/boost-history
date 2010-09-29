@@ -25,25 +25,25 @@ namespace boost{ namespace itl
     {};
 
     template <class Type, bool has_codomain_type> 
-	struct get_codomain_type;
+    struct get_codomain_type;
 
     template <class Type>
-	struct get_codomain_type<Type, false>
+    struct get_codomain_type<Type, false>
     {
-		typedef no_type type;
+        typedef no_type type;
     };
 
     template <class Type>
-	struct get_codomain_type<Type, true>
+    struct get_codomain_type<Type, true>
     {
-		typedef typename Type::codomain_type type;
+        typedef typename Type::codomain_type type;
     };
 
     template <class Type>
-	struct codomain_type_of
+    struct codomain_type_of
     {
-		typedef typename 
-			get_codomain_type<Type, has_codomain_type<Type>::value>::type type;
+        typedef typename 
+            get_codomain_type<Type, has_codomain_type<Type>::value>::type type;
     };
 
 }} // namespace boost itl

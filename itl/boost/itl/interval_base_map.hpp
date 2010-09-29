@@ -1349,10 +1349,6 @@ struct is_total<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,
 
 
 
-#ifdef BOOST_MSVC
-#pragma warning(pop)
-#endif
-
 }} // namespace itl boost
 
 #endif

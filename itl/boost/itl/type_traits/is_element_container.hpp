@@ -40,7 +40,7 @@ namespace boost{ namespace itl
         typedef is_element_container<Type> type;
         BOOST_STATIC_CONSTANT(bool, value = 
             (mpl::or_<is_element_set<Type>, is_element_map<Type> >::value) 
-			);
+            );
     };
 }} // namespace boost itl
 

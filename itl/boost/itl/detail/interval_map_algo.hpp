@@ -16,7 +16,6 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/relation_state.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
-#include <boost/itl/interval.hpp>
 #include <boost/itl/interval_combining_style.hpp>
 #include <boost/itl/detail/element_comparer.hpp>
 #include <boost/itl/detail/interval_subset_comparer.hpp>
@@ -41,10 +40,10 @@ bool is_joinable(const IntervalMapT& container,
     ++next_;
 
     const typename IntervalMapT::codomain_type& co_value 
-		= itl::co_value<IntervalMapT>(first);
+        = itl::co_value<IntervalMapT>(first);
     while(it_ != past)
     {
-		if(itl::co_value<IntervalMapT>(next_) != co_value)
+        if(itl::co_value<IntervalMapT>(next_) != co_value)
             return false;
         if(!itl::touches(key_value<IntervalMapT>(it_++),
                          key_value<IntervalMapT>(next_++)))

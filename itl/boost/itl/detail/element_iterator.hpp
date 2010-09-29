@@ -164,11 +164,12 @@ struct segment_adapter<SegmentIteratorT, std::pair<ITL_INTERVAL_TYPE(Interval,Do
 {
     typedef segment_adapter                         type;
     typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare)               interval_type;
-    typedef typename interval_type::difference_type domain_difference_type;
     typedef DomainT                                 domain_type;
     typedef std::pair<DomainT, CodomainT>           element_type;
     typedef CodomainT                               codomain_type;
     typedef mapped_reference<DomainT, CodomainT>    transit_type;    
+    typedef typename difference_type_of<interval_traits<interval_type> >::type 
+                                                    domain_difference_type;
 
     static domain_type     first (const SegmentIteratorT& leaper){ return leaper->first.first(); } 
     static domain_type     last  (const SegmentIteratorT& leaper){ return leaper->first.last();  } 
@@ -188,14 +189,15 @@ struct segment_adapter<SegmentIteratorT, std::pair<ITL_INTERVAL_TYPE(Interval,Do
 template<class SegmentIteratorT, ITL_INTERVAL(ITL_COMPARE) Interval>
 struct segment_adapter 
 {
-    typedef segment_adapter                         type;
+    typedef segment_adapter                          type;
     typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) segment_type;
-    typedef segment_type                            interval_type;
-    typedef typename interval_type::difference_type domain_difference_type;
-    typedef typename interval_type::domain_type     domain_type;
-    typedef domain_type                             codomain_type;
-    typedef domain_type                             element_type;
-    typedef domain_type&                            transit_type;
+    typedef segment_type                             interval_type;
+    typedef typename interval_type::domain_type      domain_type;
+    typedef domain_type                              codomain_type;
+    typedef domain_type                              element_type;
+    typedef domain_type&                             transit_type;
+    typedef typename difference_type_of<interval_traits<interval_type> >::type 
+                                                     domain_difference_type;
 
     static domain_type     first (const SegmentIteratorT& leaper){ return leaper->first(); } 
     static domain_type     last  (const SegmentIteratorT& leaper){ return leaper->last();  } 
@@ -213,13 +215,14 @@ struct segment_adapter
 template < class SegmentIteratorT, class CodomainT, ITL_INTERVAL(ITL_COMPARE) Interval >
 struct segment_adapter<SegmentIteratorT, std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare)const, CodomainT> >
 {
-    typedef segment_adapter                             type;
-    typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) interval_type;
-    typedef typename interval_type::domain_type         domain_type;
-    typedef typename interval_type::difference_type     domain_difference_type;
-    typedef CodomainT                                   codomain_type;
-    typedef std::pair<domain_type, codomain_type>       element_type;
-    typedef mapped_reference<domain_type, CodomainT>    transit_type;    
+    typedef segment_adapter                                type;
+    typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare)    interval_type;
+    typedef typename interval_type::domain_type            domain_type;
+    typedef CodomainT                                      codomain_type;
+    typedef std::pair<domain_type, codomain_type>          element_type;
+    typedef mapped_reference<domain_type, CodomainT>       transit_type;    
+    typedef typename difference_type_of<interval_traits<interval_type> >::type 
+                                                           domain_difference_type;
 
     static domain_type     first (const SegmentIteratorT& leaper){ return leaper->first.first(); } 
     static domain_type     last  (const SegmentIteratorT& leaper){ return leaper->first.last();  } 
@@ -246,16 +249,17 @@ class element_iterator
     >
 {
 public:
-	typedef element_iterator                                type;
+    typedef element_iterator                                type;
     typedef SegmentIteratorT                                segment_iterator;
     typedef typename SegmentIteratorT::value_type           segment_type;
     typedef typename first_element<segment_type>::type      interval_type;
-    typedef typename interval_type::difference_type         domain_difference_type;
     typedef typename elemental<segment_type>::type          element_type;
     typedef typename elemental<segment_type>::domain_type   domain_type;
     typedef typename elemental<segment_type>::codomain_type codomain_type;
     typedef typename elemental<segment_type>::transit_type  transit_type;
     typedef transit_type                                    value_type;
+    typedef typename difference_type_of<interval_traits<interval_type> >::type 
+                                                            domain_difference_type;
 
 private:
     typedef typename segment_adapter<segment_iterator,segment_type>::type adapt;

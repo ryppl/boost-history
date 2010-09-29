@@ -113,7 +113,7 @@ public:
     //]
 
     //[large_bitset_demo_functions
-    size_t interval_count()const { return _map.interval_count(); }
+    size_t interval_count()const { return itl::interval_count(_map); }
 
     void show_segments()const
     {
@@ -131,7 +131,7 @@ public:
         typename interval_bitmap_type::const_iterator iter = _map.begin();
         while(iter != _map.end())
         {
-			element_type fst = itl::first(iter->first), lst = itl::last(iter->first);
+            element_type fst = itl::first(iter->first), lst = itl::last(iter->first);
             for(element_type chunk = fst; chunk <= lst; chunk++)
                 std::cout << iter->second.as_string(off_on) << std::endl;
             ++iter;

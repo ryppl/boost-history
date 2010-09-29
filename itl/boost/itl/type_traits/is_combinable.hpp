@@ -136,21 +136,21 @@ struct is_inter_combinable
 template<class FragmentT, class Type>
 struct is_fragment_of
 {
-	typedef is_fragment_of type;
+    typedef is_fragment_of type;
     BOOST_STATIC_CONSTANT(bool, value = false);
 };
 
 template<class Type>
 struct is_fragment_of<typename Type::element_type, Type>
 {
-	typedef is_fragment_of type;
+    typedef is_fragment_of type;
     BOOST_STATIC_CONSTANT(bool, value = true);
 };
 
 template<class Type>
 struct is_fragment_of<typename Type::segment_type, Type>
 {
-	typedef is_fragment_of type;
+    typedef is_fragment_of type;
     BOOST_STATIC_CONSTANT(bool, value = true);
 };
 
@@ -160,21 +160,21 @@ struct is_fragment_of<typename Type::segment_type, Type>
 template<class KeyT, class Type>
 struct is_key_of
 {
-	typedef is_key_of type;
+    typedef is_key_of type;
     BOOST_STATIC_CONSTANT(bool, value = false);
 };
 
 template<class Type>
 struct is_key_of<typename Type::domain_type, Type>
 {
-	typedef is_key_of type;
+    typedef is_key_of type;
     BOOST_STATIC_CONSTANT(bool, value = true);
 };
 
 template<class Type>
 struct is_key_of<typename Type::interval_type, Type>
 {
-	typedef is_key_of type;
+    typedef is_key_of type;
     BOOST_STATIC_CONSTANT(bool, value = true);
 };
 

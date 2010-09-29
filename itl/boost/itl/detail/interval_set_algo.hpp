@@ -16,7 +16,6 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/is_combinable.hpp>
 #include <boost/itl/concept/set_value.hpp>
 #include <boost/itl/concept/map_value.hpp>
-#include <boost/itl/interval.hpp>
 #include <boost/itl/interval_combining_style.hpp>
 #include <boost/itl/detail/element_comparer.hpp>
 #include <boost/itl/detail/interval_subset_comparer.hpp>
@@ -24,54 +23,6 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 
 namespace boost{namespace itl
 {
-
-template <class IntervalContainerT>
-typename IntervalContainerT::size_type continuous_cardinality(const IntervalContainerT& object)
-{
-    typedef typename IntervalContainerT::size_type size_type;
-    typedef typename IntervalContainerT::interval_type interval_type;
-
-    size_type size = neutron<size_type>::value();
-    size_type interval_size;
-    ITL_const_FORALL(typename IntervalContainerT, it, object)
-    {
-        interval_size = itl::cardinality(key_value<IntervalContainerT>(it));
-        if(interval_size == infinity<size_type>::value())
-            return interval_size;
-        else
-            size += interval_size;
-    }
-    return size;
-}
-
-template <class IntervalContainerT>
-typename IntervalContainerT::size_type discrete_cardinality(const IntervalContainerT& object)
-{
-    typedef typename IntervalContainerT::size_type size_type;
-    typedef typename IntervalContainerT::interval_type interval_type;
-
-    size_type size = neutron<size_type>::value();
-    ITL_const_FORALL(typename IntervalContainerT, it, object)
-        size += discrete_interval_<interval_type>::cardinality(key_value<IntervalContainerT>(it));
-    return size;
-}
-
-struct continuous_interval_container
-{
-    template<class IntervalContainerT> 
-    static typename IntervalContainerT::size_type 
-        cardinality(const IntervalContainerT& cont) 
-    { return continuous_cardinality(cont); }
-};
-
-struct discrete_interval_container
-{
-    template<class IntervalContainerT> 
-    static typename IntervalContainerT::size_type 
-        cardinality(const IntervalContainerT& cont) 
-    { return discrete_cardinality(cont); }
-};
-
 
 namespace Interval_Set
 {
@@ -284,7 +235,7 @@ inline void join_nodes(Type& object, typename Type::iterator& left_,
 {
     typedef typename Type::interval_type interval_type;
     interval_type right_interval = key_value<Type>(right_);
-	((typename Type::base_type&)object).erase(right_); //JODO
+    ((typename Type::base_type&)object).erase(right_); //JODO
     const_cast<interval_type&>(key_value<Type>(left_)) 
         = hull(key_value<Type>(left_), right_interval);
 }
@@ -430,14 +381,14 @@ struct on_style<Type, interval_combine::joining>
     inline static iterator add_over
         (Type& object, const interval_type& addend, iterator last_)
     {
-		iterator joined_ = join_under(object, addend, last_);
+        iterator joined_ = join_under(object, addend, last_);
         return join_neighbours(object, joined_);
     }
 
     inline static iterator add_over
         (Type& object, const interval_type& addend)
     {
-		iterator joined_ = join_under(object, addend);
+        iterator joined_ = join_under(object, addend);
         return join_neighbours(object, joined_);
     }
 };

@@ -25,25 +25,25 @@ namespace boost{ namespace itl
     {};
 
     template <class Type, bool has_element_type> 
-	struct get_element_type;
+    struct get_element_type;
 
     template <class Type>
-	struct get_element_type<Type, false>
+    struct get_element_type<Type, false>
     {
-		typedef no_type type;
+        typedef no_type type;
     };
 
     template <class Type>
-	struct get_element_type<Type, true>
+    struct get_element_type<Type, true>
     {
-		typedef typename Type::element_type type;
+        typedef typename Type::element_type type;
     };
 
     template <class Type>
-	struct element_type_of
+    struct element_type_of
     {
-		typedef typename 
-			get_element_type<Type, has_element_type<Type>::value>::type type;
+        typedef typename 
+            get_element_type<Type, has_element_type<Type>::value>::type type;
     };
 
 }} // namespace boost itl

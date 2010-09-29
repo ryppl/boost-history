@@ -23,8 +23,8 @@ namespace boost{namespace itl
         {
             ITL_const_FORALL(typename IntervalContainerT, itv_, src)
             {
-				const typename IntervalContainerT::key_type& itv   = itl::key_value<IntervalContainerT>(itv_);
-				typename IntervalContainerT::codomain_type   coval = itl::co_value<IntervalContainerT>(itv_);
+                const typename IntervalContainerT::key_type& itv   = itl::key_value<IntervalContainerT>(itv_);
+                typename IntervalContainerT::codomain_type   coval = itl::co_value<IntervalContainerT>(itv_);
 
                 for(typename IntervalContainerT::domain_type element = first(itv); element <= last(itv); ++element)
                     insert(result, itl::make_value<ElementContainerT>(element, coval));
@@ -34,7 +34,7 @@ namespace boost{namespace itl
         template <typename IntervalContainerT, typename ElementContainerT>
         void cluster(IntervalContainerT& result, const ElementContainerT& src)
         {
-			typedef typename IntervalContainerT::key_type key_type;
+            typedef typename IntervalContainerT::key_type key_type;
             ITL_const_FORALL(typename ElementContainerT, element_, src)
             {
                 const typename ElementContainerT::key_type&  key  = key_value<ElementContainerT>(element_);
@@ -67,7 +67,7 @@ namespace boost{namespace itl
         {
             void operator()(JointType& joint, SplitType& split)
             {
-				itl::join(split);
+                itl::join(split);
                 ITL_FORALL(typename SplitType, split_, split)
                     joint.insert(*split_);
             }
@@ -78,7 +78,7 @@ namespace boost{namespace itl
         {
             void operator()(AbsorberType& absorber, EnricherType& enricher)
             {
-				itl::absorb_neutrons(enricher);
+                itl::absorb_neutrons(enricher);
                 ITL_FORALL(typename EnricherType, enricher_, enricher)
                     absorber.insert(*enricher_);
             }

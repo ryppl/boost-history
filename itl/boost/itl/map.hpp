@@ -333,13 +333,6 @@ public:
             ::add_intersection(section, *this, key_value_pair);
     }
 
-    /** Returns true, if there is an intersection of \c operand and \c *this map. */
-    //CL template<class OperandT>
-    //bool intersects(const OperandT& operand)const
-    //{
-    //    return itl::intersects(*this, operand);
-    //}
-
     //==========================================================================
     //= Symmetric difference
     //==========================================================================
@@ -438,8 +431,8 @@ private:
     template<class Type>
     struct on_codomain_model<Type, false, false>
     {                // !codomain_is_set, !absorbs_neutrons
-        static void subtract(Type& object, typename Type::iterator       it_, 
-                                     const typename Type::codomain_type&     )
+        static void subtract(Type&, typename Type::iterator it_, 
+                              const typename Type::codomain_type& )
         { it_->second = neutron<typename Type::codomain_type>::value(); }
     };
 

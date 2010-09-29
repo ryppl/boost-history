@@ -23,7 +23,7 @@ namespace boost{ namespace itl
         typedef is_icl_container<Type> type;
         BOOST_STATIC_CONSTANT(bool, value = 
             (mpl::or_<  is_element_container<Type>
-			         , is_interval_container<Type> >::value));
+                     , is_interval_container<Type> >::value));
     };
 
 }} // namespace boost itl

@@ -5,22 +5,24 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __test_itl_interval_hpp_JOFA_081006__
-#define __test_itl_interval_hpp_JOFA_081006__
+#ifndef BOOST_ITL_TEST_ITL_INTERVAL_HPP_JOFA_081006
+#define BOOST_ITL_TEST_ITL_INTERVAL_HPP_JOFA_081006
 
-template <class T> 
+template <class T, class IntervalT> 
 void interval_ctor_4_ordered_types()
 {
     // An empty interval is defined as the closed interval [1,0]
-    BOOST_CHECK_EQUAL(interval<T>().empty(), true);
-    BOOST_CHECK_EQUAL(interval<T>().cardinality(), itl::neutron<typename itl::size_type_of<T>::type>::value());
-    BOOST_CHECK_EQUAL(interval<T>().size(), itl::neutron<typename itl::size_type_of<T>::type>::value());
-    BOOST_CHECK_EQUAL(interval<T>().lower(), itl::unon<T>::value());
-    BOOST_CHECK_EQUAL(interval<T>().upper(), itl::neutron<T>::value());
+    BOOST_CHECK_EQUAL(itl::is_empty(IntervalT()), true);
+    BOOST_CHECK_EQUAL(itl::cardinality(IntervalT()), itl::neutron<typename itl::size_type_of<T>::type>::value());
+    BOOST_CHECK_EQUAL(itl::size(IntervalT()), itl::neutron<typename itl::size_type_of<T>::type>::value());
+    BOOST_CHECK_EQUAL(IntervalT().lower(), itl::unon<T>::value());
+    BOOST_CHECK_EQUAL(IntervalT().upper(), itl::neutron<T>::value());
+    BOOST_CHECK_EQUAL(itl::lower(IntervalT()), itl::unon<T>::value());
+    BOOST_CHECK_EQUAL(itl::upper(IntervalT()), itl::neutron<T>::value());
 
-    BOOST_CHECK_EQUAL(interval<T>(), interval<T>());
-    BOOST_CHECK_EQUAL(interval<T>(), interval<T>(itl::unon<T>::value(), itl::neutron<T>::value()));
-    BOOST_CHECK_EQUAL(interval<T>(), interval<T>(itl::unon<T>::value(), itl::neutron<T>::value(), closed_bounded));
+    //BOOST_CHECK_EQUAL(IntervalT(), IntervalT());
+    //BOOST_CHECK_EQUAL(IntervalT(), IntervalT(itl::unon<T>::value(), itl::neutron<T>::value()));
+    //BOOST_CHECK_EQUAL(IntervalT(), IntervalT(itl::unon<T>::value(), itl::neutron<T>::value(), closed_bounded));
 }
 
 template <class T> 

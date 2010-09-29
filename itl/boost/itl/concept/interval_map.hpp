@@ -77,7 +77,7 @@ typename enable_if< mpl::and_< is_interval_map<Type>
             , bool>::type
 contains(const Type& super, const CoType& sub)
 {
-	return true;
+    return true;
 }
 
 //------------------------------------------------------------------------------
@@ -140,7 +140,7 @@ template<class Type>
 typename enable_if<is_interval_map<Type>, Type>::type&
 add(Type& object, const typename Type::element_type& operand)
 {
-	return itl::add(object, make_segment<Type>(operand));
+    return itl::add(object, make_segment<Type>(operand));
 }
 
 //------------------------------------------------------------------------------
@@ -171,7 +171,7 @@ template<class Type>
 inline typename enable_if<is_interval_map<Type>, Type>::type&
 insert(Type& object, const typename Type::element_type& operand)
 {
-	return itl::insert(object, make_segment<Type>(operand));
+    return itl::insert(object, make_segment<Type>(operand));
 }
 
 //------------------------------------------------------------------------------
@@ -203,8 +203,8 @@ template<class Type>
 typename enable_if<is_interval_map<Type>, Type>::type&
 erase(Type& object, const typename Type::domain_type& operand)
 {
-	typedef typename Type::interval_type interval_type;
-	return itl::erase(object, itl::construct<interval_type>(operand));
+    typedef typename Type::interval_type interval_type;
+    return itl::erase(object, itl::construct<interval_type>(operand));
 }
 
 //------------------------------------------------------------------------------
@@ -221,7 +221,7 @@ template<class Type>
 inline typename enable_if<is_interval_map<Type>, Type>::type&
 erase(Type& object, const typename Type::element_type& operand)
 {
-	return itl::erase(object, make_segment<Type>(operand));
+    return itl::erase(object, make_segment<Type>(operand));
 }
 
 //==============================================================================
@@ -241,7 +241,7 @@ template<class Type>
 typename enable_if<is_interval_map<Type>, Type>::type&
 subtract(Type& object, const typename Type::element_type& operand)
 {
-	return itl::subtract(object, make_segment<Type>(operand));
+    return itl::subtract(object, make_segment<Type>(operand));
 }
 
 //------------------------------------------------------------------------------
@@ -293,7 +293,7 @@ typename enable_if<is_interval_map<Type>, void>::type
 add_intersection(Type& section, const Type& object, 
                  const typename Type::element_type& operand)
 {
-	typedef typename Type::segment_type segment_type;
+    typedef typename Type::segment_type segment_type;
     object.add_intersection(section, make_segment<Type>(operand));
 }
 
@@ -461,7 +461,7 @@ template<class Type>
 inline typename enable_if<is_interval_map<Type>, Type>::type&
 flip(Type& object, const typename Type::element_type& operand)
 {
-	return itl::flip(object, make_segment<Type>(operand));
+    return itl::flip(object, make_segment<Type>(operand));
 }
 
 //------------------------------------------------------------------------------
@@ -483,6 +483,10 @@ flip(Type& object, const OperandT&)
 //------------------------------------------------------------------------------
 //- T& flip(T&, c P&) T:{M} P:{M'} total enricher 
 //------------------------------------------------------------------------------
+#ifdef BOOST_MSVC 
+#pragma warning(push)
+#pragma warning(disable:4127) // conditional expression is constant
+#endif                        
 template<class Type, class OperandT>
 typename enable_if< mpl::and_< is_total<Type>
                              , mpl::not_<absorbs_neutrons<Type> >
@@ -503,6 +507,10 @@ flip(Type& object, const OperandT& operand)
 
     return object;
 }
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
+
 
 //------------------------------------------------------------------------------
 //- T& flip(T&, c P&) T:{M} P:{M'} partial 

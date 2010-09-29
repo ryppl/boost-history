@@ -20,15 +20,15 @@ template<class Type, class Iterator>
 inline typename enable_if<is_set<Type>, const typename Type::key_type>::type&
 key_value(Iterator it_)
 {
-	return *it_;
+    return *it_;
 }
 
 template<class Type>
 inline typename enable_if<is_set<Type>, typename Type::value_type>::type
 make_value(const typename Type::     key_type& key_val, 
-		   const typename Type::codomain_type&        )
+           const typename Type::codomain_type&        )
 {
-	return typename Type::value_type(key_val);
+    return typename Type::value_type(key_val);
 }
 
 

@@ -42,7 +42,7 @@ void interval_map_fundamentals_4_ordered_types()
     //empty set
     //-------------------------------------------------------------------------
     BOOST_CHECK_EQUAL(IntervalMapT().empty(), true);
-	BOOST_CHECK_EQUAL(itl::is_empty(IntervalMapT()), true);
+    BOOST_CHECK_EQUAL(itl::is_empty(IntervalMapT()), true);
     BOOST_CHECK_EQUAL(cardinality(IntervalMapT()), neutron<size_T>::value());
     BOOST_CHECK_EQUAL(IntervalMapT().size(), neutron<size_T>::value());
     BOOST_CHECK_EQUAL(itl::size(IntervalMapT()), neutron<size_T>::value());
@@ -365,8 +365,8 @@ void interval_map_distinct_4_bicremental_continuous_types()
     //USASO: unsatisfctory solution 2: not implementing mapping_type version of o=
 
     BOOST_CHECK_EQUAL( cardinality(is_123_5),      itl::infinity<size_T>::value() );
-    BOOST_CHECK_EQUAL( is_123_5.size(),             itl::infinity<size_T>::value() );
-    BOOST_CHECK_EQUAL( itl::length(is_123_5),           d2 );
+    BOOST_CHECK_EQUAL( is_123_5.size(),            itl::infinity<size_T>::value() );
+    BOOST_CHECK_EQUAL( itl::length(is_123_5),      d2 );
 
 }
 

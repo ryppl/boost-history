@@ -10,7 +10,6 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/type_traits/type_to_string.hpp>
-#include <boost/itl/detail/base_interval.hpp>
 #include <boost/itl/concept/interval.hpp>
 
 namespace boost{namespace itl
@@ -18,7 +17,7 @@ namespace boost{namespace itl
 
 template <class DomainT, 
           ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
-class closed_interval : public base_interval<DomainT,Compare> 
+class closed_interval
 {
 public:
     typedef closed_interval<DomainT,Compare> type;

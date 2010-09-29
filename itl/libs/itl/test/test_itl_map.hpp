@@ -24,7 +24,7 @@ void itl_map_contains_4_bicremental_types()
     typedef IntervalMap<T,U,Trt> IntervalMapT;
     typedef itl::map<T,U,Trt> MapT;
     typedef itl::set<T> SetT;
-	typedef typename MapT::element_type map_element_type;
+    typedef typename MapT::element_type map_element_type;
 
     IntervalMapT itv_map_a;
     itv_map_a.add(IDv(2,4,1)).add(IIv(6,7,3));
@@ -35,7 +35,7 @@ void itl_map_contains_4_bicremental_types()
     BOOST_CHECK_EQUAL( contains(map_a, MK_u(3)), true );
     BOOST_CHECK_EQUAL( within(MK_u(3), map_a),   true );
 
-	map_element_type key_value_pair(MK_v(6), MK_u(3));
+    map_element_type key_value_pair(MK_v(6), MK_u(3));
     BOOST_CHECK( contains(map_a, key_value_pair) );
     BOOST_CHECK( within(key_value_pair, map_a) );
 

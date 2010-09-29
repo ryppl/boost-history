@@ -27,14 +27,14 @@ namespace Map
 template <class ObjectT, class CoObjectT>
 bool intersects(const ObjectT& left, const CoObjectT& right)
 {
-	typedef typename CoObjectT::const_iterator co_iterator;
+    typedef typename CoObjectT::const_iterator co_iterator;
     co_iterator right_common_lower_, right_common_upper_;
     if(!Set::common_range(right_common_lower_, right_common_upper_, right, left))
         return false;
 
     co_iterator right_ = right_common_lower_;
     while(right_ != right_common_upper_)
-		if(itl::intersects(left, key_value<CoObjectT>(right_++)))
+        if(itl::intersects(left, key_value<CoObjectT>(right_++)))
             return true;
 
     return false;

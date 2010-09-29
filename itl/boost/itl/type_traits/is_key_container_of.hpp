@@ -19,8 +19,8 @@ namespace boost{ namespace itl
     {
         typedef is_strict_key_container_of<KeyT, ObjectT> type;
         BOOST_STATIC_CONSTANT(bool, value =
-			(mpl::and_< is_map<ObjectT>
-			          , is_same<typename ObjectT::key_object_type, KeyT> >::value)
+            (mpl::and_< is_map<ObjectT>
+                      , is_same<typename ObjectT::key_object_type, KeyT> >::value)
             );
     };
 
@@ -29,9 +29,9 @@ namespace boost{ namespace itl
     {
         typedef is_key_container_of<KeyT, ObjectT> type;
         BOOST_STATIC_CONSTANT(bool, value =
-			(mpl::or_< is_strict_key_container_of<KeyT, ObjectT> 
-			         , mpl::and_< is_container<ObjectT> //JODO is_itl_associative_container
-			                    , is_same<ObjectT, KeyT> > >::value)
+            (mpl::or_< is_strict_key_container_of<KeyT, ObjectT> 
+                     , mpl::and_< is_container<ObjectT> //JODO is_itl_associative_container
+                                , is_same<ObjectT, KeyT> > >::value)
             );
     };
 

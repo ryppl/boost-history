@@ -59,6 +59,7 @@ public:
     typedef typename base_type::interval_mapping_type interval_mapping_type;
     typedef typename base_type::ImplMapT ImplMapT;
 
+    typedef typename base_type::size_type     size_type;
     typedef typename base_type::codomain_combine codomain_combine;
 
     typedef interval_set<DomainT,Compare,Interval,Alloc> interval_set_type;

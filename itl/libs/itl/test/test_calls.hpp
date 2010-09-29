@@ -25,9 +25,9 @@ template<class Type, class CoType>
 bool contains(const Type& object, const CoType& co_object)
 {
 #ifdef ITL_PURE_CONCEPTUAL
-	return object.contains(co_object);
+    return object.contains(co_object);
 #else
-	return itl::contains(object, co_object);
+    return itl::contains(object, co_object);
 #endif
 }
 
@@ -35,9 +35,9 @@ template<class Type, class CoType>
 bool within(const Type& object, const CoType& co_object)
 {
 #ifdef ITL_PURE_CONCEPTUAL
-	return object.within(co_object);
+    return object.within(co_object);
 #else
-	return itl::within(object, co_object);
+    return itl::within(object, co_object);
 #endif
 }
 

@@ -15,8 +15,6 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/ptime.hpp> 
 #include <boost/itl/rational.hpp> 
 
-#include <boost/itl/interval.hpp>
-
 #if(_MSC_VER < 1500 && defined(_DEBUG) ) // 1500 = MSVC-9.0
 typedef int boost_posix_time_ptime;
 #else

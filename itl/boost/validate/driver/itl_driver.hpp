@@ -157,7 +157,7 @@ namespace boost{namespace itl
 
             std::cout << "------------------------------------------------------------------------------" << std::endl;
             // Summary for the current cycle
-			double avg_evaluation_time_per_law = avg_evaluation_time/itl::size(_frequencies);
+            double avg_evaluation_time_per_law = avg_evaluation_time/itl::size(_frequencies);
             printf( " %10.3lf%-53s%7ld%7.0lf\n", 
                     avg_evaluation_time_per_law, " total avg of atomic evaluation (micro sec)", instance_count, avg_evaluation_time_per_law);
 
@@ -270,7 +270,7 @@ namespace boost{namespace itl
                 return true;
             else if(_required_law_count == 0 || _required_law_validation_count == 0)
                 return false; // If counts are not limited: Run for ever.
-			else if(itl::size(_frequencies) < static_cast<size_t>(_required_law_count))
+            else if(itl::size(_frequencies) < static_cast<size_t>(_required_law_count))
                 return false; // Not yet reached all laws
             else
                 // All laws reached. Enough validation cycles for every law?

@@ -8,13 +8,14 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #ifndef BOOST_ITL_DISCRETE_INTERVAL_HPP_JOFA_100403
 #define BOOST_ITL_DISCRETE_INTERVAL_HPP_JOFA_100403
 
+#include <functional> 
 #include <boost/static_assert.hpp> 
+#include <boost/concept/assert.hpp>
 #include <boost/itl/type_traits/succ_pred.hpp>
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/type_traits/type_to_string.hpp>
 #include <boost/itl/type_traits/is_continuous.hpp>
 #include <boost/itl/type_traits/is_discrete_interval.hpp>
-#include <boost/itl/detail/base_interval.hpp>
 #include <boost/itl/interval_bounds.hpp>
 #include <boost/itl/concept/interval.hpp>
 
@@ -23,7 +24,7 @@ namespace boost{namespace itl
 
 template <class DomainT, 
           ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
-class discrete_interval : public base_interval<DomainT,Compare> 
+class discrete_interval
 {
 public:
     typedef discrete_interval<DomainT,Compare> type;

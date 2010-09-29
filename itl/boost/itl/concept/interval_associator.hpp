@@ -42,7 +42,7 @@ template<class Type>
 inline typename enable_if<is_interval_container<Type>, bool>::type
 operator < (const Type& left, const Type& right)
 {
-	typedef typename Type::segment_compare segment_compare;
+    typedef typename Type::segment_compare segment_compare;
     return std::lexicographical_compare(
         left.begin(), left.end(), right.begin(), right.end(), 
         segment_compare()
@@ -111,38 +111,65 @@ is_protonic_equal(const LeftT& left, const RightT& right)
 //= Size<IntervalSet|IntervalMap>
 //==============================================================================
 template<class Type>
-typename enable_if<is_interval_container<Type>, typename Type::size_type>::type
+typename enable_if
+< mpl::and_< is_interval_container<Type>
+           , is_discrete<typename Type::domain_type> >
+, typename Type::size_type
+>::type
 cardinality(const Type& object)
 {
-    using namespace boost::mpl;
-	typedef typename Type::domain_type domain_type;
+    typedef typename Type::size_type size_type;
+    typedef typename Type::interval_type interval_type;
 
-    return if_<
-                bool_<is_continuous<domain_type>::value>,
-                continuous_interval_container,
-                discrete_interval_container
-              >
-              ::type::cardinality(object);
+    size_type size = neutron<size_type>::value();
+    ITL_const_FORALL(typename Type, it, object)
+        size += itl::cardinality(key_value<Type>(it));
+    return size;
+
+}
+
+template<class Type>
+typename enable_if
+< mpl::and_< is_interval_container<Type>
+           , mpl::not_<is_discrete<typename Type::domain_type> > >
+, typename Type::size_type
+>::type
+cardinality(const Type& object)
+{
+    typedef typename Type::size_type size_type;
+    typedef typename Type::interval_type interval_type;
+
+    size_type size = neutron<size_type>::value();
+    size_type interval_size;
+    ITL_const_FORALL(typename Type, it, object)
+    {
+        interval_size = itl::cardinality(key_value<Type>(it));
+        if(interval_size == infinity<size_type>::value())
+            return interval_size;
+        else
+            size += interval_size;
+    }
+    return size;
 }
 
 template<class Type>
 inline typename enable_if<is_interval_container<Type>, typename Type::size_type>::type
 size(const Type& object)
 {
-	return itl::cardinality(object);
+    return itl::cardinality(object);
 }
 
 template<class Type>
 typename enable_if<is_interval_container<Type>, typename Type::difference_type>::type
 length(const Type& object)
 {
-	typedef typename Type::difference_type difference_type;
-	typedef typename Type::const_iterator  const_iterator;
+    typedef typename Type::difference_type difference_type;
+    typedef typename Type::const_iterator  const_iterator;
     difference_type length = neutron<difference_type>::value();
-	const_iterator it_ = object.begin();
+    const_iterator it_ = object.begin();
 
-	while(it_ != object.end())
-		length += itl::length(key_value<Type>(it_++));
+    while(it_ != object.end())
+        length += itl::length(key_value<Type>(it_++));
     return length;
 }
 
@@ -150,7 +177,7 @@ template<class Type>
 typename enable_if<is_interval_container<Type>, std::size_t>::type
 interval_count(const Type& object)
 {
-	return itl::iterative_size(object);
+    return itl::iterative_size(object);
 }
 
 //==============================================================================
@@ -717,7 +744,7 @@ typename enable_if
 typename Type::element_iterator>::type
 elements_begin(Type& object)
 {
-	return typename Type::element_iterator(object.begin());
+    return typename Type::element_iterator(object.begin());
 }
 
 template<class Type>
@@ -737,7 +764,7 @@ typename enable_if
 typename Type::element_const_iterator>::type
 elements_begin(const Type& object)
 { 
-	return typename Type::element_const_iterator(object.begin());
+    return typename Type::element_const_iterator(object.begin());
 }
 
 template<class Type>
@@ -747,7 +774,7 @@ typename enable_if
 typename Type::element_const_iterator>::type
 elements_end(const Type& object)
 { 
-	return typename Type::element_const_iterator(object.end());
+    return typename Type::element_const_iterator(object.end());
 }
 
 //--------------------------------------------------------------------------
@@ -760,7 +787,7 @@ typename enable_if
 typename Type::element_reverse_iterator>::type
 elements_rbegin(Type& object)
 {
-	return typename Type::element_reverse_iterator(object.rbegin());
+    return typename Type::element_reverse_iterator(object.rbegin());
 }
 
 template<class Type>
@@ -770,7 +797,7 @@ typename enable_if
 typename Type::element_reverse_iterator>::type
 elements_rend(Type& object)
 { 
-	return typename Type::element_reverse_iterator(object.rend());
+    return typename Type::element_reverse_iterator(object.rend());
 }
 
 template<class Type>
@@ -780,7 +807,7 @@ typename enable_if
 typename Type::element_const_reverse_iterator>::type
 elements_rbegin(const Type& object)
 { 
-	return typename Type::element_const_reverse_iterator(object.rbegin());
+    return typename Type::element_const_reverse_iterator(object.rbegin());
 }
 
 template<class Type>
@@ -790,7 +817,7 @@ typename enable_if
 typename Type::element_const_reverse_iterator>::type
 elements_rend(const Type& object)
 { 
-	return typename Type::element_const_reverse_iterator(object.rend());
+    return typename Type::element_const_reverse_iterator(object.rend());
 }
 
 //==============================================================================

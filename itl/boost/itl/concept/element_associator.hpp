@@ -28,14 +28,14 @@ template<class Type>
 typename enable_if<is_associative_element_container<Type>, typename Type::size_type>::type
 size(const Type& object)
 { 
-	return itl::iterative_size(object); 
+    return itl::iterative_size(object); 
 }
 
 template<class Type>
 typename enable_if<is_associative_element_container<Type>, typename Type::size_type>::type
 cardinality(const Type& object)
 { 
-	return itl::iterative_size(object); 
+    return itl::iterative_size(object); 
 }
 
 
@@ -241,7 +241,7 @@ template<class Type>
 typename enable_if<is_associative_element_container<Type>, 
                    typename Type::iterator>::type
 insert(Type& object, typename Type::iterator      prior, 
-	           const typename Type::element_type& operand)
+               const typename Type::element_type& operand)
 {
     return object.insert(prior, operand);
 }
@@ -270,12 +270,12 @@ template<class Type>
 typename enable_if<is_associative_element_container<Type>, typename Type::size_type>::type
 erase(Type& object, const typename Type::domain_type& key_value)
 {
-	typedef typename Type::size_type size_type;
+    typedef typename Type::size_type size_type;
     typename Type::iterator it_ = object.find(key_value);
     if(it_ != object.end())
     {
         object.erase(it_);
-		return unon<size_type>::value();
+        return unon<size_type>::value();
     }
     return neutron<size_type>::value();
 }
@@ -336,7 +336,7 @@ operator - (Type object, const Type& subtrahend)
 template<class Type>
 inline typename enable_if<is_associative_element_container<Type>, void>::type
 add_intersection(Type& section, const Type&              object, 
-				       const typename Type::domain_type& operand)
+                       const typename Type::domain_type& operand)
 {
     typedef typename Type::const_iterator const_iterator;
     const_iterator it_ = object.find(operand);
@@ -350,10 +350,10 @@ add_intersection(Type& section, const Type&              object,
 template<class Type>
 inline typename enable_if<is_associative_element_container<Type>, void>::type
 add_intersection(Type& section, const Type& object, 
-				       const typename Type::key_object_type& operand)
+                       const typename Type::key_object_type& operand)
 {
     typedef typename Type::key_object_type key_object_type;
-	typedef typename key_object_type::const_iterator const_iterator;
+    typedef typename key_object_type::const_iterator const_iterator;
     const_iterator common_lwb_, common_upb_;
     if(!Set::common_range(common_lwb_, common_upb_, operand, object))
         return;
@@ -415,14 +415,14 @@ template<class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type
 operator ^ (Type object, const typename Type::element_type& operand)
 {
-	return itl::flip(object, operand);
+    return itl::flip(object, operand);
 }
 
 template<class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type
 operator ^ (const typename Type::element_type& operand, Type object)
 {
-	return itl::flip(object, operand);
+    return itl::flip(object, operand);
 }
 
 template<class Type>
