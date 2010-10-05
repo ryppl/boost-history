@@ -23,7 +23,8 @@ namespace boost{ namespace itl
         typedef is_discrete type;
         BOOST_STATIC_CONSTANT(bool, 
             value = (mpl::and_< boost::detail::is_incrementable<Type>
-                              , mpl::not_<is_floating_point<Type> > >::value)
+                              , mpl::not_<is_floating_point<Type> > 
+                              >::value)
             );
     };
 

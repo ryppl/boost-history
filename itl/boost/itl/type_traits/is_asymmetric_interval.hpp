@@ -31,7 +31,7 @@ template <class Type> struct is_continuous_asymmetric
     BOOST_STATIC_CONSTANT(bool,
             value = (mpl::and_<
                         is_asymmetric_interval<Type>
-                    ,   is_continuous<typename Type::domain_type>
+                    ,   is_continuous<typename domain_type_of<interval_traits<Type> >::type>
                     >::value)
                 );
 };
@@ -42,7 +42,7 @@ template <class Type> struct is_discrete_asymmetric
     BOOST_STATIC_CONSTANT(bool,
             value = (mpl::and_<
                         is_asymmetric_interval<Type>
-                    ,   mpl::not_<is_continuous<typename Type::domain_type> >
+                    ,   mpl::not_<is_continuous<typename domain_type_of<interval_traits<Type> >::type> >
                     >::value)
                 );
 };

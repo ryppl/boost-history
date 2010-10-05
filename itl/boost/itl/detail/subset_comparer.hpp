@@ -13,6 +13,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/relation_state.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/type_traits/codomain_type_of.hpp>
 #include <boost/itl/type_traits/is_concept_equivalent.hpp>
 #include <boost/itl/type_traits/is_element_container.hpp>
 #include <boost/itl/concept/interval_set_value.hpp>
@@ -118,8 +119,8 @@ public:
     int co_compare(LeftIterT& left, RightIterT& right)
     {
         using namespace boost::mpl;
-        typedef typename LeftT::codomain_type  LeftCodomainT;
-        typedef typename RightT::codomain_type RightCodomainT;
+        typedef typename codomain_type_of<LeftT>::type  LeftCodomainT;
+        typedef typename codomain_type_of<RightT>::type RightCodomainT;
 
         return  
             if_<
@@ -146,7 +147,7 @@ public:
             restrict_result(superset);
             return stop;
         }
-        else if(typename LeftT::domain_compare()(key_value<LeftT>(left), key_value<RightT>(right)))
+        else if(typename LeftT::key_compare()(key_value<LeftT>(left), key_value<RightT>(right)))
         {   // left:  *left . . *joint_     left could be superset
             // right:           *right ...  if joint_ exists
             restrict_result(superset);
@@ -156,7 +157,7 @@ public:
             {
                 LeftIterT joint_ = _left.lower_bound(key_value<RightT>(right));
                 if(    joint_ == _left.end() 
-                    || typename LeftT::domain_compare()(key_value<RightT>(right), key_value<LeftT>(joint_)))
+                    || typename LeftT::key_compare()(key_value<RightT>(right), key_value<LeftT>(joint_)))
                 {
                     _result = unrelated;
                     return stop;
@@ -165,7 +166,7 @@ public:
                     left = joint_;
             }
         }
-        else if(typename LeftT::domain_compare()(key_value<RightT>(right), key_value<LeftT>(left)))
+        else if(typename LeftT::key_compare()(key_value<RightT>(right), key_value<LeftT>(left)))
         {   // left:             *left   left could be subset
             // right:*right . . .*joint_ if *joint_ exists 
             restrict_result(subset);
@@ -175,7 +176,7 @@ public:
             {
                 RightIterT joint_ = _right.lower_bound(key_value<LeftT>(left));
                 if(    joint_ == _right.end()
-                    || typename LeftT::domain_compare()(key_value<LeftT>(left), key_value<RightT>(joint_)))
+                    || typename LeftT::key_compare()(key_value<LeftT>(left), key_value<RightT>(joint_)))
                 {
                     _result = unrelated;
                     return stop;

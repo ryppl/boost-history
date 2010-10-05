@@ -12,13 +12,14 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp> 
 #include <boost/mpl/not.hpp> 
+#include <boost/itl/type_traits/element_type_of.hpp> 
+#include <boost/itl/type_traits/segment_type_of.hpp> 
 #include <boost/itl/type_traits/is_map.hpp> 
 
 namespace boost{ namespace itl
 {
     namespace detail
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
         BOOST_MPL_HAS_XXX_TRAIT_DEF(iterator)
         BOOST_MPL_HAS_XXX_TRAIT_DEF(size_type)
         BOOST_MPL_HAS_XXX_TRAIT_DEF(reference)
@@ -33,6 +34,19 @@ namespace boost{ namespace itl
             detail::has_reference<Type>::value>
     {};
 
+    template <class Type>
+    struct is_std_set
+    {
+        typedef is_std_set type;
+        BOOST_STATIC_CONSTANT(bool, 
+            value = (mpl::and_< is_container<Type> 
+                              , detail::has_key_type<Type>
+                              , is_same< typename key_type_of<Type>::type
+                                       , typename value_type_of<Type>::type >
+                              , mpl::not_<detail::has_segment_type<Type> >
+                              >::value )
+        ); 
+    };
 
 }} // namespace boost itl
 

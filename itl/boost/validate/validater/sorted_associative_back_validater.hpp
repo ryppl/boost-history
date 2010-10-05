@@ -26,10 +26,10 @@ template <typename Type, typename TargetT = itl::list<typename Type::value_type>
 class sorted_associative_back_validater : public concept_validater
 {
 public:
-    typedef typename Type::atomized_type     atomic_type;
-    typedef typename atomic_type::value_type value_type;
-    typedef typename Type::domain_type       domain_type;
-    typedef typename Type::codomain_type     codomain_type;
+    typedef typename Type::atomized_type        atomic_type;
+    typedef typename atomic_type::value_type    value_type;
+    typedef typename domain_type_of<Type>::type domain_type;
+    typedef typename Type::codomain_type        codomain_type;
 
     typedef typename mpl::if_< is_interval_map<Type>
                              , std::pair<domain_type, codomain_type>

@@ -218,6 +218,23 @@ struct type_to_string<itl::set<Type> >
     { return "set<"+ type_to_string<Type>::apply() +">"; }
 };
 
+//-----------------------------------------------------------------------------
+//JODO move
+template <class Type>
+struct is_set<std::set<Type> >
+{ 
+    typedef is_set<std::set<Type> > type;
+    BOOST_STATIC_CONSTANT(bool, value = true); 
+};
+
+
+template <class Type>
+struct type_to_string<std::set<Type> >
+{
+    static std::string apply()
+    { return "set_<"+ type_to_string<Type>::apply() +">"; }
+};
+
 
 }} // namespace itl boost
 

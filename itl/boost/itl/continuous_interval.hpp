@@ -12,6 +12,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/static_assert.hpp> 
 #include <boost/concept/assert.hpp>
 #include <boost/itl/detail/concept_check.hpp>
+#include <boost/itl/concept/container.hpp>
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/type_traits/type_to_string.hpp>
 #include <boost/itl/type_traits/is_continuous.hpp>

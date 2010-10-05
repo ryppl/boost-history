@@ -8,6 +8,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifndef BOOST_ITL_TYPE_TRAITS_CODOMAIN_TYPE_OF_HPP_JOFA_100829
 #define BOOST_ITL_TYPE_TRAITS_CODOMAIN_TYPE_OF_HPP_JOFA_100829
 
+#include <set>
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/itl/type_traits/no_type.hpp>
@@ -44,6 +45,12 @@ namespace boost{ namespace itl
     {
         typedef typename 
             get_codomain_type<Type, has_codomain_type<Type>::value>::type type;
+    };
+
+    template <class DomainT, class Compare, class Alloc>
+    struct codomain_type_of<std::set<DomainT,Compare,Alloc> >
+    {
+        typedef typename std::set<DomainT,Compare,Alloc>::value_type type;
     };
 
 }} // namespace boost itl

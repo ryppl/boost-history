@@ -11,6 +11,11 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/domain_type_of.hpp>
 #include <boost/itl/type_traits/interval_type_of.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
+#include <boost/itl/detail/set_algo.hpp>
+#include <boost/itl/detail/map_algo.hpp>
+#include <boost/itl/detail/interval_set_algo.hpp>
+#include <boost/itl/detail/interval_map_algo.hpp>
+#include <boost/itl/concept/interval.hpp>
 
 namespace boost{ namespace itl
 {
@@ -88,15 +93,16 @@ inclusion_compare(const LeftT& left, const RightT& right)
                                         right.begin(), right.end());
 }
 
-template<class LeftT, class RightT>
-typename enable_if<is_concept_equivalent<is_element_container,LeftT, RightT>, 
-                   int>::type
-inclusion_compare(const LeftT& left, const RightT& right)
-{
-    return Set::subset_compare(left, right, 
-                               left.begin(), left.end(),
-                               right.begin(), right.end());
-}
+//CL 
+//template<class LeftT, class RightT>
+//typename enable_if<is_concept_equivalent<is_element_container,LeftT, RightT>, 
+//                   int>::type
+//inclusion_compare(const LeftT& left, const RightT& right)
+//{
+//    return Set::subset_compare(left, right, 
+//                               left.begin(), left.end(),
+//                               right.begin(), right.end());
+//}
 //------------------------------------------------------------------------------
 
 template<class LeftT, class RightT>
@@ -110,6 +116,13 @@ is_protonic_equal(const LeftT& left, const RightT& right)
 //==============================================================================
 //= Size<IntervalSet|IntervalMap>
 //==============================================================================
+template<class Type> 
+typename enable_if<is_interval_container<Type>, std::size_t>::type
+iterative_size(const Type& object)
+{ 
+    return object.iterative_size(); 
+}
+
 template<class Type>
 typename enable_if
 < mpl::and_< is_interval_container<Type>

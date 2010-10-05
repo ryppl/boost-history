@@ -18,23 +18,21 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/detail/on_absorbtion.hpp>
-#include <boost/itl/type_traits/is_interval_splitter.hpp>
-#include <boost/itl/map.hpp>
-#include <boost/itl/interval_base_set.hpp>
 #include <boost/itl/detail/interval_map_algo.hpp>
 
+#include <boost/itl/concept/interval/base.hpp>
+#include <boost/itl/concept/interval_set.hpp>
+#include <boost/itl/concept/interval_map.hpp>
+#include <boost/itl/concept/interval_associator.hpp>
+
+#include <boost/itl/type_traits/is_interval_splitter.hpp>
+#include <boost/itl/map.hpp>
 
 #define const_FOR_IMPLMAP(iter) for(typename ImplMapT::const_iterator iter=_map.begin(); (iter)!=_map.end(); (iter)++)
 #define FOR_IMPLMAP(iter) for(typename ImplMapT::iterator iter=_map.begin(); (iter)!=_map.end(); (iter)++)
 
 namespace boost{namespace itl
 {
-
-#ifdef BOOST_MSVC 
-#pragma warning(push)
-#pragma warning(disable:4127) // conditional expression is constant
-#endif                        
-
 
 template<class DomainT, class CodomainT>
 struct mapping_pair

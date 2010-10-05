@@ -10,14 +10,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #define BOOST_ITL_INTERVAL_SET_HPP_JOFA_990223
 
 #include <boost/assert.hpp>
-#include <boost/itl/rightopen_interval.hpp> //JODO REV?
 #include <boost/itl/type_traits/is_interval_joiner.hpp>
 #include <boost/itl/interval_base_set.hpp>
-#include <boost/itl/concept/interval/base.hpp>
-#include <boost/itl/concept/interval_set.hpp>
-#include <boost/itl/concept/interval_map.hpp>
-#include <boost/itl/concept/interval_associator.hpp>
-
 
 namespace boost{namespace itl
 {

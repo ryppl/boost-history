@@ -16,6 +16,7 @@ namespace boost{ namespace itl
 {
     template <class Type> struct unon{ static Type value(); };
 
+    template<> inline bool   unon<bool>::value()   { return true; }
     template<> inline float  unon<float>::value()  { return 1.0; }
     template<> inline double unon<double>::value() { return 1.0; }
     template<> inline long double unon<long double>::value() 

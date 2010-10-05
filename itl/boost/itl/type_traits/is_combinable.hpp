@@ -43,12 +43,12 @@ struct is_codomain_equal
 
 //NOTE: Equality of compare order implies the equality of the domain_types
 template<class LeftT, class RightT>
-struct is_domain_compare_equal
+struct is_key_compare_equal
 {
-    typedef is_domain_compare_equal<LeftT, RightT> type;
+    typedef is_key_compare_equal<LeftT, RightT> type;
     BOOST_STATIC_CONSTANT(bool, value =
-        (is_same<typename LeftT::domain_compare, 
-                 typename RightT::domain_compare>::value)
+        (is_same<typename LeftT::key_compare, 
+                 typename RightT::key_compare>::value)
         );
 };
 
@@ -57,7 +57,7 @@ struct is_codomain_type_equal
 {
     typedef is_codomain_type_equal<LeftT, RightT> type;
     BOOST_STATIC_CONSTANT(bool, value =
-        (mpl::and_<is_domain_compare_equal<LeftT, RightT>, 
+        (mpl::and_<is_key_compare_equal<LeftT, RightT>, 
                    is_codomain_equal<LeftT, RightT> >::value)
         );
 };
@@ -87,7 +87,7 @@ struct is_concept_combinable
         (mpl::and_<
             LeftConcept<LeftT>
           , RightConcept<RightT>
-          , is_domain_compare_equal<LeftT, RightT>
+          , is_key_compare_equal<LeftT, RightT>
         >::value)
         );
 };

@@ -24,6 +24,7 @@ namespace boost{ namespace itl
       : mpl::bool_<detail::has_domain_type<Type>::value>
     {};
 
+
     template <class Type, bool has_domain_type> 
     struct get_domain_type;
 

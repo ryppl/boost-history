@@ -18,6 +18,12 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/type_traits/is_interval_splitter.hpp>
 #include <boost/itl/detail/interval_set_algo.hpp>
 #include <boost/itl/detail/exclusive_less_than.hpp>
+
+#include <boost/itl/concept/interval/base.hpp>
+#include <boost/itl/concept/interval_set.hpp>
+#include <boost/itl/concept/interval_map.hpp>
+#include <boost/itl/concept/interval_associator.hpp>
+
 #include <boost/itl/rightopen_interval.hpp>
 #include <boost/itl/continuous_interval.hpp>
 #include <boost/itl/set.hpp>
@@ -30,103 +36,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 namespace boost{namespace itl
 {
-
-//JODO Forward 4 gcc-3.4.4 -----------------------------------------------------
-
-template<class Type, class OperandT>
-typename enable_if<has_same_concept<is_interval_set, Type, OperandT>, bool>::type 
-contains(const Type& super, const OperandT& sub);
-
-template<class Type>
-typename enable_if<is_interval_container<Type>, std::size_t>::type
-interval_count(const Type&);
-
-template<class Type>
-typename enable_if
-< mpl::and_< is_interval_container<Type>
-           , is_discrete<typename Type::domain_type> >
-, typename Type::size_type
->::type
-cardinality(const Type&);
-
-template<class Type>
-typename enable_if
-< mpl::and_< is_interval_container<Type>
-           , mpl::not_<is_discrete<typename Type::domain_type> > >
-, typename Type::size_type
->::type
-cardinality(const Type&);
-
-template<class Type>
-typename enable_if<is_interval_container<Type>, typename Type::difference_type>::type
-length(const Type&);
-
-template<class Type>
-typename enable_if<is_interval_set<Type>, bool>::type
-contains(const Type& super, const typename Type::segment_type&);
-
-template<class Type>
-typename enable_if<is_interval_set<Type>, bool>::type
-contains(const Type& super, const typename Type::element_type&);
-
-//- add ------------------------------------------------------------------------
-template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
-add(Type&, const typename Type::element_type&);
-
-template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
-add(Type&, const typename Type::segment_type&);
-
-template<class Type>
-typename enable_if<is_interval_set<Type>, typename Type::iterator>::type
-add(Type&, typename Type::iterator, 
-     const typename Type::segment_type&);
-
-
-template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
-subtract(Type&, const typename Type::element_type&);
-
-template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
-subtract(Type&, const typename Type::segment_type&);
-
-//------------------------------------------------------------------------------
-template<class Type>
-typename enable_if<is_interval_set<Type>, void>::type
-add_intersection(Type&, const Type&, const typename Type::element_type&);
-
-template<class Type>
-typename enable_if<is_interval_set<Type>, void>::type
-add_intersection(Type&, const Type&, const typename Type::segment_type&);
-
-template<class Type, class OperandT>
-typename enable_if<mpl::and_<is_interval_set<Type>, 
-                             combines_right_to_interval_set<Type, OperandT> >,
-                   void>::type
-add_intersection(Type&, const Type&, const OperandT&);
-
-//------------------------------------------------------------------------------
-template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
-flip(Type&, const typename Type::element_type&);
-
-template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
-flip(Type&, const typename Type::segment_type&);
-
-template<class Type, class OperandT>
-typename enable_if<is_concept_compatible<is_interval_set, Type, OperandT>, Type>::type&
-flip(Type&, const OperandT&);
-
-//------------------------------------------------------------------------------
-template<class Type>
-typename enable_if<is_interval_container<Type>, Type>::type&
-join(Type&);
-
-//JODO Forward 4 gcc-3.4.4 -----------------------------------------------------
-
 
 /** \brief Implements a set as a set of intervals (base class) */
 template 
@@ -293,7 +202,7 @@ public:
     /** Find the interval value pair, that contains element \c key */
     const_iterator find(const element_type& key)const
     { 
-        return this->_set.find(itl::construct<segment_type>(key)); 
+        return this->_set.find(itl::singleton<segment_type>(key)); 
     }
 
     const_iterator find(const segment_type& segment)const

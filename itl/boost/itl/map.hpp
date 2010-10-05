@@ -52,12 +52,10 @@ struct partial_absorber
 template<> 
 inline std::string type_to_string<partial_absorber>::apply() { return "@0"; }
 
-
 struct partial_enricher
 {
     enum { absorbs_neutrons = false };
     enum { is_total = false };
-
 };
 
 template<> 

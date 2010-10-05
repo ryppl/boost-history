@@ -17,8 +17,11 @@ namespace boost{ namespace itl
     namespace detail
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(key_type)
     }
 
+    //--------------------------------------------------------------------------
     template <class Type>
     struct has_element_type 
       : mpl::bool_<detail::has_element_type<Type>::value>
@@ -44,6 +47,62 @@ namespace boost{ namespace itl
     {
         typedef typename 
             get_element_type<Type, has_element_type<Type>::value>::type type;
+    };
+
+    //--------------------------------------------------------------------------
+    template <class Type>
+    struct has_value_type 
+      : mpl::bool_<detail::has_value_type<Type>::value>
+    {};
+
+    template <class Type, bool has_value_type> 
+    struct get_value_type;
+
+    template <class Type>
+    struct get_value_type<Type, false>
+    {
+        typedef no_type type;
+    };
+
+    template <class Type>
+    struct get_value_type<Type, true>
+    {
+        typedef typename Type::value_type type;
+    };
+
+    template <class Type>
+    struct value_type_of
+    {
+        typedef typename 
+            get_value_type<Type, has_value_type<Type>::value>::type type;
+    };
+
+    //--------------------------------------------------------------------------
+    template <class Type>
+    struct has_key_type 
+      : mpl::bool_<detail::has_key_type<Type>::value>
+    {};
+
+    template <class Type, bool has_key_type> 
+    struct get_key_type;
+
+    template <class Type>
+    struct get_key_type<Type, false>
+    {
+        typedef no_type type;
+    };
+
+    template <class Type>
+    struct get_key_type<Type, true>
+    {
+        typedef typename Type::key_type type;
+    };
+
+    template <class Type>
+    struct key_type_of
+    {
+        typedef typename 
+            get_key_type<Type, has_key_type<Type>::value>::type type;
     };
 
 }} // namespace boost itl

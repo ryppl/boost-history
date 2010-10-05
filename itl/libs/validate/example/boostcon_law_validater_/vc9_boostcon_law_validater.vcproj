@@ -119,7 +119,7 @@
 				Name="VCCLCompilerTool"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../../../../; ../../../../boost_1_35_0"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -181,11 +181,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\src\gentor\gentorprofile.cpp"
+				RelativePath="..\boostcon_law_validater_\boostcon_law_validater.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\boostcon_law_validater_\boostcon_law_validater.cpp"
+				RelativePath="..\..\src\gentor\gentorprofile.cpp"
 				>
 			</File>
 		</Filter>

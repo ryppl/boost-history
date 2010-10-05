@@ -53,15 +53,6 @@ iterative_size(const Type& object)
     return object.size(); 
 }
 
-template<class Type> 
-typename enable_if<mpl::and_< is_container<Type>
-                            , is_icl_container<Type> >
-                  , std::size_t>::type
-iterative_size(const Type& object)
-{ 
-    return object.iterative_size(); 
-}
-
 //==============================================================================
 //= Swap
 //==============================================================================

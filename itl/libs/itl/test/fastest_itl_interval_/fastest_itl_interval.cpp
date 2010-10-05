@@ -20,11 +20,94 @@ using namespace unit_test;
 using namespace boost::itl;
 
 #include "../test_itl_interval_shared.hpp"
-#include "../test_itl_interval.hpp"
+#include "../test_icl_interval.hpp"
+#include "../test_icl_dynamic_interval.hpp"
+#include "../test_icl_discrete_interval.hpp"
+#include "../test_icl_continuous_interval.hpp"
+#include "../test_icl_static_interval.hpp"
+
+#include <boost/itl/rightopen_interval.hpp>
+#include <boost/itl/leftopen_interval.hpp>
+#include <boost/itl/closed_interval.hpp>
+#include <boost/itl/open_interval.hpp>
+
+#include <boost/itl/discrete_interval.hpp>
+#include <boost/itl/continuous_interval.hpp>
+
+//==============================================================================
+//= Traits
+//==============================================================================
+BOOST_AUTO_TEST_CASE
+(fastest_itl_discrete_interval_traits)
+{            discrete_interval_traits<discrete_type_1, discrete_interval<discrete_type_1> >(); }
+
+//==============================================================================
+
+//- sta.asy.{dis|con} ----------------------------------------------------------
+BOOST_AUTO_TEST_CASE
+(fastest_itl_rightopen_interval_ctor_4_ordered_types)
+{                      interval_ctor_4_ordered_types<rightopen_interval<ordered_type_1> >(); }
 
 BOOST_AUTO_TEST_CASE
-(fastest_itl_interval_ctor_4_ordered_types)
-{            interval_ctor_4_ordered_types<ordered_type_1, >(); }
+(fastest_itl_rightopen_interval_4_ordered_types)
+{         singelizable_interval_4_ordered_types<rightopen_interval<discrete_type_1> >(); }
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_rightopen_interval_4_bicremental_types)
+{         singelizable_interval_4_bicremental_types<rightopen_interval<discrete_type_2> >(); }
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_leftopen_interval_ctor_4_ordered_types)
+{                     interval_ctor_4_ordered_types<leftopen_interval<ordered_type_2> >(); }
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_leftopen_interval_4_ordered_types_singelizable)
+{        singelizable_interval_4_ordered_types<leftopen_interval<signed_discrete_type_1> >(); }
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_leftopen_interval_4_bicremental_types)
+{        singelizable_interval_4_bicremental_types<leftopen_interval<discrete_type_4> >(); }
+
+
+//- dyn.dis --------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE
+(fastest_itl_discrete_interval_ctor_4_discrete_types_base)
+{                     interval_ctor_4_ordered_types<discrete_interval<discrete_type_1> >(); }
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_discrete_interval_ctor_4_discrete_types_dynamic)
+{             dynamic_interval_ctor_4_ordered_types<discrete_interval<discrete_type_2> >(); }
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_discrete_interval_4_ordered_types)
+{        singelizable_interval_4_ordered_types<discrete_interval<discrete_type_3> >(); }
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_discrete_interval_4_bicremental_types)
+{        singelizable_interval_4_bicremental_types<discrete_interval<discrete_type_3> >(); }
+
+//- dyn.con --------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE
+(fastest_itl_continuous_interval_ctor_4_continuous_types_base)
+{                       interval_ctor_4_ordered_types<continuous_interval<continuous_type_1> >(); }
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_continuous_interval_ctor_4_continuous_types_dynamic)
+{               dynamic_interval_ctor_4_ordered_types<continuous_interval<continuous_type_2> >(); }
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_continuous_interval_4_continuous_types_singelizable)
+{          singelizable_interval_4_ordered_types<continuous_interval<continuous_type_3> >(); }
+
+//------------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_distant_intervals_4_discrete_types)
+{            distant_intervals_4_discrete_types<discrete_type_1, std::less>(); }
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_distant_intervals_4_numeric_continuous_types)
+{            distant_intervals_4_numeric_continuous_types<numeric_continuous_type_1, std::less>(); }
 
 /*
 BOOST_AUTO_TEST_CASE

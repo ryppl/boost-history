@@ -105,7 +105,7 @@ struct elemental;
     {
         typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) segment_type;
         typedef segment_type                        interval_type;
-        typedef typename interval_type::domain_type domain_type;
+        typedef typename interval_traits<interval_type>::domain_type domain_type;
         typedef domain_type                         type;
         typedef domain_type                         codomain_type;
         typedef domain_type                         transit_type;
@@ -116,7 +116,7 @@ struct elemental;
     {
         typedef std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare), CodomainT> segment_type;
         typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare)                       interval_type;
-        typedef typename interval_type::domain_type             domain_type;
+        typedef typename interval_traits<interval_type>::domain_type domain_type;
         typedef CodomainT                                       codomain_type;
         typedef std::pair<domain_type, codomain_type>           type;
         typedef mapped_reference<domain_type, codomain_type>    transit_type;
@@ -192,7 +192,7 @@ struct segment_adapter
     typedef segment_adapter                          type;
     typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) segment_type;
     typedef segment_type                             interval_type;
-    typedef typename interval_type::domain_type      domain_type;
+    typedef typename interval_traits<interval_type>::domain_type domain_type;
     typedef domain_type                              codomain_type;
     typedef domain_type                              element_type;
     typedef domain_type&                             transit_type;
@@ -217,7 +217,7 @@ struct segment_adapter<SegmentIteratorT, std::pair<ITL_INTERVAL_TYPE(Interval,Do
 {
     typedef segment_adapter                                type;
     typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare)    interval_type;
-    typedef typename interval_type::domain_type            domain_type;
+    typedef typename interval_traits<interval_type>::domain_type domain_type;
     typedef CodomainT                                      codomain_type;
     typedef std::pair<domain_type, codomain_type>          element_type;
     typedef mapped_reference<domain_type, CodomainT>       transit_type;    

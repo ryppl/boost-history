@@ -52,12 +52,23 @@ namespace boost{namespace itl
     }
 
     template<> 
+    struct has_difference<boost::posix_time::ptime> 
+    { 
+        typedef has_difference type;
+        BOOST_STATIC_CONSTANT(bool, value = true);
+    };  
+
+    template<> 
     struct difference_type_of<boost::posix_time::ptime> 
-    { typedef boost::posix_time::time_duration type; };  
+    { 
+        typedef boost::posix_time::time_duration type; 
+    };  
 
     template<> 
     struct size_type_of<boost::posix_time::ptime> 
-    { typedef boost::posix_time::time_duration type; };  
+    { 
+        typedef boost::posix_time::time_duration type; 
+    };  
 
     // ------------------------------------------------------------------------
     boost::posix_time::ptime operator ++(boost::posix_time::ptime& x)

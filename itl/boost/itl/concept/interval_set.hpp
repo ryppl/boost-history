@@ -9,7 +9,9 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #define BOOST_ITL_CONCEPT_INTERVAL_SET_HPP_JOFA_100920
 
 #include <boost/itl/type_traits/is_combinable.hpp>
-
+#include <boost/itl/detail/set_algo.hpp>
+#include <boost/itl/detail/interval_set_algo.hpp>
+#include <boost/itl/concept/interval.hpp>
 
 namespace boost{ namespace itl
 {
@@ -73,7 +75,7 @@ inline typename enable_if<is_interval_set<Type>, Type>::type&
 add(Type& object, const typename Type::element_type& operand)
 {
     typedef typename Type::segment_type segment_type;
-    return itl::add(object, itl::construct<segment_type>(operand));
+    return itl::add(object, itl::singleton<segment_type>(operand));
 }
 
 //------------------------------------------------------------------------------
@@ -119,26 +121,6 @@ insert(Type& object, const typename Type::iterator      prior,
 }
 
 //==============================================================================
-//= Erasure<IntervalSet>
-//==============================================================================
-//------------------------------------------------------------------------------
-//- T& erase(T&, c P&) T:{S} P:{e i} fragment_types
-//------------------------------------------------------------------------------
-template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
-erase(Type& object, const typename Type::segment_type& minuend)
-{
-    return itl::subtract(object, minuend);
-}
-
-template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
-erase(Type& object, const typename Type::element_type& minuend)
-{
-    return itl::subtract(object, minuend);
-}
-
-//==============================================================================
 //= Subtraction<IntervalSet>
 //==============================================================================
 //------------------------------------------------------------------------------
@@ -156,7 +138,27 @@ inline typename enable_if<is_interval_set<Type>, Type>::type&
 subtract(Type& object, const typename Type::element_type& operand)
 {
     typedef typename Type::segment_type segment_type;
-    return itl::subtract(object, itl::construct<segment_type>(operand));
+    return itl::subtract(object, itl::singleton<segment_type>(operand));
+}
+
+//==============================================================================
+//= Erasure<IntervalSet>
+//==============================================================================
+//------------------------------------------------------------------------------
+//- T& erase(T&, c P&) T:{S} P:{e i} fragment_types
+//------------------------------------------------------------------------------
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+erase(Type& object, const typename Type::segment_type& minuend)
+{
+    return itl::subtract(object, minuend);
+}
+
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+erase(Type& object, const typename Type::element_type& minuend)
+{
+    return itl::subtract(object, minuend);
 }
 
 //==============================================================================

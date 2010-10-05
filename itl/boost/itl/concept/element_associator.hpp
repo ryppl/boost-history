@@ -16,14 +16,17 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 namespace boost{ namespace itl
 {
-//JODO Declaration forwarding for gcc-3.4.4
-template <class Type>
-typename enable_if<is_element_set<Type>, Type>::type&
-add(Type& object, const typename Type::element_type& operand);
 
 //==============================================================================
 //= Size
 //==============================================================================
+template<class Type> 
+typename enable_if<is_element_container<Type>, std::size_t>::type
+iterative_size(const Type& object)
+{ 
+    return object.size(); 
+}
+
 template<class Type>
 typename enable_if<is_associative_element_container<Type>, typename Type::size_type>::type
 size(const Type& object)
@@ -48,7 +51,7 @@ cardinality(const Type& object)
 /** Checks if a key is in the associative container */
 template<class Type>
 typename enable_if<is_associative_element_container<Type>, bool>::type
-within(const typename Type::domain_type& key, const Type& super)
+within(const typename Type::key_type& key, const Type& super)
 { 
     return !(super.find(key) == super.end()); 
 }
@@ -91,7 +94,7 @@ within(const SubT& sub, const SuperT& super)
 //------------------------------------------------------------------------------
 template<class Type>
 typename enable_if<is_associative_element_container<Type>, bool>::type
-contains(const Type& super, const typename Type::domain_type& key)
+contains(const Type& super, const typename Type::key_type& key)
 { 
     return itl::within(key, super); 
 }
@@ -148,26 +151,36 @@ operator < (const Type& left, const Type& right)
         );
 }
 
+template<class LeftT, class RightT>
+typename enable_if<is_concept_equivalent<is_element_container,LeftT, RightT>, 
+                   int>::type
+inclusion_compare(const LeftT& left, const RightT& right)
+{
+    return Set::subset_compare(left, right, 
+                               left.begin(), left.end(),
+                               right.begin(), right.end());
+}
+
 //==============================================================================
 //= Addition
 //==============================================================================
 template <class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type&
-operator += (Type& object, const typename Type::element_type& operand) 
+operator += (Type& object, const typename Type::value_type& operand) 
 { 
     return itl::add(object, operand); 
 }
 
 template <class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type
-operator + (Type object, const typename Type::element_type& operand) 
+operator + (Type object, const typename Type::value_type& operand) 
 { 
     return object += operand; 
 }
 
 template <class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type
-operator + (const typename Type::element_type& operand, Type object) 
+operator + (const typename Type::value_type& operand, Type object) 
 { 
     return object += operand; 
 }
@@ -176,7 +189,14 @@ template <class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type
 operator += (Type& object, const Type& operand) 
 { 
-    return Set::add(object, operand); 
+    if(&object == &operand)
+        return object;
+
+    typename Type::iterator prior_ = object.end();
+    ITL_const_FORALL(typename Type, it_, operand)
+        prior_ = itl::add(object, prior_, *it_);
+
+    return object;
 }
 
 template <class Type>
@@ -189,21 +209,21 @@ operator + (Type object, const Type& operand)
 //==============================================================================
 template <class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type&
-operator |= (Type& object, const typename Type::element_type& operand) 
+operator |= (Type& object, const typename Type::value_type& operand) 
 { 
     return itl::add(object, operand); 
 }
 
 template <class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type
-operator | (Type object, const typename Type::element_type& operand) 
+operator | (Type object, const typename Type::value_type& operand) 
 { 
     return object += operand; 
 }
 
 template <class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type
-operator | (const typename Type::element_type& operand, Type object) 
+operator | (const typename Type::value_type& operand, Type object) 
 { 
     return object += operand; 
 }
@@ -212,7 +232,8 @@ template <class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type&
 operator |= (Type& object, const Type& operand) 
 { 
-    return Set::add(object, operand); 
+    return object += operand; 
+    //CL return Set::add(object, operand); 
 }
 
 template <class Type>
@@ -232,7 +253,7 @@ operator | (Type object, const Type& operand)
 template<class Type>
 typename enable_if<is_associative_element_container<Type>, 
                    std::pair<typename Type::iterator,bool> >::type
-insert(Type& object, const typename Type::element_type& operand)
+insert(Type& object, const typename Type::value_type& operand)
 {
     return object.insert(operand);
 }
@@ -241,7 +262,7 @@ template<class Type>
 typename enable_if<is_associative_element_container<Type>, 
                    typename Type::iterator>::type
 insert(Type& object, typename Type::iterator      prior, 
-               const typename Type::element_type& operand)
+               const typename Type::value_type& operand)
 {
     return object.insert(prior, operand);
 }
@@ -268,7 +289,7 @@ insert(Type& object, const Type& addend)
 //==============================================================================
 template<class Type>
 typename enable_if<is_associative_element_container<Type>, typename Type::size_type>::type
-erase(Type& object, const typename Type::domain_type& key_value)
+erase(Type& object, const typename Type::key_type& key_value)
 {
     typedef typename Type::size_type size_type;
     typename Type::iterator it_ = object.find(key_value);
@@ -297,14 +318,14 @@ erase(Type& object, const Type& erasure)
 //==============================================================================
 template <class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type&
-operator -= (Type& object, const typename Type::element_type& operand) 
+operator -= (Type& object, const typename Type::value_type& operand) 
 { 
     return itl::subtract(object, operand); 
 }
 
 template <class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type
-operator - (Type object, const typename Type::element_type& operand) 
+operator - (Type object, const typename Type::value_type& operand) 
 { 
     return object -= operand; 
 }
@@ -336,7 +357,7 @@ operator - (Type object, const Type& subtrahend)
 template<class Type>
 inline typename enable_if<is_associative_element_container<Type>, void>::type
 add_intersection(Type& section, const Type&              object, 
-                       const typename Type::domain_type& operand)
+                       const typename Type::key_type& operand)
 {
     typedef typename Type::const_iterator const_iterator;
     const_iterator it_ = object.find(operand);
@@ -350,10 +371,10 @@ add_intersection(Type& section, const Type&              object,
 template<class Type>
 inline typename enable_if<is_associative_element_container<Type>, void>::type
 add_intersection(Type& section, const Type& object, 
-                       const typename Type::key_object_type& operand)
+                 const typename key_container_type_of<Type>::type& operand)
 {
-    typedef typename Type::key_object_type key_object_type;
-    typedef typename key_object_type::const_iterator const_iterator;
+    typedef typename key_container_type_of<Type>::type key_container_type;
+    typedef typename key_container_type::const_iterator const_iterator;
     const_iterator common_lwb_, common_upb_;
     if(!Set::common_range(common_lwb_, common_upb_, operand, object))
         return;
@@ -368,7 +389,7 @@ add_intersection(Type& section, const Type& object,
 //------------------------------------------------------------------------------
 template<class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type&
-operator &= (Type& object, const typename Type::domain_type& operand)
+operator &= (Type& object, const typename Type::key_type& operand)
 { 
     Type section;
     add_intersection(section, object, operand);
@@ -378,27 +399,28 @@ operator &= (Type& object, const typename Type::domain_type& operand)
 
 template<class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type
-operator & (Type object, const typename Type::domain_type& operand)
+operator & (Type object, const typename Type::key_type& operand)
 {
     return object &= operand;
 }
 
 template<class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type
-operator & (const typename Type::domain_type& operand, Type object)
+operator & (const typename Type::key_type& operand, Type object)
 {
     return object &= operand;
 }
 
 template<class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type&
-operator &= (Type& object, const typename Type::key_object_type& operand)
+operator &= (Type& object, const typename key_container_type_of<Type>::type& operand)
 { 
     Type section;
     add_intersection(section, object, operand);
     object.swap(section);
     return object;
 }
+
 //------------------------------------------------------------------------------
 
 template<class Type, class CoType>
@@ -413,14 +435,14 @@ disjoint(const Type& left, const Type& right)
 //==============================================================================
 template<class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type
-operator ^ (Type object, const typename Type::element_type& operand)
+operator ^ (Type object, const typename Type::value_type& operand)
 {
     return itl::flip(object, operand);
 }
 
 template<class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type
-operator ^ (const typename Type::element_type& operand, Type object)
+operator ^ (const typename Type::value_type& operand, Type object)
 {
     return itl::flip(object, operand);
 }

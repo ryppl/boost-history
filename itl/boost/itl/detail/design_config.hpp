@@ -151,7 +151,7 @@ by setting defines in this file.
 //JODO find proper solution here
 #ifdef ITL_NEW_INTERVAL_IMPL
 #   ifdef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
-#       define ITL_discrt_INTERVAL_DEF itl::rightopen_interval
+#       define ITL_discrt_INTERVAL_DEF itl::closed_interval
 #       define ITL_contin_INTERVAL_DEF itl::rightopen_interval
 #   else
 #       define ITL_discrt_INTERVAL_DEF itl::discrete_interval

@@ -10,7 +10,7 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 
 #include <boost/itl/interval_set.hpp>
 
-
+/*CL after check
 template <class T, ITL_COMPARE Compare, 
           ITL_INTERVAL(ITL_COMPARE)  Interval>
 void interval_ctor_4_ordered_types()
@@ -142,6 +142,8 @@ void interval_ctor_4_bicremental_types()
 //    BOOST_CHECK_EQUAL( C3_7D,   C3_7D  );    
 //} 
 
+*/
+
 
 template <class DomainT, ITL_COMPARE Compare, 
           ITL_INTERVAL(ITL_COMPARE)  Interval>
@@ -156,6 +158,7 @@ void test_inner_complement(const ITL_INTERVAL_TYPE(Interval,DomainT,Compare)& it
     BOOST_CHECK_EQUAL(itl::length(inner_complement(itv2,itv1)), itl::distance(itv1,itv2));
     BOOST_CHECK_EQUAL(itl::length(inner_complement(itv2,itv1)), itl::distance(itv2,itv1));
 
+    IntervalT in_comp = inner_complement(itv1,itv2);
     ItvSetT itvset, inner_comp;
     itvset.add(itv1).add(itv2);
     ItvSetT hullset = ItvSetT(hull(itvset));
@@ -166,9 +169,35 @@ void test_inner_complement(const ITL_INTERVAL_TYPE(Interval,DomainT,Compare)& it
 
     BOOST_CHECK_EQUAL(inner_complement(itv1,itv2), inner_comp_itv);
     BOOST_CHECK_EQUAL(inner_complement(itv2,itv1), inner_comp_itv);
-    BOOST_CHECK_EQUAL(inner_comp.length(), itl::distance(itv1,itv2));
-    BOOST_CHECK_EQUAL(inner_comp.length(), itl::distance(itv2,itv1));
+    BOOST_CHECK_EQUAL(itl::length(inner_comp), itl::distance(itv1,itv2));
+    BOOST_CHECK_EQUAL(itl::length(inner_comp), itl::distance(itv2,itv1));
+
+    BOOST_CHECK(itl::disjoint(itv1, in_comp));
+    BOOST_CHECK(itl::disjoint(itv2, in_comp));
+
+    IntervalT itv1_comp = hull(itv1, in_comp);
+    IntervalT itv2_comp = hull(itv2, in_comp);
+
+    if(!itl::is_empty(in_comp))
+    {
+        BOOST_CHECK(itl::intersects(itv1_comp, in_comp));
+        BOOST_CHECK(itl::intersects(itv2_comp, in_comp));
+
+        BOOST_CHECK_EQUAL(itv1_comp & itv2_comp, in_comp);
+        BOOST_CHECK_EQUAL( itl::is_empty(itv1_comp & itv2_comp), itl::disjoint(itv1_comp, itv2_comp));
+        BOOST_CHECK_EQUAL(!itl::is_empty(itv1_comp & itv2_comp), itl::intersects(itv1_comp, itv2_comp));
+    }
 }
+
+template <class IntervalT>
+void test_inner_complement_(const IntervalT& itv1, const IntervalT& itv2)
+{
+    typedef typename interval_traits<IntervalT>::domain_type DomainT;
+    // For the test of plain interval types we assume that std::less is
+    // the compare functor
+    test_inner_complement<DomainT, std::less, IntervalT>(itv1, itv2);
+}
+
 
 
 #endif // __test_itl_interval_shared_hpp_JOFA_100306__

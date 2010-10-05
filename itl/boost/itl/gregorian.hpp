@@ -54,6 +54,13 @@ namespace boost{namespace itl
     };
 
     template<> 
+    struct has_difference<boost::gregorian::date> 
+    { 
+        typedef has_difference type;
+        BOOST_STATIC_CONSTANT(bool, value = true);
+    };  
+
+    template<> 
     struct difference_type_of<boost::gregorian::date> 
     { typedef boost::gregorian::date_duration type; };  
 

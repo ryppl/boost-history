@@ -9,7 +9,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #define BOOST_ITL_CONCEPT_INTERVAL_BOUNDS_HPP_JOFA_100927
 
 #include <boost/itl/interval_bounds.hpp>
-#include <boost/itl/type_traits/has_dynamic_bounds.hpp>
+//CL #include <boost/itl/type_traits/has_dynamic_bounds.hpp>
 
 namespace boost{namespace itl
 {

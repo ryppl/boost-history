@@ -16,7 +16,6 @@ namespace boost{ namespace itl
 template <typename Type>
 Type abs(Type val) { return val < 0 ? -val : val; }
 
-
 /// static class template for the size of a type's value
 /** This function is needed to be able to order values according
     to their size. This is used to e.g. prefer simple test
@@ -42,7 +41,7 @@ template<> inline std::size_t value_size<double>::apply(const double& value)
 
 template <typename Type> 
 inline std::size_t value_size<Type>::apply(const Type& value)
-{ return static_cast<int>(value.iterative_size()); }
+{ return itl::iterative_size(value); }
 
 
 

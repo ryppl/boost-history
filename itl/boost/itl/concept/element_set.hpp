@@ -24,7 +24,7 @@ namespace boost{ namespace itl
     value is added to the data value already found in the map. */
 template <class Type>
 typename enable_if<is_element_set<Type>, Type>::type&
-add(Type& object, const typename Type::element_type& operand)
+add(Type& object, const typename Type::value_type& operand)
 {
     object.insert(operand); 
     return object;
@@ -35,7 +35,7 @@ add(Type& object, const typename Type::element_type& operand)
 template <class Type>
 typename enable_if<is_element_set<Type>, typename Type::iterator>::type
 add(Type& object, typename Type::iterator prior, 
-    const typename Type::element_type& operand) 
+    const typename Type::value_type& operand) 
 { 
     return object.insert(prior, operand); 
 }
@@ -47,7 +47,7 @@ add(Type& object, typename Type::iterator prior,
     subtraced from the data value stored in the map. */
 template<class Type>
 typename enable_if<is_element_set<Type>, Type>::type&
-subtract(Type& object, const typename Type::element_type& operand)
+subtract(Type& object, const typename Type::value_type& operand)
 {
     object.erase(operand);
     return object;
@@ -86,7 +86,7 @@ intersects(const Type& object, const Type& operand)
 //==============================================================================
 template<class Type>
 inline typename enable_if<is_element_set<Type>, Type>::type&
-flip(Type& object, const typename Type::element_type& operand)
+flip(Type& object, const typename Type::value_type& operand)
 {
     typedef typename Type::iterator iterator;
     std::pair<iterator,bool> insertion = object.insert(operand);

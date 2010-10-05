@@ -11,6 +11,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/mpl/and.hpp> 
 #include <boost/mpl/or.hpp> 
 #include <boost/mpl/not.hpp> 
+#include <boost/itl/type_traits/is_container.hpp> 
 #include <boost/itl/type_traits/is_interval_container.hpp> 
 #include <boost/itl/type_traits/is_set.hpp> 
 
@@ -30,7 +31,10 @@ namespace boost{ namespace itl
     {
         typedef is_element_set<Type> type;
         BOOST_STATIC_CONSTANT(bool, value = 
-            (mpl::and_<is_set<Type>, mpl::not_<is_interval_container<Type> > >::value)
+            (mpl::or_< mpl::and_< is_set<Type>
+                                , mpl::not_<is_interval_container<Type> > > 
+                     , is_std_set<Type>
+                     >::value)
             );
     };
 

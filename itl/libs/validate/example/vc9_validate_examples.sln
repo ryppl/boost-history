@@ -45,8 +45,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_boostcon_law_validater"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_boostcon_abelian_monoids", "boostcon_abelian_monoids_\vc9_boostcon_abelian_monoids.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F4733}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_fastest_itl_map", "..\..\itl\test\fastest_itl_map_\vc9_fastest_itl_map.vcproj", "{DD9C9854-3882-42B9-BFA1-C6CEBFCE309B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -141,10 +139,6 @@ Global
 		{BF42574F-66E2-42DD-90D9-3A8FCE6F4733}.Debug|Win32.Build.0 = Debug|Win32
 		{BF42574F-66E2-42DD-90D9-3A8FCE6F4733}.Release|Win32.ActiveCfg = Release|Win32
 		{BF42574F-66E2-42DD-90D9-3A8FCE6F4733}.Release|Win32.Build.0 = Release|Win32
-		{DD9C9854-3882-42B9-BFA1-C6CEBFCE309B}.Debug|Win32.ActiveCfg = Debug|Win32
-		{DD9C9854-3882-42B9-BFA1-C6CEBFCE309B}.Debug|Win32.Build.0 = Debug|Win32
-		{DD9C9854-3882-42B9-BFA1-C6CEBFCE309B}.Release|Win32.ActiveCfg = Release|Win32
-		{DD9C9854-3882-42B9-BFA1-C6CEBFCE309B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

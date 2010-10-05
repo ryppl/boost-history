@@ -68,8 +68,8 @@ namespace boost{namespace itl
             {
             case RootType::itl_set: {
                     switch(domainChoice) {
-                    case DomainType::Int:    return new itl_set_validater<itl::set<int> >; 
-                    case DomainType::Double: return new itl_set_validater<itl::set<double> >; 
+                    case DomainType::Int:    return new itl_set_validater<std::set<int> >; 
+                    case DomainType::Double: return new itl_set_validater<std::set<double> >; 
                     default: return choiceError(ITL_LOCATION("\nRootType::itl_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }

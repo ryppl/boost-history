@@ -105,7 +105,7 @@ namespace boost{namespace itl
                     switch(codomainChoice) {
                     case CodomainType::Nat:     return new itl_order_validater<itl::map<int,nat,total_enricher> >;
                     case CodomainType::Int:     return new itl_order_validater<itl::map<int,int,partial_absorber> >;
-                    case CodomainType::set_int: return new itl_order_validater<itl::map<int,itl::set<int>,partial_enricher> >;
+                    case CodomainType::set_int: return new itl_order_validater<itl::map<int,std::set<int>,partial_enricher> >;
                     default: return choiceError(ITL_LOCATION("\nRootType::itl_map: codomainChoice:\n"),
                                                 codomainChoice, _codomainChoice);
                     }//switch codomain
@@ -114,7 +114,7 @@ namespace boost{namespace itl
                     switch(codomainChoice) {
                     case CodomainType::Nat:     return new itl_order_validater<itl::map<double,nat,partial_enricher> >; 
                     case CodomainType::Int:     return new itl_order_validater<itl::map<double,int,total_absorber> >; 
-                    case CodomainType::set_int: return new itl_order_validater<itl::map<double,itl::set<int>,partial_absorber> >;
+                    case CodomainType::set_int: return new itl_order_validater<itl::map<double,std::set<int>,partial_absorber> >;
                     default: return choiceError(ITL_LOCATION("\nRootType::itl_map: codomainChoice:\n"),
                                                 codomainChoice, _codomainChoice);
                     }//switch codomain
@@ -130,7 +130,7 @@ namespace boost{namespace itl
                     switch(codomainChoice) {
                     case CodomainType::Nat:     return new itl_order_validater<interval_map<int,nat,partial_absorber> >; 
                     case CodomainType::Int:     return new itl_order_validater<interval_map<int,int,total_enricher> >; 
-                    case CodomainType::set_int: return new itl_order_validater<interval_map<int,itl::set<int>,total_absorber> >; 
+                    case CodomainType::set_int: return new itl_order_validater<interval_map<int,std::set<int>,total_absorber> >; 
                     default: return choiceError(ITL_LOCATION("\nRootType::interval_map: codomainChoice:\n"),
                                                 codomainChoice, _codomainChoice);
                     }// switch codomain
@@ -138,7 +138,7 @@ namespace boost{namespace itl
                     switch(codomainChoice) {
                     case CodomainType::Nat:     return new itl_order_validater<interval_map<double,nat,total_absorber> >; 
                     case CodomainType::Int:     return new itl_order_validater<interval_map<double,int,partial_enricher> >; 
-                    case CodomainType::set_int: return new itl_order_validater<interval_map<double,itl::set<int>,total_enricher> >;
+                    case CodomainType::set_int: return new itl_order_validater<interval_map<double,std::set<int>,total_enricher> >;
                     default: return choiceError(ITL_LOCATION("\nRootType::interval_map: codomainChoice:\n"),
                                                 codomainChoice, _codomainChoice);
                     }// switch codomain
@@ -153,7 +153,7 @@ namespace boost{namespace itl
                     switch(codomainChoice) {
                     case CodomainType::Nat:     return new itl_order_validater<split_interval_map<int,nat,total_enricher> >; 
                     case CodomainType::Int:     return new itl_order_validater<split_interval_map<int,int,partial_absorber> >; 
-                    case CodomainType::set_int: return new itl_order_validater<split_interval_map<int,itl::set<int>,partial_enricher> >; 
+                    case CodomainType::set_int: return new itl_order_validater<split_interval_map<int,std::set<int>,partial_enricher> >; 
                     default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: codomainChoice:\n"),
                                                 codomainChoice, _codomainChoice);
                     }
@@ -161,7 +161,7 @@ namespace boost{namespace itl
                     switch(codomainChoice) {
                     case CodomainType::Nat:     return new itl_order_validater<split_interval_map<double,nat,partial_enricher> >; 
                     case CodomainType::Int:     return new itl_order_validater<split_interval_map<double,int,total_absorber> >; 
-                    case CodomainType::set_int: return new itl_order_validater<split_interval_map<double,itl::set<int>,partial_absorber> >;
+                    case CodomainType::set_int: return new itl_order_validater<split_interval_map<double,std::set<int>,partial_absorber> >;
                     default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: codomainChoice:\n"),
                                                 codomainChoice, _codomainChoice);
                 }

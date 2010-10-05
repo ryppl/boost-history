@@ -27,9 +27,11 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/interval_map.hpp>
 #include <boost/itl/split_interval_map.hpp>
 #include <boost/itl/detail/element_iterator.hpp>
+#include <boost/itl/ptime.hpp>
 #include <boost/itl/type_traits/is_key_container_of.hpp>
 #include <boost/itl/type_traits/codomain_type_of.hpp>
 #include <boost/itl/type_traits/is_icl_container.hpp>
+#include <boost/itl/type_traits/given.hpp>
 
 
 #include <boost/itl_xt/detail/bit_element_iterator.hpp>
@@ -198,6 +200,28 @@ BOOST_AUTO_TEST_CASE(casual)
 }
 */
 
+typedef bool (*void_2_bool)();
+bool callit(){ cout << "called\n"; return true; }
+bool nope(){ cout << "nope\n"; return false; }
+
+//template<class Type> struct functions
+//{
+//    typedef bool (*Type_to_bool)(Type);
+//};
+//
+//template<class Type>
+//bool minimum_is_less_than(Type value)
+//{
+//    cout << "minimum_is_less_than\n";
+//    return (numeric_limits<Type>::min)() < value; 
+//}
+//
+//template<class Type>
+//bool always_true(Type)
+//{ 
+//    cout << "always_true\n";
+//    return true; 
+//}
 
 BOOST_AUTO_TEST_CASE(casual)
 {
@@ -247,7 +271,30 @@ BOOST_AUTO_TEST_CASE(casual)
     BOOST_CHECK_EQUAL((is_floating_point<double>::value), true);
     BOOST_CHECK_EQUAL((is_floating_point<float>::value), true);
 
-    //BOOST_CHECK_EQUAL(xx, true); 
-                                
+
+    BOOST_CHECK( (is_same<key_type_of<std::set<int> >::type, int>::value) );
+    BOOST_CHECK( (is_same<value_type_of<std::set<int> >::type, int>::value) );
+
+    BOOST_CHECK_EQUAL( is_std_set<std::set<int> >::value,      true );
+    BOOST_CHECK_EQUAL( is_std_set<interval_set<int> >::value,  false);
+    BOOST_CHECK_EQUAL((is_std_set<std::map<int,int> >::value), false);
+    BOOST_CHECK_EQUAL( is_element_set<std::set<int> >::value,  true );
+    BOOST_CHECK_EQUAL( is_interval_set<std::set<int> >::value, false );
+
+    std::set<int> set_a, set_b, set_c;
+    itl::add(set_a, 1);
+    itl::add(set_a, 5);
+    set_b = set_a;
+    set_b += 7;
+    set_c += 3;
+    set_b += set_c;
+    cout << set_a << endl;
+    cout << set_b << endl;
+    add_intersection(set_c, set_a, set_b);
+    cout << set_c << endl;
+    itl::within(set_a, set_b);
+
+    itl::map<int,int> a, b;
+    within(a & b, a);
 }
 

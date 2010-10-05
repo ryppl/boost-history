@@ -131,8 +131,9 @@ struct map_val
     }
 };
 
+
 // Very short value denotation for intervals
-// Assumption typename T existes in scope
+// Assumption typename T and IntervalT exists in scope
 //I_I : [a,b]
 #define I_I(low,up) IntervalT::closed   (make<T>(low), make<T>(up))
 //I_D : [a,b)
@@ -141,6 +142,8 @@ struct map_val
 #define C_I(low,up) IntervalT::leftopen (make<T>(low), make<T>(up))
 //C_D : (a,b)
 #define C_D(low,up) IntervalT::open     (make<T>(low), make<T>(up))
+
+#define MK_I(ItvT,low,up) ItvT(make<T>(low), make<T>(up))
 
 #define MK_v(key)  make<T>(key)
 #define MK_u(key)  make<U>(key)

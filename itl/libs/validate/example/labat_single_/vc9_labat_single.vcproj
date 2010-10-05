@@ -119,7 +119,7 @@
 				Name="VCCLCompilerTool"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../../../../; ../../../../boost_1_35_0"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"

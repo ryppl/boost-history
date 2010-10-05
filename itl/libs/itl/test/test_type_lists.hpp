@@ -39,6 +39,18 @@ typedef unsigned short           bicremental_type_6;
 typedef          short           bicremental_type_7;
 typedef          float           bicremental_type_8;
 
+typedef ::boost::mpl::list<
+     short, int, long, long long
+    ,float, double, long double
+    ,boost::rational<int>
+> signed_bicremental_types;
+
+typedef          int             signed_bicremental_type_1;
+typedef          double          signed_bicremental_type_2;
+typedef boost::rational<int>     signed_bicremental_type_3;
+typedef          short           signed_bicremental_type_4;
+typedef          float           signed_bicremental_type_5;
+
 //DBG short list for debugging
 typedef ::boost::mpl::list<
     int
@@ -78,6 +90,24 @@ typedef boost_posix_time_ptime   discrete_type_2;
 typedef unsigned int             discrete_type_3;
 typedef short                    discrete_type_4;
 typedef unsigned int             discrete_type_5;
+
+typedef ::boost::mpl::list<
+     short, int, long
+> signed_discrete_types;
+
+typedef int                      signed_discrete_type_1;
+typedef short                    signed_discrete_type_2;
+typedef long                     signed_discrete_type_3;
+
+typedef ::boost::mpl::list<
+    float, double, long double
+    ,boost::rational<int>
+> numeric_continuous_types;
+
+typedef double               numeric_continuous_type_1;
+typedef float                numeric_continuous_type_2;
+typedef boost::rational<int> numeric_continuous_type_3;
+typedef long double          numeric_continuous_type_4;
 
 typedef ::boost::mpl::list<
     float, double, long double

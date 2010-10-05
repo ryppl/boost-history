@@ -55,15 +55,15 @@ public:
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
     }
 
-    domain_type lower()const{ return _lwb; }
-    domain_type upper()const{ return _upb; }
+    DomainT lower()const{ return _lwb; }
+    DomainT upper()const{ return _upb; }
 
-    domain_type first()const{ return _lwb; }
-    domain_type last() const{ return _upb; }
+    DomainT first()const{ return _lwb; }
+    DomainT last() const{ return _upb; }
 
 private:
-    domain_type _lwb;
-    domain_type _upb;
+    DomainT _lwb;
+    DomainT _upb;
 };
 
 
@@ -80,20 +80,32 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 
 
 //==============================================================================
+//=T closed_interval -> concept intervals
+//==============================================================================
+template<class DomainT, ITL_COMPARE Compare>
+struct interval_traits< itl::closed_interval<DomainT, Compare> >
+{
+    typedef DomainT domain_type;
+    typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
+    typedef itl::closed_interval<DomainT, Compare> interval_type;
+
+    static interval_type construct(const domain_type& lo, const domain_type& up)
+    {
+        return interval_type(lo, up);
+    }
+
+    static domain_type lower(const interval_type& inter_val){ return inter_val.lower(); };
+    static domain_type upper(const interval_type& inter_val){ return inter_val.upper(); };
+};
+
+//==============================================================================
 //= Type traits
 //==============================================================================
 template <class DomainT, ITL_COMPARE Compare> 
-struct is_interval<closed_interval<DomainT,Compare> >
+struct interval_bound_type< closed_interval<DomainT,Compare> >
 {
-    typedef is_interval<closed_interval<DomainT,Compare> > type;
-    BOOST_STATIC_CONSTANT(bool, value = true);
-};
-
-template <class DomainT, ITL_COMPARE Compare> 
-struct has_static_bounds<closed_interval<DomainT,Compare> >
-{
-    typedef has_static_bounds<closed_interval<DomainT,Compare> > type;
-    BOOST_STATIC_CONSTANT(bool, value = true);
+    typedef interval_bound_type type;
+    BOOST_STATIC_CONSTANT(unsigned char, value = interval_bounds::static_closed);
 };
 
 template <class DomainT, ITL_COMPARE Compare>

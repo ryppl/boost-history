@@ -15,9 +15,15 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/itl/concept/map_value.hpp>
 #include <boost/itl/detail/interval_map_algo.hpp>
+#include <boost/itl/concept/interval.hpp>
 
 namespace boost{ namespace itl
 {
+
+template<class Type> 
+typename enable_if<is_interval_container<Type>, Type>::type&
+join(Type&);
+
 
 //==============================================================================
 //= Containedness<IntervalMap>
@@ -204,7 +210,7 @@ typename enable_if<is_interval_map<Type>, Type>::type&
 erase(Type& object, const typename Type::domain_type& operand)
 {
     typedef typename Type::interval_type interval_type;
-    return itl::erase(object, itl::construct<interval_type>(operand));
+    return itl::erase(object, itl::singleton<interval_type>(operand));
 }
 
 //------------------------------------------------------------------------------

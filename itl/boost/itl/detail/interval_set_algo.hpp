@@ -235,7 +235,7 @@ inline void join_nodes(Type& object, typename Type::iterator& left_,
 {
     typedef typename Type::interval_type interval_type;
     interval_type right_interval = key_value<Type>(right_);
-    ((typename Type::base_type&)object).erase(right_); //JODO
+    object.erase(right_);
     const_cast<interval_type&>(key_value<Type>(left_)) 
         = hull(key_value<Type>(left_), right_interval);
 }

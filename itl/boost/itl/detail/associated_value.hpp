@@ -17,7 +17,7 @@ namespace boost{namespace itl
 {
 
 template<class Type, class CoType> 
-typename enable_if< mpl::and_< is_domain_compare_equal<Type,CoType>
+typename enable_if< mpl::and_< is_key_compare_equal<Type,CoType>
                              , mpl::and_<is_map<Type>, is_map<CoType> > >, 
                     bool>::type
 co_equal(typename Type::const_iterator left_, typename CoType::const_iterator right_, 
@@ -27,7 +27,7 @@ co_equal(typename Type::const_iterator left_, typename CoType::const_iterator ri
 }
 
 template<class Type, class CoType> 
-typename enable_if< mpl::and_< is_domain_compare_equal<Type,CoType>
+typename enable_if< mpl::and_< is_key_compare_equal<Type,CoType>
                              , mpl::not_<mpl::and_<is_map<Type>, is_map<CoType> > > >,
                   bool>::type
 co_equal(typename Type::const_iterator, typename CoType::const_iterator,
