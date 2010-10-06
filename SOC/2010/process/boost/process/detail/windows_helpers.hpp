@@ -47,7 +47,8 @@ namespace detail {
  *         the environment's content. This string is of the form
  *         var1=value1\\0var2=value2\\0\\0.
  */
-inline boost::shared_array<char> environment_to_windows_strings(environment &env)
+inline boost::shared_array<char> environment_to_windows_strings(environment
+    &env)
 {
     boost::shared_array<char> envp;
 
@@ -59,7 +60,8 @@ inline boost::shared_array<char> environment_to_windows_strings(environment &env
     else
     {
         std::string s;
-        for (environment::const_iterator it = env.begin(); it != env.end(); ++it)
+        for (environment::const_iterator it = env.begin(); it != env.end();
+            ++it)
         {
             s += it->first + "=" + it->second;
             s.push_back(0);
@@ -88,13 +90,15 @@ inline boost::shared_array<char> environment_to_windows_strings(environment &env
  *         shared_array object to ensure its release at some point.
  */
 template <class Arguments>
-inline boost::shared_array<char> collection_to_windows_cmdline(const Arguments &args)
+inline boost::shared_array<char> collection_to_windows_cmdline(const Arguments
+    &args)
 {
     typedef std::vector<std::string> arguments_t;
     arguments_t args2;
     typename Arguments::size_type i = 0;
     std::size_t size = 0;
-    for (typename Arguments::const_iterator it = args.begin(); it != args.end(); ++it)
+    for (typename Arguments::const_iterator it = args.begin(); it != args.end();
+        ++it)
     {
         std::string arg = *it;
 

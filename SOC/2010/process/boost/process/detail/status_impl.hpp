@@ -24,7 +24,9 @@
 
 #if defined(BOOST_POSIX_API)
 #   include <sys/types.h>
+#   include <signal.h>
 #   include <sys/wait.h>
+#   include <errno.h>
 #elif defined(BOOST_WINDOWS_API)
 #   include <windows.h>
 #else
@@ -80,6 +82,27 @@ private:
 class status_impl
 {
 public:
+#if defined(BOOST_WINDOWS_API)
+    template <typename Container>
+    void clear(Container &handles)
+    {
+        for (operations_type::iterator it = ops_.begin(); it != ops_.end();
+            ++it)
+        {
+            for (Container::iterator it2 = handles.begin(); it2 !=
+                handles.end(); ++it2)
+            {
+                if (*it2 == it->first)
+                {
+                    handles.erase(it2);
+                    break;
+                }
+            }
+            CloseHandle(it->first);
+        }
+    }
+#endif
+
     int wait(pid_type pid, boost::system::error_code &ec)
     {
 #if defined(BOOST_POSIX_API)

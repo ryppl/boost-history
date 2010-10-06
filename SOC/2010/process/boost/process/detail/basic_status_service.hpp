@@ -109,6 +109,12 @@ public:
             std::find(impls_.begin(), impls_.end(), impl);
         if (it != impls_.end())
             impls_.erase(it);
+#if defined(BOOST_WINDOWS_API)
+        interrupt_work_thread();
+        work_thread_cond_.wait(work_thread_mutex_);
+        impl->clear(handles_);
+        work_thread_cond_.notify_all();
+#endif
         impl.reset();
     }
 

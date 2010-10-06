@@ -41,8 +41,8 @@ namespace process {
  *
  * The \a handle class is a RAII model for native handles. This class wraps
  * one of such handles grabbing its ownership, and automaticaly closes it
- * upon destruction. It is basically used inside the library to avoid leaking
- * open handles, shall an unexpected execution trace occur.
+ * upon destruction. It is used to avoid leaking open handles, shall an
+ * unexpected execution trace occur.
  */
 class handle
 {
@@ -79,8 +79,9 @@ public:
      * Constructs a handle from a native handle.
      *
      * This constructor creates a new \a handle object that takes
-     * ownership of the given \a native handle. The user must not
-     * close \a native on his own during the lifetime of the new object.
+     * ownership of the given \a native handle. If \a close is set to
+     * handle::dont_close the \a native handle is not closed upon destruction.
+     * The user must not close \a native if it is owned by a \a handle object.
      * Ownership can be reclaimed using release().
      *
      * \see release()

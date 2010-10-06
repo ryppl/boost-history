@@ -755,18 +755,14 @@ BOOST_AUTO_TEST_CASE(test_posix_daemon)
 #if defined(BOOST_WINDOWS_API) 
 STARTUPINFOA sa; 
 
-class context : public bp::context 
+void setup(STARTUPINFOA &sainfo) 
 { 
-public: 
-    void setup(STARTUPINFOA &sainfo) 
-    { 
-        sa.dwFlags = sainfo.dwFlags |= STARTF_USEPOSITION | STARTF_USESIZE; 
-        sa.dwX = sainfo.dwX = 100; 
-        sa.dwY = sainfo.dwY = 200; 
-        sa.dwXSize = sainfo.dwXSize = 640; 
-        sa.dwYSize = sainfo.dwYSize = 480; 
-    } 
-}; 
+    sa.dwFlags = sainfo.dwFlags |= STARTF_USEPOSITION | STARTF_USESIZE; 
+    sa.dwX = sainfo.dwX = 100; 
+    sa.dwY = sainfo.dwY = 200; 
+    sa.dwXSize = sainfo.dwXSize = 640; 
+    sa.dwYSize = sainfo.dwYSize = 480; 
+} 
 
 BOOST_AUTO_TEST_CASE(test_windows) 
 { 
@@ -775,8 +771,9 @@ BOOST_AUTO_TEST_CASE(test_windows)
     std::vector<std::string> args; 
     args.push_back("windows-print-startupinfo"); 
 
-    context ctx; 
+    bp::context ctx; 
     ctx.streams[bp::stdout_id] = bpb::pipe(); 
+    ctx.setup = &setup; 
 
     bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 

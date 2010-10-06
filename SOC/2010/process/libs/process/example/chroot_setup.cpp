@@ -19,25 +19,22 @@
 #include <vector> 
 #include <unistd.h> 
 
-//[chroot_setup_context 
-class context : public boost::process::context 
+//[chroot_setup_function 
+void setup() 
 { 
-public: 
-    void setup(std::vector<bool> &closeflags) 
-    { 
-        chroot("/tmp"); 
-    } 
-}; 
+    chroot("/tmp"); 
+} 
 //] 
 
+//[chroot_setup_main 
 int main() 
 { 
-//[chroot_setup_main 
     std::string exe = boost::process::find_executable_in_path("hostname"); 
     std::vector<std::string> args; 
-    context ctx; 
+    boost::process::context ctx; 
+    ctx.setup = &setup; 
     boost::process::create_child(exe, args, ctx); 
-//] 
 } 
+//] 
 
 #endif 

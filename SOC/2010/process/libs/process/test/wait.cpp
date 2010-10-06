@@ -123,6 +123,8 @@ BOOST_AUTO_TEST_CASE(test_status_async_wait_twice)
     s.async_wait(c1.get_id(), handler); 
     ioservice.run(); 
 
+    ioservice.reset(); 
+
     bp::child c2 = bp::create_child(get_helpers_path(), args); 
     s.async_wait(c2.get_id(), handler); 
     ioservice.run(); 

@@ -20,9 +20,9 @@
 #include <vector> 
 #include <iostream> 
 
+//[file_descriptors_main 
 int main() 
 { 
-//[file_descriptors_main 
     std::string exe = boost::process::find_executable_in_path("dbus-daemon"); 
 
     std::vector<std::string> args = boost::assign::list_of("--fork")
@@ -41,7 +41,7 @@ int main()
 
     boost::process::pistream ispid(c.get_handle(4)); 
     std::cout << ispid.rdbuf() << std::endl; 
-//] 
 } 
+//] 
 
 #endif 

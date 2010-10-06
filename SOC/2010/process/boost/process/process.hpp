@@ -27,9 +27,9 @@
 #   include <sys/types.h>
 #   include <signal.h>
 #   include <sys/wait.h>
+#   include <errno.h>
 #elif defined(BOOST_WINDOWS_API)
 #   include <boost/process/handle.hpp>
-#   include <boost/shared_ptr.hpp>
 #   include <cstdlib>
 #   include <windows.h>
 #else
@@ -97,7 +97,7 @@ public:
      * Forces the termination of the process execution. Some platforms
      * allow processes to ignore some external termination notifications
      * or to capture them for a proper exit cleanup. You can set the
-     * \a force flag to true in them to force their termination regardless
+     * \a force flag to true to force their termination regardless
      * of any exit handler.
      *
      * After this call, accessing this object can be dangerous because the
@@ -154,19 +154,22 @@ public:
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("waitpid(2) failed");
         return status;
 #elif defined(BOOST_WINDOWS_API)
-        HANDLE h = OpenProcess(PROCESS_QUERY_INFORMATION | SYNCHRONIZE, FALSE, id_); 
+        HANDLE h = OpenProcess(PROCESS_QUERY_INFORMATION | SYNCHRONIZE, FALSE,
+            id_);
         if (h == NULL) 
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("OpenProcess() failed");
         if (WaitForSingleObject(h, INFINITE) == WAIT_FAILED)
         {
             CloseHandle(h);
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("WaitForSingleObject() failed");
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
+                "WaitForSingleObject() failed");
         }
         DWORD exit_code;
         if (!GetExitCodeProcess(h, &exit_code))
         {
             CloseHandle(h);
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("GetExitCodeProcess() failed");
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
+                "GetExitCodeProcess() failed");
         }
         if (!CloseHandle(h))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");

@@ -28,7 +28,7 @@ namespace process {
 /**
  * Stream type to differentiate between input and output streams.
  *
- * On POSIX systems another value unknown_stream is define. It is passed
+ * On POSIX systems another value unknown_stream is defined. It is passed
  * to stream behaviors for file descriptors greater than 2.
  */
 enum stream_type {

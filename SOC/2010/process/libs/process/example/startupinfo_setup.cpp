@@ -18,19 +18,15 @@
 #include <string> 
 #include <vector> 
 
-//[startupinfo_setup_context 
-class context : public boost::process::context 
+//[startupinfo_setup_function 
+void setup(STARTUPINFOA &sainfo) 
 { 
-public: 
-    void setup(STARTUPINFOA &sainfo) 
-    { 
-        sainfo.dwFlags |= STARTF_USEPOSITION | STARTF_USESIZE; 
-        sainfo.dwX = 0; 
-        sainfo.dwY = 0; 
-        sainfo.dwXSize = 640; 
-        sainfo.dwYSize = 480; 
-    } 
-}; 
+    sainfo.dwFlags |= STARTF_USEPOSITION | STARTF_USESIZE; 
+    sainfo.dwX = 0; 
+    sainfo.dwY = 0; 
+    sainfo.dwXSize = 640; 
+    sainfo.dwYSize = 480; 
+} 
 //] 
 
 //[startupinfo_setup_main 
@@ -38,7 +34,8 @@ int main()
 { 
     std::string exe = boost::process::find_executable_in_path("notepad"); 
     std::vector<std::string> args; 
-    context ctx; 
+    boost::process::context ctx; 
+    ctx.setup = &setup; 
     boost::process::create_child(exe, args, ctx); 
 } 
 //] 

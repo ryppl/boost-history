@@ -33,8 +33,6 @@
 #include <boost/process/pid_type.hpp>
 #include <boost/process/stream_id.hpp>
 #include <boost/process/handle.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/assert.hpp>
 #include <map>
 
 namespace boost {
@@ -60,12 +58,6 @@ public:
     /**
      * Creates a new child object that represents the just spawned child
      * process \a id.
-     *
-     * The \a fhstdin, \a fhstdout and \a fhstderr file handles represent
-     * the parent's handles used to communicate with the corresponding
-     * data streams. They needn't be valid but their availability must
-     * match the redirections configured by the launcher that spawned this
-     * process.
      *
      * This operation is only available on Windows systems.
      */

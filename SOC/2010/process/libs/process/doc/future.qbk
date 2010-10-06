@@ -17,8 +17,7 @@ Here's how such a program could look like:
     int main() 
     { 
         boost::process::parent p; 
-        boost::process::postream &os = p.get_stdin(); 
-        boost::process::pipe write_end(ioservice, os.handle().release()); 
+        boost::process::pipe write_end(ioservice, p.get_handle(boost::process::stdin_id).release()); 
         boost::asio::async_write(write_end, boost::asio::buffer("Hello, world!"), handler); 
         ioservice.run(); 
     } 

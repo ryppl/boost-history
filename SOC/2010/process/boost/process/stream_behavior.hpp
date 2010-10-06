@@ -135,8 +135,6 @@ private:
  * Stream behavior to redirect streams with a named pipe.
  *
  * A child process will be able to communicate with its parent process.
- * On Windows this stream behavior must be used for asynchronous I/O (as only
- * named pipes support asynchronous I/O on Windows).
  */
 class named_pipe
 {
@@ -218,7 +216,7 @@ private:
  * stream behavior is provided for convenience. It uses the minimum required
  * pipe type on a platform in order to be able to use asynchronous I/O.
  */
-#if defined(BOOST_POSIX_API)
+#if defined(BOOST_POSIX_API) || defined(BOOST_PROCESS_DOXYGEN)
 typedef pipe async_pipe;
 #elif defined(BOOST_WINDOWS_API)
 class async_pipe

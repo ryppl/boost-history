@@ -101,7 +101,8 @@ public:
 
         char *ms_environ = GetEnvironmentStrings();
         if (!ms_environ)
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("GetEnvironmentStrings() failed");
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
+                "GetEnvironmentStrings() failed");
         try
         {
             char *env = ms_environ;
@@ -158,7 +159,8 @@ public:
         BOOST_ASSERT(MAX_PATH > 0);
         char cwd[MAX_PATH];
         if (!GetCurrentDirectoryA(sizeof(cwd), cwd))
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("GetCurrentDirectory() failed");
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
+                "GetCurrentDirectory() failed");
         BOOST_ASSERT(cwd[0] != '\0');
         return cwd;
 #endif

@@ -273,7 +273,8 @@ inline child create_child(const std::string &executable, Arguments args,
             }
         }
 
-        ctx.setup(closeflags);
+        if (ctx.setup)
+            ctx.setup();
 
         for (std::size_t i = 0; i < closeflags.size(); ++i)
         {
@@ -316,7 +317,8 @@ inline child create_child(const std::string &executable, Arguments args,
     startup_info.hStdOutput = handles[stdout_id].child.native();
     startup_info.hStdError = handles[stderr_id].child.native();
 
-    ctx.setup(startup_info);
+    if (ctx.setup)
+        ctx.setup(startup_info);
 
     PROCESS_INFORMATION pi;
     ZeroMemory(&pi, sizeof(pi));
@@ -339,7 +341,7 @@ inline child create_child(const std::string &executable, Arguments args,
 
     handle hprocess(pi.hProcess);
 
-    if (CloseHandle(pi.hThread) == 0)
+    if (!CloseHandle(pi.hThread))
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");
 
     std::map<stream_id, handle> parent_ends;

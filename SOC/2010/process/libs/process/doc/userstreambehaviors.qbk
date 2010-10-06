@@ -2,14 +2,10 @@
 
 When creating a child process its standard streams must be configured. By default, standard streams are inherited. Boost.Process provides various stream behaviors to change the default configuration. However as developers might want to do something else with standard streams it's possible to create new stream behaviors. 
 
-In order to create a new stream behavior a class must be derived from _behavior_stream_. There are two virtual member functions inherited which can be overridden: _behavior_stream_get_child_end_ and _behavior_stream_get_parent_end_. These functions return the stream ends for the child and the parent process. The type of the stream ends is _handle_. 
-
 The following code defines a stream behavior class `redirect_to` which can be used to redirect streams. 
 
 [import ../example/redirect_to.cpp]
 [redirect_to_stream]
-
-[caution When you create a stream behavior like `redirect_to` whose constructor expects a handle as a parameter don't save the handle directly. If an existing handle should be reused it must be duplicated. Stream behavior instances own resources and must not share handles.]
 
 The following program uses `redirect_to` to redirect the standard error stream of a child process to its standard output stream. 
 

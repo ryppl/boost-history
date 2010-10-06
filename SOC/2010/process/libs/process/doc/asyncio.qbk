@@ -5,7 +5,7 @@ Just like the streams from the C++ standard _pistream_ and _postream_ only suppo
 [import ../example/async_io.cpp]
 [async_io]
 
-Asynchronous I/O operations are based on Boost.Asio. As _pipe_ is an I/O object it must be initialized with an I/O service object. In order to connect the I/O object to a stream the handle of a stream must also be passed to the constructor of _pipe_. 
+Asynchronous I/O operations are based on Boost.Asio. As _pipe_ is an I/O object it must be initialized with an I/O service object. In order to connect the I/O object a handle must also be passed to the constructor of _pipe_. 
 
 The _handle_ class is a wrapper for a file descriptor on POSIX and a HANDLE on Windows systems. Boost.Process provides the class to avoid leaking handles as the destructor closes them automatically. As both objects of type _handle_ and _pipe_ own handles _handle_release_ must be called to pass ownership of the native handle from the _handle_ instance to the _pipe_ instance. 
 

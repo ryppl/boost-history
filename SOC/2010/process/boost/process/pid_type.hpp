@@ -37,7 +37,7 @@ namespace process {
  *
  * Each operating system identifies processes using a specific type.
  * The \a pid_type type is used to transparently refer to a process
- * regardless of the operating system in which this class is used.
+ * regardless of the operating system.
  *
  * This type is guaranteed to be an integral type on all supported
  * platforms. On POSIX systems it is defined as pid_t, on Windows systems as

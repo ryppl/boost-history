@@ -1,11 +1,11 @@
 [section:windows Windows extensions]
 
-_context_setup_ can be used to configure a child process using Windows specific options. On Windows a reference to a `STARTUPINFOA` object is passed to _context_setup_. If a new context class is created and derived from _context_ the `STARTUPINFOA` object which is used by Boost.Process to start a new process can be configured. 
+`context::setup` can be used to configure a child process using Windows specific options. On Windows a reference to a `STARTUPINFOA` object is passed to `context::setup`. 
 
 [import ../example/startupinfo_setup.cpp]
-[startupinfo_setup_context]
+[startupinfo_setup_function]
 
-The `context` class sets window position and size as a hint. It can be used to lanch Notepad for example. 
+Here window position and size are set (as a hint) and Notepad is launched. 
 
 [startupinfo_setup_main]
 

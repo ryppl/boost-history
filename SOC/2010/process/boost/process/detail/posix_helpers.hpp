@@ -21,10 +21,11 @@
 #define BOOST_PROCESS_POSIX_HELPERS_HPP
 
 #include <boost/process/config.hpp>
-#include <boost/process/environment.hpp> 
+#include <boost/process/environment.hpp>
 #include <string>
-#include <utility> 
-#include <cstring> 
+#include <utility>
+#include <cstring>
+#include <cstddef>
 
 namespace boost {
 namespace process {
@@ -50,19 +51,20 @@ namespace detail {
  *         string of the form var=value. The caller is responsible for
  *         freeing them.
  */
-inline std::pair<std::size_t, char**> environment_to_envp(const environment &env)
+inline std::pair<std::size_t, char**> environment_to_envp(const environment
+    &env)
 {
     std::size_t nargs = env.size();
-    char **envp = new char*[nargs + 1]; 
-    environment::size_type i = 0; 
-    for (environment::const_iterator it = env.begin(); it != env.end(); ++it) 
-    { 
-        std::string s = it->first + "=" + it->second; 
-        envp[i] = new char[s.size() + 1]; 
-        std::strncpy(envp[i], s.c_str(), s.size() + 1); 
-        ++i; 
-    } 
-    envp[i] = 0; 
+    char **envp = new char*[nargs + 1];
+    environment::size_type i = 0;
+    for (environment::const_iterator it = env.begin(); it != env.end(); ++it)
+    {
+        std::string s = it->first + "=" + it->second;
+        envp[i] = new char[s.size() + 1];
+        std::strncpy(envp[i], s.c_str(), s.size() + 1);
+        ++i;
+    }
+    envp[i] = 0;
     return std::pair<std::size_t, char**>(nargs, envp);
 }
 
@@ -86,7 +88,8 @@ inline std::pair<std::size_t, char**> collection_to_argv(const Arguments &args)
     std::size_t nargs = args.size();
     char **argv = new char*[nargs + 1];
     typename Arguments::size_type i = 0;
-    for (typename Arguments::const_iterator it = args.begin(); it != args.end(); ++it)
+    for (typename Arguments::const_iterator it = args.begin(); it != args.end();
+        ++it)
     {
         argv[i] = new char[it->size() + 1];
         std::strncpy(argv[i], it->c_str(), it->size() + 1);

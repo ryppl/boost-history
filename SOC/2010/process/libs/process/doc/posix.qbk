@@ -1,25 +1,23 @@
 [section:posix POSIX extensions]
 
-_context_setup_ is an extension point to setup a child process calling platform specific functions. On POSIX systems _context_setup_ is invoked after _fork_ has been called but before _execve_ is called. _context_setup_ is executed within the child process only. 
+`context::setup` is an extension point to setup a child process calling platform specific functions. On POSIX systems `context::setup` is invoked after _fork_ has been called but before _execve_ is called. `context::setup` is executed within the child process only. 
 
-In order to inject code into _context_setup_ a new context class has to be defined and derived from _context_. Then one can call for example _chroot_ to change the root directory of the new process. 
+First define a function which configures a new child process. The function could for example call _chroot_ to change the root directory. 
 
 [import ../example/chroot_setup.cpp]
-[chroot_setup_context]
+[chroot_setup_function]
 
-The new `context` class is used like _context_. 
+Then bind the function to `context::setup`. 
 
 [chroot_setup_main]
 
-[caution When you override _context_setup_ in a multi-threaded application you must not call any function which is not async-signal-safe. Calling non-async-signal-safe functions between _fork_ and _execve_ is undefined behavior in multi-threaded applications. If you must call non-async-signal-safe functions prior to calling _execve_ (because you want to change the root directory with _chroot_ for example) you must create a singlethreaded wrapper process which can safely call non-async-signal-safe function. For more information have a look at the man page of _fork_.]
+[caution When you use `context::setup` in a multi-threaded application you must not call any function which is not async-signal-safe. Calling non-async-signal-safe functions between _fork_ and _execve_ is undefined behavior in multi-threaded applications. If you must call non-async-signal-safe functions prior to calling _execve_ (because you want to change the root directory with _chroot_ for example) you must create a singlethreaded wrapper process which can safely call non-async-signal-safe function. For more information have a look at the man page of _fork_.]
 
-As you see in the example above a reference to a `std::vector<bool>` is passed to _context_setup_. The flags are used to configure which file descriptors should be closed before _execve_ is called. The flags at the indexes 0, 1 and 2 are set according to the standard stream behaviors. If the child process should inherit additional file descriptors you can change the flags. 
+While not really an extension point it is possible to configure more than the standard streams for child processes on POSIX platforms. 
 
 [import ../example/file_descriptors_setup.cpp]
-[file_descriptors_context]
-
-This example uses the D-Bus message bus daemon to write data to the file descriptors 3 and 4. In order to read the data in the parent process those file descriptors not only must not be closed. The parent process must also use stream objects and initialize them with the read ends of the pipes. 
-
 [file_descriptors_main]
+
+This example uses the D-Bus message bus daemon to write data to the file descriptors 3 and 4. As on POSIX platforms a child's streams can be identified via integers configuring arbitrary many streams is possible. 
 
 [endsect]

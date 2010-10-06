@@ -23,7 +23,6 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#   include <vector>
 #   include <unistd.h>
 #elif defined(BOOST_WINDOWS_API)
 #   include <windows.h>
@@ -105,39 +104,24 @@ struct context
 #endif
     }
 
-#if defined(BOOST_PROCESS_DOXYGEN)
+#if defined(BOOST_POSIX_API) || defined(BOOST_PROCESS_DOXYGEN)
     /**
      * Setups a child process.
      *
      * This is an extension point to support more configuration options for
-     * child processes. You override setup() in a user-defined context class
-     * which should be derived from this class.
+     * child processes. You can initialize \a setup with a user-defined function
+     * which is called when a child process is created.
      *
      * On POSIX platforms setup() is called in the child process. That's why in
      * a multithreaded application only async-signal-safe functions must be
-     * called in setup(). A reference to a std::vector<bool> is passed which
-     * is used to decide which file descriptors to close in the child process.
-     * While the std::vector<bool> is automatically setup for standard streams
-     * developers can change flags to avoid the library closing other file
-     * descriptors.
+     * called in the function \a setup is bound to.
      *
      * On Windows platforms setup() is called in the parent process. A
      * reference to a STARTUPINFOA structure is passed as parameter.
      */
-    void setup()
-    {
-    }
-#elif defined(BOOST_POSIX_API)
-    void setup(std::vector<bool> &closeflags)
-    {
-    }
+    boost::function<void ()> setup;
 #elif defined(BOOST_WINDOWS_API)
-    void setup(STARTUPINFOA &sainfo)
-    {
-#if defined(BOOST_MSVC)
-        sainfo;
-#endif
-    }
+    boost::function<void (STARTUPINFOA&)> setup;
 #endif
 };
 
