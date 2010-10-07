@@ -94,8 +94,8 @@ struct print_layout_all
       std::size_t
     padding_all
     ;
-    print_layout_all(void)
-    : padding_all(0)
+    print_layout_all(std::size_t a_padding=0)
+    : padding_all(a_padding)
     {}
         typedef
       components_aligned_yes::layout_data<>
@@ -167,7 +167,7 @@ struct print_layout_all
         <<"aligned size="
         <<aligned_offset::value
         <<"\n";
-      print_layout_all pla;
+      print_layout_all pla(aligned_offset::value-Composed::size);
       Composed composed;
       pla(composed);
     }
