@@ -9,6 +9,7 @@
 //
 //#include <boost/composite_storage/pack/container_all_of_aligned.hpp>
 #include <boost/composite_storage/pack/container_one_of_maybe.hpp>
+#include <boost/composite_storage/pack/container_all_of_aligned.hpp>
 
 #include <boost/iostreams/utility/indent_scoped_ostreambuf.hpp>
 #include <iostream>
@@ -446,7 +447,7 @@ void test(void)
           
     }
 #endif    
-#if 0
+#if 1
     ind_out<<"object_number="<<object_number<<"\n";
     {    
         trace_scope ts("all_of_aligned composite_storage TESTS");
@@ -492,7 +493,7 @@ void test(void)
         ;
     }
 #endif
-#if 0
+#if 1
     ind_out<<"object_number="<<object_number<<"\n";
     {    
         trace_scope ts("all_of_aligned min end pad DEMO");
