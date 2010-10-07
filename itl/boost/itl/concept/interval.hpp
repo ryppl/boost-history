@@ -126,23 +126,24 @@ singleton(const typename interval_traits<Type>::domain_type& value)
 //= Construct<Interval> multon
 //==============================================================================
 template<class Type>
-typename enable_if<is_asymmetric_interval<Type>, Type>::type
+typename enable_if<has_static_bounds<Type>, Type>::type
+construct(const typename interval_traits<Type>::domain_type& low,
+          const typename interval_traits<Type>::domain_type& up  )
+//CL          interval_bounds bounds = interval_bounds::right_open())
+{
+    return interval_traits<Type>::construct(low, up);
+}
+
+/*CL
+template<class Type>
+typename enable_if<has_symmetric_bounds<Type>, Type>::type
 construct(const typename interval_traits<Type>::domain_type& low,
           const typename interval_traits<Type>::domain_type& up,
           interval_bounds bounds = interval_bounds::right_open())
 {
     return interval_traits<Type>::construct(low, up);
 }
-
-template<class Type>
-typename enable_if<has_symmetric_bounds<Type>, Type>::type
-construct(const typename interval_traits<Type>::domain_type& low,
-          const typename interval_traits<Type>::domain_type& up,
-          interval_bounds bounds = interval_bounds::right_open()) //JODO URG 3rd param for dynamic only
-{
-    return interval_traits<Type>::construct(low, up);
-}
-
+*/
 
 template<class Type>
 typename enable_if<has_dynamic_bounds<Type>, Type>::type
@@ -870,7 +871,7 @@ cardinality(const Type& object)
 {
     typedef typename size_type_of<interval_traits<Type> >::type SizeT;
     return itl::is_empty(object) ? neutron<SizeT>::value()
-                                 : last_next(object) - first(object);
+                                 : static_cast<SizeT>(last_next(object) - first(object));
 }
 
 template<class Type>
@@ -892,7 +893,7 @@ cardinality(const Type& object)
 {
     typedef typename size_type_of<interval_traits<Type> >::type SizeT;
     return itl::is_empty(object) ? neutron<SizeT>::value()
-                                 : last_next(object) - first(object);
+                                 : static_cast<SizeT>(last_next(object) - first(object));
 }
 
 template<class Type>
@@ -902,7 +903,7 @@ cardinality(const Type& object)
 {
     typedef typename size_type_of<interval_traits<Type> >::type SizeT;
     return itl::is_empty(object) ? neutron<SizeT>::value()
-                                 : last_next(object) - first(object);
+                                 : static_cast<SizeT>(last_next(object) - first(object));
 }
 
 

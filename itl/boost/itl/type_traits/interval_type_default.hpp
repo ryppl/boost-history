@@ -37,59 +37,6 @@ namespace boost{ namespace itl
 #endif
     };
 
-
-    //-----------------------------------------------------------------------------
-    //-----------------------------------------------------------------------------
-/*JODO
-    template<class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
-    struct use_static_interval_borders
-    {
-        typedef use_static_interval_borders type;
-        BOOST_STATIC_CONSTANT(bool, value = false);
-
-    }
-
-    template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)
-              bool StaticBorders = use_static_interval_borders<DomainT, Compare>,
-              bool HasContinuousDomain = is_continuous<DomainT> > 
-    struct interval_type_default;
-
-
-    template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)
-              bool HasContinuousDomain = is_continuous<DomainT>     > 
-    struct interval_type_default<DomainT, Compare, true, HasContinuousDomain>
-    {
-        typedef rightopen_interval<DomainT,Compare> type;
-    };
-
-    template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT) >
-    struct interval_type_default<DomainT, Compare, false, true>
-    {
-        typedef continuous_interval<DomainT,Compare> type;
-    };
-
-    template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT) >
-    struct interval_type_default<DomainT, Compare, false, false>
-    {
-        typedef discrete_interval<DomainT,Compare> type;
-    };
-
-
-
-
-    template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)> 
-    struct interval_type_default
-    {
-        typedef
-            typename mpl::if_< use_static_interval_borders<DomainT>
-                             , rightopen_interval<DomainT,Compare>
-                             , typename mpl::if_< is_continuous<DomainT>
-                                                , continuous_interval<DomainT,Compare>
-                                                ,   discrete_interval<DomainT,Compare> >::type >::type type;
-    };
-
-*/
-
 }} // namespace boost itl
 
 #endif

@@ -444,10 +444,10 @@ private:
 
     template<class Type>
     struct on_codomain_model<Type, true, false>
-    {                // !codomain_is_set, !absorbs_neutrons
+    {               // !codomain_is_set, !absorbs_neutrons
         typedef typename Type::inverse_codomain_intersect inverse_codomain_intersect;
-        static void subtract(Type& object, typename Type::iterator       it_, 
-                                     const typename Type::codomain_type& co_value)
+        static void subtract(Type&, typename Type::iterator       it_, 
+                              const typename Type::codomain_type& co_value)
         { 
             inverse_codomain_intersect()(it_->second, co_value); 
         }
@@ -455,7 +455,7 @@ private:
 
     template<class Type>
     struct on_codomain_model<Type, true, true>
-    {                // !codomain_is_set, absorbs_neutrons
+    {               // !codomain_is_set, absorbs_neutrons
         typedef typename Type::inverse_codomain_intersect inverse_codomain_intersect;
         static void subtract(Type& object, typename Type::iterator       it_, 
                                      const typename Type::codomain_type& co_value)

@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+    
-Copyright (c) 2008-2009: Joachim Faulhaber
+Copyright (c) 2008-2010: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
@@ -12,15 +12,20 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 template <class T, class IntervalT> 
 void discrete_interval_traits()
 {
-    //JODO gcc? BOOST_CHECK_EQUAL(is_interval<IntervalT>::value, true);
-    //JODO..
+#ifdef BOOST_MSVC 
+    BOOST_CHECK_EQUAL(is_interval<IntervalT>::value,                          true );
+    BOOST_CHECK_EQUAL(is_discrete_interval<IntervalT>::value,                 true );
+    BOOST_CHECK_EQUAL(is_discrete<typename IntervalT::domain_type>::value,    true );
+    BOOST_CHECK_EQUAL(is_continuous<typename IntervalT::domain_type>::value,  false);
+    BOOST_CHECK_EQUAL(has_dynamic_bounds<IntervalT>::value,                   true );
+    BOOST_CHECK_EQUAL(has_static_bounds<IntervalT>::value,                    false);
+#endif                        
 }
 
 template <class T, class IntervalT> 
 void discrete_interval_ctor__dis_4_dyn_v_sta() // discrete && (dynamic or static)
 {
     BOOST_CHECK_EQUAL( IntervalT(MK_v(3)), IntervalT(MK_v(3)) );
-    //JODO BOOST_CHECK_EQUAL( itl::contains(IntervalT(MK_v(0)), MK_v(0)), true );  nicht für alle (l,u]
     BOOST_CHECK_EQUAL( itl::contains(IntervalT(MK_v(1)), MK_v(1)), true ); 
 }
 

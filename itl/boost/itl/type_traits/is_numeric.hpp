@@ -28,7 +28,7 @@ struct is_numeric<std::complex<Type> >
 };
 
 //--------------------------------------------------------------------------
-//JODO move
+/*CL
 namespace aux
 {
     template<class Type> struct functions
@@ -36,7 +36,7 @@ namespace aux
         typedef bool (*Type_to_bool)(const Type&);
     };
 };
-
+*/
 template<class Type, bool Enable = false> struct numeric_minimum;
 
 template<class Type> 

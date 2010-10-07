@@ -159,7 +159,21 @@ template <class Type>
 inline typename enable_if<is_element_map<Type>, Type>::type&
 operator -= (Type& object, const typename Type::set_type& operand) 
 { 
-    return Set::erase(object, operand);
+    typedef typename Type::set_type           set_type;
+    typedef typename set_type::const_iterator co_iterator;
+    typedef typename Type::iterator           iterator;
+
+    co_iterator common_lwb_, common_upb_;
+    if(!Set::common_range(common_lwb_, common_upb_, operand, object))
+        return object;
+
+    co_iterator it_ = common_lwb_;
+    iterator    common_;
+
+    while(it_ != common_upb_)
+        object.erase(*it_++);
+
+    return object;
 }
 
 template <class Type>
@@ -402,8 +416,6 @@ operator ^= (Type& object, const typename Type::element_type& operand)
     return itl::flip(object, operand);
 }
 
-/** Symmetric subtract map \c x2 and \c *this.
-    So \c *this becomes the symmetric difference of \c *this and \c x2 */
 template<class Type>
 inline typename enable_if< mpl::and_< is_element_map<Type>
                                     , mpl::not_<is_total<Type> > > 

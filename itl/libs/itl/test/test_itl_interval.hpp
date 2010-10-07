@@ -30,8 +30,6 @@ void interval_ctor_4_ordered_types()
 
     BOOST_CHECK_EQUAL(IntervalT(), IntervalT());
     BOOST_CHECK_EQUAL(IntervalT(), IntervalT(lower_bound, itl::neutron<T>::value()));
-
-    //BOOST_CHECK_EQUAL(IntervalT(), IntervalT(itl::unon<T>::value(), itl::neutron<T>::value(), closed_bounded));
 }
 
 /*JODO

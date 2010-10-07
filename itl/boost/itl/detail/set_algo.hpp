@@ -63,7 +63,7 @@ bool common_range(IteratorT& lwb, IteratorT& upb, ObjectT& x1, const ConstObject
     return true;
 }
 
-//JODO needed
+/*CL
 template<class ObjectT, class CoObjectT>
 ObjectT& erase(ObjectT& result, const CoObjectT& x2)
 {
@@ -80,12 +80,12 @@ ObjectT& erase(ObjectT& result, const CoObjectT& x2)
 
     return result;
 }
-
+*/
 
 /** Function template <tt>contained_in</tt> implements the subset relation. 
 <tt>contained_in(sub, super)</tt> is true if <tt>sub</tt> is contained in <tt>super</tt> */
 template<class SetType>
-bool within(const SetType& sub, const SetType& super)
+inline bool within(const SetType& sub, const SetType& super)
 {
     if(&super == &sub)                   return true;
     if(itl::is_empty(sub))               return true;
@@ -123,6 +123,7 @@ bool intersects(const SetType& left, const SetType& right)
     return false;    
 }
 
+/*CL
 template<class SetType>
 inline bool is_disjoint(const SetType& left, const SetType& right)
 {
@@ -140,7 +141,7 @@ void flip(SetType& result, const SetType& x2)
             result.erase(insertion.first);
     }
 }
-
+*/
 
 #ifdef BOOST_MSVC 
 #pragma warning(push)
@@ -150,7 +151,7 @@ void flip(SetType& result, const SetType& x2)
 /** Function template <tt>lexicographical_equal</tt> implements 
     lexicographical equality. */
 template<class SetType>
-bool lexicographical_equal(const SetType& left, const SetType& right)
+inline bool lexicographical_equal(const SetType& left, const SetType& right)
 {
     if(&left == &right)
         return true;

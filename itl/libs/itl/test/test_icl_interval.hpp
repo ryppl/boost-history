@@ -57,7 +57,9 @@ void singelizable_interval_4_ordered_types()
     T t_1     = itl::unon<T>::value();
     SizeT s_1 = itl::unon<SizeT>::value();
 
-    //JODO gcc BOOST_CHECK_EQUAL( itl::is_singelizable<IntervalT>::value, true ); 
+#ifdef BOOST_MSVC 
+    BOOST_CHECK_EQUAL( is_singelizable<IntervalT>::value, true ); 
+#endif                        
 
     BOOST_CHECK_EQUAL( itl::cardinality(itl::singleton<IntervalT>(t_0)), s_1 ); 
     BOOST_CHECK_EQUAL(        itl::size(itl::singleton<IntervalT>(t_0)), s_1 ); 
@@ -76,12 +78,13 @@ void singelizable_interval_4_bicremental_types()
     //T t_0     = itl::neutron<T>::value();
     SizeT s_1 = itl::unon<SizeT>::value();
 
-    //JODO gcc BOOST_CHECK_EQUAL( itl::is_singelizable<IntervalT>::value, true ); 
+#ifdef BOOST_MSVC 
+    BOOST_CHECK_EQUAL( is_singelizable<IntervalT>::value, true ); 
+#endif                        
 
     BOOST_CHECK_EQUAL( itl::cardinality(IntervalT(MK_v(3))), s_1 ); 
     BOOST_CHECK_EQUAL(        itl::size(IntervalT(MK_v(4))), s_1 ); 
     BOOST_CHECK_EQUAL( itl::singleton<IntervalT>(MK_v(2)), itl::singleton<IntervalT>(MK_v(2)) );
-    //JODO BOOST_CHECK_EQUAL( itl::contains(IntervalT(MK_v(0)), MK_v(0)), true );  nicht für alle (l,u]
     BOOST_CHECK_EQUAL( itl::contains(IntervalT(MK_v(1)), MK_v(1)), true ); 
 }
 

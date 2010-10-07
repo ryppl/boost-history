@@ -28,7 +28,7 @@ template <class Type> struct is_interval
         value = (interval_bound_type<Type>::value < interval_bounds::undefined)); 
 };
 
-//JODO separate. Consider introducing interval_trais.
+
 template <class Type> struct has_static_bounds
 { 
     typedef has_static_bounds<Type> type;
@@ -36,7 +36,7 @@ template <class Type> struct has_static_bounds
         value = (interval_bound_type<Type>::value < interval_bounds::dynamic)); 
 };
 
-template <class Type> struct has_dynamic_bounds //JODO rearrange for all those predicates.
+template <class Type> struct has_dynamic_bounds
 { 
     typedef has_dynamic_bounds<Type> type;
     BOOST_STATIC_CONSTANT(bool, 

@@ -148,21 +148,6 @@ by setting defines in this file.
 #endif
 
 //------------------------------------------------------------------------------
-//JODO find proper solution here
-#ifdef ITL_NEW_INTERVAL_IMPL
-#   ifdef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
-#       define ITL_discrt_INTERVAL_DEF itl::closed_interval
-#       define ITL_contin_INTERVAL_DEF itl::rightopen_interval
-#   else
-#       define ITL_discrt_INTERVAL_DEF itl::discrete_interval
-#       define ITL_contin_INTERVAL_DEF itl::continuous_interval
-#   endif
-#else
-#   define ITL_discrt_INTERVAL_DEF itl::interval
-#   define ITL_contin_INTERVAL_DEF itl::interval
-#endif
-
-//------------------------------------------------------------------------------
 #define ITL_ALLOC    template<class>class
 
 //------------------------------------------------------------------------------

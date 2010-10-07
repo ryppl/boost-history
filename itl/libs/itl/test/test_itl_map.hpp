@@ -125,9 +125,9 @@ void itl_map_inclusion_compare_4_bicremental_types()
     BOOST_CHECK_EQUAL( inclusion_compare(map_a, map_c), inclusion::unrelated );
 
     SetT set_sub_a, set_a, set_a2, set_b, set_c;
-    map_a.domain(set_a);
-    map_a2.domain(set_a2);
-    map_sub_a.domain(set_sub_a);
+    itl::domain(set_a,     map_a);
+    itl::domain(set_a2,    map_a2);
+    itl::domain(set_sub_a, map_sub_a);
 
     BOOST_CHECK_EQUAL( inclusion_compare(MapT(), SetT()), inclusion::equal );
     BOOST_CHECK_EQUAL( inclusion_compare(SetT(), MapT()), inclusion::equal );

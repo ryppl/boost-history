@@ -25,11 +25,10 @@ void make_3_icl_maps_and_derivatives_1
                     itl::map<T,U,Trt>& map_c, 
                     std::pair<T,U>& map_pair_a,
                     std::pair<T,U>& map_pair_b,
-                    IntervalMap<T,U,Trt>* aux = 0)
+                    IntervalMap<T,U,Trt>*)
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
     typedef    itl::map<T,U,Trt>         MapT;
-    aux;
 
     map_pair_a = sK_v(5,1);
     map_pair_b = sK_v(9,1);

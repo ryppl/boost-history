@@ -23,8 +23,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 // have static interval borders.
 
 
-#include <boost/itl/interval_bounds.hpp> //JODO static bounded intervals should be independend of interval_bounds
-#include <boost/itl/rightopen_interval.hpp>
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl/separate_interval_set.hpp>
 #include <boost/itl/split_interval_set.hpp>

@@ -62,8 +62,8 @@ DEFINE_ASSOCIATIVITY_CHECK_WRT      (pipe,  | );
 DEFINE_ASSOCIATIVITY_CHECK_WRT_EQUAL(pipe,  | );
 DEFINE_ASSOCIATIVITY_CHECK_WRT      (et,    & );
 DEFINE_ASSOCIATIVITY_CHECK_WRT_EQUAL(et,    & );
-DEFINE_ASSOCIATIVITY_CHECK_WRT      (caret, ^ ); //JODO only, if codomain_type has set semantics
-DEFINE_ASSOCIATIVITY_CHECK_WRT_EQUAL(caret, ^ ); //JODO
+DEFINE_ASSOCIATIVITY_CHECK_WRT      (caret, ^ );
+DEFINE_ASSOCIATIVITY_CHECK_WRT_EQUAL(caret, ^ );
 
 
 //------------------------------------------------------------------------------
