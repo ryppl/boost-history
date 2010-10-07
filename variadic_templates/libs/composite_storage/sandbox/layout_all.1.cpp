@@ -143,6 +143,34 @@ struct print_layout_all
         HeadComposed head;
         this->operator()(head);
     }
+    
+      template
+      < typename Composed
+      >
+        static
+      void
+    _(void)
+    {
+          typedef 
+        alignment::aligned_offset
+        < Composed::size
+        , Composed::align
+        >
+      aligned_offset
+       /* aligned_offset::value is the size required
+        * to assure that when two elements of composite
+        * are in a vector, the 2nd would be aligned
+        * properly.
+        */
+      ;
+      std::cout
+        <<"aligned size="
+        <<aligned_offset::value
+        <<"\n";
+      print_layout_all pla;
+      Composed composed;
+      pla(composed);
+    }
 };
 
   template
@@ -161,8 +189,7 @@ show_layout(char const*title)
         typedef
       typename layout_all<Pack>::type
     layout_result;
-    print_layout_all pla;
-    pla(layout_result());
+    print_layout_all::_<layout_result>();
 }
 
 }//exit layout namespace
