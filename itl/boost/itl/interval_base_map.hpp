@@ -1059,7 +1059,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
     ::insert_main(const interval_type& inter_val, const CodomainT& co_val, 
                   iterator& it_, const iterator& last_)
 {
-    iterator end_   = next(last_);
+	iterator end_   = boost::next(last_);
     iterator prior_ = it_, inserted_;
     if(prior_ != this->_map.end())
         --prior_;
