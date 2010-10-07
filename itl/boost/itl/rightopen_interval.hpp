@@ -12,11 +12,6 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/concept/assert.hpp>
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/type_traits/type_to_string.hpp>
-#include <boost/itl/interval_bounds.hpp> //JODO CL rightopen_interval ought to be independent on this, 
-                                         //but interval_function.hpp depends partially. So we might try to minimize
-                                         //dependencies here. There's also that point on generation.
-                                         //Two partitions of interval_functions
-                                         //  (dependen on i_b ( independent on i_b ))
 #include <boost/itl/concept/interval.hpp>
 
 namespace boost{namespace itl
@@ -70,18 +65,6 @@ private:
     domain_type _lwb;
     domain_type _upb;
 };
-
-
-template<class CharType, class CharTraits, class DomainT, ITL_COMPARE Compare>//JODO CL sollte ja nicht nötig sein
-std::basic_ostream<CharType, CharTraits>& operator <<
-  (std::basic_ostream<CharType, CharTraits> &stream, 
-   rightopen_interval<DomainT,Compare> const& object)
-{
-    if(boost::itl::is_empty(object))
-        return stream << "[)";
-    else
-        return stream << "[" << object.lower() << "," << object.upper()<< ")";
-}
 
 //==============================================================================
 //=T rightopen_interval -> concept intervals

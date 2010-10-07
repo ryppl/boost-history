@@ -10,6 +10,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/itl/type_traits/is_combinable.hpp>
 #include <boost/itl/concept/set_value.hpp>
+#include <boost/itl/detail/std_set.hpp>
 
 
 namespace boost{ namespace itl

@@ -82,21 +82,6 @@ private:
     interval_bounds _bounds;
 };
 
-
-template<class CharType, class CharTraits, class DomainT, ITL_COMPARE Compare>
-std::basic_ostream<CharType, CharTraits>& operator <<
-  (std::basic_ostream<CharType, CharTraits> &stream, 
-   discrete_interval<DomainT,Compare> const& object)
-{
-    if(itl::is_empty(object))
-        return stream << "[)";
-    else
-        return stream        << left_bracket(object.bounds()) << object.lower()
-                      << "," << object.upper()<< right_bracket(object.bounds());
-}
-
-
-
 //==============================================================================
 //=T discrete_interval -> concept intervals
 //==============================================================================

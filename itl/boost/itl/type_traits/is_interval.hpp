@@ -10,7 +10,6 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/itl/interval_bounds.hpp>
 #include <boost/itl/interval_traits.hpp>
-//CL #include <boost/itl/type_traits/has_dynamic_bounds.hpp>
 
 namespace boost{ namespace itl
 {

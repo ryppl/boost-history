@@ -93,18 +93,7 @@ inclusion_compare(const LeftT& left, const RightT& right)
                                         right.begin(), right.end());
 }
 
-//CL 
-//template<class LeftT, class RightT>
-//typename enable_if<is_concept_equivalent<is_element_container,LeftT, RightT>, 
-//                   int>::type
-//inclusion_compare(const LeftT& left, const RightT& right)
-//{
-//    return Set::subset_compare(left, right, 
-//                               left.begin(), left.end(),
-//                               right.begin(), right.end());
-//}
 //------------------------------------------------------------------------------
-
 template<class LeftT, class RightT>
 typename enable_if< is_concept_compatible<is_interval_map, LeftT, RightT>,
                     bool >::type

@@ -233,7 +233,6 @@ inline typename enable_if<is_associative_element_container<Type>, Type>::type&
 operator |= (Type& object, const Type& operand) 
 { 
     return object += operand; 
-    //CL return Set::add(object, operand); 
 }
 
 template <class Type>

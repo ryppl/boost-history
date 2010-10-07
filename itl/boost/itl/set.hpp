@@ -19,7 +19,6 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #endif
 
 #include <string>
-//CL #include <boost/call_traits.hpp> 
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/detail/concept_check.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
@@ -217,24 +216,6 @@ struct type_to_string<itl::set<Type> >
     static std::string apply()
     { return "set<"+ type_to_string<Type>::apply() +">"; }
 };
-
-//-----------------------------------------------------------------------------
-//JODO move
-template <class Type>
-struct is_set<std::set<Type> >
-{ 
-    typedef is_set<std::set<Type> > type;
-    BOOST_STATIC_CONSTANT(bool, value = true); 
-};
-
-
-template <class Type>
-struct type_to_string<std::set<Type> >
-{
-    static std::string apply()
-    { return "set_<"+ type_to_string<Type>::apply() +">"; }
-};
-
 
 }} // namespace itl boost
 

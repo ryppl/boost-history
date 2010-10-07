@@ -27,7 +27,7 @@ namespace boost{ namespace itl
 #ifdef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
         typedef
             typename mpl::if_< is_discrete<DomainT>
-                             , closed_interval<DomainT,Compare>
+                             , rightopen_interval<DomainT,Compare>
                              , rightopen_interval<DomainT,Compare> >::type type;
 #else
         typedef

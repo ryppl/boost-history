@@ -963,7 +963,6 @@ length(const Type& object)
 //- hull -----------------------------------------------------------------------
 /** \c hull returns the smallest interval containing \c left and \c right. */
 template<class Type>
-//CL typename boost::enable_if<is_asymmetric_interval<Type>, Type>::type
 typename boost::enable_if<has_static_bounds<Type>, Type>::type
 hull(Type left, const Type& right)
 {
@@ -1310,20 +1309,62 @@ distance(const Type& x1, const Type& x2)
 }
 
 //==============================================================================
-//= Streaming
+//= Streaming, representation
 //==============================================================================
+template<class Type>
+typename boost::
+    enable_if< mpl::or_< is_static_leftopen<Type>
+                       , is_static_open<Type>    >, std::string>::type
+left_bracket(const Type&) { return "("; }
+
+template<class Type>
+typename boost::
+    enable_if< mpl::or_< is_static_rightopen<Type>
+                       , is_static_closed<Type>   >, std::string>::type
+left_bracket(const Type&) { return "["; }
+
+template<class Type>
+typename boost::enable_if<has_dynamic_bounds<Type>, std::string>::type
+left_bracket(const Type& object) 
+{ 
+    return left_bracket(object.bounds()); 
+}
+
+//------------------------------------------------------------------------------
+template<class Type>
+typename boost::
+    enable_if< mpl::or_< is_static_rightopen<Type>
+                       , is_static_open<Type>     >, std::string>::type
+right_bracket(const Type&) { return ")"; }
+
+template<class Type>
+typename boost::
+    enable_if< mpl::or_< is_static_leftopen<Type>
+                       , is_static_closed<Type>    >, std::string>::type
+right_bracket(const Type&) { return "]"; }
+
+template<class Type>
+typename boost::enable_if<has_dynamic_bounds<Type>, std::string>::type
+right_bracket(const Type& object) 
+{ 
+    return right_bracket(object.bounds()); 
+}
+
+//------------------------------------------------------------------------------
 template<class CharType, class CharTraits, class Type>
 typename boost::enable_if<is_interval<Type>, 
                           std::basic_ostream<CharType, CharTraits> >::type&
 operator << (std::basic_ostream<CharType, CharTraits> &stream, Type const& object)
 {
     if(boost::itl::is_empty(object))
-        return stream << "[)"; //JODO
+        return stream << left_bracket<Type>(object) << right_bracket<Type>(object); 
     else
-        return stream << "[" << interval_traits<Type>::lower(object) << "," 
-                             << interval_traits<Type>::upper(object) << ")";
+        return stream << left_bracket<Type>(object) 
+                      << interval_traits<Type>::lower(object) 
+                      << "," 
+                      << interval_traits<Type>::upper(object) 
+                      << right_bracket<Type>(object) ;
 }
-
 
 
 }} // namespace itl boost

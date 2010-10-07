@@ -86,6 +86,19 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 namespace boost{namespace itl
 {
 
+/// Constants for interval bounds
+enum BoundTypes {
+    /// Both open: <tt>(x,y)</tt>
+    open_bounded             = 0,  // '00'
+    /// Left open right closed: <tt>(x,y]</tt>
+    left_open                = 1,  // '01' 
+    /// Left closed right open: <tt>[x,y)</tt>
+    right_open               = 2,  // '10' 
+    /// Both closed: <tt>[x,y]</tt>
+    closed_bounded           = 3   // '11'
+} ;
+
+
 typedef unsigned char bound_type;
 
 /** \brief A class template for intervals */

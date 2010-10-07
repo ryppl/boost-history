@@ -64,9 +64,10 @@ using namespace std;
 using namespace boost::posix_time;
 using namespace boost::itl;
 
-// Type itl::set<string> collects the names of party guests. Therefore it needs to
-// implement operator += that performs a set union on overlap of intervals.
-typedef boost::itl::set<string> GuestSetT;
+// Type set<string> collects the names of party guests. Since std::set is
+// a model of the itl's set concept, the concept provides an operator += 
+// that performs a set union on overlap of intervals.
+typedef std::set<string> GuestSetT;
 
 void boost_party()
 {

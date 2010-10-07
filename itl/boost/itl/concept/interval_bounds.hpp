@@ -9,7 +9,6 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #define BOOST_ITL_CONCEPT_INTERVAL_BOUNDS_HPP_JOFA_100927
 
 #include <boost/itl/interval_bounds.hpp>
-//CL #include <boost/itl/type_traits/has_dynamic_bounds.hpp>
 
 namespace boost{namespace itl
 {
@@ -84,7 +83,7 @@ std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits> &stream, 
    interval_bounds const& object)
 {
-    return stream << "'" << left_bracket(object) << right_bracket(object) << "'";
+    return stream << left_bracket(object) << right_bracket(object);
 }
 
 

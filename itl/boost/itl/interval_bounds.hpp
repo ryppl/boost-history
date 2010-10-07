@@ -14,19 +14,6 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-//JODO CL?
-/// Constants for interval bounds
-enum BoundTypes {
-    /// Both open: <tt>(x,y)</tt>
-    open_bounded             = 0,  // '00'
-    /// Left open right closed: <tt>(x,y]</tt>
-    left_open                = 1,  // '01' 
-    /// Left closed right open: <tt>[x,y)</tt>
-    right_open               = 2,  // '10' 
-    /// Both closed: <tt>[x,y]</tt>
-    closed_bounded           = 3   // '11'
-} ;
-
 typedef unsigned char bound_type;
 
 class interval_bounds

@@ -150,10 +150,10 @@ struct map_val
 
 // Very short value denotation for interval value pairs
 // Assumption typename IntervalMapT existes in scope
-#define IIv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, closed_bounded)
-#define IDv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, right_open)
-#define CIv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, left_open)
-#define CDv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, open_bounded)
+#define IIv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, interval_bounds::_closed)
+#define IDv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, interval_bounds::_rightopen)
+#define CIv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, interval_bounds::_leftopen)
+#define CDv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, interval_bounds::_open)
 #define K_v(key,val)    map_val<IntervalMapT>::map_pair(key,val)
 #define sK_v(key,val)   map_val<IntervalMapT>::std_pair(key,val)
 

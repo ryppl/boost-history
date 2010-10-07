@@ -12,11 +12,6 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 namespace boost{ namespace itl
 {
-    //CL
-    //template<bool Fact> struct given;
-    //template<> struct given<false>{static bool then(bool)     { return true;}};
-    //template<> struct given<true> {static bool then(bool Fact){ return Fact;}};
-
     template<bool Fact, class Type = bool> struct given_;
 
     template<class Fact, class Type = bool> struct given

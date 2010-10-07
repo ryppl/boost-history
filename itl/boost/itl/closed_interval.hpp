@@ -67,18 +67,6 @@ private:
 };
 
 
-template<class CharType, class CharTraits, class DomainT, ITL_COMPARE Compare>
-std::basic_ostream<CharType, CharTraits>& operator <<
-  (std::basic_ostream<CharType, CharTraits> &stream, 
-   closed_interval<DomainT,Compare> const& object)
-{
-    if(itl::is_empty(object))
-        return stream << "[]";
-    else
-        return stream << "[" << object.lower() << "," << object.upper()<< "]";
-}
-
-
 //==============================================================================
 //=T closed_interval -> concept intervals
 //==============================================================================
