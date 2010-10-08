@@ -15,7 +15,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/mpl/not.hpp>
 #include <boost/detail/is_incrementable.hpp>
 #include <boost/itl/detail/design_config.hpp>
-#include <boost/itl/type_traits/given.hpp>
+//CL #include <boost/itl/type_traits/given.hpp> //JODO given unused: remove
 #include <boost/itl/type_traits/unit_element.hpp>
 #include <boost/itl/type_traits/identity_element.hpp>
 #include <boost/itl/type_traits/infinity.hpp>
@@ -70,7 +70,7 @@ domain_equal(const typename interval_traits<Type>::domain_type& left,
 template<class Type>
 typename enable_if
 <
-    mpl::and_< is_static_rightopen<Type>
+    mpl::and_< is_static_right_open<Type>
              , is_discrete<typename interval_traits<Type>::domain_type> >
   , Type
 >::type
@@ -83,7 +83,7 @@ singleton(const typename interval_traits<Type>::domain_type& value)
 template<class Type>
 typename enable_if
 <
-    mpl::and_< is_static_leftopen<Type>
+    mpl::and_< is_static_left_open<Type>
              , is_discrete<typename interval_traits<Type>::domain_type> >
   , Type
 >::type
@@ -129,21 +129,9 @@ template<class Type>
 typename enable_if<has_static_bounds<Type>, Type>::type
 construct(const typename interval_traits<Type>::domain_type& low,
           const typename interval_traits<Type>::domain_type& up  )
-//CL          interval_bounds bounds = interval_bounds::right_open())
 {
     return interval_traits<Type>::construct(low, up);
 }
-
-/*CL
-template<class Type>
-typename enable_if<has_symmetric_bounds<Type>, Type>::type
-construct(const typename interval_traits<Type>::domain_type& low,
-          const typename interval_traits<Type>::domain_type& up,
-          interval_bounds bounds = interval_bounds::right_open())
-{
-    return interval_traits<Type>::construct(low, up);
-}
-*/
 
 template<class Type>
 typename enable_if<has_dynamic_bounds<Type>, Type>::type
@@ -178,7 +166,7 @@ span(const typename interval_traits<Type>::domain_type& left,
 
 //==============================================================================
 template<class Type>
-typename enable_if<is_static_rightopen<Type>, Type>::type
+typename enable_if<is_static_right_open<Type>, Type>::type
 hull(const typename interval_traits<Type>::domain_type& left,
      const typename interval_traits<Type>::domain_type& right)
 {
@@ -189,7 +177,7 @@ hull(const typename interval_traits<Type>::domain_type& left,
 }
 
 template<class Type>
-typename enable_if<is_static_leftopen<Type>, Type>::type
+typename enable_if<is_static_left_open<Type>, Type>::type
 hull(const typename interval_traits<Type>::domain_type& left,
      const typename interval_traits<Type>::domain_type& right)
 {
@@ -270,7 +258,7 @@ upper(const Type& object)
 //- first ----------------------------------------------------------------------
 template<class Type>
 inline typename 
-enable_if< mpl::or_<is_static_rightopen<Type>, is_static_closed<Type> >
+enable_if< mpl::or_<is_static_right_open<Type>, is_static_closed<Type> >
          , typename interval_traits<Type>::domain_type>::type
 first(const Type& object)
 { 
@@ -279,7 +267,7 @@ first(const Type& object)
 
 template<class Type>
 inline typename 
-enable_if< mpl::and_< mpl::or_<is_static_leftopen<Type>, is_static_open<Type> >
+enable_if< mpl::and_< mpl::or_<is_static_left_open<Type>, is_static_open<Type> >
                     , is_discrete<typename interval_traits<Type>::domain_type> >
          , typename interval_traits<Type>::domain_type>::type
 first(const Type& object)
@@ -300,7 +288,7 @@ first(const Type& object)
 //- last -----------------------------------------------------------------------
 template<class Type>
 inline typename 
-enable_if< mpl::or_<is_static_leftopen<Type>, is_static_closed<Type> >
+enable_if< mpl::or_<is_static_left_open<Type>, is_static_closed<Type> >
          , typename interval_traits<Type>::domain_type>::type
 last(const Type& object)
 { 
@@ -309,7 +297,7 @@ last(const Type& object)
 
 template<class Type>
 inline typename 
-enable_if< mpl::and_< mpl::or_<is_static_rightopen<Type>, is_static_open<Type> >
+enable_if< mpl::and_< mpl::or_<is_static_right_open<Type>, is_static_open<Type> >
                     , is_discrete<typename interval_traits<Type>::domain_type>  >
          , typename interval_traits<Type>::domain_type>::type
 last(const Type& object)
@@ -336,7 +324,7 @@ last(const Type& object)
 //- last_next ------------------------------------------------------------------
 template<class Type>
 inline typename 
-enable_if< mpl::and_< mpl::or_<is_static_leftopen<Type>, is_static_closed<Type> >
+enable_if< mpl::and_< mpl::or_<is_static_left_open<Type>, is_static_closed<Type> >
                     , is_discrete<typename interval_traits<Type>::domain_type>  >
          , typename interval_traits<Type>::domain_type>::type
 last_next(const Type& object)
@@ -346,7 +334,7 @@ last_next(const Type& object)
 
 template<class Type>
 inline typename 
-enable_if< mpl::and_< mpl::or_<is_static_rightopen<Type>, is_static_open<Type> >
+enable_if< mpl::and_< mpl::or_<is_static_right_open<Type>, is_static_open<Type> >
                     , is_discrete<typename interval_traits<Type>::domain_type>  >
          , typename interval_traits<Type>::domain_type>::type
 last_next(const Type& object)
@@ -1314,13 +1302,13 @@ distance(const Type& x1, const Type& x2)
 //==============================================================================
 template<class Type>
 typename boost::
-    enable_if< mpl::or_< is_static_leftopen<Type>
+    enable_if< mpl::or_< is_static_left_open<Type>
                        , is_static_open<Type>    >, std::string>::type
 left_bracket(const Type&) { return "("; }
 
 template<class Type>
 typename boost::
-    enable_if< mpl::or_< is_static_rightopen<Type>
+    enable_if< mpl::or_< is_static_right_open<Type>
                        , is_static_closed<Type>   >, std::string>::type
 left_bracket(const Type&) { return "["; }
 
@@ -1334,13 +1322,13 @@ left_bracket(const Type& object)
 //------------------------------------------------------------------------------
 template<class Type>
 typename boost::
-    enable_if< mpl::or_< is_static_rightopen<Type>
+    enable_if< mpl::or_< is_static_right_open<Type>
                        , is_static_open<Type>     >, std::string>::type
 right_bracket(const Type&) { return ")"; }
 
 template<class Type>
 typename boost::
-    enable_if< mpl::or_< is_static_leftopen<Type>
+    enable_if< mpl::or_< is_static_left_open<Type>
                        , is_static_closed<Type>    >, std::string>::type
 right_bracket(const Type&) { return "]"; }
 

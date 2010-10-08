@@ -55,7 +55,7 @@ public:
 
     /// das Intervall der Episode
     //virtual itl::interval<TimeT> interval()const=0; //JODO make IntervalT a template param
-    virtual rightopen_interval<TimeT> interval()const=0;
+    virtual right_open_interval<TimeT> interval()const=0;
 };
 
 /// typed_episode is an episode that can be ordered wrt. it's type

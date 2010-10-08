@@ -53,7 +53,7 @@ date_grid month_grid(const discrete_interval<date>& scope)
     month_iterator month_iter(frame_months_1st);
 
     for(; month_iter <= last(scope); ++month_iter)
-        month_grid += discrete_interval<date>::rightopen(*month_iter, *month_iter + months(1));
+        month_grid += discrete_interval<date>::right_open(*month_iter, *month_iter + months(1));
 
     month_grid &= scope; // cut off the surplus
 
@@ -71,7 +71,7 @@ date_grid week_grid(const discrete_interval<date>& scope)
     week_iterator week_iter(frame_weeks_1st);
 
     for(; week_iter <= last(scope); ++week_iter)
-        week_grid.insert(discrete_interval<date>::rightopen(*week_iter, *week_iter + weeks(1)));
+        week_grid.insert(discrete_interval<date>::right_open(*week_iter, *week_iter + weeks(1)));
 
     week_grid &= scope; // cut off the surplus
 
@@ -86,7 +86,7 @@ void month_and_time_grid()
     date someday = day_clock::local_day();
     date thenday = someday + months(2);
 
-    discrete_interval<date> itv = discrete_interval<date>::rightopen(someday, thenday);
+    discrete_interval<date> itv = discrete_interval<date>::right_open(someday, thenday);
 
     // Compute a month grid
     date_grid month_and_week_grid = month_grid(itv);

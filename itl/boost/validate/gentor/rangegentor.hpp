@@ -46,14 +46,14 @@ namespace boost{namespace itl
         interval<Type> last()const;
 
         void setLowerBoundRange(int lwb, int upb)
-        { setLowerBoundRange(interval<int>::rightopen(lwb,upb)); }
+        { setLowerBoundRange(interval<int>::right_open(lwb,upb)); }
         void setLowerBoundRange(const interval<int>& range)
-        { BOOST_ASSERT(range.is_rightopen()||range.is_closed()); _lwbGentor.setRange(range); }
+        { BOOST_ASSERT(range.is_right_open()||range.is_closed()); _lwbGentor.setRange(range); }
 
         void setUpperBoundRange(int lwb, int upb)
-        { setUpperBoundRange(interval<int>::rightopen(lwb,upb)); }
+        { setUpperBoundRange(interval<int>::right_open(lwb,upb)); }
         void setUpperBoundRange(const interval<int>& range)
-        { BOOST_ASSERT(range.is_rightopen()||range.is_closed()); _upbGentor.setRange(range); }
+        { BOOST_ASSERT(range.is_right_open()||range.is_closed()); _upbGentor.setRange(range); }
 
     private:
         NumberGentorT<Type>   _lwbGentor;
@@ -67,7 +67,7 @@ namespace boost{namespace itl
         Type lwb, upb;
         _lwbGentor.some(lwb);
         _upbGentor.some(upb);
-        _last = rightopen_interval(lwb, upb);
+        _last = right_open_interval(lwb, upb);
         x = _last;
     }
 

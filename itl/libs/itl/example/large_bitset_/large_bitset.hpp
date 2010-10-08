@@ -190,10 +190,10 @@ private:                                      // Example value
     //]
 
     //[large_bitmap_combiners
-    void       add_(DomainT lo, DomainT up, BitSetT bits){_map += value_type(interval_type::rightopen(lo,up), bits);}
-    void  subtract_(DomainT lo, DomainT up, BitSetT bits){_map -= value_type(interval_type::rightopen(lo,up), bits);}
-    void intersect_(DomainT lo, DomainT up, BitSetT bits){_map &= value_type(interval_type::rightopen(lo,up), bits);}
-    void      flip_(DomainT lo, DomainT up, BitSetT bits){_map ^= value_type(interval_type::rightopen(lo,up), bits);}
+    void       add_(DomainT lo, DomainT up, BitSetT bits){_map += value_type(interval_type::right_open(lo,up), bits);}
+    void  subtract_(DomainT lo, DomainT up, BitSetT bits){_map -= value_type(interval_type::right_open(lo,up), bits);}
+    void intersect_(DomainT lo, DomainT up, BitSetT bits){_map &= value_type(interval_type::right_open(lo,up), bits);}
+    void      flip_(DomainT lo, DomainT up, BitSetT bits){_map ^= value_type(interval_type::right_open(lo,up), bits);}
     //]
 
 //[large_bitmap_impl_map

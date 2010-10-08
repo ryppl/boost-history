@@ -43,7 +43,7 @@ template
     typename    DomainT = unsigned long, 
     typename    BitSetT = itl::bits<unsigned long>, 
     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT),
-    ITL_INTERVAL(ITL_COMPARE) Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, DomainT, Compare), //JODO change to rightopen_interval
+    ITL_INTERVAL(ITL_COMPARE) Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, DomainT, Compare), //JODO change to right_open_interval
     ITL_ALLOC   Alloc   = std::allocator
 > 
 class interval_bitset
@@ -284,10 +284,10 @@ private:
                      condensed_type& up, bitset_type& super,
                      const segment_type& segment)const;
 
-    void       add_(DomainT lo, DomainT up, BitSetT bits){_map += value_type(interval_type::rightopen(lo,up), bits);}
-    void  subtract_(DomainT lo, DomainT up, BitSetT bits){_map -= value_type(interval_type::rightopen(lo,up), bits);}
-    void intersect_(DomainT lo, DomainT up, BitSetT bits){_map &= value_type(interval_type::rightopen(lo,up), bits);}
-    void      flip_(DomainT lo, DomainT up, BitSetT bits){_map ^= value_type(interval_type::rightopen(lo,up), bits);}
+    void       add_(DomainT lo, DomainT up, BitSetT bits){_map += value_type(interval_type::right_open(lo,up), bits);}
+    void  subtract_(DomainT lo, DomainT up, BitSetT bits){_map -= value_type(interval_type::right_open(lo,up), bits);}
+    void intersect_(DomainT lo, DomainT up, BitSetT bits){_map &= value_type(interval_type::right_open(lo,up), bits);}
+    void      flip_(DomainT lo, DomainT up, BitSetT bits){_map ^= value_type(interval_type::right_open(lo,up), bits);}
 
 private:
     interval_bitmap_type _map;
@@ -366,7 +366,7 @@ bool interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::contains(const seg
             return false;
         if(parts.contains(super_part) && !_map(up).contains(supers))
             return false;
-        if(parts.contains(inter_part) && !_map.contains(seg_type(interval_type::rightopen(lo,up), inters)) ) 
+        if(parts.contains(inter_part) && !_map.contains(seg_type(interval_type::right_open(lo,up), inters)) ) 
             return false;
 
         return true;

@@ -184,8 +184,8 @@ void codomain_test()
     //noplum.insert(mapping_pair<int,NoPlus>(42,NoPlus(14)));
     //noplum.erase(mapping_pair<int,NoPlus>(42,NoPlus(14)));
     
-    noplum.insert(make_pair(interval<int>::rightopen(2,6),NoPlus(1)));
-    noplum.insert(make_pair(interval<int>::rightopen(4,8),NoPlus(2)));
+    noplum.insert(make_pair(interval<int>::right_open(2,6),NoPlus(1)));
+    noplum.insert(make_pair(interval<int>::right_open(4,8),NoPlus(2)));
 
     cout << noplum << endl;
 }
@@ -195,8 +195,8 @@ void string_codomain_test()
 {
     typedef interval_map<int,std::string> ConcaMapT; 
     ConcaMapT cat_map;
-    cat_map += make_pair(interval<int>::rightopen(1,5),std::string("Hello"));
-    cat_map += make_pair(interval<int>::rightopen(3,7),std::string(" World"));
+    cat_map += make_pair(interval<int>::right_open(1,5),std::string("Hello"));
+    cat_map += make_pair(interval<int>::right_open(3,7),std::string(" World"));
     
     cout << "cat_map: " << cat_map << endl;
 }
@@ -205,9 +205,9 @@ void quantifier_intersect_test()
 {
     typedef interval_map<int,int> QuantifierT;
     QuantifierT sec_map;
-    sec_map += make_pair(interval<int>::rightopen(1,5), 1);
-    sec_map &= make_pair(interval<int>::rightopen(3,7), 1);
-    //sec_map &= QuantifierT(make_pair(interval<int>::rightopen(3,7), 1));
+    sec_map += make_pair(interval<int>::right_open(1,5), 1);
+    sec_map &= make_pair(interval<int>::right_open(3,7), 1);
+    //sec_map &= QuantifierT(make_pair(interval<int>::right_open(3,7), 1));
     
     cout << "sec_map: " << sec_map << endl;
 }
@@ -216,10 +216,10 @@ void quantifier_subtract_test()
 {
     typedef interval_map<int,cnat> QuantifierT;
     QuantifierT sec_map;
-    sec_map += QuantifierT::value_type(interval<int>::rightopen(1,5), 1);
-    sec_map -= make_pair(interval<int>::rightopen(3,7), static_cast<cnat>(2));
-    sec_map += make_pair(interval<int>::rightopen(3,7), static_cast<cnat>(3));
-    //sec_map *= QuantifierT(make_pair(interval<int>::rightopen(3,7), 1));
+    sec_map += QuantifierT::value_type(interval<int>::right_open(1,5), 1);
+    sec_map -= make_pair(interval<int>::right_open(3,7), static_cast<cnat>(2));
+    sec_map += make_pair(interval<int>::right_open(3,7), static_cast<cnat>(3));
+    //sec_map *= QuantifierT(make_pair(interval<int>::right_open(3,7), 1));
     
     QuantifierT sec_map2;
 
@@ -234,9 +234,9 @@ void misc_test()
 {
     typedef interval_map<int,int,partial_enricher> MapT;
     MapT m;
-    m += MapT::value_type(interval<int>::rightopen(1,3), 1);
+    m += MapT::value_type(interval<int>::right_open(1,3), 1);
     cout << m << endl;
-    m -= MapT::value_type(interval<int>::rightopen(1,3), 1);
+    m -= MapT::value_type(interval<int>::right_open(1,3), 1);
     cout << m << endl;
 }
 

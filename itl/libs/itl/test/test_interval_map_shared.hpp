@@ -581,16 +581,16 @@ void interval_map_base_intersect_4_bicremental_types()
 
     U u1 = make<U>(1);
 
-    IntervalT I0_3D = IntervalT::rightopen(v0,v3);
-    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
-    IntervalT I1_4D = IntervalT::rightopen(v1,v4);
-    IntervalT I1_8D = IntervalT::rightopen(v1,v8);
-    IntervalT I2_7D = IntervalT::rightopen(v2,v7);
-    IntervalT I2_3D = IntervalT::rightopen(v2,v3);
-    IntervalT I5_8D = IntervalT::rightopen(v5,v8);
-    IntervalT I6_7D = IntervalT::rightopen(v6,v7);
-    IntervalT I6_8D = IntervalT::rightopen(v6,v8);
-    IntervalT I6_9D = IntervalT::rightopen(v6,v9);
+    IntervalT I0_3D = IntervalT::right_open(v0,v3);
+    IntervalT I1_3D = IntervalT::right_open(v1,v3);
+    IntervalT I1_4D = IntervalT::right_open(v1,v4);
+    IntervalT I1_8D = IntervalT::right_open(v1,v8);
+    IntervalT I2_7D = IntervalT::right_open(v2,v7);
+    IntervalT I2_3D = IntervalT::right_open(v2,v3);
+    IntervalT I5_8D = IntervalT::right_open(v5,v8);
+    IntervalT I6_7D = IntervalT::right_open(v6,v7);
+    IntervalT I6_8D = IntervalT::right_open(v6,v8);
+    IntervalT I6_9D = IntervalT::right_open(v6,v9);
 
     typename IntervalMapT::value_type I0_3D_1(I0_3D, u1);
     typename IntervalMapT::value_type I6_9D_1(I6_9D, u1);
@@ -688,22 +688,22 @@ void interval_map_base_erase_4_bicremental_types()
 
     U u1 = make<U>(1);
 
-    IntervalT I0_1D = IntervalT::rightopen(v0,v1);
-    IntervalT I0_2D = IntervalT::rightopen(v0,v2);
-    IntervalT I0_3D = IntervalT::rightopen(v0,v3);
-    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
-    IntervalT I1_4D = IntervalT::rightopen(v1,v4);
-    IntervalT I1_8D = IntervalT::rightopen(v1,v8);
-    IntervalT I2_4D = IntervalT::rightopen(v2,v4);
-    IntervalT I2_7D = IntervalT::rightopen(v2,v7);
-    IntervalT I2_3D = IntervalT::rightopen(v2,v3);
-    IntervalT I5_7D = IntervalT::rightopen(v5,v7);
-    IntervalT I5_8D = IntervalT::rightopen(v5,v8);
-    IntervalT I6_7D = IntervalT::rightopen(v6,v7);
-    IntervalT I6_8D = IntervalT::rightopen(v6,v8);
-    IntervalT I6_9D = IntervalT::rightopen(v6,v9);
-    IntervalT I7_9D = IntervalT::rightopen(v7,v9);
-    IntervalT I8_9D = IntervalT::rightopen(v8,v9);
+    IntervalT I0_1D = IntervalT::right_open(v0,v1);
+    IntervalT I0_2D = IntervalT::right_open(v0,v2);
+    IntervalT I0_3D = IntervalT::right_open(v0,v3);
+    IntervalT I1_3D = IntervalT::right_open(v1,v3);
+    IntervalT I1_4D = IntervalT::right_open(v1,v4);
+    IntervalT I1_8D = IntervalT::right_open(v1,v8);
+    IntervalT I2_4D = IntervalT::right_open(v2,v4);
+    IntervalT I2_7D = IntervalT::right_open(v2,v7);
+    IntervalT I2_3D = IntervalT::right_open(v2,v3);
+    IntervalT I5_7D = IntervalT::right_open(v5,v7);
+    IntervalT I5_8D = IntervalT::right_open(v5,v8);
+    IntervalT I6_7D = IntervalT::right_open(v6,v7);
+    IntervalT I6_8D = IntervalT::right_open(v6,v8);
+    IntervalT I6_9D = IntervalT::right_open(v6,v9);
+    IntervalT I7_9D = IntervalT::right_open(v7,v9);
+    IntervalT I8_9D = IntervalT::right_open(v8,v9);
 
     typename IntervalMapT::value_type I0_1D_1(I0_1D, u1);
     typename IntervalMapT::value_type I0_3D_1(I0_3D, u1);
@@ -805,12 +805,12 @@ void interval_map_base_is_disjoint_4_bicremental_types()
 
     U u1 = make<U>(1);
 
-    IntervalT I0_1D = IntervalT::rightopen(v0,v1);
-    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
-    IntervalT I3_6D = IntervalT::rightopen(v3,v6);
-    IntervalT I5_7D = IntervalT::rightopen(v5,v7);
-    IntervalT I6_8D = IntervalT::rightopen(v6,v8);
-    IntervalT I8_9D = IntervalT::rightopen(v8,v9);
+    IntervalT I0_1D = IntervalT::right_open(v0,v1);
+    IntervalT I1_3D = IntervalT::right_open(v1,v3);
+    IntervalT I3_6D = IntervalT::right_open(v3,v6);
+    IntervalT I5_7D = IntervalT::right_open(v5,v7);
+    IntervalT I6_8D = IntervalT::right_open(v6,v8);
+    IntervalT I8_9D = IntervalT::right_open(v8,v9);
 
     typename IntervalMapT::value_type I0_1D_1(I0_1D, u1);
     typename IntervalMapT::value_type I1_3D_1(I1_3D, u1);

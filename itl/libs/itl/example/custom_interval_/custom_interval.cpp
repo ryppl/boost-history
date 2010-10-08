@@ -59,8 +59,8 @@ struct interval_traits< MyInterval >       //1.  Partially specialize interval_t
 template<>
 struct interval_bound_type<MyInterval>     //4.  Finally we define the interval borders.
 {                                          //    Choose between static_open           (lo..up)
-    typedef interval_bound_type type;      //                   static_leftopen       (lo..up]
-    BOOST_STATIC_CONSTANT(unsigned char, value = interval_bounds::static_rightopen);//[lo..up)
+    typedef interval_bound_type type;      //                   static_left_open       (lo..up]
+    BOOST_STATIC_CONSTANT(unsigned char, value = interval_bounds::static_right_open);//[lo..up)
 };                                         //               and static_closed         [lo..up] 
 
 

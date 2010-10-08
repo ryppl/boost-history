@@ -51,7 +51,7 @@ using namespace boost::itl;
 BOOST_AUTO_TEST_CASE(reverse_iter)
 {
     interval_map<int,int> map_a;
-    map_a += make_pair(interval<int>::rightopen(0,3),1);
+    map_a += make_pair(interval<int>::right_open(0,3),1);
     cout << map_a << endl;
 
     for(interval_map<int,int>::element_iterator elem = elements_begin(map_a);

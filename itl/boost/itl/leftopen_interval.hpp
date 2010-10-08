@@ -19,10 +19,10 @@ namespace boost{namespace itl
 
 template <class DomainT, 
           ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
-class leftopen_interval
+class left_open_interval
 {
 public:
-    typedef leftopen_interval<DomainT,Compare> type;
+    typedef left_open_interval<DomainT,Compare> type;
     typedef DomainT domain_type;
 
 public:
@@ -30,7 +30,7 @@ public:
     //= Construct, copy, destruct
     //==========================================================================
     /** Default constructor; yields an empty interval <tt>(0,0]</tt>. */
-    leftopen_interval() 
+    left_open_interval() 
         : _lwb(identity_element<DomainT>::value()), _upb(identity_element<DomainT>::value()) 
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
@@ -40,7 +40,7 @@ public:
     //NOTE: Compiler generated copy constructor is used
 
     /** Constructor for a left-open singleton interval <tt>(val-1,val]</tt> */
-    explicit leftopen_interval(const DomainT& val)
+    explicit left_open_interval(const DomainT& val)
         : _lwb(pred(val)), _upb(val)
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
@@ -52,7 +52,7 @@ public:
     }
 
     /** Interval from <tt>low</tt> to <tt>up</tt> with bounds <tt>bounds</tt> */
-    leftopen_interval(const DomainT& low, const DomainT& up) :
+    left_open_interval(const DomainT& low, const DomainT& up) :
         _lwb(low), _upb(up)
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
@@ -68,14 +68,14 @@ private:
 };
 
 //==============================================================================
-//=T leftopen_interval -> concept intervals
+//=T left_open_interval -> concept intervals
 //==============================================================================
 template<class DomainT, ITL_COMPARE Compare>
-struct interval_traits< itl::leftopen_interval<DomainT, Compare> >
+struct interval_traits< itl::left_open_interval<DomainT, Compare> >
 {
     typedef DomainT domain_type;
     typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
-    typedef itl::leftopen_interval<DomainT, Compare> interval_type;
+    typedef itl::left_open_interval<DomainT, Compare> interval_type;
 
     static interval_type construct(const domain_type& lo, const domain_type& up)
     {
@@ -91,23 +91,23 @@ struct interval_traits< itl::leftopen_interval<DomainT, Compare> >
 //= Type traits
 //==============================================================================
 template <class DomainT, ITL_COMPARE Compare> 
-struct interval_bound_type< leftopen_interval<DomainT,Compare> >
+struct interval_bound_type< left_open_interval<DomainT,Compare> >
 {
     typedef interval_bound_type type;
-    BOOST_STATIC_CONSTANT(unsigned char, value = interval_bounds::static_leftopen);
+    BOOST_STATIC_CONSTANT(unsigned char, value = interval_bounds::static_left_open);
 };
 
 template <class DomainT, ITL_COMPARE Compare>
-struct type_to_string<itl::leftopen_interval<DomainT,Compare> >
+struct type_to_string<itl::left_open_interval<DomainT,Compare> >
 {
     static std::string apply()
     { return "(I]<"+ type_to_string<DomainT>::apply() +">"; }
 };
 
 template<class DomainT, ITL_COMPARE Compare> 
-struct value_size<itl::leftopen_interval<DomainT,Compare> >
+struct value_size<itl::left_open_interval<DomainT,Compare> >
 {
-    static std::size_t apply(const itl::leftopen_interval<DomainT>& value) 
+    static std::size_t apply(const itl::left_open_interval<DomainT>& value) 
     { return 2; }
 };
 

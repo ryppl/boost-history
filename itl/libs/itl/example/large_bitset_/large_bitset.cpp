@@ -80,12 +80,12 @@ void test_small()
     cout << "--------------------------------------------\n";
 
     cout << "-- Flip bits in range [24,30) --------------\n";
-    tall ^= discrete_interval<nat>::rightopen(24,30);
+    tall ^= discrete_interval<nat>::right_open(24,30);
     tall.show_segments();
     cout << "--------------------------------------------\n";
 
     cout << "-- Remove the first 10 bits ----------------\n";
-    tall -= discrete_interval<nat>::rightopen(0,10);
+    tall -= discrete_interval<nat>::right_open(0,10);
     tall.show_segments();
 
     cout << "-- Remove even bits in range [0,72) --------\n";

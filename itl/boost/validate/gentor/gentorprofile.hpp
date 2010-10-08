@@ -29,21 +29,21 @@ namespace boost{namespace itl
         void set_polygon_profile(int max_polygon_set_size, int max_polygon_size, int min_coord, int max_coord);
 
         void set_range_int(int lwb, int upb) 
-        { _range_int = interval<int>::rightopen(lwb, upb); }
+        { _range_int = interval<int>::right_open(lwb, upb); }
         void set_range_nat(cnat lwb, cnat upb) 
-        { _range_nat = interval<cnat>::rightopen(lwb, upb); }
+        { _range_nat = interval<cnat>::right_open(lwb, upb); }
         void set_range_double(double lwb, double upb) 
-        { _range_double = interval<double>::rightopen(lwb, upb); }
+        { _range_double = interval<double>::right_open(lwb, upb); }
         void set_range_ContainerSize(int lwb, int upb) 
-        { _range_ContainerSize = interval<int>::rightopen(lwb, upb); }
+        { _range_ContainerSize = interval<int>::right_open(lwb, upb); }
         void set_range_interval_int(int lwb, int upb) 
-        { _range_interval_int = interval<int>::rightopen(lwb, upb); }
+        { _range_interval_int = interval<int>::right_open(lwb, upb); }
         void set_range_interval_double(double lwb, double upb) 
-        { _range_interval_double = interval<double>::rightopen(lwb, upb); }
+        { _range_interval_double = interval<double>::right_open(lwb, upb); }
         void set_maxIntervalLength(int val) 
         { _maxIntervalLength = val; }
         void set_range_codomain_ContainerSize(int lwb, int upb) 
-        { _range_codomain_ContainerSize = interval<int>::rightopen(lwb, upb); }
+        { _range_codomain_ContainerSize = interval<int>::right_open(lwb, upb); }
         void set_repeat_count(int repeat) { _repeat_count = repeat; }
         void set_trials_count(int trials) { _trials_count = trials; }
         void set_trials_count_release(int trials) { _trials_count_release = trials; }
@@ -169,7 +169,7 @@ namespace boost{namespace itl
         static interval<unsigned int> get() 
         {
             interval<cnat> inter_val = GentorProfileSgl::it()->range_nat();
-            return interval<unsigned int>::rightopen(inter_val.lower(), inter_val.upper());
+            return interval<unsigned int>::right_open(inter_val.lower(), inter_val.upper());
         }
     };
 

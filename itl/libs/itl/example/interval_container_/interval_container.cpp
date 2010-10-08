@@ -19,7 +19,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 // Prior to other includes for interval containers we define ...
 #define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
-// ... so all interval containers will use rightopen_intervals that
+// ... so all interval containers will use right_open_intervals that
 // have static interval borders.
 
 
@@ -34,10 +34,10 @@ using namespace boost::itl;
 
 void interval_container_basics()
 {
-    rightopen_interval<Time> night_and_day = rightopen_interval<Time>(Time(monday,   20,00), Time(tuesday,  20,00));
-    rightopen_interval<Time> day_and_night = rightopen_interval<Time>(Time(tuesday,   7,00), Time(wednesday, 7,00));
-    rightopen_interval<Time> next_morning  = rightopen_interval<Time>(Time(wednesday, 7,00), Time(wednesday,10,00));
-    rightopen_interval<Time> next_evening  = rightopen_interval<Time>(Time(wednesday,18,00), Time(wednesday,21,00));
+    right_open_interval<Time> night_and_day = right_open_interval<Time>(Time(monday,   20,00), Time(tuesday,  20,00));
+    right_open_interval<Time> day_and_night = right_open_interval<Time>(Time(tuesday,   7,00), Time(wednesday, 7,00));
+    right_open_interval<Time> next_morning  = right_open_interval<Time>(Time(wednesday, 7,00), Time(wednesday,10,00));
+    right_open_interval<Time> next_evening  = right_open_interval<Time>(Time(wednesday,18,00), Time(wednesday,21,00));
 
     // An interval set of type interval_set joins intervals that that overlap or touch each other.
     interval_set<Time> joinedTimes;

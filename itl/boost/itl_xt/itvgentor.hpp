@@ -52,7 +52,7 @@ public:
     { m_valueRange = range; }
 
     void setValueRange(ItvDomTV low, ItvDomTV up)
-    { m_valueRange.set(low,up, itl::right_open); }
+    { m_valueRange.set(low,up, itl::right_open_bounded); }
 
     void setMaxIntervalLength(ItvDomTV len) { m_maxIntervalLength=len; }
     void setProbDerivation();

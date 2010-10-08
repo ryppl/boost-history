@@ -45,28 +45,28 @@ BOOST_AUTO_TEST_CASE
 
 //- sta.asy.{dis|con} ----------------------------------------------------------
 BOOST_AUTO_TEST_CASE
-(fastest_itl_rightopen_interval_ctor_4_ordered_types)
-{                      interval_ctor_4_ordered_types<rightopen_interval<ordered_type_1> >(); }
+(fastest_itl_right_open_interval_ctor_4_ordered_types)
+{                      interval_ctor_4_ordered_types<right_open_interval<ordered_type_1> >(); }
 
 BOOST_AUTO_TEST_CASE
-(fastest_itl_rightopen_interval_4_ordered_types)
-{         singelizable_interval_4_ordered_types<rightopen_interval<discrete_type_1> >(); }
+(fastest_itl_right_open_interval_4_ordered_types)
+{         singelizable_interval_4_ordered_types<right_open_interval<discrete_type_1> >(); }
 
 BOOST_AUTO_TEST_CASE
-(fastest_itl_rightopen_interval_4_bicremental_types)
-{         singelizable_interval_4_bicremental_types<rightopen_interval<discrete_type_2> >(); }
+(fastest_itl_right_open_interval_4_bicremental_types)
+{         singelizable_interval_4_bicremental_types<right_open_interval<discrete_type_2> >(); }
 
 BOOST_AUTO_TEST_CASE
-(fastest_itl_leftopen_interval_ctor_4_ordered_types)
-{                     interval_ctor_4_ordered_types<leftopen_interval<ordered_type_2> >(); }
+(fastest_itl_left_open_interval_ctor_4_ordered_types)
+{                     interval_ctor_4_ordered_types<left_open_interval<ordered_type_2> >(); }
 
 BOOST_AUTO_TEST_CASE
-(fastest_itl_leftopen_interval_4_ordered_types_singelizable)
-{        singelizable_interval_4_ordered_types<leftopen_interval<signed_discrete_type_1> >(); }
+(fastest_itl_left_open_interval_4_ordered_types_singelizable)
+{        singelizable_interval_4_ordered_types<left_open_interval<signed_discrete_type_1> >(); }
 
 BOOST_AUTO_TEST_CASE
-(fastest_itl_leftopen_interval_4_bicremental_types)
-{        singelizable_interval_4_bicremental_types<leftopen_interval<discrete_type_4> >(); }
+(fastest_itl_left_open_interval_4_bicremental_types)
+{        singelizable_interval_4_bicremental_types<left_open_interval<discrete_type_4> >(); }
 
 
 //- dyn.dis --------------------------------------------------------------------

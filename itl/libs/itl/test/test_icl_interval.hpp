@@ -50,7 +50,7 @@ void singelizable_interval_4_ordered_types()
     // Singleton ctor and singleness 
     // LAW:  !is_asymmetric_continuous(IntervalT) => size(singleton(x))==1
     // LAW: This law applies to all discrete and to dynamic continuous intervals
-    // LAW: No singletons can be constructed for static continuous rightopen and leftopen intervals
+    // LAW: No singletons can be constructed for static continuous right_open and left_open intervals
     typedef typename domain_type_of<interval_traits<IntervalT> >::type T;
     typedef typename itl::size_type_of<T>::type SizeT;
     T t_0     = itl::identity_element<T>::value();

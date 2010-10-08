@@ -59,19 +59,19 @@ void overlap_counter()
     OverlapCounterT overlap_counter;
     discrete_interval<int> inter_val;
 
-    inter_val = discrete_interval<int>::rightopen(4,8);
+    inter_val = discrete_interval<int>::right_open(4,8);
     cout << "-- adding   " << inter_val << " -----------------------------------------" << endl;
     overlap_counter += make_pair(inter_val, 1);
     print_overlaps(overlap_counter);
     cout << "-----------------------------------------------------------" << endl;
 
-    inter_val = discrete_interval<int>::rightopen(6,9);
+    inter_val = discrete_interval<int>::right_open(6,9);
     cout << "-- adding   " << inter_val << " -----------------------------------------" << endl;
     overlap_counter += make_pair(inter_val, 1);
     print_overlaps(overlap_counter);
     cout << "-----------------------------------------------------------" << endl;
 
-    inter_val = discrete_interval<int>::rightopen(1,9);
+    inter_val = discrete_interval<int>::right_open(1,9);
     cout << "-- adding   " << inter_val << " -----------------------------------------" << endl;
     overlap_counter += make_pair(inter_val, 1);
     print_overlaps(overlap_counter);

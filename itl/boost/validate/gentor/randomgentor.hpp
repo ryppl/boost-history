@@ -276,7 +276,7 @@ namespace boost{namespace itl
         static void apply(RandomGentor<itl::bits<BitsT> >& gentor) 
         {
             // Set the range within which the sizes of the generated object varies.
-            gentor.set_range(itl::interval<BitsT>::rightopen(0, sizeof(BitsT)));
+            gentor.set_range(itl::interval<BitsT>::right_open(0, sizeof(BitsT)));
         }
     };
 
@@ -420,13 +420,13 @@ namespace boost{namespace itl
     };
 
     template <class NumericT, ITL_COMPARE Compare> 
-    struct Calibrater<itl::list< rightopen_interval<NumericT,Compare> >, RandomGentor>
+    struct Calibrater<itl::list< right_open_interval<NumericT,Compare> >, RandomGentor>
     {
-        static void apply(RandomGentor< itl::list< rightopen_interval<NumericT,Compare> > >& gentor) 
+        static void apply(RandomGentor< itl::list< right_open_interval<NumericT,Compare> > >& gentor) 
         {
             gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
-            ItvGentorT<NumericT, rightopen_interval<NumericT,Compare> >* itvGentor  
-                = new ItvGentorT<NumericT, rightopen_interval<NumericT,Compare> >;
+            ItvGentorT<NumericT, right_open_interval<NumericT,Compare> >* itvGentor  
+                = new ItvGentorT<NumericT, right_open_interval<NumericT,Compare> >;
             itvGentor->setRange(GentorProfileSgl_numeric_range<NumericT>::get());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
             gentor.setDomainGentor(itvGentor);

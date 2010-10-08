@@ -64,21 +64,21 @@ class NumberGentorT : public RandomGentorAT<NumTV>
 {
 public:
     NumberGentorT(): 
-      m_valueRange( NumTV(), unit_element<NumTV>::value(), right_open ) {}
+	  m_valueRange( NumTV(), unit_element<NumTV>::value(), itl::right_open_bounded ) {}
 
     NumTV operator() (NumTV upb) { return rnd_0_to_excl<NumTV>(upb); }
     NumTV operator() (NumTV lwb, NumTV upb)  { return rnd_within_exUpb<NumTV>(lwb,upb); }
     NumTV operator() (interval<NumTV> rng) 
     { 
-        BOOST_ASSERT(rng.is(right_open) || rng.is(closed_bounded));
-        if(rng.is(right_open))
+        BOOST_ASSERT(rng.is(right_open_bounded) || rng.is(closed_bounded));
+		if(rng.is(itl::right_open_bounded))
             return rnd_within_exUpb<NumTV>(rng.lower(), rng.upper());
         else
             return rnd_within<NumTV>(rng.lower(), rng.upper());
     }
 
     void setRange(interval<NumTV> rng) { m_valueRange = rng; }
-    void setRange(NumTV lwb, NumTV upb) { m_valueRange = interval<NumTV>::rightopen(lwb,upb); } 
+    void setRange(NumTV lwb, NumTV upb) { m_valueRange = interval<NumTV>::right_open(lwb,upb); } 
 
     void calibrate(const RandomGentorProfile<NumTV>& profile)
     {

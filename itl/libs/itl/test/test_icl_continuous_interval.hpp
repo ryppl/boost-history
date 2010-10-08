@@ -24,8 +24,8 @@ void interval_ctor_4_ordered_types()
 template <class T, ITL_COMPARE Compare>
 void distant_intervals_4_numeric_continuous_types()
 {
-    typedef  rightopen_interval<T,Compare> L__D; // L__D for [..)
-    typedef   leftopen_interval<T,Compare> C__I; // C__I for (..]
+    typedef  right_open_interval<T,Compare> L__D; // L__D for [..)
+    typedef   left_open_interval<T,Compare> C__I; // C__I for (..]
     typedef continuous_interval<T,Compare> IntervalT;
 
     BOOST_CHECK( is_interval<L__D>::value ); 

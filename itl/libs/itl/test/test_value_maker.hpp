@@ -137,9 +137,9 @@ struct map_val
 //I_I : [a,b]
 #define I_I(low,up) IntervalT::closed   (make<T>(low), make<T>(up))
 //I_D : [a,b)
-#define I_D(low,up) IntervalT::rightopen(make<T>(low), make<T>(up))
+#define I_D(low,up) IntervalT::right_open(make<T>(low), make<T>(up))
 //C_I : (a,b]
-#define C_I(low,up) IntervalT::leftopen (make<T>(low), make<T>(up))
+#define C_I(low,up) IntervalT::left_open (make<T>(low), make<T>(up))
 //C_D : (a,b)
 #define C_D(low,up) IntervalT::open     (make<T>(low), make<T>(up))
 
@@ -151,8 +151,8 @@ struct map_val
 // Very short value denotation for interval value pairs
 // Assumption typename IntervalMapT existes in scope
 #define IIv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, interval_bounds::_closed)
-#define IDv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, interval_bounds::_rightopen)
-#define CIv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, interval_bounds::_leftopen)
+#define IDv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, interval_bounds::_right_open)
+#define CIv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, interval_bounds::_left_open)
 #define CDv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, interval_bounds::_open)
 #define K_v(key,val)    map_val<IntervalMapT>::map_pair(key,val)
 #define sK_v(key,val)   map_val<IntervalMapT>::std_pair(key,val)

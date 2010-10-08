@@ -19,7 +19,7 @@ by setting defines in this file.
 // implementation for intervals.
 #define ITL_NEW_INTERVAL_IMPL //JODO remove for the final release.
 
-// If this macro is defined, rightopen_interval with static interval borders
+// If this macro is defined, right_open_interval with static interval borders
 // will be used as default for all interval containers. 
 // ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS should be defined in the application
 // before other includes from the ITL

@@ -517,14 +517,14 @@ void interval_set_base_intersect_4_bicremental_types()
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
-    IntervalT I0_3D = IntervalT::rightopen(v0,v3);
-    IntervalT I1_3D = IntervalT::rightopen(v1,v3);
-    IntervalT I1_8D = IntervalT::rightopen(v1,v8);
-    IntervalT I2_7D = IntervalT::rightopen(v2,v7);
-    IntervalT I2_3D = IntervalT::rightopen(v2,v3);
-    IntervalT I6_7D = IntervalT::rightopen(v6,v7);
-    IntervalT I6_8D = IntervalT::rightopen(v6,v8);
-    IntervalT I6_9D = IntervalT::rightopen(v6,v9);
+    IntervalT I0_3D = IntervalT::right_open(v0,v3);
+    IntervalT I1_3D = IntervalT::right_open(v1,v3);
+    IntervalT I1_8D = IntervalT::right_open(v1,v8);
+    IntervalT I2_7D = IntervalT::right_open(v2,v7);
+    IntervalT I2_3D = IntervalT::right_open(v2,v3);
+    IntervalT I6_7D = IntervalT::right_open(v6,v7);
+    IntervalT I6_8D = IntervalT::right_open(v6,v8);
+    IntervalT I6_9D = IntervalT::right_open(v6,v9);
 
     //--------------------------------------------------------------------------
     // IntervalSet
@@ -567,7 +567,7 @@ void interval_set_base_intersect_4_bicremental_types()
     split_AB = split_A;
     (split_AB &= v1) += IntervalT::open(v1,v7);
     split_ab2.clear();
-    split_ab2 += IntervalT::rightopen(v1,v7);
+    split_ab2 += IntervalT::right_open(v1,v7);
 
     BOOST_CHECK_EQUAL( is_element_equal(split_AB, split_ab2), true );
 }

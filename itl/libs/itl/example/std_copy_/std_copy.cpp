@@ -35,9 +35,9 @@ using namespace boost::itl;
 vector<pair<discrete_interval<int>, int> > make_segments()
 {
     vector<pair<discrete_interval<int>, int> > segment_vec;
-    segment_vec.push_back(make_pair(discrete_interval<int>::rightopen(2,4), 1));
-    segment_vec.push_back(make_pair(discrete_interval<int>::rightopen(4,5), 1));
-    segment_vec.push_back(make_pair(discrete_interval<int>::rightopen(1,3), 1));
+    segment_vec.push_back(make_pair(discrete_interval<int>::right_open(2,4), 1));
+    segment_vec.push_back(make_pair(discrete_interval<int>::right_open(4,5), 1));
+    segment_vec.push_back(make_pair(discrete_interval<int>::right_open(1,3), 1));
     return segment_vec;
 }
 

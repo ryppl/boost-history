@@ -48,8 +48,8 @@ template <class Type> struct has_asymmetric_bounds
     typedef has_asymmetric_bounds<Type> type;
     BOOST_STATIC_CONSTANT(unsigned char, bounds = (interval_bound_type<Type>::value)); 
     BOOST_STATIC_CONSTANT(bool, 
-        value = (   bounds == interval_bounds::static_leftopen 
-                 || bounds == interval_bounds::static_rightopen)); 
+        value = (   bounds == interval_bounds::static_left_open 
+                 || bounds == interval_bounds::static_right_open)); 
 };
 
 template <class Type> struct has_symmetric_bounds
@@ -72,18 +72,18 @@ template <class Type> struct is_discrete_static
 };
 
 //------------------------------------------------------------------------------
-template <class Type> struct is_static_rightopen
+template <class Type> struct is_static_right_open
 { 
-    typedef is_static_rightopen<Type> type;
+    typedef is_static_right_open<Type> type;
     BOOST_STATIC_CONSTANT(bool, 
-        value = (interval_bound_type<Type>::value == interval_bounds::static_rightopen)); 
+        value = (interval_bound_type<Type>::value == interval_bounds::static_right_open)); 
 };
 
-template <class Type> struct is_static_leftopen
+template <class Type> struct is_static_left_open
 { 
-    typedef is_static_leftopen<Type> type;
+    typedef is_static_left_open<Type> type;
     BOOST_STATIC_CONSTANT(bool, 
-        value = (interval_bound_type<Type>::value == interval_bounds::static_leftopen)); 
+        value = (interval_bound_type<Type>::value == interval_bounds::static_left_open)); 
 };
 
 template <class Type> struct is_static_open

@@ -20,15 +20,15 @@ class interval_bounds
 {
 public:
     BOOST_STATIC_CONSTANT(bound_type, static_open      = 0);
-    BOOST_STATIC_CONSTANT(bound_type, static_leftopen  = 1);
-    BOOST_STATIC_CONSTANT(bound_type, static_rightopen = 2);
+    BOOST_STATIC_CONSTANT(bound_type, static_left_open  = 1);
+    BOOST_STATIC_CONSTANT(bound_type, static_right_open = 2);
     BOOST_STATIC_CONSTANT(bound_type, static_closed    = 3);
     BOOST_STATIC_CONSTANT(bound_type, dynamic          = 4);
     BOOST_STATIC_CONSTANT(bound_type, undefined        = 5);
 
     BOOST_STATIC_CONSTANT(bound_type, _open      = 0);
-    BOOST_STATIC_CONSTANT(bound_type, _leftopen  = 1);
-    BOOST_STATIC_CONSTANT(bound_type, _rightopen = 2);
+    BOOST_STATIC_CONSTANT(bound_type, _left_open  = 1);
+    BOOST_STATIC_CONSTANT(bound_type, _right_open = 2);
     BOOST_STATIC_CONSTANT(bound_type, _closed    = 3);
 
     BOOST_STATIC_CONSTANT(bound_type, _right     = 1);
@@ -47,8 +47,8 @@ public:
     bound_type bits()const{ return _bits; }
 
     static interval_bounds open()      { return interval_bounds(_open);     }
-    static interval_bounds left_open() { return interval_bounds(_leftopen); }
-    static interval_bounds right_open(){ return interval_bounds(_rightopen);}
+    static interval_bounds left_open() { return interval_bounds(_left_open); }
+    static interval_bounds right_open(){ return interval_bounds(_right_open);}
     static interval_bounds closed()    { return interval_bounds(_closed);   }
 
 public:

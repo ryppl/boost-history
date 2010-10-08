@@ -39,28 +39,28 @@ using namespace boost::itl;
 
 //- sta.asy.{dis|con} ----------------------------------------------------------
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_rightopen_interval_ctor_4_ordered_types, T, ordered_types)
-{                   interval_ctor_4_ordered_types<rightopen_interval<T> >(); }
+(test_itl_right_open_interval_ctor_4_ordered_types, T, ordered_types)
+{                   interval_ctor_4_ordered_types<right_open_interval<T> >(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_rightopen_interval_4_ordered_types, T, discrete_types)
-{      singelizable_interval_4_ordered_types<rightopen_interval<T> >(); }
+(test_itl_right_open_interval_4_ordered_types, T, discrete_types)
+{      singelizable_interval_4_ordered_types<right_open_interval<T> >(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_rightopen_interval_4_bicremental_types, T, discrete_types)
-{      singelizable_interval_4_bicremental_types<rightopen_interval<T> >(); }
+(test_itl_right_open_interval_4_bicremental_types, T, discrete_types)
+{      singelizable_interval_4_bicremental_types<right_open_interval<T> >(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_leftopen_interval_ctor_4_ordered_types, T, ordered_types)
-{                  interval_ctor_4_ordered_types<leftopen_interval<T> >(); }
+(test_itl_left_open_interval_ctor_4_ordered_types, T, ordered_types)
+{                  interval_ctor_4_ordered_types<left_open_interval<T> >(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_leftopen_interval_4_ordered_types_singelizable, T, signed_discrete_types)
-{     singelizable_interval_4_ordered_types<leftopen_interval<T> >(); }
+(test_itl_left_open_interval_4_ordered_types_singelizable, T, signed_discrete_types)
+{     singelizable_interval_4_ordered_types<left_open_interval<T> >(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_leftopen_interval_4_bicremental_types, T, discrete_types)
-{     singelizable_interval_4_bicremental_types<leftopen_interval<T> >(); }
+(test_itl_left_open_interval_4_bicremental_types, T, discrete_types)
+{     singelizable_interval_4_bicremental_types<left_open_interval<T> >(); }
 
 //------------------------------------------------------------------------------
 

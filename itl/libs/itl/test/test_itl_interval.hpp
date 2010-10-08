@@ -11,7 +11,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 template <class T, class IntervalT> 
 void interval_ctor_4_ordered_types()
 {
-    T lower_bound = given<mpl::or_<is_static_rightopen<IntervalT>, is_static_open<IntervalT> >, T>
+    T lower_bound = given<mpl::or_<is_static_right_open<IntervalT>, is_static_open<IntervalT> >, T>
                         ::then(identity_element<T>::value(), unit_element<T>::value());
 
     typedef typename domain_type_of<IntervalT>::type Dom1T;
@@ -73,8 +73,8 @@ void interval_ctor_4_bicremental_types()
     T v2 = make<T>(2);
     BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4),    interval<T>(v2, v4) );
     BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4),    interval<T>(v2, v4, closed_bounded) );
-    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4), interval<T>(v2, v4, right_open) );
-    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4),  interval<T>(v2, v4, left_open) );
+    BOOST_CHECK_EQUAL( interval<T>::right_open(v2, v4), interval<T>(v2, v4, right_open) );
+    BOOST_CHECK_EQUAL( interval<T>::left_open(v2, v4),  interval<T>(v2, v4, left_open) );
     BOOST_CHECK_EQUAL( interval<T>::open(v2, v4),      interval<T>(v2, v4, open_bounded) );
 
     BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4).lower(),               v2 );
@@ -84,19 +84,19 @@ void interval_ctor_4_bicremental_types()
     BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4).is_left(closed_bounded),    true );
     BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4).is_right(closed_bounded),   true );
 
-    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).lower(),            v2 );
-    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).upper(),            v4 );
-    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).boundtype(),        right_open );
-    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).is(right_open),     true );
-    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).is_left(closed_bounded), true );
-    BOOST_CHECK_EQUAL( interval<T>::rightopen(v2, v4).is_right(open_bounded),  true );
+    BOOST_CHECK_EQUAL( interval<T>::right_open(v2, v4).lower(),            v2 );
+    BOOST_CHECK_EQUAL( interval<T>::right_open(v2, v4).upper(),            v4 );
+    BOOST_CHECK_EQUAL( interval<T>::right_open(v2, v4).boundtype(),        right_open );
+    BOOST_CHECK_EQUAL( interval<T>::right_open(v2, v4).is(right_open),     true );
+    BOOST_CHECK_EQUAL( interval<T>::right_open(v2, v4).is_left(closed_bounded), true );
+    BOOST_CHECK_EQUAL( interval<T>::right_open(v2, v4).is_right(open_bounded),  true );
 
-    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).lower(),             v2 );
-    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).upper(),             v4 );
-    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).boundtype(),         left_open );
-    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).is(left_open),       true );
-    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).is_left(open_bounded),    true );
-    BOOST_CHECK_EQUAL( interval<T>::leftopen(v2, v4).is_right(closed_bounded), true );
+    BOOST_CHECK_EQUAL( interval<T>::left_open(v2, v4).lower(),             v2 );
+    BOOST_CHECK_EQUAL( interval<T>::left_open(v2, v4).upper(),             v4 );
+    BOOST_CHECK_EQUAL( interval<T>::left_open(v2, v4).boundtype(),         left_open );
+    BOOST_CHECK_EQUAL( interval<T>::left_open(v2, v4).is(left_open),       true );
+    BOOST_CHECK_EQUAL( interval<T>::left_open(v2, v4).is_left(open_bounded),    true );
+    BOOST_CHECK_EQUAL( interval<T>::left_open(v2, v4).is_right(closed_bounded), true );
 
     BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).lower(),                 v2 );
     BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).upper(),                 v4 );
@@ -137,8 +137,8 @@ void interval_equal_4_integral_types()
     //C: left open bound
     //D: right open bound
     interval<T>  I3_7I  = interval<T>::closed(v3,v7);
-    interval<T>  I3__8D = interval<T>::rightopen(v3,v8);
-    interval<T> C2__7I  = interval<T>::leftopen(v2,v7);
+    interval<T>  I3__8D = interval<T>::right_open(v3,v8);
+    interval<T> C2__7I  = interval<T>::left_open(v2,v7);
     interval<T> C2___8D = interval<T>::open(v2,v8);
 
     BOOST_CHECK_EQUAL(  I3_7I ,  I3_7I  );    
@@ -166,11 +166,11 @@ void interval_less_4_integral_types()
     T v7 = make<T>(7);
     T v8 = make<T>(8);
     BOOST_CHECK_EQUAL(interval<T>() < interval<T>(v7,v3), false);
-    BOOST_CHECK_EQUAL(interval<T>::open(v2,v3) < interval<T>::rightopen(v7,v7), false);
-    BOOST_CHECK_EQUAL(interval<T>::leftopen(v3,v3) < interval<T>::closed(v7,v3), false);
+    BOOST_CHECK_EQUAL(interval<T>::open(v2,v3) < interval<T>::right_open(v7,v7), false);
+    BOOST_CHECK_EQUAL(interval<T>::left_open(v3,v3) < interval<T>::closed(v7,v3), false);
 
     BOOST_CHECK_EQUAL(interval<T>() < interval<T>(v3,v3), true);
-    BOOST_CHECK_EQUAL(interval<T>::open(v2,v3) < interval<T>::rightopen(v7,v8), true);
+    BOOST_CHECK_EQUAL(interval<T>::open(v2,v3) < interval<T>::right_open(v7,v8), true);
 
     //I: (I)nside  = closed bound
     //C: left open bound
@@ -178,8 +178,8 @@ void interval_less_4_integral_types()
     interval<T>  I3_7I  = interval<T>::closed(v3,v7);
     interval<T>  I4_7I  = interval<T>::closed(v4,v7);
 
-    interval<T>  I3__8D = interval<T>::rightopen(v3,v8);
-    interval<T> C2__7I  = interval<T>::leftopen(v2,v7);
+    interval<T>  I3__8D = interval<T>::right_open(v3,v8);
+    interval<T> C2__7I  = interval<T>::left_open(v2,v7);
     interval<T> C2___8D = interval<T>::open(v2,v8);
 
     BOOST_CHECK_EQUAL(  I3_7I <  I3_7I  , false);    
@@ -211,8 +211,8 @@ void interval_equal_4_bicremental_continuous_types()
     //I: (I)nside  = closed bound
     //O: (O)utside = open bound
     interval<T> I3_7I = interval<T>::closed(v3,v7);
-    interval<T> I3_7D = interval<T>::rightopen(v3,v7);
-    interval<T> C3_7I = interval<T>::leftopen(v3,v7);
+    interval<T> I3_7D = interval<T>::right_open(v3,v7);
+    interval<T> C3_7I = interval<T>::left_open(v3,v7);
     interval<T> C3_7D = interval<T>::open(v3,v7);
 
     BOOST_CHECK_EQUAL( I3_7I ,  I3_7I  );    
@@ -243,12 +243,12 @@ void interval_touches_4_bicremental_types()
     T v7 = make<T>(7);
     T v9 = make<T>(9);
 
-    interval<T> I3_7D = interval<T>::rightopen(v3,v7);
+    interval<T> I3_7D = interval<T>::right_open(v3,v7);
     interval<T> I7_9I = interval<T>::closed(v7,v9);
     BOOST_CHECK_EQUAL( I3_7D.touches(I7_9I), true );    
 
     interval<T> I3_7I = interval<T>::closed(v3,v7);
-    interval<T> C7_9I = interval<T>::leftopen(v7,v9);
+    interval<T> C7_9I = interval<T>::left_open(v7,v9);
     BOOST_CHECK_EQUAL( I3_7I.touches(C7_9I), true );
 
     BOOST_CHECK_EQUAL( I3_7D.touches(C7_9I), false );    
@@ -267,8 +267,8 @@ void interval_touches_4_integral_types()
     interval<T> I7_9I = interval<T>::closed(v7,v9);
     BOOST_CHECK_EQUAL( I3_6I.touches(I7_9I), true );    
 
-    interval<T> I3_7D = interval<T>::rightopen(v3,v7);
-    interval<T> C6_9I = interval<T>::leftopen(v6,v9);
+    interval<T> I3_7D = interval<T>::right_open(v3,v7);
+    interval<T> C6_9I = interval<T>::left_open(v6,v9);
     BOOST_CHECK_EQUAL( I3_7D.touches(C6_9I), true );
 }
 
@@ -285,9 +285,9 @@ void interval_inplace_intersect_4_bicremental_types()
     T v9 = make<T>(9);
 
     interval<T> section;
-    interval<T> I3_7D = interval<T>::rightopen(v3,v7);
+    interval<T> I3_7D = interval<T>::right_open(v3,v7);
 
-    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
+    interval<T> I0_3D = interval<T>::right_open(v0,v3);
     section = I3_7D; section &= I0_3D;
     BOOST_CHECK_EQUAL( I0_3D.is_disjoint(I3_7D), true );
     BOOST_CHECK_EQUAL( !I0_3D.intersects(I3_7D), true );
@@ -296,11 +296,11 @@ void interval_inplace_intersect_4_bicremental_types()
     BOOST_CHECK_EQUAL( section.empty(), true );
     BOOST_CHECK_EQUAL( section, interval<T>() );
 
-    interval<T> I0_5D = interval<T>::rightopen(v0,v5);
+    interval<T> I0_5D = interval<T>::right_open(v0,v5);
     section = I3_7D; section &= I0_5D;
-    BOOST_CHECK_EQUAL( section, interval<T>::rightopen(v3, v5) );
+    BOOST_CHECK_EQUAL( section, interval<T>::right_open(v3, v5) );
 
-    interval<T> I0_9D = interval<T>::rightopen(v0,v9);
+    interval<T> I0_9D = interval<T>::right_open(v0,v9);
     section = I3_7D; section &= I0_9D;
     BOOST_CHECK_EQUAL( section, I3_7D );
 
@@ -312,7 +312,7 @@ void interval_inplace_intersect_4_bicremental_types()
     section = I3_7D; section &= C4_6D;
     BOOST_CHECK_EQUAL( section, C4_6D );
 
-    interval<T> C4_9I = interval<T>::leftopen(v4,v9);
+    interval<T> C4_9I = interval<T>::left_open(v4,v9);
     section = I3_7D; section &= C4_9I;
     BOOST_CHECK_EQUAL( section, interval<T>::open(v4,v7) );
 
@@ -338,19 +338,19 @@ void interval_infix_intersect_4_bicremental_types()
     T v9 = make<T>(9);
 
     interval<T> section;
-    interval<T> I3_7D = interval<T>::rightopen(v3,v7);
+    interval<T> I3_7D = interval<T>::right_open(v3,v7);
 
-    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
+    interval<T> I0_3D = interval<T>::right_open(v0,v3);
     section = I3_7D & I0_3D;
     BOOST_CHECK_EQUAL( I0_3D.is_disjoint(I3_7D), true );
     BOOST_CHECK_EQUAL( section.empty(), true );
     BOOST_CHECK_EQUAL( section, interval<T>() );
 
-    interval<T> I0_5D = interval<T>::rightopen(v0,v5);
+    interval<T> I0_5D = interval<T>::right_open(v0,v5);
     section = I3_7D & I0_5D;
-    BOOST_CHECK_EQUAL( section, interval<T>::rightopen(v3, v5) );
+    BOOST_CHECK_EQUAL( section, interval<T>::right_open(v3, v5) );
 
-    interval<T> I0_9D = interval<T>::rightopen(v0,v9);
+    interval<T> I0_9D = interval<T>::right_open(v0,v9);
     section = I3_7D & I0_9D;
     BOOST_CHECK_EQUAL( section, I3_7D );
 
@@ -362,7 +362,7 @@ void interval_infix_intersect_4_bicremental_types()
     section = I3_7D & C4_6D;
     BOOST_CHECK_EQUAL( section, C4_6D );
 
-    interval<T> C4_9I = interval<T>::leftopen(v4,v9);
+    interval<T> C4_9I = interval<T>::left_open(v4,v9);
     section = I3_7D & C4_9I;
     BOOST_CHECK_EQUAL( section, interval<T>::open(v4,v7) );
 
@@ -384,11 +384,11 @@ void interval_subtract_4_bicremental_types()
     T v7 = make<T>(7);
 
     interval<T> diff_1, diff_2;
-    interval<T> I0_3D = interval<T>::rightopen(v0,v3);
-    interval<T> I2_6D = interval<T>::rightopen(v2,v6);
-    interval<T> I4_7D = interval<T>::rightopen(v4,v7);
-    interval<T> I6_7D = interval<T>::rightopen(v6,v7);
-    interval<T> I2_4D = interval<T>::rightopen(v2,v4);
+    interval<T> I0_3D = interval<T>::right_open(v0,v3);
+    interval<T> I2_6D = interval<T>::right_open(v2,v6);
+    interval<T> I4_7D = interval<T>::right_open(v4,v7);
+    interval<T> I6_7D = interval<T>::right_open(v6,v7);
+    interval<T> I2_4D = interval<T>::right_open(v2,v4);
 
     diff_1 = right_subtract(I2_6D, I4_7D);
     BOOST_CHECK_EQUAL( diff_1, I2_4D );

@@ -58,11 +58,11 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 //    { return type(low, up, interval_bounds::closed()); }
 //
 //    /** Rightopen interval <tt>[low,up)</tt> */
-//    static type rightopen(const DomainT& low, const DomainT& up)
+//    static type right_open(const DomainT& low, const DomainT& up)
 //    { return type(low, up, interval_bounds::right_open); }
 //
 //    /** Leftopen interval <tt>(low,up]</tt> */
-//    static type leftopen(const DomainT& low, const DomainT& up)
+//    static type left_open(const DomainT& low, const DomainT& up)
 //    { return type(low, up, interval_bounds::left_open); }
 //
 //    /** Open interval <tt>(low,up)</tt> */
@@ -91,9 +91,9 @@ enum BoundTypes {
     /// Both open: <tt>(x,y)</tt>
     open_bounded             = 0,  // '00'
     /// Left open right closed: <tt>(x,y]</tt>
-    left_open                = 1,  // '01' 
+    left_open_bounded               = 1,  // '01' 
     /// Left closed right open: <tt>[x,y)</tt>
-    right_open               = 2,  // '10' 
+    right_open_bounded              = 2,  // '10' 
     /// Both closed: <tt>[x,y]</tt>
     closed_bounded           = 3   // '11'
 } ;
@@ -177,12 +177,12 @@ public:
     { return interval(low, up, itl::closed_bounded); }
 
     /** Rightopen interval <tt>[low,up)</tt> */
-    static interval rightopen(const DomainT& low, const DomainT& up)
-    { return interval(low, up, right_open); }
+    static interval right_open(const DomainT& low, const DomainT& up)
+	{ return interval(low, up, itl::right_open_bounded); }
 
     /** Leftopen interval <tt>(low,up]</tt> */
-    static interval leftopen(const DomainT& low, const DomainT& up)
-    { return interval(low, up, left_open); }
+    static interval left_open(const DomainT& low, const DomainT& up)
+	{ return interval(low, up, itl::left_open_bounded); }
 
     /** Open interval <tt>(low,up)</tt> */
     static interval open(const DomainT& low, const DomainT& up)

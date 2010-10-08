@@ -102,17 +102,17 @@ void test_polyset_gen()
     typedef itl::list<PolygonT>    PolygonSetT;
 
     point_gentor<int>* pointgen = new point_gentor<int>;
-    pointgen->setRange(interval<int>::rightopen(-99, 100));
+    pointgen->setRange(interval<int>::right_open(-99, 100));
 
     PolygonT some_poly;
     polygon_gentor<PolygonT>* polygen = new polygon_gentor<PolygonT>;
     polygen->setDomainGentor(pointgen);
-    polygen->setRangeOfSampleSize(interval<int>::rightopen(1, 5));
+    polygen->setRangeOfSampleSize(interval<int>::right_open(1, 5));
 
     PolygonSetT some_polyset;
     polygon_set_gentor<PolygonSetT> polysetgen;
     polysetgen.setDomainGentor(polygen);
-    polysetgen.setRangeOfSampleSize(interval<int>::rightopen(1, 3));
+    polysetgen.setRangeOfSampleSize(interval<int>::right_open(1, 3));
 
     for(int idx=0; idx<10; idx++)
     {

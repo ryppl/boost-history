@@ -43,7 +43,7 @@ public:
     }
 
     void setRangeOfSampleSize(int lwb, int upb)
-    { m_sampleSizeRange = interval<int>::rightopen(lwb,upb); }
+    { m_sampleSizeRange = interval<int>::right_open(lwb,upb); }
     void setRangeOfSampleSize(const interval<int>& szRange)
     { BOOST_ASSERT(szRange.is(right_open)); m_sampleSizeRange = szRange; }
 
