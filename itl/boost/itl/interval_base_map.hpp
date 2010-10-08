@@ -535,7 +535,7 @@ protected:
     add_at(const iterator& prior_, const interval_type& inter_val, 
                                    const codomain_type& co_val   )
     {
-        // Never try to insert a neutron into a neutron absorber here:
+        // Never try to insert an identity element into an identity element absorber here:
         BOOST_ASSERT((!(on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(co_val))));
 
         iterator inserted_ 

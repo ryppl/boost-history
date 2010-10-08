@@ -59,7 +59,7 @@ contains(const Type& super, const typename Type::element_type& value_pair)
 //= Equivalences and Orderings<ElementMap>
 //==============================================================================
 
-/** Protonic equality is equality on all elements that do not carry a neutron as content. */
+/** Protonic equality is equality on all elements that do not carry an identity element as content. */
 template<class Type>
 inline typename enable_if<is_element_map<Type>, bool>::type
 is_protonic_equal(const Type& lhs, const Type& rhs)

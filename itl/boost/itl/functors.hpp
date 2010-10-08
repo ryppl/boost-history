@@ -368,7 +368,7 @@ namespace boost{namespace itl
 
     // A binary operation - is negative (or inverting) with respect to the
     // neutral element iff it yields the inverse element if it is applied to the 
-    // neutron element:
+    // identity element:
     // 0 - x = -x
     // For a functor that wraps the inplace of op-assign version this is 
     // equivalent to
