@@ -28,18 +28,18 @@ public:
     void set_initial_states(int* const initial_states)
     {
         for (int i=0;i<NumberOfRegions;++i)
-	        m_initialStates[i] = initial_states[i];
+            m_initialStates[i] = initial_states[i];
     }
     void history_exit(int* const )
     {
-	    // ignore
+        // ignore
     }
     // returns the state where the state machine should be at start
-	template <class Event>
-    int* const history_entry(Event const& )
+    template <class Event>
+    const int* history_entry(Event const& )
     {
-	    // always come back to the original state
-	    return m_initialStates;
+        // always come back to the original state
+        return m_initialStates;
     }
     NoHistoryImpl<NumberOfRegions>& operator=(NoHistoryImpl<NumberOfRegions> const& rhs)
     {
@@ -48,6 +48,11 @@ public:
              m_initialStates[i] = rhs.m_initialStates[i];
          }
          return *this;
+    }
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int)
+    {
+        ar & m_initialStates;
     }
 private:
     int m_initialStates[NumberOfRegions];
@@ -63,19 +68,19 @@ public:
     void set_initial_states(int* const initial_states)
     {
         for (int i=0;i<NumberOfRegions;++i)
-	        m_initialStates[i] = initial_states[i];
+            m_initialStates[i] = initial_states[i];
     }
     void history_exit(int* const current_states)
     {
         for (int i=0;i<NumberOfRegions;++i)
-	        m_initialStates[i] = current_states[i];
+            m_initialStates[i] = current_states[i];
     }
     // returns the state where the state machine should be at start
-	template <class Event>
-    int* const history_entry(Event const& )
+    template <class Event>
+    const int* history_entry(Event const& )
     {
-	    // always load back the last active state
-	    return m_initialStates;
+        // always load back the last active state
+        return m_initialStates;
     }
     AlwaysHistoryImpl<NumberOfRegions>& operator=(AlwaysHistoryImpl<NumberOfRegions> const& rhs)
     {
@@ -84,6 +89,11 @@ public:
              m_initialStates[i] = rhs.m_initialStates[i];
          }
          return *this;
+    }
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int)
+    {
+        ar & m_initialStates;
     }
 private:
     int m_initialStates[NumberOfRegions];
@@ -100,25 +110,25 @@ public:
     {
         for (int i=0;i<NumberOfRegions;++i)
         {
-	        m_currentStates[i] = initial_states[i];
+            m_currentStates[i] = initial_states[i];
             m_initialStates[i] = initial_states[i];
         }
     }
     void history_exit(int* const current_states)
     {
         for (int i=0;i<NumberOfRegions;++i)
-	        m_currentStates[i] = current_states[i];
+            m_currentStates[i] = current_states[i];
     }
     // returns the state where the state machine should be at start
     template <class Event>
-	int* const history_entry(Event const&)
+    const int* history_entry(Event const&)
     {
         if ( ::boost::mpl::contains<Events,Event>::value)
-		{
-		    return m_currentStates;
-	    }
-	    // not one of our events, no history
-	    return m_initialStates;
+        {
+            return m_currentStates;
+        }
+        // not one of our events, no history
+        return m_initialStates;
     }
     ShallowHistoryImpl<Events,NumberOfRegions>& operator=(ShallowHistoryImpl<Events,NumberOfRegions> const& rhs)
     {
@@ -128,6 +138,12 @@ public:
              m_currentStates[i] = rhs.m_currentStates[i];
          }
          return *this;
+    }
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int)
+    {
+        ar & m_initialStates;
+        ar & m_currentStates;
     }
 private:
     int m_initialStates[NumberOfRegions];
