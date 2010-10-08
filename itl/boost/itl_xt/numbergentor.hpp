@@ -15,7 +15,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <stdlib.h>
 #include <vector>
 #include <boost/validate/type/nat.hpp>
-#include <boost/itl/type_traits/unon.hpp>
+#include <boost/itl/type_traits/unit_element.hpp>
 #include <boost/itl_xt/gentorit.hpp>
 
 using namespace boost::itl;
@@ -64,7 +64,7 @@ class NumberGentorT : public RandomGentorAT<NumTV>
 {
 public:
     NumberGentorT(): 
-      m_valueRange( NumTV(), unon<NumTV>::value(), right_open ) {}
+      m_valueRange( NumTV(), unit_element<NumTV>::value(), right_open ) {}
 
     NumTV operator() (NumTV upb) { return rnd_0_to_excl<NumTV>(upb); }
     NumTV operator() (NumTV lwb, NumTV upb)  { return rnd_within_exUpb<NumTV>(lwb,upb); }

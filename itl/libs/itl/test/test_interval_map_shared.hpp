@@ -27,34 +27,34 @@ void interval_map_fundamentals_4_ordered_types()
     // ordered types is the largest set of instance types.
     // Because we can not generate values via incrementation for e.g. string,
     // we are able to test operations only for the most basic values
-    // neutron (0, empty, T() ...) and unon.
+    // identity_element (0, empty, T() ...) and unit_element.
 
-    //T v0 = neutron<T>();
-    //T v1 = unon<T>();
-    T v0 = neutron<T>::value();
-    T v1 = unon<T>::value();
+    //T v0 = identity_element<T>();
+    //T v1 = unit_element<T>();
+    T v0 = identity_element<T>::value();
+    T v1 = unit_element<T>::value();
     IntervalT I0_0I(v0);
     IntervalT I1_1I(v1);
     IntervalT I0_1I(v0, v1, interval_bounds::closed());
-    U u1 = unon<U>::value();
+    U u1 = unit_element<U>::value();
 
     //-------------------------------------------------------------------------
     //empty set
     //-------------------------------------------------------------------------
     BOOST_CHECK_EQUAL(IntervalMapT().empty(), true);
     BOOST_CHECK_EQUAL(itl::is_empty(IntervalMapT()), true);
-    BOOST_CHECK_EQUAL(cardinality(IntervalMapT()), neutron<size_T>::value());
-    BOOST_CHECK_EQUAL(IntervalMapT().size(), neutron<size_T>::value());
-    BOOST_CHECK_EQUAL(itl::size(IntervalMapT()), neutron<size_T>::value());
+    BOOST_CHECK_EQUAL(cardinality(IntervalMapT()), identity_element<size_T>::value());
+    BOOST_CHECK_EQUAL(IntervalMapT().size(), identity_element<size_T>::value());
+    BOOST_CHECK_EQUAL(itl::size(IntervalMapT()), identity_element<size_T>::value());
     BOOST_CHECK_EQUAL(interval_count(IntervalMapT()), 0);
     BOOST_CHECK_EQUAL(IntervalMapT().iterative_size(), 0);
     BOOST_CHECK_EQUAL(iterative_size(IntervalMapT()), 0);
     BOOST_CHECK_EQUAL(IntervalMapT(), IntervalMapT());
 
-    IntervalT mt_interval = neutron<IntervalT >::value();
+    IntervalT mt_interval = identity_element<IntervalT >::value();
     BOOST_CHECK_EQUAL(mt_interval, IntervalT());
     typename IntervalMapT::value_type mt_u1 = make_pair(mt_interval, u1);
-    IntervalMapT mt_map = neutron<IntervalMapT >::value();
+    IntervalMapT mt_map = identity_element<IntervalMapT >::value();
     BOOST_CHECK_EQUAL(mt_map, IntervalMapT());
 
     //adding emptieness to emptieness yields emptieness ;)
@@ -64,7 +64,7 @@ void interval_map_fundamentals_4_ordered_types()
     BOOST_CHECK_EQUAL(mt_map, IntervalMapT());
     (mt_map += mt_u1) += mt_u1;
     BOOST_CHECK_EQUAL(mt_map, IntervalMapT());
-    BOOST_CHECK_EQUAL(hull(mt_map), neutron<IntervalT >::value());
+    BOOST_CHECK_EQUAL(hull(mt_map), identity_element<IntervalT >::value());
 
     //subtracting emptieness
     mt_map.subtract(mt_u1).subtract(mt_u1);
@@ -154,8 +154,8 @@ void interval_map_fundamentals_4_ordered_types()
     BOOST_CHECK_EQUAL(itl::contains(single_I0_1I_u1, single_I1_1I_u1), true);
     BOOST_CHECK_EQUAL(itl::contains(single_I0_1I_u1, single_I0_1I_u1), true);
 
-    BOOST_CHECK_EQUAL(cardinality(single_I0_0I_u1), unon<size_T>::value());
-    BOOST_CHECK_EQUAL(single_I0_0I_u1.size(), unon<size_T>::value());
+    BOOST_CHECK_EQUAL(cardinality(single_I0_0I_u1), unit_element<size_T>::value());
+    BOOST_CHECK_EQUAL(single_I0_0I_u1.size(), unit_element<size_T>::value());
     BOOST_CHECK_EQUAL(interval_count(single_I0_0I_u1), 1);
     BOOST_CHECK_EQUAL(single_I0_0I_u1.iterative_size(), 1);
     BOOST_CHECK_EQUAL(iterative_size(single_I0_0I_u1), 1);
@@ -204,8 +204,8 @@ void interval_map_ctor_4_bicremental_types()
     _I4_4I_u2.insert(I4_4I_u2).insert(I4_4I_u2);
     BOOST_CHECK_EQUAL( _I4_4I_u2, _I4_4I_u2_1 );
 
-    BOOST_CHECK_EQUAL( cardinality(_I4_4I_u2),      unon<typename IntervalMapT::size_type>::value()  );
-    BOOST_CHECK_EQUAL( _I4_4I_u2.size(),             unon<typename IntervalMapT::size_type>::value()  );
+    BOOST_CHECK_EQUAL( cardinality(_I4_4I_u2),      unit_element<typename IntervalMapT::size_type>::value()  );
+    BOOST_CHECK_EQUAL( _I4_4I_u2.size(),             unit_element<typename IntervalMapT::size_type>::value()  );
     BOOST_CHECK_EQUAL( interval_count(_I4_4I_u2),   1  );
     BOOST_CHECK_EQUAL( _I4_4I_u2.iterative_size(),   1  );
     BOOST_CHECK_EQUAL( iterative_size(_I4_4I_u2),   1  );

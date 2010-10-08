@@ -273,7 +273,7 @@ public:
     codomain_type operator()(const domain_type& key)const
     {
         const_iterator it_ = _map.find(interval_type(key)); 
-        return it_==end() ? neutron<codomain_type>::value()
+        return it_==end() ? identity_element<codomain_type>::value()
                           : it_->second;
     }
 
@@ -539,9 +539,9 @@ protected:
         BOOST_ASSERT((!(on_absorbtion<type,Combiner,Traits::absorbs_identities>::is_absorbable(co_val))));
 
         iterator inserted_ 
-            = this->_map.insert(prior_, value_type(inter_val, Combiner::neutron()));
+            = this->_map.insert(prior_, value_type(inter_val, Combiner::identity_element()));
 
-        if(inserted_->first == inter_val && inserted_->second == Combiner::neutron())
+        if(inserted_->first == inter_val && inserted_->second == Combiner::identity_element())
         {
             Combiner()(inserted_->second, co_val);
             return std::pair<iterator,bool>(inserted_, true);
@@ -663,7 +663,7 @@ private:
         {
             intersection.template 
               _add<codomain_combine>(segment_type(common_interval, 
-                                                  neutron<codomain_type>::value()));
+                                                  identity_element<codomain_type>::value()));
         }
     };
 
@@ -693,7 +693,7 @@ private:
         { 
             object += operand;
             ITL_FORALL(typename Type, it_, object)
-                it_->second = neutron<codomain_type>::value();
+                it_->second = identity_element<codomain_type>::value();
 
             if(mpl::not_<is_interval_splitter<Type> >::value)
                 itl::join(object);

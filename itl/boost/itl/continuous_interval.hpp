@@ -38,7 +38,7 @@ public:
     //==========================================================================
     /** Default constructor; yields an empty interval <tt>[0,0)</tt>. */
     continuous_interval()
-        : _lwb(neutron<DomainT>::value()), _upb(neutron<DomainT>::value())
+        : _lwb(identity_element<DomainT>::value()), _upb(identity_element<DomainT>::value())
         , _bounds(interval_bounds::right_open())
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));

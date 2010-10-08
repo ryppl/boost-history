@@ -123,7 +123,7 @@ cardinality(const Type& object)
     typedef typename Type::size_type size_type;
     typedef typename Type::interval_type interval_type;
 
-    size_type size = neutron<size_type>::value();
+    size_type size = identity_element<size_type>::value();
     ITL_const_FORALL(typename Type, it, object)
         size += itl::cardinality(key_value<Type>(it));
     return size;
@@ -141,7 +141,7 @@ cardinality(const Type& object)
     typedef typename Type::size_type size_type;
     typedef typename Type::interval_type interval_type;
 
-    size_type size = neutron<size_type>::value();
+    size_type size = identity_element<size_type>::value();
     size_type interval_size;
     ITL_const_FORALL(typename Type, it, object)
     {
@@ -167,7 +167,7 @@ length(const Type& object)
 {
     typedef typename Type::difference_type difference_type;
     typedef typename Type::const_iterator  const_iterator;
-    difference_type length = neutron<difference_type>::value();
+    difference_type length = identity_element<difference_type>::value();
     const_iterator it_ = object.begin();
 
     while(it_ != object.end())
@@ -191,7 +191,7 @@ typename enable_if<is_interval_container<ObjectT>,
 hull(const ObjectT& object)
 {
     return 
-        itl::is_empty(object) ? neutron<typename ObjectT::interval_type>::value()
+        itl::is_empty(object) ? identity_element<typename ObjectT::interval_type>::value()
         : hull((key_value<ObjectT>(object.begin())), key_value<ObjectT>(object.rbegin()));
 }
 

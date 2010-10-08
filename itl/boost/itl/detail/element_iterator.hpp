@@ -268,11 +268,11 @@ private:
 
 public:
     element_iterator()
-        : _saltator(neutron<segment_iterator>::value())
-        , _reptator(neutron<domain_difference_type>::value()){}
+        : _saltator(identity_element<segment_iterator>::value())
+        , _reptator(identity_element<domain_difference_type>::value()){}
 
     explicit element_iterator(segment_iterator jumper)
-        : _saltator(jumper), _reptator(neutron<domain_difference_type>::value()) {}
+        : _saltator(jumper), _reptator(identity_element<domain_difference_type>::value()) {}
 
     template <class SaltatorT>
     element_iterator
@@ -298,13 +298,13 @@ private:
         else
         {
             ++_saltator;
-            _reptator = neutron<domain_difference_type>::value();
+            _reptator = identity_element<domain_difference_type>::value();
         }
     }
 
     void decrement()
     { 
-        if(neutron<domain_difference_type>::value() < _reptator)
+        if(identity_element<domain_difference_type>::value() < _reptator)
             --_reptator; 
         else
         {

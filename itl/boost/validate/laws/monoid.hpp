@@ -159,7 +159,7 @@ namespace boost{namespace itl
     // ---------------------------------------------------------------------------
     // Inplace variant of laws for operator o=
     // ---------------------------------------------------------------------------
-    template <typename Type, template<class>class Accumulator = inplace_plus, template<class>class IdentityElement = neutron>
+    template <typename Type, template<class>class Accumulator = inplace_plus, template<class>class IdentityElement = identity_element>
     class InplaceNeutrality 
         : public Law<InplaceNeutrality<Type,Accumulator,IdentityElement>, 
                      LOKI_TYPELIST_1(Type), LOKI_TYPELIST_1(Type)>
@@ -185,7 +185,7 @@ namespace boost{namespace itl
         bool holds()
         {
             Type lhs = this->template getInputValue<operand_a>();
-            Accumulator<Type>()(lhs, neutron<Type>()());
+            Accumulator<Type>()(lhs, identity_element<Type>()());
             this->template setOutputValue<lhs_result>(lhs);
             return lhs == this->template getInputValue<operand_a>();
         }

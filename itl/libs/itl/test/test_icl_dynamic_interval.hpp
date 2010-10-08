@@ -13,14 +13,14 @@ void dynamic_interval_ctor_4_ordered_types()
 {
     typedef typename domain_type_of<interval_traits<IntervalT> >::type T;
 
-    BOOST_CHECK_EQUAL(IntervalT().lower(), itl::neutron<T>::value());
-    BOOST_CHECK_EQUAL(IntervalT().upper(), itl::neutron<T>::value());
-    BOOST_CHECK_EQUAL(itl::lower(IntervalT()), itl::neutron<T>::value());
-    BOOST_CHECK_EQUAL(itl::upper(IntervalT()), itl::neutron<T>::value());
+    BOOST_CHECK_EQUAL(IntervalT().lower(), itl::identity_element<T>::value());
+    BOOST_CHECK_EQUAL(IntervalT().upper(), itl::identity_element<T>::value());
+    BOOST_CHECK_EQUAL(itl::lower(IntervalT()), itl::identity_element<T>::value());
+    BOOST_CHECK_EQUAL(itl::upper(IntervalT()), itl::identity_element<T>::value());
 
-    IntervalT itv = IntervalT(itl::neutron<T>::value(), itl::neutron<T>::value());
-    BOOST_CHECK_EQUAL(IntervalT(), IntervalT(itl::neutron<T>::value(), itl::neutron<T>::value()));
-    BOOST_CHECK_EQUAL(IntervalT(), IntervalT(itl::neutron<T>::value(), itl::neutron<T>::value(), interval_bounds::right_open()));
+    IntervalT itv = IntervalT(itl::identity_element<T>::value(), itl::identity_element<T>::value());
+    BOOST_CHECK_EQUAL(IntervalT(), IntervalT(itl::identity_element<T>::value(), itl::identity_element<T>::value()));
+    BOOST_CHECK_EQUAL(IntervalT(), IntervalT(itl::identity_element<T>::value(), itl::identity_element<T>::value(), interval_bounds::right_open()));
 }
 
 

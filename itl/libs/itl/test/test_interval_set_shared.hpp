@@ -25,10 +25,10 @@ void interval_set_fundamentals_4_ordered_types()
     // ordered types is the largest set of instance types.
     // Because we can not generate values via incrementation for e.g. string,
     // we are able to test operations only for the most basic values
-    // neutron (0, empty, T() ...) and unon.
+    // identity_element (0, empty, T() ...) and unit_element.
 
-    T v0 = neutron<T>::value();
-    T v1 = unon<T>::value();
+    T v0 = identity_element<T>::value();
+    T v1 = unit_element<T>::value();
     IntervalT I0_0I(v0);
     IntervalT I1_1I(v1);
     IntervalT I0_1I(v0, v1, interval_bounds::closed());
@@ -38,16 +38,16 @@ void interval_set_fundamentals_4_ordered_types()
     //-------------------------------------------------------------------------
     BOOST_CHECK_EQUAL(IntervalSet<T>().empty(), true);
     BOOST_CHECK_EQUAL(itl::is_empty(IntervalSet<T>()), true);
-    BOOST_CHECK_EQUAL(cardinality(IntervalSet<T>()), neutron<size_T>::value());
-    BOOST_CHECK_EQUAL(IntervalSet<T>().size(), neutron<size_T>::value());
+    BOOST_CHECK_EQUAL(cardinality(IntervalSet<T>()), identity_element<size_T>::value());
+    BOOST_CHECK_EQUAL(IntervalSet<T>().size(), identity_element<size_T>::value());
     BOOST_CHECK_EQUAL(interval_count(IntervalSet<T>()), 0);
     BOOST_CHECK_EQUAL(IntervalSet<T>().iterative_size(), 0);
     BOOST_CHECK_EQUAL(iterative_size(IntervalSet<T>()), 0);
     BOOST_CHECK_EQUAL(IntervalSet<T>(), IntervalSet<T>());
 
-    IntervalT mt_interval = neutron<IntervalT>::value();
+    IntervalT mt_interval = identity_element<IntervalT>::value();
     BOOST_CHECK_EQUAL(mt_interval, IntervalT());
-    IntervalSet<T> mt_set = neutron<IntervalSet<T> >::value();
+    IntervalSet<T> mt_set = identity_element<IntervalSet<T> >::value();
     BOOST_CHECK_EQUAL(mt_set, IntervalSet<T>());
 
     //adding emptieness to emptieness yields emptieness ;)
@@ -57,7 +57,7 @@ void interval_set_fundamentals_4_ordered_types()
     BOOST_CHECK_EQUAL(mt_set, IntervalSet<T>());
     (mt_set += mt_interval) += mt_interval;
     BOOST_CHECK_EQUAL(mt_set, IntervalSet<T>());
-    BOOST_CHECK_EQUAL(hull(mt_set), neutron<IntervalT >::value());
+    BOOST_CHECK_EQUAL(hull(mt_set), identity_element<IntervalT >::value());
 
     //subtracting emptieness
     mt_set.subtract(mt_interval).subtract(mt_interval);
@@ -137,8 +137,8 @@ void interval_set_fundamentals_4_ordered_types()
     BOOST_CHECK_EQUAL(itl::contains(single_I0_1I, single_I1_1I), true);
     BOOST_CHECK_EQUAL(itl::contains(single_I0_1I, single_I0_1I), true);
 
-    BOOST_CHECK_EQUAL(cardinality(single_I0_0I), unon<size_T>::value());
-    BOOST_CHECK_EQUAL(single_I0_0I.size(), unon<size_T>::value());
+    BOOST_CHECK_EQUAL(cardinality(single_I0_0I), unit_element<size_T>::value());
+    BOOST_CHECK_EQUAL(single_I0_0I.size(), unit_element<size_T>::value());
     BOOST_CHECK_EQUAL(interval_count(single_I0_0I), 1);
     BOOST_CHECK_EQUAL(single_I0_0I.iterative_size(), 1);
     BOOST_CHECK_EQUAL(iterative_size(single_I0_0I), 1);
@@ -179,8 +179,8 @@ void interval_set_ctor_4_bicremental_types()
     (_I4_4I_1 += v4) += I4_4I;
     BOOST_CHECK_EQUAL( _I4_4I,                    _I4_4I_1 );
     
-    BOOST_CHECK_EQUAL( cardinality(_I4_4I),      unon<typename IntervalSet<T>::size_type>::value()  );
-    BOOST_CHECK_EQUAL( _I4_4I.size(),             unon<typename IntervalSet<T>::size_type>::value()  );
+    BOOST_CHECK_EQUAL( cardinality(_I4_4I),      unit_element<typename IntervalSet<T>::size_type>::value()  );
+    BOOST_CHECK_EQUAL( _I4_4I.size(),             unit_element<typename IntervalSet<T>::size_type>::value()  );
     BOOST_CHECK_EQUAL( interval_count(_I4_4I),   1  );
     BOOST_CHECK_EQUAL( _I4_4I.iterative_size(),   1  );
     BOOST_CHECK_EQUAL( iterative_size(_I4_4I),   1  );

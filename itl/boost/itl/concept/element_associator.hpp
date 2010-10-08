@@ -295,9 +295,9 @@ erase(Type& object, const typename Type::key_type& key_value)
     if(it_ != object.end())
     {
         object.erase(it_);
-        return unon<size_type>::value();
+        return unit_element<size_type>::value();
     }
-    return neutron<size_type>::value();
+    return identity_element<size_type>::value();
 }
 
 template<class Type>

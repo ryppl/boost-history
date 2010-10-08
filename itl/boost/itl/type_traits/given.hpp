@@ -8,7 +8,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #ifndef BOOST_ITL_TYPE_TRAITS_GIVEN_HPP_JOFA_100929
 #define BOOST_ITL_TYPE_TRAITS_GIVEN_HPP_JOFA_100929
 
-#include <boost/itl/type_traits/unon.hpp>
+#include <boost/itl/type_traits/unit_element.hpp>
 
 namespace boost{ namespace itl
 {
@@ -16,7 +16,7 @@ namespace boost{ namespace itl
 
     template<class Fact, class Type = bool> struct given
     {
-        static Type then(const Type& success, const Type& fail = unon<Type>::value())
+        static Type then(const Type& success, const Type& fail = unit_element<Type>::value())
         {
             return given_<Fact::value, Type>::then(success, fail);
         }
@@ -26,14 +26,14 @@ namespace boost{ namespace itl
     template<class Type> 
     struct given_<false, Type>
     {
-        static Type then(const Type& success, const Type& fail = unon<Type>::value())     
+        static Type then(const Type& success, const Type& fail = unit_element<Type>::value())     
         { return fail; }
     };
 
     template<class Type> 
     struct given_<true, Type> 
     {
-        static Type then(const Type& success, const Type& fail = unon<Type>::value())     
+        static Type then(const Type& success, const Type& fail = unit_element<Type>::value())     
         { return success; }
     };
 

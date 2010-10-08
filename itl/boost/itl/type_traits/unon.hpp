@@ -9,25 +9,25 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #define BOOST_ITL_TYPE_TRAITS_UNON_HPP_JOFA_080912
 
 #include <string>
-#include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/type_traits/identity_element.hpp>
 #include <boost/itl/type_traits/succ_pred.hpp>
 
 namespace boost{ namespace itl
 {
-    template <class Type> struct unon{ static Type value(); };
+    template <class Type> struct unit_element{ static Type value(); };
 
-    template<> inline bool   unon<bool>::value()   { return true; }
-    template<> inline float  unon<float>::value()  { return 1.0; }
-    template<> inline double unon<double>::value() { return 1.0; }
-    template<> inline long double unon<long double>::value() 
+    template<> inline bool   unit_element<bool>::value()   { return true; }
+    template<> inline float  unit_element<float>::value()  { return 1.0; }
+    template<> inline double unit_element<double>::value() { return 1.0; }
+    template<> inline long double unit_element<long double>::value() 
                                                    { return 1.0; }
     
     // Smallest 'visible' string that is greater than the empty string.
     template <>    
-    inline std::string unon<std::string>::value(){ return std::string(" "); }
+    inline std::string unit_element<std::string>::value(){ return std::string(" "); }
 
     template <class Type> 
-    inline Type unon<Type>::value(){ return succ(neutron<Type>::value()); }
+    inline Type unit_element<Type>::value(){ return succ(identity_element<Type>::value()); }
 
 }} // namespace boost itl
 

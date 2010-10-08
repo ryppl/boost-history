@@ -24,8 +24,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/detail/exclusive_less_than.hpp>
-#include <boost/itl/type_traits/neutron.hpp>
-#include <boost/itl/type_traits/unon.hpp>
+#include <boost/itl/type_traits/identity_element.hpp>
+#include <boost/itl/type_traits/unit_element.hpp>
 #include <boost/itl/type_traits/infinity.hpp>
 #include <boost/itl/type_traits/is_continuous.hpp>
 #include <boost/itl/type_traits/difference_type_of.hpp>
@@ -147,7 +147,7 @@ public:
     //= Construct, copy, destruct
     //==========================================================================
     /** Default constructor; yields an empty interval <tt>[1,0]</tt> */
-    interval() : _lwb(unon<DomainT>::value()), _upb(neutron<DomainT>::value()), 
+    interval() : _lwb(unit_element<DomainT>::value()), _upb(identity_element<DomainT>::value()), 
                  _boundtype(itl::closed_bounded) 
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
@@ -198,7 +198,7 @@ public:
 
     /** Set the interval empty */
     void clear()
-    { set_lwb(unon<DomainT>::value()); set_upb(neutron<DomainT>::value()); 
+    { set_lwb(unit_element<DomainT>::value()); set_upb(identity_element<DomainT>::value()); 
       _boundtype=itl::closed_bounded; }
 
     /** Does the interval contain <tt>x</tt>? */
@@ -516,9 +516,9 @@ struct continuous_interval_
     {
         typedef typename IntervalT::size_type SizeT;
         if(itl::is_empty(x)) 
-            return itl::neutron<SizeT>::value();
+            return itl::identity_element<SizeT>::value();
         else if(x.is(itl::closed_bounded) && IntervalT::domain_equal(x.lower(), x.upper()))
-            return itl::unon<SizeT>::value();
+            return itl::unit_element<SizeT>::value();
         else 
             return infinity<SizeT>::value();
     }
@@ -526,7 +526,7 @@ struct continuous_interval_
     static typename IntervalT::difference_type 
         length(const IntervalT& x) 
     {
-        return x.empty() ? itl::neutron<typename IntervalT::difference_type>::value() 
+        return x.empty() ? itl::identity_element<typename IntervalT::difference_type>::value() 
                          : x.upper() - x.lower();
     }
 
@@ -534,13 +534,13 @@ struct continuous_interval_
         distance(const IntervalT& x1, const IntervalT& x2)
     {
         if(x1.empty() || x2.empty())
-            return itl::neutron<typename IntervalT::difference_type>::value();
+            return itl::identity_element<typename IntervalT::difference_type>::value();
         else if(IntervalT::domain_less(x1.upper(), x2.lower()))
             return x2.lower() - x1.upper();
         else if(IntervalT::domain_less(x2.upper(), x1.lower()))
             return x1.lower() - x2.upper();
         else
-            return itl::neutron<typename IntervalT::difference_type>::value();
+            return itl::identity_element<typename IntervalT::difference_type>::value();
     }
 
     static bool unaligned_lwb_equal(const IntervalT&, const IntervalT&)
@@ -561,13 +561,13 @@ struct discrete_interval_
     static typename IntervalT::size_type 
         cardinality(const IntervalT& x) 
     { 
-        return itl::is_empty(x)? itl::neutron<typename IntervalT::size_type>::value() 
+        return itl::is_empty(x)? itl::identity_element<typename IntervalT::size_type>::value() 
                         : static_cast<typename IntervalT::size_type>(succ(last(x) - first(x)));
     }
 
     static typename IntervalT::difference_type length(const IntervalT& x) 
     {
-        return itl::is_empty(x) ? itl::neutron<typename IntervalT::difference_type>::value() 
+        return itl::is_empty(x) ? itl::identity_element<typename IntervalT::difference_type>::value() 
                          : static_cast<typename IntervalT::difference_type>(succ(last(x) - first(x))); 
     }
 
@@ -575,13 +575,13 @@ struct discrete_interval_
         distance(const IntervalT& x1, const IntervalT& x2)
     {
         if(itl::is_empty(x1) || itl::is_empty(x2))
-            return itl::neutron<typename IntervalT::difference_type>::value();
+            return itl::identity_element<typename IntervalT::difference_type>::value();
         else if(IntervalT::domain_less(x1.last(), x2.first()))
             return static_cast<typename IntervalT::difference_type>(pred(x2.first() - x1.last()));
         else if(IntervalT::domain_less(x2.last(), x1.first()))
             return static_cast<typename IntervalT::difference_type>(pred(x1.first() - x2.last()));
         else
-            return itl::neutron<typename IntervalT::difference_type>::value();
+            return itl::identity_element<typename IntervalT::difference_type>::value();
     }
 
     static bool unaligned_lwb_equal(const IntervalT& x1, const IntervalT& x2)
@@ -1086,7 +1086,7 @@ ITL_INTERVAL_TYPE(Interval,DomainT,Compare)
     else if(right.exclusive_less(left))
         return hull(right, left).left_subtract(right).right_subtract(left);
     else
-        return neutron<ITL_INTERVAL_TYPE(Interval,DomainT,Compare) >::value();
+        return identity_element<ITL_INTERVAL_TYPE(Interval,DomainT,Compare) >::value();
 }
 
 //==============================================================================

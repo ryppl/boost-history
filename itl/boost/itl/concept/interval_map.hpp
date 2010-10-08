@@ -506,7 +506,7 @@ flip(Type& object, const OperandT& operand)
 
     object += operand;
     ITL_FORALL(typename Type, it_, object)
-        it_->second = neutron<codomain_type>::value();
+        it_->second = identity_element<codomain_type>::value();
 
     if(mpl::not_<is_interval_splitter<Type> >::value)
         itl::join(object);
@@ -620,7 +620,7 @@ typename enable_if<mpl::and_< is_interval_map<Type>
 absorb_identities(Type& object)
 {
     typedef typename Type::segment_type segment_type;
-    return itl::erase_if(content_is_neutron<segment_type>(), object);
+    return itl::erase_if(content_is_identity_element<segment_type>(), object);
 }
 
 //==============================================================================

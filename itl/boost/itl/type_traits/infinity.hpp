@@ -48,7 +48,7 @@ namespace boost{ namespace itl
             return
             mpl::if_<is_numeric<Type>,
                      numeric_infinity<Type>,
-                     neutron<Type> >::type::value();
+                     identity_element<Type> >::type::value();
         }
     };
 

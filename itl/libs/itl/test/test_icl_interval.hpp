@@ -19,10 +19,10 @@ void interval_ctor_4_ordered_types()
 {
     typedef typename domain_type_of<interval_traits<IntervalT> >::type T;
     typedef typename itl::size_type_of<T>::type SizeT;
-    T t_0     = itl::neutron<T>::value();
-    T t_1     = itl::unon<T>::value();
-    SizeT s_0 = itl::neutron<SizeT>::value();
-    SizeT s_1 = itl::unon<SizeT>::value();
+    T t_0     = itl::identity_element<T>::value();
+    T t_1     = itl::unit_element<T>::value();
+    SizeT s_0 = itl::identity_element<SizeT>::value();
+    SizeT s_1 = itl::unit_element<SizeT>::value();
 
     // Default ctor and emptieness
     BOOST_CHECK_EQUAL( itl::is_empty(IntervalT()), true );
@@ -53,9 +53,9 @@ void singelizable_interval_4_ordered_types()
     // LAW: No singletons can be constructed for static continuous rightopen and leftopen intervals
     typedef typename domain_type_of<interval_traits<IntervalT> >::type T;
     typedef typename itl::size_type_of<T>::type SizeT;
-    T t_0     = itl::neutron<T>::value();
-    T t_1     = itl::unon<T>::value();
-    SizeT s_1 = itl::unon<SizeT>::value();
+    T t_0     = itl::identity_element<T>::value();
+    T t_1     = itl::unit_element<T>::value();
+    SizeT s_1 = itl::unit_element<SizeT>::value();
 
 #ifdef BOOST_MSVC 
     BOOST_CHECK_EQUAL( is_singelizable<IntervalT>::value, true ); 
@@ -75,8 +75,8 @@ void singelizable_interval_4_bicremental_types()
 {
     typedef typename domain_type_of<interval_traits<IntervalT> >::type T;
     typedef typename itl::size_type_of<T>::type SizeT;
-    //T t_0     = itl::neutron<T>::value();
-    SizeT s_1 = itl::unon<SizeT>::value();
+    //T t_0     = itl::identity_element<T>::value();
+    SizeT s_1 = itl::unit_element<SizeT>::value();
 
 #ifdef BOOST_MSVC 
     BOOST_CHECK_EQUAL( is_singelizable<IntervalT>::value, true ); 

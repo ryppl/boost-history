@@ -36,13 +36,13 @@ namespace boost{namespace itl
     } ;
 
     template <class Type>
-    struct is_neutron: public property<Type>
+    struct is_identity_element: public property<Type>
     {
         bool operator() (const Type& x)const { return x == Type(); }
     } ;
 
     template <class Type>
-    class content_is_neutron: public property<Type>
+    class content_is_identity_element: public property<Type>
     {
     public:
         bool operator() (const Type& x)const 

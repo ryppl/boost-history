@@ -10,7 +10,7 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/relation_state.hpp>
-#include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/type_traits/identity_element.hpp>
 #include <boost/itl/type_traits/is_map.hpp>
 #include <boost/itl/type_traits/is_total.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>

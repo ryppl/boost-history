@@ -8,7 +8,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifndef BOOST_ITL_TEST_VALUE_MAKER_HPP_JOFA_080916
 #define BOOST_ITL_TEST_VALUE_MAKER_HPP_JOFA_080916
 
-#include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/type_traits/identity_element.hpp>
 #include <boost/itl/interval_bounds.hpp>
 #include "test_calls.hpp"
 
@@ -18,7 +18,7 @@ namespace boost{ namespace itl
 /*FYI completion like that:
 std::string make(int n)
 {
-    std::string value = neutron<std::string>::value();
+    std::string value = identity_element<std::string>::value();
     int abs_n = n<0 ? -n : n;
     for(int i=1; i<abs_n; i++)
         value += i%2==1 ? "hello " : "world ";
@@ -48,7 +48,7 @@ operator << (std::basic_ostream<CharType, CharTraits>& stream, const mono& objec
 template <class BicrementableT>
 BicrementableT make(int n)
 {
-    BicrementableT value = neutron<BicrementableT>::value();
+    BicrementableT value = identity_element<BicrementableT>::value();
     if(n>=0)
         for(int i=0; i<n; i++)
             ++value;
@@ -68,7 +68,7 @@ struct test_value<std::string>
 {
     static std::string make(int n)
     {
-        std::string value = neutron<std::string>::value();
+        std::string value = identity_element<std::string>::value();
         int abs_n = n<0 ? -n : n;
         for(int i=1; i<abs_n; i++)
             value += (i%2==1 ? "hello " : "world ");
@@ -82,7 +82,7 @@ struct test_value
 { 
     static Type make(int n)
     {
-        Type value = neutron<Type>::value();
+        Type value = identity_element<Type>::value();
         if(n>=0)
             for(int i=0; i<n; i++)
                 ++value;

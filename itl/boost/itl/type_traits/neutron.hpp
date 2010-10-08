@@ -12,20 +12,20 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 
 namespace boost{ namespace itl
 {
-    template <class Type> struct neutron
+    template <class Type> struct identity_element
     { 
         static Type value(); 
         Type operator()()const { return value(); }
     };
 
     template <class Type>
-    inline Type neutron<Type>::value()
+    inline Type identity_element<Type>::value()
     { 
         return Type(); 
     }
 
     template<>
-    inline std::string unary_template_to_string<neutron>::apply() { return "0"; }
+    inline std::string unary_template_to_string<identity_element>::apply() { return "0"; }
 
 }} // namespace boost itl
 

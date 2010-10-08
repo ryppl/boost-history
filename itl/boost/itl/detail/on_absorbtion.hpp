@@ -32,7 +32,7 @@ struct on_absorbtion<Type, Combiner, true>
 
     static bool is_absorbable(const codomain_type& co_value)
     {
-        return co_value == Combiner::neutron();
+        return co_value == Combiner::identity_element();
     }
 };
 

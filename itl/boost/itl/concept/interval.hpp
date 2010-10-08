@@ -16,8 +16,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/detail/is_incrementable.hpp>
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/type_traits/given.hpp>
-#include <boost/itl/type_traits/unon.hpp>
-#include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/type_traits/unit_element.hpp>
+#include <boost/itl/type_traits/identity_element.hpp>
 #include <boost/itl/type_traits/infinity.hpp>
 #include <boost/itl/type_traits/succ_pred.hpp>
 #include <boost/itl/type_traits/is_numeric.hpp>
@@ -856,10 +856,10 @@ cardinality(const Type& object)
 {
     typedef typename size_type_of<interval_traits<Type> >::type SizeT;
     if(itl::is_empty(object))
-        return itl::neutron<SizeT>::value();
+        return itl::identity_element<SizeT>::value();
     else if(   object.bounds() == interval_bounds::closed() 
             && domain_equal<Type>(lower(object), upper(object)))
-        return itl::unon<SizeT>::value();
+        return itl::unit_element<SizeT>::value();
     else 
         return infinity<SizeT>::value();
 }
@@ -870,7 +870,7 @@ typename boost::enable_if<is_discrete_interval<Type>,
 cardinality(const Type& object)
 {
     typedef typename size_type_of<interval_traits<Type> >::type SizeT;
-    return itl::is_empty(object) ? neutron<SizeT>::value()
+    return itl::is_empty(object) ? identity_element<SizeT>::value()
                                  : static_cast<SizeT>(last_next(object) - first(object));
 }
 
@@ -881,7 +881,7 @@ cardinality(const Type& object)
 {
     typedef typename size_type_of<interval_traits<Type> >::type SizeT;
     if(itl::is_empty(object))
-        return itl::neutron<SizeT>::value();
+        return itl::identity_element<SizeT>::value();
     else 
         return infinity<SizeT>::value();
 }
@@ -892,7 +892,7 @@ typename boost::enable_if<is_discrete_asymmetric<Type>,
 cardinality(const Type& object)
 {
     typedef typename size_type_of<interval_traits<Type> >::type SizeT;
-    return itl::is_empty(object) ? neutron<SizeT>::value()
+    return itl::is_empty(object) ? identity_element<SizeT>::value()
                                  : static_cast<SizeT>(last_next(object) - first(object));
 }
 
@@ -902,7 +902,7 @@ typename boost::enable_if<has_symmetric_bounds<Type>,
 cardinality(const Type& object)
 {
     typedef typename size_type_of<interval_traits<Type> >::type SizeT;
-    return itl::is_empty(object) ? neutron<SizeT>::value()
+    return itl::is_empty(object) ? identity_element<SizeT>::value()
                                  : static_cast<SizeT>(last_next(object) - first(object));
 }
 
@@ -924,7 +924,7 @@ inline typename boost::enable_if<is_continuous_interval<Type>,
 length(const Type& object)
 {
     typedef typename difference_type_of<interval_traits<Type> >::type DiffT;
-    return itl::is_empty(object) ? neutron<DiffT>::value()
+    return itl::is_empty(object) ? identity_element<DiffT>::value()
                                  : upper(object) - lower(object);
 }
 
@@ -934,7 +934,7 @@ inline typename boost::enable_if<is_discrete_interval<Type>,
 length(const Type& object)
 {
     typedef typename difference_type_of<interval_traits<Type> >::type DiffT;
-    return itl::is_empty(object) ? neutron<DiffT>::value()
+    return itl::is_empty(object) ? identity_element<DiffT>::value()
                                  : last_next(object) - first(object);
 }
 
@@ -944,7 +944,7 @@ typename boost::enable_if<is_continuous_asymmetric<Type>,
 length(const Type& object)
 {
     typedef typename difference_type_of<interval_traits<Type> >::type DiffT;
-    return itl::is_empty(object) ? neutron<DiffT>::value()
+    return itl::is_empty(object) ? identity_element<DiffT>::value()
                                  : upper(object) - lower(object);
 }
 
@@ -954,7 +954,7 @@ inline typename boost::enable_if<is_discrete_static<Type>,
 length(const Type& object)
 {
     typedef typename difference_type_of<interval_traits<Type> >::type DiffT;
-    return itl::is_empty(object) ? neutron<DiffT>::value()
+    return itl::is_empty(object) ? identity_element<DiffT>::value()
                                  : last_next(object) - first(object);
 }
 
@@ -1092,7 +1092,7 @@ right_subtract(Type left, const Type& right_minuend)
     if(exclusive_less(left, right_minuend))
         return left;
     else if(lower_less_equal(right_minuend, left))
-        return neutron<Type>::value();
+        return identity_element<Type>::value();
 
     return construct<Type>(lower(left), pred(lower(right_minuend)));
 }
@@ -1137,7 +1137,7 @@ operator & (Type left, const Type& right)
     typedef typename interval_traits<Type>::domain_compare domain_compare;
 
     if(itl::is_empty(left) || itl::is_empty(right))
-        return neutron<Type>::value();
+        return identity_element<Type>::value();
     else
         return
         construct<Type>
@@ -1154,7 +1154,7 @@ operator & (Type left, const Type& right)
     typedef typename interval_traits<Type>::domain_compare domain_compare;
 
     if(itl::is_empty(left) || itl::is_empty(right))
-        return neutron<Type>::value();
+        return identity_element<Type>::value();
     else
         return
         construct<Type>
@@ -1176,7 +1176,7 @@ typename boost::enable_if<has_dynamic_bounds<Type>, Type>::type
 operator & (Type left, const Type& right)
 {
     if(itl::is_empty(left) || itl::is_empty(right))
-        return neutron<Type>::value();
+        return identity_element<Type>::value();
     else 
         return  dynamic_interval_traits<Type>::construct_bounded
                 (
@@ -1213,13 +1213,13 @@ typename boost::enable_if<is_asymmetric_interval<Type>, Type>::type
 inner_complement(const Type& left, const Type& right)
 {
     if(itl::is_empty(left) || itl::is_empty(right))
-        return  neutron<Type>::value();
+        return  identity_element<Type>::value();
     else if(exclusive_less(left, right))
         return construct<Type>(upper(left), lower(right));
     else if(exclusive_less(right, left))
         return construct<Type>(upper(right), lower(left));
     else
-        return neutron<Type>::value();
+        return identity_element<Type>::value();
 }
 
 template<class Type>
@@ -1227,13 +1227,13 @@ typename boost::enable_if<is_discrete_static_closed<Type>, Type>::type
 inner_complement(const Type& left, const Type& right)
 {
     if(itl::is_empty(left) || itl::is_empty(right))
-        return  neutron<Type>::value();
+        return  identity_element<Type>::value();
     else if(exclusive_less(left, right))
         return construct<Type>(succ(upper(left)), pred(lower(right)));
     else if(exclusive_less(right, left))
         return construct<Type>(succ(upper(right)), pred(lower(left)));
     else
-        return neutron<Type>::value();
+        return identity_element<Type>::value();
 }
 
 template<class Type>
@@ -1241,13 +1241,13 @@ typename boost::enable_if<is_discrete_static_open<Type>, Type>::type
 inner_complement(const Type& left, const Type& right)
 {
     if(itl::is_empty(left) || itl::is_empty(right))
-        return  neutron<Type>::value();
+        return  identity_element<Type>::value();
     else if(exclusive_less(left, right))
         return construct<Type>(last(left), first(right));
     else if(exclusive_less(right, left))
         return construct<Type>(last(right), first(left));
     else
-        return neutron<Type>::value();
+        return identity_element<Type>::value();
 }
 
 template<class Type>
@@ -1255,13 +1255,13 @@ typename boost::enable_if<has_dynamic_bounds<Type>, Type>::type
 inner_complement(const Type& left, const Type& right)
 {
     if(itl::is_empty(left) || itl::is_empty(right))
-        return  neutron<Type>::value();
+        return  identity_element<Type>::value();
     else if(exclusive_less(left, right))
         return right_subtract(left_subtract(hull(left, right), left), right);
     else if(exclusive_less(right, left))
         return right_subtract(left_subtract(hull(right, left), right), left);
     else
-        return neutron<Type>::value();
+        return identity_element<Type>::value();
 }
 
 //==============================================================================
@@ -1279,13 +1279,13 @@ distance(const Type& x1, const Type& x2)
     typedef typename difference_type_of<interval_traits<Type> >::type difference_type;
 
     if(itl::is_empty(x1) || itl::is_empty(x2))
-        return itl::neutron<difference_type>::value();
+        return itl::identity_element<difference_type>::value();
     else if(domain_less<Type>(last(x1), first(x2)))
         return static_cast<difference_type>(pred(first(x2) - last(x1)));
     else if(domain_less<Type>(last(x2), first(x1)))
         return static_cast<difference_type>(pred(first(x1) - last(x2)));
     else
-        return itl::neutron<difference_type>::value();
+        return itl::identity_element<difference_type>::value();
 }
 
 template<class Type>
@@ -1300,13 +1300,13 @@ distance(const Type& x1, const Type& x2)
     typedef typename difference_type_of<interval_traits<Type> >::type DiffT;
 
     if(itl::is_empty(x1) || itl::is_empty(x2))
-        return itl::neutron<DiffT>::value();
+        return itl::identity_element<DiffT>::value();
     else if(domain_less<Type>(upper(x1), lower(x2)))
         return x2.lower() - x1.upper();
     else if(domain_less<Type>(upper(x2), lower(x1)))
         return lower(x1) - upper(x2);
     else
-        return itl::neutron<DiffT>::value();
+        return itl::identity_element<DiffT>::value();
 }
 
 //==============================================================================

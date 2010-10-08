@@ -76,14 +76,14 @@ private:
 public:
 
     bit_element_iterator()
-        : _saltator(neutron<segment_iterator>::value())
-        , _reptator(neutron<domain_difference_type>::value())
+        : _saltator(identity_element<segment_iterator>::value())
+        , _reptator(identity_element<domain_difference_type>::value())
         , _on_bit(before)
     {}
 
     bit_element_iterator(segment_iterator jumper, bit_range_type start_pos)
         : _saltator(jumper)
-        , _reptator(neutron<domain_difference_type>::value()) 
+        , _reptator(identity_element<domain_difference_type>::value()) 
         , _on_bit(start_pos)
     {}
 
@@ -135,7 +135,7 @@ private:
                 ++_saltator;
                 // NOTE: increment and dereference are unsecure now, because 
                 // _saltator can (finally) be end here. decrement is secure. 
-                _reptator = neutron<domain_difference_type>::value();
+                _reptator = identity_element<domain_difference_type>::value();
                 _on_bit = ante;
             }
         }
@@ -146,7 +146,7 @@ private:
         prev_bit();
         if(_on_bit == ante)
         {   // The current bitset passed the beginning
-            if(neutron<domain_difference_type>::value() < _reptator)
+            if(identity_element<domain_difference_type>::value() < _reptator)
             {
                 --_reptator;
                 _on_bit = past;
@@ -191,7 +191,7 @@ private:
         if(_on_bit == before)
         {
             ++_saltator;
-            _reptator = neutron<domain_difference_type>::value();
+            _reptator = identity_element<domain_difference_type>::value();
             _on_bit   = Proceed::first_bit(_saltator->second.word());
         }
         else
@@ -217,7 +217,7 @@ private:
 
     bool is_segment_begin()const
     {
-        return _reptator == neutron<domain_difference_type>::value()
+        return _reptator == identity_element<domain_difference_type>::value()
             && 0 <= _on_bit && _on_bit < digits
             && _on_bit == Proceed::first_bit(_saltator->second.word());
     }
@@ -466,7 +466,7 @@ struct proceed<IteratorT,true>
     { return first(inter_val) + reptator; }
 
     static difference_type inter_base(const iterator& iter)
-    { return neutron<difference_type>::value(); }
+    { return identity_element<difference_type>::value(); }
 
     static difference_type inter_ceil(const iterator& iter)
     { return iter->first.length(); }

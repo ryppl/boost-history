@@ -9,7 +9,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 /*------------------------------------------------------------------------------
 itl_ptime provides adapter code for boost::posix_time::ptime.
 It implements incrementation (++) decrementation (--) and a neutral element
-w.r.t. addition (neutron()).
+w.r.t. addition (identity_element()).
 ------------------------------------------------------------------------------*/
 
 #ifndef BOOST_ITL_PTIME_HPP_JOFA_080416
@@ -32,7 +32,7 @@ w.r.t. addition (neutron()).
 #pragma warning(pop)
 #endif
 
-#include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/type_traits/identity_element.hpp>
 #include <boost/itl/type_traits/difference_type_of.hpp>
 #include <boost/itl/type_traits/size_type_of.hpp>
 #include <boost/itl/type_traits/is_discrete.hpp>
@@ -46,7 +46,7 @@ namespace boost{namespace itl
     };
 
     template<> 
-    inline boost::posix_time::ptime neutron<boost::posix_time::ptime>::value()
+    inline boost::posix_time::ptime identity_element<boost::posix_time::ptime>::value()
     { 
         return boost::posix_time::ptime(boost::posix_time::min_date_time); 
     }

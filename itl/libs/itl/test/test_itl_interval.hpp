@@ -12,7 +12,7 @@ template <class T, class IntervalT>
 void interval_ctor_4_ordered_types()
 {
     T lower_bound = given<mpl::or_<is_static_rightopen<IntervalT>, is_static_open<IntervalT> >, T>
-                        ::then(neutron<T>::value(), unon<T>::value());
+                        ::then(identity_element<T>::value(), unit_element<T>::value());
 
     typedef typename domain_type_of<IntervalT>::type Dom1T;
     typedef typename domain_type_of<interval_traits<IntervalT> >::type Dom2T;
@@ -21,15 +21,15 @@ void interval_ctor_4_ordered_types()
 
     // An empty interval is defined as the closed interval [1,0]
     BOOST_CHECK_EQUAL(itl::is_empty(IntervalT()), true);
-    BOOST_CHECK_EQUAL(itl::cardinality(IntervalT()), itl::neutron<typename itl::size_type_of<T>::type>::value());
-    BOOST_CHECK_EQUAL(itl::size(IntervalT()), itl::neutron<typename itl::size_type_of<T>::type>::value());
+    BOOST_CHECK_EQUAL(itl::cardinality(IntervalT()), itl::identity_element<typename itl::size_type_of<T>::type>::value());
+    BOOST_CHECK_EQUAL(itl::size(IntervalT()), itl::identity_element<typename itl::size_type_of<T>::type>::value());
     BOOST_CHECK_EQUAL(IntervalT().lower(), lower_bound);
-    BOOST_CHECK_EQUAL(IntervalT().upper(), itl::neutron<T>::value());
+    BOOST_CHECK_EQUAL(IntervalT().upper(), itl::identity_element<T>::value());
     BOOST_CHECK_EQUAL(itl::lower(IntervalT()), lower_bound);
-    BOOST_CHECK_EQUAL(itl::upper(IntervalT()), itl::neutron<T>::value());
+    BOOST_CHECK_EQUAL(itl::upper(IntervalT()), itl::identity_element<T>::value());
 
     BOOST_CHECK_EQUAL(IntervalT(), IntervalT());
-    BOOST_CHECK_EQUAL(IntervalT(), IntervalT(lower_bound, itl::neutron<T>::value()));
+    BOOST_CHECK_EQUAL(IntervalT(), IntervalT(lower_bound, itl::identity_element<T>::value()));
 }
 
 /*JODO
@@ -37,9 +37,9 @@ template <class T>
 void interval_ctor_4_bicremental_types()
 {
     BOOST_CHECK_EQUAL( T(), pred(succ(T())));
-    BOOST_CHECK_EQUAL( itl::neutron<T>::value(), pred(succ(itl::neutron<T>::value()))       );
-    BOOST_CHECK_EQUAL( itl::unon<T>::value(),    succ(itl::neutron<T>::value())             );
-    BOOST_CHECK_EQUAL( interval<T>().length(),   itl::neutron<typename difference_type_of<T>::type>::value() );
+    BOOST_CHECK_EQUAL( itl::identity_element<T>::value(), pred(succ(itl::identity_element<T>::value()))       );
+    BOOST_CHECK_EQUAL( itl::unit_element<T>::value(),    succ(itl::identity_element<T>::value())             );
+    BOOST_CHECK_EQUAL( interval<T>().length(),   itl::identity_element<typename difference_type_of<T>::type>::value() );
 
     T v4 = make<T>(4);
     itl::interval<T> I4_4I(v4);
@@ -60,9 +60,9 @@ void interval_ctor_4_bicremental_types()
     BOOST_CHECK_EQUAL( I4_4I.contained_in(I4_4I), true  );
     BOOST_CHECK_EQUAL( I4_4I,                     I4_4I );
 
-    BOOST_CHECK_EQUAL( I4_4I.cardinality(),       unon<typename interval<T>::size_type>::value()          );
-    BOOST_CHECK_EQUAL( I4_4I.size(),              unon<typename interval<T>::size_type>::value()          );
-    //BOOST_CHECK_EQUAL( I4_4I.length(),          neutron<typename interval<T>::difference_type>::value() );
+    BOOST_CHECK_EQUAL( I4_4I.cardinality(),       unit_element<typename interval<T>::size_type>::value()          );
+    BOOST_CHECK_EQUAL( I4_4I.size(),              unit_element<typename interval<T>::size_type>::value()          );
+    //BOOST_CHECK_EQUAL( I4_4I.length(),          identity_element<typename interval<T>::difference_type>::value() );
 
     itl::interval<T> j_4_4(I4_4I);
     BOOST_CHECK_EQUAL( I4_4I, j_4_4 );
@@ -109,11 +109,11 @@ void interval_ctor_4_bicremental_types()
 template <class T> 
 void interval_ctor_4_integral_types()
 {
-    BOOST_CHECK_EQUAL(interval<T>().first(),  itl::unon<T>::value());
-    BOOST_CHECK_EQUAL(interval<T>().last(),   itl::neutron<T>::value());
-    BOOST_CHECK_EQUAL(interval<T>().length(), itl::neutron<typename interval<T>::difference_type>::value());
+    BOOST_CHECK_EQUAL(interval<T>().first(),  itl::unit_element<T>::value());
+    BOOST_CHECK_EQUAL(interval<T>().last(),   itl::identity_element<T>::value());
+    BOOST_CHECK_EQUAL(interval<T>().length(), itl::identity_element<typename interval<T>::difference_type>::value());
 
-    BOOST_CHECK_EQUAL(interval<T>(0,0).length(), itl::unon<typename interval<T>::difference_type>::value());
+    BOOST_CHECK_EQUAL(interval<T>(0,0).length(), itl::unit_element<typename interval<T>::difference_type>::value());
 }
 
 void interval_ctor_specific()//JODO 

@@ -110,13 +110,13 @@ struct std_copy_backward
 
     void operator()(const AtomicT& source, TargetT& target)
     {
-        fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), neutron<value_type>::value());
+        fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), identity_element<value_type>::value());
         std::copy_backward(source.begin(), source.end(), target.end());
     }
 
     void operator()(const SourceT& source, TargetT& target)
     {
-        fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), neutron<value_type>::value());
+        fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), identity_element<value_type>::value());
         std::copy_backward(elements_begin(source), elements_end(source), target.end());
     }
 
@@ -131,13 +131,13 @@ struct std_copy_backward_back
 
     void operator()(const AtomicT& source, TargetT& target)
     {
-        fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), neutron<value_type>::value());
+        fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), identity_element<value_type>::value());
         std::copy_backward(source.rbegin(), source.rend(), target.end());
     }
 
     void operator()(const SourceT& source, TargetT& target)
     {
-        fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), neutron<value_type>::value());
+        fill_n(InsertIterator<TargetT>(target, target.end()), source.size(), identity_element<value_type>::value());
         std::copy_backward(elements_rbegin(source), elements_rend(source), target.end());
     }
 

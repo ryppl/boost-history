@@ -19,8 +19,8 @@ void interval_map_mixed_ctor_4_ordered_types()
     typedef interval_map<T,U>       IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
 
-    T v0 = neutron<T>::value();
-    U u1 = unon<U>::value();
+    T v0 = identity_element<T>::value();
+    U u1 = unit_element<U>::value();
 
     SplitIntervalMapT split_map(make_pair(v0,u1));
     IntervalMapT      join_map(split_map);
@@ -36,8 +36,8 @@ void interval_map_mixed_equal_4_ordered_types()
     typedef split_interval_map<T,U> SplitIntervalMapT;
     typedef typename IntervalMapT::interval_type IntervalT;
 
-    T v0 = neutron<T>::value();
-    U u1 = unon<U>::value();
+    T v0 = identity_element<T>::value();
+    U u1 = unit_element<U>::value();
 
     SplitIntervalMapT    split_empty, split_single(make_pair(v0,u1));
     IntervalMapT         join_empty, join_single(make_pair(v0,u1));
@@ -81,9 +81,9 @@ void interval_map_mixed_assign_4_ordered_types()
     typedef split_interval_map<T,U> SplitIntervalMapT;
     typedef typename IntervalMapT::interval_type IntervalT;
 
-    T v0 = neutron<T>::value();
-    T v1 = unon<T>::value();
-    U u1 = unon<U>::value();
+    T v0 = identity_element<T>::value();
+    T v1 = unit_element<T>::value();
+    U u1 = unit_element<U>::value();
 
     mapping_pair<T,U> v0_u1(v0,u1);
     mapping_pair<T,U> v1_u1(v1,u1);

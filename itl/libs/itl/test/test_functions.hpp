@@ -16,7 +16,7 @@ Auxiliary functions to reduce redundancies in test case code.
 #include <boost/itl/type_traits/interval_type_default.hpp>
 #include <boost/itl/discrete_interval.hpp>
 
-#include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/type_traits/identity_element.hpp>
 #include <boost/itl/functors.hpp>
 
 namespace boost{namespace itl

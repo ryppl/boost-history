@@ -106,16 +106,16 @@ erase(Type& object, const typename Type::element_type& value_pair)
     typedef typename Type::on_identity_absorbtion on_identity_absorbtion;
 
     if(on_identity_absorbtion::is_absorbable(value_pair.second)) 
-        return neutron<size_type>::value();
+        return identity_element<size_type>::value();
 
     iterator it_ = object.find(value_pair.first);
     if(it_ != object.end() && value_pair.second == it_->second)
     {
         object.erase(it_);
-        return unon<size_type>::value();
+        return unit_element<size_type>::value();
     }
 
-    return neutron<size_type>::value();
+    return identity_element<size_type>::value();
 }
 
 template<class Type>
@@ -401,7 +401,7 @@ operator ^= (Type& object, const Type& operand)
         itl::flip(object, *it_);
 
     ITL_FORALL(typename Type, it2_, object)
-        it2_->second = neutron<typename Type::codomain_type>::value();
+        it2_->second = identity_element<typename Type::codomain_type>::value();
 
     return object;
 }
@@ -456,7 +456,7 @@ inline typename enable_if<mpl::and_< is_element_map<Type>
 absorb_identities(Type& object)
 {
     typedef typename Type::element_type element_type;
-    return itl::erase_if(content_is_neutron<element_type>(), object);
+    return itl::erase_if(content_is_identity_element<element_type>(), object);
 }
 
 template<class Type>

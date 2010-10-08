@@ -248,7 +248,7 @@ public:
     codomain_type operator()(const domain_type& key)const
     {
         const_iterator it = find(key); 
-        return it==end() ? neutron<codomain_type>::value()
+        return it==end() ? identity_element<codomain_type>::value()
                          : it->second;
     }
 
@@ -431,7 +431,7 @@ private:
     {                // !codomain_is_set, !absorbs_identities
         static void subtract(Type&, typename Type::iterator it_, 
                               const typename Type::codomain_type& )
-        { it_->second = neutron<typename Type::codomain_type>::value(); }
+        { it_->second = identity_element<typename Type::codomain_type>::value(); }
     };
 
     template<class Type>
@@ -461,7 +461,7 @@ private:
                                      const typename Type::codomain_type& co_value)
         { 
             inverse_codomain_intersect()(it_->second, co_value); 
-            if(it_->second == neutron<codomain_type>::value())
+            if(it_->second == identity_element<codomain_type>::value())
                 object.erase(it_);
         }
     };
@@ -489,7 +489,7 @@ private:
         { 
             object.add(operand);
             ITL_FORALL(typename Type, it_, object)
-                it_->second = neutron<codomain_type>::value();
+                it_->second = identity_element<codomain_type>::value();
         }
     };
 
@@ -582,7 +582,7 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
 
     iterator inserted_ 
         = base_type::insert(prior_, 
-                            value_type(addend.first, Combiner::neutron()));
+                            value_type(addend.first, Combiner::identity_element()));
     Combiner()(inserted_->second, addend.second);
 
     if(on_absorbtion_::is_absorbable(inserted_->second))

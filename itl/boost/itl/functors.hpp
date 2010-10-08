@@ -11,8 +11,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <functional>
 #include <boost/type_traits.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/itl/type_traits/neutron.hpp>
-#include <boost/itl/type_traits/unon.hpp>
+#include <boost/itl/type_traits/identity_element.hpp>
+#include <boost/itl/type_traits/unit_element.hpp>
 #include <boost/itl/type_traits/is_set.hpp>
 #include <boost/itl/type_traits/has_set_semantics.hpp>
 
@@ -22,14 +22,14 @@ namespace boost{namespace itl
     template <typename Type> struct identity_based_inplace_combine 
         : public std::binary_function<Type&, const Type&, void>
     {
-        static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type identity_element() { return boost::itl::identity_element<Type>::value(); }
     };
 
     // ------------------------------------------------------------------------
-    template <typename Type> struct unon_based_inplace_combine 
+    template <typename Type> struct unit_element_based_inplace_combine 
         : public std::binary_function<Type&, const Type&, void>
     {
-        static Type neutron() { return boost::itl::unon<Type>::value(); }
+        static Type identity_element() { return boost::itl::unit_element<Type>::value(); }
     };
 
     // ------------------------------------------------------------------------
@@ -113,7 +113,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { object &= ~operand; }
 
-        static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type identity_element() { return boost::itl::identity_element<Type>::value(); }
     };
 
     template<>
@@ -141,7 +141,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { object ^= operand; }
 
-        static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type identity_element() { return boost::itl::identity_element<Type>::value(); }
     };
 
     // ------------------------------------------------------------------------
@@ -166,7 +166,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { object ^= operand; }
 
-        static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type identity_element() { return boost::itl::identity_element<Type>::value(); }
     };
 
     template<>
@@ -181,7 +181,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { insert(object,operand); }
 
-        static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type identity_element() { return boost::itl::identity_element<Type>::value(); }
     };
 
     template<>
@@ -196,7 +196,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { erase(object,operand); }
 
-        static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type identity_element() { return boost::itl::identity_element<Type>::value(); }
     };
 
     template<>
@@ -211,7 +211,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { object *= operand; }
 
-        static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type identity_element() { return boost::itl::identity_element<Type>::value(); }
     };
 
     template<>
@@ -226,7 +226,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { object /= operand; }
 
-        static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type identity_element() { return boost::itl::identity_element<Type>::value(); }
     };
 
     template<>
@@ -244,7 +244,7 @@ namespace boost{namespace itl
                 object = operand;
         }
 
-        static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type identity_element() { return boost::itl::identity_element<Type>::value(); }
     };
 
     template<>
@@ -262,7 +262,7 @@ namespace boost{namespace itl
                 object = operand;
         }
 
-        static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type identity_element() { return boost::itl::identity_element<Type>::value(); }
     };
 
     template<>
@@ -374,7 +374,7 @@ namespace boost{namespace itl
     // equivalent to
     //
     // T x = ..., y;
-    // y = Functor::neutron();
+    // y = Functor::identity_element();
     // Functor()(y, x); // y == inverse_of(x) 
 
     template<class Functor> struct is_negative;
@@ -429,7 +429,7 @@ namespace boost{namespace itl
         // Example -= :  (0 -= x) == -x
         static argument_type inversion(const argument_type& value)
         {
-            argument_type inverse = Combiner::neutron();
+            argument_type inverse = Combiner::identity_element();
             Combiner()(inverse, value);
             return inverse;
         }

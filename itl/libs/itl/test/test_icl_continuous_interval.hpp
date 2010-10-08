@@ -12,8 +12,8 @@ template <class T, class IntervalT>
 void interval_ctor_4_ordered_types()
 {
     BOOST_CHECK_EQUAL(itl::is_empty(IntervalT()), true);
-    BOOST_CHECK_EQUAL(itl::cardinality(IntervalT()), itl::neutron<typename itl::size_type_of<T>::type>::value());
-    BOOST_CHECK_EQUAL(itl::size(IntervalT()), itl::neutron<typename itl::size_type_of<T>::type>::value());
+    BOOST_CHECK_EQUAL(itl::cardinality(IntervalT()), itl::identity_element<typename itl::size_type_of<T>::type>::value());
+    BOOST_CHECK_EQUAL(itl::size(IntervalT()), itl::identity_element<typename itl::size_type_of<T>::type>::value());
 
     BOOST_CHECK_EQUAL( IntervalT(), IntervalT() );
     BOOST_CHECK_EQUAL( IntervalT(), IntervalT(IntervalT().lower(), IntervalT().upper()) );

@@ -45,14 +45,14 @@ template<class MapT>
 typename MapT::const_iterator next_proton(typename MapT::const_iterator& iter_, const MapT& object)
 {
     while(   iter_ != object.end() 
-          && iter_->second == neutron<typename MapT::codomain_type>::value())
+          && iter_->second == identity_element<typename MapT::codomain_type>::value())
         ++iter_;
 
     return iter_;
 }
 
 /** Function template <tt>lexicographical_equal</tt> implements 
-lexicographical equality except for neutronic content values. */
+lexicographical equality except for identity_elementic content values. */
 template<class MapT>
 bool lexicographical_distinct_equal(const MapT& left, const MapT& right)
 {

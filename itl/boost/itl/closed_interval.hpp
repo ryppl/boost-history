@@ -29,7 +29,7 @@ public:
     //==========================================================================
     /** Default constructor; yields an empty interval <tt>[0,0)</tt>. */
     closed_interval() 
-        : _lwb(unon<DomainT>::value()), _upb(neutron<DomainT>::value()) 
+        : _lwb(unit_element<DomainT>::value()), _upb(identity_element<DomainT>::value()) 
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));

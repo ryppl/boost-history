@@ -8,7 +8,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifndef __test_itl_laws_h_JOFA_090119__
 #define __test_itl_laws_h_JOFA_090119__
 
-#include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/type_traits/identity_element.hpp>
 
 namespace boost{namespace itl
 {
@@ -73,40 +73,40 @@ DEFINE_ASSOCIATIVITY_CHECK_WRT_EQUAL(caret, ^ );
 #define DEFINE_RIGHT_NEUTRALITY_CHECK_WRT_EQUAL(op_tag, op_sign) \
 template<class Type> \
 void check_right_neutrality_wrt_equal_##op_tag \
-(typename equality<Type>::type* equal, const Type& a, const Type& neutron) \
+(typename equality<Type>::type* equal, const Type& a, const Type& identity_element) \
 { \
-    Type left  = a op_sign neutron; \
-    Type right = neutron; \
+    Type left  = a op_sign identity_element; \
+    Type right = identity_element; \
     BOOST_CHECK_EQUAL((*equal)(left,right), true); \
 }
 
 #define DEFINE_RIGHT_NEUTRALITY_CHECK_WRT(op_tag, op_sign) \
 template<class Type> \
 void check_right_neutrality_wrt_##op_tag \
-(typename equality<Type>::type* equal, const Type& a, const Type& neutron) \
+(typename equality<Type>::type* equal, const Type& a, const Type& identity_element) \
 { \
-    Type left  = a op_sign neutron; \
-    Type right = neutron; \
+    Type left  = a op_sign identity_element; \
+    Type right = identity_element; \
     BOOST_CHECK_EQUAL(left,right); \
 }
 
 #define DEFINE_NEUTRALITY_CHECK_WRT_EQUAL(op_tag, op_sign) \
 template<class Type> \
 void check_neutrality_wrt_equal_##op_tag \
-(typename equality<Type>::type* equal, const Type& a, const Type& neutron) \
+(typename equality<Type>::type* equal, const Type& a, const Type& identity_element) \
 { \
-    Type left  = a op_sign neutron; \
-    Type right = neutron op_sign a; \
+    Type left  = a op_sign identity_element; \
+    Type right = identity_element op_sign a; \
     BOOST_CHECK_EQUAL((*equal)(left,right), true); \
 }
 
 #define DEFINE_NEUTRALITY_CHECK_WRT(op_tag, op_sign) \
 template<class Type> \
 void check_neutrality_wrt_##op_tag \
-(const Type& a, const Type& neutron) \
+(const Type& a, const Type& identity_element) \
 { \
-    Type left  = a op_sign neutron; \
-    Type right = neutron op_sign a; \
+    Type left  = a op_sign identity_element; \
+    Type right = identity_element op_sign a; \
     BOOST_CHECK_EQUAL(left,right); \
 }
 
@@ -166,19 +166,19 @@ DEFINE_COMMUTATIVITY_CHECK_WRT_EQUAL(caret, ^ );
 #define DEFINE_PARTIAL_INVERSION_CHECK_WRT_EQUAL(plus_tag, plus_sign) \
 template<class Type> \
     void check_partial_inversion_wrt_equal_##plus_tag \
-(typename equality<Type>::type* equal, const Type& neutron, const Type& var_a) \
+(typename equality<Type>::type* equal, const Type& identity_element, const Type& var_a) \
 { \
     Type positive_difference  = var_a - var_a; \
-    BOOST_CHECK_EQUAL((*equal)(positive_difference, neutron), true); \
+    BOOST_CHECK_EQUAL((*equal)(positive_difference, identity_element), true); \
 }
 
 #define DEFINE_PARTIAL_INVERSION_CHECK_WRT(plus_tag, plus_sign) \
 template<class Type> \
     void check_partial_inversion_wrt_##plus_tag \
-(const Type& neutron, const Type& var_a) \
+(const Type& identity_element, const Type& var_a) \
 { \
     Type positive_difference  = var_a - var_a; \
-    BOOST_CHECK_EQUAL(positive_difference, neutron); \
+    BOOST_CHECK_EQUAL(positive_difference, identity_element); \
 }
 
 #define CHECK_PARTIAL_INVERSION_WRT_EQUAL(plus_tag) check_partial_inversion_wrt_equal_##plus_tag
@@ -196,23 +196,23 @@ DEFINE_PARTIAL_INVERSION_CHECK_WRT_EQUAL(pipe,  | );
 #define DEFINE_INVERSE_CHECK_WRT_EQUAL(plus_tag, plus_sign) \
 template<class Type> \
     void check_inverse_wrt_equal_##plus_tag \
-(typename equality<Type>::type* equal, const Type& neutron, const Type& var_a) \
+(typename equality<Type>::type* equal, const Type& identity_element, const Type& var_a) \
 { \
     Type positive_difference  = var_a - var_a; \
-    BOOST_CHECK_EQUAL((*equal)(positive_difference, neutron), true); \
-    Type negative_difference = (neutron - var_a) plus_sign var_a; \
-    BOOST_CHECK_EQUAL((*equal)(negative_difference, neutron), true); \
+    BOOST_CHECK_EQUAL((*equal)(positive_difference, identity_element), true); \
+    Type negative_difference = (identity_element - var_a) plus_sign var_a; \
+    BOOST_CHECK_EQUAL((*equal)(negative_difference, identity_element), true); \
 }
 
 #define DEFINE_INVERSE_CHECK_WRT(plus_tag, plus_sign) \
 template<class Type> \
     void check_inverse_wrt_##plus_tag \
-(const Type& neutron, const Type& var_a) \
+(const Type& identity_element, const Type& var_a) \
 { \
     Type positive_difference  = var_a - var_a; \
-    BOOST_CHECK_EQUAL(positive_difference, neutron); \
-    Type negative_difference = (neutron - var_a) plus_sign var_a; \
-    BOOST_CHECK_EQUAL(negative_difference, neutron); \
+    BOOST_CHECK_EQUAL(positive_difference, identity_element); \
+    Type negative_difference = (identity_element - var_a) plus_sign var_a; \
+    BOOST_CHECK_EQUAL(negative_difference, identity_element); \
 }
 
 #define CHECK_INVERSE_WRT_EQUAL(plus_tag) check_inverse_wrt_equal_##plus_tag
@@ -271,21 +271,21 @@ void check_domain_containedness(const MapT& a)
 #define DEFINE_MONOID_CHECK_WRT_EQUAL(op_tag) \
 template<class Type, class TypeB, class TypeC> \
 void check_monoid_wrt_equal_##op_tag \
-(typename equality<Type>::type* equal, const Type& neutron, \
+(typename equality<Type>::type* equal, const Type& identity_element, \
 const Type& a, const TypeB& b, const TypeC& c) \
 { \
     CHECK_ASSOCIATIVITY_WRT_EQUAL(op_tag)(equal,a,b,c); \
-    CHECK_NEUTRALITY_WRT_EQUAL(op_tag)(equal,a,neutron); \
+    CHECK_NEUTRALITY_WRT_EQUAL(op_tag)(equal,a,identity_element); \
 }
 
 #define DEFINE_MONOID_CHECK_WRT(op_tag) \
 template<class Type, class TypeB, class TypeC> \
 void check_monoid_wrt_##op_tag \
-(const Type& neutron, \
+(const Type& identity_element, \
 const Type& a, const TypeB& b, const TypeC& c) \
 { \
     CHECK_ASSOCIATIVITY_WRT(op_tag)(a,b,c); \
-    CHECK_NEUTRALITY_WRT(op_tag)(a,neutron); \
+    CHECK_NEUTRALITY_WRT(op_tag)(a,identity_element); \
 }
 
 DEFINE_MONOID_CHECK_WRT(plus);
@@ -306,11 +306,11 @@ DEFINE_MONOID_CHECK_WRT_EQUAL(caret);
 #define DEFINE_ABELIAN_MONOID_CHECK_WRT_EQUAL(op_tag) \
 template<class Type, class TypeB, class TypeC> \
 void check_abelian_monoid_wrt_equal_##op_tag \
-(typename equality<Type>::type* equal, const Type& neutron, \
+(typename equality<Type>::type* equal, const Type& identity_element, \
 const Type& a, const TypeB& b, const TypeC& c) \
 { \
     CHECK_ASSOCIATIVITY_WRT_EQUAL(op_tag)(equal,a,b,c); \
-    CHECK_NEUTRALITY_WRT_EQUAL(op_tag)(equal,a,neutron); \
+    CHECK_NEUTRALITY_WRT_EQUAL(op_tag)(equal,a,identity_element); \
     CHECK_COMMUTATIVITY_WRT_EQUAL(op_tag)(equal,a,b); \
     CHECK_COMMUTATIVITY_WRT_EQUAL(op_tag)(equal,a,c); \
 }
@@ -318,11 +318,11 @@ const Type& a, const TypeB& b, const TypeC& c) \
 #define DEFINE_ABELIAN_MONOID_CHECK_WRT(op_tag) \
 template<class Type, class TypeB, class TypeC> \
 void check_abelian_monoid_wrt_##op_tag \
-(const Type& neutron, \
+(const Type& identity_element, \
 const Type& a, const TypeB& b, const TypeC& c) \
 { \
     CHECK_ASSOCIATIVITY_WRT(op_tag)(a,b,c); \
-    CHECK_NEUTRALITY_WRT(op_tag)(a,neutron); \
+    CHECK_NEUTRALITY_WRT(op_tag)(a,identity_element); \
     CHECK_COMMUTATIVITY_WRT(op_tag)(a,b); \
     CHECK_COMMUTATIVITY_WRT(op_tag)(a,c); \
 }
@@ -345,21 +345,21 @@ DEFINE_ABELIAN_MONOID_CHECK_WRT_EQUAL(caret);
 #define DEFINE_PARTIAL_INVERTIVE_MONOID_CHECK_WRT_EQUAL(op_tag) \
 template<class Type, class TypeB, class TypeC> \
 void check_partial_invertive_monoid_wrt_equal_##op_tag \
-(typename equality<Type>::type* equal, const Type& neutron, \
+(typename equality<Type>::type* equal, const Type& identity_element, \
 const Type& a, const TypeB& b, const TypeC& c) \
 { \
-    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal,neutron,a,b,c); \
-    CHECK_PARTIAL_INVERSION_WRT_EQUAL(op_tag)(equal,neutron,a); \
+    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal,identity_element,a,b,c); \
+    CHECK_PARTIAL_INVERSION_WRT_EQUAL(op_tag)(equal,identity_element,a); \
 }
 
 #define DEFINE_PARTIAL_INVERTIVE_MONOID_CHECK_WRT(op_tag) \
 template<class Type, class TypeB, class TypeC> \
 void check_partial_invertive_monoid_wrt_##op_tag \
-(const Type& neutron, \
+(const Type& identity_element, \
 const Type& a, const TypeB& b, const TypeC& c) \
 { \
-    CHECK_ABELIAN_MONOID_WRT(op_tag)(neutron,a,b,c); \
-    CHECK_PARTIAL_INVERSION_WRT(op_tag)(neutron,a); \
+    CHECK_ABELIAN_MONOID_WRT(op_tag)(identity_element,a,b,c); \
+    CHECK_PARTIAL_INVERSION_WRT(op_tag)(identity_element,a); \
 }
 
 DEFINE_PARTIAL_INVERTIVE_MONOID_CHECK_WRT(plus);
@@ -381,21 +381,21 @@ DEFINE_PARTIAL_INVERTIVE_MONOID_CHECK_WRT_EQUAL(caret);
 #define DEFINE_ABELIAN_GROUP_CHECK_WRT_EQUAL(op_tag) \
 template<class Type, class TypeB, class TypeC> \
     void check_abelian_group_wrt_equal_##op_tag \
-(typename equality<Type>::type* equal, const Type& neutron, \
+(typename equality<Type>::type* equal, const Type& identity_element, \
 const Type& a, const TypeB& b, const TypeC& c) \
 { \
-    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal,neutron,a,b,c); \
-    CHECK_INVERSE_WRT_EQUAL(op_tag)(equal,neutron,a); \
+    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal,identity_element,a,b,c); \
+    CHECK_INVERSE_WRT_EQUAL(op_tag)(equal,identity_element,a); \
 }
 
 #define DEFINE_ABELIAN_GROUP_CHECK_WRT(op_tag) \
 template<class Type, class TypeB, class TypeC> \
     void check_abelian_group_wrt_##op_tag \
-(const Type& neutron, \
+(const Type& identity_element, \
 const Type& a, const TypeB& b, const TypeC& c) \
 { \
-    CHECK_ABELIAN_MONOID_WRT(op_tag)(neutron,a,b,c); \
-    CHECK_INVERSE_WRT(op_tag)(neutron,a); \
+    CHECK_ABELIAN_MONOID_WRT(op_tag)(identity_element,a,b,c); \
+    CHECK_INVERSE_WRT(op_tag)(identity_element,a); \
 }
 
 
@@ -416,10 +416,10 @@ template<class TypeA, class TypeB, class Assoc> \
 void check_monoid_permuted_wrt_equal_##op_tag \
 (typename equality<TypeA>::type* equal, const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 #define DEFINE_MONOID_CHECK_PERMUTED_WRT(op_tag) \
@@ -427,10 +427,10 @@ template<class TypeA, class TypeB, class Assoc> \
 void check_monoid_permuted_wrt_##op_tag \
 (const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_MONOID_WRT(op_tag)(itl::neutron<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_MONOID_WRT(op_tag)(itl::neutron<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_MONOID_WRT(op_tag)(itl::neutron<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_MONOID_WRT(op_tag)(itl::neutron<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_MONOID_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_MONOID_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_MONOID_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_MONOID_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 
@@ -456,10 +456,10 @@ template<class TypeA, class TypeB, class Assoc> \
 void check_abelian_monoid_permuted_wrt_equal_##op_tag \
 (typename equality<TypeA>::type* equal, const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 #define DEFINE_ABELIAN_MONOID_CHECK_PERMUTED_WRT(op_tag) \
@@ -467,10 +467,10 @@ template<class TypeA, class TypeB, class Assoc> \
 void check_abelian_monoid_permuted_wrt_##op_tag \
 (const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_ABELIAN_MONOID_WRT(op_tag)(itl::neutron<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_ABELIAN_MONOID_WRT(op_tag)(itl::neutron<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_ABELIAN_MONOID_WRT(op_tag)(itl::neutron<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_ABELIAN_MONOID_WRT(op_tag)(itl::neutron<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_ABELIAN_MONOID_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_ABELIAN_MONOID_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_ABELIAN_MONOID_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_ABELIAN_MONOID_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 
@@ -496,10 +496,10 @@ template<class TypeA, class TypeB, class Assoc> \
 void check_partial_invertive_monoid_permuted_wrt_equal_##op_tag \
 (typename equality<TypeA>::type* equal, const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 #define DEFINE_PARTIAL_INVERTIVE_MONOID_CHECK_PERMUTED_WRT(op_tag) \
@@ -507,10 +507,10 @@ template<class TypeA, class TypeB, class Assoc> \
 void check_partial_invertive_monoid_permuted_wrt_##op_tag \
 (const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(itl::neutron<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(itl::neutron<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(itl::neutron<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(itl::neutron<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 
@@ -536,10 +536,10 @@ template<class TypeA, class TypeB, class Assoc> \
     void check_abelian_group_permuted_wrt_equal_##op_tag \
 (typename equality<TypeA>::type* equal, const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, itl::neutron<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 #define DEFINE_ABELIAN_GROUP_CHECK_PERMUTED_WRT(op_tag) \
@@ -547,10 +547,10 @@ template<class TypeA, class TypeB, class Assoc> \
     void check_abelian_group_permuted_wrt_##op_tag \
 (const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_ABELIAN_GROUP_WRT(op_tag)(itl::neutron<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_ABELIAN_GROUP_WRT(op_tag)(itl::neutron<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_ABELIAN_GROUP_WRT(op_tag)(itl::neutron<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_ABELIAN_GROUP_WRT(op_tag)(itl::neutron<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_ABELIAN_GROUP_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_ABELIAN_GROUP_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_ABELIAN_GROUP_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_ABELIAN_GROUP_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 

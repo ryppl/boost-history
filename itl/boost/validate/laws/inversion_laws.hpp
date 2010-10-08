@@ -50,7 +50,7 @@ namespace boost{namespace itl
             Type lhs = this->template getInputValue<operand_a>();
             InverseCombinerT()(lhs, this->template getInputValue<operand_a>());
 
-            Type rhs = Combiner<Type>::neutron();
+            Type rhs = Combiner<Type>::identity_element();
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
@@ -97,14 +97,14 @@ namespace boost{namespace itl
 
         bool holds()
         {
-            Type lhs = Combiner<Type>::neutron(); 
+            Type lhs = Combiner<Type>::identity_element(); 
             Type value_a = this->template getInputValue<operand_a>();
             // lhs = (0 - a)
             InverseCombinerT()(lhs, value_a);
             // lhs = (0 - a) + a
             Combiner<Type>()(lhs, value_a);
 
-            Type rhs = Combiner<Type>::neutron();
+            Type rhs = Combiner<Type>::identity_element();
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
