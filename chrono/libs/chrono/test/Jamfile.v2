@@ -127,8 +127,8 @@ project
         [ compile-fail duration/duration.fail.cpp  ]
         [ compile-fail duration/ratio.fail.cpp  ]
         [ compile-fail duration/positive_num.fail.cpp  ]
-        [ run duration/default_ratio.pass.cpp :  :  : <link>static ]
-        [ run duration/types.pass.cpp :  :  : <link>static ]
+        [ compile duration/default_ratio.pass.cpp :  :  : ]
+        [ compile duration/types.pass.cpp :  :  : ]
         
         [ run duration/arithmetic/op_divide_ass.pass.cpp :  :  : <link>static ]
         [ run duration/arithmetic/op_minusminusint.pass.cpp :  :  : <link>static ]

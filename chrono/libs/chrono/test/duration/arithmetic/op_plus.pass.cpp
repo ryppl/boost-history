@@ -1,22 +1,14 @@
-//===----------------------------------------------------------------------===//
-//
-//                     The LLVM Compiler Infrastructure
-//
-// This file is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
-//
-//===----------------------------------------------------------------------===//
-
-// duration
-
-// duration operator+() const;
+//  Copyright 2010 Vicente J. Botet Escriba
+//  Distributed under the Boost Software License, Version 1.0.
+//  See http://www.boost.org/LICENSE_1_0.txt
 
 #include <boost/chrono.hpp>
-#include <cassert>
+#include <boost/detail/lightweight_test.hpp>
 
 int main()
 {
     const boost::chrono::minutes m(3);
     boost::chrono::minutes m2 = +m;
-    assert(m.count() == m2.count());
+    BOOST_TEST(m.count() == m2.count());
+    return boost::report_errors();
 }

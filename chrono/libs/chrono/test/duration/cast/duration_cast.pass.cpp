@@ -2,27 +2,9 @@
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
 
-// Adapted from llvm/libcxx/test/utilities/chrono
-//===----------------------------------------------------------------------===//
-//
-//                     The LLVM Compiler Infrastructure
-//
-// This file is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
-//
-//===----------------------------------------------------------------------===//
-
-// <chrono>
-
-// duration
-
-// template <class ToDuration, class Rep, class Period>
-//   ToDuration
-//   duration_cast(const duration<Rep, Period>& d);
-
 #include <boost/chrono.hpp>
 #include <boost/type_traits.hpp>
-#include <cassert>
+#include <boost/detail/lightweight_test.hpp>
 #if !defined(BOOST_NO_STATIC_ASSERT)
 #define NOTHING ""
 #endif
@@ -37,7 +19,7 @@ test(const FromDuration& f, const ToDuration& d)
     typedef decltype(boost::chrono::duration_cast<ToDuration>(f)) R;
 #endif    
     BOOST_CHRONO_STATIC_ASSERT((boost::is_same<R, ToDuration>::value), NOTHING, ());
-    assert(boost::chrono::duration_cast<ToDuration>(f) == d);
+    BOOST_TEST(boost::chrono::duration_cast<ToDuration>(f) == d);
 }
 
 int main()
@@ -52,5 +34,5 @@ int main()
          boost::chrono::duration<double, boost::ratio<3600> >(7265./3600));
     test(boost::chrono::duration<int, boost::ratio<2, 3> >(9),
          boost::chrono::duration<int, boost::ratio<3, 5> >(10));
-    return 0;    
+    return boost::report_errors();
 }
