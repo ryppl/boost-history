@@ -2,27 +2,12 @@
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
 
-// Adapted from llvm/libcxx/test/utilities/chrono
-//===----------------------------------------------------------------------===//
-//
-//                     The LLVM Compiler Infrastructure
-//
-// This file is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
-//
-//===----------------------------------------------------------------------===//
-
-// <chrono>
-
-// high_resolution_clock
-
-// static time_point now();
-
 #include <boost/chrono.hpp>
+//#include <libs/chrono/test/clock/check_clock_now.hpp>
+#include "../check_clock_now.hpp"
 
 int main()
 {
-    typedef boost::chrono::high_resolution_clock C;
-    C::time_point t1 = C::now();
+	check_clock_now<boost::chrono::high_resolution_clock>();
     return 0;    
 }

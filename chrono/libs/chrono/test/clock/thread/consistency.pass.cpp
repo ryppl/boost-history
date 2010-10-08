@@ -3,10 +3,13 @@
 //  See http://www.boost.org/LICENSE_1_0.txt
 
 #include <boost/chrono.hpp>
-#include <libs/chrono/test/clock/check_clock_invariants.hpp>
+#include <boost/chrono/thread_clock.hpp>
+#include "../check_clock_invariants.hpp"
 
 int main()
 {
-    check_clock_invariants<boost::chrono::high_resolution_clock>();
+#if defined(BOOST_CHRONO_HAS_THREAD_CLOCK) 
+    check_clock_invariants<boost::chrono::thread_clock>();
+#endif    
     return 0;    
 }

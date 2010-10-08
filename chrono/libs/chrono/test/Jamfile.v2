@@ -221,6 +221,13 @@ project
         [ run clock/system/from_time_t.pass.cpp :  :  : <link>static : clock.system.from_time_t.pass ]
         [ run clock/system/rep_signed.pass.cpp :  :  : <link>static : clock.system.rep_signed.pass ]
         [ run clock/system/to_time_t.pass.cpp :  :  : <link>static : clock.system.to_time_t.pass ]
+        
+        [ run clock/process/consistency.pass.cpp :  :  : <link>static : clock.process.consistency.pass ]
+        [ run clock/process/now.pass.cpp :  :  : <link>static : clock.process.now.pass ]
+        
+        [ run clock/thread/consistency.pass.cpp :  :  : <link>static : clock.thread.consistency.pass ]
+        [ run clock/thread/now.pass.cpp :  :  : <link>static : clock.thread.now.pass ]
+        
         ;
 
 
