@@ -74,11 +74,11 @@ namespace boost{namespace itl
         };
 
         template <typename AbsorberType, typename EnricherType>
-        struct neutron_absorber
+        struct identity_absorber
         {
             void operator()(AbsorberType& absorber, EnricherType& enricher)
             {
-                itl::absorb_neutrons(enricher);
+                itl::absorb_identities(enricher);
                 ITL_FORALL(typename EnricherType, enricher_, enricher)
                     absorber.insert(*enricher_);
             }
@@ -94,7 +94,7 @@ namespace boost{namespace itl
     template<> 
     inline std::string binary_template_to_string<segmental::joiner>::apply() { return "j"; }
     template<> 
-    inline std::string binary_template_to_string<segmental::neutron_absorber>::apply() { return "a0"; }
+    inline std::string binary_template_to_string<segmental::identity_absorber>::apply() { return "a0"; }
 }} // namespace boost itl
 
 #endif // BOOST_ITL_DETAIL_INTERVAL_MORPHISM_HPP_JOFA_080315

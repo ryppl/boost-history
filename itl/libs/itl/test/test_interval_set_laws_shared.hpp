@@ -162,8 +162,8 @@ void interval_set_check_partial_invertive_monoid_plus_prot_inv_4_bicremental_typ
     CHECK_ABELIAN_MONOID_INSTANCE_WRT(plus)(set_a, set_b, set_c, segm, elem);
     CHECK_ABELIAN_MONOID_INSTANCE_WRT(pipe)(set_a, set_b, set_c, segm, elem);
 
-    CHECK_PARTIAL_INVERTIVE_MONOID_INSTANCE_WRT_EQUAL(plus)(is_protonic_equal, set_a, set_b, set_c, segm, elem);
-    CHECK_PARTIAL_INVERTIVE_MONOID_INSTANCE_WRT_EQUAL(pipe)(is_protonic_equal, set_a, set_b, set_c, segm, elem);
+    CHECK_PARTIAL_INVERTIVE_MONOID_INSTANCE_WRT_EQUAL(plus)(is_distinct_equal, set_a, set_b, set_c, segm, elem);
+    CHECK_PARTIAL_INVERTIVE_MONOID_INSTANCE_WRT_EQUAL(pipe)(is_distinct_equal, set_a, set_b, set_c, segm, elem);
 }
 
 
@@ -218,8 +218,8 @@ void interval_set_check_abelian_group_plus_prot_inv_4_bicremental_types()
     CHECK_ABELIAN_MONOID_INSTANCE_WRT(plus) (set_a, set_b, set_c, segm, elem);
     CHECK_ABELIAN_MONOID_INSTANCE_WRT(pipe) (set_a, set_b, set_c, segm, elem);
 
-    CHECK_ABELIAN_GROUP_INSTANCE_WRT_EQUAL(plus) (is_protonic_equal, set_a, set_b, set_c, segm, elem);
-    CHECK_ABELIAN_GROUP_INSTANCE_WRT_EQUAL(pipe) (is_protonic_equal, set_a, set_b, set_c, segm, elem);
+    CHECK_ABELIAN_GROUP_INSTANCE_WRT_EQUAL(plus) (is_distinct_equal, set_a, set_b, set_c, segm, elem);
+    CHECK_ABELIAN_GROUP_INSTANCE_WRT_EQUAL(pipe) (is_distinct_equal, set_a, set_b, set_c, segm, elem);
 }
 
 #endif // __test_itl_interval_set_laws_shared_h_JOFA_090201__

@@ -12,7 +12,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 #include <boost/itl/functors.hpp>
 #include <boost/itl/type_traits/is_interval_splitter.hpp>
-#include <boost/itl/type_traits/absorbs_neutrons.hpp>
+#include <boost/itl/type_traits/absorbs_identities.hpp>
 #include <boost/itl/type_traits/is_total.hpp>
 #include <boost/validate/laws/monoid.hpp>
 #include <boost/validate/laws/inversion_laws.hpp>
@@ -62,7 +62,7 @@ public:
         _lawChoice.setMaxWeights(sum_of_shares);
 
         //NOTE: Associativity is not valid for partial_absorber signed quantifier maps
-        if(!is_total<Type>::value && absorbs_neutrons<Type>::value)
+        if(!is_total<Type>::value && absorbs_identities<Type>::value)
             et_assoc_share = 0;
         //NOTE: An Inverse exists only for a total signed quantifier
         if(!is_total<Type>::value || !has_inverse<typename Type::codomain_type>::value)
@@ -97,24 +97,24 @@ public:
         case inplacePlusNeutrality:     return new LawValidater<InplaceNeutrality   <Type> >;
         case inplacePlusCommutativity:  return new LawValidater<InplaceCommutativity<Type> >;
         case inplaceEtAssociativity:   
-            if(absorbs_neutrons<Type>::value && is_total<Type>::value)
+            if(absorbs_identities<Type>::value && is_total<Type>::value)
                                         return new LawValidater<InplaceAssociativity<Type, inplace_et, element_equal> >;
             else                        return new LawValidater<InplaceAssociativity<Type, inplace_et> >;
         case inplaceEtCommutativity:    return new LawValidater<InplaceCommutativity<Type, inplace_et> >;
         case inplaceNaturalInversion:
-            if(absorbs_neutrons<Type>::value)
+            if(absorbs_identities<Type>::value)
                                         return new LawValidater<InplaceNaturalInversion<Type, inplace_plus, std_equal> >;
-            else                        return new LawValidater<InplaceNaturalInversion<Type, inplace_plus, protonic_equal> >;
+            else                        return new LawValidater<InplaceNaturalInversion<Type, inplace_plus, distinct_equal> >;
         case inplaceSymmetricDifference:return new LawValidater<InplaceSymmetricDifference<Type> >;
         case inplaceFlip:               return new LawValidater<InplaceFlip<Type> >;
         case sectionAbsorbtion:            
-            if(absorbs_neutrons<Type>::value)
+            if(absorbs_identities<Type>::value)
                                         return new LawValidater<SectionAbsorbtion<Type,std_equal> >;
-            else                        return new LawValidater<SectionAbsorbtion<Type,protonic_equal> >;
+            else                        return new LawValidater<SectionAbsorbtion<Type,distinct_equal> >;
         case inplaceInverseExistence:
-            if(absorbs_neutrons<Type>::value)
+            if(absorbs_identities<Type>::value)
                                         return new LawValidater<InplaceInverseExistence<Type, inplace_plus, std_equal> >;
-            else                        return new LawValidater<InplaceInverseExistence<Type, inplace_plus, protonic_equal> >;
+            else                        return new LawValidater<InplaceInverseExistence<Type, inplace_plus, distinct_equal> >;
         default: return NULL;
         }
     }

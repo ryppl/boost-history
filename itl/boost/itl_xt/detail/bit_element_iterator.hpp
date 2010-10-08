@@ -176,13 +176,13 @@ private:
 
     void first_bit()const
     {
-        // Because interval_bitsets are neutron absorbers, _saltator->second.word() is not an identity element
+        // Because interval_bitsets are identity absorbers, _saltator->second.word() is not an identity element
         _on_bit   = Proceed::first_bit(_saltator->second.word());
     }
 
     void last_bit()const
     {
-        // Because interval_bitsets are neutron absorbers, _saltator->second.word() is not an identity element
+        // Because interval_bitsets are identity absorbers, _saltator->second.word() is not an identity element
         _on_bit   = Proceed::last_bit(_saltator->second.word());
     }
 

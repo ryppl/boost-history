@@ -12,7 +12,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/mpl/not.hpp>
 #include <boost/itl/detail/on_absorbtion.hpp>
 #include <boost/itl/type_traits/is_total.hpp>
-#include <boost/itl/type_traits/absorbs_neutrons.hpp>
+#include <boost/itl/type_traits/absorbs_identities.hpp>
 #include <boost/itl/type_traits/is_associative_element_container.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
 
@@ -62,9 +62,9 @@ contains(const Type& super, const typename Type::element_type& value_pair)
 /** Protonic equality is equality on all elements that do not carry an identity element as content. */
 template<class Type>
 inline typename enable_if<is_element_map<Type>, bool>::type
-is_protonic_equal(const Type& lhs, const Type& rhs)
+is_distinct_equal(const Type& lhs, const Type& rhs)
 {
-    return Map::lexicographical_protonic_equal(lhs, rhs);
+    return Map::lexicographical_distinct_equal(lhs, rhs);
 }
 
 //==============================================================================
@@ -103,9 +103,9 @@ erase(Type& object, const typename Type::element_type& value_pair)
 {
     typedef typename Type::size_type             size_type;
     typedef typename Type::iterator              iterator;
-    typedef typename Type::on_neutron_absorbtion on_neutron_absorbtion;
+    typedef typename Type::on_identity_absorbtion on_identity_absorbtion;
 
-    if(on_neutron_absorbtion::is_absorbable(value_pair.second)) 
+    if(on_identity_absorbtion::is_absorbable(value_pair.second)) 
         return neutron<size_type>::value();
 
     iterator it_ = object.find(value_pair.first);
@@ -195,10 +195,10 @@ set_at(Type& object, const typename Type::element_type& operand)
 {
     typedef typename Type::iterator         iterator;
     typedef typename Type::codomain_combine codomain_combine;
-    typedef on_absorbtion<Type,codomain_combine,absorbs_neutrons<Type>::value>
-                                            on_neutron_absorbtion;
+    typedef on_absorbtion<Type,codomain_combine,absorbs_identities<Type>::value>
+                                            on_identity_absorbtion;
 
-    if(!on_neutron_absorbtion::is_absorbable(operand.second))
+    if(!on_identity_absorbtion::is_absorbable(operand.second))
     {
         std::pair<iterator,bool> insertion = object.insert(operand);
         if(!insertion.second)
@@ -372,7 +372,7 @@ flip(Type& object, const typename Type::element_type& operand)
 template<class Type, class CoType>
 inline typename enable_if< mpl::and_< is_element_map<Type>
                                     , is_total<Type>       
-                                    , absorbs_neutrons<Type> > 
+                                    , absorbs_identities<Type> > 
                          , Type>::type&
 operator ^= (Type& object, const CoType&)
 {
@@ -383,7 +383,7 @@ operator ^= (Type& object, const CoType&)
 template<class Type>
 inline typename enable_if< mpl::and_< is_element_map<Type>
                                     , is_total<Type>       
-                                    , mpl::not_<absorbs_neutrons<Type> > > 
+                                    , mpl::not_<absorbs_identities<Type> > > 
                          , Type>::type&
 operator ^= (Type& object, const typename Type::element_type& operand)
 {
@@ -393,7 +393,7 @@ operator ^= (Type& object, const typename Type::element_type& operand)
 template<class Type>
 inline typename enable_if< mpl::and_< is_element_map<Type>
                                     , is_total<Type>       
-                                    , mpl::not_<absorbs_neutrons<Type> > > 
+                                    , mpl::not_<absorbs_identities<Type> > > 
                          , Type>::type&
 operator ^= (Type& object, const Type& operand)
 {
@@ -452,8 +452,8 @@ domain(typename Type::set_type& domain_set, const Type& object)
 //==============================================================================
 template<class Type>
 inline typename enable_if<mpl::and_< is_element_map<Type>
-                                   , absorbs_neutrons<Type> >, Type>::type&
-absorb_neutrons(Type& object)
+                                   , absorbs_identities<Type> >, Type>::type&
+absorb_identities(Type& object)
 {
     typedef typename Type::element_type element_type;
     return itl::erase_if(content_is_neutron<element_type>(), object);
@@ -461,9 +461,9 @@ absorb_neutrons(Type& object)
 
 template<class Type>
 inline typename enable_if<mpl::and_< is_element_map<Type>
-                                   , mpl::not_<absorbs_neutrons<Type> > >
+                                   , mpl::not_<absorbs_identities<Type> > >
                          , Type>::type&
-absorb_neutrons(Type&){}
+absorb_identities(Type&){}
 
 //==============================================================================
 //= Streaming<ElementMap>

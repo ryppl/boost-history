@@ -77,13 +77,13 @@ namespace boost{namespace itl
         : public Law<ProtonicEquality<MapT>, 
                      LOKI_TYPELIST_2(MapT,MapT), LOKI_TYPELIST_2(bool,bool)>
     {
-        /** (a.absorb_neutrons() == b.absorb_neutrons()) == is_protonic_equal(a, b)
+        /** (a.absorb_identities() == b.absorb_identities()) == is_distinct_equal(a, b)
         Input  = (a := inVal1, b := inVal2)
         Output = (lhs_result, rhs_result)
         */
     public:
         std::string name()const { return "ProtonicEquality"; }
-        std::string formula()const { return "(a.absorb_neutrons() == b.absorb_neutrons()) == is_protonic_equal(a, b)"; }
+        std::string formula()const { return "(a.absorb_identities() == b.absorb_identities()) == is_distinct_equal(a, b)"; }
 
         std::string typeString()const
         {
@@ -94,21 +94,21 @@ namespace boost{namespace itl
 
         bool holds()
         {
-            // (a.absorb_neutrons() == b.absorb_neutrons()) == is_protonic_equal(a, b)
+            // (a.absorb_identities() == b.absorb_identities()) == is_distinct_equal(a, b)
             // --- left hand side ------------------------
-            // lhs := (a.absorb_neutrons() == b.absorb_neutrons())
+            // lhs := (a.absorb_identities() == b.absorb_identities())
             MapT a = this->template getInputValue<operand_a>();
             MapT a_protonic = a;
-            a_protonic.absorb_neutrons();
+            a_protonic.absorb_identities();
             MapT b = this->template getInputValue<operand_b>();
             MapT b_protonic = b;
-            b_protonic.absorb_neutrons();
+            b_protonic.absorb_identities();
 
             bool lhs = a_protonic == b_protonic;
 
             // --- right hand side -----------------------
-            // rhs := is_protonic_equal(a, b)
-            bool rhs = is_protonic_equal(a, b);
+            // rhs := is_distinct_equal(a, b)
+            bool rhs = is_distinct_equal(a, b);
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
@@ -118,9 +118,9 @@ namespace boost{namespace itl
 
         bool debug_holds()
         { 
-            // (a.absorb_neutrons() == b.absorb_neutrons()) == is_protonic_equal(a, b)
+            // (a.absorb_identities() == b.absorb_identities()) == is_distinct_equal(a, b)
             // --- left hand side ------------------------
-            // lhs := (a.absorb_neutrons() == b.absorb_neutrons())
+            // lhs := (a.absorb_identities() == b.absorb_identities())
 
             std::cout << name() << "::debug_holds():" << std::endl;
             std::cout << "Instance: " << typeString() << std::endl;
@@ -133,22 +133,22 @@ namespace boost{namespace itl
             std::cout << "b: " << b.as_string() << std::endl;
 
             MapT a_protonic = a;
-            a_protonic.absorb_neutrons();
+            a_protonic.absorb_identities();
             MapT b_protonic = b;
-            b_protonic.absorb_neutrons();
+            b_protonic.absorb_identities();
 
-            std::cout << "a.absorb_neutrons(): " << a_protonic.as_string() << std::endl;
-            std::cout << "b.absorb_neutrons(): " << b_protonic.as_string() << std::endl;
+            std::cout << "a.absorb_identities(): " << a_protonic.as_string() << std::endl;
+            std::cout << "b.absorb_identities(): " << b_protonic.as_string() << std::endl;
 
             bool lhs = a_protonic == b_protonic;
 
-            std::cout << "lhs := (a.absorb_neutrons() == b.absorb_neutrons()): " << lhs << std::endl;
+            std::cout << "lhs := (a.absorb_identities() == b.absorb_identities()): " << lhs << std::endl;
 
             // --- right hand side -----------------------
-            // rhs := is_protonic_equal(a, b)
-            bool rhs = is_protonic_equal(a, b);
+            // rhs := is_distinct_equal(a, b)
+            bool rhs = is_distinct_equal(a, b);
 
-            std::cout << "rhs := is_protonic_equal(a, b): " << rhs << std::endl;
+            std::cout << "rhs := is_distinct_equal(a, b): " << rhs << std::endl;
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);

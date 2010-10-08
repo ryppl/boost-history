@@ -216,8 +216,8 @@ void itv_quantifier_check_partial_invertive_monoid_plus_prot_inv_4_bicremental_t
     CHECK_ABELIAN_MONOID_INSTANCE_WRT(plus)(map_a, map_b, map_c, map_pair1, map_pair2);
     CHECK_ABELIAN_MONOID_INSTANCE_WRT(pipe)(map_a, map_b, map_c, map_pair1, map_pair2);
 
-    CHECK_PARTIAL_INVERTIVE_MONOID_INSTANCE_WRT_EQUAL(plus)(is_protonic_equal, map_a, map_b, map_c, map_pair1, map_pair2);
-    CHECK_PARTIAL_INVERTIVE_MONOID_INSTANCE_WRT_EQUAL(pipe)(is_protonic_equal, map_a, map_b, map_c, map_pair1, map_pair2);
+    CHECK_PARTIAL_INVERTIVE_MONOID_INSTANCE_WRT_EQUAL(plus)(is_distinct_equal, map_a, map_b, map_c, map_pair1, map_pair2);
+    CHECK_PARTIAL_INVERTIVE_MONOID_INSTANCE_WRT_EQUAL(pipe)(is_distinct_equal, map_a, map_b, map_c, map_pair1, map_pair2);
 }
 
 
@@ -290,8 +290,8 @@ void itv_quantifier_check_abelian_group_plus_prot_inv_4_bicremental_types()
     CHECK_ABELIAN_MONOID_INSTANCE_WRT(plus) (map_a, map_b, map_c, map_pair1, map_pair2);
     CHECK_ABELIAN_MONOID_INSTANCE_WRT(pipe) (map_a, map_b, map_c, map_pair1, map_pair2);
 
-    CHECK_ABELIAN_GROUP_INSTANCE_WRT_EQUAL(plus) (is_protonic_equal, map_a, map_b, map_c, map_pair1, map_pair2);
-    CHECK_ABELIAN_GROUP_INSTANCE_WRT_EQUAL(pipe) (is_protonic_equal, map_a, map_b, map_c, map_pair1, map_pair2);
+    CHECK_ABELIAN_GROUP_INSTANCE_WRT_EQUAL(plus) (is_distinct_equal, map_a, map_b, map_c, map_pair1, map_pair2);
+    CHECK_ABELIAN_GROUP_INSTANCE_WRT_EQUAL(pipe) (is_distinct_equal, map_a, map_b, map_c, map_pair1, map_pair2);
 }
 
 #endif // __test_itl_quantifier_itl_map_h_JOFA_090119__

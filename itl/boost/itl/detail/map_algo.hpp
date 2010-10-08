@@ -54,7 +54,7 @@ typename MapT::const_iterator next_proton(typename MapT::const_iterator& iter_, 
 /** Function template <tt>lexicographical_equal</tt> implements 
 lexicographical equality except for neutronic content values. */
 template<class MapT>
-bool lexicographical_protonic_equal(const MapT& left, const MapT& right)
+bool lexicographical_distinct_equal(const MapT& left, const MapT& right)
 {
     if(&left == &right)        
         return true;

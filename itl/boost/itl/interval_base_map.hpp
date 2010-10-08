@@ -189,7 +189,7 @@ public:
     typedef boost::itl::element_iterator<const_reverse_iterator> element_const_reverse_iterator; 
     
     typedef typename on_absorbtion<type, codomain_combine, 
-                                Traits::absorbs_neutrons>::type on_codomain_absorbtion;
+                                Traits::absorbs_identities>::type on_codomain_absorbtion;
 
 public:
     BOOST_STATIC_CONSTANT(bool, 
@@ -408,7 +408,7 @@ public:
     /** If \c *this map contains \c interval_value_pair it is erased, otherwise it is added. */
     SubType& flip(const segment_type& interval_value_pair)
     {
-        on_total_absorbable<SubType, Traits::is_total, Traits::absorbs_neutrons>
+        on_total_absorbable<SubType, Traits::is_total, Traits::absorbs_identities>
             ::flip(*that(), interval_value_pair);
         return *that();
     }
@@ -526,7 +526,7 @@ protected:
     {
         // inter_val is not conained in this map. Insertion will be successful
         BOOST_ASSERT(this->_map.find(inter_val) == this->_map.end());
-        BOOST_ASSERT((!on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(co_val)));
+        BOOST_ASSERT((!on_absorbtion<type,Combiner,Traits::absorbs_identities>::is_absorbable(co_val)));
         return this->_map.insert(prior_, value_type(inter_val, version<Combiner>()(co_val)));
     }
 
@@ -536,7 +536,7 @@ protected:
                                    const codomain_type& co_val   )
     {
         // Never try to insert an identity element into an identity element absorber here:
-        BOOST_ASSERT((!(on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(co_val))));
+        BOOST_ASSERT((!(on_absorbtion<type,Combiner,Traits::absorbs_identities>::is_absorbable(co_val))));
 
         iterator inserted_ 
             = this->_map.insert(prior_, value_type(inter_val, Combiner::neutron()));
@@ -673,7 +673,7 @@ private:
 
 
     //--------------------------------------------------------------------------
-    template<class Type, bool is_total, bool absorbs_neutrons>
+    template<class Type, bool is_total, bool absorbs_identities>
     struct on_total_absorbable;
 
     template<class Type>
@@ -700,8 +700,8 @@ private:
         }
     };
 
-    template<class Type, bool absorbs_neutrons>
-    struct on_total_absorbable<Type, false, absorbs_neutrons>
+    template<class Type, bool absorbs_identities>
+    struct on_total_absorbable<Type, false, absorbs_identities>
     {
         typedef typename Type::segment_type   segment_type;
         typedef typename Type::codomain_type  codomain_type;
@@ -902,7 +902,7 @@ inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
     ::_add(const segment_type& addend)
 {
     typedef typename on_absorbtion<type,Combiner,
-                                absorbs_neutrons<type>::value>::type on_absorbtion_;
+                                absorbs_identities<type>::value>::type on_absorbtion_;
 
     const interval_type& inter_val = addend.first;
     if(itl::is_empty(inter_val)) 
@@ -940,7 +940,7 @@ inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
     ::_add(iterator prior_, const segment_type& addend)
 {
     typedef typename on_absorbtion<type,Combiner,
-                                absorbs_neutrons<type>::value>::type on_absorbtion_;
+                                absorbs_identities<type>::value>::type on_absorbtion_;
 
     const interval_type& inter_val = addend.first;
     if(itl::is_empty(inter_val)) 
@@ -1037,7 +1037,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
         return;
 
     const codomain_type& co_val = minuend.second;
-    if(on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(co_val)) 
+    if(on_absorbtion<type,Combiner,Traits::absorbs_identities>::is_absorbable(co_val)) 
         return;
 
     std::pair<iterator, iterator> exterior = this->_map.equal_range(inter_val);
@@ -1328,10 +1328,10 @@ template
     class SubType,
     class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
 >
-struct absorbs_neutrons<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
+struct absorbs_identities<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 {
-    typedef absorbs_neutrons<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
-    BOOST_STATIC_CONSTANT(bool, value = (Traits::absorbs_neutrons)); 
+    typedef absorbs_identities<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+    BOOST_STATIC_CONSTANT(bool, value = (Traits::absorbs_identities)); 
 };
 
 template 

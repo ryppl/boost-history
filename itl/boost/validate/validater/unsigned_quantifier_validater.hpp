@@ -11,7 +11,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define BOOST_ITL_VALIDATE_VALIDATER_UNSIGNED_QUANTIFIER_VALIDATER_HPP_JOFA_090314
 
 #include <boost/itl/functors.hpp>
-#include <boost/itl/type_traits/absorbs_neutrons.hpp>
+#include <boost/itl/type_traits/absorbs_identities.hpp>
 #include <boost/itl/type_traits/is_total.hpp>
 #include <boost/validate/laws/monoid.hpp>
 #include <boost/validate/laws/map_laws.hpp>
@@ -75,13 +75,13 @@ public:
         case inplaceEtAssociativity:    return new LawValidater<InplaceAssociativity<Type, inplace_et> >;
         case inplaceEtCommutativity:    return new LawValidater<InplaceCommutativity<Type, inplace_et> >;
         case inplaceNaturalInversion:
-            if(absorbs_neutrons<Type>::value)
+            if(absorbs_identities<Type>::value)
                                         return new LawValidater<InplaceNaturalInversion<Type, inplace_plus, std_equal> >;
-            else                        return new LawValidater<InplaceNaturalInversion<Type, inplace_plus, protonic_equal> >;
+            else                        return new LawValidater<InplaceNaturalInversion<Type, inplace_plus, distinct_equal> >;
         case sectionAbsorbtion:            
-            if(absorbs_neutrons<Type>::value)
+            if(absorbs_identities<Type>::value)
                                         return new LawValidater<SectionAbsorbtion<Type,std_equal> >;
-            else                        return new LawValidater<SectionAbsorbtion<Type,protonic_equal> >;
+            else                        return new LawValidater<SectionAbsorbtion<Type,distinct_equal> >;
         default: return NULL;
         }
     }

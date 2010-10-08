@@ -26,7 +26,7 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/itl/detail/concept_check.hpp>
 #include <boost/itl/detail/on_absorbtion.hpp>
 #include <boost/itl/type_traits/is_map.hpp>
-#include <boost/itl/type_traits/absorbs_neutrons.hpp>
+#include <boost/itl/type_traits/absorbs_identities.hpp>
 #include <boost/itl/type_traits/is_total.hpp>
 #include <boost/itl/type_traits/is_element_container.hpp>
 #include <boost/itl/type_traits/has_inverse.hpp>
@@ -45,7 +45,7 @@ namespace boost{namespace itl
 
 struct partial_absorber
 {
-    enum { absorbs_neutrons = true };
+    enum { absorbs_identities = true };
     enum { is_total = false };
 };
 
@@ -54,7 +54,7 @@ inline std::string type_to_string<partial_absorber>::apply() { return "@0"; }
 
 struct partial_enricher
 {
-    enum { absorbs_neutrons = false };
+    enum { absorbs_identities = false };
     enum { is_total = false };
 };
 
@@ -63,7 +63,7 @@ inline std::string type_to_string<partial_enricher>::apply() { return "e0"; }
 
 struct total_absorber
 {
-    enum { absorbs_neutrons = true };
+    enum { absorbs_identities = true };
     enum { is_total = true };
 };
 
@@ -72,7 +72,7 @@ inline std::string type_to_string<total_absorber>::apply() { return "^0"; }
 
 struct total_enricher
 {
-    enum { absorbs_neutrons = false };
+    enum { absorbs_identities = false };
     enum { is_total = true };
 };
 
@@ -129,12 +129,12 @@ public:
     typedef typename base_type::value_compare           value_compare;
 
     BOOST_STATIC_CONSTANT(bool, _total   = (Traits::is_total));
-    BOOST_STATIC_CONSTANT(bool, _absorbs = (Traits::absorbs_neutrons));
+    BOOST_STATIC_CONSTANT(bool, _absorbs = (Traits::absorbs_identities));
     BOOST_STATIC_CONSTANT(bool, 
         total_invertible = (mpl::and_<is_total<type>, has_inverse<codomain_type> >::value));
 
-    typedef on_absorbtion<type,codomain_combine,Traits::absorbs_neutrons> 
-                                                        on_neutron_absorbtion;
+    typedef on_absorbtion<type,codomain_combine,Traits::absorbs_identities> 
+                                                        on_identity_absorbtion;
 
 public:
     typedef typename base_type::pointer                 pointer;
@@ -294,7 +294,7 @@ public:
     //==========================================================================
     std::pair<iterator,bool> insert(const value_type& value_pair)
     {
-        if(on_neutron_absorbtion::is_absorbable(value_pair.second)) 
+        if(on_identity_absorbtion::is_absorbable(value_pair.second)) 
             return std::pair<iterator,bool>(end(),true);
         else
             return base_type::insert(value_pair);
@@ -302,7 +302,7 @@ public:
     
     iterator insert(iterator prior, const value_type& value_pair)
     {
-        if(on_neutron_absorbtion::is_absorbable(value_pair.second)) 
+        if(on_identity_absorbtion::is_absorbable(value_pair.second)) 
             return end();
         else
             return base_type::insert(prior, value_pair);
@@ -423,12 +423,12 @@ private:
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
-    template<class Type, bool has_set_semantics, bool absorbs_neutrons>
+    template<class Type, bool has_set_semantics, bool absorbs_identities>
     struct on_codomain_model;
 
     template<class Type>
     struct on_codomain_model<Type, false, false>
-    {                // !codomain_is_set, !absorbs_neutrons
+    {                // !codomain_is_set, !absorbs_identities
         static void subtract(Type&, typename Type::iterator it_, 
                               const typename Type::codomain_type& )
         { it_->second = neutron<typename Type::codomain_type>::value(); }
@@ -436,7 +436,7 @@ private:
 
     template<class Type>
     struct on_codomain_model<Type, false, true>
-    {                // !codomain_is_set, absorbs_neutrons
+    {                // !codomain_is_set, absorbs_identities
         static void subtract(Type& object, typename Type::iterator       it_, 
                                      const typename Type::codomain_type&     )
         { object.erase(it_); }
@@ -444,7 +444,7 @@ private:
 
     template<class Type>
     struct on_codomain_model<Type, true, false>
-    {               // !codomain_is_set, !absorbs_neutrons
+    {               // !codomain_is_set, !absorbs_identities
         typedef typename Type::inverse_codomain_intersect inverse_codomain_intersect;
         static void subtract(Type&, typename Type::iterator       it_, 
                               const typename Type::codomain_type& co_value)
@@ -455,7 +455,7 @@ private:
 
     template<class Type>
     struct on_codomain_model<Type, true, true>
-    {               // !codomain_is_set, absorbs_neutrons
+    {               // !codomain_is_set, absorbs_identities
         typedef typename Type::inverse_codomain_intersect inverse_codomain_intersect;
         static void subtract(Type& object, typename Type::iterator       it_, 
                                      const typename Type::codomain_type& co_value)
@@ -468,7 +468,7 @@ private:
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
-    template<class Type, bool is_total, bool absorbs_neutrons>
+    template<class Type, bool is_total, bool absorbs_identities>
     struct on_total_absorbable;
 
     template<class Type>
@@ -495,7 +495,7 @@ private:
 
     template<class Type>
     struct on_total_absorbable<Type, false, true>
-    {                         // !is_total, absorbs_neutrons
+    {                         // !is_total, absorbs_identities
         typedef typename Type::element_type   element_type;
         typedef typename Type::codomain_type  codomain_type;
         typedef typename Type::iterator       iterator;
@@ -512,7 +512,7 @@ private:
 
     template<class Type>
     struct on_total_absorbable<Type, false, false>
-    {                         // !is_total  !absorbs_neutrons
+    {                         // !is_total  !absorbs_identities
         typedef typename Type::element_type   element_type;
         typedef typename Type::codomain_type  codomain_type;
         typedef typename Type::iterator       iterator;
@@ -546,7 +546,7 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
     ::_add(const element_type& addend)
 {
     typedef typename on_absorbtion
-        <type,Combiner,absorbs_neutrons<type>::value>::type on_absorbtion_;
+        <type,Combiner,absorbs_identities<type>::value>::type on_absorbtion_;
 
     const codomain_type& co_val    = addend.second;
     if(on_absorbtion_::is_absorbable(co_val))
@@ -574,7 +574,7 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
     ::_add(iterator prior_, const value_type& addend)
 {
     typedef typename on_absorbtion
-        <type,Combiner,absorbs_neutrons<type>::value>::type on_absorbtion_;
+        <type,Combiner,absorbs_identities<type>::value>::type on_absorbtion_;
 
     const codomain_type& co_val    = addend.second;
     if(on_absorbtion_::is_absorbable(co_val))
@@ -604,7 +604,7 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::_subtract(const value_type& minuend)
 {
     typedef typename on_absorbtion
-        <type,Combiner,absorbs_neutrons<type>::value>::type on_absorbtion_;
+        <type,Combiner,absorbs_identities<type>::value>::type on_absorbtion_;
 
     iterator it_ = find(minuend.first);
     if(it_ != end())
@@ -635,10 +635,10 @@ struct has_inverse<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
 };
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-struct absorbs_neutrons<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
+struct absorbs_identities<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 { 
-    typedef absorbs_neutrons type;
-    BOOST_STATIC_CONSTANT(int, value = Traits::absorbs_neutrons); 
+    typedef absorbs_identities type;
+    BOOST_STATIC_CONSTANT(int, value = Traits::absorbs_identities); 
 };
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>

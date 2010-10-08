@@ -90,11 +90,11 @@ public:
         case inplaceSymmetricDifference:return new LawValidater<InplaceSymmetricDifference<Type> >;
         case inplaceFlip:               return new LawValidater<InplaceFlip<Type> >;
         case inplaceEtDistributivity:  
-            if(itl::is_interval_splitter<Type>::value && absorbs_neutrons<Type>::value && !is_total<Type>::value)
+            if(itl::is_interval_splitter<Type>::value && absorbs_identities<Type>::value && !is_total<Type>::value)
                                         return new LawValidater<InplaceDistributivity<Type, inplace_et, inplace_plus, element_equal> >;
             else                        return new LawValidater<InplaceDistributivity<Type, inplace_et, inplace_plus, std_equal> >;
         case inplacePlusDashRightDistrib:
-            if(itl::is_interval_splitter<Type>::value && absorbs_neutrons<Type>::value && !is_total<Type>::value)
+            if(itl::is_interval_splitter<Type>::value && absorbs_identities<Type>::value && !is_total<Type>::value)
                                         return new LawValidater<InplaceRightDistributivity<Type, inplace_plus, inplace_minus, element_equal> >;
             else                        return new LawValidater<InplaceRightDistributivity<Type, inplace_plus, inplace_minus, std_equal> >;
         case inplaceEtDashRightDistrib: return new LawValidater<InplaceRightDistributivity<Type, inplace_et, inplace_minus> >;

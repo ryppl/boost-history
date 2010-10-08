@@ -132,7 +132,7 @@ private:
     template<class Combiner>
     void handle_left_combined(iterator it_)
     {
-        if(on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+        if(on_absorbtion<type,Combiner,Traits::absorbs_identities>::is_absorbable(it_->second))
             this->_map.erase(it_);
         else
             segmental::join_left(*this, it_);
@@ -141,7 +141,7 @@ private:
     template<class Combiner>
     void handle_combined(iterator it_)
     {
-        if(on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+        if(on_absorbtion<type,Combiner,Traits::absorbs_identities>::is_absorbable(it_->second))
             this->_map.erase(it_);
         else
             segmental::join_neighbours(*this, it_);
@@ -150,7 +150,7 @@ private:
     template<class Combiner>
     void handle_preceeded_combined(iterator prior_, iterator& it_)
     {
-        if(on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+        if(on_absorbtion<type,Combiner,Traits::absorbs_identities>::is_absorbable(it_->second))
         {
             this->_map.erase(it_);
             it_ = prior_;
@@ -162,7 +162,7 @@ private:
     template<class Combiner>
     void handle_succeeded_combined(iterator it_, iterator next_)
     {
-        if(on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+        if(on_absorbtion<type,Combiner,Traits::absorbs_identities>::is_absorbable(it_->second))
         {
             this->_map.erase(it_);
             segmental::join_right(*this, next_);
@@ -186,7 +186,7 @@ private:
     void gap_insert_at(iterator& it_, iterator prior_, 
                        const interval_type& end_gap, const codomain_type& co_val)
     {
-        if(on_absorbtion<type,Combiner,Traits::absorbs_neutrons>::is_absorbable(it_->second))
+        if(on_absorbtion<type,Combiner,Traits::absorbs_identities>::is_absorbable(it_->second))
         {
             this->_map.erase(it_);
             it_ = this->template gap_insert<Combiner>(prior_, end_gap, co_val);
@@ -229,10 +229,10 @@ struct is_interval_container<itl::interval_map<DomainT,CodomainT,Traits,Compare,
 };
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-struct absorbs_neutrons<itl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
+struct absorbs_identities<itl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 {
-    typedef absorbs_neutrons<itl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
-    BOOST_STATIC_CONSTANT(bool, value = (Traits::absorbs_neutrons)); 
+    typedef absorbs_identities<itl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+    BOOST_STATIC_CONSTANT(bool, value = (Traits::absorbs_identities)); 
 };
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>

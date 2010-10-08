@@ -10,7 +10,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/itl/type_traits/element_type_of.hpp>
 #include <boost/itl/type_traits/segment_type_of.hpp>
-#include <boost/itl/type_traits/absorbs_neutrons.hpp>
+#include <boost/itl/type_traits/absorbs_identities.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
 
 #include <boost/itl/concept/map_value.hpp>
@@ -475,7 +475,7 @@ flip(Type& object, const typename Type::element_type& operand)
 //------------------------------------------------------------------------------
 template<class Type, class OperandT>
 typename enable_if< mpl::and_< is_total<Type>
-                             , absorbs_neutrons<Type>
+                             , absorbs_identities<Type>
                              , is_concept_compatible<is_interval_map, 
                                                      Type, OperandT >
                              >
@@ -495,7 +495,7 @@ flip(Type& object, const OperandT&)
 #endif                        
 template<class Type, class OperandT>
 typename enable_if< mpl::and_< is_total<Type>
-                             , mpl::not_<absorbs_neutrons<Type> >
+                             , mpl::not_<absorbs_identities<Type> >
                              , is_concept_compatible<is_interval_map, 
                                                      Type, OperandT >
                              >
@@ -608,16 +608,16 @@ assign_if(const Predicate& pred, MapT& object, const MapT& src)
 //==============================================================================
 template<class Type>
 typename enable_if<mpl::and_< is_interval_map<Type>
-                            , absorbs_neutrons<Type> >, Type>::type&
-absorb_neutrons(Type& object)
+                            , absorbs_identities<Type> >, Type>::type&
+absorb_identities(Type& object)
 {
     return object;
 }
 
 template<class Type>
 typename enable_if<mpl::and_< is_interval_map<Type>
-                            , mpl::not_<absorbs_neutrons<Type> > >, Type>::type&
-absorb_neutrons(Type& object)
+                            , mpl::not_<absorbs_identities<Type> > >, Type>::type&
+absorb_identities(Type& object)
 {
     typedef typename Type::segment_type segment_type;
     return itl::erase_if(content_is_neutron<segment_type>(), object);

@@ -97,9 +97,9 @@ inclusion_compare(const LeftT& left, const RightT& right)
 template<class LeftT, class RightT>
 typename enable_if< is_concept_compatible<is_interval_map, LeftT, RightT>,
                     bool >::type
-is_protonic_equal(const LeftT& left, const RightT& right)
+is_distinct_equal(const LeftT& left, const RightT& right)
 {
-    return Map::lexicographical_protonic_equal(left, right);
+    return Map::lexicographical_distinct_equal(left, right);
 }
 
 //==============================================================================

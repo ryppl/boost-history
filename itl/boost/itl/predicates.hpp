@@ -83,16 +83,16 @@ namespace boost{namespace itl
     { return "="; }
 
     template <class Type> 
-    struct protonic_equal : public relation<Type,Type>
+    struct distinct_equal : public relation<Type,Type>
     {
         bool operator()(const Type& lhs, const Type& rhs)const
         {
-            return is_protonic_equal(lhs, rhs);
+            return is_distinct_equal(lhs, rhs);
         }
     };
 
     template<>
-    inline std::string unary_template_to_string<itl::protonic_equal>::apply()  
+    inline std::string unary_template_to_string<itl::distinct_equal>::apply()  
     { return "==/0"; }
 
 

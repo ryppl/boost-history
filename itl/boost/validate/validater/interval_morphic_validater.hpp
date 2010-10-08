@@ -89,7 +89,7 @@ namespace boost{namespace itl
             case cluster_erase:  return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, segmental::clusterer, inplace_erase>, RandomGentor>();
             case join_plus:      return new LawValidater<BinaryPushout<Type, typename Type::joint_type,    segmental::joiner,    inplace_plus>,  RandomGentor>();
             //JODO absorb_plus holds for interval_map. For split_interval_map element_equal has to be used as equality-relation.
-            //case absorb_plus:    return new LawValidater<BinaryPushout<Type, typename Type::partial_absorber_type, segmental::neutron_absorber, inplace_plus>,  RandomGentor>();
+            //case absorb_plus:    return new LawValidater<BinaryPushout<Type, typename Type::partial_absorber_type, segmental::identity_absorber, inplace_plus>,  RandomGentor>();
             //JODO doc: violated: inverse required: case absorb_minus:    return new LawValidater<BinaryPushout<Type, typename Type::partial_absorber_type, Interval::AbsorbNeutrons, inplace_minus>,  RandomGentor>();
             default: return NULL;
             }
