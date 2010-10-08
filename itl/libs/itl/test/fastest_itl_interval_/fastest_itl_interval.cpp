@@ -26,8 +26,8 @@ using namespace boost::itl;
 #include "../test_icl_continuous_interval.hpp"
 #include "../test_icl_static_interval.hpp"
 
-#include <boost/itl/rightopen_interval.hpp>
-#include <boost/itl/leftopen_interval.hpp>
+#include <boost/itl/right_open_interval.hpp>
+#include <boost/itl/left_open_interval.hpp>
 #include <boost/itl/closed_interval.hpp>
 #include <boost/itl/open_interval.hpp>
 

@@ -12,8 +12,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/continuous_interval.hpp>
 #include <boost/itl/discrete_interval.hpp>
-#include <boost/itl/rightopen_interval.hpp>
-#include <boost/itl/leftopen_interval.hpp>
+#include <boost/itl/right_open_interval.hpp>
+#include <boost/itl/left_open_interval.hpp>
 #include <boost/itl/closed_interval.hpp>
 #include <boost/itl/open_interval.hpp>
 #include <boost/itl/type_traits/is_continuous.hpp>

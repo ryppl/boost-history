@@ -31,7 +31,7 @@ DEALINGS IN THE SOFTWARE.
 #define BOOST_ITL_TYPED_EPISODE_HPP_HPP_JOFA_011015
 
 //JODO #include <boost/itl/interval.hpp>
-#include <boost/itl/rightopen_interval.hpp>
+#include <boost/itl/right_open_interval.hpp>
 #include <boost/itl_xt/ordered_type.hpp>
 
 namespace boost{namespace itl

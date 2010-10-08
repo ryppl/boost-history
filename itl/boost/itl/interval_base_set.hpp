@@ -24,7 +24,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/concept/interval_map.hpp>
 #include <boost/itl/concept/interval_associator.hpp>
 
-#include <boost/itl/rightopen_interval.hpp>
+#include <boost/itl/right_open_interval.hpp>
 #include <boost/itl/continuous_interval.hpp>
 #include <boost/itl/set.hpp>
 #include <boost/itl/detail/notate.hpp>

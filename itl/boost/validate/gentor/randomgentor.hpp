@@ -26,7 +26,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <libs/validate/example/labat_polygon_/polygon_gentor.hpp>
 #endif //LAW_BASED_TEST_BOOST_POLYGON
 
-#include <boost/itl/rightopen_interval.hpp>
+#include <boost/itl/right_open_interval.hpp>
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl/separate_interval_set.hpp>
 #include <boost/itl/split_interval_set.hpp>

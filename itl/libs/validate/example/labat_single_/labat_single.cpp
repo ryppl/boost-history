@@ -12,7 +12,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 #include <boost/itl/ptime.hpp>
 
-#include <boost/itl/rightopen_interval.hpp>
+#include <boost/itl/right_open_interval.hpp>
 #include <boost/itl/set.hpp>
 #include <boost/itl/map.hpp>
 #include <boost/itl/detail/interval_morphism.hpp>
