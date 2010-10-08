@@ -159,9 +159,9 @@ namespace boost{namespace itl
     // ---------------------------------------------------------------------------
     // Inplace variant of laws for operator o=
     // ---------------------------------------------------------------------------
-    template <typename Type, template<class>class Accumulator = inplace_plus, template<class>class NeutronT = neutron>
+    template <typename Type, template<class>class Accumulator = inplace_plus, template<class>class IdentityElement = neutron>
     class InplaceNeutrality 
-        : public Law<InplaceNeutrality<Type,Accumulator,NeutronT>, 
+        : public Law<InplaceNeutrality<Type,Accumulator,IdentityElement>, 
                      LOKI_TYPELIST_1(Type), LOKI_TYPELIST_1(Type)>
     {
         /** a o 0 == a computed as
@@ -177,7 +177,7 @@ namespace boost{namespace itl
         {
             return "Neutrality<"+type_to_string<Type>::apply()+","
                                 +unary_template_to_string<Accumulator>::apply()+","
-                                +unary_template_to_string<NeutronT>::apply()+">";
+                                +unary_template_to_string<IdentityElement>::apply()+">";
         }
 
     public:

@@ -16,10 +16,10 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define ITL_LOCATION(message) location(__FILE__,__LINE__,message)
 
 #define NEURONIZER_CASES(validater_Template, itl_Map, domain_Type, codomain_Type) \
-case NeutronHandlerType::partial_absorber: return new validater_Template<itl_Map<domain_Type,codomain_Type,partial_absorber> >; \
-case NeutronHandlerType::partial_enricher: return new validater_Template<itl_Map<domain_Type,codomain_Type,partial_enricher> >; \
-case NeutronHandlerType::total_absorber: return new validater_Template<itl_Map<domain_Type,codomain_Type,total_absorber> >; \
-case NeutronHandlerType::total_enricher: return new validater_Template<itl_Map<domain_Type,codomain_Type,total_enricher> >;
+case IdentityHandlerType::partial_absorber: return new validater_Template<itl_Map<domain_Type,codomain_Type,partial_absorber> >; \
+case IdentityHandlerType::partial_enricher: return new validater_Template<itl_Map<domain_Type,codomain_Type,partial_enricher> >; \
+case IdentityHandlerType::total_absorber: return new validater_Template<itl_Map<domain_Type,codomain_Type,total_absorber> >; \
+case IdentityHandlerType::total_enricher: return new validater_Template<itl_Map<domain_Type,codomain_Type,total_enricher> >;
 
 
 namespace boost{namespace itl

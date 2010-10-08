@@ -54,14 +54,14 @@ namespace boost{namespace itl
             setCodomainTypeNames();
             _codomainChoice.init();
 
-            _neutronizerChoice.setSize(NeutronHandlerType::NeutronHandlerTypes_size);
-            _neutronizerChoice.setMaxWeights(100);
-            _neutronizerChoice[NeutronHandlerType::partial_absorber]    = 50;
-            _neutronizerChoice[NeutronHandlerType::partial_enricher]    = 50;
-            _neutronizerChoice[NeutronHandlerType::total_absorber]      = 0;
-            _neutronizerChoice[NeutronHandlerType::total_enricher]      = 0;
-            setNeutronHandlerTypeNames();
-            _neutronizerChoice.init();
+            _identityHandlerChoice.setSize(IdentityHandlerType::IdentityHandlerTypes_size);
+            _identityHandlerChoice.setMaxWeights(100);
+            _identityHandlerChoice[IdentityHandlerType::partial_absorber]    = 50;
+            _identityHandlerChoice[IdentityHandlerType::partial_enricher]    = 50;
+            _identityHandlerChoice[IdentityHandlerType::total_absorber]      = 0;
+            _identityHandlerChoice[IdentityHandlerType::total_enricher]      = 0;
+            setIdentityHandlerTypeNames();
+            _identityHandlerChoice.init();
 
             if(!_rootChoice.is_consistent())
             {
@@ -81,10 +81,10 @@ namespace boost{namespace itl
                 std::cout << _codomainChoice.inconsitencyMessage("map_order_driver::setProfile()") << std::endl;
             }
 
-            if(!_neutronizerChoice.is_consistent())
+            if(!_identityHandlerChoice.is_consistent())
             {
                 setValid(false);
-                std::cout << _neutronizerChoice.inconsitencyMessage("map_order_driver::setProfile()") << std::endl;
+                std::cout << _identityHandlerChoice.inconsitencyMessage("map_order_driver::setProfile()") << std::endl;
             }
 
         }
@@ -94,7 +94,7 @@ namespace boost{namespace itl
             int rootChoice         = _rootChoice.some();
             int domainChoice       = _domainChoice.some();
             int codomainChoice     = _codomainChoice.some();
-            //int neutronizerChoice  = _neutronizerChoice.some();
+            //int identityHandlerChoice  = _identityHandlerChoice.some();
 
             switch(rootChoice)
             {

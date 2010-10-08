@@ -44,9 +44,9 @@ namespace boost{namespace itl
         enum CodomainTypes { Nat, Int, Double, set_int, raw_bitset, CodomainTypes_size };
     }
 
-    namespace NeutronHandlerType 
+    namespace IdentityHandlerType 
     {
-        enum NeutronHandlerTypes { partial_absorber, partial_enricher, total_absorber, total_enricher, NeutronHandlerTypes_size };
+        enum IdentityHandlerTypes { partial_absorber, partial_enricher, total_absorber, total_enricher, IdentityHandlerTypes_size };
     }
 
     namespace FreeChoice 
@@ -237,14 +237,14 @@ namespace boost{namespace itl
             type_names[CodomainType::raw_bitset]        = "raw_bitset"; 
             _codomainChoice.setTypeNames(type_names);
         }
-        void setNeutronHandlerTypeNames()
+        void setIdentityHandlerTypeNames()
         {
-            std::vector<std::string> type_names(NeutronHandlerType::NeutronHandlerTypes_size);
-            type_names[NeutronHandlerType::partial_absorber]        = "partial_absorber"; 
-            type_names[NeutronHandlerType::partial_enricher]        = "partial_enricher"; 
-            type_names[NeutronHandlerType::total_absorber]          = "total_absorber"; 
-            type_names[NeutronHandlerType::total_enricher]          = "total_enricher"; 
-            _neutronizerChoice.setTypeNames(type_names);
+            std::vector<std::string> type_names(IdentityHandlerType::IdentityHandlerTypes_size);
+            type_names[IdentityHandlerType::partial_absorber]        = "partial_absorber"; 
+            type_names[IdentityHandlerType::partial_enricher]        = "partial_enricher"; 
+            type_names[IdentityHandlerType::total_absorber]          = "total_absorber"; 
+            type_names[IdentityHandlerType::total_enricher]          = "total_enricher"; 
+            _identityHandlerChoice.setTypeNames(type_names);
         }
         void setFreeChoiceNames()
         {
@@ -281,7 +281,7 @@ namespace boost{namespace itl
         ChoiceT            _rootChoice;
         ChoiceT            _domainChoice;
         ChoiceT            _codomainChoice;
-        ChoiceT            _neutronizerChoice;
+        ChoiceT            _identityHandlerChoice;
         ChoiceT            _freeChoice;
 
     private:

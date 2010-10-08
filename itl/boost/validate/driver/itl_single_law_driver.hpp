@@ -58,14 +58,14 @@ namespace boost{namespace itl
             setCodomainTypeNames();
             _codomainChoice.init();
 
-            _neutronizerChoice.setSize(NeutronHandlerType::NeutronHandlerTypes_size);
-            _neutronizerChoice.setMaxWeights(100);
-            _neutronizerChoice[NeutronHandlerType::partial_absorber]      = 25;
-            _neutronizerChoice[NeutronHandlerType::partial_enricher]      = 25;
-            _neutronizerChoice[NeutronHandlerType::total_absorber]        = 25;
-            _neutronizerChoice[NeutronHandlerType::total_enricher]        = 25;
-            setNeutronHandlerTypeNames();
-            _neutronizerChoice.init();
+            _identityHandlerChoice.setSize(IdentityHandlerType::IdentityHandlerTypes_size);
+            _identityHandlerChoice.setMaxWeights(100);
+            _identityHandlerChoice[IdentityHandlerType::partial_absorber]      = 25;
+            _identityHandlerChoice[IdentityHandlerType::partial_enricher]      = 25;
+            _identityHandlerChoice[IdentityHandlerType::total_absorber]        = 25;
+            _identityHandlerChoice[IdentityHandlerType::total_enricher]        = 25;
+            setIdentityHandlerTypeNames();
+            _identityHandlerChoice.init();
 
             if(!_rootChoice.is_consistent())
             {
@@ -85,10 +85,10 @@ namespace boost{namespace itl
                 std::cout << _codomainChoice.inconsitencyMessage("itl_single_law_driver::setProfile()") << std::endl;
             }
 
-            if(!_neutronizerChoice.is_consistent())
+            if(!_identityHandlerChoice.is_consistent())
             {
                 setValid(false);
-                std::cout << _neutronizerChoice.inconsitencyMessage("itl_single_law_driver::setProfile()") << std::endl;
+                std::cout << _identityHandlerChoice.inconsitencyMessage("itl_single_law_driver::setProfile()") << std::endl;
             }
 
         }
@@ -99,7 +99,7 @@ namespace boost{namespace itl
             int rootChoice         = _rootChoice.some();
             int domainChoice       = _domainChoice.some();
             int codomainChoice     = _codomainChoice.some();
-            int neutronizerChoice  = _neutronizerChoice.some();
+            int identityHandlerChoice  = _identityHandlerChoice.some();
 
             switch(rootChoice)
             {
@@ -127,17 +127,17 @@ namespace boost{namespace itl
             case RootType::split_interval_map: {
                     switch(domainChoice) {
                         case DomainType::Int: 
-                            switch(neutronizerChoice) {
-                                case NeutronHandlerType::partial_absorber: 
+                            switch(identityHandlerChoice) {
+                                case IdentityHandlerType::partial_absorber: 
                                     return new itl_induced_relations_validater<split_interval_map<int,int,partial_absorber> >;
-                                case NeutronHandlerType::partial_enricher: 
+                                case IdentityHandlerType::partial_enricher: 
                                     return new itl_induced_relations_validater<split_interval_map<int,int,partial_enricher> >;
-                                case NeutronHandlerType::total_absorber: 
+                                case IdentityHandlerType::total_absorber: 
                                     return new itl_induced_relations_validater<split_interval_map<int,int,total_absorber> >;
-                                case NeutronHandlerType::total_enricher: 
+                                case IdentityHandlerType::total_enricher: 
                                     return new itl_induced_relations_validater<split_interval_map<int,int,total_enricher> >;
-                                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), 
-                                                neutronizerChoice, _neutronizerChoice);
+                                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), 
+                                                identityHandlerChoice, _identityHandlerChoice);
                             }
                     default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
@@ -146,17 +146,17 @@ namespace boost{namespace itl
             case RootType::interval_map: {
                     switch(domainChoice) {
                         case DomainType::Int: 
-                            switch(neutronizerChoice) {
-                                case NeutronHandlerType::partial_absorber: 
+                            switch(identityHandlerChoice) {
+                                case IdentityHandlerType::partial_absorber: 
                                     return new itl_induced_relations_validater<interval_map<int,int,partial_absorber> >;
-                                case NeutronHandlerType::partial_enricher: 
+                                case IdentityHandlerType::partial_enricher: 
                                     return new itl_induced_relations_validater<interval_map<int,int,partial_enricher> >;
-                                case NeutronHandlerType::total_absorber: 
+                                case IdentityHandlerType::total_absorber: 
                                     return new itl_induced_relations_validater<interval_map<int,int,total_absorber> >;
-                                case NeutronHandlerType::total_enricher: 
+                                case IdentityHandlerType::total_enricher: 
                                     return new itl_induced_relations_validater<interval_map<int,int,total_enricher> >;
-                                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), 
-                                                neutronizerChoice, _neutronizerChoice);
+                                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), 
+                                                identityHandlerChoice, _identityHandlerChoice);
                             }
                     default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);

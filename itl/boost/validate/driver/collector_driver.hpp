@@ -55,14 +55,14 @@ namespace boost{namespace itl
             setCodomainTypeNames();
             _codomainChoice.init();
 
-            _neutronizerChoice.setSize(NeutronHandlerType::NeutronHandlerTypes_size);
-            _neutronizerChoice.setMaxWeights(100);
-            _neutronizerChoice[NeutronHandlerType::partial_absorber] = 50;
-            _neutronizerChoice[NeutronHandlerType::partial_enricher] = 50;
-            _neutronizerChoice[NeutronHandlerType::total_absorber]   = 0;
-            _neutronizerChoice[NeutronHandlerType::total_enricher]   = 0;
-            setNeutronHandlerTypeNames();
-            _neutronizerChoice.init();
+            _identityHandlerChoice.setSize(IdentityHandlerType::IdentityHandlerTypes_size);
+            _identityHandlerChoice.setMaxWeights(100);
+            _identityHandlerChoice[IdentityHandlerType::partial_absorber] = 50;
+            _identityHandlerChoice[IdentityHandlerType::partial_enricher] = 50;
+            _identityHandlerChoice[IdentityHandlerType::total_absorber]   = 0;
+            _identityHandlerChoice[IdentityHandlerType::total_enricher]   = 0;
+            setIdentityHandlerTypeNames();
+            _identityHandlerChoice.init();
 
             if(!_rootChoice.is_consistent())
             {
@@ -82,10 +82,10 @@ namespace boost{namespace itl
                 std::cout << _codomainChoice.inconsitencyMessage("collector_driver::setProfile()") << std::endl;
             }
 
-            if(!_neutronizerChoice.is_consistent())
+            if(!_identityHandlerChoice.is_consistent())
             {
                 setValid(false);
-                std::cout << _neutronizerChoice.inconsitencyMessage("collector_driver::setProfile()") << std::endl;
+                std::cout << _identityHandlerChoice.inconsitencyMessage("collector_driver::setProfile()") << std::endl;
             }
 
         }
@@ -96,36 +96,36 @@ namespace boost{namespace itl
             int rootChoice         = _rootChoice.some();
             //int domainChoice       = _domainChoice.some();
             //int codomainChoice     = _codomainChoice.some();
-            int neutronizerChoice  = _neutronizerChoice.some();
+            int identityHandlerChoice  = _identityHandlerChoice.some();
 
             switch(rootChoice)
             {
             //-----------------------------------------------------------------
             case RootType::itl_map: {
-                switch(neutronizerChoice) {
-                case NeutronHandlerType::partial_absorber: return new collector_validater<itl::map<int,std::set<int> > >;
-                case NeutronHandlerType::partial_enricher: return new collector_validater<itl::map<int,std::set<int>,partial_enricher> >;
-                //case NeutronHandlerType::total_absorber : return new collector_validater<itl::map<int,std::set<int>,total_absorber > >;
-                default: return choiceError(ITL_LOCATION("\nRootType::itl_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
-                }//switch neutronizerChoice
+                switch(identityHandlerChoice) {
+                case IdentityHandlerType::partial_absorber: return new collector_validater<itl::map<int,std::set<int> > >;
+                case IdentityHandlerType::partial_enricher: return new collector_validater<itl::map<int,std::set<int>,partial_enricher> >;
+                //case IdentityHandlerType::total_absorber : return new collector_validater<itl::map<int,std::set<int>,total_absorber > >;
+                default: return choiceError(ITL_LOCATION("\nRootType::itl_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
+                }//switch identityHandlerChoice
             }//case itl_map 
             //-----------------------------------------------------------------
             case RootType::interval_map: {
-                switch(neutronizerChoice) {
-                case NeutronHandlerType::partial_absorber: return new collector_validater<interval_map<double,std::set<int> > >;
-                case NeutronHandlerType::partial_enricher: return new collector_validater<interval_map<int,std::set<int>,partial_enricher> >;
-                //case NeutronHandlerType::total_absorber : return new collector_validater<interval_map<int,std::set<int>,total_absorber > >;
-                default: return choiceError(ITL_LOCATION("\nRootType::interval_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
-                }//switch neutronizerChoice
+                switch(identityHandlerChoice) {
+                case IdentityHandlerType::partial_absorber: return new collector_validater<interval_map<double,std::set<int> > >;
+                case IdentityHandlerType::partial_enricher: return new collector_validater<interval_map<int,std::set<int>,partial_enricher> >;
+                //case IdentityHandlerType::total_absorber : return new collector_validater<interval_map<int,std::set<int>,total_absorber > >;
+                default: return choiceError(ITL_LOCATION("\nRootType::interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
+                }//switch identityHandlerChoice
             }//case interval_map 
             //-----------------------------------------------------------------
             case RootType::split_interval_map: {
-                switch(neutronizerChoice) {
-                case NeutronHandlerType::partial_absorber: return new collector_validater<split_interval_map<int,std::set<int> > >;
-                case NeutronHandlerType::partial_enricher: return new collector_validater<split_interval_map<double,std::set<int>,partial_enricher> >;
-                //case NeutronHandlerType::total_absorber : return new collector_validater<split_interval_map<int,std::set<int>,total_absorber > >;
-                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
-                }//switch neutronizerChoice
+                switch(identityHandlerChoice) {
+                case IdentityHandlerType::partial_absorber: return new collector_validater<split_interval_map<int,std::set<int> > >;
+                case IdentityHandlerType::partial_enricher: return new collector_validater<split_interval_map<double,std::set<int>,partial_enricher> >;
+                //case IdentityHandlerType::total_absorber : return new collector_validater<split_interval_map<int,std::set<int>,total_absorber > >;
+                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
+                }//switch identityHandlerChoice
             }//case split_interval_map 
             //-----------------------------------------------------------------
 
