@@ -8,6 +8,7 @@
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <iostream>
+#include <iomanip>
 
 namespace boost
 {
@@ -37,6 +38,33 @@ struct size_align_all
 
 struct print_layout_one
 {
+    static char const delim=' ';
+    enum col_enum
+    { num
+    , size
+    , align
+    , sum_size
+    };
+    static unsigned const ncols=sum_size+1;
+    typedef unsigned wcols[ncols];
+    static wcols& our_wcols(void)
+    {
+        static unsigned widths[ncols]={ 3, 4, 5, 8};
+        return widths;
+    }
+    int my_count;
+    unsigned my_size_sum;
+    print_layout_one(int a_count=0,unsigned a_size_sum=0)
+    : my_count(a_count)
+    , my_size_sum(a_size_sum)
+    {
+        std::cout
+          <<std::setw(our_wcols()[0])<<"num"<<delim
+          <<std::setw(our_wcols()[1])<<"size"<<delim
+          <<std::setw(our_wcols()[2])<<"align"<<delim
+          <<std::setw(our_wcols()[3])<<"sum_size"<<delim
+          <<"\n";
+    }
       template
       < std::size_t Size
       , std::size_t Align
@@ -44,7 +72,13 @@ struct print_layout_one
       void
     operator()(typename components_aligned_yes::template layout_data<Size,Align>)
     {
-        std::cout<<"( size="<<Size<<", align="<<Align<<")\n";
+        my_size_sum+=Size;
+        std::cout
+        <<std::setw(our_wcols()[0])<<++my_count<<delim
+        <<std::setw(our_wcols()[1])<<Size<<delim
+        <<std::setw(our_wcols()[2])<<Align<<delim
+        <<std::setw(our_wcols()[3])<<my_size_sum<<delim
+        <<"\n";
     }
 };
 
@@ -85,24 +119,90 @@ struct layout_all
 
 struct print_layout_all
 {
+    static char const delm=' ';
+    static char const none='_';
+    enum col_enum
+    { num
+    , size
+    , align
+    , pad
+    , sum_pad
+    , offset
+    };
+    static unsigned const ncols=offset+1;
+    typedef char const* title_col;
+    typedef title_col tcols[ncols];
+    static tcols& our_tcols(void)
+    {
+        static title_col titles[ncols]=
+        { "num"
+        , "size"
+        , "align"
+        , "pad"
+        , "sum_pad"
+        , "offset"
+        };
+        return titles;
+    }
+    typedef unsigned wcols[ncols];
+    static wcols& our_wcols(void)
+    {
+        static unsigned widths[ncols]={ 3, 4, 5, 3, 7, 6};
+        return widths;
+    }
+      int
+    my_count
+    ;
       std::size_t
     padding_all
     ;
-    print_layout_all(std::size_t a_padding=0)
-    : padding_all(a_padding)
+    print_layout_all(int a_count,std::size_t a_padding=0)
+    : my_count(a_count)
+    , padding_all(a_padding)
     {}
         typedef
       components_aligned_yes::layout_data<>
     layout0
     ;
+        static
+      void
+    print_all_but_offset
+      ( unsigned v_num
+      , unsigned v_size
+      , unsigned v_align
+      , unsigned v_pad
+      , unsigned v_sum_pad
+      )
+    {
+      std::cout
+        <<std::setw(our_wcols()[num])
+        <<v_num<<delm
+        <<std::setw(our_wcols()[size])
+        <<v_size<<delm
+        <<std::setw(our_wcols()[align])
+        <<v_align<<delm
+        <<std::setw(our_wcols()[pad])
+        <<v_pad<<delm
+        <<std::setw(our_wcols()[sum_pad])
+        <<v_sum_pad<<delm;
+    }
       void
     operator()(layout0)
     {
-        std::cout<<"layout0"
-        <<"\n< size="<<layout0::size
-        <<"\n, align="<<layout0::align
-        <<"\n>\n";
-        padding_all=0;
+      std::cout
+        <<std::setw(our_wcols()[num])
+        <<my_count<<delm
+        <<std::setw(our_wcols()[size])
+        <<layout0::size<<delm
+        <<std::setw(our_wcols()[align])
+        <<layout0::align<<delm
+        <<std::setw(our_wcols()[pad])
+        <<none<<delm
+        <<std::setw(our_wcols()[sum_pad])
+        <<none<<delm
+        <<std::setw(our_wcols()[offset])
+        <<none<<delm
+        <<"\n";
     }
       template
       < typename HeadComposed
@@ -125,15 +225,19 @@ struct print_layout_all
           >
         composition
         ;
-        std::cout<<"composition"
-        <<"\n< offset="<<composition::offset
-        <<"\n, size="<<composition::size
-        <<"\n, align="<<composition::align
-        <<"\n>\n";
         std::size_t const padding_one=composition::offset-HeadComposed::size;
-        std::cout<<"padding_one="<<padding_one<<"\n";
         padding_all+=padding_one;
-        std::cout<<"padding_all="<<padding_all<<"\n";
+        print_all_but_offset
+          ( my_count--
+          , composition::size
+          , composition::align
+          , padding_one
+          , padding_all
+          );
+        std::cout
+          <<std::setw(our_wcols()[offset])
+          <<composition::offset<<delm
+          <<"\n";
         HeadComposed head;
         this->operator()(head);
     }
@@ -143,8 +247,16 @@ struct print_layout_all
       >
         static
       void
-    _(void)
+    _(int num_components)
     {
+      for(unsigned icol=0; icol<ncols; ++icol)
+      {
+          std::cout
+            <<std::setw(our_wcols()[icol])
+            <<our_tcols()[icol]
+            <<delm;
+      }
+      std::cout<<"\n";
         std::size_t const
       composite_size
       = alignment::aligned_offset
@@ -163,13 +275,18 @@ struct print_layout_all
        /* padding at the end of the composite.
         */
       ;
+      print_all_but_offset
+        ( num_components+1
+        , composite_size
+        , Composed::align
+        , composite_padding
+        , composite_padding
+        );
       std::cout
-        <<"[ composite_size="
-        <<composite_size
-        <<", composite_padding="
-        <<composite_padding
-        <<"]\n";
-      print_layout_all pla(composite_padding);
+        <<std::setw(our_wcols()[offset])
+        <<none<<delm
+        <<"\n";
+      print_layout_all pla(num_components,composite_padding);
       Composed composed;
       pla(composed);
     }
@@ -186,12 +303,16 @@ show_layout_all_of_aligned(char const*title)
         typedef
       typename size_align_all<Pack>::type
     size_align_result;
+    std::cout<<"***components***\n";
+    std::cout<<"----------------\n";
     print_layout_one plo;
     boost::mpl::for_each<size_align_result>(plo);
         typedef
       typename layout_all<Pack>::type
     layout_result;
-    print_layout_all::_<layout_result>();
+    std::cout<<"***composite***\n";
+    std::cout<<"---------------\n";
+    print_layout_all::_<layout_result>(mpl::size<Pack>::type::value);
 }
 
 }//exit layout namespace
