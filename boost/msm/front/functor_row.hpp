@@ -11,6 +11,8 @@
 #ifndef BOOST_MSM_FRONT_FUNCTOR_ROW_H
 #define BOOST_MSM_FRONT_FUNCTOR_ROW_H
 
+#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+
 #include <boost/mpl/set.hpp>
 #include <boost/mpl/for_each.hpp>
 
@@ -165,7 +167,7 @@ namespace boost { namespace msm { namespace front
     template<class TGT>
     struct get_row_target
     {
-	    typedef typename TGT::Target type;
+        typedef typename TGT::Target type;
     };
 
     template <class EVENT,class ACTION=none,class GUARD=none>
@@ -257,9 +259,9 @@ namespace boost { namespace msm { namespace front
             FCT()(evt_,fsm_,state_);
         }
         private:
-            EVT const&	evt_;
-            FSM&		fsm_;
-            STATE&		state_;
+            EVT const&  evt_;
+            FSM&        fsm_;
+            STATE&      state_;
         };
         template <class EVT,class FSM,class SourceState,class TargetState>
         struct transition_action_result 
