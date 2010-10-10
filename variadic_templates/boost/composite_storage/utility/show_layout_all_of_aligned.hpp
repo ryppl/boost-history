@@ -9,6 +9,7 @@
 #include <boost/mpl/for_each.hpp>
 #include <iostream>
 #include <iomanip>
+#include <cstring>
 
 namespace boost
 {
@@ -46,11 +47,24 @@ struct print_layout_one
     , sum_size
     };
     static unsigned const ncols=sum_size+1;
-    typedef unsigned wcols[ncols];
-    static wcols& our_wcols(void)
+        typedef 
+      char const* 
+    title_col;
+        static 
+      title_col 
+    our_tcols(unsigned icol)
     {
-        static unsigned widths[ncols]={ 3, 4, 5, 8};
-        return widths;
+        static title_col const titles[ncols]=
+        { "num"
+        , "size"
+        , "align"
+        , "sum_size"
+        };
+        return titles[icol];
+    }
+    static unsigned our_wcols(unsigned icol)
+    {
+        return std::strlen(our_tcols(icol));
     }
     int my_count;
     unsigned my_size_sum;
@@ -59,10 +73,10 @@ struct print_layout_one
     , my_size_sum(a_size_sum)
     {
         std::cout
-          <<std::setw(our_wcols()[0])<<"num"<<delim
-          <<std::setw(our_wcols()[1])<<"size"<<delim
-          <<std::setw(our_wcols()[2])<<"align"<<delim
-          <<std::setw(our_wcols()[3])<<"sum_size"<<delim
+          <<our_tcols(num)<<delim
+          <<our_tcols(size)<<delim
+          <<our_tcols(align)<<delim
+          <<our_tcols(sum_size)<<delim
           <<"\n";
     }
       template
@@ -74,10 +88,10 @@ struct print_layout_one
     {
         my_size_sum+=Size;
         std::cout
-        <<std::setw(our_wcols()[0])<<++my_count<<delim
-        <<std::setw(our_wcols()[1])<<Size<<delim
-        <<std::setw(our_wcols()[2])<<Align<<delim
-        <<std::setw(our_wcols()[3])<<my_size_sum<<delim
+        <<std::setw(our_wcols(num     ))<<++my_count <<delim
+        <<std::setw(our_wcols(size    ))<<Size       <<delim
+        <<std::setw(our_wcols(align   ))<<Align      <<delim
+        <<std::setw(our_wcols(sum_size))<<my_size_sum<<delim
         <<"\n";
     }
 };
@@ -130,11 +144,14 @@ struct print_layout_all
     , offset
     };
     static unsigned const ncols=offset+1;
-    typedef char const* title_col;
-    typedef title_col tcols[ncols];
-    static tcols& our_tcols(void)
+        typedef 
+      char const* 
+    title_col;
+        static 
+      title_col 
+    our_tcols(unsigned icol)
     {
-        static title_col titles[ncols]=
+        static title_col const titles[ncols]=
         { "num"
         , "size"
         , "align"
@@ -142,13 +159,13 @@ struct print_layout_all
         , "sum_pad"
         , "offset"
         };
-        return titles;
+        return titles[icol];
     }
-    typedef unsigned wcols[ncols];
-    static wcols& our_wcols(void)
+    static unsigned our_wcols(unsigned icols)
     {
-        static unsigned widths[ncols]={ 3, 4, 5, 3, 7, 6};
-        return widths;
+        static unsigned const widths[ncols]=
+        { 3, 4, 5, 3, 7, 6};
+        return widths[icols];
     }
       int
     my_count
@@ -175,32 +192,32 @@ struct print_layout_all
       )
     {
       std::cout
-        <<std::setw(our_wcols()[num])
+        <<std::setw(our_wcols(num))
         <<v_num<<delm
-        <<std::setw(our_wcols()[size])
+        <<std::setw(our_wcols(size))
         <<v_size<<delm
-        <<std::setw(our_wcols()[align])
+        <<std::setw(our_wcols(align))
         <<v_align<<delm
-        <<std::setw(our_wcols()[pad])
+        <<std::setw(our_wcols(pad))
         <<v_pad<<delm
-        <<std::setw(our_wcols()[sum_pad])
+        <<std::setw(our_wcols(sum_pad))
         <<v_sum_pad<<delm;
     }
       void
     operator()(layout0)
     {
       std::cout
-        <<std::setw(our_wcols()[num])
+        <<std::setw(our_wcols(num))
         <<my_count<<delm
-        <<std::setw(our_wcols()[size])
+        <<std::setw(our_wcols(size))
         <<layout0::size<<delm
-        <<std::setw(our_wcols()[align])
+        <<std::setw(our_wcols(align))
         <<layout0::align<<delm
-        <<std::setw(our_wcols()[pad])
+        <<std::setw(our_wcols(pad))
         <<none<<delm
-        <<std::setw(our_wcols()[sum_pad])
+        <<std::setw(our_wcols(sum_pad))
         <<none<<delm
-        <<std::setw(our_wcols()[offset])
+        <<std::setw(our_wcols(offset))
         <<none<<delm
         <<"\n";
     }
@@ -235,7 +252,7 @@ struct print_layout_all
           , padding_all
           );
         std::cout
-          <<std::setw(our_wcols()[offset])
+          <<std::setw(our_wcols(offset))
           <<composition::offset<<delm
           <<"\n";
         HeadComposed head;
@@ -252,8 +269,7 @@ struct print_layout_all
       for(unsigned icol=0; icol<ncols; ++icol)
       {
           std::cout
-            <<std::setw(our_wcols()[icol])
-            <<our_tcols()[icol]
+            <<our_tcols(icol)
             <<delm;
       }
       std::cout<<"\n";
@@ -283,7 +299,7 @@ struct print_layout_all
         , composite_padding
         );
       std::cout
-        <<std::setw(our_wcols()[offset])
+        <<std::setw(our_wcols(offset))
         <<none<<delm
         <<"\n";
       print_layout_all pla(num_components,composite_padding);
