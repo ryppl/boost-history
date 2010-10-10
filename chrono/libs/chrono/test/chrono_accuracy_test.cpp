@@ -20,7 +20,8 @@
 using boost::chrono::run_timer;
 using boost::system::error_code;
 
-#include <boost/test/minimal.hpp>
+//#include <boost/test/minimal.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
 namespace
 {
@@ -70,33 +71,33 @@ namespace
 
     std::cout << sys_dur.count() << " sys_dur\n";
 
-    BOOST_CHECK( sys_dur > timeout_in_nanoseconds - maximum_delta
+    BOOST_TEST( sys_dur > timeout_in_nanoseconds - maximum_delta
       && sys_dur < timeout_in_nanoseconds + maximum_delta );
 
 #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC 
     std::cout << mono_dur.count() << " mono_dur\n";
 
-    BOOST_CHECK( mono_dur > timeout_in_nanoseconds - maximum_delta
+    BOOST_TEST( mono_dur > timeout_in_nanoseconds - maximum_delta
       && mono_dur < timeout_in_nanoseconds + maximum_delta );
 #endif    
 
     std::cout << hires_dur.count() << " hires_dur\n";
 
-    BOOST_CHECK( hires_dur > timeout_in_nanoseconds - maximum_delta
+    BOOST_TEST( hires_dur > timeout_in_nanoseconds - maximum_delta
       && hires_dur < timeout_in_nanoseconds + maximum_delta );
 
     std::cout << times.real.count() << " times.real\n";
 
-    BOOST_CHECK( times.real > timeout_in_nanoseconds - maximum_delta
+    BOOST_TEST( times.real > timeout_in_nanoseconds - maximum_delta
       && times.real < timeout_in_nanoseconds + maximum_delta );
   }
 
 }
 
-int test_main( int argc, char * argv[] )
+int main( int argc, char * argv[] )
 {
   accuracy_test( argc, argv );
   
-  return 0;
+  return boost::report_errors();
 }
 

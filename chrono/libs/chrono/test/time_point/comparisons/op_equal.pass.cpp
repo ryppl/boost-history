@@ -2,30 +2,8 @@
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
 
-// Adapted from llvm/libcxx/test/utilities/chrono
-//===----------------------------------------------------------------------===//
-//
-//                     The LLVM Compiler Infrastructure
-//
-// This file is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
-//
-//===----------------------------------------------------------------------===//
-
-// <chrono>
-
-// time_point
-
-// template <class Clock, class Duration1, class Duration2>
-//   bool
-//   operator==(const time_point<Clock, Duration1>& lhs, const time_point<Clock, Duration2>& rhs);
-
-// template <class Clock, class Duration1, class Duration2>
-//   bool
-//   operator!=(const time_point<Clock, Duration1>& lhs, const time_point<Clock, Duration2>& rhs);
-
 #include <boost/chrono.hpp>
-#include <cassert>
+#include <boost/detail/lightweight_test.hpp>
 
 int main()
 {
@@ -38,25 +16,27 @@ int main()
     {
     T1 t1(Duration1(3));
     T1 t2(Duration1(3));
-    assert( (t1 == t2));
-    assert(!(t1 != t2));
+    BOOST_TEST( (t1 == t2));
+    BOOST_TEST(!(t1 != t2));
     }
     {
     T1 t1(Duration1(3));
     T1 t2(Duration1(4));
-    assert(!(t1 == t2));
-    assert( (t1 != t2));
+    BOOST_TEST(!(t1 == t2));
+    BOOST_TEST( (t1 != t2));
     }
     {
     T1 t1(Duration1(3));
     T2 t2(Duration2(3000));
-    assert( (t1 == t2));
-    assert(!(t1 != t2));
+    BOOST_TEST( (t1 == t2));
+    BOOST_TEST(!(t1 != t2));
     }
     {
     T1 t1(Duration1(3));
     T2 t2(Duration2(3001));
-    assert(!(t1 == t2));
-    assert( (t1 != t2));
+    BOOST_TEST(!(t1 == t2));
+    BOOST_TEST( (t1 != t2));
     }
+
+    return boost::report_errors();
 }

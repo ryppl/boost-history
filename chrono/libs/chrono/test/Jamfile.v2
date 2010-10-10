@@ -103,20 +103,19 @@ project
 
     test-suite "typedefs"
         :
-        [ run hours.pass.cpp :  :  : <link>static ]
-        [ run minutes.pass.cpp :  :  : <link>static ]
-        [ run seconds.pass.cpp :  :  : <link>static ]
-        [ run milliseconds.pass.cpp :  :  : <link>static ]
-        [ run microseconds.pass.cpp :  :  : <link>static ]
-        [ run nanoseconds.pass.cpp :  :  : <link>static ]
-        #[ run milliseconds.pass.cpp :  :  :  : milliseconds.pass.dll ]
+        [ compile hours.pass.cpp :  :  ]
+        [ compile minutes.pass.cpp :  : ]
+        [ compile seconds.pass.cpp :  : ]
+        [ compile milliseconds.pass.cpp :  : ]
+        [ compile microseconds.pass.cpp :  :  ]
+        [ compile nanoseconds.pass.cpp :  : ]
         ;
 
     test-suite "traits"
         :
-        [ run traits/specializations/duration.pass.cpp :  :  : <link>static ]
-        [ run traits/specializations/time_point.pass.cpp :  :  : <link>static ]
-        [ run traits/is_fp/treat_as_floating_point.pass.cpp :  :  : <link>static ]
+        [ compile traits/specializations/duration.pass.cpp :  :  ]
+        [ compile traits/specializations/time_point.pass.cpp :  : ]
+        [ compile traits/is_fp/treat_as_floating_point.pass.cpp :  :  ]
         [ run traits/duration_values/max.pass.cpp :  :  : <link>static ]
         [ run traits/duration_values/zero.pass.cpp :  :  : <link>static ]
         [ run traits/duration_values/min.pass.cpp :  :  : <link>static ]
@@ -180,7 +179,7 @@ project
 
     test-suite "time_point"
         :
-        [ run time_point/default_duration.pass.cpp :  :  : <link>static : time_point.default_duration.pass ]
+        [ compile time_point/default_duration.pass.cpp :  : time_point.default_duration.pass ]
         [ compile-fail time_point/duration.fail.cpp : : time_point.duration.fail   ]
 
         [ run time_point/arithmetic/op_plus_ass.pass.cpp :  :  : <link>static : time_point.op_plus_ass.pass ]

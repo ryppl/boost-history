@@ -2,29 +2,15 @@
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
 
-// Adapted from llvm/libcxx/test/utilities/chrono
-//===----------------------------------------------------------------------===//
-//
-//                     The LLVM Compiler Infrastructure
-//
-// This file is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
-//
-//===----------------------------------------------------------------------===//
-
-// <chrono>
-
-// time_point
-
-// static constexpr time_point max();
-
 #include <boost/chrono.hpp>
-#include <cassert>
+#include <boost/detail/lightweight_test.hpp>
 
 int main()
 {
     typedef boost::chrono::system_clock Clock;
     typedef boost::chrono::milliseconds Duration;
     typedef boost::chrono::time_point<Clock, Duration> TP;
-    assert(TP::max() == TP(Duration::max()));
+    BOOST_TEST(TP::max() == TP(Duration::max()));
+
+    return boost::report_errors();
 }
