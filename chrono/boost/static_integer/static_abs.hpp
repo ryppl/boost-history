@@ -42,7 +42,7 @@ namespace integer
 			X < 0 ? -X : X> 
 	{};
 
-	template <static_abs_unsigned_type X>
+	template <static_abs_signed_type X>
 	struct static_unsigned_abs 
 		: integral_constant<static_abs_unsigned_type, 
 			X < 0 ? -X : X> 
