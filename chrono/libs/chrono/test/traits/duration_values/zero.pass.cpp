@@ -7,10 +7,6 @@
 
 #include "../../rep.h"
 
-#if !defined(BOOST_NO_STATIC_ASSERT) 
-#define NOTHING ""
-#endif
-
 int main()
 {
     BOOST_TEST(boost::chrono::duration_values<int>::zero() == 0);
