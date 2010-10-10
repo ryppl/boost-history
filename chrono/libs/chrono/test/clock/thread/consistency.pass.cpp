@@ -6,10 +6,9 @@
 #include <boost/chrono/thread_clock.hpp>
 #include "../check_clock_invariants.hpp"
 
-int main()
+void test()
 {
 #if defined(BOOST_CHRONO_HAS_THREAD_CLOCK) 
     check_clock_invariants<boost::chrono::thread_clock>();
 #endif    
-    return 0;    
 }

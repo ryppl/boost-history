@@ -5,8 +5,7 @@
 #include <boost/chrono.hpp>
 #include <libs/chrono/test/clock/check_clock_invariants.hpp>
 
-int main()
+void test()
 {
     check_clock_invariants<boost::chrono::high_resolution_clock>();
-    return 0;    
 }

@@ -210,23 +210,26 @@ project
 
     test-suite "clock"
         :
-        [ run clock/hires/consistency.pass.cpp :  :  : <link>static : clock.hires.consistency.pass ]
+        [ compile clock/hires/consistency.pass.cpp : : clock.hires.consistency.pass ]
         [ run clock/hires/now.pass.cpp :  :  : <link>static : clock.hires.now.pass ]
         
-        [ run clock/monotonic/consistency.pass.cpp :  :  : <link>static : clock.monotonic.consistency.pass ]
+        [ compile clock/monotonic/consistency.pass.cpp : : clock.monotonic.consistency.pass ]
         [ run clock/monotonic/now.pass.cpp :  :  : <link>static : clock.monotonic.now.pass ]
         
-        [ run clock/system/consistency.pass.cpp :  :  : <link>static : clock.system.consistency.pass ]
+        [ compile clock/system/consistency.pass.cpp : : clock.system.consistency.pass ]
         [ run clock/system/now.pass.cpp :  :  : <link>static : clock.system.now.pass ]
         [ run clock/system/from_time_t.pass.cpp :  :  : <link>static : clock.system.from_time_t.pass ]
         [ run clock/system/rep_signed.pass.cpp :  :  : <link>static : clock.system.rep_signed.pass ]
         [ run clock/system/to_time_t.pass.cpp :  :  : <link>static : clock.system.to_time_t.pass ]
         
-        [ run clock/process/consistency.pass.cpp :  :  : <link>static : clock.process.consistency.pass ]
+        [ compile clock/process/consistency.pass.cpp : : clock.process.consistency.pass ]
         [ run clock/process/now.pass.cpp :  :  : <link>static : clock.process.now.pass ]
         
-        [ run clock/thread/consistency.pass.cpp :  :  : <link>static : clock.thread.consistency.pass ]
+        [ compile clock/thread/consistency.pass.cpp : : clock.thread.consistency.pass ]
         [ run clock/thread/now.pass.cpp :  :  : <link>static : clock.thread.now.pass ]
+
+        [ compile clock/errored/consistency.pass.cpp : : clock.errored.consistency.pass ]
+        [ run clock/errored/now.pass.cpp :  :  : <link>static : clock.errored.now.pass ]
         
         ;
 

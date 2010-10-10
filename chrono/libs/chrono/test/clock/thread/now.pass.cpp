@@ -6,6 +6,7 @@
 #include "../check_clock_now.hpp"
 #include <boost/chrono/thread_clock.hpp>
 #include <boost/chrono.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
 int main()
 {

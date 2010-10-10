@@ -6,11 +6,10 @@
 #include <boost/chrono/process_cpu_clocks.hpp>
 #include "../check_clock_invariants.hpp"
 
-int main()
+void test()
 {
     check_clock_invariants<boost::chrono::process_real_cpu_clock>();
     check_clock_invariants<boost::chrono::process_user_cpu_clock>();
     check_clock_invariants<boost::chrono::process_system_cpu_clock>();
     check_clock_invariants<boost::chrono::process_cpu_clock>();
-    return 0;    
 }

@@ -5,12 +5,21 @@
 #include "../check_clock_now.hpp"
 #include <boost/chrono/process_cpu_clocks.hpp>
 #include <boost/chrono.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
 int main()
 {
 	check_clock_now<boost::chrono::process_real_cpu_clock>();
+	check_clock_now_ec<boost::chrono::process_real_cpu_clock>();
+	
 	check_clock_now<boost::chrono::process_user_cpu_clock>();
+	check_clock_now_ec<boost::chrono::process_user_cpu_clock>();
+	
 	check_clock_now<boost::chrono::process_system_cpu_clock>();
+	check_clock_now_ec<boost::chrono::process_system_cpu_clock>();
+	
 	check_clock_now<boost::chrono::process_cpu_clock>();
-    return 0;    
+	check_clock_now_ec<boost::chrono::process_cpu_clock>();
+	
+    return boost::report_errors();
 }

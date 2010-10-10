@@ -3,11 +3,12 @@
 //  See http://www.boost.org/LICENSE_1_0.txt
 
 #include <boost/chrono.hpp>
-//#include <libs/chrono/test/clock/check_clock_now.hpp>
 #include "../check_clock_now.hpp"
+#include <boost/detail/lightweight_test.hpp>
 
 int main()
 {
 	check_clock_now<boost::chrono::high_resolution_clock>();
-    return 0;    
+	check_clock_now_ec<boost::chrono::high_resolution_clock>();
+    return boost::report_errors();
 }
