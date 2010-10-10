@@ -161,11 +161,9 @@ struct print_layout_all
         };
         return titles[icol];
     }
-    static unsigned our_wcols(unsigned icols)
+    static unsigned our_wcols(unsigned icol)
     {
-        static unsigned const widths[ncols]=
-        { 3, 4, 5, 3, 7, 6};
-        return widths[icols];
+        return std::strlen(our_tcols(icol));
     }
       int
     my_count
