@@ -425,7 +425,7 @@ struct common_type<chrono::duration<Rep1, Period1>,
                    chrono::duration<Rep2, Period2> >
 {
   typedef chrono::duration<typename common_type<Rep1, Rep2>::type,
-                      typename boost::detail::ratio_gcd<Period1, Period2>::type> type;
+                      typename boost::ratio_gcd<Period1, Period2>::type> type;
 };
 
 
@@ -442,7 +442,7 @@ namespace chrono {
     class duration
     {
     BOOST_EX_CHRONO_STATIC_ASSERT(!boost_ex::chrono::detail::is_duration<Rep>::value, BOOST_EX_CHRONO_A_DURATION_REPRESENTATION_CAN_NOT_BE_A_DURATION, ());
-    BOOST_EX_CHRONO_STATIC_ASSERT(boost::detail::is_ratio<Period>::value, BOOST_EX_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_DURATION_MUST_BE_A_STD_RATIO, ());
+    BOOST_EX_CHRONO_STATIC_ASSERT(boost::ratio_detail::is_ratio<Period>::value, BOOST_EX_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_DURATION_MUST_BE_A_STD_RATIO, ());
     BOOST_EX_CHRONO_STATIC_ASSERT(Period::num>0, BOOST_EX_CHRONO_DURATION_PERIOD_MUST_BE_POSITIVE, ());
     public:
         typedef Rep rep;
