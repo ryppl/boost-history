@@ -14,6 +14,7 @@
 #include <boost/chrono/time_point.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/operators.hpp>
+#include <boost/chrono/detail/system.hpp>
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 

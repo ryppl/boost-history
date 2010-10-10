@@ -62,10 +62,10 @@ TODO:
 #include <boost/chrono/config.hpp>
 #include <boost/chrono/duration.hpp>
 #include <boost/chrono/time_point.hpp>
-
-#include <ctime>
+#include <boost/chrono/detail/system.hpp>
 #include <boost/system/error_code.hpp>
 
+#include <ctime>
 
 #ifdef BOOST_CHRONO_WINDOWS_API
 // The system_clock tick is 100 nanoseconds

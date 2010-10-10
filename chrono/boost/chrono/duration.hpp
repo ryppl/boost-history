@@ -50,6 +50,7 @@ time2_demo contained this comment:
 #include <boost/utility/enable_if.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/integer_traits.hpp>
+#include <boost/static_integer/static_gcd.hpp>
 
 #if !defined(BOOST_NO_STATIC_ASSERT) || !defined(BOOST_CHRONO_USES_MPL_ASSERT)
 #define BOOST_CHRONO_A_DURATION_REPRESENTATION_CAN_NOT_BE_A_DURATION        "A duration representation can not be a duration"
@@ -423,7 +424,7 @@ struct common_type<chrono::duration<Rep1, Period1>,
                    chrono::duration<Rep2, Period2> >
 {
   typedef chrono::duration<typename common_type<Rep1, Rep2>::type,
-                      typename boost::detail::ratio_gcd<Period1, Period2>::type> type;
+                      typename boost::ratio_gcd<Period1, Period2>::type> type;
 };
 
 
@@ -439,8 +440,9 @@ namespace chrono {
     template <class Rep, class Period>
     class duration
     {
+    //BOOST_CHRONO_STATIC_ASSERT(boost::is_integral<Rep>::value, BOOST_CHRONO_A_DURATION_REPRESENTATION_MUST_BE_INTEGRAL, ());
     BOOST_CHRONO_STATIC_ASSERT(!boost::chrono::detail::is_duration<Rep>::value, BOOST_CHRONO_A_DURATION_REPRESENTATION_CAN_NOT_BE_A_DURATION, ());
-    BOOST_CHRONO_STATIC_ASSERT(boost::detail::is_ratio<Period>::value, BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_DURATION_MUST_BE_A_STD_RATIO, ());
+    BOOST_CHRONO_STATIC_ASSERT(boost::ratio_detail::is_ratio<Period>::value, BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_DURATION_MUST_BE_A_STD_RATIO, ());
     BOOST_CHRONO_STATIC_ASSERT(Period::num>0, BOOST_CHRONO_DURATION_PERIOD_MUST_BE_POSITIVE, ());
     public:
         typedef Rep rep;
