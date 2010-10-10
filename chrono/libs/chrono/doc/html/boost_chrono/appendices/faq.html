@@ -28,109 +28,15 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_chrono.appendices.faq"></a><a href="faq.html" title=" Appendix D: FAQ"> Appendix D: FAQ</a>
 </h3></div></div></div>
-<a name="boost_chrono.appendices.faq.how_important_is_the_order_of_the___code__phrase_role__identifier__common_type__phrase___code__lt__gt__template_arguments_"></a><h4>
-<a name="id5072206"></a>
-        <a href="faq.html#boost_chrono.appendices.faq.how_important_is_the_order_of_the___code__phrase_role__identifier__common_type__phrase___code__lt__gt__template_arguments_">How
-        important is the order of the <code class="computeroutput"><span class="identifier">common_type</span></code>&lt;&gt;
-        template arguments?</a>
-      </h4>
-<p>
-        The order of the template parameters is important. First <code class="computeroutput"><span class="identifier">common_type</span></code>&lt;&gt;
-        is not able to find out common type if it is not present and second <code class="computeroutput"><span class="identifier">common_type</span></code>&lt;A,B,C&gt;::type is equivalent
-        to <code class="computeroutput"><span class="identifier">common_type</span></code>&lt; <code class="computeroutput"><span class="identifier">common_type</span></code>&lt;A,B&gt;::type, C&gt;::type.
-      </p>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">A</span> <span class="special">{};</span>
-<span class="keyword">struct</span> <span class="identifier">B</span> <span class="special">{};</span>
-<span class="keyword">struct</span> <span class="identifier">C</span> <span class="special">{</span>
-    <span class="identifier">C</span><span class="special">()</span> <span class="special">{}</span>
-    <span class="identifier">C</span><span class="special">(</span><span class="identifier">A</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="special">{}</span>
-    <span class="identifier">C</span><span class="special">(</span><span class="identifier">B</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="special">{}</span>
-    <span class="identifier">C</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">C</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="special">*</span><span class="keyword">this</span><span class="special">;</span>
-    <span class="special">}</span>
-<span class="special">};</span>
-
-<span class="preprocessor">#if</span> <span class="number">0</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span> <span class="identifier">B</span><span class="special">,</span> <span class="identifier">C</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">ABC</span><span class="special">;</span> <span class="comment">// DO not compile
-</span><span class="preprocessor">#else</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span> <span class="identifier">B</span><span class="special">,</span> <span class="identifier">A</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">ABC</span><span class="special">;</span>
-<span class="preprocessor">#endif</span>
-</pre>
-<p>
-        Thus, as <code class="computeroutput"><span class="identifier">common_type</span></code>&lt;A,B&gt;::type
-        is undefined, <code class="computeroutput"><span class="identifier">common_type</span></code>&lt;A,B,C&gt;::type
-        is also undefined.
-      </p>
-<a name="boost_chrono.appendices.faq.why_does_stopwatch_reporter_only_display_millisecond_place_precision_when_the_underlying_clock_has_nanosecond_precision_"></a><h4>
-<a name="id5072704"></a>
-        <a href="faq.html#boost_chrono.appendices.faq.why_does_stopwatch_reporter_only_display_millisecond_place_precision_when_the_underlying_clock_has_nanosecond_precision_">Why
-        does stopwatch_reporter only display millisecond place precision when the
-        underlying Clock has nanosecond precision?</a>
-      </h4>
-<p>
-        To avoid giving the impression of precision where none exists. See Caveat
-        emptor. You can always specify additional decimal places if you want to live
-        dangerously.
-      </p>
-<a name="boost_chrono.appendices.faq.why_does_stopwatch_reporter_sometimes_report_more_cpu_seconds_than_real_seconds_"></a><h4>
-<a name="id5072744"></a>
-        <a href="faq.html#boost_chrono.appendices.faq.why_does_stopwatch_reporter_sometimes_report_more_cpu_seconds_than_real_seconds_">Why
-        does stopwatch_reporter sometimes report more cpu seconds than real seconds?</a>
+<a name="boost_chrono.appendices.faq.why_does_process_cpu_clock_sometimes_gives_more_cpu_seconds_than_real_seconds_"></a><h4>
+<a name="id5068417"></a>
+        <a href="faq.html#boost_chrono.appendices.faq.why_does_process_cpu_clock_sometimes_gives_more_cpu_seconds_than_real_seconds_">Why
+        does process_cpu_clock sometimes gives more cpu seconds than real seconds?</a>
       </h4>
 <p>
         Ask your operating system supplier. The results have been inspected with
         a debugger, and both for Windows and Linux, that's what the OS appears to
         be reporting at times.
-      </p>
-<a name="boost_chrono.appendices.faq.can_i_obtain_statistics_of_the_time_elapsed_between_calls_to_a_function_"></a><h4>
-<a name="id5072776"></a>
-        <a href="faq.html#boost_chrono.appendices.faq.can_i_obtain_statistics_of_the_time_elapsed_between_calls_to_a_function_">Can
-        I obtain statistics of the time elapsed between calls to a function?</a>
-      </h4>
-<p>
-        The library do not provides this feature.
-      </p>
-<a name="boost_chrono.appendices.faq.what_happens_if_i_press_ctrl_c_and_program_terminates__what_log_would_boost_chrono_output_"></a><h4>
-<a name="id5072804"></a>
-        <a href="faq.html#boost_chrono.appendices.faq.what_happens_if_i_press_ctrl_c_and_program_terminates__what_log_would_boost_chrono_output_">What
-        happens if I press Ctrl+C and program terminates? What log would Boost.chrono
-        output?</a>
-      </h4>
-<a name="boost_chrono.appendices.faq.can_you_explain_the_pros_cons_of___code__phrase_role__identifier__common_type__phrase___code__against_boost_typeof_"></a><h4>
-<a name="id5072832"></a>
-        <a href="faq.html#boost_chrono.appendices.faq.can_you_explain_the_pros_cons_of___code__phrase_role__identifier__common_type__phrase___code__against_boost_typeof_">Can
-        you explain the pros/cons of <code class="computeroutput"><span class="identifier">common_type</span></code>
-        against Boost.Typeof?</a>
-      </h4>
-<p>
-        Even if in a first look they sound to be close, <code class="computeroutput"><span class="identifier">common_type</span></code>
-        and typeof have different purposes. You use typeof to get the type of an
-        expression, while you use <code class="computeroutput"><span class="identifier">common_type</span></code>
-        to set explicitly the type returned of a template function. Both are complementary.
-        For example with the preceding declaration and the needed Typeof registrations,
-        you can do
-      </p>
-<p>
-        Suppose I have a mixed type vector2 class with a magnitude_squared function
-        defined as:
-      </p>
-<p>
-        template &lt;typename X, typename Y&gt; BOOST_TYPEOF_TPL(X() * X() + Y()
-        * Y()) magnitude_squared(const vector2&lt;X, Y&gt; &amp;v) { return v.x *
-        v.x + v.y * v.y; }
-      </p>
-<p>
-        <code class="computeroutput"><span class="identifier">common_type</span></code> is closer in
-        nature to promote_args&lt;class ...T&gt; in boost/math/tools/promotion.hpp
-        than it is to Boost.Typeof, though it is not exactly the same as promote_args
-        either. <code class="computeroutput"><span class="identifier">common_type</span></code>&lt;T1,
-        T2&gt;::type simply represents the result of some operation on T1 and T2,
-        and defaults to the type obtained by putting T1 and T2 into a conditional
-        statement.
-      </p>
-<p>
-        It is meant to be customizable (via specialization) if this default is not
-        appropriate.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

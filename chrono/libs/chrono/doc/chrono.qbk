@@ -278,11 +278,6 @@ The __Boost_Chrono__ library provides:
 * A type for representing points in time: __time_point__. A __time_point__ represents an epoch plus or minus a __duration__. The library leaves epochs unspecified. A __time_point__ is associated with a /clock/.
 * Several clocks, some of which may not be available on a particular platform: __system_clock__, __monotonic_clock__ and __high_resolution_clock__. A clock is a pairing of a __time_point__ and __duration__, and a function which returns a __time_point__ representing ['now].
 
-[/Additionally, a minimal amount of general purpose infrastructure is provided which will support both the interface and implementation of the /clocks/, __time_point_s__ and __duration_s__ proposed herein. It is expected that these general purpose facilities will also find utility in far ranging user applications as well.
-
-* __common_type__ is a traits class used to deduce a type common to a several types, useful as the return type of functions operating on multiple input types such as in mixed-mode arithmetic.
-* A class template, __ratio__, for specifying compile time rational constants such as 1/3 of a nanosecond or the number of inches per meter.  __ratio__ represents a compile time ratio of compile time constants with support for compile time arithmetic with overflow and division by zero protection
-]
 
 To make the timing facilities more generally useful, __Boost_Chrono__ provides a number of clocks that are thin wrappers around the operating system's time APIs, thereby allowing the extraction of read (wall clock) time, user CPU time, system CPU time,
 
@@ -339,6 +334,8 @@ You can also access the latest (unstable?) state from the [@https://svn.boost.or
 
 The simple way is to decompress (or checkout from SVN) the file in your BOOST_ROOT directory.
 
+[note If you are using  the trunk, don't decompress the type_traits directory.]
+
 Othesewise, if you decompress in a different directory, you will need to comment some lines, and uncomment and change others in the build/Jamfile and test/Jamfile. Sorry for this, but I have not reached yet to write a Jamfile that is able to work in both environements and use the BOOST_ROOT variable. Any help is welcome.
 
 [/=================================]
@@ -353,7 +350,7 @@ __Boost_Chrono__ is not a header only library. You need to compile it before use
 [heading Requirements]
 [/===================]
 
-[*Boost.Chrono] depends on some Boost libraries. For these specific parts you must use either Boost version 1.39.0 or the version in SVN trunk (even if older versions should works also).
+[*Boost.Chrono] depends on some new traits in Boost.TypeTraits. For these specific parts you must use either the Boost.TypeTraits.Ext or the version in SVN trunk. In addition it depends on the not yet accepted Boost.Ratio library. Except these new dependencies, we have tested with older versions as 1.39.
 
 In particular, __Boost_Chrono__ depends on:
 
@@ -374,7 +371,7 @@ In particular, __Boost_Chrono__ depends on:
     [[@http://www.boost.org/libs/operators [*Boost.Operators]]] [for operators, ...]
 ]
 [
-    [[@http://www.boost.org/libs/ratio [*Boost.Ratio]]] [for error_code, ...]
+    [[@http://www.boost.org/libs/ratio [*Boost.Ratio]]] [for ratio, ...]
 ]
 [
     [[@http://www.boost.org/libs/system [*Boost.System]]] [for error_code, ...]
@@ -417,24 +414,28 @@ Current version has been tested on:
 Windows with
 
 * MSVC 10.0
-* MSVC 9.0 Express
-* MSVC 8.0
+* MSVC 9.0 Express (not lastly)
+* MSVC 8.0 (not lastly)
 
 [/* Intel 11.0]
 
 Scientific Linux with
 
-* GCC 4.1.2
+* GCC 4.1.2 (not lastly)
 
-Cygwin with
+Cygwin 1.5 with
 
 * GCC 3.4.4
-* GCC 4.3.2
+
+Cygwin 1.7 with
+
+* GCC 4.3.4
 
 MinGW with
 
 * GCC 4.4.0
 * GCC 4.5.0
+* GCC 4.5.0 -std=c++0x
 
 Initial version was tested on:
 
@@ -1840,7 +1841,7 @@ Usage
 
 [
     [[@http://www.open-std.org/jtc1/sc22/wg21 [*C++ Standards Committee's current Working Paper]]]
-    [The most authoritative reference material for the library is the C++ Standards Committee's current Working Paper (WP).  20.9 Time utilities "time", 20.4 Compile-time rational arithmetic "ratio", 20.6.7 Other transformations "meta.trans.other"]
+    [The most authoritative reference material for the library is the C++ Standards Committee's current Working Paper (WP).  20.11 Time utilities "time"]
 ]
 
 [
@@ -1853,17 +1854,6 @@ Usage
     [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3134.html#934 [*LGW 934. duration is missing operator%]]]
     [From Terry Golubiewski. Is very informative and provides motivation for key design decisions]
 ]
-
-[
-    [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3133.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]]]
-    [From Vicente Juan Botet Escriba.]
-]
-
-[
-    [[@http://www.digitalmars.com/d/2.0/phobos/std_traits.html#CommonType D programming language -  CommonType trait]]
-    [From Andrei Alexandrescu.]
-]
-
 
 ]
 
@@ -3461,11 +3451,14 @@ All the units are given using the suffix "s" following the System International 
 [/=================]
 [section Appendices]
 [/=================]
+
 [/==================================]
 [section:history Appendix A: History]
 [/==================================]
 
-[section [*Version 0.6.0, September 20, 2010] ]
+
+[/
+[section [*Version 0.6.0, September 22, 2010] ]
 
 [*Features:]
 
@@ -3474,6 +3467,7 @@ All the units are given using the suffix "s" following the System International 
 [*Fixes:]
 
 * Fix duration values min implementation.
+* Fix some warnings
 
 [*Test:]
 
@@ -3741,7 +3735,9 @@ More updated documentation.
     * `process_timer`, capturing elapsed real, user-CPU, and system-CPU times.
     * `run_timer`, convenient reporting of process_timer results.
 
+
 [endsect]
+]
 [endsect]
 
 [/======================================]
@@ -3810,6 +3806,7 @@ If the CopyConstruction and Assignment ([[@http://home.roadrunner.com/~hinnant/i
 
 [endsect]
 
+
 [/======================================================]
 [section:implementation Appendix C: Implementation Notes]
 
@@ -3820,68 +3817,9 @@ If the CopyConstruction and Assignment ([[@http://home.roadrunner.com/~hinnant/i
 [/======================================================]
 [section:faq Appendix D: FAQ]
 
-[heading How important is the order of the __common_type__<> template arguments?]
-
-The order of the template parameters is important. First __common_type__<> is not able to find out common type if it is not present and second
-__common_type__<A,B,C>::type is equivalent to __common_type__<__common_type__<A,B>::type, C>::type.
-
-
-    struct A {};
-    struct B {};
-    struct C {
-        C() {}
-        C(A const&) {}
-        C(B const&) {}
-        C& operator=(C const&) {
-            return *this;
-        }
-    };
-
-    #if 0
-    typedef boost::__common_type__<A, B, C>::type ABC; // DO not compile
-    #else
-    typedef boost::__common_type__<C, B, A>::type ABC;
-    #endif
-
-
-Thus, as __common_type__<A,B>::type is undefined,  __common_type__<A,B,C>::type is also undefined.
-
-[heading Why does stopwatch_reporter only display millisecond place precision when the underlying Clock has nanosecond precision?]
-
-To avoid giving the impression of precision where none exists. See Caveat emptor. You can always specify additional decimal places if you want to live dangerously.
-
-[heading Why does stopwatch_reporter sometimes report more cpu seconds than real seconds?]
+[heading Why does process_cpu_clock sometimes gives more cpu seconds than real seconds?]
 
 Ask your operating system supplier. The results have been inspected with a debugger, and both for Windows and Linux, that's what the OS appears to be reporting at times.
-
-[heading  Can I obtain statistics of the time elapsed between calls to a function?]
-
-The library do not provides this feature.
-
-[heading What happens if I press Ctrl+C and program terminates? What log would Boost.chrono output?]
-
-[heading Can you explain the pros/cons of __common_type__ against Boost.Typeof?]
-
-Even if in a first look they sound to be close, __common_type__ and typeof have
-different purposes. You use typeof to get the type of an expression, while
-you use __common_type__ to set explicitly the type returned of a template
-function. Both are complementary. For example with the preceding declaration
-and the needed Typeof registrations, you can do
-
-
-Suppose I have a mixed type vector2 class with a magnitude_squared function defined as:
-
-template <typename X, typename Y>
-BOOST_TYPEOF_TPL(X() * X() + Y() * Y()) magnitude_squared(const
-vector2<X, Y> &v) {
-   return v.x * v.x + v.y * v.y;
-}
-
-
-__common_type__ is closer in nature to promote_args<class ...T> in boost/math/tools/promotion.hpp than it is to Boost.Typeof, though it is not exactly the same as promote_args either.  __common_type__<T1, T2>::type simply represents the result of some operation on T1 and T2, and defaults to the type obtained by putting T1 and T2 into a conditional statement.
-
-It is meant to be customizable (via specialization) if this default is not appropriate.
-
 
 [endsect]
 
@@ -3904,6 +3842,7 @@ Thansk to Jeffrey Lee Hellrung, Jr. for sharing his implementation of __common_t
 
 [endsect]
 
+[/
 [/====================================================]
 [section:tests  Appendix F: Tests]
 
@@ -4171,9 +4110,9 @@ boost::chrono::duration<boost::chrono::process_cpu_clock::times, boost::ratio<1l
 
 [endsect]
 
-
+]
 [/=====================================]
-[section:todo  Appendix H: Future plans]
+[section:todo  Appendix F: Future plans]
 [/=====================================]
 [heading Tasks to do before review]
 
