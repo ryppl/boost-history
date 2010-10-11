@@ -9,6 +9,18 @@ namespace composite_storage
 namespace special_components
 {
     enum special_id
+    //2010-10-11.1748CST
+    //  Maybe there should be enum's, e.g.
+    //    one
+    //    zero  
+    //  designating the unit for all_of_aligned 
+    //  and the unit for  one_of_maybe 
+    //  corresponding to the 
+    //  product's unit and the coproduct's unit 
+    //  as described here:
+    //
+    //    http://en.wikipedia.org/wiki/Monoidal_category
+    //
     { nothing_id //signifies error, something like haskell's Nothing.
     , empty_id //signifies empty class.
     };
