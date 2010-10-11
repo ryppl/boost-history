@@ -49,9 +49,9 @@ time2_demo contained this comment:
 #define BOOST_RATIO_OVERFLOW_IN_SUB "overflow in ratio sub"
 #define BOOST_RATIO_OVERFLOW_IN_MUL "overflow in ratio mul"
 #define BOOST_RATIO_OVERFLOW_IN_DIV "overflow in ratio div"
-#define BOOST_RATIO_RATIO_NUMERATOR_IS_OUT_OF_RANGE "ratio numerator is out of range"
-#define BOOST_RATIO_RATIO_DIVIDE_BY_0 "ratio divide by 0"
-#define BOOST_RATIO_RATIO_DENOMINATOR_IS_OUT_OF_RANGE "ratio denominator is out of range"
+#define BOOST_RATIO_NUMERATOR_IS_OUT_OF_RANGE "ratio numerator is out of range"
+#define BOOST_RATIO_DIVIDE_BY_0 "ratio divide by 0"
+#define BOOST_RATIO_DENOMINATOR_IS_OUT_OF_RANGE "ratio denominator is out of range"
 #endif
 
 #ifndef BOOST_NO_STATIC_ASSERT
@@ -73,11 +73,6 @@ time2_demo contained this comment:
 #endif
 
 
-#ifdef INTMAX_C
-#define BOOST_INTMAX_C(a) INTMAX_C(a)
-#else
-#define BOOST_INTMAX_C(a) a##LL
-#endif
 //
 // We simply cannot include this header on gcc without getting copious warnings of the kind:
 //
@@ -92,7 +87,6 @@ time2_demo contained this comment:
 
 namespace boost
 {
-template <boost::intmax_t N, boost::intmax_t D = 1> class ratio;
 
 //----------------------------------------------------------------------------//
 //                                 helpers                                    //
@@ -214,7 +208,7 @@ namespace ratio_detail
 
       BOOST_RATIO_STATIC_ASSERT(X != nan, BOOST_RATIO_OVERFLOW_IN_DIV, ());
       BOOST_RATIO_STATIC_ASSERT(Y != nan, BOOST_RATIO_OVERFLOW_IN_DIV, ());
-      BOOST_RATIO_STATIC_ASSERT(Y != 0, BOOST_RATIO_RATIO_DIVIDE_BY_0, ());
+      BOOST_RATIO_STATIC_ASSERT(Y != 0, BOOST_RATIO_DIVIDE_BY_0, ());
   public:
       static const boost::intmax_t value = X / Y;
   };
@@ -310,11 +304,11 @@ namespace ratio_detail
   };
   
   template <class T>
-    struct is_ratio : public boost::false_type {};
+  struct is_ratio : public boost::false_type 
+  {};
   template <boost::intmax_t N, boost::intmax_t D>
-    struct is_ratio<ratio<N, D> > : public boost::true_type  {};
-  //template <class T>
-  //  struct is_ratio : is_ratio<typename remove_cv<T>::type> {};
+  struct is_ratio<ratio<N, D> > : public boost::true_type  
+  {};
 
   template <class R1, class R2,
   		  boost::intmax_t Q1 = R1::num / R1::den, boost::intmax_t M1 = R1::num % R1::den,

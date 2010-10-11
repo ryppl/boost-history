@@ -34,7 +34,6 @@ time2_demo contained this comment:
 
 #include <boost/static_integer/static_abs.hpp>
 #include <boost/static_integer/static_sign.hpp>
-//#include <boost/static_integer/static_lcm.hpp>
 #include <boost/static_integer/static_gcd.hpp>
 #include <cstdlib>
 #include <climits>
@@ -43,6 +42,7 @@ time2_demo contained this comment:
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/integer_traits.hpp>
+#include <boost/ratio/ratio_fwd.hpp>
 #include <boost/ratio/detail/overflow_helpers.hpp>
 
 //
@@ -60,48 +60,10 @@ time2_demo contained this comment:
 namespace boost
 {
 
-//----------------------------------------------------------------------------//
-//                                                                            //
-//              20.4 Compile-time rational arithmetic [ratio]                 //
-//                                                                            //
-//----------------------------------------------------------------------------//
-
-// ratio arithmetic
-template <class R1, class R2> struct ratio_add;
-template <class R1, class R2> struct ratio_subtract;
-template <class R1, class R2> struct ratio_multiply;
-template <class R1, class R2> struct ratio_divide;
-
-// ratio comparison
-template <class R1, class R2> struct ratio_equal;
-template <class R1, class R2> struct ratio_not_equal;
-template <class R1, class R2> struct ratio_less;
-template <class R1, class R2> struct ratio_less_equal;
-template <class R1, class R2> struct ratio_greater;
-template <class R1, class R2> struct ratio_greater_equal;
-
-// convenience SI typedefs
-typedef ratio<BOOST_INTMAX_C(1), BOOST_INTMAX_C(1000000000000000000)> atto;
-typedef ratio<BOOST_INTMAX_C(1),    BOOST_INTMAX_C(1000000000000000)> femto;
-typedef ratio<BOOST_INTMAX_C(1),       BOOST_INTMAX_C(1000000000000)> pico;
-typedef ratio<BOOST_INTMAX_C(1),          BOOST_INTMAX_C(1000000000)> nano;
-typedef ratio<BOOST_INTMAX_C(1),             BOOST_INTMAX_C(1000000)> micro;
-typedef ratio<BOOST_INTMAX_C(1),                BOOST_INTMAX_C(1000)> milli;
-typedef ratio<BOOST_INTMAX_C(1),                 BOOST_INTMAX_C(100)> centi;
-typedef ratio<BOOST_INTMAX_C(1),                  BOOST_INTMAX_C(10)> deci;
-typedef ratio<                 BOOST_INTMAX_C(10), BOOST_INTMAX_C(1)> deca;
-typedef ratio<                BOOST_INTMAX_C(100), BOOST_INTMAX_C(1)> hecto;
-typedef ratio<               BOOST_INTMAX_C(1000), BOOST_INTMAX_C(1)> kilo;
-typedef ratio<            BOOST_INTMAX_C(1000000), BOOST_INTMAX_C(1)> mega;
-typedef ratio<         BOOST_INTMAX_C(1000000000), BOOST_INTMAX_C(1)> giga;
-typedef ratio<      BOOST_INTMAX_C(1000000000000), BOOST_INTMAX_C(1)> tera;
-typedef ratio<   BOOST_INTMAX_C(1000000000000000), BOOST_INTMAX_C(1)> peta;
-typedef ratio<BOOST_INTMAX_C(1000000000000000000), BOOST_INTMAX_C(1)> exa;
-
 
 //----------------------------------------------------------------------------//
 //                                                                            //
-//                20.4.1 Class template ratio [ratio.ratio]                   //
+//                20.6.1 Class template ratio [ratio.ratio]                   //
 //                                                                            //
 //----------------------------------------------------------------------------//
 
@@ -110,9 +72,9 @@ class ratio
 {
     static const boost::intmax_t ABS_N = boost::integer::static_signed_abs<N>::value;
     static const boost::intmax_t ABS_D = boost::integer::static_signed_abs<D>::value;
-    BOOST_RATIO_STATIC_ASSERT(ABS_N >= 0, BOOST_RATIO_RATIO_NUMERATOR_IS_OUT_OF_RANGE, ());
-    BOOST_RATIO_STATIC_ASSERT(ABS_D > 0, BOOST_RATIO_RATIO_DENOMINATOR_IS_OUT_OF_RANGE, ());
-    BOOST_RATIO_STATIC_ASSERT(D != 0, BOOST_RATIO_RATIO_DIVIDE_BY_0 , ());
+    BOOST_RATIO_STATIC_ASSERT(ABS_N >= 0, BOOST_RATIO_NUMERATOR_IS_OUT_OF_RANGE, ());
+    BOOST_RATIO_STATIC_ASSERT(ABS_D > 0, BOOST_RATIO_DENOMINATOR_IS_OUT_OF_RANGE, ());
+    BOOST_RATIO_STATIC_ASSERT(D != 0, BOOST_RATIO_DIVIDE_BY_0 , ());
     static const boost::intmax_t SIGN = boost::integer::static_signed_sign<N>::value
       * boost::integer::static_signed_sign<D>::value;
     static const boost::intmax_t GCD = boost::integer::static_signed_gcd<ABS_N, ABS_D>::value;
@@ -121,14 +83,16 @@ public:
     static const boost::intmax_t den = ABS_D / GCD;
 
 #ifdef BOOST_RATIO_EXTENSIONS    
-    ratio() {}
+    ratio() 
+    {}
     template <intmax_t _N2, boost::intmax_t _D2>
     ratio(const ratio<_N2, _D2>&,
         typename enable_if_c
             <
                 (ratio<_N2, _D2>::num == num &&
                 ratio<_N2, _D2>::den == den)
-            >::type* = 0) {}
+            >::type* = 0) 
+    {}
 
     template <intmax_t _N2, boost::intmax_t _D2>
         typename enable_if_c
@@ -144,7 +108,7 @@ public:
 
 //----------------------------------------------------------------------------//
 //                                                                            //
-//                             Implementation                                 //
+//                20.6.2 Arithmetic on ratio types [ratio.arithmetic]                   //
 //                                                                            //
 //----------------------------------------------------------------------------//
 
@@ -172,34 +136,46 @@ struct ratio_divide
 {
 };
 
+//----------------------------------------------------------------------------//
+//                                                                            //
+//                20.6.3 Comparasion of ratio types [ratio.comparison]                   //
+//                                                                            //
+//----------------------------------------------------------------------------//
+
 // ratio_equal
 
 template <class R1, class R2>
 struct ratio_equal
     : public boost::integral_constant<bool,
-                               (R1::num == R2::num && R1::den == R2::den)> {};
+                               (R1::num == R2::num && R1::den == R2::den)> 
+{};
 
 template <class R1, class R2>
 struct ratio_not_equal
-    : public boost::integral_constant<bool, !ratio_equal<R1, R2>::value> {};
+    : public boost::integral_constant<bool, !ratio_equal<R1, R2>::value> 
+{};
 
 // ratio_less
 
 template <class R1, class R2>
 struct ratio_less
-    : boost::integral_constant<bool, boost::ratio_detail::ratio_less<R1, R2>::value> {};
+    : boost::integral_constant<bool, boost::ratio_detail::ratio_less<R1, R2>::value> 
+{};
 
 template <class R1, class R2>
 struct ratio_less_equal
-    : boost::integral_constant<bool, !ratio_less<R2, R1>::value> {};
+    : boost::integral_constant<bool, !ratio_less<R2, R1>::value> 
+{};
 
 template <class R1, class R2>
 struct ratio_greater
-    : boost::integral_constant<bool, ratio_less<R2, R1>::value> {};
+    : boost::integral_constant<bool, ratio_less<R2, R1>::value> 
+{};
 
 template <class R1, class R2>
 struct ratio_greater_equal
-    : boost::integral_constant<bool, !ratio_less<R1, R2>::value> {};
+    : boost::integral_constant<bool, !ratio_less<R1, R2>::value> 
+{};
 
 template <class R1, class R2>
 struct ratio_gcd
