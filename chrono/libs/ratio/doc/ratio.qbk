@@ -1165,7 +1165,7 @@ The following table recapitulates this analisys
 
 [table
     [[ratio<n1,d1>][ratio<n2,d2>] [Q1] [Q2] [M1] [M2] [Result]]
-    [[ratio<n1,d1>][ratio<n2,d2>] [Q1] [Q2] [!=0] [!=0] [Odd ? Q2 < Q1 : Q1 < Q2]]
+    [[ratio<n1,d1>][ratio<n2,d2>] [Q1] [Q2] [!=0] [!=0] [Q1 < Q2]]
     [[ratio<n1,d1>][ratio<n2,d2>] [Q] [Q] [0] [0] [false]]
     [[ratio<n1,d1>][ratio<n2,d2>] [Q] [Q] [0] [!=0] [true]]
     [[ratio<n1,d1>][ratio<n2,d2>] [Q] [Q] [!=0] [0] [false]]
