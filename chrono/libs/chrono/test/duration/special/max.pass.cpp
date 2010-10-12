@@ -11,8 +11,8 @@ template <class D>
 void test()
 {
     typedef typename D::rep Rep;
-    Rep max_rep = boost::chrono::duration_values<Rep>::max();
-    BOOST_TEST(D::max().count() == max_rep);
+    Rep max_rep = (boost::chrono::duration_values<Rep>::max)();
+    BOOST_TEST((D::max)().count() == max_rep);
 }
 
 int main()

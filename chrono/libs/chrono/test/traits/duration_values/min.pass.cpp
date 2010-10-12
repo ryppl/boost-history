@@ -11,12 +11,12 @@
 
 int main()
 {
-    BOOST_TEST(boost::chrono::duration_values<int>::min() ==
-           std::numeric_limits<int>::min());
-    BOOST_TEST(boost::chrono::duration_values<double>::min() ==
-           -std::numeric_limits<double>::max());
-    BOOST_TEST(boost::chrono::duration_values<Rep>::min() ==
-           std::numeric_limits<Rep>::min());
+    BOOST_TEST((boost::chrono::duration_values<int>::min)() ==
+           (std::numeric_limits<int>::min)());
+    BOOST_TEST((boost::chrono::duration_values<double>::min)() ==
+           -(std::numeric_limits<double>::max)());
+    BOOST_TEST((boost::chrono::duration_values<Rep>::min)() ==
+           (std::numeric_limits<Rep>::min)());
 
 
     return boost::report_errors();

@@ -13,6 +13,11 @@
 // the library is being built (possibly exporting rather than importing code)
 #define BOOST_CHRONO_SOURCE
 
+#include <boost/chrono/detail/inlined/process_cpu_clocks.hpp>
+
+#if 0
+
+
 #include <boost/chrono/config.hpp>
 #include <boost/version.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
@@ -50,3 +55,4 @@ namespace boost { namespace chrono {
 } // namespace boost
 
 
+#endif

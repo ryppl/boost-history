@@ -14,6 +14,11 @@
 // the library is being built (possibly exporting rather than importing code)
 #define BOOST_CHRONO_SOURCE
 
+#include <boost/chrono/detail/inlined/thread_clock.hpp>
+
+#if 0
+
+
 #include <boost/chrono/config.hpp>
 #include <boost/version.hpp>
 #if defined(BOOST_CHRONO_HAS_THREAD_CLOCK)
@@ -43,4 +48,5 @@
 #endif  // POSIX
 
 
+#endif
 #endif

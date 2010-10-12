@@ -10,6 +10,9 @@
 // the library is being built (possibly exporting rather than importing code)
 #define BOOST_CHRONO_SOURCE
 
+#include <boost/chrono/detail/inlined/chrono.hpp>
+
+#if 0
 #include <boost/version.hpp>
 #include <boost/chrono/chrono.hpp>
 #include <boost/system/system_error.hpp>
@@ -40,3 +43,4 @@
 #include "posix/chrono.cpp"
 
 #endif  // POSIX
+#endif

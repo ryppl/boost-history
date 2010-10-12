@@ -35,12 +35,12 @@ using namespace boost::chrono;
 
 void test_special_values()
 {
-    std::cout << "duration<unsigned>::min().count()  = " << (duration<unsigned>::min()).count() << '\n';
+    std::cout << "duration<unsigned>::min().count()  = " << ((duration<unsigned>::min)()).count() << '\n';
     std::cout << "duration<unsigned>::zero().count() = " << duration<unsigned>::zero().count() << '\n';
-    std::cout << "duration<unsigned>::max().count()  = " << (duration<unsigned>::max()).count() << '\n';
-    std::cout << "duration<int>::min().count()       = " << (duration<int>::min()).count() << '\n';
+    std::cout << "duration<unsigned>::max().count()  = " << ((duration<unsigned>::max)()).count() << '\n';
+    std::cout << "duration<int>::min().count()       = " << ((duration<int>::min)()).count() << '\n';
     std::cout << "duration<int>::zero().count()      = " << duration<int>::zero().count() << '\n';
-    std::cout << "duration<int>::max().count()       = " << (duration<int>::max()).count() << '\n';
+    std::cout << "duration<int>::max().count()       = " << ((duration<int>::max)()).count() << '\n';
 }
 
 int main()

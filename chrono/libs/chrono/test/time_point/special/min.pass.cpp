@@ -10,7 +10,7 @@ int main()
     typedef boost::chrono::system_clock Clock;
     typedef boost::chrono::milliseconds Duration;
     typedef boost::chrono::time_point<Clock, Duration> TP;
-    BOOST_TEST(TP::min() == TP(Duration::min()));
+    BOOST_TEST((TP::min)() == TP((Duration::min)()));
 
     return boost::report_errors();
 }

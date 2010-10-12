@@ -11,8 +11,8 @@ template <class D>
 void test()
 {
     typedef typename D::rep Rep;
-    Rep min_rep = boost::chrono::duration_values<Rep>::min();
-    BOOST_TEST(D::min().count() == min_rep);
+    Rep min_rep = (boost::chrono::duration_values<Rep>::min)();
+    BOOST_TEST((D::min)().count() == min_rep);
 }
 
 int main()
