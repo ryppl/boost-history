@@ -74,7 +74,10 @@ TODO:
 # define BOOST_SYSTEM_CLOCK_DURATION boost::chrono::nanoseconds
 #endif
 
+#ifndef BOOST_CHRONO_INLINED
 #include <boost/config/abi_prefix.hpp> // must be the last #include
+#endif
+
 
 //----------------------------------------------------------------------------//
 //                                                                            //
@@ -124,11 +127,11 @@ namespace chrono {
       typedef chrono::time_point<system_clock>     time_point;
       static const bool is_monotonic =             false;
 
-      static time_point  now();                         // throws on error
-      static time_point  now(system::error_code & ec);  // never throws
+      static BOOST_CHRONO_INLINE time_point  now();                         // throws on error
+      static BOOST_CHRONO_INLINE time_point  now(system::error_code & ec);  // never throws
 
-      static std::time_t to_time_t(const time_point& t);
-      static time_point  from_time_t(std::time_t t);
+      static BOOST_CHRONO_INLINE std::time_t to_time_t(const time_point& t);
+      static BOOST_CHRONO_INLINE time_point  from_time_t(std::time_t t);
   };
 
 //----------------------------------------------------------------------------//
@@ -148,8 +151,8 @@ namespace chrono {
       typedef chrono::time_point<monotonic_clock>  time_point;
       static const bool is_monotonic =             true;
 
-      static time_point  now();                         // throws on error
-      static time_point  now(system::error_code & ec);  // never throws
+      static BOOST_CHRONO_INLINE time_point  now();                         // throws on error
+      static BOOST_CHRONO_INLINE time_point  now(system::error_code & ec);  // never throws
   };
 #endif
 //----------------------------------------------------------------------------//
@@ -163,6 +166,10 @@ namespace chrono {
 } // namespace chrono
 } // namespace boost
 
+#ifndef BOOST_CHRONO_INLINED
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
+#else
+#include <boost/chrono/detail/inlined/chrono.hpp> 
+#endif
 
 #endif // BOOST_CHRONO_SYSTEM_CLOCKS_HPP

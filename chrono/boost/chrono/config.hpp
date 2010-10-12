@@ -60,7 +60,26 @@
 #   endif
 # endif
 
+//  define constexpr related macros  ------------------------------//
 
+//~ #include <boost/config.hpp>
+#if defined(BOOST_NO_CONSTEXPR)
+#define BOOST_CHRONO_CONSTEXPR
+#define BOOST_CHRONO_CONST_REF const&
+#else
+#define BOOST_CHRONO_CONSTEXPR constexpr
+#define BOOST_CHRONO_CONST_REF
+#endif
+
+
+#ifdef BOOST_CHRONO_INLINED
+#define BOOST_CHRONO_INLINE inline
+#define BOOST_CHRONO_STATIC
+#define BOOST_CHRONO_DECL
+
+#else
+#define BOOST_CHRONO_INLINE
+#define BOOST_CHRONO_STATIC static
 
 //  enable dynamic linking on Windows  ---------------------------------------//
 
@@ -88,16 +107,6 @@
 #define BOOST_CHRONO_DECL
 #endif
 
-//  define constexpr related macros  ------------------------------//
-
-//~ #include <boost/config.hpp>
-#if defined(BOOST_NO_CONSTEXPR)
-#define BOOST_CHRONO_CONSTEXPR
-#define BOOST_CHRONO_CONST_REF const&
-#else
-#define BOOST_CHRONO_CONSTEXPR constexpr
-#define BOOST_CHRONO_CONST_REF
-#endif
 
 //  enable automatic library variant selection  ------------------------------//
 
@@ -118,6 +127,6 @@
 //
 #include <boost/config/auto_link.hpp>
 #endif  // auto-linking disabled
-
+#endif // BOOST_CHRONO_INLINED
 #endif // BOOST_CHRONO_CONFIG_HPP
 

@@ -17,7 +17,10 @@
 #include <string>
 #include <ostream>
 
+#ifndef BOOST_CHRONO_INLINED
 #include <boost/config/abi_prefix.hpp> // must be the last #include
+#endif
+
 
 namespace boost
 {
@@ -49,12 +52,13 @@ namespace boost
           process_clock::time_point                       system;  // system cpu time
         };
 
-        static void now( durations & times,
+        static BOOST_CHRONO_INLINE void now( durations & times,
                          system::error_code & ec = system::throws );
-        static void now( time_points & times,
+        static BOOST_CHRONO_INLINE void now( time_points & times,
                          system::error_code & ec = system::throws );
     };
 
+    
 //--------------------------------------------------------------------------------------//
 //                                  process_times                                       //
 //--------------------------------------------------------------------------------------//
@@ -184,6 +188,10 @@ namespace boost
   } // namespace chrono
 } // namespace boost
 
+#ifndef BOOST_CHRONO_INLINED
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
+#else
+#include <boost/chrono/detail/inlined/process_clock.hpp> 
+#endif
 
 #endif  // BOOST_PROCESS_TIMES_HPP

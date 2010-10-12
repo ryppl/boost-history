@@ -16,7 +16,10 @@
 #include <boost/operators.hpp>
 #include <boost/chrono/detail/system.hpp>
 
+
+#ifndef BOOST_CHRONO_INLINED
 #include <boost/config/abi_prefix.hpp> // must be the last #include
+#endif
 
 namespace boost { namespace chrono {
 
@@ -28,7 +31,7 @@ namespace boost { namespace chrono {
         typedef chrono::time_point<process_real_cpu_clock>    time_point;
         static const bool is_monotonic =             true;
 
-        static time_point now( system::error_code & ec = system::throws );
+        static BOOST_CHRONO_INLINE time_point now( system::error_code & ec = system::throws );
     };
 
     class BOOST_CHRONO_DECL process_user_cpu_clock {
@@ -39,7 +42,7 @@ namespace boost { namespace chrono {
         typedef chrono::time_point<process_user_cpu_clock>    time_point;
         static const bool is_monotonic =             true;
 
-        static time_point now( system::error_code & ec = system::throws );
+        static BOOST_CHRONO_INLINE time_point now( system::error_code & ec = system::throws );
     };
 
     class BOOST_CHRONO_DECL process_system_cpu_clock {
@@ -50,7 +53,7 @@ namespace boost { namespace chrono {
         typedef chrono::time_point<process_system_cpu_clock>    time_point;
         static const bool is_monotonic =             true;
 
-        static time_point now( system::error_code & ec = system::throws );
+        static BOOST_CHRONO_INLINE time_point now( system::error_code & ec = system::throws );
     };
 
         struct process_cpu_clock_times : arithmetic<process_cpu_clock_times, multiplicative<process_cpu_clock_times, process_real_cpu_clock::rep, less_than_comparable<process_cpu_clock_times> > >
@@ -140,7 +143,7 @@ namespace boost { namespace chrono {
         typedef chrono::time_point<process_cpu_clock>  time_point;
         static const bool is_monotonic =           true;
 
-        static time_point now( system::error_code & ec = system::throws );
+        static BOOST_CHRONO_INLINE time_point now( system::error_code & ec = system::throws );
     };
 
     template <typename OSTREAM>
@@ -228,6 +231,10 @@ namespace std {
     };
 }
 
+#ifndef BOOST_CHRONO_INLINED
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
+#else
+#include <boost/chrono/detail/inlined/process_cpu_clocks.hpp> 
+#endif
 
 #endif  // BOOST_CHRONO_PROCESS_CPU_CLOCKS_HPP

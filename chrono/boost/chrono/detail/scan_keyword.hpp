@@ -1,18 +1,9 @@
 //  scan_keyword.hpp  --------------------------------------------------------------//
 
-//  Copyright 2009-2010 Vicente J. Botet Escriba
+//  Copyright 2010 Vicente J. Botet Escriba
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
-//===-------------------------- locale ------------------------------------===//
-//
-//                     The LLVM Compiler Infrastructure
-//
-// This file is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
-//
-//===----------------------------------------------------------------------===//
-// This code was adapted to Boost by Vicente from locale file on llvm/libc++
 
 #ifndef BOOST_CHRONO_DETAIL_SCAN_KEYWORD_HPP
 #define BOOST_CHRONO_DETAIL_SCAN_KEYWORD_HPP

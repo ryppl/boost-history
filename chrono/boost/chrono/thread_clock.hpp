@@ -16,7 +16,9 @@
 #include <boost/system/error_code.hpp>
 #include <boost/chrono/detail/system.hpp>
 
+#ifndef BOOST_CHRONO_INLINED
 #include <boost/config/abi_prefix.hpp> // must be the last #include
+#endif
 
 #if defined(BOOST_CHRONO_HAS_THREAD_CLOCK) 
 
@@ -30,14 +32,18 @@ public:
     typedef chrono::time_point<thread_clock>    time_point;
     static const bool is_monotonic =             BOOST_CHRONO_THREAD_CLOCK_IS_MONOTONIC;
 
-    static time_point now( );
-    static time_point now( system::error_code & ec );
+    static BOOST_CHRONO_INLINE time_point now( );
+    static BOOST_CHRONO_INLINE time_point now( system::error_code & ec );
 };
 } // namespace chrono
 } // namespace boost
 
 #endif
 
+#ifndef BOOST_CHRONO_INLINED
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
+#else
+#include <boost/chrono/detail/inlined/thread_clock.hpp> 
+#endif
 
 #endif  // BOOST_CHRONO_THREAD_CLOCK_HPP

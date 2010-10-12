@@ -525,8 +525,8 @@ operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
                 den /= gcd_d1_d2;
                 unsigned long long n2 = Period::num / gcd_n1_n2;
                 unsigned long long d2 = Period::den / gcd_d1_d2;
-                if (num > std::numeric_limits<unsigned long long>::max() / d2 ||
-                    den > std::numeric_limits<unsigned long long>::max() / n2)
+                if (num > (std::numeric_limits<unsigned long long>::max)() / d2 ||
+                    den > (std::numeric_limits<unsigned long long>::max)() / n2)
                 {
                     // (num/den) / Period overflows
                     is.setstate(is.failbit);
@@ -549,7 +549,7 @@ operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
                         return is;
                     }
                 }
-                if (r > (duration_values<common_type_t>::max() / num))
+                if (r > ((duration_values<common_type_t>::max)() / num))
                 {
                     // Conversion to Period overflowed
                     is.setstate(is.failbit);
@@ -557,7 +557,7 @@ operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
                 }
                 common_type_t t = r * num;
                 t /= den;
-                if (duration_values<Rep>::max() < t)
+                if ((duration_values<Rep>::max)() < t)
                 {
                     // Conversion to Period overflowed
                     is.setstate(is.failbit);
