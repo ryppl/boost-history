@@ -10,10 +10,6 @@
 
 //--------------------------------------------------------------------------------------//
 
-// define BOOST_CHRONO_SOURCE so that <boost/chrono/config.hpp> knows
-// the library is being built (possibly exporting rather than importing code)
-//#define BOOST_CHRONO_SOURCE
-
 #include <boost/chrono/config.hpp>
 #include <boost/chrono/process_times.hpp>
 #include <cassert>
@@ -21,26 +17,6 @@
 #include <sys/time.h> //for gettimeofday and timeval
 # include <unistd.h>
 
-namespace
-{
-  long tick_factor()        // multiplier to convert ticks
-                            //  to nanoseconds; -1 if unknown
-  {
-    static long factor = 0;
-    if ( !factor )
-    {
-      if ( (factor = ::sysconf( _SC_CLK_TCK )) <= 0 )
-        factor = -1;
-      else
-      {
-        assert( factor <= 1000000l ); // doesn't handle large ticks
-        factor = 1000000l / factor;  // compute factor
-        if ( !factor ) factor = -1;
-      }
-    }
-    return factor;
-  }
-}
 
 #else
 # error unknown API
@@ -48,8 +24,28 @@ namespace
 
 namespace boost
 {
-  namespace chrono
-  {
+namespace chrono
+{
+namespace chrono_detail
+{
+    long tick_factor()        // multiplier to convert ticks
+                              //  to nanoseconds; -1 if unknown
+    {
+      static long factor = 0;
+      if ( !factor )
+      {
+        if ( (factor = ::sysconf( _SC_CLK_TCK )) <= 0 )
+          factor = -1;
+        else
+        {
+          assert( factor <= 1000000l ); // doesn't handle large ticks
+          factor = 1000000l / factor;  // compute factor
+          if ( !factor ) factor = -1;
+        }
+      }
+      return factor;
+    }
+  }
 
     void process_clock::now( process_times & times_, system::error_code & ec )
     {
@@ -72,11 +68,11 @@ namespace boost
         times_.real = microseconds(c);
         times_.system = microseconds(tm.tms_stime + tm.tms_cstime);
         times_.user = microseconds(tm.tms_utime + tm.tms_cutime);
-        if ( tick_factor() != -1 )
+        if ( chrono_detail::tick_factor() != -1 )
         {
-          times_.real *= tick_factor();
-          times_.user *= tick_factor();
-          times_.system *= tick_factor();
+          times_.real *= chrono_detail::tick_factor();
+          times_.user *= chrono_detail::tick_factor();
+          times_.system *= chrono_detail::tick_factor();
           ec.clear();
         }
         else
