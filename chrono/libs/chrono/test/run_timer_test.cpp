@@ -20,9 +20,9 @@
 using boost::chrono::run_timer;
 using boost::system::error_code;
 
-#include <boost/test/minimal.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
-//#define BOOST_CHECK(expr) if (!(expr)) std::cout << "*****ERROR*****\n"
+//#define BOOST_TEST(expr) if (!(expr)) std::cout << "*****ERROR*****\n"
 
 #define CHECK_REPORT(Timer,String_Stream,R,U,S,Expected_String) \
   check_report(Timer, String_Stream, R, U, S, Expected_String, __LINE__)
@@ -128,24 +128,24 @@ namespace
 
     std::cout << sys_dur.count() << " sys_dur\n";
 
-    BOOST_CHECK( sys_dur > timeout_in_nanoseconds - maximum_delta
+    BOOST_TEST( sys_dur > timeout_in_nanoseconds - maximum_delta
       && sys_dur < timeout_in_nanoseconds + maximum_delta );
 
 #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC 
     std::cout << mono_dur.count() << " mono_dur\n";
 
-    BOOST_CHECK( mono_dur > timeout_in_nanoseconds - maximum_delta
+    BOOST_TEST( mono_dur > timeout_in_nanoseconds - maximum_delta
       && mono_dur < timeout_in_nanoseconds + maximum_delta );
 #endif    
 
     std::cout << hires_dur.count() << " hires_dur\n";
 
-    BOOST_CHECK( hires_dur > timeout_in_nanoseconds - maximum_delta
+    BOOST_TEST( hires_dur > timeout_in_nanoseconds - maximum_delta
       && hires_dur < timeout_in_nanoseconds + maximum_delta );
 
     std::cout << times.real.count() << " times.real\n";
 
-    BOOST_CHECK( times.real > timeout_in_nanoseconds - maximum_delta
+    BOOST_TEST( times.real > timeout_in_nanoseconds - maximum_delta
       && times.real < timeout_in_nanoseconds + maximum_delta );
   }
 
@@ -156,21 +156,21 @@ namespace
     {
       std::stringstream ss;
       run_timer t(ss);
-      BOOST_CHECK( CHECK_REPORT(t, ss, ns(0), ns(0), ns(0),
+      BOOST_TEST( CHECK_REPORT(t, ss, ns(0), ns(0), ns(0),
         "\nreal 0.000s, cpu 0.000s (0.0%), user 0.000s, system 0.000s\n" ) );
     }
 
     {
       std::stringstream ss;
       run_timer t(ss);
-      BOOST_CHECK( CHECK_REPORT(t, ss, ns(3000000000LL), ns(2000000000LL), ns(1000000000LL),
+      BOOST_TEST( CHECK_REPORT(t, ss, ns(3000000000LL), ns(2000000000LL), ns(1000000000LL),
         "\nreal 3.000s, cpu 3.000s (100.0%), user 2.000s, system 1.000s\n" ) );
     }
 
     {
       std::stringstream ss;
       run_timer t( ss, "9 places: r %r, c %c, p %p, u %u, s %s", 9 );
-      BOOST_CHECK( CHECK_REPORT(t, ss, ns(3000000003LL), ns(2000000002LL), ns(1000000001LL),
+      BOOST_TEST( CHECK_REPORT(t, ss, ns(3000000003LL), ns(2000000002LL), ns(1000000001LL),
         "9 places: "
         "r 3.000000003, c 3.000000003, p 100.0, u 2.000000002, s 1.000000001" ) );
     }
@@ -192,9 +192,9 @@ namespace
     boost::chrono::process_times times;
     times.real = times.system = times.user = ns(0);
 
-    BOOST_CHECK( times.real == ns(0) );
-    BOOST_CHECK( times.user == ns(0) );
-    BOOST_CHECK( times.system == ns(0) );
+    BOOST_TEST( times.real == ns(0) );
+    BOOST_TEST( times.user == ns(0) );
+    BOOST_TEST( times.system == ns(0) );
 
     t.elapsed( times );
     std::cout << "\n";
@@ -203,15 +203,15 @@ namespace
     std::cout << times.user.count() << " times.user\n";
     std::cout << times.system.count() << " times.system\n";
     std::cout << (times.user+times.system).count() << " times.user+system\n";
-    BOOST_CHECK( times.real > ns(1) );
+    BOOST_TEST( times.real > ns(1) );
 
-    BOOST_CHECK( times.user+times.system  > ns(1) );
+    BOOST_TEST( times.user+times.system  > ns(1) );
 
     std::cout << "complete " << res << std::endl;
   }
 }
 
-int test_main( int argc, char * argv[] )
+int main( int argc, char * argv[] )
 {
   std::locale loc( "" );     // test with appropriate locale
   std::cout.imbue( loc );
@@ -221,6 +221,6 @@ int test_main( int argc, char * argv[] )
   process_timer_test();
   report_test();
   
-  return 0;
+  return boost::report_errors();
 }
 

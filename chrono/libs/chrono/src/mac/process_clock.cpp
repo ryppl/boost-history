@@ -42,10 +42,6 @@ namespace
   }
 }
 
-#else
-# error unknown API
-#endif
-
 namespace boost
 {
   namespace chrono

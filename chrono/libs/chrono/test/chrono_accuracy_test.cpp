@@ -20,7 +20,6 @@
 using boost::chrono::run_timer;
 using boost::system::error_code;
 
-//#include <boost/test/minimal.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
 namespace
