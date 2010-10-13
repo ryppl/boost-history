@@ -14,6 +14,10 @@
 // the library is being built (possibly exporting rather than importing code)
 #define BOOST_CHRONO_SOURCE
 
+#include <boost/chrono/detail/inlined/run_timer_static.hpp>
+
+#if 0
+
 #include <boost/version.hpp>
 #include <boost/chrono/process_times.hpp>
 #include <boost/system/system_error.hpp>
@@ -180,3 +184,5 @@ namespace boost
 
   } // namespace chrono
 } // namespace boost
+
+#endif

@@ -86,15 +86,15 @@ project
         [ run ../example/timeval_demo.cpp :  :  :  : timeval_demo_dll ]
         ;
 
-    #test-suite "timer"
-    #    :
-    #    [ run ../example/run_timer_example.cpp :  :  : <link>static ]
-    #    [ run ../example/run_timer_example.cpp :  :  :  : run_timer_example_dll ]
-    #    [ run ../example/run_timer_example2.cpp :  :  : <link>static ]
-    #    [ run ../example/run_timer_example2.cpp :  :  :  : run_timer_example2_dll ]
-    #    [ run run_timer_test.cpp  :  :  : <link>static ]
-    #    [ run run_timer_test.cpp :  :  :  : run_timer_test_dll ]
-    #    ;
+    test-suite "timer"
+        :
+        [ run ../example/run_timer_example.cpp :  :  : <link>static ]
+        [ run ../example/run_timer_example.cpp :  :  :  : run_timer_example_dll ]
+        [ run ../example/run_timer_example2.cpp :  :  : <link>static ]
+        [ run ../example/run_timer_example2.cpp :  :  :  : run_timer_example2_dll ]
+        [ run run_timer_test.cpp  :  :  : <link>static ]
+        [ run run_timer_test.cpp :  :  :  : run_timer_test_dll ]
+        ;
 
     test-suite "other_clocks"
         :

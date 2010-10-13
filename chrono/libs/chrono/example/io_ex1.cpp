@@ -14,6 +14,7 @@ Many thanks to Howard for making his code available under the Boost license.
 
 #include <iostream>
 #include <boost/chrono/chrono_io.hpp>
+#include <boost/chrono/thread_clock.hpp>
 
 int main()
 {
@@ -49,21 +50,12 @@ int main()
 #endif    
     cout << "\nSet cout to use long names:\n" << duration_long
          << "high_resolution_clock::now() = " << high_resolution_clock::now() << '\n';
+#if defined(BOOST_CHRONO_HAS_THREAD_CLOCK) 
+    cout << "\nthread_clock::now() = " << thread_clock::now() << '\n';
+#endif    
+    cout << "\nprocess_real_cpu_clock::now() = " << process_real_cpu_clock::now() << '\n';
+    cout << "\nprocess_user_cpu_clock::now() = " << process_user_cpu_clock::now() << '\n';
+    cout << "\nprocess_system_cpu_clock::now() = " << process_system_cpu_clock::now() << '\n';
+    cout << "\nprocess_cpu_clock::now() = " << process_cpu_clock::now() << '\n';
     return 0;
 }
-
-//~ milliseconds(3) + microseconds(10) = 3010 microseconds
-//~ hours(3) + minutes(10) = 190 minutes
-//~ ClockTick(3) + nanoseconds(10) = 56 [1/5000000000]seconds
-
-//~ Set cout to use short names:
-//~ milliseconds(3) + microseconds(10) = 3010 µs
-//~ hours(3) + minutes(10) = 190 m
-//~ ClockTick(3) + nanoseconds(10) = 56 [1/5000000000]s
-
-//~ system_clock::now() = 1284923218301231 µs since Jan 1, 1970
-//~ monotonic_clock::now() = 18588963676886 ns since boot
-
-//~ Set cout to use long names:
-//~ high_resolution_clock::now() = 18588963785548 nanoseconds since boot
-
