@@ -16,6 +16,7 @@
 
 #include <boost/chrono/config.hpp>
 #include <boost/chrono/process_times.hpp>
+#include <boost/chrono/system_clocks.hpp>
 #include <cassert>
 
 # include <windows.h>
