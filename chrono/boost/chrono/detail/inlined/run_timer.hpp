@@ -12,7 +12,7 @@
 
 // define BOOST_CHRONO_SOURCE so that <boost/chrono/config.hpp> knows
 // the library is being built (possibly exporting rather than importing code)
-#define BOOST_CHRONO_SOURCE
+//#define BOOST_CHRONO_SOURCE
 
 #include <boost/version.hpp>
 #include <boost/chrono/process_times.hpp>
@@ -21,10 +21,12 @@
 #include <cstring>
 #include <cassert>
 
-using boost::chrono::nanoseconds;
-using boost::chrono::duration;
 
-namespace
+namespace boost
+{
+namespace chrono
+{
+namespace chrono_detail
 {
   const char * default_format =
     "\nreal %rs, cpu %cs (%p%), user %us, system %ss\n";
@@ -86,13 +88,9 @@ namespace
     }
   }
 
-}  // unnamed namespace
+} 
 
-namespace boost
-{
-  namespace chrono
-  {
-  
+ 
 
       run_timer::run_timer( system::error_code & ec  )
         : m_places(m_default_places), m_os(m_cout()) { start(ec); }
@@ -133,7 +131,7 @@ namespace boost
     void run_timer::report( system::error_code & ec )
     {
       m_reported = true;
-      if ( m_format.empty() ) m_format = default_format;
+      if ( m_format.empty() ) m_format = chrono_detail::default_format;
 
       process_times times;
       elapsed( times, ec );
@@ -141,13 +139,13 @@ namespace boost
 
       if ( &ec == &system::throws )
       {
-        show_time( times, m_format.c_str(), m_places, m_os );
+        chrono_detail::show_time( times, m_format.c_str(), m_places, m_os );
       }
       else // non-throwing
       {
         try
         {
-          show_time( times, m_format.c_str(), m_places, m_os );
+          chrono_detail::show_time( times, m_format.c_str(), m_places, m_os );
           ec.clear();
         }
 
@@ -168,14 +166,14 @@ namespace boost
 
     void run_timer::test_report( duration real_, duration user_, duration system_ )
     {
-      if ( m_format.empty() ) m_format = default_format;
+      if ( m_format.empty() ) m_format = chrono_detail::default_format;
 
       process_times times;
       times.real = real_;
       times.user = user_;
       times.system = system_;
 
-      show_time( times, m_format.c_str(), m_places, m_os );
+      chrono_detail::show_time( times, m_format.c_str(), m_places, m_os );
     }
 
   } // namespace chrono

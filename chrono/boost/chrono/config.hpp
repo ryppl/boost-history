@@ -60,6 +60,14 @@
 #   endif
 # endif
 
+// unicode support
+
+#if defined(BOOST_NO_UNICODE_LITERALS) || defined(BOOST_NO_CHAR16_T) || defined(BOOST_NO_CHAR32_T)
+//~ #define BOOST_CHRONO_HAS_UNICODE_SUPPORT 
+#else
+#define BOOST_CHRONO_HAS_UNICODE_SUPPORT 1
+#endif
+
 //  define constexpr related macros  ------------------------------//
 
 //~ #include <boost/config.hpp>

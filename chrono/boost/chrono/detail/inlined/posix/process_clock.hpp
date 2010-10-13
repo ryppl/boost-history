@@ -12,7 +12,7 @@
 
 // define BOOST_CHRONO_SOURCE so that <boost/chrono/config.hpp> knows
 // the library is being built (possibly exporting rather than importing code)
-#define BOOST_CHRONO_SOURCE
+//#define BOOST_CHRONO_SOURCE
 
 #include <boost/chrono/config.hpp>
 #include <boost/chrono/process_times.hpp>
@@ -21,9 +21,11 @@
 # include <sys/times.h>
 # include <unistd.h>
 
-namespace
+
+namespace boost { namespace chrono {
+namespace chrono_detail
 {
-  BOOST_CHRONO_INLINE long tick_factor()        // multiplier to convert ticks
+  long tick_factor()        // multiplier to convert ticks
                             //  to nanoseconds; -1 if unknown
   {
     static long factor = 0;
@@ -42,9 +44,7 @@ namespace
   }
 }
 
-namespace boost { namespace chrono {
-
-	BOOST_CHRONO_INLINE void process_clock::now( process_times & times_, system::error_code & ec ) {
+	void process_clock::now( process_times & times_, system::error_code & ec ) {
 
         tms tm;
         clock_t c = ::times( &tm );
@@ -63,11 +63,11 @@ namespace boost { namespace chrono {
             times_.real = microseconds(c);
             times_.system = microseconds(tm.tms_stime + tm.tms_cstime);
             times_.user = microseconds(tm.tms_utime + tm.tms_cutime);
-            if ( tick_factor() != -1 )
+            if ( chrono_detail::tick_factor() != -1 )
             {
-                times_.real *= tick_factor();
-                times_.user *= tick_factor();
-                times_.system *= tick_factor();
+                times_.real *= chrono_detail::tick_factor();
+                times_.user *= chrono_detail::tick_factor();
+                times_.system *= chrono_detail::tick_factor();
             }
             else
             {

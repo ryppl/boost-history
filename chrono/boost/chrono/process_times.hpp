@@ -11,7 +11,8 @@
 #ifndef BOOST_PROCESS_TIMES_HPP
 #define BOOST_PROCESS_TIMES_HPP  
 
-#include <boost/chrono/chrono.hpp>
+#include <boost/chrono/duration.hpp>
+#include <boost/chrono/time_point.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/cstdint.hpp>
 #include <string>
@@ -121,27 +122,37 @@ namespace boost
       // std::cout, which in turn would require including <iostream>, with its
       // high associated cost, even when the standard streams are not used.
 
+      BOOST_CHRONO_INLINE 
       explicit run_timer( system::error_code & ec = system::throws );
+      BOOST_CHRONO_INLINE
       explicit run_timer( std::ostream & os,
         system::error_code & ec = system::throws );
 
+      BOOST_CHRONO_INLINE
       explicit run_timer( const std::string & format,
         system::error_code & ec = system::throws );
+      BOOST_CHRONO_INLINE
       run_timer( std::ostream & os, const std::string & format,
         system::error_code & ec = system::throws );
 
+      BOOST_CHRONO_INLINE
       run_timer( const std::string & format, int places,
         system::error_code & ec = system::throws );
+      BOOST_CHRONO_INLINE
       run_timer( std::ostream & os, const std::string & format,
         int places, system::error_code & ec = system::throws );
 
+      BOOST_CHRONO_INLINE
       explicit run_timer( int places,
         system::error_code & ec = system::throws );
+      BOOST_CHRONO_INLINE
       run_timer( std::ostream & os, int places,
         system::error_code & ec = system::throws );
 
+      BOOST_CHRONO_INLINE
       run_timer( int places, const std::string & format,
         system::error_code & ec = system::throws );
+      BOOST_CHRONO_INLINE
       run_timer( std::ostream & os, int places, const std::string & format,
         system::error_code & ec = system::throws );
 
@@ -157,9 +168,9 @@ namespace boost
         process_timer::start( ec );
       }
 
-      void  report( system::error_code & ec = system::throws );
+      BOOST_CHRONO_INLINE void  report( system::error_code & ec = system::throws );
 
-      void  test_report( duration real_, duration user_, duration system_ );
+      BOOST_CHRONO_INLINE void  test_report( duration real_, duration user_, duration system_ );
 
       bool  reported() const { return m_reported; }
 
@@ -179,7 +190,7 @@ namespace boost
 #endif
       bool            m_reported;
 
-      static std::ostream &  m_cout();
+      BOOST_CHRONO_INLINE static std::ostream &  m_cout();
       static const int m_default_places = 3;
       run_timer(const run_timer&); // = delete;
       run_timer& operator=(const run_timer&); // = delete;
@@ -192,6 +203,8 @@ namespace boost
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 #else
 #include <boost/chrono/detail/inlined/process_clock.hpp> 
+#include <boost/chrono/detail/inlined/run_timer.hpp> 
+#include <boost/chrono/detail/inlined/run_timer_static.hpp> 
 #endif
 
 #endif  // BOOST_PROCESS_TIMES_HPP

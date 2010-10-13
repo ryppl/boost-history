@@ -11,9 +11,15 @@
 
 #include <windows.h>
 
-namespace
+
+namespace boost
 {
-  BOOST_CHRONO_INLINE 
+namespace chrono
+{
+
+namespace chrono_detail
+{
+  
   double get_nanosecs_per_tic()
   {
     LARGE_INTEGER freq;
@@ -22,17 +28,11 @@ namespace
     return double(1000000000.0L / freq.QuadPart);
   }
 
-  const double nanosecs_per_tic = get_nanosecs_per_tic();
 }
-
-namespace boost
-{
-namespace chrono
-{
-
-  BOOST_CHRONO_INLINE 
+  
   monotonic_clock::time_point monotonic_clock::now()
   {
+	static double nanosecs_per_tic = chrono_detail::get_nanosecs_per_tic();
 
     LARGE_INTEGER pcount;
     if ( (nanosecs_per_tic <= 0.0L) || (!QueryPerformanceCounter( &pcount )) )
@@ -50,10 +50,10 @@ namespace chrono
       static_cast<monotonic_clock::rep>((nanosecs_per_tic) * pcount.QuadPart) ));
   }
 
-  BOOST_CHRONO_INLINE 
+  
   monotonic_clock::time_point monotonic_clock::now( system::error_code & ec )
   {
-    static double nanosecs_per_tic = get_nanosecs_per_tic();
+    static double nanosecs_per_tic = chrono_detail::get_nanosecs_per_tic();
 
     LARGE_INTEGER pcount;
     if ( (nanosecs_per_tic <= 0.0L) || (!QueryPerformanceCounter( &pcount )) )

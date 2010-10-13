@@ -13,106 +13,13 @@
 #ifndef BOOST_CHRONO_CHRONO_IO_HPP
 #define BOOST_CHRONO_CHRONO_IO_HPP
 
-/*
-
-    chrono_io synopsis
-
-#include <boost/chrono.hpp>
-#include <boost/ratio/ratio_io.hpp>
-
-namespace boost
-{
-namespace chrono
-{
-
-template <class CharT>
-class duration_punct
-    : public locale::facet
-{
-public:
-    static locale::id id;
-
-    typedef basic_string<CharT> string_type;
-    enum {use_long, use_short};
-
-    explicit duration_punct(int use = use_long);
-
-    duration_punct(int use,
-        const string_type& long_seconds, const string_type& long_minutes,
-        const string_type& long_hours, const string_type& short_seconds,
-        const string_type& short_minutes, const string_type& short_hours);
-
-    duration_punct(int use, const duration_punct& d);
-
-    template <class Period> string_type short_name() const;
-    template <class Period> string_type  long_name() const;
-    template <class Period> string_type       name() const;
-
-    bool is_short_name() const;
-    bool is_long_name() const;
-};
-
-struct duration_short {};
-struct duration_long {};
-
-template <class CharT, class Traits>
-    basic_ostream<CharT, Traits>&
-    operator<<(basic_ostream<CharT, Traits>& os, duration_short);
-
-template <class CharT, class Traits>
-    basic_ostream<CharT, Traits>&
-    operator<<(basic_ostream<CharT, Traits>& os, duration_long);
-
-template <class CharT, class Traits, class Rep, class Period>
-    basic_ostream<CharT, Traits>&
-    operator<<(basic_ostream<CharT, Traits>& os, const duration<Rep, Period>& d);
-
-template <class CharT, class Traits, class Rep, class Period>
-    basic_istream<CharT, Traits>&
-    operator>>(basic_istream<CharT, Traits>& is, duration<Rep, Period>& d);
-
-template <class CharT, class Traits, class Duration>
-    basic_ostream<CharT, Traits>&
-    operator<<(basic_ostream<CharT, Traits>& os,
-               const time_point<monotonic_clock, Duration>& tp);
-
-template <class CharT, class Traits, class Duration>
-    basic_ostream<CharT, Traits>&
-    operator<<(basic_ostream<CharT, Traits>& os,
-               const time_point<high_resolution_clock, Duration>& tp);
-
-template <class CharT, class Traits, class Duration>
-    basic_ostream<CharT, Traits>&
-    operator<<(basic_ostream<CharT, Traits>& os,
-               const time_point<system_clock, Duration>& tp);
-
-template <class CharT, class Traits, class Duration>
-    basic_istream<CharT, Traits>&
-    operator>>(basic_istream<CharT, Traits>& is,
-               time_point<monotonic_clock, Duration>& tp);
-
-template <class CharT, class Traits, class Duration>
-    basic_istream<CharT, Traits>&
-    operator>>(basic_istream<CharT, Traits>& is,
-               time_point<high_resolution_clock, Duration>& tp);
-
-template <class CharT, class Traits, class Duration>
-    basic_istream<CharT, Traits>&
-    operator>>(basic_istream<CharT, Traits>& is,
-               time_point<system_clock, Duration>& tp);
-
-}  // chrono
-}  // boost
-
-*/
-
-#include <boost/chrono.hpp>
+#include <boost/chrono/chrono.hpp>
 #include <boost/ratio/ratio_io.hpp>
 #include <locale>
 #include <boost/type_traits/is_scalar.hpp>
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/mpl/if.hpp>
-
+#include <boost/math/common_factor_rt.hpp>
 #include <boost/chrono/detail/scan_keyword.hpp>
 
 namespace boost
@@ -297,28 +204,7 @@ struct duration_io_intermediate<Rep, true>
     >::type type;
 };
 
-template <class T>
-T
-gcd(T x, T y)
-{
-    while (y != 0)
-    {
-        T old_x = x;
-        x = y;
-        y = old_x % y;
-    }
-    return x;
 }
-
-template <>
-long double
-inline
-gcd(long double , long double )
-{
-    return 1;
-}
-}
-
 template <class CharT, class Traits, class Rep, class Period>
 std::basic_istream<CharT, Traits>&
 operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
@@ -519,8 +405,8 @@ operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
                 // unit is num/den
                 // r should be multiplied by (num/den) / Period
                 // Reduce (num/den) / Period to lowest terms
-                unsigned long long gcd_n1_n2 = chrono_detail::gcd<unsigned long long>(num, Period::num);
-                unsigned long long gcd_d1_d2 = chrono_detail::gcd<unsigned long long>(den, Period::den);
+                unsigned long long gcd_n1_n2 = math::gcd<unsigned long long>(num, Period::num);
+                unsigned long long gcd_d1_d2 = math::gcd<unsigned long long>(den, Period::den);
                 num /= gcd_n1_n2;
                 den /= gcd_d1_d2;
                 unsigned long long n2 = Period::num / gcd_n1_n2;
@@ -539,7 +425,7 @@ operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
                 if (is_integral<intermediate_type>::value)
                 {
                     // Reduce r * num / den
-                    common_type_t t = chrono_detail::gcd<common_type_t>(r, den);
+                    common_type_t t = math::gcd<common_type_t>(r, den);
                     r /= t;
                     den /= t;
                     if (den != 1)
@@ -582,68 +468,162 @@ operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
     return is;
 }
 
-#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-template <class CharT, class Traits, class Duration>
-std::basic_ostream<CharT, Traits>&
-operator<<(std::basic_ostream<CharT, Traits>& os,
-           const time_point<monotonic_clock, Duration>& tp)
-{
-    return os << tp.time_since_epoch() << " since boot";
-}
+template <class Clock, class CharT>
+struct clock_string;
 
-template <class CharT, class Traits, class Duration>
-std::basic_istream<CharT, Traits>&
-operator>>(std::basic_istream<CharT, Traits>& is,
-           time_point<monotonic_clock, Duration>& tp)
+template <class CharT>
+struct clock_string<system_clock, CharT>
 {
-    Duration d;
-    is >> d;
-    if (is.good())
+    static std::string name() 
+    {
+        static const CharT u[] = {'s', 'y', 's', 't', 'e', 'm', '_', 
+        						'c', 'l','o', 'c', 'k'};
+        static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
+    	return str;
+    }
+    static std::string since()  
+    {
+        static const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 'J', 'a',
+                              'n', ' ', '1', ',', ' ', '1', '9', '7', '0'};
+        static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
+    	return str;
+    }
+};
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
+
+template <class CharT>
+struct clock_string<monotonic_clock, CharT>
+{
+    static std::string name() 
+    {
+        static const CharT u[] = {'m', 'o', 'n', 'o', 't', 'o', 'n', 'i', 'c', '_', 
+        						'c', 'l','o', 'c', 'k'};
+        static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
+    	return str;
+    }
+    static std::string since()  
     {
         const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 'b', 'o', 'o', 't'};
-        const std::basic_string<CharT> units(u, u + sizeof(u)/sizeof(u[0]));
-        std::ios_base::iostate err = std::ios_base::goodbit;
-        typedef std::istreambuf_iterator<CharT, Traits> in_iterator;
-        in_iterator i(is);
-        in_iterator e;
-        std::ptrdiff_t k = chrono_detail::scan_keyword(i, e,
-                      &units, &units + 1,
-                      std::use_facet<std::ctype<CharT> >(is.getloc()),
-                      err) - &units;
-        if (k == 1)
-        {
-            // failed to read epoch string
-            is.setstate(err);
-            return is;
-        }
-        tp = time_point<monotonic_clock, Duration>(d);
+        const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
+    	return str;
     }
-    else
-        is.setstate(is.failbit);
-    return is;
-}
+};
+
+
 #endif
 
-template <class CharT, class Traits, class Duration>
+#if defined(BOOST_CHRONO_HAS_THREAD_CLOCK) 
+
+template <class CharT>
+struct clock_string<thread_clock, CharT>
+{
+    static std::string name() 
+    {
+        static const CharT u[] = {'t', 'h', 'r', 'e', 'd', '_', 
+        						'c', 'l','o', 'c', 'k'};
+        static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
+    	return str;
+    }
+    static std::string since()  
+    {
+        const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 't', 'r', 'e', 'a', 'd', ' ', 's', 't', 'a', 'r', 't', '-', 'u', 'p'};
+        const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
+    	return str;
+    }
+};
+
+#endif
+
+template <class CharT>
+struct clock_string<process_real_cpu_clock, CharT>
+{
+    static std::string name() 
+    {
+        static const CharT u[] = {'p', 'r', 'o', 'c', 'e', 's', 's', '_', 'r', 'e', 'a', 'l','_', 
+        						'c', 'l','o', 'c', 'k'};
+        static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
+    	return str;
+    }
+    static std::string since()  
+    {
+        const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 'p', 'r', 'o', 'c', 'e', 's', 's', ' ', 's', 't', 'a', 'r', 't', '-', 'u', 'p'};
+        const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
+    	return str;
+    }
+};
+
+template <class CharT>
+struct clock_string<process_user_cpu_clock, CharT>
+{
+    static std::string name() 
+    {
+        static const CharT u[] = {'p', 'r', 'o', 'c', 'e', 's', 's', '_', 'u', 's', 'e', 'r','_', 
+        						'c', 'l','o', 'c', 'k'};
+        static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
+    	return str;
+    }
+    static std::string since()  
+    {
+        const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 'p', 'r', 'o', 'c', 'e', 's', 's', ' ', 's', 't', 'a', 'r', 't', '-', 'u', 'p'};
+        const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
+    	return str;
+    }
+};
+
+template <class CharT>
+struct clock_string<process_system_cpu_clock, CharT>
+{
+    static std::string name() 
+    {
+        static const CharT u[] = {'p', 'r', 'o', 'c', 'e', 's', 's', '_', 's', 'y', 's', 't', 't', 'e', 'm', '_', 
+        						'c', 'l','o', 'c', 'k'};
+        static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
+    	return str;
+    }
+    static std::string since()  
+    {
+        const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 'p', 'r', 'o', 'c', 'e', 's', 's', ' ', 's', 't', 'a', 'r', 't', '-', 'u', 'p'};
+        const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
+    	return str;
+    }
+};
+
+template <class CharT>
+struct clock_string<process_cpu_clock, CharT>
+{
+    static std::string name() 
+    {
+        static const CharT u[] = {'p', 'r', 'o', 'c', 'e', 's', 's', '_', 
+        						'c', 'l','o', 'c', 'k'};
+        static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
+    	return str;
+    }
+    static std::string since()  
+    {
+        const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 'p', 'r', 'o', 'c', 'e', 's', 's', ' ', 's', 't', 'a', 'r', 't', '-', 'u', 'p'};
+        const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
+    	return str;
+    }
+};
+
+template <class CharT, class Traits, class Clock, class Duration>
 std::basic_ostream<CharT, Traits>&
 operator<<(std::basic_ostream<CharT, Traits>& os,
-           const time_point<system_clock, Duration>& tp)
+           const time_point<Clock, Duration>& tp)
 {
-    return os << tp.time_since_epoch() << " since Jan 1, 1970";
+    return os << tp.time_since_epoch() << clock_string<Clock, CharT>::since();
 }
 
-template <class CharT, class Traits, class Duration>
+template <class CharT, class Traits, class Clock, class Duration>
 std::basic_istream<CharT, Traits>&
 operator>>(std::basic_istream<CharT, Traits>& is,
-           time_point<system_clock, Duration>& tp)
+           time_point<Clock, Duration>& tp)
 {
     Duration d;
     is >> d;
     if (is.good())
     {
-        const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 'J', 'a',
-                              'n', ' ', '1', ',', ' ', '1', '9', '7', '0'};
-        const std::basic_string<CharT> units(u, u + sizeof(u)/sizeof(u[0]));
+        const std::basic_string<CharT> units=clock_string<Clock, CharT>::since();
         std::ios_base::iostate err = std::ios_base::goodbit;
         typedef std::istreambuf_iterator<CharT, Traits> in_iterator;
         in_iterator i(is);
@@ -658,13 +638,12 @@ operator>>(std::basic_istream<CharT, Traits>& is,
             is.setstate(err);
             return is;
         }
-        tp = time_point<system_clock, Duration>(d);
+        tp = time_point<Clock, Duration>(d);
     }
     else
         is.setstate(is.failbit);
     return is;
 }
-
 }  // chrono
 
 }

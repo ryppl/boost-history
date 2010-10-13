@@ -15,6 +15,7 @@
 #include <boost/system/error_code.hpp>
 #include <boost/operators.hpp>
 #include <boost/chrono/detail/system.hpp>
+#include <iostream>
 
 
 #ifndef BOOST_CHRONO_INLINED
@@ -125,10 +126,28 @@ namespace boost { namespace chrono {
                 if (system < rhs.system) return true;
                 else return false;
             }
+
+            template <class CharT, class Traits>
+            void print(std::basic_ostream<CharT, Traits>& os) const {
+                os <<  "{"<< real <<";"<< user <<";"<< system << "}";
+            }
             
-            template <typename OSTREAM>
-            void print(OSTREAM& os) const {
-                os <<  "{"<< real <<","<< user <<","<< system << "}";
+            template <class CharT, class Traits>
+            void read(std::basic_istream<CharT, Traits>& is) const {
+                typedef std::istreambuf_iterator<CharT, Traits> in_iterator;
+                in_iterator i(is);
+                in_iterator e;
+                if (i == e || *i != '{')  // mandatory '{'
+                {                
+                	is.setstate(is.failbit | is.eofbit);
+                	return;
+                }
+                CharT x,y,z;
+                is >> real >> x >> user >> y >> system >> z;
+                if (!is.good() || (x != ';')|| (y != ';')|| (z != '}'))
+                {
+                    is.setstate(is.failbit);
+                }
             }
         };
         
@@ -146,11 +165,17 @@ namespace boost { namespace chrono {
         static BOOST_CHRONO_INLINE time_point now( system::error_code & ec = system::throws );
     };
 
-    template <typename OSTREAM>
-    OSTREAM& operator<<(OSTREAM& os, process_cpu_clock_times const& rhs) {
+    template <class CharT, class Traits>
+    std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, process_cpu_clock_times const& rhs) {
         rhs.print(os);
         return os;
     }
+    
+    template <class CharT, class Traits>
+    std::basic_istream<CharT, Traits>& operator<<(std::basic_istream<CharT, Traits>& is, process_cpu_clock_times const& rhs) {
+        rhs.read(is);
+        return is;
+    }  
     
     template <>
     struct duration_values<process_cpu_clock_times>

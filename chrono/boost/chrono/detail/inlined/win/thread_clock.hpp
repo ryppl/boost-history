@@ -11,7 +11,7 @@
 
 // define BOOST_CHRONO_SOURCE so that <boost/chrono/config.hpp> knows
 // the library is being built (possibly exporting rather than importing code)
-#define BOOST_CHRONO_SOURCE
+//#define BOOST_CHRONO_SOURCE
 
 #include <boost/chrono/config.hpp>
 #include <boost/chrono/thread_clock.hpp>
@@ -24,7 +24,6 @@ namespace boost
   namespace chrono
   {
 
-    BOOST_CHRONO_INLINE
     thread_clock::time_point thread_clock::now( system::error_code & ec )
     {
 
@@ -59,8 +58,6 @@ namespace boost
 
     }
     
-    
-    BOOST_CHRONO_INLINE
     thread_clock::time_point thread_clock::now( )
     {
 

@@ -12,7 +12,7 @@
 
 // define BOOST_CHRONO_SOURCE so that <boost/chrono/config.hpp> knows
 // the library is being built (possibly exporting rather than importing code)
-#define BOOST_CHRONO_SOURCE
+//#define BOOST_CHRONO_SOURCE
 
 #include <boost/chrono/config.hpp>
 #include <boost/chrono/thread_clock.hpp>
@@ -23,7 +23,7 @@
 
 namespace boost { namespace chrono {
 
-	BOOST_CHRONO_INLINE thread_clock::time_point thread_clock::now( ) {
+	thread_clock::time_point thread_clock::now( ) {
         // get the current thread
         pthread_t pth=pthread_self();
         // get the clock_id associated to the current thread
@@ -46,7 +46,7 @@ namespace boost { namespace chrono {
             static_cast<thread_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
              
     }
-	BOOST_CHRONO_INLINE thread_clock::time_point thread_clock::now( system::error_code & ec ) {
+	thread_clock::time_point thread_clock::now( system::error_code & ec ) {
         // get the current thread
         pthread_t pth=pthread_self();
         // get the clock_id associated to the current thread

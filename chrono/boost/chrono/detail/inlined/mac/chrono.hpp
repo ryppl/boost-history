@@ -24,7 +24,7 @@ namespace chrono
 // It returns the number of microseconds since New Years 1970 in a struct called timeval
 // which has a field for seconds and a field for microseconds.
 //    Fill in the timeval and then convert that to the time_point
-BOOST_CHRONO_INLINE system_clock::time_point
+system_clock::time_point
 system_clock::now()
 {
     timeval tv;
@@ -32,7 +32,7 @@ system_clock::now()
     return time_point(seconds(tv.tv_sec) + microseconds(tv.tv_usec));
 }
 
-BOOST_CHRONO_INLINE system_clock::time_point
+system_clock::time_point
 system_clock::now(system::error_code & ec)
 {
     timeval tv;
@@ -44,19 +44,22 @@ system_clock::now(system::error_code & ec)
 // Take advantage of the fact that on this platform time_t is nothing but
 //    an integral count of seconds since New Years 1970 (same epoch as timeval).
 //    Just get the duration out of the time_point and truncate it to seconds.
-BOOST_CHRONO_INLINE time_t
+time_t
 system_clock::to_time_t(const time_point& t)
 {
     return time_t(duration_cast<seconds>(t.time_since_epoch()).count());
 }
 
 // Just turn the time_t into a count of seconds and construct a time_point with it.
-BOOST_CHRONO_INLINE system_clock::time_point
+system_clock::time_point
 system_clock::from_time_t(time_t t)
 {
     return system_clock::time_point(seconds(t));
 }
 
+namespace chrono_detail
+{
+  
 // monotonic_clock
 
 // Note, in this implementation monotonic_clock and high_resolution_clock
@@ -101,7 +104,7 @@ monotonic_clock::rep
 monotonic_full()
 {
     static kern_return_t err;
-    static const double factor = compute_monotonic_factor(err);
+    static const double factor = chrono_detail::compute_monotonic_factor(err);
     if (err != 0)
       boost::throw_exception(
 #if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
@@ -117,7 +120,7 @@ monotonic_clock::rep
 monotonic_full_ec(system::error_code & ec)
 {
     static kern_return_t err;
-    static const double factor = compute_monotonic_factor(err);
+    static const double factor = chrono_detail::compute_monotonic_factor(err);
     if (err != 0) {
 #if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
       ec.assign( errno, system::system_category );
@@ -135,7 +138,7 @@ typedef monotonic_clock::rep (*FP_ec)(system::error_code &);
 
 
 BOOST_CHRONO_STATIC
-FP_ec
+FP
 init_monotonic_clock(kern_return_t & err)
 {
     mach_timebase_info_data_t MachInfo;
@@ -145,8 +148,8 @@ init_monotonic_clock(kern_return_t & err)
     }
 
     if (MachInfo.numer == MachInfo.denom)
-        return &monotonic_simplified_ec;
-    return &monotonic_full_ec;
+        return &chrono_detail::monotonic_simplified;
+    return &chrono_detail::monotonic_full;
 }
 
 BOOST_CHRONO_STATIC
@@ -160,16 +163,15 @@ init_monotonic_clock_ec(kern_return_t & err)
     }
 
     if (MachInfo.numer == MachInfo.denom)
-        return &monotonic_simplified_ec;
-    return &monotonic_full_ec;
+        return &chrono_detail::monotonic_simplified_ec;
+    return &chrono_detail::monotonic_full_ec;
 }
-
-BOOST_CHRONO_INLINE 
+}
 monotonic_clock::time_point
 monotonic_clock::now()
 {
     static kern_return_t err;
-    static FP fp = init_monotonic_clock(err);
+    static chrono_detail::FP_ec fp = chrono_detail::init_monotonic_clock(err);
     if( err != 0  ) 	boost::throw_exception(
 #if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
         system::system_error( err, system::system_category, "chrono::monotonic_clock" ));
@@ -179,12 +181,11 @@ monotonic_clock::now()
     return time_point(duration(fp()));
 }
 
-BOOST_CHRONO_INLINE 
 monotonic_clock::time_point
 monotonic_clock::now(system::error_code & ec)
 {
     static kern_return_t err;
-    static FP_ec fp = init_monotonic_clock(err);
+    static chrono_detail::FP_ec fp = chrono_detail::init_monotonic_clock(err);
     if( err != 0  ) {
 #if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
         ec.assign( err, system::system_category );

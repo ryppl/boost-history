@@ -18,7 +18,7 @@ namespace boost
 namespace chrono
 {
 
-  BOOST_CHRONO_INLINE system_clock::time_point system_clock::now()
+  system_clock::time_point system_clock::now()
   {
     timespec ts;
     if ( ::clock_gettime( CLOCK_REALTIME, &ts ) )
@@ -31,7 +31,7 @@ namespace chrono
       static_cast<system_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
   }
 
-  BOOST_CHRONO_INLINE system_clock::time_point system_clock::now(system::error_code & ec)
+  system_clock::time_point system_clock::now(system::error_code & ec)
   {
     timespec ts;
     if ( ::clock_gettime( CLOCK_REALTIME, &ts ) )
@@ -45,19 +45,19 @@ namespace chrono
       static_cast<system_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
   }
 
-  BOOST_CHRONO_INLINE std::time_t system_clock::to_time_t(const system_clock::time_point& t)
+  std::time_t system_clock::to_time_t(const system_clock::time_point& t)
   {
       return static_cast<std::time_t>( t.time_since_epoch().count() / 1000000000 );
   }
 
-  BOOST_CHRONO_INLINE system_clock::time_point system_clock::from_time_t(std::time_t t)
+  system_clock::time_point system_clock::from_time_t(std::time_t t)
   {
       return time_point(duration(static_cast<system_clock::rep>(t) * 1000000000));
   }
 
 #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
 
-  BOOST_CHRONO_INLINE monotonic_clock::time_point monotonic_clock::now()
+  monotonic_clock::time_point monotonic_clock::now()
   {
     timespec ts;
     if ( ::clock_gettime( CLOCK_MONOTONIC, &ts ) )
@@ -70,7 +70,7 @@ namespace chrono
       static_cast<monotonic_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
   }
 
-  BOOST_CHRONO_INLINE monotonic_clock::time_point monotonic_clock::now(system::error_code & ec)
+  monotonic_clock::time_point monotonic_clock::now(system::error_code & ec)
   {
     timespec ts;
     if ( ::clock_gettime( CLOCK_MONOTONIC, &ts ) )

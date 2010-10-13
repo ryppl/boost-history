@@ -12,7 +12,7 @@
 
 // define BOOST_CHRONO_SOURCE so that <boost/chrono/config.hpp> knows
 // the library is being built (possibly exporting rather than importing code)
-#define BOOST_CHRONO_SOURCE
+//#define BOOST_CHRONO_SOURCE
 
 #include <boost/chrono/config.hpp>
 #include <boost/version.hpp>
@@ -46,8 +46,6 @@ namespace boost { namespace chrono {
         tps.real=process_clock::time_point(t.real);
         tps.user=process_clock::time_point(t.user);
         tps.system=process_clock::time_point(t.system);
-        
     }
-
     
 }}
