@@ -76,9 +76,13 @@ void party()
 
     interval_map<Time, GuestSetT> party;
 
-    party += make_pair( discrete_interval<Time>::right_open(Time(19,30), Time(23,00)), mary_harry);
-    party += make_pair( discrete_interval<Time>::right_open(Time(20,10), Time(monday,0,0)), diana_susan);
-    party += make_pair( discrete_interval<Time>::right_open(Time(22,15), Time(monday,0,30)), peter);
+    //party += make_pair( discrete_interval<Time>::right_open(Time(19,30), Time(23,00)), mary_harry);
+    //party += make_pair( discrete_interval<Time>::right_open(Time(20,10), Time(monday,0,0)), diana_susan);
+    //party += make_pair( discrete_interval<Time>::right_open(Time(22,15), Time(monday,0,30)), peter);
+
+    party += make_pair( _interval<Time>::right_open(Time(19,30), Time(23,00)), mary_harry);
+    party += make_pair( _interval<Time>::right_open(Time(20,10), Time(monday,0,0)), diana_susan);
+    party += make_pair( _interval<Time>::right_open(Time(22,15), Time(monday,0,30)), peter);
 
     interval_map<Time, GuestSetT>::iterator it = party.begin();
     while(it != party.end())

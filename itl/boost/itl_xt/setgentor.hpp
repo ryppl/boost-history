@@ -48,6 +48,8 @@ public:
     typedef list<ValueTypeTD>    SampleTypeTD;
     typedef RandomGentorAT<DomainTD>  DomainGentorT;
     typedef DomainGentorT*        DomainGentorPT;
+    typedef itl::interval<int>          sample_range_type;
+    //typedef typename itl::_interval<int>::type sample_range_type;
 
     SetGentorT(): p_domainGentor(NULL) {}
     ~SetGentorT() { delete p_domainGentor; }
@@ -71,7 +73,7 @@ public:
 
 private:
     RandomGentorAT<DomainTD>*  p_domainGentor;
-    interval<int>              m_sampleSizeRange;
+    sample_range_type          m_sampleSizeRange;
     SampleTypeTD               m_sample;
     int                        m_sampleSize;
 };

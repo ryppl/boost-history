@@ -26,6 +26,8 @@ public:
     typedef DomainT   domain_type;
     typedef CodomainT codomain_type;
     typedef IntervalT interval_type;
+    typedef itl::interval<codomain_type> co_range_type;
+    //typedef typename itl::_interval<codomain_type>::type co_range_type;
     typedef std::pair<IntervalT, CodomainT> segment_type;
 
 public:
@@ -52,7 +54,7 @@ public:
 private:
     ItvGentorT<domain_type,IntervalT> _interval_gentor;
     RandomGentorAT<codomain_type>*    _codomain_gentor;
-    itl::interval<codomain_type>      _covalue_range;
+    co_range_type                     _covalue_range;
 };
 
 

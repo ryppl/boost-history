@@ -19,17 +19,17 @@ typedef unsigned char bound_type;
 class interval_bounds
 {
 public:
-    BOOST_STATIC_CONSTANT(bound_type, static_open      = 0);
+    BOOST_STATIC_CONSTANT(bound_type, static_open       = 0);
     BOOST_STATIC_CONSTANT(bound_type, static_left_open  = 1);
     BOOST_STATIC_CONSTANT(bound_type, static_right_open = 2);
-    BOOST_STATIC_CONSTANT(bound_type, static_closed    = 3);
-    BOOST_STATIC_CONSTANT(bound_type, dynamic          = 4);
-    BOOST_STATIC_CONSTANT(bound_type, undefined        = 5);
+    BOOST_STATIC_CONSTANT(bound_type, static_closed     = 3);
+    BOOST_STATIC_CONSTANT(bound_type, dynamic           = 4);
+    BOOST_STATIC_CONSTANT(bound_type, undefined         = 5);
 
-    BOOST_STATIC_CONSTANT(bound_type, _open      = 0);
+    BOOST_STATIC_CONSTANT(bound_type, _open       = 0);
     BOOST_STATIC_CONSTANT(bound_type, _left_open  = 1);
     BOOST_STATIC_CONSTANT(bound_type, _right_open = 2);
-    BOOST_STATIC_CONSTANT(bound_type, _closed    = 3);
+    BOOST_STATIC_CONSTANT(bound_type, _closed     = 3);
 
     BOOST_STATIC_CONSTANT(bound_type, _right     = 1);
     BOOST_STATIC_CONSTANT(bound_type, _left      = 2);

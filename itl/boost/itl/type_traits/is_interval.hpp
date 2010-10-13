@@ -18,7 +18,7 @@ template <class Type>
 struct interval_bound_type
 {
     typedef interval_bound_type type;
-    BOOST_STATIC_CONSTANT(unsigned char, value = (interval_bounds::undefined)); 
+    BOOST_STATIC_CONSTANT(bound_type, value = (interval_bounds::undefined)); 
 };
 
 template <class Type> struct is_interval
@@ -46,7 +46,7 @@ template <class Type> struct has_dynamic_bounds
 template <class Type> struct has_asymmetric_bounds
 { 
     typedef has_asymmetric_bounds<Type> type;
-    BOOST_STATIC_CONSTANT(unsigned char, bounds = (interval_bound_type<Type>::value)); 
+    BOOST_STATIC_CONSTANT(bound_type, bounds = (interval_bound_type<Type>::value)); 
     BOOST_STATIC_CONSTANT(bool, 
         value = (   bounds == interval_bounds::static_left_open 
                  || bounds == interval_bounds::static_right_open)); 
@@ -55,7 +55,7 @@ template <class Type> struct has_asymmetric_bounds
 template <class Type> struct has_symmetric_bounds
 { 
     typedef has_symmetric_bounds<Type> type;
-    BOOST_STATIC_CONSTANT(unsigned char, bounds = (interval_bound_type<Type>::value)); 
+    BOOST_STATIC_CONSTANT(bound_type, bounds = (interval_bound_type<Type>::value)); 
     BOOST_STATIC_CONSTANT(bool, 
         value = (   bounds == interval_bounds::static_closed 
                  || bounds == interval_bounds::static_open)); 
@@ -69,6 +69,17 @@ template <class Type> struct is_discrete_static
     BOOST_STATIC_CONSTANT(bool, 
         value = (mpl::and_< has_static_bounds<Type>
                           , is_discrete<domain_type> >::value) ); 
+};
+
+//------------------------------------------------------------------------------
+template <class Type> struct is_continuous_static
+{ 
+    typedef is_continuous_static type;
+    typedef typename interval_traits<Type>::domain_type domain_type;
+    BOOST_STATIC_CONSTANT(bool, 
+        value = (mpl::and_< has_static_bounds<Type>
+                          , is_continuous<domain_type>
+                          , has_asymmetric_bounds<Type> >::value) ); 
 };
 
 //------------------------------------------------------------------------------
@@ -119,6 +130,25 @@ template <class Type> struct is_discrete_static_open
         value = (mpl::and_< is_static_open<Type>
                           , is_discrete<domain_type> >::value) ); 
 };
+
+//------------------------------------------------------------------------------
+template <class Type> struct is_continuous_right_open
+{ 
+    typedef is_continuous_right_open<Type> type;
+    typedef typename interval_traits<Type>::domain_type domain_type;
+    BOOST_STATIC_CONSTANT(bool, 
+        value = (mpl::and_<is_static_right_open<Type>, is_continuous<domain_type> >::value)); 
+};
+
+template <class Type> struct is_continuous_left_open
+{ 
+    typedef is_continuous_left_open<Type> type;
+    typedef typename interval_traits<Type>::domain_type domain_type;
+    BOOST_STATIC_CONSTANT(bool, 
+        value = (mpl::and_<is_static_left_open<Type>, is_continuous<domain_type> >::value)); 
+};
+
+//------------------------------------------------------------------------------
 
 template <class Type> struct is_singelizable
 {

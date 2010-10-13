@@ -137,7 +137,7 @@ template <class DomainT, ITL_COMPARE Compare>
 struct interval_bound_type< discrete_interval<DomainT,Compare> >
 {
     typedef interval_bound_type type;
-    BOOST_STATIC_CONSTANT(unsigned char, value = interval_bounds::dynamic);
+    BOOST_STATIC_CONSTANT(bound_type, value = interval_bounds::dynamic);
 };
 
 template <class DomainT, ITL_COMPARE Compare> 

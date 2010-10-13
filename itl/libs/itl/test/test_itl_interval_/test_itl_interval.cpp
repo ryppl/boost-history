@@ -14,8 +14,9 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 // interval instance types
 #include "../test_type_lists.hpp"
 #include "../test_value_maker.hpp"
+#include "../test_interval_laws.hpp"
 
-#include <boost/itl/interval.hpp>
+//CL #include <boost/itl/interval.hpp>
 
 using namespace std;
 using namespace boost;
@@ -73,87 +74,121 @@ BOOST_AUTO_TEST_CASE_TEMPLATE
 {         distant_intervals_4_numeric_continuous_types<T, std::less>(); }
 
 
-/*
+//- sta.asy.{dis|con} ----------------------------------------------------------
+//- n tests for right_open_inverval --------------------------------------------
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_right_open_interval_ctor_4_ordered_types, T, ordered_types)
+{                       interval_ctor_4_ordered_types<right_open_interval<T> >(); }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_right_open_interval_4_ordered_types, T, discrete_types)
+{          singelizable_interval_4_ordered_types<right_open_interval<T> >(); }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_right_open_interval_4_bicremental_types, T, discrete_types)
+{         singelizable_interval_4_bicremental_types<right_open_interval<T> >(); }
+
+//- n tests for left_open_inverval ---------------------------------------------
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_left_open_interval_ctor_4_ordered_types, T, ordered_types)
+{                     interval_ctor_4_ordered_types<left_open_interval<T> >(); }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_left_open_interval_4_ordered_types_singelizable, T, signed_discrete_types)
+{        singelizable_interval_4_ordered_types<left_open_interval<T> >(); }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_left_open_interval_4_bicremental_types, T, discrete_types)
+{        singelizable_interval_4_bicremental_types<left_open_interval<T> >(); }
+
 //- dyn.dis --------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_discrete_interval_ctor_4_discrete_types_base)
-{                     interval_ctor_4_ordered_types<discrete_interval<discrete_type_1> >(); }
+(fastest_itl_discrete_interval_ctor_4_discrete_types_base, T, discrete_types)
+{                     interval_ctor_4_ordered_types<discrete_interval<T> >(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_discrete_interval_ctor_4_discrete_types_dynamic)
-{             dynamic_interval_ctor_4_ordered_types<discrete_interval<discrete_type_2> >(); }
+(fastest_itl_discrete_interval_ctor_4_discrete_types_dynamic, T, discrete_types)
+{             dynamic_interval_ctor_4_ordered_types<discrete_interval<T> >(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_discrete_interval_4_ordered_types)
-{        singelizable_interval_4_ordered_types<discrete_interval<discrete_type_3> >(); }
+(fastest_itl_discrete_interval_4_ordered_types, T, discrete_types)
+{        singelizable_interval_4_ordered_types<discrete_interval<T> >(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_discrete_interval_4_bicremental_types)
-{        singelizable_interval_4_bicremental_types<discrete_interval<discrete_type_3> >(); }
+(fastest_itl_discrete_interval_4_bicremental_types, T, discrete_types)
+{        singelizable_interval_4_bicremental_types<discrete_interval<T> >(); }
 
 //- dyn.con --------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_continuous_interval_ctor_4_continuous_types_base)
-{                       interval_ctor_4_ordered_types<continuous_interval<continuous_type_1> >(); }
+(fastest_itl_continuous_interval_ctor_4_continuous_types_base, T, continuous_types)
+{                       interval_ctor_4_ordered_types<continuous_interval<T> >(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_continuous_interval_ctor_4_continuous_types_dynamic)
-{               dynamic_interval_ctor_4_ordered_types<continuous_interval<continuous_type_2> >(); }
+(fastest_itl_continuous_interval_ctor_4_continuous_types_dynamic, T, continuous_types)
+{               dynamic_interval_ctor_4_ordered_types<continuous_interval<T> >(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_continuous_interval_4_continuous_types_singelizable)
-{          singelizable_interval_4_ordered_types<continuous_interval<continuous_type_3> >(); }
-*/
+(fastest_itl_continuous_interval_4_continuous_types_singelizable, T, continuous_types)
+{          singelizable_interval_4_ordered_types<continuous_interval<T> >(); }
 
-/*
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_interval_ctor_4_bicremental_types, T, bicremental_types)
-{         interval_ctor_4_bicremental_types<T>(); }
-
-BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_interval_ctor_4_integral_types, T, integral_types)
-{         interval_ctor_4_integral_types<T>(); }
+(fastest_itl_distant_intervals_4_discrete_types, T, discrete_types)
+{            distant_intervals_4_discrete_types<T, std::less>(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_interval_ctor_specific)
-{         interval_ctor_specific(); }
+(fastest_itl_distant_intervals_4_numeric_continuous_types, T, numeric_continuous_types)
+{            distant_intervals_4_numeric_continuous_types<T, std::less>(); }
+
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_dynamic_interval_bounds_4_bicremental_types, T, bicremental_types)
+{            dynamic_interval_bounds_4_bicremental_types<T>(); }
+
+//==============================================================================
+//==============================================================================
+//JODO old tests are not adapted to static_intervals
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_interval_equal_4_integral_types, T, integral_types)
+{            interval_equal_4_integral_types<T>(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_interval_equal_4_integral_types, T, integral_types)
-{         interval_equal_4_integral_types<T>(); }
+(fastest_itl_interval_less_4_integral_types, T, integral_types)
+{            interval_less_4_integral_types<T>(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_interval_less_4_integral_types, T, integral_types)
-{         interval_less_4_integral_types<T>(); }
+(fastest_itl_interval_touches_4_bicremental_types, T, bicremental_types)
+{            interval_touches_4_bicremental_types<T>(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_interval_equal_4_bicremental_continuous_types, T, bicremental_continuous_types)
-{         interval_equal_4_bicremental_continuous_types<T>(); }
+(fastest_itl_interval_touches_4_integral_types, T, integral_types)
+{            interval_touches_4_integral_types<T>(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_interval_touches_4_bicremental_types, T, bicremental_types)
-{         interval_touches_4_bicremental_types<T>(); }
+(fastest_itl_interval_subtract_4_bicremental_types, T, bicremental_types)
+{            interval_subtract_4_bicremental_types<T>(); }
+
+#ifndef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_interval_ctor_specific)
+{            interval_ctor_specific(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_interval_touches_4_integral_types, T, integral_types)
-{         interval_touches_4_integral_types<T>(); }
+(fastest_itl_interval_equal_4_bicremental_continuous_types, T, bicremental_continuous_types)
+{            interval_equal_4_bicremental_continuous_types<T>(); }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_interval_inplace_intersect_4_bicremental_types, T, bicremental_types)
-{         interval_inplace_intersect_4_bicremental_types<T>(); }
+(fastest_itl_interval_infix_intersect_4_bicremental_types, T, bicremental_types)
+{            interval_infix_intersect_4_bicremental_types<T>(); }
+
+#else
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_interval_infix_intersect_4_bicremental_types, T, bicremental_types)
-{         interval_infix_intersect_4_bicremental_types<T>(); }
+(fastest_itl_interval_infix_intersect_4_bicremental_types, T, discrete_types)
+{            interval_infix_intersect_4_bicremental_types<T>(); }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_interval_subtract_4_bicremental_types, T, bicremental_types)
-{         interval_subtract_4_bicremental_types<T>(); }
-*/
+#endif // ndef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
 
-/*JODO
-BOOST_AUTO_TEST_CASE_TEMPLATE
-(test_itl_interval_inner_complement_4_bicremental_types, T, bicremental_types)
-{         interval_inner_complement_4_bicremental_types<T>(); }
-*/
+
 

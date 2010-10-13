@@ -353,7 +353,6 @@ last_next(const Type& object)
                     upper(object) ;
 }
 
-
 //------------------------------------------------------------------------------
 template<class Type>
 typename enable_if<has_dynamic_bounds<Type>, 
@@ -394,11 +393,25 @@ reverse_bounded_upper(const Type& object)
                                   object.bounds().reverse_right()); 
 }
 
+//- bounds ---------------------------------------------------------------------
+template<class Type>
+inline typename enable_if<has_dynamic_bounds<Type>, interval_bounds>::type
+bounds(const Type& object)
+{
+    return object.bounds();
+}
+
+template<class Type>
+inline typename enable_if<has_static_bounds<Type>, interval_bounds>::type
+bounds(const Type&)
+{
+    return interval_bounds(interval_bound_type<Type>::value);
+}
+
 
 //==============================================================================
-//= Containedness
+//= Emptieness
 //==============================================================================
-//- is_empty -------------------------------------------------------------------
 /** Is the interval empty? */
 template<class Type>
 typename boost::enable_if<is_asymmetric_interval<Type>, bool>::type
@@ -450,20 +463,109 @@ is_empty(const Type& object)
             && object.bounds() != interval_bounds::closed()    );
 }
 
+//==============================================================================
+//= Orederings, containedness (non empty)
+//==============================================================================
+namespace non_empty
+{
+
+    template<class Type>
+    inline typename boost::enable_if<is_asymmetric_interval<Type>, bool>::type
+    exclusive_less(const Type& left, const Type& right)
+    { 
+        BOOST_ASSERT(!(itl::is_empty(left) || itl::is_empty(right)));
+        return domain_less_equal<Type>(upper(left), lower(right)); 
+    }
+
+    template<class Type>
+    inline typename boost::enable_if<is_universal_interval<Type>, bool>::type
+    exclusive_less(const Type& left, const Type& right)
+    { 
+        return left.exclusive_less(right); 
+    }
+
+    template<class Type>
+    inline typename boost::enable_if<is_discrete_interval<Type>, bool>::type
+    exclusive_less(const Type& left, const Type& right)
+    { 
+        BOOST_ASSERT(!(itl::is_empty(left) || itl::is_empty(right)));
+        return domain_less<Type>(last(left), first(right)); 
+    }
+
+    template<class Type>
+    inline typename boost::
+    enable_if<has_symmetric_bounds<Type>, bool>::type
+    exclusive_less(const Type& left, const Type& right)
+    { 
+        BOOST_ASSERT(!(itl::is_empty(left) || itl::is_empty(right)));
+        return domain_less<Type>(last(left), first(right)); 
+    }
+
+    template<class Type>
+    inline typename boost::enable_if<is_continuous_interval<Type>, bool>::type
+    exclusive_less(const Type& left, const Type& right)
+    { 
+        BOOST_ASSERT(!(itl::is_empty(left) || itl::is_empty(right)));
+        return     domain_less <Type>(left.upper(), right.lower())
+            || (   domain_equal<Type>(left.upper(), right.lower())
+                && inner_bounds(left,right) != interval_bounds::open() );
+    }
+
+    template<class Type>
+    inline typename boost::enable_if<is_interval<Type>, bool>::type
+    contains(const Type& super, const Type& sub)
+    { 
+        return lower_less_equal(super,sub) && upper_less_equal(sub,super);
+    }
+
+
+} //namespace non_empty
+
+
 //- contains -------------------------------------------------------------------
 template<class Type>
-typename boost::enable_if<is_interval<Type>, bool>::type
+inline typename boost::enable_if<is_interval<Type>, bool>::type
 contains(const Type& super, const Type& sub)
 { 
-    return lower_less_equal(super,sub) && upper_less_equal(sub,super);
+    return itl::is_empty(sub) || non_empty::contains(super, sub);
 }
 
 template<class Type>
-typename boost::enable_if<is_interval<Type>, bool>::type
+typename boost::enable_if<is_discrete_static<Type>, bool>::type
 contains(const Type& super, const typename interval_traits<Type>::domain_type& element)
 {
-    return domain_less_equal<Type>(super.lower(), element) 
-        && domain_less_equal<Type>(element, super.upper());
+    return domain_less_equal<Type>(itl::first(super), element                  ) 
+        && domain_less_equal<Type>(                   element, itl::last(super));
+}
+
+template<class Type>
+typename boost::enable_if<is_continuous_left_open<Type>, bool>::type
+contains(const Type& super, const typename interval_traits<Type>::domain_type& element)
+{
+    return domain_less      <Type>(itl::lower(super), element                   ) 
+        && domain_less_equal<Type>(                   element, itl::upper(super));
+}
+
+template<class Type>
+typename boost::enable_if<is_continuous_right_open<Type>, bool>::type
+contains(const Type& super, const typename interval_traits<Type>::domain_type& element)
+{
+    return domain_less_equal<Type>(itl::lower(super), element                   ) 
+        && domain_less      <Type>(                   element, itl::upper(super));
+}
+
+template<class Type>
+typename boost::enable_if<has_dynamic_bounds<Type>, bool>::type
+contains(const Type& super, const typename interval_traits<Type>::domain_type& element)
+{
+    return
+        (is_left_closed(super.bounds())  
+            ? domain_less_equal<Type>(super.lower(), element) 
+            :       domain_less<Type>(super.lower(), element))
+    &&
+        (is_right_closed(super.bounds()) 
+            ? domain_less_equal<Type>(element, super.upper()) 
+            :       domain_less<Type>(element, super.upper()));
 }
 
 //- within ---------------------------------------------------------------------
@@ -523,53 +625,6 @@ exclusive_less(const Type& left, const Type& right)
             && inner_bounds(left,right) != interval_bounds::open() );
 }
 
-
-namespace non_empty
-{
-
-    template<class Type>
-    inline typename boost::enable_if<is_asymmetric_interval<Type>, bool>::type
-    exclusive_less(const Type& left, const Type& right)
-    { 
-        BOOST_ASSERT(!(itl::is_empty(left) || itl::is_empty(right)));
-        return domain_less_equal<Type>(upper(left), lower(right)); 
-    }
-
-    template<class Type>
-    inline typename boost::enable_if<is_universal_interval<Type>, bool>::type
-    exclusive_less(const Type& left, const Type& right)
-    { 
-        return left.exclusive_less(right); 
-    }
-
-    template<class Type>
-    inline typename boost::enable_if<is_discrete_interval<Type>, bool>::type
-    exclusive_less(const Type& left, const Type& right)
-    { 
-        BOOST_ASSERT(!(itl::is_empty(left) || itl::is_empty(right)));
-        return domain_less<Type>(last(left), first(right)); 
-    }
-
-    template<class Type>
-    inline typename boost::
-    enable_if<has_symmetric_bounds<Type>, bool>::type
-    exclusive_less(const Type& left, const Type& right)
-    { 
-        BOOST_ASSERT(!(itl::is_empty(left) || itl::is_empty(right)));
-        return domain_less<Type>(last(left), first(right)); 
-    }
-
-    template<class Type>
-    inline typename boost::enable_if<is_continuous_interval<Type>, bool>::type
-    exclusive_less(const Type& left, const Type& right)
-    { 
-        BOOST_ASSERT(!(itl::is_empty(left) || itl::is_empty(right)));
-        return     domain_less <Type>(left.upper(), right.lower())
-            || (   domain_equal<Type>(left.upper(), right.lower())
-                && inner_bounds(left,right) != interval_bounds::open() );
-    }
-
-} //namespace non_empty
 
 //------------------------------------------------------------------------------
 template<class Type>

@@ -87,21 +87,21 @@ void boost_party()
 
     party.add( // add and element
       make_pair( 
-        right_open_interval<ptime>(
+        _interval<ptime>::right_open(
           time_from_string("2008-05-20 19:30"), 
           time_from_string("2008-05-20 23:00")), 
         mary_harry));
 
     party += // element addition can also be done via operator +=
       make_pair( 
-        right_open_interval<ptime>(
+        _interval<ptime>::right_open(
           time_from_string("2008-05-20 20:10"), 
           time_from_string("2008-05-21 00:00")), 
         diana_susan);
 
     party +=
       make_pair( 
-        right_open_interval<ptime>(
+        _interval<ptime>::right_open(
           time_from_string("2008-05-20 22:15"), 
           time_from_string("2008-05-21 00:30")), 
         peter);
@@ -111,7 +111,7 @@ void boost_party()
     cout << "----- History of party guests -------------------------\n";
     while(it != party.end())
     {
-        right_open_interval<ptime> when = it->first;
+        _interval<ptime>::type when = it->first;
         // Who is at the party within the time interval 'when' ?
         GuestSetT who = (*it++).second;
         cout << when << ": " << who << endl;

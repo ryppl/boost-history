@@ -347,7 +347,7 @@ inline typename Type::iterator
 
     iterator first_ = object.lower_bound(addend);
     //BOOST_ASSERT(next(last_) == this->_set.upper_bound(inter_val));
-	iterator second_= boost::next(first_), end_ = boost::next(last_);
+    iterator second_= boost::next(first_), end_ = boost::next(last_);
 
     interval_type left_resid  = right_subtract(key_value<Type>(first_), addend);
     interval_type right_resid =  left_subtract(key_value<Type>(last_) , addend);

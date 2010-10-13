@@ -135,13 +135,13 @@ struct map_val
 // Very short value denotation for intervals
 // Assumption typename T and IntervalT exists in scope
 //I_I : [a,b]
-#define I_I(low,up) IntervalT::closed   (make<T>(low), make<T>(up))
+#define I_I(low,up) _interval<T>::closed    (make<T>(low), make<T>(up))
 //I_D : [a,b)
-#define I_D(low,up) IntervalT::right_open(make<T>(low), make<T>(up))
+#define I_D(low,up) _interval<T>::right_open(make<T>(low), make<T>(up))
 //C_I : (a,b]
-#define C_I(low,up) IntervalT::left_open (make<T>(low), make<T>(up))
+#define C_I(low,up) _interval<T>::left_open (make<T>(low), make<T>(up))
 //C_D : (a,b)
-#define C_D(low,up) IntervalT::open     (make<T>(low), make<T>(up))
+#define C_D(low,up) _interval<T>::open      (make<T>(low), make<T>(up))
 
 #define MK_I(ItvT,low,up) ItvT(make<T>(low), make<T>(up))
 

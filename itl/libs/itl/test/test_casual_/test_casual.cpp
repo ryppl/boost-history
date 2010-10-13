@@ -21,6 +21,10 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/detail/is_incrementable.hpp>
 #include <boost/type_traits/is_floating_point.hpp>
 
+#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#define BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT closed_interval
+#define BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS 3
+
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl/separate_interval_set.hpp>
 #include <boost/itl/split_interval_set.hpp>
@@ -259,7 +263,7 @@ BOOST_AUTO_TEST_CASE(casual)
 
     BOOST_CHECK_EQUAL((is_fragment_of<IntervalSetT::element_type, IntervalSetT>::value), true);
     BOOST_CHECK_EQUAL((is_fragment_of<IntervalSetT::segment_type, IntervalSetT>::value), true);
-    BOOST_CHECK_EQUAL((is_fragment_of<discrete_interval<T>, IntervalSetT>::value), true);
+    //BOOST_CHECK_EQUAL((is_fragment_of<discrete_interval<T>, IntervalSetT>::value), true);
     BOOST_CHECK_EQUAL((is_fragment_of<double, IntervalSetT>::value), false);
 
 
@@ -275,26 +279,67 @@ BOOST_AUTO_TEST_CASE(casual)
     BOOST_CHECK( (is_same<key_type_of<std::set<int> >::type, int>::value) );
     BOOST_CHECK( (is_same<value_type_of<std::set<int> >::type, int>::value) );
 
-    BOOST_CHECK_EQUAL( is_std_set<std::set<int> >::value,      true );
-    BOOST_CHECK_EQUAL( is_std_set<interval_set<int> >::value,  false);
-    BOOST_CHECK_EQUAL((is_std_set<std::map<int,int> >::value), false);
-    BOOST_CHECK_EQUAL( is_element_set<std::set<int> >::value,  true );
+    BOOST_CHECK_EQUAL( is_std_set<std::set<int> >::value,      true  );
+    BOOST_CHECK_EQUAL( is_std_set<interval_set<int> >::value,  false );
+    BOOST_CHECK_EQUAL((is_std_set<std::map<int,int> >::value), false );
+    BOOST_CHECK_EQUAL( is_element_set<std::set<int> >::value,  true  );
+    BOOST_CHECK_EQUAL( is_interval_set<std::set<int> >::value, false );
     BOOST_CHECK_EQUAL( is_interval_set<std::set<int> >::value, false );
 
-    std::set<int> set_a, set_b, set_c;
-    itl::add(set_a, 1);
-    itl::add(set_a, 5);
-    set_b = set_a;
-    set_b += 7;
-    set_c += 3;
-    set_b += set_c;
-    cout << set_a << endl;
-    cout << set_b << endl;
-    add_intersection(set_c, set_a, set_b);
-    cout << set_c << endl;
-    itl::within(set_a, set_b);
+#if defined(ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS) && !defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
+    BOOST_CHECK( (is_same<_interval<int   >::type, right_open_interval<int   > >::value) );
+    BOOST_CHECK( (is_same<_interval<double>::type, right_open_interval<double> >::value) );
 
-    itl::map<int,int> a, b;
-    within(a & b, a);
+    BOOST_CHECK_EQUAL( _interval<int>::open(0,2),       itl::construct<right_open_interval<int> >(1,2) );
+    BOOST_CHECK_EQUAL( _interval<int>::left_open(0,1),  itl::construct<right_open_interval<int> >(1,2) );
+    BOOST_CHECK_EQUAL( _interval<int>::right_open(1,2), itl::construct<right_open_interval<int> >(1,2) );
+    BOOST_CHECK_EQUAL( _interval<int>::closed(1,1),     itl::construct<right_open_interval<int> >(1,2) );
+
+    BOOST_CHECK_EQUAL( _interval<float>::right_open(1.0,2.0), itl::construct<right_open_interval<float> >(1.0,2.0) );
+    //The next yields compiletime error: STATIC_ASSERTION_FAILURE
+    //BOOST_CHECK_EQUAL( _interval<float>::left_open(1.0,2.0), itl::construct<right_open_interval<float> >(1.0,2.0) );
+#endif
+
+#if defined(ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS) && defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
+#   if defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS) && (BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS == 0)
+    cout << "discrete_interval == open_interval\n";
+    BOOST_CHECK( (is_same<_interval<int>::type, open_interval<int> >::value) );
+    BOOST_CHECK_EQUAL( _interval<int>::open(0,2),       itl::construct<open_interval<int> >(0,2) );
+    BOOST_CHECK_EQUAL( _interval<int>::left_open(0,1),  itl::construct<open_interval<int> >(0,2) );
+    BOOST_CHECK_EQUAL( _interval<int>::right_open(1,2), itl::construct<open_interval<int> >(0,2) );
+    BOOST_CHECK_EQUAL( _interval<int>::closed(1,1),     itl::construct<open_interval<int> >(0,2) );
+
+#   elif defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS) && (BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS == 1)
+    cout << "discrete_interval == left_open_interval\n";
+    BOOST_CHECK( (is_same<_interval<int>::type, left_open_interval<int> >::value) );
+    BOOST_CHECK_EQUAL( _interval<int>::open(0,2),       itl::construct<left_open_interval<int> >(0,1) );
+    BOOST_CHECK_EQUAL( _interval<int>::left_open(0,1),  itl::construct<left_open_interval<int> >(0,1) );
+    BOOST_CHECK_EQUAL( _interval<int>::right_open(1,2), itl::construct<left_open_interval<int> >(0,1) );
+    BOOST_CHECK_EQUAL( _interval<int>::closed(1,1),     itl::construct<left_open_interval<int> >(0,1) );
+
+#   elif defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS) && (BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS == 2)
+    cout << "discrete_interval == right_open_interval\n";
+    BOOST_CHECK( (is_same<_interval<int>::type, right_open_interval<int> >::value) );
+    BOOST_CHECK_EQUAL( _interval<int>::open(0,2),       itl::construct<right_open_interval<int> >(1,2) );
+    BOOST_CHECK_EQUAL( _interval<int>::left_open(0,1),  itl::construct<right_open_interval<int> >(1,2) );
+    BOOST_CHECK_EQUAL( _interval<int>::right_open(1,2), itl::construct<right_open_interval<int> >(1,2) );
+    BOOST_CHECK_EQUAL( _interval<int>::closed(1,1),     itl::construct<right_open_interval<int> >(1,2) );
+
+#   elif defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS) && (BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS == 3)
+    cout << "discrete_interval == closed_interval\n";
+    BOOST_CHECK( (is_same<_interval<int>::type, closed_interval<int> >::value) );
+    BOOST_CHECK_EQUAL( _interval<int>::open(0,2),       itl::construct<closed_interval<int> >(1,1) );
+    BOOST_CHECK_EQUAL( _interval<int>::left_open(0,1),  itl::construct<closed_interval<int> >(1,1) );
+    BOOST_CHECK_EQUAL( _interval<int>::right_open(1,2), itl::construct<closed_interval<int> >(1,1) );
+    BOOST_CHECK_EQUAL( _interval<int>::closed(1,1),     itl::construct<closed_interval<int> >(1,1) );
+
+#   else
+    cout << "#else part, INTERVAL_BORDERS not in {0,1,2,3}\n";
+#endif //defined(ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS) && defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
+
+#else
+    BOOST_CHECK( (is_same<_interval<int   >::type,   discrete_interval<int   > >::value) );
+    BOOST_CHECK( (is_same<_interval<double>::type, continuous_interval<double> >::value) );
+#endif
 }
 

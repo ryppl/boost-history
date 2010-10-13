@@ -26,11 +26,11 @@ void distant_intervals_4_numeric_continuous_types()
 {
     typedef  right_open_interval<T,Compare> L__D; // L__D for [..)
     typedef   left_open_interval<T,Compare> C__I; // C__I for (..]
-    typedef continuous_interval<T,Compare> IntervalT;
+    typedef  typename  _interval<T,Compare>::type IntervalT;
 
     BOOST_CHECK( is_interval<L__D>::value ); 
     BOOST_CHECK( has_difference<typename interval_traits<L__D>::domain_type>::value ); 
-    BOOST_CHECK( is_continuous<typename interval_traits<L__D>::domain_type>::value    ); 
+    BOOST_CHECK( is_continuous<typename interval_traits<L__D>::domain_type>::value  ); 
     BOOST_CHECK( (is_same<typename interval_traits<L__D>::domain_type, T>::value)   ); 
 
     typedef typename difference_type_of<T>::type DiffT;
@@ -49,6 +49,7 @@ void distant_intervals_4_numeric_continuous_types()
     test_inner_complement<T,Compare,C__I>(MK_I(C__I,0,2), MK_I(C__I,0,6));
 
     //--------------------------------------------------------------------------
+#ifndef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
     test_inner_complement<T,Compare,IntervalT>(I_D(0,4), I_D(8,9));
     test_inner_complement<T,Compare,IntervalT>(I_D(7,8), I_D(2,3));
     test_inner_complement<T,Compare,IntervalT>(I_D(2,4), I_D(4,6));
@@ -73,6 +74,7 @@ void distant_intervals_4_numeric_continuous_types()
     test_inner_complement<T,Compare,IntervalT>(C_D(3,0), C_D(4,0));
     test_inner_complement<T,Compare,IntervalT>(C_D(0,2), C_D(4,6));
     test_inner_complement<T,Compare,IntervalT>(C_D(0,2), C_D(0,6));
+#endif //ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
 }
 
 

@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_LEFTOPEN_INTERVAL_HPP_JOFA_100930
-#define BOOST_ITL_LEFTOPEN_INTERVAL_HPP_JOFA_100930
+#ifndef BOOST_ITL_LEFT_OPEN_INTERVAL_HPP_JOFA_100930
+#define BOOST_ITL_LEFT_OPEN_INTERVAL_HPP_JOFA_100930
 
 #include <functional>
 #include <boost/concept/assert.hpp>
@@ -94,7 +94,7 @@ template <class DomainT, ITL_COMPARE Compare>
 struct interval_bound_type< left_open_interval<DomainT,Compare> >
 {
     typedef interval_bound_type type;
-    BOOST_STATIC_CONSTANT(unsigned char, value = interval_bounds::static_left_open);
+    BOOST_STATIC_CONSTANT(bound_type, value = interval_bounds::static_left_open);
 };
 
 template <class DomainT, ITL_COMPARE Compare>

@@ -23,6 +23,8 @@ public:
     typedef typename MapTV::key_type   DomainTD;
     typedef typename MapTV::data_type  CodomainTD;
     typedef list<ValueTypeTD>          SampleTypeTD;
+    typedef itl::interval<int>         sample_range_type;
+    //typedef typename itl::_interval<int>::type sample_range_type;
 
     MapGentorT(): p_domainGentor(NULL), p_codomainGentor(NULL) {}
     ~MapGentorT() { delete p_domainGentor; delete p_codomainGentor; }
@@ -50,7 +52,7 @@ public:
 private:
     RandomGentorAT<DomainTD>*    p_domainGentor;
     RandomGentorAT<CodomainTD>*  p_codomainGentor;
-    interval<int>                m_sampleSizeRange;
+    sample_range_type            m_sampleSizeRange;
     SampleTypeTD                 m_sample;
     int                          m_sampleSize;
 };

@@ -10,9 +10,20 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/mpl/list.hpp>
 #include "../unit_test_unwarned.hpp"
 
+//#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+
 // interval instance types
 #include "../test_type_lists.hpp"
 #include "../test_value_maker.hpp"
+#include "../test_interval_laws.hpp"
+
+#include <boost/itl/right_open_interval.hpp>
+#include <boost/itl/left_open_interval.hpp>
+#include <boost/itl/closed_interval.hpp>
+#include <boost/itl/open_interval.hpp>
+
+#include <boost/itl/discrete_interval.hpp>
+#include <boost/itl/continuous_interval.hpp>
 
 using namespace std;
 using namespace boost;
@@ -25,14 +36,6 @@ using namespace boost::itl;
 #include "../test_icl_discrete_interval.hpp"
 #include "../test_icl_continuous_interval.hpp"
 #include "../test_icl_static_interval.hpp"
-
-#include <boost/itl/right_open_interval.hpp>
-#include <boost/itl/left_open_interval.hpp>
-#include <boost/itl/closed_interval.hpp>
-#include <boost/itl/open_interval.hpp>
-
-#include <boost/itl/discrete_interval.hpp>
-#include <boost/itl/continuous_interval.hpp>
 
 //==============================================================================
 //= Traits
@@ -109,18 +112,14 @@ BOOST_AUTO_TEST_CASE
 (fastest_itl_distant_intervals_4_numeric_continuous_types)
 {            distant_intervals_4_numeric_continuous_types<numeric_continuous_type_1, std::less>(); }
 
-/*
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE
-(fastest_itl_interval_ctor_4_bicremental_types)
-{            interval_ctor_4_bicremental_types<bicremental_type_2>(); }
+(fastest_itl_dynamic_interval_bounds_4_bicremental_types)
+{            dynamic_interval_bounds_4_bicremental_types<bicremental_type_2>(); }
 
-BOOST_AUTO_TEST_CASE
-(fastest_itl_interval_ctor_4_integral_types)
-{            interval_ctor_4_integral_types<integral_type_1>(); }
-
-BOOST_AUTO_TEST_CASE
-(fastest_itl_interval_ctor_specific)
-{            interval_ctor_specific(); }
+//==============================================================================
+//==============================================================================
+//JODO old tests are not adapted to static_intervals
 
 BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_equal_4_integral_types)
@@ -131,10 +130,6 @@ BOOST_AUTO_TEST_CASE
 {            interval_less_4_integral_types<integral_type_3>(); }
 
 BOOST_AUTO_TEST_CASE
-(fastest_itl_interval_equal_4_bicremental_continuous_types)
-{            interval_equal_4_bicremental_continuous_types<bicremental_continuous_type_1>(); }
-
-BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_touches_4_bicremental_types)
 {            interval_touches_4_bicremental_types<bicremental_type_1>(); }
 
@@ -142,21 +137,28 @@ BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_touches_4_integral_types)
 {            interval_touches_4_integral_types<integral_type_4>(); }
 
+#ifndef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+
 BOOST_AUTO_TEST_CASE
-(fastest_itl_interval_inplace_intersect_4_bicremental_types)
-{            interval_inplace_intersect_4_bicremental_types<bicremental_type_3>(); }
+(fastest_itl_interval_ctor_specific)
+{            interval_ctor_specific(); } //JODO static
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_interval_equal_4_bicremental_continuous_types)
+{            interval_equal_4_bicremental_continuous_types<bicremental_continuous_type_1>(); }  //JODO static
 
 BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_infix_intersect_4_bicremental_types)
 {            interval_infix_intersect_4_bicremental_types<bicremental_type_4>(); }
 
+#else
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_interval_infix_intersect_4_bicremental_types)
+{            interval_infix_intersect_4_bicremental_types<discrete_type_2>(); }
+
 BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_subtract_4_bicremental_types)
 {            interval_subtract_4_bicremental_types<bicremental_type_5>(); }
-*/
 
-/*JODO
-BOOST_AUTO_TEST_CASE
-(fastest_itl_interval_inner_complement_4_bicremental_types)
-{            interval_inner_complement_4_bicremental_types<bicremental_type_6>(); }
-*/
+#endif // ndef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS

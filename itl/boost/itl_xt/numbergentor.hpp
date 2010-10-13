@@ -16,6 +16,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <vector>
 #include <boost/validate/type/nat.hpp>
 #include <boost/itl/type_traits/unit_element.hpp>
+#include <boost/itl/type_traits/interval_type_default.hpp>
 #include <boost/itl_xt/gentorit.hpp>
 
 using namespace boost::itl;
@@ -55,29 +56,34 @@ template <class NumT>
 class NumberGentorProfile : public RandomGentorProfile<NumT>
 {
 public:
+    typedef typename itl::_interval<NumT>::type range_type;
+    //CL typedef          itl:: interval<NumT>       range_type;
 private:
-    interval<NumT> _range;
+    range_type _range;
 };
 
 template <class NumTV>
 class NumberGentorT : public RandomGentorAT<NumTV>
 {
 public:
+    //typedef typename itl::_interval<NumTV>::type range_type;
+    typedef          itl:: interval<NumTV>       range_type;
+public:
     NumberGentorT(): 
-	  m_valueRange( NumTV(), unit_element<NumTV>::value(), itl::right_open_bounded ) {}
+      m_valueRange( NumTV(), unit_element<NumTV>::value(), itl::right_open_bounded ) {}
 
     NumTV operator() (NumTV upb) { return rnd_0_to_excl<NumTV>(upb); }
     NumTV operator() (NumTV lwb, NumTV upb)  { return rnd_within_exUpb<NumTV>(lwb,upb); }
-    NumTV operator() (interval<NumTV> rng) 
+    NumTV operator() (range_type rng) 
     { 
-        BOOST_ASSERT(rng.is(right_open_bounded) || rng.is(closed_bounded));
-		if(rng.is(itl::right_open_bounded))
+        // BOOST_ASSERT(rng.is(right_open_bounded) || rng.is(closed_bounded));
+        if(rng.is(itl::right_open_bounded))
             return rnd_within_exUpb<NumTV>(rng.lower(), rng.upper());
         else
             return rnd_within<NumTV>(rng.lower(), rng.upper());
     }
 
-    void setRange(interval<NumTV> rng) { m_valueRange = rng; }
+    void setRange(range_type rng) { m_valueRange = rng; }
     void setRange(NumTV lwb, NumTV upb) { m_valueRange = interval<NumTV>::right_open(lwb,upb); } 
 
     void calibrate(const RandomGentorProfile<NumTV>& profile)
@@ -90,7 +96,7 @@ public:
     std::string as_string()const { return "NumberGentorT";}
 
 private:
-    interval<NumTV> m_valueRange;
+    range_type m_valueRange;
 };
 
 // ----------------------------------------------------------------------------

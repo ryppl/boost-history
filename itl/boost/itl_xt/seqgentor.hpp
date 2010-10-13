@@ -45,6 +45,8 @@ public:
     typedef typename SeqTV::value_type  ValueTypeTD;
     typedef typename SeqTV::value_type  DomainTD;
     typedef list<ValueTypeTD>           SampleTypeTD;
+    typedef itl::interval<int>          sample_range_type;
+    //typedef typename itl::_interval<int>::type sample_range_type;
 
     SeqGentorT(): p_domainGentor(NULL), m_unique(false){}
     ~SeqGentorT(){ delete p_domainGentor; }
@@ -68,7 +70,7 @@ public:
 
 private:
     RandomGentorAT<DomainTD>* p_domainGentor;
-    interval<int>             m_sampleSizeRange;
+    sample_range_type         m_sampleSizeRange;
     SampleTypeTD              m_sample;
     int                       m_sampleSize;
     bool                      m_unique;

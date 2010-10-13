@@ -9,6 +9,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #define BOOST_ITL_CONCEPT_INTERVAL_BOUNDS_HPP_JOFA_100927
 
 #include <boost/itl/interval_bounds.hpp>
+#include <boost/itl/type_traits/is_discrete.hpp>
+#include <boost/itl/type_traits/is_numeric.hpp>
 
 namespace boost{namespace itl
 {
@@ -77,6 +79,36 @@ inline std::string left_bracket(interval_bounds bounds)
 
 inline std::string right_bracket(interval_bounds bounds)
 { return is_right_closed(bounds) ? "]" : ")"; }
+
+template <class Type>
+inline typename enable_if<is_discrete<Type>, Type>::type
+shift_lower(interval_bounds decl, interval_bounds repr, const Type& low)
+{
+    if(is_left_closed(decl) && !is_left_closed(repr))
+    {
+        BOOST_ASSERT((numeric_minimum<Type, is_numeric<Type>::value >::is_less_than(low) )); 
+        return itl::pred(low);
+    }
+    else if(!is_left_closed(decl) && is_left_closed(repr)) 
+        return itl::succ(low);
+    else 
+        return low;
+}
+
+template <class Type>
+inline typename enable_if<is_discrete<Type>, Type>::type
+shift_upper(interval_bounds decl, interval_bounds repr, const Type& up)
+{
+    if(!is_right_closed(decl) && is_right_closed(repr))
+    {
+        BOOST_ASSERT((numeric_minimum<Type, is_numeric<Type>::value >::is_less_than(up) )); 
+        return itl::pred(up);
+    }
+    else if(is_right_closed(decl) && !is_right_closed(repr)) 
+        return itl::succ(up);
+    else 
+        return up;
+}
 
 template<class CharType, class CharTraits>
 std::basic_ostream<CharType, CharTraits>& operator <<

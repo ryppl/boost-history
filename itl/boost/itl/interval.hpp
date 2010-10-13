@@ -178,11 +178,11 @@ public:
 
     /** Rightopen interval <tt>[low,up)</tt> */
     static interval right_open(const DomainT& low, const DomainT& up)
-	{ return interval(low, up, itl::right_open_bounded); }
+    { return interval(low, up, itl::right_open_bounded); }
 
     /** Leftopen interval <tt>(low,up]</tt> */
     static interval left_open(const DomainT& low, const DomainT& up)
-	{ return interval(low, up, itl::left_open_bounded); }
+    { return interval(low, up, itl::left_open_bounded); }
 
     /** Open interval <tt>(low,up)</tt> */
     static interval open(const DomainT& low, const DomainT& up)

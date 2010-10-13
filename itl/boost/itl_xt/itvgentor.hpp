@@ -46,9 +46,12 @@ template <class ItvDomTV, class ItvTV=interval<ItvDomTV> >
 class ItvGentorT: public RandomGentorAT<ItvTV>
 {
 public:
+    typedef itl::interval<ItvDomTV> range_type;
+    //typedef typename itl::_interval<ItvDomTV>::type range_type;
+
     virtual void some(ItvTV& x);
 
-    void setRange(const itl::interval<ItvDomTV>& range)
+    void setRange(const range_type& range)
     { m_valueRange = range; }
 
     void setValueRange(ItvDomTV low, ItvDomTV up)
@@ -60,8 +63,8 @@ public:
 private:
     NumberGentorT<ItvDomTV> m_ItvDomTVGentor;
 
-    interval<ItvDomTV>    m_valueRange;
-    ItvDomTV              m_maxIntervalLength;
+    range_type    m_valueRange;
+    ItvDomTV      m_maxIntervalLength;
 
 private:
     template<class IntervalT, bool has_static_bounds>

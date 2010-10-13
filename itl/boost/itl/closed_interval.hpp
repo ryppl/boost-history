@@ -93,7 +93,7 @@ template <class DomainT, ITL_COMPARE Compare>
 struct interval_bound_type< closed_interval<DomainT,Compare> >
 {
     typedef interval_bound_type type;
-    BOOST_STATIC_CONSTANT(unsigned char, value = interval_bounds::static_closed);
+    BOOST_STATIC_CONSTANT(bound_type, value = interval_bounds::static_closed);
 };
 
 template <class DomainT, ITL_COMPARE Compare>
