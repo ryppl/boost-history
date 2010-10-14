@@ -43,12 +43,12 @@ template <class SetTV>
 class SetGentorT: public RandomGentorAT<SetTV>
 {
 public:
-    typedef typename SetTV::value_type    ValueTypeTD;
-    typedef typename SetTV::key_type    DomainTD;
-    typedef list<ValueTypeTD>    SampleTypeTD;
-    typedef RandomGentorAT<DomainTD>  DomainGentorT;
-    typedef DomainGentorT*        DomainGentorPT;
-    typedef typename itl::_interval<int>::type sample_range_type;
+    typedef typename SetTV::value_type   ValueTypeTD;
+    typedef typename SetTV::key_type     DomainTD;
+    typedef list<ValueTypeTD>            SampleTypeTD;
+    typedef RandomGentorAT<DomainTD>     DomainGentorT;
+    typedef DomainGentorT*               DomainGentorPT;
+    typedef typename itl::interval<int>::type sample_range_type;
 
     SetGentorT(): p_domainGentor(NULL) {}
     ~SetGentorT() { delete p_domainGentor; }
@@ -65,7 +65,7 @@ public:
 
     void setRangeOfSampleSize(int lwb, int upb)
     { m_sampleSizeRange = _interval<int>::right_open(lwb,upb); }
-    void setRangeOfSampleSize(const itl::_interval<int>::type& szRange)
+    void setRangeOfSampleSize(const itl::interval<int>::type& szRange)
     { 
         BOOST_ASSERT(itl::bounds(szRange) == interval_bounds::right_open()); 
         m_sampleSizeRange = szRange; 

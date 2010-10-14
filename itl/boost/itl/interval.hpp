@@ -16,7 +16,7 @@ namespace boost{ namespace itl
 {
 
     template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)> 
-    struct _interval
+    struct interval
     {
         typedef typename interval_type_default<DomainT,Compare>::type interval_type;
         typedef interval_type type;

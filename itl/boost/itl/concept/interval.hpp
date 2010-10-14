@@ -15,7 +15,6 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/mpl/not.hpp>
 #include <boost/detail/is_incrementable.hpp>
 #include <boost/itl/detail/design_config.hpp>
-//CL #include <boost/itl/type_traits/given.hpp> //JODO given unused: remove
 #include <boost/itl/type_traits/unit_element.hpp>
 #include <boost/itl/type_traits/identity_element.hpp>
 #include <boost/itl/type_traits/infinity.hpp>

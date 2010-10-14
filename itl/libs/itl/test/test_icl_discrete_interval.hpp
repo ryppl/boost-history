@@ -36,7 +36,7 @@ void distant_intervals_4_discrete_types()
     typedef  left_open_interval<T,Compare> C__I; // C__I for (..]
     typedef    closed_interval<T,Compare> L__I; // L__I for [..]
     typedef      open_interval<T,Compare> C__D; // C__D for (..)
-    typedef typename _interval<T,Compare>::type IntervalT;
+    typedef typename itl::interval<T,Compare>::type IntervalT;
 
     BOOST_CHECK( is_interval<L__D>::value ); 
     BOOST_CHECK( has_difference<typename interval_traits<L__D>::domain_type>::value ); 

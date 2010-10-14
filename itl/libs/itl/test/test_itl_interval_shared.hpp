@@ -67,15 +67,15 @@ void test_inner_complement_(const IntervalT& itv1, const IntervalT& itv2)
 
 void interval_ctor_specific()
 {
-    BOOST_CHECK_EQUAL(itl::length(_interval<double>::type()), 0.0);
-    BOOST_CHECK_EQUAL(itl::cardinality(_interval<double>::closed(5.0, 5.0)), 1);
-    BOOST_CHECK_EQUAL(itl::cardinality(_interval<std::string>::closed("test", "test")), 1);
-    BOOST_CHECK_EQUAL(itl::cardinality(_interval<std::string>::closed("best","test")), 
-                      itl::cardinality(_interval<double>::closed(0.0,0.1)));
-    BOOST_CHECK_EQUAL(itl::cardinality(_interval<std::string>::right_open("best","test")), 
-                      itl::infinity<size_type_of<_interval<std::string>::type>::type >::value() );
-    BOOST_CHECK_EQUAL(itl::cardinality(_interval<double>::right_open(0.0, 1.0)), 
-                      itl::infinity<size_type_of<_interval<double>::type>::type >::value() );
+    BOOST_CHECK_EQUAL(itl::length(itl::interval<double>::type()), 0.0);
+    BOOST_CHECK_EQUAL(itl::cardinality(itl::interval<double>::closed(5.0, 5.0)), 1);
+    BOOST_CHECK_EQUAL(itl::cardinality(itl::interval<std::string>::closed("test", "test")), 1);
+    BOOST_CHECK_EQUAL(itl::cardinality(itl::interval<std::string>::closed("best","test")), 
+                      itl::cardinality(itl::interval<double>::closed(0.0,0.1)));
+    BOOST_CHECK_EQUAL(itl::cardinality(itl::interval<std::string>::right_open("best","test")), 
+                      itl::infinity<size_type_of<itl::interval<std::string>::type>::type >::value() );
+    BOOST_CHECK_EQUAL(itl::cardinality(itl::interval<double>::right_open(0.0, 1.0)), 
+                      itl::infinity<size_type_of<itl::interval<double>::type>::type >::value() );
 }
 
 #endif // ndef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
@@ -83,7 +83,7 @@ void interval_ctor_specific()
 template <class T> 
 void interval_equal_4_integral_types()
 {
-    typedef typename _interval<T>::type IntervalT;
+    typedef typename itl::interval<T>::type IntervalT;
     T v2 = make<T>(2);
     T v3 = make<T>(3);
     T v7 = make<T>(7);
@@ -93,10 +93,10 @@ void interval_equal_4_integral_types()
     //I: (I)nside  = closed bound
     //C: left open bound
     //D: right open bound
-    IntervalT  I3_7I  = _interval<T>::closed(v3,v7);
-    IntervalT  I3__8D = _interval<T>::right_open(v3,v8);
-    IntervalT C2__7I  = _interval<T>::left_open(v2,v7);
-    IntervalT C2___8D = _interval<T>::open(v2,v8);
+    IntervalT  I3_7I  = itl::interval<T>::closed(v3,v7);
+    IntervalT  I3__8D = itl::interval<T>::right_open(v3,v8);
+    IntervalT C2__7I  = itl::interval<T>::left_open(v2,v7);
+    IntervalT C2___8D = itl::interval<T>::open(v2,v8);
 
     BOOST_CHECK_EQUAL(  I3_7I ,  I3_7I  );    
     BOOST_CHECK_EQUAL(  I3_7I ,  I3__8D );    
@@ -116,28 +116,28 @@ void interval_equal_4_integral_types()
 template <class T> 
 void interval_less_4_integral_types()
 {
-    typedef typename _interval<T>::type IntervalT;
+    typedef typename itl::interval<T>::type IntervalT;
     T v2 = make<T>(2);
     T v3 = make<T>(3);
     T v4 = make<T>(4);
     T v7 = make<T>(7);
     T v8 = make<T>(8);
     BOOST_CHECK_EQUAL(IntervalT() < IntervalT(v7,v3), false);
-    BOOST_CHECK_EQUAL(_interval<T>::open(v2,v3) < _interval<T>::right_open(v7,v7), false);
-    BOOST_CHECK_EQUAL(_interval<T>::left_open(v3,v3) < _interval<T>::closed(v7,v3), false);
+    BOOST_CHECK_EQUAL(itl::interval<T>::open(v2,v3) < itl::interval<T>::right_open(v7,v7), false);
+    BOOST_CHECK_EQUAL(itl::interval<T>::left_open(v3,v3) < itl::interval<T>::closed(v7,v3), false);
 
     BOOST_CHECK_EQUAL(IntervalT() < IntervalT(v3,v4), true);
-    BOOST_CHECK_EQUAL(_interval<T>::open(v2,v3) < _interval<T>::right_open(v7,v8), true);
+    BOOST_CHECK_EQUAL(itl::interval<T>::open(v2,v3) < itl::interval<T>::right_open(v7,v8), true);
 
     //I: (I)nside  = closed bound
     //C: left open bound
     //D: right open bound
-    IntervalT  I3_7I  = _interval<T>::closed(v3,v7);
-    IntervalT  I4_7I  = _interval<T>::closed(v4,v7);
+    IntervalT  I3_7I  = itl::interval<T>::closed(v3,v7);
+    IntervalT  I4_7I  = itl::interval<T>::closed(v4,v7);
 
-    IntervalT  I3__8D = _interval<T>::right_open(v3,v8);
-    IntervalT C2__7I  = _interval<T>::left_open(v2,v7);
-    IntervalT C2___8D = _interval<T>::open(v2,v8);
+    IntervalT  I3__8D = itl::interval<T>::right_open(v3,v8);
+    IntervalT C2__7I  = itl::interval<T>::left_open(v2,v7);
+    IntervalT C2___8D = itl::interval<T>::open(v2,v8);
 
     BOOST_CHECK_EQUAL(  I3_7I <  I3_7I  , false);    
     BOOST_CHECK_EQUAL(  I3_7I <  I3__8D , false);    
@@ -160,17 +160,17 @@ void interval_less_4_integral_types()
 template <class T> 
 void interval_equal_4_bicremental_continuous_types()
 {
-    typedef typename _interval<T>::type IntervalT;
+    typedef typename itl::interval<T>::type IntervalT;
     T v3 = make<T>(3);
     T v7 = make<T>(7);
     BOOST_CHECK_EQUAL(IntervalT(), IntervalT(v7,v3));
 
     //I: (I)nside  = closed bound
     //O: (O)utside = open bound
-    IntervalT I3_7I = _interval<T>::closed(v3,v7);
-    IntervalT I3_7D = _interval<T>::right_open(v3,v7);
-    IntervalT C3_7I = _interval<T>::left_open(v3,v7);
-    IntervalT C3_7D = _interval<T>::open(v3,v7);
+    IntervalT I3_7I = itl::interval<T>::closed(v3,v7);
+    IntervalT I3_7D = itl::interval<T>::right_open(v3,v7);
+    IntervalT C3_7I = itl::interval<T>::left_open(v3,v7);
+    IntervalT C3_7D = itl::interval<T>::open(v3,v7);
 
     BOOST_CHECK_EQUAL( I3_7I ,  I3_7I  );    
     BOOST_CHECK_EQUAL( I3_7I == I3_7D, false  );    
@@ -196,17 +196,17 @@ void interval_equal_4_bicremental_continuous_types()
 template <class T> 
 void interval_touches_4_bicremental_types()
 {
-    typedef typename _interval<T>::type IntervalT;
+    typedef typename itl::interval<T>::type IntervalT;
     T v3 = make<T>(3);
     T v7 = make<T>(7);
     T v9 = make<T>(9);
 
-    IntervalT I3_7D = _interval<T>::right_open(v3,v7);
-    IntervalT I7_9I = _interval<T>::closed(v7,v9);
+    IntervalT I3_7D = itl::interval<T>::right_open(v3,v7);
+    IntervalT I7_9I = itl::interval<T>::closed(v7,v9);
     BOOST_CHECK_EQUAL( itl::touches(I3_7D, I7_9I), true );    
 
-    IntervalT I3_7I = _interval<T>::closed(v3,v7);
-    IntervalT C7_9I = _interval<T>::left_open(v7,v9);
+    IntervalT I3_7I = itl::interval<T>::closed(v3,v7);
+    IntervalT C7_9I = itl::interval<T>::left_open(v7,v9);
     BOOST_CHECK_EQUAL( itl::touches(I3_7I, C7_9I), true );
 
     BOOST_CHECK_EQUAL( itl::touches(I3_7D, C7_9I), false );    
@@ -216,25 +216,25 @@ void interval_touches_4_bicremental_types()
 template <class T> 
 void interval_touches_4_integral_types()
 {
-    typedef typename _interval<T>::type IntervalT;
+    typedef typename itl::interval<T>::type IntervalT;
     T v3 = make<T>(3);
     T v6 = make<T>(6);
     T v7 = make<T>(7);
     T v9 = make<T>(9);
 
-    IntervalT I3_6I = _interval<T>::closed(v3,v6);
-    IntervalT I7_9I = _interval<T>::closed(v7,v9);
+    IntervalT I3_6I = itl::interval<T>::closed(v3,v6);
+    IntervalT I7_9I = itl::interval<T>::closed(v7,v9);
     BOOST_CHECK_EQUAL( itl::touches(I3_6I, I7_9I), true );    
 
-    IntervalT I3_7D = _interval<T>::right_open(v3,v7);
-    IntervalT C6_9I = _interval<T>::left_open(v6,v9);
+    IntervalT I3_7D = itl::interval<T>::right_open(v3,v7);
+    IntervalT C6_9I = itl::interval<T>::left_open(v6,v9);
     BOOST_CHECK_EQUAL( itl::touches(I3_7D, C6_9I), true );
 }
 
 template <class T> 
 void interval_infix_intersect_4_bicremental_types()
 {
-    typedef typename _interval<T>::type IntervalT;
+    typedef typename itl::interval<T>::type IntervalT;
 
     IntervalT section;
     IntervalT I3_7D = I_D(3,7);
@@ -275,7 +275,7 @@ void interval_infix_intersect_4_bicremental_types()
 template <class T> 
 void interval_subtract_4_bicremental_types()
 {
-    typedef typename _interval<T>::type IntervalT;
+    typedef typename itl::interval<T>::type IntervalT;
 
     IntervalT diff_1, diff_2;
     IntervalT I0_3D = I_D(0,3);

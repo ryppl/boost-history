@@ -20,7 +20,7 @@ template <class NaturalT>
 class bits_gentor: public RandomGentorAT<itl::bits<NaturalT> >
 {
 public:
-    typedef typename itl::_interval<NaturalT>::type  range_type;
+    typedef typename itl::interval<NaturalT>::type  range_type;
     typedef itl::bits<NaturalT> bits_type;
 
     void some(bits_type& value)

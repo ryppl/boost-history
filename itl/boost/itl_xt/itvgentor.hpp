@@ -42,11 +42,11 @@ class ItvGentorT
 namespace boost{namespace itl
 {
 
-template <class ItvDomTV, class ItvTV=itl::_interval<ItvDomTV>::type> 
+template <class ItvDomTV, class ItvTV=itl::interval<ItvDomTV>::type> 
 class ItvGentorT: public RandomGentorAT<ItvTV>
 {
 public:
-    typedef typename itl::_interval<ItvDomTV>::type range_type;
+    typedef typename itl::interval<ItvDomTV>::type range_type;
 
     virtual void some(ItvTV& x);
 

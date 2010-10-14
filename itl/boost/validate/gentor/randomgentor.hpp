@@ -276,7 +276,7 @@ namespace boost{namespace itl
         static void apply(RandomGentor<itl::bits<BitsT> >& gentor) 
         {
             // Set the range within which the sizes of the generated object varies.
-            gentor.set_range(itl::_interval<BitsT>::right_open(0, sizeof(BitsT)));
+            gentor.set_range(itl::interval<BitsT>::right_open(0, sizeof(BitsT)));
         }
     };
 
@@ -589,7 +589,7 @@ namespace boost{namespace itl
             gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
             ItvGentorT<int, discrete_interval<int,Compare> >* itvGentor 
                 = new ItvGentorT<int, discrete_interval<int,Compare> >;
-            typename _interval<int>::type valRange = GentorProfileSgl::it()->range_interval_int();
+            typename itl::interval<int>::type valRange = GentorProfileSgl::it()->range_interval_int();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
             gentor.setDomainGentor(itvGentor);
@@ -683,7 +683,7 @@ namespace boost{namespace itl
             NumberGentorT<NumericDomainT>* domainGentor   = new NumberGentorT<NumericDomainT>;
             bits_gentor<BitsT>*            codomainGentor = new bits_gentor<BitsT>;
             domainGentor->setRange(GentorProfileSgl_numeric_range<NumericDomainT>::get());
-            codomainGentor->set_range(_interval<BitsT>::closed(0, (std::numeric_limits<BitsT>::max)()));
+            codomainGentor->set_range(itl::interval<BitsT>::closed(0, (std::numeric_limits<BitsT>::max)()));
             gentor.setDomainGentor(domainGentor);
             gentor.setCodomainGentor(codomainGentor);
         }
@@ -708,7 +708,7 @@ namespace boost{namespace itl
 
             ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >* itvGentor 
                 = new ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >;
-            typename _interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
+            typename itl::interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
 
@@ -740,7 +740,7 @@ namespace boost{namespace itl
 
             ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >* itvGentor 
                 = new ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >;
-            typename _interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
+            typename itl::interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
 
@@ -774,7 +774,7 @@ namespace boost{namespace itl
             // NumberGentorT<int> intGentor;
             ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >* itvGentor 
                 = new ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >;
-            typename _interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
+            typename itl::interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
 
@@ -806,7 +806,7 @@ namespace boost{namespace itl
             // NumberGentorT<int> intGentor;
             ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >* itvGentor 
                 = new ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >;
-            typename _interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
+            typename itl::interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
 
@@ -839,7 +839,7 @@ namespace boost{namespace itl
             // NumberGentorT<int> intGentor;
             ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >* itvGentor 
                 = new ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >;
-            typename _interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
+            typename itl::interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
 
@@ -873,7 +873,7 @@ namespace boost{namespace itl
             // NumberGentorT<int> intGentor;
             ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >* itvGentor 
                 = new ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >;
-            typename _interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
+            typename itl::interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
 
@@ -903,12 +903,12 @@ namespace boost{namespace itl
             // NumberGentorT<int> intGentor;
             ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >* itvGentor 
                 = new ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >;
-            typename _interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
+            typename itl::interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
 
             bits_gentor<BitsT>* codomainGentor = new bits_gentor<BitsT>;
-            codomainGentor->set_range(_interval<BitsT>::closed(0, (std::numeric_limits<BitsT>::max)()));
+            codomainGentor->set_range(itl::interval<BitsT>::closed(0, (std::numeric_limits<BitsT>::max)()));
 
             gentor.setDomainGentor(itvGentor);
             gentor.setCodomainGentor(codomainGentor);
@@ -933,12 +933,12 @@ namespace boost{namespace itl
             // NumberGentorT<int> intGentor;
             ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >* itvGentor 
                 = new ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >;
-            typename _interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
+            typename itl::interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
 
             bits_gentor<BitsT>* codomainGentor = new bits_gentor<BitsT>;
-            codomainGentor->set_range(_interval<BitsT>::closed(0, (std::numeric_limits<BitsT>::max)()));
+            codomainGentor->set_range(itl::interval<BitsT>::closed(0, (std::numeric_limits<BitsT>::max)()));
 
             gentor.setDomainGentor(itvGentor);
             gentor.setCodomainGentor(codomainGentor);
@@ -960,12 +960,12 @@ namespace boost{namespace itl
             // NumberGentorT<int> intGentor;
             ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >* itvGentor 
                 = new ItvGentorT<NumericDomainT, ITL_INTERVAL_TYPE(Interval,NumericDomainT,Compare) >;
-            typename _interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
+            typename itl::interval<NumericDomainT>::type valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
 
             bits_gentor<BitsT>* codomainGentor = new bits_gentor<BitsT>;
-            codomainGentor->set_range(_interval<BitsT>::closed(0, (std::numeric_limits<BitsT>::max)()));
+            codomainGentor->set_range(itl::interval<BitsT>::closed(0, (std::numeric_limits<BitsT>::max)()));
 
             gentor.setDomainGentor(itvGentor);
             gentor.setCodomainGentor(codomainGentor);

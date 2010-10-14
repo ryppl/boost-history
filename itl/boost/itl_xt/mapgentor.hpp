@@ -23,7 +23,7 @@ public:
     typedef typename MapTV::key_type   DomainTD;
     typedef typename MapTV::data_type  CodomainTD;
     typedef list<ValueTypeTD>          SampleTypeTD;
-    typedef typename itl::_interval<int>::type sample_range_type;
+    typedef typename itl::interval<int>::type sample_range_type;
 
     MapGentorT(): p_domainGentor(NULL), p_codomainGentor(NULL) {}
     ~MapGentorT() { delete p_domainGentor; delete p_codomainGentor; }
@@ -44,9 +44,9 @@ public:
     }
 
     void setRangeOfSampleSize(int lwb, int upb)
-    { m_sampleSizeRange = _interval<int>::right_open(lwb,upb); }
+    { m_sampleSizeRange = itl::interval<int>::right_open(lwb,upb); }
 
-    void setRangeOfSampleSize(const itl::_interval<int>::type& szRange)
+    void setRangeOfSampleSize(const itl::interval<int>::type& szRange)
     { 
         BOOST_ASSERT(itl::bounds(szRange) == interval_bounds::right_open()); 
         m_sampleSizeRange = szRange; 

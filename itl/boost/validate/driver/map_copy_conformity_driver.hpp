@@ -94,8 +94,8 @@ namespace boost{namespace itl
 
         concept_validater* chooseValidater()
         {
-            typedef _interval<double>::type interval_double;
-            typedef _interval<int>::type    interval_int;
+            typedef itl::interval<double>::type interval_double;
+            typedef itl::interval<int>::type    interval_int;
 
             int rootChoice         = _rootChoice.some();
             int identityHandlerChoice  = _identityHandlerChoice.some();

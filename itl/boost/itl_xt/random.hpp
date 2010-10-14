@@ -59,7 +59,7 @@ public:
         return some + lwb;
     }
 
-    unsigned rnd(const itl::_interval<unsigned>::type& rng)
+    unsigned rnd(const itl::interval<unsigned>::type& rng)
     { 
         BOOST_ASSERT(itl::bounds(rng) == interval_bounds::right_open()); 
         return rnd(rng.lower(),rng.upper()); 

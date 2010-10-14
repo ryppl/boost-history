@@ -56,7 +56,7 @@ template <class NumT>
 class NumberGentorProfile : public RandomGentorProfile<NumT>
 {
 public:
-    typedef typename itl::_interval<NumT>::type range_type;
+    typedef typename itl::interval<NumT>::type range_type;
 private:
     range_type _range;
 };
@@ -65,7 +65,7 @@ template <class NumTV>
 class NumberGentorT : public RandomGentorAT<NumTV>
 {
 public:
-    typedef typename itl::_interval<NumTV>::type range_type;
+    typedef typename itl::interval<NumTV>::type range_type;
 public:
     NumberGentorT(): 
       m_valueRange( NumTV(), unit_element<NumTV>::value() ) {}
@@ -83,7 +83,7 @@ public:
     }
 
     void setRange(range_type rng) { m_valueRange = rng; }
-    void setRange(NumTV lwb, NumTV upb) { m_valueRange = _interval<NumTV>::right_open(lwb,upb); } 
+    void setRange(NumTV lwb, NumTV upb) { m_valueRange = itl::interval<NumTV>::right_open(lwb,upb); } 
 
     void calibrate(const RandomGentorProfile<NumTV>& profile)
     {

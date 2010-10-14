@@ -26,7 +26,7 @@ void dynamic_interval_ctor_4_ordered_types()
 template <class T> 
 void dynamic_interval_bounds_4_bicremental_types()
 {
-    typedef typename itl::_interval<T>::type IntervalT;
+    typedef typename itl::interval<T>::type IntervalT;
 
     BOOST_CHECK_EQUAL( T(), pred(succ(T())));
     BOOST_CHECK_EQUAL( itl::identity_element<T>::value(), pred(succ(itl::identity_element<T>::value())) );
@@ -51,7 +51,7 @@ void dynamic_interval_bounds_4_bicremental_types()
 template <class T> 
 void discrete_dynamic_interval_bounds_4_bicremental_types()
 {
-    typedef typename itl::_interval<T>::type IntervalT;
+    typedef typename itl::interval<T>::type IntervalT;
 
     BOOST_CHECK( itl::bounds(I_I(2,4)) == interval_bounds::closed()     );
     BOOST_CHECK( itl::bounds(I_D(2,5)) == interval_bounds::right_open() );
