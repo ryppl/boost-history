@@ -154,9 +154,10 @@ namespace sweepline {
         }
 
         // Clip using defined rectangle.
-        void clip(const BRect<coordinate_type> &brect, ClippedOutput &clipped_output) {
-            output_.clip(brect, clipped_output);
-        }
+		// TODO(asydorchuk): Define what exactly it means to clip some region of voronoi diagram.
+        //void clip(const BRect<coordinate_type> &brect, ClippedOutput &clipped_output) {
+        //    output_.clip(brect, clipped_output);
+        //}
 
     protected:
         typedef typename std::vector<site_event_type>::const_iterator site_events_iterator_type;

@@ -236,13 +236,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(less_predicate_segment_segment_test1, T, test_type
     segm_site1_2.set_inverse();
 
     // New sites.
-    point_2d<T> new_site1 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(5));
+    point_2d<T> new_site1 = make_point_2d<T>(static_cast<T>(2), static_cast<T>(7));
     point_2d<T> new_site2 = make_point_2d<T>(static_cast<T>(1), static_cast<T>(5));
     point_2d<T> new_site3 = make_point_2d<T>(static_cast<T>(-1), static_cast<T>(5));
 
     CHECK_LESS_PREDICATE_SS(segm_site1_1, segm_site1_2, new_site1, false);
-    CHECK_LESS_PREDICATE_SS(segm_site1_1, segm_site1_2, new_site2, true);
-    CHECK_LESS_PREDICATE_SS(segm_site1_1, segm_site1_2, new_site3, false);
+    CHECK_LESS_PREDICATE_SS(segm_site1_1, segm_site1_2, new_site2, false);
+    CHECK_LESS_PREDICATE_SS(segm_site1_1, segm_site1_2, new_site3, true);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(less_predicate_segment_segment_test2, T, test_types) {
@@ -283,3 +283,29 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(less_predicate_segment_segment_test2, T, test_type
     CHECK_LESS_PREDICATE_SS(segm_site3, segm_site1_2, new_site3, false);
     CHECK_LESS_PREDICATE_SS(segm_site3, segm_site1_2, new_site4, true);
 }
+
+//BOOST_AUTO_TEST_CASE_TEMPLATE(point_projection_test1, T, test_types) {
+//	point_2d<T> segm_start = make_point_2d<T>(static_cast<T>(0), static_cast<T>(0));
+//	point_2d<T> segm_end = make_point_2d<T>(static_cast<T>(5), static_cast<T>(-3));
+//	point_2d<T> point1 = make_point_2d<T>(static_cast<T>(4), static_cast<T>(1));
+//	point_2d<T> point2 = make_point_2d<T>(static_cast<T>(1), static_cast<T>(-4));
+//	double projection1 = detail::get_point_projection(point1, segm_start, segm_end);
+//	BOOST_CHECK_EQUAL(projection1 == 0.5, true);
+//	double projection2 = detail::get_point_projection(point2, segm_start, segm_end);
+//	BOOST_CHECK_EQUAL(projection2 == 0.5, true);
+//}
+//
+//BOOST_AUTO_TEST_CASE_TEMPLATE(compute_intermediate_points_test1, T, test_types) {
+//	point_2d<T> point_site = make_point_2d<T>(static_cast<T>(5), static_cast<T>(-7));
+//	point_2d<T> segm_site_start = make_point_2d<T>(static_cast<T>(1), static_cast<T>(-2));
+//	point_2d<T> segm_site_end = make_point_2d<T>(static_cast<T>(1), static_cast<T>(-12));
+//	std::vector< point_2d<T> > intermediate_points;
+//	intermediate_points.push_back(make_point_2d<T>(static_cast<T>(5), static_cast<T>(-3)));
+//	intermediate_points.push_back(make_point_2d<T>(static_cast<T>(5), static_cast<T>(-11)));
+//	detail::fill_intermediate_points(point_site, segm_site_start, segm_site_end,
+//									 intermediate_points);
+//	BOOST_CHECK_EQUAL(intermediate_points.size() == 5, true);
+//	BOOST_CHECK_EQUAL(intermediate_points[1] == make_point_2d(3.5, -5.0), true);
+//	BOOST_CHECK_EQUAL(intermediate_points[2] == make_point_2d(3.0, -7.0), true);
+//	BOOST_CHECK_EQUAL(intermediate_points[3] == make_point_2d(3.5, -9.0), true);
+//}

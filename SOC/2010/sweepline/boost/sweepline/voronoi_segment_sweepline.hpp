@@ -11,7 +11,6 @@
 #define BOOST_SWEEPLINE_VORONOI_SEGMENT_SWEEPLINE
 
 #include <algorithm>
-#include <assert.h>
 #include <cmath>
 #include <cstring>
 #include <list>

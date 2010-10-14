@@ -33,14 +33,14 @@ kOrientation get_orientation(const Point2D &point1,
 template <typename Output>
 bool verify_half_edge_orientation(const Output &output) {
     typedef typename Output::Point2D Point2D;
-    typename Output::edges_const_iterator_type edge_it;
-    for (edge_it = output.get_voronoi_edges().begin(); 
-         edge_it != output.get_voronoi_edges().end(); edge_it++) {
+    typename Output::voronoi_edge_const_iterator_type edge_it;
+    for (edge_it = output.edge_records.begin(); 
+         edge_it != output.edge_records.end(); edge_it++) {
         if (edge_it->start_point != NULL && edge_it->end_point != NULL) {
-            const Point2D &site = edge_it->cell->voronoi_point;
-            const Point2D &start_point = edge_it->start_point->voronoi_point;
-            const Point2D &end_point = edge_it->end_point->voronoi_point;
-            if (get_orientation(start_point, end_point, site) != LEFT_ORIENTATION)
+            const Point2D &site_point = edge_it->cell->get_point0();
+            const Point2D &start_point = edge_it->start_point->vertex;
+            const Point2D &end_point = edge_it->end_point->vertex;
+            if (get_orientation(start_point, end_point, site_point) != LEFT_ORIENTATION)
                 return false;
         }
     }
@@ -50,10 +50,10 @@ bool verify_half_edge_orientation(const Output &output) {
 template <typename Output>
 bool verify_cell_convexity(const Output &output) {
     typedef typename Output::Point2D Point2D;
-    typename Output::voronoi_const_iterator_type cell_it;
-    for (cell_it = output.get_voronoi_cells().begin();
-         cell_it != output.get_voronoi_cells().end(); cell_it++) {
-        const typename Output::edge_type *edge = cell_it->incident_edge;
+    typename Output::voronoi_cell_const_iterator_type cell_it;
+    for (cell_it = output.cell_records.begin();
+         cell_it != output.cell_records.end(); cell_it++) {
+        const typename Output::voronoi_edge_type *edge = cell_it->incident_edge;
         if (edge)
             do {
                 if (edge->next->prev != edge)
@@ -64,9 +64,9 @@ bool verify_cell_convexity(const Output &output) {
                     edge->end_point != NULL &&
                     edge->end_point == edge->next->start_point &&
                     edge->next->end_point != NULL) {
-                        const Point2D &vertex1 = edge->start_point->voronoi_point;
-                        const Point2D &vertex2 = edge->end_point->voronoi_point;
-                        const Point2D &vertex3 = edge->next->end_point->voronoi_point;
+                        const Point2D &vertex1 = edge->start_point->vertex;
+                        const Point2D &vertex2 = edge->end_point->vertex;
+                        const Point2D &vertex3 = edge->next->end_point->vertex;
                         if (get_orientation(vertex1, vertex2, vertex3) != LEFT_ORIENTATION)
                             return false;
                 }
@@ -79,18 +79,18 @@ bool verify_cell_convexity(const Output &output) {
 template <typename Output>
 bool verify_incident_edges_ccw_order(const Output &output) {
     typedef typename Output::Point2D Point2D;
-    typename Output::voronoi_const_iterator_type vertex_it;
-    for (vertex_it = output.get_voronoi_vertices().begin();
-         vertex_it != output.get_voronoi_vertices().end(); vertex_it++) {
+    typename Output::voronoi_vertex_const_iterator_type vertex_it;
+    for (vertex_it = output.vertex_records.begin();
+         vertex_it != output.vertex_records.end(); vertex_it++) {
         if (vertex_it->num_incident_edges < 3)
             continue;
-        typename Output::edge_type *edge = vertex_it->incident_edge;
+        typename Output::voronoi_edge_type *edge = vertex_it->incident_edge;
         do {
-            typename Output::edge_type *edge_next1 = edge->rot_next;
-            typename Output::edge_type *edge_next2 = edge_next1->rot_next;
-            const Point2D &site1 = edge->cell->voronoi_point;
-            const Point2D &site2 = edge_next1->cell->voronoi_point;
-            const Point2D &site3 = edge_next2->cell->voronoi_point;
+            typename Output::voronoi_edge_type *edge_next1 = edge->rot_next;
+            typename Output::voronoi_edge_type *edge_next2 = edge_next1->rot_next;
+            const Point2D &site1 = edge->cell->get_point0();
+            const Point2D &site2 = edge_next1->cell->get_point0();
+            const Point2D &site3 = edge_next2->cell->get_point0();
 
             if (get_orientation(site1, site2, site3) != LEFT_ORIENTATION)
                 return false;
@@ -110,12 +110,12 @@ bool verfiy_no_half_edge_intersections(const Output &output) {
     std::map< Point2D, std::vector<Point2D> > edge_map;
     typedef typename std::map< Point2D, std::vector<Point2D> >::const_iterator 
         edge_map_iterator;
-    typename Output::edges_const_iterator_type edge_it;
-    for (edge_it = output.get_voronoi_edges().begin();
-         edge_it != output.get_voronoi_edges().end(); edge_it++) {
+    typename Output::voronoi_edge_const_iterator_type edge_it;
+    for (edge_it = output.edge_records.begin();
+         edge_it != output.edge_records.end(); edge_it++) {
         if (edge_it->start_point != NULL && edge_it->end_point != NULL) {
-            const Point2D &start_point = edge_it->start_point->voronoi_point;
-            const Point2D &end_point = edge_it->end_point->voronoi_point;
+            const Point2D &start_point = edge_it->start_point->vertex;
+            const Point2D &end_point = edge_it->end_point->vertex;
             if (start_point < end_point)
                 edge_map[start_point].push_back(end_point);
         }
