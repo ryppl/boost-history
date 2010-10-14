@@ -32,6 +32,7 @@ DEALINGS IN THE SOFTWARE.
 #include <functional>
 #include <stdlib.h>
 #include <boost/assert.hpp>
+#include <boost/itl/type_traits/interval_type_default.hpp>
 #include <boost/itl/interval.hpp>
 
 namespace boost{namespace itl

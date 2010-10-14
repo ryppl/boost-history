@@ -8,7 +8,8 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #ifndef __polygon_gentor_H_JOFA_000724__
 #define __polygon_gentor_H_JOFA_000724__
 
-#include <boost/itl/interval.hpp>
+#include <boost/itl/type_traits/interval_type_default.hpp>
+//REV #include <boost/itl/interval.hpp>
 #include <boost/itl_xt/gentorit.hpp>
 #include <boost/itl_xt/list.hpp>
 

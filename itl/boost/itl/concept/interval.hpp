@@ -24,7 +24,6 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/is_discrete.hpp>
 #include <boost/itl/type_traits/is_continuous.hpp>
 #include <boost/itl/type_traits/is_asymmetric_interval.hpp>
-#include <boost/itl/type_traits/is_universal_interval.hpp>
 #include <boost/itl/type_traits/is_discrete_interval.hpp>
 #include <boost/itl/type_traits/is_continuous_interval.hpp>
 
@@ -434,14 +433,6 @@ is_empty(const Type& object)
     return domain_less_equal<Type>(upper(object), succ(lower(object))); 
 }
 
-
-template<class Type>
-typename boost::enable_if<is_universal_interval<Type>, bool>::type
-is_empty(const Type& object)
-{ 
-    return object.empty(); 
-}
-
 template<class Type>
 typename boost::enable_if<is_discrete_interval<Type>, bool>::type
 is_empty(const Type& object)
@@ -475,13 +466,6 @@ namespace non_empty
     { 
         BOOST_ASSERT(!(itl::is_empty(left) || itl::is_empty(right)));
         return domain_less_equal<Type>(upper(left), lower(right)); 
-    }
-
-    template<class Type>
-    inline typename boost::enable_if<is_universal_interval<Type>, bool>::type
-    exclusive_less(const Type& left, const Type& right)
-    { 
-        return left.exclusive_less(right); 
     }
 
     template<class Type>
@@ -592,13 +576,6 @@ exclusive_less(const Type& left, const Type& right)
 }
 
 template<class Type>
-inline typename boost::enable_if<is_universal_interval<Type>, bool>::type
-exclusive_less(const Type& left, const Type& right)
-{ 
-    return left.exclusive_less(right); 
-}
-
-template<class Type>
 inline typename boost::enable_if<is_discrete_interval<Type>, bool>::type
 exclusive_less(const Type& left, const Type& right)
 { 
@@ -635,13 +612,6 @@ lower_less(const Type& left, const Type& right)
 }
     
 template<class Type>
-typename boost::enable_if<is_universal_interval<Type>, bool>::type
-lower_less(const Type& left, const Type& right)
-{
-    return left.lower_less(right);
-}
-
-template<class Type>
 typename boost::enable_if<is_discrete_interval<Type>, bool>::type
 lower_less(const Type& left, const Type& right)
 {
@@ -665,13 +635,6 @@ typename boost::enable_if<has_static_bounds<Type>, bool>::type
 upper_less(const Type& left, const Type& right)
 {
     return domain_less<Type>(left.upper(), right.upper());
-}
-
-template<class Type>
-typename boost::enable_if<is_universal_interval<Type>, bool>::type
-upper_less(const Type& left, const Type& right)
-{
-    return left.upper_less(right);
 }
 
 template<class Type>
@@ -737,13 +700,6 @@ lower_equal(const Type& left, const Type& right)
 }
 
 template<class Type>
-typename boost::enable_if<is_universal_interval<Type>, bool>::type
-lower_equal(const Type& left, const Type& right)
-{
-    return left.lower_equal(right);
-}
-
-template<class Type>
 typename boost::enable_if<has_symmetric_bounds<Type>, bool>::type
 lower_equal(const Type& left, const Type& right)
 {
@@ -774,13 +730,6 @@ upper_equal(const Type& left, const Type& right)
     return domain_equal<Type>(left.upper(), right.upper());
 }
 
-template<class Type>
-typename boost::enable_if<is_universal_interval<Type>, bool>::type
-upper_equal(const Type& left, const Type& right)
-{
-    return left.upper_equal(right);
-}
-    
 template<class Type>
 typename boost::enable_if<has_symmetric_bounds<Type>, bool>::type
 upper_equal(const Type& left, const Type& right)
@@ -862,13 +811,6 @@ typename boost::enable_if<has_symmetric_bounds<Type>, bool>::type
 touches(const Type& left, const Type& right)
 { 
     return domain_equal<Type>(last_next(left), first(right)); 
-}
-
-template<class Type>
-typename boost::enable_if<is_universal_interval<Type>, bool>::type
-touches(const Type& left, const Type& right)
-{ 
-    return left.touches(right); 
 }
 
 template<class Type>
@@ -1026,13 +968,6 @@ hull(Type left, const Type& right)
 }
 
 template<class Type>
-typename boost::enable_if<is_universal_interval<Type>, Type>::type
-hull(Type left, const Type& right)
-{
-    return left.extend(right);
-}
-
-template<class Type>
 typename boost::enable_if<has_dynamic_bounds<Type>, Type>::type
 hull(Type left, const Type& right)
 {
@@ -1092,13 +1027,6 @@ left_subtract(Type right, const Type& left_minuend)
 }
 
 template<class Type>
-typename boost::enable_if<is_universal_interval<Type>, Type>::type
-left_subtract(Type right, const Type& left_minuend)
-{
-    return right.left_subtract(left_minuend);
-}
-
-template<class Type>
 typename boost::enable_if<has_dynamic_bounds<Type>, Type>::type
 left_subtract(Type right, const Type& left_minuend)
 {
@@ -1151,13 +1079,6 @@ right_subtract(Type left, const Type& right_minuend)
 }
 
 template<class Type>
-typename boost::enable_if<is_universal_interval<Type>, Type>::type
-right_subtract(Type left, const Type& right_minuend)
-{
-    return left.right_subtract(right_minuend);
-}
-
-template<class Type>
 typename boost::enable_if<has_dynamic_bounds<Type>, Type>::type
 right_subtract(Type left, const Type& right_minuend)
 {
@@ -1205,13 +1126,6 @@ operator & (Type left, const Type& right)
             (std::max)(itl::lower(left), itl::lower(right), domain_compare()),
             (std::min)(itl::upper(left), itl::upper(right), domain_compare())
         );
-}
-
-template<class Type>
-typename boost::enable_if<is_universal_interval<Type>, Type>::type
-operator & (Type left, const Type& right)
-{
-    return left &= right;
 }
 
 template<class Type>

@@ -30,7 +30,8 @@ DEALINGS IN THE SOFTWARE.
 #ifndef BOOST_ITL_TYPED_EPISODE_HPP_HPP_JOFA_011015
 #define BOOST_ITL_TYPED_EPISODE_HPP_HPP_JOFA_011015
 
-//JODO #include <boost/itl/interval.hpp>
+#include <boost/itl/type_traits/interval_type_default.hpp>
+//REV #include <boost/itl/interval.hpp>
 #include <boost/itl/right_open_interval.hpp>
 #include <boost/itl_xt/ordered_type.hpp>
 

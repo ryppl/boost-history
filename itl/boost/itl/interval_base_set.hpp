@@ -12,6 +12,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <limits>
 #include <boost/next_prior.hpp> 
 #include <boost/itl/type_traits/interval_type_default.hpp>
+#include <boost/itl/interval.hpp>
 #include <boost/itl/type_traits/infinity.hpp>
 #include <boost/itl/type_traits/is_interval_joiner.hpp>
 #include <boost/itl/type_traits/is_interval_separator.hpp>

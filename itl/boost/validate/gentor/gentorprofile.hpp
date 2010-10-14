@@ -11,8 +11,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 #include <math.h>
 #include <boost/validate/type/nat.hpp>
-#include <boost/itl/interval.hpp>
 #include <boost/itl/type_traits/interval_type_default.hpp>
+#include <boost/itl/interval.hpp>
 
 namespace boost{namespace itl
 {
