@@ -47,5 +47,18 @@ int main(void)
       >
     bools_A_type;
     show_layout_all_of_aligned<bools_A_type>("bools_A_type");
+        typedef 
+      boost::mpl::package
+      < double
+      , double
+      , std::string
+      , int
+      , bool
+      , bool
+      , bool
+      , bool
+      >
+    A_sort_bools_type;
+    show_layout_all_of_aligned<A_sort_bools_type>("A_sort_bools_type");
     return 0;
 }
