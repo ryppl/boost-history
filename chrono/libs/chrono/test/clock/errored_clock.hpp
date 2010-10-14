@@ -5,8 +5,8 @@
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
 
-#ifndef BOOST_CHRONO_SYSTEM_CLOCKS_HPP
-#define BOOST_CHRONO_SYSTEM_CLOCKS_HPP
+#ifndef BOOST_CHRONO_ERRORED_CLOCKS_HPP
+#define BOOST_CHRONO_ERRORED_CLOCKS_HPP
 
 #include <boost/chrono/config.hpp>
 #include <boost/chrono/duration.hpp>
