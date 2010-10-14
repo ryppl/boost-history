@@ -48,8 +48,7 @@ public:
     typedef list<ValueTypeTD>    SampleTypeTD;
     typedef RandomGentorAT<DomainTD>  DomainGentorT;
     typedef DomainGentorT*        DomainGentorPT;
-    typedef itl::interval<int>          sample_range_type;
-    //typedef typename itl::_interval<int>::type sample_range_type;
+    typedef typename itl::_interval<int>::type sample_range_type;
 
     SetGentorT(): p_domainGentor(NULL) {}
     ~SetGentorT() { delete p_domainGentor; }
@@ -65,9 +64,12 @@ public:
     }
 
     void setRangeOfSampleSize(int lwb, int upb)
-    { m_sampleSizeRange = interval<int>::right_open(lwb,upb); }
-    void setRangeOfSampleSize(const interval<int>& szRange)
-    { BOOST_ASSERT(szRange.is(right_open)); m_sampleSizeRange = szRange; }
+    { m_sampleSizeRange = _interval<int>::right_open(lwb,upb); }
+    void setRangeOfSampleSize(const itl::_interval<int>::type& szRange)
+    { 
+        BOOST_ASSERT(itl::bounds(szRange) == interval_bounds::right_open()); 
+        m_sampleSizeRange = szRange; 
+    }
 
     DomainGentorPT domainGentor()const { return p_domainGentor; } 
 
@@ -83,7 +85,7 @@ template <class SetTV>
 void SetGentorT<SetTV>::some(SetTV& x)
 {
     NumberGentorT<int> intGentor;
-    ITL_FUN_CALL(clear, x);
+    itl::clear(x);
     m_sample.clear();
     m_sampleSize = intGentor(m_sampleSizeRange);
 

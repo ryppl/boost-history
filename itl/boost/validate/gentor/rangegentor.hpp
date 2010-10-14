@@ -39,30 +39,40 @@ namespace boost{namespace itl
 {
 
     template <class Type> 
-    class RangeGentor: public RandomGentorAT<interval<Type> >
+    class RangeGentor: public RandomGentorAT<typename _interval<Type>::type >
     {
     public:
-        virtual void some(interval<Type>& x);
-        interval<Type> last()const;
+        typedef typename _interval<Type>::type interval_type;
+    public:
+        virtual void some(interval_type& x);
+        interval_type last()const;
 
         void setLowerBoundRange(int lwb, int upb)
-        { setLowerBoundRange(interval<int>::right_open(lwb,upb)); }
-        void setLowerBoundRange(const interval<int>& range)
-        { BOOST_ASSERT(range.is_right_open()||range.is_closed()); _lwbGentor.setRange(range); }
+        { setLowerBoundRange(_interval<int>::right_open(lwb,upb)); }
+
+        void setLowerBoundRange(const itl::_interval<int>::type& range)
+        { 
+            //JODO? BOOST_ASSERT(range.is_right_open()||range.is_closed()); 
+            _lwbGentor.setRange(range); 
+        }
 
         void setUpperBoundRange(int lwb, int upb)
-        { setUpperBoundRange(interval<int>::right_open(lwb,upb)); }
-        void setUpperBoundRange(const interval<int>& range)
-        { BOOST_ASSERT(range.is_right_open()||range.is_closed()); _upbGentor.setRange(range); }
+        { setUpperBoundRange(_interval<int>::right_open(lwb,upb)); }
+
+        void setUpperBoundRange(const itl::_interval<int>::type& range)
+        { 
+            //JODO? BOOST_ASSERT(range.is_right_open()||range.is_closed()); 
+            _upbGentor.setRange(range); 
+        }
 
     private:
         NumberGentorT<Type>   _lwbGentor;
         NumberGentorT<Type>   _upbGentor;
-        interval<Type>          _last;
+        interval_type         _last;
     };
 
     template <class Type> 
-    void RangeGentor<Type>::some(interval<Type>& x)
+    void RangeGentor<Type>::some(interval_type& x)
     {
         Type lwb, upb;
         _lwbGentor.some(lwb);
@@ -72,7 +82,7 @@ namespace boost{namespace itl
     }
 
     template <class Type> 
-    interval<Type> RangeGentor<Type>::last()const
+    typename RangeGentor<Type>::interval_type RangeGentor<Type>::last()const
     {
         return _last;
     }

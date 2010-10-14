@@ -30,7 +30,6 @@ class sorted_associative_validater : public concept_validater
 public:
     typedef typename Type::atomized_type     atomic_type;
     typedef typename atomic_type::value_type value_type;
-    //CL typedef typename Type::domain_type       domain_type;
     typedef typename domain_type_of<Type>::type domain_type;
     typedef typename Type::codomain_type     codomain_type;
 

@@ -26,7 +26,7 @@ struct base_insertion
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-        ITL_FUN_CALL(clear, collected);
+        itl::clear(collected);
         ITL_const_FORALL(typename SourceT, item_, items)
             collected.insert(*item_);
     }
@@ -40,7 +40,8 @@ struct hint_insertion
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-        ITL_FUN_CALL(clear, collected);
+        typedef typename TargetT::value_type target_value_type;
+        itl::clear(collected);
         typename TargetT::iterator prior_ = collected.end();
         ITL_const_FORALL(typename SourceT, item_, items)
             prior_ = collected.insert(prior_, *item_);
@@ -55,7 +56,7 @@ struct copy_insertion
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-        ITL_FUN_CALL(clear, collected);
+        itl::clear(collected);
         std::copy(items.begin(), items.end(), itl::inserter(collected, collected.end()));
     }
 };
@@ -69,7 +70,7 @@ struct base_addition
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-        ITL_FUN_CALL(clear, collected);
+        itl::clear(collected);
         ITL_const_FORALL(typename SourceT, item_, items)
             //JODO itl::add(collected, *item_);
             collected.add(*item_);
@@ -84,7 +85,7 @@ struct hint_addition
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-        ITL_FUN_CALL(clear, collected);
+        itl::clear(collected);
         typename TargetT::iterator prior_ = collected.end();
         ITL_const_FORALL(typename SourceT, item_, items)
             //JODO prior_ = add(collected, prior_, *item_);
@@ -100,7 +101,7 @@ struct copy_addition
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-        ITL_FUN_CALL(clear, collected);
+        itl::clear(collected);
         std::copy(items.begin(), items.end(), itl::adder(collected, collected.end()));
     }
 };

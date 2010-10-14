@@ -42,12 +42,11 @@ class ItvGentorT
 namespace boost{namespace itl
 {
 
-template <class ItvDomTV, class ItvTV=interval<ItvDomTV> > 
+template <class ItvDomTV, class ItvTV=itl::_interval<ItvDomTV>::type> 
 class ItvGentorT: public RandomGentorAT<ItvTV>
 {
 public:
-    typedef itl::interval<ItvDomTV> range_type;
-    //typedef typename itl::_interval<ItvDomTV>::type range_type;
+    typedef typename itl::_interval<ItvDomTV>::type range_type;
 
     virtual void some(ItvTV& x);
 
@@ -55,7 +54,9 @@ public:
     { m_valueRange = range; }
 
     void setValueRange(ItvDomTV low, ItvDomTV up)
-    { m_valueRange.set(low,up, itl::right_open_bounded); }
+    { 
+        m_valueRange = itl::construct<range_type>(low, up); 
+    }
 
     void setMaxIntervalLength(ItvDomTV len) { m_maxIntervalLength=len; }
     void setProbDerivation();
@@ -106,20 +107,17 @@ void ItvGentorT<ItvDomTV,ItvTV>::some(ItvTV& x)
     if(decideEmpty==0)
     {        
         ItvDomTV x2   = m_ItvDomTVGentor(m_valueRange);
-        //CL x = construct<ItvTV>(x1, x1-x2, interval_bounds(bndTypes));
         x = construct_interval<ItvTV, has_static_bounds<ItvTV>::value>
             ::apply(x1, x1-x2, interval_bounds(bndTypes));
     }
     else if(upOrDown==0) {
         ItvDomTV up 
             = m_ItvDomTVGentor(x1, static_cast<ItvDomTV>((std::min)(m_valueRange.upper(), x1+m_maxIntervalLength)));
-        //CL x = construct<ItvTV>(x1, up, interval_bounds(bndTypes));
         x = construct_interval<ItvTV, has_static_bounds<ItvTV>::value>
             ::apply(x1, up, interval_bounds(bndTypes));
     } else {
         ItvDomTV low 
             = m_ItvDomTVGentor(static_cast<ItvDomTV>((std::max)(m_valueRange.lower(), x1-m_maxIntervalLength)), x1);
-        //CL x = construct<ItvTV>(low, x1, interval_bounds(bndTypes));
         x = construct_interval<ItvTV, has_static_bounds<ItvTV>::value>
             ::apply(low, x1, interval_bounds(bndTypes));
     }

@@ -35,8 +35,6 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/is_key_container_of.hpp>
 #include <boost/itl/type_traits/codomain_type_of.hpp>
 #include <boost/itl/type_traits/is_icl_container.hpp>
-#include <boost/itl/type_traits/given.hpp>
-
 
 #include <boost/itl_xt/detail/bit_element_iterator.hpp>
 #include <boost/itl_xt/interval_bitset.hpp>

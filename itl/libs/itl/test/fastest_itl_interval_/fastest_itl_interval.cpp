@@ -119,8 +119,6 @@ BOOST_AUTO_TEST_CASE
 
 //==============================================================================
 //==============================================================================
-//JODO old tests are not adapted to static_intervals
-
 BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_equal_4_integral_types)
 {            interval_equal_4_integral_types<integral_type_2>(); }
@@ -141,11 +139,11 @@ BOOST_AUTO_TEST_CASE
 
 BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_ctor_specific)
-{            interval_ctor_specific(); } //JODO static
+{            interval_ctor_specific(); }
 
 BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_equal_4_bicremental_continuous_types)
-{            interval_equal_4_bicremental_continuous_types<bicremental_continuous_type_1>(); }  //JODO static
+{            interval_equal_4_bicremental_continuous_types<bicremental_continuous_type_1>(); }
 
 BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_infix_intersect_4_bicremental_types)

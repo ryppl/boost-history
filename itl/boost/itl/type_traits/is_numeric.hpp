@@ -28,15 +28,6 @@ struct is_numeric<std::complex<Type> >
 };
 
 //--------------------------------------------------------------------------
-/*CL
-namespace aux
-{
-    template<class Type> struct functions
-    {
-        typedef bool (*Type_to_bool)(const Type&);
-    };
-};
-*/
 template<class Type, bool Enable = false> struct numeric_minimum;
 
 template<class Type> 

@@ -16,8 +16,6 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include "../test_value_maker.hpp"
 #include "../test_interval_laws.hpp"
 
-//CL #include <boost/itl/interval.hpp>
-
 using namespace std;
 using namespace boost;
 using namespace unit_test;
@@ -147,7 +145,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE
 
 //==============================================================================
 //==============================================================================
-//JODO old tests are not adapted to static_intervals
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (fastest_itl_interval_equal_4_integral_types, T, integral_types)
 {            interval_equal_4_integral_types<T>(); }

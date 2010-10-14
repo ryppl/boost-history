@@ -19,14 +19,15 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-template <class DomainT, class CodomainT, class IntervalT = itl::interval<DomainT> > 
+template <class DomainT, class CodomainT, class IntervalT = itl::_interval<DomainT>::type > 
 class map_segment_gentor: public RandomGentorAT<std::pair<IntervalT, CodomainT> >
 {
 public:
     typedef DomainT   domain_type;
     typedef CodomainT codomain_type;
     typedef IntervalT interval_type;
-    typedef itl::interval<codomain_type> co_range_type;
+    typedef typename itl::_interval<domain_type>::type   range_type;
+    typedef typename itl::_interval<codomain_type>::type co_range_type;
     //typedef typename itl::_interval<codomain_type>::type co_range_type;
     typedef std::pair<IntervalT, CodomainT> segment_type;
 
@@ -36,10 +37,10 @@ public:
 
     virtual void some(segment_type& x);
 
-    void set_range(const itl::interval<domain_type>& range)
+    void set_range(const range_type& range)
     { _interval_gentor.setRange(range); }
 
-    void set_corange(const itl::interval<codomain_type>& range)
+    void set_corange(const co_range_type& range)
     { _covalue_range = range; }
     
     void setMaxIntervalLength(domain_type max_itv_length)

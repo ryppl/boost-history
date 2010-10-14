@@ -45,8 +45,7 @@ public:
     typedef typename SeqTV::value_type  ValueTypeTD;
     typedef typename SeqTV::value_type  DomainTD;
     typedef list<ValueTypeTD>           SampleTypeTD;
-    typedef itl::interval<int>          sample_range_type;
-    //typedef typename itl::_interval<int>::type sample_range_type;
+    typedef typename itl::_interval<int>::type sample_range_type;
 
     SeqGentorT(): p_domainGentor(NULL), m_unique(false){}
     ~SeqGentorT(){ delete p_domainGentor; }
@@ -62,9 +61,12 @@ public:
     }
 
     void setRangeOfSampleSize(int lwb, int upb)
-    { m_sampleSizeRange = interval<int>::right_open(lwb,upb); }
-    void setRangeOfSampleSize(const interval<int>& szRange)
-    { BOOST_ASSERT(szRange.is(itl::right_open)); m_sampleSizeRange = szRange; }
+    { m_sampleSizeRange = _interval<int>::right_open(lwb,upb); }
+    void setRangeOfSampleSize(const _interval<int>::type& szRange)
+    { 
+        BOOST_ASSERT(itl::bounds(szRange) == interval_bounds::right_open()); 
+        m_sampleSizeRange = szRange; 
+    }
 
     void setUnique(bool truth) { m_unique = truth; }
 

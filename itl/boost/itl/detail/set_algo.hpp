@@ -63,24 +63,6 @@ bool common_range(IteratorT& lwb, IteratorT& upb, ObjectT& x1, const ConstObject
     return true;
 }
 
-/*CL
-template<class ObjectT, class CoObjectT>
-ObjectT& erase(ObjectT& result, const CoObjectT& x2)
-{
-    typename CoObjectT::const_iterator common_lwb_;
-    typename CoObjectT::const_iterator common_upb_;
-    if(!common_range(common_lwb_, common_upb_, x2, result))
-        return result;
-
-    typename CoObjectT::const_iterator x2_ = common_lwb_;
-    typename ObjectT::iterator common_;
-
-    while(x2_ != common_upb_)
-        result.erase(*x2_++);
-
-    return result;
-}
-*/
 
 /** Function template <tt>contained_in</tt> implements the subset relation. 
 <tt>contained_in(sub, super)</tt> is true if <tt>sub</tt> is contained in <tt>super</tt> */
@@ -123,25 +105,6 @@ bool intersects(const SetType& left, const SetType& right)
     return false;    
 }
 
-/*CL
-template<class SetType>
-inline bool is_disjoint(const SetType& left, const SetType& right)
-{
-    return !intersects(left, right);
-}
-
-template<class SetType>
-void flip(SetType& result, const SetType& x2)
-{
-    typename SetType::const_iterator x2_ = x2.begin(), x1_;
-    while(x2_ != x2.end()) 
-    {
-        std::pair<typename SetType::iterator,bool> insertion = result.insert(*x2_++);
-        if(!insertion.second)
-            result.erase(insertion.first);
-    }
-}
-*/
 
 #ifdef BOOST_MSVC 
 #pragma warning(push)

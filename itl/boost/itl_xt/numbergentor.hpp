@@ -57,7 +57,6 @@ class NumberGentorProfile : public RandomGentorProfile<NumT>
 {
 public:
     typedef typename itl::_interval<NumT>::type range_type;
-    //CL typedef          itl:: interval<NumT>       range_type;
 private:
     range_type _range;
 };
@@ -66,25 +65,25 @@ template <class NumTV>
 class NumberGentorT : public RandomGentorAT<NumTV>
 {
 public:
-    //typedef typename itl::_interval<NumTV>::type range_type;
-    typedef          itl:: interval<NumTV>       range_type;
+    typedef typename itl::_interval<NumTV>::type range_type;
 public:
     NumberGentorT(): 
-      m_valueRange( NumTV(), unit_element<NumTV>::value(), itl::right_open_bounded ) {}
+      m_valueRange( NumTV(), unit_element<NumTV>::value() ) {}
 
     NumTV operator() (NumTV upb) { return rnd_0_to_excl<NumTV>(upb); }
     NumTV operator() (NumTV lwb, NumTV upb)  { return rnd_within_exUpb<NumTV>(lwb,upb); }
     NumTV operator() (range_type rng) 
     { 
-        // BOOST_ASSERT(rng.is(right_open_bounded) || rng.is(closed_bounded));
-        if(rng.is(itl::right_open_bounded))
+        BOOST_ASSERT(   itl::bounds(rng) == interval_bounds::right_open() 
+                     || itl::bounds(rng) == interval_bounds::closed());
+        if(itl::bounds(rng) == interval_bounds::right_open())
             return rnd_within_exUpb<NumTV>(rng.lower(), rng.upper());
         else
             return rnd_within<NumTV>(rng.lower(), rng.upper());
     }
 
     void setRange(range_type rng) { m_valueRange = rng; }
-    void setRange(NumTV lwb, NumTV upb) { m_valueRange = interval<NumTV>::right_open(lwb,upb); } 
+    void setRange(NumTV lwb, NumTV upb) { m_valueRange = _interval<NumTV>::right_open(lwb,upb); } 
 
     void calibrate(const RandomGentorProfile<NumTV>& profile)
     {

@@ -32,7 +32,4 @@ void interval_ctor_4_ordered_types()
     BOOST_CHECK_EQUAL(IntervalT(), IntervalT(lower_bound, itl::identity_element<T>::value()));
 }
 
-/*JODO
-*/
-
 #endif // __test_itl_interval_hpp_JOFA_081006__

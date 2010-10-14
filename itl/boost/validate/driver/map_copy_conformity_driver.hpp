@@ -94,6 +94,9 @@ namespace boost{namespace itl
 
         concept_validater* chooseValidater()
         {
+            typedef _interval<double>::type interval_double;
+            typedef _interval<int>::type    interval_int;
+
             int rootChoice         = _rootChoice.some();
             int identityHandlerChoice  = _identityHandlerChoice.some();
 
@@ -112,20 +115,20 @@ namespace boost{namespace itl
             //-----------------------------------------------------------------
             case RootType::interval_map: {
                 switch(identityHandlerChoice) {
-                case IdentityHandlerType::partial_absorber: return new function_equality_validater<itl::list<std::pair<typename interval_type_default<double,std::less>::type,int> >, interval_map<double,int,partial_absorber> >;
-                case IdentityHandlerType::partial_enricher: return new function_equality_validater<itl::list<std::pair<typename interval_type_default<double,std::less>::type,int> >, interval_map<double,int,partial_enricher> >;
-                case IdentityHandlerType::total_absorber:   return new function_equality_validater<itl::list<std::pair<typename interval_type_default<int,std::less>::type,   int> >, interval_map<int,   int,total_absorber  > >;
-                case IdentityHandlerType::total_enricher:   return new function_equality_validater<itl::list<std::pair<typename interval_type_default<int,std::less>::type,   int> >, interval_map<int,   int,total_enricher  > >;
+                case IdentityHandlerType::partial_absorber: return new function_equality_validater<itl::list<std::pair<interval_double,int> >, interval_map<double,int,partial_absorber> >;
+                case IdentityHandlerType::partial_enricher: return new function_equality_validater<itl::list<std::pair<interval_double,int> >, interval_map<double,int,partial_enricher> >;
+                case IdentityHandlerType::total_absorber:   return new function_equality_validater<itl::list<std::pair<interval_int,   int> >, interval_map<int,   int,total_absorber  > >;
+                case IdentityHandlerType::total_enricher:   return new function_equality_validater<itl::list<std::pair<interval_int,   int> >, interval_map<int,   int,total_enricher  > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case interval_map 
             //-----------------------------------------------------------------
             case RootType::split_interval_map: {
                 switch(identityHandlerChoice) {
-                case IdentityHandlerType::partial_absorber: return new function_equality_validater<itl::list<std::pair<typename interval_type_default<double,std::less>::type,int> >, split_interval_map<double,int,partial_absorber> >;
-                case IdentityHandlerType::partial_enricher: return new function_equality_validater<itl::list<std::pair<typename interval_type_default<int,std::less>::type,   int> >, split_interval_map<int,   int,partial_enricher> >;
-                case IdentityHandlerType::total_absorber:   return new function_equality_validater<itl::list<std::pair<typename interval_type_default<double,std::less>::type,int> >, split_interval_map<double,int,total_absorber  > >;
-                case IdentityHandlerType::total_enricher:   return new function_equality_validater<itl::list<std::pair<typename interval_type_default<int,std::less>::type,   int> >, split_interval_map<int,   int,total_enricher  > >;
+                case IdentityHandlerType::partial_absorber: return new function_equality_validater<itl::list<std::pair<interval_double,int> >, split_interval_map<double,int,partial_absorber> >;
+                case IdentityHandlerType::partial_enricher: return new function_equality_validater<itl::list<std::pair<interval_int,   int> >, split_interval_map<int,   int,partial_enricher> >;
+                case IdentityHandlerType::total_absorber:   return new function_equality_validater<itl::list<std::pair<interval_double,int> >, split_interval_map<double,int,total_absorber  > >;
+                case IdentityHandlerType::total_enricher:   return new function_equality_validater<itl::list<std::pair<interval_int,   int> >, split_interval_map<int,   int,total_enricher  > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case split_interval_map 
