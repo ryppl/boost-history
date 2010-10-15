@@ -348,8 +348,8 @@ two preconditions:
 # None of the intervals or segements of the source containers
   must be empty.
   
-# A segment never carries a neutral value when your target 
-  interval map absorbs neutrons.
+# A segment never carries a neutral element when your target 
+  interval map absorbs identities.
 
 Violating those preconditions leads to ['*undefined behavior*].
 ]
