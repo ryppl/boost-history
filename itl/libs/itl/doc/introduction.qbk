@@ -171,12 +171,12 @@ interval insertion.
 [section Icl's class templates]
 
 In addition to interval containers the *itl* provides element containers
-__itl_set__ and __itl_map__. 
+__icl_set__ and __icl_map__. 
 
-* An __itl_set__ is behavioral equal to __itv_bsets__ on the __bi_conceptual__ aspect.
+* An __icl_set__ is behavioral equal to __itv_bsets__ on the __bi_conceptual__ aspect.
 
-* An __itl_map__ is behavioral equal to __itv_bmaps__ on the __bi_conceptual__  aspect. 
-  Specifically an __itl_map__
+* An __icl_map__ is behavioral equal to __itv_bmaps__ on the __bi_conceptual__  aspect. 
+  Specifically an __icl_map__
   implements ['*aggregate on overlap*], which is
   named ['*aggregate on collision*] for an element container.
 

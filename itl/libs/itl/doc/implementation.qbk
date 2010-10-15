@@ -27,10 +27,10 @@ The *implementation* of the *itl's* containers is based on
 [*std::set] and [*std::map]. So the underlying data structure of
 interval containers is a red black tree of intervals or
 interval value pairs. 
-The element containers __itl_set__ and __itl_map__ are wrapper
+The element containers __icl_set__ and __icl_map__ are wrapper
 classes of `std::set` and `std::map`.
-Interval containers are then using __itl_sets__ of intervals
-or __itl_maps__ of interval value pairs as implementing
+Interval containers are then using __icl_sets__ of intervals
+or __icl_maps__ of interval value pairs as implementing
 containers.
 So all the ['*complexity characteristics*] of itl containers
 are based on and limited by the ['*red-black tree implementation*]
@@ -78,7 +78,7 @@ to element iteration for interval containers.
 
 [h4 Complexity of element containers]
 
-Since ['element containers] __itl_set__ and __itl_map__ are only extensions of
+Since ['element containers] __icl_set__ and __icl_map__ are only extensions of
 stl::set and stl::map, their complexity characteristics are
 accordingly. So their major operations insertion (addition),
 deletion and search are all using logarithmic time. 

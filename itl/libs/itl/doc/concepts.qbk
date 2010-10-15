@@ -30,13 +30,13 @@ divided in are summarized in the next table:
 [table
 []
 [[]                  [`Set`]                                        [`Map`]      ]
-[[element container] [__itl_set__]                                  [__itl_map__]]
+[[element container] [__icl_set__]                                  [__icl_map__]]
 [[interval container][__itv_set__, __sep_itv_set__, __spl_itv_set__][__itv_map__, __spl_itv_map__]]
 ]
 
-* Containers __itl_set__, __itv_set__, __sep_itv_set__, __spl_itv_set__
+* Containers __icl_set__, __itv_set__, __sep_itv_set__, __spl_itv_set__
   are models of concept `Set`. 
-* Containers __itl_map__, __itv_map__, __spl_itv_map__
+* Containers __icl_map__, __itv_map__, __spl_itv_map__
   are models of concept `Map`. 
 * Containers that are ['*implemented*] using elements or element value pairs
   are called ['*element containers*].
@@ -46,7 +46,7 @@ divided in are summarized in the next table:
 * When we talk about /element containers/ or /interval containers/ 
   we refer to the way they are implemented.
 * The *itl's* element containers
-  are always denoted qualified as __itl_set__ of __itl_map__ 
+  are always denoted qualified as __icl_set__ of __icl_map__ 
   to avoid confusion with `std::set` and `std::map`. 
 
 [endsect][/ Naming]
@@ -94,7 +94,7 @@ On the __iterative__ aspect
 
 [h5 A Set Concept]
 
-On the __conceptual__ aspect the __itl_set__ and all __itv_bsets__ are models 
+On the __conceptual__ aspect the __icl_set__ and all __itv_bsets__ are models 
 of a concept `Set`.
 The `Set` concept of the Interval Template Library refers to the
 mathematical notion of a set.
@@ -116,7 +116,7 @@ Equality on `Sets` is not implemented as `operator ==`, because `operator ==`
 is used for the stronger lexicographical equality on segments, that takes the 
 segmentation of elements into account.
 
-Being models of concept `Set`, __itl_set__ and all __itv_bsets__ 
+Being models of concept `Set`, __icl_set__ and all __itv_bsets__ 
 implement these 
 operations and obey the associated laws on `Sets`. See e.g. 
 [@http://en.wikipedia.org/wiki/Algebra_of_sets an algebra of sets here].
@@ -140,7 +140,7 @@ but with a different semantics.
 
 [h5 A Map Concept]
 
-On the __conceptual__ aspect __itl_map__ and all __itv_bmaps__ are models of a 
+On the __conceptual__ aspect __icl_map__ and all __itv_bmaps__ are models of a 
 concept `Map`.
 Since a `map` is a `set of pairs`, we try to design the `Map` concept in accordance
 to the `Set` concept above. 

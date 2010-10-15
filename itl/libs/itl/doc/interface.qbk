@@ -32,7 +32,7 @@ template, because an interval is considered to be a set as well.
 [[__itv_bsets__][__itv_set__]    [`<DomainT,Compare,Interval,Alloc>`]]
 [[]             [__sep_itv_set__][`<DomainT,Compare,Interval,Alloc>`]]
 [[]             [__spl_itv_set__][`<DomainT,Compare,Interval,Alloc>`]]
-[[__itl_set__]  [__itl_set__]    [`<DomainT,Compare,         Alloc>`]]
+[[__icl_set__]  [__icl_set__]    [`<DomainT,Compare,         Alloc>`]]
 [[=std::set=]   [`std::set`]     [`<_Key,  _Compare,        _Alloc>`]]
 ]
 
@@ -47,7 +47,7 @@ that all have equal template parameters.
 [[template parameter] [`class`]  [`template <class>class`]     [`template <class, template<class>class> class`][`template <class>class`]]    
 [[__itv__]            [`DomainT`][`Compare = std::less`]       []                                              []]
 [[__itv_bsets__]      [`DomainT`][`Compare = std::less`]       [`Interval = itl::interval`]                    [`Alloc = std::alloc`]]
-[[__itl_set__]        [`DomainT`][`Compare = std::less`]       []                                              [`Alloc = std::alloc`]]
+[[__icl_set__]        [`DomainT`][`Compare = std::less`]       []                                              [`Alloc = std::alloc`]]
 [[template parameter] [`class`]  [`class`]                     [`class`]                                       [class]]
 [[=std::set=]         [`_Key`]   [`_Compare = std::less<_Key>`][]                                              [`Alloc = std::alloc<_Key>`]]
 ]
@@ -63,7 +63,7 @@ the itl and compares them to =std::map=.
 [[group]        [template]       [instance parameters]]
 [[__itv_bmaps__][__itv_map__]    [`<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>`]]
 [[]             [__spl_itv_map__][`<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>`]]
-[[__itl_map__]  [__itl_map__]    [`<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>`]]
+[[__icl_map__]  [__icl_map__]    [`<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>`]]
 [[=std::map=]   [`std::map`]     [`<_Key,   _Data,          _Compare,               _Alloc>`]]
 ]
 
@@ -78,7 +78,7 @@ that all have equal template parameters.
 [[]                   [elements][mapped values][traits]                      [order of elements]           [aggregation propagation]  [intersection propagation]     [type of intervals]                             [memory allocation]]
 [[template parameter] [`class`]  [`class`]     [`class`]                     [`template <class>class`]     [`template <class>class`]  [`template <class>class`]      [`template <class, template<class>class> class`][`template <class>class`]]    
 [[__itv_bmaps__]      [`DomainT`][`CodomainT`] [`Traits = neutron_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = itl::inplace_et`]  [`Interval = itl::interval`]                    [`Alloc = std::alloc`]]
-[[__itl_map__]        [`DomainT`][`CodomainT`] [`Traits = neutron_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = itl::inplace_et`]  [`Alloc = std::alloc`]]
+[[__icl_map__]        [`DomainT`][`CodomainT`] [`Traits = neutron_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = itl::inplace_et`]  [`Alloc = std::alloc`]]
 [[template parameter] [`class`]  [`class`]     []                            [`class`]                     []                         []                             []                                              [`class`]]
 [[=std::map=]         [`_Key`]   [`_Data`]     []                            [`_Compare = std::less<_Key>`][]                         []                             []                                              [`Alloc = std::alloc<_Key>`]]
 ]
@@ -217,7 +217,7 @@ needs to be implemented on the smallest possible unit of the
 integral type. This seems like being trivial but there are types like e.g.
 `boost::date_time::ptime`, that are integral in nature but do
 not provide the required in- and decrementation on the least incrementable unit.
-For __itl_itvs__ incementation and decementation is used
+For __icl_itvs__ incementation and decementation is used
 for computations between open to closed interval borders like e.g.
 `[2,43) == [2,42]`. Such computations always need only
 one in- or decrementation, if `DomainT` is an integral type. 
@@ -256,7 +256,7 @@ using the default combiner `Combine = itl::inplace_plus`.
 [[]           [`Section` used and `CodomainT` is a set][`&=`]             [`&& Intersectable<CodomainT,Section>`] ] 
 ]
 
-The requirements on the type `CodomainT` of associated values for a __itl_map__ or __itv_map__
+The requirements on the type `CodomainT` of associated values for a __icl_map__ or __itv_map__
 depend on the usage of their aggregation functionality. If aggregation on overlap
 is never used, that is to say that none of the addition, subtraction and intersection
 operations (`+, +=, add`, `-, -=, subtract`, &, &=, add_intersection) are used on the 
@@ -414,13 +414,13 @@ overloaded implementations for the function of that row is shown.
 [[`V`                         ] []                        [various types `V`, that do dot fall in the categories above]]             
 [[1,2,...                     ] []                        [number of implementations for this function]]             
 [[A                           ] []                        [implementation generated by compilers]]             
-[[[#element_type]         [*e]] [T::element_type]         [the element type of __itv_sets__ or __itl_sets__]]
+[[[#element_type]         [*e]] [T::element_type]         [the element type of __itv_sets__ or __icl_sets__]]
 [[[#interval_type]        [*i]] [T::segment_type]         [the segment type of of __itv_sets__]]
-[[[#itl_set_type]         [*s]] [__itl_set__]             [itl's set type]]
+[[[#itl_set_type]         [*s]] [__icl_set__]             [itl's set type]]
 [[[#interval_set_types]   [*S]] [interval_sets]           [one of the interval set types]]
-[[[#element_mapping_type] [*b]] [T::element_type]         [type of __itv_map_s__ or __itl_map_s__ element value pairs]]
+[[[#element_mapping_type] [*b]] [T::element_type]         [type of __itv_map_s__ or __icl_map_s__ element value pairs]]
 [[[#interval_mapping_type][*p]] [T::segment_type]         [type of __itv_map_s__ interval value pairs]]
-[[[#itl_map_type]         [*m]] [__itl_map__]             [itl's map type]]
+[[[#itl_map_type]         [*m]] [__icl_map__]             [itl's map type]]
 [[[#interval_map_types]   [*M]] [interval_maps]           [one of the interval map types]]
 ]
 

@@ -20,8 +20,12 @@ Distributed under the Boost Software License, Version 1.0.
 [/ Macros will be used for links so we have a central place to change them ]
 [def __itv__          [classref boost::icl::interval interval]]
 [def __Itv__          [classref boost::icl::interval Interval]]
+
+[def __itv_tr__       [classref boost::icl::interval interval_traits]]
+[def __Itv_tr__       [classref boost::icl::interval Interval_traits]]
+
 [def __itvs__         [classref boost::icl::interval intervals]]
-[def __itl_itvs__     [classref boost::icl::interval icl::intervals]]
+[def __icl_itvs__     [classref boost::icl::interval icl::intervals]]
 [def __Itvs__         [classref boost::icl::interval Intervals]]
 [def __itv_set__      [classref boost::icl::interval_set interval_set]]
 [def __itv_sets__     [classref boost::icl::interval_set interval_sets]]
@@ -33,8 +37,8 @@ Distributed under the Boost Software License, Version 1.0.
 
 [def __ele_set__      [classref boost::icl::set set]]
 [def __ele_sets__     [classref boost::icl::set sets]]
-[def __itl_set__      [classref boost::icl::set icl::set]]
-[def __itl_sets__     [classref boost::icl::set icl::sets]]
+[def __icl_set__      [classref boost::icl::set icl::set]]
+[def __icl_sets__     [classref boost::icl::set icl::sets]]
 
 
 [def __Itv_set__      [classref boost::icl::interval_set Interval_set]]
@@ -83,9 +87,9 @@ Distributed under the Boost Software License, Version 1.0.
 
 [def __ele_map__      [classref boost::icl::map map]]
 [def __ele_maps__     [classref boost::icl::map maps]]
-[def __itl_map__      [classref boost::icl::map icl::map]]
-[def __itl_maps__     [classref boost::icl::map icl::maps]]
-[def __itl_map_s__    [classref boost::icl::map icl::map's]]
+[def __icl_map__      [classref boost::icl::map icl::map]]
+[def __icl_maps__     [classref boost::icl::map icl::maps]]
+[def __icl_map_s__    [classref boost::icl::map icl::map's]]
 
 [def __pabsorber__     [classref boost::icl::partial_absorber partial_absorber]]
 [def __penricher__     [classref boost::icl::partial_enricher partial_enricher]]

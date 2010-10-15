@@ -194,7 +194,7 @@ segments and submaps.
 [[__e: `domain_type`   ][  key value pair       ][   key value pair ]]
 [[__i: `interval_type` ][  interval value pair  ][					 ]]
 [[__S: __itv_sets__    ][  interval map		    ][					 ]]
-[[__s: __itl_set__     ][                       ][   interval map	 ]]
+[[__s: __icl_set__     ][                       ][   interval map	 ]]
 ]
 
 __biLSubtraction__, __biLerasure__, __biLintersection__

@@ -56,7 +56,7 @@
 	    [__itv_map__,\n__sep_itv_set__][Fill interval containers from user defined objects using `std::transform`.]]
 	    
 	[[customize] [[link boost_icl.examples.custom_interval Custom interval]]
-	    [JODO interval_traits][Use interval containers with your own interval class types.]]
+	    [__itv_tr__][Use interval containers with your own interval class types.]]
 
 ]
 

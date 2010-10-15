@@ -126,7 +126,7 @@ a.contained_in(b) && b.contained_in(a) implies is_element_equal(a, b);
 [section Sets]
 
 For all set types `S` that are models concept `Set`  
-(__itl_set__, __itv_set__, __sep_itv_set__ and __spl_itv_set__)
+(__icl_set__, __itv_set__, __sep_itv_set__ and __spl_itv_set__)
 most of the well known mathematical 
 [@http://en.wikipedia.org/wiki/Algebra_of_sets laws on sets]
 were successfully checked via LaBatea. The next tables 
@@ -246,7 +246,7 @@ joining     interval_set, itl::set
 separating  separate_interval_set
 splitting   split_interval_set
 ``
-where the __itl_set__ of elements can be subsumed in the `joining` rows.
+where the __icl_set__ of elements can be subsumed in the `joining` rows.
 
 
 Finally there are two laws that combine all three major set operations:
@@ -419,7 +419,7 @@ as `=p=` operator.
 The validity of the sets of laws that make up `Set` semantics
 should now be quite evident. So the following text shows the
 laws that are validated for all `Collector` types `C`. Which are
-__itl_map__`<D,S,T>`, __itv_map__`<D,S,T>` and __spl_itv_map__`<D,S,T>`
+__icl_map__`<D,S,T>`, __itv_map__`<D,S,T>` and __spl_itv_map__`<D,S,T>`
 where `CodomainT` type `S` is a model of `Set` and `Trait` type `T` is either 
 __pabsorber__ or __penricher__.
 
@@ -612,7 +612,7 @@ a signed number type as `CodomainT` parameter.
 
 Again, we are presenting the investigated sets of laws, this time for
 `Quantifier` types `Q` which are
-__itl_map__`<D,N,T>`, __itv_map__`<D,N,T>` and __spl_itv_map__`<D,N,T>`
+__icl_map__`<D,N,T>`, __itv_map__`<D,N,T>` and __spl_itv_map__`<D,N,T>`
 where `CodomainT` type `N` is a `Number` and `Trait` type `T` is one of
 the itl's map traits. 
 

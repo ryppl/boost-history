@@ -69,8 +69,8 @@ contains| e b s m       contains| e i b p S M
   m     | 1   1           M     | 1 1     1      
 ``
 
-For type *m* = __itl_map__, 
-a key element (*m*`::domain_type`) and an __itl_set__ 
+For type *m* = __icl_map__, 
+a key element (*m*`::domain_type`) and an __icl_set__ 
 (*m*`::set_type`) can be a ['*key object*].
 
 For an interval map type *M*, 
@@ -88,8 +88,8 @@ m = sub.iterative_size(); //if P is a container type
 
 [table Time Complexity for function contains on element containers
 [[`bool T::contains(const P& sub)const`][__ch_dom_t__][__ch_dom_mp_t__][__ch_itl_set__][__ch_itl_map__]]
-[[__itl_set__]                          [__Olgn__]    []               [__Omlgn__]     []              ]
-[[__itl_map__]                          [__Olgn__]    [__Olgn__]       [__Omlgn__]     [__Omlgn__]     ]
+[[__icl_set__]                          [__Olgn__]    []               [__Omlgn__]     []              ]
+[[__icl_map__]                          [__Olgn__]    [__Olgn__]       [__Omlgn__]     [__Omlgn__]     ]
 ]
 
 
