@@ -15,8 +15,13 @@ a formal review on the boost developer's list
 from February 18, 2010 to March 08, 2010 and has been accepted 
 into the boost library collection.
 
-The name ['*Interval Template Library (ITL)*] is provisional
-an will be changed to ['*Interval Container Library (ICL)*].
+The name ['*Interval Template Library (ITL)*] 
+will be changed to ['*Interval Container Library (ICL)*].
+
+The library is currently refactored for the suggestions and requests
+that came up during the review. These modifications will be
+completed in autumn 2010 and the library will probably 
+available with the boost release 1.46.
 ]
 
 ["A bug crawls across the boost docs on my laptop screen.
@@ -33,14 +38,14 @@ If you want to add intervals to a collection of
 intervals that does still represent a /set/,
 you arrive at the idea of /interval_sets/ provided by this library. 
 
-Interval containers of the *ITL* have been developed initially at 
+Interval containers of the *ICL* have been developed initially at 
 [@http://www.cortex-software.de/desktopdefault.aspx Cortex Software GmbH]
 to solve problems related to date and time interval
 computations in the context of a Hospital Information System.
 Time intervals with associated values like ['amount of invoice]
 or ['set of therapies] had to be manipulated in statistics,
 billing programs and therapy scheduling programs. 
-So the *ITL* emerged out of those industrial use cases.
+So the *ICL* emerged out of those industrial use cases.
 It extracts generic code that helps to solve common
 problems from the date and time problem domain and can be
 beneficial in other fields as well.
@@ -51,19 +56,19 @@ sets and maps /of elements/ can be very inefficient, if in a given
 problem domain, elements are typically occurring in contiguous
 chunks. 
 Besides a compact representation of associative containers, that
-can reduce the cost of space and time drastically, the ITL
+can reduce the cost of space and time drastically, the ICL
 comes with a universal mechanism of aggregation, that allows
 to combine associated values in meaningful ways when intervals
 overlap on insertion.
 
 For a condensed introduction and overview you may want to look at the
 [@http://www.herold-faulhaber.de/boost_itl/doc/libs/itl/doc/boostcon09/intro_to_itl.pdf 
-presentation material on the *ITL* from ['*BoostCon2009*]].
+presentation material on the *ICL* from ['*BoostCon2009*]].
 
 
 [section Definition and Basic Example]
 
-The [*Interval Template Library (ITL)] provides __itvs__ and two kinds of 
+The [*Interval Template Library (ICL)] provides __itvs__ and two kinds of 
 interval containers: __itv_sets__ and __itv_maps__.
 
 * An __itv_bset__ is a *set* that is implemented as a set of intervals.
@@ -83,7 +88,7 @@ set or map ['*of elements*]. It exposes the same functions.
 ``
 interval_set<int> mySet;
 mySet.insert(42);
-bool has_answer = mySet.contains(42);
+bool has_answer = contains(mySet, 42);
 ``
 
 
@@ -93,10 +98,10 @@ fact, that the elements of __itv_sets__ and __itv_maps__ are clustered in
 
 ``
 // Switch on my favorite telecasts using an interval_set
-interval<seconds> news(make_seconds("20:00:00"), make_seconds("20:15:00"));
-interval<seconds> talk_show(make_seconds("22:45:30"), make_seconds("23:30:50"));
+interval<seconds>::type news(make_seconds("20:00:00"), make_seconds("20:15:00"));
+interval<seconds>::type talk_show(make_seconds("22:45:30"), make_seconds("23:30:50"));
 interval_set<seconds> myTvProgram;
-myTVProgram.add(news).add(talk_show);
+myTvProgram.add(news).add(talk_show);
 
 // Iterating over elements (seconds) would be silly ...
 for(interval_set<seconds>::iterator telecast = myTvProgram.begin(); 
@@ -134,10 +139,10 @@ This is a first motivating example of a very small party, demonstrating the
 In the example Mary enters the party first. She attends during the 
 time interval `[20:00,22:00)`. Harry enters later. He stays within `[21:00,23:00)`.
 ``
-typedef itl::set<string> guests;
+typedef std::set<string> guests;
 interval_map<time, guests> party; 
-party += make_pair(interval<time>::rightopen(time("20:00"), time("22:00")), guests("Mary"));
-party += make_pair(interval<time>::rightopen(time("21:00"), time("23:00")), guests("Harry")); 
+party += make_pair(interval<time>::right_open(time("20:00"), time("22:00")), guests("Mary"));
+party += make_pair(interval<time>::right_open(time("21:00"), time("23:00")), guests("Harry")); 
 // party now contains
 [20:00, 21:00)->{"Mary"} 
 [21:00, 22:00)->{"Harry","Mary"} //guest sets aggregated on overlap

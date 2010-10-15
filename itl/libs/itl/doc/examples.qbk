@@ -1,5 +1,5 @@
 [/
-    Copyright (c) 2008-2009 Joachim Faulhaber
+    Copyright (c) 2008-2010 Joachim Faulhaber
 
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,48 +12,51 @@
 
 [table Overview over Icl Examples
 	[[level]   [example] [classes] [features]]
-	[[intro][[link boost_itl.examples.party Party]]
+	[[intro][[link boost_icl.examples.party Party]]
 		[__itv_map__][Generates an attendance history of a party
 	                  by inserting into an __itv_map__. 
 					  Demonstrating 
 					  ['*aggregate on overlap*].]]
-	[[basic]   [[link boost_itl.examples.interval Interval]]
+	[[basic]   [[link boost_icl.examples.interval Interval]]
 	    [__itv__] [Intervals for integral and continuous instance types. 
 	               Closed and open interval borders.]]
-	[[basic]   [[link boost_itl.examples.interval_container Interval container]]
+	[[basic]   [[link boost_icl.examples.interval_container Interval container]]
 		[__itv_set__,\n__sep_itv_set__,\n__spl_itv_set__,\n__spl_itv_map__,\n__itv_map__]
 	                               [Basic characteristics of interval containers.]]
-	[[basic]   [[link boost_itl.examples.overlap_counter Overlap counter]]
+	[[basic]   [[link boost_icl.examples.overlap_counter Overlap counter]]
 	    [__itv_map__][The most simple application of an interval map: 
 	                  Counting the overlaps of added intervals.]]
-	[[advanced][[link boost_itl.examples.partys_height_average Party's height average]]
+	[[advanced][[link boost_icl.examples.partys_height_average Party's height average]]
 	    [__itv_map__][Using /aggregate on overlap/ a history of height averages of party guests is computed.  
 	                  Associated values are user defined class objects, that implement
 	                  an appropriate `operator +=` for the aggregation.]]
-	[[advanced][[link boost_itl.examples.partys_tallest_guests Party's tallest guests]]
+	[[advanced][[link boost_icl.examples.partys_tallest_guests Party's tallest guests]]
 	    [__itv_map__,\n__spl_itv_map__]
 	                 [Using /aggregate on overlap/ the heights of the party's tallest guests are computed.  
 	                  Associated values are aggregated via a maximum functor, that can 
 	                  be chosen as template parameter of an interval_map class template.]]
-	[[advanced][[link boost_itl.examples.time_grids_for_months_and_weeks Time grids for months and weeks]]
+	[[advanced][[link boost_icl.examples.time_grids_for_months_and_weeks Time grids for months and weeks]]
 	                            [__spl_itv_set__]
 								             [Shows how the ['*border preserving*]
                                               __spl_itv_set__ can be used to create time partitions where different
                                               periodic time intervals overlay each other.]]
-	[[advanced][[link boost_itl.examples.man_power Man power]]      
+	[[advanced][[link boost_icl.examples.man_power Man power]]      
 		[__itv_set__,\n__itv_map__]
 		[Set style operations on __itv_sets__ and __itv_maps__ like union, difference
 	     and intersection can be used to obtain calculations in a flexible way. Example
 	     [*man_power] demonstrates such operations in the process of calculating the
 	     available man-power of a company in a given time interval.]]
-	[[advanced][[link boost_itl.examples.user_groups User groups]][__itv_map__]
+	[[advanced][[link boost_icl.examples.user_groups User groups]][__itv_map__]
 		[Example [*user_groups] shows how interval_maps can be unified or 
          intersected to calculate desired information.]]
          
-	[[and std]   [[link boost_itl.examples.std_copy Std copy]]
+	[[and std]   [[link boost_icl.examples.std_copy Std copy]]
 	    [__itv_map__][Fill interval containers using `std::copy`.]]
-	[[and std]   [[link boost_itl.examples.std_transform Std transform]]
+	[[and std]   [[link boost_icl.examples.std_transform Std transform]]
 	    [__itv_map__,\n__sep_itv_set__][Fill interval containers from user defined objects using `std::transform`.]]
+	    
+	[[customize] [[link boost_icl.examples.custom_interval Custom interval]]
+	    [JODO interval_traits][Use interval containers with your own interval class types.]]
 
 ]
 
@@ -136,7 +139,7 @@ Example *interval* shows some basic functionality of __itvs__.
 
 Example [*interval container] demonstrates the characteristic behaviors
 of different interval containers that are also summarized
-in the introductory [link boost_itl.introduction.interval_combining_styles Interval Combining Styles].
+in the introductory [link boost_icl.introduction.interval_combining_styles Interval Combining Styles].
 
 [import ../example/interval_container_/interval_container.cpp]
 [example_interval_container]
@@ -327,7 +330,7 @@ containers.
 
 To get clear about the different behaviors of interval containers 
 in the example, you may want to refer to the section about 
-[link boost_itl.introduction.interval_combining_styles interval combining styles]
+[link boost_icl.introduction.interval_combining_styles interval combining styles]
 that uses the same data.
 
 [/
@@ -353,6 +356,15 @@ Violating those preconditions leads to ['*undefined behavior*].
 
 [endsect][/ std::transform]
 
+
+[section Custom interval]
+
+Example *custom interval* demonstrates how to use interval 
+containers with an own interval class type. 
+
+[import ../example/custom_interval_/custom_interval.cpp]
+[example_custom_interval]
+[endsect][/ Custom interval]
 
 
 

@@ -22,8 +22,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/type_traits/is_floating_point.hpp>
 
 #define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
-#define BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT closed_interval
-#define BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS 3
+#define BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT right_open_interval
+#define BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS 2 //0=() 1=(] 2=[) 3=[]
 
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl/separate_interval_set.hpp>
@@ -48,6 +48,31 @@ using namespace std;
 using namespace boost;
 using namespace unit_test;
 using namespace boost::icl;
+
+
+BOOST_AUTO_TEST_CASE(intro_sample_42)
+{
+	interval_set<int> mySet;
+	mySet.insert(42);
+	bool has_answer = contains(mySet, 42);
+}
+
+BOOST_AUTO_TEST_CASE(intro_sample_telecast)
+{
+	// Switch on my favorite telecasts using an interval_set
+	interval<int>::type news(2000, 2015);
+	interval<int>::type talk_show(2245, 2330);
+	interval_set<int> myTvProgram;
+	myTvProgram.add(news).add(talk_show);
+
+	// Iterating over elements (seconds) would be silly ...
+	for(interval_set<int>::iterator telecast = myTvProgram.begin(); 
+		telecast != myTvProgram.end(); ++telecast)
+		//...so this iterates over intervals
+	    //TV.switch_on(*telecast);
+		cout << *telecast;
+}
+
 
 /*CL after Proto
 BOOST_AUTO_TEST_CASE(reverse_iter)
