@@ -9,10 +9,8 @@
 //  See http://www.boost.org/libs/chrono for documentation.
 
 //--------------------------------------------------------------------------------------//
-
-// define BOOST_CHRONO_SOURCE so that <boost/chrono/config.hpp> knows
-// the library is being built (possibly exporting rather than importing code)
-//#define BOOST_CHRONO_SOURCE
+#ifndef BOOST_CHRONO_DETAIL_INLINED_RUN_TIMER_HPP
+#define BOOST_CHRONO_DETAIL_INLINED_RUN_TIMER_HPP
 
 #include <boost/version.hpp>
 #include <boost/chrono/process_times.hpp>
@@ -28,9 +26,12 @@ namespace chrono
 {
 namespace chrono_detail
 {
-  const char * default_format =
-    "\nreal %rs, cpu %cs (%p%), user %us, system %ss\n";
+  BOOST_CHRONO_INLINE
+  const char * default_format() {
+    return "\nreal %rs, cpu %cs (%p%), user %us, system %ss\n";
+  }
 
+  BOOST_CHRONO_INLINE
   void show_time( const boost::chrono::process_times & times,
                   const char * format, int places, std::ostream & os )
   //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
@@ -131,7 +132,7 @@ namespace chrono_detail
     void run_timer::report( system::error_code & ec )
     {
       m_reported = true;
-      if ( m_format.empty() ) m_format = chrono_detail::default_format;
+      if ( m_format.empty() ) m_format = chrono_detail::default_format();
 
       process_times times;
       elapsed( times, ec );
@@ -166,7 +167,7 @@ namespace chrono_detail
 
     void run_timer::test_report( duration real_, duration user_, duration system_ )
     {
-      if ( m_format.empty() ) m_format = chrono_detail::default_format;
+      if ( m_format.empty() ) m_format = chrono_detail::default_format();
 
       process_times times;
       times.real = real_;
@@ -178,3 +179,5 @@ namespace chrono_detail
 
   } // namespace chrono
 } // namespace boost
+
+#endif

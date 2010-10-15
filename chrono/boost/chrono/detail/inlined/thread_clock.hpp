@@ -8,11 +8,8 @@
 //  See http://www.boost.org/libs/chrono for documentation.
 
 //--------------------------------------------------------------------------------------//
-
-
-// define BOOST_CHRONO_SOURCE so that <boost/chrono/config.hpp> knows
-// the library is being built (possibly exporting rather than importing code)
-//#define BOOST_CHRONO_SOURCE
+#ifndef BOOST_CHRONO_DETAIL_INLINED_THREAD_CLOCK_HPP
+#define BOOST_CHRONO_DETAIL_INLINED_THREAD_CLOCK_HPP
 
 #include <boost/chrono/config.hpp>
 #include <boost/version.hpp>
@@ -42,5 +39,5 @@
 
 #endif  // POSIX
 
-
+#endif
 #endif

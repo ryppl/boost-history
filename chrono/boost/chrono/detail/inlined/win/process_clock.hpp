@@ -1,7 +1,7 @@
 //  boost process_timer.cpp  -----------------------------------------------------------//
 
 //  Copyright Beman Dawes 1994, 2006, 2008
-//  Copyright 2009 Vicente J. Botet Escriba
+//  Copyright 2009-2010 Vicente J. Botet Escriba
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
@@ -9,33 +9,31 @@
 //  See http://www.boost.org/libs/chrono for documentation.
 
 //--------------------------------------------------------------------------------------//
-
-// define BOOST_CHRONO_SOURCE so that <boost/chrono/config.hpp> knows
-// the library is being built (possibly exporting rather than importing code)
-//#define BOOST_CHRONO_SOURCE
+#ifndef BOOST_CHRONO_DETAIL_INLINED_WIN_PROCESS_CLOCK_HPP
+#define BOOST_CHRONO_DETAIL_INLINED_WIN_PROCESS_CLOCK_HPP
 
 #include <boost/chrono/config.hpp>
-#include <boost/chrono/process_times.hpp>
 #include <boost/chrono/system_clocks.hpp>
+#include <boost/chrono/process_times.hpp>
 #include <cassert>
 
-# include <windows.h>
+#include <boost/detail/win/time.hpp>
 
 namespace boost
 {
   namespace chrono
   {
-
     
     void process_clock::now( process_times & times_, system::error_code & ec )
     {
 
       //  note that Windows uses 100 nanosecond ticks for FILETIME
-      FILETIME creation, exit, user_time, system_time;
+      boost::detail::win32::FILETIME_ creation, exit, user_time, system_time;
 
       times_.real = duration( monotonic_clock::now().time_since_epoch().count() );
 
-      if ( ::GetProcessTimes( ::GetCurrentProcess(), &creation, &exit,
+      if ( boost::detail::win32::GetProcessTimes( 
+    		  boost::detail::win32::GetCurrentProcess(), &creation, &exit,
              &system_time, &user_time ) )
       {
         ec.clear();
@@ -51,9 +49,9 @@ namespace boost
       {
         //~ assert( 0 && "error handling not implemented yet" );
 #if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-        ec.assign( ::GetLastError(), system::system_category );
+        ec.assign( boost::detail::win32::GetLastError(), system::system_category );
 #else
-        ec.assign( ::GetLastError(), system::system_category() );
+        ec.assign( boost::detail::win32::GetLastError(), system::system_category() );
 #endif          
         times_.real = times_.system = times_.user = nanoseconds(-1);
       }
@@ -61,3 +59,5 @@ namespace boost
     }
   } // namespace chrono
 } // namespace boost
+
+#endif          

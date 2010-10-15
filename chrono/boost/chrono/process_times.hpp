@@ -17,6 +17,7 @@
 #include <boost/cstdint.hpp>
 #include <string>
 #include <ostream>
+//#include <iostream>
 
 #ifndef BOOST_CHRONO_INLINED
 #include <boost/config/abi_prefix.hpp> // must be the last #include
@@ -162,7 +163,7 @@ namespace boost
         if ( !reported() ) report( ec );
       }
 
-      void  start( system::error_code & ec = system::throws )
+      BOOST_CHRONO_INLINE void  start( system::error_code & ec = system::throws )
       {
         m_reported = false;
         process_timer::start( ec );
@@ -172,9 +173,9 @@ namespace boost
 
       BOOST_CHRONO_INLINE void  test_report( duration real_, duration user_, duration system_ );
 
-      bool  reported() const { return m_reported; }
+      BOOST_CHRONO_INLINE bool  reported() const { return m_reported; }
 
-      static int default_places() { return m_default_places; }
+      BOOST_CHRONO_INLINE static int default_places() { return m_default_places; }
 
     private:
       int             m_places;
@@ -191,6 +192,7 @@ namespace boost
       bool            m_reported;
 
       BOOST_CHRONO_INLINE static std::ostream &  m_cout();
+      //{return std::cout;}
       static const int m_default_places = 3;
       run_timer(const run_timer&); // = delete;
       run_timer& operator=(const run_timer&); // = delete;

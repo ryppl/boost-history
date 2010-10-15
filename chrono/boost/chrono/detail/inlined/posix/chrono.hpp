@@ -10,7 +10,6 @@
 //                                POSIX                                     //
 //----------------------------------------------------------------------------//
 
-
 #include <time.h>  // for clock_gettime
 
 namespace boost

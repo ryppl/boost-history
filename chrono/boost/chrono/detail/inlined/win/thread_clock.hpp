@@ -8,16 +8,14 @@
 //  See http://www.boost.org/libs/chrono for documentation.
 
 //--------------------------------------------------------------------------------------//
-
-// define BOOST_CHRONO_SOURCE so that <boost/chrono/config.hpp> knows
-// the library is being built (possibly exporting rather than importing code)
-//#define BOOST_CHRONO_SOURCE
+#ifndef BOOST_CHRONO_DETAIL_INLINED_WIN_THREAD_CLOCK_HPP
+#define BOOST_CHRONO_DETAIL_INLINED_WIN_THREAD_CLOCK_HPP
 
 #include <boost/chrono/config.hpp>
 #include <boost/chrono/thread_clock.hpp>
 #include <cassert>
 
-# include <windows.h>
+#include <boost/detail/win/time.hpp>
 
 namespace boost
 {
@@ -28,9 +26,10 @@ namespace boost
     {
 
       //  note that Windows uses 100 nanosecond ticks for FILETIME
-      FILETIME creation, exit, user_time, system_time;
+    	boost::detail::win32::FILETIME_ creation, exit, user_time, system_time;
 
-      if ( ::GetThreadTimes( ::GetCurrentThread (), &creation, &exit,
+      if ( boost::detail::win32::GetThreadTimes( 
+    		  boost::detail::win32::GetCurrentThread (), &creation, &exit,
              &system_time, &user_time ) )
       {
         duration user   = duration(
@@ -49,9 +48,9 @@ namespace boost
       {
         //~ assert( 0 && "error handling not implemented yet" );
 #if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-        ec.assign( ::GetLastError(), system::system_category );
+        ec.assign( boost::detail::win32::GetLastError(), system::system_category );
 #else
-        ec.assign( ::GetLastError(), system::system_category() );
+        ec.assign( boost::detail::win32::GetLastError(), system::system_category() );
 #endif          
         return thread_clock::time_point(duration(0));
       }
@@ -62,9 +61,9 @@ namespace boost
     {
 
       //  note that Windows uses 100 nanosecond ticks for FILETIME
-      FILETIME creation, exit, user_time, system_time;
+      boost::detail::win32::FILETIME_ creation, exit, user_time, system_time;
 
-      if ( ::GetThreadTimes( ::GetCurrentThread (), &creation, &exit,
+      if ( boost::detail::win32::GetThreadTimes( boost::detail::win32::GetCurrentThread (), &creation, &exit,
              &system_time, &user_time ) )
       {
         duration user   = duration(
@@ -82,9 +81,9 @@ namespace boost
       {
         boost::throw_exception(
 #if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-            system::system_error( ::GetLastError(), system::system_category, "chrono::monotonic_clock" ));
+            system::system_error( boost::detail::win32::GetLastError(), system::system_category, "chrono::monotonic_clock" ));
 #else
-            system::system_error( ::GetLastError(), system::system_category(), "chrono::monotonic_clock" ));
+            system::system_error( boost::detail::win32::GetLastError(), system::system_category(), "chrono::monotonic_clock" ));
 #endif          
       }
 
@@ -94,3 +93,5 @@ namespace boost
     
   } // namespace chrono
 } // namespace boost
+
+#endif
