@@ -8,7 +8,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #ifndef BOOST_ITL_INTERVAL_COMBINING_STYLE_HPP_JOFA_100906
 #define BOOST_ITL_INTERVAL_COMBINING_STYLE_HPP_JOFA_100906
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 namespace interval_combine

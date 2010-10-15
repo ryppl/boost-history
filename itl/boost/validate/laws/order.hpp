@@ -13,7 +13,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/validate/laws/law.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     /*  Orders (Orderings): .<. : M x M -> bool */
@@ -84,7 +84,7 @@ namespace boost{namespace itl
     // ---------------------------------------------------------------------------
     template <typename Type, 
               template<class>class Relation,
-              template<class>class Equality = itl::std_equal>
+              template<class>class Equality = icl::std_equal>
     class Antisymmetry 
         : public Law<Antisymmetry<Type,Relation,Equality>, 
                      LOKI_TYPELIST_2(Type,Type), Loki::NullType> 
@@ -222,7 +222,7 @@ namespace boost{namespace itl
         }
     };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_ORDER_HPP_JOFA_071129
 

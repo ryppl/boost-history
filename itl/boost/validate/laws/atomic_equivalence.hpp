@@ -17,7 +17,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/itl/detail/interval_morphism.hpp>
 #include <boost/validate/laws/law.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 // ----------------------------------------------------------------------------+
@@ -39,8 +39,8 @@ template <typename SegmentsT,
           typename TargetsT,
           template<class,class,template<class>class>class Algorithm,
           template<class>class       TargetIterator = std::insert_iterator,
-          template<class,class>class Atomizer       = itl::segmental::atomizer,
-          template<class>class       Equality       = itl::std_equal         > 
+          template<class,class>class Atomizer       = icl::segmental::atomizer,
+          template<class>class       Equality       = icl::std_equal         > 
 class UnaryAtomicEquivalence : 
     public Law<UnaryAtomicEquivalence<SegmentsT, TargetsT, 
                                       Algorithm, TargetIterator, 
@@ -124,8 +124,8 @@ public:
 template <typename SegmentsT, 
           typename TargetsT,
           template<class,class>class Algorithm,
-          template<class,class>class Atomizer       = itl::segmental::atomizer,
-          template<class>class       Equality       = itl::std_equal         > 
+          template<class,class>class Atomizer       = icl::segmental::atomizer,
+          template<class>class       Equality       = icl::std_equal         > 
 class UnaryAtomicEquivalence2 : 
     public Law<UnaryAtomicEquivalence2<SegmentsT, TargetsT, 
                                        Algorithm, Atomizer, Equality>, 
@@ -213,8 +213,8 @@ template <typename SegmentsT,
           typename TargetsT,
           template<class,class,template<class>class>class Algorithm,
           template<class>class       TargetIterator = std::insert_iterator,
-          template<class,class>class Atomizer       = itl::segmental::atomizer,
-          template<class>class       Equality       = itl::std_equal         > 
+          template<class,class>class Atomizer       = icl::segmental::atomizer,
+          template<class>class       Equality       = icl::std_equal         > 
 class BinaryAtomicEquivalence : 
     public Law<BinaryAtomicEquivalence<SegmentsT, TargetsT, 
                                        Algorithm, TargetIterator, 
@@ -282,7 +282,7 @@ public:
     }
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_LAWS_ATOMIC_EQUIVALENCE_HPP_JOFA_091124
 

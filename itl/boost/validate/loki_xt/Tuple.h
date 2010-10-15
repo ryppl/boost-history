@@ -740,7 +740,7 @@ namespace Loki
 
             static std::string Do(const TupleT& obj)
             {
-                return boost::itl::to_string<HeadType>::apply(get<0>(obj));
+                return boost::icl::to_string<HeadType>::apply(get<0>(obj));
             }
         };
 
@@ -752,7 +752,7 @@ namespace Loki
 
             static std::string Do(const TupleT& obj)
             {
-                return boost::itl::to_string<HeadType>::apply(get<0>(obj)) 
+                return boost::icl::to_string<HeadType>::apply(get<0>(obj)) 
                        + ", " + Stringer<TailClass, i-1>::Do(obj);
             }
         };
@@ -832,7 +832,7 @@ namespace Loki
         {
             static std::string apply(const SourceT& src)
             {
-                return boost::itl::to_string<SourceT>::apply(src);
+                return boost::icl::to_string<SourceT>::apply(src);
             }
         };
         // ---------------------------------------------------------------------------

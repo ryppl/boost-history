@@ -15,7 +15,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/utility.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     
     class unsigned_quantifier_driver : public itl_driver
@@ -103,10 +103,10 @@ namespace boost{namespace itl
             //-----------------------------------------------------------------
             case RootType::itl_map: {
                 switch(identityHandlerChoice) {
-                case IdentityHandlerType::partial_absorber: return new unsigned_quantifier_validater<itl::map<double,double,partial_absorber> >;
-                case IdentityHandlerType::partial_enricher: return new unsigned_quantifier_validater<itl::map<double,nat,   partial_enricher> >;
-                case IdentityHandlerType::total_absorber:   return new unsigned_quantifier_validater<itl::map<int,   double,total_absorber  > >;
-                case IdentityHandlerType::total_enricher:   return new unsigned_quantifier_validater<itl::map<int,   nat,   total_enricher  > >;
+                case IdentityHandlerType::partial_absorber: return new unsigned_quantifier_validater<icl::map<double,double,partial_absorber> >;
+                case IdentityHandlerType::partial_enricher: return new unsigned_quantifier_validater<icl::map<double,nat,   partial_enricher> >;
+                case IdentityHandlerType::total_absorber:   return new unsigned_quantifier_validater<icl::map<int,   double,total_absorber  > >;
+                case IdentityHandlerType::total_enricher:   return new unsigned_quantifier_validater<icl::map<int,   nat,   total_enricher  > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::itl_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case itl_map 
@@ -140,5 +140,5 @@ namespace boost{namespace itl
     };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 

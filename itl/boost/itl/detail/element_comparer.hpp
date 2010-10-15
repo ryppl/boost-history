@@ -13,7 +13,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/type_traits/identity_element.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 namespace Interval_Set
@@ -204,7 +204,7 @@ int element_compare
 
 } // namespace Interval_Set
     
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif 
 

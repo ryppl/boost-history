@@ -12,7 +12,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 #include <boost/itl/interval_map.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 /// Adds episodes of different types into a single history of episode_products
@@ -74,7 +74,7 @@ protected:
     }
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // __product_history_h_JOFA_011005_H__
 

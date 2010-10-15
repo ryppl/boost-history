@@ -36,7 +36,7 @@ DEALINGS IN THE SOFTWARE.
 #include <string>
 #include <sstream>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     /// tuple of independent variables 
     /** class var_tuple: Die Tupel unabhängiger Variablen. Beschreiben
@@ -91,14 +91,14 @@ namespace boost{namespace itl
 
 
     template <int varCountV>
-    itl::var_tuple<varCountV>::var_tuple (StatVarTD val) // vor VC8: itl::var_tuple<varCountV>::var_tuple<varCountV>(StatVarTD val)
+    icl::var_tuple<varCountV>::var_tuple (StatVarTD val) // vor VC8: icl::var_tuple<varCountV>::var_tuple<varCountV>(StatVarTD val)
     {
         FOREACH_VAR(idx) 
             m_tupel[idx] = val;
     }
 
     template <int varCountV>
-    itl::var_tuple<varCountV>::var_tuple (const var_tuple<varCountV>& src)
+    icl::var_tuple<varCountV>::var_tuple (const var_tuple<varCountV>& src)
     {
         FOREACH_VAR(idx)
             m_tupel[idx] = src.m_tupel[idx];
@@ -172,7 +172,7 @@ namespace boost{namespace itl
 
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 
 

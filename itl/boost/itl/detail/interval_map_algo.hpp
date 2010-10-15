@@ -20,7 +20,7 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 #include <boost/itl/detail/element_comparer.hpp>
 #include <boost/itl/detail/interval_subset_comparer.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 
@@ -40,12 +40,12 @@ bool is_joinable(const IntervalMapT& container,
     ++next_;
 
     const typename IntervalMapT::codomain_type& co_value 
-        = itl::co_value<IntervalMapT>(first);
+        = icl::co_value<IntervalMapT>(first);
     while(it_ != past)
     {
-        if(itl::co_value<IntervalMapT>(next_) != co_value)
+        if(icl::co_value<IntervalMapT>(next_) != co_value)
             return false;
-        if(!itl::touches(key_value<IntervalMapT>(it_++),
+        if(!icl::touches(key_value<IntervalMapT>(it_++),
                          key_value<IntervalMapT>(next_++)))
             return false;
     }
@@ -81,7 +81,7 @@ contains(const IntervalMapT& container,
          const typename IntervalMapT::interval_type& sub_interval) 
 {
     typedef typename IntervalMapT::const_iterator const_iterator;
-    if(itl::is_empty(sub_interval)) 
+    if(icl::is_empty(sub_interval)) 
         return true;
 
     std::pair<const_iterator, const_iterator> exterior = container.equal_range(sub_interval);
@@ -91,7 +91,7 @@ contains(const IntervalMapT& container,
     const_iterator last_overlap = prior(exterior.second);
 
     return
-          itl::contains(hull(exterior.first->first, last_overlap->first), sub_interval)
+          icl::contains(hull(exterior.first->first, last_overlap->first), sub_interval)
       &&  Interval_Set::is_joinable(container, exterior.first, last_overlap);
 }
 
@@ -139,7 +139,7 @@ bool contains(const IntervalMapT& container,
 {
     typedef typename IntervalMapT::const_iterator const_iterator;
     typename IntervalMapT::interval_type sub_interval = sub_segment.first;
-    if(itl::is_empty(sub_interval)) 
+    if(icl::is_empty(sub_interval)) 
         return true;
 
     std::pair<const_iterator, const_iterator> exterior = container.equal_range(sub_interval);
@@ -152,7 +152,7 @@ bool contains(const IntervalMapT& container,
         return false;
 
     return
-          itl::contains(hull(exterior.first->first, last_overlap->first), sub_interval)
+          icl::contains(hull(exterior.first->first, last_overlap->first), sub_interval)
       &&  Interval_Map::is_joinable(container, exterior.first, last_overlap);
 }
 
@@ -165,7 +165,7 @@ bool contains(const IntervalMapT& super, const IntervalMapT& sub)
 
 } // namespace Interval_Map
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif 
 

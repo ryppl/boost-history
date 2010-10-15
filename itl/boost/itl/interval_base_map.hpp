@@ -31,7 +31,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #define const_FOR_IMPLMAP(iter) for(typename ImplMapT::const_iterator iter=_map.begin(); (iter)!=_map.end(); (iter)++)
 #define FOR_IMPLMAP(iter) for(typename ImplMapT::iterator iter=_map.begin(); (iter)!=_map.end(); (iter)++)
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template<class DomainT, class CodomainT>
@@ -55,10 +55,10 @@ template
     class SubType,
     typename DomainT,
     typename CodomainT,
-    class Traits = itl::partial_absorber,
+    class Traits = icl::partial_absorber,
     ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
-    ITL_COMBINE Combine  = ITL_COMBINE_INSTANCE(itl::inplace_plus, CodomainT),
-    ITL_SECTION Section  = ITL_SECTION_INSTANCE(itl::inter_section, CodomainT), 
+    ITL_COMBINE Combine  = ITL_COMBINE_INSTANCE(icl::inplace_plus, CodomainT),
+    ITL_SECTION Section  = ITL_SECTION_INSTANCE(icl::inter_section, CodomainT), 
     ITL_INTERVAL(ITL_COMPARE) Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, DomainT, Compare),
     ITL_ALLOC   Alloc    = std::allocator
 >
@@ -85,7 +85,7 @@ public:
     //- Associated types: Related types
     //--------------------------------------------------------------------------
     /// The atomized type representing the corresponding container of elements
-    typedef typename itl::map<DomainT,CodomainT,
+    typedef typename icl::map<DomainT,CodomainT,
                               Traits,Compare,Combine,Section,Alloc> atomized_type;
 
     //--------------------------------------------------------------------------
@@ -180,13 +180,13 @@ public:
     typedef typename ImplMapT::const_reverse_iterator const_reverse_iterator;
 
     /// element iterator: Depreciated, see documentation.
-    typedef boost::itl::element_iterator<iterator> element_iterator; 
+    typedef boost::icl::element_iterator<iterator> element_iterator; 
     /// const element iterator: Depreciated, see documentation.
-    typedef boost::itl::element_iterator<const_iterator> element_const_iterator; 
+    typedef boost::icl::element_iterator<const_iterator> element_const_iterator; 
     /// element reverse iterator: Depreciated, see documentation.
-    typedef boost::itl::element_iterator<reverse_iterator> element_reverse_iterator; 
+    typedef boost::icl::element_iterator<reverse_iterator> element_reverse_iterator; 
     /// element const reverse iterator: Depreciated, see documentation.
-    typedef boost::itl::element_iterator<const_reverse_iterator> element_const_reverse_iterator; 
+    typedef boost::icl::element_iterator<const_reverse_iterator> element_const_reverse_iterator; 
     
     typedef typename on_absorbtion<type, codomain_combine, 
                                 Traits::absorbs_identities>::type on_codomain_absorbtion;
@@ -234,10 +234,10 @@ public:
     //= Containedness
     //==========================================================================
     /** clear the map */
-    void clear() { itl::clear(*that()); }
+    void clear() { icl::clear(*that()); }
 
     /** is the map empty? */
-    bool empty()const { return itl::is_empty(*that()); }
+    bool empty()const { return icl::is_empty(*that()); }
 
     //==========================================================================
     //= Size
@@ -245,7 +245,7 @@ public:
     /** An interval map's size is it's cardinality */
     size_type size()const
     {
-        return itl::cardinality(*that());
+        return icl::cardinality(*that());
     }
 
     /** Size of the iteration over this container */
@@ -284,7 +284,7 @@ public:
     /** Addition of a key value pair to the map */
     SubType& add(const element_type& key_value_pair) 
     {
-        return itl::add(*that(), key_value_pair);
+        return icl::add(*that(), key_value_pair);
     }
 
     /** Addition of an interval value pair to the map. */
@@ -308,7 +308,7 @@ public:
     /** Subtraction of a key value pair from the map */
     SubType& subtract(const element_type& key_value_pair)
     { 
-        return itl::subtract(*that(), key_value_pair);
+        return icl::subtract(*that(), key_value_pair);
     }
 
     /** Subtraction of an interval value pair from the map. */
@@ -325,7 +325,7 @@ public:
     /** Insertion of a \c key_value_pair into the map. */
     SubType& insert(const element_type& key_value_pair) 
     {
-        return itl::insert(*that(), key_value_pair);
+        return icl::insert(*that(), key_value_pair);
     }
 
     /** Insertion of an \c interval_value_pair into the map. */
@@ -345,14 +345,14 @@ public:
     /** With <tt>key_value_pair = (k,v)</tt> set value \c v for key \c k */
     SubType& set(const element_type& key_value_pair) 
     { 
-        return itl::set_at(*that(), key_value_pair);
+        return icl::set_at(*that(), key_value_pair);
     }
 
     /** With <tt>interval_value_pair = (I,v)</tt> set value \c v 
         for all keys in interval \c I in the map. */
     SubType& set(const segment_type& interval_value_pair)
     { 
-        return itl::set_at(*that(), interval_value_pair);
+        return icl::set_at(*that(), interval_value_pair);
     }
 
     //==========================================================================
@@ -361,7 +361,7 @@ public:
     /** Erase a \c key_value_pair from the map. */
     SubType& erase(const element_type& key_value_pair) 
     { 
-        itl::erase(*that(), key_value_pair);
+        icl::erase(*that(), key_value_pair);
         return *that();
     }
 
@@ -371,7 +371,7 @@ public:
     /** Erase a key value pair for \c key. */
     SubType& erase(const domain_type& key) 
     { 
-        return itl::erase(*that(), key); 
+        return icl::erase(*that(), key); 
     }
 
     /** Erase all value pairs within the range of the 
@@ -402,7 +402,7 @@ public:
     /** If \c *this map contains \c key_value_pair it is erased, otherwise it is added. */
     SubType& flip(const element_type& key_value_pair)
     { 
-        return itl::flip(*that(), key_value_pair); 
+        return icl::flip(*that(), key_value_pair); 
     }
 
     /** If \c *this map contains \c interval_value_pair it is erased, otherwise it is added. */
@@ -493,7 +493,7 @@ private:
     void partial_add_intersection(SubType& section, const segment_type& operand)const
     {
         interval_type inter_val = operand.first;
-        if(itl::is_empty(inter_val)) 
+        if(icl::is_empty(inter_val)) 
             return;
 
         std::pair<const_iterator, const_iterator> exterior 
@@ -504,7 +504,7 @@ private:
         for(const_iterator it_=exterior.first; it_ != exterior.second; it_++) 
         {
             interval_type common_interval = it_->first & inter_val; 
-            if(!itl::is_empty(common_interval))
+            if(!icl::is_empty(common_interval))
             {
                 section.template _add<codomain_combine>  (value_type(common_interval, it_->second) );
                 section.template _add<codomain_intersect>(value_type(common_interval, operand.second));
@@ -680,7 +680,7 @@ private:
     struct on_total_absorbable<Type, true, true>
     {
         static void flip(Type& object, const typename Type::segment_type& operand)
-        { itl::clear(object); }
+        { icl::clear(object); }
     };
 
     template<class Type>
@@ -696,7 +696,7 @@ private:
                 it_->second = identity_element<codomain_type>::value();
 
             if(mpl::not_<is_interval_splitter<Type> >::value)
-                itl::join(object);
+                icl::join(object);
         }
     };
 
@@ -741,16 +741,16 @@ private:
 
                 //That which is common ...
                 common_interval = span & covered;
-                if(!itl::is_empty(common_interval))
+                if(!icl::is_empty(common_interval))
                 {
                     // ... shall be subtracted
-                    itl::add(eraser, common_interval);
+                    icl::add(eraser, common_interval);
 
                     on_codomain_model<Type, has_set_semantics<codomain_type>::value>
                         ::add(intersection, common_interval, x_value, co_value);
                 }
 
-                itl::add(object, value_type(left_over, x_value)); //That which is not shall be added
+                icl::add(object, value_type(left_over, x_value)); //That which is not shall be added
                 // Because this is a collision free addition I don't have to distinguish codomain_types.
 
                 //...      d) : span
@@ -760,10 +760,10 @@ private:
             }
 
             //If span is not empty here, it is not in the set so it shall be added
-            itl::add(object, value_type(span, x_value));
+            icl::add(object, value_type(span, x_value));
 
             //finally rewrite the common segments
-            itl::erase(object, eraser);
+            icl::erase(object, eraser);
             object += intersection;
         }
     };
@@ -785,7 +785,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
     // only for the first there can be a left_resid: a part of *first_ left of inter_val
     interval_type left_resid = right_subtract(first_->first, inter_val);
 
-    if(!itl::is_empty(left_resid))
+    if(!icl::is_empty(left_resid))
     {   //            [------------ . . .
         // [left_resid---first_ --- . . .
         iterator prior_ = cyclic_prior(*this, first_);
@@ -805,7 +805,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
     ::add_segment(const interval_type& inter_val, const CodomainT& co_val, iterator& it_)
 {
     interval_type lead_gap = right_subtract(inter_val, it_->first);
-    if(!itl::is_empty(lead_gap))
+    if(!icl::is_empty(lead_gap))
     {
         // [lead_gap--- . . .
         //          [-- it_ ...
@@ -846,7 +846,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
     interval_type cur_itv = it_->first ;
 
     interval_type lead_gap = right_subtract(inter_val, cur_itv);
-    if(!itl::is_empty(lead_gap))
+    if(!icl::is_empty(lead_gap))
     {   //         [lead_gap--- . . .
         // [prior)          [-- it_ ...
         iterator inserted_ = this->template gap_insert<Combiner>(prior_, lead_gap, co_val);
@@ -854,7 +854,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
     }
 
     interval_type end_gap = left_subtract(inter_val, cur_itv);
-    if(!itl::is_empty(end_gap))
+    if(!icl::is_empty(end_gap))
     {
         // [----------------end_gap)
         //  . . . -- it_ --)
@@ -866,7 +866,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
         // only for the last there can be a right_resid: a part of *it_ right of x
         interval_type right_resid = left_subtract(cur_itv, inter_val);
 
-        if(itl::is_empty(right_resid))
+        if(icl::is_empty(right_resid))
         {
             // [---------------)
             //      [-- it_ ---)
@@ -905,7 +905,7 @@ inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
                                 absorbs_identities<type>::value>::type on_absorbtion_;
 
     const interval_type& inter_val = addend.first;
-    if(itl::is_empty(inter_val)) 
+    if(icl::is_empty(inter_val)) 
         return this->_map.end();
 
     const codomain_type& co_val = addend.second;
@@ -943,7 +943,7 @@ inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
                                 absorbs_identities<type>::value>::type on_absorbtion_;
 
     const interval_type& inter_val = addend.first;
-    if(itl::is_empty(inter_val)) 
+    if(icl::is_empty(inter_val)) 
         return prior_;
 
     const codomain_type& co_val = addend.second;
@@ -980,7 +980,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
 {
     interval_type left_resid = right_subtract(it_->first, inter_val);
 
-    if(!itl::is_empty(left_resid)) //                     [--- inter_val ---)
+    if(!icl::is_empty(left_resid)) //                     [--- inter_val ---)
     {                              //[prior_) [left_resid)[--- it_ . . .
         iterator prior_ = cyclic_prior(*this, it_); 
         const_cast<interval_type&>(it_->first) = left_subtract(it_->first, left_resid);
@@ -1010,7 +1010,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
 {
     interval_type right_resid = left_subtract(it_->first, inter_val);
 
-    if(itl::is_empty(right_resid))
+    if(icl::is_empty(right_resid))
     {
         Combiner()(it_->second, co_val);
         that()->template handle_combined<Combiner>(it_);
@@ -1033,7 +1033,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
     ::_subtract(const segment_type& minuend)
 {
     interval_type inter_val = minuend.first;
-    if(itl::is_empty(inter_val)) 
+    if(icl::is_empty(inter_val)) 
         return;
 
     const codomain_type& co_val = minuend.second;
@@ -1071,7 +1071,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
         cur_itv = it_->first ;            
         left_gap = right_subtract(rest_interval, cur_itv);
 
-        if(!itl::is_empty(left_gap))
+        if(!icl::is_empty(left_gap))
         {
             inserted_ = this->_map.insert(prior_, value_type(left_gap, co_val));
             it_ = that()->handle_inserted(inserted_);
@@ -1085,7 +1085,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
 
     //insert_rear(rest_interval, co_val, last_):
     interval_type end_gap = left_subtract(rest_interval, last_interval);
-    if(!itl::is_empty(end_gap))
+    if(!icl::is_empty(end_gap))
     {
         inserted_ = this->_map.insert(prior_, value_type(end_gap, co_val));
         it_ = that()->handle_inserted(inserted_);
@@ -1101,7 +1101,7 @@ inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
     ::_insert(const segment_type& addend)
 {
     interval_type inter_val = addend.first;
-    if(itl::is_empty(inter_val)) 
+    if(icl::is_empty(inter_val)) 
         return this->_map.end();
 
     const codomain_type& co_val = addend.second;
@@ -1131,7 +1131,7 @@ inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
     ::_insert(iterator prior_, const segment_type& addend)
 {
     interval_type inter_val = addend.first;
-    if(itl::is_empty(inter_val)) 
+    if(icl::is_empty(inter_val)) 
         return prior_;
 
     const codomain_type& co_val = addend.second;
@@ -1170,7 +1170,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
     if(it_->second == co_val)
     {
         interval_type right_resid = left_subtract(it_->first, inter_val);
-        if(itl::is_empty(right_resid))
+        if(icl::is_empty(right_resid))
             this->_map.erase(it_);
         else
             const_cast<interval_type&>(it_->first) = right_resid;
@@ -1182,7 +1182,7 @@ inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
     ::erase(const segment_type& minuend)
 {
     interval_type inter_val = minuend.first;
-    if(itl::is_empty(inter_val)) 
+    if(icl::is_empty(inter_val)) 
         return *that();
 
     const codomain_type& co_val = minuend.second;
@@ -1206,13 +1206,13 @@ inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
         if(first_->second == co_val)
         {   
             interval_type left_resid = right_subtract(first_->first, inter_val);
-            if(!itl::is_empty(left_resid)) //            [----inter_val----)
+            if(!icl::is_empty(left_resid)) //            [----inter_val----)
             {                              // [left_resid)..first_==last_......
                 const_cast<interval_type&>(first_->first) = left_resid;
-                if(!itl::is_empty(right_resid))
+                if(!icl::is_empty(right_resid))
                     this->_map.insert(first_, value_type(right_resid, co_val));
             }
-            else if(!itl::is_empty(right_resid))
+            else if(!icl::is_empty(right_resid))
                 const_cast<interval_type&>(first_->first) = right_resid;
             else
                 this->_map.erase(first_);
@@ -1224,7 +1224,7 @@ inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
         if(first_->second == co_val)
         {
             interval_type left_resid = right_subtract(first_->first, inter_val);
-            if(itl::is_empty(left_resid))
+            if(icl::is_empty(left_resid))
                 this->_map.erase(first_);
             else
                 const_cast<interval_type&>(first_->first) = left_resid;
@@ -1243,7 +1243,7 @@ template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPA
 inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::erase(const interval_type& minuend)
 {
-    if(itl::is_empty(minuend)) 
+    if(icl::is_empty(minuend)) 
         return *that();
 
     std::pair<iterator, iterator> exterior = this->_map.equal_range(minuend);
@@ -1258,13 +1258,13 @@ inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
     interval_type right_resid =  left_subtract(last_ ->first, minuend);
 
     if(first_ == last_ )
-        if(!itl::is_empty(left_resid))
+        if(!icl::is_empty(left_resid))
         {
             const_cast<interval_type&>(first_->first) = left_resid;
-            if(!itl::is_empty(right_resid))
+            if(!icl::is_empty(right_resid))
                 this->_map.insert(first_, value_type(right_resid, first_->second));
         }
-        else if(!itl::is_empty(right_resid))
+        else if(!icl::is_empty(right_resid))
             const_cast<interval_type&>(first_->first) = left_subtract(first_->first, minuend);
         else
             this->_map.erase(first_);
@@ -1273,14 +1273,14 @@ inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
         // [left_resid   fst)   . . . .    [lst  right_resid)
         iterator second_= first_; ++second_;
 
-        iterator start_ = itl::is_empty(left_resid)? first_: second_;
-        iterator stop_  = itl::is_empty(right_resid)? end_  : last_ ;
+        iterator start_ = icl::is_empty(left_resid)? first_: second_;
+        iterator stop_  = icl::is_empty(right_resid)? end_  : last_ ;
         this->_map.erase(start_, stop_); //erase [start_, stop_)
 
-        if(!itl::is_empty(left_resid))
+        if(!icl::is_empty(left_resid))
             const_cast<interval_type&>(first_->first) = left_resid;
 
-        if(!itl::is_empty(right_resid))
+        if(!icl::is_empty(right_resid))
             const_cast<interval_type&>(last_ ->first) = right_resid;
     }
 
@@ -1295,9 +1295,9 @@ template
     class SubType,
     class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
 >
-struct is_map<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
+struct is_map<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
-    typedef is_map<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+    typedef is_map<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
@@ -1306,9 +1306,9 @@ template
     class SubType,
     class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
 >
-struct has_inverse<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
+struct has_inverse<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
-    typedef has_inverse<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+    typedef has_inverse<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = (has_inverse<CodomainT>::value)); 
 };
 
@@ -1317,9 +1317,9 @@ template
     class SubType,
     class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
 >
-struct is_interval_container<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
+struct is_interval_container<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
-    typedef is_interval_container<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+    typedef is_interval_container<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
@@ -1328,9 +1328,9 @@ template
     class SubType,
     class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
 >
-struct absorbs_identities<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
+struct absorbs_identities<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 {
-    typedef absorbs_identities<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+    typedef absorbs_identities<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = (Traits::absorbs_identities)); 
 };
 
@@ -1339,15 +1339,15 @@ template
     class SubType,
     class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc
 >
-struct is_total<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
+struct is_total<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 {
-    typedef is_total<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+    typedef is_total<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = (Traits::is_total)); 
 };
 
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

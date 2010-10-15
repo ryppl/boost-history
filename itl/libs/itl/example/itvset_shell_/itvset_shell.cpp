@@ -19,7 +19,7 @@ The shell also gives you a good idea how interval container are working.
 
 using namespace std;
 using namespace boost;
-using namespace boost::itl;
+using namespace boost::icl;
 
 void instructions()
 {
@@ -92,7 +92,7 @@ void setTestShell()
                 break;
             case 'j':
                 {
-                    itl::join(m1);
+                    icl::join(m1);
                     cout << "{" << m1 << "}" << endl;
                 }
                 break;
@@ -123,7 +123,7 @@ void setTestShell()
 
 int main()
 {
-    cout << ">> Interval Template Library: Test itvset_shell.cpp <<\n";
+    cout << ">>Interval Container Library: Test itvset_shell.cpp <<\n";
     cout << "------------------------------------------------------\n";
     setTestShell< interval_set<int> >();
 

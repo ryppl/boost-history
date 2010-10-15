@@ -16,7 +16,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/segment_type_of.hpp> 
 #include <boost/itl/type_traits/is_map.hpp> 
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
     namespace detail
     {

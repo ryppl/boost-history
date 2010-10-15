@@ -13,7 +13,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <functional>
 #include <boost/itl/type_traits/type_to_string.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     // naming convention
     // predicate: n-ary predicate
@@ -66,7 +66,7 @@ namespace boost{namespace itl
     //-----------------------------------------------------------------------------
 
     template<>         
-    inline std::string unary_template_to_string<itl::std_equal>::apply()
+    inline std::string unary_template_to_string<icl::std_equal>::apply()
     { return "=="; }
 
     template <class Type> 
@@ -79,7 +79,7 @@ namespace boost{namespace itl
     };
 
     template<>
-    inline std::string unary_template_to_string<itl::element_equal>::apply()  
+    inline std::string unary_template_to_string<icl::element_equal>::apply()  
     { return "="; }
 
     template <class Type> 
@@ -92,7 +92,7 @@ namespace boost{namespace itl
     };
 
     template<>
-    inline std::string unary_template_to_string<itl::distinct_equal>::apply()  
+    inline std::string unary_template_to_string<icl::distinct_equal>::apply()  
     { return "==/0"; }
 
 
@@ -111,7 +111,7 @@ namespace boost{namespace itl
     };
 
     template<>
-    inline std::string unary_template_to_string<itl::sub_super_set>::apply()  
+    inline std::string unary_template_to_string<icl::sub_super_set>::apply()  
     { return "C="; }
 
     /// Functor class template <b>contains</b> implements the superset relation. 
@@ -128,10 +128,10 @@ namespace boost{namespace itl
     };
 
     template<>
-    inline std::string unary_template_to_string<itl::super_sub_set>::apply()  
+    inline std::string unary_template_to_string<icl::super_sub_set>::apply()  
     { return "D="; }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

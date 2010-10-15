@@ -12,7 +12,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/is_numeric.hpp>
 #include <boost/mpl/if.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 #ifdef BOOST_MSVC 

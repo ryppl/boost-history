@@ -13,7 +13,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/validate/laws/law.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     // ---------------------------------------------------------------------------
@@ -128,7 +128,7 @@ namespace boost{namespace itl
     }; //class BinaryPushout
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_PUSHOUTS_HPP_JOFA_071124
 

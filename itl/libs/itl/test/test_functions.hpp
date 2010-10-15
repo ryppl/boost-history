@@ -19,15 +19,15 @@ Auxiliary functions to reduce redundancies in test case code.
 #include <boost/itl/type_traits/identity_element.hpp>
 #include <boost/itl/functors.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <class T, class U, class Trt,
           template<class T, class U,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(icl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(icl::inter_section, U),
                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap,
@@ -45,8 +45,8 @@ template <class T, class U, class Trt,
           template<class T, class U,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
-                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(icl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(icl::inter_section, U),
                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap,
@@ -64,7 +64,7 @@ void test_interval_map_copy_via_inserter(const SequenceT& segments, IntervalMap<
     BOOST_CHECK_EQUAL( looped_copied_map, std_copied_map );
 }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_TEST_FUNCTIONS_H_JOFA_091003
 

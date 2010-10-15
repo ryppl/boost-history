@@ -29,7 +29,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/difference_type_of.hpp>
 #include <boost/itl/type_traits/size_type_of.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     template<> struct is_discrete<boost::gregorian::date>
     {
@@ -95,7 +95,7 @@ namespace boost{namespace itl
     // ------------------------------------------------------------------------
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

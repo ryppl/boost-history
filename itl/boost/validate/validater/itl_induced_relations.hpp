@@ -16,7 +16,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/validater/law_validater.hpp>
 #include <boost/validate/validater/concept_validater.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     template <typename Type>
@@ -61,7 +61,7 @@ namespace boost{namespace itl
     }; //class itl_induced_relations_validater
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif BOOST_ITL_VALIDATE_VALIDATER_ITL_INDUCED_RELATIONS_HPP_JOFA_090304
 

@@ -40,7 +40,7 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/itl/concept/element_map.hpp>
 #include <boost/itl/concept/element_associator.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 struct partial_absorber
@@ -86,10 +86,10 @@ template
 <
     typename DomainT, 
     typename CodomainT, 
-    class Traits = itl::partial_absorber,
+    class Traits = icl::partial_absorber,
     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT),
-    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, CodomainT),
-    ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, CodomainT), 
+    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(icl::inplace_plus, CodomainT),
+    ITL_SECTION Section = ITL_SECTION_INSTANCE(icl::inter_section, CodomainT), 
     ITL_ALLOC   Alloc   = std::allocator 
 >
 class map: private ITL_IMPL_SPACE::map<DomainT, CodomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), 
@@ -98,10 +98,10 @@ class map: private ITL_IMPL_SPACE::map<DomainT, CodomainT, ITL_COMPARE_DOMAIN(Co
 public:
     typedef Alloc<typename std::pair<const DomainT, CodomainT> >  allocator_type;
 
-    typedef typename itl::map<DomainT,CodomainT,Traits, Compare,Combine,Section,Alloc> type;
+    typedef typename icl::map<DomainT,CodomainT,Traits, Compare,Combine,Section,Alloc> type;
     typedef typename ITL_IMPL_SPACE::map<DomainT, CodomainT, ITL_COMPARE_DOMAIN(Compare,DomainT),
                                          allocator_type>   base_type;
-    typedef typename itl::set<DomainT, Compare, Alloc >    set_type;
+    typedef typename icl::set<DomainT, Compare, Alloc >    set_type;
     typedef set_type                                       key_object_type;
 
     typedef Traits traits;
@@ -227,10 +227,10 @@ public:
 
     template<class SubObject>
     bool contains(const SubObject& sub)const 
-    { return itl::contains(*this, sub); }
+    { return icl::contains(*this, sub); }
 
     bool within(const map& super)const 
-    { return itl::contains(super, *this); }
+    { return icl::contains(super, *this); }
 
     //==========================================================================
     //= Size
@@ -285,7 +285,7 @@ public:
 
     map& subtract(const domain_type& key)
     {
-        itl::erase(*this, key);
+        icl::erase(*this, key);
         return *this;
     }
 
@@ -311,14 +311,14 @@ public:
     /** With <tt>key_value_pair = (k,v)</tt> set value \c v for key \c k */
     map& set(const element_type& key_value_pair)
     { 
-        return itl::set_at(*this, key_value_pair);
+        return icl::set_at(*this, key_value_pair);
     }
 
     /** erase \c key_value_pair from the map.
         Erase only if, the exact value content \c val is stored for the given key. */
     size_type erase(const element_type& key_value_pair)
     {
-        return itl::erase(*this, key_value_pair); 
+        return icl::erase(*this, key_value_pair); 
     }
 
     //==========================================================================
@@ -476,7 +476,7 @@ private:
     {
         typedef typename Type::element_type  element_type;
         static void flip(Type& object, const typename Type::element_type&)
-        { itl::clear(object); }
+        { icl::clear(object); }
     };
 
     template<class Type>
@@ -621,35 +621,35 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 // type traits
 //-----------------------------------------------------------------------------
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-struct is_map<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
+struct is_map<icl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 { 
-    typedef is_map<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> > type;
+    typedef is_map<icl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-struct has_inverse<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
+struct has_inverse<icl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 { 
-    typedef has_inverse<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> > type;
+    typedef has_inverse<icl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = (has_inverse<CodomainT>::value)); 
 };
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-struct absorbs_identities<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
+struct absorbs_identities<icl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 { 
     typedef absorbs_identities type;
     BOOST_STATIC_CONSTANT(int, value = Traits::absorbs_identities); 
 };
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-struct is_total<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
+struct is_total<icl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 { 
     typedef is_total type;
     BOOST_STATIC_CONSTANT(int, value = Traits::is_total); 
 };
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-struct type_to_string<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
+struct type_to_string<icl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 {
     static std::string apply()
     {
@@ -661,7 +661,7 @@ struct type_to_string<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,
 
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_MAP_HPP_JOFA_070519
 

@@ -30,7 +30,7 @@ DEALINGS IN THE SOFTWARE.
 #include <stdafx.h>
 #include "prefix_set.h"
 
-using namespace boost::itl;
+using namespace boost::icl;
 
 
 int prefix_set::compareStrings(int& comSize, const char* s1, const char* s2)

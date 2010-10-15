@@ -19,7 +19,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/type_traits/interval_type_default.hpp>
 #include <boost/itl_xt/gentorit.hpp>
 
-using namespace boost::itl;
+using namespace boost::icl;
 
 #define RND_1_TO(y)      (1+(int)((double)(y)*rand()/(RAND_MAX+1.0)))
 #define RND_0_TO(y)      ((int)((double)((y)+1)*rand()/(RAND_MAX+1.0)))
@@ -31,7 +31,7 @@ using namespace boost::itl;
 
 #define RND_WITHIN_EXUPB(x,y) ((x)+((double)((y)-(x))*rand()/(RAND_MAX+1.0)))
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <class NumTV>
@@ -56,7 +56,7 @@ template <class NumT>
 class NumberGentorProfile : public RandomGentorProfile<NumT>
 {
 public:
-    typedef typename itl::interval<NumT>::type range_type;
+    typedef typename icl::interval<NumT>::type range_type;
 private:
     range_type _range;
 };
@@ -65,7 +65,7 @@ template <class NumTV>
 class NumberGentorT : public RandomGentorAT<NumTV>
 {
 public:
-    typedef typename itl::interval<NumTV>::type range_type;
+    typedef typename icl::interval<NumTV>::type range_type;
 public:
     NumberGentorT(): 
       m_valueRange( NumTV(), unit_element<NumTV>::value() ) {}
@@ -74,16 +74,16 @@ public:
     NumTV operator() (NumTV lwb, NumTV upb)  { return rnd_within_exUpb<NumTV>(lwb,upb); }
     NumTV operator() (range_type rng) 
     { 
-        BOOST_ASSERT(   itl::bounds(rng) == interval_bounds::right_open() 
-                     || itl::bounds(rng) == interval_bounds::closed());
-        if(itl::bounds(rng) == interval_bounds::right_open())
+        BOOST_ASSERT(   icl::bounds(rng) == interval_bounds::right_open() 
+                     || icl::bounds(rng) == interval_bounds::closed());
+        if(icl::bounds(rng) == interval_bounds::right_open())
             return rnd_within_exUpb<NumTV>(rng.lower(), rng.upper());
         else
             return rnd_within<NumTV>(rng.lower(), rng.upper());
     }
 
     void setRange(range_type rng) { m_valueRange = rng; }
-    void setRange(NumTV lwb, NumTV upb) { m_valueRange = itl::interval<NumTV>::right_open(lwb,upb); } 
+    void setRange(NumTV lwb, NumTV upb) { m_valueRange = icl::interval<NumTV>::right_open(lwb,upb); } 
 
     void calibrate(const RandomGentorProfile<NumTV>& profile)
     {
@@ -253,7 +253,7 @@ std::string WeightedNumberGentor<WeightsT>::inconsitencyMessage(const std::strin
     return message;
 }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // __NUMBERGENTORT_H_JOFA_000725__
 

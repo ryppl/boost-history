@@ -11,7 +11,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/type_traits/is_floating_point.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
     template <class Type> struct has_inverse

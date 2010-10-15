@@ -36,31 +36,31 @@ class IntevalGentor
 #include <boost/itl_xt/gentorit.hpp>
 #include <boost/itl_xt/numbergentor.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     template <class Type> 
-    class RangeGentor: public RandomGentorAT<typename itl::interval<Type>::type >
+    class RangeGentor: public RandomGentorAT<typename icl::interval<Type>::type >
     {
     public:
-        typedef typename itl::interval<Type>::type interval_type;
+        typedef typename icl::interval<Type>::type interval_type;
     public:
         virtual void some(interval_type& x);
         interval_type last()const;
 
         void setLowerBoundRange(int lwb, int upb)
-        { setLowerBoundRange(itl::interval<int>::right_open(lwb,upb)); }
+        { setLowerBoundRange(icl::interval<int>::right_open(lwb,upb)); }
 
-        void setLowerBoundRange(const itl::interval<int>::type& range)
+        void setLowerBoundRange(const icl::interval<int>::type& range)
         { 
             //JODO? BOOST_ASSERT(range.is_right_open()||range.is_closed()); 
             _lwbGentor.setRange(range); 
         }
 
         void setUpperBoundRange(int lwb, int upb)
-        { setUpperBoundRange(itl::interval<int>::right_open(lwb,upb)); }
+        { setUpperBoundRange(icl::interval<int>::right_open(lwb,upb)); }
 
-        void setUpperBoundRange(const itl::interval<int>::type& range)
+        void setUpperBoundRange(const icl::interval<int>::type& range)
         { 
             //JODO? BOOST_ASSERT(range.is_right_open()||range.is_closed()); 
             _upbGentor.setRange(range); 
@@ -88,7 +88,7 @@ namespace boost{namespace itl
         return _last;
     }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 
 

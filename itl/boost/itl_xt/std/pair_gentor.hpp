@@ -12,7 +12,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/itl_xt/std/pair.hpp>
 #include <boost/itl_xt/gentorit.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 
@@ -50,7 +50,7 @@ private:
 };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

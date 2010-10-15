@@ -35,7 +35,7 @@ set of strings
 #include <string.h>
 #include <boost/itl/set.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     typedef std::string StringTD;
     typedef StringTD (StringTD::* StringSelectorFPD)()const; 
@@ -58,10 +58,10 @@ namespace boost{namespace itl
     // ---------------------------------------------------------------------------------
 
     template <ITL_COMPARE Compare = std::less>
-    class string_set: public itl::set<std::string, Compare>
+    class string_set: public icl::set<std::string, Compare>
     {
     public:
-        typedef itl::set<std::string, Compare> base_type;
+        typedef icl::set<std::string, Compare> base_type;
         typedef typename base_type::iterator iterator;
         typedef typename base_type::const_iterator const_iterator;
         

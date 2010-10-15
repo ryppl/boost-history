@@ -10,7 +10,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 
 #include <boost/itl/type_traits/identity_element.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template<class Type>
@@ -416,10 +416,10 @@ template<class TypeA, class TypeB, class Assoc> \
 void check_monoid_permuted_wrt_equal_##op_tag \
 (typename equality<TypeA>::type* equal, const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_MONOID_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 #define DEFINE_MONOID_CHECK_PERMUTED_WRT(op_tag) \
@@ -427,10 +427,10 @@ template<class TypeA, class TypeB, class Assoc> \
 void check_monoid_permuted_wrt_##op_tag \
 (const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_MONOID_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_MONOID_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_MONOID_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_MONOID_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_MONOID_WRT(op_tag)(icl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_MONOID_WRT(op_tag)(icl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_MONOID_WRT(op_tag)(icl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_MONOID_WRT(op_tag)(icl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 
@@ -456,10 +456,10 @@ template<class TypeA, class TypeB, class Assoc> \
 void check_abelian_monoid_permuted_wrt_equal_##op_tag \
 (typename equality<TypeA>::type* equal, const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_ABELIAN_MONOID_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 #define DEFINE_ABELIAN_MONOID_CHECK_PERMUTED_WRT(op_tag) \
@@ -467,10 +467,10 @@ template<class TypeA, class TypeB, class Assoc> \
 void check_abelian_monoid_permuted_wrt_##op_tag \
 (const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_ABELIAN_MONOID_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_ABELIAN_MONOID_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_ABELIAN_MONOID_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_ABELIAN_MONOID_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_ABELIAN_MONOID_WRT(op_tag)(icl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_ABELIAN_MONOID_WRT(op_tag)(icl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_ABELIAN_MONOID_WRT(op_tag)(icl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_ABELIAN_MONOID_WRT(op_tag)(icl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 
@@ -496,10 +496,10 @@ template<class TypeA, class TypeB, class Assoc> \
 void check_partial_invertive_monoid_permuted_wrt_equal_##op_tag \
 (typename equality<TypeA>::type* equal, const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 #define DEFINE_PARTIAL_INVERTIVE_MONOID_CHECK_PERMUTED_WRT(op_tag) \
@@ -507,10 +507,10 @@ template<class TypeA, class TypeB, class Assoc> \
 void check_partial_invertive_monoid_permuted_wrt_##op_tag \
 (const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(icl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(icl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(icl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_PARTIAL_INVERTIVE_MONOID_WRT(op_tag)(icl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 
@@ -536,10 +536,10 @@ template<class TypeA, class TypeB, class Assoc> \
     void check_abelian_group_permuted_wrt_equal_##op_tag \
 (typename equality<TypeA>::type* equal, const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_ABELIAN_GROUP_WRT_EQUAL(op_tag)(equal, icl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 #define DEFINE_ABELIAN_GROUP_CHECK_PERMUTED_WRT(op_tag) \
@@ -547,10 +547,10 @@ template<class TypeA, class TypeB, class Assoc> \
     void check_abelian_group_permuted_wrt_##op_tag \
 (const TypeA& var_a, const TypeB& var_b, const Assoc& assoc) \
 { \
-    CHECK_ABELIAN_GROUP_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
-    CHECK_ABELIAN_GROUP_WRT(op_tag)(itl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
-    CHECK_ABELIAN_GROUP_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
-    CHECK_ABELIAN_GROUP_WRT(op_tag)(itl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
+    CHECK_ABELIAN_GROUP_WRT(op_tag)(icl::identity_element<TypeA>::value(), var_a, var_b, assoc);\
+    CHECK_ABELIAN_GROUP_WRT(op_tag)(icl::identity_element<TypeA>::value(), var_a, assoc, var_b);\
+    CHECK_ABELIAN_GROUP_WRT(op_tag)(icl::identity_element<TypeB>::value(), var_b, var_a, assoc);\
+    CHECK_ABELIAN_GROUP_WRT(op_tag)(icl::identity_element<TypeB>::value(), var_b, assoc, var_a);\
 }
 
 
@@ -715,7 +715,7 @@ DEFINE_ABELIAN_GROUP_CHECK_INSTANCE_WRT_EQUAL(pipe);
 #define CHECK_ABELIAN_GROUP_INSTANCE_WRT(op_tag)       check_abelian_group_instance_wrt_##op_tag
 #define CHECK_ABELIAN_GROUP_INSTANCE_WRT_EQUAL(op_tag) check_abelian_group_instance_wrt_equal_##op_tag
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // __test_itl_laws_h_JOFA_080920__
 

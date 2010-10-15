@@ -14,7 +14,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/set.hpp>
 #include <boost/validate/loki_xt/Tuple.h>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     class LawViolationsI
@@ -96,7 +96,7 @@ namespace boost{namespace itl
     {
     public:
         typedef LawT LawType;
-        typedef typename itl::set<LawType> ViolationSet;
+        typedef typename icl::set<LawType> ViolationSet;
         typedef typename ViolationSet::size_type size_type;
 
         typedef typename ViolationSet::iterator iterator;
@@ -146,7 +146,7 @@ namespace boost{namespace itl
         iterator       end()        { return _violations.end(); }
         const_iterator end()const   { return _violations.begin(); }
 
-        void clear()       { itl::clear(_violations); }
+        void clear()       { icl::clear(_violations); }
         bool empty()const  { return ITL_FUN_REN(empty, is_empty, _violations); }
         size_type size()const { return _violations.size(); }
 
@@ -175,11 +175,11 @@ template<class CharType, class CharTraits>
 std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits>& stream, const PolyLawViolations& object)
 {
-    return stream << "operator<<: not implemented for itl::PolyLawViolations!";
+    return stream << "operator<<: not implemented for icl::PolyLawViolations!";
 }
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif //BOOST_ITL_LAW_VIOLATIONS_HPP_JOFA_070411
 

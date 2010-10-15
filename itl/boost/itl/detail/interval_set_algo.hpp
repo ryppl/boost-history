@@ -21,7 +21,7 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 #include <boost/itl/detail/interval_subset_comparer.hpp>
 #include <boost/itl/detail/associated_value.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 namespace Interval_Set
@@ -80,7 +80,7 @@ bool is_joinable(const IntervalContainerT& container,
     ++next_;
 
     while(next_ != container.end() && it_ != past)
-        if(!itl::touches(key_value<IntervalContainerT>(it_++),
+        if(!icl::touches(key_value<IntervalContainerT>(it_++),
                          key_value<IntervalContainerT>(next_++)))
             return false;
 
@@ -209,7 +209,7 @@ bool is_dense(const IntervalContainerT& container,
     ++next_;
 
     while(next_ != container.end() && it_ != past)
-        if(!itl::touches(key_value<IntervalContainerT>(it_++), 
+        if(!icl::touches(key_value<IntervalContainerT>(it_++), 
                          key_value<IntervalContainerT>(next_++)))
             return false;
 
@@ -474,14 +474,14 @@ void add_front(Type& object, const typename Type::interval_type& inter_val,
     // only for the first there can be a left_resid: a part of *first_ left of inter_val
     interval_type left_resid = right_subtract(key_value<Type>(first_), inter_val);
 
-    if(!itl::is_empty(left_resid))
+    if(!icl::is_empty(left_resid))
     {   //            [------------ . . .
         // [left_resid---first_ --- . . .
         iterator prior_ = cyclic_prior(object, first_);
         const_cast<interval_type&>(key_value<Type>(first_)) 
             = left_subtract(key_value<Type>(first_), left_resid);
         //NOTE: Only splitting
-        object._insert(prior_, itl::make_value<Type>(left_resid, co_value<Type>(first_)));
+        object._insert(prior_, icl::make_value<Type>(left_resid, co_value<Type>(first_)));
     }
 
     //POST:
@@ -496,7 +496,7 @@ void add_segment(Type& object, const typename Type::interval_type& inter_val,
 {
     typedef typename Type::interval_type interval_type;
     interval_type lead_gap = right_subtract(inter_val, *it_);
-    if(!itl::is_empty(lead_gap))
+    if(!icl::is_empty(lead_gap))
         //           [lead_gap--- . . .
         // [prior_)           [-- it_ ...
         object._insert(prior(it_), lead_gap);
@@ -535,13 +535,13 @@ void add_rear(Type& object, const typename Type::interval_type& inter_val,
     interval_type cur_itv = *it_;
 
     interval_type lead_gap = right_subtract(inter_val, cur_itv);
-    if(!itl::is_empty(lead_gap))
+    if(!icl::is_empty(lead_gap))
         //          [lead_gap--- . . .
         // [prior_)          [-- it_ ...
         object._insert(prior_, lead_gap);
     
     interval_type end_gap = left_subtract(inter_val, cur_itv);
-    if(!itl::is_empty(end_gap))
+    if(!icl::is_empty(end_gap))
         // [---------------end_gap)
         //      [-- it_ --)
         it_ = object._insert(it_, end_gap);
@@ -550,7 +550,7 @@ void add_rear(Type& object, const typename Type::interval_type& inter_val,
         // only for the last there can be a right_resid: a part of *it_ right of addend
         interval_type right_resid = left_subtract(cur_itv, inter_val);
 
-        if(!itl::is_empty(right_resid))
+        if(!icl::is_empty(right_resid))
         {
             // [--------------)
             //      [-- it_ --right_resid)
@@ -572,7 +572,7 @@ typename Type::iterator
     typedef typename Type::iterator      iterator;
     typedef typename on_style<Type, Type::fineness>::type on_style_;
 
-    if(itl::is_empty(addend)) 
+    if(icl::is_empty(addend)) 
         return object.end();
 
     std::pair<iterator,bool> insertion = object._insert(addend);
@@ -593,7 +593,7 @@ typename Type::iterator
     typedef typename Type::iterator      iterator;
     typedef typename on_style<Type, Type::fineness>::type on_style_;
 
-    if(itl::is_empty(addend)) 
+    if(icl::is_empty(addend)) 
         return prior_;
 
     iterator insertion = object._insert(prior_, addend);
@@ -615,7 +615,7 @@ void subtract(Type& object, const typename Type::value_type& minuend)
     typedef typename Type::interval_type interval_type;
     typedef typename Type::value_type    value_type;
 
-    if(itl::is_empty(minuend)) return;
+    if(icl::is_empty(minuend)) return;
 
     std::pair<iterator, iterator> exterior = object.equal_range(minuend);
     if(exterior.first == exterior.second) return;
@@ -631,17 +631,17 @@ void subtract(Type& object, const typename Type::value_type& minuend)
 
     object.erase(first_, end_);
 
-    if(!itl::is_empty(leftResid))
+    if(!icl::is_empty(leftResid))
         object._insert(leftResid);
 
-    if(!itl::is_empty(rightResid))
+    if(!icl::is_empty(rightResid))
         object._insert(rightResid);
 }
 
 
 } // namespace Interval_Set
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif 
 

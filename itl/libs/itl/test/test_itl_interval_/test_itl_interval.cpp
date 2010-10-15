@@ -5,7 +5,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#define BOOST_TEST_MODULE itl::interval unit test
+#define BOOST_TEST_MODULE icl::interval unit test
 #include <string>
 #include <boost/mpl/list.hpp>
 #include "../unit_test_unwarned.hpp"
@@ -19,7 +19,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 using namespace std;
 using namespace boost;
 using namespace unit_test;
-using namespace boost::itl;
+using namespace boost::icl;
 
 #include "../test_itl_interval_shared.hpp"
 #include "../test_icl_interval.hpp"

@@ -11,7 +11,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define BOOST_ITL_VALIDATION_COUNTS_HPP_JOFA_090713
 
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 class validation_counts
@@ -48,6 +48,6 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_VALIDATION_COUNTS_HPP_JOFA_090713

@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Interval Template Library
+Interval Container Library
 Author: Joachim Faulhaber
 Copyright (c) 2007-2009: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
@@ -62,7 +62,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 using namespace std;
 using namespace boost::posix_time;
-using namespace boost::itl;
+using namespace boost::icl;
 
 // Type set<string> collects the names of party guests. Since std::set is
 // a model of the itl's set concept, the concept provides an operator += 
@@ -122,7 +122,7 @@ void boost_party()
 
 int main()
 {
-    cout << ">> Interval Template Library: Sample boost_party.cpp <<\n";
+    cout << ">>Interval Container Library: Sample boost_party.cpp <<\n";
     cout << "-------------------------------------------------------\n";
     boost_party();
     return 0;
@@ -130,7 +130,7 @@ int main()
 
 // Program output:
 /*-----------------------------------------------------------------------------
->> Interval Template Library: Sample boost_party.cpp <<
+>>Interval Container Library: Sample boost_party.cpp <<
 -------------------------------------------------------
 ----- History of party guests -------------------------
 [2008-May-20 19:30:00, 2008-May-20 20:10:00): Harry Mary

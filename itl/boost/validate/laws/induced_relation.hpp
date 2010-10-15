@@ -13,7 +13,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/validate/laws/law.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     // An InducedRelation can be represented as a triangular commuting diagram
     // where f is a unary function and R a binary predicate or relation
@@ -105,7 +105,7 @@ namespace boost{namespace itl
     }; //class InducedRelation
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_INDUCED_RELATION_HPP_JOFA_090204
 

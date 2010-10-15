@@ -35,7 +35,7 @@ DEALINGS IN THE SOFTWARE.
 #include <boost/itl/right_open_interval.hpp>
 #include <boost/itl_xt/ordered_type.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 /// Serves as a base class for the decomposition of histories in episodes
@@ -55,7 +55,7 @@ public:
     virtual ~episode_interface(){}
 
     /// das Intervall der Episode
-    //virtual itl::interval<TimeT> interval()const=0; //JODO make IntervalT a template param
+    //virtual icl::interval<TimeT> interval()const=0; //JODO make IntervalT a template param
     virtual right_open_interval<TimeT> interval()const=0;
 };
 
@@ -74,7 +74,7 @@ class typed_episode : public ordered_type_base<TypeDomain>, public episode_inter
 {
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_TYPED_EPISODE_HPP_HPP_JOFA_011015
 

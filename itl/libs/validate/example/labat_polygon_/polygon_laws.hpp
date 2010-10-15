@@ -17,7 +17,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/polygon/polygon.hpp>
 #include "custom_polygon.hpp"
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     template <typename Type>
@@ -161,7 +161,7 @@ namespace boost{namespace itl
 
     };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_POLYGON_LAWS_HPP_JOFA_070411
 

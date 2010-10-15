@@ -14,7 +14,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/functors.hpp>
 #include <boost/validate/validater/law_validater.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     typedef WeightedNumberGentor<int> ChoiceT;
 
@@ -65,6 +65,6 @@ namespace boost{namespace itl
         return share;
     }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_VALIDATE_CONCEPT_VALIDATER_HPP_JOFA_080203

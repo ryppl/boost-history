@@ -12,7 +12,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/mpl/bool.hpp>
 #include <boost/itl/type_traits/no_type.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
     namespace detail
     {

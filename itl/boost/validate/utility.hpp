@@ -22,7 +22,7 @@ case IdentityHandlerType::total_absorber: return new validater_Template<itl_Map<
 case IdentityHandlerType::total_enricher: return new validater_Template<itl_Map<domain_Type,codomain_Type,total_enricher> >;
 
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     std::string location(const std::string& file, int line, const std::string& message)
     {
@@ -48,7 +48,7 @@ namespace boost{namespace itl
         );
     }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_UTILITY_HPP_JOFA_090203
 

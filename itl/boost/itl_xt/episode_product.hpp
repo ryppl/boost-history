@@ -33,7 +33,7 @@ DEALINGS IN THE SOFTWARE.
 #include <boost/itl/map.hpp>
 #include <boost/itl_xt/episode_set.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 /// A collection (product) of episodes of different types that do not change for a period of time
@@ -88,10 +88,10 @@ namespace boost{namespace itl
 */
 
 template <class TimeT, class TypeDomain>
-class episode_product : public boost::itl::map<typename TypeDomain::DomainET, episode_set<TimeT,TypeDomain> >
+class episode_product : public boost::icl::map<typename TypeDomain::DomainET, episode_set<TimeT,TypeDomain> >
 {
 public:
-    typedef boost::itl::map<typename TypeDomain::DomainET, episode_set<TimeT,TypeDomain> > base_type;
+    typedef boost::icl::map<typename TypeDomain::DomainET, episode_set<TimeT,TypeDomain> > base_type;
     typedef    typename base_type::value_type value_type;
     typedef    typename base_type::data_type data_type;
     typedef    typename base_type::data_type EpisodeSetTD;
@@ -192,10 +192,10 @@ public:
 NOTE MEMO DESIGN USING PRIVATE INHERITENCE
 
 template <class TimeT, class TypeDomain>
-class episode_product : private itl::MapT<TypeDomain::DomainET, episode_set<TimeT,TypeDomain> >
+class episode_product : private icl::MapT<TypeDomain::DomainET, episode_set<TimeT,TypeDomain> >
 {
 public:
-    typedef itl::MapT<TypeDomain::DomainET, episode_set<TimeT,TypeDomain> > BaseTD;
+    typedef icl::MapT<TypeDomain::DomainET, episode_set<TimeT,TypeDomain> > BaseTD;
     typedef BaseTD::value_type value_type;
     typedef BaseTD::data_type data_type;
     typedef BaseTD::data_type EpisodeSetTD;
@@ -290,7 +290,7 @@ inline bool operator == (const episode_product<TimeT,TypeDomain>& lhs,
 }
 */
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_EPISODE_PRODUCT_HPP_HPP_JOFA_011005
 

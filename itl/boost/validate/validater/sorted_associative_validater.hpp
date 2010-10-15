@@ -21,10 +21,10 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/std/algorithm/find.hpp>
 
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
-template <typename Type, typename TargetT = itl::list<typename Type::value_type> >
+template <typename Type, typename TargetT = icl::list<typename Type::value_type> >
 class sorted_associative_validater : public concept_validater
 {
 public:
@@ -111,6 +111,6 @@ private:
 };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_VALIDATER_SORTED_ASSOCIATIVE_VALIDATER_HPP_JOFA_091125

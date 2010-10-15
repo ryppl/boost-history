@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+    
-Interval Template Library
+Interval Container Library
 Author: Joachim Faulhaber
 Copyright (c) 2007-2009: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
@@ -31,7 +31,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/split_interval_map.hpp>
 
 using namespace std;
-using namespace boost::itl;
+using namespace boost::icl;
 
 
 /* The most simple example of an interval_map is an overlap counter.
@@ -81,7 +81,7 @@ void overlap_counter()
 
 int main()
 {
-    cout << ">> Interval Template Library: Sample overlap_counter.cpp <<\n";
+    cout << ">>Interval Container Library: Sample overlap_counter.cpp <<\n";
     cout << "-----------------------------------------------------------\n";
     overlap_counter();
     return 0;
@@ -89,7 +89,7 @@ int main()
 
 // Program output:
 
-// >> Interval Template Library: Sample overlap_counter.cpp <<
+// >>Interval Container Library: Sample overlap_counter.cpp <<
 // -----------------------------------------------------------
 // -- adding   [4,8) -----------------------------------------
 // in interval [4,8) intervals do not overlap

@@ -15,7 +15,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/predicates.hpp>
 #include <boost/validate/laws/law.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     template <typename Type>
@@ -207,7 +207,7 @@ namespace boost{namespace itl
         }
     };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_MINOR_SET_LAWS_HPP_JOFA_070411
 

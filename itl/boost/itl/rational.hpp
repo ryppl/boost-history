@@ -30,7 +30,7 @@ itl_rational provides adapter code for boost::rational.
 #include <boost/itl/type_traits/has_inverse.hpp>
 #include <boost/itl/type_traits/is_numeric.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     template<class Integral> 
     struct is_numeric<boost::rational<Integral> >
@@ -60,7 +60,7 @@ namespace boost{namespace itl
         BOOST_STATIC_CONSTANT(bool, value = (is_signed<Integral>::value));
     };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 
 #endif

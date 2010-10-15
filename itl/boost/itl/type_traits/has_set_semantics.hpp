@@ -14,7 +14,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/is_map.hpp>
 #include <boost/itl/type_traits/codomain_type_of.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
     template <class Type> struct has_set_semantics
     { 

@@ -18,29 +18,29 @@ template <class IntervalT>
 void interval_ctor_4_ordered_types()
 {
     typedef typename domain_type_of<interval_traits<IntervalT> >::type T;
-    typedef typename itl::size_type_of<T>::type SizeT;
-    T t_0     = itl::identity_element<T>::value();
-    T t_1     = itl::unit_element<T>::value();
-    SizeT s_0 = itl::identity_element<SizeT>::value();
-    SizeT s_1 = itl::unit_element<SizeT>::value();
+    typedef typename icl::size_type_of<T>::type SizeT;
+    T t_0     = icl::identity_element<T>::value();
+    T t_1     = icl::unit_element<T>::value();
+    SizeT s_0 = icl::identity_element<SizeT>::value();
+    SizeT s_1 = icl::unit_element<SizeT>::value();
 
     // Default ctor and emptieness
-    BOOST_CHECK_EQUAL( itl::is_empty(IntervalT()), true );
-    BOOST_CHECK_EQUAL( itl::cardinality(IntervalT()), s_0 );
-    BOOST_CHECK_EQUAL(        itl::size(IntervalT()), s_0 );
+    BOOST_CHECK_EQUAL( icl::is_empty(IntervalT()), true );
+    BOOST_CHECK_EQUAL( icl::cardinality(IntervalT()), s_0 );
+    BOOST_CHECK_EQUAL(        icl::size(IntervalT()), s_0 );
 
     BOOST_CHECK_EQUAL( IntervalT(), IntervalT() );
     BOOST_CHECK_EQUAL( IntervalT(), IntervalT(IntervalT().lower(), IntervalT().upper()) );
-    BOOST_CHECK_EQUAL( IntervalT(), IntervalT(itl::lower(IntervalT()), itl::upper(IntervalT())) );
+    BOOST_CHECK_EQUAL( IntervalT(), IntervalT(icl::lower(IntervalT()), icl::upper(IntervalT())) );
 
-    BOOST_CHECK_EQUAL(itl::cardinality(IntervalT(t_0, t_1)) >= s_1,  true);
-    BOOST_CHECK_EQUAL((    itl::contains(IntervalT(t_0, t_1), t_0)
-                       ||  itl::contains(IntervalT(t_0, t_1), t_1)), true);
+    BOOST_CHECK_EQUAL(icl::cardinality(IntervalT(t_0, t_1)) >= s_1,  true);
+    BOOST_CHECK_EQUAL((    icl::contains(IntervalT(t_0, t_1), t_0)
+                       ||  icl::contains(IntervalT(t_0, t_1), t_1)), true);
 
     BOOST_CHECK_EQUAL(IntervalT(t_0, t_1).lower(),  t_0);
     BOOST_CHECK_EQUAL(IntervalT(t_0, t_1).upper(),  t_1);
-    BOOST_CHECK_EQUAL(lower(itl::construct<IntervalT>(t_0, t_1)),  t_0);
-    BOOST_CHECK_EQUAL(upper(itl::construct<IntervalT>(t_0, t_1)),  t_1);
+    BOOST_CHECK_EQUAL(lower(icl::construct<IntervalT>(t_0, t_1)),  t_0);
+    BOOST_CHECK_EQUAL(upper(icl::construct<IntervalT>(t_0, t_1)),  t_1);
 }
 
 
@@ -52,40 +52,40 @@ void singelizable_interval_4_ordered_types()
     // LAW: This law applies to all discrete and to dynamic continuous intervals
     // LAW: No singletons can be constructed for static continuous right_open and left_open intervals
     typedef typename domain_type_of<interval_traits<IntervalT> >::type T;
-    typedef typename itl::size_type_of<T>::type SizeT;
-    T t_0     = itl::identity_element<T>::value();
-    T t_1     = itl::unit_element<T>::value();
-    SizeT s_1 = itl::unit_element<SizeT>::value();
+    typedef typename icl::size_type_of<T>::type SizeT;
+    T t_0     = icl::identity_element<T>::value();
+    T t_1     = icl::unit_element<T>::value();
+    SizeT s_1 = icl::unit_element<SizeT>::value();
 
 #ifdef BOOST_MSVC 
     BOOST_CHECK_EQUAL( is_singelizable<IntervalT>::value, true ); 
 #endif                        
 
-    BOOST_CHECK_EQUAL( itl::cardinality(itl::singleton<IntervalT>(t_0)), s_1 ); 
-    BOOST_CHECK_EQUAL(        itl::size(itl::singleton<IntervalT>(t_0)), s_1 ); 
-    BOOST_CHECK_EQUAL( itl::cardinality(itl::singleton<IntervalT>(t_1)), s_1 ); 
-    BOOST_CHECK_EQUAL(        itl::size(itl::singleton<IntervalT>(t_1)), s_1 ); 
+    BOOST_CHECK_EQUAL( icl::cardinality(icl::singleton<IntervalT>(t_0)), s_1 ); 
+    BOOST_CHECK_EQUAL(        icl::size(icl::singleton<IntervalT>(t_0)), s_1 ); 
+    BOOST_CHECK_EQUAL( icl::cardinality(icl::singleton<IntervalT>(t_1)), s_1 ); 
+    BOOST_CHECK_EQUAL(        icl::size(icl::singleton<IntervalT>(t_1)), s_1 ); 
 
-    BOOST_CHECK_EQUAL( itl::contains(itl::singleton<IntervalT>(t_0), t_0), true ); 
-    BOOST_CHECK_EQUAL( itl::contains(itl::singleton<IntervalT>(t_1), t_1), true ); 
+    BOOST_CHECK_EQUAL( icl::contains(icl::singleton<IntervalT>(t_0), t_0), true ); 
+    BOOST_CHECK_EQUAL( icl::contains(icl::singleton<IntervalT>(t_1), t_1), true ); 
 }
 
 template <class IntervalT> 
 void singelizable_interval_4_bicremental_types()
 {
     typedef typename domain_type_of<interval_traits<IntervalT> >::type T;
-    typedef typename itl::size_type_of<T>::type SizeT;
-    //T t_0     = itl::identity_element<T>::value();
-    SizeT s_1 = itl::unit_element<SizeT>::value();
+    typedef typename icl::size_type_of<T>::type SizeT;
+    //T t_0     = icl::identity_element<T>::value();
+    SizeT s_1 = icl::unit_element<SizeT>::value();
 
 #ifdef BOOST_MSVC 
     BOOST_CHECK_EQUAL( is_singelizable<IntervalT>::value, true ); 
 #endif                        
 
-    BOOST_CHECK_EQUAL( itl::cardinality(IntervalT(MK_v(3))), s_1 ); 
-    BOOST_CHECK_EQUAL(        itl::size(IntervalT(MK_v(4))), s_1 ); 
-    BOOST_CHECK_EQUAL( itl::singleton<IntervalT>(MK_v(2)), itl::singleton<IntervalT>(MK_v(2)) );
-    BOOST_CHECK_EQUAL( itl::contains(IntervalT(MK_v(1)), MK_v(1)), true ); 
+    BOOST_CHECK_EQUAL( icl::cardinality(IntervalT(MK_v(3))), s_1 ); 
+    BOOST_CHECK_EQUAL(        icl::size(IntervalT(MK_v(4))), s_1 ); 
+    BOOST_CHECK_EQUAL( icl::singleton<IntervalT>(MK_v(2)), icl::singleton<IntervalT>(MK_v(2)) );
+    BOOST_CHECK_EQUAL( icl::contains(IntervalT(MK_v(1)), MK_v(1)), true ); 
 }
 
 

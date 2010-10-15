@@ -16,7 +16,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/utility.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     
     class sorted_associative_set_driver : public itl_driver
@@ -100,9 +100,9 @@ namespace boost{namespace itl
 
             switch(rootChoice)
             {
-            case RootType::         interval_set: return new sorted_associative_validater<         interval_set<int>, itl::list<int> >;
-            case RootType::separate_interval_set: return new sorted_associative_validater<separate_interval_set<int>, itl::list<int> >;
-            case RootType::   split_interval_set: return new sorted_associative_validater<   split_interval_set<int>, itl::list<int> >;
+            case RootType::         interval_set: return new sorted_associative_validater<         interval_set<int>, icl::list<int> >;
+            case RootType::separate_interval_set: return new sorted_associative_validater<separate_interval_set<int>, icl::list<int> >;
+            case RootType::   split_interval_set: return new sorted_associative_validater<   split_interval_set<int>, icl::list<int> >;
             default: return choiceError(ITL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
             } //switch()
 
@@ -110,6 +110,6 @@ namespace boost{namespace itl
     };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_DRIVER_SORTED_ASSOCIATIVE_SET_DRIVER_HPP_JOFA_091126

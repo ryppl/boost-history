@@ -7,7 +7,7 @@ class ItvMapTesterT
 #include <boost/itl_xt/itvgentor.hpp>
 #include <boost/itl_xt/mapgentor.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <class ItvMapTV>
@@ -543,7 +543,7 @@ bool ItvMapTesterT<ItvMapTV>::testErasureAsIntersectionComputability(int nTries,
     return correct;
 }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

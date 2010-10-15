@@ -13,7 +13,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/detail/std_set.hpp>
 
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 //==============================================================================
@@ -69,7 +69,7 @@ template<class Type>
 inline typename enable_if<is_element_set<Type>, bool>::type
 intersects(const Type& object, const typename Type::domain_type& operand)
 {
-    return itl::contains(object, operand);
+    return icl::contains(object, operand);
 }
 
 template<class Type>
@@ -101,7 +101,7 @@ template<class Type>
 inline typename enable_if<is_element_set<Type>, Type>::type&
 operator ^= (Type& object, const typename Type::element_tpye& operand)
 {
-    return itl::flip(object, operand); 
+    return icl::flip(object, operand); 
 }
 
 /** Symmetric subtract map \c x2 and \c *this.
@@ -113,7 +113,7 @@ operator ^= (Type& object, const Type& operand)
     typedef typename Type::const_iterator const_iterator;
     const_iterator it_ = operand.begin();
     while(it_ != operand.end())
-        itl::flip(object, *it_++);
+        icl::flip(object, *it_++);
 
     return object;
 }

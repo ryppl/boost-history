@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Interval Template Library
+Interval Container Library
 Author: Joachim Faulhaber
 Copyright (c) 2007-2009: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
@@ -34,7 +34,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 using namespace std;
 using namespace boost::posix_time;
-using namespace boost::itl;
+using namespace boost::icl;
 
 
 class counted_sum
@@ -114,7 +114,7 @@ void partys_height_average()
 
 int main()
 {
-    cout << ">> Interval Template Library: Sample partys_height_average.cpp  <<\n";
+    cout << ">>Interval Container Library: Sample partys_height_average.cpp  <<\n";
     cout << "------------------------------------------------------------------\n";
     partys_height_average();
     return 0;
@@ -122,7 +122,7 @@ int main()
 
 // Program output:
 /*-----------------------------------------------------------------------------
->> Interval Template Library: Sample partys_height_average.cpp  <<
+>>Interval Container Library: Sample partys_height_average.cpp  <<
 ------------------------------------------------------------------
 -------------- History of average guest height -------------------
 [2008-May-20 19:30:00 - 2008-May-20 20:10:00): 173 cm = 5.66 ft

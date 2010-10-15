@@ -17,7 +17,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/is_concept_equivalent.hpp>
 #include <boost/itl/type_traits/is_interval_container.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template<class Type>
@@ -561,7 +561,7 @@ struct is_binary_inter_combinable
 };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

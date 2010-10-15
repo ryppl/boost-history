@@ -14,7 +14,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/concept/set_value.hpp>
 #include <boost/itl/concept/map_value.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     namespace segmental
     {
@@ -23,11 +23,11 @@ namespace boost{namespace itl
         {
             ITL_const_FORALL(typename IntervalContainerT, itv_, src)
             {
-                const typename IntervalContainerT::key_type& itv   = itl::key_value<IntervalContainerT>(itv_);
-                typename IntervalContainerT::codomain_type   coval = itl::co_value<IntervalContainerT>(itv_);
+                const typename IntervalContainerT::key_type& itv   = icl::key_value<IntervalContainerT>(itv_);
+                typename IntervalContainerT::codomain_type   coval = icl::co_value<IntervalContainerT>(itv_);
 
                 for(typename IntervalContainerT::domain_type element = first(itv); element <= last(itv); ++element)
-                    insert(result, itl::make_value<ElementContainerT>(element, coval));
+                    insert(result, icl::make_value<ElementContainerT>(element, coval));
             }
         }
 
@@ -40,7 +40,7 @@ namespace boost{namespace itl
                 const typename ElementContainerT::key_type&  key  = key_value<ElementContainerT>(element_);
                 const typename ElementContainerT::data_type& data = co_value<ElementContainerT>(element_);
 
-                result += itl::make_value<IntervalContainerT>(key_type(key), data);
+                result += icl::make_value<IntervalContainerT>(key_type(key), data);
             }
         }
 
@@ -67,7 +67,7 @@ namespace boost{namespace itl
         {
             void operator()(JointType& joint, SplitType& split)
             {
-                itl::join(split);
+                icl::join(split);
                 ITL_FORALL(typename SplitType, split_, split)
                     joint.insert(*split_);
             }
@@ -78,7 +78,7 @@ namespace boost{namespace itl
         {
             void operator()(AbsorberType& absorber, EnricherType& enricher)
             {
-                itl::absorb_identities(enricher);
+                icl::absorb_identities(enricher);
                 ITL_FORALL(typename EnricherType, enricher_, enricher)
                     absorber.insert(*enricher_);
             }

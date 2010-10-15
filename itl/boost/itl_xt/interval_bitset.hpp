@@ -21,7 +21,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 
 
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 /** \brief Large bitsets that combine interval compression and bitcompression. 
@@ -29,19 +29,19 @@ namespace boost{namespace itl
     Class interval_bitset implements a set as an interval_map of bitsets.
     An interval_bitset is selfcompressing in two ways.
     Large contiguous runs of bits can be represented by intervals in the
-    same way as for itl::interval_set or itl::interval_map (interval compression).
+    same way as for icl::interval_set or icl::interval_map (interval compression).
     Individual bits that spread over narrow ranges are represented in 
     machine words as bitsets (bit compression).
 
     There is a datailed description on how an interval_bitset is
-    implemented using itl::interval_map in the project section
+    implemented using icl::interval_map in the project section
     of the boost book documentation here:
     http://www.joachim-faulhaber.de/boost_itl/doc/libs/itl/doc/html/boost_itl/projects.html
 */
 template 
 <
     typename    DomainT = unsigned long, 
-    typename    BitSetT = itl::bits<unsigned long>, 
+    typename    BitSetT = icl::bits<unsigned long>, 
     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT),
     ITL_INTERVAL(ITL_COMPARE) Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, DomainT, Compare), //JODO change to right_open_interval
     ITL_ALLOC   Alloc   = std::allocator
@@ -72,9 +72,9 @@ class interval_bitset
     //segment   element   container
 {
 public:
-    typedef boost::itl::interval_map
-        <DomainT, BitSetT, boost::itl::partial_absorber, 
-         std::less, boost::itl::inplace_bit_add, boost::itl::inplace_bit_and> interval_bitmap_type;
+    typedef boost::icl::interval_map
+        <DomainT, BitSetT, boost::icl::partial_absorber, 
+         std::less, boost::icl::inplace_bit_add, boost::icl::inplace_bit_and> interval_bitmap_type;
 
     typedef DomainT                                       domain_type;
     typedef DomainT                                       codomain_type;
@@ -92,7 +92,7 @@ public:
     typedef typename interval_bitmap_type::key_type       key_type;
     typedef typename interval_bitmap_type::value_type     value_type;
 
-    typedef typename itl::set<DomainT,Compare,Alloc>      atomized_type;
+    typedef typename icl::set<DomainT,Compare,Alloc>      atomized_type;
 
     typedef typename interval_bitmap_type::iterator               iterator;
     typedef typename interval_bitmap_type::const_iterator         const_iterator;
@@ -100,13 +100,13 @@ public:
     typedef typename interval_bitmap_type::const_reverse_iterator const_reverse_iterator;
 
     /// element iterator: Depreciated, see documentation.
-    typedef boost::itl::bit_element_iterator<iterator> element_iterator; 
+    typedef boost::icl::bit_element_iterator<iterator> element_iterator; 
     /// element const iterator: Depreciated, see documentation.
-    typedef boost::itl::bit_element_iterator<const_iterator> element_const_iterator; 
+    typedef boost::icl::bit_element_iterator<const_iterator> element_const_iterator; 
     /// element reverse iterator: Depreciated, see documentation.
-    typedef boost::itl::bit_element_iterator<reverse_iterator> element_reverse_iterator; 
+    typedef boost::icl::bit_element_iterator<reverse_iterator> element_reverse_iterator; 
     /// element const reverse iterator: Depreciated, see documentation.
-    typedef boost::itl::bit_element_iterator<const_reverse_iterator> element_const_reverse_iterator; 
+    typedef boost::icl::bit_element_iterator<const_reverse_iterator> element_const_reverse_iterator; 
 
     typedef typename interval_bitmap_type::pointer         pointer;
     typedef typename interval_bitmap_type::const_pointer   const_pointer;
@@ -148,8 +148,8 @@ public:
     interval_bitset& intersect(const element_type& rhs) {return segment_apply(&interval_bitset::intersect_,interval_type(rhs));}
     interval_bitset& flip     (const element_type& rhs) {return segment_apply(&interval_bitset::flip_,     interval_type(rhs));}
 
-    void clear()                    { itl::clear(_map); }
-    bool empty()const               { return itl::is_empty(_map); }
+    void clear()                    { icl::clear(_map); }
+    bool empty()const               { return icl::is_empty(_map); }
     size_type cardinality()const;
     size_type size()const           { return cardinality(); }
     size_type interval_count()const { return interval_count(_map); }
@@ -157,8 +157,8 @@ public:
 
     bool contains(element_type element)const{ return _map(element>>shift).contains(element & mask); }
     bool contains(const segment_type& segment)const;
-    bool contains(const interval_bitset& sub)const      { return itl::contains(_map, sub._map); }
-    bool contained_in(const interval_bitset& super)const{ return itl::within(_map, super._map); }
+    bool contains(const interval_bitset& sub)const      { return icl::contains(_map, sub._map); }
+    bool contained_in(const interval_bitset& super)const{ return icl::within(_map, super._map); }
 
     void show_segments()const;
     void show_matrix(const char off_on[2] = " 1")const;
@@ -246,7 +246,7 @@ private:
 #pragma warning(pop)
 #endif
 
-    typedef itl::bits<unsigned char> PartsT;
+    typedef icl::bits<unsigned char> PartsT;
     enum { inner_part = 0, sub_part = 1, super_part = 2, inter_part = 4 };
 
     typedef void (interval_bitset::*segment_combiner)(element_type, element_type, bitset_type);
@@ -380,7 +380,7 @@ typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::size_type
 {
     size_type cardinality = 0;
     ITL_const_FORALL(typename interval_bitmap_type, it_, _map)
-        cardinality += (it_->second.cardinality() * itl::cardinality(it_->first));
+        cardinality += (it_->second.cardinality() * icl::cardinality(it_->first));
     return cardinality; 
 }
 
@@ -514,7 +514,7 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 // type representation
 //-----------------------------------------------------------------------------
 template <class DomainT, class BitSetT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-struct type_to_string<itl::interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc> >
+struct type_to_string<icl::interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc> >
 {
     static std::string apply()
     { 
@@ -526,9 +526,9 @@ struct type_to_string<itl::interval_bitset<DomainT,BitSetT,Compare,Interval,Allo
 namespace segmental
 {
     template <typename DomainT, typename BitSetT>
-    struct atomizer<itl::set<DomainT>, interval_bitset<DomainT, BitSetT> >
+    struct atomizer<icl::set<DomainT>, interval_bitset<DomainT, BitSetT> >
     {
-        void operator()(                      itl::set<DomainT>& atomized, 
+        void operator()(                      icl::set<DomainT>& atomized, 
                         const interval_bitset<DomainT, BitSetT>& clustered)
         {
             typedef interval_bitset<DomainT, BitSetT> InterBitsetT;
@@ -541,7 +541,7 @@ namespace segmental
 } // namespace segmental
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_XT_INTERVAL_BITSET_HPP_JOFA_091023
 

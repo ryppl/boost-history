@@ -10,7 +10,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 
 #include <boost/config.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
     template <class Type> struct is_interval_joiner
     { 

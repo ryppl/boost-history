@@ -14,7 +14,7 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/is_set.hpp>
 
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <class Type>
@@ -32,7 +32,7 @@ struct type_to_string<std::set<Type> >
     { return "set<"+ type_to_string<Type>::apply() +">"; }
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_DETAIL_STD_SET_HPP_JOFA_101007
 

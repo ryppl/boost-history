@@ -10,7 +10,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/itl/type_traits/is_interval.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 template <class Type> struct is_asymmetric_interval

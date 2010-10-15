@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+    
-Interval Template Library
+Interval Container Library
 Author: Joachim Faulhaber
 Copyright (c) 2007-2009: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
@@ -34,7 +34,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 using namespace std;
 using namespace boost::gregorian;
-using namespace boost::itl;
+using namespace boost::icl;
 
 
 // Function weekends returns the interval_set of weekends that are contained in
@@ -158,7 +158,7 @@ void man_power()
 
 int main()
 {
-    cout << ">> Interval Template Library: Sample man_power.cpp <<\n";
+    cout << ">>Interval Container Library: Sample man_power.cpp <<\n";
     cout << "---------------------------------------------------------------\n";
     man_power();
     return 0;
@@ -166,7 +166,7 @@ int main()
 
 // Program output:
 /*
->> Interval Template Library: Sample man_power.cpp <<
+>>Interval Container Library: Sample man_power.cpp <<
 ---------------------------------------------------------------
 2008-Aug-01 - 2008-Oct-31    available man-power:
 ---------------------------------------------------------------

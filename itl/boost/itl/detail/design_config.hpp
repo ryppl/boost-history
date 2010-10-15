@@ -39,8 +39,8 @@ by setting defines in this file.
 #endif
 
 #ifdef  ITL_CONCEPT_ORIENTED //CL
-#   define ITL_FUN_CALL(func, arg) itl::func(arg)
-#   define ITL_FUN_REN(func_obj, func_conc, arg) itl::func_conc(arg)
+#   define ITL_FUN_CALL(func, arg) icl::func(arg)
+#   define ITL_FUN_REN(func_obj, func_conc, arg) icl::func_conc(arg)
 #else //ITL_OBJECT_ORIENTED 
 #   define ITL_FUN_CALL(func,arg) arg.func()
 #   define ITL_FUN_REN(func_obj, func_conc, arg) arg.func_obj()
@@ -142,9 +142,9 @@ by setting defines in this file.
 
 //------------------------------------------------------------------------------
 #ifdef ITL_NEW_INTERVAL_IMPL
-#   define ITL_INTERVAL_DEFAULT boost::itl::interval_type_default
+#   define ITL_INTERVAL_DEFAULT boost::icl::interval_type_default
 #else
-#   define ITL_INTERVAL_DEFAULT boost::itl::interval
+#   define ITL_INTERVAL_DEFAULT boost::icl::interval
 #endif
 
 //------------------------------------------------------------------------------

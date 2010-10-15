@@ -12,7 +12,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/type_to_string.hpp>
 #include <boost/itl/concept/interval.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <class DomainT, 
@@ -33,7 +33,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        BOOST_STATIC_ASSERT((itl::is_discrete<DomainT>::value));
+        BOOST_STATIC_ASSERT((icl::is_discrete<DomainT>::value));
     }
 
     //NOTE: Compiler generated copy constructor is used
@@ -44,7 +44,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
+        BOOST_STATIC_ASSERT((!icl::is_continuous<DomainT>::value));
     }
 
     /** Interval from <tt>low</tt> to <tt>up</tt> with bounds <tt>bounds</tt> */
@@ -71,11 +71,11 @@ private:
 //=T closed_interval -> concept intervals
 //==============================================================================
 template<class DomainT, ITL_COMPARE Compare>
-struct interval_traits< itl::closed_interval<DomainT, Compare> >
+struct interval_traits< icl::closed_interval<DomainT, Compare> >
 {
     typedef DomainT domain_type;
     typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
-    typedef itl::closed_interval<DomainT, Compare> interval_type;
+    typedef icl::closed_interval<DomainT, Compare> interval_type;
 
     static interval_type construct(const domain_type& lo, const domain_type& up)
     {
@@ -97,20 +97,20 @@ struct interval_bound_type< closed_interval<DomainT,Compare> >
 };
 
 template <class DomainT, ITL_COMPARE Compare>
-struct type_to_string<itl::closed_interval<DomainT,Compare> >
+struct type_to_string<icl::closed_interval<DomainT,Compare> >
 {
     static std::string apply()
     { return "[I]<"+ type_to_string<DomainT>::apply() +">"; }
 };
 
 template<class DomainT> 
-struct value_size<itl::closed_interval<DomainT> >
+struct value_size<icl::closed_interval<DomainT> >
 {
-    static std::size_t apply(const itl::closed_interval<DomainT>& value) 
+    static std::size_t apply(const icl::closed_interval<DomainT>& value) 
     { return 2; }
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

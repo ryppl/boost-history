@@ -14,7 +14,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/validater/interval_morphic_validater.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     
 class itl_morphic_driver : public itl_driver
@@ -136,5 +136,5 @@ public:
 };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 

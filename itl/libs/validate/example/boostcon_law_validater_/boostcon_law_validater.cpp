@@ -16,12 +16,12 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 using namespace std;
 using namespace boost;
-using namespace boost::itl;
+using namespace boost::icl;
 using namespace boost::posix_time;
 
 int main()
 {
-    typedef InplaceCommutativity<itl::list<int> > TestLawT;
+    typedef InplaceCommutativity<icl::list<int> > TestLawT;
     LawValidater<TestLawT> law_validator;
 
     //-----------------------------------------------------------------------------

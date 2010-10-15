@@ -11,7 +11,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <limits>
 #include <complex>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 template <class Type> struct is_numeric

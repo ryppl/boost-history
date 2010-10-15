@@ -20,7 +20,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #pragma warning(disable:4717) // ::size' : recursive on all control paths, function will cause runtime stack overflow
 #endif                        
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     /** \brief An abstract class template Law
@@ -130,7 +130,7 @@ namespace boost{namespace itl
     enum InputVarIndex  { operand_a, operand_b, operand_c, operand_d, operand_e };
     enum OutputVarIndex { lhs_result, rhs_result };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #ifdef BOOST_MSVC
 #pragma warning(pop)

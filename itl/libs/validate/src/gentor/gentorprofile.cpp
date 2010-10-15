@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+    
-Interval Template Library
+Interval Container Library
 Author: Joachim Faulhaber
 Copyright (c) 2007-2009: Joachim Faulhaber
 +------------------------------------------------------------------------------+
@@ -9,7 +9,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 +-----------------------------------------------------------------------------*/
 #include <boost/validate/gentor/gentorprofile.hpp>
 
-using namespace boost::itl;
+using namespace boost::icl;
 
 GentorProfileSgl* GentorProfileSgl::s_instance = NULL;
 
@@ -151,5 +151,5 @@ void GentorProfile::report_profile()
 
 // -------------------------------------
 // (Algebra, Law, Type) -> (testsCount)
-// (set, ipAddCommut, itl::set) -> 150
+// (set, ipAddCommut, icl::set) -> 150
 

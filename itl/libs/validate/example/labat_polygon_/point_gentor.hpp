@@ -16,7 +16,7 @@ class point_gentor
 #include <boost/itl_xt/numbergentor.hpp>
 #include <boost/itl_xt/seqgentor.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 //toy point.
@@ -49,7 +49,7 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 }
 
 template <class Type>
-struct type_to_string<itl::point<Type> >
+struct type_to_string<icl::point<Type> >
 {
     static std::string apply()
     { return "point<"+ type_to_string<Type>::apply() +">"; }
@@ -61,11 +61,11 @@ class point_gentor: public RandomGentorAT<PointT>
 public:
     virtual void some(PointT& x);
 
-    void setRange(const itl::interval<DomainT>& range)
+    void setRange(const icl::interval<DomainT>& range)
     { m_valueRange = range; }
 
     void setValueRange(DomainT low, DomainT up)
-    { m_valueRange.set(low,up, itl::right_open); }
+    { m_valueRange.set(low,up, icl::right_open); }
 
     void setMaxIntervalLength(DomainT len) { m_maxIntervalLength=len; }
     void setProbDerivation();
@@ -85,7 +85,7 @@ void point_gentor<DomainT, PointT>::some(PointT& value)
     value.y = m_DomainTGentor(m_valueRange);
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

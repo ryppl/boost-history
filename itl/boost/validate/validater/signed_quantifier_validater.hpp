@@ -26,7 +26,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #pragma warning(disable:4127) // conditional expression is constant
 #endif                        
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <typename Type>
@@ -124,7 +124,7 @@ private:
 };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #ifdef BOOST_MSVC
 #pragma warning(pop)

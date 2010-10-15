@@ -11,7 +11,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/has_inverse.hpp>
 #include <boost/itl/functors.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 template<class Type, class Combiner>

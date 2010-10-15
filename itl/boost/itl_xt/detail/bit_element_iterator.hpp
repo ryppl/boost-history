@@ -14,7 +14,7 @@ Copyright (c) 1998: Charles E. Leiserson, Harald Prokop, Keith H. Randall
 #include <boost/itl_xt/bits.hpp>
 #include <boost/mpl/not.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 //------------------------------------------------------------------------------
@@ -125,7 +125,7 @@ private:
         next_bit();
         if(_on_bit == past)
         {   // The current bitset passed the end
-            if(_reptator < pred(itl::length(_saltator->first)))
+            if(_reptator < pred(icl::length(_saltator->first)))
             {
                 ++_reptator; 
                 _on_bit = ante;
@@ -157,7 +157,7 @@ private:
                 --_saltator;
                 // NOW: decrement insecure, because _saltator can (finally) be 
                 // begin here. increment and dereference are secure.
-                _reptator = itl::length(_saltator->first);
+                _reptator = icl::length(_saltator->first);
                 --_reptator;
                 _on_bit = past;
             }
@@ -205,7 +205,7 @@ private:
         if(_on_bit == beyond)
         {
             --_saltator;
-            _reptator = itl::length(_saltator->first);
+            _reptator = icl::length(_saltator->first);
             --_reptator;
             _on_bit   = Proceed::last_bit(_saltator->second.word());
         }
@@ -510,7 +510,7 @@ struct proceed<IteratorT,false>
 
 } //namespace biterate
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_XT_DETAIL_BIT_ELEMENT_ITERATOR_HPP_JOFA_091109
 

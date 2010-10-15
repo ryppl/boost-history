@@ -15,7 +15,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/validater/itl_order_validater.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     
     class map_order_driver : public itl_driver
@@ -103,18 +103,18 @@ namespace boost{namespace itl
                 switch(domainChoice) {
                 case DomainType::Int: 
                     switch(codomainChoice) {
-                    case CodomainType::Nat:     return new itl_order_validater<itl::map<int,nat,total_enricher> >;
-                    case CodomainType::Int:     return new itl_order_validater<itl::map<int,int,partial_absorber> >;
-                    case CodomainType::set_int: return new itl_order_validater<itl::map<int,std::set<int>,partial_enricher> >;
+                    case CodomainType::Nat:     return new itl_order_validater<icl::map<int,nat,total_enricher> >;
+                    case CodomainType::Int:     return new itl_order_validater<icl::map<int,int,partial_absorber> >;
+                    case CodomainType::set_int: return new itl_order_validater<icl::map<int,std::set<int>,partial_enricher> >;
                     default: return choiceError(ITL_LOCATION("\nRootType::itl_map: codomainChoice:\n"),
                                                 codomainChoice, _codomainChoice);
                     }//switch codomain
 
                 case DomainType::Double:
                     switch(codomainChoice) {
-                    case CodomainType::Nat:     return new itl_order_validater<itl::map<double,nat,partial_enricher> >; 
-                    case CodomainType::Int:     return new itl_order_validater<itl::map<double,int,total_absorber> >; 
-                    case CodomainType::set_int: return new itl_order_validater<itl::map<double,std::set<int>,partial_absorber> >;
+                    case CodomainType::Nat:     return new itl_order_validater<icl::map<double,nat,partial_enricher> >; 
+                    case CodomainType::Int:     return new itl_order_validater<icl::map<double,int,total_absorber> >; 
+                    case CodomainType::set_int: return new itl_order_validater<icl::map<double,std::set<int>,partial_absorber> >;
                     default: return choiceError(ITL_LOCATION("\nRootType::itl_map: codomainChoice:\n"),
                                                 codomainChoice, _codomainChoice);
                     }//switch codomain
@@ -179,5 +179,5 @@ namespace boost{namespace itl
     };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 

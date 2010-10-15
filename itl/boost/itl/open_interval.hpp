@@ -14,7 +14,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/type_to_string.hpp>
 #include <boost/itl/concept/interval.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <class DomainT, 
@@ -47,7 +47,7 @@ public:
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
         // Only for discrete types this ctor creates an interval containing 
         // a single element only.
-        BOOST_STATIC_ASSERT((itl::is_discrete<DomainT>::value));
+        BOOST_STATIC_ASSERT((icl::is_discrete<DomainT>::value));
         BOOST_ASSERT((numeric_minimum<DomainT, is_numeric<DomainT>::value >::is_less_than(val) )); 
     }
 
@@ -71,11 +71,11 @@ private:
 //=T open_interval -> concept intervals
 //==============================================================================
 template<class DomainT, ITL_COMPARE Compare>
-struct interval_traits< itl::open_interval<DomainT, Compare> >
+struct interval_traits< icl::open_interval<DomainT, Compare> >
 {
     typedef DomainT domain_type;
     typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
-    typedef itl::open_interval<DomainT, Compare> interval_type;
+    typedef icl::open_interval<DomainT, Compare> interval_type;
 
     static interval_type construct(const domain_type& lo, const domain_type& up)
     {
@@ -98,20 +98,20 @@ struct interval_bound_type< open_interval<DomainT,Compare> >
 };
 
 template <class DomainT, ITL_COMPARE Compare>
-struct type_to_string<itl::open_interval<DomainT,Compare> >
+struct type_to_string<icl::open_interval<DomainT,Compare> >
 {
     static std::string apply()
     { return "(I)<"+ type_to_string<DomainT>::apply() +">"; }
 };
 
 template<class DomainT, ITL_COMPARE Compare> 
-struct value_size<itl::open_interval<DomainT,Compare> >
+struct value_size<icl::open_interval<DomainT,Compare> >
 {
-    static std::size_t apply(const itl::open_interval<DomainT>& value) 
+    static std::size_t apply(const icl::open_interval<DomainT>& value) 
     { return 2; }
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

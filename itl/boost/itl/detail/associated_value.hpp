@@ -13,7 +13,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/and.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template<class Type, class CoType> 
@@ -37,7 +37,7 @@ co_equal(typename Type::const_iterator, typename CoType::const_iterator,
 }
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

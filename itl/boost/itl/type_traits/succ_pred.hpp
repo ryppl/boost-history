@@ -8,7 +8,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifndef BOOST_ITL_TYPE_TRAITS_SUCC_PRED_HPP_JOFA_080913
 #define BOOST_ITL_TYPE_TRAITS_SUCC_PRED_HPP_JOFA_080913
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
     template <class IncrementableT>
     inline static IncrementableT succ(IncrementableT x) { return ++x; }

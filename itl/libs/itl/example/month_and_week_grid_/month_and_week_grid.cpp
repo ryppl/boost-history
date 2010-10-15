@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+    
-Interval Template Library
+Interval Container Library
 Author: Joachim Faulhaber
 Copyright (c) 2007-2009: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
@@ -38,7 +38,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 using namespace std;
 using namespace boost::gregorian;
-using namespace boost::itl;
+using namespace boost::icl;
 
 typedef split_interval_set<boost::gregorian::date> date_grid;
 
@@ -113,7 +113,7 @@ void month_and_time_grid()
 
 int main()
 {
-    cout << ">> Interval Template Library: Sample month_and_time_grid.cpp <<\n";
+    cout << ">>Interval Container Library: Sample month_and_time_grid.cpp <<\n";
     cout << "---------------------------------------------------------------\n";
     month_and_time_grid();
     return 0;
@@ -121,7 +121,7 @@ int main()
 
 // Program output:
 /*
->> Interval Template Library: Sample month_and_time_grid.cpp <<
+>>Interval Container Library: Sample month_and_time_grid.cpp <<
 ---------------------------------------------------------------
 interval : 2008-Jun-22 - 2008-Aug-21 month and week partitions:
 ---------------------------------------------------------------

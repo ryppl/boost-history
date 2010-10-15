@@ -21,7 +21,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/concept/map_value.hpp>
 
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 namespace Set
@@ -39,7 +39,7 @@ bool common_range(IteratorT& lwb, IteratorT& upb, ObjectT& x1, const ConstObject
     lwb = x1.end();
     upb = x1.end();
 
-    if(itl::is_empty(x1) || itl::is_empty(x2)) 
+    if(icl::is_empty(x1) || icl::is_empty(x2)) 
         return false;
 
     IteratorT x1_fst_ = x1.begin();
@@ -49,16 +49,16 @@ bool common_range(IteratorT& lwb, IteratorT& upb, ObjectT& x1, const ConstObject
     ConstObject_iterator x2_lst_ = x2.end(); x2_lst_--;
 
     typename ObjectT::key_compare key_less;
-    if(key_less(itl::key_value< PureObjectT>(x1_lst_), 
-                itl::key_value<ConstObjectT>(x2_fst_))) // {x1}   {x2}
+    if(key_less(icl::key_value< PureObjectT>(x1_lst_), 
+                icl::key_value<ConstObjectT>(x2_fst_))) // {x1}   {x2}
         return false;
-    if(key_less(itl::key_value<ConstObjectT>(x2_lst_), 
-                itl::key_value< PureObjectT>(x1_fst_))) // {x2}   {x1} 
+    if(key_less(icl::key_value<ConstObjectT>(x2_lst_), 
+                icl::key_value< PureObjectT>(x1_fst_))) // {x2}   {x1} 
         return false;
 
     // We do have a common range
-    lwb = x1.lower_bound(itl::key_value<ConstObjectT>(x2_fst_));
-    upb = x1.upper_bound(itl::key_value<ConstObjectT>(x2_lst_));
+    lwb = x1.lower_bound(icl::key_value<ConstObjectT>(x2_fst_));
+    upb = x1.upper_bound(icl::key_value<ConstObjectT>(x2_lst_));
 
     return true;
 }
@@ -70,8 +70,8 @@ template<class SetType>
 inline bool within(const SetType& sub, const SetType& super)
 {
     if(&super == &sub)                   return true;
-    if(itl::is_empty(sub))               return true;
-    if(itl::is_empty(super))             return false;
+    if(icl::is_empty(sub))               return true;
+    if(icl::is_empty(super))             return false;
 
     typename SetType::const_iterator common_lwb_, common_upb_;
     if(!common_range(common_lwb_, common_upb_, sub, super))
@@ -129,7 +129,7 @@ inline bool lexicographical_equal(const SetType& left, const SetType& right)
 
 } // namespace Set
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

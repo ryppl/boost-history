@@ -14,7 +14,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include "point_gentor.hpp"
 #include "polygon_gentor.hpp"
 
-typedef boost::itl::point<int> CPoint;
+typedef boost::icl::point<int> CPoint;
 
 namespace boost{ namespace polygon{
 
@@ -51,7 +51,7 @@ namespace boost{ namespace polygon{
 }}
 
 //the CPolygon example
-typedef boost::itl::list<CPoint > CPolygon;
+typedef boost::icl::list<CPoint > CPolygon;
 
 //we need to specialize our polygon concept mapping in gtl
 namespace boost{ namespace polygon{
@@ -105,7 +105,7 @@ namespace boost{ namespace polygon{
 }}
 
 //OK, finally we get to declare our own polygon set type
-typedef boost::itl::list<CPolygon> CPolygonSet;
+typedef boost::icl::list<CPolygon> CPolygonSet;
 
 //deque isn't automatically a polygon set in the library
 //because it is a standard container there is a shortcut

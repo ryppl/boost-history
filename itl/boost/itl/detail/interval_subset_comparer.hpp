@@ -17,7 +17,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/is_set.hpp>
 #include <boost/itl/concept/interval_set_value.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 #ifdef BOOST_MSVC 
@@ -34,8 +34,8 @@ struct settic_codomain_compare
 {
     static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
     {
-        return inclusion_compare( itl::co_value<LeftT>(left_), 
-                                 itl::co_value<RightT>(right_));
+        return inclusion_compare( icl::co_value<LeftT>(left_), 
+                                 icl::co_value<RightT>(right_));
     }
 };
 
@@ -44,7 +44,7 @@ struct atomic_codomain_compare
 {
     static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
     {
-        if(itl::co_value<LeftT>(left_) == itl::co_value<RightT>(right_))
+        if(icl::co_value<LeftT>(left_) == icl::co_value<RightT>(right_))
             return inclusion::equal;
         else
             return inclusion::unrelated;
@@ -362,7 +362,7 @@ int subset_compare
 #pragma warning(pop)
 #endif
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif 
 

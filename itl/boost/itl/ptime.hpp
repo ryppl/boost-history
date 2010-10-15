@@ -37,7 +37,7 @@ w.r.t. addition (identity_element()).
 #include <boost/itl/type_traits/size_type_of.hpp>
 #include <boost/itl/type_traits/is_discrete.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     template<> struct is_discrete<boost::posix_time::ptime>
     {
@@ -91,7 +91,7 @@ namespace boost{namespace itl
     {
         return x -= boost::posix_time::ptime::time_duration_type::unit();
     }
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

@@ -200,7 +200,7 @@ namespace Loki
 
         static std::string Do(H& obj)
         {
-            return itl::value<HeadType>::to_string(get<0>(obj));
+            return icl::value<HeadType>::to_string(get<0>(obj));
         }
     };
 
@@ -212,7 +212,7 @@ namespace Loki
 
         static std::string Do(H& obj)
         {
-            return itl::value<HeadType>::to_string(get<0>(obj)) 
+            return icl::value<HeadType>::to_string(get<0>(obj)) 
                    + ", " + Stringer<TailClass, i-1>::Do(obj);
         }
     };
@@ -281,7 +281,7 @@ namespace Loki
     {
         static std::string apply(const SourceT& src)
         {
-            return itl::value<SourceT>::to_string(src);
+            return icl::value<SourceT>::to_string(src);
         }
     };
 

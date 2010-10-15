@@ -16,7 +16,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/type_traits/is_float.hpp>
 #include <boost/mpl/if.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
     //--------------------------------------------------------------------------
     template<class Type>

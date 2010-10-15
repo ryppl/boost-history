@@ -15,7 +15,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/validater/itl_order_validater.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     
     class set_order_driver : public itl_driver
@@ -138,5 +138,5 @@ namespace boost{namespace itl
     };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 

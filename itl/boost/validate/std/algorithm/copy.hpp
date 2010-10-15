@@ -12,7 +12,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 
 #include <algorithm>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 //------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ struct std_copy_backward_back
 
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_STD_ALGORITHM_COPY_HPP_JOFA_091124
 

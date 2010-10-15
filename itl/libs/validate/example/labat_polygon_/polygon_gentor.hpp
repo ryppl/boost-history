@@ -13,7 +13,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/itl_xt/gentorit.hpp>
 #include <boost/itl_xt/list.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <class PolygonT> 

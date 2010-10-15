@@ -13,25 +13,25 @@ void dynamic_interval_ctor_4_ordered_types()
 {
     typedef typename domain_type_of<interval_traits<IntervalT> >::type T;
 
-    BOOST_CHECK_EQUAL(IntervalT().lower(), itl::identity_element<T>::value());
-    BOOST_CHECK_EQUAL(IntervalT().upper(), itl::identity_element<T>::value());
-    BOOST_CHECK_EQUAL(itl::lower(IntervalT()), itl::identity_element<T>::value());
-    BOOST_CHECK_EQUAL(itl::upper(IntervalT()), itl::identity_element<T>::value());
+    BOOST_CHECK_EQUAL(IntervalT().lower(), icl::identity_element<T>::value());
+    BOOST_CHECK_EQUAL(IntervalT().upper(), icl::identity_element<T>::value());
+    BOOST_CHECK_EQUAL(icl::lower(IntervalT()), icl::identity_element<T>::value());
+    BOOST_CHECK_EQUAL(icl::upper(IntervalT()), icl::identity_element<T>::value());
 
-    IntervalT itv = IntervalT(itl::identity_element<T>::value(), itl::identity_element<T>::value());
-    BOOST_CHECK_EQUAL(IntervalT(), IntervalT(itl::identity_element<T>::value(), itl::identity_element<T>::value()));
-    BOOST_CHECK_EQUAL(IntervalT(), IntervalT(itl::identity_element<T>::value(), itl::identity_element<T>::value(), interval_bounds::right_open()));
+    IntervalT itv = IntervalT(icl::identity_element<T>::value(), icl::identity_element<T>::value());
+    BOOST_CHECK_EQUAL(IntervalT(), IntervalT(icl::identity_element<T>::value(), icl::identity_element<T>::value()));
+    BOOST_CHECK_EQUAL(IntervalT(), IntervalT(icl::identity_element<T>::value(), icl::identity_element<T>::value(), interval_bounds::right_open()));
 }
 
 template <class T> 
 void dynamic_interval_bounds_4_bicremental_types()
 {
-    typedef typename itl::interval<T>::type IntervalT;
+    typedef typename icl::interval<T>::type IntervalT;
 
     BOOST_CHECK_EQUAL( T(), pred(succ(T())));
-    BOOST_CHECK_EQUAL( itl::identity_element<T>::value(), pred(succ(itl::identity_element<T>::value())) );
-    BOOST_CHECK_EQUAL( itl::unit_element<T>::value(),     succ(itl::identity_element<T>::value())        );
-    BOOST_CHECK_EQUAL( length(IntervalT()), itl::identity_element<typename difference_type_of<T>::type>::value() );
+    BOOST_CHECK_EQUAL( icl::identity_element<T>::value(), pred(succ(icl::identity_element<T>::value())) );
+    BOOST_CHECK_EQUAL( icl::unit_element<T>::value(),     succ(icl::identity_element<T>::value())        );
+    BOOST_CHECK_EQUAL( length(IntervalT()), icl::identity_element<typename difference_type_of<T>::type>::value() );
 
     //LAW: I x: borders(x)==closed => contains(x, lower(x)) && contains(x, upper(x))
     check_border_containedness(I_I(0,0));
@@ -51,12 +51,12 @@ void dynamic_interval_bounds_4_bicremental_types()
 template <class T> 
 void discrete_dynamic_interval_bounds_4_bicremental_types()
 {
-    typedef typename itl::interval<T>::type IntervalT;
+    typedef typename icl::interval<T>::type IntervalT;
 
-    BOOST_CHECK( itl::bounds(I_I(2,4)) == interval_bounds::closed()     );
-    BOOST_CHECK( itl::bounds(I_D(2,5)) == interval_bounds::right_open() );
-    BOOST_CHECK( itl::bounds(C_I(1,4)) == interval_bounds::left_open()  );
-    BOOST_CHECK( itl::bounds(C_D(1,5)) == interval_bounds::open()       );
+    BOOST_CHECK( icl::bounds(I_I(2,4)) == interval_bounds::closed()     );
+    BOOST_CHECK( icl::bounds(I_D(2,5)) == interval_bounds::right_open() );
+    BOOST_CHECK( icl::bounds(C_I(1,4)) == interval_bounds::left_open()  );
+    BOOST_CHECK( icl::bounds(C_D(1,5)) == interval_bounds::open()       );
 
 }
 

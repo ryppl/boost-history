@@ -11,9 +11,9 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #define BOOST_ITL_DOXYGEN_MAINPAGE_HPP_JOFA_091216
 
 /**
-\mainpage Interval Template Library
+\mainpage Boost Interval Container Library
 
-\section header_sec Interval Template Library
+\section header_sec Boost Interval Container Library
 
 Author: Joachim Faulhaber\n
 Copyright (c) 2007-2009: Joachim Faulhaber\n
@@ -25,7 +25,7 @@ Distributed under the Boost Software License, Version 1.0.\n
 
 \section overview_sec Overview
 
-The <b>Interval Template Library (ITL+)</b> is a collection of
+The <b>Boost Interval Container Library (ITL+)</b> is a collection of
 generic c++ class templates for computations on intervals,
 interval containers, large bitsets and generalized crosstables or cubes.
 
@@ -79,10 +79,10 @@ explained in the
 project section</a>
 of the boost book documentation. 
 
-<li>itl::add_iterator, and itl::insert_iterator
+<li>icl::add_iterator, and icl::insert_iterator
 
 To copy or tranform data from std::containers of intervals or segments into
-interval containers you can use an itl::insert_iterator or an itl::add_iterator.
+interval containers you can use an icl::insert_iterator or an icl::add_iterator.
 See examples 
 <a href="http://www.herold-faulhaber.de/boost_itl/doc/libs/itl/doc/html/boost_itl/examples/std_copy.html">
 std_copy</a> and 

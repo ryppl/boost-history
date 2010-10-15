@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Interval Template Library
+Interval Container Library
 Author: Joachim Faulhaber
 Copyright (c) 2007-2009: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
@@ -30,7 +30,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include "../toytime.hpp"
 
 using namespace std;
-using namespace boost::itl;
+using namespace boost::icl;
 
 void interval_container_basics()
 {
@@ -88,7 +88,7 @@ void interval_container_basics()
 
 int main()
 {
-    cout << ">> Interval Template Library: Sample interval_container.cpp <<\n";
+    cout << ">>Interval Container Library: Sample interval_container.cpp <<\n";
     cout << "--------------------------------------------------------------\n";
     interval_container_basics();
     return 0;
@@ -97,7 +97,7 @@ int main()
 
 // Program output:
 /* ----------------------------------------------------------------------------
->> Interval Template Library: Sample interval_container.cpp <<
+>>Interval Container Library: Sample interval_container.cpp <<
 --------------------------------------------------------------
 Joined times  :[mon:20:00,wed:10:00)[wed:18:00,wed:21:00)
 Separate times:[mon:20:00,wed:07:00)[wed:07:00,wed:10:00)[wed:18:00,wed:21:00)

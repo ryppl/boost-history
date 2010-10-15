@@ -16,7 +16,7 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/utility.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     class abelian_monoid_driver : public itl_driver
     {
@@ -63,8 +63,8 @@ namespace boost{namespace itl
             {
             case RootType::itl_set: {
                     switch(domainChoice) {
-                    case DomainType::Int:    return new abelian_monoid_validater<itl::set<int> >; 
-                    case DomainType::Double: return new abelian_monoid_validater<itl::set<double> >; 
+                    case DomainType::Int:    return new abelian_monoid_validater<icl::set<int> >; 
+                    case DomainType::Double: return new abelian_monoid_validater<icl::set<double> >; 
                     default: return choiceError(ITL_LOCATION("\nRootType::itl_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
@@ -90,6 +90,6 @@ namespace boost{namespace itl
         }
     };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_DRIVER_ABELIAN_MONOID_DRIVER_HPP_JOFA_100502

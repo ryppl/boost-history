@@ -12,7 +12,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 
 #include <algorithm>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 //------------------------------------------------------------------------------
@@ -255,7 +255,7 @@ private:
 };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_STD_ALGORITHM_FIND_HPP_JOFA_091205
 

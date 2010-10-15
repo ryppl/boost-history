@@ -8,7 +8,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifndef BOOST_ITL_TYPE_TRAITS_NO_TYPE_HPP_JOFA_100902
 #define BOOST_ITL_TYPE_TRAITS_NO_TYPE_HPP_JOFA_100902
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
     struct no_type{};
 

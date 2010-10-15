@@ -13,7 +13,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/mpl/if.hpp>
 #include <boost/itl/type_traits/is_concept_equivalent.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template<class FirstT, class SecondT> class mapped_reference;
@@ -187,6 +187,6 @@ template<class FirstT, class SecondT>
 inline mapped_reference<FirstT, SecondT> make_mapped_reference(const FirstT& left, SecondT& right)
 { return mapped_reference<FirstT, SecondT>(left, right); }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_DETAIL_MAPPED_REFERENCE_HPP_JOFA_091108

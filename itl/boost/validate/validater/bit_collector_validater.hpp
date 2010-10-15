@@ -18,7 +18,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/validater/law_validater.hpp>
 #include <boost/validate/validater/concept_validater.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <typename Type>
@@ -85,19 +85,19 @@ public:
         case inplaceSymmetricDifference:return new LawValidater<InplaceSymmetricDifference<Type, inplace_bit_add, inplace_bit_subtract, inplace_bit_and> >;
         case inplaceFlip:               return new LawValidater<InplaceFlip<Type> >;
         case inplaceEtDistributivity:  
-            if(itl::is_interval_splitter<Type>::value && absorbs_identities<Type>::value && !is_total<Type>::value)
+            if(icl::is_interval_splitter<Type>::value && absorbs_identities<Type>::value && !is_total<Type>::value)
                                         return new LawValidater<InplaceDistributivity<Type, inplace_bit_and, inplace_bit_add, element_equal> >;
             else                        return new LawValidater<InplaceDistributivity<Type, inplace_bit_and, inplace_bit_add, std_equal> >;
         case inplacePlusDashRightDistrib:
-            if(itl::is_interval_splitter<Type>::value && absorbs_identities<Type>::value && !is_total<Type>::value)
+            if(icl::is_interval_splitter<Type>::value && absorbs_identities<Type>::value && !is_total<Type>::value)
                                         return new LawValidater<InplaceRightDistributivity<Type, inplace_bit_add, inplace_bit_subtract, element_equal> >;
             else                        return new LawValidater<InplaceRightDistributivity<Type, inplace_bit_add, inplace_bit_subtract, std_equal> >;
         case inplaceEtDashRightDistrib: return new LawValidater<InplaceRightDistributivity<Type, inplace_bit_and, inplace_bit_subtract> >;
-        case inplacePlusDeMorgan:       return new LawValidater<InplaceDeMorgan<Type, inplace_bit_add, inplace_bit_and, inplace_bit_subtract, itl::std_equal> >;
+        case inplacePlusDeMorgan:       return new LawValidater<InplaceDeMorgan<Type, inplace_bit_add, inplace_bit_and, inplace_bit_subtract, icl::std_equal> >;
         case inplaceEtDeMorgan:        
-            if(itl::is_interval_splitter<Type>::value || itl::is_interval_separator<Type>::value)
-                                        return new LawValidater<InplaceDeMorgan<Type, inplace_bit_and, inplace_bit_add, inplace_bit_subtract, itl::element_equal> >;
-            else                        return new LawValidater<InplaceDeMorgan<Type, inplace_bit_and, inplace_bit_add, inplace_bit_subtract, itl::std_equal> >;
+            if(icl::is_interval_splitter<Type>::value || icl::is_interval_separator<Type>::value)
+                                        return new LawValidater<InplaceDeMorgan<Type, inplace_bit_and, inplace_bit_add, inplace_bit_subtract, icl::element_equal> >;
+            else                        return new LawValidater<InplaceDeMorgan<Type, inplace_bit_and, inplace_bit_add, inplace_bit_subtract, icl::std_equal> >;
 
         default: return NULL;
         }
@@ -108,6 +108,6 @@ private:
 };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_VALIDATER_BIT_COLLECTOR_VALIDATER_HPP_JOFA_091009

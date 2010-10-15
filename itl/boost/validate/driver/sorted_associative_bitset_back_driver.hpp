@@ -16,7 +16,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/utility.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     
     class sorted_associative_bitset_back_driver : public itl_driver
@@ -51,19 +51,19 @@ namespace boost{namespace itl
             switch(freeChoice)
             {
             case FreeChoice::_1:
-                return new sorted_associative_back_validater< interval_bitset<int, bits<unsigned char> >,  itl::list<int> >; 
+                return new sorted_associative_back_validater< interval_bitset<int, bits<unsigned char> >,  icl::list<int> >; 
             case FreeChoice::_2:
-                return new sorted_associative_back_validater< interval_bitset<int, bits<unsigned short> >, itl::list<int> >; 
+                return new sorted_associative_back_validater< interval_bitset<int, bits<unsigned short> >, icl::list<int> >; 
             case FreeChoice::_3:
-                return new sorted_associative_back_validater< interval_bitset<int, bits<unsigned long> >,  itl::list<int> >; 
+                return new sorted_associative_back_validater< interval_bitset<int, bits<unsigned long> >,  icl::list<int> >; 
             case FreeChoice::_4:
-                return new sorted_associative_back_validater< interval_bitset<int, bits<unsigned long long> >, itl::list<int> >; 
+                return new sorted_associative_back_validater< interval_bitset<int, bits<unsigned long long> >, icl::list<int> >; 
             default: return choiceError(ITL_LOCATION("freeChoice:\n"), freeChoice, _freeChoice);
             } //switch()
 
         }
     };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_DRIVER_SORTED_ASSOCIATIVE_BITSET_BACK_DRIVER_HPP_JOFA_091202

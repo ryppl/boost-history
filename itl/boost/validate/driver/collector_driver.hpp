@@ -17,7 +17,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/utility.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     
     class collector_driver : public itl_driver
@@ -103,9 +103,9 @@ namespace boost{namespace itl
             //-----------------------------------------------------------------
             case RootType::itl_map: {
                 switch(identityHandlerChoice) {
-                case IdentityHandlerType::partial_absorber: return new collector_validater<itl::map<int,std::set<int> > >;
-                case IdentityHandlerType::partial_enricher: return new collector_validater<itl::map<int,std::set<int>,partial_enricher> >;
-                //case IdentityHandlerType::total_absorber : return new collector_validater<itl::map<int,std::set<int>,total_absorber > >;
+                case IdentityHandlerType::partial_absorber: return new collector_validater<icl::map<int,std::set<int> > >;
+                case IdentityHandlerType::partial_enricher: return new collector_validater<icl::map<int,std::set<int>,partial_enricher> >;
+                //case IdentityHandlerType::total_absorber : return new collector_validater<icl::map<int,std::set<int>,total_absorber > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::itl_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case itl_map 
@@ -137,6 +137,6 @@ namespace boost{namespace itl
     };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_DRIVER_COLLECTOR_DRIVER_HPP_JOFA_091009

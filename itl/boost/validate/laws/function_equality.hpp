@@ -15,7 +15,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/itl/predicates.hpp>
 #include <boost/validate/laws/law.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 // -----------------------------------------------------------------------------
@@ -29,7 +29,7 @@ namespace boost{namespace itl
 template <typename SourceT, typename TargetT,// domain, codomain types of f,g
           template<class,class>class Function_f,
           template<class,class>class Function_g,
-          template<class>class Equality = itl::std_equal> 
+          template<class>class Equality = icl::std_equal> 
 class FunctionEquality : 
     public Law<FunctionEquality<SourceT,TargetT,Function_f,Function_g,Equality>, 
                LOKI_TYPELIST_1(SourceT), LOKI_TYPELIST_2(TargetT,TargetT)>
@@ -100,7 +100,7 @@ public:
     }
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_FUNCTION_EQUALITY_HPP_JOFA_091005
 

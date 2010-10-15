@@ -34,7 +34,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 
 using namespace std;
 using namespace boost;
-using namespace boost::itl;
+using namespace boost::icl;
 using namespace mini;
 //]
 
@@ -157,7 +157,7 @@ void test_set()
 
 int main()
 {
-    cout << ">> Interval Template Library: Sample large_bitset.cpp <<\n";
+    cout << ">>Interval Container Library: Sample large_bitset.cpp <<\n";
     cout << "--------------------------------------------------------\n";
     test_large();
     test_small();

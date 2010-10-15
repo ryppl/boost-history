@@ -16,8 +16,8 @@ template <class T, class U, class Trt,
           template<class T, class U,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
-                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(icl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(icl::inter_section, U),
                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
@@ -25,7 +25,7 @@ template <class T, class U, class Trt,
 void itv_quantifier_check_monoid_plus_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
-    typedef itl::map<T,U,Trt> MapT;
+    typedef icl::map<T,U,Trt> MapT;
 
     IntervalMapT itv_map_a, itv_map_b, itv_map_c;
     itv_map_a.add(IDv(3,6,1)).add(IIv(5,7,1));
@@ -49,8 +49,8 @@ template <class T, class U, class Trt,
           template<class T, class U,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
-                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(icl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(icl::inter_section, U),
                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
@@ -58,7 +58,7 @@ template <class T, class U, class Trt,
 void itv_quantifier_check_monoid_et_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
-    typedef itl::map<T,U,Trt> MapT;
+    typedef icl::map<T,U,Trt> MapT;
 
     IntervalMapT itv_map_a, itv_map_b, itv_map_c;
     itv_map_a.add(IDv(3,6,1)).add(IIv(5,7,1));
@@ -85,8 +85,8 @@ template <class T, class U, class Trt,
           template<class T, class U,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
-                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(icl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(icl::inter_section, U),
                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
@@ -94,7 +94,7 @@ template <class T, class U, class Trt,
 void itv_quantifier_check_abelian_monoid_plus_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
-    typedef itl::map<T,U,Trt> MapT;
+    typedef icl::map<T,U,Trt> MapT;
 
     IntervalMapT itv_map_a, itv_map_b, itv_map_c;
     itv_map_a.add(IDv(3,6,1)).add(IIv(5,7,1));
@@ -118,8 +118,8 @@ template <class T, class U, class Trt,
           template<class T, class U,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
-                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(icl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(icl::inter_section, U),
                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
@@ -127,7 +127,7 @@ template <class T, class U, class Trt,
 void itv_quantifier_check_abelian_monoid_et_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
-    typedef itl::map<T,U,Trt> MapT;
+    typedef icl::map<T,U,Trt> MapT;
 
     IntervalMapT itv_map_a, itv_map_b, itv_map_c;
     itv_map_a.add(IDv(3,6,1)).add(IIv(5,7,1));
@@ -154,8 +154,8 @@ template <class T, class U, class Trt,
           template<class T, class U,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
-                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(icl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(icl::inter_section, U),
                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
@@ -163,7 +163,7 @@ template <class T, class U, class Trt,
 void itv_quantifier_check_partial_invertive_monoid_plus_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
-    typedef itl::map<T,U,Trt> MapT;
+    typedef icl::map<T,U,Trt> MapT;
 
     IntervalMapT itv_map_a, itv_map_b, itv_map_c;
     itv_map_a.add(IDv(3,6,1)).add(IIv(5,7,1));
@@ -189,8 +189,8 @@ template <class T, class U, class Trt,
           template<class T, class U,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
-                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(icl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(icl::inter_section, U),
                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
@@ -198,7 +198,7 @@ template <class T, class U, class Trt,
 void itv_quantifier_check_partial_invertive_monoid_plus_prot_inv_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
-    typedef itl::map<T,U,Trt> MapT;
+    typedef icl::map<T,U,Trt> MapT;
 
     IntervalMapT itv_map_a, itv_map_b, itv_map_c;
     itv_map_a.add(IDv(3,6,1)).add(IIv(5,7,1));
@@ -228,8 +228,8 @@ template <class T, class U, class Trt,
           template<class T, class U,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
-                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(icl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(icl::inter_section, U),
                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
@@ -237,7 +237,7 @@ template <class T, class U, class Trt,
 void itv_quantifier_check_abelian_group_plus_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
-    typedef itl::map<T,U,Trt> MapT;
+    typedef icl::map<T,U,Trt> MapT;
 
     IntervalMapT itv_map_a, itv_map_b, itv_map_c;
     itv_map_a.add(IDv(3,6,1)).add(IIv(5,7,1));
@@ -263,8 +263,8 @@ template <class T, class U, class Trt,
           template<class T, class U,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
-                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(icl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(icl::inter_section, U),
                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
@@ -272,7 +272,7 @@ template <class T, class U, class Trt,
 void itv_quantifier_check_abelian_group_plus_prot_inv_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
-    typedef itl::map<T,U,Trt> MapT;
+    typedef icl::map<T,U,Trt> MapT;
 
     IntervalMapT itv_map_a, itv_map_b, itv_map_c;
     itv_map_a.add(IDv(3,6,1)).add(IIv(5,7,1));

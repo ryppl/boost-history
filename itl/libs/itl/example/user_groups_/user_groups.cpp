@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+    
-Interval Template Library
+Interval Container Library
 Author: Joachim Faulhaber
 Copyright (c) 2007-2009: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
@@ -39,12 +39,12 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 using namespace std;
 using namespace boost::gregorian;
-using namespace boost::itl;
+using namespace boost::icl;
 
-// Type itl::set<string> collects the names a user group's members. Therefore
+// Type icl::set<string> collects the names a user group's members. Therefore
 // it needs to implement operator += that performs a set union on overlap of 
 // intervals.
-typedef boost::itl::set<string> MemberSetT;
+typedef boost::icl::set<string> MemberSetT;
 
 // boost::gregorian::date is the domain type the interval map. 
 // It's key values are therefore time intervals: discrete_interval<date>. The content
@@ -162,7 +162,7 @@ void user_groups()
 
 int main()
 {
-    cout << ">> Interval Template Library: Sample user_groups.cpp <<\n";
+    cout << ">>Interval Container Library: Sample user_groups.cpp <<\n";
     cout << "-------------------------------------------------------\n";
     user_groups();
     return 0;
@@ -170,7 +170,7 @@ int main()
 
 // Program output:
 /*-----------------------------------------------------------------------------
->> Interval Template Library: Sample user_groups.cpp <<
+>>Interval Container Library: Sample user_groups.cpp <<
 -------------------------------------------------------
 ----- Membership of medical staff -----------------------------------
 [2008-Jan-01 - 2008-Jan-14]: Harry Mary

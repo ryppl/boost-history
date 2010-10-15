@@ -12,7 +12,7 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/identity_element.hpp>
 #include <boost/itl/type_traits/succ_pred.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
     template <class Type> struct unit_element{ static Type value(); };
 
@@ -29,7 +29,7 @@ namespace boost{ namespace itl
 
     template <class Type> 
     inline Type unit_element<Type>::value()
-    { return itl::succ(identity_element<Type>::value()); }
+    { return icl::succ(identity_element<Type>::value()); }
 
 }} // namespace boost itl
 

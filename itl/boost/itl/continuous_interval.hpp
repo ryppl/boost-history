@@ -20,7 +20,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/interval_bounds.hpp>
 #include <boost/itl/concept/interval.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <class DomainT, 
@@ -43,7 +43,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value)); 
+        BOOST_STATIC_ASSERT((icl::is_continuous<DomainT>::value)); 
     }
 
     //NOTE: Compiler generated copy constructor is used
@@ -54,7 +54,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value));
+        BOOST_STATIC_ASSERT((icl::is_continuous<DomainT>::value));
     }
 
     /** Interval from <tt>low</tt> to <tt>up</tt> with bounds <tt>bounds</tt> */
@@ -65,7 +65,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value));
+        BOOST_STATIC_ASSERT((icl::is_continuous<DomainT>::value));
     }
 
     domain_type     lower()const { return _lwb; }
@@ -88,12 +88,12 @@ private:
 //=T continuous_interval -> concept interval
 //==============================================================================
 template<class DomainT, ITL_COMPARE Compare>
-struct interval_traits< itl::continuous_interval<DomainT, Compare> >
+struct interval_traits< icl::continuous_interval<DomainT, Compare> >
 {
     typedef interval_traits type;
     typedef DomainT domain_type;
     typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
-    typedef itl::continuous_interval<DomainT, Compare> interval_type;
+    typedef icl::continuous_interval<DomainT, Compare> interval_type;
 
     static interval_type construct(const domain_type& lo, const domain_type& up)
     {
@@ -109,27 +109,27 @@ struct interval_traits< itl::continuous_interval<DomainT, Compare> >
 //=T continuous_interval -> concept dynamic_interval
 //==============================================================================
 template<class DomainT, ITL_COMPARE Compare>
-struct dynamic_interval_traits<boost::itl::continuous_interval<DomainT,Compare> >
+struct dynamic_interval_traits<boost::icl::continuous_interval<DomainT,Compare> >
 {
     typedef dynamic_interval_traits type;
-    typedef boost::itl::continuous_interval<DomainT,Compare> interval_type;
+    typedef boost::icl::continuous_interval<DomainT,Compare> interval_type;
     typedef DomainT domain_type;
     typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
 
     static interval_type construct(const domain_type lo, const domain_type up, interval_bounds bounds)
     {
-        return itl::continuous_interval<DomainT,Compare>(lo, up, bounds,
-            static_cast<itl::continuous_interval<DomainT,Compare>* >(0) );
+        return icl::continuous_interval<DomainT,Compare>(lo, up, bounds,
+            static_cast<icl::continuous_interval<DomainT,Compare>* >(0) );
     }
 
     static interval_type construct_bounded(const bounded_value<DomainT>& lo, 
                                            const bounded_value<DomainT>& up)
     {
-        return  itl::continuous_interval<DomainT,Compare>
+        return  icl::continuous_interval<DomainT,Compare>
                 (
                     lo.value(), up.value(),
                     lo.bound().left() | up.bound().right(),
-                    static_cast<itl::continuous_interval<DomainT,Compare>* >(0) 
+                    static_cast<icl::continuous_interval<DomainT,Compare>* >(0) 
                 );
     }
 };
@@ -152,20 +152,20 @@ struct is_continuous_interval<continuous_interval<DomainT,Compare> >
 };
 
 template <class DomainT, ITL_COMPARE Compare>
-struct type_to_string<itl::continuous_interval<DomainT,Compare> >
+struct type_to_string<icl::continuous_interval<DomainT,Compare> >
 {
     static std::string apply()
     { return "cI<"+ type_to_string<DomainT>::apply() +">"; }
 };
 
 template<class DomainT> 
-struct value_size<itl::continuous_interval<DomainT> >
+struct value_size<icl::continuous_interval<DomainT> >
 {
-    static std::size_t apply(const itl::continuous_interval<DomainT>& value) 
+    static std::size_t apply(const icl::continuous_interval<DomainT>& value) 
     { return 2; }
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+    
-Interval Template Library
+Interval Container Library
 Author: Joachim Faulhaber
 Copyright (c) 2007-2009: Joachim Faulhaber
 +------------------------------------------------------------------------------+
@@ -14,7 +14,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/interval_type_default.hpp>
 #include <boost/itl/interval.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     class GentorProfile
@@ -30,35 +30,35 @@ namespace boost{namespace itl
         void set_polygon_profile(int max_polygon_set_size, int max_polygon_size, int min_coord, int max_coord);
 
         void set_range_int(int lwb, int upb) 
-        { _range_int = itl::interval<int>::right_open(lwb, upb); }
+        { _range_int = icl::interval<int>::right_open(lwb, upb); }
         void set_range_nat(cnat lwb, cnat upb) 
-        { _range_nat = itl::interval<cnat>::right_open(lwb, upb); }
+        { _range_nat = icl::interval<cnat>::right_open(lwb, upb); }
         void set_range_double(double lwb, double upb) 
-        { _range_double = itl::interval<double>::right_open(lwb, upb); }
+        { _range_double = icl::interval<double>::right_open(lwb, upb); }
         void set_range_ContainerSize(int lwb, int upb) 
-        { _range_ContainerSize = itl::interval<int>::right_open(lwb, upb); }
+        { _range_ContainerSize = icl::interval<int>::right_open(lwb, upb); }
         void set_range_interval_int(int lwb, int upb) 
-        { _range_interval_int = itl::interval<int>::right_open(lwb, upb); }
+        { _range_interval_int = icl::interval<int>::right_open(lwb, upb); }
         void set_range_interval_double(double lwb, double upb) 
-        { _range_interval_double = itl::interval<double>::right_open(lwb, upb); }
+        { _range_interval_double = icl::interval<double>::right_open(lwb, upb); }
         void set_maxIntervalLength(int val) 
         { _maxIntervalLength = val; }
         void set_range_codomain_ContainerSize(int lwb, int upb) 
-        { _range_codomain_ContainerSize = itl::interval<int>::right_open(lwb, upb); }
+        { _range_codomain_ContainerSize = icl::interval<int>::right_open(lwb, upb); }
         void set_repeat_count(int repeat) { _repeat_count = repeat; }
         void set_trials_count(int trials) { _trials_count = trials; }
         void set_trials_count_release(int trials) { _trials_count_release = trials; }
         void set_laws_per_cycle(int count){ _laws_per_cycle = count; }
         void set_debug_slowdown(double factor){ _debug_slowdown = factor; }
 
-        itl::interval<int>::type       range_int()             { return _range_int; }
-        itl::interval<cnat>::type      range_nat()             { return _range_nat; }
-        itl::interval<double>::type    range_double()          { return _range_double; }
-        itl::interval<int>::type       range_ContainerSize()   { return _range_ContainerSize; }
-        itl::interval<int>::type       range_interval_int()    { return _range_interval_int; }
-        itl::interval<double>::type    range_interval_double() { return _range_interval_double; }
+        icl::interval<int>::type       range_int()             { return _range_int; }
+        icl::interval<cnat>::type      range_nat()             { return _range_nat; }
+        icl::interval<double>::type    range_double()          { return _range_double; }
+        icl::interval<int>::type       range_ContainerSize()   { return _range_ContainerSize; }
+        icl::interval<int>::type       range_interval_int()    { return _range_interval_int; }
+        icl::interval<double>::type    range_interval_double() { return _range_interval_double; }
         int                 maxIntervalLength()     { return _maxIntervalLength; }
-        itl::interval<int>::type       range_codomain_ContainerSize()
+        icl::interval<int>::type       range_codomain_ContainerSize()
                                                     { return _range_codomain_ContainerSize; }
         int                 repeat_count()          { return _repeat_count; }
         int                 trials_count()          { return _trials_count; }
@@ -75,16 +75,16 @@ namespace boost{namespace itl
         void report_profile();
 
     private:
-        itl::interval<int>::type       _range_int;
-        itl::interval<cnat>::type       _range_nat;
-        itl::interval<double>::type    _range_double;
-        itl::interval<int>::type       _range_ContainerSize;
+        icl::interval<int>::type       _range_int;
+        icl::interval<cnat>::type       _range_nat;
+        icl::interval<double>::type    _range_double;
+        icl::interval<int>::type       _range_ContainerSize;
 
-        itl::interval<int>::type       _range_interval_int;
-        itl::interval<double>::type    _range_interval_double;
+        icl::interval<int>::type       _range_interval_int;
+        icl::interval<double>::type    _range_interval_double;
         int                 _maxIntervalLength;
 
-        itl::interval<int>::type       _range_codomain_ContainerSize;
+        icl::interval<int>::type       _range_codomain_ContainerSize;
         int                 _repeat_count;
         int                 _trials_count;
         int                 _trials_count_release;
@@ -122,14 +122,14 @@ namespace boost{namespace itl
         void set_trials_count(int trials)              { m_profile.set_trials_count(trials); }
         void set_laws_per_cycle(int count)              { m_profile.set_laws_per_cycle(count); }
 
-        itl::interval<int>::type       range_int()                { return m_profile.range_int();           }
-        itl::interval<cnat>::type      range_nat()                { return m_profile.range_nat();           }
-        itl::interval<double>::type    range_double()             { return m_profile.range_double();        }
-        itl::interval<int>::type       range_ContainerSize(){ return m_profile.range_ContainerSize(); }
-        itl::interval<int>::type       range_interval_int()       { return m_profile.range_interval_int();  }
-        itl::interval<double>::type    range_interval_double()    { return m_profile.range_interval_double();}
+        icl::interval<int>::type       range_int()                { return m_profile.range_int();           }
+        icl::interval<cnat>::type      range_nat()                { return m_profile.range_nat();           }
+        icl::interval<double>::type    range_double()             { return m_profile.range_double();        }
+        icl::interval<int>::type       range_ContainerSize(){ return m_profile.range_ContainerSize(); }
+        icl::interval<int>::type       range_interval_int()       { return m_profile.range_interval_int();  }
+        icl::interval<double>::type    range_interval_double()    { return m_profile.range_interval_double();}
         int                 maxIntervalLength()        { return m_profile.maxIntervalLength();   }
-        itl::interval<int>::type       range_codomain_ContainerSize(){ return m_profile.range_codomain_ContainerSize(); }
+        icl::interval<int>::type       range_codomain_ContainerSize(){ return m_profile.range_codomain_ContainerSize(); }
         int                 repeat_count()             { return m_profile.repeat_count(); }
         int                 trials_count()             { return m_profile.trials_count(); }
         int                 laws_per_cycle()           { return m_profile.laws_per_cycle(); }
@@ -154,38 +154,38 @@ namespace boost{namespace itl
     template<typename NumberT>
     struct GentorProfileSgl_numeric_range
     {
-        static typename itl::interval<NumberT>::type get();
+        static typename icl::interval<NumberT>::type get();
     };
 
     template<>
     struct GentorProfileSgl_numeric_range<int>
     {
-        static itl::interval<int>::type get() 
+        static icl::interval<int>::type get() 
         { return GentorProfileSgl::it()->range_int(); }
     };
 
     template<>
     struct GentorProfileSgl_numeric_range<unsigned int>
     {
-        static itl::interval<unsigned int>::type get() 
+        static icl::interval<unsigned int>::type get() 
         {
-            itl::interval<cnat>::type inter_val = GentorProfileSgl::it()->range_nat();
-            return itl::interval<unsigned int>::right_open(inter_val.lower(), inter_val.upper());
+            icl::interval<cnat>::type inter_val = GentorProfileSgl::it()->range_nat();
+            return icl::interval<unsigned int>::right_open(inter_val.lower(), inter_val.upper());
         }
     };
 
     template<>
     struct GentorProfileSgl_numeric_range<cnat>
     {
-        static itl::interval<cnat>::type get() 
+        static icl::interval<cnat>::type get() 
         { return GentorProfileSgl::it()->range_nat(); }
     };
 
     template<>
     struct GentorProfileSgl_numeric_range<double>
     {
-        static itl::interval<double>::type get() 
+        static icl::interval<double>::type get() 
         { return GentorProfileSgl::it()->range_double(); }
     };
 
-}} // namespace itl boost
+}} // namespace icl boost

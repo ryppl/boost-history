@@ -13,7 +13,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl_xt/var_tuple_order.hpp>
 #include <boost/itl/split_interval_map.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     template <int VarCount>
@@ -22,7 +22,7 @@ namespace boost{namespace itl
     public:
         typedef var_tuple<VarCount> var_tuple_type;
         typedef var_tuple_order<var_tuple_type> tuple_order_type;
-        typedef itl::set<var_tuple_type, var_tuple_order> tuple_set_type;
+        typedef icl::set<var_tuple_type, var_tuple_order> tuple_set_type;
 
     public:
         virtual ~tuple_computer_interface(){};
@@ -72,7 +72,7 @@ namespace boost{namespace itl
         typedef var_tuple<VarCount> var_tuple_type;
         typedef var_tuple_order<var_tuple_type> tuple_order_type;
         /// Container type for the implementation 
-        typedef itl::map<var_tuple_type, CounterT, partial_absorber, var_tuple_order> ImplMapTD;
+        typedef icl::map<var_tuple_type, CounterT, partial_absorber, var_tuple_order> ImplMapTD;
         /// iterator
         typedef typename ImplMapTD::iterator iterator;
         /// const_iterator
@@ -305,14 +305,14 @@ namespace boost{namespace itl
     */
     template <int VarCount, class TimeT, class CounteeT>
     class date_tuple_computer : 
-        public tuple_computer_base<VarCount, itl::map<TimeT, CounteeT> >
+        public tuple_computer_base<VarCount, icl::map<TimeT, CounteeT> >
     {
     public:
-        typedef typename itl::map<TimeT, CounteeT> counter_type;
+        typedef typename icl::map<TimeT, CounteeT> counter_type;
         typedef tuple_computer_base<VarCount, counter_type> base_type;
         typedef typename base_type::var_tuple_type var_tuple_type;
         typedef typename base_type::key_compare key_compare;
-        typedef typename itl::set<var_tuple_type, var_tuple_order> tuple_set_type;
+        typedef typename icl::set<var_tuple_type, var_tuple_order> tuple_set_type;
 
     public:
         // Default Ctor
@@ -364,11 +364,11 @@ namespace boost{namespace itl
         typedef tuple_computer_base<VarCount, counter_type>  base_type;
         typedef typename base_type::var_tuple_type           var_tuple_type;
         typedef typename base_type::key_compare              key_compare;
-        typedef itl::set<var_tuple_type, var_tuple_order>    tuple_set_type;
+        typedef icl::set<var_tuple_type, var_tuple_order>    tuple_set_type;
         typedef typename base_type::counter_type::interval_type interval_type;
 
     private:
-        typedef itl::map<TimeT, CounteeT> DateMapTD;
+        typedef icl::map<TimeT, CounteeT> DateMapTD;
 
     public:
         // Default Ctor
@@ -424,9 +424,9 @@ namespace boost{namespace itl
     //JODO: Where to put this kind of functionality
     template <class SubType, class ItvDomTV, class CodomTV>
     void intervalize(interval_base_map<SubType, ItvDomTV, CodomTV>& itvMap, 
-                     const itl::map<ItvDomTV, CodomTV>& dateMap)
+                     const icl::map<ItvDomTV, CodomTV>& dateMap)
     {
-        typedef itl::map<ItvDomTV, CodomTV> DateMapTD;
+        typedef icl::map<ItvDomTV, CodomTV> DateMapTD;
         typedef interval_base_map<SubType, ItvDomTV, CodomTV> ItvMapTD;
 
         itvMap.clear();
@@ -469,7 +469,7 @@ namespace boost{namespace itl
         
     }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // __tuple_computer_JOFA_040614_H__
 

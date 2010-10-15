@@ -10,7 +10,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/itl/type_traits/is_combinable.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 template<class Type>
@@ -19,7 +19,7 @@ make_segment(const typename Type::element_type& element)
 {
     typedef typename Type::interval_type interval_type;
     typedef typename Type::segment_type  segment_type;
-    return segment_type(itl::singleton<interval_type>(element.key), element.data);
+    return segment_type(icl::singleton<interval_type>(element.key), element.data);
 }
 
 namespace segmental

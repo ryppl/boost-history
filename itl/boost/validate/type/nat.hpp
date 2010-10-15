@@ -17,7 +17,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 #define ITL_LOCATION(message) location(__FILE__,__LINE__,message)
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 class cnat
@@ -54,8 +54,8 @@ private:
 //inline cnat operator + (const cnat& left, const cnat& right){return cnat(left)+=right;}
 //inline cnat operator - (const cnat& left, const cnat& right){return cnat(left)-=right;}
 
-inline bool operator == (const boost::itl::cnat& left, const boost::itl::cnat& right){ return left.value() == right.value(); }
-inline bool operator <  (const boost::itl::cnat& left, const boost::itl::cnat& right){ return left.value() < right.value(); }
+inline bool operator == (const boost::icl::cnat& left, const boost::icl::cnat& right){ return left.value() == right.value(); }
+inline bool operator <  (const boost::icl::cnat& left, const boost::icl::cnat& right){ return left.value() < right.value(); }
 
 template<>inline std::string type_to_string<cnat>::apply() { return "cnat"; }
 
@@ -64,10 +64,10 @@ template<> inline std::size_t value_size<cnat>::apply(const cnat& value)
 
 template<class CharType, class CharTraits>
 std::basic_ostream<CharType, CharTraits> &operator<<
-(std::basic_ostream<CharType, CharTraits> &stream, itl::cnat const& right)
+(std::basic_ostream<CharType, CharTraits> &stream, icl::cnat const& right)
 {
     return stream << right.value();
 }
 
-}} // namespace itl boost
+}} // namespace icl boost
 

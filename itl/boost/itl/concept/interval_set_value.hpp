@@ -12,7 +12,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/is_interval_container.hpp>
 #include <boost/itl/concept/interval.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 //==============================================================================
@@ -23,7 +23,7 @@ inline typename enable_if<is_interval_set<Type>, typename Type::codomain_type>::
 co_value(Iterator value_)
 { 
     typedef typename Type::codomain_type codomain_type;
-    return itl::is_empty(*value_)? codomain_type() : (*value_).lower(); 
+    return icl::is_empty(*value_)? codomain_type() : (*value_).lower(); 
 }
 
 }} // namespace boost itl

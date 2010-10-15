@@ -11,7 +11,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/utility/enable_if.hpp>
 #include <boost/itl/detail/design_config.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 typedef unsigned char bound_type;
@@ -74,7 +74,7 @@ private:
     interval_bounds _bound;
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

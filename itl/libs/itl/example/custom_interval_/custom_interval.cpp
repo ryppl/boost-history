@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Interval Template Library
+Interval Container Library
 Author: Joachim Faulhaber
 Copyright (c) 2007-2010: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
@@ -24,7 +24,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/interval_set.hpp>
 
 using namespace std;
-using namespace boost::itl;
+using namespace boost::icl;
 
 // Here is a typical class that may model intervals in your application.
 class MyInterval
@@ -80,7 +80,7 @@ void custom_interval()
 
 int main()
 {
-    cout << ">> Interval Template Library: Sample custom_interval.cpp <<\n";
+    cout << ">>Interval Container Library: Sample custom_interval.cpp <<\n";
     cout << "-----------------------------------------------------------\n";
     cout << "This program uses a user defined interval class:\n";
     custom_interval();
@@ -89,7 +89,7 @@ int main()
 
 // Program output:
 /*-----------------------------------------------------------------------------
->> Interval Template Library: Sample custom_interval.cpp <<
+>>Interval Container Library: Sample custom_interval.cpp <<
 -----------------------------------------------------------
 This program uses a user defined interval class:
 {[1,                      9)}

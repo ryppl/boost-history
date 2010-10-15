@@ -14,7 +14,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/detail/interval_morphism.hpp>
 #include <boost/validate/laws/law.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     // ---------------------------------------------------------------------------
@@ -214,7 +214,7 @@ namespace boost{namespace itl
         }
     };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_SUBSET_ORDERING_HPP_JOFA_090202
 

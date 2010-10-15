@@ -15,13 +15,13 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/laws/law.hpp>
 #include <boost/itl/functors.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     // ---------------------------------------------------------------------------
     template <typename Type, template<class>class Operator1 = inplace_plus, 
                              template<class>class Operator2 = inplace_et,
-                             template<class>class Equality  = itl::std_equal>
+                             template<class>class Equality  = icl::std_equal>
     class InplaceDistributivity 
         : public Law<InplaceDistributivity<Type,Operator1,Operator2,Equality>, 
                      LOKI_TYPELIST_3(Type,Type,Type), LOKI_TYPELIST_2(Type,Type)>
@@ -122,7 +122,7 @@ namespace boost{namespace itl
     template <typename Type, template<class>class Operator1   = inplace_plus, 
                              template<class>class Operator2   = inplace_et, 
                              template<class>class Subtraction = inplace_minus, 
-                             template<class>class Equality    = itl::std_equal>
+                             template<class>class Equality    = icl::std_equal>
     class InplaceDeMorgan 
         : public Law<InplaceDeMorgan<Type,Operator1,Operator2,Subtraction,Equality>, 
                      LOKI_TYPELIST_3(Type,Type,Type), LOKI_TYPELIST_2(Type,Type)>
@@ -232,7 +232,7 @@ namespace boost{namespace itl
     template <typename Type, 
               template<class>class Operator1 = inplace_plus, 
               template<class>class Operator2 = inplace_minus,
-              template<class>class Equality = itl::std_equal>
+              template<class>class Equality = icl::std_equal>
     class InplaceRightDistributivity 
         : public Law<InplaceRightDistributivity<Type,Operator1,Operator2>, 
                      LOKI_TYPELIST_3(Type,Type,Type), LOKI_TYPELIST_2(Type,Type)>
@@ -325,7 +325,7 @@ namespace boost{namespace itl
         }
     };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_SET_LAWS_HPP_JOFA_071124
 

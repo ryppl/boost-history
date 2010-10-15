@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE
 {         itl_set_check_monoid_plus_4_bicremental_types<T, interval_set>();}
                                                    //MEMO: interval_set
 // is used here pragmatically to be able to recycle test code for initializing
-// sets. These interval_set are then converted to itl::set by atomize.
+// sets. These interval_set are then converted to icl::set by atomize.
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_itl_set_check_abelian_monoid_plus_4_bicremental_types, T, discrete_types)

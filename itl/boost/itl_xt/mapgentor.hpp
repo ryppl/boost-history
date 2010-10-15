@@ -12,7 +12,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl_xt/list.hpp>
 #include <boost/itl_xt/gentorit.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <class MapTV> 
@@ -23,7 +23,7 @@ public:
     typedef typename MapTV::key_type   DomainTD;
     typedef typename MapTV::data_type  CodomainTD;
     typedef list<ValueTypeTD>          SampleTypeTD;
-    typedef typename itl::interval<int>::type sample_range_type;
+    typedef typename icl::interval<int>::type sample_range_type;
 
     MapGentorT(): p_domainGentor(NULL), p_codomainGentor(NULL) {}
     ~MapGentorT() { delete p_domainGentor; delete p_codomainGentor; }
@@ -44,11 +44,11 @@ public:
     }
 
     void setRangeOfSampleSize(int lwb, int upb)
-    { m_sampleSizeRange = itl::interval<int>::right_open(lwb,upb); }
+    { m_sampleSizeRange = icl::interval<int>::right_open(lwb,upb); }
 
-    void setRangeOfSampleSize(const itl::interval<int>::type& szRange)
+    void setRangeOfSampleSize(const icl::interval<int>::type& szRange)
     { 
-        BOOST_ASSERT(itl::bounds(szRange) == interval_bounds::right_open()); 
+        BOOST_ASSERT(icl::bounds(szRange) == interval_bounds::right_open()); 
         m_sampleSizeRange = szRange; 
     }
 
@@ -65,7 +65,7 @@ template <class MapTV>
 void MapGentorT<MapTV>::some(MapTV& x)
 {
     NumberGentorT<int> intGentor;
-    itl::clear(x);
+    icl::clear(x);
     m_sample.clear();
     m_sampleSize = intGentor(m_sampleSizeRange);
 
@@ -128,7 +128,7 @@ void MapGentorT<MapTV>::lastSample_permuted(SampleTypeTD& sam)
 }
 */
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_XT_MAPGENTOR_HPP_JOFA_000724
 

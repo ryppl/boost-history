@@ -19,7 +19,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 using namespace std;
 using namespace boost;
 using namespace boost::mpl::placeholders;
-using namespace boost::itl;
+using namespace boost::icl;
 
 template<class T>struct unary{
   void speak(){ cout<<"unary"<<endl; }
@@ -162,7 +162,7 @@ public:
     int value()const { return _value; }
 
     std::string as_string()const
-    { return itl::to_string<int>::apply(_value); }
+    { return icl::to_string<int>::apply(_value); }
 
 private:
     int _value;
@@ -242,7 +242,7 @@ void misc_test()
 
 int main()
 {
-    cout << ">> Interval Template Library: Test meta_functors     <<\n";
+    cout << ">>Interval Container Library: Test meta_functors     <<\n";
     cout << "-------------------------------------------------------\n";
 
     /*

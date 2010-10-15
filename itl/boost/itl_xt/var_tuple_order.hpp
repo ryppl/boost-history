@@ -37,7 +37,7 @@ DEALINGS IN THE SOFTWARE.
 #include <boost/itl_xt/var_permutation.hpp>
 #include <boost/itl_xt/grouping.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     // template <typename VarTupleT> class var_permutation {};
@@ -79,19 +79,19 @@ namespace boost{namespace itl
     };
 
     template <typename VarTupleT>
-    itl::var_tuple_order<VarTupleT>::var_tuple_order ()
+    icl::var_tuple_order<VarTupleT>::var_tuple_order ()
     {
         m_Permutation.setIdentity();
     }
 
     template <typename VarTupleT>
-    itl::var_tuple_order<VarTupleT>::var_tuple_order (const var_tuple_order& order, const var_permutationT& perm):
+    icl::var_tuple_order<VarTupleT>::var_tuple_order (const var_tuple_order& order, const var_permutationT& perm):
         m_Grouping(order.m_Grouping), m_Permutation(perm)
     {}
 
     
     template <typename VarTupleT>
-    bool itl::var_tuple_order<VarTupleT>::operator() (const VarTupleT& x1, const VarTupleT& x2)const
+    bool icl::var_tuple_order<VarTupleT>::operator() (const VarTupleT& x1, const VarTupleT& x2)const
     {
         ITL_FORALL_VEC(permIdx, m_Permutation)
         {
@@ -123,7 +123,7 @@ namespace boost{namespace itl
     }
 
     template <typename VarTupleT>
-    VarEnumTD itl::var_tuple_order<VarTupleT>::indexOfFirstDifference(const VarTupleT& x1, const VarTupleT& x2)const
+    VarEnumTD icl::var_tuple_order<VarTupleT>::indexOfFirstDifference(const VarTupleT& x1, const VarTupleT& x2)const
     {
         ITL_FORALL_VEC(permIdx, m_Permutation)
         {
@@ -154,7 +154,7 @@ namespace boost{namespace itl
         return UNDEFINED_INDEX;
     }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // __var_tuple_order_JOFA_040620_H__
 

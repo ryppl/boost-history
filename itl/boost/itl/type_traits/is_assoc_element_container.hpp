@@ -14,7 +14,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/is_element_container.hpp> 
 #include <boost/itl/type_traits/is_set.hpp> 
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
     template <class Type> 
     struct is_assoc_element_container

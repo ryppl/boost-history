@@ -71,9 +71,9 @@ class large_bitset
 {
 public:
     //[large_bitset_associated_types
-    typedef boost::itl::interval_map
-        <DomainT, BitSetT, boost::itl::partial_absorber, 
-         std::less, boost::itl::inplace_bit_add, boost::itl::inplace_bit_and> interval_bitmap_type;
+    typedef boost::icl::interval_map
+        <DomainT, BitSetT, boost::icl::partial_absorber, 
+         std::less, boost::icl::inplace_bit_add, boost::icl::inplace_bit_and> interval_bitmap_type;
 
     typedef DomainT                                      domain_type;
     typedef DomainT                                      element_type;
@@ -113,7 +113,7 @@ public:
     //]
 
     //[large_bitset_demo_functions
-    size_t interval_count()const { return itl::interval_count(_map); }
+    size_t interval_count()const { return icl::interval_count(_map); }
 
     void show_segments()const
     {
@@ -131,7 +131,7 @@ public:
         typename interval_bitmap_type::const_iterator iter = _map.begin();
         while(iter != _map.end())
         {
-            element_type fst = itl::first(iter->first), lst = itl::last(iter->first);
+            element_type fst = icl::first(iter->first), lst = icl::last(iter->first);
             for(element_type chunk = fst; chunk <= lst; chunk++)
                 std::cout << iter->second.as_string(off_on) << std::endl;
             ++iter;
@@ -165,10 +165,10 @@ private:                                      // Example value
     //[large_bitset_segment_apply
     large_bitset& segment_apply(segment_combiner combine, const interval_type& operand)
     {                                                       // same as
-        element_type   base = itl::first(operand) >> shift, // itl::first(operand) / divisor
-                       ceil = itl::last (operand) >> shift; // itl::last (operand) / divisor
-        word_type base_rest = itl::first(operand) &  mask , // itl::first(operand) % divisor
-                  ceil_rest = itl::last (operand) &  mask ; // itl::last (operand) % divisor  
+        element_type   base = icl::first(operand) >> shift, // icl::first(operand) / divisor
+                       ceil = icl::last (operand) >> shift; // icl::last (operand) / divisor
+        word_type base_rest = icl::first(operand) &  mask , // icl::first(operand) % divisor
+                  ceil_rest = icl::last (operand) &  mask ; // icl::last (operand) % divisor  
 
         if(base == ceil) // [first, last] are within one bitset (chunk)
             (this->*combine)(base, base+1, bitset_type(  to_upper_from(base_rest)

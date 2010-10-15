@@ -34,7 +34,7 @@ DEALINGS IN THE SOFTWARE.
 #include <boost/itl/set.hpp>
 #include <boost/itl_xt/typed_episode.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     template <typename EpisodePointer>
     class Less_TypedEpisodeATP
@@ -67,7 +67,7 @@ namespace boost{namespace itl
     @author  Joachim Faulhaber
 */
 template <class TimeT, class TypeDomain>
-class episode_set : public itl::set<typed_episode<TimeT, TypeDomain>*, 
+class episode_set : public icl::set<typed_episode<TimeT, TypeDomain>*, 
 #ifdef ITL_USE_COMPARE_TEMPLATE_TEMPLATE
                                     Less_TypedEpisodeATP 
 #else
@@ -78,7 +78,7 @@ class episode_set : public itl::set<typed_episode<TimeT, TypeDomain>*,
     // all elements must have the same type from TypeDomain
 public:
     typedef typed_episode<TimeT, TypeDomain>* episode_type; 
-    typedef itl::set<typed_episode<TimeT, TypeDomain>*, 
+    typedef icl::set<typed_episode<TimeT, TypeDomain>*, 
                      ITL_COMPARE_INSTANCE(Less_TypedEpisodeATP,episode_type)> base_type;
     typedef typename base_type::iterator iterator;
     typedef typename base_type::const_iterator const_iterator;
@@ -129,7 +129,7 @@ inline bool operator == (const episode_set<TimeT,TypeDomain>& lhs,
     return true;
 }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_EPISODE_SET_HPP_HPP_JOFA_011015
 

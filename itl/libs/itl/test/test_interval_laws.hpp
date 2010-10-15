@@ -20,7 +20,7 @@ versions.
 #include <boost/itl/type_traits/is_interval.hpp>
 #include <boost/itl/concept/interval.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 template<class Type>
@@ -28,49 +28,49 @@ typename enable_if<is_interval<Type>, void>::type
 check_border_containedness(const Type& itv)
 {
     typedef typename interval_traits<Type>::domain_type domain_type;
-    domain_type lo = itl::lower(itv);
-    domain_type up = itl::upper(itv);
+    domain_type lo = icl::lower(itv);
+    domain_type up = icl::upper(itv);
 
     //LAW: The empty set is contained in every set 
-    BOOST_CHECK_EQUAL(itl::contains(itv, itl::identity_element<Type>::value()), true);
+    BOOST_CHECK_EQUAL(icl::contains(itv, icl::identity_element<Type>::value()), true);
     //LAW: Reflexivity: Every interval contains itself
-    BOOST_CHECK_EQUAL(itl::contains(itv, itv), true);
+    BOOST_CHECK_EQUAL(icl::contains(itv, itv), true);
 
-    if(itl::bounds(itv) == interval_bounds::closed())
+    if(icl::bounds(itv) == interval_bounds::closed())
     {
-        BOOST_CHECK_EQUAL(itl::contains(itv, lo), true);
-        BOOST_CHECK_EQUAL(itl::contains(itv, up), true);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>::    closed(lo,up)), true);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>::right_open(lo,up)), true);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>:: left_open(lo,up)), true);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>::      open(lo,up)), true);
+        BOOST_CHECK_EQUAL(icl::contains(itv, lo), true);
+        BOOST_CHECK_EQUAL(icl::contains(itv, up), true);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>::    closed(lo,up)), true);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>::right_open(lo,up)), true);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>:: left_open(lo,up)), true);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>::      open(lo,up)), true);
     }
-    else if(itl::bounds(itv) == interval_bounds::right_open())
+    else if(icl::bounds(itv) == interval_bounds::right_open())
     {
-        BOOST_CHECK_EQUAL(itl::contains(itv, lo), true);
-        BOOST_CHECK_EQUAL(itl::contains(itv, up), false);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>::    closed(lo,up)), false);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>::right_open(lo,up)), true);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>:: left_open(lo,up)), false);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>::      open(lo,up)), true);
+        BOOST_CHECK_EQUAL(icl::contains(itv, lo), true);
+        BOOST_CHECK_EQUAL(icl::contains(itv, up), false);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>::    closed(lo,up)), false);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>::right_open(lo,up)), true);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>:: left_open(lo,up)), false);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>::      open(lo,up)), true);
     }
-    else if(itl::bounds(itv) == interval_bounds::left_open())
+    else if(icl::bounds(itv) == interval_bounds::left_open())
     {
-        BOOST_CHECK_EQUAL(itl::contains(itv, lo), false);
-        BOOST_CHECK_EQUAL(itl::contains(itv, up), true);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>::    closed(lo,up)), false);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>::right_open(lo,up)), false);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>:: left_open(lo,up)), true);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>::      open(lo,up)), true);
+        BOOST_CHECK_EQUAL(icl::contains(itv, lo), false);
+        BOOST_CHECK_EQUAL(icl::contains(itv, up), true);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>::    closed(lo,up)), false);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>::right_open(lo,up)), false);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>:: left_open(lo,up)), true);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>::      open(lo,up)), true);
     }
-    else if(itl::bounds(itv) == interval_bounds::open())
+    else if(icl::bounds(itv) == interval_bounds::open())
     {
-        BOOST_CHECK_EQUAL(itl::contains(itv, lo), false);
-        BOOST_CHECK_EQUAL(itl::contains(itv, up), false);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>::    closed(lo,up)), false);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>::right_open(lo,up)), false);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>:: left_open(lo,up)), false);
-        BOOST_CHECK_EQUAL(itl::contains(itv, itl::interval<domain_type>::      open(lo,up)), true);
+        BOOST_CHECK_EQUAL(icl::contains(itv, lo), false);
+        BOOST_CHECK_EQUAL(icl::contains(itv, up), false);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>::    closed(lo,up)), false);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>::right_open(lo,up)), false);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>:: left_open(lo,up)), false);
+        BOOST_CHECK_EQUAL(icl::contains(itv, icl::interval<domain_type>::      open(lo,up)), true);
     }
     else
     {

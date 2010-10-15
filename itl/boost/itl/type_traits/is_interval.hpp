@@ -11,7 +11,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/interval_bounds.hpp>
 #include <boost/itl/interval_traits.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 template <class Type>

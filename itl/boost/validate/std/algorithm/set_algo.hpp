@@ -12,7 +12,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 
 #include <algorithm>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 
@@ -216,7 +216,7 @@ struct std_set_symmetric_difference_back
 };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_STD_ALGORITHM_SET_ALGO_HPP_JOFA_091125
 

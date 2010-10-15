@@ -12,7 +12,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/difference_type_of.hpp>
 #include <boost/itl/type_traits/size_type_of.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 template<class Type> struct interval_traits;

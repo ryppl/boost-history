@@ -10,7 +10,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 
 #include <boost/itl/type_traits/type_to_string.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
     template <class Type> struct identity_element
     { 

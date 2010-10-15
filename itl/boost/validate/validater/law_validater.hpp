@@ -22,11 +22,11 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/laws/monoid.hpp>
 #include <boost/validate/laws/law_violations.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
-    typedef itl::map<std::string, validation_counts> ValidationCounterT;
-    typedef itl::map<std::string, int> ViolationCounterT;
-    typedef itl::map<std::string, PolyLawViolations> ViolationMapT;
+    typedef icl::map<std::string, validation_counts> ValidationCounterT;
+    typedef icl::map<std::string, int> ViolationCounterT;
+    typedef icl::map<std::string, PolyLawViolations> ViolationMapT;
 
     /** \brief An interface for a test machine.    */
     class LawValidaterI
@@ -136,9 +136,9 @@ namespace boost{namespace itl
     template <class LawT, template<typename>class GentorT>
     void LawValidater<LawT, GentorT>::init()
     {
-        itl::clear(_frequencies);
+        icl::clear(_frequencies);
         _lawViolations.clear();
-        itl::clear(_violations);
+        icl::clear(_violations);
     }
 
     // Runs law_instance_count * repeat_count validations on the law LawT
@@ -235,7 +235,7 @@ namespace boost{namespace itl
         std::cout << "Law successfully validated for " << _trials_count << " cases" << std::endl;
     }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 // ----------------------------------------------------------------------------
 

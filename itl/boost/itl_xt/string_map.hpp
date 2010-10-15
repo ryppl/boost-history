@@ -32,7 +32,7 @@ DEALINGS IN THE SOFTWARE.
 #include <boost/itl/map.hpp>
 #include <string>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {    
     template <class CodomTV, class CompTV=less<std::string> >
         class string_map : public MapT<std::string, CodomTV, CompTV>
@@ -50,7 +50,7 @@ namespace boost{namespace itl
     
     // A template map class that's keys are handled case insensitive
     template <class CodomTV>
-        class ICstring_map : public itl::string_map<CodomTV, string_ICLess>
+        class ICstring_map : public icl::string_map<CodomTV, string_ICLess>
     {
     };
 }} // namespace boost itl

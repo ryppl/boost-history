@@ -17,7 +17,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/validater/strict_weak_order_validater.hpp>
 #include <boost/validate/validater/partial_order_validater.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     template <typename Type>
@@ -26,7 +26,7 @@ namespace boost{namespace itl
     public:
         typedef strict_weak_order_validater<Type, std::less> LessValidaterT;
         typedef partial_order_validater<Type, std::less_equal> LessEqualValidaterT;
-        typedef partial_order_validater<Type, itl::sub_super_set, itl::element_equal> ContainedInValidaterT;
+        typedef partial_order_validater<Type, icl::sub_super_set, icl::element_equal> ContainedInValidaterT;
 
         enum Laws 
         { 
@@ -68,5 +68,5 @@ namespace boost{namespace itl
         ContainedInValidaterT _containedInValidater;
     };
 
-}} // namespace itl boost
+}} // namespace icl boost
 

@@ -13,15 +13,15 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/itl_xt/numbergentor.hpp>
 #include <boost/itl_xt/bits.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <class NaturalT> 
-class bits_gentor: public RandomGentorAT<itl::bits<NaturalT> >
+class bits_gentor: public RandomGentorAT<icl::bits<NaturalT> >
 {
 public:
-    typedef typename itl::interval<NaturalT>::type  range_type;
-    typedef itl::bits<NaturalT> bits_type;
+    typedef typename icl::interval<NaturalT>::type  range_type;
+    typedef icl::bits<NaturalT> bits_type;
 
     void some(bits_type& value)
     {
@@ -36,7 +36,7 @@ private:
     range_type              _value_range;
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

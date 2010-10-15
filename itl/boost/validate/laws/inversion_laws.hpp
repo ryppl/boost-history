@@ -14,12 +14,12 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/laws/law.hpp>
 #include <boost/itl/functors.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     template <typename Type, 
               template<class>class Combiner = inplace_plus,
-              template<class>class Equality = itl::std_equal>
+              template<class>class Equality = icl::std_equal>
     class InplaceNaturalInversion 
         : public Law<InplaceNaturalInversion<Type,Combiner,Equality>, 
                      LOKI_TYPELIST_1(Type), LOKI_TYPELIST_2(Type,Type)>
@@ -69,7 +69,7 @@ namespace boost{namespace itl
 
     template <typename Type, 
               template<class>class Combiner = inplace_plus,
-              template<class>class Equality = itl::std_equal>
+              template<class>class Equality = icl::std_equal>
     class InplaceInverseExistence 
         : public Law<InplaceInverseExistence<Type,Combiner,Equality>, 
                      LOKI_TYPELIST_1(Type), LOKI_TYPELIST_2(Type,Type)>
@@ -124,7 +124,7 @@ namespace boost{namespace itl
     template <typename Type, 
           template<class>class Combiner = inplace_plus,
           template<class>class Inverter = inplace_minus,
-          template<class>class Equality = itl::std_equal>
+          template<class>class Equality = icl::std_equal>
     class InplaceNaiveInversion 
         : public Law<InplaceNaiveInversion<Type,Combiner,Inverter,Equality>, 
                      LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_2(Type,Type)>
@@ -176,7 +176,7 @@ namespace boost{namespace itl
     template <typename Type, 
           template<class>class Combiner = inplace_plus,
           template<class>class Inverter = inplace_minus,
-          template<class>class Equality = itl::std_equal>
+          template<class>class Equality = icl::std_equal>
     class DisjointNaiveInversion 
         : public Law<DisjointNaiveInversion<Type,Combiner,Inverter,Equality>, 
                      LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_2(Type,Type)>
@@ -243,7 +243,7 @@ namespace boost{namespace itl
     template <typename Type, 
           template<class>class Combiner = inplace_plus,
           template<class>class Inverter = inplace_minus,
-          template<class>class Equality = itl::std_equal>
+          template<class>class Equality = icl::std_equal>
     class JointInverseExistence 
         : public Law<JointInverseExistence<Type,Combiner,Inverter,Equality>, 
                      LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_2(Type,Type)>
@@ -306,7 +306,7 @@ namespace boost{namespace itl
         size_t size()const { return value_size<Type>::apply(this->template getInputValue<operand_a>()); }
     };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_INVERSION_LAWS_HPP_JOFA_071124
 

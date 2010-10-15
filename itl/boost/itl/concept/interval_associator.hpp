@@ -17,7 +17,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/detail/interval_map_algo.hpp>
 #include <boost/itl/concept/interval.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 //==============================================================================
@@ -30,7 +30,7 @@ template<class SubT, class SuperT>
 typename enable_if<is_interval_container<SuperT>, bool>::type 
 within(const SubT& sub, const SuperT& super)
 {
-    return itl::contains(super, sub); 
+    return icl::contains(super, sub); 
 }
 
 //==============================================================================
@@ -125,7 +125,7 @@ cardinality(const Type& object)
 
     size_type size = identity_element<size_type>::value();
     ITL_const_FORALL(typename Type, it, object)
-        size += itl::cardinality(key_value<Type>(it));
+        size += icl::cardinality(key_value<Type>(it));
     return size;
 
 }
@@ -145,7 +145,7 @@ cardinality(const Type& object)
     size_type interval_size;
     ITL_const_FORALL(typename Type, it, object)
     {
-        interval_size = itl::cardinality(key_value<Type>(it));
+        interval_size = icl::cardinality(key_value<Type>(it));
         if(interval_size == infinity<size_type>::value())
             return interval_size;
         else
@@ -158,7 +158,7 @@ template<class Type>
 inline typename enable_if<is_interval_container<Type>, typename Type::size_type>::type
 size(const Type& object)
 {
-    return itl::cardinality(object);
+    return icl::cardinality(object);
 }
 
 template<class Type>
@@ -171,7 +171,7 @@ length(const Type& object)
     const_iterator it_ = object.begin();
 
     while(it_ != object.end())
-        length += itl::length(key_value<Type>(it_++));
+        length += icl::length(key_value<Type>(it_++));
     return length;
 }
 
@@ -179,7 +179,7 @@ template<class Type>
 typename enable_if<is_interval_container<Type>, std::size_t>::type
 interval_count(const Type& object)
 {
-    return itl::iterative_size(object);
+    return icl::iterative_size(object);
 }
 
 //==============================================================================
@@ -191,7 +191,7 @@ typename enable_if<is_interval_container<ObjectT>,
 hull(const ObjectT& object)
 {
     return 
-        itl::is_empty(object) ? identity_element<typename ObjectT::interval_type>::value()
+        icl::is_empty(object) ? identity_element<typename ObjectT::interval_type>::value()
         : hull((key_value<ObjectT>(object.begin())), key_value<ObjectT>(object.rbegin()));
 }
 
@@ -226,7 +226,7 @@ template<class Type, class OperandT>
 typename enable_if<is_intra_derivative<Type, OperandT>, Type>::type&
 operator += (Type& object, const OperandT& operand)
 { 
-    return itl::add(object, operand); 
+    return icl::add(object, operand); 
 }
 
 
@@ -243,7 +243,7 @@ operator += (Type& object, const OperandT& operand)
 {
     typename Type::iterator prior_ = object.end();
     ITL_const_FORALL(typename OperandT, elem_, operand) 
-        prior_ = itl::add(object, prior_, *elem_); 
+        prior_ = icl::add(object, prior_, *elem_); 
 
     return object; 
 }
@@ -400,7 +400,7 @@ erase(Type& object, const OperandT& operand)
 {
     typedef typename OperandT::const_iterator const_iterator;
 
-    if(itl::is_empty(operand))
+    if(icl::is_empty(operand))
         return object;
 
     const_iterator common_lwb, common_upb;
@@ -409,7 +409,7 @@ erase(Type& object, const OperandT& operand)
 
     const_iterator it_ = common_lwb;
     while(it_ != common_upb)
-        itl::erase(object, *it_++);
+        icl::erase(object, *it_++);
 
     return object; 
 }
@@ -448,7 +448,7 @@ typename enable_if<is_concept_compatible<is_interval_map, Type, OperandT>,
 operator -=(Type& object, const OperandT& operand)
 {
     ITL_const_FORALL(typename OperandT, elem_, operand) 
-        itl::subtract(object, *elem_);
+        icl::subtract(object, *elem_);
 
     return object; 
 }
@@ -460,7 +460,7 @@ template<class Type, class OperandT>
 typename enable_if<is_intra_derivative<Type, OperandT>, Type>::type&
 operator -= (Type& object, const OperandT& operand)
 { 
-    return itl::subtract(object, operand); 
+    return icl::subtract(object, operand); 
 }
 
 //------------------------------------------------------------------------------
@@ -470,7 +470,7 @@ template<class Type, class OperandT>
 typename enable_if<is_cross_derivative<Type, OperandT>, Type>::type&
 operator -= (Type& object, const OperandT& operand)
 { 
-    return itl::erase(object, operand); 
+    return icl::erase(object, operand); 
 }
 
 //------------------------------------------------------------------------------
@@ -519,7 +519,7 @@ add_intersection(Type& section, const Type& object, const OperandT& operand)
 
     const_iterator it_ = common_lwb;
     while(it_ != common_upb)
-        itl::add_intersection(section, object, key_value<OperandT>(it_++));
+        icl::add_intersection(section, object, key_value<OperandT>(it_++));
 }
 
 //------------------------------------------------------------------------------
@@ -577,7 +577,7 @@ typename enable_if<mpl::and_< is_interval_container<Type>
                    bool>::type
 intersects(const Type& left, const CoType& right)
 {
-    return itl::contains(left, right); 
+    return icl::contains(left, right); 
 }
 
 template<class Type, class CoType>
@@ -615,8 +615,8 @@ intersects(const LeftT& left, const RightT& right)
     const_iterator it_ = right_common_lower_;
     while(it_ != right_common_upper_)
     {
-        itl::add_intersection(intersection, left, *it_++);
-        if(!itl::is_empty(intersection))
+        icl::add_intersection(intersection, left, *it_++);
+        if(!icl::is_empty(intersection))
             return true;
     }
     return false; 
@@ -629,7 +629,7 @@ intersects(const LeftT& left, const RightT& right)
     typedef typename RightT::const_iterator const_iterator;
     LeftT intersection;
 
-    if(itl::is_empty(left) || itl::is_empty(right))
+    if(icl::is_empty(left) || icl::is_empty(right))
         return false;
 
     const_iterator right_common_lower_, right_common_upper_;
@@ -639,8 +639,8 @@ intersects(const LeftT& left, const RightT& right)
     typename RightT::const_iterator it_ = right_common_lower_;
     while(it_ != right_common_upper_)
     {
-        itl::add_intersection(intersection, left, key_value<RightT>(it_++));
-        if(!itl::is_empty(intersection))
+        icl::add_intersection(intersection, left, key_value<RightT>(it_++));
+        if(!icl::is_empty(intersection))
             return true;
     }
 
@@ -653,7 +653,7 @@ typename enable_if<mpl::and_< is_interval_map<Type>
                    bool>::type
 intersects(const Type& left, const AssociateT& right)
 {
-    return itl::intersects(left, right);
+    return icl::intersects(left, right);
 }
 
 /** \b Returns true, if \c left and \c right have no common elements.
@@ -690,7 +690,7 @@ template<class Type, class OperandT>
 typename enable_if<is_intra_combinable<Type, OperandT>, Type>::type&
 operator ^= (Type& object, const OperandT& operand)
 { 
-    return itl::flip(object, operand); 
+    return icl::flip(object, operand); 
 }
 
 //------------------------------------------------------------------------------
@@ -700,7 +700,7 @@ template<class Type, class OperandT>
 typename enable_if<is_intra_derivative<Type, OperandT>, Type>::type&
 operator ^= (Type& object, const OperandT& operand)
 { 
-    return itl::flip(object, operand); 
+    return icl::flip(object, operand); 
 }
 
 //------------------------------------------------------------------------------

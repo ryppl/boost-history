@@ -31,7 +31,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <functional>
 #include <boost/itl/random.hpp>
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     template <class NumTV>

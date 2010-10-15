@@ -8,7 +8,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #ifndef BOOST_ITL_DYNAMIC_INTERVAL_TRAITS_HPP_JOFA_100926
 #define BOOST_ITL_DYNAMIC_INTERVAL_TRAITS_HPP_JOFA_100926
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 class interval_bounds;

@@ -31,7 +31,7 @@ DEALINGS IN THE SOFTWARE.
 #define BOOST_ITL_STRINGPATTERN_SET_HPP_JOFA_040902
 
 #include "prefix_set.h"
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     /// Specifies a set of strings via prefix_set s include and exclude
     /** stringpattern_set repraesentiert eine Menge von Strings durch
@@ -65,7 +65,7 @@ namespace boost{namespace itl
         prefix_set m_Excludes;
     };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_STRINGPATTERN_SET_HPP_JOFA_040902
 

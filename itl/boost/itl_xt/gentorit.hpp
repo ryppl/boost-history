@@ -34,7 +34,7 @@ class GentorT
 
 #include <boost/itl_xt/random.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <class TypeT> class RandomGentorProfile{};
@@ -52,7 +52,7 @@ template <class TypeTV> class RandomGentorAT : public GentorIT<TypeTV>
 {
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

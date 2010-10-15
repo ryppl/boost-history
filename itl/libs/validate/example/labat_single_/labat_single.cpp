@@ -41,7 +41,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 using namespace std;
 using namespace Loki;
 using namespace boost;
-using namespace boost::itl;
+using namespace boost::icl;
 using namespace boost::posix_time;
 
 
@@ -50,45 +50,45 @@ void test_LawValidater()
 
     //typedef UnaryAtomicEquivalence2
     //<
-    //    itl::interval_map<int,int>, 
-    //    //itl::list<int>,
+    //    icl::interval_map<int,int>, 
+    //    //icl::list<int>,
     //    std::pair<int,int>,
-    //    itl::std_find
+    //    icl::std_find
     //> TestLawT;
 
     //typedef InducedRelation
     //<
-    //    itl::interval_map<int,int>, 
-    //    itl::map<int,int>, 
+    //    icl::interval_map<int,int>, 
+    //    icl::map<int,int>, 
     //    segmental::atomizer, 
     //    element_equal
     //>
     //TestLawT;
 
-    //typedef Antisymmetry<itl::map<int,int>, std::less_equal, std_equal> TestLawT;
+    //typedef Antisymmetry<icl::map<int,int>, std::less_equal, std_equal> TestLawT;
 
     //typedef JointInverseExistence
-    //    <interval_map<int,int,partial_enricher>, itl::inplace_plus, itl::inplace_minus> TestLawT;
+    //    <interval_map<int,int,partial_enricher>, icl::inplace_plus, icl::inplace_minus> TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
-    //typedef InplaceCommutativity<itl::set<double> > TestLawT;
+    //typedef InplaceCommutativity<icl::set<double> > TestLawT;
     //LawValidater<TestLawT> test_law;
 
     //typedef FunctionEquality
     //<
-    //    itl::list<std::pair<right_open_interval<double,std::less>,int> >, //SourceT, 
+    //    icl::list<std::pair<right_open_interval<double,std::less>,int> >, //SourceT, 
     //    split_interval_map<double,int,partial_absorber>,                 //TargetT, 
     //    base_insertion, 
     //    hint_insertion
     //>
     //TestLawT;
 
-    //typedef Antisymmetry<itl::map<int,int>, itl::sub_super_set, itl::element_equal> TestLawT;
-    //typedef InplaceAssociativity<itl::interval_map<int,itl::set<int> >, itl::inplace_caret, itl::element_equal> TestLawT;
+    //typedef Antisymmetry<icl::map<int,int>, icl::sub_super_set, icl::element_equal> TestLawT;
+    //typedef InplaceAssociativity<icl::interval_map<int,icl::set<int> >, icl::inplace_caret, icl::element_equal> TestLawT;
 
-    typedef InplaceFlip< itl::map<int,int,partial_enricher> > TestLawT;
-    //typedef InplaceFlip< itl::map<int,int> > TestLawT;
-    //typedef InplaceFlip< itl::map<int, itl::set<int> > > TestLawT;
+    typedef InplaceFlip< icl::map<int,int,partial_enricher> > TestLawT;
+    //typedef InplaceFlip< icl::map<int,int> > TestLawT;
+    //typedef InplaceFlip< icl::map<int, icl::set<int> > > TestLawT;
 
     LawValidater<TestLawT> test_law;
 

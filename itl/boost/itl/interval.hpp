@@ -12,7 +12,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/interval_type_default.hpp>
 
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
     template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)> 
@@ -72,23 +72,23 @@ namespace boost{ namespace itl
         }
 
         static inline interval_type construct(const DomainT& low, const DomainT& up)
-        { return itl::construct<interval_type>(low, up); }
+        { return icl::construct<interval_type>(low, up); }
 
 #else // ITL_USE_DYNAMIC_INTERVAL_BORDER_DEFAULTS
         static inline interval_type right_open(const DomainT& low, const DomainT& up)
-        { return itl::construct<interval_type>(low, up, interval_bounds::right_open()); }
+        { return icl::construct<interval_type>(low, up, interval_bounds::right_open()); }
 
         static inline interval_type left_open(const DomainT& low, const DomainT& up)
-        { return itl::construct<interval_type>(low, up, interval_bounds::left_open()); }
+        { return icl::construct<interval_type>(low, up, interval_bounds::left_open()); }
 
         static inline interval_type open(const DomainT& low, const DomainT& up)
-        { return itl::construct<interval_type>(low, up, interval_bounds::open()); }
+        { return icl::construct<interval_type>(low, up, interval_bounds::open()); }
 
         static inline interval_type closed(const DomainT& low, const DomainT& up)
-        { return itl::construct<interval_type>(low, up, interval_bounds::closed()); }
+        { return icl::construct<interval_type>(low, up, interval_bounds::closed()); }
 
         static inline interval_type construct(const DomainT& low, const DomainT& up)
-        { return itl::construct<interval_type>(low, up); }
+        { return icl::construct<interval_type>(low, up); }
 
 #endif 
     };
@@ -103,7 +103,7 @@ namespace boost{ namespace itl
 
         static inline IntervalT construct(const domain_type& low, const domain_type& up)
         {
-            return itl::construct<IntervalT>(
+            return icl::construct<IntervalT>(
                   shift_lower(interval_bounds(PretendedBounds), interval_bounds(RepresentedBounds), low)
                 , shift_upper(interval_bounds(PretendedBounds), interval_bounds(RepresentedBounds), up )
                 ); 
@@ -126,7 +126,7 @@ namespace boost{ namespace itl
             // interval<T>::closed(x,y)     then interval<T>::type must be static_closed
             // Conversion between 'PretendedBounds' and 'RepresentedBounds' is only possible
             // for discrete domain_types.
-            return itl::construct<IntervalT>(low, up);
+            return icl::construct<IntervalT>(low, up);
         }
     };
 

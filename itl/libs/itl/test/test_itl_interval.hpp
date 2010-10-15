@@ -20,16 +20,16 @@ void interval_ctor_4_ordered_types()
 
 
     // An empty interval is defined as the closed interval [1,0]
-    BOOST_CHECK_EQUAL(itl::is_empty(IntervalT()), true);
-    BOOST_CHECK_EQUAL(itl::cardinality(IntervalT()), itl::identity_element<typename itl::size_type_of<T>::type>::value());
-    BOOST_CHECK_EQUAL(itl::size(IntervalT()), itl::identity_element<typename itl::size_type_of<T>::type>::value());
+    BOOST_CHECK_EQUAL(icl::is_empty(IntervalT()), true);
+    BOOST_CHECK_EQUAL(icl::cardinality(IntervalT()), icl::identity_element<typename icl::size_type_of<T>::type>::value());
+    BOOST_CHECK_EQUAL(icl::size(IntervalT()), icl::identity_element<typename icl::size_type_of<T>::type>::value());
     BOOST_CHECK_EQUAL(IntervalT().lower(), lower_bound);
-    BOOST_CHECK_EQUAL(IntervalT().upper(), itl::identity_element<T>::value());
-    BOOST_CHECK_EQUAL(itl::lower(IntervalT()), lower_bound);
-    BOOST_CHECK_EQUAL(itl::upper(IntervalT()), itl::identity_element<T>::value());
+    BOOST_CHECK_EQUAL(IntervalT().upper(), icl::identity_element<T>::value());
+    BOOST_CHECK_EQUAL(icl::lower(IntervalT()), lower_bound);
+    BOOST_CHECK_EQUAL(icl::upper(IntervalT()), icl::identity_element<T>::value());
 
     BOOST_CHECK_EQUAL(IntervalT(), IntervalT());
-    BOOST_CHECK_EQUAL(IntervalT(), IntervalT(lower_bound, itl::identity_element<T>::value()));
+    BOOST_CHECK_EQUAL(IntervalT(), IntervalT(lower_bound, icl::identity_element<T>::value()));
 }
 
 #endif // __test_itl_interval_hpp_JOFA_081006__

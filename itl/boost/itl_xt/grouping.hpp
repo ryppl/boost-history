@@ -34,7 +34,7 @@ DEALINGS IN THE SOFTWARE.
 #include <boost/itl_xt/group_order.hpp>
 #include <boost/itl/map.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     template <int varCountV>
     class grouping
@@ -54,7 +54,7 @@ namespace boost{namespace itl
     };
 
     template <int varCountV>
-    itl::grouping<varCountV>::grouping ()
+    icl::grouping<varCountV>::grouping ()
     {
         FOREACH_VAR(idx)
             m_GroupOrder[idx] = NULL;
@@ -62,14 +62,14 @@ namespace boost{namespace itl
 
 
     template <int varCountV>
-    itl::grouping<varCountV>::grouping (const grouping<varCountV>& src)
+    icl::grouping<varCountV>::grouping (const grouping<varCountV>& src)
     {
         FOREACH_VAR(idx)
             m_GroupOrder[idx] = src.m_GroupOrder[idx];
     }
 
     template <int varCountV>
-    grouping<varCountV>& itl::grouping<varCountV>::operator = (const grouping<varCountV>& src)
+    grouping<varCountV>& icl::grouping<varCountV>::operator = (const grouping<varCountV>& src)
     {
         if(&src != this)
         {
@@ -80,7 +80,7 @@ namespace boost{namespace itl
     }
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // __grouping_JOFA_040621_H__
 

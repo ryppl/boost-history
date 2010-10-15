@@ -13,7 +13,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/interval_base_set.hpp>
 #include <boost/itl/interval_set.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 /** \brief implements a set as a set of intervals - on insertion 
@@ -64,10 +64,10 @@ public:
     typedef Alloc<DomainT> domain_allocator_type;
 
     /// The corresponding atomized type representing this interval container of elements
-    typedef typename itl::set<DomainT,Compare,Alloc> atomized_type;
+    typedef typename icl::set<DomainT,Compare,Alloc> atomized_type;
 
     /// Container type for the implementation 
-    typedef typename itl::set<interval_type,ITL_EXCLUSIVE_LESS(interval_type),Alloc> ImplSetT;
+    typedef typename icl::set<interval_type,ITL_EXCLUSIVE_LESS(interval_type),Alloc> ImplSetT;
 
     /// key type of the implementing container
     typedef typename ImplSetT::key_type   key_type;
@@ -168,23 +168,23 @@ private:
 // type traits
 //-----------------------------------------------------------------------------
 template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-struct is_set<itl::split_interval_set<DomainT,Compare,Interval,Alloc> >
+struct is_set<icl::split_interval_set<DomainT,Compare,Interval,Alloc> >
 { 
-    typedef is_set<itl::split_interval_set<DomainT,Compare,Interval,Alloc> > type;
+    typedef is_set<icl::split_interval_set<DomainT,Compare,Interval,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
 template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-struct is_interval_container<itl::split_interval_set<DomainT,Compare,Interval,Alloc> >
+struct is_interval_container<icl::split_interval_set<DomainT,Compare,Interval,Alloc> >
 { 
-    typedef is_interval_container<itl::split_interval_set<DomainT,Compare,Interval,Alloc> > type;
+    typedef is_interval_container<icl::split_interval_set<DomainT,Compare,Interval,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
 template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-struct is_interval_splitter<itl::split_interval_set<DomainT,Compare,Interval,Alloc> >
+struct is_interval_splitter<icl::split_interval_set<DomainT,Compare,Interval,Alloc> >
 { 
-    typedef is_interval_splitter<itl::split_interval_set<DomainT,Compare,Interval,Alloc> > type;
+    typedef is_interval_splitter<icl::split_interval_set<DomainT,Compare,Interval,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = true);
 };
 
@@ -192,14 +192,14 @@ struct is_interval_splitter<itl::split_interval_set<DomainT,Compare,Interval,All
 // type representation
 //-----------------------------------------------------------------------------
 template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
-struct type_to_string<itl::split_interval_set<DomainT,Compare,Interval,Alloc> >
+struct type_to_string<icl::split_interval_set<DomainT,Compare,Interval,Alloc> >
 {
     static std::string apply()
     { return "sp_itv_set<"+ type_to_string<DomainT>::apply() +">"; }
 };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

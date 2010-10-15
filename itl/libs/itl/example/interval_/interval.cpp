@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Interval Template Library
+Interval Container Library
 Author: Joachim Faulhaber
 Copyright (c) 2007-2009: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
@@ -27,11 +27,11 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include "../toytime.hpp"
 
 using namespace std;
-using namespace boost::itl;
+using namespace boost::icl;
 
 int main()
 {
-    cout << ">> Interval Template Library: Sample interval.cpp <<\n";
+    cout << ">>Interval Container Library: Sample interval.cpp <<\n";
     cout << "----------------------------------------------------\n";
 
     discrete_interval<int>      int_interval  
@@ -63,7 +63,7 @@ int main()
 
 // Program output:
 
-//>> Interval Template Library: Sample interval.cpp <<
+//>>Interval Container Library: Sample interval.cpp <<
 //----------------------------------------------------
 //  discrete_interval<int>:    [3,7]
 //continuous_interval<double>: [0.707107,1.41421) does NOT contain sqrt(2)

@@ -16,7 +16,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/utility.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     
     class signed_quantifier_driver : public itl_driver
@@ -104,10 +104,10 @@ namespace boost{namespace itl
             //-----------------------------------------------------------------
             case RootType::itl_map: {
                 switch(identityHandlerChoice) {
-                case IdentityHandlerType::partial_absorber: return new signed_quantifier_validater<itl::map<int,    int,    partial_absorber> >;
-                case IdentityHandlerType::partial_enricher: return new signed_quantifier_validater<itl::map<int,    double, partial_enricher> >;
-                case IdentityHandlerType::total_absorber:   return new signed_quantifier_validater<itl::map<double, int,    total_absorber  > >;
-                case IdentityHandlerType::total_enricher:   return new signed_quantifier_validater<itl::map<double, double, total_enricher  > >;
+                case IdentityHandlerType::partial_absorber: return new signed_quantifier_validater<icl::map<int,    int,    partial_absorber> >;
+                case IdentityHandlerType::partial_enricher: return new signed_quantifier_validater<icl::map<int,    double, partial_enricher> >;
+                case IdentityHandlerType::total_absorber:   return new signed_quantifier_validater<icl::map<double, int,    total_absorber  > >;
+                case IdentityHandlerType::total_enricher:   return new signed_quantifier_validater<icl::map<double, double, total_enricher  > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::itl_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case itl_map 
@@ -141,6 +141,6 @@ namespace boost{namespace itl
     };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_DRIVER_SIGNED_QUANTIFIER_DRIVER_HPP_JOFA_091013

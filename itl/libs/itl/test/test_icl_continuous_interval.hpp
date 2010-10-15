@@ -11,13 +11,13 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 template <class T, class IntervalT> 
 void interval_ctor_4_ordered_types()
 {
-    BOOST_CHECK_EQUAL(itl::is_empty(IntervalT()), true);
-    BOOST_CHECK_EQUAL(itl::cardinality(IntervalT()), itl::identity_element<typename itl::size_type_of<T>::type>::value());
-    BOOST_CHECK_EQUAL(itl::size(IntervalT()), itl::identity_element<typename itl::size_type_of<T>::type>::value());
+    BOOST_CHECK_EQUAL(icl::is_empty(IntervalT()), true);
+    BOOST_CHECK_EQUAL(icl::cardinality(IntervalT()), icl::identity_element<typename icl::size_type_of<T>::type>::value());
+    BOOST_CHECK_EQUAL(icl::size(IntervalT()), icl::identity_element<typename icl::size_type_of<T>::type>::value());
 
     BOOST_CHECK_EQUAL( IntervalT(), IntervalT() );
     BOOST_CHECK_EQUAL( IntervalT(), IntervalT(IntervalT().lower(), IntervalT().upper()) );
-    BOOST_CHECK_EQUAL( IntervalT(), IntervalT(itl::lower(IntervalT()), itl::upper(IntervalT())) );
+    BOOST_CHECK_EQUAL( IntervalT(), IntervalT(icl::lower(IntervalT()), icl::upper(IntervalT())) );
 }
 
 
@@ -26,7 +26,7 @@ void distant_intervals_4_numeric_continuous_types()
 {
     typedef  right_open_interval<T,Compare> L__D; // L__D for [..)
     typedef   left_open_interval<T,Compare> C__I; // C__I for (..]
-    typedef  typename  itl::interval<T,Compare>::type IntervalT;
+    typedef  typename  icl::interval<T,Compare>::type IntervalT;
 
     BOOST_CHECK( is_interval<L__D>::value ); 
     BOOST_CHECK( has_difference<typename interval_traits<L__D>::domain_type>::value ); 

@@ -16,19 +16,19 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/itl_xt/itvgentor.hpp>
 #include <boost/itl_xt/seqgentor.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
-template <class DomainT, class CodomainT, class IntervalT = itl::interval<DomainT>::type > 
+template <class DomainT, class CodomainT, class IntervalT = icl::interval<DomainT>::type > 
 class map_segment_gentor: public RandomGentorAT<std::pair<IntervalT, CodomainT> >
 {
 public:
     typedef DomainT   domain_type;
     typedef CodomainT codomain_type;
     typedef IntervalT interval_type;
-    typedef typename itl::interval<domain_type>::type   range_type;
-    typedef typename itl::interval<codomain_type>::type co_range_type;
-    //typedef typename itl::interval<codomain_type>::type co_range_type;
+    typedef typename icl::interval<domain_type>::type   range_type;
+    typedef typename icl::interval<codomain_type>::type co_range_type;
+    //typedef typename icl::interval<codomain_type>::type co_range_type;
     typedef std::pair<IntervalT, CodomainT> segment_type;
 
 public:

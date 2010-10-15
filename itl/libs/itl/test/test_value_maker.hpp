@@ -11,7 +11,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/identity_element.hpp>
 #include <boost/itl/interval_bounds.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 /*FYI completion like that:
@@ -134,13 +134,13 @@ struct map_val
 // Very short value denotation for intervals
 // Assumption typename T and IntervalT exists in scope
 //I_I : [a,b]
-#define I_I(low,up) itl::interval<T>::closed    (make<T>(low), make<T>(up))
+#define I_I(low,up) icl::interval<T>::closed    (make<T>(low), make<T>(up))
 //I_D : [a,b)
-#define I_D(low,up) itl::interval<T>::right_open(make<T>(low), make<T>(up))
+#define I_D(low,up) icl::interval<T>::right_open(make<T>(low), make<T>(up))
 //C_I : (a,b]
-#define C_I(low,up) itl::interval<T>::left_open (make<T>(low), make<T>(up))
+#define C_I(low,up) icl::interval<T>::left_open (make<T>(low), make<T>(up))
 //C_D : (a,b)
-#define C_D(low,up) itl::interval<T>::open      (make<T>(low), make<T>(up))
+#define C_D(low,up) icl::interval<T>::open      (make<T>(low), make<T>(up))
 
 #define MK_I(ItvT,low,up) ItvT(make<T>(low), make<T>(up))
 

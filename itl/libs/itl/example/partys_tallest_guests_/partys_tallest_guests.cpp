@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Interval Template Library
+Interval Container Library
 Author: Joachim Faulhaber
 Copyright (c) 2007-2009: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
@@ -38,7 +38,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 using namespace std;
 using namespace boost::posix_time;
-using namespace boost::itl;
+using namespace boost::icl;
 
 
 // A party's height shall be defined as the maximum height of all guests ;-)
@@ -135,7 +135,7 @@ void partys_split_height()
 
 int main()
 {
-    cout << ">> Interval Template Library: Sample partys_tallest_guests.cpp  <<\n";
+    cout << ">>Interval Container Library: Sample partys_tallest_guests.cpp  <<\n";
     cout << "------------------------------------------------------------------\n";
     partys_height();
     partys_split_height();
@@ -144,7 +144,7 @@ int main()
 
 // Program output:
 /*-----------------------------------------------------------------------------
->> Interval Template Library: Sample partys_tallest_guests.cpp  <<
+>>Interval Container Library: Sample partys_tallest_guests.cpp  <<
 ------------------------------------------------------------------
 -------------- History of maximum guest height -------------------
 [2008-May-20 19:30:00 - 2008-May-20 22:15:00): 180 cm = 5.90551 ft

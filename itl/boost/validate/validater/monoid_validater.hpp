@@ -14,7 +14,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/validater/concept_validater.hpp>
 #include <boost/validate/laws/monoid.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <typename Type>
@@ -50,7 +50,7 @@ private:
 };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_VALIDATE_VALIDATER_MONOID_VALIDATER_HPP_JOFA_100501
 

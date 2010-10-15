@@ -12,7 +12,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/is_discrete.hpp>
 #include <boost/itl/type_traits/is_numeric.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 inline interval_bounds left(interval_bounds x1)
@@ -87,10 +87,10 @@ shift_lower(interval_bounds decl, interval_bounds repr, const Type& low)
     if(is_left_closed(decl) && !is_left_closed(repr))
     {
         BOOST_ASSERT((numeric_minimum<Type, is_numeric<Type>::value >::is_less_than(low) )); 
-        return itl::pred(low);
+        return icl::pred(low);
     }
     else if(!is_left_closed(decl) && is_left_closed(repr)) 
-        return itl::succ(low);
+        return icl::succ(low);
     else 
         return low;
 }
@@ -102,10 +102,10 @@ shift_upper(interval_bounds decl, interval_bounds repr, const Type& up)
     if(!is_right_closed(decl) && is_right_closed(repr))
     {
         BOOST_ASSERT((numeric_minimum<Type, is_numeric<Type>::value >::is_less_than(up) )); 
-        return itl::pred(up);
+        return icl::pred(up);
     }
     else if(is_right_closed(decl) && !is_right_closed(repr)) 
-        return itl::succ(up);
+        return icl::succ(up);
     else 
         return up;
 }
@@ -157,7 +157,7 @@ right_subtract_bounds(const IntervalT& x1, const IntervalT& x2)
 { return right_subtract_bounds(x1.bounds(), x2.bounds()); }
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

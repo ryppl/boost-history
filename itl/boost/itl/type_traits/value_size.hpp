@@ -10,7 +10,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #ifndef BOOST_ITL_VALUE_SIZE_HPP_JOFA_081004
 #define BOOST_ITL_VALUE_SIZE_HPP_JOFA_081004
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {    
 
 template <typename Type>
@@ -41,7 +41,7 @@ template<> inline std::size_t value_size<double>::apply(const double& value)
 
 template <typename Type> 
 inline std::size_t value_size<Type>::apply(const Type& value)
-{ return itl::iterative_size(value); }
+{ return icl::iterative_size(value); }
 
 
 

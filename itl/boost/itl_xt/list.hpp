@@ -8,7 +8,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 /* ------------------------------------------------------------------
-class itl::list
+class icl::list
     a general list class that extends stl-lists
     for concepts InplaceAddable and InplaceSubtractable
 --------------------------------------------------------------------*/
@@ -26,7 +26,7 @@ class itl::list
 #include <boost/itl/predicates.hpp>
 
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     //JODO 1_0_1 documentation
     /// an stl based list implementing inplace addition operators += 
@@ -42,7 +42,7 @@ namespace boost{namespace itl
         typedef Alloc<DataT> allocator_type;
 
     private:
-        typedef typename itl::list<DataT, Alloc>           type;
+        typedef typename icl::list<DataT, Alloc>           type;
         typedef typename std::list<DataT, allocator_type>  base_type;
 
     public:        
@@ -200,24 +200,24 @@ namespace boost{namespace itl
 
 
     template <typename DataT, ITL_ALLOC Alloc>
-    inline bool operator == (const itl::list<DataT,Alloc>& lhs,
-                             const itl::list<DataT,Alloc>& rhs)
+    inline bool operator == (const icl::list<DataT,Alloc>& lhs,
+                             const icl::list<DataT,Alloc>& rhs)
     {
         typedef std::list<DataT,Alloc<DataT> > base_type;
         return operator==((const base_type&)lhs, (const base_type&)rhs);
     }
     
     template <typename DataT, ITL_ALLOC Alloc>
-    inline bool operator < (const itl::list<DataT,Alloc>& lhs,
-        const itl::list<DataT,Alloc>& rhs)
+    inline bool operator < (const icl::list<DataT,Alloc>& lhs,
+        const icl::list<DataT,Alloc>& rhs)
     {
         typedef std::list<DataT,Alloc<DataT> > base_type;
         return operator<((const base_type&)lhs, (const base_type&)rhs);
     }
 
     template <typename DataT, ITL_ALLOC Alloc>
-    inline bool operator <= (const itl::list<DataT,Alloc>& lhs,
-        const itl::list<DataT,Alloc>& rhs)
+    inline bool operator <= (const icl::list<DataT,Alloc>& lhs,
+        const icl::list<DataT,Alloc>& rhs)
     {
         typedef std::list<DataT,Alloc<DataT> > base_type;
         return operator<=((const base_type&)lhs, (const base_type&)rhs);
@@ -429,9 +429,9 @@ template<class CharType, class CharTraits,
     class DataT, ITL_ALLOC Alloc>
 std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits>& stream, 
-  const itl::list<DataT,Alloc>& object)
+  const icl::list<DataT,Alloc>& object)
 {
-    typedef itl::list<DataT,Alloc> ObjectT;
+    typedef icl::list<DataT,Alloc> ObjectT;
     stream << "[";
     typename ObjectT::const_iterator it = object.begin();
     if(it != object.end())
@@ -445,13 +445,13 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 // type traits
 //-----------------------------------------------------------------------------
 template <class Type>
-struct type_to_string<itl::list<Type> >
+struct type_to_string<icl::list<Type> >
 {
     static std::string apply()
     { return "list<"+ type_to_string<Type>::apply() +">"; }
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_LIST_HPP_JOFA_070519
 

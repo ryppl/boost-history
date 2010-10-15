@@ -56,7 +56,7 @@ std::string bits<NaturalT>::as_string(const char off_on[2])const
 } // mini
 
 //[mini_bits_is_set
-namespace boost { namespace itl 
+namespace boost { namespace icl 
 {
     template<class NaturalT>
     struct is_set<mini::bits<NaturalT> >

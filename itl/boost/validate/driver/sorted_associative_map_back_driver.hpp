@@ -16,7 +16,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/utility.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     
     class sorted_associative_map_back_driver : public itl_driver
@@ -103,20 +103,20 @@ namespace boost{namespace itl
             //-----------------------------------------------------------------
             case RootType::interval_map: {
                 switch(identityHandlerChoice) {
-                case IdentityHandlerType::partial_absorber: return new sorted_associative_back_validater<interval_map<int,int,partial_absorber>, itl::list<std::pair<int,int> > >;
-                case IdentityHandlerType::partial_enricher: return new sorted_associative_back_validater<interval_map<int,int,partial_enricher>, itl::list<std::pair<int,int> > >;
-                case IdentityHandlerType::total_absorber:   return new sorted_associative_back_validater<interval_map<int,int,total_absorber  >, itl::list<std::pair<int,int> > >;
-                case IdentityHandlerType::total_enricher:   return new sorted_associative_back_validater<interval_map<int,int,total_enricher  >, itl::list<std::pair<int,int> > >;
+                case IdentityHandlerType::partial_absorber: return new sorted_associative_back_validater<interval_map<int,int,partial_absorber>, icl::list<std::pair<int,int> > >;
+                case IdentityHandlerType::partial_enricher: return new sorted_associative_back_validater<interval_map<int,int,partial_enricher>, icl::list<std::pair<int,int> > >;
+                case IdentityHandlerType::total_absorber:   return new sorted_associative_back_validater<interval_map<int,int,total_absorber  >, icl::list<std::pair<int,int> > >;
+                case IdentityHandlerType::total_enricher:   return new sorted_associative_back_validater<interval_map<int,int,total_enricher  >, icl::list<std::pair<int,int> > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case interval_map 
             //-----------------------------------------------------------------
             case RootType::split_interval_map: {
                 switch(identityHandlerChoice) {
-                case IdentityHandlerType::partial_absorber: return new sorted_associative_back_validater<split_interval_map<int,int,partial_absorber>, itl::list<std::pair<int,int> > >;
-                case IdentityHandlerType::partial_enricher: return new sorted_associative_back_validater<split_interval_map<int,int,partial_enricher>, itl::list<std::pair<int,int> > >;
-                case IdentityHandlerType::total_absorber:   return new sorted_associative_back_validater<split_interval_map<int,int,total_absorber  >, itl::list<std::pair<int,int> > >;
-                case IdentityHandlerType::total_enricher:   return new sorted_associative_back_validater<split_interval_map<int,int,total_enricher  >, itl::list<std::pair<int,int> > >;
+                case IdentityHandlerType::partial_absorber: return new sorted_associative_back_validater<split_interval_map<int,int,partial_absorber>, icl::list<std::pair<int,int> > >;
+                case IdentityHandlerType::partial_enricher: return new sorted_associative_back_validater<split_interval_map<int,int,partial_enricher>, icl::list<std::pair<int,int> > >;
+                case IdentityHandlerType::total_absorber:   return new sorted_associative_back_validater<split_interval_map<int,int,total_absorber  >, icl::list<std::pair<int,int> > >;
+                case IdentityHandlerType::total_enricher:   return new sorted_associative_back_validater<split_interval_map<int,int,total_enricher  >, icl::list<std::pair<int,int> > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case split_interval_map 
@@ -129,6 +129,6 @@ namespace boost{namespace itl
     };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_DRIVER_SORTED_ASSOCIATIVE_MAP_BACK_DRIVER_HPP_JOFA_091202

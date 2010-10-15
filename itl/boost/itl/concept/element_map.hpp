@@ -20,7 +20,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/detail/map_algo.hpp>
 
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 //NOTE: Some forward declarations are needed by some compilers.
@@ -52,7 +52,7 @@ template<class Type>
 typename enable_if<is_element_map<Type>, bool>::type
 contains(const Type& super, const typename Type::element_type& value_pair)
 {
-    return itl::within(value_pair, super);
+    return icl::within(value_pair, super);
 }
 
 //==============================================================================
@@ -124,7 +124,7 @@ erase(Type& object, const typename Type::set_type& erasure)
 {
     typedef typename Type::set_type set_type;
     ITL_const_FORALL(typename set_type, elem_, erasure) 
-        itl::erase(object, *elem_); 
+        icl::erase(object, *elem_); 
 
     return object; 
 }
@@ -149,7 +149,7 @@ template <class Type>
 typename enable_if<is_element_map<Type>, Type>::type&
 subtract(Type& object, const typename Type::domain_type& key_value)
 {
-    return itl::erase(object, key_value);
+    return icl::erase(object, key_value);
 }
 
 //------------------------------------------------------------------------------
@@ -224,7 +224,7 @@ inline typename enable_if<is_element_map<Type>, void>::type
 add_intersection(Type& section, const Type& object, const Type& operand)
 {
     ITL_const_FORALL(typename Type, it_, operand) 
-        itl::add_intersection(section, object, *it_); 
+        icl::add_intersection(section, object, *it_); 
 }
 
 //------------------------------------------------------------------------------
@@ -244,7 +244,7 @@ inline typename enable_if<mpl::and_<is_element_map<Type>, mpl::not_<is_total<Typ
 operator &=(Type& object, const typename Type::element_type& operand)
 {
     Type section;
-    itl::add_intersection(section, object, operand);
+    icl::add_intersection(section, object, operand);
     object.swap(section);
     return object; 
 }
@@ -277,7 +277,7 @@ inline typename enable_if<mpl::and_<is_element_map<Type>, mpl::not_<is_total<Typ
 operator &=(Type& object, const Type& operand)
 {
     Type section;
-    itl::add_intersection(section, object, operand);
+    icl::add_intersection(section, object, operand);
     object.swap(section);
     return object; 
 }
@@ -321,7 +321,7 @@ inline typename enable_if< mpl::and_< is_element_map<Type>
                          , bool>::type
 intersects(const Type& object, const typename Type::domain_type& operand)
 {
-    return itl::contains(object, operand);
+    return icl::contains(object, operand);
 }
 
 template<class Type>
@@ -343,7 +343,7 @@ inline typename enable_if< mpl::and_< is_element_map<Type>
 intersects(const Type& object, const typename Type::element_type& operand)
 {
     Type intersection;
-    itl::add_intersection(intersection, object, operand);
+    icl::add_intersection(intersection, object, operand);
     return !intersection.empty();
 }
 
@@ -376,7 +376,7 @@ inline typename enable_if< mpl::and_< is_element_map<Type>
                          , Type>::type&
 operator ^= (Type& object, const CoType&)
 {
-    itl::clear(object);
+    icl::clear(object);
     return object;
 }
 
@@ -398,7 +398,7 @@ inline typename enable_if< mpl::and_< is_element_map<Type>
 operator ^= (Type& object, const Type& operand)
 {
     ITL_const_FORALL(typename Type, it_, operand)
-        itl::flip(object, *it_);
+        icl::flip(object, *it_);
 
     ITL_FORALL(typename Type, it2_, object)
         it2_->second = identity_element<typename Type::codomain_type>::value();
@@ -413,7 +413,7 @@ inline typename enable_if< mpl::and_< is_element_map<Type>
                          , Type>::type&
 operator ^= (Type& object, const typename Type::element_type& operand)
 {
-    return itl::flip(object, operand);
+    return icl::flip(object, operand);
 }
 
 template<class Type>
@@ -425,7 +425,7 @@ operator ^= (Type& object, const Type& operand)
     typedef typename Type::const_iterator const_iterator;
     const_iterator it_ = operand.begin();
     while(it_ != operand.end())
-        itl::flip(object, *it_++);
+        icl::flip(object, *it_++);
 
     return object;
 }
@@ -456,7 +456,7 @@ inline typename enable_if<mpl::and_< is_element_map<Type>
 absorb_identities(Type& object)
 {
     typedef typename Type::element_type element_type;
-    return itl::erase_if(content_is_identity_element<element_type>(), object);
+    return icl::erase_if(content_is_identity_element<element_type>(), object);
 }
 
 template<class Type>

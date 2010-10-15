@@ -36,7 +36,7 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/itl/concept/comparable.hpp>
 
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 /** \brief Addable, subtractable and intersectable sets. */
@@ -49,7 +49,7 @@ template
 class set: private ITL_IMPL_SPACE::set<DomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), Alloc<DomainT> >
 {
 public:
-    typedef typename itl::set<DomainT, Compare, Alloc> type;
+    typedef typename icl::set<DomainT, Compare, Alloc> type;
     typedef typename ITL_IMPL_SPACE::set<DomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), Alloc<DomainT> > base_type;
     typedef type key_object_type;
 
@@ -150,19 +150,19 @@ public:
 
     /// Checks if the element \c value is in the set
     bool contains(const element_type& value)const 
-    { return itl::contains(*this, value); }
+    { return icl::contains(*this, value); }
 
     /** Does <tt>*this</tt> contain <tt>sub</tt>? */
     bool contains(const set& sub)const 
-    { return itl::contains(*this, sub); }
+    { return icl::contains(*this, sub); }
 
     /** Is <tt>*this</tt> contained in <tt>super</tt>? */
     bool contained_in(const set& super)const 
-    { return itl::within(*this, super); }
+    { return icl::within(*this, super); }
 
     /** <tt>*this</tt> and <tt>x2</tt> are disjoint, if their intersection is empty */
     bool disjoint(const set& x2)const 
-    { return itl::disjoint(*this, x2); }
+    { return icl::disjoint(*this, x2); }
 
     //==========================================================================
     //= Size
@@ -179,22 +179,22 @@ public:
     //==========================================================================
     /** Add an \c element to the set. */
     set& add(const element_type& element) 
-    { return itl::insert(*this, element); } 
+    { return icl::insert(*this, element); } 
 
     /** Add an element \c element after \c prior to the set. */
     iterator add(iterator prior, const element_type& element) 
-    { return itl::insert(*this, prior, element); } 
+    { return icl::insert(*this, prior, element); } 
 
     /** Subtract an \c element from the set. */
     set& subtract(const element_type& element)
-    { return itl::subtract(*this, element); } 
+    { return icl::subtract(*this, element); } 
 
     //==========================================================================
     //= Symmetric difference
     //==========================================================================
     /** If \c *this set contains \c element it is erased, otherwise it is added. */
     set& flip(const element_type& element)
-    { return itl::flip(*this, element); }
+    { return icl::flip(*this, element); }
 };
 
 
@@ -203,21 +203,21 @@ public:
 // type traits
 //-----------------------------------------------------------------------------
 template <class Type>
-struct is_set<itl::set<Type> >
+struct is_set<icl::set<Type> >
 { 
-    typedef is_set<itl::set<Type> > type;
+    typedef is_set<icl::set<Type> > type;
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
 
 template <class Type>
-struct type_to_string<itl::set<Type> >
+struct type_to_string<icl::set<Type> >
 {
     static std::string apply()
     { return "set<"+ type_to_string<Type>::apply() +">"; }
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_SET_HPP_JOFA_070519
 

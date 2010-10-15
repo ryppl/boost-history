@@ -18,7 +18,7 @@ handcoded loops and calls of std::algorithms.
 
 #include <boost/itl/iterator.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <typename SourceT, typename TargetT>
@@ -26,7 +26,7 @@ struct base_insertion
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-        itl::clear(collected);
+        icl::clear(collected);
         ITL_const_FORALL(typename SourceT, item_, items)
             collected.insert(*item_);
     }
@@ -41,7 +41,7 @@ struct hint_insertion
     void operator()(TargetT& collected, const SourceT& items)
     {
         typedef typename TargetT::value_type target_value_type;
-        itl::clear(collected);
+        icl::clear(collected);
         typename TargetT::iterator prior_ = collected.end();
         ITL_const_FORALL(typename SourceT, item_, items)
             prior_ = collected.insert(prior_, *item_);
@@ -56,8 +56,8 @@ struct copy_insertion
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-        itl::clear(collected);
-        std::copy(items.begin(), items.end(), itl::inserter(collected, collected.end()));
+        icl::clear(collected);
+        std::copy(items.begin(), items.end(), icl::inserter(collected, collected.end()));
     }
 };
 
@@ -70,9 +70,9 @@ struct base_addition
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-        itl::clear(collected);
+        icl::clear(collected);
         ITL_const_FORALL(typename SourceT, item_, items)
-            //JODO itl::add(collected, *item_);
+            //JODO icl::add(collected, *item_);
             collected.add(*item_);
     }
 };
@@ -85,7 +85,7 @@ struct hint_addition
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-        itl::clear(collected);
+        icl::clear(collected);
         typename TargetT::iterator prior_ = collected.end();
         ITL_const_FORALL(typename SourceT, item_, items)
             //JODO prior_ = add(collected, prior_, *item_);
@@ -101,14 +101,14 @@ struct copy_addition
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-        itl::clear(collected);
-        std::copy(items.begin(), items.end(), itl::adder(collected, collected.end()));
+        icl::clear(collected);
+        std::copy(items.begin(), items.end(), icl::adder(collected, collected.end()));
     }
 };
 
 template<> 
 inline std::string binary_template_to_string<copy_addition>::apply() { return "c+"; }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_FUNCTORS_HPP_JOFA_091004

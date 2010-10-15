@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+    
-Interval Template Library
+Interval Container Library
 Author: Joachim Faulhaber
 Copyright (c) 2007-2009: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
@@ -19,7 +19,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <sstream>
 
 using namespace std;
-using namespace boost::itl;
+using namespace boost::icl;
 
 /** Example amount_cube.cpp \file amount_cube.cpp
     \brief Demonstrates computations of aggregates using maps of tuples or <i>cubes</i>
@@ -225,7 +225,7 @@ void accumulate_the_total()
 
 int main()
 {
-    cout << ">> Interval Template Library: Sample amount_cube.cpp <<\n";
+    cout << ">>Interval Container Library: Sample amount_cube.cpp <<\n";
     cout << "-------------------------------------------------------\n";
     cout << "Note that there is always a representing value for a tupel component\n";
     cout << "even if the component is grouped or switched off.\n";
@@ -240,7 +240,7 @@ int main()
 
 // Program output
 
-// >> Interval Template Library: Sample amount_cube.cpp <<
+// >>Interval Container Library: Sample amount_cube.cpp <<
 // -------------------------------------------------------
 // Note that there is always a representing value for a tupel component
 // even if the component is grouped or switched off.

@@ -14,7 +14,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/is_set.hpp>
 #include <boost/itl/detail/relation_state.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template<class NaturalT> class bits
@@ -51,7 +51,7 @@ typedef bits<unsigned long>       bits32;
 typedef bits<unsigned long long>  bits64;
 
 template<class NaturalT>
-int inclusion_compare(itl::bits<NaturalT> left, itl::bits<NaturalT> right)
+int inclusion_compare(icl::bits<NaturalT> left, icl::bits<NaturalT> right)
 {
     if(0 ==(left.number() & right.number())) return inclusion::unrelated;
     else if(left.number() < right.number() ) return inclusion::subset;
@@ -62,7 +62,7 @@ int inclusion_compare(itl::bits<NaturalT> left, itl::bits<NaturalT> right)
 
 template<class CharType, class CharTraits, class NaturalT>
 std::basic_ostream<CharType, CharTraits>& operator <<
-(std::basic_ostream<CharType, CharTraits>& stream, const itl::bits<NaturalT>& object)
+(std::basic_ostream<CharType, CharTraits>& stream, const icl::bits<NaturalT>& object)
 {
     return stream << object.number();
 }
@@ -74,13 +74,13 @@ struct is_set<bits<NaturalT> >
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
-template <>struct type_to_string<itl::bits<unsigned char > >{static std::string apply(){ return "bit8";  }};
-template <>struct type_to_string<itl::bits<unsigned short> >{static std::string apply(){ return "bit16"; }};
-template <>struct type_to_string<itl::bits<unsigned int  > >{static std::string apply(){ return "bit32"; }};
-template <>struct type_to_string<itl::bits<unsigned long > >{static std::string apply(){ return "bitl32"; }};
-template <>struct type_to_string<itl::bits<unsigned long long> >{static std::string apply(){ return "bit64"; }};
+template <>struct type_to_string<icl::bits<unsigned char > >{static std::string apply(){ return "bit8";  }};
+template <>struct type_to_string<icl::bits<unsigned short> >{static std::string apply(){ return "bit16"; }};
+template <>struct type_to_string<icl::bits<unsigned int  > >{static std::string apply(){ return "bit32"; }};
+template <>struct type_to_string<icl::bits<unsigned long > >{static std::string apply(){ return "bitl32"; }};
+template <>struct type_to_string<icl::bits<unsigned long long> >{static std::string apply(){ return "bit64"; }};
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_LIBS_VALIDATE_TEST_BITS_HPP_JOFA_091009

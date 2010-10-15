@@ -13,7 +13,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/detail/interval_set_algo.hpp>
 #include <boost/itl/concept/interval.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 //==============================================================================
@@ -34,7 +34,7 @@ typename enable_if<is_interval_set<Type>, bool>::type
 contains(const Type& super, const typename Type::segment_type& inter_val)
 { 
     typedef typename Type::const_iterator const_iterator;
-    if(itl::is_empty(inter_val)) 
+    if(icl::is_empty(inter_val)) 
         return true;
 
     std::pair<const_iterator, const_iterator> exterior 
@@ -45,7 +45,7 @@ contains(const Type& super, const typename Type::segment_type& inter_val)
     const_iterator last_overlap = cyclic_prior(super, exterior.second);
 
     return 
-        itl::contains(hull(*(exterior.first), *last_overlap), inter_val)
+        icl::contains(hull(*(exterior.first), *last_overlap), inter_val)
     &&  Interval_Set::is_joinable(super, exterior.first, last_overlap);
 }
 
@@ -75,7 +75,7 @@ inline typename enable_if<is_interval_set<Type>, Type>::type&
 add(Type& object, const typename Type::element_type& operand)
 {
     typedef typename Type::segment_type segment_type;
-    return itl::add(object, itl::singleton<segment_type>(operand));
+    return icl::add(object, icl::singleton<segment_type>(operand));
 }
 
 //------------------------------------------------------------------------------
@@ -99,14 +99,14 @@ template<class Type>
 typename enable_if<is_interval_set<Type>, Type>::type&
 insert(Type& object, const typename Type::segment_type& operand)
 {
-    return itl::add(object, operand);
+    return icl::add(object, operand);
 }
 
 template<class Type>
 typename enable_if<is_interval_set<Type>, Type>::type&
 insert(Type& object, const typename Type::element_type& operand)
 {
-    return itl::add(object, operand);
+    return icl::add(object, operand);
 }
 
 //------------------------------------------------------------------------------
@@ -117,7 +117,7 @@ typename enable_if<is_interval_set<Type>, Type>::type&
 insert(Type& object, const typename Type::iterator      prior,
                      const typename Type::segment_type& operand)
 {
-    return itl::add(object, prior, operand);
+    return icl::add(object, prior, operand);
 }
 
 //==============================================================================
@@ -138,7 +138,7 @@ inline typename enable_if<is_interval_set<Type>, Type>::type&
 subtract(Type& object, const typename Type::element_type& operand)
 {
     typedef typename Type::segment_type segment_type;
-    return itl::subtract(object, itl::singleton<segment_type>(operand));
+    return icl::subtract(object, icl::singleton<segment_type>(operand));
 }
 
 //==============================================================================
@@ -151,14 +151,14 @@ template<class Type>
 typename enable_if<is_interval_set<Type>, Type>::type&
 erase(Type& object, const typename Type::segment_type& minuend)
 {
-    return itl::subtract(object, minuend);
+    return icl::subtract(object, minuend);
 }
 
 template<class Type>
 typename enable_if<is_interval_set<Type>, Type>::type&
 erase(Type& object, const typename Type::element_type& minuend)
 {
-    return itl::subtract(object, minuend);
+    return icl::subtract(object, minuend);
 }
 
 //==============================================================================
@@ -175,7 +175,7 @@ add_intersection(Type& section, const Type& object,
     typedef typename Type::const_iterator const_iterator;
     const_iterator found = object.find(operand);
     if(found != object.end())
-        itl::add(section, operand);
+        icl::add(section, operand);
 }
 
 
@@ -188,7 +188,7 @@ add_intersection(Type& section, const Type& object,
     typedef typename Type::iterator       iterator;
     typedef typename Type::interval_type  interval_type;
 
-    if(itl::is_empty(segment)) 
+    if(icl::is_empty(segment)) 
         return;
 
     std::pair<const_iterator, const_iterator> exterior 
@@ -200,7 +200,7 @@ add_intersection(Type& section, const Type& object,
     for(const_iterator it_=exterior.first; it_ != exterior.second; it_++) 
     {
         interval_type common_interval = key_value<Type>(it_) & segment;
-        if(!itl::is_empty(common_interval))
+        if(!icl::is_empty(common_interval))
             prior_ = section.insert(prior_, common_interval);
     }
 }
@@ -215,7 +215,7 @@ template<class Type>
 typename enable_if<is_interval_set<Type>, Type>::type&
 flip(Type& object, const typename Type::element_type& operand)
 {
-    if(itl::contains(object, operand))
+    if(icl::contains(object, operand))
         return object -= operand;
     else
         return object += operand;
@@ -246,8 +246,8 @@ flip(Type& object, const typename Type::segment_type& segment)
         //     [b ...  : covered
         //[a  b)       : left_over
         left_over = right_subtract(span, covered);
-        itl::subtract(object, span & covered); //That which is common shall be subtracted
-        itl::add(object, left_over);           //That which is not shall be added
+        icl::subtract(object, span & covered); //That which is common shall be subtracted
+        icl::add(object, left_over);           //That which is not shall be added
 
         //...      d) : span
         //... c)      : covered
@@ -256,7 +256,7 @@ flip(Type& object, const typename Type::segment_type& segment)
     }
 
     //If span is not empty here, it_ is not in the set so it_ shall be added
-    itl::add(object, span);
+    icl::add(object, span);
     return object;
 }
 
@@ -279,13 +279,13 @@ flip(Type& object, const OperandT& operand)
 
     // All elements of operand left of the common range are added
     while(it_ != common_lwb)
-        itl::add(object, *it_++);
+        icl::add(object, *it_++);
     // All elements of operand in the common range are symmertrically subtracted
     while(it_ != common_upb)
-        itl::flip(object, *it_++);
+        icl::flip(object, *it_++);
     // All elements of operand right of the common range are added
     while(it_ != operand.end())
-        itl::add(object, *it_++);
+        icl::add(object, *it_++);
 
     return object;
 }

@@ -13,7 +13,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/config/warning_disable.hpp>
 #include <boost/itl/detail/mapped_reference.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 //------------------------------------------------------------------------------
@@ -63,9 +63,9 @@ struct is_reverse<std::reverse_iterator<BaseIteratorT> >
 };
 
 template<class BaseIteratorT>
-struct is_reverse<itl::element_iterator<BaseIteratorT> >
+struct is_reverse<icl::element_iterator<BaseIteratorT> >
 { 
-    typedef is_reverse<itl::element_iterator<BaseIteratorT> > type; 
+    typedef is_reverse<icl::element_iterator<BaseIteratorT> > type; 
     BOOST_STATIC_CONSTANT(bool, value = is_reverse<BaseIteratorT>::value);
 };
 
@@ -201,13 +201,13 @@ struct segment_adapter
 
     static domain_type     first (const SegmentIteratorT& leaper){ return leaper->first(); } 
     static domain_type     last  (const SegmentIteratorT& leaper){ return leaper->last();  } 
-    static domain_difference_type length(const SegmentIteratorT& leaper){ return itl::length(*leaper);}
+    static domain_difference_type length(const SegmentIteratorT& leaper){ return icl::length(*leaper);}
 
     static transit_type transient_element(domain_type& inter_pos, const SegmentIteratorT& leaper, 
                                           const domain_difference_type& sneaker)
     { 
-        inter_pos = is_reverse<SegmentIteratorT>::value ? itl::last(*leaper)  - sneaker
-                                                        : itl::first(*leaper) + sneaker;
+        inter_pos = is_reverse<SegmentIteratorT>::value ? icl::last(*leaper)  - sneaker
+                                                        : icl::first(*leaper) + sneaker;
         return inter_pos; 
     }
 };
@@ -226,13 +226,13 @@ struct segment_adapter<SegmentIteratorT, std::pair<ITL_INTERVAL_TYPE(Interval,Do
 
     static domain_type     first (const SegmentIteratorT& leaper){ return leaper->first.first(); } 
     static domain_type     last  (const SegmentIteratorT& leaper){ return leaper->first.last();  } 
-    static domain_difference_type length(const SegmentIteratorT& leaper){ return itl::length(leaper->first);}
+    static domain_difference_type length(const SegmentIteratorT& leaper){ return icl::length(leaper->first);}
 
     static transit_type transient_element(domain_type& inter_pos, const SegmentIteratorT& leaper,
                                           const domain_difference_type& sneaker)
     {
-        inter_pos = is_reverse<SegmentIteratorT>::value ? itl::last(leaper->first)  - sneaker
-                                                        : itl::first(leaper->first) + sneaker;
+        inter_pos = is_reverse<SegmentIteratorT>::value ? icl::last(leaper->first)  - sneaker
+                                                        : icl::first(leaper->first) + sneaker;
         return transit_type(inter_pos, leaper->second); 
     }
 };
@@ -326,7 +326,7 @@ private:
                                                // _saltator->first.first() <= _inter_pos <= _saltator->first.last() 
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_DETAIL_ELEMENT_ITERATOR_HPP_JOFA_091104
 

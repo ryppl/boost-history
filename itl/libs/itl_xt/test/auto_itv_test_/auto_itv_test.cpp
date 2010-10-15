@@ -47,7 +47,7 @@ information on the erroneous testcases if there are any.
 #include "../itvsettester.h"
 
 using namespace std;
-using namespace boost::itl;
+using namespace boost::icl;
 
 // -------------------------------------------------
 void autoPropertyTest_ItvSet_int()
@@ -149,7 +149,7 @@ int main()
 {
     // Select a test by (re)moving the comment tokens!
 
-    cout << ">> Interval Template Library: Test auto_itv_test.cpp <<\n";
+    cout << ">>Interval Container Library: Test auto_itv_test.cpp <<\n";
     cout << "-------------------------------------------------------\n";
     // Test programmed properties on a sample of generated interval_set<int>
     //autoPropertyTest_ItvSet_int();

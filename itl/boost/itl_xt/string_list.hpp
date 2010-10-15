@@ -28,7 +28,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 +-----------------------------------------------------------------------------*/
 /* ------------------------------------------------------------------
-class itl::string_list
+class icl::string_list
     A List of Strings.
     Can be useful for string split and join.
     Also simple text-formating can be done. 
@@ -41,7 +41,7 @@ class itl::string_list
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/itl_list.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {    
     
 /// providing split, join and basic text processing
@@ -50,7 +50,7 @@ namespace boost{namespace itl
 
     @author Joachim Faulhaber
 */
-class string_list:    public itl::list<std::string> //JODO URG no inhertiance from base container
+class string_list:    public icl::list<std::string> //JODO URG no inhertiance from base container
 {
 public:
     /** Empty string_list (default-Ctor) */

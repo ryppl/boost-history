@@ -15,7 +15,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/predicates.hpp>
 #include <boost/validate/laws/law.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     /*  Monoid: (M,+,0) with .+.: M x M -> M   has these axioms
@@ -197,7 +197,7 @@ namespace boost{namespace itl
 
     template <typename Type, 
               template<class>class Accumulator = inplace_plus, 
-              template<class>class Equality = itl::std_equal>
+              template<class>class Equality = icl::std_equal>
     class InplaceAssociativity 
         : public Law<InplaceAssociativity<Type,Accumulator,Equality>, 
                      LOKI_TYPELIST_3(Type,Type,Type), LOKI_TYPELIST_2(Type,Type)>
@@ -339,7 +339,7 @@ namespace boost{namespace itl
 
     };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_MONOID_HPP_JOFA_070411
 

@@ -9,7 +9,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #ifndef BOOST_ITL_XT_META_LOG_HPP_JOFA_091023
 #define BOOST_ITL_XT_META_LOG_HPP_JOFA_091023
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 // A meta implementation of an the logarithm function on integrals
@@ -25,6 +25,6 @@ struct log2_{ enum { value = log_<Argument, 2>::value }; };
 template <size_t Argument>
 struct power2_{ enum { value = 1 << Argument }; };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_XT_META_LOG_HPP_JOFA_091023

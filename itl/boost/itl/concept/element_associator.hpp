@@ -14,7 +14,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/concept/element_set.hpp>
 #include <boost/itl/concept/element_map.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 //==============================================================================
@@ -31,14 +31,14 @@ template<class Type>
 typename enable_if<is_associative_element_container<Type>, typename Type::size_type>::type
 size(const Type& object)
 { 
-    return itl::iterative_size(object); 
+    return icl::iterative_size(object); 
 }
 
 template<class Type>
 typename enable_if<is_associative_element_container<Type>, typename Type::size_type>::type
 cardinality(const Type& object)
 { 
-    return itl::iterative_size(object); 
+    return icl::iterative_size(object); 
 }
 
 
@@ -65,9 +65,9 @@ typename enable_if<mpl::and_< is_associative_element_container<SuperT>
                    bool>::type
 within(const SubT& sub, const SuperT& super)
 {
-    if(itl::is_empty(sub))                return true;
-    if(itl::is_empty(super))              return false;
-    if(itl::size(super) < itl::size(sub)) return false;
+    if(icl::is_empty(sub))                return true;
+    if(icl::is_empty(super))              return false;
+    if(icl::size(super) < icl::size(sub)) return false;
 
     typename SubT::const_iterator common_lwb_;
     typename SubT::const_iterator common_upb_;
@@ -96,7 +96,7 @@ template<class Type>
 typename enable_if<is_associative_element_container<Type>, bool>::type
 contains(const Type& super, const typename Type::key_type& key)
 { 
-    return itl::within(key, super); 
+    return icl::within(key, super); 
 }
 
 //------------------------------------------------------------------------------
@@ -108,7 +108,7 @@ typename enable_if<mpl::and_< is_associative_element_container<SuperT>
                    bool>::type
 contains(const SuperT& super, const SubT& sub)
 { 
-    return itl::within(sub, super); 
+    return icl::within(sub, super); 
 }
 
 //==============================================================================
@@ -168,7 +168,7 @@ template <class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type&
 operator += (Type& object, const typename Type::value_type& operand) 
 { 
-    return itl::add(object, operand); 
+    return icl::add(object, operand); 
 }
 
 template <class Type>
@@ -194,7 +194,7 @@ operator += (Type& object, const Type& operand)
 
     typename Type::iterator prior_ = object.end();
     ITL_const_FORALL(typename Type, it_, operand)
-        prior_ = itl::add(object, prior_, *it_);
+        prior_ = icl::add(object, prior_, *it_);
 
     return object;
 }
@@ -211,7 +211,7 @@ template <class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type&
 operator |= (Type& object, const typename Type::value_type& operand) 
 { 
-    return itl::add(object, operand); 
+    return icl::add(object, operand); 
 }
 
 template <class Type>
@@ -277,7 +277,7 @@ insert(Type& object, const Type& addend)
 
     iterator prior_ = object.end();
     ITL_const_FORALL(typename Type, elem_, addend) 
-        itl::insert(object, prior_, *elem_);
+        icl::insert(object, prior_, *elem_);
 
     return object; 
 }
@@ -305,7 +305,7 @@ typename enable_if<is_associative_element_container<Type>, Type>::type&
 erase(Type& object, const Type& erasure)
 {
     ITL_const_FORALL(typename Type, elem_, erasure) 
-        itl::erase(object, *elem_); 
+        icl::erase(object, *elem_); 
 
     return object; 
 }
@@ -319,7 +319,7 @@ template <class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type&
 operator -= (Type& object, const typename Type::value_type& operand) 
 { 
-    return itl::subtract(object, operand); 
+    return icl::subtract(object, operand); 
 }
 
 template <class Type>
@@ -334,7 +334,7 @@ inline typename enable_if<is_associative_element_container<Type>, Type>::type&
 operator -= (Type& object, const Type& subtrahend) 
 { 
     ITL_const_FORALL(typename Type, it_, subtrahend)
-        itl::subtract(object, *it_);
+        icl::subtract(object, *it_);
 
     return object; 
 }
@@ -361,7 +361,7 @@ add_intersection(Type& section, const Type&              object,
     typedef typename Type::const_iterator const_iterator;
     const_iterator it_ = object.find(operand);
     if(it_ != object.end()) 
-        itl::add(section, *it_);
+        icl::add(section, *it_);
 }
 
 //------------------------------------------------------------------------------
@@ -436,14 +436,14 @@ template<class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type
 operator ^ (Type object, const typename Type::value_type& operand)
 {
-    return itl::flip(object, operand);
+    return icl::flip(object, operand);
 }
 
 template<class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type
 operator ^ (const typename Type::value_type& operand, Type object)
 {
-    return itl::flip(object, operand);
+    return icl::flip(object, operand);
 }
 
 template<class Type>
@@ -464,7 +464,7 @@ erase_if(const Predicate& pred, Type& object)
     typename Type::iterator it_ = object.begin();
     while(it_ != object.end())
         if(pred(*it_))
-            itl::erase(object, it_++); 
+            icl::erase(object, it_++); 
         else ++it_;
     return object;
 }
@@ -476,7 +476,7 @@ add_if(const Predicate& pred, Type& object, const Type& src)
     typename Type::const_iterator it_ = src.begin();
     while(it_ != src.end())
         if(pred(*it_)) 
-            itl::add(object, *it_++); 
+            icl::add(object, *it_++); 
     
     return object;
 }
@@ -485,7 +485,7 @@ template<class Type, class Predicate>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type&
 assign_if(const Predicate& pred, Type& object, const Type& src)
 {
-    itl::clear(object);
+    icl::clear(object);
     return add_if(object, src, pred);
 }
 

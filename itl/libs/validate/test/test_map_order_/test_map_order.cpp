@@ -16,7 +16,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 using namespace std;
 using namespace boost;
 using namespace unit_test;
-using namespace boost::itl;
+using namespace boost::icl;
 
 BOOST_AUTO_TEST_CASE(test_validate_itl_map_order)
 {

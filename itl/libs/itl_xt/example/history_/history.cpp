@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+    
-Interval Template Library
+Interval Container Library
 Author: Joachim Faulhaber
 Copyright (c) 2007-2009: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
@@ -87,7 +87,7 @@ separate episode data to a history object.
 #include <boost/itl_xt/product_history.hpp>
 
 using namespace std;
-using namespace boost::itl;
+using namespace boost::icl;
 
 
 /* To use a product_history object, we need an TypeDomain-class, specifying
@@ -229,7 +229,7 @@ void medical_file()
 
 int main()
 {
-    cout << ">> Interval Template Library: Sample history.cpp <<\n";
+    cout << ">>Interval Container Library: Sample history.cpp <<\n";
     cout << "---------------------------------------------------\n";
     medical_file();
     return 0;
@@ -237,7 +237,7 @@ int main()
 
 // Program output:
 
-// >> Interval Template Library: Sample history.cpp <<
+// >>Interval Container Library: Sample history.cpp <<
 // ---------------------------------------------------
 // [mon:22:00,mon:22:05): DIAG{susp.cran.frac.}, WARD{emergency_ward}
 // [mon:22:05,mon:22:15): DIAG{alc.intox. susp.cran.frac.}, WARD{emergency_ward}

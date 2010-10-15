@@ -12,7 +12,7 @@ States of comparison and inclusion relations as static constants
 #ifndef  BOOST_ITL_RELATION_STATE_HPP_JOFA_090214
 #define  BOOST_ITL_RELATION_STATE_HPP_JOFA_090214
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     namespace comparison
     {
@@ -30,7 +30,7 @@ namespace boost{namespace itl
     }
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_RELATION_STATE_HPP_JOFA_090214
 

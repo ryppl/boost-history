@@ -20,7 +20,7 @@ The shell also gives you a good idea how interval container are working.
 
 using namespace std;
 using namespace boost;
-using namespace boost::itl;
+using namespace boost::icl;
 
 void instructions()
 {
@@ -94,7 +94,7 @@ void mapTestShell()
                 break;
             case 'j':
                 {
-                    itl::join(m1);
+                    icl::join(m1);
                     cout << "{" << m1 << "}" << endl;
                 }
                 break;
@@ -122,7 +122,7 @@ void mapTestShell()
 
 int main()
 {
-    cout << ">> Interval Template Library: Test splititvmap_shell.cpp <<\n";
+    cout << ">>Interval Container Library: Test splititvmap_shell.cpp <<\n";
     cout << "-----------------------------------------------------------\n";
     mapTestShell< interval_map<int, int> >();
 

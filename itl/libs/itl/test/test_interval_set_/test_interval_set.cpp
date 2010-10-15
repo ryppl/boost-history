@@ -5,7 +5,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#define BOOST_TEST_MODULE itl::interval_set unit test
+#define BOOST_TEST_MODULE icl::interval_set unit test
 #include <string>
 #include <vector>
 #include <boost/mpl/list.hpp>
@@ -21,7 +21,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 using namespace std;
 using namespace boost;
 using namespace unit_test;
-using namespace boost::itl;
+using namespace boost::icl;
 
 // -----------------------------------------------------------------------------
 // test_interval_set_shared are tests that should give identical results for all

@@ -13,11 +13,11 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #pragma warning(disable:4996) // This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 #endif                        
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 /** Time is a toy-class to demonstrate a class that conforms the requirements of
-    a template parameter for class template itl::interval. 
+    a template parameter for class template icl::interval. 
 
     In real world applications you may want to use the integer representation of a
     time variable. That way intervals and their containers are working most efficiently. 
@@ -70,5 +70,5 @@ std::basic_ostream<CharType, CharTraits> &operator<<
 #pragma warning(pop)
 #endif
 
-}} // namespace itl boost
+}} // namespace icl boost
 

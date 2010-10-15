@@ -5,7 +5,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#define BOOST_TEST_MODULE itl::interval_map_infix_mixed unit test
+#define BOOST_TEST_MODULE icl::interval_map_infix_mixed unit test
 #include <string>
 #include <boost/mpl/list.hpp>
 #include "../unit_test_unwarned.hpp"
@@ -24,7 +24,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 using namespace std;
 using namespace boost;
 using namespace unit_test;
-using namespace boost::itl;
+using namespace boost::icl;
 
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_infix_plus_overload_4_bicremental_types, T, bicremental_types)

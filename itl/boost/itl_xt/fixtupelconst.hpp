@@ -34,14 +34,14 @@ DEALINGS IN THE SOFTWARE.
 #define FOREACH_VAR(idx) for(VarEnumTD idx=0; idx < varCountV; idx++)
 #define FOREACH_VAR_TO(idx, upb) for(VarEnumTD idx=0; idx < upb; idx++)
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     typedef int VarEnumTD;
     typedef int StatVarTD;
     typedef int GroupVarTD;
 
     const GroupVarTD UNDEFINED_GROUP = -1;
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_FIXTUPELCONSTT_HPP_JOFA_040621
 

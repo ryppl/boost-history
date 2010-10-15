@@ -34,7 +34,7 @@ class ItvSetTesterT
 
 #include <boost/itl_xt/setgentor.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <class ItvSetTV>
@@ -598,7 +598,7 @@ bool ItvSetTesterT<ItvSetTV>::testSymmetricDifference(int nTries, char* errFile)
     return correct;
 }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

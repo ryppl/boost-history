@@ -14,15 +14,15 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/laws/law.hpp>
 #include <boost/itl/functors.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     // ---------------------------------------------------------------------------
     template <typename Type,
-              template<class>class Addition     = itl::inplace_plus,
-              template<class>class Subtraction  = itl::inplace_minus,
-              template<class>class Intersection = itl::inplace_et,
-              template<class>class Equality     = itl::std_equal>
+              template<class>class Addition     = icl::inplace_plus,
+              template<class>class Subtraction  = icl::inplace_minus,
+              template<class>class Intersection = icl::inplace_et,
+              template<class>class Equality     = icl::std_equal>
     class InplaceSymmetricDifference 
         : public Law<InplaceSymmetricDifference<Type>, 
                      LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_2(Type,Type)>
@@ -119,7 +119,7 @@ namespace boost{namespace itl
     };
 
     // ---------------------------------------------------------------------------
-    template <typename Type, template<class>class Equality = itl::std_equal>
+    template <typename Type, template<class>class Equality = icl::std_equal>
     class InplaceFlip 
         : public Law<InplaceFlip<Type>, 
                      LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_2(Type,Type)>
@@ -198,7 +198,7 @@ namespace boost{namespace itl
         }
     };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_SYMMETRIC_DIFFERENCE_HPP_JOFA_071124
 

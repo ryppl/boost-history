@@ -35,7 +35,7 @@ DEALINGS IN THE SOFTWARE.
 #include <boost/itl/type_traits/interval_type_default.hpp>
 #include <boost/itl/interval.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 class random
@@ -59,9 +59,9 @@ public:
         return some + lwb;
     }
 
-    unsigned rnd(const itl::interval<unsigned>::type& rng)
+    unsigned rnd(const icl::interval<unsigned>::type& rng)
     { 
-        BOOST_ASSERT(itl::bounds(rng) == interval_bounds::right_open()); 
+        BOOST_ASSERT(icl::bounds(rng) == interval_bounds::right_open()); 
         return rnd(rng.lower(),rng.upper()); 
     }
 
@@ -69,7 +69,7 @@ private:
     //JODO subtractive_rng m_random;
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

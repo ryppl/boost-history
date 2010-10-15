@@ -19,7 +19,7 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #pragma warning(disable:4127) // conditional expression is constant
 #endif                        
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 namespace Map 
 {
@@ -34,7 +34,7 @@ bool intersects(const ObjectT& left, const CoObjectT& right)
 
     co_iterator right_ = right_common_lower_;
     while(right_ != right_common_upper_)
-        if(itl::intersects(left, key_value<CoObjectT>(right_++)))
+        if(icl::intersects(left, key_value<CoObjectT>(right_++)))
             return true;
 
     return false;

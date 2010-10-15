@@ -11,7 +11,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/concept_check.hpp>
 #include <boost/concept/detail/concept_def.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
     BOOST_concept(EqualComparable,(Type))

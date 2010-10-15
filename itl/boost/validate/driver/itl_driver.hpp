@@ -22,7 +22,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #pragma warning(disable:4996) // 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 #endif                        
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     namespace RootType 
     {
@@ -108,7 +108,7 @@ namespace boost{namespace itl
             if(_info_level >= inform::rarely)
                 reportFrequencies();
 
-            return itl::is_empty(_violationsCount);
+            return icl::is_empty(_violationsCount);
         }
 
         void validateType()
@@ -157,12 +157,12 @@ namespace boost{namespace itl
 
             std::cout << "------------------------------------------------------------------------------" << std::endl;
             // Summary for the current cycle
-            double avg_evaluation_time_per_law = avg_evaluation_time/itl::size(_frequencies);
+            double avg_evaluation_time_per_law = avg_evaluation_time/icl::size(_frequencies);
             printf( " %10.3lf%-53s%7ld%7.0lf\n", 
                     avg_evaluation_time_per_law, " total avg of atomic evaluation (micro sec)", instance_count, avg_evaluation_time_per_law);
 
             int violation_count = 1;
-            if(!itl::is_empty(_violations))
+            if(!icl::is_empty(_violations))
             {
                 std::cout << "------------------------------------------------------------------------------" << std::endl;
                 std::cout << "--- Law violations -----------------------------------------------count-------" << std::endl;
@@ -172,14 +172,14 @@ namespace boost{namespace itl
                 printf("%3d %-59s%8d\n", violation_count, it->first.c_str(), it->second.getViolationsCount());
                 violation_count++;
             }
-            if(!itl::is_empty(_violations))
+            if(!icl::is_empty(_violations))
                 std::cout << "------------------------------------------------------------------------------" << std::endl;
             ITL_FORALL(ViolationMapT, it, _violations)
             {
                 PolyLawViolations violas = it->second;
                 violas.reportFirst();
             }
-            if(!itl::is_empty(_violations))
+            if(!icl::is_empty(_violations))
                 std::cout << "------------------------------------------------------------------------------" << std::endl;
         }
 
@@ -270,7 +270,7 @@ namespace boost{namespace itl
                 return true;
             else if(_required_law_count == 0 || _required_law_validation_count == 0)
                 return false; // If counts are not limited: Run for ever.
-            else if(itl::size(_frequencies) < static_cast<size_t>(_required_law_count))
+            else if(icl::size(_frequencies) < static_cast<size_t>(_required_law_count))
                 return false; // Not yet reached all laws
             else
                 // All laws reached. Enough validation cycles for every law?
@@ -301,7 +301,7 @@ namespace boost{namespace itl
     };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #ifdef BOOST_MSVC
 #pragma warning(pop)

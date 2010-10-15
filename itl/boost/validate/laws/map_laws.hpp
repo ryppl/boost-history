@@ -14,11 +14,11 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/laws/law.hpp>
 #include <boost/itl/functors.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     // ---------------------------------------------------------------------------
-    template <typename MapT, template<class>class Equality = itl::std_equal>
+    template <typename MapT, template<class>class Equality = icl::std_equal>
     class SectionAbsorbtion 
         : public Law<SectionAbsorbtion<MapT>, 
                      LOKI_TYPELIST_2(MapT, typename MapT::set_type), LOKI_TYPELIST_2(MapT,MapT)>
@@ -164,7 +164,7 @@ namespace boost{namespace itl
         }
     };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_MAP_LAWS_HPP_JOFA_071124
 

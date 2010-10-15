@@ -19,7 +19,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/is_continuous.hpp>
 #include <boost/itl/type_traits/is_discrete.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
     template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)> 

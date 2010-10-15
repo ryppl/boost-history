@@ -16,7 +16,7 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/utility.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     
     class itl_set_driver : public itl_driver
@@ -106,6 +106,6 @@ namespace boost{namespace itl
     };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_DRIVER_ITL_SET_DRIVER_HPP_JOFA_080405

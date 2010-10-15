@@ -26,7 +26,7 @@ template <class T, class IntervalT>
 void discrete_interval_ctor__dis_4_dyn_v_sta() // discrete && (dynamic or static)
 {
     BOOST_CHECK_EQUAL( IntervalT(MK_v(3)), IntervalT(MK_v(3)) );
-    BOOST_CHECK_EQUAL( itl::contains(IntervalT(MK_v(1)), MK_v(1)), true ); 
+    BOOST_CHECK_EQUAL( icl::contains(IntervalT(MK_v(1)), MK_v(1)), true ); 
 }
 
 template <class T, ITL_COMPARE Compare>
@@ -36,7 +36,7 @@ void distant_intervals_4_discrete_types()
     typedef  left_open_interval<T,Compare> C__I; // C__I for (..]
     typedef    closed_interval<T,Compare> L__I; // L__I for [..]
     typedef      open_interval<T,Compare> C__D; // C__D for (..)
-    typedef typename itl::interval<T,Compare>::type IntervalT;
+    typedef typename icl::interval<T,Compare>::type IntervalT;
 
     BOOST_CHECK( is_interval<L__D>::value ); 
     BOOST_CHECK( has_difference<typename interval_traits<L__D>::domain_type>::value ); 

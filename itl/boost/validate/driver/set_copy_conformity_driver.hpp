@@ -18,7 +18,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/utility.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     
     class set_copy_conformity_driver : public itl_driver
@@ -100,10 +100,10 @@ namespace boost{namespace itl
             switch(rootChoice)
             {
             //-----------------------------------------------------------------
-            case RootType::itl_set:               return new function_equality_validater<itl::list<int>,                        itl::set<int> >;
-            case RootType::interval_set:          return new function_equality_validater<itl::list<ITL_INTERVAL_DEFAULT<int> >, interval_set<int> >;
-            case RootType::separate_interval_set: return new function_equality_validater<itl::list<ITL_INTERVAL_DEFAULT<int> >, separate_interval_set<int> >;
-            case RootType::split_interval_set:    return new function_equality_validater<itl::list<ITL_INTERVAL_DEFAULT<int> >, split_interval_set<int> >;
+            case RootType::itl_set:               return new function_equality_validater<icl::list<int>,                        icl::set<int> >;
+            case RootType::interval_set:          return new function_equality_validater<icl::list<ITL_INTERVAL_DEFAULT<int> >, interval_set<int> >;
+            case RootType::separate_interval_set: return new function_equality_validater<icl::list<ITL_INTERVAL_DEFAULT<int> >, separate_interval_set<int> >;
+            case RootType::split_interval_set:    return new function_equality_validater<icl::list<ITL_INTERVAL_DEFAULT<int> >, split_interval_set<int> >;
             //-----------------------------------------------------------------
             default: return choiceError(ITL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
             } //switch()
@@ -113,6 +113,6 @@ namespace boost{namespace itl
     };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_DRIVER_SET_COPY_CONFORMITY_DRIVER_HPP_JOFA_091013

@@ -33,7 +33,7 @@ A general list of strings
 #include <boost/itl/string_list.hpp>
 
 using namespace std;
-using namespace boost::itl;
+using namespace boost::icl;
 
 string_list::string_list(const char* const deno[], int nOfDeno): list<std::string>()
 {

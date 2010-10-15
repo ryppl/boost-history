@@ -12,7 +12,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 
 #include <algorithm>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 //- equal ----------------------------------------------------------------------
@@ -161,7 +161,7 @@ struct std_includes_back
     static std::string struct_abbreviation(){ return "C=b"; }
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_STD_ALGORITHM_RELATION_HPP_JOFA_091202
 

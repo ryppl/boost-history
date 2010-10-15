@@ -11,7 +11,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <iterator>
 #include <boost/config/warning_disable.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 /** \brief Performes an addition using a container's memberfunction add, when operator= is called. */
@@ -96,7 +96,7 @@ inline insert_iterator<ContainerT> inserter(ContainerT& cont, IteratorT iter_)
     return insert_iterator<ContainerT>(cont, typename ContainerT::iterator(iter_));
 }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_ITL_ITERATOR_HPP_JOFA_091003
 

@@ -18,7 +18,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/utility.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
     
     class bit_collector_driver : public itl_driver
@@ -103,9 +103,9 @@ namespace boost{namespace itl
             case RootType::itl_map: {
                 switch(identityHandlerChoice) {
                 case IdentityHandlerType::partial_absorber: 
-                    return new collector_validater< itl::map<int, itl::bits8, partial_absorber, std::less, inplace_bit_add, inplace_bit_and> >;
+                    return new collector_validater< icl::map<int, icl::bits8, partial_absorber, std::less, inplace_bit_add, inplace_bit_and> >;
                 case IdentityHandlerType::partial_enricher: 
-                    return new collector_validater< itl::map<int, itl::bits32, partial_enricher, std::less, inplace_bit_add, inplace_bit_and> >;
+                    return new collector_validater< icl::map<int, icl::bits32, partial_enricher, std::less, inplace_bit_add, inplace_bit_and> >;
                 default: return choiceError(ITL_LOCATION("\nRootType::itl_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case itl_map 
@@ -113,9 +113,9 @@ namespace boost{namespace itl
             case RootType::interval_map: {
                 switch(identityHandlerChoice) {
                 case IdentityHandlerType::partial_absorber: 
-                    return new collector_validater<interval_map<int, itl::bits64, partial_absorber, std::less, inplace_bit_add, inplace_bit_and> >;
+                    return new collector_validater<interval_map<int, icl::bits64, partial_absorber, std::less, inplace_bit_add, inplace_bit_and> >;
                 case IdentityHandlerType::partial_enricher: 
-                    return new collector_validater<interval_map<int, itl::bits16, partial_enricher, std::less, inplace_bit_add, inplace_bit_and> >;
+                    return new collector_validater<interval_map<int, icl::bits16, partial_enricher, std::less, inplace_bit_add, inplace_bit_and> >;
                 default: return choiceError(ITL_LOCATION("\nRootType::interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case interval_map 
@@ -123,9 +123,9 @@ namespace boost{namespace itl
             case RootType::split_interval_map: {
                 switch(identityHandlerChoice) {
                 case IdentityHandlerType::partial_absorber: 
-                    return new collector_validater<split_interval_map<int, itl::bits32, partial_absorber, std::less, inplace_bit_add, inplace_bit_and> >;
+                    return new collector_validater<split_interval_map<int, icl::bits32, partial_absorber, std::less, inplace_bit_add, inplace_bit_and> >;
                 case IdentityHandlerType::partial_enricher: 
-                    return new collector_validater<split_interval_map<double, itl::bits8, partial_enricher, std::less, inplace_bit_add, inplace_bit_and> >;
+                    return new collector_validater<split_interval_map<double, icl::bits8, partial_enricher, std::less, inplace_bit_add, inplace_bit_and> >;
                 default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case split_interval_map 
@@ -139,6 +139,6 @@ namespace boost{namespace itl
     };
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // BOOST_VALIDATE_DRIVER_BIT_COLLECTOR_DRIVER_HPP_JOFA_091009

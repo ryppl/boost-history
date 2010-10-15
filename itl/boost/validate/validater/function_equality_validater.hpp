@@ -14,7 +14,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/validater/law_validater.hpp>
 #include <boost/validate/validater/concept_validater.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     template <typename SourceT, typename TargetT>
@@ -63,5 +63,5 @@ namespace boost{namespace itl
 
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 

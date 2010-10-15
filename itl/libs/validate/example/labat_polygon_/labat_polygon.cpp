@@ -32,7 +32,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 namespace gtl = boost::polygon;
 using namespace std;
 using namespace boost;
-using namespace boost::itl;
+using namespace boost::icl;
 using namespace boost::posix_time;
 
 using namespace boost::polygon::operators;
@@ -98,8 +98,8 @@ int polygon_test() {
 // This function tests the generator for polygon sets.
 void test_polyset_gen()
 {
-    typedef itl::list<point<int> > PolygonT;
-    typedef itl::list<PolygonT>    PolygonSetT;
+    typedef icl::list<point<int> > PolygonT;
+    typedef icl::list<PolygonT>    PolygonSetT;
 
     point_gentor<int>* pointgen = new point_gentor<int>;
     pointgen->setRange(interval<int>::right_open(-99, 100));

@@ -36,7 +36,7 @@ class SetGentorT
 #include <boost/itl_xt/numbergentor.hpp>
 #include <boost/itl_xt/list.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template <class SetTV> 
@@ -48,7 +48,7 @@ public:
     typedef list<ValueTypeTD>            SampleTypeTD;
     typedef RandomGentorAT<DomainTD>     DomainGentorT;
     typedef DomainGentorT*               DomainGentorPT;
-    typedef typename itl::interval<int>::type sample_range_type;
+    typedef typename icl::interval<int>::type sample_range_type;
 
     SetGentorT(): p_domainGentor(NULL) {}
     ~SetGentorT() { delete p_domainGentor; }
@@ -65,9 +65,9 @@ public:
 
     void setRangeOfSampleSize(int lwb, int upb)
     { m_sampleSizeRange = _interval<int>::right_open(lwb,upb); }
-    void setRangeOfSampleSize(const itl::interval<int>::type& szRange)
+    void setRangeOfSampleSize(const icl::interval<int>::type& szRange)
     { 
-        BOOST_ASSERT(itl::bounds(szRange) == interval_bounds::right_open()); 
+        BOOST_ASSERT(icl::bounds(szRange) == interval_bounds::right_open()); 
         m_sampleSizeRange = szRange; 
     }
 
@@ -85,7 +85,7 @@ template <class SetTV>
 void SetGentorT<SetTV>::some(SetTV& x)
 {
     NumberGentorT<int> intGentor;
-    itl::clear(x);
+    icl::clear(x);
     m_sample.clear();
     m_sampleSize = intGentor(m_sampleSizeRange);
 
@@ -146,7 +146,7 @@ void SetGentorT<SetTV>::lastSample_permuted(SampleTypeTD& sam)
 }
 */
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

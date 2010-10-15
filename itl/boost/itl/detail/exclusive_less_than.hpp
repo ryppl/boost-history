@@ -10,7 +10,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/itl/concept/interval.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 /// Comparison functor on intervals implementing an overlap free less 
@@ -20,7 +20,7 @@ struct exclusive_less_than
     /** Operator <tt>operator()</tt> implements a strict weak ordering on intervals. */
     bool operator()(const IntervalT& left, const IntervalT& right)const
     { 
-        return itl::non_empty::exclusive_less(left, right); 
+        return icl::non_empty::exclusive_less(left, right); 
     }
 };
 

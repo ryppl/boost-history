@@ -5,7 +5,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#define BOOST_TEST_MODULE itl::interval_map_infix unit test
+#define BOOST_TEST_MODULE icl::interval_map_infix unit test
 #include <string>
 #include <boost/mpl/list.hpp>
 #include "../unit_test_unwarned.hpp"
@@ -23,7 +23,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 using namespace std;
 using namespace boost;
 using namespace unit_test;
-using namespace boost::itl;
+using namespace boost::icl;
 
 // -----------------------------------------------------------------------------
 // test_interval_map_shared are tests that should give identical results for all

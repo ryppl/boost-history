@@ -19,7 +19,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/concept/interval_set_value.hpp>
 #include <boost/itl/concept/map_value.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 #ifdef BOOST_MSVC 
@@ -253,7 +253,7 @@ int subset_compare(const LeftT& left, const RightT& right)
 #pragma warning(pop)
 #endif
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif 
 

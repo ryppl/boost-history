@@ -27,13 +27,13 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 
 } //namespace std
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
 template<> 
 inline std::string binary_template_to_string<std::pair>::apply() { return "p"; }
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 
 #endif // BOOST_ITL_XT_STD_PAIR_HPP_JOFA_091006

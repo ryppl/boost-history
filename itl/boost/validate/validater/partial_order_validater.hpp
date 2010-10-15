@@ -18,10 +18,10 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/validater/law_validater.hpp>
 #include <boost/validate/validater/concept_validater.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
-    template <typename Type, template<class>class Relation, template<class>class Equality = itl::std_equal>
+    template <typename Type, template<class>class Relation, template<class>class Equality = icl::std_equal>
     class partial_order_validater : public concept_validater
     {
     public:
@@ -62,5 +62,5 @@ namespace boost{namespace itl
         ChoiceT _lawChoice;
     };
 
-}} // namespace itl boost
+}} // namespace icl boost
 

@@ -39,14 +39,14 @@ class ItvGentorT
 #include <boost/itl_xt/numbergentor.hpp>
 #include <boost/itl_xt/seqgentor.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
-template <class ItvDomTV, class ItvTV=itl::interval<ItvDomTV>::type> 
+template <class ItvDomTV, class ItvTV=icl::interval<ItvDomTV>::type> 
 class ItvGentorT: public RandomGentorAT<ItvTV>
 {
 public:
-    typedef typename itl::interval<ItvDomTV>::type range_type;
+    typedef typename icl::interval<ItvDomTV>::type range_type;
 
     virtual void some(ItvTV& x);
 
@@ -55,7 +55,7 @@ public:
 
     void setValueRange(ItvDomTV low, ItvDomTV up)
     { 
-        m_valueRange = itl::construct<range_type>(low, up); 
+        m_valueRange = icl::construct<range_type>(low, up); 
     }
 
     void setMaxIntervalLength(ItvDomTV len) { m_maxIntervalLength=len; }
@@ -100,7 +100,7 @@ void ItvGentorT<ItvDomTV,ItvTV>::some(ItvTV& x)
 {
     NumberGentorT<unsigned> NATGentor;
     ItvDomTV x1   = m_ItvDomTVGentor(m_valueRange);
-    itl::bound_type bndTypes = NATGentor(4);
+    icl::bound_type bndTypes = NATGentor(4);
     unsigned upOrDown = NATGentor(1);
     unsigned decideEmpty = NATGentor(2);
 
@@ -123,7 +123,7 @@ void ItvGentorT<ItvDomTV,ItvTV>::some(ItvTV& x)
     }
 };
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif
 

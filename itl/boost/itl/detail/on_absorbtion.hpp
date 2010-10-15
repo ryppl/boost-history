@@ -8,7 +8,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #ifndef BOOST_ITL_TYPE_TRAITS_ON_ABSORBTION_HPP_JOFA_100915
 #define BOOST_ITL_TYPE_TRAITS_ON_ABSORBTION_HPP_JOFA_100915
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
 
 template<class Type, class Combiner, bool absorbs_identities>

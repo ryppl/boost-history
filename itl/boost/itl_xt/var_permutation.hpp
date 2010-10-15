@@ -32,14 +32,14 @@ DEALINGS IN THE SOFTWARE.
 #include <boost/itl_xt/fixtupelconst.hpp>
 #include <boost/itl_xt/list.hpp>
 
-namespace boost{namespace itl
+namespace boost{namespace icl
 {
 
     template <int varCountV>
     class var_permutation
     {
     public:
-        typedef itl::list<VarEnumTD> ListTD;
+        typedef icl::list<VarEnumTD> ListTD;
     public:
         var_permutation(): m_Size(0) {}
         var_permutation(const var_permutation&);
@@ -220,7 +220,7 @@ namespace boost{namespace itl
 
 
     template <int varCountV>
-    typename itl::var_permutation<varCountV>::ListTD var_permutation<varCountV>::asList()const
+    typename icl::var_permutation<varCountV>::ListTD var_permutation<varCountV>::asList()const
     {
         ListTD seq;
         int idx = 0;
@@ -261,7 +261,7 @@ namespace boost{namespace itl
     }
 
 
-}} // namespace itl boost
+}} // namespace icl boost
 
 #endif // __var_permutation_JOFA_040621_H__
 

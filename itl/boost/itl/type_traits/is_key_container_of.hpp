@@ -11,7 +11,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/is_combinable.hpp>
 #include <boost/itl/type_traits/is_container.hpp>
 
-namespace boost{ namespace itl
+namespace boost{ namespace icl
 {
     //--------------------------------------------------------------------------
     namespace detail
