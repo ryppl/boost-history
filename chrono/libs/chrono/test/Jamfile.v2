@@ -21,6 +21,7 @@ project
         <os>LINUX:<threading>multi
         #<library>/boost/chrono//boost_chrono
         <define>BOOST_CHRONO_INLINED
+        #<define>BOOST_USE_WINDOWS_H
         #<library>../build//boost_chrono
         <library>/boost/system//boost_system
         #<library>/boost/thread//boost_thread/<link>shared
