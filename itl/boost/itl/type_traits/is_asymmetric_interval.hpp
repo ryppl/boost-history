@@ -47,7 +47,7 @@ template <class Type> struct is_discrete_asymmetric
                 );
 };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

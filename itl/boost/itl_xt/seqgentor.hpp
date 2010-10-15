@@ -149,7 +149,7 @@ void SeqGentorT<SeqTV>::lastSample_permuted(SampleTypeTD& sam)
     }
 }
 */
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

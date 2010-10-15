@@ -341,11 +341,11 @@ From a practical point of view we can think
 of numbers as counting or quantifying the key values 
 of the map.
 
-Itl ['*Maps of Sets*] or ['*Collectors*]
+Icl ['*Maps of Sets*] or ['*Collectors*]
 are models of concept `Set`. This implies that all laws that have been
 stated as a semantics for `itl::Sets` in the previous chapter also hold for
 `Maps of Sets`.
-Itl ['*Maps of Numbers*] or ['*Quantifiers*] on the contrary are not models 
+Icl ['*Maps of Numbers*] or ['*Quantifiers*] on the contrary are not models 
 of concept `Set`.
 But there is a substantial intersection of laws that apply both for
 `Collectors` and `Quantifiers`.
@@ -363,7 +363,7 @@ and ['*Quantifiers*] will be described in more detail.
 
 [section Collectors: Maps of Sets]
 
-Itl `Collectors`, behave like `Sets`. 
+Icl `Collectors`, behave like `Sets`. 
 This can be understood easily, if we consider, that
 every map of sets can be transformed to an equivalent
 set of pairs.

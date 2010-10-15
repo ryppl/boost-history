@@ -37,7 +37,7 @@ inline typename enable_if<is_icl_container<Type>, bool>::type
 operator >= (const Type& left, const Type& right)
 { return !(left < right); }
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

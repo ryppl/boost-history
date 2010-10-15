@@ -1,7 +1,7 @@
-[library Boost.Itl
+[library Boost.Icl
     [quickbook 1.4]
     [authors [Faulhaber, Joachim]]
-    [copyright 2007-2009 Joachim Faulhaber]
+    [copyright 2007-2010 Joachim Faulhaber]
     [copyright 1999-2006 Cortex Software GmbH]
     [category container]
     [id optional]

@@ -12,7 +12,7 @@ namespace boost{ namespace icl
 {
     template <class Type> struct difference{ typedef Type type; };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

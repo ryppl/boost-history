@@ -100,7 +100,7 @@ namespace boost{namespace icl
         ITL_const_FORALL_THIS(it)
             selectees.insert(((*it).*selector)());
     }
-}} // namespace boost itl
+}} // namespace boost icl
 
 
 #endif

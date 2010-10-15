@@ -47,7 +47,7 @@ struct numeric_minimum<Type, true>
     { return cond || is_less_than(value); }
 };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

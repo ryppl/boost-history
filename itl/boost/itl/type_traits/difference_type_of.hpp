@@ -46,7 +46,7 @@ namespace boost{ namespace icl
             get_difference_type<Type, has_difference<Type>::value>::type type;
     };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

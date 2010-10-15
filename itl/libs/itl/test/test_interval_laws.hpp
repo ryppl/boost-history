@@ -79,7 +79,7 @@ check_border_containedness(const Type& itv)
     }
 }
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif // BOOST_ITL_TEST_INTERVAL_LAWS_HPP_JOFA_100908
 

@@ -31,7 +31,7 @@ namespace boost{ namespace icl
     inline Type unit_element<Type>::value()
     { return icl::succ(identity_element<Type>::value()); }
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

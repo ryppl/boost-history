@@ -53,7 +53,7 @@ namespace boost{ namespace icl
         typedef typename std::set<DomainT,Compare,Alloc>::value_type type;
     };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

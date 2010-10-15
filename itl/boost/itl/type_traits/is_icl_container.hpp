@@ -26,7 +26,7 @@ namespace boost{ namespace icl
                      , is_interval_container<Type> >::value));
     };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

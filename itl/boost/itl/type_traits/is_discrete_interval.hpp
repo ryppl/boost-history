@@ -19,7 +19,7 @@ template <class Type> struct is_discrete_interval
     BOOST_STATIC_CONSTANT(bool, value = false);
 };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

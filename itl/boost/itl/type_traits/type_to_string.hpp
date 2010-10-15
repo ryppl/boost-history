@@ -78,7 +78,7 @@ namespace boost{ namespace icl
         }
     };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

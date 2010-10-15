@@ -23,7 +23,7 @@ namespace boost{ namespace icl
         Type _left, _right;
     };
 
-}}// namespace boost itl
+}}// namespace boost icl
 
 
 #endif

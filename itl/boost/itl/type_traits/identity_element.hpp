@@ -27,7 +27,7 @@ namespace boost{ namespace icl
     template<>
     inline std::string unary_template_to_string<identity_element>::apply() { return "0"; }
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

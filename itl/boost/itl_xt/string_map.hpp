@@ -53,7 +53,7 @@ namespace boost{namespace icl
         class ICstring_map : public icl::string_map<CodomTV, string_ICLess>
     {
     };
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif // BOOST_ITL_STRING_MAP_HPP_JOFA_021215
 

@@ -24,7 +24,7 @@ co_value(Iterator it_)
 }
 
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

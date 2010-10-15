@@ -867,7 +867,7 @@ join(Type& object)
 
 
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

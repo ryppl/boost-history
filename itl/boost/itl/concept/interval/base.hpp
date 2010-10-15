@@ -42,7 +42,7 @@ namespace segmental
 
 
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

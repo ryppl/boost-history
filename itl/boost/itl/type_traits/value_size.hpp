@@ -45,7 +45,7 @@ inline std::size_t value_size<Type>::apply(const Type& value)
 
 
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

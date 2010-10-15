@@ -24,7 +24,7 @@ struct exclusive_less_than
     }
 };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

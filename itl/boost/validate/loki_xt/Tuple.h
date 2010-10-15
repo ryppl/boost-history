@@ -33,7 +33,7 @@ DEALINGS IN THE SOFTWARE.
 // and:
 // www.sourceforge.net/projects/loki
 //
-// Parts of the Loki Library have been used for the Itl Library.
+// Parts of the Loki Library have been used for the Icl Library.
 // Those parts from the path <itl/loki> can also be included from the 
 // original Loki Library sources.
 

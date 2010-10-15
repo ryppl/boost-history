@@ -32,7 +32,7 @@ make_value(const typename Type::     key_type& key_val,
 }
 
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

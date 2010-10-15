@@ -80,7 +80,7 @@ bool lexicographical_distinct_equal(const MapT& left, const MapT& right)
 }
 
 } // namespace Map
-}} // namespace boost itl
+}} // namespace boost icl
 
 #ifdef BOOST_MSVC
 #pragma warning(pop)

@@ -51,7 +51,7 @@ namespace boost{namespace icl
     private:
         random _random;
     };
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

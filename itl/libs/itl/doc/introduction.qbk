@@ -1,5 +1,5 @@
 [/
-    Copyright (c) 2008-2009 Joachim Faulhaber
+    Copyright (c) 2008-2010 Joachim Faulhaber
 
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -8,17 +8,15 @@
 
 [section Introduction]
 
-[note [* This is not an official boost library]
+[note [* The Interval Template Library is accepted into Boost]
 
 The /Interval Template Library/ underwent 
 a formal review on the boost developer's list
-from February 18, 2010 to March 08, 2010.
-Results are pending.
+from February 18, 2010 to March 08, 2010 and has been accepted 
+into the boost library collection.
 
 The name ['*Interval Template Library (ITL)*] is provisional
-an will probably be changed, if the library is accepted into
-boost. A renaming will not be done before completion of the
-formal review.
+an will be changed to ['*Interval Container Library (ICL)*].
 ]
 
 ["A bug crawls across the boost docs on my laptop screen.
@@ -119,7 +117,7 @@ Unlike `std::sets` and `maps`, __itv_bsets__ and __itv_bmaps__ implement
 concept `Addable` and `Subtractable`. So __itv_bsets__ define an 
 `operator +=` that is naturally implemented as ['*set union*] and an
 `operator -=` that is consequently implemented as ['*set difference*].
-In the *Itl* __itv_bmaps__ are addable and subtractable as well. 
+In the *Icl* __itv_bmaps__ are addable and subtractable as well. 
 It turned out to be a very fruitful concept to propagate the
 addition or subtraction to the __itv_bmap_s__ associated values
 in cases where the insertion of an interval value pair into an
@@ -165,7 +163,7 @@ interval insertion.
 
 [endsect]
 
-[section Itl's class templates]
+[section Icl's class templates]
 
 In addition to interval containers the *itl* provides element containers
 __itl_set__ and __itl_map__. 

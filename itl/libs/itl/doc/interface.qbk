@@ -9,7 +9,7 @@
 [section Interface]
 
 Section *Interface* outlines types and functions
-of the *Itl*. Synoptical tables allow to review the overall structure of
+of the *Icl*. Synoptical tables allow to review the overall structure of
 the libraries design and to focus on structural equalities and differences
 with the corresponding containers of the standard template library.
 
@@ -353,7 +353,7 @@ we can summarize the associated types as follows.
 Again two additional columns for easy comparison with stl
 sets and maps are provided. 
 
-[table Itl Associated types
+[table Icl Associated types
 [[Purpose][Aspect][Type][interval][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map][std::set][std::map]]                                                                                         
 [/[ ]             [ ]             [ ]                   [ ]      [ ]      [ ]       [ ]      [ ]      [ ]      [ ]]
 [/                                                     interval  itvset   itvmap  itl:set  itl:map  std:set  std:map]
@@ -426,7 +426,7 @@ overloaded implementations for the function of that row is shown.
 
 [/ memberref boost::itl::set::iterative_size `iterative_size`]
 
-[table Itl Interfaces
+[table Icl Interfaces
 [[T]      [interval][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map][std::set][std::map]]                                                                                         
 [/                                           interval  itvset   itvmap  itl:set  itl:map  std:set  std:map]
 [[__biLConsCopyDest__ [#function_synopsis_table]][ ]     [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]

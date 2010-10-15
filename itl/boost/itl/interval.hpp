@@ -130,7 +130,7 @@ namespace boost{ namespace icl
         }
     };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif // BOOST_ITL_INTERVAL_HPP_JOFA_101014
 

@@ -133,7 +133,7 @@ operator << (std::basic_ostream<CharType, CharTraits>& stream, const Type& objec
 }
 
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

@@ -30,7 +30,7 @@ struct dynamic_interval_traits
 };
 
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

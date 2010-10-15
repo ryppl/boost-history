@@ -16,7 +16,7 @@ namespace boost{ namespace icl
     template <class DecrementableT>
     inline static DecrementableT pred(DecrementableT x) { return --x; }
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

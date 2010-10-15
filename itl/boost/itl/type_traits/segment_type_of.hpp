@@ -46,7 +46,7 @@ namespace boost{ namespace icl
             get_segment_type<Type, has_segment_type<Type>::value>::type type;
     };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

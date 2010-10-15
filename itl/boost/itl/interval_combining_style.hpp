@@ -21,7 +21,7 @@ namespace interval_combine
 
 } // namespace interval_combine
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

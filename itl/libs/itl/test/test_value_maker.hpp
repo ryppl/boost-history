@@ -157,7 +157,7 @@ struct map_val
 #define sK_v(key,val)   map_val<IntervalMapT>::std_pair(key,val)
 
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif 
 

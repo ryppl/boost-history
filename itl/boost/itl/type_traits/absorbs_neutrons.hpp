@@ -16,7 +16,7 @@ namespace boost{ namespace icl
         BOOST_STATIC_CONSTANT(bool, value = false); 
     };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

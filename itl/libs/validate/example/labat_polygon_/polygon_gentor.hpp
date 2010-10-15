@@ -216,7 +216,7 @@ void polygon_set_gentor<PolygonSetT>::last_permuted(PolygonSetT& x)const
 
 
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

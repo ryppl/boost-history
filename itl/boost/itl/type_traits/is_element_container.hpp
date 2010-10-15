@@ -46,7 +46,7 @@ namespace boost{ namespace icl
             (mpl::or_<is_element_set<Type>, is_element_map<Type> >::value) 
             );
     };
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

@@ -105,7 +105,7 @@ namespace boost{ namespace icl
             get_key_type<Type, has_key_type<Type>::value>::type type;
     };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

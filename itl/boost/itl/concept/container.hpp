@@ -80,7 +80,7 @@ cyclic_prior(const Type& object, typename Type::const_iterator it_)
 
 
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

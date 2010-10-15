@@ -11,7 +11,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 namespace boost{ namespace icl
 {
     template <class Type> struct size_type_of{ typedef std::size_t type; };
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

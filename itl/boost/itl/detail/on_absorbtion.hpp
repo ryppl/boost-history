@@ -36,7 +36,7 @@ struct on_absorbtion<Type, Combiner, true>
     }
 };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

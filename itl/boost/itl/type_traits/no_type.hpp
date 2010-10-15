@@ -12,7 +12,7 @@ namespace boost{ namespace icl
 {
     struct no_type{};
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

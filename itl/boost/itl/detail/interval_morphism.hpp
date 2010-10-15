@@ -95,7 +95,7 @@ namespace boost{namespace icl
     inline std::string binary_template_to_string<segmental::joiner>::apply() { return "j"; }
     template<> 
     inline std::string binary_template_to_string<segmental::identity_absorber>::apply() { return "a0"; }
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif // BOOST_ITL_DETAIL_INTERVAL_MORPHISM_HPP_JOFA_080315
 

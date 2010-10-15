@@ -28,7 +28,7 @@ namespace boost{ namespace icl
                              >::value)); 
     };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

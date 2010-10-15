@@ -36,7 +36,7 @@ struct to_string
     }
 };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

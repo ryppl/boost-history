@@ -48,7 +48,7 @@ namespace boost{ namespace icl
 #endif
     };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

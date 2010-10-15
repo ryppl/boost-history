@@ -22,7 +22,7 @@ struct adds_inversely
         value = (mpl::and_<has_inverse<Type>, is_negative<Combiner> >::value)); 
 };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif // BOOST_ITL_TYPE_TRAITS_ADDS_INVERSELY_HPP_JOFA_100829
 

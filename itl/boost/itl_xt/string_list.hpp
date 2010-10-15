@@ -108,7 +108,7 @@ public:
     string_list& emptyTail(int count);
 } ;
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

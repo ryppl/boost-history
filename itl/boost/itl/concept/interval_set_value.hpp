@@ -26,7 +26,7 @@ co_value(Iterator value_)
     return icl::is_empty(*value_)? codomain_type() : (*value_).lower(); 
 }
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

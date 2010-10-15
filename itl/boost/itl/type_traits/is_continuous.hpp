@@ -21,7 +21,7 @@ namespace boost{ namespace icl
             value = mpl::not_<is_discrete<Type> >::value);
     };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

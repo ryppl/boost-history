@@ -47,7 +47,7 @@ namespace boost{ namespace icl
             get_domain_type<Type, has_domain_type<Type>::value>::type type;
     };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

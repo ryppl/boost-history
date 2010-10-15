@@ -197,7 +197,7 @@ default template parameter
 is again generically implemented by `operator +=` for all
 Addable types. 
 
-For `Combine` functors, the Itl provides an __inverse__ functor.
+For `Combine` functors, the Icl provides an __inverse__ functor.
 
 [table
 [[`Combine<T>`]        [`inverse<Combine<T> >::type`]]
@@ -262,7 +262,7 @@ so they can be called directly.
 
 [section Map Traits]
 
-Itl maps differ in their behavior dependent on how they handle
+Icl maps differ in their behavior dependent on how they handle
 ['*neutral elements*] of the associated type `CodomainT`. This 
 section became ['kind of nuclear] at least in wording. 
 But rest assured `itl::Maps` won't contaminate your software.
@@ -316,7 +316,7 @@ inplace_times<T>::neutron() == unon<T>::value()
 
 There are two /properties/ or /traits/ of itl maps that can be
 chosen by a template parameter `Traits`.
-The ['*first trait*] relates to the ['*definedness*] of the map. Itl
+The ['*first trait*] relates to the ['*definedness*] of the map. Icl
 maps can be *partial* or *total* on the set of values given by
 domain type `DomainT`.
 

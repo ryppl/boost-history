@@ -51,7 +51,7 @@ struct size_type_of<interval_traits<Type> >
     typedef typename size_type_of<domain_type>::type type;
 };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif
 

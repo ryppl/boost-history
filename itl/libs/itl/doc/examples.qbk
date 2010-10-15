@@ -10,7 +10,7 @@
 
 [section Overview]
 
-[table Overview over Itl Examples
+[table Overview over Icl Examples
 	[[level]   [example] [classes] [features]]
 	[[intro][[link boost_itl.examples.party Party]]
 		[__itv_map__][Generates an attendance history of a party

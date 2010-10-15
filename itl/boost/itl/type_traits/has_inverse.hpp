@@ -22,7 +22,7 @@ namespace boost{ namespace icl
                                          is_floating_point<Type>::value>::value)); 
     };
 
-}} // namespace boost itl
+}} // namespace boost icl
 
 #endif // BOOST_ITL_TYPE_TRAITS_HAS_INVERSE_HPP_JOFA_090205
 
