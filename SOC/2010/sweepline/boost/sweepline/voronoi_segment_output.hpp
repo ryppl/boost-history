@@ -195,6 +195,52 @@ namespace sweepline {
 
 			return fT0_used && fT1_used;
 		}
+
+        static void fill_intermediate_points(point_2d<coordinate_type> point_site,
+                                             point_2d<coordinate_type> segment_site_start,
+                                             point_2d<coordinate_type> segment_site_end,
+                                             std::vector< point_2d<double> > &intermediate_points) {
+            int num_inter_points = get_intermediate_points_count(
+                intermediate_points[0], intermediate_points[1]);
+            if (num_inter_points <= 0 ||
+                point_site == segment_site_start ||
+                point_site == segment_site_end) {
+                return;
+            }
+            intermediate_points.reserve(2 + num_inter_points);
+            double segm_vec_x = static_cast<double>(segment_site_end.x()) -
+                                static_cast<double>(segment_site_start.x());
+            double segm_vec_y = static_cast<double>(segment_site_end.y()) -
+                                static_cast<double>(segment_site_start.y());
+            double sqr_segment_length = segm_vec_x * segm_vec_x + segm_vec_y * segm_vec_y;
+            double projection_start =
+                get_point_projection(intermediate_points[0], segment_site_start, segment_site_end);
+            double projection_end =
+                get_point_projection(intermediate_points[1], segment_site_start, segment_site_end);
+            double step = (projection_end - projection_start) *
+                          sqr_segment_length / (num_inter_points + 1);
+            double point_vec_x = static_cast<double>(point_site.x()) -
+                                 static_cast<double>(segment_site_start.x());
+            double point_vec_y = static_cast<double>(point_site.y()) -
+                                 static_cast<double>(segment_site_start.y());
+            double point_rot_x = segm_vec_x * point_vec_x + segm_vec_y * point_vec_y;
+            double point_rot_y = segm_vec_x * point_vec_y - segm_vec_y * point_vec_x;
+            double projection_cur_x = projection_start * sqr_segment_length + step;
+            point_2d<T> last_point = intermediate_points.back();
+            intermediate_points.pop_back();
+            for (int i = 0; i < num_inter_points; i++, projection_cur_x += step) {
+                double inter_rot_x = projection_cur_x;
+                double inter_rot_y =
+                    ((inter_rot_x - point_rot_x) * (inter_rot_x - point_rot_x) +
+                     point_rot_y * point_rot_y) / (2.0 * point_rot_y);
+                double new_point_x = (segm_vec_x * inter_rot_x - segm_vec_y * inter_rot_y) /
+                                     sqr_segment_length + static_cast<double>(segment_site_start.x());
+                double new_point_y = (segm_vec_x * inter_rot_y + segm_vec_y * inter_rot_x) /
+                                     sqr_segment_length + static_cast<double>(segment_site_start.y());
+                intermediate_points.push_back(make_point_2d(new_point_x, new_point_y));
+            }
+            intermediate_points.push_back(last_point);
+        }
 	
 	private:
 		Helper();
@@ -237,6 +283,32 @@ namespace sweepline {
 			}
 			return false;
 		}
+
+        static double get_point_projection(point_2d<coordinate_type> point,
+                                           point_2d<coordinate_type> segment_start,
+                                           point_2d<coordinate_type> segment_end) {
+            double segment_vec_x = static_cast<double>(segment_end.x()) -
+                                   static_cast<double>(segment_start.x());
+            double segment_vec_y = static_cast<double>(segment_end.y()) -
+                                   static_cast<double>(segment_start.y());
+            double point_vec_x = static_cast<double>(point.x()) -
+                                 static_cast<double>(segment_start.x());
+            double point_vec_y = static_cast<double>(point.y()) -
+                                 static_cast<double>(segment_start.y());
+            double sqr_segment_length = segment_vec_x * segment_vec_x +
+                                        segment_vec_y * segment_vec_y;
+            double vec_dot = segment_vec_x * point_vec_x +
+                             segment_vec_y * point_vec_y;
+            return vec_dot / sqr_segment_length;
+        }
+
+        static int get_intermediate_points_count(point_2d<coordinate_type> point1,
+                                                 point_2d<coordinate_type> point2) {
+            double vec_x = static_cast<double>(point1.x()) - static_cast<double>(point2.x());
+            double vec_y = static_cast<double>(point1.y()) - static_cast<double>(point2.y());
+            double sqr_len = vec_x * vec_x + vec_y * vec_y;
+            return static_cast<int>(log(sqr_len) * 3.4 + 1E-6);
+        }
 	};
 
     template <typename T>
@@ -253,8 +325,8 @@ namespace sweepline {
 		voronoi_cell_clipped(const site_event_type &new_site,
 							 voronoi_edge_clipped<coordinate_type>* edge) :
 			incident_edge(edge),
-			site(new_site),
-			num_incident_edges(0) {}
+			num_incident_edges(0),
+			site(new_site) {}
 
 		bool is_segment() const {
 			return site.is_segment();
@@ -354,7 +426,7 @@ namespace sweepline {
 				if (start_point != NULL && end_point != NULL) {
 					edge_points.push_back(start_point->vertex);
 					edge_points.push_back(end_point->vertex);
-					fill_intermediate_points(point1, point2, point3, edge_points);
+                    Helper<T>::fill_intermediate_points(point1, point2, point3, edge_points);
 				} else {
 					coordinate_type dir_x = (cell1->is_segment() ^ (point1 == point3)) ?
 						point3.y() - point2.y() : point2.y() - point3.y();
@@ -381,12 +453,12 @@ namespace sweepline {
 		typedef detail::site_event<T> site_event_type;
 
 		typedef voronoi_cell_clipped<coordinate_type> voronoi_cell_type;
-		typedef std::list<voronoi_cell_type> voronoi_cells_type;
+        typedef std::list<voronoi_cell_type> voronoi_cells_type;
 		typedef typename voronoi_cells_type::iterator voronoi_cell_iterator_type;
 		typedef typename voronoi_cells_type::const_iterator voronoi_cell_const_iterator_type;
 
 		typedef voronoi_vertex_clipped<coordinate_type> voronoi_vertex_type;
-		typedef std::list<voronoi_vertex_type> voronoi_vertices_type;
+        typedef std::list<voronoi_vertex_type> voronoi_vertices_type;
 		typedef typename voronoi_vertices_type::iterator voronoi_vertex_iterator_type;
 		typedef typename voronoi_vertices_type::const_iterator voronoi_vertex_const_iterator_type;
 

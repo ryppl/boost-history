@@ -1,4 +1,4 @@
-// Boost sweepline library segment_voronoi_benchmark_test.cpp file 
+// Boost sweepline library segment_voronoi_benchmark_test.cpp file
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(benchmark_test1, T, test_types) {
 
     FILE *bench_file = fopen("benchmark.txt", "a");
     fprintf(bench_file, "Voronoi Segment Sweepline Benchmark Test (time in seconds):\n");
-    
+
     for (int num_points = 10; num_points <= 1000000; num_points *= 10) {
         std::vector< point_2d<coordinate_type> > points;
         points.reserve(num_points);
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(benchmark_test1, T, test_types) {
         time_t end_time = time(NULL);
         double running_time = static_cast<double>(end_time - start_time) / num_times;
 
-        fprintf(bench_file, 
+        fprintf(bench_file,
                 "Number of points = %8d; Overall time = %2d; Time per one input = %9.6f.\n",
                 num_points, static_cast<int>(end_time - start_time), running_time);
     }

@@ -1,4 +1,4 @@
-// Boost sweepline library segment_node_comparer_test.cpp file 
+// Boost sweepline library segment_node_comparer_test.cpp file
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -16,9 +16,9 @@ using namespace boost::sweepline::detail;
 #include <boost/test/test_case_template.hpp>
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp1, T, test_types) {
-    typedef site_event<T> site_event_type; 
+    typedef site_event<T> site_event_type;
     typedef beach_line_node<T> bline_node;
-    typedef typename std::map< bline_node, int, 
+    typedef typename std::map< bline_node, int,
         node_comparer<bline_node> >::const_iterator bline_it;
 
     std::map< bline_node, int, node_comparer<bline_node> > test_beach_line;
@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp1, T, test_types) {
     bline_node node2(site3, site1);
     test_beach_line.insert(std::pair<bline_node, int>(node1, 0));
     test_beach_line.insert(std::pair<bline_node, int>(node2, 1));
-    
+
     int cur_value = 0;
     for (bline_it it = test_beach_line.begin();
          it != test_beach_line.end();
@@ -42,9 +42,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp1, T, test_types) {
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp2, T, test_types) {
-    typedef site_event<T> site_event_type; 
+    typedef site_event<T> site_event_type;
     typedef beach_line_node<T> bline_node;
-    typedef typename std::map< bline_node, int, 
+    typedef typename std::map< bline_node, int,
         node_comparer<bline_node> >::const_iterator bline_it;
 
     std::map< bline_node, int, node_comparer<bline_node> > test_beach_line;
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp3, T, test_types) {
     bline_node initial_node(
         make_site_event<T>(static_cast<T>(1), static_cast<T>(0), 0),
         make_site_event<T>(static_cast<T>(0), static_cast<T>(2), 1));
-    
+
     bline_node new_node1(make_site_event<T>(static_cast<T>(2), static_cast<T>(-10), 2));
     bline_node new_node2(make_site_event<T>(static_cast<T>(2), static_cast<T>(-1), 3));
     bline_node new_node3(make_site_event<T>(static_cast<T>(2), static_cast<T>(0), 4));
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp4, T, test_types) {
     bline_node initial_node(
         make_site_event<T>(static_cast<T>(0), static_cast<T>(1), 0),
         make_site_event<T>(static_cast<T>(1), static_cast<T>(0), 1));
-    
+
     bline_node new_node1(make_site_event<T>(static_cast<T>(2), static_cast<T>(-3), 2));
     bline_node new_node2(make_site_event<T>(static_cast<T>(2), static_cast<T>(-2), 2));
     bline_node new_node3(make_site_event<T>(static_cast<T>(2), static_cast<T>(-1), 2));
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp5, T, test_types) {
     bline_node initial_node(
         make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 0),
         make_site_event<T>(static_cast<T>(1), static_cast<T>(2), 1));
-    
+
     bline_node new_node1(make_site_event<T>(static_cast<T>(2), static_cast<T>(-10), 2));
     bline_node new_node2(make_site_event<T>(static_cast<T>(2), static_cast<T>(0), 3));
     bline_node new_node3(make_site_event<T>(static_cast<T>(2), static_cast<T>(1), 4));
@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp6, T, test_types) {
     bline_node initial_node(
         make_site_event<T>(static_cast<T>(1), static_cast<T>(1), 0),
         make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 1));
-    
+
     bline_node new_node1(make_site_event<T>(static_cast<T>(2), static_cast<T>(-3), 2));
     bline_node new_node2(make_site_event<T>(static_cast<T>(2), static_cast<T>(-2), 3));
     bline_node new_node3(make_site_event<T>(static_cast<T>(2), static_cast<T>(0), 4));
@@ -208,11 +208,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp7, T, test_types) {
     bline_node initial_node(
         make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 0),
         make_site_event<T>(static_cast<T>(0), static_cast<T>(2), 1));
-    
+
     bline_node new_node1(make_site_event<T>(static_cast<T>(1), static_cast<T>(0), 2));
     bline_node new_node2(make_site_event<T>(static_cast<T>(1), static_cast<T>(1), 3));
     bline_node new_node3(make_site_event<T>(static_cast<T>(1), static_cast<T>(2), 4));
-    
+
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node1), false);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node2), false);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node3), true);
@@ -230,14 +230,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp8, T, test_types) {
     bline_node initial_node(
         make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 0),
         make_site_event<T>(static_cast<T>(1), static_cast<T>(1), 1));
-    
+
     bline_node new_node1(make_site_event<T>(static_cast<T>(1), static_cast<T>(0), 2));
     bline_node new_node2(make_site_event<T>(static_cast<T>(1), static_cast<T>(1), 1));
     bline_node new_node3(make_site_event<T>(static_cast<T>(1), static_cast<T>(2), 3));
     bline_node new_node4(
         make_site_event<T>(static_cast<T>(1), static_cast<T>(1), 1),
         make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 0));
-    
+
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node1), false);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node2), true);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node3), true);
@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_pp8, T, test_types) {
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_ps1, T, test_types) {
-    // TODO(asydorchuk): add more tests there.   
+    // TODO(asydorchuk): add more tests there.
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test_ss1, T, test_types) {

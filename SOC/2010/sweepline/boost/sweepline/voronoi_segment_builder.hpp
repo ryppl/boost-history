@@ -288,8 +288,7 @@ namespace sweepline {
             beach_line_iterator it_first = circle_event.get_bisector();
             beach_line_iterator it_last = it_first;
 
-            // Get the second and the third sites that create given circle event.
-            site_event_type site2 = it_first->first.get_left_site();
+            // Get the the third site.
             site_event_type site3 = it_first->first.get_right_site();
 
             // Get second bisector;
@@ -316,7 +315,7 @@ namespace sweepline {
             if (site3.is_segment() && site3.get_point1(true) == site1.get_point0(true)) {
                 const_cast<Key &>(it_first->first).set_right_site_inverse();
             }
-            it_first->second.edge = output_.insert_new_edge(site1, site2, site3, circle_event,
+            it_first->second.edge = output_.insert_new_edge(site1, site3, circle_event,
                                                             bisector1, bisector2);
             beach_line_.erase(it_last);
             it_last = it_first;

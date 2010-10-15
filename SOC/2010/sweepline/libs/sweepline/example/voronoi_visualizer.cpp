@@ -16,7 +16,9 @@ using namespace boost::sweepline;
 class GLWidget : public QGLWidget {
     Q_OBJECT
 public:
-    GLWidget(QMainWindow *parent = NULL) : QGLWidget(QGLFormat(QGL::SampleBuffers), parent) {}
+    GLWidget(QMainWindow *parent = NULL) : QGLWidget(QGLFormat(QGL::SampleBuffers), parent) {
+        startTimer(40);
+    }
 
     QSize sizeHint() const {
         return QSize(600, 600);
@@ -58,7 +60,6 @@ public:
 
         // Update view.
         update_view_port();
-        updateGL();
     }
 
 protected:
@@ -71,57 +72,61 @@ protected:
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Draw voronoi sites.
-		{
-			voronoi_cells_type cells = voronoi_output_.cell_records;
-			voronoi_cell_const_iterator_type it;
-			glColor3f(0.0f, 0.0f, 1.0f);
-			glBegin(GL_POINTS);
-			for (it = cells.begin(); it != cells.end(); it++) {
-				if (!it->is_segment())
-					glVertex2f(it->get_point0().x(), it->get_point0().y());
-			}
-			glEnd();
-			glBegin(GL_LINES);
-			for (it = cells.begin(); it != cells.end(); it++) {
-				if (it->is_segment()) {
-					glVertex2f(it->get_point0().x(), it->get_point0().y());
-					glVertex2f(it->get_point1().x(), it->get_point1().y());
-				}
-			}
-			glEnd();
-		}
+        {
+            voronoi_cells_type cells = voronoi_output_.cell_records;
+            voronoi_cell_const_iterator_type it;
+            glColor3f(0.0f, 0.0f, 1.0f);
+            glBegin(GL_POINTS);
+            for (it = cells.begin(); it != cells.end(); it++) {
+                if (!it->is_segment())
+                    glVertex2f(it->get_point0().x(), it->get_point0().y());
+            }
+            glEnd();
+            glBegin(GL_LINES);
+            for (it = cells.begin(); it != cells.end(); it++) {
+                if (it->is_segment()) {
+                    glVertex2f(it->get_point0().x(), it->get_point0().y());
+                    glVertex2f(it->get_point1().x(), it->get_point1().y());
+                }
+            }
+            glEnd();
+        }
 
         // Draw voronoi vertices.
-		{
-			voronoi_vertices_type vertices = voronoi_output_.vertex_records;
-			voronoi_vertex_const_iterator_type it;
-			glColor3f(0.0f, 1.0f, 0.0f);
-			glBegin(GL_POINTS);
-			for (it = vertices.begin(); it != vertices.end(); it++)
-				glVertex2f(it->vertex.x(), it->vertex.y());
-			glEnd();
-		}
+        {
+            voronoi_vertices_type vertices = voronoi_output_.vertex_records;
+            voronoi_vertex_const_iterator_type it;
+            glColor3f(0.0f, 1.0f, 0.0f);
+            glBegin(GL_POINTS);
+            for (it = vertices.begin(); it != vertices.end(); it++)
+                glVertex2f(it->vertex.x(), it->vertex.y());
+            glEnd();
+        }
 
         // Draw voronoi edges.
-		{
-			voronoi_edges_type edges = voronoi_output_.edge_records;
-			voronoi_edge_const_iterator_type it;
-			glColor3f(0.0f, 1.0f, 0.0f);
-			glBegin(GL_LINES);
-			for (it = edges.begin(); it != edges.end(); it++) {
-				std::vector<Point2D> temp_v = it->get_intermediate_points(brect_);
-				for (int i = 0; i < static_cast<int>(temp_v.size()) - 1; i++) {
-					glVertex2f(temp_v[i].x(), temp_v[i].y());
-					glVertex2f(temp_v[i+1].x(), temp_v[i+1].y());
-				}
-			}
-			glEnd();
-		}
+        {
+            voronoi_edges_type edges = voronoi_output_.edge_records;
+            voronoi_edge_const_iterator_type it;
+            glColor3f(0.0f, 1.0f, 0.0f);
+            glBegin(GL_LINES);
+            for (it = edges.begin(); it != edges.end(); it++) {
+                std::vector<Point2D> temp_v = it->get_intermediate_points(brect_);
+                for (int i = 0; i < static_cast<int>(temp_v.size()) - 1; i++) {
+                    glVertex2f(temp_v[i].x(), temp_v[i].y());
+                    glVertex2f(temp_v[i+1].x(), temp_v[i+1].y());
+                }
+            }
+            glEnd();
+        }
     }
 
     void resizeGL(int width, int height) {
         int side = qMin(width, height);
         glViewport((width - side) / 2, (height - side) / 2, side, side);
+    }
+
+    void timerEvent(QTimerEvent *) {
+        update();
     }
 
 private:

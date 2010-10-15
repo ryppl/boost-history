@@ -1,4 +1,4 @@
-// Boost sweepline library segment_event_types_test.cpp file 
+// Boost sweepline library segment_event_types_test.cpp file
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(site_event_test2, T, test_types) {
     site_event<T> site2 = make_site_event<T>(point1, 0);
     BOOST_CHECK_EQUAL(site2.is_segment(), false);
     BOOST_CHECK_EQUAL(site2.is_vertical(), true);
-    
+
     bool arr1_1[] = { true, false, true, false, false, true };
     bool arr1_2[] = { false , true, false, true, false, true };
     EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr1_1);
@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(circle_event_test1, T, test_types) {
                                                    static_cast<T>(3));
     site_event<T> temp_site = make_site_event<T>(static_cast<T>(0), static_cast<T>(0),0);
     circle_event<T> circle2;
-    
+
     BOOST_CHECK_EQUAL(circle1.x(), static_cast<T>(1));
     BOOST_CHECK_EQUAL(circle1.y(), static_cast<T>(2));
     BOOST_CHECK_EQUAL(circle1.get_lower_x(), static_cast<T>(3));
@@ -205,7 +205,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(circle_event_test2, T, test_types) {
 
     site = make_site_event<T>(static_cast<T>(3), static_cast<T>(2), 0);
     BOOST_CHECK_EQUAL(circle.compare(site), 0);
-    
+
     site = make_site_event<T>(static_cast<T>(3), static_cast<T>(3), 0);
     BOOST_CHECK_EQUAL(circle.compare(site), -1);
 

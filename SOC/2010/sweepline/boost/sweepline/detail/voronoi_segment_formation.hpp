@@ -22,8 +22,6 @@
         if ((val) >= 0) first_expr += (val); \
         else second_expr -= (val);
 
-#define INV_LOG_2 1.4426950408889634
-
 namespace boost {
 namespace sweepline {
 namespace detail {
@@ -542,76 +540,6 @@ namespace detail {
                 return (expr_l < expr_r) ? RIGHT_ORIENTATION : LEFT_ORIENTATION;
         }
     }
-
-	template<typename T>
-	double get_point_projection(point_2d<T> point, point_2d<T> segment_start,
-								point_2d<T> segment_end) {
-		double segment_vec_x = static_cast<double>(segment_end.x()) -
-							   static_cast<double>(segment_start.x());
-		double segment_vec_y = static_cast<double>(segment_end.y()) -
-							   static_cast<double>(segment_start.y());
-		double point_vec_x = static_cast<double>(point.x()) -
-							 static_cast<double>(segment_start.x());
-		double point_vec_y = static_cast<double>(point.y()) -
-							 static_cast<double>(segment_start.y());
-		double sqr_segment_length = segment_vec_x * segment_vec_x +
-									segment_vec_y * segment_vec_y;
-		double vec_dot = segment_vec_x * point_vec_x +
-						 segment_vec_y * point_vec_y;
-		return vec_dot / sqr_segment_length;
-	}
-
-	template<typename T>
-	int get_intermediate_points_count(point_2d<T> point1, point_2d<T> point2) {
-		double vec_x = static_cast<double>(point1.x()) - static_cast<double>(point2.x());
-		double vec_y = static_cast<double>(point1.y()) - static_cast<double>(point2.y());
-		double sqr_len = vec_x * vec_x + vec_y * vec_y;
-		return static_cast<int>(log(sqr_len) * INV_LOG_2 * 2 + 1E-6);
-	}
-
-	template<typename T>
-	void fill_intermediate_points(point_2d<T> point_site, point_2d<T> segment_site_start,
-		point_2d<T> segment_site_end, std::vector< point_2d<T> > &intermediate_points) {
-		int num_inter_points = get_intermediate_points_count(
-			intermediate_points[0], intermediate_points[1]);
-		if (num_inter_points <= 0 ||
-			orientation_test(point_site, segment_site_start, segment_site_end) == COLINEAR) {
-			return;
-		}
-		intermediate_points.reserve(2 + num_inter_points);
-		double segm_vec_x = static_cast<double>(segment_site_end.x()) -
-							static_cast<double>(segment_site_start.x());
-		double segm_vec_y = static_cast<double>(segment_site_end.y()) -
-							static_cast<double>(segment_site_start.y());
-		double sqr_segment_length = segm_vec_x * segm_vec_x + segm_vec_y * segm_vec_y;
-		double projection_start = 
-			get_point_projection(intermediate_points[0], segment_site_start, segment_site_end);
-		double projection_end =
-			get_point_projection(intermediate_points[1], segment_site_start, segment_site_end);
-		double step = (projection_end - projection_start) *
-					  sqr_segment_length / (num_inter_points + 1);
-		double point_vec_x = static_cast<double>(point_site.x()) -
-							 static_cast<double>(segment_site_start.x());
-		double point_vec_y = static_cast<double>(point_site.y()) -
-							 static_cast<double>(segment_site_start.y());
-		double point_rot_x = segm_vec_x * point_vec_x + segm_vec_y * point_vec_y;
-		double point_rot_y = segm_vec_x * point_vec_y - segm_vec_y * point_vec_x;
-		double projection_cur_x = projection_start * sqr_segment_length + step;
-		point_2d<T> last_point = intermediate_points.back();
-		intermediate_points.pop_back();
-		for (int i = 0; i < num_inter_points; i++, projection_cur_x += step) {
-			double inter_rot_x = projection_cur_x;
-			double inter_rot_y = 
-				((inter_rot_x - point_rot_x) * (inter_rot_x - point_rot_x) +
-				 point_rot_y * point_rot_y) / (2.0 * point_rot_y);
-			double new_point_x = (segm_vec_x * inter_rot_x - segm_vec_y * inter_rot_y) /
-								 sqr_segment_length + static_cast<double>(segment_site_start.x());
-			double new_point_y = (segm_vec_x * inter_rot_y + segm_vec_y * inter_rot_x) /
-								 sqr_segment_length + static_cast<double>(segment_site_start.y());
-			intermediate_points.push_back(make_point_2d(new_point_x, new_point_y));
-		}
-		intermediate_points.push_back(last_point);
-	}
 
     enum kPredicateResult {
         LESS = -1,
@@ -1588,7 +1516,6 @@ namespace detail {
         }
 
         edge_type *insert_new_edge(const site_event_type &site1,
-                                   const site_event_type &site2,
                                    const site_event_type &site3,
                                    const circle_event_type &circle,
                                    edge_type *edge12,

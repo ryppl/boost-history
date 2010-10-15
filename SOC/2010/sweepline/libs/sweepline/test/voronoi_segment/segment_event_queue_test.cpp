@@ -1,4 +1,4 @@
-// Boost sweepline library segment_event_queue_test.cpp file 
+// Boost sweepline library segment_event_queue_test.cpp file
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -23,7 +23,7 @@ using namespace boost::sweepline;
 BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test1, T, test_types) {
     detail::circle_events_queue<T> event_q;
     BOOST_CHECK_EQUAL(event_q.empty(), true);
-    
+
     event_q.reset();
     for (int i = 0; i < 10; i++) {
         T x = static_cast<T>(-i);
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test1, T, test_types) {
 BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test2, T, test_types) {
     typedef detail::circle_event<T> circle_event_type;
     detail::circle_events_queue<T> event_q;
-    detail::site_event<T> temp_site =  
+    detail::site_event<T> temp_site =
         detail::make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 0);
 
     for (int i = 0; i < 10; i++) {

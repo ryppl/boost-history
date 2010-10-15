@@ -5,13 +5,7 @@
 
 import cast ;
 
-lib opengl : : <name>opengl32 ;
-lib glu : : <name>glu32 ;
 exe voronoi_visualizer : voronoi_visualizer.cpp 
-			   [ cast _ moccable-cpp : voronoi_visualizer.cpp ] 
-		         /qt//QtCore 
-                         /qt//QtGui 
+			   [ cast _ moccable-cpp : voronoi_visualizer.cpp ]  
                          /qt//QtOpenGL 
-		         opengl 
-		         glu 
 		         ;
