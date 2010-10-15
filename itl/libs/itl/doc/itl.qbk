@@ -18,8 +18,8 @@ Distributed under the Boost Software License, Version 1.0.
 ]
 
 [/ Macros will be used for links so we have a central place to change them ]
-[def __itv__          [classref boost::icl::interval interval]]
-[def __Itv__          [classref boost::icl::interval Interval]]
+[def __itv__          `interval`]
+[def __Itv__          `Interval`]
 
 [def __itv_tr__       [classref boost::icl::interval interval_traits]]
 [def __Itv_tr__       [classref boost::icl::interval Interval_traits]]
@@ -35,11 +35,14 @@ Distributed under the Boost Software License, Version 1.0.
 [def __itv_bset_s__   [classref boost::icl::interval_base_set interval_set's]]
 [def __Itv_bsets__    [classref boost::icl::interval_base_set Interval_sets]]
 
-[def __ele_set__      [classref boost::icl::set set]]
-[def __ele_sets__     [classref boost::icl::set sets]]
-[def __icl_set__      [classref boost::icl::set icl::set]]
-[def __icl_sets__     [classref boost::icl::set icl::sets]]
-
+[def __ele_set__      [@http://www.cplusplus.com/reference/stl/set/ `std::set` ]]
+[def __ele_sets__     [@http://www.cplusplus.com/reference/stl/set/ `std::sets`]]
+[def __icl_set__      [@http://www.cplusplus.com/reference/stl/set/ `std::set` ]]
+[def __icl_sets__     [@http://www.cplusplus.com/reference/stl/set/ `std::sets`]]
+[def __std_set__      [@http://www.cplusplus.com/reference/stl/set/ `std::set` ]]
+[def __std_sets__     [@http://www.cplusplus.com/reference/stl/set/ `std::sets`]]
+[def __std_map__      [@http://www.cplusplus.com/reference/stl/set/ `std::map` ]]
+[def __std_maps__     [@http://www.cplusplus.com/reference/stl/set/ `std::maps`]]
 
 [def __Itv_set__      [classref boost::icl::interval_set Interval_set]]
 [def __Itv_sets__     [classref boost::icl::interval_set Interval_sets]]

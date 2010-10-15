@@ -1,5 +1,5 @@
 [/
-    Copyright (c) 2008-2009 Joachim Faulhaber
+    Copyright (c) 2008-2010 Joachim Faulhaber
 
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -10,31 +10,31 @@
 
 [section Naming]
 
-The *itl* is about sets and maps and a useful
+The *icl* is about sets and maps and a useful
 implementation of sets and maps using intervals.
-In the documentation of the *itl* the different
+In the documentation of the *icl* the different
 set and map types are grouped in various ways.
 In order to distinguish those groups we use
 a naming convention.
 
 Names of concepts start with a capital letter.
-So `Set` and `Map` stand for the concepts of
-a set and a map as defined in the *itl*.
+So `Set` and `Map` stand for the /concept/ of
+a set and a map as defined in the *icl*.
 When we talk about `Sets` and `Maps` though, 
 most of the time we do not not talk about the
 concepts themselves but the set of types
-that implement those concepts in the *itl*.
-The main groups ['*itl containers*] can be
-divided in are summarized in the next table:
+that implement those concepts in the *icl*.
+The main groups, ['*icl containers*] can be
+divided in, are summarized in the next table:
 
 [table
 []
 [[]                  [`Set`]                                        [`Map`]      ]
-[[element container] [__icl_set__]                                  [__icl_map__]]
+[[element container] [__std_set__]                                  [__icl_map__]]
 [[interval container][__itv_set__, __sep_itv_set__, __spl_itv_set__][__itv_map__, __spl_itv_map__]]
 ]
 
-* Containers __icl_set__, __itv_set__, __sep_itv_set__, __spl_itv_set__
+* Containers std:set, __itv_set__, __sep_itv_set__, __spl_itv_set__
   are models of concept `Set`. 
 * Containers __icl_map__, __itv_map__, __spl_itv_map__
   are models of concept `Map`. 
@@ -45,19 +45,21 @@ divided in are summarized in the next table:
 * When we talk about `Sets` or `Maps` we abstract from the way they are implemented.
 * When we talk about /element containers/ or /interval containers/ 
   we refer to the way they are implemented.
-* The *itl's* element containers
-  are always denoted qualified as __icl_set__ of __icl_map__ 
-  to avoid confusion with `std::set` and `std::map`. 
+* __std_set__ is a model of the icl's `Set` concept.
+* __std_map__ is ['*not*] a model of the icl's `Map` concept. 
+* The *icl's* element map
+  is always denoted qualified as __icl_map__ 
+  to avoid confusion with`std::map`. 
 
 [endsect][/ Naming]
 
 [section Aspects]
 
-There are two major ['*aspects*] or ['*views*] of itl containers. The first and predominant
+There are two major ['*aspects*] or ['*views*] of icl containers. The first and predominant
 aspect is called __bi_conceptual__. The second and minor aspect is called __bi_iterative__.
 
 [/ table
-[[Aspect]    [Abstraction level][]                  []                    [Practical]]
+[[Aspect]    [Abstraction level][]                      []                    [Practical]]
 [[__Conceptual__][more abstract][concept related]       [iterator independent][interval_sets(maps) can be used as sets(maps) 
                                                                            except for element iteration.]]
 [[__Iterative__] [less abstract][implementation related][iterator dependent]  [interval_sets(maps) iterate over intervals]]
@@ -73,12 +75,12 @@ aspect is called __bi_conceptual__. The second and minor aspect is called __bi_i
 [[Practical][interval_sets(maps) can be used as sets(maps) 
              of elements(element value pairs)             ]
                                                            [Segmentation information is available. 
-                                                            See e.g. [link boost_itl.examples.month_and_week_grid Time grids for months and weeks]]]
+                                                            See e.g. [link boost_icl.examples.month_and_week_grid Time grids for months and weeks]]]
 ]
 
 On the __conceptual__ aspect
 
-* an __itv__ implements a set of elements partially.
+* an `interval` implements a set of elements partially.
 * an __itv_set__ implements a set of elements.
 * an __itv_map__ implements a map of element value pairs.
 
@@ -94,7 +96,7 @@ On the __iterative__ aspect
 
 [h5 A Set Concept]
 
-On the __conceptual__ aspect the __icl_set__ and all __itv_bsets__ are models 
+On the __conceptual__ aspect all __itv_bsets__ are models 
 of a concept `Set`.
 The `Set` concept of the Interval Template Library refers to the
 mathematical notion of a set.
@@ -102,7 +104,7 @@ mathematical notion of a set.
 [table
 [[Function]        [Variant][implemented as]                                 ]  
 [[empty set   ]    []       [`Set::Set()`]                                   ]
-[[subset relation] []       [`bool Set::contained_in(const Set& s2)const`]   ]
+[[subset relation] []       [`bool Set::within(const Set& s1, const Set& s2)const`]   ]
 [[equality       ] []       [`bool is_element_equal(const Set& s1, const Set& s2)`]]
 [[set union]       [inplace][`Set& operator += (Set& s1, const Set& s2)`]    ]
 [[]                []       [`Set  operator +  (const Set& s1, const Set& s2)`]]
@@ -148,7 +150,7 @@ to the `Set` concept above.
 [table
 [[Function]        [Variant][implemented as]                                 ]  
 [[empty map   ]    []       [`Map::Map()`]                                   ]
-[[subset relation] []       [`bool Map::contained_in(const Map& s2)const`]   ]
+[[subset relation] []       [`bool within(const Map& s2, const Map& s2)const`]   ]
 [[equality       ] []       [`bool is_element_equal(const Map& s1, const Map& s2)`]]
 [[map union]       [inplace][`Map& operator += (Map& s1, const Map& s2)`]        ]
 [[]                []       [`Map  operator +  (const Map& s1, const Map& s2)`]]
@@ -158,13 +160,13 @@ to the `Set` concept above.
 [[]                []       [`Map  operator &  (const Map& s1, const Map& s2)`]]
 ]
 
-As one can see, on the abstract kernel the signatures of the itl's `Set` and `Map`
+As one can see, on the abstract kernel the signatures of the icl's `Set` and `Map`
 concepts are identical, except for the typename. 
 While signatures are identical
 The sets of valid laws are different, which will be described in more detail 
 in the sections on the
-[link boost_itl.semantics.sets semantics of itl Sets] and 
-[link boost_itl.semantics.maps Maps].
+[link boost_icl.semantics.sets semantics of icl Sets] and 
+[link boost_icl.semantics.maps Maps].
 These semantic differences are mainly based on the implementation
 of the pivotal member functions `add` and `subtract` for elements 
 and intervals that again serve for implementing 
@@ -183,7 +185,7 @@ This kind of `Addability` and `Subtractability` allows to compute
 a lot of useful aggregation results on an __itv_map_s__ associated
 values, just by adding and subtracting value pairs. 
 Various examples of ['*aggrovering*] are given in 
-[link boost_itl.examples section examples].
+[link boost_icl.examples section examples].
 In addition, this concept of `Addability` and `Subtractability`
 contains the classical `Insertability` and `Erasability` of
 key value pairs as a special case so it provides a broader
@@ -263,58 +265,51 @@ so they can be called directly.
 [section Map Traits]
 
 Icl maps differ in their behavior dependent on how they handle
-['*neutral elements*] of the associated type `CodomainT`. This 
-section became ['kind of nuclear] at least in wording. 
-But rest assured `itl::Maps` won't contaminate your software.
+[@http://en.wikipedia.org/wiki/Identity_element ['*identity elements*]]
+of the associated type `CodomainT`.
 
-[h4 Remarks on Neutral Elements]
-
-In the itl we call ['*neutral elements*] `neutrons` and all values
-that [*are not] `neutrons` we call `protons`.
+[h4 Remarks on Identity Elements]
 
 In the pseudo code snippets below `0` will be used to denote
-`neutrons`, which can be 
+[@http://en.wikipedia.org/wiki/Identity_element `identity elements`],
+which can be 
 different objects like `const double 0.0`, empty sets, empty strings, 
 null-vectors etc. dependent of the instance type for parameter `CodomainT`.
-The existence of a ['*neutral element*] wrt. an `operator+=` is a requirement
+The existence of an ['*identity element*] wrt. an `operator+=` is a requirement
 for template type `CodomainT`. 
 
 
-Note, that a neutron is defined in relation to a combiner operation. 
-[/ In most cases
-this relation is provided by the default parameters of itl `Maps`.]
-
 [table
-[[type]     [operation]     [neutron]]
+[[type]     [operation]     [identity element]]
 [[`int`]    [addition]      [`0`]    ]
 [[`string`] [concatenation] [`""`]   ]
 [[`set<T>`] [union]         [`{}`]   ]
 ]
 
-In these cases the `neutron` value is delivered by the default constructor
+In these cases the `identity element` value is delivered by the default constructor
 of the maps `CodomainT` type. But there are well known exceptions 
 like e.g. numeric multiplication:
 
 [table
-[[type]   [operation]        [neutron]]
+[[type]   [operation]        [identity element]]
 [[`int`]  [multiplication]   [`1`]    ]
 ]
 
-Therefore itl functors,
-that serve as `Combiner` parameters of itl Maps
-implement a static function `neutron()` to make
-sure that the correct `neutron()` is used
+Therefore icl functors,
+that serve as `Combiner` parameters of icl Maps
+implement a static function `identity_element()` to make
+sure that the correct `identity_element()` is used
 in the implementation
 of ['aggregate on overlap].
 ``
-inplace_times<int>::neutron() == 1
+inplace_times<int>::identity_element() == 1
 // or more general
-inplace_times<T>::neutron() == unon<T>::value()
+inplace_times<T>::identity_element() == unit_element<T>::value()
 ``
 
-[h4 Definedness and Neutron Storage]
+[h4 Definedness and Storage of Identity Elements]
 
-There are two /properties/ or /traits/ of itl maps that can be
+There are two /properties/ or /traits/ of icl maps that can be
 chosen by a template parameter `Traits`.
 The ['*first trait*] relates to the ['*definedness*] of the map. Icl
 maps can be *partial* or *total* on the set of values given by
@@ -324,32 +319,32 @@ domain type `DomainT`.
 inserted into the Map. This is usually expected and so ['*partial definedness*]
 is the default.
 
-* Alternatively an itl Map can be ['*total*]. It is then considered to
+* Alternatively an icl Map can be ['*total*]. It is then considered to
 contain a ['*neutral value*] for all key values that are not
 stored in the map. 
 
-The ['*second trait*] is related to the representation of `neutrons` in 
-the map. An itl map can be a ['*neutron absorber*] or a ['*neutron enricher*].
+The ['*second trait*] is related to the representation of `identity elements` in 
+the map. An icl map can be a ['*identity absorber*] or a ['*identity enricher*].
 
-* A ['*neutron absorber*] never stores value pairs `(k,0)` that carry neutrons.
-* A ['*neutron enricher*] stores value pairs `(k,0)`.
+* A ['*identity absorber*] never stores value pairs `(k,0)` that carry identity elements.
+* A ['*identity enricher*] stores value pairs `(k,0)`.
 
-For the template parameter `Traits` of itl Maps we have the following
+For the template parameter `Traits` of icl Maps we have the following
 four values.
 
 [table
-[[]       [neutron absorber]            [neutron enricher]]
+[[]       [identity absorber]            [identity enricher]]
 [[partial][partial_absorber /(default)/][partial_enricher]]
 [[total]  [total_absorber]              [total_enricher]]
 ]
 
 [h4 Map Traits motivated]
 
-Map traits are a late extension to the *itl*. Interval maps have
+Map traits are a late extension to the *icl*. Interval maps have
 been used for a couple of years  
 in a variety of applications at Cortex Software GmbH
 with an implementation that resembled the default trait.
-Only the deeper analysis of the itl's ['*aggregating Map's
+Only the deeper analysis of the icl's ['*aggregating Map's
 concept*] in the course of preparation of the library for boost 
 led to the introduction of map Traits.
 
@@ -367,7 +362,7 @@ Further addition on common keys triggers aggregation:
 
 A subtraction of existing pairs
 ``{(k,2)} - {(k,2)} == {(k,0)} // aggregation for common key k``
-yields value pairs that are associated with 0-values or `neutrons`.
+yields value pairs that are associated with 0-values or `identity elements`.
 
 So once a value pair is created for a key `k` it can not be 
 removed from the map via subtraction (`subtract, -=` or `-`).
@@ -377,18 +372,18 @@ previously added
 ``x - x = {}``
 does not apply.
 
-This is the motivation for the ['*neutron absorber*] Trait.
-A neutron absorber map handles value pairs that carry
-neutrons as ['*non-existent*], which saves the law:
+This is the motivation for the ['*identity absorber*] Trait.
+A identity absorber map handles value pairs that carry
+identity elements as ['*non-existent*], which saves the law:
 ``x - x = {}``
 
-Yet this introduces a new problem: With such a /neutron absorber/
+Yet this introduces a new problem: With such a /identity absorber/
 we are /by definition/ unable to store a value `(k,0)` in
 the map. This may be unfavorable because it is not inline with the 
 behavior of stl::maps and this is not necessarily expected by clients
 of the library.
 
-[/ CL On the other hand, the notion of a neutron absorbing map
+[/ CL On the other hand, the notion of a identity absorbing map
 is more than just an akademic rescue effort for a formal law.
 It turns out that absorber maps have desirable properties
 for aggregation computations (see section semantics) 
@@ -396,46 +391,43 @@ that proved to be useful in practice and are in many cases
 just what is needed.]
 
 The solution to the problem is the introduction of the
-neutron enricher Trait, so the user can choose a map variant
+identity enricher Trait, so the user can choose a map variant
 according to her needs.
 
 [h5 Partial and Total Maps]
 
-The idea of a neutron absorbing map is,
-that an ['*associated neutron*] value of a pair `(k,0)` 
+The idea of a identity absorbing map is,
+that an ['*associated identity element*] value of a pair `(k,0)` 
 ['*codes non-existence*] for it's key `k`.
 So the pair `(k,0)` immediately tunnels from
 a map where it may emerge into the realm
 of non existence.
 ``{(k,0)} == {}``
 
-If neutrons do not code ['*non-existence*] but 
+If identity elements do not code ['*non-existence*] but 
 ['*existence with null quantification*], 
 we can also think of a map
-that has an associated neutron value
+that has an associated identity element
 ['*for every*] key `k` that has no associated value
 different from 0.
-So in contrast to modelling *all* neutronic
+So in contrast to modelling *all* neutral
 value pairs `(k,0)` as being ['*non-existent*]
-we can model *all* neutronic value pairs `(k,0)` as being
+we can model *all* neutral value pairs `(k,0)` as being
 ['*implicitly existent*].
 
 
 A map that is modelled in this way, is one large vector with
 a value `v` for every key `k` of it's domain type `DomainT`.
 But only protonic value are actually stored.
-This is the motivation for the definedness-Trait on `itl Maps`.
+This is the motivation for the definedness-Trait on `icl Maps`.
 
 A ['*partial*] map models the intuitive view that only value
 pairs are existent, that are stored in the map.
 A ['*total*] map exploits the possibility that all 
 value pairs that are not stored can be considered 
-as being existent and ['*quantified*] with the neutron value.
+as being existent and ['*quantified*] with the identity element.
 
-[/ Alle vier traits sind varianten eines denkmodells das
-um die handhabung von neutronen kreist.]   
-
-[/                        
+[/                         
 partial existential view
 total   quantifying view
 ] 
@@ -443,14 +435,14 @@ total   quantifying view
 
 [h4 Pragmatical Aspects of Map Traits]
 
-From a pragmatic perspective value pairs that carry `neutrons` as 
+From a pragmatic perspective value pairs that carry `identity elements` as 
 mapped values can often be ignored.
 If we count, for instance,
 the number of overlaps of inserted intervals in an __itv_map__
-(see example [link boost_itl.examples.overlap_counter overlap counter]), 
+(see example [link boost_icl.examples.overlap_counter overlap counter]), 
 most of the time, we are not
 interested in whether an overlap has been counted `0` times or
-has not been counted at all. A neutron enricher map
+has not been counted at all. A identity enricher map
 is only needed, if we want to distinct between non-existence
 and 0-quantification.
 
@@ -462,7 +454,7 @@ but it can be made for an __penricher__ map:
 ]
 
 Sometimes this subtle distinction is needed. Then a __penricher__
-is the right choice. Also, If we want to give two `itl::Maps`
+is the right choice. Also, If we want to give two `icl::Maps`
 a common set of keys in order to, say, iterate synchronously
 over both maps, we need /enrichers/. 
 
