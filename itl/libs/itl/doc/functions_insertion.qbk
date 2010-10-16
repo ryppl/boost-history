@@ -64,8 +64,8 @@ insert | e i b p
 
 [table Time Complexity for member function insert on itl containers
 [[`T& T::insert(const P&)`]    [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
-[[__itl_set__]                 [__Olgn__] []          []        []          ]
-[[__itl_map__]                 []         []          [__Olgn__][]          ]
+[[__icl_set__]                 [__Olgn__] []          []        []          ]
+[[__icl_map__]                 []         []          [__Olgn__][]          ]
 [[__itv_set__\n__sep_itv_set__][__Olgn__] [__a_Olgn__][]        []          ]
 [[__spl_itv_set__]             [__Olgn__] [__On__]    []        []          ]
 [[__itv_map__\n__spl_itv_map__][]         []          [__Olgn__][__On__]    ]
@@ -85,8 +85,8 @@ insert | e b s m        insert | e i b p S M
 
 [table Time Complexity for inplace insertion on element containers
 [[`T& insert(T& y, const P& x)`][__ch_dom_t__][__ch_dom_mp_t__][__ch_itv_sets__][__ch_itv_maps__]]
-[[__itl_set__]                    [__Olgn__]    []               [__Om__]         []               ]
-[[__itl_map__]                    []            [__Olgn__]       []               [__Om__]         ]
+[[__icl_set__]                    [__Olgn__]    []               [__Om__]         []               ]
+[[__icl_map__]                    []            [__Olgn__]       []               [__Om__]         ]
 ]
 
 Time complexity characteristics of inplace insertion for interval containers

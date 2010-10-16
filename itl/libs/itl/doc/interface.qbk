@@ -458,8 +458,8 @@ overloaded implementations for the function of that row is shown.
 [[`size_type size(const T&)`]                     [1]       [1]      [1]     [1]      [1]   ]
 [[`size_type cardinality(const T&)`]              [1]       [1]      [1]     [1]      [1]   ]
 [[`difference_type length(const T&)`]             [1]       [1]      [1]     [ ]      [ ]   ]
-[[`size_t iterative_size(const T&)`]              [ ]       [1]      [1]     [1]      [1]   ]
-[[`size_t interval_count(const T&)`]              [ ]       [1]      [1]     [ ]      [ ]   ]
+[[`size_type iterative_size(const T&)`]              [ ]       [1]      [1]     [1]      [1]   ]
+[[`size_type interval_count(const T&)`]              [ ]       [1]      [1]     [ ]      [ ]   ]
 											    
 [[__biLSelection__ ]                              [ ]       [ ]      [ ]     [ ]      [ ]   ]
 [[`J T::find(const domain_type&)`]                [ ]       [1]      [1]     [2]      [2]   ]

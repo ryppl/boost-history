@@ -39,7 +39,7 @@ where /n/ `= iterative_size(x)`.
 [[['*Construct, copy, destruct*]] [Description] ]
 [[`T::T()`]                       [Object of type T is default constructed.] ]
 [[`T::T(const T& src)`]           [Object of type T is copy constructed from object `src`. ] ]
-[[`T& T::operator=(const T&)` src][Assigns the contents of src to `*this` object. Returns a reference to the assigned object.] ]
+[[`T& T::operator=(const T& src)`][Assigns the contents of src to `*this` object. Returns a reference to the assigned object.] ]
 [[`void T::swap(T& src)`]         [Swaps the content containers `*this` and `src` in constant time. ] ]
 ]
 
@@ -56,31 +56,31 @@ s     | s   s           S     | S S     S
 m     |   m   m         M     |     M M   M    
 ``
 
-For an object `y` of type `T` and an argument `x` of type `P` let
+For an object `dst` of type `T` and an argument `src` of type `P` let
 ``
-n = iterative_size(y);
-m = iterative_size(x);
+n = iterative_size(dst);
+m = iterative_size(src);
 ``
 in the following tables.
 
 [table Time Complexity for overloaded constructors on element containers
-[[`T(const P& x)`][__ch_dom_t__][__ch_dom_mp_t__][__ch_itv_sets__][__ch_itv_maps__]]
-[[__icl_set__]    [__Olgn__]    []               [__Om__]         []               ]
-[[__icl_map__]    []            [__Olgn__]       []               [__Om__]         ]
+[[`T(const P& src)`][__ch_dom_t__][__ch_dom_mp_t__][__ch_itv_sets__][__ch_itv_maps__]]
+[[__icl_set__]      [__Olgn__]    []               [__Om__]         []               ]
+[[__icl_map__]      []            [__Olgn__]       []               [__Om__]         ]
 ]
 
 Time complexity characteristics of inplace insertion for interval containers
 is given by this table.
 
 [table Time Complexity for overloaded constructors on interval containers
-[[`T(const P& x)`] [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__][__ch_itv_sets__][__ch_itv_maps__]]
-[[interval_sets]   [__O1__] [__O1__][]      []      [__Om__]    []          ]
-[[interval_maps]   []       []      [__O1__][__O1__][]          [__Om__]    ]
+[[`T(const P& src)`] [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__][__ch_itv_sets__][__ch_itv_maps__]]
+[[interval_sets]     [__O1__] [__O1__][]      []      [__Om__]    []          ]
+[[interval_maps]     []       []      [__O1__][__O1__][]          [__Om__]    ]
 ]
 
 ``
 // overload tables for assignment
-T& operator = (const P& x)
+T& operator = (const P& src)
 
 interval containers:  
 T \ P | S M    
@@ -89,9 +89,9 @@ S     | S
 M     |   M    
 ``
 
-The assignment `T& operator = (const P& x)` is overloaded within interval containers.
+The assignment `T& operator = (const P& src)` is overloaded within interval containers.
 For all type combinations we have ['*linear time complexity*]
-in the maximum of the `iterative_size` of `y` and `x`.
+in the maximum of the `iterative_size` of `dst` and `src`.
 
 
 ['*Back to section . . .*]

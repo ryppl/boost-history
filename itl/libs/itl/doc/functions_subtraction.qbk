@@ -67,8 +67,8 @@ The next table contains complexity characteristics for `subtract`.
 
 [table Time Complexity for member function subtract on itl containers
 [[`T& T::subtract(const P&)`] [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
-[[__itl_set__]                 [__Olgn__]   []            []           []          ]
-[[__itl_map__]                 [__Olgn__]   []            [__Olgn__]   []          ]
+[[__icl_set__]                 [__Olgn__]   []            []           []          ]
+[[__icl_map__]                 [__Olgn__]   []            [__Olgn__]   []          ]
 [[__itv_sets__]                [__Olgn__]   [__a_Olgn__]  []           []          ]
 [[__itv_maps__]                [__Olgn__]   [__On__]      [__Olgn__]   [__On__]    ]
 ]
@@ -104,7 +104,7 @@ s  | s   s              S  | S S     S
 m  |   m   m            M  |     M M   M    
 ``
 
-[*and] you can erase parts of __itl_maps__ or __itv_maps__ 
+[*and] you can erase parts of __icl_maps__ or __itv_maps__ 
 using
 /key values/, /intervals/ or /element or interval sets/
 using these overloads:
@@ -129,8 +129,8 @@ m = x.iterative_size(); //if P is a container type
 
 [table Time Complexity for inplace Subtraction on element containers
 [[`T& operator -= (T&, const P&)`][__ch_dom_t__][__ch_dom_mp_t__][__ch_itl_set__][__ch_itl_map__]]
-[[__itl_set__]                    [__Olgn__]    []               [__Omlgn__]     []              ]
-[[__itl_map__]                    [__Olgn__]    [__Olgn__]       [__Omlgn__]     [__Omlgn__]     ]
+[[__icl_set__]                    [__Olgn__]    []               [__Omlgn__]     []              ]
+[[__icl_map__]                    [__Olgn__]    [__Olgn__]       [__Omlgn__]     [__Omlgn__]     ]
 ]
 
 

@@ -55,8 +55,8 @@ The next table contains complexity characteristics for member function `erase`.
 
 [table Time Complexity for member function erase on itl containers
 [[`T& T::erase(const P&)`] [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
-[[__itl_set__]                 [__Olgn__]   []            []           []          ]
-[[__itl_map__]                 [__Olgn__]   []            [__Olgn__]   []          ]
+[[__icl_set__]                 [__Olgn__]   []            []           []          ]
+[[__icl_map__]                 [__Olgn__]   []            [__Olgn__]   []          ]
 [[__itv_sets__]                [__Olgn__]   [__a_Olgn__]  []           []          ]
 [[__itv_maps__]                [__Olgn__]   [__On__]      [__Olgn__]   [__On__]    ]
 ]
@@ -117,8 +117,8 @@ m = x.iterative_size(); //if P is a container type
 
 [table Time Complexity for inplace erasure on element containers
 [[`T& erase(T& y, const P& x)`][__ch_dom_t__][__ch_dom_mp_t__][__ch_itl_set__][__ch_itl_map__]]
-[[__itl_set__]                    [__Olgn__]    []               [__Omlgn__]     []              ]
-[[__itl_map__]                    [__Olgn__]    [__Olgn__]       [__Omlgn__]     [__Omlgn__]     ]
+[[__icl_set__]                    [__Olgn__]    []               [__Omlgn__]     []              ]
+[[__icl_map__]                    [__Olgn__]    [__Olgn__]       [__Omlgn__]     [__Omlgn__]     ]
 ]
 
 
@@ -137,8 +137,8 @@ available for. Erase on iterators erases always one `value` of `value_type`
 for an iterator pointing to it.
 So we erase
 
-* elements from __itl_sets__
-* element-value pairs from __itl_maps__
+* elements from __icl_sets__
+* element-value pairs from __icl_maps__
 * intervals from __itv_sets__ and
 * interval-value-pairs from __itv_maps__
 
