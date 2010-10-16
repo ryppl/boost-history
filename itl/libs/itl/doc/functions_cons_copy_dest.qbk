@@ -11,7 +11,7 @@
 [section Construct, copy, destruct]
 
 [table
-[[['*Construct, copy, destruct*]]      [interval][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map] ]
+[[['*Construct, copy, destruct*]]      [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map] ]
 [[`T::T()`]                                    [1]       [1]      [1]     [1]      [1]   ]
 [[`T::T(const P&)`]                            [A]   [__eiS]  [__bpM]     [1]      [1]   ]
 [[`T& T::operator=(const P&)`]                 [A]     [__S]    [__M]     [1]      [1]   ]
@@ -26,14 +26,14 @@ The /regular and swappable part/ of the basic functions and their complexities
 are described in the tables below. 
 
 [table
-[[['*Regular and swap*]]      [interval][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map] ]
+[[['*Regular and swap*]]      [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map] ]
 [[`T::T()`]                                 [__O1__]  [__O1__] [__O1__][__O1__] [__O1__] ]
 [[`T::T(const T&)`]                         [__O1__]  [__On__] [__On__][__On__] [__On__] ]
 [[`T& T::operator=(const T&)`]              [__O1__]  [__On__] [__On__][__On__] [__On__] ]
 [[`void T::swap(T&)`]                          [ ]    [__O1__] [__O1__][__O1__] [__O1__] ]
 ]
 
-where /n/ `= iterative_size()`.
+where /n/ `= iterative_size(x)`.
 
 [table
 [[['*Construct, copy, destruct*]] [Description] ]

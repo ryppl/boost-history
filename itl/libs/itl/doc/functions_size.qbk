@@ -11,7 +11,7 @@
 [section Size]
 
 [table
-[[['*Size*]]                    [interval][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map]]
+[[['*Size*]]                    [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map]]
 [[`size_type T::size()const`]               [__O1__]  [__On__] [__On__] [__O1__] [__O1__]   ]
 [[`size_type T::cardinality()const`]        [__O1__]  [__On__] [__On__] [__O1__] [__O1__]   ]
 [[`difference_type T::length()const`]       [__O1__]  [__On__] [__On__]   [ ]      [ ]      ]

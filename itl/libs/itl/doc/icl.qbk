@@ -17,6 +17,7 @@ Distributed under the Boost Software License, Version 1.0.
     ]
 ]
 
+
 [/ Macros will be used for links so we have a central place to change them ]
 [def __itv__          `interval`]
 [def __Itv__          `Interval`]
@@ -157,6 +158,8 @@ Distributed under the Boost Software License, Version 1.0.
 [def __biLStreaming__    [link boost_icl.function_reference.streaming__conversion ['*Streaming, conversion*]]]
 
 [/ column headers]
+[def __ch_itvs__       intervals]
+
 [def __ch_dom_t__      domain\ntype]
 [def __ch_itv_t__      interval\ntype]
 [def __ch_dom_mp_t__   domain\nmapping\ntype]

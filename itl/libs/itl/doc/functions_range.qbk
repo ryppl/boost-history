@@ -11,7 +11,7 @@
 [section Range]
 
 [table
-[[['*Range*]]                 [interval][__ch_itv_sets__][__ch_itv_maps__][condition]   ]
+[[['*Range*]]                 [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][condition]   ]
 [[`interval<domain_type> hull(const T&)`] [      ]  [__O1__] [__O1__][]          ]
 [[`domain_type T::lower()const`]          [__O1__]  [__O1__] [__O1__][]          ]
 [[`domain_type T::upper()const`]          [__O1__]  [__O1__] [__O1__][]          ]

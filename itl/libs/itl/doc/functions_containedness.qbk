@@ -11,7 +11,7 @@
 [section Containedness]
 
 [table
-[[['*Containedness*]]       [interval][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map]  ]
+[[['*Containedness*]]       [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map]  ]
 [[`void T::clear()`]                           [1]       [1]      [1]     [1]      [1]      ]
 [[`bool T::empty()const`]                      [1]       [1]      [1]     [1]      [1]      ]
 [[`bool T::contains(const P&)const`]         [__ei]  [__eiS][__eiS __bpM][__es]   [__bm]    ]

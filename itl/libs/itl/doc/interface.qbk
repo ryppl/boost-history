@@ -352,7 +352,7 @@ Again two additional columns for easy comparison with stl
 sets and maps are provided. 
 
 [table Icl Associated types
-[[Purpose][Aspect][Type][interval][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]                                                                                         
+[[Purpose][Aspect][Type][__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]                                                                                         
 [/[ ]             [ ]             [ ]                   [ ]      [ ]      [ ]       [ ]      [ ]      ]
 [/                                                     interval  itvset   itvmap  itl:set  itl:map   ]
 [[['*Data*]]     [__conceptual__][`domain_type`]       [`D`]    [`D`]    [`D`]     [`D`]    [`D`]    ]
@@ -361,13 +361,13 @@ sets and maps are provided.
 [[         ]     [              ][`segment_type`][`i<D,cp>`][`i<D,cp>`][`(i<D,cp>,C)`][ ]   [ ]      ]
 [[         ]     [['size]       ][`size_type`]       [`sz<D>`][`sz<D>`][`sz<D>`] [size_t]  [size_t]  ]
 [[         ]     [              ][`difference_type`] [`df<D>`][`df<D>`][`df<D>`] [size_t]  [size_t]  ]
-[[         ]     [             ][][interval][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]                                                                                         
+[[         ]     [             ][][__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]                                                                                         
 [[['*Data*]]     [__iterative__ ][`key_type`]          [`D`][`i<D,cp>`][`i<D,cp>`] [`D`]    [`D`]   ]
 [[         ]     [              ][`data_type`]         [`D`][`i<D,cp>`]   [`C`]    [`D`]    [`C`]   ]
 [[         ]     [              ][`value_type`]        [`D`][`i<D,cp>`][`(i<D,cp>,C)`][`D`][`(D,C)`]]
 [[         ]     [              ][`interval_type`] [`i<D,cp>`][`i<D,cp>`][`i<D,cp>`] [ ]     [ ]     ]
 [[         ]     [['allocation]][`allocator_type`] [ ][`a<i<D,cp>>`][`a<(i<D,cp>, C)>`][`a<D>`][`a<(D,C)>`]]
-[[         ]     [             ][][interval][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]                                                                                         
+[[         ]     [             ][][__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]                                                                                         
 [[['*Ordering*]] [__conceptual__][`domain_compare`]  [`cp<D>`][`cp<D>`][`cp<D>`][`cp<D>`][`cp<D>`]    ]
 [[         ]     [__iterative__ ][`key_compare`]     [`cp<D>`]   [`Xl`]  [`Xl`] [`cp<D>`] [`cp<D>`] ]
 [[         ]     [              ][`interval_compare`]   [ ]      [`Xl`]  [`Xl`]     [ ]      [ ]      ]
@@ -426,7 +426,7 @@ overloaded implementations for the function of that row is shown.
 [/ memberref boost::itl::set::iterative_size `iterative_size`]
 
 [table Synopsis Functions and Overloads
-[[T]                        [interval][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]                                                                                         
+[[T]                        [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]                                                                                         
 [/                                           interval  itvset   itvmap  itl:set  itl:map    ]
 [[__biLConsCopyDest__ [#function_synopsis_table]] [ ]     [ ]      [ ]     [ ]      [ ]     ]
 [[`T::T()`]                                       [1]       [1]      [1]     [1]      [1]   ]
@@ -435,13 +435,13 @@ overloaded implementations for the function of that row is shown.
 [[`T& T::operator=(const P&)`]                    [A]     [__S]    [__M]     [1]      [1]   ]
 [[`void T::swap(T&)`]                             [ ]       [1]      [1]     [1]      [1]   ]
 
-[[__biLContainedness__ ][interval][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
+[[__biLContainedness__ ][__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
 [[`bool T::empty()const`]                         [ ]       [1]      [1]     [1]      [1]   ]
 [[`bool is_empty(const T&)`]                      [1]       [1]      [1]     [1]      [1]   ]
 [[`bool contains(const T&, const P&)`\n
   `bool within(const P&, const T&)`]            [__ei]  [__eiS][__eiS __bpM][__es]   [__bm] ]
 
-[[__biLEquivsOrderings__ ][interval][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
+[[__biLEquivsOrderings__ ][__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
 [[`bool operator == (const T&, const T&)`]        [1]       [1]      [1]     [1]      [1]   ]
 [[`bool operator != (const T&, const T&)`]        [1]       [1]      [1]     [1]      [1]   ]
 [[`bool operator <  (const T&, const T&)`]        [1]       [1]      [1]     [1]      [1]   ]
@@ -453,7 +453,7 @@ overloaded implementations for the function of that row is shown.
 [[`bool is_element_greater(const T&, const P&)`]  [ ]     [__S]    [__M]     [1]      [1]   ]
 [[`bool is_distinct_equal(const T&, const P&)`]   [ ]       [ ]    [__M]     [ ]      [1]   ]
 
-[[__biLSize__ ] [interval][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
+[[__biLSize__ ] [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
 [[`size_type T::size()const`]                     [ ]       [1]      [1]     [1]      [1]   ]
 [[`size_type size(const T&)`]                     [1]       [1]      [1]     [1]      [1]   ]
 [[`size_type cardinality(const T&)`]              [1]       [1]      [1]     [1]      [1]   ]
@@ -470,7 +470,7 @@ overloaded implementations for the function of that row is shown.
 [[`interval_type hull(const T&)`]                 [ ]       [1]      [1]     [ ]      [ ]   ]
 [[`T hull(const T&, const T&)`]                   [1]       [ ]      [ ]     [ ]      [ ]   ]
 
-[[__biLAddition__]                [interval][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
+[[__biLAddition__]                [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
 [[`T& T::add(const P&)`]                          [ ]     [__ei]    [__bp]   [ ]     [__b]  ]
 [[`T& add(T&, const P&)`]                         [ ]     [__ei]    [__bp]   [__e]   [__b]  ]
 [[`T& T::add(J pos, const P&)`]                   [ ]     [__i]     [__p]    [ ]     [__b]  ]
@@ -489,7 +489,7 @@ overloaded implementations for the function of that row is shown.
 [[`T& operator -=(T&, const P&)`]                 [ ]    [__eiS][__eiS __bpM][__es]  [__bm] ]
 [[`T  operator - (T, const P&)`]                  [ ]    [__eiS][__eiS __bpM][__es]  [__bm] ]
 
-[[__biLInsertion__]      [interval][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
+[[__biLInsertion__]      [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
 [[`V T::insert(const P&)`]                        [ ]     [__ei]    [__bp]   [__e]    [__b]  ]
 [[`V insert(T&, const P&)`]                       [ ]     [__ei]    [__bp]   [__e]    [__b]  ]
 [[`V T::insert(J pos, const P&)`]                 [ ]     [__i]     [__p]    [__e]    [__b]  ]
@@ -505,7 +505,7 @@ overloaded implementations for the function of that row is shown.
 [[`void T::erase(iterator)`]                      [ ]       [1]      [1]     [1]      [1]    ]
 [[`void T::erase(iterator,iterator)`]             [ ]       [1]      [1]     [1]      [1]    ]
 
-[[__biLIntersection__]  [interval][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
+[[__biLIntersection__]  [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
 [[`void add_intersection(T&, const T&, const P&)`][ ]   [__eiS][__eiS __bpM][ ]     [ ]       ]
 [[`T& operator &=(T&, const P&)`]              [__i]  [__eiS][__eiS __bpM][__es]  [__bm]    ]
 [[`T  operator & (T, const P&)`\n`T  operator & (const P&, T)`] 
@@ -518,7 +518,7 @@ overloaded implementations for the function of that row is shown.
 [[`T& operator ^=(T&, const P&)`]              [ ]    [__eiS]    [__bpM]  [__es]  [__bm]    ]
 [[`T  operator ^ (T, const P&)`\n
   `T  operator ^ (const P&, T)`]               [ ]    [__eiS]    [__bpM]  [__es]  [__bm]    ]
-[[__biLIteratorRelated__] [interval][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
+[[__biLIteratorRelated__] [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
 [[`J T::begin()`]                              [ ]       [2]      [2]     [2]      [2]      ]
 [[`J T::end()`]                                [ ]       [2]      [2]     [2]      [2]      ]
 [[`J T::rbegin()`]                             [ ]       [2]      [2]     [2]      [2]      ]
@@ -527,13 +527,13 @@ overloaded implementations for the function of that row is shown.
 [[`J T::upper_bound(const key_type&)`]         [ ]       [2]      [2]     [2]      [2]      ]
 [[`pair<J,J> T::equal_range(const key_type&)`] [ ]       [2]      [2]     [2]      [2]      ]
 
-[[__biLElementIteration__] [interval][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
+[[__biLElementIteration__] [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
 [[`K elements_begin(T&)`]                      [ ]       [2]      [2]     [ ]      [ ]      ]
 [[`K elements_end(T&)`]                        [ ]       [2]      [2]     [ ]      [ ]      ]
 [[`K elements_rbegin(T&)`]                     [ ]       [2]      [2]     [ ]      [ ]      ]
 [[`K elements_rend(T&)`]                       [ ]       [2]      [2]     [ ]      [ ]      ]
 
-[[__biLStreaming__ ]      [interval][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
+[[__biLStreaming__ ]      [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
 [[`std::basic_ostream operator << (basic_ostream&, const T&)`]      
                                                [1]       [1]      [1]     [1]      [1]      ]
 ]
