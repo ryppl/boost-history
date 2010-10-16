@@ -32,9 +32,9 @@ are given in the table above.
           the effect of the corresponding addition function.
         
           Find more on 
-          [link boost_itl.concepts.addability__subtractability_and_aggregate_on_overlap ['subtractability of maps]]
+          [link boost_icl.concepts.addability__subtractability_and_aggregate_on_overlap ['subtractability of maps]]
           and related 
-          [link boost_itl.semantics.maps ['semantic issues]] 
+          [link boost_icl.semantics.maps ['semantic issues]] 
           following the links. 
         
          ]]
@@ -166,14 +166,14 @@ m  | m m m m      M  | M M M M M M
 ['*See also . . .*]
 [table
 []
-[[[link boost_itl.function_reference.addition ['*Addition*]]         ]]
-[[[link boost_itl.function_reference.erasure  ['*Erasure*]]          ]]
+[[[link boost_icl.function_reference.addition ['*Addition*]]         ]]
+[[[link boost_icl.function_reference.erasure  ['*Erasure*]]          ]]
 ]
 ['*Back to section . . .*]
 [table
 []
 [[[link function_synopsis_table ['*Function Synopsis*]]    ]]
-[[[link boost_itl.interface ['*Interface*]]                ]]
+[[[link boost_icl.interface ['*Interface*]]                ]]
 ]
 
 [endsect][/ Subtraction]

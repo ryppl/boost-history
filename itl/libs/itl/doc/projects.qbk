@@ -24,7 +24,7 @@ project code lives in `namespace mini`.
 
 [table Overview over Icl Examples
 	[[level]   [example] [classes] [features]]
-	[[basic]   [[link boost_itl.examples.large_bitset Large Bitset]]
+	[[basic]   [[link boost_icl.examples.large_bitset Large Bitset]]
 	    [__itv_map__][The most simple application of an interval map: 
 	                  Counting the overlaps of added intervals.]]
 ]

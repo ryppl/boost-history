@@ -9,7 +9,7 @@
 
 [section Function Reference]
 
-Section [link boost_itl.interface.function_synopsis Function Synopsis] 
+Section [link boost_icl.interface.function_synopsis Function Synopsis] 
 above gave an overview of the polymorphic functions of the itl.
 This is what you will need to find the desired possibilities to combine itl 
 functions and objects most of the time.
@@ -28,7 +28,7 @@ in detail.
 [h5 Placeholders]
 
 For a concise representation the same __eiS_phs__ will be used that have been
-introduced in section [link boost_itl.interface.function_synopsis Function Synopsis].
+introduced in section [link boost_icl.interface.function_synopsis Function Synopsis].
 
 [h5 More specific function documentation]
 
@@ -76,7 +76,7 @@ the result type is always equal to the first argument.
 The possible types that can be instantiated for `T` and `P`
 are element, interval and container types abbreviated by
 placeholders that are defined 
-[link boost_itl.interface.function_synopsis here]
+[link boost_icl.interface.function_synopsis here]
 and can be summarized as
 
 __s : element set, __S : interval sets, __e : elements, __i : intervals\n

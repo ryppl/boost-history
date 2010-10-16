@@ -122,7 +122,7 @@ stays linear.
 [table
 []
 [[[link function_synopsis_table ['*Function Synopsis*]]]]
-[[[link boost_itl.interface ['*Interface*]]                          ]]
+[[[link boost_icl.interface ['*Interface*]]                          ]]
 ]
 
 [endsect][/ Containedness]

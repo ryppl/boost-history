@@ -39,15 +39,15 @@ a /set union/ semantics is often attached `operators |=` and `|`.
           for element maps and /aggregate on overlap/ for interval maps. 
         
           Find more on 
-          [link boost_itl.concepts.addability__subtractability_and_aggregate_on_overlap ['addability of maps]]
+          [link boost_icl.concepts.addability__subtractability_and_aggregate_on_overlap ['addability of maps]]
           and related 
-          [link boost_itl.semantics.maps ['semantic issues]] 
+          [link boost_icl.semantics.maps ['semantic issues]] 
           following the links. 
         
           Examples, demonstrating Addition on interval containers are
-          [link boost_itl.examples.overlap_counter ['overlap counter]],
-          [link boost_itl.examples.party ['party]] and
-          [link boost_itl.examples.partys_height_average ['party's height average.]] 
+          [link boost_icl.examples.overlap_counter ['overlap counter]],
+          [link boost_icl.examples.party ['party]] and
+          [link boost_icl.examples.partys_height_average ['party's height average.]] 
          ]]
 ]
 
@@ -142,7 +142,7 @@ we separate /element containers/ from /interval containers/.
 Within each group all combinations of types are supported 
 for an operation, that are in line with the *itl's* 
 design and the sets of laws, that establish the *itl's*
-[link boost_itl.semantics semantics].
+[link boost_icl.semantics semantics].
 
 
 Overloads between /element containers/ and /interval containers/
@@ -203,7 +203,7 @@ is given by this table.
 
 Since the implementation of
 element and interval containers is based on the 
-[link boost_itl.implementation link red-black tree implementation]
+[link boost_icl.implementation link red-black tree implementation]
 of std::AssociativeContainers, we have a logarithmic complexity for
 addition of elements.
 Addition of intervals or interval value pairs is amortized logarithmic
@@ -243,15 +243,15 @@ m  |   m   m            p  |                      M1 M3
 ['*See also . . .*]
 [table
 []
-[[[link boost_itl.function_reference.subtraction ['*Subtraction*]]   ]]
-[[[link boost_itl.function_reference.insertion ['*Insertion*]]       ]]
+[[[link boost_icl.function_reference.subtraction ['*Subtraction*]]   ]]
+[[[link boost_icl.function_reference.insertion ['*Insertion*]]       ]]
 ]
 
 ['*Back to section . . .*]
 [table
 []
 [[[link function_synopsis_table ['*Function Synopsis*]]    ]]
-[[[link boost_itl.interface ['*Interface*]]                          ]]
+[[[link boost_icl.interface ['*Interface*]]                          ]]
 ]
 
 [endsect][/ Addition]

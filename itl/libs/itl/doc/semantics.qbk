@@ -210,7 +210,7 @@ RightDistributivity<S,&,-,=v= > : S a,b,c; (a & b) - c =v= (a - c) & (b - c)
 
 The next table shows the relationship between 
 law instances, 
-[link boost_itl.introduction.interval_combining_styles interval combining style]
+[link boost_icl.introduction.interval_combining_styles interval combining style]
 and the 
 used equality relation.
 
@@ -238,7 +238,7 @@ RightDistributivity<S,+,-,=e= > : S a,b,c; (a + b) - c =e= (a - c) + (b - c)
 The remaining five instantiations of `RightDistributivity`
 are valid for lexicographical equality (demoted as `==`) as well.
 
-[link boost_itl.introduction.interval_combining_styles Interval combining styles]
+[link boost_icl.introduction.interval_combining_styles Interval combining styles]
 correspond to containers according to
 ``
 style       set

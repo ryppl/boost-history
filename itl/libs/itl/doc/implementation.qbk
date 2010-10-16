@@ -8,14 +8,14 @@
 
 [section Implementation]
 
-The [link boost_itl.interface previous section] gave an overview over the interface
+The [link boost_icl.interface previous section] gave an overview over the interface
 of the *itl* outlining 
-[link boost_itl.interface.class_templates class templates], 
-[link boost_itl.interface.associated_types associated types]
+[link boost_icl.interface.class_templates class templates], 
+[link boost_icl.interface.associated_types associated types]
 and polymorphic 
-[link boost_itl.interface.function_synopsis functions and operators]. 
+[link boost_icl.interface.function_synopsis functions and operators]. 
 In preparation to the 
-[link boost_itl.function_reference next section], 
+[link boost_icl.function_reference next section], 
 that describes the *itl's* polymorphic functions in
 more detail together with ['*complexity characteristics*], 
 this section summarizes some general information on
@@ -98,7 +98,7 @@ interval containers is briefly discussed.
 
 More information on ['*complexity characteristics*] 
 of *itl's* functions is contained in section 
-[link boost_itl.function_reference Function Reference]
+[link boost_icl.function_reference Function Reference]
 
 
 [h5 Time Complexity of Addition]

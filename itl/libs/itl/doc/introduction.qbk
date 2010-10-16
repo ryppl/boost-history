@@ -62,7 +62,7 @@ to combine associated values in meaningful ways when intervals
 overlap on insertion.
 
 For a condensed introduction and overview you may want to look at the
-[@http://www.herold-faulhaber.de/boost_itl/doc/libs/itl/doc/boostcon09/intro_to_itl.pdf 
+[@http://www.herold-faulhaber.de/boost_icl/doc/libs/itl/doc/boostcon09/intro_to_itl.pdf 
 presentation material on the *ICL* from ['*BoostCon2009*]].
 
 
@@ -162,7 +162,7 @@ an ['*accumulative one*] (on the associated values).
 Addability and aggregate on overlap are useful features on 
 __itv_maps__ implemented via function `add` and `operator +=`. 
 But you can also use them with the ['traditional] 
-[link boost_itl.function_reference.insertion insert semantics] 
+[link boost_icl.function_reference.insertion insert semantics] 
 that behaves like `std::map::insert` generalized for 
 interval insertion.
 
@@ -266,7 +266,7 @@ styles are shown by example in the tables below.
 
 Note that =interval_sets= /A/, /B/ and /C/ represent the same set of elements ={1,2,3,4}= 
 and =interval_maps= /D/ and /E/ represent the same map of elements [^{1->1, 2->2, 3->1, 4->1}].
-See example program [link boost_itl.examples.interval_container Interval container]
+See example program [link boost_icl.examples.interval_container Interval container]
 for an additional demo.
 
 [h4 Joining interval containers]
@@ -284,7 +284,7 @@ __Spl_itv_set__ and __spl_itv_map__ on the contrary
 have an ['*insertion memory*]. They do accumulate interval borders both 
 from additions and intersections. This is specifically useful, if we want
 to enrich an interval container with certain time grids, like e.g. months 
-or calendar weeks or both. See example [link boost_itl.examples.month_and_week_grid time grids for months and weeks].
+or calendar weeks or both. See example [link boost_icl.examples.month_and_week_grid time grids for months and weeks].
 
 [h4 Separating interval containers]
 
@@ -297,4 +297,5 @@ these borders are preserved in the __sep_itv_set__.
 [endsect]
 
 [endsect][/ Introduction]
+
 

@@ -39,13 +39,13 @@
 ['*See also . . .*]
 [table
 []
-[[[link boost_itl.function_reference.intersection ['*Intersection*]] ]]
+[[[link boost_icl.function_reference.intersection ['*Intersection*]] ]]
 ]
 ['*Back to section . . .*]
 [table
 []
 [[[link function_synopsis_table ['*Function Synopsis*]]    ]]
-[[[link boost_itl.interface ['*Interface*]]                ]]
+[[[link boost_icl.interface ['*Interface*]]                ]]
 ]
 
 [endsect][/ Selection]
