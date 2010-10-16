@@ -53,8 +53,8 @@ namespace boost
 # include <WinError.h>
 //#    define WINAPI  __stdcall
 
-//# ifdef UNDER_CE
-# if defined(_WIN32_WCE)
+// @FIXME Which condition must be tested            	
+# ifdef UNDER_CE
 #  ifndef WINAPI
 #   ifndef _WIN32_WCE_EMULATION
 #    define WINAPI  __cdecl     // Note this doesn't match the desktop definition
@@ -69,7 +69,6 @@ extern "C" {
 
 
 
-//#  include <kfuncs.h>
 #  ifdef __cplusplus
 }
 #  endif
@@ -94,24 +93,29 @@ namespace boost
             	typedef void* HANDLE_;
             	
             	typedef long LONG_;
-            	
-            	#if !defined(_M_IX86)
+
+// @FIXME Which condition must be tested            	
+//            	#if !defined(_M_IX86)
             	typedef __int64 LONGLONG_; 
-            	#else
-            	typedef double LONGLONG_;
-            	#endif
-            	
-            	typedef union _LARGE_INTEGER_ {
+//            	#else
+//            	typedef double LONGLONG_;
+//            	#endif
+            	           	
+//            	typedef union _LARGE_INTEGER_ {
+////            	  struct {
+////            	    DWORD_ LowPart;
+////            	    LONG_  HighPart;
+////            	  } ;
 //            	  struct {
 //            	    DWORD_ LowPart;
 //            	    LONG_  HighPart;
-//            	  } ;
-            	  struct {
-            	    DWORD_ LowPart;
-            	    LONG_  HighPart;
-            	  } u;
-            	  LONGLONG_ QuadPart;
-            	} LARGE_INTEGER_, *PLARGE_INTEGER_;
+//            	  } u;
+//            	  LONGLONG_ QuadPart;
+//            	} LARGE_INTEGER_, *PLARGE_INTEGER_;
+            	typedef struct _LARGE_INTEGER {
+            	    LONGLONG_ QuadPart;
+            	} LARGE_INTEGER_;           	
+            	typedef LARGE_INTEGER_ *PLARGE_INTEGER_;
             	
             	typedef struct _FILETIME {
             	  DWORD_ dwLowDateTime;
@@ -182,9 +186,7 @@ namespace boost
             	QueryPerformanceFrequency(
             	  LARGE_INTEGER_ *lpFrequency
             	);
-                
-                static const DWORD_ ERROR_NOT_SUPPORTED_ = ERROR_NOT_SUPPORTED; //?? 
-                
+                              
             }
         }
     }
