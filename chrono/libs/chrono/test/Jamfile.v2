@@ -11,24 +11,29 @@
 #local BOOST_ROOT = /boost_1_41_0 ;
 #local BOOST_ROOT = c:/cygwin/boost_1_41_0 ;
 
+import os ;
+import feature ;
+
 if ! $(BOOST_ROOT)
 {
     BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
 }
+#feature.feature chrono_level : sh st hd;
+#feature.set-default chrono_level : [ hd ] ;
+
+#feature.feature chrono_stub : yes no;
+#feature.set-default chrono_stub : [ no ] ;
 
 project
     : requirements
         <os>LINUX:<threading>multi
-        #<library>/boost/chrono//boost_chrono
-        <define>BOOST_CHRONO_INLINED
-        #<define>BOOST_USE_WINDOWS_H
-        #<library>../build//boost_chrono
-        <library>/boost/system//boost_system
-        #<library>/boost/thread//boost_thread/<link>shared
+        <library>/boost/system//boost_system/<link>static
+        
         # uncomment the line above if you build outside the Boost release
         #<include>$(BOOST_ROOT)
         # uncomment the line above if you build outside the Boost release
         #<include>../../..
+        
         <toolset>msvc:<asynch-exceptions>on
         <define>BOOST_ENABLE_WARNINGS
         <define>BOOST_CHRONO_USES_MPL_ASSERT
@@ -40,87 +45,134 @@ project
         <toolset>msvc:<cxxflags>/wd4127
     ;
 
+rule chrono-run ( sources )
+{
+    return 
+    [ run $(sources) ../build//boost_chrono 
+        : : : <define>BOOST_USE_WINDOWS_H
+        : $(sources[1]:B)_shared ]
+    [ run $(sources) ../build//boost_chrono/<link>static 
+        : : : 
+        : $(sources[1]:B)_static ]
+    [ run $(sources) 
+        : : : <define>BOOST_CHRONO_INLINED 
+        : $(sources[1]:B)_header ]
+    [ run $(sources) 
+        : : : <define>BOOST_CHRONO_INLINED <define>BOOST_USE_WINDOWS_H 
+        : $(sources[1]:B)_header_win ]
+    ;
+}    
+rule chrono-run2 ( sources : name )
+{
+    local result = 
+    [ run $(sources) ../build//boost_chrono 
+        : : : <define>BOOST_USE_WINDOWS_H
+        : $(name)_shared ]
+    [ run $(sources) ../build//boost_chrono/<link>static 
+        : : : 
+        : $(name)_static ]
+    [ run $(sources) 
+        : : : <define>BOOST_CHRONO_INLINED 
+        : $(name)_header ]
+        ;
+    [ run $(sources) 
+        : : : <define>BOOST_CHRONO_INLINED <define>BOOST_USE_WINDOWS_H 
+        : $(name)_header_win ]
+    ;
+}    
+
+rule chrono-compile ( sources )
+{
+    return 
+    [ compile $(sources) 
+        :
+        : $(sources[1]:B)_lib ]
+    [ compile $(sources) 
+        :  <define>BOOST_CHRONO_INLINED 
+        : $(sources[1]:B)_header ]
+    [ compile $(sources) 
+        : <define>BOOST_CHRONO_INLINED <define>BOOST_USE_WINDOWS_H 
+        : $(sources[1]:B)_header_win ]
+    ;
+}    
+        
+rule chrono-compile2 ( sources : name )
+{
+    return 
+    [ compile $(sources) 
+        :
+        : $(name)_lib ]
+    [ compile $(sources) 
+        :  <define>BOOST_CHRONO_INLINED 
+        : $(name)_header ]
+    [ compile $(sources) 
+        : <define>BOOST_CHRONO_INLINED <define>BOOST_USE_WINDOWS_H 
+        : $(name)_header_win ]
+    ;
+}    
+        
+
 
    test-suite "minmax"
         :
-        [ compile test_minmax.cpp ]
+        [ chrono-compile test_minmax.cpp ]
         ;
 
     test-suite "chrono"
         :
-        [ run chrono_unit_test.cpp :  :  : <link>static ]
-        [ run chrono_unit_test.cpp :  :  : : chrono_unit_test_dll ]
-        [ run explore_limits.cpp :  :  : <link>static ]
-        [ run explore_limits.cpp :  :  :  : explore_limits_dll ]
-        [ run test_duration.cpp :  :  : <link>static ]
-        [ run test_duration.cpp :  :  :  : test_duration_dll ]
-        [ run test_clock.cpp :  :  : <link>static ]
-        [ run test_clock.cpp :  :  :  : test_clock_dll ]
-        [ run miscellaneous.cpp :  :  : <link>static ]
-        [ run miscellaneous.cpp :  :  :  : miscellaneous_dll ]
-        [ run test_special_values.cpp :  :  : <link>static ]
-        [ run test_special_values.cpp :  :  :  : test_special_values_dll ]
-        [ run manipulate_clock_object.cpp :  :  : <link>static ]
-        [ run manipulate_clock_object.cpp :  :  :  : manipulate_clock_object_dll ]
-        [ run chrono_accuracy_test.cpp :  :  : <link>static ]
-        [ run chrono_accuracy_test.cpp :  :  :  : chrono_accuracy_test_dll ]
+        [ chrono-run chrono_unit_test.cpp  ]
+        [ chrono-run explore_limits.cpp  ]
+        [ chrono-run test_duration.cpp ]
+        [ chrono-run test_clock.cpp ]
+        [ chrono-run miscellaneous.cpp ]
+        [ chrono-run test_special_values.cpp ]
+        [ chrono-run manipulate_clock_object.cpp ]
+        [ chrono-run chrono_accuracy_test.cpp ]
         ;
 
 
     test-suite "examples"
         :
-        [ run ../example/cycle_count.cpp :  :  : <link>static ]
-        [ run ../example/cycle_count.cpp :  :  :  : cycle_count_dll ]
-        [ run ../example/runtime_resolution.cpp :  :  : <link>static ]
-        [ run ../example/runtime_resolution.cpp :  :  :  : runtime_resolution_dll ]
-        [ run ../example/xtime.cpp :  :  : <link>static ]
-        [ run ../example/xtime.cpp :  :  :  : xtime_dll ]
-        [ run ../example/saturating.cpp :  :  : <link>static ]
-        [ run ../example/saturating.cpp  :  :  :  : saturating_dll ]
-        [ run ../example/min_time_point.cpp :  :  : <link>static ]
-        [ run ../example/min_time_point.cpp  :  :  :  : min_time_point_dll ]
-        [ run ../example/i_dont_like_the_default_duration_behavior.cpp :  :  : <link>static ]
-        [ run ../example/i_dont_like_the_default_duration_behavior.cpp  :  :  :  : i_dont_like_the_default_duration_behavior_dll ]
-        [ run ../example/simulated_thread_interface_demo.cpp :  :  : <link>static ]
-        [ run ../example/simulated_thread_interface_demo.cpp  :  :  :  : simulated_thread_interface_demo_dll ]
-        [ run ../example/timeval_demo.cpp :  :  : <link>static ]
-        [ run ../example/timeval_demo.cpp :  :  :  : timeval_demo_dll ]
+        [ chrono-run ../example/cycle_count.cpp  ]
+        [ chrono-run ../example/runtime_resolution.cpp  ]
+        [ chrono-run ../example/xtime.cpp ]
+        [ chrono-run ../example/saturating.cpp  ]
+        [ chrono-run ../example/min_time_point.cpp  ]
+        [ chrono-run ../example/i_dont_like_the_default_duration_behavior.cpp ]
+        [ chrono-run ../example/simulated_thread_interface_demo.cpp ]
+        [ chrono-run ../example/timeval_demo.cpp ]
         ;
 
     test-suite "timer"
         :
-        [ run ../example/run_timer_example.cpp :  :  : <link>static ]
-        [ run ../example/run_timer_example.cpp :  :  :  : run_timer_example_dll ]
-        [ run ../example/run_timer_example2.cpp :  :  : <link>static ]
-        [ run ../example/run_timer_example2.cpp :  :  :  : run_timer_example2_dll ]
-        [ run run_timer_test.cpp  :  :  : <link>static ]
-        [ run run_timer_test.cpp :  :  :  : run_timer_test_dll ]
+        [ chrono-run ../example/run_timer_example.cpp ]
+        [ chrono-run ../example/run_timer_example2.cpp ]
+        [ chrono-run run_timer_test.cpp  ]
         ;
 
     test-suite "other_clocks"
         :
-        [ run test_thread_clock.cpp :  :  : <link>static ]
-        [ run test_thread_clock.cpp :  :  :  : test_thread_clock_dll ]
+        [ chrono-run test_thread_clock.cpp  ]
         ;
 
     test-suite "typedefs"
         :
-        [ compile hours.pass.cpp :  :  ]
-        [ compile minutes.pass.cpp :  : ]
-        [ compile seconds.pass.cpp :  : ]
-        [ compile milliseconds.pass.cpp :  : ]
-        [ compile microseconds.pass.cpp :  :  ]
-        [ compile nanoseconds.pass.cpp :  : ]
+        [ chrono-compile hours.pass.cpp :  :  ]
+        [ chrono-compile minutes.pass.cpp :  : ]
+        [ chrono-compile seconds.pass.cpp :  : ]
+        [ chrono-compile milliseconds.pass.cpp :  : ]
+        [ chrono-compile microseconds.pass.cpp :  :  ]
+        [ chrono-compile nanoseconds.pass.cpp :  : ]
         ;
 
     test-suite "traits"
         :
-        [ compile traits/specializations/duration.pass.cpp :  :  ]
-        [ compile traits/specializations/time_point.pass.cpp :  : ]
-        [ compile traits/is_fp/treat_as_floating_point.pass.cpp :  :  ]
-        [ run traits/duration_values/max.pass.cpp :  :  : <link>static ]
-        [ run traits/duration_values/zero.pass.cpp :  :  : <link>static ]
-        [ run traits/duration_values/min.pass.cpp :  :  : <link>static ]
+        [ chrono-compile traits/specializations/duration.pass.cpp ]
+        [ chrono-compile traits/specializations/time_point.pass.cpp ]
+        [ chrono-compile traits/is_fp/treat_as_floating_point.pass.cpp  ]
+        [ chrono-run traits/duration_values/max.pass.cpp  ]
+        [ chrono-run traits/duration_values/zero.pass.cpp ]
+        [ chrono-run traits/duration_values/min.pass.cpp  ]
         ;
 
     test-suite "duration"
@@ -128,124 +180,124 @@ project
         [ compile-fail duration/duration.fail.cpp  ]
         [ compile-fail duration/ratio.fail.cpp  ]
         [ compile-fail duration/positive_num.fail.cpp  ]
-        [ compile duration/default_ratio.pass.cpp :  :  : ]
-        [ compile duration/types.pass.cpp :  :  : ]
+        [ chrono-compile duration/default_ratio.pass.cpp ]
+        [ chrono-compile duration/types.pass.cpp ]
         
-        [ run duration/arithmetic/op_divide_ass.pass.cpp :  :  : <link>static ]
-        [ run duration/arithmetic/op_minusminusint.pass.cpp :  :  : <link>static ]
-        [ run duration/arithmetic/op_plus_ass.pass.cpp :  :  : <link>static ]
-        [ run duration/arithmetic/op_minus.pass.cpp :  :  : <link>static ]
-        [ run duration/arithmetic/op_mod_ass_duration.pass.cpp :  :  : <link>static ]
-        [ run duration/arithmetic/op_plusplus.pass.cpp :  :  : <link>static ]
-        [ run duration/arithmetic/op_minus_ass.pass.cpp :  :  : <link>static ]
-        [ run duration/arithmetic/op_mod_ass_rep.pass.cpp :  :  : <link>static ]
-        [ run duration/arithmetic/op_plusplusint.pass.cpp :  :  : <link>static ]
-        [ run duration/arithmetic/op_minusminus.pass.cpp :  :  : <link>static ]
-        [ run duration/arithmetic/op_plus.pass.cpp :  :  : <link>static ]
-        [ run duration/arithmetic/op_times_ass.pass.cpp :  :  : <link>static ]
+        [ chrono-run duration/arithmetic/op_divide_ass.pass.cpp  ]
+        [ chrono-run duration/arithmetic/op_minusminusint.pass.cpp  ]
+        [ chrono-run duration/arithmetic/op_plus_ass.pass.cpp  ]
+        [ chrono-run duration/arithmetic/op_minus.pass.cpp  ]
+        [ chrono-run duration/arithmetic/op_mod_ass_duration.pass.cpp  ]
+        [ chrono-run duration/arithmetic/op_plusplus.pass.cpp  ]
+        [ chrono-run duration/arithmetic/op_minus_ass.pass.cpp  ]
+        [ chrono-run duration/arithmetic/op_mod_ass_rep.pass.cpp  ]
+        [ chrono-run duration/arithmetic/op_plusplusint.pass.cpp  ]
+        [ chrono-run duration/arithmetic/op_minusminus.pass.cpp  ]
+        [ chrono-run duration/arithmetic/op_plus.pass.cpp  ]
+        [ chrono-run duration/arithmetic/op_times_ass.pass.cpp  ]
         
-        [ run duration/cast/duration_cast.pass.cpp :  :  : <link>static ]
+        [ chrono-run duration/cast/duration_cast.pass.cpp  ]
         [ compile-fail duration/cast/toduration.fail.cpp  ]
         
-        [ run duration/comparisons/op_equal.pass.cpp :  :  : <link>static ]
-        [ run duration/comparisons/op_less.pass.cpp :  :  : <link>static ]
+        [ chrono-run duration/comparisons/op_equal.pass.cpp  ]
+        [ chrono-run duration/comparisons/op_less.pass.cpp  ]
         
-        [ run duration/cons/convert_exact.pass.cpp :  :  : <link>static ]
+        [ chrono-run duration/cons/convert_exact.pass.cpp  ]
         [ compile-fail duration/cons/convert_float_to_int.fail.cpp  ]
         [ compile-fail duration/cons/convert_inexact.fail.cpp  ]
-        [ run duration/cons/convert_inexact.pass.cpp :  :  : <link>static ]
-        [ run duration/cons/convert_int_to_float.pass.cpp :  :  : <link>static ]
-        [ run duration/cons/default.pass.cpp :  :  : <link>static ]
-        [ run duration/cons/rep.pass.cpp :  :  : <link>static ]
+        [ chrono-run duration/cons/convert_inexact.pass.cpp  ]
+        [ chrono-run duration/cons/convert_int_to_float.pass.cpp  ]
+        [ chrono-run duration/cons/default.pass.cpp  ]
+        [ chrono-run duration/cons/rep.pass.cpp  ]
         [ compile-fail duration/cons/rep01.fail.cpp  ]
         [ compile-fail duration/cons/rep02.fail.cpp  ]
-        [ run duration/cons/rep02.pass.cpp :  :  : <link>static ]
+        [ chrono-run duration/cons/rep02.pass.cpp  ]
         [ compile-fail duration/cons/rep03.fail.cpp  ]
         
-        [ run duration/nonmember/op_plus.pass.cpp :  :  : <link>static : nonmember_op_plus.pass ]
-        [ run duration/nonmember/op_minus.pass.cpp :  :  : <link>static : nonmember_op_minus.pass ]
-        [ run duration/nonmember/op_divide_duration.pass.cpp :  :  : <link>static : nonmember_op_divide_duration.pass  ]
+        [ chrono-run2 duration/nonmember/op_plus.pass.cpp  : nonmember_op_plus.pass ]
+        [ chrono-run2 duration/nonmember/op_minus.pass.cpp  : nonmember_op_minus.pass ]
+        [ chrono-run2 duration/nonmember/op_divide_duration.pass.cpp  : nonmember_op_divide_duration.pass  ]
         [ compile-fail duration/nonmember/op_divide_rep.fail.cpp : : nonmember_op_divide_rep.fail   ]
-        [ run duration/nonmember/op_divide_rep.pass.cpp :  :  : <link>static : nonmember_op_divide_rep.pass  ]
-        [ run duration/nonmember/op_mod_duration.pass.cpp :  :  : <link>static : nonmember_op_mod_duration.pass  ]
-        [ run duration/nonmember/op_mod_rep.pass.cpp :  :  : <link>static : nonmember_op_mod_rep.pass  ]
+        [ chrono-run2 duration/nonmember/op_divide_rep.pass.cpp  : nonmember_op_divide_rep.pass  ]
+        [ chrono-run2 duration/nonmember/op_mod_duration.pass.cpp  : nonmember_op_mod_duration.pass  ]
+        [ chrono-run2 duration/nonmember/op_mod_rep.pass.cpp  : nonmember_op_mod_rep.pass  ]
         [ compile-fail duration/nonmember/op_mod_rep.fail.cpp : : nonmember_op_mod_rep.fail   ]
-        [ run duration/nonmember/op_times_rep.pass.cpp :  :  : <link>static : nonmember_op_times_rep.pass  ]
+        [ chrono-run2 duration/nonmember/op_times_rep.pass.cpp  : nonmember_op_times_rep.pass  ]
         [ compile-fail duration/nonmember/op_times_rep1.fail.cpp : : nonmember_op_times_rep1.fail   ]
         [ compile-fail duration/nonmember/op_times_rep2.fail.cpp : : nonmember_op_times_rep2.fail   ]
 
-        [ run duration/special/max.pass.cpp :  :  : <link>static : duration_special_max.pass  ]
-        [ run duration/special/min.pass.cpp :  :  : <link>static : duration_special_min.pass  ]
-        [ run duration/special/zero.pass.cpp :  :  : <link>static : duration_special_zero.pass  ]
+        [ chrono-run2 duration/special/max.pass.cpp  : duration_special_max.pass  ]
+        [ chrono-run2 duration/special/min.pass.cpp  : duration_special_min.pass  ]
+        [ chrono-run2 duration/special/zero.pass.cpp  : duration_special_zero.pass  ]
         ;
 
     test-suite "time_point"
         :
-        [ compile time_point/default_duration.pass.cpp :  : time_point.default_duration.pass ]
+        [ chrono-compile2 time_point/default_duration.pass.cpp : time_point.default_duration.pass ]
         [ compile-fail time_point/duration.fail.cpp : : time_point.duration.fail   ]
 
-        [ run time_point/arithmetic/op_plus_ass.pass.cpp :  :  : <link>static : time_point.op_plus_ass.pass ]
-        [ run time_point/arithmetic/op_minus_ass.pass.cpp :  :  : <link>static : time_point.op_minus_ass.pass ]
+        [ chrono-run2 time_point/arithmetic/op_plus_ass.pass.cpp  : time_point.op_plus_ass.pass ]
+        [ chrono-run2 time_point/arithmetic/op_minus_ass.pass.cpp  : time_point.op_minus_ass.pass ]
         
-        [ run time_point/cast/time_point_cast.pass.cpp :  :  : <link>static : time_point.time_point_cast.pass ]
+        [ chrono-run2 time_point/cast/time_point_cast.pass.cpp  : time_point.time_point_cast.pass ]
         [ compile-fail time_point/cast/toduration.fail.cpp : : time_point.toduration.fail   ]
         
         [ compile-fail time_point/comparisons/op_equal.fail.cpp : : time_point.op_equal.fail   ]
-        [ run time_point/comparisons/op_equal.pass.cpp :  :  : <link>static : time_point.op_equal.pass ]
+        [ chrono-run2 time_point/comparisons/op_equal.pass.cpp  : time_point.op_equal.pass ]
         [ compile-fail time_point/comparisons/op_less.fail.cpp : : time_point.op_less.fail   ]
-        [ run time_point/comparisons/op_less.pass.cpp :  :  : <link>static : time_point.op_less.pass ]
+        [ chrono-run2 time_point/comparisons/op_less.pass.cpp  : time_point.op_less.pass ]
         
         [ compile-fail time_point/cons/convert.fail.cpp : : time_point.convert.fail   ]
-        [ run time_point/cons/convert.pass.cpp :  :  : <link>static : time_point.convert.pass ]
-        [ run time_point/cons/default.pass.cpp :  :  : <link>static : time_point.default.pass ]
+        [ chrono-run2 time_point/cons/convert.pass.cpp  : time_point.convert.pass ]
+        [ chrono-run2 time_point/cons/default.pass.cpp  : time_point.default.pass ]
         [ compile-fail time_point/cons/duration.fail.cpp : : time_point.cons.duration.fail   ]
-        [ run time_point/cons/duration.pass.cpp :  :  : <link>static : time_point.duration.pass ]
+        [ chrono-run2 time_point/cons/duration.pass.cpp  : time_point.duration.pass ]
         
-        [ run time_point/nonmember/op_plus.pass.cpp :  :  : <link>static : time_point.op_plus.pass ]
-        [ run time_point/nonmember/op_minus_time_point.pass.cpp :  :  : <link>static : time_point.op_minus_time_point.pass ]
-        [ run time_point/nonmember/op_minus_duration.pass.cpp :  :  : <link>static : time_point.op_minus_duration.pass ]
+        [ chrono-run2 time_point/nonmember/op_plus.pass.cpp  : time_point.op_plus.pass ]
+        [ chrono-run2 time_point/nonmember/op_minus_time_point.pass.cpp  : time_point.op_minus_time_point.pass ]
+        [ chrono-run2 time_point/nonmember/op_minus_duration.pass.cpp  : time_point.op_minus_duration.pass ]
         
-        [ run time_point/special/max.pass.cpp :  :  : <link>static : time_point.max.pass ]
-        [ run time_point/special/min.pass.cpp :  :  : <link>static : time_point.min.pass ]
+        [ chrono-run2 time_point/special/max.pass.cpp  : time_point.max.pass ]
+        [ chrono-run2 time_point/special/min.pass.cpp  : time_point.min.pass ]
         ;
 
     test-suite "clock"
         :
-        [ compile clock/hires/consistency.pass.cpp : : clock.hires.consistency.pass ]
-        [ run clock/hires/now.pass.cpp :  :  : <link>static : clock.hires.now.pass ]
+        [ chrono-compile2 clock/hires/consistency.pass.cpp : clock.hires.consistency.pass ]
+        [ chrono-run2 clock/hires/now.pass.cpp  : clock.hires.now.pass ]
         
-        [ compile clock/monotonic/consistency.pass.cpp : : clock.monotonic.consistency.pass ]
-        [ run clock/monotonic/now.pass.cpp :  :  : <link>static : clock.monotonic.now.pass ]
+        [ chrono-compile2 clock/monotonic/consistency.pass.cpp : clock.monotonic.consistency.pass ]
+        [ chrono-run2 clock/monotonic/now.pass.cpp  : clock.monotonic.now.pass ]
         
-        [ compile clock/system/consistency.pass.cpp : : clock.system.consistency.pass ]
-        [ run clock/system/now.pass.cpp :  :  : <link>static : clock.system.now.pass ]
-        [ run clock/system/from_time_t.pass.cpp :  :  : <link>static : clock.system.from_time_t.pass ]
-        [ run clock/system/rep_signed.pass.cpp :  :  : <link>static : clock.system.rep_signed.pass ]
-        [ run clock/system/to_time_t.pass.cpp :  :  : <link>static : clock.system.to_time_t.pass ]
+        [ chrono-compile2 clock/system/consistency.pass.cpp : clock.system.consistency.pass ]
+        [ chrono-run2 clock/system/now.pass.cpp  : clock.system.now.pass ]
+        [ chrono-run2 clock/system/from_time_t.pass.cpp  : clock.system.from_time_t.pass ]
+        [ chrono-run2 clock/system/rep_signed.pass.cpp  : clock.system.rep_signed.pass ]
+        [ chrono-run2 clock/system/to_time_t.pass.cpp  : clock.system.to_time_t.pass ]
         
-        [ compile clock/process/consistency.pass.cpp : : clock.process.consistency.pass ]
-        [ run clock/process/now.pass.cpp :  :  : <link>static : clock.process.now.pass ]
+        [ chrono-compile2 clock/process/consistency.pass.cpp : clock.process.consistency.pass ]
+        [ chrono-run2 clock/process/now.pass.cpp  : clock.process.now.pass ]
         
-        [ compile clock/thread/consistency.pass.cpp : : clock.thread.consistency.pass ]
-        [ run clock/thread/now.pass.cpp :  :  : <link>static : clock.thread.now.pass ]
+        [ chrono-compile2 clock/thread/consistency.pass.cpp : clock.thread.consistency.pass ]
+        [ chrono-run2 clock/thread/now.pass.cpp  : clock.thread.now.pass ]
 
-        [ compile clock/errored/consistency.pass.cpp : : clock.errored.consistency.pass ]
-        [ run clock/errored/now.pass.cpp :  :  : <link>static : clock.errored.now.pass ]
+        [ chrono-compile2 clock/errored/consistency.pass.cpp : clock.errored.consistency.pass ]
+        [ chrono-run2 clock/errored/now.pass.cpp  : clock.errored.now.pass ]
         
         ;
 
 
     test-suite "io"
         :
-        [ run ../example/io_ex1.cpp :  :  : <link>static ]
-        [ run ../example/io_ex2.cpp :  :  : <link>static ]
-        [ run ../example/io_ex3.cpp :  :  : <link>static ]
-        [ run ../example/io_ex4.cpp :  :  : <link>static ]
-        [ run ../example/io_ex5.cpp :  :  : <link>static ]
+        [ chrono-run ../example/io_ex1.cpp  ]
+        [ chrono-run ../example/io_ex2.cpp  ]
+        [ chrono-run ../example/io_ex3.cpp  ]
+        [ chrono-run ../example/io_ex4.cpp  ]
+        [ chrono-run ../example/io_ex5.cpp  ]
         ;
 
     test-suite "win32"
         :
-        [ run win32_test.cpp :  :  : <link>static ]
+        [ chrono-run win32_test.cpp  ]
         ;
         
