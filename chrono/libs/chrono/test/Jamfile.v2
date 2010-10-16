@@ -243,3 +243,9 @@ project
         [ run ../example/io_ex4.cpp :  :  : <link>static ]
         [ run ../example/io_ex5.cpp :  :  : <link>static ]
         ;
+
+    test-suite "win32"
+        :
+        [ run win32_test.cpp :  :  : <link>static ]
+        ;
+        
