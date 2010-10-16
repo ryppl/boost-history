@@ -24,9 +24,9 @@ namespace chrono_detail
   BOOST_CHRONO_INLINE double get_nanosecs_per_tic()
   {
 	  boost::detail::win32::LARGE_INTEGER_ freq;
-    if ( !boost::detail::win32::QueryPerformanceFrequency( &freq ) )
-      return 0.0L;
-    return double(1000000000.0L / freq.QuadPart);
+	  if ( !boost::detail::win32::QueryPerformanceFrequency( &freq ) )
+		  return 0.0L;
+	  return double(1000000000.0L / freq.QuadPart);
   }
 
 }
@@ -40,7 +40,7 @@ namespace chrono_detail
     {
     	boost::detail::win32::DWORD_ cause = 
     		(nanosecs_per_tic <= 0.0L 
-    				? boost::detail::win32::ERROR_NOT_SUPPORTED_ 
+    				? ERROR_NOT_SUPPORTED 
     				: boost::detail::win32::GetLastError());
       boost::throw_exception(
 #if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
@@ -62,7 +62,7 @@ namespace chrono_detail
     boost::detail::win32::LARGE_INTEGER_ pcount;
     if ( (nanosecs_per_tic <= 0.0L) || (!boost::detail::win32::QueryPerformanceCounter( &pcount )) )
     {
-    	boost::detail::win32::DWORD_ cause = ((nanosecs_per_tic <= 0.0L) ? boost::detail::win32::ERROR_NOT_SUPPORTED_ : boost::detail::win32::GetLastError());
+    	boost::detail::win32::DWORD_ cause = ((nanosecs_per_tic <= 0.0L) ? ERROR_NOT_SUPPORTED : boost::detail::win32::GetLastError());
 #if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
       ec.assign( cause, system::system_category );
 #else
