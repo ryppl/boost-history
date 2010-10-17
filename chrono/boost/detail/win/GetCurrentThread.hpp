@@ -8,52 +8,19 @@
 
 #ifndef BOOST_DETAIL_WIN_GETCURRENTTHREAD_HPP
 #define BOOST_DETAIL_WIN_GETCURRENTTHREAD_HPP
-#include <boost/config.hpp>
-#include <cstdarg>
+
 #include <boost/detail/win/basic_types.hpp>
 
+namespace boost { 
+namespace detail {
+namespace win32 {
 #if defined( BOOST_USE_WINDOWS_H )
-# if !defined( BOOST_DETAIL_WIN_WINDOWS_H_INCLUDED )
-#  include <windows.h>
-#  define BOOST_DETAIL_WIN_WINDOWS_H_INCLUDED
-# endif
-
-namespace boost
-{
-    namespace detail
-    {
-        namespace win32
-        {
-			
-            using ::GetCurrentThread;
-            
-        }
-    }
-}
-
-#elif defined( WIN32 ) || defined( _WIN32 ) || defined( __WIN32__ )
-
-namespace boost
-{
-    namespace detail
-    {
-        namespace win32
-        {
-            extern "C"
-            {
-            	           		
-//                using ::GetCurrentThread;
-                __declspec(dllimport) 
-                HANDLE_ 
-                WINAPI 
-                GetCurrentThread();
-            	
-            	
-            }
-        }
-    }
-}
+    using ::GetCurrentThread;
 #else
-# error "Win32 functions not available"
+    extern "C" __declspec(dllimport) HANDLE_ WINAPI GetCurrentThread();
 #endif
+}
+}
+}
+
 #endif // BOOST_DETAIL_WIN_TIME_HPP

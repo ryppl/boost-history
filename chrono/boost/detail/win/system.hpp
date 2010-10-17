@@ -14,10 +14,6 @@
 #include <boost/detail/win/basic_types.hpp>
 
 #if defined( BOOST_USE_WINDOWS_H )
-# if !defined( BOOST_DETAIL_WIN_WINDOWS_H_INCLUDED )
-#  include <windows.h>
-#  define BOOST_DETAIL_WIN_WINDOWS_H_INCLUDED
-# endif
 
 namespace boost
 {

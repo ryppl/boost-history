@@ -6,20 +6,23 @@
 //  See http://www.boost.org/LICENSE_1_0.txt
 
 
-#ifndef BOOST_DETAIL_WIN_GETCURRENT_PROCESS_HPP
-#define BOOST_DETAIL_WIN_GETCURRENT_PROCESS_HPP
+#ifndef BOOST_DETAIL_WIN_LOCALFREE_HPP
+#define BOOST_DETAIL_WIN_LOCALFREE_HPP
 
 #include <boost/detail/win/basic_types.hpp>
 
-namespace boost {
+namespace boost { 
 namespace detail {
 namespace win32 {
 #if defined( BOOST_USE_WINDOWS_H )
-    using ::GetCurrentProcess;
+    typedef HANDLE_ HLOCAL_;
+
+    using ::LocalFree;
 #else
-    extern "C" __declspec(dllimport) HANDLE_ WINAPI GetCurrentProcess();
+    extern "C" typedef HANDLE_ HLOCAL_;
+    extern "C" __declspec(dllimport) HLOCAL_ WINAPI LocalFree(HLOCAL_ hMem);
 #endif
 }
 }
 }
-#endif // BOOST_DETAIL_WIN_TIME_HPP
+#endif // BOOST_DETAIL_WIN_LOCALFREE_HPP

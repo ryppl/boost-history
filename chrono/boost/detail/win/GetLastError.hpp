@@ -8,8 +8,7 @@
 
 #ifndef BOOST_DETAIL_WIN_GETLASTERROR_HPP
 #define BOOST_DETAIL_WIN_GETLASTERROR_HPP
-#include <boost/config.hpp>
-#include <cstdarg>
+
 #include <boost/detail/win/basic_types.hpp>
 
 #if defined( BOOST_USE_WINDOWS_H )
