@@ -9,6 +9,8 @@
 #ifndef BOOST_DETAIL_WIN_TIME_HPP
 #define BOOST_DETAIL_WIN_TIME_HPP
 #include <boost/config.hpp>
+#include <cstdarg>
+#include <boost/detail/win/basic_types.hpp>
 
 #if defined( BOOST_USE_WINDOWS_H )
 # if !defined( BOOST_DETAIL_WIN_WINDOWS_H_INCLUDED )
@@ -22,29 +24,16 @@ namespace boost
     {
         namespace win32
         {
-    		typedef BOOL BOOL_;
-			typedef DWORD DWORD_;
-        	typedef HANDLE HANDLE_;
-    		typedef LONG LONG_;
-			typedef LONGLONG LONGLONG_; 
-	        typedef LARGE_INTEGER LARGE_INTEGER_;
-	        typedef PLARGE_INTEGER PLARGE_INTEGER_;
 	        typedef FILETIME FILETIME_;
 	        typedef PFILETIME PFILETIME_;
-			
-            using ::GetLastError;
-            using ::GetCurrentProcess;
-            using ::GetCurrentThread;
-            
+        
             using ::GetProcessTimes;
             using ::GetSystemTimeAsFileTime;
             using ::GetThreadTimes;
             
             using ::QueryPerformanceCounter;
             using ::QueryPerformanceFrequency;
-            
-            static const DWORD ERROR_NOT_SUPPORTED_ = ERROR_NOT_SUPPORTED; 
-            
+                   	
         }
     }
 }
@@ -86,60 +75,12 @@ namespace boost
         {
             extern "C"
             {
-            	typedef int BOOL_;
-            	
-            	typedef unsigned long DWORD_;
-            	
-            	typedef void* HANDLE_;
-            	
-            	typedef long LONG_;
-
-// @FIXME Which condition must be tested            	
-//            	#if !defined(_M_IX86)
-            	typedef __int64 LONGLONG_; 
-//            	#else
-//            	typedef double LONGLONG_;
-//            	#endif
-            	           	
-//            	typedef union _LARGE_INTEGER_ {
-////            	  struct {
-////            	    DWORD_ LowPart;
-////            	    LONG_  HighPart;
-////            	  } ;
-//            	  struct {
-//            	    DWORD_ LowPart;
-//            	    LONG_  HighPart;
-//            	  } u;
-//            	  LONGLONG_ QuadPart;
-//            	} LARGE_INTEGER_, *PLARGE_INTEGER_;
-            	typedef struct _LARGE_INTEGER {
-            	    LONGLONG_ QuadPart;
-            	} LARGE_INTEGER_;           	
-            	typedef LARGE_INTEGER_ *PLARGE_INTEGER_;
             	
             	typedef struct _FILETIME {
             	  DWORD_ dwLowDateTime;
             	  DWORD_ dwHighDateTime;
             	} FILETIME_, *PFILETIME_, *LPFILETIME_;
 
-//            	  using ::GetLastError;
-                __declspec(dllimport) 
-                DWORD_ 
-                WINAPI 
-            	GetLastError();
-
-//                using ::GetCurrentProcess;
-            	__declspec(dllimport) 
-            	HANDLE_ 
-            	WINAPI 
-            	GetCurrentProcess();
-            		
-//                using ::GetCurrentThread;
-                __declspec(dllimport) 
-                HANDLE_ 
-                WINAPI 
-                GetCurrentThread();
-            	
 //                using ::GetProcessTimes;
                 __declspec(dllimport) 
                 BOOL_ 
@@ -170,7 +111,6 @@ namespace boost
                   LPFILETIME_ lpUserTime
                 );
 
-               
 //                using ::QueryPerformanceCounter;
             	__declspec(dllimport) 
                 BOOL_ 
@@ -185,8 +125,8 @@ namespace boost
             	WINAPI 
             	QueryPerformanceFrequency(
             	  LARGE_INTEGER_ *lpFrequency
-            	);
-                              
+            	);                   
+            	
             }
         }
     }
