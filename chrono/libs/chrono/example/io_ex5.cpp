@@ -78,7 +78,7 @@ int main()
 #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
     display(cout, monotonic_clock::now().time_since_epoch()
                   + duration<long, mega>(1)) << '\n';
-#endif    
+#endif
     display(cout, -milliseconds(6)) << '\n';
     display(cout, duration<long, mega>(1)) << '\n';
     display(cout, -duration<long, mega>(1)) << '\n';

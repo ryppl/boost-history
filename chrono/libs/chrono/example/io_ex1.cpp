@@ -47,12 +47,12 @@ int main()
     cout << "\nsystem_clock::now() = " << system_clock::now() << '\n';
 #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
     cout << "monotonic_clock::now() = " << monotonic_clock::now() << '\n';
-#endif    
+#endif
     cout << "\nSet cout to use long names:\n" << duration_long
          << "high_resolution_clock::now() = " << high_resolution_clock::now() << '\n';
-#if defined(BOOST_CHRONO_HAS_THREAD_CLOCK) 
+#if defined(BOOST_CHRONO_HAS_THREAD_CLOCK)
     cout << "\nthread_clock::now() = " << thread_clock::now() << '\n';
-#endif    
+#endif
     cout << "\nprocess_real_cpu_clock::now() = " << process_real_cpu_clock::now() << '\n';
     cout << "\nprocess_user_cpu_clock::now() = " << process_user_cpu_clock::now() << '\n';
     cout << "\nprocess_system_cpu_clock::now() = " << process_system_cpu_clock::now() << '\n';

@@ -29,7 +29,7 @@ void test_thread_clock()
     std::cout << "thread_clock resolution estimate: " << nanoseconds(stop-start).count() << " nanoseconds\n";
 #else
     std::cout << "thread_clock not available\n";
-#endif    
+#endif
 }
 
 

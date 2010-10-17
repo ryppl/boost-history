@@ -11,8 +11,8 @@
 This code was extracted by Vicente J. Botet Escriba from Beman Dawes time2_demo.cpp which
 was derived by Beman Dawes from Howard Hinnant's time2_demo prototype.
 Many thanks to Howard for making his code available under the Boost license.
-The original code was modified to conform to Boost conventions and to section 
-20.9 Time utilities [time] of the C++ committee's working paper N2798. 
+The original code was modified to conform to Boost conventions and to section
+20.9 Time utilities [time] of the C++ committee's working paper N2798.
 See http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2798.pdf.
 
 time2_demo contained this comment:
@@ -39,14 +39,14 @@ using namespace boost::chrono;
 #endif
 void manipulate_clock_object(system_clock clock)
 #if defined _MSC_VER
-#pragma warning(pop)    
+#pragma warning(pop)
 #endif
 {
     system_clock::duration delay = milliseconds(5);
     system_clock::time_point start = clock.now();
 
     while ((clock.now() - start) <= delay) {}
-        
+
     system_clock::time_point stop = clock.now();
     system_clock::duration elapsed = stop - start;
     std::cout << "paused " << nanoseconds(elapsed).count() << " nanoseconds\n";

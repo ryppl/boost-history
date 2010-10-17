@@ -11,8 +11,8 @@
 This code was extracted by Vicente J. Botet Escriba from Beman Dawes time2_demo.cpp which
 was derived by Beman Dawes from Howard Hinnant's time2_demo prototype.
 Many thanks to Howard for making his code available under the Boost license.
-The original code was modified to conform to Boost conventions and to section 
-20.9 Time utilities [time] of the C++ committee's working paper N2798. 
+The original code was modified to conform to Boost conventions and to section
+20.9 Time utilities [time] of the C++ committee's working paper N2798.
 See http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2798.pdf.
 
 time2_demo contained this comment:
@@ -90,7 +90,7 @@ void test_system_clock()
 
 void test_monotonic_clock()
 {
-#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC 
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
     std::cout << "monotonic_clock test" << std::endl;
     monotonic_clock::duration delay = milliseconds(5);
     monotonic_clock::time_point start = monotonic_clock::now();
@@ -159,7 +159,7 @@ int main()
     test_monotonic_clock();
     test_hi_resolution_clock();
     //test_mixed_clock();
-    test_clock<system_clock>();    
+    test_clock<system_clock>();
 #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
     test_clock<monotonic_clock>();
 #endif

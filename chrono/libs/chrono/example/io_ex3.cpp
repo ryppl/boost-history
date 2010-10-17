@@ -17,7 +17,7 @@ Many thanks to Howard for making his code available under the Boost license.
 #include <iostream>
 #include <cassert>
 
-int main() 
+int main()
 {
     using namespace std;
     using namespace boost::chrono;
@@ -33,10 +33,10 @@ int main()
     cout << t1 << '\n';
     high_resolution_clock::time_point t = high_resolution_clock::now();
     cout << t << '\n';
-    
+
     cout << "That took " << t - t0 << '\n';
     cout << "That took " << t - t1 << '\n';
-    
+
     return 0;
 }
 

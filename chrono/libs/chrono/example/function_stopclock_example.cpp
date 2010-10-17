@@ -13,7 +13,7 @@
 using namespace boost::chrono;
 int f1(long j)
 {
-  function_stopclock<> _(BOOST_CURRENT_FUNCTION);   
+  function_stopclock<> _(BOOST_CURRENT_FUNCTION);
 
   for ( long i = 0; i < j; ++i )
     std::sqrt( 123.456L );  // burn some time
@@ -22,7 +22,7 @@ int f1(long j)
 }
 int main()
 {
-  function_stopclock<> _(BOOST_CURRENT_FUNCTION);   
+  function_stopclock<> _(BOOST_CURRENT_FUNCTION);
 
   f1(1000);
   f1(2000);

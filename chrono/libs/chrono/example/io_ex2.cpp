@@ -32,7 +32,7 @@ int main()
     in >> d;
     assert(in.fail());
     assert(d == seconds(4));
-    
+
     return 0;
 }
 

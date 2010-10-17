@@ -11,8 +11,8 @@
 This code was extracted by Vicente J. Botet Escriba from Beman Dawes time2_demo.cpp which
 was derived by Beman Dawes from Howard Hinnant's time2_demo prototype.
 Many thanks to Howard for making his code available under the Boost license.
-The original code was modified to conform to Boost conventions and to section 
-20.9 Time utilities [time] of the C++ committee's working paper N2798. 
+The original code was modified to conform to Boost conventions and to section
+20.9 Time utilities [time] of the C++ committee's working paper N2798.
 See http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2798.pdf.
 
 time2_demo contained this comment:
@@ -157,7 +157,7 @@ int main()
     assert(us5.count()==300000000);
 
     //minutes m4 = m3 + us3; // won't compile
-    
+
     minutes m4 = duration_cast<minutes>(m3 + us3);  // m4.count() == 5
     assert(m4.count()==5);
 
@@ -181,7 +181,7 @@ int main()
     {
     double r = double(milliseconds(3) / milliseconds(3));
     std::cout << r << '\n';
-        
+
     duration<double, boost::milli> d = milliseconds(3) * 2.5;
     duration<double, boost::milli> d2 = 2.5 * milliseconds(3) ;
     duration<double, boost::milli> d3 = milliseconds(3) / 2.5;

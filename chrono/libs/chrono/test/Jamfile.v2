@@ -28,12 +28,12 @@ project
     : requirements
         <os>LINUX:<threading>multi
         <library>/boost/system//boost_system/<link>static
-        
+
         # uncomment the line above if you build outside the Boost release
         #<include>$(BOOST_ROOT)
         # uncomment the line above if you build outside the Boost release
         #<include>../../..
-        
+
         <toolset>msvc:<asynch-exceptions>on
         <define>BOOST_ENABLE_WARNINGS
         <define>BOOST_CHRONO_USES_MPL_ASSERT
@@ -47,69 +47,69 @@ project
 
 rule chrono-run ( sources )
 {
-    return 
-    [ run $(sources) ../build//boost_chrono 
+    return
+    [ run $(sources) ../build//boost_chrono
         : : : <define>BOOST_USE_WINDOWS_H
         : $(sources[1]:B)_shared ]
-    [ run $(sources) ../build//boost_chrono/<link>static 
-        : : : 
+    [ run $(sources) ../build//boost_chrono/<link>static
+        : : :
         : $(sources[1]:B)_static ]
-    [ run $(sources) 
-        : : : <define>BOOST_CHRONO_INLINED 
+    [ run $(sources)
+        : : : <define>BOOST_CHRONO_INLINED
         : $(sources[1]:B)_header ]
-    [ run $(sources) 
-        : : : <define>BOOST_CHRONO_INLINED <define>BOOST_USE_WINDOWS_H 
+    [ run $(sources)
+        : : : <define>BOOST_CHRONO_INLINED <define>BOOST_USE_WINDOWS_H
         : $(sources[1]:B)_header_win ]
     ;
-}    
+}
 rule chrono-run2 ( sources : name )
 {
-    return 
-    [ run $(sources) ../build//boost_chrono 
+    return
+    [ run $(sources) ../build//boost_chrono
         : : : <define>BOOST_USE_WINDOWS_H
         : $(name)_shared ]
-    [ run $(sources) ../build//boost_chrono/<link>static 
-        : : : 
+    [ run $(sources) ../build//boost_chrono/<link>static
+        : : :
         : $(name)_static ]
-    [ run $(sources) 
-        : : : <define>BOOST_CHRONO_INLINED 
+    [ run $(sources)
+        : : : <define>BOOST_CHRONO_INLINED
         : $(name)_header ]
-    [ run $(sources) 
-        : : : <define>BOOST_CHRONO_INLINED <define>BOOST_USE_WINDOWS_H 
+    [ run $(sources)
+        : : : <define>BOOST_CHRONO_INLINED <define>BOOST_USE_WINDOWS_H
         : $(name)_header_win ]
     ;
-}    
+}
 
 rule chrono-compile ( sources )
 {
-    return 
-    [ compile $(sources) 
+    return
+    [ compile $(sources)
         :
         : $(sources[1]:B)_lib ]
-    [ compile $(sources) 
-        :  <define>BOOST_CHRONO_INLINED 
+    [ compile $(sources)
+        :  <define>BOOST_CHRONO_INLINED
         : $(sources[1]:B)_header ]
-    [ compile $(sources) 
-        : <define>BOOST_CHRONO_INLINED <define>BOOST_USE_WINDOWS_H 
+    [ compile $(sources)
+        : <define>BOOST_CHRONO_INLINED <define>BOOST_USE_WINDOWS_H
         : $(sources[1]:B)_header_win ]
     ;
-}    
-        
+}
+
 rule chrono-compile2 ( sources : name )
 {
-    return 
-    [ compile $(sources) 
+    return
+    [ compile $(sources)
         :
         : $(name)_lib ]
-    [ compile $(sources) 
-        :  <define>BOOST_CHRONO_INLINED 
+    [ compile $(sources)
+        :  <define>BOOST_CHRONO_INLINED
         : $(name)_header ]
-    [ compile $(sources) 
-        : <define>BOOST_CHRONO_INLINED <define>BOOST_USE_WINDOWS_H 
+    [ compile $(sources)
+        : <define>BOOST_CHRONO_INLINED <define>BOOST_USE_WINDOWS_H
         : $(name)_header_win ]
     ;
-}    
-        
+}
+
 
 
    test-suite "minmax"
@@ -181,7 +181,7 @@ rule chrono-compile2 ( sources : name )
         [ compile-fail duration/positive_num.fail.cpp  ]
         [ chrono-compile duration/default_ratio.pass.cpp ]
         [ chrono-compile duration/types.pass.cpp ]
-        
+
         [ chrono-run duration/arithmetic/op_divide_ass.pass.cpp  ]
         [ chrono-run duration/arithmetic/op_minusminusint.pass.cpp  ]
         [ chrono-run duration/arithmetic/op_plus_ass.pass.cpp  ]
@@ -194,13 +194,13 @@ rule chrono-compile2 ( sources : name )
         [ chrono-run duration/arithmetic/op_minusminus.pass.cpp  ]
         [ chrono-run duration/arithmetic/op_plus.pass.cpp  ]
         [ chrono-run duration/arithmetic/op_times_ass.pass.cpp  ]
-        
+
         [ chrono-run duration/cast/duration_cast.pass.cpp  ]
         [ compile-fail duration/cast/toduration.fail.cpp  ]
-        
+
         [ chrono-run duration/comparisons/op_equal.pass.cpp  ]
         [ chrono-run duration/comparisons/op_less.pass.cpp  ]
-        
+
         [ chrono-run duration/cons/convert_exact.pass.cpp  ]
         [ compile-fail duration/cons/convert_float_to_int.fail.cpp  ]
         [ compile-fail duration/cons/convert_inexact.fail.cpp  ]
@@ -212,7 +212,7 @@ rule chrono-compile2 ( sources : name )
         [ compile-fail duration/cons/rep02.fail.cpp  ]
         [ chrono-run duration/cons/rep02.pass.cpp  ]
         [ compile-fail duration/cons/rep03.fail.cpp  ]
-        
+
         [ chrono-run2 duration/nonmember/op_plus.pass.cpp  : nonmember_op_plus.pass ]
         [ chrono-run2 duration/nonmember/op_minus.pass.cpp  : nonmember_op_minus.pass ]
         [ chrono-run2 duration/nonmember/op_divide_duration.pass.cpp  : nonmember_op_divide_duration.pass  ]
@@ -237,25 +237,25 @@ rule chrono-compile2 ( sources : name )
 
         [ chrono-run2 time_point/arithmetic/op_plus_ass.pass.cpp  : time_point.op_plus_ass.pass ]
         [ chrono-run2 time_point/arithmetic/op_minus_ass.pass.cpp  : time_point.op_minus_ass.pass ]
-        
+
         [ chrono-run2 time_point/cast/time_point_cast.pass.cpp  : time_point.time_point_cast.pass ]
         [ compile-fail time_point/cast/toduration.fail.cpp : : time_point.toduration.fail   ]
-        
+
         [ compile-fail time_point/comparisons/op_equal.fail.cpp : : time_point.op_equal.fail   ]
         [ chrono-run2 time_point/comparisons/op_equal.pass.cpp  : time_point.op_equal.pass ]
         [ compile-fail time_point/comparisons/op_less.fail.cpp : : time_point.op_less.fail   ]
         [ chrono-run2 time_point/comparisons/op_less.pass.cpp  : time_point.op_less.pass ]
-        
+
         [ compile-fail time_point/cons/convert.fail.cpp : : time_point.convert.fail   ]
         [ chrono-run2 time_point/cons/convert.pass.cpp  : time_point.convert.pass ]
         [ chrono-run2 time_point/cons/default.pass.cpp  : time_point.default.pass ]
         [ compile-fail time_point/cons/duration.fail.cpp : : time_point.cons.duration.fail   ]
         [ chrono-run2 time_point/cons/duration.pass.cpp  : time_point.duration.pass ]
-        
+
         [ chrono-run2 time_point/nonmember/op_plus.pass.cpp  : time_point.op_plus.pass ]
         [ chrono-run2 time_point/nonmember/op_minus_time_point.pass.cpp  : time_point.op_minus_time_point.pass ]
         [ chrono-run2 time_point/nonmember/op_minus_duration.pass.cpp  : time_point.op_minus_duration.pass ]
-        
+
         [ chrono-run2 time_point/special/max.pass.cpp  : time_point.max.pass ]
         [ chrono-run2 time_point/special/min.pass.cpp  : time_point.min.pass ]
         ;
@@ -264,25 +264,25 @@ rule chrono-compile2 ( sources : name )
         :
         [ chrono-compile2 clock/hires/consistency.pass.cpp : clock.hires.consistency.pass ]
         [ chrono-run2 clock/hires/now.pass.cpp  : clock.hires.now.pass ]
-        
+
         [ chrono-compile2 clock/monotonic/consistency.pass.cpp : clock.monotonic.consistency.pass ]
         [ chrono-run2 clock/monotonic/now.pass.cpp  : clock.monotonic.now.pass ]
-        
+
         [ chrono-compile2 clock/system/consistency.pass.cpp : clock.system.consistency.pass ]
         [ chrono-run2 clock/system/now.pass.cpp  : clock.system.now.pass ]
         [ chrono-run2 clock/system/from_time_t.pass.cpp  : clock.system.from_time_t.pass ]
         [ chrono-run2 clock/system/rep_signed.pass.cpp  : clock.system.rep_signed.pass ]
         [ chrono-run2 clock/system/to_time_t.pass.cpp  : clock.system.to_time_t.pass ]
-        
+
         [ chrono-compile2 clock/process/consistency.pass.cpp : clock.process.consistency.pass ]
         [ chrono-run2 clock/process/now.pass.cpp  : clock.process.now.pass ]
-        
+
         [ chrono-compile2 clock/thread/consistency.pass.cpp : clock.thread.consistency.pass ]
         [ chrono-run2 clock/thread/now.pass.cpp  : clock.thread.now.pass ]
 
         [ chrono-compile2 clock/errored/consistency.pass.cpp : clock.errored.consistency.pass ]
         [ chrono-run2 clock/errored/now.pass.cpp  : clock.errored.now.pass ]
-        
+
         ;
 
 
@@ -299,4 +299,3 @@ rule chrono-compile2 ( sources : name )
         :
         [ chrono-run win32_test.cpp  ]
         ;
-        

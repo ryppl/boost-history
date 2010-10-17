@@ -10,6 +10,6 @@ int main()
 {
 	check_clock_now<boost::chrono::system_clock>();
 	check_clock_now_ec<boost::chrono::system_clock>();
-	
+
     return boost::report_errors();
 }

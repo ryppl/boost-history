@@ -16,5 +16,5 @@
 
 BOOST_CHRONO_STATIC_ASSERT((boost::is_same<
     boost::chrono::duration<int, boost::ratio<1> >,
-    boost::chrono::duration<int> 
+    boost::chrono::duration<int>
 >::value), NOTHING, ());

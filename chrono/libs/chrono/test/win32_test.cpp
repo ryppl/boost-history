@@ -15,81 +15,81 @@
 #define NOTHING ""
 #endif
 
-#include <boost/detail/win/time.hpp>
+#include <boost/detail/win/basic_types.hpp>
 #include <windows.h>
 #include <boost/type_traits.hpp>
 #include <boost/typeof/typeof.hpp>
 
 void test() {
-	{
-	boost::detail::win32::LARGE_INTEGER_ a;
-	LARGE_INTEGER b;
+    {
+    boost::detail::win32::LARGE_INTEGER_ a;
+    LARGE_INTEGER b;
     BOOST_CHRONO_STATIC_ASSERT((
-    		sizeof(boost::detail::win32::LARGE_INTEGER_)==sizeof(LARGE_INTEGER)
-    	), NOTHING, (boost::detail::win32::LARGE_INTEGER_, LARGE_INTEGER));
+            sizeof(boost::detail::win32::LARGE_INTEGER_)==sizeof(LARGE_INTEGER)
+        ), NOTHING, (boost::detail::win32::LARGE_INTEGER_, LARGE_INTEGER));
     BOOST_TEST((
-    		sizeof(a.QuadPart)==sizeof(b.QuadPart)
-    		));
+            sizeof(a.QuadPart)==sizeof(b.QuadPart)
+            ));
     BOOST_CHRONO_STATIC_ASSERT((
-    		offsetof(boost::detail::win32::LARGE_INTEGER_, QuadPart)==offsetof(LARGE_INTEGER, QuadPart)
-		), NOTHING, (boost::detail::win32::LARGE_INTEGER_, LARGE_INTEGER));
-	}
-//    BOOST_CHRONO_STATIC_ASSERT((
-//    		boost::is_same<
-//    				BOOST_TYPEOF(boost::detail::win32::LARGE_INTEGER_::QuadPart),
-//    				BOOST_TYPEOF(LARGE_INTEGER::QuadPart)
-//    			>::value
-//		), NOTHING, (boost::detail::win32::LARGE_INTEGER_, LARGE_INTEGER));
-
-    BOOST_CHRONO_STATIC_ASSERT((
-    		sizeof(boost::detail::win32::BOOL_)==sizeof(BOOL)
-    	), NOTHING, (boost::detail::win32::BOOL_, BOOL));
-    BOOST_CHRONO_STATIC_ASSERT((
-    		sizeof(boost::detail::win32::DWORD_)==sizeof(DWORD)
-    	), NOTHING, (boost::detail::win32::DWORD_, DWORD));
-    BOOST_CHRONO_STATIC_ASSERT((
-    		sizeof(boost::detail::win32::HANDLE_)==sizeof(HANDLE)
-    	), NOTHING, (boost::detail::win32::HANDLE_, HANDLE));
-    BOOST_CHRONO_STATIC_ASSERT((
-    		sizeof(boost::detail::win32::LONG_)==sizeof(LONG)
-    	), NOTHING, (boost::detail::win32::LONG_, LONG));
-    BOOST_CHRONO_STATIC_ASSERT((
-    		sizeof(boost::detail::win32::LONGLONG_)==sizeof(LONGLONG)
-    	), NOTHING, (boost::detail::win32::LONGLONG_, LONGLONG));
-    BOOST_CHRONO_STATIC_ASSERT((
-    		boost::is_same<boost::detail::win32::LONGLONG_,LONGLONG>::value
-    	), NOTHING, (boost::detail::win32::LONGLONG_, LONGLONG));
-    BOOST_CHRONO_STATIC_ASSERT((
-    		sizeof(boost::detail::win32::PLARGE_INTEGER_)==sizeof(PLARGE_INTEGER)
-    	), NOTHING, (boost::detail::win32::PLARGE_INTEGER_, PLARGE_INTEGER));
-    {	
-    	BOOST_CHRONO_STATIC_ASSERT((
-    			sizeof(boost::detail::win32::FILETIME_)==sizeof(FILETIME)
-    		), NOTHING, (boost::detail::win32::FILETIME_, FILETIME));
-    	BOOST_CHRONO_STATIC_ASSERT((
-    			sizeof(boost::detail::win32::PFILETIME_)==sizeof(PFILETIME)
-    		), NOTHING, (boost::detail::win32::PFILETIME_, PFILETIME));
-
-    	boost::detail::win32::FILETIME_ a;
-    	FILETIME b;
-        BOOST_TEST((
-        		sizeof(a.dwLowDateTime)==sizeof(b.dwLowDateTime)
-        		));
-        BOOST_TEST((
-        		sizeof(a.dwHighDateTime)==sizeof(b.dwHighDateTime)
-        		));
-        BOOST_CHRONO_STATIC_ASSERT((
-        		offsetof(boost::detail::win32::FILETIME_, dwLowDateTime)==offsetof(FILETIME, dwLowDateTime)
-    		), NOTHING, (boost::detail::win32::FILETIME_, FILETIME));
-    	BOOST_CHRONO_STATIC_ASSERT((
-    			offsetof(boost::detail::win32::FILETIME_, dwHighDateTime)==offsetof(FILETIME, dwHighDateTime)
-			), NOTHING, (boost::detail::win32::FILETIME_, FILETIME));
-    	
+            offsetof(boost::detail::win32::LARGE_INTEGER_, QuadPart)==offsetof(LARGE_INTEGER, QuadPart)
+        ), NOTHING, (boost::detail::win32::LARGE_INTEGER_, LARGE_INTEGER));
     }
-    
 //    BOOST_CHRONO_STATIC_ASSERT((
-//    		GetLastError==boost::detail::win32::::GetLastError
-//    	), NOTHING, ());
+//            boost::is_same<
+//                    BOOST_TYPEOF(boost::detail::win32::LARGE_INTEGER_::QuadPart),
+//                    BOOST_TYPEOF(LARGE_INTEGER::QuadPart)
+//                >::value
+//        ), NOTHING, (boost::detail::win32::LARGE_INTEGER_, LARGE_INTEGER));
+
+    BOOST_CHRONO_STATIC_ASSERT((
+            sizeof(boost::detail::win32::BOOL_)==sizeof(BOOL)
+        ), NOTHING, (boost::detail::win32::BOOL_, BOOL));
+    BOOST_CHRONO_STATIC_ASSERT((
+            sizeof(boost::detail::win32::DWORD_)==sizeof(DWORD)
+        ), NOTHING, (boost::detail::win32::DWORD_, DWORD));
+    BOOST_CHRONO_STATIC_ASSERT((
+            sizeof(boost::detail::win32::HANDLE_)==sizeof(HANDLE)
+        ), NOTHING, (boost::detail::win32::HANDLE_, HANDLE));
+    BOOST_CHRONO_STATIC_ASSERT((
+            sizeof(boost::detail::win32::LONG_)==sizeof(LONG)
+        ), NOTHING, (boost::detail::win32::LONG_, LONG));
+    BOOST_CHRONO_STATIC_ASSERT((
+            sizeof(boost::detail::win32::LONGLONG_)==sizeof(LONGLONG)
+        ), NOTHING, (boost::detail::win32::LONGLONG_, LONGLONG));
+    BOOST_CHRONO_STATIC_ASSERT((
+            boost::is_same<boost::detail::win32::LONGLONG_,LONGLONG>::value
+        ), NOTHING, (boost::detail::win32::LONGLONG_, LONGLONG));
+    BOOST_CHRONO_STATIC_ASSERT((
+            sizeof(boost::detail::win32::PLARGE_INTEGER_)==sizeof(PLARGE_INTEGER)
+        ), NOTHING, (boost::detail::win32::PLARGE_INTEGER_, PLARGE_INTEGER));
+    {
+        BOOST_CHRONO_STATIC_ASSERT((
+                sizeof(boost::detail::win32::FILETIME_)==sizeof(FILETIME)
+            ), NOTHING, (boost::detail::win32::FILETIME_, FILETIME));
+        BOOST_CHRONO_STATIC_ASSERT((
+                sizeof(boost::detail::win32::PFILETIME_)==sizeof(PFILETIME)
+            ), NOTHING, (boost::detail::win32::PFILETIME_, PFILETIME));
+
+        boost::detail::win32::FILETIME_ a;
+        FILETIME b;
+        BOOST_TEST((
+                sizeof(a.dwLowDateTime)==sizeof(b.dwLowDateTime)
+                ));
+        BOOST_TEST((
+                sizeof(a.dwHighDateTime)==sizeof(b.dwHighDateTime)
+                ));
+        BOOST_CHRONO_STATIC_ASSERT((
+                offsetof(boost::detail::win32::FILETIME_, dwLowDateTime)==offsetof(FILETIME, dwLowDateTime)
+            ), NOTHING, (boost::detail::win32::FILETIME_, FILETIME));
+        BOOST_CHRONO_STATIC_ASSERT((
+                offsetof(boost::detail::win32::FILETIME_, dwHighDateTime)==offsetof(FILETIME, dwHighDateTime)
+            ), NOTHING, (boost::detail::win32::FILETIME_, FILETIME));
+
+    }
+
+//    BOOST_CHRONO_STATIC_ASSERT((
+//            GetLastError==boost::detail::win32::::GetLastError
+//        ), NOTHING, ());
 
 }
 #else
@@ -98,8 +98,8 @@ void test() {
 #endif
 int main(  )
 {
-	test();
-  
+    test();
+
   return boost::report_errors();
 }
 

@@ -26,5 +26,5 @@ int main()
     typedef boost::chrono::system_clock C;
     std::time_t t1 = C::to_time_t(C::now());
     (void)t1;
-    return 0;    
+    return 0;
 }

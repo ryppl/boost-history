@@ -24,7 +24,7 @@ template <typename Clock,
           bool = boost::is_same<Clock, boost::chrono::high_resolution_clock>::value
          >
 struct name;
- 
+
 template <typename Clock>
 struct name<Clock, false, false, false>  {
     static const char* apply() { return "unknown clock";}

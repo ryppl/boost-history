@@ -37,12 +37,12 @@ namespace
     timeout_in_clock_t += (timeout_in_secs * CLOCKS_PER_SEC);
 
     boost::chrono::system_timer           sys;
-#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC 
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
     boost::chrono::monotonic_timer        mono;
-#endif    
+#endif
     boost::chrono::high_resolution_timer  hires;
     boost::chrono::process_timer          process;
-    
+
     std::clock_t now;
     do
     {
@@ -50,9 +50,9 @@ namespace
     } while ( now < timeout_in_clock_t );
 
     boost::chrono::system_timer::duration sys_dur = sys.elapsed();
-#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC 
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
     boost::chrono::monotonic_timer::duration mono_dur = mono.elapsed();
-#endif    
+#endif
     boost::chrono::high_resolution_timer::duration hires_dur = hires.elapsed();
     boost::chrono::process_times times;
     process.elapsed( times );
@@ -73,12 +73,12 @@ namespace
     BOOST_TEST( sys_dur > timeout_in_nanoseconds - maximum_delta
       && sys_dur < timeout_in_nanoseconds + maximum_delta );
 
-#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC 
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
     std::cout << mono_dur.count() << " mono_dur\n";
 
     BOOST_TEST( mono_dur > timeout_in_nanoseconds - maximum_delta
       && mono_dur < timeout_in_nanoseconds + maximum_delta );
-#endif    
+#endif
 
     std::cout << hires_dur.count() << " hires_dur\n";
 
@@ -96,7 +96,7 @@ namespace
 int main( int argc, char * argv[] )
 {
   accuracy_test( argc, argv );
-  
+
   return boost::report_errors();
 }
 

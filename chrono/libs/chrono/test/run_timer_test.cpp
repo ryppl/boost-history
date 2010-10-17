@@ -33,7 +33,7 @@ namespace
   typedef boost::chrono::nanoseconds ns;
 
   bool check_report( run_timer & tmr, std::stringstream & ss,
-    run_timer::duration r, run_timer::duration u, run_timer::duration s, 
+    run_timer::duration r, run_timer::duration u, run_timer::duration s,
     const std::string & expected, int line )
   {
     tmr.test_report(r,u,s);
@@ -95,12 +95,12 @@ namespace
     timeout_in_clock_t += (timeout_in_secs * CLOCKS_PER_SEC);
 
     boost::chrono::system_timer           sys;
-#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC 
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
     boost::chrono::monotonic_timer        mono;
-#endif    
+#endif
     boost::chrono::high_resolution_timer  hires;
     boost::chrono::process_timer          process;
-    
+
     std::clock_t now;
     do
     {
@@ -108,9 +108,9 @@ namespace
     } while ( now < timeout_in_clock_t );
 
     boost::chrono::system_timer::duration sys_dur = sys.elapsed();
-#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC 
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
     boost::chrono::monotonic_timer::duration mono_dur = mono.elapsed();
-#endif    
+#endif
     boost::chrono::high_resolution_timer::duration hires_dur = hires.elapsed();
     boost::chrono::process_times times;
     process.elapsed( times );
@@ -131,12 +131,12 @@ namespace
     BOOST_TEST( sys_dur > timeout_in_nanoseconds - maximum_delta
       && sys_dur < timeout_in_nanoseconds + maximum_delta );
 
-#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC 
+#ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
     std::cout << mono_dur.count() << " mono_dur\n";
 
     BOOST_TEST( mono_dur > timeout_in_nanoseconds - maximum_delta
       && mono_dur < timeout_in_nanoseconds + maximum_delta );
-#endif    
+#endif
 
     std::cout << hires_dur.count() << " hires_dur\n";
 
@@ -183,10 +183,10 @@ namespace
     std::cout << "process_timer_test..." << std::flush;
 
     boost::chrono::process_timer t;
-    double res=0; // avoids optimization 
+    double res=0; // avoids optimization
     for (long i = 0; i < 10000000L; ++i)
     {
-      res+=std::sqrt( static_cast<double>(i) ); // avoids optimization 
+      res+=std::sqrt( static_cast<double>(i) ); // avoids optimization
     }
 
     boost::chrono::process_times times;
@@ -220,7 +220,7 @@ int main( int argc, char * argv[] )
   run_timer_constructor_overload_test();
   process_timer_test();
   report_test();
-  
+
   return boost::report_errors();
 }
 

@@ -43,14 +43,14 @@ namespace boost { namespace chrono {
         process_clock::now(t, ec);
         return process_system_cpu_clock::time_point(t.system);
     }
-    
+
     process_cpu_clock::time_point process_cpu_clock::now( system::error_code & ec ) {
         process_times t;
         process_clock::now(t,ec);
-        time_point::rep r(t.real.count(), t.user.count(), t.system.count()); 
+        time_point::rep r(t.real.count(), t.user.count(), t.system.count());
         return time_point(duration(r));
     }
-    
+
 } // namespace chrono
 } // namespace boost
 

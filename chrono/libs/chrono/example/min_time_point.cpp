@@ -52,7 +52,7 @@ min BOOST_PREVENT_MACRO_SUBSTITUTION  (time_point<Clock, Duration1> t1, time_poi
 
 void test_min()
 {
-#if 0    
+#if 0
     typedef time_point<system_clock,
       boost::common_type<system_clock::duration, seconds>::type> T1;
     typedef time_point<system_clock,
@@ -65,7 +65,7 @@ void test_min()
     BOOST_AUTO(t1, system_clock::now() + seconds(3));
     BOOST_AUTO(t2, system_clock::now() + nanoseconds(3));
     BOOST_AUTO(t3, (min)(t1, t2));
-#endif    
+#endif
     print_duration(std::cout, t1 - t3);
     print_duration(std::cout, t2 - t3);
 }

@@ -34,19 +34,19 @@
       static time_point  now() {
           boost::throw_exception(
         		  boost::system::system_error(
-        				  errno_, 
-        				  BOOST_CHRONO_SYSTEM_CATEGORY, 
-        				  "errored_clock" 
+        				  errno_,
+        				  BOOST_CHRONO_SYSTEM_CATEGORY,
+        				  "errored_clock"
         		  )
           );
           return time_point();
-      }                         
+      }
       // never throws and set ec
       static time_point  now(boost::system::error_code & ec) {
     	  ec.assign( errno_, BOOST_CHRONO_SYSTEM_CATEGORY );
     	  return time_point();
-      }; 
+      };
   };
   int errored_clock::errno_;
-  
-#endif  
+
+#endif

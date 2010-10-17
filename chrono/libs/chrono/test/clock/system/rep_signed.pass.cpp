@@ -25,5 +25,5 @@ int main()
 {
     assert((boost::chrono::system_clock::duration::min)() <
            boost::chrono::system_clock::duration::zero());
-    return 0;    
+    return 0;
 }

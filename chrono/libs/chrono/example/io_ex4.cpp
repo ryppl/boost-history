@@ -26,7 +26,7 @@ int main()
     T tp = monotonic_clock::now();
     std::cout << tp << '\n';
 #endif
-    return 0;    
+    return 0;
 }
 
 //~ 17.8666 hours since boot

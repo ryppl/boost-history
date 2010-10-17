@@ -8,7 +8,7 @@
 
 void test()
 {
-#if defined(BOOST_CHRONO_HAS_THREAD_CLOCK) 
+#if defined(BOOST_CHRONO_HAS_THREAD_CLOCK)
     check_clock_invariants<boost::chrono::thread_clock>();
-#endif    
+#endif
 }

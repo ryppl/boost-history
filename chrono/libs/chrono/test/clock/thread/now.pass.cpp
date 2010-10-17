@@ -10,8 +10,8 @@
 
 int main()
 {
-#if defined(BOOST_CHRONO_HAS_THREAD_CLOCK) 
+#if defined(BOOST_CHRONO_HAS_THREAD_CLOCK)
 	check_clock_now<boost::chrono::thread_clock>();
-#endif    
-    return 0;    
+#endif
+    return 0;
 }
