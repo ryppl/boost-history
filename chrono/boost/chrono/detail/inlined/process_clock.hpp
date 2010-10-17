@@ -46,7 +46,7 @@ namespace boost { namespace chrono {
         tps.user=process_clock::time_point(t.user);
         tps.system=process_clock::time_point(t.system);
     }
-    
+
 }}
 
 #endif

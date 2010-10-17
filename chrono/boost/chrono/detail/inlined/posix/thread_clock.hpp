@@ -34,13 +34,13 @@ namespace boost { namespace chrono {
             system::system_error( errno, system::system_category, "chrono::thread_clock" ));
 #else
             system::system_error( errno, system::system_category(), "chrono::thread_clock" ));
-#endif          
+#endif
         }
 
         // transform to nanoseconds
         return time_point(duration(
             static_cast<thread_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
-             
+
     }
 	thread_clock::time_point thread_clock::now( system::error_code & ec ) {
         // get the current thread
@@ -56,13 +56,13 @@ namespace boost { namespace chrono {
           ec.assign( errno, system::system_category );
 #else
           ec.assign( errno, system::system_category() );
-#endif          
+#endif
           return time_point();
         }
         ec.clear();
         // transform to nanoseconds
         return time_point(duration(
             static_cast<thread_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
-             
+
     }
 } }

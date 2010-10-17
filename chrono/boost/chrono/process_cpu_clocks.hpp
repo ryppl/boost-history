@@ -131,14 +131,14 @@ namespace boost { namespace chrono {
             void print(std::basic_ostream<CharT, Traits>& os) const {
                 os <<  "{"<< real <<";"<< user <<";"<< system << "}";
             }
-            
+
             template <class CharT, class Traits>
             void read(std::basic_istream<CharT, Traits>& is) const {
                 typedef std::istreambuf_iterator<CharT, Traits> in_iterator;
                 in_iterator i(is);
                 in_iterator e;
                 if (i == e || *i != '{')  // mandatory '{'
-                {                
+                {
                 	is.setstate(is.failbit | is.eofbit);
                 	return;
                 }
@@ -150,7 +150,7 @@ namespace boost { namespace chrono {
                 }
             }
         };
-        
+
     class BOOST_CHRONO_DECL process_cpu_clock
     {
     public:
@@ -170,13 +170,13 @@ namespace boost { namespace chrono {
         rhs.print(os);
         return os;
     }
-    
+
     template <class CharT, class Traits>
     std::basic_istream<CharT, Traits>& operator<<(std::basic_istream<CharT, Traits>& is, process_cpu_clock_times const& rhs) {
         rhs.read(is);
         return is;
-    }  
-    
+    }
+
     template <>
     struct duration_values<process_cpu_clock_times>
     {
@@ -199,12 +199,12 @@ namespace boost { namespace chrono {
 } // namespace boost
 
 namespace std {
-    
+
     template <>
-    class numeric_limits<boost::chrono::process_cpu_clock::times> 
+    class numeric_limits<boost::chrono::process_cpu_clock::times>
     {
         typedef boost::chrono::process_cpu_clock::times Rep;
-        
+
         public:
         static const bool is_specialized = true;
         static Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {
@@ -251,15 +251,15 @@ namespace std {
         //~ static const bool is_modulo = false;
         //~ static const bool traps = false;
         //~ static const bool tinyness_before = false;
-        //~ static const float_round_style round_style = round_toward_zero;        
-        
+        //~ static const float_round_style round_style = round_toward_zero;
+
     };
 }
 
 #ifndef BOOST_CHRONO_INLINED
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 #else
-#include <boost/chrono/detail/inlined/process_cpu_clocks.hpp> 
+#include <boost/chrono/detail/inlined/process_cpu_clocks.hpp>
 #endif
 
 #endif  // BOOST_CHRONO_PROCESS_CPU_CLOCKS_HPP

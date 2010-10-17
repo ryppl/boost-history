@@ -20,7 +20,7 @@
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 #endif
 
-#if defined(BOOST_CHRONO_HAS_THREAD_CLOCK) 
+#if defined(BOOST_CHRONO_HAS_THREAD_CLOCK)
 
 namespace boost { namespace chrono {
 
@@ -43,7 +43,7 @@ public:
 #ifndef BOOST_CHRONO_INLINED
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 #else
-#include <boost/chrono/detail/inlined/thread_clock.hpp> 
+#include <boost/chrono/detail/inlined/thread_clock.hpp>
 #endif
 
 #endif  // BOOST_CHRONO_THREAD_CLOCK_HPP

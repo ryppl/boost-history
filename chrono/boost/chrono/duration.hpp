@@ -379,22 +379,22 @@ namespace chrono {
     struct chrono_numeric_limits {
         static T lowest() throw() {return (std::numeric_limits<T>::min)  ();}
     };
-    
+
     template <class T>
     struct chrono_numeric_limits<T,true> {
         static T lowest() throw() {return (std::numeric_limits<T>::min)  ();}
     };
-    
+
     template <>
     struct chrono_numeric_limits<float,true> {
         static float lowest() throw() {return -(std::numeric_limits<float>::max) ();}
     };
-    
+
     template <>
     struct chrono_numeric_limits<double,true> {
         static double lowest() throw() {return -(std::numeric_limits<double>::max) ();}
     };
-    
+
     template <>
     struct chrono_numeric_limits<long double,true> {
         static long double lowest() throw() {return -(std::numeric_limits<long double>::max)();}
@@ -402,14 +402,14 @@ namespace chrono {
 
     template <class T>
     struct numeric_limits : chrono_numeric_limits<typename remove_cv<T>::type> {};
-    
-  }        
+
+  }
   template <class Rep>
   struct duration_values
   {
       static BOOST_CHRONO_CONSTEXPR Rep zero() {return Rep(0);}
       static BOOST_CHRONO_CONSTEXPR Rep max BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return (std::numeric_limits<Rep>::max)();}
-      
+
       static BOOST_CHRONO_CONSTEXPR Rep min BOOST_PREVENT_MACRO_SUBSTITUTION ()  {return detail::numeric_limits<Rep>::lowest();}
   };
 
@@ -434,7 +434,7 @@ struct common_type<chrono::duration<Rep1, Period1>,
 //                                                                            //
 //----------------------------------------------------------------------------//
 
-    
+
 namespace chrono {
 
     template <class Rep, class Period>
@@ -455,11 +455,11 @@ namespace chrono {
         template <class Rep2>
         BOOST_CHRONO_CONSTEXPR explicit duration(const Rep2& r,
             typename boost::enable_if <
-                    mpl::and_ <   
+                    mpl::and_ <
                         boost::is_convertible<Rep2, rep>,
                         mpl::or_ <
                             treat_as_floating_point<rep>,
-                            mpl::and_ <    
+                            mpl::and_ <
                                 mpl::not_ < treat_as_floating_point<rep> >,
                                 mpl::not_ < treat_as_floating_point<Rep2> >
                             >
@@ -479,9 +479,9 @@ namespace chrono {
         template <class Rep2, class Period2>
         BOOST_CHRONO_CONSTEXPR duration(const duration<Rep2, Period2>& d,
             typename boost::enable_if <
-                    mpl::or_ < 
+                    mpl::or_ <
                         treat_as_floating_point<rep>,
-                        mpl::and_ < 
+                        mpl::and_ <
                             mpl::bool_ < ratio_divide<Period2, period>::type::den == 1>,
                             mpl::not_ < treat_as_floating_point<Rep2> >
                         >
@@ -560,8 +560,8 @@ namespace chrono {
   template <class Rep1, class Period, class Rep2>
   inline
   typename boost::enable_if <
-    mpl::and_ < 
-        boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>, 
+    mpl::and_ <
+        boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>,
         boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>
     >,
     duration<typename common_type<Rep1, Rep2>::type, Period>
@@ -577,7 +577,7 @@ namespace chrono {
   template <class Rep1, class Period, class Rep2>
   inline
   typename boost::enable_if <
-    mpl::and_ < 
+    mpl::and_ <
         boost::is_convertible<Rep1, typename common_type<Rep1, Rep2>::type>,
         boost::is_convertible<Rep2, typename common_type<Rep1, Rep2>::type>
     >,
@@ -777,7 +777,7 @@ namespace chrono {
     template <class Rep2, class Period2>
     BOOST_CHRONO_CONSTEXPR duration<Rep, Period>::duration(const duration<Rep2, Period2>& d,
         typename boost::enable_if <
-            mpl::or_ < 
+            mpl::or_ <
                 treat_as_floating_point<rep>,
                 mpl::and_ <
                     mpl::bool_ <ratio_divide<Period2, period>::type::den == 1>,

@@ -60,7 +60,7 @@ system_clock::from_time_t(time_t t)
 
 namespace chrono_detail
 {
-  
+
 // monotonic_clock
 
 // Note, in this implementation monotonic_clock and high_resolution_clock
@@ -72,7 +72,7 @@ namespace chrono_detail
 
 // MachInfo.numer / MachInfo.denom is often 1 on the latest equipment.  Specialize
 //   for that case as an optimization.
-BOOST_CHRONO_STATIC 
+BOOST_CHRONO_STATIC
 monotonic_clock::rep
 monotonic_simplified()
 {
@@ -112,7 +112,7 @@ monotonic_full()
         system::system_error( err, system::system_category, "chrono::monotonic_clock" ));
 #else
         system::system_error( err, system::system_category(), "chrono::monotonic_clock" ));
-#endif          
+#endif
     return static_cast<monotonic_clock::rep>(mach_absolute_time() * factor);
 }
 
@@ -127,7 +127,7 @@ monotonic_full_ec(system::error_code & ec)
       ec.assign( errno, system::system_category );
 #else
       ec.assign( errno, system::system_category() );
-#endif          
+#endif
       return monotonic_clock::rep();
     }
     ec.clear();
@@ -178,7 +178,7 @@ monotonic_clock::now()
         system::system_error( err, system::system_category, "chrono::monotonic_clock" ));
 #else
         system::system_error( err, system::system_category(), "chrono::monotonic_clock" ));
-#endif          
+#endif
     return time_point(duration(fp()));
 }
 
@@ -192,7 +192,7 @@ monotonic_clock::now(system::error_code & ec)
         ec.assign( err, system::system_category );
 #else
         ec.assign( err, system::system_category() );
-#endif          
+#endif
         return time_point();
     }
     ec.clear();

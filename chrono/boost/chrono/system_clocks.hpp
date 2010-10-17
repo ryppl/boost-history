@@ -169,7 +169,7 @@ namespace chrono {
 #ifndef BOOST_CHRONO_INLINED
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 #else
-#include <boost/chrono/detail/inlined/chrono.hpp> 
+#include <boost/chrono/detail/inlined/chrono.hpp>
 #endif
 
 #endif // BOOST_CHRONO_SYSTEM_CLOCKS_HPP

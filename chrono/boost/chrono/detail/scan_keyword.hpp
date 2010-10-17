@@ -16,7 +16,7 @@
 
 namespace boost {
     using interprocess::unique_ptr;
-    
+
 namespace chrono {
 namespace chrono_detail {
 
@@ -38,7 +38,7 @@ namespace chrono_detail {
 //  Keywords:  "a", "abb"
 //  If the input is "a", the first keyword matches and eofbit is set.
 //  If the input is "abc", no match is found and "ab" are consumed.
-    
+
 template <class InputIterator, class ForwardIterator, class Ctype>
 ForwardIterator
 scan_keyword(InputIterator& b, InputIterator e,

@@ -51,7 +51,7 @@ namespace chrono_detail
             ec.assign( errno, system::system_category );
 #else
             ec.assign( errno, system::system_category() );
-#endif          
+#endif
             times_.real = times_.system = times_.user = nanoseconds(-1);
         }
         else
@@ -72,7 +72,7 @@ namespace chrono_detail
                 ec.assign( errno, system::system_category );
 #else
                 ec.assign( errno, system::system_category() );
-#endif          
+#endif
                 times_.real = times_.user = times_.system = nanoseconds(-1);
             }
         }

@@ -9,7 +9,7 @@
 //  See http://www.boost.org/libs/system for documentation.
 
 #ifndef BOOST_PROCESS_TIMES_HPP
-#define BOOST_PROCESS_TIMES_HPP  
+#define BOOST_PROCESS_TIMES_HPP
 
 #include <boost/chrono/duration.hpp>
 #include <boost/chrono/time_point.hpp>
@@ -60,7 +60,7 @@ namespace boost
                          system::error_code & ec = system::throws );
     };
 
-    
+
 //--------------------------------------------------------------------------------------//
 //                                  process_times                                       //
 //--------------------------------------------------------------------------------------//
@@ -123,7 +123,7 @@ namespace boost
       // std::cout, which in turn would require including <iostream>, with its
       // high associated cost, even when the standard streams are not used.
 
-      BOOST_CHRONO_INLINE 
+      BOOST_CHRONO_INLINE
       explicit run_timer( system::error_code & ec = system::throws );
       BOOST_CHRONO_INLINE
       explicit run_timer( std::ostream & os,
@@ -180,14 +180,14 @@ namespace boost
     private:
       int             m_places;
       std::ostream &  m_os;
-    
+
 #if defined _MSC_VER
 #pragma warning(push)
 #pragma warning(disable:4251)
 #endif
       std::string     m_format;
 #if defined _MSC_VER
-#pragma warning(pop)    
+#pragma warning(pop)
 #endif
       bool            m_reported;
 
@@ -204,9 +204,9 @@ namespace boost
 #ifndef BOOST_CHRONO_INLINED
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 #else
-#include <boost/chrono/detail/inlined/process_clock.hpp> 
-#include <boost/chrono/detail/inlined/run_timer.hpp> 
-#include <boost/chrono/detail/inlined/run_timer_static.hpp> 
+#include <boost/chrono/detail/inlined/process_clock.hpp>
+#include <boost/chrono/detail/inlined/run_timer.hpp>
+#include <boost/chrono/detail/inlined/run_timer_static.hpp>
 #endif
 
 #endif  // BOOST_PROCESS_TIMES_HPP

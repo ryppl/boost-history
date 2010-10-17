@@ -71,7 +71,7 @@ struct common_type<chrono::time_point<Clock, Duration1>,
 };
 
 
-    
+
 namespace chrono {
 
   // time_point arithmetic
@@ -112,7 +112,7 @@ namespace chrono {
   // time_point_cast
   template <class ToDuration, class Clock, class Duration>
   time_point<Clock, ToDuration> time_point_cast(const time_point<Clock, Duration>& t);
-  
+
 //----------------------------------------------------------------------------//
 //                                                                            //
 //      20.9.4 Class template time_point [time.point]                         //

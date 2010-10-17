@@ -89,9 +89,9 @@ namespace chrono_detail
     }
   }
 
-} 
+}
 
- 
+
 
       run_timer::run_timer( system::error_code & ec  )
         : m_places(m_default_places), m_os(m_cout()) { start(ec); }
@@ -157,7 +157,7 @@ namespace chrono_detail
           ec.assign(system::errc::success, system::generic_category);
 #else
           ec.assign(system::errc::success, system::generic_category());
-#endif          
+#endif
             //ec = error_code( EIO, errno_ecat );
         }
       }
