@@ -64,7 +64,7 @@ rule chrono-run ( sources )
 }    
 rule chrono-run2 ( sources : name )
 {
-    local result = 
+    return 
     [ run $(sources) ../build//boost_chrono 
         : : : <define>BOOST_USE_WINDOWS_H
         : $(name)_shared ]
@@ -74,7 +74,6 @@ rule chrono-run2 ( sources : name )
     [ run $(sources) 
         : : : <define>BOOST_CHRONO_INLINED 
         : $(name)_header ]
-        ;
     [ run $(sources) 
         : : : <define>BOOST_CHRONO_INLINED <define>BOOST_USE_WINDOWS_H 
         : $(name)_header_win ]
