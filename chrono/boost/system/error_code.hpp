@@ -23,7 +23,7 @@
 #include <functional>
 
 // TODO: undef these macros if not already defined
-#include <boost/cerrno.hpp> 
+#include <boost/cerrno.hpp>
 
 #if !defined(BOOST_SYSTEM_POSIX_API) && !defined(BOOST_SYSTEM_WINDOWS_API)
 #  error BOOST_SYSTEM_POSIX_API or BOOST_SYSTEM_WINDOWS_API must be defined
@@ -187,7 +187,7 @@ namespace boost
       virtual const char *     name() const = 0;
       virtual std::string      message( int ev ) const = 0;
       virtual error_condition  default_error_condition( int ev ) const;
-      virtual bool             equivalent( int code, 
+      virtual bool             equivalent( int code,
                                            const error_condition & condition ) const;
       virtual bool             equivalent( const error_code & code,
                                            int condition ) const;
@@ -238,15 +238,15 @@ namespace boost
       // modifiers:
 
       void assign( int val, const error_category & cat )
-      { 
+      {
         m_val = val;
         m_cat = &cat;
       }
-                                             
+
       template<typename ErrorConditionEnum>
         typename boost::enable_if<is_error_condition_enum<ErrorConditionEnum>, error_condition>::type &
           operator=( ErrorConditionEnum val )
-      { 
+      {
         *this = make_error_condition(val);
         return *this;
       }
@@ -266,7 +266,7 @@ namespace boost
       static void unspecified_bool_true() {}
 
       operator unspecified_bool_type() const  // true if error
-      { 
+      {
         return m_val == 0 ? 0 : unspecified_bool_true;
       }
 
@@ -282,7 +282,7 @@ namespace boost
                                      const error_condition & rhs )
       {
         return lhs.m_cat == rhs.m_cat && lhs.m_val == rhs.m_val;
-      }                  
+      }
 
       inline friend bool operator<( const error_condition & lhs,
                                     const error_condition & rhs )
@@ -324,15 +324,15 @@ namespace boost
 
       // modifiers:
       void assign( int val, const error_category & cat )
-      { 
+      {
         m_val = val;
         m_cat = &cat;
       }
-                                             
+
       template<typename ErrorCodeEnum>
         typename boost::enable_if<is_error_code_enum<ErrorCodeEnum>, error_code>::type &
           operator=( ErrorCodeEnum val )
-      { 
+      {
         *this = make_error_code(val);
         return *this;
       }
@@ -353,7 +353,7 @@ namespace boost
       static void unspecified_bool_true() {}
 
       operator unspecified_bool_type() const  // true if error
-      { 
+      {
         return m_val == 0 ? 0 : unspecified_bool_true;
       }
 
@@ -379,7 +379,7 @@ namespace boost
         return lhs.m_cat < rhs.m_cat
           || (lhs.m_cat == rhs.m_cat && lhs.m_val < rhs.m_val);
       }
-                  
+
       private:
       int                     m_val;
       const error_category *  m_cat;
@@ -431,26 +431,26 @@ namespace boost
       return code.category().equivalent( code.value(), condition )
         || condition.category().equivalent( code, condition.value() );
     }
-                
+
     inline bool operator!=( const error_code & lhs,
                             const error_condition & rhs )
     {
       return !(lhs == rhs);
     }
-                
+
     inline bool operator==( const error_condition & condition,
                             const error_code & code )
     {
       return condition.category().equivalent( code, condition.value() )
         || code.category().equivalent( code.value(), condition );
     }
-                
+
     inline bool operator!=( const error_condition & lhs,
                             const error_code & rhs )
     {
       return !(lhs == rhs);
     }
-                  
+
     // TODO: both of these may move elsewhere, but the LWG hasn't spoken yet.
 
     template <class charT, class traits>
@@ -483,7 +483,7 @@ namespace boost
     //  error_category default implementation  -------------------------------//
 
     inline error_condition error_category::default_error_condition( int ev ) const
-    { 
+    {
       return error_condition( ev, *this );
     }
 
@@ -514,7 +514,7 @@ namespace boost
 #ifndef BOOST_SYSTEM_INLINED
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 #else
-#include <boost/system/detail/inlined/error_code.hpp> 
+#include <boost/system/detail/inlined/error_code.hpp>
 #endif
 
 

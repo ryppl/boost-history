@@ -153,7 +153,7 @@ namespace system_detail
   #  endif   // else POSIX version of strerror_r
   # endif  // else use strerror_r
   }
-  //  system_error_category implementation  --------------------------------// 
+  //  system_error_category implementation  --------------------------------//
 
   const char * system_error_category::name() const
   {
@@ -227,9 +227,9 @@ namespace system_detail
   # if ENOTEMPTY != EEXIST // AIX treats ENOTEMPTY and EEXIST as the same value
     case ENOTEMPTY: return make_error_condition( errc::directory_not_empty );
   # endif // ENOTEMPTY != EEXIST
-  # if ENOTRECOVERABLE != ECONNRESET // the same on some Broadcom chips 
-    case ENOTRECOVERABLE: return make_error_condition( errc::state_not_recoverable ); 
-  # endif // ENOTRECOVERABLE != ECONNRESET 
+  # if ENOTRECOVERABLE != ECONNRESET // the same on some Broadcom chips
+    case ENOTRECOVERABLE: return make_error_condition( errc::state_not_recoverable );
+  # endif // ENOTRECOVERABLE != ECONNRESET
     case ENOTSOCK: return make_error_condition( errc::not_a_socket );
     case ENOTSUP: return make_error_condition( errc::not_supported );
     case ENOTTY: return make_error_condition( errc::inappropriate_io_control_operation );
@@ -238,9 +238,9 @@ namespace system_detail
     case EOPNOTSUPP: return make_error_condition( errc::operation_not_supported );
   # endif // EOPNOTSUPP != ENOTSUP
     case EOVERFLOW: return make_error_condition( errc::value_too_large );
-  # if EOWNERDEAD != ECONNABORTED // the same on some Broadcom chips 
-    case EOWNERDEAD: return make_error_condition( errc::owner_dead ); 
-  # endif // EOWNERDEAD != ECONNABORTED 
+  # if EOWNERDEAD != ECONNABORTED // the same on some Broadcom chips
+    case EOWNERDEAD: return make_error_condition( errc::owner_dead );
+  # endif // EOWNERDEAD != ECONNABORTED
     case EPERM: return make_error_condition( errc::operation_not_permitted );
     case EPIPE: return make_error_condition( errc::broken_pipe );
     case EPROTO: return make_error_condition( errc::protocol_error );
@@ -349,41 +349,41 @@ namespace system_detail
 
   std::string system_error_category::message( int ev ) const
   {
-# ifndef BOOST_NO_ANSI_APIS  
+# ifndef BOOST_NO_ANSI_APIS
 	boost::detail::win32::LPVOID_ lpMsgBuf = 0;
-	boost::detail::win32::DWORD_ retval = boost::detail::win32::FormatMessageA( 
-			boost::detail::win32::FORMAT_MESSAGE_ALLOCATE_BUFFER_ | 
-			boost::detail::win32::FORMAT_MESSAGE_FROM_SYSTEM_ | 
+	boost::detail::win32::DWORD_ retval = boost::detail::win32::FormatMessageA(
+			boost::detail::win32::FORMAT_MESSAGE_ALLOCATE_BUFFER_ |
+			boost::detail::win32::FORMAT_MESSAGE_FROM_SYSTEM_ |
 			boost::detail::win32::FORMAT_MESSAGE_IGNORE_INSERTS_,
         NULL,
         ev,
         boost::detail::win32::MAKELANGID_(boost::detail::win32::LANG_NEUTRAL_, boost::detail::win32::SUBLANG_DEFAULT_), // Default language
         (boost::detail::win32::LPSTR_) &lpMsgBuf,
         0,
-        NULL 
+        NULL
     );
     detail::local_free_on_destruction lfod(lpMsgBuf);
     if (retval == 0)
         return std::string("Unknown error");
-        
+
     std::string str( static_cast<boost::detail::win32::LPCSTR_>(lpMsgBuf) );
 # else  // WinCE workaround
     boost::detail::win32::LPVOID_ lpMsgBuf = 0;
-    boost::detail::win32::DWORD retval = boost::detail::win32::FormatMessageW( 
-    		boost::detail::win32::FORMAT_MESSAGE_ALLOCATE_BUFFER_ | 
-    		boost::detail::win32::FORMAT_MESSAGE_FROM_SYSTEM_ | 
+    boost::detail::win32::DWORD retval = boost::detail::win32::FormatMessageW(
+    		boost::detail::win32::FORMAT_MESSAGE_ALLOCATE_BUFFER_ |
+    		boost::detail::win32::FORMAT_MESSAGE_FROM_SYSTEM_ |
     		boost::detail::win32::FORMAT_MESSAGE_IGNORE_INSERTS_,
         NULL,
         ev,
         boost::detail::win32::MAKELANGID_(boost::detail::win32::LANG_NEUTRAL_, boost::detail::win32::SUBLANG_DEFAULT_), // Default language
         (boost::detail::win32::LPWSTR_) &lpMsgBuf,
         0,
-        NULL 
+        NULL
     );
     detail::local_free_on_destruction lfod(lpMsgBuf);
     if (retval == 0)
         return std::string("Unknown error");
-    
+
     int num_chars = (wcslen( static_cast<LPCWSTR>(lpMsgBuf) ) + 1) * 2;
     boost::detail::win32::LPSTR_ narrow_buffer = (boost::detail::win32::LPSTR_)_alloca( num_chars );
     if (boost::detail::win32::WideCharToMultiByte(CP_ACP, 0, static_cast<boost::detail::win32::LPCWSTR_>(lpMsgBuf), -1, narrow_buffer, num_chars, NULL, NULL) == 0)
@@ -394,13 +394,13 @@ namespace system_detail
     while ( str.size()
       && (str[str.size()-1] == '\n' || str[str.size()-1] == '\r') )
         str.erase( str.size()-1 );
-    if ( str.size() && str[str.size()-1] == '.' ) 
+    if ( str.size() && str[str.size()-1] == '.' )
       { str.erase( str.size()-1 ); }
     return str;
   }
 # endif
 
-} 
+}
 
 # ifndef BOOST_SYSTEM_NO_DEPRECATED
     BOOST_SYSTEM_DECL error_code throws; // "throw on error" special error_code;
