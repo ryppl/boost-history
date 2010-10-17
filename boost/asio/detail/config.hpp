@@ -12,6 +12,7 @@
 #define BOOST_ASIO_DETAIL_CONFIG_HPP
 
 #include <boost/config.hpp>
+#include <boost/version.hpp>
 
 // Default to a header-only implementation. The user must specifically request
 // separate compilation by defining either BOOST_ASIO_SEPARATE_COMPILATION or
@@ -159,9 +160,11 @@
 // Serial ports.
 #if defined(BOOST_ASIO_HAS_IOCP) \
    || !defined(BOOST_WINDOWS) && !defined(__CYGWIN__)
-# if !defined(BOOST_ASIO_DISABLE_SERIAL_PORT)
-#  define BOOST_ASIO_HAS_SERIAL_PORT 1
-# endif // !defined(BOOST_ASIO_DISABLE_SERIAL_PORT)
+# if !defined(__SYMBIAN32__)
+#  if !defined(BOOST_ASIO_DISABLE_SERIAL_PORT)
+#   define BOOST_ASIO_HAS_SERIAL_PORT 1
+#  endif // !defined(BOOST_ASIO_DISABLE_SERIAL_PORT)
+# endif // !defined(__SYMBIAN32__)
 #endif // defined(BOOST_ASIO_HAS_IOCP)
        //   || !defined(BOOST_WINDOWS) && !defined(__CYGWIN__)
 
