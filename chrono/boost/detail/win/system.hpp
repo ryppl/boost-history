@@ -52,33 +52,6 @@ namespace boost
 }
 
 #elif defined( WIN32 ) || defined( _WIN32 ) || defined( __WIN32__ )
-# include <WinError.h>
-//#    define WINAPI  __stdcall
-
-// @FIXME Which condition must be tested            	
-# ifdef UNDER_CE
-#  ifndef WINAPI
-#   ifndef _WIN32_WCE_EMULATION
-#    define WINAPI  __cdecl     // Note this doesn't match the desktop definition
-#   else
-#    define WINAPI  __stdcall
-#   endif
-#  endif
-
-#  ifdef __cplusplus
-extern "C" {
-#  endif
-
-
-
-#  ifdef __cplusplus
-}
-#  endif
-# else
-#  ifndef WINAPI
-#    define WINAPI  __stdcall
-#  endif
-# endif
 
 namespace boost
 {

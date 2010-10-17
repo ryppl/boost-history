@@ -60,16 +60,6 @@ namespace boost
 #    define WINAPI  __stdcall
 #   endif
 #  endif
-
-#  ifdef __cplusplus
-extern "C" {
-#  endif
-
-
-
-#  ifdef __cplusplus
-}
-#  endif
 # else
 #  ifndef WINAPI
 #    define WINAPI  __stdcall
