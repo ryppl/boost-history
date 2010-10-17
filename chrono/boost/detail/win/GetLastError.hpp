@@ -23,9 +23,9 @@ namespace boost
     {
         namespace win32
         {
-		
+
             using ::GetLastError;
-        	
+
         }
     }
 }
@@ -40,13 +40,13 @@ namespace boost
         {
             extern "C"
             {
-            	
+
 //            	  using ::GetLastError;
-                __declspec(dllimport) 
-                DWORD_ 
-                WINAPI 
+                __declspec(dllimport)
+                DWORD_
+                WINAPI
             	GetLastError();
-            	
+
             }
         }
     }

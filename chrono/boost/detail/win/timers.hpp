@@ -31,7 +31,7 @@ namespace win32
         QueryPerformanceFrequency(
             LARGE_INTEGER_ *lpFrequency
         );
-#endif    
+#endif
 }
 }
 }

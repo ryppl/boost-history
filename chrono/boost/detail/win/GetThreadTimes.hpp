@@ -11,7 +11,7 @@
 
 #include <boost/detail/win/time.hpp>
 
-namespace boost { 
+namespace boost {
 namespace detail {
 namespace win32 {
 #if defined( BOOST_USE_WINDOWS_H )

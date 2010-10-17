@@ -23,26 +23,26 @@ namespace boost
     {
         namespace win32
         {
-    		typedef BOOL BOOL_;
-        	typedef unsigned short WORD_;
-			typedef DWORD DWORD_;
-        	typedef HANDLE HANDLE_;
-    		typedef LONG LONG_;
-			typedef LONGLONG LONGLONG_; 
-	        typedef LARGE_INTEGER LARGE_INTEGER_;
-	        typedef PLARGE_INTEGER PLARGE_INTEGER_;
-	        typedef void *PVOID_;
-	        typedef void *LPVOID_;
-        	typedef char CHAR_;
-        	typedef CHAR_ *LPSTR_;
-        	typedef const CHAR_ *LPCSTR_;
-        	typedef wchar_t WCHAR_;          	
-        	typedef WCHAR_ *LPWSTR_;
-        	typedef const WCHAR_ *LPCWSTR_;
+            typedef BOOL BOOL_;
+            typedef unsigned short WORD_;
+            typedef DWORD DWORD_;
+            typedef HANDLE HANDLE_;
+            typedef LONG LONG_;
+            typedef LONGLONG LONGLONG_;
+            typedef LARGE_INTEGER LARGE_INTEGER_;
+            typedef PLARGE_INTEGER PLARGE_INTEGER_;
+            typedef void *PVOID_;
+            typedef void *LPVOID_;
+            typedef char CHAR_;
+            typedef CHAR_ *LPSTR_;
+            typedef const CHAR_ *LPCSTR_;
+            typedef wchar_t WCHAR_;
+            typedef WCHAR_ *LPWSTR_;
+            typedef const WCHAR_ *LPCWSTR_;
 
-			
 
-        	
+
+
         }
     }
 }
@@ -51,7 +51,7 @@ namespace boost
 # include <WinError.h>
 //#    define WINAPI  __stdcall
 
-// @FIXME Which condition must be tested            	
+// @FIXME Which condition must be tested
 # ifdef UNDER_CE
 #  ifndef WINAPI
 #   ifndef _WIN32_WCE_EMULATION
@@ -74,48 +74,37 @@ namespace boost
         {
             extern "C"
             {
-            	typedef int BOOL_;
-            	typedef unsigned short WORD_;           	
-            	typedef unsigned long DWORD_;
-            	typedef void* HANDLE_;
-            	
-            	typedef long LONG_;
+                typedef int BOOL_;
+                typedef unsigned short WORD_;
+                typedef unsigned long DWORD_;
+                typedef void* HANDLE_;
 
-// @FIXME Which condition must be tested            	
-//            	#if !defined(_M_IX86)
-            	typedef __int64 LONGLONG_; 
-//            	#else
-//            	typedef double LONGLONG_;
-//            	#endif
-            	           	
-//            	typedef union _LARGE_INTEGER_ {
-////            	  struct {
-////            	    DWORD_ LowPart;
-////            	    LONG_  HighPart;
-////            	  } ;
-//            	  struct {
-//            	    DWORD_ LowPart;
-//            	    LONG_  HighPart;
-//            	  } u;
-//            	  LONGLONG_ QuadPart;
-//            	} LARGE_INTEGER_, *PLARGE_INTEGER_;
-            	typedef struct _LARGE_INTEGER {
-            	    LONGLONG_ QuadPart;
-            	} LARGE_INTEGER_;           	
-            	typedef LARGE_INTEGER_ *PLARGE_INTEGER_;
-            	
-            	typedef void *PVOID_;
-            	typedef void *LPVOID_;
-            	typedef const void *LPCVOID_;
+                typedef long LONG_;
 
-            	typedef char CHAR_;
-            	typedef CHAR_ *LPSTR_;
-            	typedef const CHAR_ *LPCSTR_;
+// @FIXME Which condition must be tested
+//                #if !defined(_M_IX86)
+                typedef __int64 LONGLONG_;
+//                #else
+//                typedef double LONGLONG_;
+//                #endif
 
-            	typedef wchar_t WCHAR_;          	
-            	typedef WCHAR_ *LPWSTR_;
-            	typedef const WCHAR_ *LPCWSTR_;
-            	           	
+                typedef struct _LARGE_INTEGER {
+                    LONGLONG_ QuadPart;
+                } LARGE_INTEGER_;
+                typedef LARGE_INTEGER_ *PLARGE_INTEGER_;
+
+                typedef void *PVOID_;
+                typedef void *LPVOID_;
+                typedef const void *LPCVOID_;
+
+                typedef char CHAR_;
+                typedef CHAR_ *LPSTR_;
+                typedef const CHAR_ *LPCSTR_;
+
+                typedef wchar_t WCHAR_;
+                typedef WCHAR_ *LPWSTR_;
+                typedef const WCHAR_ *LPCWSTR_;
+
             }
         }
     }

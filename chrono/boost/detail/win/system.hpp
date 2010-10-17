@@ -22,7 +22,7 @@ namespace boost
         namespace win32
         {
         	typedef HANDLE_ HLOCAL_;
-			          
+
         	using ::LocalFree;
         	using ::FormatMessageA;
         	using ::FormatMessageW;
@@ -34,15 +34,15 @@ namespace boost
 			const int FORMAT_MESSAGE_FROM_SYSTEM_=     FORMAT_MESSAGE_FROM_SYSTEM;
 			const int FORMAT_MESSAGE_ARGUMENT_ARRAY_=  FORMAT_MESSAGE_ARGUMENT_ARRAY;
 			const int FORMAT_MESSAGE_MAX_WIDTH_MASK_=  FORMAT_MESSAGE_MAX_WIDTH_MASK;
-			
+
 			const char LANG_NEUTRAL_=                  LANG_NEUTRAL;
 			const char LANG_INVARIANT_=                LANG_INVARIANT;
-			
+
 			const char SUBLANG_DEFAULT_=               SUBLANG_DEFAULT;    // user default
 			inline WORD_ MAKELANGID_(WORD_ p, WORD_ s) {
 				return MAKELANGID(p,s);
 			}
-        	
+
         }
     }
 }
@@ -59,17 +59,17 @@ namespace boost
             {
     	        typedef HANDLE_ HLOCAL_;
 
-                    
+
             	//                using ::LocalFree;
-            	__declspec(dllimport) 
+            	__declspec(dllimport)
             	HLOCAL_
             	WINAPI
             	LocalFree(
             	    HLOCAL_ hMem
             	);
-            	
+
             	//                using ::FormatMessageA;
-            	__declspec(dllimport) 
+            	__declspec(dllimport)
             	DWORD_
             	WINAPI
             	FormatMessageA(
@@ -81,9 +81,9 @@ namespace boost
             	    DWORD_ nSize,
             	    va_list *Arguments
             	    );
-            
+
             	//                using ::FormatMessageW;
-            	__declspec(dllimport) 
+            	__declspec(dllimport)
             	DWORD_
             	WINAPI
             	FormatMessageW(
@@ -95,7 +95,7 @@ namespace boost
             	    DWORD_ nSize,
             	    va_list *Arguments
             	    );
-            
+
     			const int FORMAT_MESSAGE_ALLOCATE_BUFFER_= 0x00000100;
     			const int FORMAT_MESSAGE_IGNORE_INSERTS_=  0x00000200;
     			const int FORMAT_MESSAGE_FROM_STRING_=     0x00000400;
@@ -103,15 +103,15 @@ namespace boost
     			const int FORMAT_MESSAGE_FROM_SYSTEM_=     0x00001000;
     			const int FORMAT_MESSAGE_ARGUMENT_ARRAY_=  0x00002000;
     			const int FORMAT_MESSAGE_MAX_WIDTH_MASK_=  0x000000FF;
-    			
+
     			const char LANG_NEUTRAL_=                  0x00;
     			const char LANG_INVARIANT_=                0x7f;
-    			
+
     			const char SUBLANG_DEFAULT_=               0x01;    // user default
     			inline WORD_ MAKELANGID_(WORD_ p, WORD_ s) {
     				return ((((WORD_  )(s)) << 10) | (WORD_  )(p));
     			}
-            	
+
             }
         }
     }
