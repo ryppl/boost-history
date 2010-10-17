@@ -15,9 +15,9 @@
 #include <boost/chrono/thread_clock.hpp>
 #include <cassert>
 
-#include <boost/detail/win/time.hpp>
 #include <boost/detail/win/GetLastError.hpp>
 #include <boost/detail/win/GetCurrentThread.hpp>
+#include <boost/detail/win/GetThreadTimes.hpp>
 
 namespace boost
 {
@@ -28,10 +28,10 @@ namespace boost
     {
 
       //  note that Windows uses 100 nanosecond ticks for FILETIME
-    	boost::detail::win32::FILETIME_ creation, exit, user_time, system_time;
+        boost::detail::win32::FILETIME_ creation, exit, user_time, system_time;
 
-      if ( boost::detail::win32::GetThreadTimes( 
-    		  boost::detail::win32::GetCurrentThread (), &creation, &exit,
+      if ( boost::detail::win32::GetThreadTimes(
+              boost::detail::win32::GetCurrentThread (), &creation, &exit,
              &system_time, &user_time ) )
       {
         duration user   = duration(
@@ -41,10 +41,10 @@ namespace boost
         duration system = duration(
           ((static_cast<duration::rep>(system_time.dwHighDateTime) << 32)
             | system_time.dwLowDateTime) * 100 );
-          
+
         ec.clear();
         return time_point(system+user);
-          
+
       }
       else
       {
@@ -53,12 +53,12 @@ namespace boost
         ec.assign( boost::detail::win32::GetLastError(), system::system_category );
 #else
         ec.assign( boost::detail::win32::GetLastError(), system::system_category() );
-#endif          
+#endif
         return thread_clock::time_point(duration(0));
       }
 
     }
-    
+
     thread_clock::time_point thread_clock::now( )
     {
 
@@ -75,9 +75,9 @@ namespace boost
         duration system = duration(
           ((static_cast<duration::rep>(system_time.dwHighDateTime) << 32)
             | system_time.dwLowDateTime) * 100 );
-          
+
         return time_point(system+user);
-          
+
       }
       else
       {
@@ -86,13 +86,13 @@ namespace boost
             system::system_error( boost::detail::win32::GetLastError(), system::system_category, "chrono::monotonic_clock" ));
 #else
             system::system_error( boost::detail::win32::GetLastError(), system::system_category(), "chrono::monotonic_clock" ));
-#endif          
+#endif
       }
 
     }
-    
 
-    
+
+
   } // namespace chrono
 } // namespace boost
 

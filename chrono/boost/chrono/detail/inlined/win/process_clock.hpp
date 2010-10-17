@@ -17,15 +17,15 @@
 #include <boost/chrono/process_times.hpp>
 #include <cassert>
 
-#include <boost/detail/win/time.hpp>
 #include <boost/detail/win/GetLastError.hpp>
 #include <boost/detail/win/GetCurrentProcess.hpp>
+#include <boost/detail/win/GetProcessTimes.hpp>
 
 namespace boost
 {
   namespace chrono
   {
-    
+
     void process_clock::now( process_times & times_, system::error_code & ec )
     {
 
@@ -34,8 +34,8 @@ namespace boost
 
       times_.real = duration( monotonic_clock::now().time_since_epoch().count() );
 
-      if ( boost::detail::win32::GetProcessTimes( 
-    		  boost::detail::win32::GetCurrentProcess(), &creation, &exit,
+      if ( boost::detail::win32::GetProcessTimes(
+              boost::detail::win32::GetCurrentProcess(), &creation, &exit,
              &system_time, &user_time ) )
       {
         ec.clear();
@@ -54,7 +54,7 @@ namespace boost
         ec.assign( boost::detail::win32::GetLastError(), system::system_category );
 #else
         ec.assign( boost::detail::win32::GetLastError(), system::system_category() );
-#endif          
+#endif
         times_.real = times_.system = times_.user = nanoseconds(-1);
       }
 
@@ -62,4 +62,4 @@ namespace boost
   } // namespace chrono
 } // namespace boost
 
-#endif          
+#endif
