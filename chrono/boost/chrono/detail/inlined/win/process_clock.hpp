@@ -18,6 +18,8 @@
 #include <cassert>
 
 #include <boost/detail/win/time.hpp>
+#include <boost/detail/win/GetLastError.hpp>
+#include <boost/detail/win/GetCurrentProcess.hpp>
 
 namespace boost
 {

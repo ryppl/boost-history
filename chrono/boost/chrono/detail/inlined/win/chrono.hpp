@@ -13,6 +13,7 @@
 #define BOOST_CHRONO_DETAIL_INLINED_WIN_CHRONO_HPP
 
 #include <boost/detail/win/time.hpp>
+#include <boost/detail/win/GetLastError.hpp>
 
 namespace boost
 {
