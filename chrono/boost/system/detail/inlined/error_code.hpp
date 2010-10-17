@@ -29,7 +29,7 @@
 #include <cstring> // for strerror/strerror_r
 
 # if defined( BOOST_SYSTEM_WINDOWS_API )
-#   include <boost/detail/win/system.hpp>
+#   include <boost/detail/win/error_handling.hpp>
 #   include "local_free_on_destruction.hpp"
 #   ifndef ERROR_INCORRECT_SIZE
 #     define ERROR_INCORRECT_SIZE ERROR_BAD_ARGUMENTS

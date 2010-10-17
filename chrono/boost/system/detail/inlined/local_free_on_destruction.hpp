@@ -9,8 +9,10 @@
 //  This is derived from boost/asio/detail/local_free_on_block_exit.hpp to avoid
 //  a dependency on asio. Thanks to Chris Kohlhoff for pointing it out.
 
-#ifndef BOOST_SYSTEM_DETAIL_INLINEDLOCAL_FREE_ON_EXIT_HPP
-#define BOOST_SYSTEM_DETAIL_INLINEDLOCAL_FREE_ON_EXIT_HPP
+#ifndef BOOST_SYSTEM_DETAIL_INLINED_LOCAL_FREE_ON_DESTRUCTION_HPP
+#define BOOST_SYSTEM_DETAIL_INLINED_LOCAL_FREE_ON_DESTRUCTION_HPP
+
+#include <boost/detail/win/LocalFree.hpp>
 
 namespace boost {
 namespace system {
@@ -37,4 +39,4 @@ private:
 } // namespace system
 } // namespace boost
 
-#endif  // BOOST_SYSTEM_DETAIL_INLINEDLOCAL_FREE_ON_EXIT_HPP
+#endif  // BOOST_SYSTEM_DETAIL_INLINED_LOCAL_FREE_ON_DESTRUCTION_HPP
