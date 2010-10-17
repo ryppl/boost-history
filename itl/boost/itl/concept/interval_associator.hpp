@@ -185,15 +185,67 @@ interval_count(const Type& object)
 //==============================================================================
 //= Range<IntervalSet|IntervalMap>
 //==============================================================================
-template<class ObjectT>
-typename enable_if<is_interval_container<ObjectT>, 
-                   typename ObjectT::interval_type>::type
-hull(const ObjectT& object)
+template<class Type>
+typename enable_if<is_interval_container<Type>, 
+                   typename Type::interval_type>::type
+hull(const Type& object)
 {
     return 
-        icl::is_empty(object) ? identity_element<typename ObjectT::interval_type>::value()
-        : hull((key_value<ObjectT>(object.begin())), key_value<ObjectT>(object.rbegin()));
+        icl::is_empty(object) 
+            ? identity_element<typename Type::interval_type>::value()
+            : icl::hull( key_value<Type>(object.begin()), 
+                         key_value<Type>(object.rbegin()) );
 }
+
+template<class Type>
+typename enable_if<is_interval_container<Type>, 
+                   typename Type::interval_type>::type
+lower(const Type& object)
+{
+    return 
+        icl::is_empty(object) 
+            ? identity_element<typename Type::interval_type>::value()
+            : icl::lower( key_value<Type>(object.begin()) );
+}
+
+template<class Type>
+typename enable_if<is_interval_container<Type>, 
+                   typename Type::interval_type>::type
+upper(const Type& object)
+{
+    return 
+        icl::is_empty(object) 
+            ? identity_element<typename Type::interval_type>::value()
+            : icl::upper( key_value<Type>(object.rbegin()) );
+}
+
+//------------------------------------------------------------------------------
+template<class Type>
+typename enable_if
+< mpl::and_< is_interval_container<Type>
+           , is_discrete<typename Type::domain_type> >
+, typename Type::interval_type>::type
+first(const Type& object)
+{
+    return 
+        icl::is_empty(object) 
+            ? identity_element<typename Type::interval_type>::value()
+            : icl::first( key_value<Type>(object.begin()) );
+}
+
+template<class Type>
+typename enable_if
+< mpl::and_< is_interval_container<Type>
+           , is_discrete<typename Type::domain_type> >
+, typename Type::interval_type>::type
+last(const Type& object)
+{
+    return 
+        icl::is_empty(object) 
+            ? identity_element<typename Type::interval_type>::value()
+            : icl::last( key_value<Type>(object.rbegin()) );
+}
+
 
 //==============================================================================
 //= Addition<IntervalSet|IntervalMap>

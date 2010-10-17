@@ -130,8 +130,8 @@ M      |       M
 T& T::set(const P&)
 
 set | b p     
-----+----	  
-m   | m		  
+----+----      
+m   | m          
 M   |   M      
 ``
 

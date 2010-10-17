@@ -192,9 +192,9 @@ segments and submaps.
 [table Selection of elements, segments and sub maps using key types
 [[                     ][  __M: __itv_maps__    ][  __m: itl_map        ]]
 [[__e: `domain_type`   ][  key value pair       ][   key value pair ]]
-[[__i: `interval_type` ][  interval value pair  ][					 ]]
-[[__S: __itv_sets__    ][  interval map		    ][					 ]]
-[[__s: __icl_set__     ][                       ][   interval map	 ]]
+[[__i: `interval_type` ][  interval value pair  ][                     ]]
+[[__S: __itv_sets__    ][  interval map            ][                     ]]
+[[__s: __icl_set__     ][                       ][   interval map     ]]
 ]
 
 __biLSubtraction__, __biLerasure__, __biLintersection__

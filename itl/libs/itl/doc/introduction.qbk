@@ -106,7 +106,7 @@ myTvProgram.add(news).add(talk_show);
 // Iterating over elements (seconds) would be silly ...
 for(interval_set<seconds>::iterator telecast = myTvProgram.begin(); 
     telecast != myTvProgram.end(); ++telecast)
-	//...so this iterates over intervals
+    //...so this iterates over intervals
    TV.switch_on(*telecast);
 ``
 
@@ -210,22 +210,22 @@ styles are shown by example in the tables below.
 [table Interval container's ways to combine intervals 
     [[]         [joining]       [separating]            [splitting]]
     [[set]      [[classref boost::itl::interval_set          interval_set]]  
-	            [[classref boost::itl::separate_interval_set separate_interval_set]] 
-				[[classref boost::itl::split_interval_set    split_interval_set]]]
+                [[classref boost::itl::separate_interval_set separate_interval_set]] 
+                [[classref boost::itl::split_interval_set    split_interval_set]]]
     [[map]      [[classref boost::itl::interval_map          interval_map]]      
-	            []   
-				[[classref boost::itl::split_interval_map    split_interval_map]]]
-	[[]         [Intervals are joined on overlap or touch\n(if associated values are equal).]
-				[Intervals are joined on overlap, not on touch.]
-				[Intervals are split on overlap.\nAll interval borders are preserved.]]
+                []   
+                [[classref boost::itl::split_interval_map    split_interval_map]]]
+    [[]         [Intervals are joined on overlap or touch\n(if associated values are equal).]
+                [Intervals are joined on overlap, not on touch.]
+                [Intervals are split on overlap.\nAll interval borders are preserved.]]
 ]
 
 [table Interval combining styles by example
     [[]         [joining]       [separating]            [splitting]]
     [[set]      [[classref boost::itl::interval_set          interval_set] /A/]  
-	            [[classref boost::itl::separate_interval_set separate_interval_set] /B/] 
-				[[classref boost::itl::split_interval_set    split_interval_set] /C/]]
-[[]			
+                [[classref boost::itl::separate_interval_set separate_interval_set] /B/] 
+                [[classref boost::itl::split_interval_set    split_interval_set] /C/]]
+[[]            
 [``
   {[1      3)          }
 +       [2      4)
@@ -244,10 +244,10 @@ styles are shown by example in the tables below.
 ]
 
     [[map]      [[classref boost::itl::interval_map          interval_map] /D/]      
-	            []   
-				[[classref boost::itl::split_interval_map    split_interval_map] /E/]]
+                []   
+                [[classref boost::itl::split_interval_map    split_interval_map] /E/]]
 
-[[]			
+[[]            
 [``
   {[1      3)->1          }
 +       [2      4)->1

@@ -305,7 +305,7 @@ If, for instance, we instantiate an __itv_map__ to
 collect and concatenate
 `std::strings` associated to intervals,
 
-``	
+``    
 interval_map<int,std::string> cat_map;
 cat_map += make_pair(interval<int>::rightopen(1,5),std::string("Hello"));
 cat_map += make_pair(interval<int>::rightopen(3,7),std::string(" World"));

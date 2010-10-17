@@ -52,25 +52,25 @@ using namespace boost::icl;
 
 BOOST_AUTO_TEST_CASE(intro_sample_42)
 {
-	interval_set<int> mySet;
-	mySet.insert(42);
-	bool has_answer = contains(mySet, 42);
+    interval_set<int> mySet;
+    mySet.insert(42);
+    bool has_answer = contains(mySet, 42);
 }
 
 BOOST_AUTO_TEST_CASE(intro_sample_telecast)
 {
-	// Switch on my favorite telecasts using an interval_set
-	interval<int>::type news(2000, 2015);
-	interval<int>::type talk_show(2245, 2330);
-	interval_set<int> myTvProgram;
-	myTvProgram.add(news).add(talk_show);
+    // Switch on my favorite telecasts using an interval_set
+    interval<int>::type news(2000, 2015);
+    interval<int>::type talk_show(2245, 2330);
+    interval_set<int> myTvProgram;
+    myTvProgram.add(news).add(talk_show);
 
-	// Iterating over elements (seconds) would be silly ...
-	for(interval_set<int>::iterator telecast = myTvProgram.begin(); 
-		telecast != myTvProgram.end(); ++telecast)
-		//...so this iterates over intervals
-	    //TV.switch_on(*telecast);
-		cout << *telecast;
+    // Iterating over elements (seconds) would be silly ...
+    for(interval_set<int>::iterator telecast = myTvProgram.begin(); 
+        telecast != myTvProgram.end(); ++telecast)
+        //...so this iterates over intervals
+        //TV.switch_on(*telecast);
+        cout << *telecast;
 }
 
 

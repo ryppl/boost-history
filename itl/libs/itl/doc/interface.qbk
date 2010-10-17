@@ -406,7 +406,7 @@ overloaded implementations for the function of that row is shown.
 
 [table 
 [[Placeholder]                  [Argument types]          [Description]]
-[[`T`                         ] []                        [a container type]]             
+[[`T`                         ] []                        [a container or interval type]]             
 [[`P`                         ] []                        [polymorphical container argument type]]             
 [[`J`                         ] []                        [polymorphical iterator type]]
 [[`K`                         ] []                        [polymorphical element_iterator type for interval containers]]
@@ -460,15 +460,19 @@ overloaded implementations for the function of that row is shown.
 [[`difference_type length(const T&)`]             [1]       [1]      [1]     [ ]      [ ]   ]
 [[`size_type iterative_size(const T&)`]              [ ]       [1]      [1]     [1]      [1]   ]
 [[`size_type interval_count(const T&)`]              [ ]       [1]      [1]     [ ]      [ ]   ]
-											    
+                                                
 [[__biLSelection__ ]                              [ ]       [ ]      [ ]     [ ]      [ ]   ]
 [[`J T::find(const domain_type&)`]                [ ]       [1]      [1]     [2]      [2]   ]
 [[`codomain_type& operator[] (const domain_type&)`][ ]      [ ]      [ ]     [ ]      [1]   ]
 [[`codomain_type operator() (const domain_type&)const`][ ]  [ ]      [1]     [ ]      [1]   ]
 
-[[__biLHull__ ]                                   [ ]       [ ]      [ ]     [ ]      [ ]   ]
+[[__biLRange__]                                   [ ]       [ ]      [ ]     [ ]      [ ]   ]
 [[`interval_type hull(const T&)`]                 [ ]       [1]      [1]     [ ]      [ ]   ]
 [[`T hull(const T&, const T&)`]                   [1]       [ ]      [ ]     [ ]      [ ]   ]
+[[`domain_type lower(const T&)`]                  [1]       [1]      [1]     [ ]      [ ]   ]
+[[`domain_type upper(const T&)`]                  [1]       [1]      [1]     [ ]      [ ]   ]
+[[`domain_type first(const T&)`]                  [1]       [1]      [1]     [ ]      [ ]   ]
+[[`domain_type last(const T&)`]                   [1]       [1]      [1]     [ ]      [ ]   ]
 
 [[__biLAddition__]                [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
 [[`T& T::add(const P&)`]                          [ ]     [__ei]    [__bp]   [ ]     [__b]  ]
