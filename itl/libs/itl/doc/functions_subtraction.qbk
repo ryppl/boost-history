@@ -1,5 +1,5 @@
 [/
-    Copyright (c) 2008-2009 Joachim Faulhaber
+    Copyright (c) 2008-2010 Joachim Faulhaber
 
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -13,13 +13,18 @@
 [section Synopsis]
 
 [table
-[[Subtraction]                             [__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map]]
-[[`T& T::subtract(const P&)`]                                [__ei]    [__bp]    [__e]   [__b]   ]
-[[`T& operator -=(T&, const P&)`]                            [__eiS][__eiS __bpM][__es]  [__bm]  ]
-[[`T  operator - (T, const P&)`]                             [__eiS][__eiS __bpM][__es]  [__bm]  ]
+[[Subtraction]                        [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
+[[`T& T::subtract(const P&)`]                     [ ]     [__ei]    [__bp]   [ ]     [__b]  ]
+[[`T& subtract(T&, const P&)`]                    [ ]     [__ei]    [__bp]   [__e]   [__b]  ]
+
+[[`T& operator -=(T&, const P&)`]                 [ ]    [__eiS][__eiS __bpM][__es]  [__bm] ]
+[[`T  operator - (T, const P&)`]                  [ ]    [__eiS][__eiS __bpM][__es]  [__bm] ]
+
+[[`T left_subtract(T, const T&)`]                 [1]       [ ]      [ ]     [ ]      [ ]   ]
+[[`T right_subtract(T, const T&)`]                [1]       [ ]      [ ]     [ ]      [ ]   ]
 ]
 
-Functions and operators that implement ['*Subtraction*] on *itl* objects
+Functions and operators that implement ['*Subtraction*] on *icl* objects
 are given in the table above.
 
 [table
@@ -65,9 +70,9 @@ subtract | e i b p
 
 The next table contains complexity characteristics for `subtract`.
 
-[table Time Complexity for member function subtract on itl containers
+[table Time Complexity for member function subtract on icl containers
 [[`T& T::subtract(const P&)`] [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
-[[__icl_set__]                 [__Olgn__]   []            []           []          ]
+[/ [__icl_set__]                 [__Olgn__]   []            []           []          ]
 [[__icl_map__]                 [__Olgn__]   []            [__Olgn__]   []          ]
 [[__itv_sets__]                [__Olgn__]   [__a_Olgn__]  []           []          ]
 [[__itv_maps__]                [__Olgn__]   [__On__]      [__Olgn__]   [__On__]    ]
@@ -128,7 +133,7 @@ m = x.iterative_size(); //if P is a container type
 ``
 
 [table Time Complexity for inplace Subtraction on element containers
-[[`T& operator -= (T&, const P&)`][__ch_dom_t__][__ch_dom_mp_t__][__ch_itl_set__][__ch_itl_map__]]
+[[`T& operator -= (T&, const P&)`][__ch_dom_t__][__ch_dom_mp_t__][__ch_icl_set__][__ch_icl_map__]]
 [[__icl_set__]                    [__Olgn__]    []               [__Omlgn__]     []              ]
 [[__icl_map__]                    [__Olgn__]    [__Olgn__]       [__Omlgn__]     [__Omlgn__]     ]
 ]
@@ -161,6 +166,34 @@ s  | s   s        S  | S S     S
 m  | m m m m      M  | M M M M M M    
 ``
 [endsect][/- Infix operator Subtraction]
+
+
+[section Subtraction on Intervals]
+
+[table
+[[['*Subtraction*]]                                   [Types] [Description]                                        ]
+
+[[`T left_subtract(T right, const T& left_minuend)`]  [__i]   
+    [subtract `left_minuend` from the interval `right` on it's left side. 
+``
+right_over = left_subtract(right, left_minuend);
+...      d) : right
+... c)      : left_minuend
+     [c  d) : right_over
+``
+    ] ]
+[[`T right_subtract(T left, const T& right_minuend)`] [__i]   
+    [subtract `right_minuend` from the interval `left` on it's right side.
+``
+left_over = right_subtract(left, right_minuend);
+[a      ...  : left
+     [b ...  : right_minuend
+[a  b)       : left_over
+``
+    ] ]
+]
+
+[endsect][/ Subtraction on Intervals]
 
 
 ['*See also . . .*]

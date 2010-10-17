@@ -57,6 +57,7 @@ BOOST_AUTO_TEST_CASE(intro_sample_42)
     bool has_answer = contains(mySet, 42);
 }
 
+
 BOOST_AUTO_TEST_CASE(intro_sample_telecast)
 {
     // Switch on my favorite telecasts using an interval_set

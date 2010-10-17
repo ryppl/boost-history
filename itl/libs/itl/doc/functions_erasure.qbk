@@ -13,7 +13,7 @@
 [section Synopsis][/ Erasure]
 
 [table
-[[['*Erasure*]]                 [__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map]  ]
+[[['*Erasure*]]                 [__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]  ]
 [[`T& T::erase(const P&)`]              [__ei ]   [__ei __bp]     [__e]      [__bp]     ]
 [[`T& erase(T&, const P&)`]             [__eiS]  [__eiS __bpM]    [__es]     [__bm]     ]
 [[`void T::erase(iterator)`]               [1]        [1]         [1]        [1]        ]
@@ -31,7 +31,7 @@ contrast to `subtract` and `operator -=`, that implement a generalized subtracti
 that performs inverse aggregations if key values collide or key intervals overlap.
 
 Using iterators it is possible to erase objects or ranges of 
-objects the iterator is pointing at from itl Sets and Maps.
+objects the iterator is pointing at from icl Sets and Maps.
 
 [endsect][/ Synopsis Erasure]
 
@@ -53,7 +53,7 @@ erase | e i b p
 
 The next table contains complexity characteristics for member function `erase`.
 
-[table Time Complexity for member function erase on itl containers
+[table Time Complexity for member function erase on icl containers
 [[`T& T::erase(const P&)`] [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
 [[__icl_set__]                 [__Olgn__]   []            []           []          ]
 [[__icl_map__]                 [__Olgn__]   []            [__Olgn__]   []          ]
@@ -116,7 +116,7 @@ m = x.iterative_size(); //if P is a container type
 ``
 
 [table Time Complexity for inplace erasure on element containers
-[[`T& erase(T& y, const P& x)`][__ch_dom_t__][__ch_dom_mp_t__][__ch_itl_set__][__ch_itl_map__]]
+[[`T& erase(T& y, const P& x)`][__ch_dom_t__][__ch_dom_mp_t__][__ch_icl_set__][__ch_icl_map__]]
 [[__icl_set__]                    [__Olgn__]    []               [__Omlgn__]     []              ]
 [[__icl_map__]                    [__Olgn__]    [__Olgn__]       [__Omlgn__]     [__Omlgn__]     ]
 ]
@@ -143,7 +143,7 @@ So we erase
 * interval-value-pairs from __itv_maps__
 
 [table
-[[['*Erasure by iterators*]]                [__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map]  ]
+[[['*Erasure by iterators*]]                [__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]  ]
 [[`void T::erase(iterator pos)`]                   [__aO1__]   [__aO1__]    [__aO1__]   [__aO1__]   ]
 [[`void T::erase(iterator first, iterator past)`]  [__Ok__]    [__Ok__]     [__Ok__]    [__Ok__]    ]
 ]

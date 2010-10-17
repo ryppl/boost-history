@@ -11,7 +11,7 @@
 [section Streaming, conversion]
 
 [table
-[[['*Streaming, conversion*]]             [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map]  ]
+[[['*Streaming, conversion*]]             [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]  ]
 [[`std::basic_ostream operator << (basic_ostream&, const T&)`]      [1]       [1]      [1]     [1]      [1]      ]
 [[`std::string T::as_string()`]                [1]       [1]      [1]     [1]      [1]      ]
 ]

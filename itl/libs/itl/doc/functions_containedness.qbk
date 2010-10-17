@@ -11,7 +11,7 @@
 [section Containedness]
 
 [table
-[[['*Containedness*]]       [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map]  ]
+[[['*Containedness*]]       [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]  ]
 [[`bool T::empty()const`]                         [ ]       [1]      [1]     [1]      [1]   ]
 [[`bool is_empty(const T&)`]                      [1]       [1]      [1]     [1]      [1]   ]
 [[`bool contains(const T&, const P&)`\n
@@ -90,7 +90,7 @@ m = iterative_size(sub); //if P is a container type
 
 [table Time Complexity for function contains on element containers
 [[`bool contains(const T& super, const P& sub)`\n
-  `bool   within(const P& sub, const T& super)`][__ch_dom_t__][__ch_dom_mp_t__][__ch_itl_set__][__ch_itl_map__]]
+  `bool   within(const P& sub, const T& super)`][__ch_dom_t__][__ch_dom_mp_t__][__ch_icl_set__][__ch_icl_map__]]
 [[__icl_set__]                          [__Olgn__]    []               [__Omlgn__]     []              ]
 [[__icl_map__]                          [__Olgn__]    [__Olgn__]       [__Omlgn__]     [__Omlgn__]     ]
 ]

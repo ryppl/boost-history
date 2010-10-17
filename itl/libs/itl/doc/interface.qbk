@@ -17,7 +17,7 @@ with the corresponding containers of the standard template library.
 [section Class templates]
 
 The next two tables give an overview over ['*set class templates*] of
-the itl and compares them to std::set. Included is the __itv__ class
+the icl and compares them to std::set. Included is the __itv__ class
 template, because an interval is considered to be a set as well. 
 
 [/              interval]
@@ -56,7 +56,7 @@ the itl and compares them to =std::map=.
 
 [/       interval_map]
 [/ split_interval_map]
-[/           itl::map]
+[/           icl::map]
 
 [table map class templates
 [[group]        [template]       [instance parameters]]
@@ -76,8 +76,8 @@ that all have equal template parameters.
 [table Parameters of map class templates
 [[]                   [elements][mapped values][traits]                      [order of elements]           [aggregation propagation]  [intersection propagation]     [type of intervals]                             [memory allocation]]
 [[template parameter] [`class`]  [`class`]     [`class`]                     [`template <class>class`]     [`template <class>class`]  [`template <class>class`]      [`template <class, template<class>class> class`][`template <class>class`]]    
-[[__itv_bmaps__]      [`DomainT`][`CodomainT`] [`Traits = identity_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = itl::inplace_et`]  [`Interval = itl::interval`]                    [`Alloc = std::alloc`]]
-[[__icl_map__]        [`DomainT`][`CodomainT`] [`Traits = identity_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = itl::inplace_et`]  [`Alloc = std::alloc`]]
+[[__itv_bmaps__]      [`DomainT`][`CodomainT`] [`Traits = identity_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = icl::inplace_et`]  [`Interval = icl::interval`]                    [`Alloc = std::alloc`]]
+[[__icl_map__]        [`DomainT`][`CodomainT`] [`Traits = identity_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = icl::inplace_et`]  [`Alloc = std::alloc`]]
 [[template parameter] [`class`]  [`class`]     []                            [`class`]                     []                         []                             []                                              [`class`]]
 [[__std_map__]        [`_Key`]   [`_Data`]     []                            [`_Compare = std::less<_Key>`][]                         []                             []                                              [`Alloc = std::alloc<_Key>`]]
 ]
@@ -90,9 +90,9 @@ C  := class CodomainT,
 T  := class Traits,
 Cp := class Compare = std::less<DomainT>,
 cp := template<class D>class Compare = std::less,
-cb := template<class C>class Combine = itl::inplace_plus,
-s  := template<class C>class Section = itl::inplace_et,
-I  := class Interval = itl::interval_type_default<D,C>
+cb := template<class C>class Combine = icl::inplace_plus,
+s  := template<class C>class Section = icl::inplace_et,
+I  := class Interval = icl::interval_type_default<D,C>
 Ad := class Alloc = std::allocator<DomainT>
 Av := class Alloc = std::allocator<std::pair<DomainT,CodomainT> >
 a  := template<class>class Alloc = std::allocator
@@ -105,7 +105,7 @@ interval     <D,       cp,             >
 interval_sets<D,       cp,        I, a >
 std::set     <D,       Cp,           Ad>
 interval_maps<D, C, T, cp, cb, s, I, a >
-itl::map     <D, C, T, cp, cb, s,    a >
+icl::map     <D, C, T, cp, cb, s,    a >
 std::map     <D, C     Cp,           Av>
 ]
 
@@ -243,7 +243,7 @@ Summarized in the next table are requirements for template parameter
 `CodomainT` of associated values for `Maps`. Again there are
 /conditions/ for some of the requirements. Column /operators/
 contains the operators and functions required for `CodomainT`, if we are
-using the default combiner `Combine = itl::inplace_plus`.
+using the default combiner `Combine = icl::inplace_plus`.
 
 [table 
 [[Parameter]  [Condition]                              [Operators]        [Requirement]                                 ]
@@ -288,18 +288,18 @@ cout << "cat_map: " << cat_map << endl;
 ``
 
 For ['complete aggregation functionality] an inverse aggregation functor on 
-a `Map`'s `CodomainT` is needed. The itl provides a 
-metafunction [classref boost::itl::inverse inverse] 
+a `Map`'s `CodomainT` is needed. The icl provides a 
+metafunction [classref boost::icl::inverse inverse] 
 for that purpose. Using the default
 `Combine = inplace_plus` that relies on the existence of `operator +=`
 on type `CodomainT` 
-metafunction [classref boost::itl::inverse inverse] 
-will infer [classref boost::itl::inplace_minus inplace_minus]
+metafunction [classref boost::icl::inverse inverse] 
+will infer [classref boost::icl::inplace_minus inplace_minus]
 as inverse functor, that requires `operator -=` on type `CodomainT`.
 
 In the itl's design we make the assumption,
 in particular for the default setting of parameters
-`Combine = `[classref boost::itl::inplace_minus inplace_plus],
+`Combine = `[classref boost::icl::inplace_minus inplace_plus],
 that type `CodomainT` has a neutral element or `neutron` 
 with respect to the `Combine` functor.
 
@@ -311,7 +311,7 @@ with respect to the `Combine` functor.
 
 In order to give an overview over ['*associated types*] the *itl* works
 with, we will apply abbreviations again that were introduced in the
-presentaiton of itl class templates,
+presentaiton of icl class templates,
 
 [pre
 interval     <D,       cp,             >
@@ -319,7 +319,7 @@ interval_sets<D,       cp,        i, a >
 itl::set     <D,       cp,           a >
 std::set     <D,       Cp,           Ad>
 interval_maps<D, C, T, cp, cb, s, i, a >
-itl::map     <D, C, T, cp, cb, s,    a >
+icl::map     <D, C, T, cp, cb, s,    a >
 std::map     <D, C     Cp,           Av>
 ]
 
@@ -331,8 +331,8 @@ C  := class CodomainT,
 T  := class Traits,
 Cp := class Compare = std::less<DomainT>,
 cp := template<class D>class Compare = std::less,
-cb := template<class C>class Combine = itl::inplace_plus,
-s  := template<class C>class Section = itl::inplace_et,
+cb := template<class C>class Combine = icl::inplace_plus,
+s  := template<class C>class Section = icl::inplace_et,
 i  := template<class D,template<class>class cp>class Interval = itl::interval
 Ad := class Alloc = std::allocator<DomainT>
 Av := class Alloc = std::allocator<std::pair<DomainT,CodomainT> >
@@ -481,10 +481,12 @@ overloaded implementations for the function of that row is shown.
 [[`T& add(T&, J pos, const P&)`]                  [ ]     [__i]     [__p]    [__e]   [__b]  ]
 
 [[`T& operator +=(T&, const P&)`]                 [ ]     [__eiS]   [__bpM]  [__es]  [__bm] ]
-[[`T operator + (T, const P&)`\n`T operator + (const P&, T)`]
+[[`T operator + (T, const P&)`\n
+  `T operator + (const P&, T)`]
                                                   [ ]     [__eiS]   [__bpM]  [__es]  [__bm] ]
 [[`T& operator |=(      T&, const P&)`]           [ ]     [__eiS]   [__bpM]  [__es]  [__bm] ]
-[[`T operator | (T, const P&)`\n`T operator | (const P&, T)`]
+[[`T operator | (T, const P&)`\n
+  `T operator | (const P&, T)`]
                                                   [ ]     [__eiS]   [__bpM]  [__es]  [__bm] ]
 [[__biLSubtraction__]                             [ ]       [ ]      [ ]     [ ]      [ ]   ]
 [[`T& T::subtract(const P&)`]                     [ ]     [__ei]    [__bp]   [ ]     [__b]  ]
@@ -492,6 +494,9 @@ overloaded implementations for the function of that row is shown.
 
 [[`T& operator -=(T&, const P&)`]                 [ ]    [__eiS][__eiS __bpM][__es]  [__bm] ]
 [[`T  operator - (T, const P&)`]                  [ ]    [__eiS][__eiS __bpM][__es]  [__bm] ]
+
+[[`T left_subtract(T, const T&)`]                 [1]       [ ]      [ ]     [ ]      [ ]   ]
+[[`T right_subtract(T, const T&)`]                [1]       [ ]      [ ]     [ ]      [ ]   ]
 
 [[__biLInsertion__]      [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
 [[`V T::insert(const P&)`]                        [ ]     [__ei]    [__bp]   [__e]    [__b]  ]

@@ -13,13 +13,23 @@
 [section Synopsis]
 
 [table
-[[Addition]                                [__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map] ]
-[[`T& T::add(const P&)`]                                     [__ei]    [__bp]   [__e]   [__b]     ]
-[[`T& T::add(J prior, const P&)`]                            [__i]     [__p]    [__e]   [__b]     ]
-[[`T& operator +=(T&, const P&)`]                            [__eiS]   [__bpM]  [__es]  [__bm]    ]
-[[`T operator + (T, const P&)`\n`T operator + (const P&, T)`][__eiS]   [__bpM]  [__es]  [__bm]    ]
-[[`T& operator |=(      T&, const P&)`]                      [__eiS]   [__bpM]  [__es]  [__bm]    ]
-[[`T operator | (T, const P&)`\n`T operator | (const P&, T)`][__eiS]   [__bpM]  [__es]  [__bm]    ]
+
+[[Addition]                                [__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__] ]
+
+[[`T& T::add(const P&)`]                           [__ei]    [__bp]   [ ]     [__b]  ]
+[[`T& add(T&, const P&)`]                          [__ei]    [__bp]   [__e]   [__b]  ]
+[[`T& T::add(J pos, const P&)`]                    [__i]     [__p]    [ ]     [__b]  ]
+[[`T& add(T&, J pos, const P&)`]                   [__i]     [__p]    [__e]   [__b]  ]
+
+[[`T& operator +=(T&, const P&)`]                  [__eiS]   [__bpM]  [__es]  [__bm] ]
+[[`T operator + (T, const P&)`\n
+  `T operator + (const P&, T)`]
+                                                   [__eiS]   [__bpM]  [__es]  [__bm] ]
+[[`T& operator |=(      T&, const P&)`]            [__eiS]   [__bpM]  [__es]  [__bm] ]
+[[`T operator | (T, const P&)`\n
+  `T operator | (const P&, T)`]
+                                                   [__eiS]   [__bpM]  [__es]  [__bm] ]
+
 ]
 
 Functions and operators that implement ['*Addition*] on *itl* objects
@@ -79,9 +89,9 @@ M   |     M M
 
 The next table contains complexity characteristics for `add`.
 
-[table Time Complexity for member function add on itl containers
+[table Time Complexity for member function add on icl containers
 [[`T& T::add(const P&)`]      [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
-[[__icl_set__]                 [__Olgn__] []          []        []          ]
+[/ [__icl_set__]                 [__Olgn__] []          []        []          ]
 [[__icl_map__]                 []         []          [__Olgn__][]          ]
 [[__itv_set__\n__sep_itv_set__][__Olgn__] [__a_Olgn__][]        []          ]
 [[__spl_itv_set__]             [__Olgn__] [__On__]    []        []          ]
@@ -186,7 +196,7 @@ Therefore a function `T::iterative_size()` is used that provides the
 desired kind of size.
 
 [table Time Complexity for inplace Addition on element containers
-[[`T& operator += (T& y, const P& x)`][__ch_dom_t__][__ch_dom_mp_t__][__ch_itv_sets__][__ch_itv_maps__]]
+[[`T& operator += (T& y, const P& x)`][__ch_dom_t__][__ch_dom_mp_t__][__ch_icl_sets__][__ch_icl_maps__]]
 [[__icl_set__]                        [__Olgn__]    []               [__Om__]         []               ]
 [[__icl_map__]                        []            [__Olgn__]       []               [__Om__]         ]
 ]

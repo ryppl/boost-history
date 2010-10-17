@@ -167,13 +167,15 @@ Distributed under the Boost Software License, Version 1.0.
 
 [def __ch_itv_sets__   interval\nsets]
 [def __ch_itv_maps__   interval\nmaps]
-[def __ch_itl_set__    interval\nsets]
-[def __ch_itl_map__    interval\nmaps]
+[def __ch_itl_set__    std::set]
+[def __ch_itl_map__    icl::map]
+[def __ch_icl_set__    std::set]
+[def __ch_icl_map__    icl::map]
 
 [def __ch_ele_sets__   element\nsets]
 [def __ch_ele_maps__   element\nmaps]
-[def __ch_ele_set__    element\nsets]
-[def __ch_ele_map__    element\nmaps]
+[def __ch_ele_set__    element\nset]
+[def __ch_ele_map__    element\nmap]
 
 [def __bi_conceptual__ ['*fundamental*]]
 [def __conceptual__    fundamental]

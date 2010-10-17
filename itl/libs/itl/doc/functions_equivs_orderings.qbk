@@ -13,7 +13,7 @@
 [section Synopsis][/ Equivalences and Orderings]
 
 [table
-[[['*Equivalences and Orderings*]][__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map]]
+[[['*Equivalences and Orderings*]][__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
 [[['Segment Ordering]]                         [ ]       [ ]      [ ]     [ ]      [ ]   ]
 [[`bool operator == (const T&, const T&)`]     [1]       [1]      [1]     [1]      [1]   ]
 [[`bool operator != (const T&, const T&)`]     [1]       [1]      [1]     [1]      [1]   ]

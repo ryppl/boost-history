@@ -11,7 +11,7 @@
 [section Selection]
 
 [table
-[[['*Selection*]]                          [__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map]     [condition]            ]
+[[['*Selection*]]                          [__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]     [condition]            ]
 [[`const_iterator T::find(const domain_type&)const`]     [__Olgn__] [__Olgn__] [__Olgn__]  [__Olgn__] []                     ]
 [[`iterator T::find(const domain_type&)`]                [ ]        [ ]        [__Olgn__]  [__Olgn__] []                     ]
 [[`codomain_type& operator[] (const domain_type&)`]      [ ]        [ ]        [ ]         [__Olgn__] []                     ]

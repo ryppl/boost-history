@@ -11,7 +11,7 @@
 [section Construct, copy, destruct]
 
 [table
-[[['*Construct, copy, destruct*]]      [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map] ]
+[[['*Construct, copy, destruct*]]      [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__] ]
 [[`T::T()`]                                    [1]       [1]      [1]     [1]      [1]   ]
 [[`T::T(const P&)`]                            [A]   [__eiS]  [__bpM]     [1]      [1]   ]
 [[`T& T::operator=(const P&)`]                 [A]     [__S]    [__M]     [1]      [1]   ]
@@ -19,14 +19,14 @@
 ]
 
 All *itl* types are ['*regular types*]. They are ['*default constructible*], 
-['*copy constructible*] and ['*assignable*]. On itl Sets and Maps a `swap`
+['*copy constructible*] and ['*assignable*]. On icl Sets and Maps a `swap`
 function is available, that allows for *constant time* swapping of 
 container contents.
 The /regular and swappable part/ of the basic functions and their complexities
 are described in the tables below. 
 
 [table
-[[['*Regular and swap*]]      [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map] ]
+[[['*Regular and swap*]]      [__ch_itvs__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__] ]
 [[`T::T()`]                                 [__O1__]  [__O1__] [__O1__][__O1__] [__O1__] ]
 [[`T::T(const T&)`]                         [__O1__]  [__On__] [__On__][__On__] [__On__] ]
 [[`T& T::operator=(const T&)`]              [__O1__]  [__On__] [__On__][__On__] [__On__] ]
@@ -44,7 +44,7 @@ where /n/ `= iterative_size(x)`.
 ]
 
 In addition we have overloads of constructors and assignment operators
-for itl container types.
+for icl container types.
 ``
 // overload tables for constructors
 T::T(const P& src)

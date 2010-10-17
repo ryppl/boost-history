@@ -12,7 +12,7 @@
 
 
 [table
-[[['*Synopsis Complexities*]]                [__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map]   ]
+[[['*Synopsis Complexities*]]                [__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]   ]
 [[`J T::begin()`]                                  [__O1__]    [__O1__]   [__O1__]    [__O1__]   ]
 [[`J T::end()`]                                    [__O1__]    [__O1__]   [__O1__]    [__O1__]   ]
 [[`J T::rbegin()`]                                 [__O1__]    [__O1__]   [__O1__]    [__O1__]   ]
