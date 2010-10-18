@@ -21,6 +21,7 @@
 [[`V insert(T&, J pos, const P&)`]                 [__i]     [__p]    [__e]    [__b]  ]
 [[`T& insert(T&, const P&)`]                      [__eiS]   [__bpM]   [__es]   [__bm] ]
 [[`T& T::set(const P&)`]                             [ ]     [__bp]   [ ]      [1]    ]
+[[`T& set_at(T&, const P&)`]                         [ ]     [__bp]   [ ]      [1]    ]
 
 ]
 
@@ -28,7 +29,7 @@
 
 The effects of ['*insertion*] implemented by `insert` and ['*addition*]
 implemented by `add` and `operator +=` are identical for all Set-types of
-the *itl*.
+the *icl*.
 
 For Map-types, `insert` provides the *stl* semantics of insertion in
 contrast to `add` and `operator +=`, that implement a generalized addition,
@@ -56,15 +57,12 @@ my_map.set(make_pair(overwrite_this, new_value));
 [section Insertion]
 
 ``
-// overload table for member function
-T& T::insert(const P&)
-
-insert | e i b p    
--------+--------
-   s   | s
-   m   |     m
-   S   |   S         
-   M   |       M    
+// overload table for functions      T\P| e i b p  
+V T::insert(const P&)                ---+--------
+V insert(T&, const P&)                s | s
+                                      m |     m
+                                      S |   S      
+                                      M |       M  
 ``
 
 [table Time Complexity for member function insert on icl containers
@@ -77,21 +75,18 @@ insert | e i b p
 ]
 
 ``
-// overload tables for function
-T& insert(T&, const P&)
-
-element containers:     interval containers:  
-insert | e b s m        insert | e i b p S M    
--------+--------        -------+------------    
-    s  | s   s              S  | S S     S       
-    m  |   m   m            M  |     M M   M    
+// overload tables for function      element containers:     interval containers:  
+T& insert(T&, const P&)              T\P| e b s m            T\P| e i b p S M 
+                                     ---+--------            ---+------------ 
+                                      s | s   s               S | S S     S   
+                                      m |   m   m             M |     M M   M    
 ``
 
 
 [table Time Complexity for inplace insertion on element containers
 [[`T& insert(T& y, const P& x)`][__ch_dom_t__][__ch_dom_mp_t__][__ch_itv_sets__][__ch_itv_maps__]]
-[[__icl_set__]                    [__Olgn__]    []               [__Om__]         []               ]
-[[__icl_map__]                    []            [__Olgn__]       []               [__Om__]         ]
+[[__icl_set__]                  [__Olgn__]    []               [__Om__]         []               ]
+[[__icl_map__]                  []            [__Olgn__]       []               [__Om__]         ]
 ]
 
 Time complexity characteristics of inplace insertion for interval containers
@@ -113,15 +108,12 @@ right after iterator `prior` without collision. If this is not possible
 the complexity characteristics are as stated for the non hinted insertion
 above. Hinted insertion is available for these combinations of types:
 ``
-// overload table for insertion with hint
-T& T::insert(T::iterator prior, const P&)
-
-insert | e i b p    
--------+--------
-s      | s
-m      |     m
-S      |   S         
-M      |       M    
+// overload table for insertion with hint     T\P| e i b p  
+V T::insert(J pos, const P&)                  ---+--------
+V insert(T&, J pos, const P&)                  s | s
+                                               m |     m
+                                               S |   S     
+                                               M |       M 
 ``
 
 [endsect][/ Insertion]
@@ -131,13 +123,10 @@ M      |       M
 [section Setting values]
 
 ``
-// overload table for member function
-T& T::set(const P&)
-
-set | b p     
-----+----      
-m   | m          
-M   |   M      
+// overload table for member function         T\P| b p 
+T& T::set(const P&)                           ---+---- 
+T& set_at(T&, const P&)                        m | m   
+                                               M |   M 
 ``
 
 [table Time Complexity for member function `set`
@@ -164,4 +153,4 @@ M   |   M
 
 [endsect][/ Insertion]
 
-
+    

@@ -69,29 +69,27 @@ while function `insert` only inserts values that do not yet have key values.
 
 [endsect][/ Synopsis]
 
-[section Member functions][/ Addition]
+[section Functions][/ Addition]
 
 The admissible combinations of types for member function 
 `T& T::add(const P&)` can be summarized in the 
 ['*overload table*] below:
 
 ``
-// overload table for
-T& T::add(const P&)
-
-add | e i b p    
-----+--------
-s   | s
-m   |     m
-S   | S S         
-M   |     M M    
+// overload table for    T\P| e i b p  
+T& T::add(const P&)      ---+--------
+T& add(T&, const P&)      s | s
+                          m |     m
+                          S | S S      
+                          M |     M M  
 ``
 
 The next table contains complexity characteristics for `add`.
 
 [table Time Complexity for member function add on icl containers
-[[`T& T::add(const P&)`]      [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
-[/ [__icl_set__]                 [__Olgn__] []          []        []          ]
+[[`T& T::add(const P&)`\n
+  `T& add(T&, const P&)`]      [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
+[[__icl_set__]                 [__Olgn__] []          []        []          ]
 [[__icl_map__]                 []         []          [__Olgn__][]          ]
 [[__itv_set__\n__sep_itv_set__][__Olgn__] [__a_Olgn__][]        []          ]
 [[__spl_itv_set__]             [__Olgn__] [__On__]    []        []          ]
@@ -106,18 +104,15 @@ right after iterator `prior` without collision. If this is not possible
 the complexity characteristics are as stated for the non hinted addition
 above. Hinted addition is available for these combinations of types:
 ``
-// overload table for addition with hint
-T& T::add(T::iterator prior, const P&)
-
-add | e i b p    
-----+--------
-s   | s
-m   |     m
-S   |   S         
-M   |       M    
+// overload table for addition with hint        T\P| e i b p   
+T& T::add(T::iterator prior, const P&)          ---+--------
+T& add(T&, T::iterator prior, const P&)          s | s
+                                                 m |     m
+                                                 S |   S      
+                                                 M |       M   
 ``
 
-[endsect][/ Member function Addition]
+[endsect][/ Functions Addition]
 
 [section Inplace operators]
 
@@ -137,14 +132,11 @@ overloads of `+=` for /element containers/ the second table
 refers to /interval containers/. 
 
 ``
-// overload tables for
-T& operator += (T&, const P&)
-
-element containers:     interval containers:  
-+= | e b s m            += | e i b p S M    
----+--------            ---+------------    
-s  | s   s              S  | S S     S       
-m  |   m   m            M  |     M M   M    
+// overload tables for             element containers:     interval containers:  
+T& operator += (T&, const P&)      += | e b s m            += | e i b p S M    
+                                   ---+--------            ---+------------    
+                                   s  | s   s              S  | S S     S       
+                                   m  |   m   m            M  |     M M   M    
 ``
 
 For the definition of admissible overloads
@@ -187,8 +179,8 @@ The next table shows /time complexities/ of addition for
 Sizes `n` and `m` are in the complexity statements are sizes
 of objects `T y` and `P x`:
 ``
-n = y.iterative_size();
-m = x.iterative_size(); //if P is a container type
+n = iterative_size(y);
+m = iterative_size(x); //if P is a container type
 ``
 Note, that for an interval container the number of elements `T::size` is
 different from the number of intervals that you can iterate over.
@@ -229,22 +221,18 @@ The admissible type combinations for infix `operator +`
 are defined by the overload tables below. 
 
 ``
-// overload tables for
-T operator + (T, const P&)
-T operator + (const P&, T)
-
-element containers:     interval containers:
-+  | e b s m            +  | e  i  b  p  S1 S2 S3 M1 M3     
----+--------            ---+---------------------------
-e  |     s              e  |             S1 S2 S3 
-b  |       m            i  |             S1 S2 S3 
-s  | s   s              b  |                      M1 M3  
-m  |   m   m            p  |                      M1 M3
-                        S1 | S1 S1       S1 S2 S3 
-                        S2 | S2 S2       S2 S2 S3 
-                        S3 | S3 S3       S3 S3 S3 
-                        M1 |       M1 M1          M1 M3
-                        M3 |       M3 M3          M3 M3
+// overload tables for          element containers:     interval containers:
+T operator + (T, const P&)      +  | e b s m            +  | e  i  b  p  S1 S2 S3 M1 M3  
+T operator + (const P&, T)      ---+--------            ---+---------------------------
+                                e  |     s              e  |             S1 S2 S3 
+                                b  |       m            i  |             S1 S2 S3 
+                                s  | s   s              b  |                      M1 M3  
+                                m  |   m   m            p  |                      M1 M3
+                                                        S1 | S1 S1       S1 S2 S3 
+                                                        S2 | S2 S2       S2 S2 S3 
+                                                        S3 | S3 S3       S3 S3 S3 
+                                                        M1 |       M1 M1          M1 M3
+                                                        M3 |       M3 M3          M3 M3
 ``
 
 [endsect][/ Infix operators]
@@ -261,7 +249,7 @@ m  |   m   m            p  |                      M1 M3
 [table
 []
 [[[link function_synopsis_table ['*Function Synopsis*]]    ]]
-[[[link boost_icl.interface ['*Interface*]]                          ]]
+[[[link boost_icl.interface ['*Interface*]]                ]]
 ]
 
 [endsect][/ Addition]

@@ -45,34 +45,31 @@ are given in the table above.
          ]]
 ]
 
-
 [endsect][/ Synopsis]
 
 
 
-[section Member functions][/ Subtraction]
+[section Functions][/ Subtraction]
 
-The admissible combinations of types for member function 
-`T& T::add(const P&)` can be summarized in the 
+The admissible combinations of types for subtraction functions 
+can be summarized in the 
 ['*overload table*] below:
 
 ``
-// overload table for
-T& T::subtract(const P&)
-
-subtract | e i b p    
----------+--------
-     s   | s
-     m   |     m
-     S   | S S         
-     M   |     M M    
+// overload table for              T\P| e i b p  
+T& T::subtract(const P&)           ---+--------
+T& subtract(T&, const P&)           s | s
+                                    m |     m
+                                    S | S S      
+                                    M |     M M  
 ``
 
 The next table contains complexity characteristics for `subtract`.
 
-[table Time Complexity for member function subtract on icl containers
-[[`T& T::subtract(const P&)`] [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
-[/ [__icl_set__]                 [__Olgn__]   []            []           []          ]
+[table Time Complexity for function subtract on icl containers
+[[`T& T::subtract(const P&)`\n
+  `T& subtract(T&, const P&)`] [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
+[[__icl_set__]                 [__Olgn__]   []            []           []          ]
 [[__icl_map__]                 [__Olgn__]   []            [__Olgn__]   []          ]
 [[__itv_sets__]                [__Olgn__]   [__a_Olgn__]  []           []          ]
 [[__itv_maps__]                [__Olgn__]   [__On__]      [__Olgn__]   [__On__]    ]
@@ -88,25 +85,21 @@ more type combinations are provided for subtraction than for
 addition. 
 
 ``
-// overload tables for
-T& operator -= (T&, const P&)
-
-element containers:     interval containers:  
--= | e b s m            -= | e i b p S M    
----+--------            ---+------------    
-s  | s   s              S  | S S     S       
-m  | m m m m            M  | M M M M M M    
+// overload tables for             element containers:     interval containers:  
+T& operator -= (T&, const P&)      -= | e b s m            -= | e i b p S M    
+                                   ---+--------            ---+------------    
+                                   s  | s   s              S  | S S     S       
+                                   m  | m m m m            M  | M M M M M M    
 ``
 
 Subtraction provides the /reverse/ operation
 of an addition for these overloads,
 
 ``
-// Reverse addition
--= | e b s m            -= | e i b p S M    
----+--------            ---+------------    
-s  | s   s              S  | S S     S       
-m  |   m   m            M  |     M M   M    
+// Reverse addition                -= | e b s m            -= | e i b p S M 
+                                   ---+--------            ---+------------ 
+                                   s  | s   s              S  | S S     S   
+                                   m  |   m   m            M  |     M M   M 
 ``
 
 [*and] you can erase parts of __icl_maps__ or __itv_maps__ 
@@ -115,11 +108,10 @@ using
 using these overloads:
 
 ``
-// Erasure by key objects
--= | e b s m            -= | e i b p S M    
----+--------            ---+------------    
-s  | s   s              S  | S S     S       
-m  | m   m              M  | M M     M    
+// Erasure by key objects          -= | e b s m            -= | e i b p S M  
+                                   ---+--------            ---+------------  
+                                   s  | s   s              S  | S S     S    
+                                   m  | m   m              M  | M M     M    
 ``
 
 On Sets both function groups fall together
@@ -128,8 +120,8 @@ as ['*set difference*].
 Complexity characteristics for inplace subtraction operations are 
 given by the next tables where 
 ``
-n = y.iterative_size();
-m = x.iterative_size(); //if P is a container type
+n = iterative_size(y);
+m = iterative_size(x); //if P is a container type
 ``
 
 [table Time Complexity for inplace Subtraction on element containers
@@ -157,13 +149,10 @@ operation
 is given by the next overload table.
 
 ``
-// overload tables for
-T operator - (T, const P&)
-
--  | e b s m      -  | e i b p S M    
----+--------      ---+------------    
-s  | s   s        S  | S S     S       
-m  | m m m m      M  | M M M M M M    
+// overload tables for         -  | e b s m      -  | e i b p S M   
+T operator - (T, const P&)     ---+--------      ---+------------   
+                               s  | s   s        S  | S S     S     
+                               m  | m m m m      M  | M M M M M M   
 ``
 [endsect][/- Infix operator Subtraction]
 

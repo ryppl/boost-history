@@ -1,5 +1,5 @@
 [/
-    Copyright (c) 2008-2009 Joachim Faulhaber
+    Copyright (c) 2008-2010 Joachim Faulhaber
 
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -24,7 +24,7 @@
 
 The effects of ['*erasure*] implemented by `erase` and ['*subtraction*]
 implemented by `subtract` and `operator -=` are identical for all Set-types of
-the *itl*.
+the *icl*.
 
 For Map-types, `erase` provides the *stl* semantics of erasure in
 contrast to `subtract` and `operator -=`, that implement a generalized subtraction,
@@ -40,21 +40,19 @@ objects the iterator is pointing at from icl Sets and Maps.
 
 
 ``
-// overload table for
-T& T::erase(const P&)
-
-erase | e i b p    
-------+--------
-  s   | s
-  m   |     m
-  S   | S S         
-  M   |     M M    
+// overload table for          T\P| e i b p 
+T& T::erase(const P&)          ---+--------
+T& erase(T&, const P&)          s | s
+                                m |     m
+                                S | S S     
+                                M |     M M    
 ``
 
-The next table contains complexity characteristics for member function `erase`.
+The next table contains complexity characteristics for the `erase` function on elements and segments.
 
-[table Time Complexity for member function erase on icl containers
-[[`T& T::erase(const P&)`] [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
+[table Time Complexity for erasure of elements and segments on icl containers
+[[`T& T::erase(const P&)`\n
+  `T& erase(T&, const P&)`] [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
 [[__icl_set__]                 [__Olgn__]   []            []           []          ]
 [[__icl_map__]                 [__Olgn__]   []            [__Olgn__]   []          ]
 [[__itv_sets__]                [__Olgn__]   [__a_Olgn__]  []           []          ]
@@ -67,35 +65,26 @@ more type combinations are available for /erasure/ than for
 /insertion/. 
 
 ``
-// overload tables for inplace function
-T& operator erase(T&, const P&)
-
-element containers:     interval containers:  
-erase | e b s m         erase | e i b p S M    
-------+--------         ------+------------    
-   s  | s   s              S  | S S     S       
-   m  | m m m m            M  | M M M M M M    
+// overload tables for function    element containers:     interval containers: 
+T& erase(T&, const P&)             T\P| e b s m            T\P| e i b p S M  
+                                   ---+--------            ---+------------  
+                                    s | s   s               S | S S     S    
+                                    m | m m m m             M | M M M M M M  
 ``
-
 We can split up these overloads in two groups.
 The first group can be called /reverse insertion/.
-
 ``
-// (1) Reverse insertion
-erase | e b s m         erase | e i b p S M    
-   ---+--------            ---+------------    
-   s  | s   s              S  | S S     S       
-   m  |   m   m            M  |     M M   M    
+// (1) Reverse insertion           T\P| e b s m            T\P| e i b p S M  
+                                   ---+--------            ---+------------  
+                                    s | s   s               S | S S     S    
+                                    m |   m   m             M |     M M   M  
 ``
-
 The second group can be viewed as an /erasure by key objects/
-
 ``
-// (2) Erasure by key objects
-erase | e b s m         erase | e i b p S M    
-   ---+--------            ---+------------    
-   s  | s   s              S  | S S     S       
-   m  | m   m              M  | M M     M    
+// (2) Erasure by key objects      T\P| e b s m            T\P| e i b p S M
+                                   ---+--------            ---+------------
+                                    s | s   s               S | S S     S  
+                                    m | m   m               M | M M     M  
 ``
 
 On Maps ['*reverse insertion (1)*] is different from
@@ -111,8 +100,8 @@ as ['*set difference*].
 Complexity characteristics for inplace erasure operations are 
 given by the next tables where 
 ``
-n = y.iterative_size();
-m = x.iterative_size(); //if P is a container type
+n = iterative_size(y);
+m = iterative_size(x); //if P is a container type
 ``
 
 [table Time Complexity for inplace erasure on element containers
@@ -132,7 +121,7 @@ m = x.iterative_size(); //if P is a container type
 
 [section Erasure by Iterators]
 
-The next table shows the *itl* containers that erasure with iterators is
+The next table shows the *icl* containers that erasure with iterators is
 available for. Erase on iterators erases always one `value` of `value_type`
 for an iterator pointing to it.
 So we erase
