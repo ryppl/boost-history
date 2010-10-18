@@ -30,8 +30,8 @@ Distributed under the Boost Software License, Version 1.0.
 [def __op_itv__       [classref boost::icl::open_interval       open_interval]]
 [def __cl_itv__       [classref boost::icl::closed_interval     closed_interval]]
 
-[def __dc_itv__       [classref boost::icl::closed_interval     discrete_interval]]
-[def __ct_itv__       [classref boost::icl::closed_interval     continous_interval]]
+[def __dc_itv__       [classref boost::icl::discrete_interval   discrete_interval]]
+[def __ct_itv__       [classref boost::icl::continuous_interval continuous_interval]]
 
 
 [def __itvs__         [classref boost::icl::interval intervals]]

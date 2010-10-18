@@ -1,5 +1,5 @@
 [/
-    Copyright (c) 2008-2009 Joachim Faulhaber
+    Copyright (c) 2008-2010 Joachim Faulhaber
 
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -18,16 +18,63 @@ with the corresponding containers of the standard template library.
 
 [section Intervals]
 
+In the *icl* we have two groups of interval types. There are ['*statically bounded*] intervals, 
+__ro_itv__,
+__lo_itv__,
+__cl_itv__,
+__op_itv__,
+that always have the the same kind of interval borders and ['*dynamically bounded*] intervals,
+__dc_itv__,
+__ct_itv__
+which can have one of the four possible bound types at runtime.
+
+
 [table Interval class templates
-[[group]                   [template]          [instance parameters]]
-[[`static_bounded`]        [__ro_itv__]        [`<class DomainT,template<class>class Compare>`]]
-[[ ]                       [__lo_itv__]        []]
-[[ ]                       [__cl_itv__]        []]
-[[ ]                       [__op_itv__]        []]
-[[`dynamic_bounded`]       [__dc_itv__]        []]
-[[ ]                       [__ct_itv__]        []]
+[[group]            [form]      [template]          [instance parameters]]
+[[`static_bounded`] [asymmetric][__ro_itv__]        [`<class DomainT, template<class>class Compare>`]]
+[[ ]                []          [__lo_itv__]        [`<...same for all interval class templates...>`]]
+[[ ]                [symmetric] [__cl_itv__]        []]
+[[ ]                []          [__op_itv__]        []]
+[[`dynamic_bounded`][]          [__dc_itv__]        []]
+[[ ]                []          [__ct_itv__]        []]
 ]
 
+Not every class template works with all domain types. Use interval class templates
+according the next table.
+
+[table Usability of interval class templates for discrete or continuous domain types
+[[group]            [form]      [template]          [discrete]    [continuous] ]
+[[`static_bounded`] [asymmetric][__ro_itv__]        [yes]         [yes]        ]
+[[ ]                []          [__lo_itv__]        [yes]         [yes]        ]
+[[ ]                [symmetric] [__cl_itv__]        [yes]         [ ]          ]
+[[ ]                []          [__op_itv__]        [yes]         [ ]          ]
+[[`dynamic_bounded`][]          [__dc_itv__]        [yes]         [ ]          ]
+[[ ]                []          [__ct_itv__]        []            [yes]        ]
+]
+
+From a pragmatical point of view, the most important interval class template
+of the /statically bounded/ group is __ro_itv__. For discrete domain types
+also closed intervals might be convenient.
+
+Use __ct_itv__, if you work with interval containers of countinuous domain types
+and you want to be able to handle single values as well:
+
+``
+typedef interval_set<std::string, less, continuous_interval<std::string> > IdentifiersT;
+IdentifiersT identifiers, excluded;
+identifiers += continuous_interval<std::string>::right_open("a", "c");
+
+// special identifiers shall be excluded
+identifiers -= std::string("boost");
+cout << "identifiers: " << identifiers << endl;
+
+excluded = IdentifiersT(icl::hull(identifiers)) - identifiers;
+cout << "excluded   : " << excluded << endl;
+
+//------ Program output: --------
+identifiers: {[a,boost)(boost,c)}
+excluded   : {[boost,boost]}
+`` 
 
 [endsect][/ Intervals]
 
