@@ -40,7 +40,7 @@ objects the iterator is pointing at from icl Sets and Maps.
 
 
 ``
-// overload table for          T\P| e i b p 
+/* overload table for */       T\P| e i b p 
 T& T::erase(const P&)          ---+--------
 T& erase(T&, const P&)          s | s
                                 m |     m
@@ -74,14 +74,14 @@ T& erase(T&, const P&)             T\P| e b s m            T\P| e i b p S M
 We can split up these overloads in two groups.
 The first group can be called /reverse insertion/.
 ``
-// (1) Reverse insertion           T\P| e b s m            T\P| e i b p S M  
+/* (1) Reverse insertion */        T\P| e b s m            T\P| e i b p S M  
                                    ---+--------            ---+------------  
                                     s | s   s               S | S S     S    
                                     m |   m   m             M |     M M   M  
 ``
 The second group can be viewed as an /erasure by key objects/
 ``
-// (2) Erasure by key objects      T\P| e b s m            T\P| e i b p S M
+/* (2) Erasure by key objects */   T\P| e b s m            T\P| e i b p S M
                                    ---+--------            ---+------------
                                     s | s   s               S | S S     S  
                                     m | m   m               M | M M     M  

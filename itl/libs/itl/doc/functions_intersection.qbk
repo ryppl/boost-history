@@ -1,5 +1,5 @@
 [/
-    Copyright (c) 2008-2009 Joachim Faulhaber
+    Copyright (c) 2008-2010 Joachim Faulhaber
 
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -13,14 +13,16 @@
 
 [table
 [[Intersection]                             [__ch_itv_t__][__ch_itv_sets__][__ch_itv_maps__][__ch_ele_sets__][__ch_ele_maps__]]
-[[`void T::add_intersection(T&, const P&)const`][ ]   [__eiS][__eiS __bpM][ ]     [ ]       ]
-[[`T& operator &=(T&, const P&)`]              [__i]  [__eiS][__eiS __bpM][__es]  [__bm]    ]
-[[`T  operator & (T, const P&)`\n`T  operator & (const P&, T)`] 
-                                               [__i]  [__eiS][__eiS __bpM][__es]  [__bm]    ]
-[[`bool intersects(const T&, const P&)`]       [__i]  [__eiS][__eiS __bpM][__es]  [__bm]    ]
+
+[[`void add_intersection(T&, const T&, const P&)`][ ]   [__eiS][__eiS __bpM][ ]     [ ]       ]
+[[`T& operator &=(T&, const P&)`]                 [ ]   [__eiS][__eiS __bpM][__es]  [__bm]    ]
+[[`T  operator & (T, const P&)`\n
+  `T  operator & (const P&, T)`]                 [__i]  [__eiS][__eiS __bpM][__es]  [__bm]    ]
+[[`bool intersects(const T&, const P&)`\n
+  `bool disjoint(const T&, const P&)`]           [__i]  [__eiS][__eiS __bpM][__es]  [__bm]    ]
 ]
 
-Functions and operators that are related to ['*intersection*] on *itl* objects
+Functions and operators that are related to ['*intersection*] on *icl* objects
 are given in the table above.
 
 
@@ -51,10 +53,28 @@ are given in the table above.
 [endsect][/ Synopsis Intersection]
 
 
-[section Member functions][/ Intersection]
+[section Functions][/ Intersection]
 
-The admissible combinations of types for member function 
-`void T::add_intersection(T&, const P&)` can be summarized in the 
+The overloaded function 
+
+`void add_intersection(T& result, const T& y, const P& x)`
+
+allows to accumulate the intersection of `y` and `x` in the first argument `result`. 
+`Result` might already contain data. In this case the intersection of `y` and `x` 
+is `added` the the contents of `result`.
+``
+T s1 = f, s2 = f, y = g; P x = h; // The effect of 
+add_intersection(s1, y, x);       // add_intersection 
+s2 += (y & x);                    // and & followed by +=
+assert(s1==s2);                   // is identical
+``
+
+This might be convenient, if intersection is used like a generalized selection function.
+Using element or segment types for `P`, we can select small parts of a container
+`y` and accumulate them in `section`.
+
+The admissible combinations of types for function 
+`void add_intersection(T&, const T&, const P&)` can be summarized in the 
 ['*overload table*] below. 
 Compared to other overload tables, placements of function arguments are
 different: Row headers denote type `T` of `*this` object.
@@ -63,28 +83,25 @@ The table cells contain the arguments `T` of the intersections
 `result`, which is the functions first argument.
 
 ``
-// overload table for
-void T::add_intersection(T& result, const P&)const
-
-add_intersection | e i b p    
------------------+--------
-             s   | s
-             m   | m   m
-             S   | S S         
-             M   | M M M M    
+/* overload table for */                                T\P| e i b p 
+void T::add_intersection(T& result, const P&)const      ---+--------
+                                                         s | s
+                                                         m | m   m
+                                                         S | S S     
+                                                         M | M M M M 
 ``
 
-The next table contains complexity characteristics for member function `add_intersection`.
+The next table contains complexity characteristics for function `add_intersection`.
 
-[table Time Complexity for member function add_intersection on icl containers
-[[`void T::add_intersection(T&, const P&)const`] [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
+[table Time Complexity for function add_intersection on icl containers
+[[`void add_intersection(T&, const T&, const P&)const`] [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
 [[__icl_set__]                                   [__Olgn__]    []            []           []          ]
 [[__icl_map__]                                   [__Olgn__]    []            [__Olgn__]   []          ]
 [[__itv_sets__]                                  [__Olgn__]    [__On__]      []           []          ]
 [[__itv_maps__]                                  [__Olgn__]    [__On__]      [__On__]     [__On__]    ]
 ]
 
-[endsect][/ Member function Intersection]
+[endsect][/ Function Intersection]
 
 
 [section Inplace operators][/ Intersection]
@@ -97,14 +114,11 @@ but also for Maps combined with /key objects/
 which are /key elements, intervals/ and /Sets of keys/.
 
 ``
-// overload tables for
-T& operator &= (T&, const P&)
-
-element containers:     interval containers:  
-&= | e b s m            &= | e i b p S M    
----+--------            ---+------------    
-s  | s   s              S  | S S     S       
-m  | m m m m            M  | M M M M M M    
+// overload tables for             element containers:     interval containers:
+T& operator &= (T&, const P&)      &= | e b s m            &= | e i b p S M    
+                                   ---+--------            ---+------------    
+                                   s  | s   s              S  | S S     S      
+                                   m  | m m m m            M  | M M M M M M    
 ``
 
 While intersection on maps can be viewed as
@@ -117,21 +131,19 @@ So we have a ['*generalized intersection*] for
 these overloads,
 
 ``
-// (Generalized) intersection
-&= | e b s m            &= | e i b p S M    
----+--------            ---+------------    
-s  | s   s              S  | S S     S       
-m  |   m   m            M  |     M M   M    
+/* (Generalized) intersection */   &= | e b s m            &= | e i b p S M  
+                                   ---+--------            ---+------------  
+                                   s  | s   s              S  | S S     S    
+                                   m  |   m   m            M  |     M M   M  
 ``
 
 [*and] a ['*selection by key objects*] here:
 
 ``
-// Selection by key objects
-&= | e b s m            &= | e i b p S M    
----+--------            ---+------------    
-s  | s   s              S  | S S     S       
-m  | m   m              M  | M M     M    
+/* Selection by key objects */     &= | e b s m            &= | e i b p S M 
+                                   ---+--------            ---+------------ 
+                                   s  | s   s              S  | S S     S   
+                                   m  | m   m              M  | M M     M   
 ``
 
 The differences for the different functionalities
@@ -142,8 +154,8 @@ for Sets in the function ['*set intersection*].
 Complexity characteristics for inplace intersection operations are 
 given by the next tables where 
 ``
-n = y.iterative_size();
-m = x.iterative_size(); //if P is a container type
+n = iterative_size(y);
+m = iterative_size(x); //if P is a container type
 ``
 
 [table Time Complexity for inplace intersection on element containers
@@ -162,26 +174,22 @@ m = x.iterative_size(); //if P is a container type
 
 [section Infix operators][/ Intersection]
 
-For the *itl's* infix intersection the
+For the *icl's* infix intersection the
 following overloads are available:
 
 ``
-// overload tables for
-T operator & (T, const P&)
-T operator & (const P&, T)
-
-element containers:     interval containers:
-&  | e b s m            &  | e  i  b  p  S1 S2 S3 M1 M3
----+--------            ---+---------------------------
-e  |     s m            e  |             S1 S2 S3 M1 M3
-b  |       m            i  |    i        S1 S2 S3 M1 M3
-s  | s   s m            b  |                      M1 M3
-m  | m m m m            p  |                      M1 M3
-                        S1 | S1 S1       S1 S2 S3 M1 M3
-                        S2 | S2 S2       S2 S2 S3 M1 M3
-                        S3 | S3 S3       S3 S3 S3 M1 M3
-                        M1 | M1 M1 M1 M1 M1 M1 M1 M1 M3
-                        M3 | M3 M3 M3 M3 M3 M3 M3 M3 M3
+// overload tables for             element containers:     interval containers:
+T operator & (T, const P&)         &  | e b s m            &  | e  i  b  p  S1 S2 S3 M1 M3
+T operator & (const P&, T)         ---+--------            ---+---------------------------
+                                   e  |     s m            e  |             S1 S2 S3 M1 M3
+                                   b  |       m            i  |    i        S1 S2 S3 M1 M3
+                                   s  | s   s m            b  |                      M1 M3
+                                   m  | m m m m            p  |                      M1 M3
+                                                           S1 | S1 S1       S1 S2 S3 M1 M3
+                                                           S2 | S2 S2       S2 S2 S3 M1 M3
+                                                           S3 | S3 S3       S3 S3 S3 M1 M3
+                                                           M1 | M1 M1 M1 M1 M1 M1 M1 M1 M3
+                                                           M3 | M3 M3 M3 M3 M3 M3 M3 M3 M3
 ``
 
 To resolve ambiguities among interval containers
@@ -194,33 +202,31 @@ and a second part defining the
 ['*selection by key object] functionality.
 
 ``
-// (Generalized) intersection
-&  | e b s m            &  | e  i  b  p  S1 S2 S3 M1 M3
----+--------            ---+---------------------------
-e  |     s              e  |             S1 S2 S3      
-b  |       m            i  |    i        S1 S2 S3      
-s  | s   s              b  |                      M1 M3
-m  |   m   m            p  |                      M1 M3
-                        S1 | S1 S1       S1 S2 S3      
-                        S2 | S2 S2       S2 S2 S3      
-                        S3 | S3 S3       S3 S3 S3      
-                        M1 |       M1 M1          M1 M3
-                        M3 |       M3 M3          M3 M3
+/* (Generalized) intersection */   &  | e b s m            &  | e  i  b  p  S1 S2 S3 M1 M3
+                                   ---+--------            ---+---------------------------
+                                   e  |     s              e  |             S1 S2 S3      
+                                   b  |       m            i  |    i        S1 S2 S3      
+                                   s  | s   s              b  |                      M1 M3
+                                   m  |   m   m            p  |                      M1 M3
+                                                           S1 | S1 S1       S1 S2 S3      
+                                                           S2 | S2 S2       S2 S2 S3      
+                                                           S3 | S3 S3       S3 S3 S3      
+                                                           M1 |       M1 M1          M1 M3
+                                                           M3 |       M3 M3          M3 M3
 ``
 
 ``
-// Selection by key objects
-&  | e b s m            &  | e  i  b  p  S1 S2 S3 M1 M3
----+--------            ---+---------------------------
-e  |     s m            e  |             S1 S2 S3 M1 M3
-b  |                    i  |    i        S1 S2 S3 M1 M3
-s  | s   s m            b  |                           
-m  | m   m              p  |                           
-                        S1 | S1 S1       S1 S2 S3 M1 M3
-                        S2 | S2 S2       S2 S2 S3 M1 M3
-                        S3 | S3 S3       S3 S3 S3 M1 M3
-                        M1 | M1 M1       M1 M1 M1      
-                        M3 | M3 M3       M3 M3 M3      
+/* Selection by key objects */     &  | e b s m            &  | e  i  b  p  S1 S2 S3 M1 M3
+                                   ---+--------            ---+---------------------------
+                                   e  |     s m            e  |             S1 S2 S3 M1 M3
+                                   b  |                    i  |    i        S1 S2 S3 M1 M3
+                                   s  | s   s m            b  |                           
+                                   m  | m   m              p  |                           
+                                                           S1 | S1 S1       S1 S2 S3 M1 M3
+                                                           S2 | S2 S2       S2 S2 S3 M1 M3
+                                                           S3 | S3 S3       S3 S3 S3 M1 M3
+                                                           M1 | M1 M1       M1 M1 M1      
+                                                           M3 | M3 M3       M3 M3 M3      
 ``
 
 [endsect][/ Inplace operator Intersection]
@@ -230,14 +236,15 @@ m  | m   m              p  |
 [table
 [[Tester]                                          [Desctription]]
 [[`bool intersects(const T& left, const P& right)`][Tests, if `left` and `right` intersect.]]
+[[`bool disjoint(const T& left, const P& right)`]  [Tests, if `left` and `right` are disjoint.]]
+[[]                                                [`intersects(x,y) == !disjoint(x,y)`]]
 ]
 
 ``
-// bool intersects(const T&, const P&)
-T\P | e b s m     T\P | e i b p S M    
-----+--------     ----+------------    
- s  | 1   1        S  | 1 1     1       
- m  | 1 1 1 1      M  | 1 1 1 1 1 1    
+bool intersects(const T&, const P&)      T\P| e b s m      T\P| e i b p S M 
+bool   disjoint(const T&, const P&)      ---+--------      ---+------------
+                                          s | 1   1         S | 1 1     1  
+                                          m | 1 1 1 1       M | 1 1 1 1 1 1
 ``
 
 [endsect][/ Intersection tester]
