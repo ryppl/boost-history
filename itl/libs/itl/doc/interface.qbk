@@ -16,11 +16,26 @@ with the corresponding containers of the standard template library.
 
 [section Class templates]
 
-The next two tables give an overview over ['*set class templates*] of
-the icl and compares them to std::set. Included is the __itv__ class
-template, because an interval is considered to be a set as well. 
+[section Intervals]
 
-[/              interval]
+[table Interval class templates
+[[group]                   [template]          [instance parameters]]
+[[`static_bounded`]        [__ro_itv__]        [`<class DomainT,template<class>class Compare>`]]
+[[ ]                       [__lo_itv__]        []]
+[[ ]                       [__cl_itv__]        []]
+[[ ]                       [__op_itv__]        []]
+[[`dynamic_bounded`]       [__dc_itv__]        []]
+[[ ]                       [__ct_itv__]        []]
+]
+
+
+[endsect][/ Intervals]
+
+[section Sets]
+
+The next two tables give an overview over ['*set class templates*] of
+the icl. 
+
 [/          interval_set]
 [/ separate_interval_set]
 [/    split_interval_set]
@@ -28,7 +43,7 @@ template, because an interval is considered to be a set as well.
 
 [table Set class templates
 [[group]        [template]       [instance parameters]]
-[[__itv__]      [__itv__]        [`<DomainT,Compare>`]]
+[/ CL [__itv__]      [__itv__]        [`<DomainT,Compare>`]]
 [[__itv_bsets__][__itv_set__]    [`<DomainT,Compare,Interval,Alloc>`]]
 [[]             [__sep_itv_set__][`<DomainT,Compare,Interval,Alloc>`]]
 [[]             [__spl_itv_set__][`<DomainT,Compare,Interval,Alloc>`]]
@@ -50,6 +65,10 @@ that all have equal template parameters.
 [[template parameter] [`class`]  [`class`]                     [`class`]                    [class]]
 [[__std_set__]        [`_Key`]   [`_Compare = std::less<_Key>`][]                           [`Alloc = std::alloc<_Key>`]]
 ]
+
+[endsect][/ Sets]
+
+[section Maps]
 
 The next two tables give an overview over ['*map class templates*] of
 the itl and compares them to =std::map=. 
@@ -121,6 +140,7 @@ interval_set<string, german_compare>      sections; // 2nd parameter is a templa
 std::set<string, german_compare<string> > words;    // 2nd parameter is a type
 ``
 
+[endsect][/ Maps]
 [endsect][/ Class templates]
 
 [section Required Concepts]

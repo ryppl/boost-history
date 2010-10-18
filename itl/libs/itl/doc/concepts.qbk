@@ -250,7 +250,7 @@ interval_map<int,int,partial_absorber,
              std::less,
              inplace_identity //Combine parameter specified
             > m; 
-interval<int> itv = interval<int>::rightopen(2,7);
+interval<int>::type itv = interval<int>::rightopen(2,7);
 m.add(make_pair(itv,42));      //same as insert
 m.subtract(make_pair(itv,42)); //same as erase 
 ``  
