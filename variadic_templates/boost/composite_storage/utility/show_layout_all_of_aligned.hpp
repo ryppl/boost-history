@@ -312,6 +312,7 @@ struct print_layout_all
   void
 show_layout_all_of_aligned(char const*title)
 {
+    std::cout<<"===========\n";
     std::cout<<title<<"\n";
     std::cout<<"===========\n";
         typedef
@@ -327,6 +328,7 @@ show_layout_all_of_aligned(char const*title)
     std::cout<<"***composite***\n";
     std::cout<<"---------------\n";
     print_layout_all::_<layout_result>(mpl::size<Pack>::type::value);
+    std::cout<<"---------------\n";
 }
 
 }//exit layout namespace
