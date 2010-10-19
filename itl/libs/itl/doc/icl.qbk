@@ -226,6 +226,7 @@ Distributed under the Boost Software License, Version 1.0.
 [include concepts.qbk]
 [include semantics.qbk]
 [include interface.qbk]
+[include customization.qbk]
 [include implementation.qbk]
 [include functions.qbk]
 [include acknowledgments.qbk]

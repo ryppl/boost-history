@@ -78,19 +78,19 @@ BOOST_AUTO_TEST_CASE(intro_sample_telecast)
 
 BOOST_AUTO_TEST_CASE(interface_sample_identifiers)
 {
-	typedef interval_set<std::string, less, continuous_interval<std::string> > IdentifiersT;
-	IdentifiersT identifiers, excluded;
+    typedef interval_set<std::string, less, continuous_interval<std::string> > IdentifiersT;
+    IdentifiersT identifiers, excluded;
 
-	// special identifiers shall be excluded
-	identifiers += continuous_interval<std::string>::right_open("a", "c");
-	identifiers -= std::string("boost");
-	cout << "identifiers: " << identifiers << endl;
+    // special identifiers shall be excluded
+    identifiers += continuous_interval<std::string>::right_open("a", "c");
+    identifiers -= std::string("boost");
+    cout << "identifiers: " << identifiers << endl;
 
-	excluded = IdentifiersT(icl::hull(identifiers)) - identifiers;
-	cout << "excluded   : " << excluded << endl;
+    excluded = IdentifiersT(icl::hull(identifiers)) - identifiers;
+    cout << "excluded   : " << excluded << endl;
 
-	if(icl::contains(identifiers, std::string("boost")))
-		cout << "error, identifiers.contains('boost')\n";
+    if(icl::contains(identifiers, std::string("boost")))
+        cout << "error, identifiers.contains('boost')\n";
 }
 
 
