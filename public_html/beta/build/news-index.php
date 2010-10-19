@@ -1,6 +1,6 @@
 <?php
-require_once(dirname(__FILE__) . '/../../common/code/boost_feed.php');
-$_news = new boost_feed(dirname(__FILE__) . '/../../feed/news.rss', '/users/news');
+require_once(dirname(__FILE__) . '/../common/code/boost_feed.php');
+$_news = new boost_feed(dirname(__FILE__) . '/../feed/news.rss', '/users/news');
 $_news->sort_by('pubdate');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -50,7 +50,7 @@ $_news->sort_by('pubdate');
                 <li>
                 <?php print '<a href="'.htmlentities($_item['link']).'">Details</a>'; ?></li>
 
-                <?php if($_item['boostbook:download']) : ?>
+                <?php if(!empty($_item['boostbook:download'])) : ?>
                 <li><?php print '<a href="'.htmlentities($_item['boostbook:download']).'">Download</a>'; ?></li>
                 <?php endif; ?>
               </ul><?php } ?>
