@@ -10,13 +10,13 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 
 #include <boost/itl/interval_set.hpp>
 
-template <class DomainT, ITL_COMPARE Compare, 
-          ITL_INTERVAL(ITL_COMPARE)  Interval>
-void test_inner_complement(const ITL_INTERVAL_TYPE(Interval,DomainT,Compare)& itv1,
-                           const ITL_INTERVAL_TYPE(Interval,DomainT,Compare)& itv2)
+template <class DomainT, ICL_COMPARE Compare, 
+          ICL_INTERVAL(ICL_COMPARE)  Interval>
+void test_inner_complement(const ICL_INTERVAL_TYPE(Interval,DomainT,Compare)& itv1,
+                           const ICL_INTERVAL_TYPE(Interval,DomainT,Compare)& itv2)
 {
     typedef interval_set<DomainT,Compare,Interval> ItvSetT;
-    typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) IntervalT;
+    typedef ICL_INTERVAL_TYPE(Interval,DomainT,Compare) IntervalT;
 
     BOOST_CHECK_EQUAL(icl::length(inner_complement(itv1,itv2)), icl::distance(itv1,itv2));
     BOOST_CHECK_EQUAL(icl::length(inner_complement(itv1,itv2)), icl::distance(itv2,itv1));
@@ -63,7 +63,7 @@ void test_inner_complement_(const IntervalT& itv1, const IntervalT& itv2)
     test_inner_complement<DomainT, std::less, IntervalT>(itv1, itv2);
 }
 
-#ifndef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#ifndef ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
 
 void interval_ctor_specific()
 {
@@ -78,7 +78,7 @@ void interval_ctor_specific()
                       icl::infinity<size_type_of<icl::interval<double>::type>::type >::value() );
 }
 
-#endif // ndef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#endif // ndef ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
 
 template <class T> 
 void interval_equal_4_integral_types()

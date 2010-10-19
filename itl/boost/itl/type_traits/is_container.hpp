@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TYPE_TRAITS_IS_CONTAINER_HPP_JOFA_100828
-#define BOOST_ITL_TYPE_TRAITS_IS_CONTAINER_HPP_JOFA_100828
+#ifndef BOOST_ICL_TYPE_TRAITS_IS_CONTAINER_HPP_JOFA_100828
+#define BOOST_ICL_TYPE_TRAITS_IS_CONTAINER_HPP_JOFA_100828
 
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/bool.hpp>

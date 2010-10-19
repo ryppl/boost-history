@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TYPE_TRAITS_INTERVAL_TYPE_DEFAULT_HPP_JOFA_100403
-#define BOOST_ITL_TYPE_TRAITS_INTERVAL_TYPE_DEFAULT_HPP_JOFA_100403
+#ifndef BOOST_ICL_TYPE_TRAITS_INTERVAL_TYPE_DEFAULT_HPP_JOFA_100403
+#define BOOST_ICL_TYPE_TRAITS_INTERVAL_TYPE_DEFAULT_HPP_JOFA_100403
 
 #include <boost/mpl/if.hpp>
 #include <boost/itl/detail/design_config.hpp>
@@ -22,10 +22,10 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 namespace boost{ namespace icl
 {
 
-    template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)> 
+    template <class DomainT, ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, DomainT)> 
     struct interval_type_default
     {
-#ifdef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#ifdef ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
         typedef
             typename mpl::if_< is_discrete<DomainT>
 #  ifdef BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT 

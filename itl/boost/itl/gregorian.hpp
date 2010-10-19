@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_GREGORIAN_DATE_HPP_JOFA_080416
-#define BOOST_ITL_GREGORIAN_DATE_HPP_JOFA_080416
+#ifndef BOOST_ICL_GREGORIAN_DATE_HPP_JOFA_080416
+#define BOOST_ICL_GREGORIAN_DATE_HPP_JOFA_080416
 
 #include <stdio.h>
 #include <string>

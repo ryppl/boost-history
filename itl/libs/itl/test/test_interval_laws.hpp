@@ -10,8 +10,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 Function templates to call functions in object oriented or namespace glabal 
 versions.
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_LIBS_ITL_TEST_INTERVAL_LAWS_HPP_JOFA_101011
-#define BOOST_LIBS_ITL_TEST_INTERVAL_LAWS_HPP_JOFA_101011
+#ifndef BOOST_LIBS_ICL_TEST_INTERVAL_LAWS_HPP_JOFA_101011
+#define BOOST_LIBS_ICL_TEST_INTERVAL_LAWS_HPP_JOFA_101011
 
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
@@ -81,5 +81,5 @@ check_border_containedness(const Type& itv)
 
 }} // namespace boost icl
 
-#endif // BOOST_ITL_TEST_INTERVAL_LAWS_HPP_JOFA_100908
+#endif // BOOST_ICL_TEST_INTERVAL_LAWS_HPP_JOFA_100908
 

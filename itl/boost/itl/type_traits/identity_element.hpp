@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TYPE_TRAITS_IDENTITY_ELEMENT_HPP_JOFA_080912
-#define BOOST_ITL_TYPE_TRAITS_IDENTITY_ELEMENT_HPP_JOFA_080912
+#ifndef BOOST_ICL_TYPE_TRAITS_IDENTITY_ELEMENT_HPP_JOFA_080912
+#define BOOST_ICL_TYPE_TRAITS_IDENTITY_ELEMENT_HPP_JOFA_080912
 
 #include <boost/itl/type_traits/type_to_string.hpp>
 

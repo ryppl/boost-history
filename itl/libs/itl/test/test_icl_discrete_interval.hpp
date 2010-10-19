@@ -5,8 +5,8 @@ Copyright (c) 2008-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TEST_ICL_DISCRETE_INTERVAL_HPP_JOFA_100930
-#define BOOST_ITL_TEST_ICL_DISCRETE_INTERVAL_HPP_JOFA_100930
+#ifndef BOOST_ICL_TEST_ICL_DISCRETE_INTERVAL_HPP_JOFA_100930
+#define BOOST_ICL_TEST_ICL_DISCRETE_INTERVAL_HPP_JOFA_100930
 
 
 template <class T, class IntervalT> 
@@ -29,7 +29,7 @@ void discrete_interval_ctor__dis_4_dyn_v_sta() // discrete && (dynamic or static
     BOOST_CHECK_EQUAL( icl::contains(IntervalT(MK_v(1)), MK_v(1)), true ); 
 }
 
-template <class T, ITL_COMPARE Compare>
+template <class T, ICL_COMPARE Compare>
 void distant_intervals_4_discrete_types()
 {
     typedef right_open_interval<T,Compare> L__D; // L__D for [..)
@@ -99,4 +99,4 @@ void distant_intervals_4_discrete_types()
 }
 
 
-#endif // BOOST_ITL_TEST_ICL_DISCRETE_INTERVAL_HPP_JOFA_100930
+#endif // BOOST_ICL_TEST_ICL_DISCRETE_INTERVAL_HPP_JOFA_100930

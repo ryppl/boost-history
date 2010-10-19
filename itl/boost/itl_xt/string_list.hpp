@@ -33,8 +33,8 @@ class icl::string_list
     Can be useful for string split and join.
     Also simple text-formating can be done. 
 --------------------------------------------------------------------*/
-#ifndef BOOST_ITL_STRING_LIST_HPP_JOFA_990603
-#define BOOST_ITL_STRING_LIST_HPP_JOFA_990603
+#ifndef BOOST_ICL_STRING_LIST_HPP_JOFA_990603
+#define BOOST_ICL_STRING_LIST_HPP_JOFA_990603
 
 #include <string>    
 #include <list>    

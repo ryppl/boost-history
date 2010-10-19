@@ -5,8 +5,8 @@ Copyright (c) 2008-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_INTERVAL_SET_ALGO_HPP_JOFA_081005
-#define BOOST_ITL_INTERVAL_SET_ALGO_HPP_JOFA_081005
+#ifndef BOOST_ICL_INTERVAL_SET_ALGO_HPP_JOFA_081005
+#define BOOST_ICL_INTERVAL_SET_ALGO_HPP_JOFA_081005
 
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/relation_state.hpp>

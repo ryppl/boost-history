@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TYPE_TRAITS_CODOMAIN_TYPE_OF_HPP_JOFA_100829
-#define BOOST_ITL_TYPE_TRAITS_CODOMAIN_TYPE_OF_HPP_JOFA_100829
+#ifndef BOOST_ICL_TYPE_TRAITS_CODOMAIN_TYPE_OF_HPP_JOFA_100829
+#define BOOST_ICL_TYPE_TRAITS_CODOMAIN_TYPE_OF_HPP_JOFA_100829
 
 #include <set>
 #include <boost/mpl/has_xxx.hpp>

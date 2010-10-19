@@ -27,8 +27,8 @@ FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_PREFIX_SET_HPP_JOFA_040902
-#define BOOST_ITL_PREFIX_SET_HPP_JOFA_040902
+#ifndef BOOST_ICL_PREFIX_SET_HPP_JOFA_040902
+#define BOOST_ICL_PREFIX_SET_HPP_JOFA_040902
 
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/string_set.hpp>
@@ -110,5 +110,5 @@ namespace boost{namespace icl
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_PREFIX_SET_HPP_JOFA_040902
+#endif // BOOST_ICL_PREFIX_SET_HPP_JOFA_040902
 

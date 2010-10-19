@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_CONCEPT_ELEMENT_ASSOCIATOR_HPP_JOFA_100921
-#define BOOST_ITL_CONCEPT_ELEMENT_ASSOCIATOR_HPP_JOFA_100921
+#ifndef BOOST_ICL_CONCEPT_ELEMENT_ASSOCIATOR_HPP_JOFA_100921
+#define BOOST_ICL_CONCEPT_ELEMENT_ASSOCIATOR_HPP_JOFA_100921
 
 #include <boost/itl/type_traits/is_associative_element_container.hpp>
 #include <boost/itl/type_traits/is_key_container_of.hpp>
@@ -193,7 +193,7 @@ operator += (Type& object, const Type& operand)
         return object;
 
     typename Type::iterator prior_ = object.end();
-    ITL_const_FORALL(typename Type, it_, operand)
+    ICL_const_FORALL(typename Type, it_, operand)
         prior_ = icl::add(object, prior_, *it_);
 
     return object;
@@ -276,7 +276,7 @@ insert(Type& object, const Type& addend)
     typedef typename Type::iterator iterator;
 
     iterator prior_ = object.end();
-    ITL_const_FORALL(typename Type, elem_, addend) 
+    ICL_const_FORALL(typename Type, elem_, addend) 
         icl::insert(object, prior_, *elem_);
 
     return object; 
@@ -304,7 +304,7 @@ template<class Type>
 typename enable_if<is_associative_element_container<Type>, Type>::type&
 erase(Type& object, const Type& erasure)
 {
-    ITL_const_FORALL(typename Type, elem_, erasure) 
+    ICL_const_FORALL(typename Type, elem_, erasure) 
         icl::erase(object, *elem_); 
 
     return object; 
@@ -333,7 +333,7 @@ template <class Type>
 inline typename enable_if<is_associative_element_container<Type>, Type>::type&
 operator -= (Type& object, const Type& subtrahend) 
 { 
-    ITL_const_FORALL(typename Type, it_, subtrahend)
+    ICL_const_FORALL(typename Type, it_, subtrahend)
         icl::subtract(object, *it_);
 
     return object; 

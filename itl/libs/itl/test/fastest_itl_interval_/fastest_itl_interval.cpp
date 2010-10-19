@@ -10,7 +10,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/mpl/list.hpp>
 #include "../unit_test_unwarned.hpp"
 
-//#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+//#define ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
 
 // interval instance types
 #include "../test_type_lists.hpp"
@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_touches_4_integral_types)
 {            interval_touches_4_integral_types<integral_type_4>(); }
 
-#ifndef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#ifndef ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
 
 BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_ctor_specific)
@@ -159,4 +159,4 @@ BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_subtract_4_bicremental_types)
 {            interval_subtract_4_bicremental_types<bicremental_type_5>(); }
 
-#endif // ndef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#endif // ndef ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS

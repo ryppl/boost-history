@@ -7,8 +7,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 
-#ifndef BOOST_ITL_DOXYGEN_MAINPAGE_HPP_JOFA_091216
-#define BOOST_ITL_DOXYGEN_MAINPAGE_HPP_JOFA_091216
+#ifndef BOOST_ICL_DOXYGEN_MAINPAGE_HPP_JOFA_091216
+#define BOOST_ICL_DOXYGEN_MAINPAGE_HPP_JOFA_091216
 
 /**
 \mainpage Boost Interval Container Library
@@ -158,6 +158,6 @@ templates parameters.
 </ul>
 
 */
-#endif // BOOST_ITL_DOXYGEN_MAINPAGE_HPP_JOFA_091216
+#endif // BOOST_ICL_DOXYGEN_MAINPAGE_HPP_JOFA_091216
 
 

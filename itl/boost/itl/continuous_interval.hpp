@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_CONTINUOUS_INTERVAL_HPP_JOFA_100327
-#define BOOST_ITL_CONTINUOUS_INTERVAL_HPP_JOFA_100327
+#ifndef BOOST_ICL_CONTINUOUS_INTERVAL_HPP_JOFA_100327
+#define BOOST_ICL_CONTINUOUS_INTERVAL_HPP_JOFA_100327
 
 #include <functional> 
 #include <boost/static_assert.hpp> 
@@ -24,7 +24,7 @@ namespace boost{namespace icl
 {
 
 template <class DomainT, 
-          ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
+          ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, DomainT)>
 class continuous_interval
 {
 public:
@@ -87,12 +87,12 @@ private:
 //==============================================================================
 //=T continuous_interval -> concept interval
 //==============================================================================
-template<class DomainT, ITL_COMPARE Compare>
+template<class DomainT, ICL_COMPARE Compare>
 struct interval_traits< icl::continuous_interval<DomainT, Compare> >
 {
     typedef interval_traits type;
     typedef DomainT domain_type;
-    typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
+    typedef ICL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
     typedef icl::continuous_interval<DomainT, Compare> interval_type;
 
     static interval_type construct(const domain_type& lo, const domain_type& up)
@@ -108,13 +108,13 @@ struct interval_traits< icl::continuous_interval<DomainT, Compare> >
 //==============================================================================
 //=T continuous_interval -> concept dynamic_interval
 //==============================================================================
-template<class DomainT, ITL_COMPARE Compare>
+template<class DomainT, ICL_COMPARE Compare>
 struct dynamic_interval_traits<boost::icl::continuous_interval<DomainT,Compare> >
 {
     typedef dynamic_interval_traits type;
     typedef boost::icl::continuous_interval<DomainT,Compare> interval_type;
     typedef DomainT domain_type;
-    typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
+    typedef ICL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
 
     static interval_type construct(const domain_type lo, const domain_type up, interval_bounds bounds)
     {
@@ -137,21 +137,21 @@ struct dynamic_interval_traits<boost::icl::continuous_interval<DomainT,Compare> 
 //==============================================================================
 //= Type traits
 //==============================================================================
-template <class DomainT, ITL_COMPARE Compare> 
+template <class DomainT, ICL_COMPARE Compare> 
 struct interval_bound_type< continuous_interval<DomainT,Compare> >
 {
     typedef interval_bound_type type;
     BOOST_STATIC_CONSTANT(bound_type, value = interval_bounds::dynamic);
 };
 
-template <class DomainT, ITL_COMPARE Compare> 
+template <class DomainT, ICL_COMPARE Compare> 
 struct is_continuous_interval<continuous_interval<DomainT,Compare> >
 {
     typedef is_continuous_interval<continuous_interval<DomainT,Compare> > type;
     BOOST_STATIC_CONSTANT(bool, value = true);
 };
 
-template <class DomainT, ITL_COMPARE Compare>
+template <class DomainT, ICL_COMPARE Compare>
 struct type_to_string<icl::continuous_interval<DomainT,Compare> >
 {
     static std::string apply()

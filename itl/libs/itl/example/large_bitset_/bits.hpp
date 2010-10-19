@@ -6,8 +6,8 @@ Copyright (c) 2009-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_LIBS_ITL_EXAMPLE_LARGE_BITSET_BITS_HPP_JOFA_091019
-#define BOOST_LIBS_ITL_EXAMPLE_LARGE_BITSET_BITS_HPP_JOFA_091019
+#ifndef BOOST_LIBS_ICL_EXAMPLE_LARGE_BITSET_BITS_HPP_JOFA_091019
+#define BOOST_LIBS_ICL_EXAMPLE_LARGE_BITSET_BITS_HPP_JOFA_091019
 //[mini_bits_includes
                                                // These includes are needed ...
 #include <string>                              // for conversion to output and to

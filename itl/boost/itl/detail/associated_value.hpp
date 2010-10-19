@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_DETAIL_ASSOCIATED_VALUE_HPP_JOFA_100829
-#define BOOST_ITL_DETAIL_ASSOCIATED_VALUE_HPP_JOFA_100829
+#ifndef BOOST_ICL_DETAIL_ASSOCIATED_VALUE_HPP_JOFA_100829
+#define BOOST_ICL_DETAIL_ASSOCIATED_VALUE_HPP_JOFA_100829
 
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>

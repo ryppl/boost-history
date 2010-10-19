@@ -13,8 +13,8 @@ Auxiliary functors that are used to validate the equality of
 handcoded loops and calls of std::algorithms.
 +-----------------------------------------------------------------------------*/
 
-#ifndef BOOST_VALIDATE_ITL_FUNCTORS_HPP_JOFA_091004
-#define BOOST_VALIDATE_ITL_FUNCTORS_HPP_JOFA_091004
+#ifndef BOOST_VALIDATE_ICL_FUNCTORS_HPP_JOFA_091004
+#define BOOST_VALIDATE_ICL_FUNCTORS_HPP_JOFA_091004
 
 #include <boost/itl/iterator.hpp>
 
@@ -27,7 +27,7 @@ struct base_insertion
     void operator()(TargetT& collected, const SourceT& items)
     {
         icl::clear(collected);
-        ITL_const_FORALL(typename SourceT, item_, items)
+        ICL_const_FORALL(typename SourceT, item_, items)
             collected.insert(*item_);
     }
 };
@@ -43,7 +43,7 @@ struct hint_insertion
         typedef typename TargetT::value_type target_value_type;
         icl::clear(collected);
         typename TargetT::iterator prior_ = collected.end();
-        ITL_const_FORALL(typename SourceT, item_, items)
+        ICL_const_FORALL(typename SourceT, item_, items)
             prior_ = collected.insert(prior_, *item_);
     }
 };
@@ -71,7 +71,7 @@ struct base_addition
     void operator()(TargetT& collected, const SourceT& items)
     {
         icl::clear(collected);
-        ITL_const_FORALL(typename SourceT, item_, items)
+        ICL_const_FORALL(typename SourceT, item_, items)
             //JODO icl::add(collected, *item_);
             collected.add(*item_);
     }
@@ -87,7 +87,7 @@ struct hint_addition
     {
         icl::clear(collected);
         typename TargetT::iterator prior_ = collected.end();
-        ITL_const_FORALL(typename SourceT, item_, items)
+        ICL_const_FORALL(typename SourceT, item_, items)
             //JODO prior_ = add(collected, prior_, *item_);
             prior_ = collected.add(prior_, *item_);
     }

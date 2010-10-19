@@ -103,7 +103,7 @@ namespace boost{namespace icl
             case RootType::         interval_set: return new sorted_associative_validater<         interval_set<int>, icl::list<int> >;
             case RootType::separate_interval_set: return new sorted_associative_validater<separate_interval_set<int>, icl::list<int> >;
             case RootType::   split_interval_set: return new sorted_associative_validater<   split_interval_set<int>, icl::list<int> >;
-            default: return choiceError(ITL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
+            default: return choiceError(ICL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
             } //switch()
 
         }

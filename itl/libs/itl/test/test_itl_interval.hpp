@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TEST_ITL_INTERVAL_HPP_JOFA_081006
-#define BOOST_ITL_TEST_ITL_INTERVAL_HPP_JOFA_081006
+#ifndef BOOST_ICL_TEST_ICL_INTERVAL_HPP_JOFA_081006
+#define BOOST_ICL_TEST_ICL_INTERVAL_HPP_JOFA_081006
 
 template <class T, class IntervalT> 
 void interval_ctor_4_ordered_types()

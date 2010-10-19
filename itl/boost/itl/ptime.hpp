@@ -12,8 +12,8 @@ It implements incrementation (++) decrementation (--) and a neutral element
 w.r.t. addition (identity_element()).
 ------------------------------------------------------------------------------*/
 
-#ifndef BOOST_ITL_PTIME_HPP_JOFA_080416
-#define BOOST_ITL_PTIME_HPP_JOFA_080416
+#ifndef BOOST_ICL_PTIME_HPP_JOFA_080416
+#define BOOST_ICL_PTIME_HPP_JOFA_080416
 
 #include <stdio.h>
 #include <string>

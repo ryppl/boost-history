@@ -21,7 +21,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/detail/is_incrementable.hpp>
 #include <boost/type_traits/is_floating_point.hpp>
 
-#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#define ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
 #define BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT right_open_interval
 #define BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS 2 //0=() 1=(] 2=[) 3=[]
 
@@ -329,7 +329,7 @@ BOOST_AUTO_TEST_CASE(casual)
     BOOST_CHECK_EQUAL( is_interval_set<std::set<int> >::value, false );
     BOOST_CHECK_EQUAL( is_interval_set<std::set<int> >::value, false );
 
-#if defined(ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS) && !defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
+#if defined(ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS) && !defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
     BOOST_CHECK( (is_same<icl::interval<int   >::type, right_open_interval<int   > >::value) );
     BOOST_CHECK( (is_same<icl::interval<double>::type, right_open_interval<double> >::value) );
 
@@ -343,7 +343,7 @@ BOOST_AUTO_TEST_CASE(casual)
     //BOOST_CHECK_EQUAL( icl::interval<float>::left_open(1.0,2.0), icl::construct<right_open_interval<float> >(1.0,2.0) );
 #endif
 
-#if defined(ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS) && defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
+#if defined(ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS) && defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
 #   if defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS) && (BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS == 0)
     cout << "discrete_interval == open_interval\n";
     BOOST_CHECK( (is_same<icl::interval<int>::type, open_interval<int> >::value) );
@@ -378,7 +378,7 @@ BOOST_AUTO_TEST_CASE(casual)
 
 #   else
     cout << "#else part, INTERVAL_BORDERS not in {0,1,2,3}\n";
-#endif //defined(ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS) && defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
+#endif //defined(ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS) && defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
 
 #else
     BOOST_CHECK( (is_same<icl::interval<int   >::type,   discrete_interval<int   > >::value) );

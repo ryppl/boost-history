@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_SYMMETRIC_DIFFERENCE_HPP_JOFA_071124
-#define BOOST_ITL_SYMMETRIC_DIFFERENCE_HPP_JOFA_071124
+#ifndef BOOST_ICL_SYMMETRIC_DIFFERENCE_HPP_JOFA_071124
+#define BOOST_ICL_SYMMETRIC_DIFFERENCE_HPP_JOFA_071124
 
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/validate/laws/law.hpp>
@@ -200,6 +200,6 @@ namespace boost{namespace icl
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_SYMMETRIC_DIFFERENCE_HPP_JOFA_071124
+#endif // BOOST_ICL_SYMMETRIC_DIFFERENCE_HPP_JOFA_071124
 
 

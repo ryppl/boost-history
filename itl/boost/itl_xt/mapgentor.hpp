@@ -6,8 +6,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_XT_MAPGENTOR_HPP_JOFA_000724
-#define BOOST_ITL_XT_MAPGENTOR_HPP_JOFA_000724
+#ifndef BOOST_ICL_XT_MAPGENTOR_HPP_JOFA_000724
+#define BOOST_ICL_XT_MAPGENTOR_HPP_JOFA_000724
 
 #include <boost/itl_xt/list.hpp>
 #include <boost/itl_xt/gentorit.hpp>
@@ -85,7 +85,7 @@ template <class MapTV>
 void MapGentorT<MapTV>::last(MapTV& x)const
 {
     x.clear();
-    ITL_const_FORALL(typename SampleTypeTD, it, m_sample) 
+    ICL_const_FORALL(typename SampleTypeTD, it, m_sample) 
         x += *it;
 }
 
@@ -97,13 +97,13 @@ void MapGentorT<MapTV>::last_permuted(MapTV& x)const
     SampleTypeTD perm;
 
     NumberGentorT<int> intGentor;
-    ITL_const_FORALL(typename SampleTypeTD, it, m_sample)
+    ICL_const_FORALL(typename SampleTypeTD, it, m_sample)
     {
         if( 0==intGentor(2) ) perm.push_back(*it);
         else perm.push_front(*it);
     }
 
-    ITL_const_FORALL(typename SampleTypeTD, pit, perm) 
+    ICL_const_FORALL(typename SampleTypeTD, pit, perm) 
         x += *pit;
 }
 
@@ -120,7 +120,7 @@ void MapGentorT<MapTV>::lastSample_permuted(SampleTypeTD& sam)
     NumberGentorT<unsigned> intGentor;
     x.clear();
     int coin = intGentor.some(2); // gives 0 or 1
-    ITL_const_FORALL(typename SampleTypeTD, it, m_sample)
+    ICL_const_FORALL(typename SampleTypeTD, it, m_sample)
     {
         if( 0==intGentor.some(2) ) sam.push_back(*it);
         else sam.push_front(*it);
@@ -130,6 +130,6 @@ void MapGentorT<MapTV>::lastSample_permuted(SampleTypeTD& sam)
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_XT_MAPGENTOR_HPP_JOFA_000724
+#endif // BOOST_ICL_XT_MAPGENTOR_HPP_JOFA_000724
 
 

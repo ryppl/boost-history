@@ -10,8 +10,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 itl_rational provides adapter code for boost::rational.
 ------------------------------------------------------------------------------*/
 
-#ifndef BOOST_ITL_RATIONAL_HPP_JOFA_080913
-#define BOOST_ITL_RATIONAL_HPP_JOFA_080913
+#ifndef BOOST_ICL_RATIONAL_HPP_JOFA_080913
+#define BOOST_ICL_RATIONAL_HPP_JOFA_080913
 
 #ifdef BOOST_MSVC 
 #pragma warning(push)

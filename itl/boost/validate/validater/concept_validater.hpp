@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_VALIDATE_CONCEPT_VALIDATER_HPP_JOFA_080203
-#define BOOST_ITL_VALIDATE_CONCEPT_VALIDATER_HPP_JOFA_080203
+#ifndef BOOST_ICL_VALIDATE_CONCEPT_VALIDATER_HPP_JOFA_080203
+#define BOOST_ICL_VALIDATE_CONCEPT_VALIDATER_HPP_JOFA_080203
 
 #include <boost/itl/type_traits/is_continuous.hpp>
 #include <boost/itl/functors.hpp>
@@ -67,4 +67,4 @@ namespace boost{namespace icl
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_VALIDATE_CONCEPT_VALIDATER_HPP_JOFA_080203
+#endif // BOOST_ICL_VALIDATE_CONCEPT_VALIDATER_HPP_JOFA_080203

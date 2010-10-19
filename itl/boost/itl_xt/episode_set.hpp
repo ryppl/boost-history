@@ -27,8 +27,8 @@ FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_EPISODE_SET_HPP_HPP_JOFA_011015
-#define BOOST_ITL_EPISODE_SET_HPP_HPP_JOFA_011015
+#ifndef BOOST_ICL_EPISODE_SET_HPP_HPP_JOFA_011015
+#define BOOST_ICL_EPISODE_SET_HPP_HPP_JOFA_011015
 
 #include <string>
 #include <boost/itl/set.hpp>
@@ -68,7 +68,7 @@ namespace boost{namespace icl
 */
 template <class TimeT, class TypeDomain>
 class episode_set : public icl::set<typed_episode<TimeT, TypeDomain>*, 
-#ifdef ITL_USE_COMPARE_TEMPLATE_TEMPLATE
+#ifdef ICL_USE_COMPARE_TEMPLATE_TEMPLATE
                                     Less_TypedEpisodeATP 
 #else
                                     Less_TypedEpisodeATP<typed_episode<TimeT, TypeDomain>*> 
@@ -79,7 +79,7 @@ class episode_set : public icl::set<typed_episode<TimeT, TypeDomain>*,
 public:
     typedef typed_episode<TimeT, TypeDomain>* episode_type; 
     typedef icl::set<typed_episode<TimeT, TypeDomain>*, 
-                     ITL_COMPARE_INSTANCE(Less_TypedEpisodeATP,episode_type)> base_type;
+                     ICL_COMPARE_INSTANCE(Less_TypedEpisodeATP,episode_type)> base_type;
     typedef typename base_type::iterator iterator;
     typedef typename base_type::const_iterator const_iterator;
     
@@ -131,6 +131,6 @@ inline bool operator == (const episode_set<TimeT,TypeDomain>& lhs,
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_EPISODE_SET_HPP_HPP_JOFA_011015
+#endif // BOOST_ICL_EPISODE_SET_HPP_HPP_JOFA_011015
 
 

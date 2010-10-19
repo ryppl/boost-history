@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_VALIDATE_VALIDATER_UNSIGNED_QUANTIFIER_VALIDATER_HPP_JOFA_090314
-#define BOOST_ITL_VALIDATE_VALIDATER_UNSIGNED_QUANTIFIER_VALIDATER_HPP_JOFA_090314
+#ifndef BOOST_ICL_VALIDATE_VALIDATER_UNSIGNED_QUANTIFIER_VALIDATER_HPP_JOFA_090314
+#define BOOST_ICL_VALIDATE_VALIDATER_UNSIGNED_QUANTIFIER_VALIDATER_HPP_JOFA_090314
 
 #include <boost/itl/functors.hpp>
 #include <boost/itl/type_traits/absorbs_identities.hpp>
@@ -97,5 +97,5 @@ private:
 #pragma warning(pop)
 #endif
 
-#endif // BOOST_ITL_VALIDATE_VALIDATER_UNSIGNED_QUANTIFIER_VALIDATER_HPP_JOFA_090314
+#endif // BOOST_ICL_VALIDATE_VALIDATER_UNSIGNED_QUANTIFIER_VALIDATER_HPP_JOFA_090314
 

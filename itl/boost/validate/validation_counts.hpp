@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_VALIDATION_COUNTS_HPP_JOFA_090713
-#define BOOST_ITL_VALIDATION_COUNTS_HPP_JOFA_090713
+#ifndef BOOST_ICL_VALIDATION_COUNTS_HPP_JOFA_090713
+#define BOOST_ICL_VALIDATION_COUNTS_HPP_JOFA_090713
 
 
 namespace boost{namespace icl
@@ -50,4 +50,4 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_VALIDATION_COUNTS_HPP_JOFA_090713
+#endif // BOOST_ICL_VALIDATION_COUNTS_HPP_JOFA_090713

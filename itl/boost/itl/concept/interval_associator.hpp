@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_CONCEPT_INTERVAL_ASSOCIATOR_HPP_JOFA_100920
-#define BOOST_ITL_CONCEPT_INTERVAL_ASSOCIATOR_HPP_JOFA_100920
+#ifndef BOOST_ICL_CONCEPT_INTERVAL_ASSOCIATOR_HPP_JOFA_100920
+#define BOOST_ICL_CONCEPT_INTERVAL_ASSOCIATOR_HPP_JOFA_100920
 
 #include <boost/itl/type_traits/domain_type_of.hpp>
 #include <boost/itl/type_traits/interval_type_of.hpp>
@@ -124,7 +124,7 @@ cardinality(const Type& object)
     typedef typename Type::interval_type interval_type;
 
     size_type size = identity_element<size_type>::value();
-    ITL_const_FORALL(typename Type, it, object)
+    ICL_const_FORALL(typename Type, it, object)
         size += icl::cardinality(key_value<Type>(it));
     return size;
 
@@ -143,7 +143,7 @@ cardinality(const Type& object)
 
     size_type size = identity_element<size_type>::value();
     size_type interval_size;
-    ITL_const_FORALL(typename Type, it, object)
+    ICL_const_FORALL(typename Type, it, object)
     {
         interval_size = icl::cardinality(key_value<Type>(it));
         if(interval_size == infinity<size_type>::value())
@@ -294,7 +294,7 @@ typename enable_if<is_intra_combinable<Type, OperandT>, Type>::type&
 operator += (Type& object, const OperandT& operand)
 {
     typename Type::iterator prior_ = object.end();
-    ITL_const_FORALL(typename OperandT, elem_, operand) 
+    ICL_const_FORALL(typename OperandT, elem_, operand) 
         prior_ = icl::add(object, prior_, *elem_); 
 
     return object; 
@@ -433,7 +433,7 @@ typename enable_if<is_intra_combinable<Type, OperandT>, Type>::type&
 insert(Type& object, const OperandT& operand)
 {
     typename Type::iterator prior_ = object.end();
-    ITL_const_FORALL(typename OperandT, elem_, operand) 
+    ICL_const_FORALL(typename OperandT, elem_, operand) 
         insert(object, *elem_); 
 
     return object; 
@@ -499,7 +499,7 @@ typename enable_if<is_concept_compatible<is_interval_map, Type, OperandT>,
                    Type>::type& 
 operator -=(Type& object, const OperandT& operand)
 {
-    ITL_const_FORALL(typename OperandT, elem_, operand) 
+    ICL_const_FORALL(typename OperandT, elem_, operand) 
         icl::subtract(object, *elem_);
 
     return object; 

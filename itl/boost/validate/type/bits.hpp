@@ -6,8 +6,8 @@ Copyright (c) 2009-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_LIBS_VALIDATE_TEST_BITS_HPP_JOFA_091009
-#define BOOST_ITL_LIBS_VALIDATE_TEST_BITS_HPP_JOFA_091009
+#ifndef BOOST_ICL_LIBS_VALIDATE_TEST_BITS_HPP_JOFA_091009
+#define BOOST_ICL_LIBS_VALIDATE_TEST_BITS_HPP_JOFA_091009
 
 #include <boost/itl/type_traits/type_to_string.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
@@ -83,4 +83,4 @@ template <>struct type_to_string<icl::bits<unsigned long long> >{static std::str
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_LIBS_VALIDATE_TEST_BITS_HPP_JOFA_091009
+#endif // BOOST_ICL_LIBS_VALIDATE_TEST_BITS_HPP_JOFA_091009

@@ -5,8 +5,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_FUNCTORS_HPP_JOFA_080315
-#define BOOST_ITL_FUNCTORS_HPP_JOFA_080315
+#ifndef BOOST_ICL_FUNCTORS_HPP_JOFA_080315
+#define BOOST_ICL_FUNCTORS_HPP_JOFA_080315
 
 #include <functional>
 #include <boost/type_traits.hpp>

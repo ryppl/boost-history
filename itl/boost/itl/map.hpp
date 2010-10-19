@@ -5,14 +5,14 @@ Copyright (c) 2007-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_MAP_HPP_JOFA_070519
-#define BOOST_ITL_MAP_HPP_JOFA_070519
+#ifndef BOOST_ICL_MAP_HPP_JOFA_070519
+#define BOOST_ICL_MAP_HPP_JOFA_070519
 
 #include <boost/itl/impl_config.hpp>
 
-#if defined(ITL_USE_BOOST_INTERPROCESS_IMPLEMENTATION)
+#if defined(ICL_USE_BOOST_INTERPROCESS_IMPLEMENTATION)
 #include <boost/interprocess/containers/map.hpp>
-#elif defined(ITL_USE_BOOST_MOVE_IMPLEMENTATION)
+#elif defined(ICL_USE_BOOST_MOVE_IMPLEMENTATION)
 #include <boost/container/map.hpp>
 #else 
 #include <map>
@@ -87,19 +87,19 @@ template
     typename DomainT, 
     typename CodomainT, 
     class Traits = icl::partial_absorber,
-    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT),
-    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(icl::inplace_plus, CodomainT),
-    ITL_SECTION Section = ITL_SECTION_INSTANCE(icl::inter_section, CodomainT), 
-    ITL_ALLOC   Alloc   = std::allocator 
+    ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, DomainT),
+    ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, CodomainT),
+    ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, CodomainT), 
+    ICL_ALLOC   Alloc   = std::allocator 
 >
-class map: private ITL_IMPL_SPACE::map<DomainT, CodomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), 
+class map: private ICL_IMPL_SPACE::map<DomainT, CodomainT, ICL_COMPARE_DOMAIN(Compare,DomainT), 
                                        Alloc<std::pair<const DomainT, CodomainT> > >
 {
 public:
     typedef Alloc<typename std::pair<const DomainT, CodomainT> >  allocator_type;
 
     typedef typename icl::map<DomainT,CodomainT,Traits, Compare,Combine,Section,Alloc> type;
-    typedef typename ITL_IMPL_SPACE::map<DomainT, CodomainT, ITL_COMPARE_DOMAIN(Compare,DomainT),
+    typedef typename ICL_IMPL_SPACE::map<DomainT, CodomainT, ICL_COMPARE_DOMAIN(Compare,DomainT),
                                          allocator_type>   base_type;
     typedef typename icl::set<DomainT, Compare, Alloc >    set_type;
     typedef set_type                                       key_object_type;
@@ -115,14 +115,14 @@ public:
     typedef CodomainT                                   data_type;
     typedef std::pair<const DomainT, CodomainT>         element_type;
     typedef std::pair<const DomainT, CodomainT>         value_type;
-    typedef ITL_COMPARE_DOMAIN(Compare,DomainT)         domain_compare;
-    typedef ITL_COMBINE_CODOMAIN(Combine,CodomainT)     codomain_combine;
+    typedef ICL_COMPARE_DOMAIN(Compare,DomainT)         domain_compare;
+    typedef ICL_COMBINE_CODOMAIN(Combine,CodomainT)     codomain_combine;
     typedef domain_compare                              key_compare;
-    typedef ITL_COMPARE_DOMAIN(Compare,element_type)    element_compare;
+    typedef ICL_COMPARE_DOMAIN(Compare,element_type)    element_compare;
     typedef typename inverse<codomain_combine >::type   inverse_codomain_combine;
     typedef typename mpl::if_
         <has_set_semantics<codomain_type>
-        , ITL_SECTION_CODOMAIN(Section,CodomainT)     
+        , ICL_SECTION_CODOMAIN(Section,CodomainT)     
         , codomain_combine
         >::type                                         codomain_intersect;
     typedef typename inverse<codomain_intersect>::type  inverse_codomain_intersect;
@@ -488,7 +488,7 @@ private:
         static void flip(Type& object, const element_type& operand)
         { 
             object.add(operand);
-            ITL_FORALL(typename Type, it_, object)
+            ICL_FORALL(typename Type, it_, object)
                 it_->second = identity_element<codomain_type>::value();
         }
     };
@@ -539,7 +539,7 @@ private:
 //==============================================================================
 //= Addition<ElementMap>
 //==============================================================================
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+template <class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_ALLOC Alloc>
     template <class Combiner>
 map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
@@ -567,7 +567,7 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 }
 
 
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+template <class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_ALLOC Alloc>
     template <class Combiner>
 typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
@@ -598,7 +598,7 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
 //==============================================================================
 //= Subtraction<ElementMap>
 //==============================================================================
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+template <class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_ALLOC Alloc>
     template <class Combiner>
 map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::_subtract(const value_type& minuend)
@@ -620,35 +620,35 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 //-----------------------------------------------------------------------------
 // type traits
 //-----------------------------------------------------------------------------
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+template <class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_ALLOC Alloc>
 struct is_map<icl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 { 
     typedef is_map<icl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+template <class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_ALLOC Alloc>
 struct has_inverse<icl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 { 
     typedef has_inverse<icl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = (has_inverse<CodomainT>::value)); 
 };
 
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+template <class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_ALLOC Alloc>
 struct absorbs_identities<icl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 { 
     typedef absorbs_identities type;
     BOOST_STATIC_CONSTANT(int, value = Traits::absorbs_identities); 
 };
 
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+template <class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_ALLOC Alloc>
 struct is_total<icl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 { 
     typedef is_total type;
     BOOST_STATIC_CONSTANT(int, value = Traits::is_total); 
 };
 
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+template <class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_ALLOC Alloc>
 struct type_to_string<icl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 {
     static std::string apply()
@@ -663,5 +663,5 @@ struct type_to_string<icl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_MAP_HPP_JOFA_070519
+#endif // BOOST_ICL_MAP_HPP_JOFA_070519
 

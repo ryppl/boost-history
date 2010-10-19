@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_FASTEST_TOTAL_INTERVAL_QUANTIFIER_CASES_HPP_JOFA_090703
-#define BOOST_ITL_FASTEST_TOTAL_INTERVAL_QUANTIFIER_CASES_HPP_JOFA_090703
+#ifndef BOOST_ICL_FASTEST_TOTAL_INTERVAL_QUANTIFIER_CASES_HPP_JOFA_090703
+#define BOOST_ICL_FASTEST_TOTAL_INTERVAL_QUANTIFIER_CASES_HPP_JOFA_090703
 
 //------------------------------------------------------------------------------
 // total_absorber
@@ -80,5 +80,5 @@ BOOST_AUTO_TEST_CASE
 
 
 
-#endif // BOOST_ITL_FASTEST_TOTAL_INTERVAL_QUANTIFIER_CASES_HPP_JOFA_090703
+#endif // BOOST_ICL_FASTEST_TOTAL_INTERVAL_QUANTIFIER_CASES_HPP_JOFA_090703
 

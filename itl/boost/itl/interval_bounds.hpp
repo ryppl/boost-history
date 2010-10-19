@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_INTERVAL_BOUNDS_HPP_JOFA_100330
-#define BOOST_ITL_INTERVAL_BOUNDS_HPP_JOFA_100330
+#ifndef BOOST_ICL_INTERVAL_BOUNDS_HPP_JOFA_100330
+#define BOOST_ICL_INTERVAL_BOUNDS_HPP_JOFA_100330
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/itl/detail/design_config.hpp>

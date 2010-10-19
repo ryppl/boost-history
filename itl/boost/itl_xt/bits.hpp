@@ -6,8 +6,8 @@ Copyright (c) 2009-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_XT_BITS_HPP_JOFA_091023
-#define BOOST_ITL_XT_BITS_HPP_JOFA_091023
+#ifndef BOOST_ICL_XT_BITS_HPP_JOFA_091023
+#define BOOST_ICL_XT_BITS_HPP_JOFA_091023
 
 #include <limits>
 #include <boost/static_assert.hpp>
@@ -250,4 +250,4 @@ template <>struct type_to_string<icl::bits<unsigned long long> >{static std::str
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_XT_BITS_HPP_JOFA_091023
+#endif // BOOST_ICL_XT_BITS_HPP_JOFA_091023

@@ -26,8 +26,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 +-----------------------------------------------------------------------------*/
 
-#ifndef BOOST_ITL_FIXTUPELCONSTT_HPP_JOFA_040621
-#define BOOST_ITL_FIXTUPELCONSTT_HPP_JOFA_040621
+#ifndef BOOST_ICL_FIXTUPELCONSTT_HPP_JOFA_040621
+#define BOOST_ICL_FIXTUPELCONSTT_HPP_JOFA_040621
 
 #include <boost/itl/detail/notate.hpp>
 
@@ -43,6 +43,6 @@ namespace boost{namespace icl
     const GroupVarTD UNDEFINED_GROUP = -1;
 }} // namespace icl boost
 
-#endif // BOOST_ITL_FIXTUPELCONSTT_HPP_JOFA_040621
+#endif // BOOST_ICL_FIXTUPELCONSTT_HPP_JOFA_040621
 
 

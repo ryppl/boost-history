@@ -13,7 +13,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <iostream>
 #include <boost/itl/type_traits/to_string.hpp>
 
-#define ITL_LOCATION(message) location(__FILE__,__LINE__,message)
+#define ICL_LOCATION(message) location(__FILE__,__LINE__,message)
 
 #define NEURONIZER_CASES(validater_Template, itl_Map, domain_Type, codomain_Type) \
 case IdentityHandlerType::partial_absorber: return new validater_Template<itl_Map<domain_Type,codomain_Type,partial_absorber> >; \

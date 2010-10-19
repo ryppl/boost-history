@@ -7,8 +7,8 @@ Copyright (c) 2009-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_XT_MAP_SEGMENT_GENTOR_HPP_JOFA_091004
-#define BOOST_ITL_XT_MAP_SEGMENT_GENTOR_HPP_JOFA_091004
+#ifndef BOOST_ICL_XT_MAP_SEGMENT_GENTOR_HPP_JOFA_091004
+#define BOOST_ICL_XT_MAP_SEGMENT_GENTOR_HPP_JOFA_091004
 
 
 #include <boost/itl_xt/gentorit.hpp>
@@ -69,7 +69,7 @@ void map_segment_gentor<DomainT,CodomainT,IntervalT>::some(segment_type& value)
     value = segment_type(inter_val, co_val);
 };
 
-}} // BOOST_ITL_XT_MAP_SEGMENT_GENTOR_HPP_JOFA_091004
+}} // BOOST_ICL_XT_MAP_SEGMENT_GENTOR_HPP_JOFA_091004
 
 #endif
 

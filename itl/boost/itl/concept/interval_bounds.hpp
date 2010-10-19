@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_CONCEPT_INTERVAL_BOUNDS_HPP_JOFA_100927
-#define BOOST_ITL_CONCEPT_INTERVAL_BOUNDS_HPP_JOFA_100927
+#ifndef BOOST_ICL_CONCEPT_INTERVAL_BOUNDS_HPP_JOFA_100927
+#define BOOST_ICL_CONCEPT_INTERVAL_BOUNDS_HPP_JOFA_100927
 
 #include <boost/itl/interval_bounds.hpp>
 #include <boost/itl/type_traits/is_discrete.hpp>

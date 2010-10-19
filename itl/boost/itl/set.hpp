@@ -5,14 +5,14 @@ Copyright (c) 2007-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_SET_HPP_JOFA_070519
-#define BOOST_ITL_SET_HPP_JOFA_070519
+#ifndef BOOST_ICL_SET_HPP_JOFA_070519
+#define BOOST_ICL_SET_HPP_JOFA_070519
 
 #include <boost/itl/impl_config.hpp>
 
-#if defined(ITL_USE_BOOST_INTERPROCESS_IMPLEMENTATION)
+#if defined(ICL_USE_BOOST_INTERPROCESS_IMPLEMENTATION)
 #include <boost/interprocess/containers/set.hpp>
-#elif defined(ITL_USE_BOOST_MOVE_IMPLEMENTATION)
+#elif defined(ICL_USE_BOOST_MOVE_IMPLEMENTATION)
 #include <boost/container/set.hpp>
 #else 
 #include <set>
@@ -43,14 +43,14 @@ namespace boost{namespace icl
 template 
 <
     typename DomainT, 
-    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT),
-    ITL_ALLOC   Alloc   = std::allocator 
+    ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, DomainT),
+    ICL_ALLOC   Alloc   = std::allocator 
 >
-class set: private ITL_IMPL_SPACE::set<DomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), Alloc<DomainT> >
+class set: private ICL_IMPL_SPACE::set<DomainT, ICL_COMPARE_DOMAIN(Compare,DomainT), Alloc<DomainT> >
 {
 public:
     typedef typename icl::set<DomainT, Compare, Alloc> type;
-    typedef typename ITL_IMPL_SPACE::set<DomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), Alloc<DomainT> > base_type;
+    typedef typename ICL_IMPL_SPACE::set<DomainT, ICL_COMPARE_DOMAIN(Compare,DomainT), Alloc<DomainT> > base_type;
     typedef type key_object_type;
 
 public:
@@ -60,10 +60,10 @@ public:
     typedef DomainT     key_type;
     typedef DomainT     value_type;
     typedef DomainT     data_type;
-    typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
+    typedef ICL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
     typedef domain_compare                      element_compare;
-    typedef ITL_COMPARE_DOMAIN(Compare,DomainT) key_compare;
-    typedef ITL_COMPARE_DOMAIN(Compare,DomainT) value_compare;
+    typedef ICL_COMPARE_DOMAIN(Compare,DomainT) key_compare;
+    typedef ICL_COMPARE_DOMAIN(Compare,DomainT) value_compare;
     typedef Alloc<DomainT>   allocator_type;
 
 public:        
@@ -219,5 +219,5 @@ struct type_to_string<icl::set<Type> >
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_SET_HPP_JOFA_070519
+#endif // BOOST_ICL_SET_HPP_JOFA_070519
 

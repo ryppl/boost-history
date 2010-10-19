@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_INTERVAL_COMBINING_STYLE_HPP_JOFA_100906
-#define BOOST_ITL_INTERVAL_COMBINING_STYLE_HPP_JOFA_100906
+#ifndef BOOST_ICL_INTERVAL_COMBINING_STYLE_HPP_JOFA_100906
+#define BOOST_ICL_INTERVAL_COMBINING_STYLE_HPP_JOFA_100906
 
 namespace boost{ namespace icl
 {

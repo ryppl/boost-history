@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TEST_ICL_INTERVAL_CONTINUOUS_HPP_JOFA_100930
-#define BOOST_ITL_TEST_ICL_INTERVAL_CONTINUOUS_HPP_JOFA_100930
+#ifndef BOOST_ICL_TEST_ICL_INTERVAL_CONTINUOUS_HPP_JOFA_100930
+#define BOOST_ICL_TEST_ICL_INTERVAL_CONTINUOUS_HPP_JOFA_100930
 
 template <class T, class IntervalT> 
 void interval_ctor_4_ordered_types()
@@ -21,7 +21,7 @@ void interval_ctor_4_ordered_types()
 }
 
 
-template <class T, ITL_COMPARE Compare>
+template <class T, ICL_COMPARE Compare>
 void distant_intervals_4_numeric_continuous_types()
 {
     typedef  right_open_interval<T,Compare> L__D; // L__D for [..)
@@ -49,7 +49,7 @@ void distant_intervals_4_numeric_continuous_types()
     test_inner_complement<T,Compare,C__I>(MK_I(C__I,0,2), MK_I(C__I,0,6));
 
     //--------------------------------------------------------------------------
-#ifndef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#ifndef ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
     test_inner_complement<T,Compare,IntervalT>(I_D(0,4), I_D(8,9));
     test_inner_complement<T,Compare,IntervalT>(I_D(7,8), I_D(2,3));
     test_inner_complement<T,Compare,IntervalT>(I_D(2,4), I_D(4,6));
@@ -74,9 +74,9 @@ void distant_intervals_4_numeric_continuous_types()
     test_inner_complement<T,Compare,IntervalT>(C_D(3,0), C_D(4,0));
     test_inner_complement<T,Compare,IntervalT>(C_D(0,2), C_D(4,6));
     test_inner_complement<T,Compare,IntervalT>(C_D(0,2), C_D(0,6));
-#endif //ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#endif //ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
 }
 
 
 
-#endif // BOOST_ITL_TEST_ICL_INTERVAL_CONTINUOUS_HPP_JOFA_100930
+#endif // BOOST_ICL_TEST_ICL_INTERVAL_CONTINUOUS_HPP_JOFA_100930

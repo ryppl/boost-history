@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_IS_COMBINABLE_HPP_JOFA_090115
-#define BOOST_ITL_IS_COMBINABLE_HPP_JOFA_090115
+#ifndef BOOST_ICL_IS_COMBINABLE_HPP_JOFA_090115
+#define BOOST_ICL_IS_COMBINABLE_HPP_JOFA_090115
 
 #include <boost/mpl/bool.hpp> 
 #include <boost/mpl/if.hpp> 

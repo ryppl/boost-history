@@ -5,8 +5,8 @@ Copyright (c) 2009-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_XT_BITS_GENTOR_HPP_JOFA_091009
-#define BOOST_ITL_XT_BITS_GENTOR_HPP_JOFA_091009
+#ifndef BOOST_ICL_XT_BITS_GENTOR_HPP_JOFA_091009
+#define BOOST_ICL_XT_BITS_GENTOR_HPP_JOFA_091009
 
 #include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl_xt/gentorit.hpp>

@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_CONCEPT_COMPARABLE_HPP_JOFA_100921
-#define BOOST_ITL_CONCEPT_COMPARABLE_HPP_JOFA_100921
+#ifndef BOOST_ICL_CONCEPT_COMPARABLE_HPP_JOFA_100921
+#define BOOST_ICL_CONCEPT_COMPARABLE_HPP_JOFA_100921
 
 #include <boost/itl/type_traits/is_icl_container.hpp>
 

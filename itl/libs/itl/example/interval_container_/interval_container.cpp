@@ -18,7 +18,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <iostream>
 
 // Prior to other includes for interval containers we define ...
-#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#define ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
 // ... so all interval containers will use right_open_intervals that
 // have static interval borders.
 

@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TYPE_TRAITS_IS_DISCRETE_HPP_JOFA_100410
-#define BOOST_ITL_TYPE_TRAITS_IS_DISCRETE_HPP_JOFA_100410
+#ifndef BOOST_ICL_TYPE_TRAITS_IS_DISCRETE_HPP_JOFA_100410
+#define BOOST_ICL_TYPE_TRAITS_IS_DISCRETE_HPP_JOFA_100410
 
 #include <string>
 #include <boost/config.hpp> // For macro BOOST_STATIC_CONSTANT

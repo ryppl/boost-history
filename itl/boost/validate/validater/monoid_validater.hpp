@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_VALIDATE_VALIDATER_MONOID_VALIDATER_HPP_JOFA_100501
-#define BOOST_ITL_VALIDATE_VALIDATER_MONOID_VALIDATER_HPP_JOFA_100501
+#ifndef BOOST_ICL_VALIDATE_VALIDATER_MONOID_VALIDATER_HPP_JOFA_100501
+#define BOOST_ICL_VALIDATE_VALIDATER_MONOID_VALIDATER_HPP_JOFA_100501
 
 #include <boost/itl/functors.hpp>
 #include <boost/validate/validater/concept_validater.hpp>
@@ -52,5 +52,5 @@ private:
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_VALIDATE_VALIDATER_MONOID_VALIDATER_HPP_JOFA_100501
+#endif // BOOST_ICL_VALIDATE_VALIDATER_MONOID_VALIDATER_HPP_JOFA_100501
 

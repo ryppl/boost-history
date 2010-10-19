@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_CONCEPT_INTERVAL_SET_VALUE_HPP_JOFA_100924
-#define BOOST_ITL_CONCEPT_INTERVAL_SET_VALUE_HPP_JOFA_100924
+#ifndef BOOST_ICL_CONCEPT_INTERVAL_SET_VALUE_HPP_JOFA_100924
+#define BOOST_ICL_CONCEPT_INTERVAL_SET_VALUE_HPP_JOFA_100924
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/itl/type_traits/is_interval_container.hpp>

@@ -10,19 +10,19 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 /*-----------------------------------------------------------------------------
     Macro definitions for some useful notations e.g. iteration headers
 -----------------------------------------------------------------------------*/
-#ifndef  BOOST_ITL_DETAIL_NOTATE_HPP_JOFA_990119
-#define  BOOST_ITL_DETAIL_NOTATE_HPP_JOFA_990119
+#ifndef  BOOST_ICL_DETAIL_NOTATE_HPP_JOFA_990119
+#define  BOOST_ICL_DETAIL_NOTATE_HPP_JOFA_990119
 
 
 // Iterations over stl or stl-compatible containers:
-#define ITL_FORALL(type,iter,obj) for(type::iterator iter=(obj).begin(); (iter)!=(obj).end(); (iter)++)
-#define ITL_const_FORALL(type,iter,obj) for(type::const_iterator iter=(obj).begin(); !((iter)==(obj).end()); (iter)++)
+#define ICL_FORALL(type,iter,obj) for(type::iterator iter=(obj).begin(); (iter)!=(obj).end(); (iter)++)
+#define ICL_const_FORALL(type,iter,obj) for(type::const_iterator iter=(obj).begin(); !((iter)==(obj).end()); (iter)++)
 
-#define ITL_FORALL_THIS(iter) for(iterator iter=begin(); (iter)!=end(); (iter)++)
-#define ITL_const_FORALL_THIS(iter) for(const_iterator iter=this->begin(); (iter)!=this->end(); (iter)++)
+#define ICL_FORALL_THIS(iter) for(iterator iter=begin(); (iter)!=end(); (iter)++)
+#define ICL_const_FORALL_THIS(iter) for(const_iterator iter=this->begin(); (iter)!=this->end(); (iter)++)
 
 // Plain old array iteration (assuming member function VecT::size()!)
-#define ITL_FORALL_VEC(idx, vec) for(int idx=0; idx<vec.size(); idx++)
+#define ICL_FORALL_VEC(idx, vec) for(int idx=0; idx<vec.size(); idx++)
 
 namespace boost{namespace icl
 {
@@ -30,6 +30,6 @@ namespace boost{namespace icl
 }} // namespace icl boost
 
 
-#endif // BOOST_ITL_DETAIL_NOTATE_HPP_JOFA_990119
+#endif // BOOST_ICL_DETAIL_NOTATE_HPP_JOFA_990119
 
 

@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_INTERVAL_TRAITS_HPP_JOFA_100926
-#define BOOST_ITL_INTERVAL_TRAITS_HPP_JOFA_100926
+#ifndef BOOST_ICL_INTERVAL_TRAITS_HPP_JOFA_100926
+#define BOOST_ICL_INTERVAL_TRAITS_HPP_JOFA_100926
 
 #include <boost/itl/type_traits/domain_type_of.hpp>
 #include <boost/itl/type_traits/difference_type_of.hpp>

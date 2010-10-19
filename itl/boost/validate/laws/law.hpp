@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_LAW_HPP_JOFA_070411
-#define BOOST_ITL_LAW_HPP_JOFA_070411
+#ifndef BOOST_ICL_LAW_HPP_JOFA_070411
+#define BOOST_ICL_LAW_HPP_JOFA_070411
 
 #include <string>
 #include <set>
@@ -136,5 +136,5 @@ namespace boost{namespace icl
 #pragma warning(pop)
 #endif
 
-#endif //BOOST_ITL_LAW_HPP_JOFA_070411
+#endif //BOOST_ICL_LAW_HPP_JOFA_070411
 

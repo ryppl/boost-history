@@ -15,7 +15,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/type_to_string.hpp>
 #include <boost/itl/type_traits/value_size.hpp>
 
-#define ITL_LOCATION(message) location(__FILE__,__LINE__,message)
+#define ICL_LOCATION(message) location(__FILE__,__LINE__,message)
 
 namespace boost{namespace icl
 {

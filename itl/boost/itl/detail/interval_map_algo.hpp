@@ -5,8 +5,8 @@ Copyright (c) 2008-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_INTERVAL_MAP_ALGO_HPP_JOFA_100730
-#define BOOST_ITL_INTERVAL_MAP_ALGO_HPP_JOFA_100730
+#ifndef BOOST_ICL_INTERVAL_MAP_ALGO_HPP_JOFA_100730
+#define BOOST_ICL_INTERVAL_MAP_ALGO_HPP_JOFA_100730
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/not.hpp>

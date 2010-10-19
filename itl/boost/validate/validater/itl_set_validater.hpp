@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_VALIDATE_VALIDATER_ITL_SET_VALIDATER_HPP_JOFA_090303
-#define BOOST_ITL_VALIDATE_VALIDATER_ITL_SET_VALIDATER_HPP_JOFA_090303
+#ifndef BOOST_ICL_VALIDATE_VALIDATER_ICL_SET_VALIDATER_HPP_JOFA_090303
+#define BOOST_ICL_VALIDATE_VALIDATER_ICL_SET_VALIDATER_HPP_JOFA_090303
 
 #include <boost/itl/functors.hpp>
 #include <boost/validate/laws/monoid.hpp>
@@ -121,4 +121,4 @@ private:
 #pragma warning(pop)
 #endif
 
-#endif // BOOST_ITL_VALIDATE_VALIDATER_ITL_SET_VALIDATER_HPP_JOFA_090303
+#endif // BOOST_ICL_VALIDATE_VALIDATER_ICL_SET_VALIDATER_HPP_JOFA_090303

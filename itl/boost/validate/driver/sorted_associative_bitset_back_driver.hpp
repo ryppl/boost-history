@@ -58,7 +58,7 @@ namespace boost{namespace icl
                 return new sorted_associative_back_validater< interval_bitset<int, bits<unsigned long> >,  icl::list<int> >; 
             case FreeChoice::_4:
                 return new sorted_associative_back_validater< interval_bitset<int, bits<unsigned long long> >, icl::list<int> >; 
-            default: return choiceError(ITL_LOCATION("freeChoice:\n"), freeChoice, _freeChoice);
+            default: return choiceError(ICL_LOCATION("freeChoice:\n"), freeChoice, _freeChoice);
             } //switch()
 
         }

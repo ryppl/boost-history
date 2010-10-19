@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_FASTEST_SET_ITL_SET_CASES_HPP_JOFA_090703
-#define BOOST_ITL_FASTEST_SET_ITL_SET_CASES_HPP_JOFA_090703
+#ifndef BOOST_ICL_FASTEST_SET_ICL_SET_CASES_HPP_JOFA_090703
+#define BOOST_ICL_FASTEST_SET_ICL_SET_CASES_HPP_JOFA_090703
 
 //------------------------------------------------------------------------------
 // interval_set
@@ -30,6 +30,6 @@ BOOST_AUTO_TEST_CASE
 (fastest_itl_itl_set_check_partial_invertive_monoid_plus_4_bicremental_types)
 {            itl_set_check_partial_invertive_monoid_plus_4_bicremental_types<discrete_type_4, interval_set>();}
 
-#endif // BOOST_ITL_FASTEST_SET_ITL_SET_CASES_HPP_JOFA_090703
+#endif // BOOST_ICL_FASTEST_SET_ICL_SET_CASES_HPP_JOFA_090703
 
 

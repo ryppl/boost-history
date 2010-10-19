@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_LIBS_ICL_TEST_ITL_LAWS_HPP_JOFA_090119
-#define BOOST_LIBS_ICL_TEST_ITL_LAWS_HPP_JOFA_090119
+#ifndef BOOST_LIBS_ICL_TEST_ICL_LAWS_HPP_JOFA_090119
+#define BOOST_LIBS_ICL_TEST_ICL_LAWS_HPP_JOFA_090119
 
 #include <boost/itl/type_traits/identity_element.hpp>
 

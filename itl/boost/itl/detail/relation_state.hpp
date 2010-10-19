@@ -9,8 +9,8 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 /*-----------------------------------------------------------------------------+
 States of comparison and inclusion relations as static constants
 +-----------------------------------------------------------------------------*/
-#ifndef  BOOST_ITL_RELATION_STATE_HPP_JOFA_090214
-#define  BOOST_ITL_RELATION_STATE_HPP_JOFA_090214
+#ifndef  BOOST_ICL_RELATION_STATE_HPP_JOFA_090214
+#define  BOOST_ICL_RELATION_STATE_HPP_JOFA_090214
 
 namespace boost{namespace icl
 {
@@ -32,6 +32,6 @@ namespace boost{namespace icl
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_RELATION_STATE_HPP_JOFA_090214
+#endif // BOOST_ICL_RELATION_STATE_HPP_JOFA_090214
 
 

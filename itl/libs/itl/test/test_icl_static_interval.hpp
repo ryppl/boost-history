@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TEST_ICL_STATIC_INTERVAL_HPP_JOFA_100930
-#define BOOST_ITL_TEST_ICL_STATIC_INTERVAL_HPP_JOFA_100930
+#ifndef BOOST_ICL_TEST_ICL_STATIC_INTERVAL_HPP_JOFA_100930
+#define BOOST_ICL_TEST_ICL_STATIC_INTERVAL_HPP_JOFA_100930
 
 template <class T, class IntervalT> 
 void static_interval_ctor_4_ordered_types()
@@ -21,4 +21,4 @@ void static_interval_ctor_4_ordered_types()
 }
 
 
-#endif // BOOST_ITL_TEST_ICL_STATIC_INTERVAL_HPP_JOFA_100930
+#endif // BOOST_ICL_TEST_ICL_STATIC_INTERVAL_HPP_JOFA_100930

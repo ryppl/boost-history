@@ -240,7 +240,7 @@ namespace boost{namespace icl
         master.consequent_permutation(conseq, unseq);
 
         perm.clear();
-        ITL_const_FORALL(ListTD, it_, conseq)
+        ICL_const_FORALL(ListTD, it_, conseq)
             perm.add(*it_);
     }
 

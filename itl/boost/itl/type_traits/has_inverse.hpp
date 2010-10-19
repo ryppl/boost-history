@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TYPE_TRAITS_HAS_INVERSE_HPP_JOFA_090205
-#define BOOST_ITL_TYPE_TRAITS_HAS_INVERSE_HPP_JOFA_090205
+#ifndef BOOST_ICL_TYPE_TRAITS_HAS_INVERSE_HPP_JOFA_090205
+#define BOOST_ICL_TYPE_TRAITS_HAS_INVERSE_HPP_JOFA_090205
 
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/type_traits/is_floating_point.hpp>
@@ -24,6 +24,6 @@ namespace boost{ namespace icl
 
 }} // namespace boost icl
 
-#endif // BOOST_ITL_TYPE_TRAITS_HAS_INVERSE_HPP_JOFA_090205
+#endif // BOOST_ICL_TYPE_TRAITS_HAS_INVERSE_HPP_JOFA_090205
 
 

@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_ELEMENT_COMPARER_HPP_JOFA_090202
-#define BOOST_ITL_ELEMENT_COMPARER_HPP_JOFA_090202
+#ifndef BOOST_ICL_ELEMENT_COMPARER_HPP_JOFA_090202
+#define BOOST_ICL_ELEMENT_COMPARER_HPP_JOFA_090202
 
 #include <boost/mpl/and.hpp>
 #include <boost/itl/type_traits/is_map.hpp>

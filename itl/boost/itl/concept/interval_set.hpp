@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_CONCEPT_INTERVAL_SET_HPP_JOFA_100920
-#define BOOST_ITL_CONCEPT_INTERVAL_SET_HPP_JOFA_100920
+#ifndef BOOST_ICL_CONCEPT_INTERVAL_SET_HPP_JOFA_100920
+#define BOOST_ICL_CONCEPT_INTERVAL_SET_HPP_JOFA_100920
 
 #include <boost/itl/type_traits/is_combinable.hpp>
 #include <boost/itl/detail/set_algo.hpp>
@@ -299,7 +299,7 @@ typename enable_if<is_interval_set<Type>,
 operator << (std::basic_ostream<CharType, CharTraits>& stream, const Type& object)
 {
     stream << "{";
-    ITL_const_FORALL(typename Type, it_, object)
+    ICL_const_FORALL(typename Type, it_, object)
         stream << (*it_);
 
     return stream << "}";

@@ -107,7 +107,7 @@ namespace boost{namespace icl
                 case IdentityHandlerType::partial_enricher: return new sorted_associative_validater<interval_map<int,int,partial_enricher>, icl::list<std::pair<int,int> > >;
                 case IdentityHandlerType::total_absorber:   return new sorted_associative_validater<interval_map<int,int,total_absorber  >, icl::list<std::pair<int,int> > >;
                 case IdentityHandlerType::total_enricher:   return new sorted_associative_validater<interval_map<int,int,total_enricher  >, icl::list<std::pair<int,int> > >;
-                default: return choiceError(ITL_LOCATION("\nRootType::interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
+                default: return choiceError(ICL_LOCATION("\nRootType::interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case interval_map 
             //-----------------------------------------------------------------
@@ -117,12 +117,12 @@ namespace boost{namespace icl
                 case IdentityHandlerType::partial_enricher: return new sorted_associative_validater<split_interval_map<int,int,partial_enricher>, icl::list<std::pair<int,int> > >;
                 case IdentityHandlerType::total_absorber:   return new sorted_associative_validater<split_interval_map<int,int,total_absorber  >, icl::list<std::pair<int,int> > >;
                 case IdentityHandlerType::total_enricher:   return new sorted_associative_validater<split_interval_map<int,int,total_enricher  >, icl::list<std::pair<int,int> > >;
-                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
+                default: return choiceError(ICL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case split_interval_map 
             //-----------------------------------------------------------------
 
-            default: return choiceError(ITL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
+            default: return choiceError(ICL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
             } //switch()
 
         }

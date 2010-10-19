@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_CONCEPT_INTERVAL_MAP_HPP_JOFA_100920
-#define BOOST_ITL_CONCEPT_INTERVAL_MAP_HPP_JOFA_100920
+#ifndef BOOST_ICL_CONCEPT_INTERVAL_MAP_HPP_JOFA_100920
+#define BOOST_ICL_CONCEPT_INTERVAL_MAP_HPP_JOFA_100920
 
 #include <boost/itl/type_traits/element_type_of.hpp>
 #include <boost/itl/type_traits/segment_type_of.hpp>
@@ -505,7 +505,7 @@ flip(Type& object, const OperandT& operand)
     typedef typename Type::codomain_type  codomain_type;
 
     object += operand;
-    ITL_FORALL(typename Type, it_, object)
+    ICL_FORALL(typename Type, it_, object)
         it_->second = identity_element<codomain_type>::value();
 
     if(mpl::not_<is_interval_splitter<Type> >::value)
@@ -561,7 +561,7 @@ typename enable_if<is_concept_combinable<is_interval_set, is_interval_map,
 domain(SetT& result, const Type& object)
 {
     result.clear(); 
-    ITL_const_FORALL(typename Type, it_, object) 
+    ICL_const_FORALL(typename Type, it_, object) 
         result += it_->first; 
     
     return result;
@@ -632,7 +632,7 @@ typename enable_if<is_interval_map<Type>,
 operator << (std::basic_ostream<CharType, CharTraits>& stream, const Type& object)
 {
     stream << "{";
-    ITL_const_FORALL(typename Type, it_, object)
+    ICL_const_FORALL(typename Type, it_, object)
         stream << "(" << it_->first << "->" << it_->second << ")";
 
     return stream << "}";

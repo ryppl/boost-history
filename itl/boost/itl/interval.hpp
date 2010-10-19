@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_INTERVAL_HPP_JOFA_101014
-#define BOOST_ITL_INTERVAL_HPP_JOFA_101014
+#ifndef BOOST_ICL_INTERVAL_HPP_JOFA_101014
+#define BOOST_ICL_INTERVAL_HPP_JOFA_101014
 
 
 #include <boost/itl/type_traits/interval_type_default.hpp>
@@ -15,13 +15,13 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 namespace boost{ namespace icl
 {
 
-    template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)> 
+    template <class DomainT, ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, DomainT)> 
     struct interval
     {
         typedef typename interval_type_default<DomainT,Compare>::type interval_type;
         typedef interval_type type;
 
-#ifdef ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#ifdef ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
 
         static inline interval_type open(const DomainT& low, const DomainT& up)
         {
@@ -74,7 +74,7 @@ namespace boost{ namespace icl
         static inline interval_type construct(const DomainT& low, const DomainT& up)
         { return icl::construct<interval_type>(low, up); }
 
-#else // ITL_USE_DYNAMIC_INTERVAL_BORDER_DEFAULTS
+#else // ICL_USE_DYNAMIC_INTERVAL_BORDER_DEFAULTS
         static inline interval_type right_open(const DomainT& low, const DomainT& up)
         { return icl::construct<interval_type>(low, up, interval_bounds::right_open()); }
 
@@ -132,5 +132,5 @@ namespace boost{ namespace icl
 
 }} // namespace boost icl
 
-#endif // BOOST_ITL_INTERVAL_HPP_JOFA_101014
+#endif // BOOST_ICL_INTERVAL_HPP_JOFA_101014
 

@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_LAW_VIOLATIONS_HPP_JOFA_070411
-#define BOOST_ITL_LAW_VIOLATIONS_HPP_JOFA_070411
+#ifndef BOOST_ICL_LAW_VIOLATIONS_HPP_JOFA_070411
+#define BOOST_ICL_LAW_VIOLATIONS_HPP_JOFA_070411
 
 #include <string>
 #include <boost/itl/set.hpp>
@@ -112,7 +112,7 @@ namespace boost{namespace icl
 
         LawViolationsI& operator += (const LawViolationsI& rhs) 
         { 
-            ITL_const_FORALL(typename ViolationSet, vio_, 
+            ICL_const_FORALL(typename ViolationSet, vio_, 
                 dynamic_cast<const LawViolations<LawT>*>(rhs.getLawViolations())->_violations)
                 insert(*vio_);
 
@@ -147,7 +147,7 @@ namespace boost{namespace icl
         const_iterator end()const   { return _violations.begin(); }
 
         void clear()       { icl::clear(_violations); }
-        bool empty()const  { return ITL_FUN_REN(empty, is_empty, _violations); }
+        bool empty()const  { return ICL_FUN_REN(empty, is_empty, _violations); }
         size_type size()const { return _violations.size(); }
 
         void reportFirst()const
@@ -181,5 +181,5 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 
 }} // namespace icl boost
 
-#endif //BOOST_ITL_LAW_VIOLATIONS_HPP_JOFA_070411
+#endif //BOOST_ICL_LAW_VIOLATIONS_HPP_JOFA_070411
 

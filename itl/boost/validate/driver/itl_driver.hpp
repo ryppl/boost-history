@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_VALIDATE_DRIVER_ITL_DRIVER_HPP_JOFA_090303
-#define BOOST_ITL_VALIDATE_DRIVER_ITL_DRIVER_HPP_JOFA_090303
+#ifndef BOOST_ICL_VALIDATE_DRIVER_ICL_DRIVER_HPP_JOFA_090303
+#define BOOST_ICL_VALIDATE_DRIVER_ICL_DRIVER_HPP_JOFA_090303
 
 #include <iostream>
 #include <stdio.h>
@@ -128,7 +128,7 @@ namespace boost{namespace icl
             // The least count of validation cycles performed on a single law instance.
             int min_test_count = 9999;
             
-            ITL_const_FORALL(ValidationCounterT, it, _frequencies)
+            ICL_const_FORALL(ValidationCounterT, it, _frequencies)
                 min_test_count = min_test_count < it->second.count() ?
                                  min_test_count : it->second.count() ;
 
@@ -142,7 +142,7 @@ namespace boost{namespace icl
             int valid_count = 1;
             double avg_evaluation_time = 0.0;
             long   instance_count      = 0;
-            ITL_FORALL(ValidationCounterT, it, _frequencies)
+            ICL_FORALL(ValidationCounterT, it, _frequencies)
             {
                 long law_validation_count = it->second.count();
                 double avg_law_evaluation_time = 
@@ -167,14 +167,14 @@ namespace boost{namespace icl
                 std::cout << "------------------------------------------------------------------------------" << std::endl;
                 std::cout << "--- Law violations -----------------------------------------------count-------" << std::endl;
             }
-            ITL_FORALL(ViolationMapT, it, _violations)
+            ICL_FORALL(ViolationMapT, it, _violations)
             {
                 printf("%3d %-59s%8d\n", violation_count, it->first.c_str(), it->second.getViolationsCount());
                 violation_count++;
             }
             if(!icl::is_empty(_violations))
                 std::cout << "------------------------------------------------------------------------------" << std::endl;
-            ITL_FORALL(ViolationMapT, it, _violations)
+            ICL_FORALL(ViolationMapT, it, _violations)
             {
                 PolyLawViolations violas = it->second;
                 violas.reportFirst();
@@ -187,7 +187,7 @@ namespace boost{namespace icl
         {
             FILE* fp = fopen(filename.c_str(), "w");
             int valid_count = 1;
-            ITL_FORALL(ValidationCounterT, it, _frequencies)
+            ICL_FORALL(ValidationCounterT, it, _frequencies)
             {
                 fprintf(fp, "%3d %-66s\n", valid_count, it->first.c_str());
                 valid_count++;
@@ -307,6 +307,6 @@ namespace boost{namespace icl
 #pragma warning(pop)
 #endif
 
-#endif // BOOST_ITL_VALIDATE_DRIVER_ITL_DRIVER_HPP_JOFA_090303
+#endif // BOOST_ICL_VALIDATE_DRIVER_ICL_DRIVER_HPP_JOFA_090303
 
 

@@ -5,8 +5,8 @@ Copyright (c) 2007-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_DETAIL_STD_SET_HPP_JOFA_101007
-#define BOOST_ITL_DETAIL_STD_SET_HPP_JOFA_101007
+#ifndef BOOST_ICL_DETAIL_STD_SET_HPP_JOFA_101007
+#define BOOST_ICL_DETAIL_STD_SET_HPP_JOFA_101007
 
 #include <set>
 #include <boost/config.hpp>
@@ -34,5 +34,5 @@ struct type_to_string<std::set<Type> >
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_DETAIL_STD_SET_HPP_JOFA_101007
+#endif // BOOST_ICL_DETAIL_STD_SET_HPP_JOFA_101007
 

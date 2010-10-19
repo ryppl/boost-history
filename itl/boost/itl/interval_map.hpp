@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_INTERVAL_MAP_HPP_JOFA_080705
-#define BOOST_ITL_INTERVAL_MAP_HPP_JOFA_080705
+#ifndef BOOST_ICL_INTERVAL_MAP_HPP_JOFA_080705
+#define BOOST_ICL_INTERVAL_MAP_HPP_JOFA_080705
 
 #include <boost/assert.hpp>
 #include <boost/itl/type_traits/is_map.hpp>
@@ -17,8 +17,8 @@ namespace boost{namespace icl
 {
 
 template<class DomainT, class CodomainT, class Traits, 
-         ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, 
-         ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
+         ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, 
+         ICL_INTERVAL(ICL_COMPARE)  Interval, ICL_ALLOC Alloc>
 class split_interval_map;
 
 /** \brief implements a map as a map of intervals - on insertion 
@@ -28,11 +28,11 @@ template
     typename DomainT,
     typename CodomainT,
     class Traits = icl::partial_absorber,
-    ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
-    ITL_COMBINE Combine  = ITL_COMBINE_INSTANCE(icl::inplace_plus, CodomainT),
-    ITL_SECTION Section  = ITL_SECTION_INSTANCE(icl::inter_section, CodomainT), 
-    ITL_INTERVAL(ITL_COMPARE) Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, DomainT, Compare),
-    ITL_ALLOC   Alloc    = std::allocator
+    ICL_COMPARE Compare  = ICL_COMPARE_INSTANCE(std::less, DomainT),
+    ICL_COMBINE Combine  = ICL_COMBINE_INSTANCE(icl::inplace_plus, CodomainT),
+    ICL_SECTION Section  = ICL_SECTION_INSTANCE(icl::inter_section, CodomainT), 
+    ICL_INTERVAL(ICL_COMPARE) Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, DomainT, Compare),
+    ICL_ALLOC   Alloc    = std::allocator
 >
 class interval_map:
 
@@ -48,7 +48,7 @@ public:
     typedef interval_base_map<type, 
                               DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> base_type;
 
-    typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) interval_type;
+    typedef ICL_INTERVAL_TYPE(Interval,DomainT,Compare) interval_type;
     typedef typename base_type::iterator      iterator;
     typedef typename base_type::value_type    value_type;
     typedef typename base_type::element_type  element_type;
@@ -108,7 +108,7 @@ public:
         this->clear();
         // Can be implemented via _map.insert: Interval joining not necessary.
         iterator prior_ = this->_map.end();
-        ITL_const_FORALL(typename base_map_type, it_, src) 
+        ICL_const_FORALL(typename base_map_type, it_, src) 
             prior_ = this->add(prior_, *it_); 
     }
 
@@ -206,14 +206,14 @@ private:
 //-----------------------------------------------------------------------------
 // type traits
 //-----------------------------------------------------------------------------
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
+template <class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE)  Interval, ICL_ALLOC Alloc>
 struct is_map<icl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
     typedef is_map<icl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
+template <class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE)  Interval, ICL_ALLOC Alloc>
 struct has_inverse<icl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
     typedef has_inverse<icl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
@@ -221,21 +221,21 @@ struct has_inverse<icl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Se
 };
 
 
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
+template <class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE)  Interval, ICL_ALLOC Alloc>
 struct is_interval_container<icl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 {
     typedef is_interval_container<icl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
+template <class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE)  Interval, ICL_ALLOC Alloc>
 struct absorbs_identities<icl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 {
     typedef absorbs_identities<icl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = (Traits::absorbs_identities)); 
 };
 
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
+template <class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE)  Interval, ICL_ALLOC Alloc>
 struct is_total<icl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 {
     typedef is_total<icl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
@@ -246,7 +246,7 @@ struct is_total<icl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Secti
 //-----------------------------------------------------------------------------
 // type representation
 //-----------------------------------------------------------------------------
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
+template <class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE)  Interval, ICL_ALLOC Alloc>
 struct type_to_string<icl::interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 {
     static std::string apply()

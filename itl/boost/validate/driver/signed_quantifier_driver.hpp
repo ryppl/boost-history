@@ -108,7 +108,7 @@ namespace boost{namespace icl
                 case IdentityHandlerType::partial_enricher: return new signed_quantifier_validater<icl::map<int,    double, partial_enricher> >;
                 case IdentityHandlerType::total_absorber:   return new signed_quantifier_validater<icl::map<double, int,    total_absorber  > >;
                 case IdentityHandlerType::total_enricher:   return new signed_quantifier_validater<icl::map<double, double, total_enricher  > >;
-                default: return choiceError(ITL_LOCATION("\nRootType::itl_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
+                default: return choiceError(ICL_LOCATION("\nRootType::itl_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case itl_map 
             //-----------------------------------------------------------------
@@ -118,7 +118,7 @@ namespace boost{namespace icl
                 case IdentityHandlerType::partial_enricher: return new signed_quantifier_validater<interval_map<double, int,    partial_enricher> >;
                 case IdentityHandlerType::total_absorber:   return new signed_quantifier_validater<interval_map<int,    double, total_absorber  > >;
                 case IdentityHandlerType::total_enricher:   return new signed_quantifier_validater<interval_map<int,    int,    total_enricher  > >;
-                default: return choiceError(ITL_LOCATION("\nRootType::interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
+                default: return choiceError(ICL_LOCATION("\nRootType::interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case interval_map 
             //-----------------------------------------------------------------
@@ -128,12 +128,12 @@ namespace boost{namespace icl
                 case IdentityHandlerType::partial_enricher: return new signed_quantifier_validater<split_interval_map<int,    double, partial_enricher> >;
                 case IdentityHandlerType::total_absorber:   return new signed_quantifier_validater<split_interval_map<double, int,    total_absorber  > >;
                 case IdentityHandlerType::total_enricher:   return new signed_quantifier_validater<split_interval_map<int,    double, total_enricher  > >;
-                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
+                default: return choiceError(ICL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case split_interval_map 
             //-----------------------------------------------------------------
 
-            default: return choiceError(ITL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
+            default: return choiceError(ICL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
             } //switch()
 
         }

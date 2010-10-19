@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_DYNAMIC_INTERVAL_TRAITS_HPP_JOFA_100926
-#define BOOST_ITL_DYNAMIC_INTERVAL_TRAITS_HPP_JOFA_100926
+#ifndef BOOST_ICL_DYNAMIC_INTERVAL_TRAITS_HPP_JOFA_100926
+#define BOOST_ICL_DYNAMIC_INTERVAL_TRAITS_HPP_JOFA_100926
 
 namespace boost{ namespace icl
 {

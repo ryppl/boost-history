@@ -27,8 +27,8 @@ FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TYPED_EPISODE_HPP_HPP_JOFA_011015
-#define BOOST_ITL_TYPED_EPISODE_HPP_HPP_JOFA_011015
+#ifndef BOOST_ICL_TYPED_EPISODE_HPP_HPP_JOFA_011015
+#define BOOST_ICL_TYPED_EPISODE_HPP_HPP_JOFA_011015
 
 #include <boost/itl/type_traits/interval_type_default.hpp>
 //REV #include <boost/itl/interval.hpp>
@@ -76,7 +76,7 @@ class typed_episode : public ordered_type_base<TypeDomain>, public episode_inter
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_TYPED_EPISODE_HPP_HPP_JOFA_011015
+#endif // BOOST_ICL_TYPED_EPISODE_HPP_HPP_JOFA_011015
 
 
 

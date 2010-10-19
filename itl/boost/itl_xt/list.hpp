@@ -12,8 +12,8 @@ class icl::list
     a general list class that extends stl-lists
     for concepts InplaceAddable and InplaceSubtractable
 --------------------------------------------------------------------*/
-#ifndef BOOST_ITL_LIST_HPP_JOFA_070519
-#define BOOST_ITL_LIST_HPP_JOFA_070519
+#ifndef BOOST_ICL_LIST_HPP_JOFA_070519
+#define BOOST_ICL_LIST_HPP_JOFA_070519
 
 #include <string>
 #include <list>
@@ -34,7 +34,7 @@ namespace boost{namespace icl
 
         @author Joachim Faulhaber
     */
-    template <typename DataT, ITL_ALLOC Alloc = std::allocator>
+    template <typename DataT, ICL_ALLOC Alloc = std::allocator>
     class list: private std::list<DataT, Alloc<DataT> >
     {
     public:
@@ -199,7 +199,7 @@ namespace boost{namespace icl
     };
 
 
-    template <typename DataT, ITL_ALLOC Alloc>
+    template <typename DataT, ICL_ALLOC Alloc>
     inline bool operator == (const icl::list<DataT,Alloc>& lhs,
                              const icl::list<DataT,Alloc>& rhs)
     {
@@ -207,7 +207,7 @@ namespace boost{namespace icl
         return operator==((const base_type&)lhs, (const base_type&)rhs);
     }
     
-    template <typename DataT, ITL_ALLOC Alloc>
+    template <typename DataT, ICL_ALLOC Alloc>
     inline bool operator < (const icl::list<DataT,Alloc>& lhs,
         const icl::list<DataT,Alloc>& rhs)
     {
@@ -215,7 +215,7 @@ namespace boost{namespace icl
         return operator<((const base_type&)lhs, (const base_type&)rhs);
     }
 
-    template <typename DataT, ITL_ALLOC Alloc>
+    template <typename DataT, ICL_ALLOC Alloc>
     inline bool operator <= (const icl::list<DataT,Alloc>& lhs,
         const icl::list<DataT,Alloc>& rhs)
     {
@@ -223,7 +223,7 @@ namespace boost{namespace icl
         return operator<=((const base_type&)lhs, (const base_type&)rhs);
     }
 
-    template <typename DataT, ITL_ALLOC Alloc>
+    template <typename DataT, ICL_ALLOC Alloc>
     bool list<DataT,Alloc>::is_unique()const 
     {
         //JODO implement via std-algorithm of directly
@@ -232,7 +232,7 @@ namespace boost{namespace icl
         return (*this) == self;
     }
 
-    template <typename DataT, ITL_ALLOC Alloc>
+    template <typename DataT, ICL_ALLOC Alloc>
     bool list<DataT,Alloc>::is_supersequence(const list& subSeq)const
     {
         list sub = subSeq;
@@ -240,7 +240,7 @@ namespace boost{namespace icl
         return is_supersequence(sub, pos);
     }
 
-    template <typename DataT, ITL_ALLOC Alloc>
+    template <typename DataT, ICL_ALLOC Alloc>
     bool list<DataT,Alloc>::is_supersequence(list& subtee, const_iterator& pos)const
     {
         if(subtee.empty())
@@ -260,7 +260,7 @@ namespace boost{namespace icl
     }
 
 
-    template <typename DataT, ITL_ALLOC Alloc>
+    template <typename DataT, ICL_ALLOC Alloc>
     bool list<DataT,Alloc>::is_consequent(const list& conSeq)const
     {
         list seq = conSeq;
@@ -269,7 +269,7 @@ namespace boost{namespace icl
     }
 
 
-    template <typename DataT, ITL_ALLOC Alloc>
+    template <typename DataT, ICL_ALLOC Alloc>
     bool list<DataT,Alloc>::is_consequent(list& seq, const_iterator& pos)const
     {
         if(seq.empty())
@@ -289,7 +289,7 @@ namespace boost{namespace icl
         }
     }
 
-    template <typename DataT, ITL_ALLOC Alloc>
+    template <typename DataT, ICL_ALLOC Alloc>
     void list<DataT,Alloc>::consequent_permutation(list& perm, list& seq)
     {
         perm.clear();
@@ -298,7 +298,7 @@ namespace boost{namespace icl
         consequent_permutation(perm, this_, seq, seq_);
     }
 
-    template <typename DataT, ITL_ALLOC Alloc>
+    template <typename DataT, ICL_ALLOC Alloc>
     void list<DataT,Alloc>::consequent_permutation(list& perm, iterator& this_, list& seq, iterator& seq_)
     {
         if(seq_ == seq.end())
@@ -339,7 +339,7 @@ namespace boost{namespace icl
     }
 
 
-    template <typename DataT, ITL_ALLOC Alloc>
+    template <typename DataT, ICL_ALLOC Alloc>
     typename list<DataT,Alloc>::iterator list<DataT,Alloc>::first_common_element
         (iterator& beg1_, iterator& end1_, iterator& beg2_, iterator& end2_)const
     {
@@ -353,7 +353,7 @@ namespace boost{namespace icl
     }
 
 
-    template <typename DataT, ITL_ALLOC Alloc>
+    template <typename DataT, ICL_ALLOC Alloc>
     void list<DataT,Alloc>::interlace(const list& inList)
     {
         BOOST_ASSERT(is_unique());
@@ -363,7 +363,7 @@ namespace boost{namespace icl
         interlace(seq, inPos);
     }
 
-    template <typename DataT, ITL_ALLOC Alloc>
+    template <typename DataT, ICL_ALLOC Alloc>
     void list<DataT,Alloc>::interlace(list& seq, iterator& inPos)
     {
         if(seq.empty())
@@ -393,7 +393,7 @@ namespace boost{namespace icl
 
 
     // THINK: here codereplication occurs at the next level of abstraction (cf. SetT)
-    template <typename DataT, ITL_ALLOC Alloc>
+    template <typename DataT, ICL_ALLOC Alloc>
     bool list<DataT,Alloc>::any(const property<DataT>& pred)const
     {
         const_iterator it = begin();
@@ -402,7 +402,7 @@ namespace boost{namespace icl
     }
 
 
-    template <typename DataT, ITL_ALLOC Alloc>
+    template <typename DataT, ICL_ALLOC Alloc>
     std::string list<DataT,Alloc>::as_string(const char* sep /* =" " */)const
     {
         const_iterator it=begin();
@@ -426,7 +426,7 @@ namespace boost{namespace icl
 //= Streaming
 //==============================================================================
 template<class CharType, class CharTraits, 
-    class DataT, ITL_ALLOC Alloc>
+    class DataT, ICL_ALLOC Alloc>
 std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits>& stream, 
   const icl::list<DataT,Alloc>& object)
@@ -453,5 +453,5 @@ struct type_to_string<icl::list<Type> >
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_LIST_HPP_JOFA_070519
+#endif // BOOST_ICL_LIST_HPP_JOFA_070519
 

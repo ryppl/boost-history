@@ -28,8 +28,8 @@ DEALINGS IN THE SOFTWARE.
 /*---------------------------------------------------------------------------------
 set of strings
 ---------------------------------------------------------------------------------*/
-#ifndef  BOOST_ITL_STRING_SET_HPP_JOFA_990318
-#define  BOOST_ITL_STRING_SET_HPP_JOFA_990318
+#ifndef  BOOST_ICL_STRING_SET_HPP_JOFA_990318
+#define  BOOST_ICL_STRING_SET_HPP_JOFA_990318
 
 #include <string>
 #include <string.h>
@@ -57,7 +57,7 @@ namespace boost{namespace icl
     // sets of strings
     // ---------------------------------------------------------------------------------
 
-    template <ITL_COMPARE Compare = std::less>
+    template <ICL_COMPARE Compare = std::less>
     class string_set: public icl::set<std::string, Compare>
     {
     public:
@@ -79,7 +79,7 @@ namespace boost{namespace icl
     typedef string_set<String_ICLess> ICstring_setD;
     
 
-    template <ITL_COMPARE Compare>
+    template <ICL_COMPARE Compare>
     std::string string_set<Compare>::as_string(char* sep)const
     {
         const_iterator it = this->begin();
@@ -93,11 +93,11 @@ namespace boost{namespace icl
     }
 
 
-    template <ITL_COMPARE Compare>
+    template <ICL_COMPARE Compare>
     void string_set<Compare>::selectSet(string_set& selectees, StringSelectorFPD selector)const
     {
         selectees.clear();
-        ITL_const_FORALL_THIS(it)
+        ICL_const_FORALL_THIS(it)
             selectees.insert(((*it).*selector)());
     }
 }} // namespace boost icl

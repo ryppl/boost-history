@@ -102,7 +102,7 @@ namespace boost{namespace icl
                     switch(domainChoice) {
                     case DomainType::Int:    return new itl_order_validater<std::set<int> >; 
                     case DomainType::Double: return new itl_order_validater<std::set<double> >; 
-                    default: return choiceError(ITL_LOCATION("\nRootType::itl_set: domainChoice:\n"), 
+                    default: return choiceError(ICL_LOCATION("\nRootType::itl_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                 }
@@ -110,7 +110,7 @@ namespace boost{namespace icl
                     switch(domainChoice) {
                     case DomainType::Int:    return new itl_order_validater<interval_set<int> >;
                     case DomainType::Double: return new itl_order_validater<interval_set<double> >;
-                    default: return choiceError(ITL_LOCATION("\nRootType::interval_set: domainChoice:\n"), 
+                    default: return choiceError(ICL_LOCATION("\nRootType::interval_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                 }
@@ -118,7 +118,7 @@ namespace boost{namespace icl
                     switch(domainChoice) {
                     case DomainType::Int:    return new itl_order_validater<separate_interval_set<int> >;
                     case DomainType::Double: return new itl_order_validater<separate_interval_set<double> >;
-                    default: return choiceError(ITL_LOCATION("\nRootType::separate_interval_set: domainChoice:\n"), 
+                    default: return choiceError(ICL_LOCATION("\nRootType::separate_interval_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                  }
@@ -126,11 +126,11 @@ namespace boost{namespace icl
                     switch(domainChoice) {
                     case DomainType::Int:    return new itl_order_validater<split_interval_set<int> >;
                     case DomainType::Double: return new itl_order_validater<split_interval_set<double> >;
-                    default: return choiceError(ITL_LOCATION("\nRootType::split_interval_set: domainChoice:\n"), 
+                    default: return choiceError(ICL_LOCATION("\nRootType::split_interval_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                 }
-            default: return choiceError(ITL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
+            default: return choiceError(ICL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
             } //switch()
 
         }

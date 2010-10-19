@@ -12,50 +12,50 @@ template template parameters or
 template type parameter
 by setting defines in this file.
 +-----------------------------------------------------------------------------*/
-#ifndef  BOOST_ITL_DESIGN_CONFIG_HPP_JOFA_090214
-#define  BOOST_ITL_DESIGN_CONFIG_HPP_JOFA_090214
+#ifndef  BOOST_ICL_DESIGN_CONFIG_HPP_JOFA_090214
+#define  BOOST_ICL_DESIGN_CONFIG_HPP_JOFA_090214
 
 // For an interim period, it will be possible to swith between the old and new 
 // implementation for intervals.
-#define ITL_NEW_INTERVAL_IMPL //JODO remove for the final release.
+#define ICL_NEW_INTERVAL_IMPL //JODO remove for the final release.
 
 // If this macro is defined, right_open_interval with static interval borders
 // will be used as default for all interval containers. 
-// ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS should be defined in the application
+// ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS should be defined in the application
 // before other includes from the ITL
-//#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS //JODO comment this out for the final release
-// If ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS is NOT defined, ITL uses intervals
+//#define ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS //JODO comment this out for the final release
+// If ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS is NOT defined, ITL uses intervals
 // with dynamic borders as default.
 
-#ifdef ITL_USE_DYNAMIC_INTERVAL_BORDERS_DEFAULTS //JODO remove this for the final release
-#   undef ITL_USE_STATIC_INTERVAL_BORDERS_DEFAULTS
+#ifdef ICL_USE_DYNAMIC_INTERVAL_BORDERS_DEFAULTS //JODO remove this for the final release
+#   undef ICL_USE_STATIC_INTERVAL_BORDERS_DEFAULTS
 #endif
 
-//#define ITL_CONCEPT_ORIENTED
-#define ITL_PURE_CONCEPTUAL
+//#define ICL_CONCEPT_ORIENTED
+#define ICL_PURE_CONCEPTUAL
 
-#ifndef ITL_CONCEPT_ORIENTED
-#define ITL_OBJECT_ORIENTED
+#ifndef ICL_CONCEPT_ORIENTED
+#define ICL_OBJECT_ORIENTED
 #endif
 
-#ifdef  ITL_CONCEPT_ORIENTED //CL
-#   define ITL_FUN_CALL(func, arg) icl::func(arg)
-#   define ITL_FUN_REN(func_obj, func_conc, arg) icl::func_conc(arg)
-#else //ITL_OBJECT_ORIENTED 
-#   define ITL_FUN_CALL(func,arg) arg.func()
-#   define ITL_FUN_REN(func_obj, func_conc, arg) arg.func_obj()
+#ifdef  ICL_CONCEPT_ORIENTED //CL
+#   define ICL_FUN_CALL(func, arg) icl::func(arg)
+#   define ICL_FUN_REN(func_obj, func_conc, arg) icl::func_conc(arg)
+#else //ICL_OBJECT_ORIENTED 
+#   define ICL_FUN_CALL(func,arg) arg.func()
+#   define ICL_FUN_REN(func_obj, func_conc, arg) arg.func_obj()
 #endif
 
-#ifdef  ITL_OBJECT_ORIENTED //CL
-#   define ITL_BEGIN_COMMON_MEMBER_FUNCTIONS public
-#   define ITL_END_COMMON_MEMBER_FUNCTIONS   public
-#else //ITL_CONCEPT_ORIENTED
-#   ifdef ITL_PURE_CONCEPTUAL
-#       define ITL_BEGIN_COMMON_MEMBER_FUNCTIONS private
-#       define ITL_END_COMMON_MEMBER_FUNCTIONS   public
+#ifdef  ICL_OBJECT_ORIENTED //CL
+#   define ICL_BEGIN_COMMON_MEMBER_FUNCTIONS public
+#   define ICL_END_COMMON_MEMBER_FUNCTIONS   public
+#else //ICL_CONCEPT_ORIENTED
+#   ifdef ICL_PURE_CONCEPTUAL
+#       define ICL_BEGIN_COMMON_MEMBER_FUNCTIONS private
+#       define ICL_END_COMMON_MEMBER_FUNCTIONS   public
 #   else
-#       define ITL_BEGIN_COMMON_MEMBER_FUNCTIONS public
-#       define ITL_END_COMMON_MEMBER_FUNCTIONS   public
+#       define ICL_BEGIN_COMMON_MEMBER_FUNCTIONS public
+#       define ICL_END_COMMON_MEMBER_FUNCTIONS   public
 #   endif
 #endif
 
@@ -68,90 +68,90 @@ by setting defines in this file.
 // (4) Being able to check template template parameter variants against
 //     template type parameter variants.
 
-#ifdef ITL_NEW_INTERVAL_IMPL
-#   define ITL_USE_COMPARE_TEMPLATE_TEMPLATE
-#   define ITL_USE_COMBINE_TEMPLATE_TEMPLATE
-#   define ITL_USE_SECTION_TEMPLATE_TEMPLATE
+#ifdef ICL_NEW_INTERVAL_IMPL
+#   define ICL_USE_COMPARE_TEMPLATE_TEMPLATE
+#   define ICL_USE_COMBINE_TEMPLATE_TEMPLATE
+#   define ICL_USE_SECTION_TEMPLATE_TEMPLATE
 #else
-#   define ITL_USE_COMPARE_TEMPLATE_TEMPLATE
-#   define ITL_USE_COMBINE_TEMPLATE_TEMPLATE
-#   define ITL_USE_SECTION_TEMPLATE_TEMPLATE
-#   define ITL_USE_INTERVAL_TEMPLATE_TEMPLATE
+#   define ICL_USE_COMPARE_TEMPLATE_TEMPLATE
+#   define ICL_USE_COMBINE_TEMPLATE_TEMPLATE
+#   define ICL_USE_SECTION_TEMPLATE_TEMPLATE
+#   define ICL_USE_INTERVAL_TEMPLATE_TEMPLATE
 #endif
 
-//#define ITL_USE_COMPARE_TEMPLATE_TYPE
-//#define ITL_USE_COMBINE_TEMPLATE_TYPE
-//#define ITL_USE_SECTION_TEMPLATE_TYPE
-//#define ITL_USE_INTERVAL_TEMPLATE_TYPE
+//#define ICL_USE_COMPARE_TEMPLATE_TYPE
+//#define ICL_USE_COMBINE_TEMPLATE_TYPE
+//#define ICL_USE_SECTION_TEMPLATE_TYPE
+//#define ICL_USE_INTERVAL_TEMPLATE_TYPE
 
 //------------------------------------------------------------------------------
 // template parameter Compare can not be a template type parameter as long as
 // Compare<Interval<DomainT,Compare> >() is called in std::lexicographical_compare
 // implementing operator< for interval_base_{set,map}. see NOTE DESIGN TTP
-#ifdef ITL_USE_COMPARE_TEMPLATE_TEMPLATE
-#   define ITL_COMPARE template<class>class
-#   define ITL_COMPARE_DOMAIN(itl_compare, domain_type) itl_compare<domain_type> 
-#   define ITL_COMPARE_INSTANCE(compare_instance, domain_type) compare_instance
-#   define ITL_EXCLUSIVE_LESS(interval_type) exclusive_less_than
-#else//ITL_USE_COMPARE_TEMPLATE_TYPE
-#   define ITL_COMPARE class
-#   define ITL_COMPARE_DOMAIN(itl_compare, domain_type) itl_compare 
-#   define ITL_COMPARE_INSTANCE(compare_instance, domain_type) compare_instance<domain_type> 
-#   define ITL_EXCLUSIVE_LESS(interval_type) exclusive_less_than<interval_type>
+#ifdef ICL_USE_COMPARE_TEMPLATE_TEMPLATE
+#   define ICL_COMPARE template<class>class
+#   define ICL_COMPARE_DOMAIN(itl_compare, domain_type) itl_compare<domain_type> 
+#   define ICL_COMPARE_INSTANCE(compare_instance, domain_type) compare_instance
+#   define ICL_EXCLUSIVE_LESS(interval_type) exclusive_less_than
+#else//ICL_USE_COMPARE_TEMPLATE_TYPE
+#   define ICL_COMPARE class
+#   define ICL_COMPARE_DOMAIN(itl_compare, domain_type) itl_compare 
+#   define ICL_COMPARE_INSTANCE(compare_instance, domain_type) compare_instance<domain_type> 
+#   define ICL_EXCLUSIVE_LESS(interval_type) exclusive_less_than<interval_type>
 #endif
 
 //------------------------------------------------------------------------------
 // template parameter Combine could be a template type parameter.
-#ifdef ITL_USE_COMBINE_TEMPLATE_TEMPLATE
-#   define ITL_COMBINE template<class>class
-#   define ITL_COMBINE_CODOMAIN(itl_combine, codomain_type) itl_combine<codomain_type> 
-#   define ITL_COMBINE_INSTANCE(combine_instance,codomain_type) combine_instance
-#else//ITL_USE_COMBINE_TEMPLATE_TYPE
-#   define ITL_COMBINE class
-#   define ITL_COMBINE_CODOMAIN(itl_combine, codomain_type) itl_combine 
-#   define ITL_COMBINE_INSTANCE(combine_instance,codomain_type) combine_instance<codomain_type>
+#ifdef ICL_USE_COMBINE_TEMPLATE_TEMPLATE
+#   define ICL_COMBINE template<class>class
+#   define ICL_COMBINE_CODOMAIN(itl_combine, codomain_type) itl_combine<codomain_type> 
+#   define ICL_COMBINE_INSTANCE(combine_instance,codomain_type) combine_instance
+#else//ICL_USE_COMBINE_TEMPLATE_TYPE
+#   define ICL_COMBINE class
+#   define ICL_COMBINE_CODOMAIN(itl_combine, codomain_type) itl_combine 
+#   define ICL_COMBINE_INSTANCE(combine_instance,codomain_type) combine_instance<codomain_type>
 #endif
 
 //------------------------------------------------------------------------------
 // template parameter Section could be a template type parameter.
-#ifdef ITL_USE_SECTION_TEMPLATE_TEMPLATE
-#   define ITL_SECTION template<class>class
-#   define ITL_SECTION_CODOMAIN(itl_intersect, codomain_type) itl_intersect<codomain_type> 
-#   define ITL_SECTION_INSTANCE(section_instance,codomain_type) section_instance
-#else//ITL_USE_SECTION_TEMPLATE_TYPE
-#   define ITL_SECTION class
-#   define ITL_SECTION_CODOMAIN(itl_intersect, codomain_type) itl_intersect 
-#   define ITL_SECTION_INSTANCE(section_instance,codomain_type) section_instance<codomain_type>
+#ifdef ICL_USE_SECTION_TEMPLATE_TEMPLATE
+#   define ICL_SECTION template<class>class
+#   define ICL_SECTION_CODOMAIN(itl_intersect, codomain_type) itl_intersect<codomain_type> 
+#   define ICL_SECTION_INSTANCE(section_instance,codomain_type) section_instance
+#else//ICL_USE_SECTION_TEMPLATE_TYPE
+#   define ICL_SECTION class
+#   define ICL_SECTION_CODOMAIN(itl_intersect, codomain_type) itl_intersect 
+#   define ICL_SECTION_INSTANCE(section_instance,codomain_type) section_instance<codomain_type>
 #endif
 
 
 //------------------------------------------------------------------------------
 // template parameter Interval could be a template type parameter.
-#ifdef ITL_USE_INTERVAL_TEMPLATE_TEMPLATE
-#   define ITL_INTERVAL(itl_compare) template<class,itl_compare>class
-#   define ITL_INTERVAL2(itl_compare) template<class DomT2,itl_compare>class
-#   define ITL_INTERVAL_TYPE(itl_interval, domain_type, itl_compare) itl_interval<domain_type,itl_compare> 
-#   define ITL_INTERVAL_INSTANCE(interval_instance,domain_type,itl_compare) interval_instance
-#else//ITL_USE_INTERVAL_TEMPLATE_TYPE
-#   define ITL_INTERVAL(itl_compare) class
-#   define ITL_INTERVAL2(itl_compare) class
-#   define ITL_INTERVAL_TYPE(itl_interval, domain_type, itl_compare) itl_interval  
-#   define ITL_INTERVAL_INSTANCE(interval_instance,domain_type,itl_compare) typename interval_instance<domain_type,itl_compare>::type
+#ifdef ICL_USE_INTERVAL_TEMPLATE_TEMPLATE
+#   define ICL_INTERVAL(itl_compare) template<class,itl_compare>class
+#   define ICL_INTERVAL2(itl_compare) template<class DomT2,itl_compare>class
+#   define ICL_INTERVAL_TYPE(itl_interval, domain_type, itl_compare) itl_interval<domain_type,itl_compare> 
+#   define ICL_INTERVAL_INSTANCE(interval_instance,domain_type,itl_compare) interval_instance
+#else//ICL_USE_INTERVAL_TEMPLATE_TYPE
+#   define ICL_INTERVAL(itl_compare) class
+#   define ICL_INTERVAL2(itl_compare) class
+#   define ICL_INTERVAL_TYPE(itl_interval, domain_type, itl_compare) itl_interval  
+#   define ICL_INTERVAL_INSTANCE(interval_instance,domain_type,itl_compare) typename interval_instance<domain_type,itl_compare>::type
 #endif
 
 
 //------------------------------------------------------------------------------
-#ifdef ITL_NEW_INTERVAL_IMPL
-#   define ITL_INTERVAL_DEFAULT boost::icl::interval_type_default
+#ifdef ICL_NEW_INTERVAL_IMPL
+#   define ICL_INTERVAL_DEFAULT boost::icl::interval_type_default
 #else
-#   define ITL_INTERVAL_DEFAULT boost::icl::interval
+#   define ICL_INTERVAL_DEFAULT boost::icl::interval
 #endif
 
 //------------------------------------------------------------------------------
-#define ITL_ALLOC    template<class>class
+#define ICL_ALLOC    template<class>class
 
 //------------------------------------------------------------------------------
 
-#endif // BOOST_ITL_DESIGN_CONFIG_HPP_JOFA_090214
+#endif // BOOST_ICL_DESIGN_CONFIG_HPP_JOFA_090214
 
 

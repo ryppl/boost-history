@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_CONCEPT_ELEMENT_MAP_HPP_JOFA_100921
-#define BOOST_ITL_CONCEPT_ELEMENT_MAP_HPP_JOFA_100921
+#ifndef BOOST_ICL_CONCEPT_ELEMENT_MAP_HPP_JOFA_100921
+#define BOOST_ICL_CONCEPT_ELEMENT_MAP_HPP_JOFA_100921
 
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
@@ -123,7 +123,7 @@ typename enable_if<is_element_map<Type>, Type>::type&
 erase(Type& object, const typename Type::set_type& erasure)
 {
     typedef typename Type::set_type set_type;
-    ITL_const_FORALL(typename set_type, elem_, erasure) 
+    ICL_const_FORALL(typename set_type, elem_, erasure) 
         icl::erase(object, *elem_); 
 
     return object; 
@@ -223,7 +223,7 @@ template<class Type>
 inline typename enable_if<is_element_map<Type>, void>::type
 add_intersection(Type& section, const Type& object, const Type& operand)
 {
-    ITL_const_FORALL(typename Type, it_, operand) 
+    ICL_const_FORALL(typename Type, it_, operand) 
         icl::add_intersection(section, object, *it_); 
 }
 
@@ -397,10 +397,10 @@ inline typename enable_if< mpl::and_< is_element_map<Type>
                          , Type>::type&
 operator ^= (Type& object, const Type& operand)
 {
-    ITL_const_FORALL(typename Type, it_, operand)
+    ICL_const_FORALL(typename Type, it_, operand)
         icl::flip(object, *it_);
 
-    ITL_FORALL(typename Type, it2_, object)
+    ICL_FORALL(typename Type, it2_, object)
         it2_->second = identity_element<typename Type::codomain_type>::value();
 
     return object;
@@ -473,7 +473,7 @@ inline typename enable_if<is_element_map<Type>, std::basic_ostream<CharType, Cha
 operator << (std::basic_ostream<CharType, CharTraits>& stream, const Type& object)
 {
     stream << "{";
-    ITL_const_FORALL(typename Type, it, object)
+    ICL_const_FORALL(typename Type, it, object)
         stream << "(" << it->first << "->" << it->second << ")";
 
     return stream << "}";

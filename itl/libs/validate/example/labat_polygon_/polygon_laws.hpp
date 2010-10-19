@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_POLYGON_LAWS_HPP_JOFA_090901
-#define BOOST_ITL_POLYGON_LAWS_HPP_JOFA_090901
+#ifndef BOOST_ICL_POLYGON_LAWS_HPP_JOFA_090901
+#define BOOST_ICL_POLYGON_LAWS_HPP_JOFA_090901
 
 #define LAW_BASED_TEST_BOOST_POLYGON
 
@@ -163,5 +163,5 @@ namespace boost{namespace icl
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_POLYGON_LAWS_HPP_JOFA_070411
+#endif // BOOST_ICL_POLYGON_LAWS_HPP_JOFA_070411
 

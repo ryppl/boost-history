@@ -63,7 +63,7 @@ namespace boost{namespace icl
                 return new itl_order_validater< interval_bitset<int, bits<unsigned long> > >; 
             case FreeChoice::_5:
                 return new itl_order_validater< interval_bitset<int, bits<unsigned long long> > >; 
-            default: return choiceError(ITL_LOCATION("freeChoice:\n"), freeChoice, _freeChoice);
+            default: return choiceError(ICL_LOCATION("freeChoice:\n"), freeChoice, _freeChoice);
             } //switch()
 
         }

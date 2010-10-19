@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TEST_TOTAL_INTERVAL_QUANTIFIER_CASES_HPP_JOFA_090701
-#define BOOST_ITL_TEST_TOTAL_INTERVAL_QUANTIFIER_CASES_HPP_JOFA_090701
+#ifndef BOOST_ICL_TEST_TOTAL_INTERVAL_QUANTIFIER_CASES_HPP_JOFA_090701
+#define BOOST_ICL_TEST_TOTAL_INTERVAL_QUANTIFIER_CASES_HPP_JOFA_090701
 
 //------------------------------------------------------------------------------
 // total_absorber
@@ -77,5 +77,5 @@ BOOST_AUTO_TEST_CASE_TEMPLATE
 // partial    x - x == 0    x - x =p= 0   partiality of subtraction   
 // total    (-x)+ x == 0  (-x)+ x =p= 0   totality   of subtraction
 
-#endif // BOOST_ITL_TEST_TOTAL_INTERVAL_QUANTIFIER_CASES_HPP_JOFA_090701
+#endif // BOOST_ICL_TEST_TOTAL_INTERVAL_QUANTIFIER_CASES_HPP_JOFA_090701
 

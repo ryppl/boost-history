@@ -224,7 +224,7 @@ namespace boost{namespace icl
     template <int VarCount, class CounterT>
     void tuple_computer_base<VarCount, CounterT>::addDomain(tuple_set_type& domain)const
     {
-        ITL_const_FORALL_THIS(tupel_)
+        ICL_const_FORALL_THIS(tupel_)
             domain.insert((*tupel_).first);
     }
 
@@ -280,7 +280,7 @@ namespace boost{namespace icl
 
         void alignFor(const tuple_set_type& domain)
         {
-            ITL_const_FORALL(typename tuple_set_type, it_, domain)
+            ICL_const_FORALL(typename tuple_set_type, it_, domain)
                 this->insert(*it_, CounteeT());
         }
 
@@ -290,7 +290,7 @@ namespace boost{namespace icl
     void amount_tuple_computer<VarCount, CounterT>::load(const tuple_computer_interface<VarCount>& srcI)
     {
         const amount_tuple_computer& src = dynamic_cast<const amount_tuple_computer&>(srcI);
-        ITL_const_FORALL(typename amount_tuple_computer, it_, src)
+        ICL_const_FORALL(typename amount_tuple_computer, it_, src)
             this->insert(*it_);
     }
 
@@ -329,7 +329,7 @@ namespace boost{namespace icl
 
         void alignFor(const tuple_set_type& domain)
         {
-            ITL_const_FORALL(typename tuple_set_type, it_, domain)
+            ICL_const_FORALL(typename tuple_set_type, it_, domain)
                 insert(*it_, counter_type());
         }
 
@@ -339,7 +339,7 @@ namespace boost{namespace icl
     void date_tuple_computer<VarCount,TimeT,CounteeT>::load(const tuple_computer_interface<VarCount>& srcI)
     {
         const date_tuple_computer& src = dynamic_cast<const date_tuple_computer&>(srcI);
-        ITL_const_FORALL(typename date_tuple_computer, it_, src)
+        ICL_const_FORALL(typename date_tuple_computer, it_, src)
             insert(*it_);
     }
 
@@ -388,7 +388,7 @@ namespace boost{namespace icl
 
         void alignFor(const tuple_set_type& domain)
         {
-            ITL_const_FORALL(typename tuple_set_type, it_, domain)
+            ICL_const_FORALL(typename tuple_set_type, it_, domain)
                 insert(*it_, counter_type());
         }
     };
@@ -398,7 +398,7 @@ namespace boost{namespace icl
     void interval_tuple_computer<VarCount,TimeT,CounteeT>::load(const tuple_computer_interface<VarCount>& srcI)
     {
         const interval_tuple_computer& src = dynamic_cast<const interval_tuple_computer&>(srcI);
-        ITL_const_FORALL(typename interval_tuple_computer, it_, src)
+        ICL_const_FORALL(typename interval_tuple_computer, it_, src)
             insert(*it_);
     }
 
@@ -406,7 +406,7 @@ namespace boost{namespace icl
     void interval_tuple_computer<VarCount,TimeT,CounteeT>::insertDateMap(const var_tuple_type tup, const DateMapTD& date)
     {
         counter_type itvCounter;
-        ITL_const_FORALL(typename DateMapTD, date_, date)
+        ICL_const_FORALL(typename DateMapTD, date_, date)
         {
             itvCounter.insert(
                 counter_type::value_type(
@@ -430,7 +430,7 @@ namespace boost{namespace icl
         typedef interval_base_map<SubType, ItvDomTV, CodomTV> ItvMapTD;
 
         itvMap.clear();
-        ITL_const_FORALL(typename DateMapTD, date_, dateMap)
+        ICL_const_FORALL(typename DateMapTD, date_, dateMap)
         {
             itvMap.insert(
                 ItvMapTD::value_type(
@@ -460,7 +460,7 @@ namespace boost{namespace icl
 
         ItvMapTD* aux = itvMap.cons();
         //JODO OPTI: optimize using the ordering: if intervalls are beyond borders we can terminate
-        ITL_const_FORALL(typename DiscItvSetTD, itv_, grid)
+        ICL_const_FORALL(typename DiscItvSetTD, itv_, grid)
         {
             itvMap.intersect(*aux, *itv_);
             gridSums.insert(ItvMapTD::value_type(*itv_, (*aux).volume()));

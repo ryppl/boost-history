@@ -109,7 +109,7 @@ namespace boost{namespace icl
                 case IdentityHandlerType::partial_enricher: return new function_equality_validater<icl::list<std::pair<int,int> >, icl::map<int,int,partial_enricher> >;
                 case IdentityHandlerType::total_absorber:   return new function_equality_validater<icl::list<std::pair<int,int> >, icl::map<int,int,total_absorber  > >;
                 case IdentityHandlerType::total_enricher:   return new function_equality_validater<icl::list<std::pair<int,int> >, icl::map<int,int,total_enricher  > >;
-                default: return choiceError(ITL_LOCATION("\nRootType::itl_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
+                default: return choiceError(ICL_LOCATION("\nRootType::itl_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case itl_map 
             //-----------------------------------------------------------------
@@ -119,7 +119,7 @@ namespace boost{namespace icl
                 case IdentityHandlerType::partial_enricher: return new function_equality_validater<icl::list<std::pair<interval_double,int> >, interval_map<double,int,partial_enricher> >;
                 case IdentityHandlerType::total_absorber:   return new function_equality_validater<icl::list<std::pair<interval_int,   int> >, interval_map<int,   int,total_absorber  > >;
                 case IdentityHandlerType::total_enricher:   return new function_equality_validater<icl::list<std::pair<interval_int,   int> >, interval_map<int,   int,total_enricher  > >;
-                default: return choiceError(ITL_LOCATION("\nRootType::interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
+                default: return choiceError(ICL_LOCATION("\nRootType::interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case interval_map 
             //-----------------------------------------------------------------
@@ -129,12 +129,12 @@ namespace boost{namespace icl
                 case IdentityHandlerType::partial_enricher: return new function_equality_validater<icl::list<std::pair<interval_int,   int> >, split_interval_map<int,   int,partial_enricher> >;
                 case IdentityHandlerType::total_absorber:   return new function_equality_validater<icl::list<std::pair<interval_double,int> >, split_interval_map<double,int,total_absorber  > >;
                 case IdentityHandlerType::total_enricher:   return new function_equality_validater<icl::list<std::pair<interval_int,   int> >, split_interval_map<int,   int,total_enricher  > >;
-                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
+                default: return choiceError(ICL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case split_interval_map 
             //-----------------------------------------------------------------
 
-            default: return choiceError(ITL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
+            default: return choiceError(ICL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
             } //switch()
 
         }

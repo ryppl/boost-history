@@ -11,8 +11,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 /*-----------------------------------------------------------------------------+
 Additions to std::pair
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_XT_STD_PAIR_HPP_JOFA_091006
-#define BOOST_ITL_XT_STD_PAIR_HPP_JOFA_091006
+#ifndef BOOST_ICL_XT_STD_PAIR_HPP_JOFA_091006
+#define BOOST_ICL_XT_STD_PAIR_HPP_JOFA_091006
 
 #include <boost/itl/type_traits/type_to_string.hpp>
 
@@ -36,5 +36,5 @@ inline std::string binary_template_to_string<std::pair>::apply() { return "p"; }
 }} // namespace icl boost
 
 
-#endif // BOOST_ITL_XT_STD_PAIR_HPP_JOFA_091006
+#endif // BOOST_ICL_XT_STD_PAIR_HPP_JOFA_091006
 

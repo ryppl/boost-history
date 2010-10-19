@@ -106,7 +106,7 @@ namespace boost{namespace icl
                 case IdentityHandlerType::partial_absorber: return new collector_validater<icl::map<int,std::set<int> > >;
                 case IdentityHandlerType::partial_enricher: return new collector_validater<icl::map<int,std::set<int>,partial_enricher> >;
                 //case IdentityHandlerType::total_absorber : return new collector_validater<icl::map<int,std::set<int>,total_absorber > >;
-                default: return choiceError(ITL_LOCATION("\nRootType::itl_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
+                default: return choiceError(ICL_LOCATION("\nRootType::itl_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case itl_map 
             //-----------------------------------------------------------------
@@ -115,7 +115,7 @@ namespace boost{namespace icl
                 case IdentityHandlerType::partial_absorber: return new collector_validater<interval_map<double,std::set<int> > >;
                 case IdentityHandlerType::partial_enricher: return new collector_validater<interval_map<int,std::set<int>,partial_enricher> >;
                 //case IdentityHandlerType::total_absorber : return new collector_validater<interval_map<int,std::set<int>,total_absorber > >;
-                default: return choiceError(ITL_LOCATION("\nRootType::interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
+                default: return choiceError(ICL_LOCATION("\nRootType::interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case interval_map 
             //-----------------------------------------------------------------
@@ -124,12 +124,12 @@ namespace boost{namespace icl
                 case IdentityHandlerType::partial_absorber: return new collector_validater<split_interval_map<int,std::set<int> > >;
                 case IdentityHandlerType::partial_enricher: return new collector_validater<split_interval_map<double,std::set<int>,partial_enricher> >;
                 //case IdentityHandlerType::total_absorber : return new collector_validater<split_interval_map<int,std::set<int>,total_absorber > >;
-                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
+                default: return choiceError(ICL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
             }//case split_interval_map 
             //-----------------------------------------------------------------
 
-            default: return choiceError(ITL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
+            default: return choiceError(ICL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
             } //switch()
 
         }

@@ -27,8 +27,8 @@ FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_EPISODE_PRODUCT_HPP_HPP_JOFA_011005
-#define BOOST_ITL_EPISODE_PRODUCT_HPP_HPP_JOFA_011005
+#ifndef BOOST_ICL_EPISODE_PRODUCT_HPP_HPP_JOFA_011005
+#define BOOST_ICL_EPISODE_PRODUCT_HPP_HPP_JOFA_011005
 
 #include <boost/itl/map.hpp>
 #include <boost/itl_xt/episode_set.hpp>
@@ -145,13 +145,13 @@ public:
 
     void leftAlignedEpisodes(episode_product& syncProd, const TimeT& start)
     {
-        ITL_const_FORALL_THIS(elem_)
+        ICL_const_FORALL_THIS(elem_)
         {
             TypeDomain type = (*elem_).first;
             EpisodeSetTD& epiSet = (*elem_).first;
             
             EpisodeSetTD syncSet;
-            ITL_const_FORALL(typename EpisodeSetTD, epi_, epiSet)
+            ICL_const_FORALL(typename EpisodeSetTD, epi_, epiSet)
             {
                 if((*epi_)->interval().first()==start)
                     syncSet.insert(*epi_);
@@ -292,6 +292,6 @@ inline bool operator == (const episode_product<TimeT,TypeDomain>& lhs,
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_EPISODE_PRODUCT_HPP_HPP_JOFA_011005
+#endif // BOOST_ICL_EPISODE_PRODUCT_HPP_HPP_JOFA_011005
 
 

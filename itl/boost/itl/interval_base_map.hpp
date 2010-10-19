@@ -56,11 +56,11 @@ template
     typename DomainT,
     typename CodomainT,
     class Traits = icl::partial_absorber,
-    ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
-    ITL_COMBINE Combine  = ITL_COMBINE_INSTANCE(icl::inplace_plus, CodomainT),
-    ITL_SECTION Section  = ITL_SECTION_INSTANCE(icl::inter_section, CodomainT), 
-    ITL_INTERVAL(ITL_COMPARE) Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, DomainT, Compare),
-    ITL_ALLOC   Alloc    = std::allocator
+    ICL_COMPARE Compare  = ICL_COMPARE_INSTANCE(std::less, DomainT),
+    ICL_COMBINE Combine  = ICL_COMBINE_INSTANCE(icl::inplace_plus, CodomainT),
+    ICL_SECTION Section  = ICL_SECTION_INSTANCE(icl::inter_section, CodomainT), 
+    ICL_INTERVAL(ICL_COMPARE) Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, DomainT, Compare),
+    ICL_ALLOC   Alloc    = std::allocator
 >
 class interval_base_map
 {
@@ -101,7 +101,7 @@ public:
     /// Conceptual is a map a set of elements of type \c element_type
     typedef domain_mapping_type element_type;
     /// The interval type of the map
-    typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) interval_type;
+    typedef ICL_INTERVAL_TYPE(Interval,DomainT,Compare) interval_type;
     /// Auxiliary type for overload resolution
     typedef std::pair<interval_type,CodomainT> interval_mapping_type;
     /// Type of an interval containers segment, that is spanned by an interval
@@ -119,17 +119,17 @@ public:
     //- Associated types: Functors
     //--------------------------------------------------------------------------
     /// Comparison functor for domain values
-    typedef ITL_COMPARE_DOMAIN(Compare,DomainT)      domain_compare;
-    typedef ITL_COMPARE_DOMAIN(Compare,segment_type) segment_compare;
+    typedef ICL_COMPARE_DOMAIN(Compare,DomainT)      domain_compare;
+    typedef ICL_COMPARE_DOMAIN(Compare,segment_type) segment_compare;
     /// Combine functor for codomain value aggregation
-    typedef ITL_COMBINE_CODOMAIN(Combine,CodomainT)  codomain_combine;
+    typedef ICL_COMBINE_CODOMAIN(Combine,CodomainT)  codomain_combine;
     /// Inverse Combine functor for codomain value aggregation
     typedef typename inverse<codomain_combine>::type inverse_codomain_combine;
     /// Intersection functor for codomain values
 
     typedef typename mpl::if_
     <has_set_semantics<codomain_type>
-    , ITL_SECTION_CODOMAIN(Section,CodomainT)     
+    , ICL_SECTION_CODOMAIN(Section,CodomainT)     
     , codomain_combine
     >::type                                            codomain_intersect;
 
@@ -151,7 +151,7 @@ public:
         allocator_type;
 
     /// Container type for the implementation 
-    typedef ITL_IMPL_SPACE::map<interval_type,codomain_type,
+    typedef ICL_IMPL_SPACE::map<interval_type,codomain_type,
                                 key_compare,allocator_type> ImplMapT;
 
     /// key type of the implementing container
@@ -692,7 +692,7 @@ private:
         static void flip(Type& object, const segment_type& operand)
         { 
             object += operand;
-            ITL_FORALL(typename Type, it_, object)
+            ICL_FORALL(typename Type, it_, object)
                 it_->second = identity_element<codomain_type>::value();
 
             if(mpl::not_<is_interval_splitter<Type> >::value)
@@ -774,7 +774,7 @@ private:
 //==============================================================================
 //= Addition detail
 //==============================================================================
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::add_front(const interval_type& inter_val, iterator& first_)
 {
@@ -799,7 +799,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
     // ...[-- first_ --...
 }
 
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
     template<class Combiner>
 inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::add_segment(const interval_type& inter_val, const CodomainT& co_val, iterator& it_)
@@ -821,7 +821,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
 }
 
 
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
     template<class Combiner>
 inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::add_main(interval_type& inter_val, const CodomainT& co_val, 
@@ -837,7 +837,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
     }
 }
 
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
     template<class Combiner>
 inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::add_rear(const interval_type& inter_val, const CodomainT& co_val, iterator& it_)
@@ -895,7 +895,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
 //==============================================================================
 //= Addition
 //==============================================================================
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
     template<class Combiner>
 inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::iterator
     interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
@@ -933,7 +933,7 @@ inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
     }
 }
 
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
     template<class Combiner>
 inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::iterator
     interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
@@ -974,7 +974,7 @@ inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
 //= Subtraction detail
 //==============================================================================
 
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::subtract_front(const interval_type& inter_val, iterator& it_)
 {
@@ -991,7 +991,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
 }
 
 
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
     template<class Combiner>
 inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::subtract_main(const CodomainT& co_val, iterator& it_, const iterator& last_)
@@ -1003,7 +1003,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
     }
 }
 
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
     template<class Combiner>
 inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::subtract_rear(interval_type& inter_val, const CodomainT& co_val, iterator& it_)
@@ -1027,7 +1027,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
 //==============================================================================
 //= Subtraction
 //==============================================================================
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
     template<class Combiner>
 inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::_subtract(const segment_type& minuend)
@@ -1054,7 +1054,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
 //==============================================================================
 //= Insertion
 //==============================================================================
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::insert_main(const interval_type& inter_val, const CodomainT& co_val, 
                   iterator& it_, const iterator& last_)
@@ -1095,7 +1095,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
 }
 
 
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::iterator
     interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::_insert(const segment_type& addend)
@@ -1125,7 +1125,7 @@ inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
 }
 
 
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::iterator
     interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::_insert(iterator prior_, const segment_type& addend)
@@ -1155,7 +1155,7 @@ inline typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
 //==============================================================================
 //= Erasure segment_type
 //==============================================================================
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::erase_rest(interval_type& inter_val, const CodomainT& co_val, 
                  iterator& it_, const iterator& last_)
@@ -1177,7 +1177,7 @@ inline void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
     }
 }
 
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::erase(const segment_type& minuend)
 {
@@ -1239,7 +1239,7 @@ inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
 //==============================================================================
 //= Erasure key_type
 //==============================================================================
-template <class SubType, class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::erase(const interval_type& minuend)
 {
@@ -1293,7 +1293,7 @@ inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
+    class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE)  Interval, ICL_ALLOC Alloc
 >
 struct is_map<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
@@ -1304,7 +1304,7 @@ struct is_map<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Co
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
+    class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE)  Interval, ICL_ALLOC Alloc
 >
 struct has_inverse<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
@@ -1315,7 +1315,7 @@ struct has_inverse<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compa
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
+    class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE)  Interval, ICL_ALLOC Alloc
 >
 struct is_interval_container<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
@@ -1326,7 +1326,7 @@ struct is_interval_container<icl::interval_base_map<SubType,DomainT,CodomainT,Tr
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
+    class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE)  Interval, ICL_ALLOC Alloc
 >
 struct absorbs_identities<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 {
@@ -1337,7 +1337,7 @@ struct absorbs_identities<icl::interval_base_map<SubType,DomainT,CodomainT,Trait
 template 
 <
     class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc
+    class DomainT, class CodomainT, class Traits, ICL_COMPARE Compare, ICL_COMBINE Combine, ICL_SECTION Section, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc
 >
 struct is_total<icl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 {

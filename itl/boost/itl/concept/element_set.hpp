@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_CONCEPT_ELEMENT_SET_HPP_JOFA_100921
-#define BOOST_ITL_CONCEPT_ELEMENT_SET_HPP_JOFA_100921
+#ifndef BOOST_ICL_CONCEPT_ELEMENT_SET_HPP_JOFA_100921
+#define BOOST_ICL_CONCEPT_ELEMENT_SET_HPP_JOFA_100921
 
 #include <boost/itl/type_traits/is_combinable.hpp>
 #include <boost/itl/concept/set_value.hpp>
@@ -126,7 +126,7 @@ inline typename enable_if<is_element_set<Type>, std::basic_ostream<CharType, Cha
 operator << (std::basic_ostream<CharType, CharTraits>& stream, const Type& object)
 {
     stream << "{";
-    ITL_const_FORALL(typename Type, it, object)
+    ICL_const_FORALL(typename Type, it, object)
         stream << *it << " ";
 
     return stream << "}";

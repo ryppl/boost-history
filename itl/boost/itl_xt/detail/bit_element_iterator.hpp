@@ -8,8 +8,8 @@ Copyright (c) 1998: Charles E. Leiserson, Harald Prokop, Keith H. Randall
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_XT_DETAIL_BIT_ELEMENT_ITERATOR_HPP_JOFA_091109
-#define BOOST_ITL_XT_DETAIL_BIT_ELEMENT_ITERATOR_HPP_JOFA_091109
+#ifndef BOOST_ICL_XT_DETAIL_BIT_ELEMENT_ITERATOR_HPP_JOFA_091109
+#define BOOST_ICL_XT_DETAIL_BIT_ELEMENT_ITERATOR_HPP_JOFA_091109
 
 #include <boost/itl_xt/bits.hpp>
 #include <boost/mpl/not.hpp>
@@ -20,7 +20,7 @@ namespace boost{namespace icl
 //------------------------------------------------------------------------------
 template<class SegmentT> struct bitwise;
 
-template<class DomainT, ITL_COMPARE Compare, template<class, ITL_COMPARE>class Interval, class BitSetT>
+template<class DomainT, ICL_COMPARE Compare, template<class, ICL_COMPARE>class Interval, class BitSetT>
 struct bitwise<std::pair<Interval<DomainT,Compare>const, BitSetT> >
 {
     typedef bitwise type;
@@ -512,7 +512,7 @@ struct proceed<IteratorT,false>
 
 }} // namespace icl boost
 
-#endif // BOOST_ITL_XT_DETAIL_BIT_ELEMENT_ITERATOR_HPP_JOFA_091109
+#endif // BOOST_ICL_XT_DETAIL_BIT_ELEMENT_ITERATOR_HPP_JOFA_091109
 
 
 

@@ -7,8 +7,8 @@ Copyright (c) 2007-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_VALIDATE_DRIVER_ITL_SET_DRIVER_HPP_JOFA_080405
-#define BOOST_VALIDATE_DRIVER_ITL_SET_DRIVER_HPP_JOFA_080405
+#ifndef BOOST_VALIDATE_DRIVER_ICL_SET_DRIVER_HPP_JOFA_080405
+#define BOOST_VALIDATE_DRIVER_ICL_SET_DRIVER_HPP_JOFA_080405
 
 #include <iostream>
 #include <stdio.h>
@@ -70,7 +70,7 @@ namespace boost{namespace icl
                     switch(domainChoice) {
                     case DomainType::Int:    return new itl_set_validater<std::set<int> >; 
                     case DomainType::Double: return new itl_set_validater<std::set<double> >; 
-                    default: return choiceError(ITL_LOCATION("\nRootType::itl_set: domainChoice:\n"), 
+                    default: return choiceError(ICL_LOCATION("\nRootType::itl_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                 }
@@ -78,7 +78,7 @@ namespace boost{namespace icl
                     switch(domainChoice) {
                     case DomainType::Int:    return new itl_set_validater<interval_set<int> >;
                     case DomainType::Double: return new itl_set_validater<interval_set<double> >;
-                    default: return choiceError(ITL_LOCATION("\nRootType::interval_set: domainChoice:\n"), 
+                    default: return choiceError(ICL_LOCATION("\nRootType::interval_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                 }
@@ -86,7 +86,7 @@ namespace boost{namespace icl
                     switch(domainChoice) {
                     case DomainType::Int:    return new itl_set_validater<separate_interval_set<int> >;
                     case DomainType::Double: return new itl_set_validater<separate_interval_set<double> >;
-                    default: return choiceError(ITL_LOCATION("\nRootType::separate_interval_set: domainChoice:\n"), 
+                    default: return choiceError(ICL_LOCATION("\nRootType::separate_interval_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                  }
@@ -94,11 +94,11 @@ namespace boost{namespace icl
                     switch(domainChoice) {
                     case DomainType::Int:    return new itl_set_validater<split_interval_set<int> >;
                     case DomainType::Double: return new itl_set_validater<split_interval_set<double> >;
-                    default: return choiceError(ITL_LOCATION("\nRootType::split_interval_set: domainChoice:\n"), 
+                    default: return choiceError(ICL_LOCATION("\nRootType::split_interval_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                 }
-            default: return choiceError(ITL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
+            default: return choiceError(ICL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
             } //switch()
 
         }
@@ -108,4 +108,4 @@ namespace boost{namespace icl
 
 }} // namespace icl boost
 
-#endif // BOOST_VALIDATE_DRIVER_ITL_SET_DRIVER_HPP_JOFA_080405
+#endif // BOOST_VALIDATE_DRIVER_ICL_SET_DRIVER_HPP_JOFA_080405

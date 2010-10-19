@@ -5,8 +5,8 @@ Copyright (c) 2007-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_MAPALGO_HPP_JOFA_080225
-#define BOOST_ITL_MAPALGO_HPP_JOFA_080225
+#ifndef BOOST_ICL_MAPALGO_HPP_JOFA_080225
+#define BOOST_ICL_MAPALGO_HPP_JOFA_080225
 
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/or.hpp>

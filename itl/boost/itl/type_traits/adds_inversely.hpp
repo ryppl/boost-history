@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TYPE_TRAITS_ADDS_INVERSELY_HPP_JOFA_100829
-#define BOOST_ITL_TYPE_TRAITS_ADDS_INVERSELY_HPP_JOFA_100829
+#ifndef BOOST_ICL_TYPE_TRAITS_ADDS_INVERSELY_HPP_JOFA_100829
+#define BOOST_ICL_TYPE_TRAITS_ADDS_INVERSELY_HPP_JOFA_100829
 
 #include <boost/itl/type_traits/has_inverse.hpp>
 #include <boost/itl/functors.hpp>
@@ -24,6 +24,6 @@ struct adds_inversely
 
 }} // namespace boost icl
 
-#endif // BOOST_ITL_TYPE_TRAITS_ADDS_INVERSELY_HPP_JOFA_100829
+#endif // BOOST_ICL_TYPE_TRAITS_ADDS_INVERSELY_HPP_JOFA_100829
 
 

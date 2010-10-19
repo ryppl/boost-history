@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_VALIDATE_VALIDATER_ITL_INDUCED_RELATIONS_HPP_JOFA_090304
-#define BOOST_ITL_VALIDATE_VALIDATER_ITL_INDUCED_RELATIONS_HPP_JOFA_090304
+#ifndef BOOST_ICL_VALIDATE_VALIDATER_ICL_INDUCED_RELATIONS_HPP_JOFA_090304
+#define BOOST_ICL_VALIDATE_VALIDATER_ICL_INDUCED_RELATIONS_HPP_JOFA_090304
 
 #include <boost/itl/functors.hpp>
 #include <boost/itl/detail/interval_morphism.hpp>
@@ -63,5 +63,5 @@ namespace boost{namespace icl
 
 }} // namespace icl boost
 
-#endif BOOST_ITL_VALIDATE_VALIDATER_ITL_INDUCED_RELATIONS_HPP_JOFA_090304
+#endif BOOST_ICL_VALIDATE_VALIDATER_ICL_INDUCED_RELATIONS_HPP_JOFA_090304
 

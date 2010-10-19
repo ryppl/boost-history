@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TYPE_TRAITS_INTERVAL_TYPE_OF_HPP_JOFA_100910
-#define BOOST_ITL_TYPE_TRAITS_INTERVAL_TYPE_OF_HPP_JOFA_100910
+#ifndef BOOST_ICL_TYPE_TRAITS_INTERVAL_TYPE_OF_HPP_JOFA_100910
+#define BOOST_ICL_TYPE_TRAITS_INTERVAL_TYPE_OF_HPP_JOFA_100910
 
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/bool.hpp>

@@ -106,21 +106,21 @@ namespace boost{namespace icl
             case RootType::interval_set: {
                     switch(domainChoice) {
                     case DomainType::Int: return new itl_induced_relations_validater<interval_set<int> >;
-                    default: return choiceError(ITL_LOCATION("\nRootType::interval_set: domainChoice:\n"), 
+                    default: return choiceError(ICL_LOCATION("\nRootType::interval_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                 }
             case RootType::separate_interval_set: {
                     switch(domainChoice) {
                     case DomainType::Int: return new itl_induced_relations_validater<separate_interval_set<int> >;
-                    default: return choiceError(ITL_LOCATION("\nRootType::separate_interval_set: domainChoice:\n"), 
+                    default: return choiceError(ICL_LOCATION("\nRootType::separate_interval_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                  }
             case RootType::split_interval_set: {
                     switch(domainChoice) {
                     case DomainType::Int: return new itl_induced_relations_validater<split_interval_set<int> >;   
-                    default: return choiceError(ITL_LOCATION("\nRootType::split_interval_set: domainChoice:\n"), 
+                    default: return choiceError(ICL_LOCATION("\nRootType::split_interval_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                 }
@@ -136,10 +136,10 @@ namespace boost{namespace icl
                                     return new itl_induced_relations_validater<split_interval_map<int,int,total_absorber> >;
                                 case IdentityHandlerType::total_enricher: 
                                     return new itl_induced_relations_validater<split_interval_map<int,int,total_enricher> >;
-                                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), 
+                                default: return choiceError(ICL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), 
                                                 identityHandlerChoice, _identityHandlerChoice);
                             }
-                    default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: domainChoice:\n"), 
+                    default: return choiceError(ICL_LOCATION("\nRootType::split_interval_map: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                 }
@@ -155,14 +155,14 @@ namespace boost{namespace icl
                                     return new itl_induced_relations_validater<interval_map<int,int,total_absorber> >;
                                 case IdentityHandlerType::total_enricher: 
                                     return new itl_induced_relations_validater<interval_map<int,int,total_enricher> >;
-                                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), 
+                                default: return choiceError(ICL_LOCATION("\nRootType::split_interval_map: identityHandlerChoice:\n"), 
                                                 identityHandlerChoice, _identityHandlerChoice);
                             }
-                    default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: domainChoice:\n"), 
+                    default: return choiceError(ICL_LOCATION("\nRootType::split_interval_map: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                 }
-            default: return choiceError(ITL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
+            default: return choiceError(ICL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
             } //switch()
 
         }

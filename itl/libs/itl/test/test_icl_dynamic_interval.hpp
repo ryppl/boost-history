@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_TEST_ICL_DYNAMIC_INTERVAL_HPP_JOFA_100930
-#define BOOST_ITL_TEST_ICL_DYNAMIC_INTERVAL_HPP_JOFA_100930
+#ifndef BOOST_ICL_TEST_ICL_DYNAMIC_INTERVAL_HPP_JOFA_100930
+#define BOOST_ICL_TEST_ICL_DYNAMIC_INTERVAL_HPP_JOFA_100930
 
 template <class IntervalT> 
 void dynamic_interval_ctor_4_ordered_types()
@@ -62,4 +62,4 @@ void discrete_dynamic_interval_bounds_4_bicremental_types()
 
 
 
-#endif // BOOST_ITL_TEST_ICL_DYNAMIC_INTERVAL_HPP_JOFA_100930
+#endif // BOOST_ICL_TEST_ICL_DYNAMIC_INTERVAL_HPP_JOFA_100930

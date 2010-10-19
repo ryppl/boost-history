@@ -27,8 +27,8 @@ FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_ENUM_BITSET_HPP_JOFA_021204
-#define BOOST_ITL_ENUM_BITSET_HPP_JOFA_021204
+#ifndef BOOST_ICL_ENUM_BITSET_HPP_JOFA_021204
+#define BOOST_ICL_ENUM_BITSET_HPP_JOFA_021204
 
 #include <bitset>
 #include <boost/itl/detail/notate.hpp>
@@ -57,5 +57,5 @@ namespace boost{namespace icl
 }} // namespace icl boost
 
 
-#endif // BOOST_ITL_ENUM_BITSET_HPP_JOFA_021204
+#endif // BOOST_ICL_ENUM_BITSET_HPP_JOFA_021204
 

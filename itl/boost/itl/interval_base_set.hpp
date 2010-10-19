@@ -6,8 +6,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_INTERVAL_BASE_SET_H_JOFA_990223
-#define BOOST_ITL_INTERVAL_BASE_SET_H_JOFA_990223
+#ifndef BOOST_ICL_INTERVAL_BASE_SET_H_JOFA_990223
+#define BOOST_ICL_INTERVAL_BASE_SET_H_JOFA_990223
 
 #include <limits>
 #include <boost/next_prior.hpp> 
@@ -43,9 +43,9 @@ template
 <
     typename             SubType,
     typename             DomainT, 
-    ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
-    ITL_INTERVAL(ITL_COMPARE) Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, DomainT, Compare),
-    ITL_ALLOC   Alloc    = std::allocator
+    ICL_COMPARE Compare  = ICL_COMPARE_INSTANCE(std::less, DomainT),
+    ICL_INTERVAL(ICL_COMPARE) Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, DomainT, Compare),
+    ICL_ALLOC   Alloc    = std::allocator
 > 
 class interval_base_set
 {
@@ -79,7 +79,7 @@ public:
     typedef DomainT   element_type;
 
     /// The interval type of the set
-    typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) interval_type;
+    typedef ICL_INTERVAL_TYPE(Interval,DomainT,Compare) interval_type;
     /// The segment type of the set
     typedef interval_type   segment_type;
 
@@ -97,8 +97,8 @@ public:
     //- Associated types: Order
     //--------------------------------------------------------------------------
     /// Comparison functor for domain values
-    typedef ITL_COMPARE_DOMAIN(Compare,DomainT)      domain_compare;
-    typedef ITL_COMPARE_DOMAIN(Compare,segment_type) segment_compare;
+    typedef ICL_COMPARE_DOMAIN(Compare,DomainT)      domain_compare;
+    typedef ICL_COMPARE_DOMAIN(Compare,segment_type) segment_compare;
     /// Comparison functor for intervals
     typedef exclusive_less_than<interval_type>       interval_compare;
 
@@ -115,7 +115,7 @@ public:
     typedef Alloc<DomainT> domain_allocator_type;
 
     /// Container type for the implementation 
-    typedef typename ITL_IMPL_SPACE::set<interval_type,key_compare,allocator_type> ImplSetT;
+    typedef typename ICL_IMPL_SPACE::set<interval_type,key_compare,allocator_type> ImplSetT;
 
     /// key type of the implementing container
     typedef typename ImplSetT::key_type   key_type;
@@ -366,7 +366,7 @@ protected:
 } ;
 
 
-template <class SubType, class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 inline void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
     ::add_front(const interval_type& inter_val, iterator& first_)
 {
@@ -391,7 +391,7 @@ inline void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
     // ...[-- first_ --...
 }
 
-template <class SubType, class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 inline void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
     ::add_segment(const interval_type& inter_val, iterator& it_)
 {
@@ -406,7 +406,7 @@ inline void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
     ++it_;
 }
 
-template <class SubType, class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 inline void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
     ::add_main(interval_type& rest_interval, iterator& it_, const iterator& last_)
 {
@@ -420,7 +420,7 @@ inline void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
     }
 }
 
-template <class SubType, class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 inline void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
     ::add_rear(const interval_type& inter_val, iterator& it_)
 {
@@ -456,7 +456,7 @@ inline void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
 //==============================================================================
 //= Addition
 //==============================================================================
-template <class SubType, class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 inline typename interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::iterator 
     interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
     ::_add(const segment_type& addend)
@@ -472,7 +472,7 @@ inline typename interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::itera
         return that()->add_over(addend, insertion.first);
 }
 
-template <class SubType, class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 inline typename interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::iterator 
     interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
     ::_add(iterator prior_, const segment_type& addend)
@@ -491,7 +491,7 @@ inline typename interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::itera
 //==============================================================================
 //= Subtraction
 //==============================================================================
-template <class SubType, class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval, ITL_ALLOC Alloc>
+template <class SubType, class DomainT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 inline SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
     ::subtract(const segment_type& minuend)
 {
@@ -526,7 +526,7 @@ inline SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
 // type traits
 //-----------------------------------------------------------------------------
 template<class SubType,
-         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
+         class DomainT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE)  Interval, ICL_ALLOC Alloc>
 struct is_set<icl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> >
 { 
     typedef is_set<icl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> > type;
@@ -534,7 +534,7 @@ struct is_set<icl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> >
 };
 
 template<class SubType,
-         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
+         class DomainT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE)  Interval, ICL_ALLOC Alloc>
 struct is_interval_container<icl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> >
 { 
     typedef is_interval_container<icl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> > type;

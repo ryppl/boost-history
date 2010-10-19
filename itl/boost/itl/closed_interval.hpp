@@ -5,8 +5,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef BOOST_ITL_CLOSED_INTERVAL_HPP_JOFA_100324
-#define BOOST_ITL_CLOSED_INTERVAL_HPP_JOFA_100324
+#ifndef BOOST_ICL_CLOSED_INTERVAL_HPP_JOFA_100324
+#define BOOST_ICL_CLOSED_INTERVAL_HPP_JOFA_100324
 
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/type_traits/type_to_string.hpp>
@@ -16,7 +16,7 @@ namespace boost{namespace icl
 {
 
 template <class DomainT, 
-          ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
+          ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, DomainT)>
 class closed_interval
 {
 public:
@@ -70,11 +70,11 @@ private:
 //==============================================================================
 //=T closed_interval -> concept intervals
 //==============================================================================
-template<class DomainT, ITL_COMPARE Compare>
+template<class DomainT, ICL_COMPARE Compare>
 struct interval_traits< icl::closed_interval<DomainT, Compare> >
 {
     typedef DomainT domain_type;
-    typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
+    typedef ICL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
     typedef icl::closed_interval<DomainT, Compare> interval_type;
 
     static interval_type construct(const domain_type& lo, const domain_type& up)
@@ -89,14 +89,14 @@ struct interval_traits< icl::closed_interval<DomainT, Compare> >
 //==============================================================================
 //= Type traits
 //==============================================================================
-template <class DomainT, ITL_COMPARE Compare> 
+template <class DomainT, ICL_COMPARE Compare> 
 struct interval_bound_type< closed_interval<DomainT,Compare> >
 {
     typedef interval_bound_type type;
     BOOST_STATIC_CONSTANT(bound_type, value = interval_bounds::static_closed);
 };
 
-template <class DomainT, ITL_COMPARE Compare>
+template <class DomainT, ICL_COMPARE Compare>
 struct type_to_string<icl::closed_interval<DomainT,Compare> >
 {
     static std::string apply()
