@@ -11,15 +11,19 @@ int main()
 {
 	check_clock_now<boost::chrono::process_real_cpu_clock>();
 	check_clock_now_ec<boost::chrono::process_real_cpu_clock>();
+    check_clock_now_throws<boost::chrono::process_real_cpu_clock>();
 
 	check_clock_now<boost::chrono::process_user_cpu_clock>();
 	check_clock_now_ec<boost::chrono::process_user_cpu_clock>();
+    check_clock_now_throws<boost::chrono::process_user_cpu_clock>();
 
 	check_clock_now<boost::chrono::process_system_cpu_clock>();
 	check_clock_now_ec<boost::chrono::process_system_cpu_clock>();
+    check_clock_now_throws<boost::chrono::process_system_cpu_clock>();
 
 	check_clock_now<boost::chrono::process_cpu_clock>();
 	check_clock_now_ec<boost::chrono::process_cpu_clock>();
+    check_clock_now_throws<boost::chrono::process_cpu_clock>();
 
     return boost::report_errors();
 }
