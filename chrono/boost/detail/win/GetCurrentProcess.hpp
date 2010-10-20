@@ -1,4 +1,4 @@
-//  time.hpp  --------------------------------------------------------------//
+//  GetCurrentProcess.hpp  --------------------------------------------------------------//
 
 //  Copyright 2010 Vicente J. Botet Escriba
 
@@ -6,8 +6,8 @@
 //  See http://www.boost.org/LICENSE_1_0.txt
 
 
-#ifndef BOOST_DETAIL_WIN_GETCURRENT_PROCESS_HPP
-#define BOOST_DETAIL_WIN_GETCURRENT_PROCESS_HPP
+#ifndef BOOST_DETAIL_WIN_GETCURRENTPROCESS_HPP
+#define BOOST_DETAIL_WIN_GETCURRENTPROCESS_HPP
 
 #include <boost/detail/win/basic_types.hpp>
 

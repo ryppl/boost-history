@@ -1,4 +1,4 @@
-//  time.hpp  --------------------------------------------------------------//
+//  process.hpp  --------------------------------------------------------------//
 
 //  Copyright 2010 Vicente J. Botet Escriba
 
@@ -12,4 +12,22 @@
 #include <boost/detail/win/basic_types.hpp>
 #include <boost/detail/win/GetCurrentProcess.hpp>
 
+namespace boost {
+namespace detail {
+namespace win32 {
+#if defined( BOOST_USE_WINDOWS_H )
+    using ::GetCurrentProcessId;
+#else
+# ifndef UNDER_CE
+extern "C" { 
+    __declspec(dllimport) unsigned long __stdcall 
+        GetCurrentProcessId(void);
+}    
+# else
+    using ::GetCurrentProcessId;
+# endif
+#endif
+}
+}
+}
 #endif // BOOST_DETAIL_WIN_PROCESS_HPP

@@ -20,16 +20,46 @@ namespace win32 {
     typedef PFILETIME PFILETIME_;
     typedef LPFILETIME LPFILETIME_;
 
+    typedef SYSTEMTIME SYSTEMTIME_;
+    typedef SYSTEMTIME* PSYSTEMTIME_;
+
     using ::GetSystemTimeAsFileTime;
+    using ::FileTimeToLocalFileTime;
+    using ::GetSystemTime;
+    using ::SystemTimeToFileTime;
+    using ::GetTickCount;
+
 #else
-    extern "C" typedef struct _FILETIME {
+extern "C" {
+    typedef struct _FILETIME {
         DWORD_ dwLowDateTime;
         DWORD_ dwHighDateTime;
     } FILETIME_, *PFILETIME_, *LPFILETIME_;
 
-    extern "C" __declspec(dllimport) void WINAPI
-        GetSystemTimeAsFileTime(FILETIME_* lpFileTime);
+    typedef struct _SYSTEMTIME {
+      WORD_ wYear;
+      WORD_ wMonth;
+      WORD_ wDayOfWeek;
+      WORD_ wDay;
+      WORD_ wHour;
+      WORD_ wMinute;
+      WORD_ wSecond;
+      WORD_ wMilliseconds;
+    } SYSTEMTIME_, *PSYSTEMTIME_;
 
+    __declspec(dllimport) void WINAPI
+        GetSystemTimeAsFileTime(FILETIME_* lpFileTime);
+    __declspec(dllimport) int WINAPI
+        FileTimeToLocalFileTime(const FILETIME_* lpFileTime, 
+                FILETIME_* lpLocalFileTime);
+    __declspec(dllimport) void WINAPI
+        GetSystemTime(SYSTEMTIME_* lpSystemTime);
+    __declspec(dllimport) int WINAPI
+        SystemTimeToFileTime(const SYSTEMTIME_* lpSystemTime, 
+                FILETIME_* lpFileTime);
+    __declspec(dllimport) unsigned long __stdcall 
+        GetTickCount();
+}
 #endif
 }
 }

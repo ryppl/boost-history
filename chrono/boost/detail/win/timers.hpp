@@ -1,4 +1,4 @@
-//  time.hpp  --------------------------------------------------------------//
+//  timers.hpp  --------------------------------------------------------------//
 
 //  Copyright 2010 Vicente J. Botet Escriba
 
@@ -22,15 +22,17 @@ namespace win32
     using ::QueryPerformanceCounter;
     using ::QueryPerformanceFrequency;
 #else
-    extern "C" __declspec(dllimport) BOOL_ WINAPI
+extern "C" { 
+    __declspec(dllimport) BOOL_ WINAPI
         QueryPerformanceCounter(
             LARGE_INTEGER_ *lpPerformanceCount
         );
 
-    extern "C" __declspec(dllimport) BOOL_ WINAPI
+    __declspec(dllimport) BOOL_ WINAPI
         QueryPerformanceFrequency(
             LARGE_INTEGER_ *lpFrequency
         );
+}
 #endif
 }
 }

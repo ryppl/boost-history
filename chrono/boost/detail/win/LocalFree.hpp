@@ -1,4 +1,4 @@
-//  time.hpp  --------------------------------------------------------------//
+//  LocalFree.hpp  --------------------------------------------------------------//
 
 //  Copyright 2010 Vicente J. Botet Escriba
 
@@ -20,7 +20,8 @@ namespace win32 {
     using ::LocalFree;
 #else
     extern "C" typedef HANDLE_ HLOCAL_;
-    extern "C" __declspec(dllimport) HLOCAL_ WINAPI LocalFree(HLOCAL_ hMem);
+    extern "C" __declspec(dllimport) HLOCAL_ WINAPI 
+        LocalFree(HLOCAL_ hMem);
 #endif
 }
 }

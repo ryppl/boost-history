@@ -12,111 +12,39 @@
 #include <cstdarg>
 
 #include <boost/detail/win/basic_types.hpp>
+extern "C" __declspec(dllimport) void __stdcall GetSystemInfo (struct system_info *);
 
+namespace boost {
+namespace detail {
+namespace win32 {
 #if defined( BOOST_USE_WINDOWS_H )
-
-namespace boost
-{
-    namespace detail
-    {
-        namespace win32
-        {
-        	typedef HANDLE_ HLOCAL_;
-
-        	using ::LocalFree;
-        	using ::FormatMessageA;
-        	using ::FormatMessageW;
-
-			const int FORMAT_MESSAGE_ALLOCATE_BUFFER_= FORMAT_MESSAGE_ALLOCATE_BUFFER;
-			const int FORMAT_MESSAGE_IGNORE_INSERTS_=  FORMAT_MESSAGE_IGNORE_INSERTS;
-			const int FORMAT_MESSAGE_FROM_STRING_=     FORMAT_MESSAGE_FROM_STRING;
-			const int FORMAT_MESSAGE_FROM_HMODULE_=    FORMAT_MESSAGE_FROM_HMODULE;
-			const int FORMAT_MESSAGE_FROM_SYSTEM_=     FORMAT_MESSAGE_FROM_SYSTEM;
-			const int FORMAT_MESSAGE_ARGUMENT_ARRAY_=  FORMAT_MESSAGE_ARGUMENT_ARRAY;
-			const int FORMAT_MESSAGE_MAX_WIDTH_MASK_=  FORMAT_MESSAGE_MAX_WIDTH_MASK;
-
-			const char LANG_NEUTRAL_=                  LANG_NEUTRAL;
-			const char LANG_INVARIANT_=                LANG_INVARIANT;
-
-			const char SUBLANG_DEFAULT_=               SUBLANG_DEFAULT;    // user default
-			inline WORD_ MAKELANGID_(WORD_ p, WORD_ s) {
-				return MAKELANGID(p,s);
-			}
-
-        }
-    }
-}
-
-#elif defined( WIN32 ) || defined( _WIN32 ) || defined( __WIN32__ )
-
-namespace boost
-{
-    namespace detail
-    {
-        namespace win32
-        {
-            extern "C"
-            {
-    	        typedef HANDLE_ HLOCAL_;
-
-
-            	//                using ::LocalFree;
-            	__declspec(dllimport)
-            	HLOCAL_
-            	WINAPI
-            	LocalFree(
-            	    HLOCAL_ hMem
-            	);
-
-            	//                using ::FormatMessageA;
-            	__declspec(dllimport)
-            	DWORD_
-            	WINAPI
-            	FormatMessageA(
-            	    DWORD_ dwFlags,
-            	    LPCVOID_ lpSource,
-            	    DWORD_ dwMessageId,
-            	    DWORD_ dwLanguageId,
-            	    LPSTR_ lpBuffer,
-            	    DWORD_ nSize,
-            	    va_list *Arguments
-            	    );
-
-            	//                using ::FormatMessageW;
-            	__declspec(dllimport)
-            	DWORD_
-            	WINAPI
-            	FormatMessageW(
-            	    DWORD_ dwFlags,
-            	    LPCVOID_ lpSource,
-            	    DWORD_ dwMessageId,
-            	    DWORD_ dwLanguageId,
-            	    LPWSTR_ lpBuffer,
-            	    DWORD_ nSize,
-            	    va_list *Arguments
-            	    );
-
-    			const int FORMAT_MESSAGE_ALLOCATE_BUFFER_= 0x00000100;
-    			const int FORMAT_MESSAGE_IGNORE_INSERTS_=  0x00000200;
-    			const int FORMAT_MESSAGE_FROM_STRING_=     0x00000400;
-    			const int FORMAT_MESSAGE_FROM_HMODULE_=    0x00000800;
-    			const int FORMAT_MESSAGE_FROM_SYSTEM_=     0x00001000;
-    			const int FORMAT_MESSAGE_ARGUMENT_ARRAY_=  0x00002000;
-    			const int FORMAT_MESSAGE_MAX_WIDTH_MASK_=  0x000000FF;
-
-    			const char LANG_NEUTRAL_=                  0x00;
-    			const char LANG_INVARIANT_=                0x7f;
-
-    			const char SUBLANG_DEFAULT_=               0x01;    // user default
-    			inline WORD_ MAKELANGID_(WORD_ p, WORD_ s) {
-    				return ((((WORD_  )(s)) << 10) | (WORD_  )(p));
-    			}
-
-            }
-        }
-    }
-}
+    typedef ::SYSTEM_INFO SYSTEM_INFO_;
 #else
-# error "Win32 functions not available"
+extern "C" {
+    typedef struct _SYSTEM_INFO {
+      union {
+        DWORD_  dwOemId;
+        struct {
+          WORD_ wProcessorArchitecture;
+          WORD_ wReserved;
+        } dummy;
+      } ;
+      DWORD_     dwPageSize;
+      LPVOID_    lpMinimumApplicationAddress;
+      LPVOID_    lpMaximumApplicationAddress;
+      DWORD_PTR_ dwActiveProcessorMask;
+      DWORD_     dwNumberOfProcessors;
+      DWORD_     dwProcessorType;
+      DWORD_     dwAllocationGranularity;
+      WORD_      wProcessorLevel;
+      WORD_      wProcessorRevision;
+    } SYSTEM_INFO_;
+
+    __declspec(dllimport) void __stdcall 
+        GetSystemInfo (struct system_info *);
+}    
 #endif
+}
+}
+}
 #endif // BOOST_DETAIL_WIN_TIME_HPP
