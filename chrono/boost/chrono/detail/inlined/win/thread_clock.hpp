@@ -21,79 +21,84 @@
 
 namespace boost
 {
-  namespace chrono
-  {
+namespace chrono
+{
 
-    thread_clock::time_point thread_clock::now( system::error_code & ec )
+thread_clock::time_point thread_clock::now( system::error_code & ec )
+{
+    //  note that Windows uses 100 nanosecond ticks for FILETIME
+    boost::detail::win32::FILETIME_ creation, exit, user_time, system_time;
+
+    if ( boost::detail::win32::GetThreadTimes(
+            boost::detail::win32::GetCurrentThread (), &creation, &exit,
+            &system_time, &user_time ) )
     {
-
-      //  note that Windows uses 100 nanosecond ticks for FILETIME
-        boost::detail::win32::FILETIME_ creation, exit, user_time, system_time;
-
-      if ( boost::detail::win32::GetThreadTimes(
-              boost::detail::win32::GetCurrentThread (), &creation, &exit,
-             &system_time, &user_time ) )
-      {
-        duration user   = duration(
-          ((static_cast<duration::rep>(user_time.dwHighDateTime) << 32)
-            | user_time.dwLowDateTime) * 100 );
+        duration user = duration(
+                ((static_cast<duration::rep>(user_time.dwHighDateTime) << 32)
+                        | user_time.dwLowDateTime) * 100 );
 
         duration system = duration(
-          ((static_cast<duration::rep>(system_time.dwHighDateTime) << 32)
-            | system_time.dwLowDateTime) * 100 );
+                ((static_cast<duration::rep>(system_time.dwHighDateTime) << 32)
+                        | system_time.dwLowDateTime) * 100 );
 
-        ec.clear();
+        if (!BOOST_CHRONO_IS_THROWS(ec)) 
+        {
+            ec.clear();
+        }
         return time_point(system+user);
-
-      }
-      else
-      {
-        //~ assert( 0 && "error handling not implemented yet" );
-#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-        ec.assign( boost::detail::win32::GetLastError(), system::system_category );
-#else
-        ec.assign( boost::detail::win32::GetLastError(), system::system_category() );
-#endif
-        return thread_clock::time_point(duration(0));
-      }
 
     }
-
-    thread_clock::time_point thread_clock::now( )
+    else
     {
+        if (BOOST_CHRONO_IS_THROWS(ec)) 
+        {
+            boost::throw_exception(
+                    system::system_error( 
+                            boost::detail::win32::GetLastError(), 
+                            BOOST_CHRONO_SYSTEM_CATEGORY, 
+                            "chrono::thread_clock" ));
+        } 
+        else 
+        {
+            ec.assign( boost::detail::win32::GetLastError(), BOOST_CHRONO_SYSTEM_CATEGORY );
+            return thread_clock::time_point(duration(0));
+        }
+    }
+}
 
-      //  note that Windows uses 100 nanosecond ticks for FILETIME
-      boost::detail::win32::FILETIME_ creation, exit, user_time, system_time;
+thread_clock::time_point thread_clock::now( )
+{
 
-      if ( boost::detail::win32::GetThreadTimes( boost::detail::win32::GetCurrentThread (), &creation, &exit,
-             &system_time, &user_time ) )
-      {
+    //  note that Windows uses 100 nanosecond ticks for FILETIME
+    boost::detail::win32::FILETIME_ creation, exit, user_time, system_time;
+
+    if ( boost::detail::win32::GetThreadTimes( 
+            boost::detail::win32::GetCurrentThread (), &creation, &exit,
+            &system_time, &user_time ) )
+    {
         duration user   = duration(
-          ((static_cast<duration::rep>(user_time.dwHighDateTime) << 32)
-            | user_time.dwLowDateTime) * 100 );
+                ((static_cast<duration::rep>(user_time.dwHighDateTime) << 32)
+                        | user_time.dwLowDateTime) * 100 );
 
         duration system = duration(
-          ((static_cast<duration::rep>(system_time.dwHighDateTime) << 32)
-            | system_time.dwLowDateTime) * 100 );
+                ((static_cast<duration::rep>(system_time.dwHighDateTime) << 32)
+                        | system_time.dwLowDateTime) * 100 );
 
         return time_point(system+user);
 
-      }
-      else
-      {
+    }
+    else
+    {
         boost::throw_exception(
-#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-            system::system_error( boost::detail::win32::GetLastError(), system::system_category, "chrono::monotonic_clock" ));
-#else
-            system::system_error( boost::detail::win32::GetLastError(), system::system_category(), "chrono::monotonic_clock" ));
-#endif
-      }
-
+                system::system_error( 
+                        boost::detail::win32::GetLastError(), 
+                        BOOST_CHRONO_SYSTEM_CATEGORY, 
+                        "chrono::thread_clock" ));
     }
 
+}
 
-
-  } // namespace chrono
+} // namespace chrono
 } // namespace boost
 
 #endif

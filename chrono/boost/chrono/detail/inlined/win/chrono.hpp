@@ -38,22 +38,22 @@ namespace chrono_detail
     static double nanosecs_per_tic = chrono_detail::get_nanosecs_per_tic();
 
     boost::detail::win32::LARGE_INTEGER_ pcount;
-    if ( (nanosecs_per_tic <= 0.0L) || (!boost::detail::win32::QueryPerformanceCounter( &pcount )) )
+    if ( (nanosecs_per_tic <= 0.0L) || 
+            (!boost::detail::win32::QueryPerformanceCounter( &pcount )) )
     {
         boost::detail::win32::DWORD_ cause =
             (nanosecs_per_tic <= 0.0L
                     ? ERROR_NOT_SUPPORTED
                     : boost::detail::win32::GetLastError());
-      boost::throw_exception(
-#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-        system::system_error( cause, system::system_category, "chrono::monotonic_clock" ));
-#else
-        system::system_error( cause, system::system_category(), "chrono::monotonic_clock" ));
-#endif
+        boost::throw_exception(
+                system::system_error( 
+                        cause, 
+                        BOOST_CHRONO_SYSTEM_CATEGORY, 
+                        "chrono::monotonic_clock" ));
     }
 
     return monotonic_clock::time_point(monotonic_clock::duration(
-      static_cast<monotonic_clock::rep>((nanosecs_per_tic) * pcount.QuadPart) ));
+      static_cast<monotonic_clock::rep>((nanosecs_per_tic) * pcount.QuadPart)));
   }
 
 
@@ -62,20 +62,33 @@ namespace chrono_detail
     static double nanosecs_per_tic = chrono_detail::get_nanosecs_per_tic();
 
     boost::detail::win32::LARGE_INTEGER_ pcount;
-    if ( (nanosecs_per_tic <= 0.0L) || (!boost::detail::win32::QueryPerformanceCounter( &pcount )) )
+    if ( (nanosecs_per_tic <= 0.0L) 
+            || (!boost::detail::win32::QueryPerformanceCounter( &pcount )) )
     {
-        boost::detail::win32::DWORD_ cause = ((nanosecs_per_tic <= 0.0L) ? ERROR_NOT_SUPPORTED : boost::detail::win32::GetLastError());
-#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-      ec.assign( cause, system::system_category );
-#else
-      ec.assign( cause, system::system_category() );
-#endif
-      return monotonic_clock::time_point(duration(0));
+        boost::detail::win32::DWORD_ cause = 
+            ((nanosecs_per_tic <= 0.0L) 
+                    ? ERROR_NOT_SUPPORTED 
+                    : boost::detail::win32::GetLastError());
+        if (BOOST_CHRONO_IS_THROWS(ec)) {
+            boost::throw_exception(
+                    system::system_error( 
+                            cause, 
+                            BOOST_CHRONO_SYSTEM_CATEGORY, 
+                            "chrono::monotonic_clock" ));
+        } 
+        else 
+        {
+            ec.assign( cause, BOOST_CHRONO_SYSTEM_CATEGORY );
+            return monotonic_clock::time_point(duration(0));
+        }
     }
 
-    ec.clear();
+    if (!BOOST_CHRONO_IS_THROWS(ec)) 
+    {
+        ec.clear();
+    }
     return time_point(duration(
-      static_cast<monotonic_clock::rep>(nanosecs_per_tic * pcount.QuadPart) ));
+      static_cast<monotonic_clock::rep>(nanosecs_per_tic * pcount.QuadPart)));
   }
 
   BOOST_CHRONO_INLINE
@@ -92,7 +105,10 @@ namespace chrono_detail
   {
     boost::detail::win32::FILETIME_ ft;
     boost::detail::win32::GetSystemTimeAsFileTime( &ft );  // never fails
-    ec.clear();
+    if (!BOOST_CHRONO_IS_THROWS(ec)) 
+    {
+        ec.clear();
+    }
     return time_point(duration(
       (static_cast<__int64>( ft.dwHighDateTime ) << 32) | ft.dwLowDateTime));
   }

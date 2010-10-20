@@ -23,22 +23,25 @@
 
 namespace boost
 {
-  namespace chrono
-  {
+namespace chrono
+{
 
-    void process_clock::now( process_times & times_, system::error_code & ec )
+void process_clock::now( process_times & times_, system::error_code & ec )
+{
+
+    //  note that Windows uses 100 nanosecond ticks for FILETIME
+    boost::detail::win32::FILETIME_ creation, exit, user_time, system_time;
+
+    times_.real = duration( monotonic_clock::now().time_since_epoch().count() );
+       
+    if ( boost::detail::win32::GetProcessTimes(
+            boost::detail::win32::GetCurrentProcess(), &creation, &exit,
+            &system_time, &user_time ) )
     {
-
-      //  note that Windows uses 100 nanosecond ticks for FILETIME
-      boost::detail::win32::FILETIME_ creation, exit, user_time, system_time;
-
-      times_.real = duration( monotonic_clock::now().time_since_epoch().count() );
-
-      if ( boost::detail::win32::GetProcessTimes(
-              boost::detail::win32::GetCurrentProcess(), &creation, &exit,
-             &system_time, &user_time ) )
-      {
-        ec.clear();
+        if (!BOOST_CHRONO_IS_THROWS(ec)) 
+        {
+            ec.clear();
+        }
         times_.user   = duration(
           ((static_cast<time_point::rep>(user_time.dwHighDateTime) << 32)
             | user_time.dwLowDateTime) * 100 );
@@ -46,20 +49,27 @@ namespace boost
         times_.system = duration(
           ((static_cast<time_point::rep>(system_time.dwHighDateTime) << 32)
             | system_time.dwLowDateTime) * 100 );
-      }
-      else
-      {
-        //~ assert( 0 && "error handling not implemented yet" );
-#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-        ec.assign( boost::detail::win32::GetLastError(), system::system_category );
-#else
-        ec.assign( boost::detail::win32::GetLastError(), system::system_category() );
-#endif
-        times_.real = times_.system = times_.user = nanoseconds(-1);
-      }
-
     }
-  } // namespace chrono
+    else
+    {
+        boost::detail::win32::DWORD_ cause = boost::detail::win32::GetLastError();
+        if (BOOST_CHRONO_IS_THROWS(ec)) 
+        {
+            boost::throw_exception(
+                    system::system_error( 
+                            cause, 
+                            BOOST_CHRONO_SYSTEM_CATEGORY, 
+                            "chrono::process_clock" ));
+        } 
+        else 
+        {
+            ec.assign( cause, BOOST_CHRONO_SYSTEM_CATEGORY );
+            times_.real = times_.system = times_.user = nanoseconds(-1);
+        }
+    }
+
+}
+} // namespace chrono
 } // namespace boost
 
 #endif

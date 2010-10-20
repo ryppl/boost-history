@@ -13,6 +13,7 @@
 #include <boost/chrono/chrono.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/throw_exception.hpp>
+#include <boost/chrono/detail/system.hpp>
 
 //----------------------------------------------------------------------------//
 //                                                                            //

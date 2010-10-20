@@ -15,6 +15,7 @@
 #include <boost/version.hpp>
 #include <boost/chrono/process_times.hpp>
 #include <boost/system/system_error.hpp>
+#include <boost/throw_exception.hpp>
 #include <boost/io/ios_state.hpp>
 #include <cstring>
 #include <cassert>
@@ -138,7 +139,7 @@ namespace chrono_detail
       elapsed( times, ec );
       if (ec) return;
 
-      if ( &ec == &system::throws )
+      if ( BOOST_CHRONO_IS_THROWS(ec) )
       {
         chrono_detail::show_time( times, m_format.c_str(), m_places, m_os );
       }
@@ -147,19 +148,28 @@ namespace chrono_detail
         try
         {
           chrono_detail::show_time( times, m_format.c_str(), m_places, m_os );
-          ec.clear();
+          if (!BOOST_CHRONO_IS_THROWS(ec)) 
+          {
+            ec.clear();
+          }
         }
 
         catch (...) // eat any exceptions
         {
           assert( 0 && "error reporting not fully implemented yet" );
-#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-          ec.assign(system::errc::success, system::generic_category);
-#else
-          ec.assign(system::errc::success, system::generic_category());
-#endif
-            //ec = error_code( EIO, errno_ecat );
-        }
+          if (BOOST_CHRONO_IS_THROWS(ec))
+          {
+              boost::throw_exception(
+                      system::system_error( 
+                              errno, 
+                              BOOST_CHRONO_SYSTEM_CATEGORY, 
+                              "chrono::run_timer" ));
+          } 
+          else
+          {
+            ec.assign(system::errc::success, BOOST_CHRONO_SYSTEM_CATEGORY);
+          }
+          }
       }
     }
 

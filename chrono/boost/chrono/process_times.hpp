@@ -17,7 +17,7 @@
 #include <boost/cstdint.hpp>
 #include <string>
 #include <ostream>
-//#include <iostream>
+#include <boost/chrono/detail/system.hpp>
 
 #ifndef BOOST_CHRONO_INLINED
 #include <boost/config/abi_prefix.hpp> // must be the last #include
@@ -26,8 +26,8 @@
 
 namespace boost
 {
-  namespace chrono
-  {
+namespace chrono
+{
 //--------------------------------------------------------------------------------------//
 //                                  process_clock                                       //
 //--------------------------------------------------------------------------------------//
@@ -55,9 +55,9 @@ namespace boost
         };
 
         static BOOST_CHRONO_INLINE void now( durations & times,
-                         system::error_code & ec = system::throws );
+                         system::error_code & ec = BOOST_CHRONO_THROWS );
         static BOOST_CHRONO_INLINE void now( time_points & times,
-                         system::error_code & ec = system::throws );
+                         system::error_code & ec = BOOST_CHRONO_THROWS );
     };
 
 
@@ -82,19 +82,19 @@ namespace boost
       typedef process_clock::duration                duration;
       typedef process_clock::time_point              time_point;
 
-      explicit process_timer( system::error_code & ec = system::throws )
+      explicit process_timer( system::error_code & ec = BOOST_CHRONO_THROWS )
       {
         start(ec);
       }
 
-     ~process_timer() {}  // never throws
+     ~process_timer() {}  // never throws()
 
-      void  start( system::error_code & ec = system::throws )
+      void  start( system::error_code & ec = BOOST_CHRONO_THROWS )
       {
         process_clock::now( m_start, ec );
       }
 
-      void  elapsed( process_times & times, system::error_code & ec = system::throws )
+      void  elapsed( process_times & times, system::error_code & ec = BOOST_CHRONO_THROWS )
       {
         process_times end;
         process_clock::now( end, ec );
@@ -124,38 +124,38 @@ namespace boost
       // high associated cost, even when the standard streams are not used.
 
       BOOST_CHRONO_INLINE
-      explicit run_timer( system::error_code & ec = system::throws );
+      explicit run_timer( system::error_code & ec = BOOST_CHRONO_THROWS );
       BOOST_CHRONO_INLINE
       explicit run_timer( std::ostream & os,
-        system::error_code & ec = system::throws );
+        system::error_code & ec = BOOST_CHRONO_THROWS );
 
       BOOST_CHRONO_INLINE
       explicit run_timer( const std::string & format,
-        system::error_code & ec = system::throws );
+        system::error_code & ec = BOOST_CHRONO_THROWS );
       BOOST_CHRONO_INLINE
       run_timer( std::ostream & os, const std::string & format,
-        system::error_code & ec = system::throws );
+        system::error_code & ec = BOOST_CHRONO_THROWS );
 
       BOOST_CHRONO_INLINE
       run_timer( const std::string & format, int places,
-        system::error_code & ec = system::throws );
+        system::error_code & ec = BOOST_CHRONO_THROWS );
       BOOST_CHRONO_INLINE
       run_timer( std::ostream & os, const std::string & format,
-        int places, system::error_code & ec = system::throws );
+        int places, system::error_code & ec = BOOST_CHRONO_THROWS );
 
       BOOST_CHRONO_INLINE
       explicit run_timer( int places,
-        system::error_code & ec = system::throws );
+        system::error_code & ec = BOOST_CHRONO_THROWS );
       BOOST_CHRONO_INLINE
       run_timer( std::ostream & os, int places,
-        system::error_code & ec = system::throws );
+        system::error_code & ec = BOOST_CHRONO_THROWS );
 
       BOOST_CHRONO_INLINE
       run_timer( int places, const std::string & format,
-        system::error_code & ec = system::throws );
+        system::error_code & ec = BOOST_CHRONO_THROWS );
       BOOST_CHRONO_INLINE
       run_timer( std::ostream & os, int places, const std::string & format,
-        system::error_code & ec = system::throws );
+        system::error_code & ec = BOOST_CHRONO_THROWS );
 
       ~run_timer()  // never throws
       {
@@ -163,13 +163,13 @@ namespace boost
         if ( !reported() ) report( ec );
       }
 
-      BOOST_CHRONO_INLINE void  start( system::error_code & ec = system::throws )
+      BOOST_CHRONO_INLINE void  start( system::error_code & ec = BOOST_CHRONO_THROWS )
       {
         m_reported = false;
         process_timer::start( ec );
       }
 
-      BOOST_CHRONO_INLINE void  report( system::error_code & ec = system::throws );
+      BOOST_CHRONO_INLINE void  report( system::error_code & ec = BOOST_CHRONO_THROWS );
 
       BOOST_CHRONO_INLINE void  test_report( duration real_, duration user_, duration system_ );
 

@@ -19,7 +19,8 @@
 
 namespace boost { namespace chrono {
 
-	thread_clock::time_point thread_clock::now( ) {
+	thread_clock::time_point thread_clock::now( ) 
+	{
         // get the current thread
         pthread_t pth=pthread_self();
         // get the clock_id associated to the current thread
@@ -30,11 +31,10 @@ namespace boost { namespace chrono {
         if ( ::clock_gettime( clock_id, &ts ) )
         {
             boost::throw_exception(
-#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-            system::system_error( errno, system::system_category, "chrono::thread_clock" ));
-#else
-            system::system_error( errno, system::system_category(), "chrono::thread_clock" ));
-#endif
+                    system::system_error( 
+                            errno, 
+                            BOOST_CHRONO_SYSTEM_CATEGORY, 
+                            "chrono::thread_clock" ));
         }
 
         // transform to nanoseconds
@@ -42,7 +42,8 @@ namespace boost { namespace chrono {
             static_cast<thread_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
 
     }
-	thread_clock::time_point thread_clock::now( system::error_code & ec ) {
+	thread_clock::time_point thread_clock::now( system::error_code & ec ) 
+	{
         // get the current thread
         pthread_t pth=pthread_self();
         // get the clock_id associated to the current thread
@@ -52,14 +53,24 @@ namespace boost { namespace chrono {
         struct timespec ts;
         if ( ::clock_gettime( clock_id, &ts ) )
         {
-#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-          ec.assign( errno, system::system_category );
-#else
-          ec.assign( errno, system::system_category() );
-#endif
-          return time_point();
+            if (BOOST_CHRONO_IS_THROWS(ec))
+            {
+                boost::throw_exception(
+                        system::system_error( 
+                                errno, 
+                                BOOST_CHRONO_SYSTEM_CATEGORY, 
+                                "chrono::thread_clock" ));
+            }
+            else
+            {
+                ec.assign( errno, BOOST_CHRONO_SYSTEM_CATEGORY );
+                return time_point();
+            }
         }
-        ec.clear();
+        if (!BOOST_CHRONO_IS_THROWS(ec)) 
+        {
+            ec.clear();
+        }
         // transform to nanoseconds
         return time_point(duration(
             static_cast<thread_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));

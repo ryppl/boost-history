@@ -38,7 +38,10 @@ system_clock::now(system::error_code & ec)
 {
     timeval tv;
     gettimeofday(&tv, 0);
-    ec.clear();
+    if (!BOOST_CHRONO_IS_THROWS(ec)) 
+    {
+        ec.clear();
+    }
     return time_point(seconds(tv.tv_sec) + microseconds(tv.tv_usec));
 }
 
@@ -83,7 +86,9 @@ BOOST_CHRONO_STATIC
 monotonic_clock::rep
 monotonic_simplified_ec(system::error_code & ec)
 {
-    ec.clear();
+    if (!BOOST_CHRONO_IS_THROWS(ec))
+        ec.clear();
+    }
     return mach_absolute_time();
 }
 
@@ -108,11 +113,7 @@ monotonic_full()
     static const double factor = chrono_detail::compute_monotonic_factor(err);
     if (err != 0)
       boost::throw_exception(
-#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-        system::system_error( err, system::system_category, "chrono::monotonic_clock" ));
-#else
-        system::system_error( err, system::system_category(), "chrono::monotonic_clock" ));
-#endif
+        system::system_error( err, BOOST_CHRONO_SYSTEM_CATEGORY, "chrono::monotonic_clock" ));
     return static_cast<monotonic_clock::rep>(mach_absolute_time() * factor);
 }
 
@@ -123,14 +124,23 @@ monotonic_full_ec(system::error_code & ec)
     static kern_return_t err;
     static const double factor = chrono_detail::compute_monotonic_factor(err);
     if (err != 0) {
-#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-      ec.assign( errno, system::system_category );
-#else
-      ec.assign( errno, system::system_category() );
-#endif
-      return monotonic_clock::rep();
+        if (BOOST_CHRONO_IS_THROWS(ec))
+        {
+            boost::throw_exception(
+                    system::system_error( 
+                            err, 
+                            BOOST_CHRONO_SYSTEM_CATEGORY, 
+                            "chrono::monotonic_clock" ));
+        } 
+        else
+        {
+            ec.assign( errno, BOOST_CHRONO_SYSTEM_CATEGORY );
+            return monotonic_clock::rep();
+        }
     }
-    ec.clear();
+    if (!BOOST_CHRONO_IS_THROWS(ec))
+        ec.clear();
+    }
     return static_cast<monotonic_clock::rep>(mach_absolute_time() * factor);
 }
 
@@ -173,12 +183,13 @@ monotonic_clock::now()
 {
     static kern_return_t err;
     static chrono_detail::FP_ec fp = chrono_detail::init_monotonic_clock(err);
-    if( err != 0  ) 	boost::throw_exception(
-#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-        system::system_error( err, system::system_category, "chrono::monotonic_clock" ));
-#else
-        system::system_error( err, system::system_category(), "chrono::monotonic_clock" ));
-#endif
+    if( err != 0  ) { 	
+        boost::throw_exception(
+                system::system_error( 
+                        err, 
+                        BOOST_CHRONO_SYSTEM_CATEGORY, 
+                        "chrono::monotonic_clock" ));
+    }
     return time_point(duration(fp()));
 }
 
@@ -188,14 +199,23 @@ monotonic_clock::now(system::error_code & ec)
     static kern_return_t err;
     static chrono_detail::FP_ec fp = chrono_detail::init_monotonic_clock(err);
     if( err != 0  ) {
-#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-        ec.assign( err, system::system_category );
-#else
-        ec.assign( err, system::system_category() );
-#endif
-        return time_point();
+        if (BOOST_CHRONO_IS_THROWS(ec))
+        {
+            boost::throw_exception(
+                    system::system_error( 
+                            err, 
+                            BOOST_CHRONO_SYSTEM_CATEGORY, 
+                            "chrono::monotonic_clock" ));
+        }
+        else
+        {
+            ec.assign( err, BOOST_CHRONO_SYSTEM_CATEGORY );
+            return time_point();
+        }
     }
-    ec.clear();
+    if (!BOOST_CHRONO_IS_THROWS(ec))
+        ec.clear();
+    }
     return time_point(duration(fp(ec)));
 }
 

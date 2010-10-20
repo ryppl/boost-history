@@ -17,7 +17,8 @@
 #include <boost/chrono/thread_clock.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/system/system_error.hpp>
-#include <cassert>
+#include <boost/throw_exception.hpp>
+#include <boost/chrono/detail/system.hpp>
 
 //----------------------------------------------------------------------------//
 //                                Windows                                     //

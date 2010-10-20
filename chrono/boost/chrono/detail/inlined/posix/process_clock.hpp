@@ -46,13 +46,19 @@ namespace chrono_detail
         clock_t c = ::times( &tm );
         if ( c == clock_t(-1) ) // error
         {
-            assert( 0 && "error handling not implemented yet" );
-#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-            ec.assign( errno, system::system_category );
-#else
-            ec.assign( errno, system::system_category() );
-#endif
-            times_.real = times_.system = times_.user = nanoseconds(-1);
+            if (BOOST_CHRONO_IS_THROWS(ec))
+            {
+                boost::throw_exception(
+                        system::system_error( 
+                                errno, 
+                                BOOST_CHRONO_SYSTEM_CATEGORY, 
+                                "chrono::process_clock" ));
+            }
+            else
+            {
+                ec.assign( errno, BOOST_CHRONO_SYSTEM_CATEGORY );
+                times_.real = times_.system = times_.user = nanoseconds(-1);
+            }
         }
         else
         {
@@ -67,13 +73,19 @@ namespace chrono_detail
             }
             else
             {
-                assert( 0 && "error handling not implemented yet" );
-#if ((BOOST_VERSION / 100000) < 2) && ((BOOST_VERSION / 100 % 1000) < 44)
-                ec.assign( errno, system::system_category );
-#else
-                ec.assign( errno, system::system_category() );
-#endif
-                times_.real = times_.user = times_.system = nanoseconds(-1);
+                if (BOOST_CHRONO_IS_THROWS(ec))
+                {
+                    boost::throw_exception(
+                            system::system_error( 
+                                    errno, 
+                                    BOOST_CHRONO_SYSTEM_CATEGORY, 
+                                    "chrono::process_clock" ));
+                }
+                else
+                {
+                    ec.assign( errno, BOOST_CHRONO_SYSTEM_CATEGORY );
+                    times_.real = times_.user = times_.system = nanoseconds(-1);
+                }
             }
         }
 

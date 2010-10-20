@@ -15,5 +15,12 @@
 #define BOOST_CHRONO_SYSTEM_CATEGORY boost::system::system_category()
 #endif
 
+#ifdef BOOST_SYSTEM_NO_DEPRECATED 
+#define BOOST_CHRONO_THROWS boost::throws()
+#define BOOST_CHRONO_IS_THROWS(EC) (&EC==&boost::throws())
+#else
+#define BOOST_CHRONO_THROWS boost::system::throws
+#define BOOST_CHRONO_IS_THROWS(EC) (&EC==&boost::system::throws)
+#endif
 
 #endif

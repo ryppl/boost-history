@@ -22,8 +22,11 @@ namespace chrono
     timespec ts;
     if ( ::clock_gettime( CLOCK_REALTIME, &ts ) )
     {
-      boost::throw_exception(
-        system::system_error( errno, BOOST_CHRONO_SYSTEM_CATEGORY, "chrono::system_clock" ));
+        boost::throw_exception(
+                system::system_error( 
+                        errno, 
+                        BOOST_CHRONO_SYSTEM_CATEGORY, 
+                        "chrono::system_clock" ));
     }
 
     return time_point(duration(
@@ -35,13 +38,27 @@ namespace chrono
     timespec ts;
     if ( ::clock_gettime( CLOCK_REALTIME, &ts ) )
     {
-      ec.assign( errno, BOOST_CHRONO_SYSTEM_CATEGORY );
-      return time_point();
+        if (BOOST_CHRONO_IS_THROWS(ec))
+        {
+            boost::throw_exception(
+                    system::system_error( 
+                            errno, 
+                            BOOST_CHRONO_SYSTEM_CATEGORY, 
+                            "chrono::system_clock" ));
+        }
+        else
+        {
+            ec.assign( errno, BOOST_CHRONO_SYSTEM_CATEGORY );
+            return time_point();
+        }
     }
 
-    ec.clear();
+    if (!BOOST_CHRONO_IS_THROWS(ec)) 
+    {
+        ec.clear();
+    }
     return time_point(duration(
-      static_cast<system_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
+//      static_cast<system_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
   }
 
   std::time_t system_clock::to_time_t(const system_clock::time_point& t)
@@ -61,8 +78,11 @@ namespace chrono
     timespec ts;
     if ( ::clock_gettime( CLOCK_MONOTONIC, &ts ) )
     {
-      boost::throw_exception(
-        system::system_error( errno, BOOST_CHRONO_SYSTEM_CATEGORY, "chrono::monotonic_clock" ));
+        boost::throw_exception(
+                system::system_error( 
+                        errno, 
+                        BOOST_CHRONO_SYSTEM_CATEGORY, 
+                        "chrono::monotonic_clock" ));
     }
 
     return time_point(duration(
@@ -74,11 +94,25 @@ namespace chrono
     timespec ts;
     if ( ::clock_gettime( CLOCK_MONOTONIC, &ts ) )
     {
-      ec.assign( errno, BOOST_CHRONO_SYSTEM_CATEGORY );
-      return time_point();
+        if (BOOST_CHRONO_IS_THROWS(ec))
+        {
+            boost::throw_exception(
+                    system::system_error( 
+                            errno, 
+                            BOOST_CHRONO_SYSTEM_CATEGORY, 
+                            "chrono::monotonic_clock" ));
+        }
+        else
+        {
+            ec.assign( errno, BOOST_CHRONO_SYSTEM_CATEGORY );
+            return time_point();
+        }
     }
 
-    ec.clear();
+    if (!BOOST_CHRONO_IS_THROWS(ec)) 
+    {
+        ec.clear();
+    }
     return time_point(duration(
       static_cast<monotonic_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
   }
