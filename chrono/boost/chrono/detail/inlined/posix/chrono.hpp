@@ -58,7 +58,7 @@ namespace chrono
         ec.clear();
     }
     return time_point(duration(
-//      static_cast<system_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
+      static_cast<system_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
   }
 
   std::time_t system_clock::to_time_t(const system_clock::time_point& t)
