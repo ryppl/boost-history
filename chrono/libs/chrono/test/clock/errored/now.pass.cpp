@@ -9,7 +9,8 @@
 int main()
 {
 	check_clock_now_err<errored_clock>(1);
-	check_clock_now_ec_err<errored_clock>(1);
+    check_clock_now_ec_err<errored_clock>(1);
+    check_clock_now_throws_err<errored_clock>(1);
 
     return boost::report_errors();
 }

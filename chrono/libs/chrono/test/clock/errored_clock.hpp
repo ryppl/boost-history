@@ -43,6 +43,16 @@
       }
       // never throws and set ec
       static time_point  now(boost::system::error_code & ec) {
+          if (BOOST_CHRONO_IS_THROWS(ec))
+          {
+              boost::throw_exception(
+                      boost::system::system_error(
+                              errno_,
+                              BOOST_CHRONO_SYSTEM_CATEGORY,
+                              "errored_clock"
+                      )
+              );
+          }
     	  ec.assign( errno_, BOOST_CHRONO_SYSTEM_CATEGORY );
     	  return time_point();
       };

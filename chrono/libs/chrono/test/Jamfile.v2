@@ -35,7 +35,6 @@ project
         #<include>../../..
 
         <toolset>msvc:<asynch-exceptions>on
-        <define>BOOST_ENABLE_WARNINGS
         <define>BOOST_CHRONO_USES_MPL_ASSERT
         <define>BOOST_SYSTEM_NO_DEPRECATED
         <warnings>all

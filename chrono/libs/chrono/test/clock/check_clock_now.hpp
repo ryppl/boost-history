@@ -60,6 +60,7 @@ void check_clock_now_throws_err(int err)
     Clock::set_errno(err);
     try {
         typename Clock::time_point t1 = Clock::now(boost::throws());
+        BOOST_TEST(0&&"exception not thown");
     } catch (boost::system::system_error& ex) {
         BOOST_TEST(ex.code().value()==err);
 //      BOOST_TEST(ex.code().category() == BOOST_CHRONO_SYSTEM_CATEGORY);
