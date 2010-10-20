@@ -30,10 +30,10 @@
 //  with a boost::system using directive increases use scenario coverage.
 using namespace boost::system;
 
-# if defined( BOOST_WINDOWS_API )
+# if defined( BOOST_SYSTEM_WINDOWS_API )
 #   include "winerror.h"
 #   define BOOST_ACCESS_ERROR_MACRO ERROR_ACCESS_DENIED
-# elif defined( BOOST_POSIX_API )
+# elif defined( BOOST_SYSTEM_POSIX_API )
 #   define BOOST_ACCESS_ERROR_MACRO EACCES
 # else
 #   error "Only supported for POSIX and Windows"
@@ -154,7 +154,7 @@ int main( int, char ** )
   ec = error_code( -1, system_category() );
   std::cout << "error_code message for -1 is \"" << ec.message() << "\"\n";
   std::cout << "error_code message for 0 is \"" << ec_0_system.message() << "\"\n";
-#if defined(BOOST_WINDOWS_API)
+#if defined(BOOST_SYSTEM_WINDOWS_API)
   // Borland appends newline, so just check text
   BOOST_TEST( ec.message().substr(0,13) == "Unknown error" );
   BOOST_TEST( ec_0_system.message().substr(0,36) == "The operation completed successfully" );
@@ -177,7 +177,7 @@ int main( int, char ** )
   error_condition econd_ok;
   std::cout << "error_condition message for -1 is \"" << econd.message() << "\"\n";
   std::cout << "error_condition message for 0 is \"" << econd_ok.message() << "\"\n";
-#if defined(BOOST_WINDOWS_API)
+#if defined(BOOST_SYSTEM_WINDOWS_API)
   // Borland appends newline, so just check text
   BOOST_TEST( econd.message().substr(0,13) == "Unknown error" );
   BOOST_TEST( econd_ok.message().substr(0,8) == "No error" );
@@ -196,7 +196,7 @@ int main( int, char ** )
   BOOST_TEST( econd.message() != "" );
   BOOST_TEST( econd.message().substr( 0, 13) != "Unknown error" );
 
-#ifdef BOOST_WINDOWS_API
+#ifdef BOOST_SYSTEM_WINDOWS_API
   std::cout << "Windows tests...\n";
   // these tests probe the Windows errc decoder
   //   test the first entry in the decoder table:

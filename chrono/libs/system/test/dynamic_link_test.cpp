@@ -26,7 +26,7 @@ namespace boost
 {
   namespace system
   {
-    BOOST_SYSTEM_DECL void throw_test();
+  BOOST_SYMBOL_EXPORT void throw_test();
   }
 }
 

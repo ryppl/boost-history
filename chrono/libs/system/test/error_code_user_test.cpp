@@ -22,7 +22,7 @@
 #include <cstdio>
 #include <boost/detail/lightweight_test.hpp>
 
-#ifdef BOOST_POSIX_API
+#ifdef BOOST_SYSTEM_POSIX_API
 # include <sys/stat.h>
 #else
 # include <windows.h>
@@ -37,7 +37,7 @@
 boost::system::error_code my_mkdir( const std::string & path )
 {
   return boost::system::error_code(
-#   ifdef BOOST_POSIX_API
+#   ifdef BOOST_SYSTEM_POSIX_API
       ::mkdir( path.c_str(), S_IRWXU|S_IRWXG|S_IROTH|S_IXOTH ) == 0 ? 0 : errno,
 #   else
       ::CreateDirectoryA( path.c_str(), 0 ) != 0 ? 0 : ::GetLastError(),
@@ -318,7 +318,7 @@ namespace lib4
 //    check_out_of_memory(user_permission_denied, false);
 //    check_out_of_memory(user_out_of_memory, true);
 //
-//# ifdef BOOST_WINDOWS_API
+//# ifdef BOOST_SYSTEM_WINDOWS_API
 //    check_success(boost::system::windows::success, true);
 //    check_success(boost::system::windows::access_denied, false);
 //    check_success(boost::system::windows::not_enough_memory, false);

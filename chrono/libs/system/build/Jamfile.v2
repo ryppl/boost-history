@@ -12,7 +12,7 @@ project boost/system
     : usage-requirements  # pass these requirement to dependents (i.e. users)
       <link>shared:<define>BOOST_SYSTEM_DYN_LINK=1
       <link>static:<define>BOOST_SYSTEM_STATIC_LINK=1
-      <define>BOOST_USE_WINDOWS_H
+      #<define>BOOST_USE_WINDOWS_H
     ;
 
 SOURCES = error_code ;

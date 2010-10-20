@@ -9,8 +9,10 @@
 
 project
     : requirements
-      <library>/boost/system//boost_system
+      #<library>/boost/system//boost_system
       <toolset>msvc:<asynch-exceptions>on
+      <define>BOOST_SYSTEM_INLINED
+      <define>BOOST_USE_WINDOWS_H
     ;
     
    lib throw_test

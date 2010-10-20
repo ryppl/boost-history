@@ -19,7 +19,7 @@
 #include <iostream>
 #include <string>
 
-#ifdef BOOST_WINDOWS_API
+#ifdef BOOST_SYSTEM_WINDOWS_API
 #include <windows.h>
 #endif
 
@@ -38,7 +38,7 @@ namespace
     std::cout << "test " << desc << "\n what() returns \"" << ex.what() << "\"\n";
     BOOST_TEST( ex.code().value() == v );
     BOOST_TEST( ex.code().category() == system_category() );
-# ifdef BOOST_WINDOWS_API
+# ifdef BOOST_SYSTEM_WINDOWS_API
     LANGID language_id;
 #   if !defined(__MINGW32__) && !defined(__CYGWIN__)
       language_id = ::GetUserDefaultUILanguage();
