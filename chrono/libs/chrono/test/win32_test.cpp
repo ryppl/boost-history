@@ -16,6 +16,7 @@
 #endif
 
 #include <boost/detail/win/basic_types.hpp>
+#include <boost/detail/win/time.hpp>
 #include <windows.h>
 #include <boost/type_traits.hpp>
 #include <boost/typeof/typeof.hpp>

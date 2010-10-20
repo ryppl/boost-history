@@ -27,7 +27,7 @@ if ! $(BOOST_ROOT)
 project
     : requirements
         <os>LINUX:<threading>multi
-        <library>/boost/system//boost_system/<link>static
+        <library>/boost/system//boost_system
 
         # uncomment the line above if you build outside the Boost release
         #<include>$(BOOST_ROOT)
@@ -37,6 +37,7 @@ project
         <toolset>msvc:<asynch-exceptions>on
         <define>BOOST_ENABLE_WARNINGS
         <define>BOOST_CHRONO_USES_MPL_ASSERT
+        <define>BOOST_SYSTEM_NO_DEPRECATED
         <warnings>all
         <toolset>gcc:<cxxflags>-Wextra
         <toolset>gcc:<cxxflags>-Wno-long-long

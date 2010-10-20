@@ -18,9 +18,15 @@ void check_clock_now()
 template <typename Clock>
 void check_clock_now_ec()
 {
-	boost::system::error_code ec;
-	typename Clock::time_point t1 = Clock::now(ec);
-	BOOST_TEST(ec.value()==0);
+    boost::system::error_code ec;
+    typename Clock::time_point t1 = Clock::now(ec);
+    BOOST_TEST(ec.value()==0);
+}
+
+template <typename Clock>
+void check_clock_now_throws()
+{
+    typename Clock::time_point t1 = Clock::now(boost::throws());
 }
 
 template <typename Clock>
@@ -28,7 +34,7 @@ void check_clock_now_err(int err)
 {
 	Clock::set_errno(err);
 	try {
-	typename Clock::time_point t1 = Clock::now();
+	    typename Clock::time_point t1 = Clock::now();
 	} catch (boost::system::system_error& ex) {
 		BOOST_TEST(ex.code().value()==err);
 //		BOOST_TEST(ex.code().category() == BOOST_CHRONO_SYSTEM_CATEGORY);
@@ -40,12 +46,26 @@ void check_clock_now_err(int err)
 template <typename Clock>
 void check_clock_now_ec_err(int err)
 {
-	Clock::set_errno(err);
-	boost::system::error_code ec;
-	typename Clock::time_point t1 = Clock::now(ec);
-	BOOST_TEST(ec.value()==err);
-//	BOOST_TEST(ec.category() == BOOST_CHRONO_SYSTEM_CATEGORY);
-	Clock::set_errno(0);
+    Clock::set_errno(err);
+    boost::system::error_code ec;
+    typename Clock::time_point t1 = Clock::now(ec);
+    BOOST_TEST(ec.value()==err);
+//  BOOST_TEST(ec.category() == BOOST_CHRONO_SYSTEM_CATEGORY);
+    Clock::set_errno(0);
+}
+
+template <typename Clock>
+void check_clock_now_throws_err(int err)
+{
+    Clock::set_errno(err);
+    try {
+        typename Clock::time_point t1 = Clock::now(boost::throws());
+    } catch (boost::system::system_error& ex) {
+        BOOST_TEST(ex.code().value()==err);
+//      BOOST_TEST(ex.code().category() == BOOST_CHRONO_SYSTEM_CATEGORY);
+//      BOOST_TEST(std::string(ex.what()) == std::string("errored_clock"));
+    }
+    Clock::set_errno(0);
 }
 
 #endif
