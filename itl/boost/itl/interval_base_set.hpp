@@ -9,6 +9,16 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #ifndef BOOST_ICL_INTERVAL_BASE_SET_H_JOFA_990223
 #define BOOST_ICL_INTERVAL_BASE_SET_H_JOFA_990223
 
+#include <boost/itl/impl_config.hpp>
+
+#if defined(ICL_USE_BOOST_INTERPROCESS_IMPLEMENTATION)
+#include <boost/interprocess/containers/set.hpp>
+#elif defined(ICL_USE_BOOST_MOVE_IMPLEMENTATION)
+#include <boost/container/set.hpp>
+#else 
+#include <set>
+#endif
+
 #include <limits>
 #include <boost/next_prior.hpp> 
 #include <boost/itl/type_traits/interval_type_default.hpp>
@@ -27,7 +37,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 #include <boost/itl/right_open_interval.hpp>
 #include <boost/itl/continuous_interval.hpp>
-#include <boost/itl/set.hpp>
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/element_iterator.hpp>
 
@@ -60,12 +69,6 @@ public:
 
     /// Auxilliary type for overloadresolution
     typedef type overloadable_type;
-
-    //--------------------------------------------------------------------------
-    //- Associated types: Related types
-    //--------------------------------------------------------------------------
-    /// The atomized type representing the corresponding container of elements
-    typedef typename icl::set<DomainT,Compare,Alloc> atomized_type;
 
     //--------------------------------------------------------------------------
     //- Associated types: Data
@@ -104,6 +107,12 @@ public:
 
     /// Comparison functor for keys
     typedef exclusive_less_than<interval_type> key_compare;
+
+    //--------------------------------------------------------------------------
+    //- Associated types: Related types
+    //--------------------------------------------------------------------------
+    /// The atomized type representing the corresponding container of elements
+    typedef typename std::set<DomainT,domain_compare,Alloc<DomainT> > atomized_type;
 
     //--------------------------------------------------------------------------
     //- Associated types: Implementation and stl related

@@ -8,6 +8,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifndef BOOST_LIBS_ICL_TEST_ICL_LAWS_HPP_JOFA_090119
 #define BOOST_LIBS_ICL_TEST_ICL_LAWS_HPP_JOFA_090119
 
+#include <functional>
 #include <boost/itl/type_traits/identity_element.hpp>
 
 namespace boost{namespace icl
@@ -35,7 +36,7 @@ void check_associativity_wrt_##op_tag(const Type& a, const TypeB& b, const TypeC
 { \
     Type left  = (a op_sign b) op_sign c; \
     Type right = a op_sign (b op_sign c); \
-    BOOST_CHECK_EQUAL(left,right); \
+    BOOST_CHECK(left==right); \
 }
 
 #define DEFINE_ASSOCIATIVITY_CHECK_WRT_EQUAL(op_tag, op_sign) \
@@ -46,7 +47,7 @@ const Type& a, const TypeB& b, const TypeC& c) \
 { \
     Type left  = (a op_sign b) op_sign c; \
     Type right = a op_sign (b op_sign c); \
-    BOOST_CHECK_EQUAL((*equal)(left,right), true); \
+    BOOST_CHECK((*equal)(left,right)); \
 }
 
 // Here we define the call of the test function thats definition 
@@ -77,7 +78,7 @@ void check_right_neutrality_wrt_equal_##op_tag \
 { \
     Type left  = a op_sign identity_element; \
     Type right = identity_element; \
-    BOOST_CHECK_EQUAL((*equal)(left,right), true); \
+    BOOST_CHECK((*equal)(left,right)); \
 }
 
 #define DEFINE_RIGHT_NEUTRALITY_CHECK_WRT(op_tag, op_sign) \
@@ -87,7 +88,7 @@ void check_right_neutrality_wrt_##op_tag \
 { \
     Type left  = a op_sign identity_element; \
     Type right = identity_element; \
-    BOOST_CHECK_EQUAL(left,right); \
+    BOOST_CHECK(left==right); \
 }
 
 #define DEFINE_NEUTRALITY_CHECK_WRT_EQUAL(op_tag, op_sign) \
@@ -97,7 +98,7 @@ void check_neutrality_wrt_equal_##op_tag \
 { \
     Type left  = a op_sign identity_element; \
     Type right = identity_element op_sign a; \
-    BOOST_CHECK_EQUAL((*equal)(left,right), true); \
+    BOOST_CHECK((*equal)(left,right)); \
 }
 
 #define DEFINE_NEUTRALITY_CHECK_WRT(op_tag, op_sign) \
@@ -107,7 +108,7 @@ void check_neutrality_wrt_##op_tag \
 { \
     Type left  = a op_sign identity_element; \
     Type right = identity_element op_sign a; \
-    BOOST_CHECK_EQUAL(left,right); \
+    BOOST_CHECK(left==right); \
 }
 
 #define CHECK_NEUTRALITY_WRT(op_tag) check_neutrality_wrt_##op_tag
@@ -135,7 +136,7 @@ void check_commutativity_wrt_equal_##op_tag \
 { \
     Type left  = a op_sign b; \
     Type right = b op_sign a; \
-    BOOST_CHECK_EQUAL((*equal)(left,right), true); \
+    BOOST_CHECK((*equal)(left,right)); \
 }
 
 #define DEFINE_COMMUTATIVITY_CHECK_WRT(op_tag, op_sign) \
@@ -144,7 +145,7 @@ template<class Type, class TypeB> \
 { \
     Type left  = a op_sign b; \
     Type right = b op_sign a; \
-    BOOST_CHECK_EQUAL(left,right); \
+    BOOST_CHECK(left==right); \
 }
 
 #define CHECK_COMMUTATIVITY_WRT_EQUAL(op_tag) check_commutativity_wrt_equal_##op_tag
@@ -169,7 +170,7 @@ template<class Type> \
 (typename equality<Type>::type* equal, const Type& identity_element, const Type& var_a) \
 { \
     Type positive_difference  = var_a - var_a; \
-    BOOST_CHECK_EQUAL((*equal)(positive_difference, identity_element), true); \
+    BOOST_CHECK((*equal)(positive_difference, identity_element)); \
 }
 
 #define DEFINE_PARTIAL_INVERSION_CHECK_WRT(plus_tag, plus_sign) \
@@ -178,7 +179,7 @@ template<class Type> \
 (const Type& identity_element, const Type& var_a) \
 { \
     Type positive_difference  = var_a - var_a; \
-    BOOST_CHECK_EQUAL(positive_difference, identity_element); \
+    BOOST_CHECK(positive_difference==identity_element); \
 }
 
 #define CHECK_PARTIAL_INVERSION_WRT_EQUAL(plus_tag) check_partial_inversion_wrt_equal_##plus_tag
@@ -199,9 +200,9 @@ template<class Type> \
 (typename equality<Type>::type* equal, const Type& identity_element, const Type& var_a) \
 { \
     Type positive_difference  = var_a - var_a; \
-    BOOST_CHECK_EQUAL((*equal)(positive_difference, identity_element), true); \
+    BOOST_CHECK((*equal)(positive_difference, identity_element)); \
     Type negative_difference = (identity_element - var_a) plus_sign var_a; \
-    BOOST_CHECK_EQUAL((*equal)(negative_difference, identity_element), true); \
+    BOOST_CHECK((*equal)(negative_difference, identity_element)); \
 }
 
 #define DEFINE_INVERSE_CHECK_WRT(plus_tag, plus_sign) \
@@ -210,9 +211,9 @@ template<class Type> \
 (const Type& identity_element, const Type& var_a) \
 { \
     Type positive_difference  = var_a - var_a; \
-    BOOST_CHECK_EQUAL(positive_difference, identity_element); \
+    BOOST_CHECK(positive_difference==identity_element); \
     Type negative_difference = (identity_element - var_a) plus_sign var_a; \
-    BOOST_CHECK_EQUAL(negative_difference, identity_element); \
+    BOOST_CHECK(negative_difference==identity_element); \
 }
 
 #define CHECK_INVERSE_WRT_EQUAL(plus_tag) check_inverse_wrt_equal_##plus_tag

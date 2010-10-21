@@ -63,7 +63,7 @@ void test_inner_complement_(const IntervalT& itv1, const IntervalT& itv2)
     test_inner_complement<DomainT, std::less, IntervalT>(itv1, itv2);
 }
 
-#ifndef ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#ifndef BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
 
 void interval_ctor_specific()
 {
@@ -78,7 +78,7 @@ void interval_ctor_specific()
                       icl::infinity<size_type_of<icl::interval<double>::type>::type >::value() );
 }
 
-#endif // ndef ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#endif // ndef BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
 
 template <class T> 
 void interval_equal_4_integral_types()

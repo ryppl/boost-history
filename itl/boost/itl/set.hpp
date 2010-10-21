@@ -157,7 +157,7 @@ public:
     { return icl::contains(*this, sub); }
 
     /** Is <tt>*this</tt> contained in <tt>super</tt>? */
-    bool contained_in(const set& super)const 
+    bool within(const set& super)const 
     { return icl::within(*this, super); }
 
     /** <tt>*this</tt> and <tt>x2</tt> are disjoint, if their intersection is empty */

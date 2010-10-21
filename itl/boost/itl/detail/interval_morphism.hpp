@@ -37,10 +37,12 @@ namespace boost{namespace icl
             typedef typename IntervalContainerT::key_type key_type;
             ICL_const_FORALL(typename ElementContainerT, element_, src)
             {
-                const typename ElementContainerT::key_type&  key  = key_value<ElementContainerT>(element_);
-                const typename ElementContainerT::data_type& data = co_value<ElementContainerT>(element_);
+                const typename ElementContainerT::key_type&  key  
+                    = key_value<ElementContainerT>(element_);
+                const typename codomain_type_of<ElementContainerT>::type& coval 
+                    = co_value<ElementContainerT>(element_);
 
-                result += icl::make_value<IntervalContainerT>(key_type(key), data);
+                result += icl::make_value<IntervalContainerT>(key_type(key), coval);
             }
         }
 

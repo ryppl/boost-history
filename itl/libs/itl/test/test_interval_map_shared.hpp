@@ -1169,7 +1169,7 @@ void interval_map_inclusion_compare_4_bicremental_types()
     typedef typename IntervalMapT::interval_type   IntervalT;
     typedef typename IntervalMap<T,U,Trt>::set_type IntervalSetT;
     typedef icl::map<T,U,Trt> MapT;
-    typedef icl::set<T> SetT;
+    typedef std::set<T> SetT;
 
     IntervalMapT itv_map_sub_a, itv_map_a, itv_map_a2, itv_map_super_a, 
                  itv_map_b, itv_map_c;

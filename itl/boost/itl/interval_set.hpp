@@ -68,15 +68,15 @@ public:
     typedef Alloc<DomainT> domain_allocator_type;
 
     /// The corresponding atomized type representing this interval container of elements
-    typedef typename icl::set<DomainT,Compare,Alloc> atomized_type;
+    typedef typename base_type::atomized_type atomized_type;
 
     /// Container type for the implementation 
-    typedef typename icl::set<interval_type,ICL_EXCLUSIVE_LESS(interval_type),Alloc> ImplSetT;
+    typedef typename base_type::ImplSetT ImplSetT;
 
     /// key type of the implementing container
     typedef typename ImplSetT::key_type   key_type;
     /// data type of the implementing container
-    typedef typename ImplSetT::data_type  data_type;
+    typedef typename ImplSetT::value_type data_type;
     /// value type of the implementing container
     typedef typename ImplSetT::value_type value_type;
 

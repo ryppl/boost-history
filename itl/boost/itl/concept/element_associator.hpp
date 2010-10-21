@@ -11,6 +11,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/is_associative_element_container.hpp>
 #include <boost/itl/type_traits/is_key_container_of.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
+#include <boost/itl/detail/subset_comparer.hpp>
 #include <boost/itl/concept/element_set.hpp>
 #include <boost/itl/concept/element_map.hpp>
 

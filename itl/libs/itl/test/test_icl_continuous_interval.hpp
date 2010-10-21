@@ -49,7 +49,7 @@ void distant_intervals_4_numeric_continuous_types()
     test_inner_complement<T,Compare,C__I>(MK_I(C__I,0,2), MK_I(C__I,0,6));
 
     //--------------------------------------------------------------------------
-#ifndef ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#ifndef BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
     test_inner_complement<T,Compare,IntervalT>(I_D(0,4), I_D(8,9));
     test_inner_complement<T,Compare,IntervalT>(I_D(7,8), I_D(2,3));
     test_inner_complement<T,Compare,IntervalT>(I_D(2,4), I_D(4,6));
@@ -74,7 +74,7 @@ void distant_intervals_4_numeric_continuous_types()
     test_inner_complement<T,Compare,IntervalT>(C_D(3,0), C_D(4,0));
     test_inner_complement<T,Compare,IntervalT>(C_D(0,2), C_D(4,6));
     test_inner_complement<T,Compare,IntervalT>(C_D(0,2), C_D(0,6));
-#endif //ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#endif //BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
 }
 
 

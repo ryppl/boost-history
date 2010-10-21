@@ -21,10 +21,10 @@ by setting defines in this file.
 
 // If this macro is defined, right_open_interval with static interval borders
 // will be used as default for all interval containers. 
-// ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS should be defined in the application
+// BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS should be defined in the application
 // before other includes from the ITL
-//#define ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS //JODO comment this out for the final release
-// If ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS is NOT defined, ITL uses intervals
+//#define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS //JODO comment this out for the final release
+// If BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS is NOT defined, ITL uses intervals
 // with dynamic borders as default.
 
 #ifdef ICL_USE_DYNAMIC_INTERVAL_BORDERS_DEFAULTS //JODO remove this for the final release

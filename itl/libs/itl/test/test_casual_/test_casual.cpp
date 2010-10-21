@@ -18,10 +18,11 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include "../test_value_maker.hpp"
 
 #include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/is_const.hpp>
 #include <boost/detail/is_incrementable.hpp>
 #include <boost/type_traits/is_floating_point.hpp>
 
-#define ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
 #define BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT right_open_interval
 #define BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS 2 //0=() 1=(] 2=[) 3=[]
 
@@ -31,6 +32,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/interval_map.hpp>
 #include <boost/itl/split_interval_map.hpp>
 #include <boost/itl/detail/element_iterator.hpp>
+#include <boost/itl/detail/interval_morphism.hpp>
 #include <boost/itl/ptime.hpp>
 #include <boost/itl/type_traits/is_key_container_of.hpp>
 #include <boost/itl/type_traits/codomain_type_of.hpp>
@@ -39,6 +41,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl_xt/detail/bit_element_iterator.hpp>
 #include <boost/itl_xt/interval_bitset.hpp>
 #include <boost/itl_xt/list.hpp>
+#include <boost/itl/set.hpp> //JODO
 
 #include <limits>
 #include <bitset>
@@ -49,6 +52,24 @@ using namespace boost;
 using namespace unit_test;
 using namespace boost::icl;
 
+
+BOOST_AUTO_TEST_CASE(ad_hoc)
+{
+    std::set<int> set_a;
+    set_a += 1;
+    icl::add(set_a, 4);
+    icl::add(set_a, 5);
+    set_a -= 4;
+    cout << set_a << endl;
+
+    interval_set<int> itv_set_b;
+    itv_set_b += interval<int>::right_open(1,3);
+
+    std::set<int> set_b;
+
+    segmental::atomize(set_b, itv_set_b);
+    cout << set_b << endl;
+}
 
 BOOST_AUTO_TEST_CASE(intro_sample_42)
 {
@@ -329,7 +350,7 @@ BOOST_AUTO_TEST_CASE(casual)
     BOOST_CHECK_EQUAL( is_interval_set<std::set<int> >::value, false );
     BOOST_CHECK_EQUAL( is_interval_set<std::set<int> >::value, false );
 
-#if defined(ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS) && !defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
+#if defined(BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS) && !defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
     BOOST_CHECK( (is_same<icl::interval<int   >::type, right_open_interval<int   > >::value) );
     BOOST_CHECK( (is_same<icl::interval<double>::type, right_open_interval<double> >::value) );
 
@@ -343,7 +364,7 @@ BOOST_AUTO_TEST_CASE(casual)
     //BOOST_CHECK_EQUAL( icl::interval<float>::left_open(1.0,2.0), icl::construct<right_open_interval<float> >(1.0,2.0) );
 #endif
 
-#if defined(ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS) && defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
+#if defined(BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS) && defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
 #   if defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS) && (BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS == 0)
     cout << "discrete_interval == open_interval\n";
     BOOST_CHECK( (is_same<icl::interval<int>::type, open_interval<int> >::value) );
@@ -378,11 +399,20 @@ BOOST_AUTO_TEST_CASE(casual)
 
 #   else
     cout << "#else part, INTERVAL_BORDERS not in {0,1,2,3}\n";
-#endif //defined(ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS) && defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
+#endif //defined(BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS) && defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
 
 #else
     BOOST_CHECK( (is_same<icl::interval<int   >::type,   discrete_interval<int   > >::value) );
     BOOST_CHECK( (is_same<icl::interval<double>::type, continuous_interval<double> >::value) );
 #endif
+
+    cout << "--->\n";
+    BOOST_CHECK_EQUAL( (is_set<std::set<int> >::value), true );
+    BOOST_CHECK_EQUAL( (is_element_set<std::set<int> >::value), true );
+    BOOST_CHECK_EQUAL( (is_map<std::set<int> >::value), false );
+
+    BOOST_CHECK_EQUAL( (is_const<std::set<int>::key_type >::value),   false );
+    BOOST_CHECK_EQUAL( (is_const<std::set<int>::value_type >::value), false );
+
 }
 

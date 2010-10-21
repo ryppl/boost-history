@@ -44,7 +44,7 @@ using namespace boost::icl;
 // Type icl::set<string> collects the names a user group's members. Therefore
 // it needs to implement operator += that performs a set union on overlap of 
 // intervals.
-typedef boost::icl::set<string> MemberSetT;
+typedef std::set<string> MemberSetT;
 
 // boost::gregorian::date is the domain type the interval map. 
 // It's key values are therefore time intervals: discrete_interval<date>. The content

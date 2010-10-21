@@ -17,6 +17,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/itl_xt/bits.hpp>      // a bitset implementation
 #include <boost/itl_xt/detail/bit_element_iterator.hpp>
 
+//CL #include <boost/itl/set.hpp> //JODO URG
 #include <boost/itl/detail/interval_morphism.hpp> //JODO Separate aspects and concerns
 
 
@@ -92,7 +93,8 @@ public:
     typedef typename interval_bitmap_type::key_type       key_type;
     typedef typename interval_bitmap_type::value_type     value_type;
 
-    typedef typename icl::set<DomainT,Compare,Alloc>      atomized_type;
+    typedef typename interval_bitmap_type::domain_compare domain_compare;      
+    typedef typename std::set<DomainT,domain_compare,Alloc<DomainT> > atomized_type;
 
     typedef typename interval_bitmap_type::iterator               iterator;
     typedef typename interval_bitmap_type::const_iterator         const_iterator;
@@ -526,9 +528,9 @@ struct type_to_string<icl::interval_bitset<DomainT,BitSetT,Compare,Interval,Allo
 namespace segmental
 {
     template <typename DomainT, typename BitSetT>
-    struct atomizer<icl::set<DomainT>, interval_bitset<DomainT, BitSetT> >
+    struct atomizer<std::set<DomainT>, interval_bitset<DomainT, BitSetT> >
     {
-        void operator()(                      icl::set<DomainT>& atomized, 
+        void operator()(                      std::set<DomainT>& atomized, 
                         const interval_bitset<DomainT, BitSetT>& clustered)
         {
             typedef interval_bitset<DomainT, BitSetT> InterBitsetT;

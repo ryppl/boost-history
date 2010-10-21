@@ -12,7 +12,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <iostream>
 
 // Prior to other includes for interval containers we define ...
-#define ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
 // ... so all interval containers will use right_open_intervals that
 // has static interval borders.
 

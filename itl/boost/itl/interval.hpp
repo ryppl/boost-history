@@ -21,7 +21,7 @@ namespace boost{ namespace icl
         typedef typename interval_type_default<DomainT,Compare>::type interval_type;
         typedef interval_type type;
 
-#ifdef ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#ifdef BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
 
         static inline interval_type open(const DomainT& low, const DomainT& up)
         {

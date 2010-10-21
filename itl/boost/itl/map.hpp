@@ -33,7 +33,6 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl/functors.hpp>
 #include <boost/itl/predicates.hpp>
-#include <boost/itl/set.hpp>
 
 #include <boost/itl/detail/map_algo.hpp>
 #include <boost/itl/concept/container.hpp>
@@ -101,8 +100,6 @@ public:
     typedef typename icl::map<DomainT,CodomainT,Traits, Compare,Combine,Section,Alloc> type;
     typedef typename ICL_IMPL_SPACE::map<DomainT, CodomainT, ICL_COMPARE_DOMAIN(Compare,DomainT),
                                          allocator_type>   base_type;
-    typedef typename icl::set<DomainT, Compare, Alloc >    set_type;
-    typedef set_type                                       key_object_type;
 
     typedef Traits traits;
 
@@ -127,6 +124,10 @@ public:
         >::type                                         codomain_intersect;
     typedef typename inverse<codomain_intersect>::type  inverse_codomain_intersect;
     typedef typename base_type::value_compare           value_compare;
+
+    typedef typename std::set<DomainT, domain_compare, Alloc<DomainT> > set_type;
+    typedef set_type                                       key_object_type;
+
 
     BOOST_STATIC_CONSTANT(bool, _total   = (Traits::is_total));
     BOOST_STATIC_CONSTANT(bool, _absorbs = (Traits::absorbs_identities));

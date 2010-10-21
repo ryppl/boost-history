@@ -9,6 +9,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #define BOOST_ICL_CONCEPT_SET_VALUE_HPP_JOFA_100924
 
 #include <boost/itl/type_traits/is_set.hpp>
+#include <boost/itl/type_traits/codomain_type_of.hpp>
 
 namespace boost{ namespace icl
 {
@@ -25,8 +26,8 @@ key_value(Iterator it_)
 
 template<class Type>
 inline typename enable_if<is_set<Type>, typename Type::value_type>::type
-make_value(const typename Type::     key_type& key_val, 
-           const typename Type::codomain_type&        )
+make_value(const typename Type::key_type& key_val, 
+           const typename codomain_type_of<Type>::type& )
 {
     return typename Type::value_type(key_val);
 }

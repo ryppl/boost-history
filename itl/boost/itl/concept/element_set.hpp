@@ -11,6 +11,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/is_combinable.hpp>
 #include <boost/itl/concept/set_value.hpp>
 #include <boost/itl/detail/std_set.hpp>
+#include <boost/itl/detail/set_algo.hpp>
 
 
 namespace boost{ namespace icl
@@ -67,9 +68,9 @@ operator & (Type object, const Type& operand)
 
 template<class Type>
 inline typename enable_if<is_element_set<Type>, bool>::type
-intersects(const Type& object, const typename Type::domain_type& operand)
+intersects(const Type& object, const typename Type::key_type& operand)
 {
-    return icl::contains(object, operand);
+    return !(object.find(operand) == object.end()); 
 }
 
 template<class Type>
@@ -127,7 +128,7 @@ operator << (std::basic_ostream<CharType, CharTraits>& stream, const Type& objec
 {
     stream << "{";
     ICL_const_FORALL(typename Type, it, object)
-        stream << *it << " ";
+        stream << (*it) << " ";
 
     return stream << "}";
 }

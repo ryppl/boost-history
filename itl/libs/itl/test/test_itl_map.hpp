@@ -23,7 +23,7 @@ void itl_map_contains_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
     typedef icl::map<T,U,Trt> MapT;
-    typedef icl::set<T> SetT;
+    typedef std::set<T> SetT;
     typedef typename MapT::element_type map_element_type;
 
     IntervalMapT itv_map_a;
@@ -93,7 +93,7 @@ void itl_map_inclusion_compare_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
     typedef icl::map<T,U,Trt> MapT;
-    typedef icl::set<T> SetT;
+    typedef std::set<T> SetT;
 
     IntervalMapT itv_map_sub_a, itv_map_a, itv_map_super_a, 
                  itv_map_b, itv_map_c;

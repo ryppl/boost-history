@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE
 (fastest_itl_interval_subtract_4_bicremental_types, T, bicremental_types)
 {            interval_subtract_4_bicremental_types<T>(); }
 
-#ifndef ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#ifndef BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
 
 BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_ctor_specific)
@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE
 (fastest_itl_interval_infix_intersect_4_bicremental_types, T, discrete_types)
 {            interval_infix_intersect_4_bicremental_types<T>(); }
 
-#endif // ndef ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#endif // ndef BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
 
 
 

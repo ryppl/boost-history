@@ -25,7 +25,7 @@ namespace boost{ namespace icl
     template <class DomainT, ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, DomainT)> 
     struct interval_type_default
     {
-#ifdef ICL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+#ifdef BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
         typedef
             typename mpl::if_< is_discrete<DomainT>
 #  ifdef BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT 
