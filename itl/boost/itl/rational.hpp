@@ -13,6 +13,8 @@ itl_rational provides adapter code for boost::rational.
 #ifndef BOOST_ICL_RATIONAL_HPP_JOFA_080913
 #define BOOST_ICL_RATIONAL_HPP_JOFA_080913
 
+#include <boost/config.hpp> // For BOOST_MSVC and more
+
 #ifdef BOOST_MSVC 
 #pragma warning(push)
 #pragma warning(disable:4127) // conditional expression is constant

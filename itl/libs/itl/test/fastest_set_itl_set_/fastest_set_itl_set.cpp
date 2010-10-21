@@ -19,6 +19,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 //JODO include
 //------------------------------------------------------------------------------
 #include <set>
+#include <boost/interprocess/containers/set.hpp>
 #include <boost/itl/concept/container.hpp>
 #include <boost/itl/concept/element_set.hpp>
 #include <boost/itl/concept/element_associator.hpp>

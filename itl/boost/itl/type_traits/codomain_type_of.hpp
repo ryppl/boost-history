@@ -12,6 +12,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/itl/type_traits/no_type.hpp>
+#include <boost/itl/type_traits/is_container.hpp>
 
 namespace boost{ namespace icl
 {
@@ -25,33 +26,43 @@ namespace boost{ namespace icl
       : mpl::bool_<detail::has_codomain_type<Type>::value>
     {};
 
-    template <class Type, bool has_codomain_type> 
+    template <class Type, bool has_codomain_type, bool is_std_set> 
     struct get_codomain_type;
 
     template <class Type>
-    struct get_codomain_type<Type, false>
+    struct get_codomain_type<Type, false, false>
     {
         typedef no_type type;
     };
 
-    template <class Type>
-    struct get_codomain_type<Type, true>
+    template <class Type, bool is_std_set>
+    struct get_codomain_type<Type, true, is_std_set>
     {
         typedef typename Type::codomain_type type;
+    };
+
+    template <class Type>
+    struct get_codomain_type<Type, false, true>
+    {
+        typedef typename Type::value_type type;
     };
 
     template <class Type>
     struct codomain_type_of
     {
         typedef typename 
-            get_codomain_type<Type, has_codomain_type<Type>::value>::type type;
+            get_codomain_type< Type
+                             , has_codomain_type<Type>::value
+                             , is_std_set<Type>::value
+                             >::type type;
     };
 
-    template <class DomainT, class Compare, class Alloc>
-    struct codomain_type_of<std::set<DomainT,Compare,Alloc> >
-    {
-        typedef typename std::set<DomainT,Compare,Alloc>::value_type type;
-    };
+    //CL
+    //template <class DomainT, class Compare, class Alloc>
+    //struct codomain_type_of<std::set<DomainT,Compare,Alloc> >
+    //{
+    //    typedef typename std::set<DomainT,Compare,Alloc>::value_type type;
+    //};
 
 }} // namespace boost icl
 
