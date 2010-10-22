@@ -116,8 +116,7 @@
 [def __clock_req__ [clock_concept_link `Clock` requirements]]
 [def __Clock__ [clock_concept_link `Clock`]]
 [def __Clock_s__ [clock_concept_link `Clock`'s]]
-
-
+                                      
 [template duration_link[link_text] [link boost_chrono.reference.cpp0x.duration_hpp.duration [link_text]]]
 [def __duration__ [duration_link `duration`]]
 [def __duration_s__ [duration_link `duration`'s]]
@@ -342,7 +341,7 @@ Othesewise, if you decompress in a different directory, you will need to comment
 [heading Building __Boost_Chrono__ ]
 [/=================================]
 
-__Boost_Chrono__ is not a header only library. You need to compile it before use.
+__Boost_Chrono__ can be configured as a header only library. When BOOST_CHRONO_INLINED is defined the lib is header only library. Otherwise is not a header only library and you need to compile it before use.
 
     bjam libs/chrono/build
 
@@ -390,6 +389,7 @@ In particular, __Boost_Chrono__ depends on:
 [/=========================================================]
 
 In addition to link with the Boost.Chrono library you need also to link with the Boost.System library.
+Once Boost.System will be configurable to be a header only using BOOST_SYSTEM_INLINED you will no need to link with.
 
 
 [/=========================]
@@ -439,7 +439,7 @@ MinGW with
 
 Initial version was tested on:
 
-MacOS with GCC 4.2.4
+MacOS with GCC 4.2.4 (Some test are needed for the specific Mac files).
 
 Ubuntu Linux with GCC 4.2.4
 
@@ -1896,6 +1896,7 @@ The current implementation provides in addition:
 
 [section:conf Configuration macros]
 
+[section:assert How Assert behaves?]
 
 When BOOST_NO_STATIC_ASSERT is defined, the user can select the way static assertions are reported. Define
 
@@ -1917,6 +1918,16 @@ When BOOST_CHRONO_USES_MPL_ASSERT is not defined the following symbols are defin
         "Second template parameter of time_point must be a boost::chrono::duration"
 
 Depending on the static assertion used system you will have an hint of the failing assertion either through the symbol or through the texte.
+[endsect]
+
+[section:header_only How to build __Boost_Chrono__ as a header only lib?]
+
+When `BOOST_CHRONO_INLINED` is defined the lib is header-only.
+
+If in addition `BOOST_USE_WINDOWS_H` is defined `<windows.h>` is included, otherwise files in `detail/win` are used to reduce the impact of including `<windows.h>`.
+
+[endsect]
+
 
 [endsect]
 
@@ -2950,7 +2961,8 @@ Register __duration__`<>` and __timepoint__`<>` class templates to Boost.Typeof.
 [section:chrono_io_hpp Header `<boost/chrono/chrono_io.hpp>`]
 [/==================================================================]
 
-This source has been adapted from the experimental header `<chrono_io>` from Howard Hinnant. The current implementation makes use of a few utilities in libc++ as `__scan_keyword` which has also been ported and seen as implementation details. Porting to Boost has been trivial.
+
+[/The current implementation makes use of a few utilities in libc++ as `__scan_keyword` which has also been ported and seen as implementation details.]
 
 
     namespace boost {
@@ -2958,6 +2970,9 @@ This source has been adapted from the experimental header `<chrono_io>` from How
 
         template <class CharT>
         class duration_punct;
+
+        template <class Clock, class CharT>
+        struct clock_string;
 
         template <class CharT, class Traits>
             std::basic_ostream<CharT, Traits>&
@@ -2975,27 +2990,15 @@ This source has been adapted from the experimental header `<chrono_io>` from How
             std::basic_istream<CharT, Traits>&
             operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
 
-        #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        template <class CharT, class Traits, class Duration>
+        template <class CharT, class Traits, class Clock, class Duration>
             std::basic_ostream<CharT, Traits>&
             operator<<(std::basic_ostream<CharT, Traits>& os,
-                   const time_point<monotonic_clock, Duration>& tp);
+                   const time_point<Clock, Duration>& tp);
 
-        template <class CharT, class Traits, class Duration>
+        template <class CharT, class Traits, class Clock, class Duration>
             std::basic_istream<CharT, Traits>&
             operator>>(std::basic_istream<CharT, Traits>& is,
-                   time_point<monotonic_clock, Duration>& tp);
-        #endif
-
-        template <class CharT, class Traits, class Duration>
-            std::basic_ostream<CharT, Traits>&
-            operator<<(std::basic_ostream<CharT, Traits>& os,
-                   const time_point<system_clock, Duration>& tp);
-
-        template <class CharT, class Traits, class Duration>
-            std::basic_istream<CharT, Traits>&
-            operator>>(std::basic_istream<CharT, Traits>& is,
-                   time_point<system_clock, Duration>& tp);
+                   time_point<Clock, Duration>& tp);
 
     }  // chrono
 
@@ -3052,7 +3055,24 @@ Knowing how long a program takes to execute is useful in both test and productio
         class process_system_cpu_clock;
         class process_cpu_clock;
 
+        struct process_cpu_clock::times;
+        template <class CharT, class Traits>
+        std::basic_ostream<CharT, Traits>&
+        operator<<(std::basic_ostream<CharT, Traits>& os,
+                process_cpu_clock::times const& rhs);
+
+        template <class CharT, class Traits>
+        std::basic_istream<CharT, Traits>&
+        operator>>(std::basic_istream<CharT, Traits>& is,
+                process_cpu_clock::times const& rhs);
+
+        template <>
+        struct duration_values<process_cpu_clock::times>;
     } }
+    namespace std {
+        template <>
+        class numeric_limits<boost::chrono::process_cpu_clock::times>;
+    }
 
 [section:process_real_cpu_clock Class `process_real_cpu_clock`]
 
@@ -3135,15 +3155,15 @@ The process relative real, user and system current time can be obtained at once 
         static time_point now( system::error_code & ec = system::throws );
     };
 
-    template <>
-    struct duration_values<process_cpu_clock::times>;
+[endsect]
 
+[section:times Class `process_cpu_clock::times`]
 
-[section:times Class `times`]
+This class is the representation of the `process_cpu_clock::duration` class. As such it needs to implements the arithmetic operators.
 
-This class is the representation of the process_cpu_clock::duration class. As such it needs to implements the arithmetic operators.
-
-        struct times : arithmetic<times>, less_than_comparable<times>
+        struct times : arithmetic<times,
+            multiplicative<times, process_real_cpu_clock::rep,
+            less_than_comparable<times> > >
         {
             process_real_cpu_clock::rep   real;    // real (i.e wall clock) time
             process_user_cpu_clock::rep   user;    // user cpu time
@@ -3152,7 +3172,7 @@ This class is the representation of the process_cpu_clock::duration class. As su
             times();
             times(
                 process_real_cpu_clock::rep r,
-                process_user_cpu_clock::rep   u,
+                process_user_cpu_clock::rep u,
                 process_system_cpu_clock::rep s);
 
             bool operator==(times const& rhs);
@@ -3166,7 +3186,28 @@ This class is the representation of the process_cpu_clock::duration class. As su
 
 [endsect]
 
-[section `duration_values` specialization for `times`]
+[section:times_io `process_cpu_clock::times` input/output]
+
+    template <class CharT, class Traits>
+    std::basic_ostream<CharT, Traits>&
+    operator<<(std::basic_ostream<CharT, Traits>& os,
+            process_cpu_clock::times const& rhs);
+
+[*Effect]: Output each part separated by ';' and sourrounded by '{', '}'.
+[*Throws]: None.
+
+    template <class CharT, class Traits>
+    std::basic_istream<CharT, Traits>&
+    operator>>(std::basic_istream<CharT, Traits>& is,
+            process_cpu_clock::times const& rhs);
+
+[*Effect]: overrides the value of rhs if the input stream has the format "{r;u;s}". Otherwise, set the input stream state as failbit | eofbit.
+[*Throws]: None.
+
+
+[endsect]
+
+[section:times_duration_values `duration_values` specialization for `times`]
 
     template <>
     struct __duration_values__<process_cpu_clock::times>
@@ -3179,6 +3220,37 @@ This class is the representation of the process_cpu_clock::duration class. As su
 The `times` specific functions `zero()`, `max()` and `min()` uses the relative functions on the representation of each component.
 
 [endsect]
+
+[section:times_numeric_limits `numeric_limits` specialization for `times`]
+
+    namespace std {
+        template <>
+        class numeric_limits<boost::chrono::process_cpu_clock::times> {
+            typedef boost::chrono::process_cpu_clock::times Rep;
+
+        public:
+            static const bool is_specialized = true;
+            static Rep min();
+            static Rep max();
+            static Rep lowest();
+            static const int digits;
+            static const int digits10;
+            static const bool is_signed = false;
+            static const bool is_integer = true;
+            static const bool is_exact = true;
+            static const int radix = 0;
+        };
+    }
+
+The `times` specialization functions `min()`, `max()` and `lowest()` uses the relative functions on the representation of each component.
+
+Notes
+
+* `min()` returns the tuple of min's
+* `max()` returns the tuple of max's
+* `lowest()' returns the tuple of lowest's
+* `digits' is the sum of digits's
+* `digits10' is the sum of digits10's
 
 [endsect]
 
@@ -3458,6 +3530,39 @@ All the units are given using the suffix "s" following the System International 
 
 
 [/
+[section [*Version 0.7.0, October 24, 2010] ]
+
+[*Features:]
+
+* Boost_Chrono is now a configurable header only lib that allows the user to choose in addition if the windows file is included or not.
+* Added clock_string<> traits.
+* Define chrono-io for all the clocks
+* Add input of process_times representation
+
+[*Implementation:]
+
+* Moved some details to static_integer directory.
+* Use of detail/win files to avoid the use of windows.h file.
+* Completed the error_code handling.
+* Works now with BOOST_SYSTEL_NO_DEPRECATED.
+
+[*Fixes:]
+
+* Fix some warnings.
+* Fix original error on Mac
+* Dont fic the link with boost_system to static.
+
+[*Test:]
+
+* Added test on process and thread clocks.
+* Moved to lightweight_test.hpp.
+* Able to test multiple configurations.
+
+[*Doc:]
+
+* Removed some not useful parts as the history, the test and the tickets.
+
+[endsect]
 [section [*Version 0.6.0, September 22, 2010] ]
 
 [*Features:]
@@ -3832,13 +3937,13 @@ time2_demo contained this comment:
 
 Much thanks to Andrei Alexandrescu, Walter Brown, Peter Dimov, Jeff Garland, Terry Golubiewski, Daniel Krugler, Anthony Williams.
 
+The file <boost/chrono_io.hpp> has been adapted from the experimental header `<chrono_io>` from Howard Hinnant. Thanks for all Howard.
+
 Thanks to Adrew Chinoff for his help polishing the documentation.
 
 Thanks to Tom Tan for reporting some compiler issues with MSVC V10 beta and MinGW-gcc-4.4.0 and for the many suggestion he did concerning the `process_cpu_clock` class.
 
 Thanks to Ronald Bock for reporting Valgind issues and for the many suggestion he did concerning the documentation.
-
-Thansk to Jeffrey Lee Hellrung, Jr. for sharing his implementation of __common_type__ without using Boost.TypeOf.
 
 [endsect]
 
@@ -3944,11 +4049,11 @@ You can also run a specific suite of test by doing
 
     [[comparisons.op_equal.pass]            [run]           [check operator==() and operator!=().]  [Pass]   [#]]
     [[comparisons.op_less.pass]             [run]           [check operators <,<=,>,>=.]            [Pass]   [#]]
-    
+
 ]
 [table
     [[Name]                         [kind]          [Description]           [Result] [Ticket]]
-    
+
     [[cons.convert_exact.pass]              [run]           [check exact conversions allowed for integral reps.]                    [Pass]   [#]]
     [[cons.convert_float_to_int.fail]       [compile-fail]  [check conversions from floating point to integral durations disallowed.]   [Pass]   [#]]
     [[cons.convert_inexact.fail]            [compile-fail]  [check inexact conversions disallowed for integral reps.]               [Pass]   [#]]
@@ -3960,7 +4065,7 @@ You can also run a specific suite of test by doing
     [[cons.rep02.fail]                      [compile-fail]  [check Rep2 shall be implicitly convertible to rep.]                    [Pass]   [#]]
     [[cons.rep02.pass]                      [run]           [check construct double with int.]                                      [Pass]   [#]]
     [[cons.rep03.fail]                      [compile-fail]  [treat_as_floating_point<Rep2>::value shall be false.]                  [Pass]   [#]]
-    
+
     [[nonmember.op_plus.pass]               [run]           [check operator+(d,d).]                   [Pass]   [#]]
     [[nonmember.op_minus.pass]              [run]           [check operator-(d,d).]                   [Pass]   [#]]
     [[nonmember.op_divide_duration.pass]    [run]           [check operator/(d,d).]                   [Pass]   [#]]
@@ -4016,6 +4121,10 @@ You can also run a specific suite of test by doing
     [[system.from_time_t.pass]               [run]           [check .]                   [Pass]   [#]]
     [[system.rep_signed.pass]               [run]           [check .]                   [Pass]   [#]]
     [[system.rep_signed.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[process.consistency.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[process.now.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[thread.consistency.pass]               [run]           [check .]                   [Pass]   [#]]
+    [[thread.now.pass]               [run]           [check .]                   [Pass]   [#]]
 ]
 
 
@@ -4114,11 +4223,6 @@ boost::chrono::duration<boost::chrono::process_cpu_clock::times, boost::ratio<1l
 [/=====================================]
 [section:todo  Appendix F: Future plans]
 [/=====================================]
-[heading Tasks to do before review]
-
-* Complete documentation
-* Fully implement error handling, with test cases.
-* Fix open isues.
 
 [heading For later releases]
 

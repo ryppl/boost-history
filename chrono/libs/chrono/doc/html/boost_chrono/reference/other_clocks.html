@@ -38,6 +38,16 @@
           Class <code class="computeroutput"><span class="identifier">process_system_cpu_clock</span></code></a></span></dt>
 <dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_cpu_clock">
           Class <code class="computeroutput"><span class="identifier">process_cpu_clock</span></code></a></span></dt>
+<dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times">
+          Class <code class="computeroutput"><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span></code></a></span></dt>
+<dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_io">
+          <code class="computeroutput"><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span></code> input/output</a></span></dt>
+<dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_duration_values">
+          <code class="computeroutput"><span class="identifier">duration_values</span></code> specialization
+          for <code class="computeroutput"><span class="identifier">times</span></code></a></span></dt>
+<dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_numeric_limits">
+          <code class="computeroutput"><span class="identifier">numeric_limits</span></code> specialization
+          for <code class="computeroutput"><span class="identifier">times</span></code></a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp">
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">thread_clock</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
@@ -65,6 +75,16 @@
           Class <code class="computeroutput"><span class="identifier">process_system_cpu_clock</span></code></a></span></dt>
 <dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_cpu_clock">
           Class <code class="computeroutput"><span class="identifier">process_cpu_clock</span></code></a></span></dt>
+<dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times">
+          Class <code class="computeroutput"><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span></code></a></span></dt>
+<dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_io">
+          <code class="computeroutput"><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span></code> input/output</a></span></dt>
+<dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_duration_values">
+          <code class="computeroutput"><span class="identifier">duration_values</span></code> specialization
+          for <code class="computeroutput"><span class="identifier">times</span></code></a></span></dt>
+<dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_numeric_limits">
+          <code class="computeroutput"><span class="identifier">numeric_limits</span></code> specialization
+          for <code class="computeroutput"><span class="identifier">times</span></code></a></span></dt>
 </dl></div>
 <p>
           Knowing how long a program takes to execute is useful in both test and
@@ -79,7 +99,24 @@
     <span class="keyword">class</span> <span class="identifier">process_system_cpu_clock</span><span class="special">;</span>
     <span class="keyword">class</span> <span class="identifier">process_cpu_clock</span><span class="special">;</span>
 
+    <span class="keyword">struct</span> <span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Traits</span><span class="special">&gt;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span><span class="special">&gt;&amp;</span>
+    <span class="keyword">operator</span><span class="special">&lt;&lt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span><span class="special">&gt;&amp;</span> <span class="identifier">os</span><span class="special">,</span>
+            <span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Traits</span><span class="special">&gt;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_istream</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span><span class="special">&gt;&amp;</span>
+    <span class="keyword">operator</span><span class="special">&gt;&gt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_istream</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span><span class="special">&gt;&amp;</span> <span class="identifier">is</span><span class="special">,</span>
+            <span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">duration_values</span><span class="special">&lt;</span><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span><span class="special">&gt;;</span>
 <span class="special">}</span> <span class="special">}</span>
+<span class="keyword">namespace</span> <span class="identifier">std</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span><span class="special">&gt;;</span>
+<span class="special">}</span>
 </pre>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
@@ -176,12 +213,6 @@
           Class process_cpu_clock">
           Class <code class="computeroutput"><span class="identifier">process_cpu_clock</span></code></a>
 </h5></div></div></div>
-<div class="toc"><dl>
-<dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_cpu_clock.times">
-            Class <code class="computeroutput"><span class="identifier">times</span></code></a></span></dt>
-<dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_cpu_clock._duration_values__specialization_for__times_"><code class="computeroutput"><span class="identifier">duration_values</span></code> specialization for
-            <code class="computeroutput"><span class="identifier">times</span></code></a></span></dt>
-</dl></div>
 <p>
             <code class="computeroutput"><span class="identifier">process_cpu_clock</span></code> can
             be considered as a <code class="computeroutput"><span class="identifier">tuple</span><span class="special">&lt;</span><span class="identifier">process_real_cpu_clock</span><span class="special">,</span> <span class="identifier">process_user_cpu_clock</span><span class="special">,</span> <span class="identifier">process_system_cpu_clock</span><span class="special">&gt;</span></code>.
@@ -209,21 +240,21 @@
 
     <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
 <span class="special">};</span>
-
-<span class="keyword">template</span> <span class="special">&lt;&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">duration_values</span><span class="special">&lt;</span><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span><span class="special">&gt;;</span>
 </pre>
+</div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h6 class="title">
-<a name="boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_cpu_clock.times"></a><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_cpu_clock.times" title="
-            Class times">
-            Class <code class="computeroutput"><span class="identifier">times</span></code></a>
-</h6></div></div></div>
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times"></a><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times" title="
+          Class process_cpu_clock::times">
+          Class <code class="computeroutput"><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span></code></a>
+</h5></div></div></div>
 <p>
-              This class is the representation of the process_cpu_clock::duration
-              class. As such it needs to implements the arithmetic operators.
-            </p>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">times</span> <span class="special">:</span> <span class="identifier">arithmetic</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">&gt;,</span> <span class="identifier">less_than_comparable</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">&gt;</span>
+            This class is the representation of the <code class="computeroutput"><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">duration</span></code>
+            class. As such it needs to implements the arithmetic operators.
+          </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">times</span> <span class="special">:</span> <span class="identifier">arithmetic</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">,</span>
+    <span class="identifier">multiplicative</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">,</span> <span class="identifier">process_real_cpu_clock</span><span class="special">::</span><span class="identifier">rep</span><span class="special">,</span>
+    <span class="identifier">less_than_comparable</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span>
 <span class="special">{</span>
     <span class="identifier">process_real_cpu_clock</span><span class="special">::</span><span class="identifier">rep</span>   <span class="identifier">real</span><span class="special">;</span>    <span class="comment">// real (i.e wall clock) time
 </span>    <span class="identifier">process_user_cpu_clock</span><span class="special">::</span><span class="identifier">rep</span>   <span class="identifier">user</span><span class="special">;</span>    <span class="comment">// user cpu time
@@ -232,7 +263,7 @@
     <span class="identifier">times</span><span class="special">();</span>
     <span class="identifier">times</span><span class="special">(</span>
         <span class="identifier">process_real_cpu_clock</span><span class="special">::</span><span class="identifier">rep</span> <span class="identifier">r</span><span class="special">,</span>
-        <span class="identifier">process_user_cpu_clock</span><span class="special">::</span><span class="identifier">rep</span>   <span class="identifier">u</span><span class="special">,</span>
+        <span class="identifier">process_user_cpu_clock</span><span class="special">::</span><span class="identifier">rep</span> <span class="identifier">u</span><span class="special">,</span>
         <span class="identifier">process_system_cpu_clock</span><span class="special">::</span><span class="identifier">rep</span> <span class="identifier">s</span><span class="special">);</span>
 
     <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">==(</span><span class="identifier">times</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
@@ -246,11 +277,41 @@
 </pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h6 class="title">
-<a name="boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_cpu_clock._duration_values__specialization_for__times_"></a><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_cpu_clock._duration_values__specialization_for__times_" title="duration_values specialization for
-            times"><code class="computeroutput"><span class="identifier">duration_values</span></code> specialization for
-            <code class="computeroutput"><span class="identifier">times</span></code></a>
-</h6></div></div></div>
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_io"></a><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_io" title="
+          process_cpu_clock::times input/output">
+          <code class="computeroutput"><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span></code> input/output</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Traits</span><span class="special">&gt;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span><span class="special">&gt;&amp;</span>
+<span class="keyword">operator</span><span class="special">&lt;&lt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span><span class="special">&gt;&amp;</span> <span class="identifier">os</span><span class="special">,</span>
+        <span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+</pre>
+<p>
+            <span class="bold"><strong>Effect</strong></span>: Output each part separated by
+            ';' and sourrounded by '{', '}'. <span class="bold"><strong>Throws</strong></span>:
+            None.
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Traits</span><span class="special">&gt;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_istream</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span><span class="special">&gt;&amp;</span>
+<span class="keyword">operator</span><span class="special">&gt;&gt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_istream</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span><span class="special">&gt;&amp;</span> <span class="identifier">is</span><span class="special">,</span>
+        <span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+</pre>
+<p>
+            <span class="bold"><strong>Effect</strong></span>: overrides the value of rhs if
+            the input stream has the format "{r;u;s}". Otherwise, set the
+            input stream state as failbit | eofbit. <span class="bold"><strong>Throws</strong></span>:
+            None.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_duration_values"></a><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_duration_values" title="
+          duration_values specialization
+          for times">
+          <code class="computeroutput"><span class="identifier">duration_values</span></code> specialization
+          for <code class="computeroutput"><span class="identifier">times</span></code></a>
+</h5></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;&gt;</span>
 <span class="keyword">struct</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.traits.duration_values" title="
             Class template duration_values"><code class="computeroutput"><span class="identifier">duration_values</span></code></a><span class="special">&lt;</span><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span><span class="special">&gt;</span>
@@ -261,13 +322,67 @@
 <span class="special">};</span>
 </pre>
 <p>
-              The <code class="computeroutput"><span class="identifier">times</span></code> specific
-              functions <code class="computeroutput"><span class="identifier">zero</span><span class="special">()</span></code>,
-              <code class="computeroutput"><span class="identifier">max</span><span class="special">()</span></code>
-              and <code class="computeroutput"><span class="identifier">min</span><span class="special">()</span></code>
-              uses the relative functions on the representation of each component.
-            </p>
+            The <code class="computeroutput"><span class="identifier">times</span></code> specific functions
+            <code class="computeroutput"><span class="identifier">zero</span><span class="special">()</span></code>,
+            <code class="computeroutput"><span class="identifier">max</span><span class="special">()</span></code>
+            and <code class="computeroutput"><span class="identifier">min</span><span class="special">()</span></code>
+            uses the relative functions on the representation of each component.
+          </p>
 </div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_numeric_limits"></a><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_numeric_limits" title="
+          numeric_limits specialization
+          for times">
+          <code class="computeroutput"><span class="identifier">numeric_limits</span></code> specialization
+          for <code class="computeroutput"><span class="identifier">times</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">std</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span><span class="special">&gt;</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span> <span class="identifier">Rep</span><span class="special">;</span>
+
+    <span class="keyword">public</span><span class="special">:</span>
+        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_specialized</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span>
+        <span class="keyword">static</span> <span class="identifier">Rep</span> <span class="identifier">min</span><span class="special">();</span>
+        <span class="keyword">static</span> <span class="identifier">Rep</span> <span class="identifier">max</span><span class="special">();</span>
+        <span class="keyword">static</span> <span class="identifier">Rep</span> <span class="identifier">lowest</span><span class="special">();</span>
+        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">digits</span><span class="special">;</span>
+        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">digits10</span><span class="special">;</span>
+        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_signed</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_integer</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span>
+        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_exact</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span>
+        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">radix</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="special">};</span>
+<span class="special">}</span>
+</pre>
+<p>
+            The <code class="computeroutput"><span class="identifier">times</span></code> specialization
+            functions <code class="computeroutput"><span class="identifier">min</span><span class="special">()</span></code>,
+            <code class="computeroutput"><span class="identifier">max</span><span class="special">()</span></code>
+            and <code class="computeroutput"><span class="identifier">lowest</span><span class="special">()</span></code>
+            uses the relative functions on the representation of each component.
+          </p>
+<p>
+            Notes
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+                <code class="computeroutput"><span class="identifier">min</span><span class="special">()</span></code>
+                returns the tuple of min's
+              </li>
+<li>
+                <code class="computeroutput"><span class="identifier">max</span><span class="special">()</span></code>
+                returns the tuple of max's
+              </li>
+<li>
+                <code class="computeroutput"><span class="identifier">lowest</span><span class="special">()</span><span class="char">' returns the tuple of lowest'</span><span class="identifier">s</span>
+                <span class="special">*</span> </code>digits' is the sum of digits's
+              </li>
+<li>
+                `digits10' is the sum of digits10's
+              </li>
+</ul></div>
 </div>
 </div>
 <div class="section" lang="en">

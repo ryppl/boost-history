@@ -135,30 +135,44 @@
           macros"> Configuration
           macros</a>
 </h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.conf.assert">
+            How Assert behaves?</a></span></dt>
+<dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.conf.header_only">
+            How to build <span class="bold"><strong>Boost.Chrono</strong></span> as a header
+            only lib?</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="boost_chrono.reference.cpp0x.chrono_hpp.conf.assert"></a><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.conf.assert" title="
+            How Assert behaves?">
+            How Assert behaves?</a>
+</h6></div></div></div>
 <p>
-            When BOOST_NO_STATIC_ASSERT is defined, the user can select the way static
-            assertions are reported. Define
-          </p>
+              When BOOST_NO_STATIC_ASSERT is defined, the user can select the way
+              static assertions are reported. Define
+            </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-                BOOST_CHRONO_USES_STATIC_ASSERT: define it if you want to use Boost.StaticAssert
-              </li>
+                  BOOST_CHRONO_USES_STATIC_ASSERT: define it if you want to use Boost.StaticAssert
+                </li>
 <li>
-                BOOST_CHRONO_USES_MPL_ASSERT: define it if you want to use Boost.MPL
-                static asertions
-              </li>
+                  BOOST_CHRONO_USES_MPL_ASSERT: define it if you want to use Boost.MPL
+                  static asertions
+                </li>
 <li>
-                BOOST_CHRONO_USES_ARRAY_ASSERT: define it if you want to use internal
-                static asertions
-              </li>
+                  BOOST_CHRONO_USES_ARRAY_ASSERT: define it if you want to use internal
+                  static asertions
+                </li>
 </ul></div>
 <p>
-            The default vaule behavior is as BOOST_CHRONO_USES_ARRAY_ASSERT was defined.
-          </p>
+              The default vaule behavior is as BOOST_CHRONO_USES_ARRAY_ASSERT was
+              defined.
+            </p>
 <p>
-            When BOOST_CHRONO_USES_MPL_ASSERT is not defined the following symbols
-            are defined as
-          </p>
+              When BOOST_CHRONO_USES_MPL_ASSERT is not defined the following symbols
+              are defined as
+            </p>
 <pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_CHRONO_A_DURATION_REPRESENTATION_CAN_NOT_BE_A_DURATION</span> <span class="special">\</span>
     <span class="string">"A duration representation can not be a duration"</span>
 <span class="preprocessor">#define</span> <span class="identifier">BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_DURATION_MUST_BE_A_STD_RATIO</span> <span class="special">\</span>
@@ -169,9 +183,29 @@
     <span class="string">"Second template parameter of time_point must be a boost::chrono::duration"</span>
 </pre>
 <p>
-            Depending on the static assertion used system you will have an hint of
-            the failing assertion either through the symbol or through the texte.
-          </p>
+              Depending on the static assertion used system you will have an hint
+              of the failing assertion either through the symbol or through the texte.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="boost_chrono.reference.cpp0x.chrono_hpp.conf.header_only"></a><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.conf.header_only" title="
+            How to build Boost.Chrono as a header
+            only lib?">
+            How to build <span class="bold"><strong>Boost.Chrono</strong></span> as a header
+            only lib?</a>
+</h6></div></div></div>
+<p>
+              When <code class="computeroutput"><span class="identifier">BOOST_CHRONO_INLINED</span></code>
+              is defined the lib is header-only.
+            </p>
+<p>
+              If in addition <code class="computeroutput"><span class="identifier">BOOST_USE_WINDOWS_H</span></code>
+              is defined <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">windows</span><span class="special">.</span><span class="identifier">h</span><span class="special">&gt;</span></code> is included, otherwise files in
+              <code class="computeroutput"><span class="identifier">detail</span><span class="special">/</span><span class="identifier">win</span></code> are used to reduce the impact
+              of including <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">windows</span><span class="special">.</span><span class="identifier">h</span><span class="special">&gt;</span></code>.
+            </p>
+</div>
 </div>
 </div>
 <div class="section" lang="en">
