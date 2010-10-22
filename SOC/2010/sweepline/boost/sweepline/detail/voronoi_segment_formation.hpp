@@ -505,8 +505,8 @@ namespace detail {
         }
     }
 
-    kOrientation orientation_test(long long dif_x1_, long long dif_y1_,
-                                  long long dif_x2_, long long dif_y2_) {
+	template <typename T>
+    kOrientation orientation_test(T dif_x1_, T dif_y1_, T dif_x2_, T dif_y2_) {
         typedef unsigned long long ull;
         ull dif_x1, dif_y1, dif_x2, dif_y2;
         bool dif_x1_plus, dif_x2_plus, dif_y1_plus, dif_y2_plus;
@@ -540,6 +540,51 @@ namespace detail {
                 return (expr_l < expr_r) ? RIGHT_ORIENTATION : LEFT_ORIENTATION;
         }
     }
+
+	template <typename T>
+	kOrientation orientation_test(T value) {
+		if (value == static_cast<T>(0.0))
+			return COLINEAR;
+		return (value < static_cast<T>(0.0)) ? RIGHT_ORIENTATION : LEFT_ORIENTATION;
+	}
+
+	template <typename T>
+	T robust_cross_product(T a1_, T b1_, T a2_, T b2_) {
+		typedef unsigned long long ull;
+        ull a1, b1, a2, b2;
+        bool a1_plus, a2_plus, b1_plus, b2_plus;
+        INT_PREDICATE_CONVERT_65_BIT(a1_, a1, a1_plus);
+        INT_PREDICATE_CONVERT_65_BIT(b1_, b1, b1_plus);
+        INT_PREDICATE_CONVERT_65_BIT(a2_, a2, a2_plus);
+        INT_PREDICATE_CONVERT_65_BIT(b2_, b2, b2_plus);
+
+		ull expr_l = a1 * b2;
+        bool expr_l_plus = (a1_plus == b2_plus) ? true : false;
+        ull expr_r = b1 * a2;
+        bool expr_r_plus = (a2_plus == b1_plus) ? true : false;
+
+		if (expr_l == 0)
+            expr_l_plus = true;
+        if (expr_r == 0)
+            expr_r_plus = true;
+        
+        if ((expr_l_plus == expr_r_plus) && (expr_l == expr_r))
+            return static_cast<T>(0.0);
+
+		if (!expr_l_plus) {
+            if (expr_r_plus)
+                return -static_cast<double>(expr_l) - static_cast<double>(expr_r);
+            else
+				return (expr_l > expr_r) ? -static_cast<double>(expr_l - expr_r) :
+										   static_cast<double>(expr_r - expr_l);
+        } else {
+            if (!expr_r_plus)
+                return static_cast<double>(expr_l) + static_cast<double>(expr_r);
+            else
+				return (expr_l < expr_r) ? -static_cast<double>(expr_r - expr_l) :
+										   static_cast<double>(expr_l - expr_r);
+		}
+	}
 
     enum kPredicateResult {
         LESS = -1,
@@ -928,18 +973,16 @@ namespace detail {
                         static_cast<double>(site2.y());
         double dif_y2 = static_cast<double>(site2.y()) -
                         static_cast<double>(site3.y());
-        kOrientation valid_orientation = orientation_test(
-            static_cast<long long>(dif_x1), static_cast<long long>(dif_y1),
-            static_cast<long long>(dif_x2), static_cast<long long>(dif_y2));
-        if (valid_orientation != RIGHT_ORIENTATION)
+		double orientation = robust_cross_product(dif_x1, dif_y1, dif_x2, dif_y2);
+        if (orientation_test(orientation) != RIGHT_ORIENTATION)
             return false;
-        double a = 2.0 * (dif_x1 * dif_y2 - dif_x2 * dif_y1);
+		orientation *= 2.0;
         double b1 = dif_x1 * (site1.x() + site2.x()) + dif_y1 * (site1.y() + site2.y());
         double b2 = dif_x2 * (site2.x() + site3.x()) + dif_y2 * (site2.y() + site3.y());
 
         // Create new circle event.
-        double c_x = (b1*dif_y2 - b2*dif_y1) / a;
-        double c_y = (b2*dif_x1 - b1*dif_x2) / a;
+        double c_x = (b1*dif_y2 - b2*dif_y1) / orientation;
+        double c_y = (b2*dif_x1 - b1*dif_x2) / orientation;
         double radius = sqrt((c_x-site2.x())*(c_x-site2.x()) +
                              (c_y-site2.y())*(c_y-site2.y()));
         c_event = make_circle_event<double>(c_x, c_y, c_x + radius);
@@ -972,30 +1015,31 @@ namespace detail {
         double line_b = site3.get_point0().x() - site3.get_point1().x();
         double vec_x = site2.y() - site1.y();
         double vec_y = site1.x() - site2.x();
-        double teta = line_b * vec_y + line_a * vec_x;
-        double A = line_a * (site1.x() - site3.get_point1().x()) +
-                   line_b * (site1.y() - site3.get_point1().y());
-        double B = line_a * (site2.x() - site3.get_point1().x()) +
-                   line_b * (site2.y() - site3.get_point1().y());
-        double denom = line_b * vec_x - line_a * vec_y;
-        double det = sqrt((teta * teta + denom * denom) * A * B);
-        double t;
-        
-        if (orientation_test(static_cast<long long>(line_a),
-                             static_cast<long long>(line_b),
-                             static_cast<long long>(vec_x),
-                             static_cast<long long>(vec_y)) == COLINEAR) {
-            t = (teta * teta - 4.0 * A * B) / (4.0 * teta * (A + B));
+		double teta = robust_cross_product(line_a, line_b, -vec_y, vec_x);
+		double A = robust_cross_product(line_a, line_b,
+			site3.get_point1().y() - site1.y(), 
+			site1.x() - site3.get_point1().x());
+		double B = robust_cross_product(line_a, line_b,
+			site3.get_point1().y() - site2.y(),
+			site2.x() - site3.get_point1().x());
+		double denom = robust_cross_product(vec_x, vec_y, line_a, line_b);
+		double t;
+        if (orientation_test(denom) == COLINEAR) {
+            t = (teta * teta - 4.0 * A * B) / (4.0 * teta * (A + B));;
         } else {
+			double det = sqrt((teta * teta + denom * denom) * A * B);
             if (segment_index == 2)
                 det = -det;
             t = (teta * (A + B) + 2.0 * det) / (2.0 * denom * denom);
         }
         double c_x = 0.5 * (site1.x() + site2.x()) + t * vec_x;
         double c_y = 0.5 * (site1.y() + site2.y()) + t * vec_y;
+
         double radius = sqrt((c_x-site2.x())*(c_x-site2.x()) +
                              (c_y-site2.y())*(c_y-site2.y()));
-        c_event = make_circle_event<double>(c_x, c_y, c_x + radius);
+		double lower_x = (site3.is_vertical() && site3.is_inverse()) ?
+			site3.get_point0().x() : c_x + radius;
+        c_event = make_circle_event<double>(c_x, c_y, lower_x);
         return true;
     }
 
@@ -1008,19 +1052,30 @@ namespace detail {
                                         int point_index,
                                         circle_event<T> &c_event) {
         // Intersection check.
-        if (site1.get_site_index() == site2.get_site_index()) {
+        if (site2.get_site_index() == site3.get_site_index()) {
             return false;
         }
+		const point_2d<T> &site = site1.get_point0();		
         const point_2d<T> &segm_start1 = site2.get_point1(true);
         const point_2d<T> &segm_end1 = site2.get_point0(true);
         const point_2d<T> &segm_start2 = site3.get_point0(true);
         const point_2d<T> &segm_end2 = site3.get_point1(true);
 
-        kOrientation valid_orient1 = orientation_test(segm_end1, segm_start1, segm_start2);
-        kOrientation valid_orient2 = orientation_test(segm_end1, segm_start1, segm_end2);
-        if (valid_orient1 != RIGHT_ORIENTATION && valid_orient2 != RIGHT_ORIENTATION) {
-            return false;
-        }
+		if (point_index != 2) {
+			if (orientation_test(segm_start1, segm_start2, site) == LEFT_ORIENTATION &&
+				orientation_test(segm_end1, segm_end2, site) == LEFT_ORIENTATION &&
+				orientation_test(segm_start1, segm_end2, site) == LEFT_ORIENTATION &&
+				orientation_test(segm_end1, segm_start2, site) == LEFT_ORIENTATION) {
+				return false;
+			}
+		} else {
+			if ((orientation_test(segm_end1, segm_start1, segm_start2) != RIGHT_ORIENTATION &&
+			     orientation_test(segm_end1, segm_start1, segm_end2) != RIGHT_ORIENTATION) ||
+			    (orientation_test(segm_start2, segm_end2, segm_start1) != RIGHT_ORIENTATION &&
+			     orientation_test(segm_start2, segm_end2, segm_end1) != RIGHT_ORIENTATION)) {
+			    return false;
+			}
+		}
 
         double a1 = static_cast<double>(segm_end1.x() - segm_start1.x());
         double b1 = static_cast<double>(segm_end1.y() - segm_start1.y());
@@ -1039,18 +1094,12 @@ namespace detail {
                        b1 * ((static_cast<double>(segm_start1.y()) +
                               static_cast<double>(segm_start2.y())) * 0.5 -
                               static_cast<double>(site1.y()));
-            double c = b1 * (static_cast<double>(segm_start2.x()) -
-                             static_cast<double>(segm_start1.x())) -
-                       a1 * (static_cast<double>(segm_start2.y()) -
-                             static_cast<double>(segm_start1.y()));
-            double det = -(b1 * (static_cast<double>(site1.x()) -
-                                 static_cast<double>(segm_start1.x())) -
-                           a1 * (static_cast<double>(site1.y()) -
-                                 static_cast<double>(segm_start1.y()))) *
-                          (b1 * (static_cast<double>(site1.x()) -
-                                 static_cast<double>(segm_start2.x())) -
-                           a1 * (static_cast<double>(site1.y()) -
-                                 static_cast<double>(segm_start2.y())));
+			double c = robust_cross_product(b1, a1, segm_start2.y() - segm_start1.y(),
+										    segm_start2.x() - segm_start1.x());
+			double det = robust_cross_product(a1, b1, site1.x() - segm_start1.x(),
+											  site1.y() - segm_start1.y()) *
+					     robust_cross_product(b1, a1, site1.y() - segm_start2.y(),
+											  site1.x() - segm_start2.x());
             double t = ((point_index == 2) ? (-b + sqrt(det)) : (-b - sqrt(det))) / a;
             double c_x = 0.5 * (static_cast<double>(segm_start1.x() + segm_start2.x())) + a1 * t;
             double c_y = 0.5 * (static_cast<double>(segm_start1.y() + segm_start2.y())) + b1 * t;
@@ -1058,11 +1107,9 @@ namespace detail {
             c_event = make_circle_event<double>(c_x, c_y, c_x + radius);
             return true;
         } else {
-            double c1 = b1 * static_cast<double>(segm_end1.x()) -
-                a1 * static_cast<double>(segm_end1.y());
-            double c2 = a2 * static_cast<double>(segm_end2.y()) -
-                b2 * static_cast<double>(segm_end2.x());
-            double denom = (b1 * a2 - b2 * a1);
+            double c1 = robust_cross_product(b1, a1, segm_end1.y(), segm_end1.x());
+			double c2 = robust_cross_product(a2, b2, segm_end2.x(), segm_end2.y());
+			double denom = robust_cross_product(b1, a1, b2, a2);
             double intersection_x = (c1 * a2 + a1 * c2) / denom;
             double intersection_y = (b1 * c2 + b2 * c1) / denom;
             double sqr_sum1 = sqrt(a1 * a1 + b1 * b1);
@@ -1071,9 +1118,9 @@ namespace detail {
             double vec_y = b1 * sqr_sum2 + b2 * sqr_sum1;
             double dx = intersection_x - site1.get_point0().x();
             double dy = intersection_y - site1.get_point0().y();
-            double a = a1 * a2 + b1 * b2 + sqr_sum1 * sqr_sum2;
+            double a = robust_cross_product(a1, b1, -b2, a2) + sqr_sum1 * sqr_sum2;
             double b = dx * vec_x + dy * vec_y;
-            double det = -2.0 * a * (b1 * dx - a1 * dy) * (b2 * dx - a2 * dy);
+            double det = fabs(-2.0 * a * (b1 * dx - a1 * dy) * (b2 * dx - a2 * dy));
             double t = ((point_index == 2) ? (-b + sqrt(det)) : (-b - sqrt(det))) / (a * a);
             double c_x = intersection_x + vec_x * t;
             double c_y = intersection_y + vec_y * t;
@@ -1487,10 +1534,10 @@ namespace detail {
             if (cell_records_.empty()) {
                 cell_iterators_.push_back(cell_records_.insert(
                     cell_records_.end(), voronoi_cell_type(site1, &edge1)));
-                cell_records_.back().num_incident_edges++;
                 num_cell_records_++;
                 voronoi_rect_ = BRect<coordinate_type>(site1.get_point0(), site1.get_point0());
-            }
+			}
+			cell_iterators_[site_index1]->num_incident_edges++;
 
             // Update bounding rectangle.
 			voronoi_rect_.update(site2.get_point0());
@@ -1525,7 +1572,7 @@ namespace detail {
             num_edges_++;
 
             // Update bounding rectangle.
-            voronoi_rect_.update(circle.get_center());
+            //voronoi_rect_.update(circle.get_center());
 
             // Add new voronoi vertex with point at center of the circle.
             vertex_records_.push_back(voronoi_vertex_type(circle.get_center(), edge12));
@@ -1650,17 +1697,29 @@ namespace detail {
 
                     // To guarantee N*lon(N) time we merge vertex with
                     // less incident edges to the one with more.
+					if (edge_it1->cell->incident_edge == &(*edge_it1)) {
+						if (edge_it1->cell->incident_edge == edge_it1->next) {
+							edge_it1->cell->incident_edge = NULL;
+						} else {
+							edge_it1->cell->incident_edge = edge_it1->next;
+						}
+					}
+					if (edge_it1->twin->cell->incident_edge == edge_it1->twin) {
+						if (edge_it1->twin->cell->incident_edge == edge_it1->twin->next) {
+							edge_it1->twin->cell->incident_edge = NULL;
+						} else {
+							edge_it1->twin->cell->incident_edge = edge_it1->twin->next;
+						}
+					}
                     if (edge_it1->start_point->num_incident_edges >=
-                        edge_it1->end_point->num_incident_edges)
+						edge_it1->end_point->num_incident_edges) {
                             simplify_edge(&(*edge_it1));
-                    else
-                        simplify_edge(&(*edge_it1->twin));
+					} else {
+                        simplify_edge(edge_it1->twin);
+					}
 
                     // Remove zero length edges.
                     edges_.erase(edge_it1, edge_it);
-
-                    // Update counters.
-                    num_vertex_records_--;
                     num_edges_--;
                 }
             }
@@ -1670,27 +1729,28 @@ namespace detail {
                 cell_it != cell_records_.end(); cell_it++) {
                 // Move to the previous edge while it is possible in the CW direction.
                 edge_type *cur_edge = cell_it->incident_edge;
-                while (cur_edge->prev != NULL) {
-                    cur_edge = cur_edge->prev;
+				if (cur_edge) {
+					while (cur_edge->prev != NULL) {
+						cur_edge = cur_edge->prev;
 
-                    // Terminate if this is not a boundary cell.
-                    if (cur_edge == cell_it->incident_edge)
-                        break;
-                }
+						// Terminate if this is not a boundary cell.
+						if (cur_edge == cell_it->incident_edge)
+							break;
+					}
 
-                // Rewind incident edge pointer to the leftmost edge for the boundary cells.
-                cell_it->incident_edge = cur_edge;
+					// Rewind incident edge pointer to the leftmost edge for the boundary cells.
+					cell_it->incident_edge = cur_edge;
 
-                // Set up prev/next half-edge pointers for ray edges.
-                if (cur_edge->prev == NULL) {
-                    edge_type *last_edge = cell_it->incident_edge;
-                    while (last_edge->next != NULL)
-                        last_edge = last_edge->next;
-                    last_edge->next = cur_edge;
-                    cur_edge->prev = last_edge;
-                }
+					// Set up prev/next half-edge pointers for ray edges.
+					if (cur_edge->prev == NULL) {
+						edge_type *last_edge = cell_it->incident_edge;
+						while (last_edge->next != NULL)
+							last_edge = last_edge->next;
+						last_edge->next = cur_edge;
+						cur_edge->prev = last_edge;
+					}
+				}
             }
-            
         }
 
         void clip(voronoi_output_clipped<coordinate_type> &clipped_output) {
@@ -1704,7 +1764,6 @@ namespace detail {
             coordinate_type offset = x_len;
             if (offset < y_len)
                 offset = y_len;
-            offset *= static_cast<coordinate_type>(1.0);
 
             if (offset == static_cast<coordinate_type>(0.0))
                 offset = 0.5;
@@ -1758,7 +1817,10 @@ namespace detail {
                 vertex1->incident_edge = edge->rot_prev;
 
             // Remove second vertex from the vertex records list.
-            vertex_records_.erase(vertex2->voronoi_record_it);
+			if (vertex1->voronoi_record_it != vertex2->voronoi_record_it) {
+				vertex_records_.erase(vertex2->voronoi_record_it);
+				num_vertex_records_--;
+			}
         }
 
 		void clip(const BRect<coordinate_type> &brect,
@@ -1861,34 +1923,33 @@ namespace detail {
 				clipped_output.num_cell_records++;
                 clipped_voronoi_cell_type &new_cell = clipped_output.cell_records.back();
                 edge_type *cur_edge = cell_it->incident_edge;
-                clipped_edge_type *prev = NULL;
 
                 // Update cell, next/prev pointers.
-                do {
-                    clipped_edge_type *new_edge = cur_edge->clipped_edge;
-                    if (new_edge) {
-                        if (prev) {
-                            new_edge->prev = prev;
-                            prev->next = new_edge;
-                        }
-                        new_edge->cell = &new_cell;
-                        if (new_cell.incident_edge == NULL)
-                            new_cell.incident_edge = cur_edge->clipped_edge;
-                        new_cell.num_incident_edges++;
-                        prev = new_edge;
-                        cur_edge->clipped_edge = NULL;
-                    }
-                    cur_edge = cur_edge->next;
-                } while(cur_edge != cell_it->incident_edge);
+				if (cur_edge) {
+					clipped_edge_type *prev = NULL;
+					do {
+						clipped_edge_type *new_edge = cur_edge->clipped_edge;
+						if (new_edge) {
+							if (prev) {
+								new_edge->prev = prev;
+								prev->next = new_edge;
+							}
+							new_edge->cell = &new_cell;
+							if (new_cell.incident_edge == NULL)
+								new_cell.incident_edge = cur_edge->clipped_edge;
+							new_cell.num_incident_edges++;
+							prev = new_edge;
+							cur_edge->clipped_edge = NULL;
+						}
+						cur_edge = cur_edge->next;
+					} while(cur_edge != cell_it->incident_edge);
 
-				if (new_cell.incident_edge == NULL) {
-					clipped_output.cell_records.pop_back();
-                    clipped_output.num_cell_records--;
-				} else {
-                    // Update prev/next pointers.
-                    prev->next = new_cell.incident_edge;
-                    new_cell.incident_edge->prev = prev;
-                }
+					// Update prev/next pointers.
+					if (prev) {
+						prev->next = new_cell.incident_edge;
+						new_cell.incident_edge->prev = prev;
+					}
+				}
             }
 			clipped_output.num_edge_records >>= 1;
         }

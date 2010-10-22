@@ -64,7 +64,6 @@ public:
 
 protected:
     void initializeGL() {
-        glPointSize(9);
     }
 
     void paintGL() {
@@ -76,12 +75,15 @@ protected:
             voronoi_cells_type cells = voronoi_output_.cell_records;
             voronoi_cell_const_iterator_type it;
             glColor3f(0.0f, 0.0f, 1.0f);
+			glPointSize(9);
             glBegin(GL_POINTS);
             for (it = cells.begin(); it != cells.end(); it++) {
                 if (!it->is_segment())
                     glVertex2f(it->get_point0().x(), it->get_point0().y());
             }
             glEnd();
+			glPointSize(6);
+			glLineWidth(2.7);
             glBegin(GL_LINES);
             for (it = cells.begin(); it != cells.end(); it++) {
                 if (it->is_segment()) {
@@ -90,6 +92,7 @@ protected:
                 }
             }
             glEnd();
+			glLineWidth(1.0);
         }
 
         // Draw voronoi vertices.
@@ -163,6 +166,7 @@ public:
     MainWindow() {
         glWidget_ = new GLWidget();
         file_dir_ = QDir(QDir::currentPath(), tr("*.txt"));
+		file_name_ = tr("");
         
         QHBoxLayout *centralLayout = new QHBoxLayout;
         centralLayout->addWidget(glWidget_);
@@ -184,9 +188,18 @@ private slots:
         update_file_list();
     }
 
+	void print_scr() {
+		if (!file_name_.isEmpty()) {
+			QImage screenshot = glWidget_->grabFrameBuffer(true);
+			QString output_file = file_dir_.absolutePath() + tr("/") +
+				file_name_.left(file_name_.indexOf('.')) + tr(".png");
+			screenshot.save(output_file, 0, -1);
+		}
+	}
+
     void build() {
-        QString file_name = file_list_->currentItem()->text();
-        QString file_path = file_dir_.filePath(file_name);
+        file_name_ = file_list_->currentItem()->text();
+        QString file_path = file_dir_.filePath(file_name_);
         message_label_->setText("Building...");
         glWidget_->build(file_path);
         message_label_->setText("Double click the item to build voronoi diagram:");
@@ -203,13 +216,18 @@ private:
         file_list_->connect(file_list_, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
                             this, SLOT(build()));
 
-        QPushButton *browse_button = new QPushButton(tr("Browse"));
-        browse_button->connect(browse_button, SIGNAL(clicked()), this, SLOT(browse()));
+        QPushButton *browse_button = new QPushButton(tr("Browse Input Directory"));
+        connect(browse_button, SIGNAL(clicked()), this, SLOT(browse()));
         browse_button->setMinimumHeight(50);
+
+		QPushButton *print_scr_button = new QPushButton(tr("Make Screenshot"));
+		connect(print_scr_button, SIGNAL(clicked()), this, SLOT(print_scr()));
+		print_scr_button->setMinimumHeight(50);
 
         file_layout->addWidget(message_label_, 0, 0);
         file_layout->addWidget(file_list_, 1, 0);
         file_layout->addWidget(browse_button, 2, 0);
+		file_layout->addWidget(print_scr_button, 3, 0);
 
         return file_layout;
     }
@@ -227,6 +245,7 @@ private:
     }
 
     QDir file_dir_;
+	QString file_name_;
     GLWidget *glWidget_;
     QListWidget *file_list_;
     QLabel *message_label_;
