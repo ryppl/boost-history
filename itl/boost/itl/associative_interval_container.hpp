@@ -8,6 +8,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #ifndef BOOST_ICL_ASSOCIATIVE_INTERVAL_CONTAINER_HPP_JOFA_101023
 #define BOOST_ICL_ASSOCIATIVE_INTERVAL_CONTAINER_HPP_JOFA_101023
 
+#include <boost/itl/concept/comparable.hpp>
 #include <boost/itl/concept/joinable.hpp>
 #include <boost/itl/concept/container.hpp>
 #include <boost/itl/concept/interval_set.hpp>

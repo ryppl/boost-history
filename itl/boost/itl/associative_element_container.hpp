@@ -9,6 +9,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #define BOOST_ICL_ASSOCIATIVE_ELEMENT_CONTAINER_HPP_JOFA_101023
 
 #include <boost/itl/detail/map_algo.hpp>
+#include <boost/itl/concept/comparable.hpp>
 #include <boost/itl/concept/container.hpp>
 #include <boost/itl/concept/element_set.hpp>
 #include <boost/itl/concept/element_map.hpp>

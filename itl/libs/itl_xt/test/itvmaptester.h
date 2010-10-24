@@ -459,20 +459,20 @@ bool ItvMapTesterT<ItvMapTV>::hasErasureAsIntersectionComputability(ItvMapTV& x,
     m_ContainerGentor.some(erasure);
 
     interval_set_type erasureDomain;
-    domain(erasure, erasureDomain);
+    domain(erasureDomain, erasure);
 
     ItvMapTV xxResid = xx;
     xxResid -= erasureDomain;
 
     interval_set_type xxDomain;
-    domain(xx, xxDomain);
+    domain(xxDomain, xx);
 
     interval_set_type erasureComplement;
     erasureComplement = xxDomain;
     erasureComplement -= erasureDomain;
 
     ItvMapTV xxSect;
-    xx.add_intersection(xxSect, erasureComplement);
+    add_intersection(xxSect, xx, erasureComplement);
 
     if(! is_element_equal(xxResid, xxSect) ) {
         x = xx; y = erasureDomain; xDom_minus_y = erasureComplement; 
