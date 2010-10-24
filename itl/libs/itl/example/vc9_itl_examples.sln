@@ -29,6 +29,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_user_groups", "user_gro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_custom_interval", "custom_interval_\vc9_custom_interval.vcproj", "{0D1DB87E-E72A-4FE9-A067-1907CC6614F8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_dynamic_interval", "dynamic_interval_\vc9_dynamic_interval.vcproj", "{EE61B7EF-EC45-4165-8B49-FD5B7D3A9F7C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_static_interval", "static_interval_\vc9_static_interval.vcproj", "{EE61B7EF-EC45-4165-8B49-FD5B7D4A9F7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -91,6 +95,14 @@ Global
 		{0D1DB87E-E72A-4FE9-A067-1907CC6614F8}.Debug|Win32.Build.0 = Debug|Win32
 		{0D1DB87E-E72A-4FE9-A067-1907CC6614F8}.Release|Win32.ActiveCfg = Release|Win32
 		{0D1DB87E-E72A-4FE9-A067-1907CC6614F8}.Release|Win32.Build.0 = Release|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D3A9F7C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D3A9F7C}.Debug|Win32.Build.0 = Debug|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D3A9F7C}.Release|Win32.ActiveCfg = Release|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D3A9F7C}.Release|Win32.Build.0 = Release|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D4A9F7C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D4A9F7C}.Debug|Win32.Build.0 = Debug|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D4A9F7C}.Release|Win32.ActiveCfg = Release|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D4A9F7C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

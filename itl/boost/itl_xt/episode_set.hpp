@@ -31,7 +31,7 @@ DEALINGS IN THE SOFTWARE.
 #define BOOST_ICL_EPISODE_SET_HPP_HPP_JOFA_011015
 
 #include <string>
-#include <boost/itl/set.hpp>
+#include <boost/itl_xt/set.hpp>
 #include <boost/itl_xt/typed_episode.hpp>
 
 namespace boost{namespace icl

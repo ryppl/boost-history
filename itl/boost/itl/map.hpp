@@ -34,10 +34,7 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/itl/functors.hpp>
 #include <boost/itl/predicates.hpp>
 
-#include <boost/itl/detail/map_algo.hpp>
-#include <boost/itl/concept/container.hpp>
-#include <boost/itl/concept/element_map.hpp>
-#include <boost/itl/concept/element_associator.hpp>
+#include <boost/itl/associative_element_container.hpp>
 
 namespace boost{namespace icl
 {
@@ -125,7 +122,7 @@ public:
     typedef typename inverse<codomain_intersect>::type  inverse_codomain_intersect;
     typedef typename base_type::value_compare           value_compare;
 
-    typedef typename std::set<DomainT, domain_compare, Alloc<DomainT> > set_type;
+    typedef typename ICL_IMPL_SPACE::set<DomainT, domain_compare, Alloc<DomainT> > set_type;
     typedef set_type                                       key_object_type;
 
 

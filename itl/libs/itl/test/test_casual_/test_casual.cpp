@@ -42,7 +42,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl_xt/detail/bit_element_iterator.hpp>
 #include <boost/itl_xt/interval_bitset.hpp>
 #include <boost/itl_xt/list.hpp>
-#include <boost/itl/set.hpp> //JODO
+#include <boost/itl_xt/set.hpp> 
 
 #include <limits>
 #include <bitset>

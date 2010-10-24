@@ -57,13 +57,6 @@ namespace boost{ namespace icl
                              >::type type;
     };
 
-    //CL
-    //template <class DomainT, class Compare, class Alloc>
-    //struct codomain_type_of<std::set<DomainT,Compare,Alloc> >
-    //{
-    //    typedef typename std::set<DomainT,Compare,Alloc>::value_type type;
-    //};
-
 }} // namespace boost icl
 
 #endif

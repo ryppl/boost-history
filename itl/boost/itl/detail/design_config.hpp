@@ -15,49 +15,14 @@ by setting defines in this file.
 #ifndef  BOOST_ICL_DESIGN_CONFIG_HPP_JOFA_090214
 #define  BOOST_ICL_DESIGN_CONFIG_HPP_JOFA_090214
 
-// For an interim period, it will be possible to swith between the old and new 
-// implementation for intervals.
-#define ICL_NEW_INTERVAL_IMPL //JODO remove for the final release.
-
 // If this macro is defined, right_open_interval with static interval borders
 // will be used as default for all interval containers. 
 // BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS should be defined in the application
 // before other includes from the ITL
-//#define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS //JODO comment this out for the final release
+//#define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
 // If BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS is NOT defined, ITL uses intervals
 // with dynamic borders as default.
 
-#ifdef ICL_USE_DYNAMIC_INTERVAL_BORDERS_DEFAULTS //JODO remove this for the final release
-#   undef ICL_USE_STATIC_INTERVAL_BORDERS_DEFAULTS
-#endif
-
-//#define ICL_CONCEPT_ORIENTED
-#define ICL_PURE_CONCEPTUAL
-
-#ifndef ICL_CONCEPT_ORIENTED
-#define ICL_OBJECT_ORIENTED
-#endif
-
-#ifdef  ICL_CONCEPT_ORIENTED //CL
-#   define ICL_FUN_CALL(func, arg) icl::func(arg)
-#   define ICL_FUN_REN(func_obj, func_conc, arg) icl::func_conc(arg)
-#else //ICL_OBJECT_ORIENTED 
-#   define ICL_FUN_CALL(func,arg) arg.func()
-#   define ICL_FUN_REN(func_obj, func_conc, arg) arg.func_obj()
-#endif
-
-#ifdef  ICL_OBJECT_ORIENTED //CL
-#   define ICL_BEGIN_COMMON_MEMBER_FUNCTIONS public
-#   define ICL_END_COMMON_MEMBER_FUNCTIONS   public
-#else //ICL_CONCEPT_ORIENTED
-#   ifdef ICL_PURE_CONCEPTUAL
-#       define ICL_BEGIN_COMMON_MEMBER_FUNCTIONS private
-#       define ICL_END_COMMON_MEMBER_FUNCTIONS   public
-#   else
-#       define ICL_BEGIN_COMMON_MEMBER_FUNCTIONS public
-#       define ICL_END_COMMON_MEMBER_FUNCTIONS   public
-#   endif
-#endif
 
 //------------------------------------------------------------------------------
 // Auxiliary macros for denoting template signatures.
@@ -68,21 +33,10 @@ by setting defines in this file.
 // (4) Being able to check template template parameter variants against
 //     template type parameter variants.
 
-#ifdef ICL_NEW_INTERVAL_IMPL
-#   define ICL_USE_COMPARE_TEMPLATE_TEMPLATE
-#   define ICL_USE_COMBINE_TEMPLATE_TEMPLATE
-#   define ICL_USE_SECTION_TEMPLATE_TEMPLATE
-#else
-#   define ICL_USE_COMPARE_TEMPLATE_TEMPLATE
-#   define ICL_USE_COMBINE_TEMPLATE_TEMPLATE
-#   define ICL_USE_SECTION_TEMPLATE_TEMPLATE
-#   define ICL_USE_INTERVAL_TEMPLATE_TEMPLATE
-#endif
-
-//#define ICL_USE_COMPARE_TEMPLATE_TYPE
-//#define ICL_USE_COMBINE_TEMPLATE_TYPE
-//#define ICL_USE_SECTION_TEMPLATE_TYPE
-//#define ICL_USE_INTERVAL_TEMPLATE_TYPE
+#define ICL_USE_COMPARE_TEMPLATE_TEMPLATE
+#define ICL_USE_COMBINE_TEMPLATE_TEMPLATE
+#define ICL_USE_SECTION_TEMPLATE_TEMPLATE
+//      ICL_USE_INTERVAL_TEMPLATE_TYPE
 
 //------------------------------------------------------------------------------
 // template parameter Compare can not be a template type parameter as long as
@@ -141,11 +95,7 @@ by setting defines in this file.
 
 
 //------------------------------------------------------------------------------
-#ifdef ICL_NEW_INTERVAL_IMPL
-#   define ICL_INTERVAL_DEFAULT boost::icl::interval_type_default
-#else
-#   define ICL_INTERVAL_DEFAULT boost::icl::interval
-#endif
+#define ICL_INTERVAL_DEFAULT boost::icl::interval_type_default
 
 //------------------------------------------------------------------------------
 #define ICL_ALLOC    template<class>class

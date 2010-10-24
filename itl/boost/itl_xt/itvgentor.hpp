@@ -42,7 +42,7 @@ class ItvGentorT
 namespace boost{namespace icl
 {
 
-template <class ItvDomTV, class ItvTV=icl::interval<ItvDomTV>::type> 
+template <class ItvDomTV, class ItvTV=typename icl::interval<ItvDomTV>::type> 
 class ItvGentorT: public RandomGentorAT<ItvTV>
 {
 public:

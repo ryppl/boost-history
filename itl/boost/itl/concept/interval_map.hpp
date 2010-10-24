@@ -13,7 +13,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/absorbs_identities.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
 
-#include <boost/itl/concept/map_value.hpp>
+#include <boost/itl/detail/set_algo.hpp>
 #include <boost/itl/detail/interval_map_algo.hpp>
 #include <boost/itl/concept/interval.hpp>
 

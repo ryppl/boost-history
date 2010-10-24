@@ -140,7 +140,7 @@ bool ItvSetTesterT<ItvSetTV>::testInsertionIndependence(int nTries)
         if(!valueIsInsertionIndependent(y, y_perm))
         {
             if(true==correct) { min_y = y; min_y_perm = y_perm; correct=false; }
-            else if( y.interval_count() < min_y.interval_count() ) {
+            else if( interval_count(y) < interval_count(min_y) ) {
                 min_y = y; min_y_perm = y_perm;
             }
         }
@@ -163,7 +163,7 @@ bool ItvSetTesterT<ItvSetTV>::valueIsJoinIndependent(ItvSetTV& y, ItvSetTV& y_jo
     ItvSetTV x, x_perm, x_join;
     m_ContainerGentor.some(x);
     x_join = x;
-    x_join.join();
+    join(x_join);
     
     if(!(x == x_join) ) { y = x; y_join = x_join; return false; } 
     else return true;
@@ -184,11 +184,11 @@ bool ItvSetTesterT<ItvSetTV>::testJoinIndependence(int nTries)
             if(true==correct) { 
                 min_y = y; min_y_join = y_join;
                 correct=false;
-                std::cout << "y.sz=" << static_cast<unsigned int>(y.interval_count()) << "  try=" << i << std::endl;
+                std::cout << "y.sz=" << static_cast<unsigned int>(interval_count(y)) << "  try=" << i << std::endl;
             }
-            else if( y.interval_count() < min_y.interval_count() ) {
+            else if( interval_count(y) < interval_count(min_y) ) {
                 min_y = y; min_y_join = y_join;
-                std::cout << "y.sz=" << static_cast<unsigned int>(y.interval_count()) << "  try=" << i << std::endl;
+                std::cout << "y.sz=" << static_cast<unsigned int>(interval_count(y)) << "  try=" << i << std::endl;
             }
         }
 
@@ -211,7 +211,7 @@ bool ItvSetTesterT<ItvSetTV>::valueIsInsertAndJoinIndependent(ItvSetTV& y, ItvSe
     m_ContainerGentor.some(x);
     m_ContainerGentor.last_permuted(x_perm);
     x_permJoin = x_perm;
-    x_permJoin.join();
+    join(x_permJoin);
     
     if(! x.isEqual(x_permJoin) ) {
         y = x; y_perm = x_perm; y_permJoin = x_permJoin;
@@ -236,11 +236,11 @@ bool ItvSetTesterT<ItvSetTV>::testInsertAndJoinIndependence(int nTries)
             if(true==correct) { 
                 min_y = y; min_y_perm = y_perm; min_y_permJoin = y_permJoin;
                 correct=false;
-                std::cout << "y.sz=" << y.interval_count() << "  try=" << i << std::endl;
+                std::cout << "y.sz=" << interval_count(y) << "  try=" << i << std::endl;
             }
-            else if( y.interval_count() < min_y.interval_count() ) {
+            else if( interval_count(y) < interval_count(min_y) ) {
                 min_y = y; min_y_perm = y_perm; min_y_permJoin = y_permJoin;
-                std::cout << "y.sz=" << y.interval_count() << "  try=" << i << std::endl;
+                std::cout << "y.sz=" << interval_count(y) << "  try=" << i << std::endl;
             }
         }
     }
@@ -275,7 +275,7 @@ bool ItvSetTesterT<ItvSetTV>::isInsertReversible
     m_ContainerGentor.some(yy);
     m_ContainerGentor.last_permuted(yy_perm);
     yy_permJoin = yy_perm;
-    yy_permJoin.join();
+    join(yy_permJoin);
 
     lhs = xx;
     lhs += yy;
@@ -306,14 +306,14 @@ bool ItvSetTesterT<ItvSetTV>::testInsertReversibility(int nTries, char* errFile)
     {
         if(!isInsertReversible(x, y, y_perm, y_permJoin, x_plus_y, lhs, rhs))
         {
-            caseSize = static_cast<unsigned int>(x.interval_count() + y.interval_count());
+            caseSize = static_cast<unsigned int>(interval_count(x) + interval_count(y));
             if(true==correct) { 
                 min_x = x; min_y = y; min_y_perm = y_perm; 
                 min_y_permJoin = y_permJoin; min_x_plus_y = x_plus_y; 
                 min_lhs = lhs; min_rhs = rhs;
                 min_caseSize = caseSize;
-                std::cout << "x.sz="  << static_cast<unsigned int>(x.interval_count()) 
-                     << " y.sz=" << static_cast<unsigned int>(y.interval_count()) 
+                std::cout << "x.sz="  << static_cast<unsigned int>(interval_count(x)) 
+                     << " y.sz=" << static_cast<unsigned int>(interval_count(y)) 
                      << "  try=" << i << std::endl;
                 correct=false;
             }
@@ -323,8 +323,8 @@ bool ItvSetTesterT<ItvSetTV>::testInsertReversibility(int nTries, char* errFile)
                 min_y_permJoin = y_permJoin; min_x_plus_y = x_plus_y;
                 min_lhs = lhs; min_rhs = rhs;
                 min_caseSize = caseSize;
-                std::cout << "x.sz="  << static_cast<unsigned int>(x.interval_count()) 
-                     << " y.sz=" << static_cast<unsigned int>(y.interval_count()) 
+                std::cout << "x.sz="  << static_cast<unsigned int>(interval_count(x)) 
+                     << " y.sz=" << static_cast<unsigned int>(interval_count(y)) 
                      << "  try=" << i << std::endl;
             }
         }
@@ -390,7 +390,7 @@ bool ItvSetTesterT<ItvSetTV>::isInsertReversible1
     m_ContainerGentor.some(yy);
     m_ContainerGentor.last_permuted(yy_perm);
     yy_permJoin = yy_perm;
-    yy_permJoin.join();
+    join(yy_permJoin);
 
     xx2 = xx;
     xx2 += yy;
@@ -420,12 +420,12 @@ bool ItvSetTesterT<ItvSetTV>::testInsertReversibility1(int nTries, char* errFile
     {
         if(!isInsertReversible1(x, y, y_perm, y_permJoin, x_plus_y, x2))
         {
-            caseSize = x.interval_count() + y.interval_count();
+            caseSize = interval_count(x) + interval_count(y);
             if(true==correct) { 
                 min_x = x; min_y = y; min_y_perm = y_perm; 
                 min_y_permJoin = y_permJoin; min_x_plus_y = x_plus_y; min_x2 = x2;
                 min_caseSize = caseSize;
-                std::cout << "x.sz=" << x.interval_count() << " y.sz=" << y.interval_count() 
+                std::cout << "x.sz=" << interval_count(x) << " y.sz=" << interval_count(y) 
                      << "  try=" << i << std::endl;
                 correct=false;
             }
@@ -434,7 +434,7 @@ bool ItvSetTesterT<ItvSetTV>::testInsertReversibility1(int nTries, char* errFile
                 min_x = x; min_y = y; min_y_perm = y_perm;
                 min_y_permJoin = y_permJoin; min_x_plus_y = x_plus_y; min_x2 = x2;
                 min_caseSize = caseSize;
-                std::cout << "x.sz=" << x.interval_count() << " y.sz=" << y.interval_count() 
+                std::cout << "x.sz=" << interval_count(x) << " y.sz=" << interval_count(y) 
                      << "  try=" << i << std::endl;
             }
         }
@@ -476,7 +476,7 @@ void ItvSetTesterT<ItvSetTV>::debugInsertReversibility1
     (const ItvSetTV& x, const ItvSetTV& y, const ItvSetTV y_perm)
 {
     ItvSetTV x2 = x, y_pj = y_perm;
-    y_pj.join();
+    join(y_pj);
 
     x2 += y_pj;
     x2 -= y;
@@ -552,15 +552,15 @@ bool ItvSetTesterT<ItvSetTV>::testSymmetricDifference(int nTries, char* errFile)
         if(!hasSymmetricDifference(x, y, x_uni_y, x_sec_y, x_sub_y, y_sub_x))
         {
             // collect results to find the smallest invalid case
-            caseSize = static_cast<unsigned int>(x.interval_count() + y.interval_count());
+            caseSize = static_cast<unsigned int>(interval_count(x) + interval_count(y));
             if(true==correct) { 
                 min_x = x; min_y = y; 
                 /*
                 more results
                 */
                 min_caseSize = caseSize;
-                std::cout << "x.sz="  << static_cast<unsigned int>(x.interval_count()) 
-                     << " y.sz=" << static_cast<unsigned int>(y.interval_count()) 
+                std::cout << "x.sz="  << static_cast<unsigned int>(interval_count(x)) 
+                     << " y.sz=" << static_cast<unsigned int>(interval_count(y)) 
                      << "  try=" << i << std::endl;
                 correct=false;
             }
@@ -571,8 +571,8 @@ bool ItvSetTesterT<ItvSetTV>::testSymmetricDifference(int nTries, char* errFile)
                 more results
                 */
                 min_caseSize = caseSize;
-                std::cout << "x.sz="  << static_cast<unsigned int>(x.interval_count()) 
-                     << " y.sz=" << static_cast<unsigned int>(y.interval_count()) 
+                std::cout << "x.sz="  << static_cast<unsigned int>(interval_count(x)) 
+                     << " y.sz=" << static_cast<unsigned int>(interval_count(y)) 
                      << "  try=" << i << std::endl;
             }
         }

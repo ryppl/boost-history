@@ -10,6 +10,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #define __tuple_computer_JOFA_040614_H__
 
 #include <boost/itl/map.hpp>
+#include <boost/itl_xt/set.hpp>
 #include <boost/itl_xt/var_tuple_order.hpp>
 #include <boost/itl/split_interval_map.hpp>
 

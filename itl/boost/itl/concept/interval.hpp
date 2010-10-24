@@ -942,6 +942,16 @@ length(const Type& object)
                                  : last_next(object) - first(object);
 }
 
+//- iterative_size -------------------------------------------------------------
+template<class Type>
+inline typename enable_if<is_interval<Type>, 
+    typename size_type_of<interval_traits<Type> >::type>::type
+iterative_size(const Type& object)
+{
+    return 2;
+}
+
+
 //==============================================================================
 //= Addition
 //==============================================================================

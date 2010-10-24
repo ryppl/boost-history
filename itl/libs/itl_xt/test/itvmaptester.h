@@ -4,6 +4,7 @@ class ItvMapTesterT
 #ifndef __ITVMAPTESTER_H_JOFA_990226__
 #define __ITVMAPTESTER_H_JOFA_990226__
 
+#include <boost/itl/associative_element_container.hpp>
 #include <boost/itl_xt/itvgentor.hpp>
 #include <boost/itl_xt/mapgentor.hpp>
 
@@ -101,7 +102,7 @@ bool ItvMapTesterT<ItvMapTV>::testInsertionIndependence(int nTries)
         if(!valueIsInsertionIndependent(y, y_perm))
         {
             if(true==correct) { min_y = y; min_y_perm = y_perm; correct=false; }
-            else if( y.interval_count() < min_y.interval_count() ) {
+            else if( interval_count(y) < interval_count(min_y) ) {
                 min_y = y; min_y_perm = y_perm;
             }
         }
@@ -124,7 +125,7 @@ bool ItvMapTesterT<ItvMapTV>::valueIsJoinIndependent(ItvMapTV& y, ItvMapTV& y_jo
     ItvMapTV x, x_perm, x_join;
     m_ContainerGentor.some(x);
     x_join = x;
-    x_join.join();
+    join(x_join);
     
     if(! x.isEqual(x_join) ) { y = x; y_join = x_join; return false; } 
     else return true;
@@ -145,11 +146,11 @@ bool ItvMapTesterT<ItvMapTV>::testJoinIndependence(int nTries)
             if(true==correct) { 
                 min_y = y; min_y_join = y_join;
                 correct=false;
-                std::cout << "y.sz=" << y.interval_count() << "  try=" << i << std::endl;
+                std::cout << "y.sz=" << interval_count(y) << "  try=" << i << std::endl;
             }
-            else if( y.interval_count() < min_y.interval_count() ) {
+            else if( interval_count(y) < interval_count(min_y) ) {
                 min_y = y; min_y_join = y_join;
-                std::cout << "y.sz=" << y.interval_count() << "  try=" << i << std::endl;
+                std::cout << "y.sz=" << interval_count(y) << "  try=" << i << std::endl;
             }
         }
 
@@ -173,7 +174,7 @@ bool ItvMapTesterT<ItvMapTV>::valueIsInsertAndJoinIndependent(ItvMapTV& y, ItvMa
     m_ContainerGentor.some(x);
     m_ContainerGentor.last_permuted(x_perm);
     x_permJoin = x_perm;
-    x_permJoin.join();
+    join(x_permJoin);
     
     if(! x.isEqual(x_permJoin) ) {
         y = x; y_perm = x_perm; y_permJoin = x_permJoin;
@@ -198,11 +199,11 @@ bool ItvMapTesterT<ItvMapTV>::testInsertAndJoinIndependence(int nTries)
             if(true==correct) { 
                 min_y = y; min_y_perm = y_perm; min_y_permJoin = y_permJoin;
                 correct=false;
-                std::cout << "y.sz=" << y.interval_count() << "  try=" << i << std::endl;
+                std::cout << "y.sz=" << interval_count(y) << "  try=" << i << std::endl;
             }
-            else if( y.interval_count() < min_y.interval_count() ) {
+            else if( interval_count(y) < interval_count(min_y) ) {
                 min_y = y; min_y_perm = y_perm; min_y_permJoin = y_permJoin;
-                std::cout << "y.sz=" << y.interval_count() << "  try=" << i << std::endl;
+                std::cout << "y.sz=" << interval_count(y) << "  try=" << i << std::endl;
             }
         }
     }
@@ -238,7 +239,7 @@ bool ItvMapTesterT<ItvMapTV>::isInsertReversible1
     m_ContainerGentor.some(yy);
     m_ContainerGentor.last_permuted(yy_perm);
     yy_permJoin = yy_perm;
-    yy_permJoin.join();
+    join(yy_permJoin);
 
     xx2 = xx;
     xx2 += yy;
@@ -268,12 +269,12 @@ bool ItvMapTesterT<ItvMapTV>::testInsertReversibility1(int nTries, char* errFile
     {
         if(!isInsertReversible1(x, y, y_perm, y_permJoin, x_plus_y, x2))
         {
-            caseSize = x.interval_count() + y.interval_count();
+            caseSize = interval_count(x) + interval_count(y);
             if(true==correct) { 
                 min_x = x; min_y = y; min_y_perm = y_perm; 
                 min_y_permJoin = y_permJoin; min_x_plus_y = x_plus_y; min_x2 = x2;
                 min_caseSize = caseSize;
-                std::cout << "x.sz=" << x.interval_count() << " y.sz=" << y.interval_count() 
+                std::cout << "x.sz=" << interval_count(x) << " y.sz=" << interval_count(y) 
                      << "  try=" << i << std::endl;
                 correct=false;
             }
@@ -282,7 +283,7 @@ bool ItvMapTesterT<ItvMapTV>::testInsertReversibility1(int nTries, char* errFile
                 min_x = x; min_y = y; min_y_perm = y_perm;
                 min_y_permJoin = y_permJoin; min_x_plus_y = x_plus_y; min_x2 = x2;
                 min_caseSize = caseSize;
-                std::cout << "x.sz=" << x.interval_count() << " y.sz=" << y.interval_count() 
+                std::cout << "x.sz=" << interval_count(x) << " y.sz=" << interval_count(y) 
                      << "  try=" << i << std::endl;
             }
         }
@@ -324,7 +325,7 @@ void ItvMapTesterT<ItvMapTV>::debugInsertReversibility1
     (const ItvMapTV& x, const ItvMapTV& y, const ItvMapTV y_perm)
 {
     ItvMapTV x2 = x, y_pj = y_perm;
-    y_pj.join();
+    join(y_pj);
 
     x2 += y_pj;
     x2 -= y;
@@ -350,13 +351,13 @@ bool ItvMapTesterT<ItvMapTV>::isInsertReversible2
     m_ContainerGentor.some(yy);
     m_ContainerGentor.last_permuted(yy_perm);
     yy_permJoin = yy_perm;
-    yy_permJoin.join();
+    join(yy_permJoin);
 
     xx2 = xx;
     xx2 += yy_permJoin;
     xx_plus_yy_pj = xx2;
     xx2 -= yy;
-    xx2.join();
+    join(xx2);
     
     if(! is_element_equal(xx, xx2) ) {
         x = xx; y = yy; y_perm = yy_perm; y_permJoin = yy_permJoin;
@@ -380,14 +381,14 @@ bool ItvMapTesterT<ItvMapTV>::testInsertReversibility2(int nTries, char* errFile
     for(int i=0; i<nTries; i++) {
         if(!isInsertReversible2(x, y, y_perm, y_permJoin, x_plus_y_pj, x2))
         {
-            caseSize = x.interval_count() + y.interval_count();
+            caseSize = interval_count(x) + interval_count(y);
             if(true==correct) { 
                 min_x = x; min_y = y; min_y_perm = y_perm; 
                 min_y_permJoin = y_permJoin; min_x_plus_y_pj = x_plus_y_pj; 
                 min_x2 = x2;
                 min_caseSize = caseSize;
-                std::cout << "x.sz="  << static_cast<unsigned int>(x.interval_count())
-                     << " y.sz=" << static_cast<unsigned int>(y.interval_count())
+                std::cout << "x.sz="  << static_cast<unsigned int>(interval_count(x))
+                     << " y.sz=" << static_cast<unsigned int>(interval_count(y))
                      << "  try=" << i << std::endl;
                 correct=false;
             }
@@ -396,8 +397,8 @@ bool ItvMapTesterT<ItvMapTV>::testInsertReversibility2(int nTries, char* errFile
                 min_x = x; min_y = y; min_y_perm = y_perm;
                 min_y_permJoin = y_permJoin; min_x_plus_y_pj = x_plus_y_pj; min_x2 = x2;
                 min_caseSize = caseSize;
-                std::cout << "x.sz="  << static_cast<unsigned int>(x.interval_count())
-                     << " y.sz=" << static_cast<unsigned int>(y.interval_count()) 
+                std::cout << "x.sz="  << static_cast<unsigned int>(interval_count(x))
+                     << " y.sz=" << static_cast<unsigned int>(interval_count(y)) 
                      << "  try=" << i << std::endl;
             }
         }
@@ -437,7 +438,7 @@ template <class ItvMapTV>
 void ItvMapTesterT<ItvMapTV>::debugInsertReversibility2(const ItvMapTV& x, const ItvMapTV& y, const ItvMapTV y_perm)
 {
     ItvMapTV x2 = x, y_pj = y_perm;
-    y_pj.join();
+    join(y_pj);
 
     x2 += y_pj;
     x2 -= y;
@@ -458,13 +459,13 @@ bool ItvMapTesterT<ItvMapTV>::hasErasureAsIntersectionComputability(ItvMapTV& x,
     m_ContainerGentor.some(erasure);
 
     interval_set_type erasureDomain;
-    erasure.domain(erasureDomain);
+    domain(erasure, erasureDomain);
 
     ItvMapTV xxResid = xx;
     xxResid -= erasureDomain;
 
     interval_set_type xxDomain;
-    xx.domain(xxDomain);
+    domain(xx, xxDomain);
 
     interval_set_type erasureComplement;
     erasureComplement = xxDomain;
@@ -498,14 +499,14 @@ bool ItvMapTesterT<ItvMapTV>::testErasureAsIntersectionComputability(int nTries,
     for(int i=0; i<nTries; i++) {
         if(!hasErasureAsIntersectionComputability(x, y, xDom_minus_y, x_resid, x_section))
         {
-            caseSize = static_cast<int>(x.interval_count() + y.interval_count());
+            caseSize = static_cast<int>(interval_count(x) + interval_count(y));
             if(true==correct) { 
                 min_x = x; min_y = y; 
                 min_xDom_minus_y = xDom_minus_y;
                 min_x_resid = x_resid; min_x_section = x_section;
                 min_caseSize = caseSize;
-                std::cout << "x.sz="  << static_cast<unsigned int>(x.interval_count())
-                     << " y.sz=" << static_cast<unsigned int>(y.interval_count())
+                std::cout << "x.sz="  << static_cast<unsigned int>(interval_count(x))
+                     << " y.sz=" << static_cast<unsigned int>(interval_count(y))
                      << "  try=" << i << std::endl;
                 correct=false;
             }
@@ -515,8 +516,8 @@ bool ItvMapTesterT<ItvMapTV>::testErasureAsIntersectionComputability(int nTries,
                 min_xDom_minus_y = xDom_minus_y;
                 min_x_resid = x_resid; min_x_section = x_section;
                 min_caseSize = caseSize;
-                std::cout << "x.sz="  << static_cast<unsigned int>(x.interval_count())
-                     << " y.sz=" << static_cast<unsigned int>(y.interval_count())
+                std::cout << "x.sz="  << static_cast<unsigned int>(interval_count(x))
+                     << " y.sz=" << static_cast<unsigned int>(interval_count(y))
                      << "  try=" << i << std::endl;
             }
         }

@@ -33,7 +33,7 @@ set of strings
 
 #include <string>
 #include <string.h>
-#include <boost/itl/set.hpp>
+#include <boost/itl_xt/set.hpp>
 
 namespace boost{namespace icl
 {

@@ -30,19 +30,12 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/detail/interval_set_algo.hpp>
 #include <boost/itl/detail/exclusive_less_than.hpp>
 
-#include <boost/itl/concept/interval/base.hpp>
-#include <boost/itl/concept/interval_set.hpp>
-#include <boost/itl/concept/interval_map.hpp>
-#include <boost/itl/concept/interval_associator.hpp>
+#include <boost/itl/associative_interval_container.hpp>
 
 #include <boost/itl/right_open_interval.hpp>
 #include <boost/itl/continuous_interval.hpp>
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/element_iterator.hpp>
-
-#define const_FOR_IMPL(iter) for(typename ImplSetT::const_iterator iter=_set.begin(); (iter)!=_set.end(); (iter)++)
-#define FOR_IMPL(iter) for(typename ImplSetT::iterator iter=_set.begin(); (iter)!=_set.end(); (iter)++)
-
 
 namespace boost{namespace icl
 {
@@ -112,7 +105,7 @@ public:
     //- Associated types: Related types
     //--------------------------------------------------------------------------
     /// The atomized type representing the corresponding container of elements
-    typedef typename std::set<DomainT,domain_compare,Alloc<DomainT> > atomized_type;
+    typedef typename ICL_IMPL_SPACE::set<DomainT,domain_compare,Alloc<DomainT> > atomized_type;
 
     //--------------------------------------------------------------------------
     //- Associated types: Implementation and stl related

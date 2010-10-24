@@ -34,7 +34,6 @@ bool intersects(const ObjectT& left, const CoObjectT& right)
 
     co_iterator right_ = right_common_lower_;
     while(right_ != right_common_upper_)
-        //CL if(icl::intersects(left, key_value<CoObjectT>(right_++)))
         if(!(left.find(key_value<CoObjectT>(right_++))==left.end()))
             return true;
 

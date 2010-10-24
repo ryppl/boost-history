@@ -38,6 +38,8 @@ private:
     int _first, _past;
 };
 
+namespace boost{ namespace icl 
+{
 // Class template interval_traits serves as adapter to register and customize your interval class
 template<>
 struct interval_traits< MyInterval >       //1.  Partially specialize interval_traits for 
@@ -63,6 +65,7 @@ struct interval_bound_type<MyInterval>     //4.  Finally we define the interval 
     BOOST_STATIC_CONSTANT(bound_type, value = interval_bounds::static_right_open);//[lo..up)
 };                                         //               and static_closed       [lo..up] 
 
+}} // namespace boost icl
 
 void custom_interval()
 {

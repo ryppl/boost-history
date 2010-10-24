@@ -63,7 +63,7 @@ int main()
         = construct<discrete_interval<Time> >(Time(monday,8,30), Time(monday,17,20), 
                                               interval_bounds::open());
 
-    cout << "Dynamically bounded interval\n";
+    cout << "Dynamically bounded intervals:\n";
     cout << "  discrete_interval<int>:    " << int_interval  << endl;
     cout << "continuous_interval<double>: " << sqrt_interval << " does " 
                                             << string(contains(sqrt_interval, sqrt(2.0))?"":"NOT") 
@@ -87,7 +87,7 @@ int main()
     right_open_interval<rational<int> > range2(rational<int>(1,3),  rational<int>(1,1));
 
     // This middle third of the unit interval [0,1)
-    cout << "Statically bounded interval\n";
+    cout << "Statically bounded interval:\n";
     cout << "right_open_interval<rational<int>>: " << (range1 & range2) << endl;
 
     return 0;
@@ -97,7 +97,7 @@ int main()
 
 //>>Interval Container Library: Sample interval.cpp <<
 //----------------------------------------------------
-//Dynamically bounded interval
+//Dynamically bounded intervals
 //  discrete_interval<int>:    [3,7]
 //continuous_interval<double>: [0.707107,1.41421) does NOT contain sqrt(2)
 //continuous_interval<string>: (Barcelona,Boston] does NOT contain 'Barcelona'

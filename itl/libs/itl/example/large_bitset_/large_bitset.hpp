@@ -113,7 +113,7 @@ public:
     //]
 
     //[large_bitset_demo_functions
-    size_t interval_count()const { return icl::interval_count(_map); }
+    size_t interval_count()const { return boost::icl::interval_count(_map); }
 
     void show_segments()const
     {
@@ -128,6 +128,7 @@ public:
 
     void show_matrix(const char off_on[2] = " 1")const
     {
+        using namespace boost;
         typename interval_bitmap_type::const_iterator iter = _map.begin();
         while(iter != _map.end())
         {
@@ -164,7 +165,8 @@ private:                                      // Example value
 
     //[large_bitset_segment_apply
     large_bitset& segment_apply(segment_combiner combine, const interval_type& operand)
-    {                                                       // same as
+    {
+        using namespace boost;                              // same as
         element_type   base = icl::first(operand) >> shift, // icl::first(operand) / divisor
                        ceil = icl::last (operand) >> shift; // icl::last (operand) / divisor
         word_type base_rest = icl::first(operand) &  mask , // icl::first(operand) % divisor

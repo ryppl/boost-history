@@ -17,7 +17,6 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/itl_xt/bits.hpp>      // a bitset implementation
 #include <boost/itl_xt/detail/bit_element_iterator.hpp>
 
-//CL #include <boost/itl/set.hpp> //JODO URG
 #include <boost/itl/detail/interval_morphism.hpp> //JODO Separate aspects and concerns
 
 

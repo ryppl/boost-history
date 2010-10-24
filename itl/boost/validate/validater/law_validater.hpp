@@ -14,7 +14,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/ptime.hpp>
 
 #include <boost/validate/loki_xt/Tuple.h>
-#include <boost/itl/set.hpp>
+#include <boost/itl_xt/set.hpp>
 #include <boost/itl/map.hpp>
 #include <boost/validate/gentor/randomgentor.hpp>
 

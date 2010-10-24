@@ -12,6 +12,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp> 
 #include <boost/mpl/not.hpp> 
+#include <boost/type_traits/is_same.hpp>
 #include <boost/itl/type_traits/element_type_of.hpp> 
 #include <boost/itl/type_traits/segment_type_of.hpp> 
 #include <boost/itl/type_traits/is_map.hpp> 

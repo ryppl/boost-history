@@ -18,7 +18,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
     (bitset compression).
 
     Find a commented sample implementation in the boost book documentation 
-    <a href="http://www.herold-faulhaber.de/boost_itl/doc/libs/itl/doc/html/boost_itl/projects.html#boost_itl.projects.large_bitset">
+    <a href="http://www.joachim-faulhaber.de/boost_itl/doc/libs/itl/doc/html/boost_itl/projects.html#boost_itl.projects.large_bitset">
     here</a>.
 
     \include large_bitset_/large_bitset.cpp

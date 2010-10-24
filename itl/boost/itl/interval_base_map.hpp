@@ -20,16 +20,10 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/detail/on_absorbtion.hpp>
 #include <boost/itl/detail/interval_map_algo.hpp>
 
-#include <boost/itl/concept/interval/base.hpp>
-#include <boost/itl/concept/interval_set.hpp>
-#include <boost/itl/concept/interval_map.hpp>
-#include <boost/itl/concept/interval_associator.hpp>
+#include <boost/itl/associative_interval_container.hpp>
 
 #include <boost/itl/type_traits/is_interval_splitter.hpp>
 #include <boost/itl/map.hpp>
-
-#define const_FOR_IMPLMAP(iter) for(typename ImplMapT::const_iterator iter=_map.begin(); (iter)!=_map.end(); (iter)++)
-#define FOR_IMPLMAP(iter) for(typename ImplMapT::iterator iter=_map.begin(); (iter)!=_map.end(); (iter)++)
 
 namespace boost{namespace icl
 {

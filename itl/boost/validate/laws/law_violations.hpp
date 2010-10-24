@@ -11,7 +11,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define BOOST_ICL_LAW_VIOLATIONS_HPP_JOFA_070411
 
 #include <string>
-#include <boost/itl/set.hpp>
+#include <boost/itl_xt/set.hpp>
 #include <boost/validate/loki_xt/Tuple.h>
 
 namespace boost{namespace icl
@@ -147,7 +147,7 @@ namespace boost{namespace icl
         const_iterator end()const   { return _violations.begin(); }
 
         void clear()       { icl::clear(_violations); }
-        bool empty()const  { return ICL_FUN_REN(empty, is_empty, _violations); }
+        bool empty()const  { return icl::is_empty(_violations); }
         size_type size()const { return _violations.size(); }
 
         void reportFirst()const
