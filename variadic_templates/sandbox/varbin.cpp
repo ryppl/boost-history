@@ -2,21 +2,41 @@
 //  see if variadic reduce is possible using variadic templates.
 //
 //Result:
-// //  No, apparently b... is not an arg pack.
-// //
-// int add(int a,int b){return a+b;}
+//  Yes.
+//
 
-template<typename T, typename... U>
-T fold(T (*op)(T,T), T z, U... a)
+struct add
+{
+      template<typename T>
+      T
+    operator()(T a,T b)
+    { 
+        return a+b;
+    }
+
+};
+
+template<typename Op, typename T, typename... U>
+T fold(Op op, T z, U... a)
 ;
 
-template<typename T>
-T fold(T (*op)(T,T), T z, T a)
-{ return op(z,a)
+template<typename Op, typename T>
+T fold(Op op, T z)
+{ return z
 ;}
 
-template<typename T, typename... U>
-T fold(T (*op)(T,T), T z, T a, U... b)
+template<typename Op, typename T, typename... U>
+T fold(Op op, T z, T a, U... b)
 { return op(z,fold(op,a,b...))
 ;}
 
+#include <iostream>
+
+int main(void)
+{
+    add op;
+    std::cout<<fold(op,1)<<"\n";
+    std::cout<<fold(op,1,2,3)<<"\n";
+    std::cout<<fold(op,10,20,30)<<"\n";
+    return 0;
+}    
