@@ -186,6 +186,22 @@ public:
 };
 
 
+template <class TimeT, class TypeDomain>
+bool operator == (const episode_product<TimeT,TypeDomain>& left, 
+                  const episode_product<TimeT,TypeDomain>& right)
+{
+    typedef typename episode_product<TimeT,TypeDomain>::base_type base_type;
+    return dynamic_cast<const base_type&>(left) == dynamic_cast<const base_type&>(right);
+}
+
+template <class TimeT, class TypeDomain>
+struct is_map<episode_product<TimeT,TypeDomain> >
+{
+    typedef is_map type;
+    BOOST_STATIC_CONSTANT(bool, value = true); 
+};
+
+
 /* KEEP Eigentlich bessere Implementierung exemplarisch für 'using' in Verbindung
     private inheritence. Müsste aber wg. Rückwärtskompatibilität sorgfältig
     eingepflegt werden (eigentlich nur StatPflege)
