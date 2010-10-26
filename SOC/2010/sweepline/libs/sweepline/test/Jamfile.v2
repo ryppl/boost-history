@@ -12,17 +12,7 @@ project
 
 test-suite "sweepline_benchmark"
     :
-	[ run voronoi_point/voronoi_benchmark_test.cpp ]
 	[ run voronoi_segment/segment_voronoi_benchmark_test.cpp ]
-    ;
-
-test-suite "sweepline_point"
-    : 
-        [ run voronoi_point/event_queue_test.cpp ]
-        [ run voronoi_point/event_types_test.cpp ]
-	[ run voronoi_point/node_comparer_test.cpp ]
-	[ run voronoi_point/voronoi_builder_test.cpp ]
-	[ run voronoi_point/voronoi_clipping_test.cpp ]
     ;
 
 test-suite "sweepline_segment"
