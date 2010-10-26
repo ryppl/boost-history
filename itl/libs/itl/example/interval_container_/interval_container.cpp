@@ -34,10 +34,10 @@ using namespace boost::icl;
 
 void interval_container_basics()
 {
-    right_open_interval<Time> night_and_day = right_open_interval<Time>(Time(monday,   20,00), Time(tuesday,  20,00));
-    right_open_interval<Time> day_and_night = right_open_interval<Time>(Time(tuesday,   7,00), Time(wednesday, 7,00));
-    right_open_interval<Time> next_morning  = right_open_interval<Time>(Time(wednesday, 7,00), Time(wednesday,10,00));
-    right_open_interval<Time> next_evening  = right_open_interval<Time>(Time(wednesday,18,00), Time(wednesday,21,00));
+    interval<Time>::type night_and_day(Time(monday,   20,00), Time(tuesday,  20,00));
+    interval<Time>::type day_and_night(Time(tuesday,   7,00), Time(wednesday, 7,00));
+    interval<Time>::type  next_morning(Time(wednesday, 7,00), Time(wednesday,10,00));
+    interval<Time>::type  next_evening(Time(wednesday,18,00), Time(wednesday,21,00));
 
     // An interval set of type interval_set joins intervals that that overlap or touch each other.
     interval_set<Time> joinedTimes;

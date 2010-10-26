@@ -20,7 +20,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
     \include static_interval_/static_interval.cpp
 */
-//[example_interval
+//[example_static_interval
 #include <iostream>
 #include <string>
 #include <math.h>
@@ -53,12 +53,12 @@ int main()
     // Statically bounded intervals are the user defined library default for 
     // interval parameters in interval containers now.
     BOOST_STATIC_ASSERT((
-        is_same< typename interval_set<int>::interval_type
+        is_same< interval_set<int>::interval_type
                , right_open_interval<int> >::value
                )); 
 
     BOOST_STATIC_ASSERT((
-        is_same< typename interval_set<float>::interval_type
+        is_same< interval_set<float>::interval_type
                , right_open_interval<float> >::value
                )); 
 
@@ -67,7 +67,7 @@ int main()
     // The user defined library default for intervals is also available via 
     // the template 'interval':
     BOOST_STATIC_ASSERT((
-        is_same< typename interval<int>::type
+        is_same< interval<int>::type
                , right_open_interval<int> >::value
                )); 
 

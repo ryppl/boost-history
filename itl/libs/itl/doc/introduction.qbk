@@ -8,20 +8,28 @@
 
 [section Introduction]
 
-[note [* The Interval Template Library is accepted into Boost]
+[/ note [* The Interval Container Library is accepted into Boost]
 
-The /Interval Template Library/ underwent 
+The [*Interval Container Library] (formerly /Interval Template Library/) underwent 
 a formal review on the boost developer's list
 from February 18, 2010 to March 08, 2010 and has been accepted 
-into the boost library collection.
+by declaration of review manager Hartmut Kaiser
+into the boost library collection on April 18, 2010.
 
+
+The library has been refactored for the suggestions and requests
+that came up during the review. The current version is now
+ready for inclusion into the next boost release.
 The name ['*Interval Template Library (ITL)*] 
-will be changed to ['*Interval Container Library (ICL)*].
+has been changed to ['*Interval Container Library (ICL)*].
 
-The library is currently refactored for the suggestions and requests
-that came up during the review. These modifications will be
-completed in autumn 2010 and the library will probably 
-available with the boost release 1.46.
+If you find bugs in the library or typos or other shortcomings in
+the documentation please send reports to the boost developers list
+boost@lists.boost.org
+the boost users list or
+boost-users@lists.boost.org
+to `[afojgo<AT>gmail dot com]`.
+
 ]
 
 ["A bug crawls across the boost docs on my laptop screen.

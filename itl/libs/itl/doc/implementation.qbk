@@ -46,9 +46,9 @@ to the familiar `size` function that returns
 the ['*number of elements*] of a container. Because for an interval container
 ``
 interval_set<int> mono;
-mono += interval<int>(1,5); // {[1 ... 5]}
-mono.size()           == 5; // true, 5 elements
-mono.interval_count() == 1; // true, only one interval
+mono += interval<int>::closed(1,5); // {[1 ... 5]}
+mono.size()           == 5;         // true, 5 elements
+mono.interval_count() == 1;         // true, only one interval
 ``
 
 it's size and the number of contained intervals is usually different.

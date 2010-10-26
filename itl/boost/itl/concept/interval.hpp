@@ -13,7 +13,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/not.hpp>
-#include <boost/detail/is_incrementable.hpp>
+//CL #include <boost/detail/is_incrementable.hpp>
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/type_traits/unit_element.hpp>
 #include <boost/itl/type_traits/identity_element.hpp>
@@ -378,7 +378,7 @@ bounded_upper(const Type& object)
 { 
     return typename 
         Type::bounded_domain_type(upper(object), 
-                                       object.bounds().right()); 
+                                  object.bounds().right()); 
 }
 
 template<class Type>
@@ -454,7 +454,7 @@ is_empty(const Type& object)
 }
 
 //==============================================================================
-//= Orederings, containedness (non empty)
+//= Orderings, containedness (non empty)
 //==============================================================================
 namespace non_empty
 {

@@ -19,8 +19,8 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 [/ Macros will be used for links so we have a central place to change them ]
-[def __itv__          `interval`]
-[def __Itv__          `Interval`]
+[def __itv__          [classref boost::icl::interval interval]]
+[def __Itv__          [classref boost::icl::interval Interval]]
 
 [def __itv_tr__       [classref boost::icl::interval_traits interval_traits]]
 [def __Itv_tr__       [classref boost::icl::interval_traits Interval_traits]]
@@ -119,6 +119,9 @@ Distributed under the Boost Software License, Version 1.0.
 [def __p              [link interval_mapping_type *p*]]
 [def __m              [link itl_map_type *m*]]
 [def __M              [link interval_map_types *M*]]
+[def __d              [link discrete_types *d*]]
+[def __c              [link continuous_types *c*]]
+
 [def __ei             [link element_type *e*] [link interval_type *i*]]
 [def __bp             [link element_mapping_type *b*] [link interval_mapping_type *p*]]
 [def __eS             [link element_type *e*] [link interval_set_types *S*]]
@@ -128,6 +131,7 @@ Distributed under the Boost Software License, Version 1.0.
 [def __ebm            [link element_type *e*] [link element_mapping_type *b*] [link itl_map_type *m*]]
 [def __eiS            [link element_type *e*] [link interval_type *i*] [link interval_set_types *S*]]
 [def __bpM            [link element_mapping_type *b*] [link interval_mapping_type *p*] [link interval_map_types *M*]]
+[def __dc             [link discrete_types *d*] [link continuous_types *c*]]
 
 [def __S1             [link ph_def_S1 *S1*]]
 [def __S2             [link ph_def_S2 *S2*]]
@@ -166,6 +170,10 @@ Distributed under the Boost Software License, Version 1.0.
 [def __biLElementIteration__ [link boost_icl.function_reference.element_iteration ['*Element iteration*]]]
 [def __biLStreaming__    [link boost_icl.function_reference.streaming__conversion ['*Streaming, conversion*]]]
 
+[def __biLIntervalConstruct__  [link boost_icl.function_reference.interval_construction ['*Construction*]]]
+[def __biLIntervalOrderings__  [link boost_icl.function_reference.additional_interval_orderings ['*Orderings*]]]
+[def __biLIntervalMiscellaneous__  [link boost_icl.function_reference.miscellaneous_interval_functions ['*Miscellaneous*]]]
+
 [/ column headers]
 [def __ch_itvs__       intervals]
 
@@ -185,6 +193,13 @@ Distributed under the Boost Software License, Version 1.0.
 [def __ch_ele_maps__   element\nmaps]
 [def __ch_ele_set__    element\nset]
 [def __ch_ele_map__    element\nmap]
+
+[def __ch_dsc_itv__    discrete\n_interval]
+[def __ch_cnt_itv__    continuous\n_interval]
+[def __ch_ro_itv__     right_open\n_interval]
+[def __ch_lo_itv__     left_open\n_interval]
+[def __ch_cl_itv__     closed\n_interval]
+[def __ch_op_itv__     open\n_interval]
 
 [def __bi_conceptual__ ['*fundamental*]]
 [def __conceptual__    fundamental]

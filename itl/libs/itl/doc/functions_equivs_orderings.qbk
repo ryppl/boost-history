@@ -32,6 +32,14 @@
 
 [endsect][/ Synopsis Equivalences and Orderings]
 
+[section Less on Intervals]
+
+[
+[[ ]    [Types][]]
+[[`x < y`]   [__i]   [`x` begins before `y` or, for equal beginnings `x` ends before `y`]]
+]
+
+[endsect][/ Less on Intervals]
 
 [section Lexicographical Ordering][/ Equivalences and Orderings]
 
@@ -40,6 +48,25 @@ all objects of the *icl*. For all *icl* containers
 equality and compare operators implement lexicographical
 equality and lexicographical comparison, that depends on
 the equality of template parameter `Compare`.
+This includes the less ordering on intervals, that can be
+perceived as the sequence of elements between their lower and upper
+bound. This generalized lexicogrphical comparison in intervals
+can also be specified this way:
+
+`x < y := x` begins before `y` or, for equal beginnings `x` ends before `y`
+
+[
+[]
+[[`x < y`]  [`:=`]  [`x` begins before `y` or, for equal beginnings `x` ends before `y`.
+              
+                     The other operators can be deduced in the usual way]]
+[[`x > y`]  [`:=`]  [`y < x`] ] 
+[[`x <= y`] [`:=`]  [`!(y < x)`] ] 
+[[`x >= y`] [`:=`]  [`!(x < y)`] ] 
+[[`x == y`] [`:=`]  [`!(x < y) && !(y < x)` induced equivalence] ] 
+[[`x != y`] [`:=`]  [`!(x == y)`] ] 
+]
+
 
 Equality and compare operators are defined for all *icl*
 objects but there are no overloads between different types.

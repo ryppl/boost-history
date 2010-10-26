@@ -19,7 +19,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
     \include dynamic_interval_/dynamic_interval.cpp
 */
-//[example_interval
+//[example_dynamic_interval
 #include <iostream>
 #include <string>
 #include <math.h>
@@ -44,13 +44,13 @@ int main()
     // Dynamically bounded intervals are the library default for 
     // interval parameters in interval containers.
     BOOST_STATIC_ASSERT((
-        is_same< typename interval_set<int>::interval_type
+        is_same< interval_set<int>::interval_type
                , discrete_interval<int> >::value
                )); 
 
 
     BOOST_STATIC_ASSERT((
-        is_same< typename interval_set<float>::interval_type
+        is_same< interval_set<float>::interval_type
                , continuous_interval<float> >::value
                )); 
 
@@ -59,12 +59,12 @@ int main()
     // dependent on the domain_type T. The library default for intervals
     // is also available via the template 'interval':
     BOOST_STATIC_ASSERT((
-        is_same< typename interval<int>::type
+        is_same< interval<int>::type
                , discrete_interval<int> >::value
                )); 
 
     BOOST_STATIC_ASSERT((
-        is_same< typename interval<float>::type
+        is_same< interval<float>::type
                , continuous_interval<float> >::value
                )); 
 

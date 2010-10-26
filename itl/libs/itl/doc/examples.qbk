@@ -18,8 +18,12 @@
                       Demonstrating 
                       ['*aggregate on overlap*].]]
     [[basic]   [[link boost_icl.examples.interval Interval]]
-        [__itv__] [Intervals for integral and continuous instance types. 
+        [__dc_itv__, __ct_itv__  ] [Intervals for discrete and continuous instance types. 
                    Closed and open interval borders.]]
+    [[basic]   [[link boost_icl.examples.dynamic_interval Dynamic intervals]]
+        [__dc_itv__, __ct_itv__, __itv__ ] [Intervals with dynamic interval bounds as library default.]]
+    [[basic]   [[link boost_icl.examples.static_interval Static intervals]]
+        [__ro_itv__, __itv__ ] [Intervals with static interval bounds and changing the library default.]]
     [[basic]   [[link boost_icl.examples.interval_container Interval container]]
         [__itv_set__,\n__sep_itv_set__,\n__spl_itv_set__,\n__spl_itv_map__,\n__itv_map__]
                                    [Basic characteristics of interval containers.]]
@@ -134,6 +138,17 @@ Example *interval* shows some basic functionality of __itvs__.
 [import ../example/interval_/interval.cpp]
 [example_interval]
 [endsect]
+
+[section Dynamic interval]
+[import ../example/dynamic_interval_/dynamic_interval.cpp]
+[example_dynamic_interval]
+[endsect]
+
+[section Static interval]
+[import ../example/static_interval_/static_interval.cpp]
+[example_static_interval]
+[endsect]
+
 
 [section Interval container]
 

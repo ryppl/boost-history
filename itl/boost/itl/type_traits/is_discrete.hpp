@@ -12,7 +12,18 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/config.hpp> // For macro BOOST_STATIC_CONSTANT
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
+
+#ifdef BOOST_MSVC 
+#pragma warning(push)
+#pragma warning(disable:4913) // user defined binary operator ',' exists but no overload could convert all operands, default built-in binary operator ',' used
+#endif                        
+
 #include <boost/detail/is_incrementable.hpp>
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
+
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_floating_point.hpp>
 
