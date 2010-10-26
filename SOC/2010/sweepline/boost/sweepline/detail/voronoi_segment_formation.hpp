@@ -1567,6 +1567,7 @@ namespace detail {
                                    const circle_event_type &circle,
                                    edge_type *edge12,
                                    edge_type *edge23) {
+		    //voronoi_rect_.update(circle.get_center());
             // Update counters.
             num_vertex_records_++;
             num_edges_++;

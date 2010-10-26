@@ -63,9 +63,6 @@ public:
     }
 
 protected:
-    void initializeGL() {
-    }
-
     void paintGL() {
         qglClearColor(QColor::fromRgb(0, 0, 0));
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -83,7 +80,7 @@ protected:
             }
             glEnd();
 			glPointSize(6);
-			glLineWidth(2.7);
+			glLineWidth(2.7f);
             glBegin(GL_LINES);
             for (it = cells.begin(); it != cells.end(); it++) {
                 if (it->is_segment()) {
@@ -136,7 +133,7 @@ private:
     void update_view_port() {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(brect_.x_min, brect_.x_max, brect_.y_min, brect_.y_max, -1.0, 1.0);
+		glOrtho(brect_.x_min, brect_.x_max, brect_.y_min, brect_.y_max, -1.0, 1.0);
         glMatrixMode(GL_MODELVIEW);
     }
 
