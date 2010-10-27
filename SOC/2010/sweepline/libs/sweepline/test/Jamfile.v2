@@ -10,18 +10,19 @@ project
       <library>$(BOOST_ROOT)/libs/test/build//boost_unit_test_framework
     ;
 
-test-suite "sweepline_benchmark"
+
+test-suite "sweepline"
     :
-	[ run voronoi_segment/segment_voronoi_benchmark_test.cpp ]
+        [ run circle_event_creation_test.cpp ]
+        [ run clipping_test.cpp ]
+        [ run event_queue_test.cpp ]
+        [ run event_types_test.cpp ]
+        [ run node_comparer_test.cpp ]
+        [ run predicates_test.cpp ]
+        [ run sweepline_test.cpp ]
     ;
 
-test-suite "sweepline_segment"
+test-suite "sweepline_benchmark"
     :
-	[ run voronoi_segment/segment_circle_event_creation_test.cpp ]
-	[ run voronoi_segment/segment_event_queue_test.cpp ]
-        [ run voronoi_segment/segment_event_types_test.cpp ]
-	[ run voronoi_segment/segment_node_comparer_test.cpp ]
-	[ run voronoi_segment/segment_predicates_test.cpp ]
-	[ run voronoi_segment/segment_voronoi_builder_test.cpp ]
-	[ run voronoi_segment/segment_voronoi_clipping_test.cpp ]
+        [ run benchmark_test.cpp ]
     ;

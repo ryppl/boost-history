@@ -10,7 +10,7 @@
 #include <QtOpenGL/QGLWidget>
 #include <QtGui/QtGui>
 
-#include "boost/sweepline/voronoi_segment_sweepline.hpp"
+#include "boost/sweepline/voronoi_sweepline.hpp"
 using namespace boost::sweepline;
 
 class GLWidget : public QGLWidget {
@@ -26,7 +26,7 @@ public:
 
     void build(QString file_path) {
         std::vector<Point2D> point_sites;
-		std::vector<Segment2D> segment_sites;
+        std::vector<Segment2D> segment_sites;
 
         // Open file.
         QFile data(file_path);
@@ -37,19 +37,19 @@ public:
         // Read points from the file.
         QTextStream in_stream(&data);
         int num_point_sites = 0;
-		int num_edge_sites = 0;
+        int num_edge_sites = 0;
         coordinate_type x1, y1, x2, y2;
         in_stream >> num_point_sites;
         for (int i = 0; i < num_point_sites; i++) {
             in_stream >> x1 >> y1;
             point_sites.push_back(make_point_2d(x1, y1));
         }
-		in_stream >> num_edge_sites;
-		for (int i = 0; i < num_edge_sites; i++) {
-			in_stream >> x1 >> y1 >> x2 >> y2;
-			segment_sites.push_back(std::make_pair(
-				make_point_2d(x1, y1), make_point_2d(x2, y2)));
-		}
+        in_stream >> num_edge_sites;
+        for (int i = 0; i < num_edge_sites; i++) {
+            in_stream >> x1 >> y1 >> x2 >> y2;
+            segment_sites.push_back(std::make_pair(
+                make_point_2d(x1, y1), make_point_2d(x2, y2)));
+        }
         in_stream.flush();
 
         // Build voronoi diagram.
@@ -72,15 +72,15 @@ protected:
             voronoi_cells_type cells = voronoi_output_.cell_records;
             voronoi_cell_const_iterator_type it;
             glColor3f(0.0f, 0.0f, 1.0f);
-			glPointSize(9);
+            glPointSize(9);
             glBegin(GL_POINTS);
             for (it = cells.begin(); it != cells.end(); it++) {
                 if (!it->is_segment())
                     glVertex2f(it->get_point0().x(), it->get_point0().y());
             }
             glEnd();
-			glPointSize(6);
-			glLineWidth(2.7f);
+            glPointSize(6);
+            glLineWidth(2.7f);
             glBegin(GL_LINES);
             for (it = cells.begin(); it != cells.end(); it++) {
                 if (it->is_segment()) {
@@ -89,7 +89,7 @@ protected:
                 }
             }
             glEnd();
-			glLineWidth(1.0);
+            glLineWidth(1.0);
         }
 
         // Draw voronoi vertices.
@@ -133,20 +133,20 @@ private:
     void update_view_port() {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-		glOrtho(brect_.x_min, brect_.x_max, brect_.y_min, brect_.y_max, -1.0, 1.0);
+        glOrtho(brect_.x_min, brect_.x_max, brect_.y_min, brect_.y_max, -1.0, 1.0);
         glMatrixMode(GL_MODELVIEW);
     }
 
     typedef double coordinate_type;
     typedef point_2d<coordinate_type> Point2D;
-	typedef voronoi_builder<coordinate_type>::Segment2D Segment2D;
+    typedef voronoi_builder<coordinate_type>::Segment2D Segment2D;
     typedef voronoi_output_clipped<coordinate_type>::voronoi_cells_type
         voronoi_cells_type;
-	typedef voronoi_output_clipped<coordinate_type>::voronoi_vertices_type
+    typedef voronoi_output_clipped<coordinate_type>::voronoi_vertices_type
         voronoi_vertices_type;
     typedef voronoi_output_clipped<coordinate_type>::voronoi_edges_type
         voronoi_edges_type;
-	typedef voronoi_output_clipped<coordinate_type>::voronoi_cell_const_iterator_type
+    typedef voronoi_output_clipped<coordinate_type>::voronoi_cell_const_iterator_type
         voronoi_cell_const_iterator_type;
     typedef voronoi_output_clipped<coordinate_type>::voronoi_vertex_const_iterator_type
         voronoi_vertex_const_iterator_type;
@@ -163,7 +163,7 @@ public:
     MainWindow() {
         glWidget_ = new GLWidget();
         file_dir_ = QDir(QDir::currentPath(), tr("*.txt"));
-		file_name_ = tr("");
+        file_name_ = tr("");
         
         QHBoxLayout *centralLayout = new QHBoxLayout;
         centralLayout->addWidget(glWidget_);
@@ -171,7 +171,7 @@ public:
         setLayout(centralLayout);
         
         update_file_list();
-	    setWindowTitle(tr("Voronoi Visualizer"));
+        setWindowTitle(tr("Voronoi Visualizer"));
         layout()->setSizeConstraint( QLayout::SetFixedSize );
     }
 
@@ -185,14 +185,14 @@ private slots:
         update_file_list();
     }
 
-	void print_scr() {
-		if (!file_name_.isEmpty()) {
-			QImage screenshot = glWidget_->grabFrameBuffer(true);
-			QString output_file = file_dir_.absolutePath() + tr("/") +
-				file_name_.left(file_name_.indexOf('.')) + tr(".png");
-			screenshot.save(output_file, 0, -1);
-		}
-	}
+    void print_scr() {
+        if (!file_name_.isEmpty()) {
+            QImage screenshot = glWidget_->grabFrameBuffer(true);
+            QString output_file = file_dir_.absolutePath() + tr("/") +
+                file_name_.left(file_name_.indexOf('.')) + tr(".png");
+            screenshot.save(output_file, 0, -1);
+        }
+    }
 
     void build() {
         file_name_ = file_list_->currentItem()->text();
@@ -217,14 +217,14 @@ private:
         connect(browse_button, SIGNAL(clicked()), this, SLOT(browse()));
         browse_button->setMinimumHeight(50);
 
-		QPushButton *print_scr_button = new QPushButton(tr("Make Screenshot"));
-		connect(print_scr_button, SIGNAL(clicked()), this, SLOT(print_scr()));
-		print_scr_button->setMinimumHeight(50);
+        QPushButton *print_scr_button = new QPushButton(tr("Make Screenshot"));
+        connect(print_scr_button, SIGNAL(clicked()), this, SLOT(print_scr()));
+        print_scr_button->setMinimumHeight(50);
 
         file_layout->addWidget(message_label_, 0, 0);
         file_layout->addWidget(file_list_, 1, 0);
         file_layout->addWidget(browse_button, 2, 0);
-		file_layout->addWidget(print_scr_button, 3, 0);
+        file_layout->addWidget(print_scr_button, 3, 0);
 
         return file_layout;
     }
@@ -242,7 +242,7 @@ private:
     }
 
     QDir file_dir_;
-	QString file_name_;
+    QString file_name_;
     GLWidget *glWidget_;
     QListWidget *file_list_;
     QLabel *message_label_;
