@@ -6353,7 +6353,7 @@ Consider applying noexcept to all of the std::lib.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="60" type="Ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="60" type="Ge" owner="" issue="1344" disp="" date="" extdoc="">
 <section>
 17-30
 </section>
@@ -6372,7 +6372,7 @@ of the form 'throw()' with the 'noexcept' form.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="61" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="61" type="te" owner="LWG" issue="1345" disp="" date="" extdoc="">
 <section>
 17-30
 </section>
@@ -6402,7 +6402,7 @@ specification should be provided.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="62" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="62" type="te" owner="LWG" issue="1346" disp="" date="" extdoc="">
 <section>
 17-30
 </section>
@@ -6429,7 +6429,7 @@ constant expression exists.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="63" type="Ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="63" type="Ge" owner="" issue="1347" disp="" date="" extdoc="">
 <section>
 17-30
 </section>
@@ -6452,7 +6452,7 @@ specification where it is appropriate.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="64" type="Ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="64" type="Ge" owner="" issue="1348" disp="" date="" extdoc="">
 <section>
 17-30
 </section>
@@ -6483,7 +6483,7 @@ are already required not to throw.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="65" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="65" type="te" owner="LWG" issue="1349" disp="" date="" extdoc="">
 <section>
 17-30
 </section>
@@ -6533,7 +6533,7 @@ attributes.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="15" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="15" type="te" owner="LWG" issue="1350" disp="" date="" extdoc="">
 <section>
 Library clauses
 </section>
@@ -6549,7 +6549,7 @@ Make them copyable again.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="16" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="16" type="te" owner="LWG" issue="1351" disp="" date="" extdoc="">
 <section>
 Library clauses
 </section>
@@ -6566,7 +6566,7 @@ noexcept.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="17" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="17" type="te" owner="LWG" issue="1352" disp="" date="" extdoc="">
 <section>
 Library clauses
 </section>
@@ -6583,7 +6583,7 @@ the respective noexcept specification.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="18" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="18" type="te" owner="LWG" issue="1353" disp="" date="" extdoc="">
 <section>
 17
 </section>
@@ -6628,7 +6628,7 @@ Change "(25)" to "(Clause 25)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="52" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="52" type="te" owner="LWG" issue="1354" disp="" date="" extdoc="">
 <section>
 17.3.7
 </section>
@@ -6644,7 +6644,7 @@ The definition should be corrected.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="50" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="50" type="te" owner="LWG" issue="1355" disp="" date="" extdoc="">
 <section>
 17.3.13
 </section>
@@ -6663,7 +6663,7 @@ Add a cross-reference to (12.8) to 17.3.12.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="51" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="51" type="te" owner="LWG" issue="1356" disp="" date="" extdoc="">
 <section>
 17.3.14
 </section>
@@ -6716,7 +6716,7 @@ static const
 This is pseudo-code; okay as written.
 </rationale>
 </comment>
-<comment nb="GB" num="53" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="53" type="te" owner="LWG" issue="1357" disp="" date="" extdoc="">
 <section>
 17.5.2.1.3
 </section>
@@ -6756,7 +6756,7 @@ associated footnotes 170, 171, 172, 173, 174 and
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="55" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="55" type="te" owner="LWG" issue="1358" disp="" date="" extdoc="">
 <section>
 17.6.1.3
 </section>
@@ -6779,7 +6779,7 @@ environment, much like &lt;thread&gt;.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="56" type="Ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="56" type="Ge" owner="" issue="1359" disp="" date="" extdoc="">
 <section>
 17.6.1.3
 </section>
@@ -6808,7 +6808,7 @@ required for a free-standing implementation.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="57" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="GB" num="57" type="te" owner="LWG" issue="1360" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 17.6.1.3
 </section>
@@ -6832,7 +6832,7 @@ free-standing implementation.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="58" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="58" type="te" owner="LWG" issue="1361" disp="" date="" extdoc="">
 <section>
 17.6.2
 </section>
@@ -6924,7 +6924,7 @@ s/statements/ specifications/
 Removed the offending word.
 </rationale>
 </comment>
-<comment nb="US" num="82" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="82" type="te" owner="LWG" issue="1362" disp="" date="" extdoc="">
 <section>
 17.6.3.9
 </section>
@@ -6959,7 +6959,7 @@ s/contructor/constructor/
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="68" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="GB" num="68" type="te" owner="LWG" issue="1363" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 18.2
 </section>
@@ -7062,7 +7062,7 @@ Remove paragraph 14
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="19" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="19" type="te" owner="LWG" issue="1364" disp="" date="" extdoc="">
 <section>
 18.8.5
 </section>
@@ -7099,7 +7099,7 @@ constexpr nothrow_t nothrow{};
 <rationale>There was consensus that it is too late to make such a change at this time.
 </rationale>
 </comment>
-<comment nb="GB" num="71" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="71" type="te" owner="LWG" issue="1365" disp="" date="" extdoc="">
 <section>
 18.6.2.4 / 18.8.2.2 / 18.8.3.2
 </section>
@@ -7120,7 +7120,7 @@ handlers in a thread safe way.
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="14" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="14" type="te" owner="LWG" issue="1366" disp="" date="" extdoc="">
 <section>
 18.6.1.4
 </section>
@@ -7140,7 +7140,7 @@ new-handler.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="72" type="Ge" owner="" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="GB" num="72" type="Ge" owner="" issue="1367" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 18.8.2
 </section>
@@ -7163,7 +7163,7 @@ move clause 18.8.2 diectly to Annex D.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="73" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="73" type="te" owner="LWG" issue="1368" disp="" date="" extdoc="">
 <section>
 18.8.4
 </section>
@@ -7184,7 +7184,7 @@ requirements on the user.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="74" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="74" type="te" owner="LWG" issue="1369" disp="" date="" extdoc="">
 <section>
 18.8.5
 </section>
@@ -7212,7 +7212,7 @@ refers.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="84" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="84" type="te" owner="LWG" issue="1370" disp="" date="" extdoc="">
 <section>
 18.8.6 [except.nested]
 </section>
@@ -7235,7 +7235,7 @@ std::forward&lt;T&gt;(t).
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="75" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="75" type="te" owner="LWG" issue="1371" disp="" date="" extdoc="">
 <section>
 19
 </section>
@@ -7264,7 +7264,7 @@ specification on those operations.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="76" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="GB" num="76" type="te" owner="LWG" issue="1372" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 19.5.1.5
 </section>
@@ -7362,7 +7362,7 @@ rhs, then lhs.code()
 <rationale>This is already addressed by 17.5.2.2 [functions.within.classes]/1. 
 </rationale>
 </comment>
-<comment nb="GB" num="79" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="79" type="te" owner="LWG" issue="1373" disp="" date="" extdoc="">
 <section>
 20, 22, 24, 28
 </section>
@@ -7391,7 +7391,7 @@ regex_traits
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="85" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="85" type="te" owner="LWG" issue="1374" disp="" date="" extdoc="">
 <section>
 20.2.1
 </section>
@@ -7537,7 +7537,7 @@ of type X should be <del>copied</del><ins>moved</ins>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="87" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="87" type="te" owner="LWG" issue="1375" disp="" date="" extdoc="">
 <section>
 20.2.5
 </section>
@@ -7564,7 +7564,7 @@ value_type&amp;.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="88" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="88" type="te" owner="LWG" issue="1376" disp="" date="" extdoc="">
 <section>
 20.2.5
 </section>
@@ -7648,7 +7648,7 @@ Piecewise construction"
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="90" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="90" type="te" owner="LWG" issue="1377" disp="" date="" extdoc="">
 <section>
 20.3
 </section>
@@ -7838,7 +7838,7 @@ Returns: std::move(<del>t</del><ins>x</ins>).
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="15" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="15" type="te" owner="LWG" issue="1378" disp="" date="" extdoc="">
 <section>
 20.3.5.2, 20.4.2.1
 </section>
@@ -7909,7 +7909,7 @@ containing everything below paragraph 17 in
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="95" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="95" type="te" owner="LWG" issue="1379" disp="" date="" extdoc="">
 <section>
 20.3.5.2
 </section>
@@ -7940,7 +7940,7 @@ Returns: *this.
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="16" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="16" type="te" owner="LWG" issue="1380" disp="" date="" extdoc="">
 <section>
 20.3.5.2, 20.4.2.1
 </section>
@@ -7965,7 +7965,7 @@ requirements.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="85" type="te" owner="LWG" issue="" disp="modified" date="2010-08-07" extdoc="">
+<comment nb="GB" num="85" type="te" owner="LWG" issue="1381" disp="modified" date="2010-08-07" extdoc="">
 <section>
 20.3.5.4
 </section>
@@ -8005,7 +8005,7 @@ Provide a separate template range&lt;Iterator&gt;.
 <rationale>No consensus to make this change.
 </rationale>
 </comment>
-<comment nb="US" num="96" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="96" type="te" owner="LWG" issue="1382" disp="" date="" extdoc="">
 <section>
 20.3.5.2 20.4.2.1 20.4.2.2
 </section>
@@ -8026,7 +8026,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="97" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="97" type="te" owner="LWG" issue="1383" disp="" date="" extdoc="">
 <section>
 20.3.5.2 and 20.4.2
 </section>
@@ -8128,7 +8128,7 @@ SF: 1 WF: 1 WA: 6 SA: 4 </notes>
 <rationale>There was no consensus to make this change.
 </rationale>
 </comment>
-<comment nb="US" num="98" type="te/ed" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="US" num="98" type="te/ed" owner="LWG" issue="1384" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 20.4.2.4
 </section>
@@ -8148,7 +8148,7 @@ throughout the standard.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="88" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="88" type="te" owner="LWG" issue="1385" disp="" date="" extdoc="">
 <section>
 20.4.2.4
 </section>
@@ -8168,7 +8168,7 @@ outlawing support for other tuple-like types.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="99" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="US" num="99" type="te" owner="LWG" issue="1386" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 20.4.2.4
 </section>
@@ -8196,7 +8196,7 @@ simpler signature.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="87" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="GB" num="87" type="te" owner="LWG" issue="1387" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 20.4.2.10
 </section>
@@ -8217,7 +8217,7 @@ the header synopsis in 20.4.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="100" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="US" num="100" type="te" owner="LWG" issue="1388" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 20.6.1 [ratio.ratio]
 </section>
@@ -8240,7 +8240,7 @@ typedef ratio&lt;num, den&gt; type;
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="89" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="89" type="te" owner="LWG" issue="1389" disp="" date="" extdoc="">
 <section>
 20.6.2
 </section>
@@ -8373,7 +8373,7 @@ Type traits support queries about all types, not just
 built-in types. They do not belong in Clause 18.
 </rationale>
 </comment>
-<comment nb="DE" num="17" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="17" type="te" owner="LWG" issue="1390" disp="" date="" extdoc="">
 <section>
 20.7
 </section>
@@ -8389,7 +8389,7 @@ language (see 14.8.2 paragraph 8).
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="18" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="18" type="te" owner="LWG" issue="1391" disp="" date="" extdoc="">
 <section>
 20.7
 </section>
@@ -8418,7 +8418,7 @@ constructors/conversion functions.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="102" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="102" type="te" owner="LWG" issue="1392" disp="" date="" extdoc="">
 <section>
 20.7.4
 </section>
@@ -8464,7 +8464,7 @@ is an unevaluated operand. It's not at all clear that
 the proposed change would be clearer.
 </rationale>
 </comment>
-<comment nb="GB" num="92" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="92" type="te" owner="LWG" issue="1393" disp="" date="" extdoc="">
 <section>
 20.7.4.3
 </section>
@@ -8534,7 +8534,7 @@ noexcept(has_nothrow_destructor&lt;T&gt;::value) {}
 <rationale>No consensus to make this change at this time. 
 </rationale>
 </comment>
-<comment nb="DE" num="19" type="te" owner="LWG" issue="" disp="modified" date="2010-08-07" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3047.html">
+<comment nb="DE" num="19" type="te" owner="LWG" issue="1394" disp="modified" date="2010-08-07" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3047.html">
 <section>
 20.7.4.3
 </section>
@@ -8556,7 +8556,7 @@ is_constructible.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="32" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="32" type="te" owner="LWG" issue="1395" disp="" date="" extdoc="">
 <section>
 20.7.5
 </section>
@@ -8624,7 +8624,7 @@ Fn shall be.
 <rationale>Standard is correct as written. 
 </rationale>
 </comment>
-<comment nb="US" num="104" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="104" type="te" owner="LWG" issue="1396" disp="" date="" extdoc="">
 <section>
 28.8
 </section>
@@ -8659,7 +8659,7 @@ numbered clause.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="95" type="Ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="95" type="Ge" owner="" issue="1397" disp="" date="" extdoc="">
 <section>
 20.8
 </section>
@@ -8692,7 +8692,7 @@ of calling mem_fn and bind.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="96" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="96" type="te" owner="LWG" issue="1398" disp="" date="" extdoc="">
 <section>
 20.8
 </section>
@@ -8749,7 +8749,7 @@ original function.
 <rationale>No consensus for a change at this time. 
 </rationale>
 </comment>
-<comment nb="JP" num="3" type="tl" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="JP" num="3" type="tl" owner="LWG" issue="1399" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 20.8.14.2
 </section>
@@ -8833,7 +8833,7 @@ Change "(33)" to "(Table 33)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="4" type="tl" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="JP" num="4" type="tl" owner="LWG" issue="1400" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 20.8.14.2.1
 </section>
@@ -8913,7 +8913,7 @@ numbered clause.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="99" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="99" type="te" owner="LWG" issue="1401" disp="" date="" extdoc="">
 <section>
 20.9
 </section>
@@ -8952,7 +8952,7 @@ rhs);
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="100" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="GB" num="100" type="te" owner="LWG" issue="1402" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 20.9
 </section>
@@ -8974,7 +8974,7 @@ add "constexpr" to shared_ptr(nullptr_t).
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="85" type="E" owner="" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="JP" num="85" type="E" owner="" issue="1403" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 20.9.1
 </section>
@@ -9003,7 +9003,7 @@ allocator_arg_t();
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="106" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="106" type="te" owner="LWG" issue="1404" disp="" date="" extdoc="">
 <section>
 20.9.3
 </section>
@@ -9071,7 +9071,7 @@ tuple&lt;Args2...&gt; y);
 The declaration is identical to the proposed text.
 </rationale>
 </comment>
-<comment nb="US" num="107" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="US" num="107" type="te" owner="LWG" issue="1405" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 20.9.6
 </section>
@@ -9244,7 +9244,7 @@ Change "(36)" to "(Table 36)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="5" type="tl" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="5" type="tl" owner="LWG" issue="1406" disp="" date="" extdoc="">
 <section>
 20.9.11.2
 </section>
@@ -9363,7 +9363,7 @@ Alisdair: Plan to open an NAD Future issue to add an unsynchronized shared_ptr v
 <rationale>No consensus to make a change at this time. 
 </rationale>
 </comment>
-<comment nb="US" num="108" type="te" owner="LWG" issue="" disp="modified" date="2010-08-07" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3109.html">
+<comment nb="US" num="108" type="te" owner="LWG" issue="1407" disp="modified" date="2010-08-07" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3109.html">
 <section>
 20.9.11.2.1 [util.smartptr.shared.const]
 </section>
@@ -9407,7 +9407,7 @@ T(std::forward&lt;Args&gt;(args)...)"
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="103" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="103" type="te" owner="LWG" issue="1408" disp="" date="" extdoc="">
 <section>
 20.9.12
 </section>
@@ -9470,7 +9470,7 @@ Make those parts "implementation-defined".
 <rationale>No consensus to make a change. 
 </rationale>
 </comment>
-<comment nb="US" num="111" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="111" type="te" owner="LWG" issue="1409" disp="" date="" extdoc="">
 <section>
 20.10.5.2
 </section>
@@ -9489,7 +9489,7 @@ Require that it be a distinct class type.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="107" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="107" type="te" owner="LWG" issue="1410" disp="" date="" extdoc="">
 <section>
 20.10.5.2
 </section>
@@ -9522,7 +9522,7 @@ not present.
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="20" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="20" type="te" owner="LWG" issue="1411" disp="" date="" extdoc="">
 <section>
 20.10.5.2
 </section>
@@ -9544,7 +9544,7 @@ monotonic_clock.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="21" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="21" type="te" owner="LWG" issue="1412" disp="" date="" extdoc="">
 <section>
 20.10.5.2
 </section>
@@ -9564,7 +9564,7 @@ p2. Also change 30.2.4p2 accordingly.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="112" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="112" type="te" owner="LWG" issue="1413" disp="" date="" extdoc="">
 <section>
 20.10.5.3
 </section>
@@ -9631,7 +9631,7 @@ Add a cross-reference to from 27.2.2 to 27.3.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="109" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="109" type="te" owner="LWG" issue="1414" disp="" date="" extdoc="">
 <section>
 21.2.3.2/3/4
 </section>
@@ -9855,7 +9855,7 @@ refer to the same string or the other string.
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="21" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="DE" num="21" type="te" owner="LWG" issue="1416" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 23.2.1, 23.3.3.4
 </section>
@@ -10055,7 +10055,7 @@ Rapperswil Poll: Add quick_erase that returns void?
 <rationale>
 </rationale>No consensus for a change. 
 </comment>
-<comment nb="GB" num="112" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="GB" num="112" type="te" owner="LWG" issue="1417" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 23.3.1.7
 </section>
@@ -10074,7 +10074,7 @@ Change "implementation defined" to "undefined"
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="113" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="113" type="te" owner="LWG" issue="1418" disp="" date="" extdoc="">
 <section>
 23.3.2.2
 </section>
@@ -10094,7 +10094,7 @@ effects.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="117" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="US" num="117" type="te" owner="LWG" issue="1419" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 23.3.3
 </section>
@@ -10154,7 +10154,7 @@ The code in question is a remmant from a previous version.  It has
 now been removed.
 </rationale>
 </comment>
-<comment nb="GB" num="115" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="115" type="te" owner="LWG" issue="1420" disp="" date="" extdoc="">
 <section>
 23.3.4.2
 </section>
@@ -10199,7 +10199,7 @@ which would be renumbered 23.5.
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="22" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="22" type="te" owner="LWG" issue="1421" disp="" date="" extdoc="">
 <section>
 23.3.5.1, 23.3.5.2, 23.3.5.3
 </section>
@@ -10263,7 +10263,7 @@ effects.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="118" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="118" type="te" owner="LWG" issue="1422" disp="" date="" extdoc="">
 <section>
 23.3.7
 </section>
@@ -10288,7 +10288,7 @@ having the wrong reference type.
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="6" type="tl" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="JP" num="6" type="tl" owner="LWG" issue="1423" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 23.4.1
 </section>
@@ -10354,7 +10354,7 @@ explicit multimap(const Allocator&amp;);
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="8" type="tl" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="JP" num="8" type="tl" owner="LWG" issue="1425" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 23.4.3
 </section>
@@ -10381,7 +10381,7 @@ explicit set(const Allocator&amp;);
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="9" type="tl" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="JP" num="9" type="tl" owner="LWG" issue="1426" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 23.4.4
 </section>
@@ -10425,7 +10425,7 @@ See Appendix 1 - Additional Details
 <rationale>No consensus for a change. 
 </rationale>
 </comment>
-<comment nb="JP" num="10" type="tl" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="JP" num="10" type="tl" owner="LWG" issue="1427" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 23.5.1
 </section>
@@ -10458,7 +10458,7 @@ explicit unordered_map(const Allocator&amp;);
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="11" type="tl" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="JP" num="11" type="tl" owner="LWG" issue="1428" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 23.5.2
 </section>
@@ -10511,7 +10511,7 @@ below,
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="12" type="tl" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="JP" num="12" type="tl" owner="LWG" issue="1429" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 23.5.3
 </section>
@@ -10541,7 +10541,7 @@ explicit unordered_set(const Allocator&amp;);
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="13" type="tl" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="JP" num="13" type="tl" owner="LWG" issue="1430" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 23.5.4
 </section>
@@ -10614,7 +10614,7 @@ Change "(4)" to "(Clause 4)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="120" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="US" num="120" type="te" owner="LWG" issue="1431" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 25.2.12
 </section>
@@ -10678,7 +10678,7 @@ Change "(4)" to "(Clause 4)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="121" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="121" type="te" owner="LWG" issue="1432" disp="" date="" extdoc="">
 <section>
 25.3.12 [alg.random.shuffle]
 </section>
@@ -10698,7 +10698,7 @@ RandomNumberGenerator by lvalue reference.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="119" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="119" type="te" owner="LWG" issue="1433" disp="" date="" extdoc="">
 <section>
 25.3.12
 </section>
@@ -10771,7 +10771,7 @@ Change "(32)" to "(Table 32)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="122" type="te" owner="LWG" issue="" disp="modified" date="2010-08-07" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3106.pdf">
+<comment nb="US" num="122" type="te" owner="LWG" issue="1434" disp="modified" date="2010-08-07" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3106.pdf">
 <section>
 25.4.7 [alg.min.max]
 </section>
@@ -10824,7 +10824,7 @@ environment."
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="120" type="Ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="120" type="Ge" owner="" issue="1435" disp="" date="" extdoc="">
 <section>
 26.4.7
 </section>
@@ -10877,7 +10877,7 @@ Change "Clause 21 and 27" to "Clauses 21 and
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="121" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="121" type="te" owner="LWG" issue="1436" disp="" date="" extdoc="">
 <section>
 26.5.3
 </section>
@@ -10904,7 +10904,7 @@ DIRECTION IS INDICATED]
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="124" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="124" type="te" owner="LWG" issue="1437" disp="" date="" extdoc="">
 <section>
 26.5.3.2
 </section>
@@ -10943,7 +10943,7 @@ return Engine::max();
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="126" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="126" type="te" owner="LWG" issue="1438" disp="" date="" extdoc="">
 <section>
 26.5.4.1 [rand.adapt.disc], 26.5.4.2 [rand.adapt.ibits], 26.5.4.3 [rand.adapt.shuf]
 </section>
@@ -11103,7 +11103,7 @@ r4, and ...
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="134" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="134" type="te" owner="LWG" issue="1439" disp="" date="" extdoc="">
 <section>
 26.5.8.5.2 [rand.dist.samp.pconst], 26.5.8.5.3 [rand.dist.samp.plinear]
 </section>
@@ -11132,7 +11132,7 @@ the return of densities as a vector&lt;result_type&gt;.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="135" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="135" type="te" owner="LWG" issue="1440" disp="" date="" extdoc="">
 <section>
 26.5.8.5.3
 </section>
@@ -11228,7 +11228,7 @@ Change "(36)" to "(Table 36)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="136" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="US" num="136" type="te" owner="LWG" issue="1441" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 26.8
 </section>
@@ -11243,7 +11243,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="9" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="9" type="te" owner="LWG" issue="1442" disp="" date="" extdoc="">
 <section>
 27.2.3p2 30.3.1.2p6 30.3.1.5p7 30.6.4p7 30.6.9p5 30.6.10.1p23
 </section>
@@ -11284,7 +11284,7 @@ the following sentences:<BR/>
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="122" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="122" type="te" owner="LWG" issue="1442" disp="" date="" extdoc="">
 <section>
 27, 30
 </section>
@@ -11300,7 +11300,7 @@ determine if changes are needed
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="123" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="123" type="te" owner="LWG" issue="1414" disp="" date="" extdoc="">
 <section>
 27.5.3.2
 </section>
@@ -11320,7 +11320,7 @@ type 'OFF_T'.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="137" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="137" type="te" owner="LWG" issue="1445" disp="" date="" extdoc="">
 <section>
 27.7
 </section>
@@ -11336,7 +11336,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="138" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="138" type="te" owner="LWG" issue="1446" disp="" date="" extdoc="">
 <section>
 27.7
 </section>
@@ -11365,7 +11365,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="139" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="139" type="te" owner="LWG" issue="1447" disp="" date="" extdoc="">
 <section>
 27.7
 </section>
@@ -11410,7 +11410,7 @@ embedded basic_string using the same allocator.
 <rationale>No consensus for a change at this time. 
 </rationale>
 </comment>
-<comment nb="GB" num="124" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="124" type="te" owner="LWG" issue="1448" disp="" date="" extdoc="">
 <section>
 27.8.1.3
 </section>
@@ -11473,7 +11473,7 @@ matter, but it looks a bit inconsistent.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="4" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="4" type="te" owner="LWG" issue="1449" disp="" date="" extdoc="">
 <section>
 27.8.2
 </section>
@@ -11530,7 +11530,7 @@ Rapperswil Poll to accept JP 14
 <rationale>No consensus to make a change at this time. 
 </rationale>
 </comment>
-<comment nb="GB" num="127" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="127" type="te" owner="LWG" issue="1450" disp="" date="" extdoc="">
 <section>
 28.5.2
 </section>
@@ -11610,7 +11610,7 @@ Change "table 137" to "Table 137".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="141" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="141" type="te" owner="LWG" issue="1451" disp="" date="" extdoc="">
 <section>
 28.8
 </section>
@@ -11628,7 +11628,7 @@ Add allocators to regexes
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="125" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="125" type="te" owner="LWG" issue="1452" disp="" date="" extdoc="">
 <section>
 28.10.3
 </section>
@@ -11646,7 +11646,7 @@ searched/matched"
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="126" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="126" type="te" owner="LWG" issue="1453" disp="" date="" extdoc="">
 <section>
 28.10.3
 </section>
@@ -11763,7 +11763,7 @@ Change "table 135" to "Table 135".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="128" type="Ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="128" type="Ge" owner="" issue="1454" disp="" date="" extdoc="">
 <section>
 29
 </section>
@@ -11788,7 +11788,7 @@ to ensure compatibity from both sides.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="22" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="22" type="te" owner="LWG" issue="1455" disp="" date="" extdoc="">
 <section>
 29
 </section>
@@ -11807,7 +11807,7 @@ standard.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="129" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="129" type="te" owner="LWG" issue="1456" disp="" date="" extdoc="">
 <section>
 29
 </section>
@@ -11957,7 +11957,7 @@ Repair as suggested
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="130" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="130" type="Ed" owner="" issue="1457" disp="" date="" extdoc="">
 <section>
 29.2
 </section>
@@ -12130,7 +12130,7 @@ See below."
 It's named in the second and fourth bullet items.
 </rationale>
 </comment>
-<comment nb="GB" num="131" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="131" type="te" owner="LWG" issue="1458" disp="" date="" extdoc="">
 <section>
 29.3
 </section>
@@ -12149,7 +12149,7 @@ changing the use of "sequence" in 29.3
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="21" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="21" type="te" owner="LWG" issue="1459" disp="" date="" extdoc="">
 <section>
 9.3p8 1.9p13
 </section>
@@ -12232,7 +12232,7 @@ document what it does. Removing this requirement would be a
 technical change.
 </rationale>
 </comment>
-<comment nb="US" num="154" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="154" type="te" owner="LWG" issue="1460" disp="" date="" extdoc="">
 <section>
 [atomics.lockfree] 29.4
 </section>
@@ -12268,7 +12268,7 @@ memory ... and by memory'.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="1" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="1" type="te" owner="LWG" issue="1461" disp="" date="" extdoc="">
 <section>
 29.4, 29.6 29.7
 </section>
@@ -12360,7 +12360,7 @@ Change "table 142" to "Table 142".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="132" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="132" type="te" owner="LWG" issue="1462" disp="" date="" extdoc="">
 <section>
 29.5.1
 </section>
@@ -12391,7 +12391,7 @@ atomic_bool in 29.5.1
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="157" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="157" type="ed" owner="" issue="1463" disp="" date="" extdoc="">
 <section>
 [atomics.types.integral] 29.5.1
 </section>
@@ -12459,7 +12459,7 @@ Fix last 2
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="160" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="160" type="te" owner="LWG" issue="1464" disp="" date="" extdoc="">
 <section>
 [atomic.types.integral] 29.5.1
 </section>
@@ -12481,7 +12481,7 @@ Remove Table 143 and the last sentence of
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="161" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="161" type="te" owner="LWG" issue="1465" disp="" date="" extdoc="">
 <section>
 [atomic.types.address] 29.5.2
 </section>
@@ -12503,7 +12503,7 @@ operator--() to atomic_address.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="162" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="162" type="te" owner="LWG" issue="1466" disp="" date="" extdoc="">
 <section>
 [atomics.typres.address] 29.5.2
 </section>
@@ -12524,7 +12524,7 @@ compare_exchange_strong
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="163" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="163" type="te" owner="LWG" issue="1467" disp="" date="" extdoc="">
 <section>
 [atomics.type.address], [atomics.types.generic] 29.5.2, 29.5.3
 </section>
@@ -12548,7 +12548,7 @@ derived from atomic_address.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="164" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="164" type="te" owner="LWG" issue="1468" disp="" date="" extdoc="">
 <section>
 [atomics.types.address] 29.5.2
 </section>
@@ -12600,7 +12600,7 @@ Table 143".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="133" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="133" type="te" owner="LWG" issue="1469" disp="" date="" extdoc="">
 <section>
 29.5.3
 </section>
@@ -12684,7 +12684,7 @@ c&lt;T*&gt;&amp;,void**,void*,memory_order) = delete;
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="165" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="165" type="ed" owner="" issue="1470" disp="" date="" extdoc="">
 <section>
 29.5.3
 </section>
@@ -12738,7 +12738,7 @@ Add semicolons to ends of the bullets.
 Seems to be a duplicate of US 166 but with the wrong section number.
 </rationale>
 </comment>
-<comment nb="US" num="168" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="168" type="te" owner="LWG" issue="1471" disp="" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12821,7 +12821,7 @@ bool A::is_lock_free() const;
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="171" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="171" type="te" owner="LWG" issue="1472" disp="" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12845,7 +12845,7 @@ compatibility with C. --end note]"
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="172" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="172" type="ed" owner="" issue="1473" disp="" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12906,7 +12906,7 @@ the Returns clause refers to the "result of the comparison"
 from the Effects clause. Okay as written.
 </rationale>
 </comment>
-<comment nb="US" num="175" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="175" type="ed" owner="" issue="1474" disp="" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12928,7 +12928,7 @@ operation."
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="23" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="23" type="ed" owner="" issue="1475" disp="" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12968,7 +12968,7 @@ is in a loop,".
 Okay as written. Two different subjects, two paragraphs.
 </rationale>
 </comment>
-<comment nb="US" num="177" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="177" type="ed" owner="" issue="1476" disp="" date="" extdoc="">
 <section>
 [atomics.types.operations] 29.6
 </section>
@@ -12985,7 +12985,7 @@ Figure out what it's supposed to say, and say it.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="135" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="135" type="Ed" owner="" issue="1477" disp="" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -13012,7 +13012,7 @@ Fix the Remark to say whatever was intended.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="136" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="136" type="Te" owner="LWG" issue="1478" disp="" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -13051,7 +13051,7 @@ memory_order_acq_rel."
 Changed "nor" to "or".
 </rationale>
 </comment>
-<comment nb="US" num="179" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="179" type="te" owner="LWG" issue="1479" disp="" date="" extdoc="">
 <section>
 29.8
 </section>
@@ -13070,7 +13070,7 @@ Add extern "C" to their declarations in 29.8 and in
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="137" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="137" type="te" owner="LWG" issue="1480" disp="" date="" extdoc="">
 <section>
 29.8
 </section>
@@ -13116,7 +13116,7 @@ between threads".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="138" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="138" type="te" owner="LWG" issue="1481" disp="" date="" extdoc="">
 <section>
 30.2
 </section>
@@ -13133,7 +13133,7 @@ See attached Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="181" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="181" type="te" owner="LWG" issue="1482" disp="" date="" extdoc="">
 <section>
 30.2.4
 </section>
@@ -13181,7 +13181,7 @@ native_handle_type.
 <rationale>No consensus to make a change at this time. 
 </rationale>
 </comment>
-<comment nb="DE" num="23" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="DE" num="23" type="te" owner="LWG" issue="1483" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 30.3
 </section>
@@ -13199,7 +13199,7 @@ __STDCPP_THREADS__.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="183" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="183" type="te" owner="LWG" issue="1484" disp="" date="" extdoc="">
 <section>
 30.3.1
 </section>
@@ -13216,7 +13216,7 @@ pthread_join doesn't have a timeout version.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="184" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="184" type="te" owner="LWG" issue="1485" disp="" date="" extdoc="">
 <section>
 30.3.1.1
 </section>
@@ -13281,7 +13281,7 @@ Throws: system_error
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="24" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="24" type="te" owner="LWG" issue="1486" disp="" date="" extdoc="">
 <section>
 30.3.2
 </section>
@@ -13300,7 +13300,7 @@ the same value even after detaching.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="25" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="25" type="te" owner="LWG" issue="1487" disp="" date="" extdoc="">
 <section>
 30.3.2
 </section>
@@ -13321,7 +13321,7 @@ or negative rel_time is allowed.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="185" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="185" type="te" owner="LWG" issue="1488" disp="" date="" extdoc="">
 <section>
 30.4
 </section>
@@ -13342,7 +13342,7 @@ development of more compatible APIs.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="26" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="26" type="te" owner="LWG" issue="1489" disp="" date="" extdoc="">
 <section>
 30.4
 </section>
@@ -13370,7 +13370,7 @@ needed to be called.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="27" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="27" type="te" owner="LWG" issue="1490" disp="" date="" extdoc="">
 <section>
 30.4.1
 </section>
@@ -13414,7 +13414,7 @@ Throws: system_error
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="186" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="186" type="te" owner="LWG" issue="1491" disp="" date="" extdoc="">
 <section>
 30.4.1
 </section>
@@ -13478,7 +13478,7 @@ Change "(29)" to "(Clause 29)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="188" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="188" type="te" owner="LWG" issue="1492" disp="" date="" extdoc="">
 <section>
 30.4.1
 </section>
@@ -13520,7 +13520,7 @@ Change "(9)" to "(Clause 9)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="189" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="189" type="te" owner="LWG" issue="1493" disp="" date="" extdoc="">
 <section>
 30.4.1.1 30.4.1.2
 </section>
@@ -13664,7 +13664,7 @@ Throws: system_error
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="190" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="190" type="te" owner="LWG" issue="1494" disp="" date="" extdoc="">
 <section>
 30.4.5.2
 </section>
@@ -13705,7 +13705,7 @@ Throws: system_error
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="191" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="191" type="te" owner="LWG" issue="1495" disp="" date="" extdoc="">
 <section>
 30.5
 </section>
@@ -13758,7 +13758,7 @@ Replace "threds" with "threads".
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="28" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="28" type="te" owner="LWG" issue="1496" disp="" date="" extdoc="">
 <section>
 30.5.1
 </section>
@@ -13800,7 +13800,7 @@ Throws: system_error
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="30" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="30" type="te" owner="LWG" issue="1497" disp="" date="" extdoc="">
 <section>
 30.5.1 and 30.5.2
 </section>
@@ -13904,7 +13904,7 @@ Change it to code font.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="29" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="29" type="te" owner="LWG" issue="1498" disp="" date="" extdoc="">
 <section>
 30.5.1 and 30.5.2
 </section>
@@ -13927,7 +13927,7 @@ the previous loop executions.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="193" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="193" type="te" owner="LWG" issue="1499" disp="" date="" extdoc="">
 <section>
 30.5.1, 30.5.2
 </section>
@@ -13968,7 +13968,7 @@ Change "(9)" to "(Clause 9)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="32" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="CH" num="32" type="te" owner="LWG" issue="1500" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 30.5.2
 </section>
@@ -14094,7 +14094,7 @@ constexpr adopt_lock_t adopt_lock { };
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="194" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="194" type="te" owner="LWG" issue="1501" disp="" date="" extdoc="">
 <section>
 30.6
 </section>
@@ -14137,7 +14137,7 @@ thread.'
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="195" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="195" type="te" owner="LWG" issue="1502" disp="" date="" extdoc="">
 <section>
 30.6.4
 </section>
@@ -14153,7 +14153,7 @@ The intent and meaning of the paragraph is not apparent.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="35" type="ed/te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="35" type="ed/te" owner="" issue="1503" disp="" date="" extdoc="">
 <section>
 30.6.4ff
 </section>
@@ -14175,7 +14175,7 @@ asynchronous state" to "liaison state".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="196" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="196" type="te" owner="LWG" issue="1504" disp="" date="" extdoc="">
 <section>
 30.6.5
 </section>
@@ -14193,7 +14193,7 @@ data race (17.6.4.8)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="197" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="197" type="te" owner="LWG" issue="1505" disp="" date="" extdoc="">
 <section>
 30.6.5
 </section>
@@ -14216,7 +14216,7 @@ associated asynchronous state marked ready."
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="198" type="te" owner="LWG" issue="" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="US" num="198" type="te" owner="LWG" issue="1506" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 30.6.5
 </section>
@@ -14237,7 +14237,7 @@ set_exception with a null pointer is undefined.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="199" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="199" type="te" owner="LWG" issue="1507" disp="" date="" extdoc="">
 <section>
 [futures.promise] 30.6.5
 </section>
@@ -14280,7 +14280,7 @@ Add the label.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="201" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="201" type="te" owner="LWG" issue="1508" disp="" date="" extdoc="">
 <section>
 [futures.unique_future], [futures.shared_future], [futures.atomic_future], [futures.task] 30.6.6 30.6.7 30.6.8 30.6.10
 </section>
@@ -14303,7 +14303,7 @@ specification (before 30.6.10.1
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="202" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="202" type="te" owner="LWG" issue="1509" disp="" date="" extdoc="">
 <section>
 [futures.atomic_future] 30.6.8
 </section>
@@ -14326,7 +14326,7 @@ says.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="203" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="203" type="te" owner="LWG" issue="1510" disp="" date="" extdoc="">
 <section>
 [futures.atomic_future] 30.6.8
 </section>
@@ -14346,7 +14346,7 @@ Add a new paragraph after 30.6.8
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="204" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="204" type="te" owner="LWG" issue="1511" disp="" date="" extdoc="">
 <section>
 30.6.8
 </section>
@@ -14371,7 +14371,7 @@ the source
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="205" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="205" type="te" owner="LWG" issue="1512" disp="" date="" extdoc="">
 <section>
 [futures.async] 30.6.9
 </section>
@@ -14396,7 +14396,7 @@ finished or to call join, and rewrite to match.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="36" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="36" type="te" owner="LWG" issue="1513" disp="" date="" extdoc="">
 <section>
 30.6.9 and 30.6.1
 </section>
@@ -14511,7 +14511,7 @@ in 30.6.10.1/28, bullet 2.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="207" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="207" type="te" owner="LWG" issue="1514" disp="" date="" extdoc="">
 <section>
 [futures.task.members] 30.6.10.1
 </section>
@@ -14533,7 +14533,7 @@ inappropriate.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="208" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="208" type="te" owner="LWG" issue="1515" disp="" date="" extdoc="">
 <section>
 [futures.task.members] 30.6.10.1
 </section>
@@ -14615,7 +14615,7 @@ Strike [depr.static] completely.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="142" type="Ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="142" type="Ge" owner="" issue="1516" disp="" date="" extdoc="">
 <section>
 D10
 </section>
