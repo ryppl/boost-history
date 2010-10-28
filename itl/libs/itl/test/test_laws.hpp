@@ -10,6 +10,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 
 #include <functional>
 #include <boost/itl/type_traits/identity_element.hpp>
+#include <boost/itl/associative_interval_container.hpp>
 
 namespace boost{namespace icl
 {
@@ -225,9 +226,8 @@ DEFINE_INVERSE_CHECK_WRT      (pipe,  | );
 DEFINE_INVERSE_CHECK_WRT_EQUAL(pipe,  | );
 
 //------------------------------------------------------------------------------
-// Containedness laws
+// Containedness laws (Valid for sets, NOT for maps)
 //------------------------------------------------------------------------------
-
 template<class Type, class TypeB>
 void check_intersection_containedness(const Type& a, const TypeB& b)
 {
@@ -262,6 +262,77 @@ void check_domain_containedness(const MapT& a)
         BOOST_CHECK_EQUAL(contains(a, a1), true);
     }
 }
+
+//------------------------------------------------------------------------------
+// Laws on inner complement, between and distance
+//------------------------------------------------------------------------------
+template<class Type, class SetT>
+bool check_length_as_distance( const Type& object
+                             , SetT& in_between
+                             , typename Type::difference_type& between_len
+                             , typename Type::difference_type& obj_dist )
+{
+    //LAW LengthAsDistance: distance(x) == length(between(x))
+    icl::between(in_between, object);
+    between_len  = icl::length(in_between);
+    obj_dist     = icl::distance(object);
+    BOOST_CHECK_EQUAL(obj_dist, between_len);
+    return obj_dist == between_len;
+}
+
+template<class Type, class SetT>
+bool has_length_as_distance(const Type& object)
+{
+    typedef typename Type::difference_type DiffT;
+    SetT in_between; DiffT between_len, obj_dist;
+    return check_length_as_distance(object, in_between, between_len, obj_dist);
+}
+
+template<class Type>
+bool check_length_complementarity( const Type& object
+                                 , typename Type::difference_type& obj_len
+                                 , typename Type::difference_type& obj_dist
+                                 , typename Type::difference_type& hull_len )
+{
+    //LAW Length Complementarity: length(x) + distance(x) == length(hull(x))
+    obj_len  = icl::length(object);
+    obj_dist = icl::distance(object);
+    hull_len = icl::length(hull(object));
+    BOOST_CHECK_EQUAL(obj_len + obj_dist, hull_len);
+    return obj_len + obj_dist == hull_len;
+}
+
+template<class Type>
+bool has_length_complementarity(const Type& object)
+{
+    typedef typename Type::difference_type DiffT;
+    DiffT obj_len, obj_dist, hull_len;
+    return check_length_complementarity(object, obj_len, obj_dist, hull_len);
+}
+
+template<class Type, class SetT>
+bool check_inner_complementarity(const Type& object, SetT& in_between, SetT& lhs, SetT& rhs)
+{
+    //LAW Inner Complementarity1: domain(x) + between(x)       =e= hull(x)
+    //LAW Inner Complementarity2: join(domain(x) + between(x))  == hull(x)
+    SetT dom;
+    icl::domain(dom, object);
+    lhs = dom + between(in_between, object);
+    join(lhs);
+    rhs = SetT(hull(object));
+    BOOST_CHECK_EQUAL(lhs, rhs);
+    return lhs == rhs;
+}
+
+
+template<class Type, class SetT>
+bool has_inner_complementarity(const Type& object)
+{
+    SetT in_between, lhs, rhs;
+    return check_inner_complementarity(object, in_between, lhs, rhs);
+}
+
+
 
 //==============================================================================
 // Law tests are now combined to test algebraic concepts.

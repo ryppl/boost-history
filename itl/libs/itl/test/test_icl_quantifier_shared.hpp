@@ -311,6 +311,5 @@ void icl_quantifier_check_containedness_4_bicremental_types()
 }
 
 
-
 #endif // __TEST_ICL_QUANTIFIER_SHARED_H_JOFA_100819__
 

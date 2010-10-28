@@ -246,6 +246,5 @@ void itv_quantifier_check_abelian_group_plus_prot_inv_4_bicremental_types()
     CHECK_ABELIAN_GROUP_INSTANCE_WRT_EQUAL(pipe) (is_distinct_equal, map_a, map_b, map_c, val_pair, map_pair);
 }
 
-
 #endif // __test_itl_itv_quantifier_shared_h_JOFA_090119__
 

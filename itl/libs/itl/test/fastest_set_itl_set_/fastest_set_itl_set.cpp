@@ -16,15 +16,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include "../test_value_maker.hpp"
 #include "../test_laws.hpp"
 
-//JODO include
-//------------------------------------------------------------------------------
 #include <set>
-#include <boost/interprocess/containers/set.hpp>
-#include <boost/itl/concept/container.hpp>
-#include <boost/itl/concept/element_set.hpp>
-#include <boost/itl/concept/element_associator.hpp>
-//------------------------------------------------------------------------------
-
+#include <boost/itl/associative_element_container.hpp>
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl/separate_interval_set.hpp>
 #include <boost/itl/split_interval_set.hpp>

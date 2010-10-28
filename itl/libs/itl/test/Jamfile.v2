@@ -50,5 +50,11 @@ test-suite "itl"
       [ run fastest_partial_interval_quantifier_/fastest_partial_interval_quantifier.cpp ]
       [ run fastest_total_interval_quantifier_/fastest_total_interval_quantifier.cpp ]            
       [ run fastest_partial_icl_quantifier_/fastest_partial_icl_quantifier.cpp ]
-      [ run fastest_total_icl_quantifier_/fastest_total_icl_quantifier.cpp ]            
+      [ run fastest_total_icl_quantifier_/fastest_total_icl_quantifier.cpp ]   
+      
+      # Misc -------------------------------------------------------------------         
+      [ run test_misc_/test_misc.cpp ]   
+      [ run test_doc_code_/test_doc_code.cpp ]   
+      [ run test_type_traits_/test_type_traits.cpp ]   
+      [ run test_changing_interval_defaults_/test_changing_interval_defaults.cpp ]   
     ;

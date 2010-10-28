@@ -82,7 +82,7 @@ add(Type& object, const typename Type::element_type& operand)
 //- T& add(T&, J, c P&) T:{S} P:{i} interval_type
 //------------------------------------------------------------------------------
 template<class Type>
-typename enable_if<is_interval_set<Type>, typename Type::iterator>::type
+inline typename enable_if<is_interval_set<Type>, typename Type::iterator>::type
 add(Type& object, typename Type::iterator      prior, 
             const typename Type::segment_type& operand)
 {
@@ -96,14 +96,14 @@ add(Type& object, typename Type::iterator      prior,
 //- T& insert(T&, c P&) T:{S} P:{e i} fragment_types
 //------------------------------------------------------------------------------
 template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
+inline typename enable_if<is_interval_set<Type>, Type>::type&
 insert(Type& object, const typename Type::segment_type& operand)
 {
     return icl::add(object, operand);
 }
 
 template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
+inline typename enable_if<is_interval_set<Type>, Type>::type&
 insert(Type& object, const typename Type::element_type& operand)
 {
     return icl::add(object, operand);
@@ -113,9 +113,9 @@ insert(Type& object, const typename Type::element_type& operand)
 //- T& insert(T&, J, c P&) T:{S} P:{i} with hint
 //------------------------------------------------------------------------------
 template<class Type>
-typename enable_if<is_interval_set<Type>, Type>::type&
-insert(Type& object, const typename Type::iterator      prior,
-                     const typename Type::segment_type& operand)
+inline typename enable_if<is_interval_set<Type>, typename Type::iterator>::type
+insert(Type& object, typename Type::iterator      prior,
+               const typename Type::segment_type& operand)
 {
     return icl::add(object, prior, operand);
 }
@@ -289,6 +289,46 @@ flip(Type& object, const OperandT& operand)
 
     return object;
 }
+
+//==============================================================================
+//= Set selection
+//==============================================================================
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+domain(Type& dom, const Type& object)
+{
+    typedef typename Type::const_iterator const_iterator;
+    typedef typename Type::iterator       iterator;
+    dom.clear();
+    const_iterator it_    = object.begin();
+    iterator       prior_ = dom.end();
+
+    while(it_ != object.end())
+        prior_ = icl::insert(dom, prior_, *it_++);
+
+    return dom;
+}
+
+template<class Type>
+typename enable_if<is_interval_set<Type>, Type>::type&
+between(Type& in_between, const Type& object)
+{
+    typedef typename Type::const_iterator const_iterator;
+    typedef typename Type::iterator       iterator;
+    in_between.clear();
+    const_iterator it_ = object.begin(), pred_;
+    iterator prior_ = in_between.end();
+
+    if(it_ != object.end())
+        pred_ = it_++;
+
+    while(it_ != object.end())
+        prior_ = icl::insert(in_between, prior_, 
+                             icl::between(*pred_++, *it_++));
+
+    return in_between;
+}
+
 
 //==============================================================================
 //= Streaming

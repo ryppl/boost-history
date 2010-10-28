@@ -13,7 +13,6 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/not.hpp>
-//CL #include <boost/detail/is_incrementable.hpp>
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/type_traits/unit_element.hpp>
 #include <boost/itl/type_traits/identity_element.hpp>
@@ -553,7 +552,7 @@ contains(const Type& super, const typename interval_traits<Type>::domain_type& e
 
 //- within ---------------------------------------------------------------------
 template<class Type>
-typename boost::enable_if<is_interval<Type>, bool>::type
+inline typename boost::enable_if<is_interval<Type>, bool>::type
 within(const Type& sub, const Type& super)
 { 
     return contains(super,sub);
@@ -1229,6 +1228,15 @@ inner_complement(const Type& left, const Type& right)
     else
         return identity_element<Type>::value();
 }
+
+template<class Type>
+inline typename boost::enable_if<is_interval<Type>, Type>::type
+between(const Type& left, const Type& right)
+{ 
+    return inner_complement(left, right);
+}
+
+
 
 //==============================================================================
 //= Distance

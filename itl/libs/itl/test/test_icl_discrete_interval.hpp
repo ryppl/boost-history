@@ -12,14 +12,12 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 template <class T, class IntervalT> 
 void discrete_interval_traits()
 {
-#ifdef BOOST_MSVC 
-    BOOST_CHECK_EQUAL(is_interval<IntervalT>::value,                          true );
-    BOOST_CHECK_EQUAL(is_discrete_interval<IntervalT>::value,                 true );
-    BOOST_CHECK_EQUAL(is_discrete<typename IntervalT::domain_type>::value,    true );
-    BOOST_CHECK_EQUAL(is_continuous<typename IntervalT::domain_type>::value,  false);
-    BOOST_CHECK_EQUAL(has_dynamic_bounds<IntervalT>::value,                   true );
-    BOOST_CHECK_EQUAL(has_static_bounds<IntervalT>::value,                    false);
-#endif                        
+    BOOST_CHECK_EQUAL( is_interval<IntervalT>::value                        );
+    BOOST_CHECK_EQUAL( is_discrete_interval<IntervalT>::value               );
+    BOOST_CHECK_EQUAL( is_discrete<typename IntervalT::domain_type>::value  );
+    BOOST_CHECK_EQUAL(!is_continuous<typename IntervalT::domain_type>::value);
+    BOOST_CHECK_EQUAL( has_dynamic_bounds<IntervalT>::value                 );
+    BOOST_CHECK_EQUAL(!has_static_bounds<IntervalT>::value                  );
 }
 
 template <class T, class IntervalT> 

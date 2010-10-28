@@ -182,6 +182,27 @@ interval_count(const Type& object)
     return icl::iterative_size(object);
 }
 
+
+template<class Type>
+typename enable_if< is_interval_container<Type> 
+                  , typename Type::difference_type >::type
+distance(const Type& object)
+{
+    typedef typename Type::difference_type DiffT;
+    typedef typename Type::const_iterator const_iterator;
+    const_iterator it_ = object.begin(), pred_;
+    DiffT dist = identity_element<DiffT>::value();
+
+    if(it_ != object.end())
+        pred_ = it_++;
+
+    while(it_ != object.end())
+        dist += icl::distance(key_value<Type>(pred_++), key_value<Type>(it_++));
+    
+    return dist;
+}
+
+
 //==============================================================================
 //= Range<IntervalSet|IntervalMap>
 //==============================================================================

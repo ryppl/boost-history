@@ -9,6 +9,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #define BOOST_ICL_CONCEPT_JOINABLE_HPP_JOFA_100920
 
 #include <boost/itl/type_traits/is_interval_container.hpp>
+#include <boost/itl/concept/interval.hpp>
 
 namespace boost{ namespace icl
 {

@@ -202,6 +202,60 @@ void interval_set_check_containedness_4_bicremental_types()
 }
 
 
+//------------------------------------------------------------------------------
+// Inner complement
+//------------------------------------------------------------------------------
+template <class T, 
+          template<class T, 
+                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
+                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
+                   ICL_ALLOC   Alloc   = std::allocator
+                  >class IntervalSet
+          >
+void interval_set_check_inner_complementarity_4_bicremental_types()
+{
+    typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::segment_type segment_type;
+    typedef typename IntervalSetT::element_type element_type;
+
+    IntervalSetT set_a, set_b, set_c;
+    segment_type segm_d;
+    element_type elem_e;
+    make_3_interval_sets_and_derivatives_1(set_a, set_b, set_c, segm_d, elem_e);
+
+    has_inner_complementarity<IntervalSetT,IntervalSetT>(set_a);
+    has_inner_complementarity<IntervalSetT,IntervalSetT>(set_b);
+    has_inner_complementarity<IntervalSetT,IntervalSetT>(set_c);
+}
+
+template <class T, 
+          template<class T, 
+                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
+                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
+                   ICL_ALLOC   Alloc   = std::allocator
+                  >class IntervalSet
+          >
+void interval_set_check_length_complementarity_4_bicremental_types()
+{
+    typedef IntervalSet<T> IntervalSetT;
+    typedef typename IntervalSetT::segment_type segment_type;
+    typedef typename IntervalSetT::element_type element_type;
+
+    IntervalSetT set_a, set_b, set_c;
+    segment_type segm_d;
+    element_type elem_e;
+    make_3_interval_sets_and_derivatives_1(set_a, set_b, set_c, segm_d, elem_e);
+
+    has_length_complementarity(set_a);
+    has_length_complementarity(set_b);
+    has_length_complementarity(set_c);
+
+    has_length_as_distance<IntervalSetT,IntervalSetT>(set_a);
+    has_length_as_distance<IntervalSetT,IntervalSetT>(set_b);
+    has_length_as_distance<IntervalSetT,IntervalSetT>(set_c);
+}
+
+
 
 #endif // __test_itl_set_interval_set_h_JOFA_090119__
 

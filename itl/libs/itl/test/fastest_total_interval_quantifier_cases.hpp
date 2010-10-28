@@ -72,10 +72,29 @@ BOOST_AUTO_TEST_CASE
 (fastest_itl_total_enricher_itv_quantifier_check_abelian_group_plus_prot_inv_4_bicremental_domain_continuous_codomain_2)
 {                           itv_quantifier_check_abelian_group_plus_prot_inv_4_bicremental_types<bicremental_type_4, boost::rational<int>, total_enricher, INTERVAL_MAP>();}
 
-
 //            absorber      enricher
 // partial    x - x == 0    x - x =p= 0   partiality of subtraction   
 // total    (-x)+ x == 0  (-x)+ x =p= 0   totality   of subtraction
+
+
+//------------------------------------------------------------------------------
+// Inner complement
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE
+(fastest_itl_total_enricher_itv_quantifier_check_inner_complementarity_4_bicremental_types)
+{                             itv_quantifier_check_inner_complementarity_4_bicremental_types<bicremental_type_4, int, total_enricher, interval_map>();}
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_total_enricher_itv_quantifier_check_length_complementarity_4_bicremental_types)
+{                             itv_quantifier_check_length_complementarity_4_bicremental_types<bicremental_type_5, double, total_enricher, split_interval_map>();}
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_total_absorber_itv_quantifier_check_inner_complementarity_4_bicremental_types)
+{                             itv_quantifier_check_inner_complementarity_4_bicremental_types<bicremental_type_6, int, total_absorber, split_interval_map>();}
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_total_absorber_itv_quantifier_check_length_complementarity_4_bicremental_types)
+{                             itv_quantifier_check_length_complementarity_4_bicremental_types<bicremental_type_7, double, total_absorber, interval_map>();}
 
 #endif // BOOST_ICL_FASTEST_TOTAL_INTERVAL_QUANTIFIER_CASES_HPP_JOFA_090703
 

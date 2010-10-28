@@ -71,13 +71,47 @@ BOOST_AUTO_TEST_CASE
 //------------------------------------------------------------------------------
 // Containedness
 //------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE
+(fastest_itl_interval_set_check_containedness_4_bicremental_types)
+{            interval_set_check_containedness_4_bicremental_types<bicremental_type_4, interval_set>();}
 
 BOOST_AUTO_TEST_CASE
-(fastest_itl_split_interval_set_check_containedness_4_bicremental_types) //JODO complete slowtest
-{                  interval_set_check_containedness_4_bicremental_types<bicremental_type_4, split_interval_set>();}
+(fastest_itl_split_interval_set_check_containedness_4_bicremental_types)
+{                  interval_set_check_containedness_4_bicremental_types<bicremental_type_5, split_interval_set>();}
 
+BOOST_AUTO_TEST_CASE
+(fastest_itl_separate_interval_set_check_containedness_4_bicremental_types)
+{                     interval_set_check_containedness_4_bicremental_types<bicremental_type_6, separate_interval_set>();}
 
+//------------------------------------------------------------------------------
+// Inner Complement
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE
+(fastest_itl_interval_set_check_inner_complementarity_4_bicremental_types)
+{            interval_set_check_inner_complementarity_4_bicremental_types<bicremental_type_7, interval_set>();}
 
+BOOST_AUTO_TEST_CASE
+(fastest_itl_separate_interval_set_check_inner_complementarity_4_bicremental_types)
+{                     interval_set_check_inner_complementarity_4_bicremental_types<bicremental_type_8, separate_interval_set>();}
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_split_interval_set_check_inner_complementarity_4_bicremental_types)
+{                  interval_set_check_inner_complementarity_4_bicremental_types<bicremental_type_1, split_interval_set>();}
+
+//------------------------------------------------------------------------------
+// Inner Complement and Distance
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE
+(fastest_itl_interval_set_check_length_complementarity_4_bicremental_types)
+{            interval_set_check_length_complementarity_4_bicremental_types<bicremental_type_2, interval_set>();}
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_separate_interval_set_check_length_complementarity_4_bicremental_types)
+{                     interval_set_check_length_complementarity_4_bicremental_types<bicremental_type_3, separate_interval_set>();}
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_split_interval_set_check_length_complementarity_4_bicremental_types)
+{                  interval_set_check_length_complementarity_4_bicremental_types<bicremental_type_4, split_interval_set>();}
 
 #endif // BOOST_ICL_FASTEST_SET_INTERVAL_SET_CASES_HPP_JOFA_090703
 

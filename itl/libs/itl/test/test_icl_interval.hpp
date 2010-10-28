@@ -57,9 +57,7 @@ void singelizable_interval_4_ordered_types()
     T t_1     = icl::unit_element<T>::value();
     SizeT s_1 = icl::unit_element<SizeT>::value();
 
-#ifdef BOOST_MSVC 
-    BOOST_CHECK_EQUAL( is_singelizable<IntervalT>::value, true ); 
-#endif                        
+    BOOST_CHECK( is_singelizable<IntervalT>::value ); 
 
     BOOST_CHECK_EQUAL( icl::cardinality(icl::singleton<IntervalT>(t_0)), s_1 ); 
     BOOST_CHECK_EQUAL(        icl::size(icl::singleton<IntervalT>(t_0)), s_1 ); 
@@ -78,9 +76,7 @@ void singelizable_interval_4_bicremental_types()
     //T t_0     = icl::identity_element<T>::value();
     SizeT s_1 = icl::unit_element<SizeT>::value();
 
-#ifdef BOOST_MSVC 
-    BOOST_CHECK_EQUAL( is_singelizable<IntervalT>::value, true ); 
-#endif                        
+    BOOST_CHECK( is_singelizable<IntervalT>::value ); 
 
     BOOST_CHECK_EQUAL( icl::cardinality(IntervalT(MK_v(3))), s_1 ); 
     BOOST_CHECK_EQUAL(        icl::size(IntervalT(MK_v(4))), s_1 ); 

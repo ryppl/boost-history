@@ -246,5 +246,62 @@ void itv_quantifier_check_abelian_group_plus_prot_inv_4_bicremental_types()
 }
 
 
+//------------------------------------------------------------------------------
+// Inner complement
+//------------------------------------------------------------------------------
+template <class T, class U, class Trt,
+          template<class T, class U,
+                   class Traits = Trt,
+                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
+                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
+                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
+                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
+                   ICL_ALLOC   Alloc   = std::allocator
+                  >class IntervalMap
+          >
+void itv_quantifier_check_inner_complementarity_4_bicremental_types()
+{
+    typedef IntervalMap<T,U,Trt> IntervalMapT;
+    typedef typename IntervalMap<T,U,Trt>::set_type IntervalSetT;
+    IntervalMapT map_a, map_b, map_c;
+    typename IntervalMapT::interval_mapping_type val_pair;
+    mapping_pair<T,U> map_pair;
+    make_3_itv_maps_and_derivatives_1(map_a, map_b, map_c, val_pair, map_pair);
+
+    has_inner_complementarity<IntervalMapT,IntervalSetT>(map_a);
+    has_inner_complementarity<IntervalMapT,IntervalSetT>(map_b);
+    has_inner_complementarity<IntervalMapT,IntervalSetT>(map_c);
+}
+
+template <class T, class U, class Trt,
+          template<class T, class U,
+                   class Traits = Trt,
+                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
+                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
+                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
+                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
+                   ICL_ALLOC   Alloc   = std::allocator
+                  >class IntervalMap
+          >
+void itv_quantifier_check_length_complementarity_4_bicremental_types()
+{
+    typedef IntervalMap<T,U,Trt> IntervalMapT;
+    typedef typename IntervalMap<T,U,Trt>::set_type IntervalSetT;
+    IntervalMapT map_a, map_b, map_c;
+    typename IntervalMapT::interval_mapping_type val_pair;
+    mapping_pair<T,U> map_pair;
+    make_3_itv_maps_and_derivatives_1(map_a, map_b, map_c, val_pair, map_pair);
+
+    has_length_complementarity(map_a);
+    has_length_complementarity(map_b);
+    has_length_complementarity(map_c);
+
+    has_length_as_distance<IntervalMapT,IntervalSetT>(map_a);
+    has_length_as_distance<IntervalMapT,IntervalSetT>(map_b);
+    has_length_as_distance<IntervalMapT,IntervalSetT>(map_c);
+}
+
+
+
 #endif // __TEST_INTERVAL_QUANTIFIER_SHARED_H_JOFA_090119__
 

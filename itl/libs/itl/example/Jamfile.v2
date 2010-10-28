@@ -59,6 +59,22 @@ exe custom_interval
         <include>$(BOOST_ROOT)
     ;
 
+exe dynamic_interval
+    :
+        dynamic_interval_/dynamic_interval.cpp
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+exe static_interval
+    :
+        static_interval_/static_interval.cpp
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
 # Examples using boost_date_time
 exe boost_party
     :

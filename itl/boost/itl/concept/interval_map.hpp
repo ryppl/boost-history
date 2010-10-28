@@ -12,6 +12,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/itl/type_traits/segment_type_of.hpp>
 #include <boost/itl/type_traits/absorbs_identities.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
+#include <boost/itl/type_traits/is_interval_splitter.hpp>
 
 #include <boost/itl/detail/set_algo.hpp>
 #include <boost/itl/detail/interval_map_algo.hpp>
@@ -553,18 +554,41 @@ flip(Type& object, const OperandT& operand)
 }
 
 //==============================================================================
-//= Domain
+//= Set selection
 //==============================================================================
 template<class Type, class SetT>
 typename enable_if<is_concept_combinable<is_interval_set, is_interval_map, 
                                          SetT, Type>, SetT>::type&
 domain(SetT& result, const Type& object)
 {
+    typedef typename SetT::iterator set_iterator;
     result.clear(); 
+    set_iterator prior_ = result.end();
     ICL_const_FORALL(typename Type, it_, object) 
-        result += it_->first; 
+        prior_ = icl::insert(result, prior_, it_->first); 
     
     return result;
+}
+
+template<class Type, class SetT>
+typename enable_if<is_concept_combinable<is_interval_set, is_interval_map, 
+                                         SetT, Type>, SetT>::type&
+between(SetT& in_between, const Type& object)
+{
+    typedef typename Type::const_iterator const_iterator;
+    typedef typename SetT::iterator       set_iterator;
+    in_between.clear();
+    const_iterator it_ = object.begin(), pred_;
+    set_iterator   prior_ = in_between.end();
+
+    if(it_ != object.end())
+        pred_ = it_++;
+
+    while(it_ != object.end())
+        prior_ = icl::insert(in_between, prior_, 
+                             between((*pred_++).first, (*it_++).first));
+    
+    return in_between;
 }
 
 //==============================================================================
