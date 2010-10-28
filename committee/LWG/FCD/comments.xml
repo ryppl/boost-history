@@ -6339,7 +6339,7 @@ Add the macro to the list of predefined macros in
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="80" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="80" type="te" owner="LWG" issue="1347" disp="" date="" extdoc="">
 <section>
 [library] 17 - 30
 </section>
@@ -6533,7 +6533,7 @@ attributes.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="15" type="te" owner="LWG" issue="1350" disp="" date="" extdoc="">
+<comment nb="CH" num="15" type="te" owner="LWG" issue="1421, 1350" disp="" date="" extdoc="">
 <section>
 Library clauses
 </section>
@@ -11284,7 +11284,7 @@ the following sentences:<BR/>
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="122" type="te" owner="LWG" issue="1442" disp="" date="" extdoc="">
+<comment nb="GB" num="122" type="te" owner="LWG" issue="1442, 1443" disp="" date="" extdoc="">
 <section>
 27, 30
 </section>
@@ -11300,7 +11300,7 @@ determine if changes are needed
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="123" type="te" owner="LWG" issue="1414" disp="" date="" extdoc="">
+<comment nb="GB" num="123" type="te" owner="LWG" issue="1414, 1444" disp="" date="" extdoc="">
 <section>
 27.5.3.2
 </section>
