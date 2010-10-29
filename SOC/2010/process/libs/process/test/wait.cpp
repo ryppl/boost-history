@@ -130,6 +130,51 @@ BOOST_AUTO_TEST_CASE(test_status_async_wait_twice)
     ioservice.run(); 
 } 
 
+void start_child() 
+{ 
+    std::vector<std::string> args; 
+    args.push_back("wait-exit"); 
+    args.push_back("1"); 
+
+    bp::child c = bp::create_child(get_helpers_path(), args); 
+    c.wait(); 
+} 
+
+void handler2(boost::system::error_code ec, int exit_code, bool &called) 
+{ 
+    called = true; 
+    BOOST_REQUIRE_EQUAL(ec, boost::system::error_code()); 
+#if defined(BOOST_POSIX_API) 
+    BOOST_REQUIRE(WIFEXITED(exit_code)); 
+    BOOST_CHECK_EQUAL(WEXITSTATUS(exit_code), EXIT_SUCCESS); 
+#elif defined(BOOST_WINDOWS_API) 
+    BOOST_CHECK_EQUAL(exit_code, EXIT_SUCCESS); 
+#endif 
+} 
+
+BOOST_AUTO_TEST_CASE(test_status_sync_and_async_wait) 
+{ 
+    check_helpers(); 
+
+    bool called = false; 
+
+    ba::io_service ioservice; 
+    bp::status s(ioservice); 
+
+    std::vector<std::string> args; 
+    args.push_back("wait-exit"); 
+    args.push_back("2"); 
+
+    bp::child c = bp::create_child(get_helpers_path(), args); 
+    s.async_wait(c.get_id(), boost::bind(handler2, _1, _2, boost::ref(called))); 
+
+    boost::thread(start_child); 
+
+    ioservice.run(); 
+
+    BOOST_CHECK_EQUAL(called, true); 
+} 
+
 BOOST_AUTO_TEST_CASE(test_status_async_wait_shutdown) 
 { 
     check_helpers(); 

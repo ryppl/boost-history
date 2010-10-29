@@ -161,10 +161,12 @@ public:
         ops_.insert(ph, new wrapped_handler<Handler>(handler));
     }
 
-    void complete(phandle ph, int exit_code)
+    bool complete(phandle ph, int exit_code)
     {
         boost::iterator_range<operations_type::iterator> r =
             ops_.equal_range(ph);
+        if (r.begin() == r.end())
+            return false;
         for (operations_type::iterator it = r.begin(); it != r.end(); ++it)
             (*it->second)(exit_code);
         ops_.erase(r.begin(), r.end());
@@ -172,6 +174,7 @@ public:
         if (!CloseHandle(ph))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");
 #endif
+        return true;
     }
 
 private:

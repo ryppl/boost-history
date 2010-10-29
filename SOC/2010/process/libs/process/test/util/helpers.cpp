@@ -14,6 +14,7 @@
 #include <boost/process/config.hpp> 
 
 #if defined(BOOST_POSIX_API) 
+#   include <unistd.h> 
 #   include <stdlib.h> 
 #elif defined(BOOST_WINDOWS_API) 
 #   include <windows.h> 
@@ -23,6 +24,7 @@
 
 #include <boost/process/detail/systembuf.hpp> 
 #include <boost/filesystem.hpp> 
+#include <boost/lexical_cast.hpp> 
 #include <iostream> 
 #include <string> 
 #include <cstdlib> 
@@ -66,6 +68,19 @@ int h_exit_failure(int argc, char *argv[])
 
 int h_exit_success(int argc, char *argv[]) 
 { 
+    return EXIT_SUCCESS; 
+} 
+
+int h_wait_exit(int argc, char *argv[]) 
+{ 
+    int sec = boost::lexical_cast<int>(argv[1]); 
+
+#if defined(BOOST_POSIX_API) 
+    sleep(sec); 
+#elif defined(BOOST_WINDOWS_API) 
+    Sleep(sec * 1000); 
+#endif 
+
     return EXIT_SUCCESS; 
 } 
 
@@ -243,6 +258,7 @@ struct helper
     { "echo-stdout-stderr", h_echo_stdout_stderr, 2, "message" }, 
     { "exit-failure", h_exit_failure, 1, "" }, 
     { "exit-success", h_exit_success, 1, "" }, 
+    { "wait-exit", h_wait_exit, 2, "integer" }, 
     { "is-closed-stdin", h_is_closed_stdin, 1, "" }, 
     { "is-closed-stdout", h_is_closed_stdout, 1, "" }, 
     { "is-closed-stderr", h_is_closed_stderr, 1, "" }, 
