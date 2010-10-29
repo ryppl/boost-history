@@ -11763,7 +11763,7 @@ Change "table 135" to "Table 135".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="128" type="Ge" owner="" issue="1454" disp="" date="" extdoc="">
+<comment nb="GB" num="128" type="Ge" owner="" issue="1455, 1454" disp="" date="" extdoc="">
 <section>
 29
 </section>
@@ -11788,7 +11788,7 @@ to ensure compatibity from both sides.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="22" type="te" owner="LWG" issue="1455" disp="" date="" extdoc="">
+<comment nb="CH" num="22" type="te" owner="LWG" issue="1455, 1454" disp="" date="" extdoc="">
 <section>
 29
 </section>
