@@ -1,0 +1,26 @@
+File itl_plus_3_2_1.zip    or
+File itl_plus_3_2_1.tar.gz
+
++ itl_plus_3_2_1 is for users of different platforms that have a version of the
+  boost libraries and the build tool bjam installed.
++ You can copy itl_plus/boost/{itl,itl_xt,validate} to the boost directory
+  and itl_plus/libs/{itl,itl_xt,validate} to the libs directory of your boost
+  installation and then run all examples and tests using bjam.
+
+Changes
+Version 3.2.1. (Boost review version update 2)
++ All source files are now following the boost project conventions
+  <prj-root>/boost/itl/...    Header files *.hpp of the library itl
+  <prj-root>/libs/itl/...     Examples, Tests, Documentation for itl
++ Added class template interval_bitset for large compressed bitsets.
++ Added itl::insert_iterator itl::add_iterator to fill interval containers from
+  stl containers of intervals.  
++ Added element iteration for all interval containers.
++ Set theoretic operations union (+ += | |=), difference (- -=), intersection 
+  (& &=) and symmetric difference (^ ^=) are now available as namespace global 
+  operators in an infix and an assigning variant for all interval containers and
+  many overloads combining elements, segments and useful combinations of 
+  different interval containers.
++ Operators for intersection changed from (* *=) to (& &=).
++ Interval constructing functions changed from global function templates to
+  static functions.

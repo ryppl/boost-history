@@ -1,0 +1,27 @@
+File itl_plus_3_2_1_standalone.7z  or
+File itl_plus_3_2_1_standalone.zip
+
++ itl_plus_3_2_1_standalone is for users of msvc (visual studio) who do not have 
+  a version of the boost libraries installed and do not want to get one or are 
+  so busy that they think they do not have time to do so ;)
++ itl_plus_3_2_1_standalone contains all parts of boost that are needed to run 
+  itl code, examples and tests under a ms windows os (vista, windows7) using 
+  msvc-9 (visual studio 2008).
+
+Changes
+Version 3.2.1. (Boost review version update 2)
++ All source files are now following the boost project conventions
+  <prj-root>/boost/itl/...    Header files *.hpp of the library itl
+  <prj-root>/libs/itl/...     Examples, Tests, Documentation for itl
++ Added class template interval_bitset for large compressed bitsets.
++ Added itl::insert_iterator itl::add_iterator to fill interval containers from
+  stl containers of intervals.  
++ Added element iteration for all interval containers.
++ Set theoretic operations union (+ += | |=), difference (- -=), intersection 
+  (& &=) and symmetric difference (^ ^=) are now available as namespace global 
+  operators in an infix and an assigning variant for all interval containers and
+  many overloads combining elements, segments and useful combinations of 
+  different interval containers.
++ Operators for intersection changed from (* *=) to (& &=).
++ Interval constructing functions changed from global function templates to
+  static functions.
