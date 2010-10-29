@@ -43,8 +43,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_split_interval_set
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_total_interval_quantifier", "test_total_interval_quantifier_\vc9_test_total_interval_quantifier.vcproj", "{EE61B7EF-EC45-4165-8B4B-FD5B7D2A9F9F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_continuous_interval", "test_continuous_interval_\vc9_test_continuous_interval.vcproj", "{EE61B7EF-EC45-4165-8B49-FD5B7D2B9F8C}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_partial_icl_quantifier", "test_partial_icl_quantifier_\vc9_test_partial_icl_quantifier.vcproj", "{EE61B7EF-EC45-4165-8B4A-FD5B7D5A9F9F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_total_icl_quantifier", "test_total_icl_quantifier_\vc9_test_total_icl_quantifier.vcproj", "{EE61B7EF-EC45-4165-8B4B-FD5B7D5A9F9F}"
@@ -139,10 +137,6 @@ Global
 		{EE61B7EF-EC45-4165-8B4B-FD5B7D2A9F9F}.Debug|Win32.Build.0 = Debug|Win32
 		{EE61B7EF-EC45-4165-8B4B-FD5B7D2A9F9F}.Release|Win32.ActiveCfg = Release|Win32
 		{EE61B7EF-EC45-4165-8B4B-FD5B7D2A9F9F}.Release|Win32.Build.0 = Release|Win32
-		{EE61B7EF-EC45-4165-8B49-FD5B7D2B9F8C}.Debug|Win32.ActiveCfg = Debug|Win32
-		{EE61B7EF-EC45-4165-8B49-FD5B7D2B9F8C}.Debug|Win32.Build.0 = Debug|Win32
-		{EE61B7EF-EC45-4165-8B49-FD5B7D2B9F8C}.Release|Win32.ActiveCfg = Release|Win32
-		{EE61B7EF-EC45-4165-8B49-FD5B7D2B9F8C}.Release|Win32.Build.0 = Release|Win32
 		{EE61B7EF-EC45-4165-8B4A-FD5B7D5A9F9F}.Debug|Win32.ActiveCfg = Debug|Win32
 		{EE61B7EF-EC45-4165-8B4A-FD5B7D5A9F9F}.Debug|Win32.Build.0 = Debug|Win32
 		{EE61B7EF-EC45-4165-8B4A-FD5B7D5A9F9F}.Release|Win32.ActiveCfg = Release|Win32
