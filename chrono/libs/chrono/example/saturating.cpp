@@ -70,7 +70,7 @@ public:
     saturate() : i_(nan) {}
     explicit saturate(int_type i) : i_(i) {}
     // explicit
-       operator int_type() const;
+    operator int_type() const;
 
     saturate& operator+=(saturate x);
     saturate& operator-=(saturate x) {return *this += -x;}
