@@ -50,17 +50,17 @@ namespace system_detail
   {
   public:
     generic_error_category(){}
-    const char *   name() const;
-    std::string    message( int ev ) const;
+    BOOST_SYSTEM_INLINE const char *   name() const;
+    BOOST_SYSTEM_INLINE std::string    message( int ev ) const;
   };
 
   class system_error_category : public error_category
   {
   public:
     system_error_category(){}
-    const char *        name() const;
-    std::string         message( int ev ) const;
-    error_condition     default_error_condition( int ev ) const;
+    BOOST_SYSTEM_INLINE const char *        name() const;
+    BOOST_SYSTEM_INLINE std::string         message( int ev ) const;
+    BOOST_SYSTEM_INLINE error_condition     default_error_condition( int ev ) const;
   };
 
   //  generic_error_category implementation  ---------------------------------//

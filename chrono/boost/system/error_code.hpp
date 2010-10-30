@@ -21,6 +21,7 @@
 #include <string>
 #include <stdexcept>
 #include <functional>
+#include <assert.h>
 
 // TODO: undef these macros if not already defined
 #include <boost/cerrno.hpp>
@@ -29,7 +30,15 @@
 #  error BOOST_SYSTEM_POSIX_API or BOOST_SYSTEM_WINDOWS_API must be defined
 #endif
 
+# ifdef BOOST_ERROR_CODE_HEADER_ONLY
+#  ifndef BOOST_SYSTEM_INLINED
+#   define BOOST_SYSTEM_INLINED
+#  endif
+# endif
+
+#ifndef BOOST_SYSTEM_INLINED
 #include <boost/config/abi_prefix.hpp> // must be the last #include
+#endif
 
 namespace boost
 {
@@ -397,7 +406,9 @@ namespace boost
 
   }  // namespace system
 
-  namespace detail { inline system::error_code * throws() { return 0; } }
+  namespace detail { 
+      inline system::error_code * throws() { return 0; } 
+  }
     //  Misuse of the error_code object is turned into a noisy failure by
     //  poisoning the reference. This particular implementation doesn't
     //  produce warnings or errors from popular compilers, is very efficient
@@ -405,7 +416,6 @@ namespace boost
     //  from order of initialization problems. In practice, it also seems
     //  cause user function error handling implementation errors to be detected
     //  very early in the development cycle.
-
   inline system::error_code & throws()
     { return *detail::throws(); }
 
@@ -504,12 +514,6 @@ namespace boost
 
 //#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 //
-# ifdef BOOST_ERROR_CODE_HEADER_ONLY
-#  ifndef BOOST_SYSTEM_INLINED
-#   define BOOST_SYSTEM_INLINED
-#  endif
-//#   include <boost/../libs/system/src/error_code.cpp>
-# endif
 
 #ifndef BOOST_SYSTEM_INLINED
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
