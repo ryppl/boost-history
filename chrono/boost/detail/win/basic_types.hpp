@@ -50,7 +50,7 @@ namespace win32 {
     typedef ::LPVOID LPVOID_;
     typedef ::CHAR CHAR_;
     typedef ::LPSTR LPSTR_;
-    typedef ::LPCSTR *LPCSTR_;
+    typedef ::LPCSTR LPCSTR_;
     typedef ::WCHAR WCHAR_;
     typedef ::LPWSTR LPWSTR_;
     typedef ::LPCWSTR LPCWSTR_;
