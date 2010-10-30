@@ -3734,7 +3734,7 @@ All the units are given using the suffix "s" following the System International 
 
 
 [/
-[section [*Version 0.7.0, October 24, 2010] ]
+[section [*Version 0.7.0, October 30, 2010] ]
 
 [*Features:]
 
@@ -3748,13 +3748,13 @@ All the units are given using the suffix "s" following the System International 
 * Moved some details to static_integer directory.
 * Use of detail/win files to avoid the use of windows.h file.
 * Completed the error_code handling.
-* Works now with BOOST_SYSTEL_NO_DEPRECATED.
+* Works now with BOOST_SYSTEM_NO_DEPRECATED.
 
 [*Fixes:]
 
 * Fix some warnings.
 * Fix original error on Mac
-* Dont fic the link with boost_system to static.
+* Dont fix the link with boost_system to static.
 
 [*Test:]
 
