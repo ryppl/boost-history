@@ -220,23 +220,23 @@
 <p>
             <code class="computeroutput"><span class="identifier">process_cpu_clock</span></code> provides
             a thin wrapper around the operating system's process time API. For POSIX-like
-            systems, that's the times() function, while for Windows, it's the GetProcessTimes()
+            systems, that's the times() function, while for Windows, it's the <code class="computeroutput"><span class="identifier">GetProcessTimes</span><span class="special">()</span></code>
             function.
           </p>
 <p>
             The process relative real, user and system current time can be obtained
             at once by calling <code class="computeroutput"><span class="identifier">process_clocks</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>.
           </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">BOOST_CHRONO_DECL</span> <span class="identifier">process_cpu_clock</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">process_cpu_clock</span>
 <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">struct</span> <span class="identifier">times</span> <span class="special">;</span>
 
-    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">,</span>  <span class="identifier">nano</span><span class="special">&gt;</span>                <span class="identifier">duration</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span>                       <span class="identifier">rep</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span>                    <span class="identifier">period</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">process_cpu_clock</span><span class="special">&gt;</span>  <span class="identifier">time_point</span><span class="special">;</span>
-    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>           <span class="keyword">true</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">times</span><span class="special">,</span>  <span class="identifier">nano</span><span class="special">&gt;</span>                  <span class="identifier">duration</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span>                           <span class="identifier">rep</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span>                        <span class="identifier">period</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">process_cpu_clock</span><span class="special">&gt;</span>   <span class="identifier">time_point</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>                <span class="keyword">true</span><span class="special">;</span>
 
     <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
 <span class="special">};</span>

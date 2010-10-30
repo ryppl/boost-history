@@ -107,27 +107,28 @@
 <p>
             Next follows limitation respect to the C++0x recomendations:
           </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-                <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3135.html#1121" target="_top">Ratio
-                values should be constexpr</a>: <code class="computeroutput"><span class="identifier">constexpr</span></code>
-                don't used as no compiler supports it today. <code class="computeroutput"><span class="keyword">const</span></code>
+<div class="itemizedlist"><ul type="disc"><li>
+                <code class="computeroutput"><span class="identifier">constexpr</span></code> don't used
+                for <code class="computeroutput"><span class="identifier">min</span><span class="special">()</span></code>,
+                <code class="computeroutput"><span class="identifier">max</span><span class="special">()</span></code>
+                and <code class="computeroutput"><span class="identifier">zero</span><span class="special">()</span></code>
+                <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.traits.duration_values" title="
+            Class template duration_values"><code class="computeroutput"><span class="identifier">duration_values</span></code></a> class as
+                no compiler supports it today. <code class="computeroutput"><span class="keyword">const</span></code>
                 is used instead when appropiated.
-              </li>
-<li>
-                <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3134.html#921" target="_top">Rational
-                Arithmetic should use template aliases</a>: In the absence of
-                compiler support of template aliases the C++03 emulation define a
-                nested typedef <code class="computeroutput"><span class="identifier">type</span></code>.
-              </li>
-</ul></div>
+              </li></ul></div>
 <p>
             The current implementation provides in addition:
           </p>
-<div class="itemizedlist"><ul type="disc"><li>
+<div class="itemizedlist"><ul type="disc">
+<li>
                 clock error handling as specified in <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3135.html#3155" target="_top">clock
                 error handling needs to be specified</a>.
-              </li></ul></div>
+              </li>
+<li>
+                process and thread clocks.
+              </li>
+</ul></div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
@@ -140,7 +141,7 @@
             How Assert behaves?</a></span></dt>
 <dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.conf.header_only">
             How to build <span class="bold"><strong>Boost.Chrono</strong></span> as a header
-            only lib?</a></span></dt>
+            only library?</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h6 class="title">
@@ -149,29 +150,31 @@
             How Assert behaves?</a>
 </h6></div></div></div>
 <p>
-              When BOOST_NO_STATIC_ASSERT is defined, the user can select the way
-              static assertions are reported. Define
+              When <code class="computeroutput"><span class="identifier">BOOST_NO_STATIC_ASSERT</span></code>
+              is defined, the user can select the way static assertions are reported.
+              Define
             </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-                  BOOST_CHRONO_USES_STATIC_ASSERT: define it if you want to use Boost.StaticAssert
+                  <code class="computeroutput"><span class="identifier">BOOST_CHRONO_USES_STATIC_ASSERT</span></code>:
+                  define it if you want to use Boost.StaticAssert
                 </li>
 <li>
-                  BOOST_CHRONO_USES_MPL_ASSERT: define it if you want to use Boost.MPL
-                  static asertions
+                  <code class="computeroutput"><span class="identifier">BOOST_CHRONO_USES_MPL_ASSERT</span></code>:
+                  define it if you want to use Boost.MPL static asertions
                 </li>
 <li>
-                  BOOST_CHRONO_USES_ARRAY_ASSERT: define it if you want to use internal
-                  static asertions
+                  <code class="computeroutput"><span class="identifier">BOOST_CHRONO_USES_ARRAY_ASSERT</span></code>:
+                  define it if you want to use internal static asertions
                 </li>
 </ul></div>
 <p>
-              The default vaule behavior is as BOOST_CHRONO_USES_ARRAY_ASSERT was
-              defined.
+              The default vaule behavior is as <code class="computeroutput"><span class="identifier">BOOST_CHRONO_USES_ARRAY_ASSERT</span></code>
+              was defined.
             </p>
 <p>
-              When BOOST_CHRONO_USES_MPL_ASSERT is not defined the following symbols
-              are defined as
+              When <code class="computeroutput"><span class="identifier">BOOST_CHRONO_USES_MPL_ASSERT</span></code>
+              is not defined the following symbols are defined as
             </p>
 <pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_CHRONO_A_DURATION_REPRESENTATION_CAN_NOT_BE_A_DURATION</span> <span class="special">\</span>
     <span class="string">"A duration representation can not be a duration"</span>
@@ -191,9 +194,9 @@
 <div class="titlepage"><div><div><h6 class="title">
 <a name="boost_chrono.reference.cpp0x.chrono_hpp.conf.header_only"></a><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.conf.header_only" title="
             How to build Boost.Chrono as a header
-            only lib?">
+            only library?">
             How to build <span class="bold"><strong>Boost.Chrono</strong></span> as a header
-            only lib?</a>
+            only library?</a>
 </h6></div></div></div>
 <p>
               When <code class="computeroutput"><span class="identifier">BOOST_CHRONO_INLINED</span></code>
@@ -228,6 +231,9 @@
 <dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs">
           <code class="computeroutput"><span class="identifier">duration</span></code> typedefs</a></span></dt>
 </dl></div>
+<p>
+          This file contains duration specific classes and non-member function.
+        </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
   <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
 
@@ -466,12 +472,12 @@
           <code class="computeroutput"><span class="identifier">common_type</span></code> specialization</a>
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep2</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period2</span><span class="special">&gt;</span>
-<span class="keyword">struct</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+<span class="keyword">struct</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period1</span><span class="special">&gt;,</span> <span class="identifier">chrono</span><span class="special">::</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period2</span><span class="special">&gt;</span> <span class="special">&gt;</span>
 <span class="special">{</span>
     <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">typename</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Rep2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">see</span> <span class="identifier">below</span><span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span>
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">typename</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Rep2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">see</span> <span class="identifier">below</span><span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
 <p>
@@ -1010,7 +1016,7 @@
             Non-Member function <code class="computeroutput"><span class="keyword">operator</span><span class="special">+(</span><span class="identifier">duration</span><span class="special">,</span><span class="identifier">duration</span><span class="special">)</span></code></a>
 </h6></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep2</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period2</span><span class="special">&gt;</span>
-<span class="keyword">typename</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+<span class="keyword">typename</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period1</span><span class="special">&gt;,</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period2</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span>
 <span class="keyword">operator</span><span class="special">+(</span><span class="keyword">const</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
@@ -1029,7 +1035,7 @@
             Non-Member function <code class="computeroutput"><span class="keyword">operator</span><span class="special">-(</span><span class="identifier">duration</span><span class="special">,</span><span class="identifier">duration</span><span class="special">)</span></code></a>
 </h6></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep2</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period2</span><span class="special">&gt;</span>
-<span class="keyword">typename</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+<span class="keyword">typename</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period1</span><span class="special">&gt;,</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period2</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span>
 <span class="keyword">operator</span><span class="special">-(</span><span class="keyword">const</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
@@ -1042,7 +1048,7 @@
             </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep2</span><span class="special">&gt;</span>
  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">typename</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Rep2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">typename</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Rep2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span>
 <span class="keyword">operator</span><span class="special">*(</span><span class="keyword">const</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">Rep2</span><span class="special">&amp;</span> <span class="identifier">s</span><span class="special">);</span>
 </pre>
@@ -1067,7 +1073,7 @@
 </h6></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep2</span><span class="special">&gt;</span>
  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">typename</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Rep2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">typename</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Rep2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span>
 <span class="keyword">operator</span><span class="special">*(</span><span class="keyword">const</span> <span class="identifier">Rep1</span><span class="special">&amp;</span> <span class="identifier">s</span><span class="special">,</span> <span class="keyword">const</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">);</span>
 </pre>
@@ -1092,7 +1098,7 @@
 </h6></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep2</span><span class="special">&gt;</span>
  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">typename</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Rep2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">typename</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Rep2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span>
 <span class="keyword">operator</span><span class="special">/(</span><span class="keyword">const</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">Rep2</span><span class="special">&amp;</span> <span class="identifier">s</span><span class="special">);</span>
 </pre>
@@ -1119,7 +1125,7 @@
             Non-Member function <code class="computeroutput"><span class="keyword">operator</span><span class="special">/(</span><span class="identifier">duration</span><span class="special">,</span><span class="identifier">duration</span><span class="special">)</span></code></a>
 </h6></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep2</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period2</span><span class="special">&gt;</span>
-<span class="keyword">typename</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Rep2</span><span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="keyword">typename</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Rep2</span><span class="special">&gt;::</span><span class="identifier">type</span>
 <span class="keyword">operator</span><span class="special">/(</span><span class="keyword">const</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period1</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span> <span class="keyword">const</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period2</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
@@ -1167,7 +1173,7 @@
 </h6></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep2</span><span class="special">&gt;</span>
  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">typename</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Rep2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">typename</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Rep2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span>
 <span class="keyword">operator</span><span class="special">%(</span><span class="keyword">const</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">Rep2</span><span class="special">&amp;</span> <span class="identifier">s</span><span class="special">);</span>
 </pre>
@@ -1190,7 +1196,7 @@
             Non-Member function <code class="computeroutput"><span class="keyword">operator</span><span class="special">%(</span><span class="identifier">duration</span><span class="special">,</span><span class="identifier">duration</span><span class="special">)</span></code></a>
 </h6></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep2</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period2</span><span class="special">&gt;</span>
-<span class="keyword">typename</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+<span class="keyword">typename</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period1</span><span class="special">&gt;,</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period2</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span>
 <span class="keyword">operator</span><span class="special">%(</span><span class="keyword">const</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
@@ -1641,6 +1647,9 @@
 <dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point_cast">
           Non-Member function <code class="computeroutput"><span class="identifier">time_point_cast</span><span class="special">(</span><span class="identifier">time_point</span><span class="special">)</span></code></a></span></dt>
 </dl></div>
+<p>
+          This file contains time_point specific classes and non-member function.
+        </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
   <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
 
@@ -1709,12 +1718,12 @@
           <code class="computeroutput"><span class="identifier">common_type</span></code> specialization</a>
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration2</span><span class="special">&gt;</span>
-<span class="keyword">struct</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+<span class="keyword">struct</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;,</span> <span class="identifier">chrono</span><span class="special">::</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;</span> <span class="special">&gt;</span>
 <span class="special">{</span>
     <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">typename</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Duration1</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span>
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">typename</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Duration1</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
 <p>
@@ -1943,7 +1952,7 @@
 </h6></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep2</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period2</span><span class="special">&gt;</span>
  <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">typename</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Duration1</span><span class="special">,</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period2</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span>
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">typename</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Duration1</span><span class="special">,</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period2</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span>
 <span class="keyword">operator</span><span class="special">+(</span><span class="keyword">const</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
           <span class="keyword">const</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period2</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
@@ -1961,7 +1970,7 @@
 </h6></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration2</span><span class="special">&gt;</span>
  <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">typename</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period1</span><span class="special">&gt;,</span> <span class="identifier">Duration2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span>
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">typename</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period1</span><span class="special">&gt;,</span> <span class="identifier">Duration2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span>
 <span class="keyword">operator</span><span class="special">+(</span><span class="keyword">const</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep1</span><span class="special">,</span> <span class="identifier">Period1</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
           <span class="keyword">const</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
@@ -1979,7 +1988,7 @@
 </h6></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep2</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period2</span><span class="special">&gt;</span>
  <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">typename</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Duration1</span><span class="special">,</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period2</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span>
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">typename</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Duration1</span><span class="special">,</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period2</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span>
 <span class="keyword">operator</span><span class="special">-(</span><span class="keyword">const</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
           <span class="keyword">const</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep2</span><span class="special">,</span> <span class="identifier">Period2</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
@@ -1996,7 +2005,7 @@
             Non-Member function <code class="computeroutput"><span class="keyword">operator</span><span class="special">-(</span><span class="identifier">duration</span><span class="special">,</span><span class="identifier">time_point</span><span class="special">)</span></code></a>
 </h6></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration2</span><span class="special">&gt;</span>
-<span class="keyword">typename</span>  <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Duration1</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="keyword">typename</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="identifier">Duration1</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;::</span><span class="identifier">type</span>
 <span class="keyword">operator</span><span class="special">-(</span><span class="keyword">const</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
           <span class="keyword">const</span>  <a href="cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
@@ -2170,6 +2179,9 @@
 <dt><span class="section"><a href="cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.high_resolution_clock">
           Class <code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a></span></dt>
 </dl></div>
+<p>
+          This file contains the standard clock classes.
+        </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
   <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
 

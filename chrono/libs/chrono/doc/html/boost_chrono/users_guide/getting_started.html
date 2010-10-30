@@ -39,7 +39,7 @@
         Installing Chrono</a>
 </h4></div></div></div>
 <a name="boost_chrono.users_guide.getting_started.install.getting__emphasis_role__bold__boost_chrono__emphasis__"></a><h5>
-<a name="id4949661"></a>
+<a name="id4987965"></a>
           <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.getting__emphasis_role__bold__boost_chrono__emphasis__">Getting
           <span class="bold"><strong>Boost.Chrono</strong></span> </a>
         </h5>
@@ -54,13 +54,13 @@
           and follow the instructions there for anonymous SVN access.
         </p>
 <a name="boost_chrono.users_guide.getting_started.install.where_to_install__emphasis_role__bold__boost_chrono__emphasis___"></a><h5>
-<a name="id4949732"></a>
+<a name="id4988037"></a>
           <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.where_to_install__emphasis_role__bold__boost_chrono__emphasis___">Where
           to install <span class="bold"><strong>Boost.Chrono</strong></span>? </a>
         </h5>
 <p>
           The simple way is to decompress (or checkout from SVN) the file in your
-          BOOST_ROOT directory.
+          <code class="computeroutput"><span class="identifier">BOOST_ROOT</span></code> directory.
         </p>
 <div class="note"><table border="0" summary="Note">
 <tr>
@@ -73,34 +73,37 @@
 </table></div>
 <p>
           Othesewise, if you decompress in a different directory, you will need to
-          comment some lines, and uncomment and change others in the build/Jamfile
-          and test/Jamfile. Sorry for this, but I have not reached yet to write a
-          Jamfile that is able to work in both environements and use the BOOST_ROOT
+          comment some lines, and uncomment and change others in the <code class="computeroutput"><span class="identifier">build</span><span class="special">/</span><span class="identifier">Jamfile</span></code> and <code class="computeroutput"><span class="identifier">test</span><span class="special">/</span><span class="identifier">Jamfile</span></code>.
+          Sorry for this, but I have not reached yet to write a <code class="computeroutput"><span class="identifier">Jamfile</span></code>
+          that is able to work in both environements and use the <code class="computeroutput"><span class="identifier">BOOST_ROOT</span></code>
           variable. Any help is welcome.
         </p>
 <a name="boost_chrono.users_guide.getting_started.install.building__emphasis_role__bold__boost_chrono__emphasis__"></a><h5>
-<a name="id4949782"></a>
+<a name="id4942292"></a>
           <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.building__emphasis_role__bold__boost_chrono__emphasis__">Building
           <span class="bold"><strong>Boost.Chrono</strong></span> </a>
         </h5>
 <p>
           <span class="bold"><strong>Boost.Chrono</strong></span> can be configured as a header
-          only library. When BOOST_CHRONO_INLINED is defined the lib is header only
-          library. Otherwise is not a header only library and you need to compile
-          it before use.
+          only library. When <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.conf.header_only" title="
+            How to build Boost.Chrono as a header
+            only library?"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_INLINED</span></code></a> is defined
+          the lib is header only library. Otherwise is not a header only library
+          and you need to compile it before use.
         </p>
 <pre class="programlisting"><span class="identifier">bjam</span> <span class="identifier">libs</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">build</span>
 </pre>
 <a name="boost_chrono.users_guide.getting_started.install.requirements"></a><h5>
-<a name="id4949856"></a>
+<a name="id4942382"></a>
           <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.requirements">Requirements</a>
         </h5>
 <p>
           <span class="bold"><strong>Boost.Chrono</strong></span> depends on some new traits
-          in Boost.TypeTraits. For these specific parts you must use either the Boost.TypeTraits.Ext
-          or the version in SVN trunk. In addition it depends on the not yet accepted
-          Boost.Ratio library. Except these new dependencies, we have tested with
-          older versions as 1.39.
+          in <span class="bold"><strong>Boost.TypeTraits</strong></span> which have been added
+          on Boost 1.45. For these specific parts you must use either the Boost.TypeTraits.Ext
+          or the version in SVN trunk/release. In addition it depends on the recently
+          accepted <span class="bold"><strong>Boost.Ratio</strong></span> library. Except these
+          new dependencies, we have tested with older versions as 1.39.
         </p>
 <p>
           In particular, <span class="bold"><strong>Boost.Chrono</strong></span> depends on:
@@ -147,18 +150,20 @@
 </dl>
 </div>
 <a name="boost_chrono.users_guide.getting_started.install.building_an_executable_that_uses__emphasis_role__bold__boost_chrono__emphasis__"></a><h5>
-<a name="id4942274"></a>
+<a name="id4942633"></a>
           <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.building_an_executable_that_uses__emphasis_role__bold__boost_chrono__emphasis__">Building
           an executable that uses <span class="bold"><strong>Boost.Chrono</strong></span>
           </a>
         </h5>
 <p>
-          In addition to link with the Boost.Chrono library you need also to link
-          with the Boost.System library. Once Boost.System will be configurable to
-          be a header only using BOOST_SYSTEM_INLINED you will no need to link with.
+          In addition to link with the <span class="bold"><strong>Boost.Chrono</strong></span>
+          library you need also to link with the <span class="bold"><strong>Boost.System</strong></span>
+          library. Once <span class="bold"><strong>Boost.System</strong></span> will be configurable
+          to be a header only using __BOOST_SYSTEM_INLINED you will no need to link
+          with.
         </p>
 <a name="boost_chrono.users_guide.getting_started.install.exceptions_safety_"></a><h5>
-<a name="id4942311"></a>
+<a name="id4942683"></a>
           <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.exceptions_safety_">Exceptions
           safety </a>
         </h5>
@@ -167,7 +172,7 @@
           of exception safety as long as the underlying parameters provide it.
         </p>
 <a name="boost_chrono.users_guide.getting_started.install.thread_safety_"></a><h5>
-<a name="id4942338"></a>
+<a name="id4942710"></a>
           <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.thread_safety_">Thread
           safety </a>
         </h5>
@@ -175,7 +180,7 @@
           All functions in the library are thread-unsafe except when noted explicitly.
         </p>
 <a name="boost_chrono.users_guide.getting_started.install.tested_compilers_"></a><h5>
-<a name="id4942364"></a>
+<a name="id4942736"></a>
           <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.tested_compilers_">Tested
           compilers </a>
         </h5>
