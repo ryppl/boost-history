@@ -1,13 +1,17 @@
 <HTML>
 <!--
-     Copyright (c) Jeremy Siek, Lie-Quan Lee, and Andrew Lumsdaine 2000
-    
+     Copyright 2010 The Trustees of Indiana University.
+     
      Distributed under the Boost Software License, Version 1.0.
      (See accompanying file LICENSE_1_0.txt or copy at
      http://www.boost.org/LICENSE_1_0.txt)
+     
+      Authors: Jeremiah Willcock
+               Jeremy Siek (due to adaptation from depth_first_search.html)
+               Andrew Lumsdaine
   -->
 <Head>
-<Title>Boost Graph Library: Depth-First Search</Title>
+<Title>Boost Graph Library: Random Spanning Tree</Title>
 <BODY BGCOLOR="#ffffff" LINK="#0000ee" TEXT="#000000" VLINK="#551a8b" 
         ALINK="#ff0000"> 
 <IMG SRC="../../../boost.png" 
@@ -15,173 +19,78 @@
 
 <BR Clear>
 
-<H1><A NAME="sec:depth-first-search"></A><img src="figs/python.gif" alt="(Python)"/>
-<TT>depth_first_search</TT>
+<TT>random_spanning_tree</TT>
 </H1>
 
 <P>
 <PRE>
 <i>// named parameter version</i>
-template &lt;class Graph, class class P, class T, class R&gt;
-void depth_first_search(Graph&amp; G,
+template &lt;class Graph, class Gen, class class P, class T, class R&gt;
+void random_spanning_tree(Graph&amp; G,
+  Gen&amp; gen,
   const bgl_named_params&lt;P, T, R&gt;&amp; params);
 
-<i>// non-named parameter version</i>
-template &lt;class Graph, class <a href="DFSVisitor.html">DFSVisitor</a>, class ColorMap&gt;
-void depth_first_search(const Graph&amp; g, DFSVisitor vis, ColorMap color)
-
-template &lt;class Graph, class <a href="DFSVisitor.html">DFSVisitor</a>, class ColorMap&gt;
-void depth_first_search(const Graph&amp; g, DFSVisitor vis, ColorMap color, 
-                        typename graph_traits&lt;Graph&gt;::vertex_descriptor start)
-
+<i>// non-named parameter versions</i>
+template &lt;class Graph, class Gen, class PredMap, class WeightMap, class ColorMap&gt;
+void random_spanning_tree(const Graph&amp; g, Gen&amp; gen, vertex_descriptor root,
+  PredMap pred, WeightMap weight, ColorMap color);
 </PRE>
 
 <p>
-The <tt>depth_first_search()</tt> function performs a depth-first
-traversal of the vertices in a directed graph.  When
-possible, a depth-first traversal chooses a vertex adjacent to the
-current vertex to visit next. If all adjacent vertices have already
-been discovered, or there are no adjacent vertices, then the algorithm
-backtracks to the last vertex that had undiscovered neighbors. Once
-all reachable vertices have been visited, the algorithm selects from
-any remaining undiscovered vertices and continues the traversal. The
-algorithm finishes when all vertices have been visited. Depth-first
-search is useful for categorizing edges in a graph, and for imposing
-an ordering on the vertices. Section <a
-href="./graph_theory_review.html#sec:dfs-algorithm">Depth-First
-Search</a> describes the various properties of DFS and walks through
-an example.
+The <tt>random_spanning_tree()</tt> function generates a random spanning tree
+on a directed or undirected graph.  The algorithm used is Wilson's algorithm (<a
+href="bibliography.html#wilson96generating">73</a>, based on <!-- (FIXME: add
+documentation for loop_erased_random_walk()) <a
+href="loop_erased_random_walk.html"> -->loop-erased random walks<!-- </a> -->.  There must
+be a path from every non-root vertex of the graph to the root;
+the algorithm typically enters an infinite loop when
+given a graph that does not satisfy this property, but may also throw the
+exception <tt>loop_erased_random_walk_stuck</tt> if the search reaches a vertex
+with no outgoing edges.  Both weighted and unweighted versions of
+<tt>random_spanning_tree()</tt> are
+implemented.  In the unweighted version, all spanning trees are equally likely.
+In the weighted version, the probability of a particular spanning tree being
+selected is the product of its edge weights.
+In the non-named-parameter
+version of the algorithm, the unweighted version can be selected by passing an
+object of type <tt>static_property_map&lt;double&gt;</tt> as the weight map.
+In the named-parameter version, leaving off the <tt>weight_map</tt> parameter
+has the same effect.
 </p>
-
-<p>
-Similar to BFS, color markers are used to keep track of which vertices
-have been discovered. White marks vertices that have yet to be
-discovered, gray marks a vertex that is discovered but still has
-vertices adjacent to it that are undiscovered. A black vertex is
-discovered vertex that is not adjacent to any white vertices.
-<p>
-
-<p>
-The <tt>depth_first_search()</tt> function invokes user-defined
-actions at certain event-points within the algorithm. This provides a
-mechanism for adapting the generic DFS algorithm to the many
-situations in which it can be used.  In the pseudo-code below, the
-event points for DFS are the labels on
-the right. The user-defined actions must be provided in the form of a
-visitor object, that is, an object whose type meets the requirements
-for a <a href="./DFSVisitor.html">DFS Visitor</a>. In the pseudo-code
-we show the algorithm computing predecessors <i>p</i>, discover time
-<i>d</i> and finish time <i>t</i>.  By default, the
-<tt>depth_first_search()</tt> function does not compute these
-properties, however there are pre-defined visitors such as <a
-href="./predecessor_recorder.html"><tt>predecessor_recorder</tt></a>
-and <a href="./time_stamper.html"><tt>time_stamper</tt></a> that can
-be used to do this.
-</p>
-
-<table>
-<tr>
-<td valign="top">
-<pre>
-DFS(<i>G</i>)
-  <b>for</b> each vertex <i>u in V</i> 
-    <i>color[u] :=</i> WHITE
-    <i>p[u] = u</i> 
-  <b>end for</b>
-  <i>time := 0</i>
-  <b>if</b> there is a starting vertex <i>s</i>
-    <b>call</b> DFS-VISIT(<i>G</i>, <i>s</i>)
-  <b>for</b> each vertex <i>u in V</i> 
-    <b>if</b> <i>color[u] =</i> WHITE
-      <b>call</b> DFS-VISIT(<i>G</i>, <i>u</i>)
-  <b>end for</b>
-  return (<i>p</i>,<i>d_time</i>,<i>f_time</i>) <br>
-DFS-VISIT(<i>G</i>, <i>u</i>) 
-  <i>color[u] :=</i> GRAY
-  <i>d_time[u] := time := time + 1</i> 
-  <b>for</b> each <i>v in Adj[u]</i> 
-    <b>if</b> (<i>color[v] =</i> WHITE)
-      <i>p[v] = u</i> 
-      <b>call</b> DFS-VISIT(<i>G</i>, <i>v</i>)
-    <b>else if</b> (<i>color[v] =</i> GRAY) 
-      <i>...</i>
-    <b>else if</b> (<i>color[v] =</i> BLACK) 
-      <i>...</i>
-  <b>end for</b>
-  <i>color[u] :=</i> BLACK
-  <i>f_time[u] := time := time + 1</i> 
-<pre>
-</td>
-<td valign="top">
-<pre>
--
--
-initialize vertex <i>u</i>
--
--
--
--
-start vertex <i>s</i>
--
--
-start vertex <i>u</i>
--
--
--
--
-discover vertex <i>u</i>
--
-examine edge <i>(u,v)</i>
--
-<i>(u,v)</i> is a tree edge
--
--
-<i>(u,v)</i> is a back edge
--
-<i>(u,v)</i> is a cross or forward edge
--
-finish vertex <i>u</i>
--
-</pre>
-</td>
-</tr>
-</table>
-
-
 
 <H3>Where Defined</H3>
 
 <P>
-<a href="../../../boost/graph/depth_first_search.hpp"><TT>boost/graph/depth_first_search.hpp</TT></a>
+<a href="../../../boost/graph/random_spanning_tree.hpp"><TT>boost/graph/random_spanning_tree.hpp</TT></a>
 
 <h3>Parameters</h3>
 
-IN: <tt>Graph&amp; g</tt>
+IN: <tt>const Graph&amp; g</tt>
 <blockquote>
-  A directed graph. The graph type must
+  An undirected graph. The graph type must
   be a model of <a href="./IncidenceGraph.html">Incidence Graph</a>
   and <a href="./VertexListGraph.html">Vertex List Graph</a>.<br>
+</blockquote>
 
-  <b>Python</b>: The parameter is named <tt>graph</tt>.
+IN: <tt>Gen&amp; gen</tt>
+<blockquote>
+  A random number generator. The generator type must
+  be a model of <a
+  href="../../../doc/html/boost_random/reference.html#boost_random.reference.concepts.uniform_random_number_generator">Uniform
+  Random Number Generator</a> or a pointer or reference to such a type.<br>
 </blockquote>
 
 
 <h3>Named Parameters</h3>
 
-IN: <tt>visitor(DFSVisitor vis)</tt>
+IN: <tt>root_vertex(vertex_descriptor root)</tt>
 <blockquote>
-  A visitor object that is invoked inside the algorithm at the
-  event-points specified by the <a href="./DFSVisitor.html">DFS
-  Visitor</a> concept. The visitor object is passed by value <a
-  href="#1">[1]</a>. <br> <b>Default:</b>
-  <tt>dfs_visitor&lt;null_visitor&gt;</tt><br>
-
-  <b>Python</b>: The parameter should be an object that derives from
-  the <a href="DFSVisitor.html#python"><tt>DFSVisitor</tt></a> type of
-  the graph.
+  This parameter, whose type must be the vertex descriptor type of
+  <tt>Graph</tt>, gives the root of the tree to be generated.  The default is
+  <tt>*vertices(g).first</tt>.<br>
 </blockquote>
 
-UTIL/OUT: <tt>color_map(ColorMap color)</tt>
+UTIL: <tt>color_map(ColorMap color)</tt>
 <blockquote>
   This is used by the algorithm to keep track of its progress through
   the graph. The type <tt>ColorMap</tt> must be a model of <a
@@ -189,24 +98,9 @@ UTIL/OUT: <tt>color_map(ColorMap color)</tt>
   Property Map</a> and its key type must be the graph's vertex
   descriptor type and the value type of the color map must model
   <a href="./ColorValue.html">ColorValue</a>.<br>
-  <b>Default:</b> an <a
-  href="../../property_map/doc/iterator_property_map.html">
-  </tt>iterator_property_map</tt></a> created from a
-  <tt>std::vector</tt> of <tt>default_color_type</tt> of size
+  <b>Default:</b> a <tt>two_bit_color_map</tt> of size
   <tt>num_vertices(g)</tt> and using the <tt>i_map</tt> for the index
   map.<br>
-
-   <b>Python</b>: The color map must be a <tt>vertex_color_map</tt> for
-  the graph.
-</blockquote>
-
-IN: <tt>root_vertex(typename
-graph_traits&lt;VertexListGraph&gt;::vertex_descriptor start)</tt>
-<blockquote>
-  This specifies the vertex that the depth-first search should
-  originate from. The type is the type of a vertex descriptor for the
-  given graph.<br>
-  <b>Default:</b> <tt>*vertices(g).first</tt><br>
 </blockquote>
 
 IN: <tt>vertex_index_map(VertexIndexMap i_map)</tt>
@@ -219,82 +113,34 @@ IN: <tt>vertex_index_map(VertexIndexMap i_map)</tt>
   Map</a>. The value type of the map must be an integer type. The
   vertex descriptor type of the graph needs to be usable as the key
   type of the map.<br>
-
-  <b>Default:</b> <tt>get(vertex_index, g)</tt>.
-    Note: if you use this default, make sure your graph has
-    an internal <tt>vertex_index</tt> property. For example,
-    <tt>adjacenty_list</tt> with <tt>VertexList=listS</tt> does
-    not have an internal <tt>vertex_index</tt> property.<br>
-
-  <b>Python</b>: Unsupported parameter.
 </blockquote>
 
-<P>
+OUT: <tt>predecessor_map(PredMap pred)</tt>
+<blockquote>
+  This map, on output, will contain the predecessor of each vertex in the graph
+  in the spanning tree.  The value
+  <tt>graph_traits&lt;Graph&gt;::null_vertex()</tt> will be used as the
+  predecessor of the root of the tree.  The type <tt>PredMap</tt> must be a
+  model of
+  <a
+  href="../../property_map/doc/ReadWritePropertyMap.html">Read/Write Property
+  Map</a>. The key and value types of the map must both be the graph's vertex type.<br>
+</blockquote>
 
-<H3><A NAME="SECTION001340300000000000000">
-Complexity</A>
-</H3>
-
-<P>
-The time complexity is <i>O(E + V)</i>.
-
-<P>
-
-<h3>Visitor Event Points</h3>
-
-<ul>
-
-<li><b><tt>vis.initialize_vertex(s, g)</tt></b> is invoked on every
-  vertex of the graph before the start of the graph search.
-
-<li><b><tt>vis.start_vertex(s, g)</tt></b> is invoked on the source
-  vertex once before the start of the search.
-  
-<li><b><tt>vis.discover_vertex(u, g)</tt></b> is invoked when a vertex
-  is encountered for the first time.
-  
-<li><b><tt>vis.examine_edge(e, g)</tt></b> is invoked on every out-edge
-  of each vertex after it is discovered.
-
-<li><b><tt>vis.tree_edge(e, g)</tt></b> is invoked on each edge as it
-  becomes a member of the edges that form the search tree. If you
-  wish to record predecessors, do so at this event point.
-  
-<li><b><tt>vis.back_edge(e, g)</tt></b> is invoked on the back edges in
-  the graph.
-  
-<li><b><tt>vis.forward_or_cross_edge(e, g)</tt></b> is invoked on
-  forward or cross edges in the graph. In an undirected graph this
-  method is never called.
-  
-<li><b><tt>vis.finish_vertex(u, g)</tt></b> is invoked on a vertex after
-  all of its out edges have been added to the search tree and all of
-  the adjacent vertices have been discovered (but before their
-  out-edges have been examined).
-
-</ul>
-
-
-<H3>Example</H3>
-
-<P>
-The example in <a href="../example/dfs-example.cpp">
-<TT>examples/dfs-example.cpp</TT></a> shows DFS applied to the graph in
-<A HREF="./graph_theory_review.html#fig:dfs-example">Figure 1</A>.
-
-<h3>See Also</h3>
-
-<a href="./depth_first_visit.html"><tt>depth_first_visit</tt></a>
-<a href="./undirected_dfs.html"><tt>undirected_dfs</tt></a>
-
-<h3>Notes</h3>
-
-<p><a name="1">[1]</a> 
-  Since the visitor parameter is passed by value, if your visitor
-  contains state then any changes to the state during the algorithm
-  will be made to a copy of the visitor object, not the visitor object
-  passed in. Therefore you may want the visitor to hold this state by
-  pointer or reference.
+IN: <tt>weight_map(WeightMap weight)</tt>
+<blockquote>
+  This map contains the weight of each edge in the graph.  The probability of
+  any given spanning tree being produced as the result of the algorithm is
+  proportional to the product of its edge weights.  If the weight map is
+  omitted, a default that gives an equal weight to each edge will be used; a
+  faster algorithm that relies on constant weights will also be invoked.
+  The type <tt>WeightMap</tt> must be a
+  model of
+  <a
+  href="../../property_map/doc/ReadablePropertyMap.html">Readable Property
+  Map</a>. The key type of the map must be the graph's edge type, and the value
+  type must be a real number type (such as <tt>double</tt>).<br>
+</blockquote>
 
 <br>
 <HR>
