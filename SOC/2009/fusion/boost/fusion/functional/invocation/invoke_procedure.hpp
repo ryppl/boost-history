@@ -10,6 +10,7 @@
 #ifndef BOOST_FUSION_FUNCTIONAL_INVOCATION_INVOKE_PROCEDURE_HPP
 #define BOOST_FUSION_FUNCTIONAL_INVOCATION_INVOKE_PROCEDURE_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/functional/invocation/limits.hpp>
 
 #define BOOST_FUSION_INVOKE_IMPL_MAX_ARITY BOOST_FUSION_INVOKE_PROCEDURE_MAX_ARITY

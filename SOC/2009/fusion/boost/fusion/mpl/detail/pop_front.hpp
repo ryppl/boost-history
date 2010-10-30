@@ -1,26 +1,27 @@
 /*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_MPL_HAS_KEY_HPP
-#define BOOST_FUSION_MPL_HAS_KEY_HPP
+#ifndef BOOST_FUSION_MPL_DETAIL_POP_FRONT_HPP
+#define BOOST_FUSION_MPL_DETAIL_POP_FRONT_HPP
 
-#include <boost/fusion/sequence/intrinsic/has_key.hpp>
+#include <boost/fusion/algorithm/transformation/pop_front.hpp>
 
 namespace boost { namespace mpl
 {
     template<typename>
-    struct has_key_impl;
+    struct pop_front_impl;
 
     template<>
-    struct has_key_impl<fusion::fusion_sequence_tag>
+    struct pop_front_impl<fusion::fusion_sequence_tag>
     {
-        template<typename Seq, typename Key>
+        template<typename Seq>
         struct apply
-          : fusion::result_of::has_key<Seq, Key>
+          : fusion::result_of::pop_front<Seq>
         {};
     };
 }}

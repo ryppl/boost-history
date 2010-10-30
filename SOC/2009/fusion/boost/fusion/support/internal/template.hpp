@@ -1,5 +1,5 @@
 /*==============================================================================
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -8,10 +8,7 @@
 #ifndef BOOST_FUSION_SUPPORT_INTERNAL_TEMPLATE_HPP
 #define BOOST_FUSION_SUPPORT_INTERNAL_TEMPLATE_HPP
 
-#include <boost/config.hpp>
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
-#   include <boost/fusion/support/internal/ref.hpp>
-
 #   include <boost/preprocessor/expand.hpp>
 #   include <boost/preprocessor/empty.hpp>
 #   include <boost/preprocessor/cat.hpp>

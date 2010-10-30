@@ -10,6 +10,7 @@
 #ifndef BOOST_FUSION_CONTAINER_GENERATION_MAKE_CONS_HPP
 #define BOOST_FUSION_CONTAINER_GENERATION_MAKE_CONS_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/container/list/cons.hpp>
 #include <boost/fusion/support/deduce.hpp>
 

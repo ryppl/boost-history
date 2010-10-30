@@ -8,9 +8,10 @@
 #ifndef BOOST_FUSION_CONTAINER_LIST_HPP
 #define BOOST_FUSION_CONTAINER_LIST_HPP
 
-#include <boost/fusion/container/list/limits.hpp>
 #include <boost/fusion/container/list/cons.hpp>
-#include <boost/fusion/container/list/list.hpp>
 #include <boost/fusion/container/list/convert.hpp>
+#include <boost/fusion/container/list/limits.hpp>
+#include <boost/fusion/container/list/list_fwd.hpp>
+#include <boost/fusion/container/list/list.hpp>
 
 #endif

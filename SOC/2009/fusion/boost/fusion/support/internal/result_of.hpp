@@ -8,8 +8,6 @@
 #ifndef BOOST_FUSION_SUPPORT_INTERNAL_RESULT_OF_HPP
 #define BOOST_FUSION_SUPPORT_INTERNAL_RESULT_OF_HPP
 
-#include <boost/config.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>

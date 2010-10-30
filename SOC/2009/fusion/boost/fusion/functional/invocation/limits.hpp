@@ -10,9 +10,10 @@
 #ifndef BOOST_FUSION_FUNCTIONAL_INVOCATION_LIMITS_HPP
 #define BOOST_FUSION_FUNCTIONAL_INVOCATION_LIMITS_HPP
 
-#include <boost/config.hpp>
-
-#if defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES) || !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
+#include <boost/fusion/support/internal/base.hpp>
+#if defined(BOOST_NO_VARIADIC_TEMPLATES) ||                                     \
+    defined(BOOST_FUSION_NO_RVALUE_REFERENCES) ||                               \
+    !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
 #   ifndef BOOST_FUSION_INVOKE_MAX_ARITY
 #       define BOOST_FUSION_INVOKE_MAX_ARITY 6
 #   endif

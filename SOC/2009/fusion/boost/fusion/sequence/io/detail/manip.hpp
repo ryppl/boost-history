@@ -10,7 +10,6 @@
 #ifndef BOOST_FUSION_SEQUENCE_IO_DETAIL_MANIP_HPP
 #define BOOST_FUSION_SEQUENCE_IO_DETAIL_MANIP_HPP
 
-#include <boost/config.hpp>
 #include <string>
 #include <vector>
 #include <cctype>

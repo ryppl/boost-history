@@ -8,8 +8,6 @@
 #ifndef BOOST_FUSION_SUPPORT_INTERNAL_IS_EXPLICITLY_CONVERTIBLE_HPP
 #define BOOST_FUSION_SUPPORT_INTERNAL_IS_EXPLICITLY_CONVERTIBLE_HPP
 
-#include <boost/config.hpp>
-#include <boost/detail/workaround.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #if !BOOST_WORKAROUND(__GNUC__,<4) && !defined(BOOST_MSVC)
 #   include <boost/mpl/or.hpp>

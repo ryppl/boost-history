@@ -8,7 +8,7 @@
 #ifndef BOOST_FUSION_CONTAINER_GENERATION_MAKE_SET_HPP
 #define BOOST_FUSION_CONTAINER_GENERATION_MAKE_SET_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/container/set/set.hpp>
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES

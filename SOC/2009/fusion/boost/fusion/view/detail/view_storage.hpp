@@ -8,9 +8,7 @@
 #ifndef BOOST_FUSION_VIEW_DETAIL_VIEW_STORAGE_HPP
 #define BOOST_FUSION_VIEW_DETAIL_VIEW_STORAGE_HPP
 
-#include <boost/config.hpp>
 #include <boost/fusion/support/is_view.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
@@ -33,7 +31,7 @@ namespace boost { namespace fusion { namespace detail
         typedef typename
             remove_const<typename remove_reference<View>::type>::type
         type;
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         typedef type const& call_param;
 #endif
 
@@ -48,7 +46,7 @@ namespace boost { namespace fusion { namespace detail
 
 #undef BOOST_FUSION_VIEW_STORAGE_CTOR
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         view_storage(call_param view)
           : view(view)
         {}
@@ -91,7 +89,7 @@ namespace boost { namespace fusion { namespace detail
     struct view_storage<Seq, /*IsView*/false>
     {
         typedef typename add_lref<Seq>::type type;
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         typedef type call_param;
 #endif
 
@@ -106,7 +104,7 @@ namespace boost { namespace fusion { namespace detail
 
 #undef BOOST_FUSION_VIEW_STORAGE_CTOR
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         view_storage(call_param seq)
           : seq(&seq)
         {}

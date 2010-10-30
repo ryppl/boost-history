@@ -10,9 +10,8 @@
 #ifndef BOOST_FUSION_ALGORITHM_ITERATION_FOR_EACH_HPP
 #define BOOST_FUSION_ALGORITHM_ITERATION_FOR_EACH_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/algorithm/iteration/detail/for_each.hpp>
 
 namespace boost { namespace fusion
@@ -22,8 +21,8 @@ namespace boost { namespace fusion
         template<typename Seq, typename>
         struct for_each
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
 
             typedef void type;
         };
@@ -45,7 +44,7 @@ namespace boost { namespace fusion
             BOOST_FUSION_FORWARD(F,f));
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename Seq, typename F>
     inline typename result_of::for_each<Seq&,F>::type
     for_each(Seq& seq,F f)

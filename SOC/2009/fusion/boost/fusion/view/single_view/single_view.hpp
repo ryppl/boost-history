@@ -1,6 +1,6 @@
 /*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,23 +9,21 @@
 #ifndef BOOST_FUSION_VIEW_SINGLE_VIEW_SINGLE_VIEW_HPP
 #define BOOST_FUSION_VIEW_SINGLE_VIEW_SINGLE_VIEW_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #   include <boost/fusion/sequence/intrinsic/size.hpp>
 #endif
 #include <boost/fusion/sequence/intrinsic/front.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/internal/workaround.hpp>
 #include <boost/fusion/support/internal/sequence_assign.hpp>
 #include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
 
-#include <boost/detail/workaround.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/utility/enable_if.hpp>
-#if defined(BOOST_NO_VARIADIC_TEMPLATES) && defined(BOOST_NO_RVALUE_REFERENCES)
+#if defined(BOOST_NO_VARIADIC_TEMPLATES) && defined(BOOST_FUSION_NO_RVALUE_REFERENCES)
 #   include <boost/call_traits.hpp>
 #endif
 
@@ -78,7 +76,7 @@ namespace boost { namespace fusion
           : val()
         {}
 
-#if defined(BOOST_NO_VARIADIC_TEMPLATES) && defined(BOOST_NO_RVALUE_REFERENCES)
+#if defined(BOOST_NO_VARIADIC_TEMPLATES) && defined(BOOST_FUSION_NO_RVALUE_REFERENCES)
         explicit
         single_view(typename call_traits<T>::param_type val)
           : val(val)
@@ -120,7 +118,7 @@ namespace boost { namespace fusion
             >::type* =0)
           : val(fusion::front(BOOST_FUSION_FORWARD(Seq,seq)))
         {
-            BOOST_FUSION_STATIC_ASSERT((result_of::size<Seq>::value==1));
+            BOOST_FUSION_STATIC_ASSERT((result_of::size<Seq>::value==1))
         }
 
 #define BOOST_FUSION_SINGLE_VIEW_ASSIGN_CTOR(MODIFIER,_)\
@@ -129,7 +127,7 @@ namespace boost { namespace fusion
             detail::sequence_assign_type<SeqRef> MODIFIER seq_assign)\
           : val(fusion::front(seq_assign.get()))\
         {\
-            BOOST_FUSION_STATIC_ASSERT((result_of::size<SeqRef>::value==1));\
+            BOOST_FUSION_STATIC_ASSERT((result_of::size<SeqRef>::value==1))\
         }
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(
@@ -157,13 +155,14 @@ namespace boost { namespace fusion
         single_view&\
         operator=(detail::sequence_assign_type<SeqRef> MODIFIER seq_assign)\
         {\
-            BOOST_FUSION_STATIC_ASSERT((result_of::size<SeqRef>::value==1));\
+            BOOST_FUSION_STATIC_ASSERT((result_of::size<SeqRef>::value==1))\
             \
             val=fusion::front(seq_assign.get());\
             return *this;\
         }
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_SINGLE_VIEW_SEQ_ASSIGN,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(
+            BOOST_FUSION_SINGLE_VIEW_SEQ_ASSIGN,_)
 
 #undef BOOST_FUSION_SINGLE_VIEW_SEQ_ASSIGN
 
@@ -184,12 +183,12 @@ namespace boost { namespace fusion
         result_of::make_single_view<BOOST_FUSION_R_ELSE_CLREF(T)>::type
     make_single_view(BOOST_FUSION_R_ELSE_CLREF(T) val)
     {
-        return typename
-            result_of::make_single_view<BOOST_FUSION_R_ELSE_CLREF(T)>::type(
-                BOOST_FUSION_FORWARD(T,val));
+        return typename result_of::make_single_view<
+            BOOST_FUSION_R_ELSE_CLREF(T)
+        >::type(BOOST_FUSION_FORWARD(T,val));
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename T, typename Seq>
     //cschmidt: see https://svn.boost.org/trac/boost/ticket/3305
 #   if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) || BOOST_WORKAROUND(__GNUC__,<4)

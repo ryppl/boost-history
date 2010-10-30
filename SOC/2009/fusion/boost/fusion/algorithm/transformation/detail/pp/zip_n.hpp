@@ -16,7 +16,7 @@
         {
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERS
 #define BOOST_FUSION_IS_FORWARD_ASSERT(Z,N,_)\
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<BOOST_PP_CAT(T,N)>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<BOOST_PP_CAT(T,N)>))
 
             BOOST_PP_REPEAT(BOOST_FUSION_N,BOOST_FUSION_IS_FORWARD_ASSERT,_)
 

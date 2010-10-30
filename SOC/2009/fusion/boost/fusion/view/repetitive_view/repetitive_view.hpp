@@ -1,6 +1,6 @@
 /*==============================================================================
     Copyright (c) 2007 Tobias Schwinger
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -11,15 +11,12 @@
 
 //TODO doc/testcase/zip_view testcase
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/deduce.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/internal/workaround.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
-
-#include <boost/detail/workaround.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/integer_traits.hpp>
@@ -50,13 +47,13 @@ namespace boost { namespace fusion
     struct repetitive_view
       : sequence_base<repetitive_view<Seq> >
     {
-        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
         BOOST_FUSION_MPL_ASSERT((
             mpl::or_<
                 mpl::not_<result_of::empty<Seq> >
               , mpl::not_<Size>
-            >));
+            >))
 
         typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq) storage_type;
         typedef typename storage_type::type seq_type;
@@ -78,7 +75,7 @@ namespace boost { namespace fusion
 
 #undef BOOST_FUSION_REPETITIVE_VIEW_CTOR
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         explicit
         repetitive_view(typename storage_type::call_param seq)
           : seq(seq)
@@ -100,7 +97,7 @@ namespace boost { namespace fusion
                 mpl::equal_to<
                     size
                   , typename detail::remove_reference<OtherView>::type::size
-                >));
+                >))
 
             seq=BOOST_FUSION_FORWARD(OtherView,other_view).seq;
             return *this;
@@ -117,13 +114,13 @@ namespace boost { namespace fusion
         >
         struct repeat
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
             BOOST_FUSION_MPL_ASSERT((
                 mpl::or_<
                     mpl::not_<result_of::empty<Seq> >
                   , mpl::not_<Size>
-                >));
+                >))
 
             typedef
                 repetitive_view<typename traits::deduce<Seq>::type, Size>
@@ -142,7 +139,7 @@ namespace boost { namespace fusion
         >::type(BOOST_FUSION_FORWARD(Seq,seq));
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename Size, typename Seq>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
             result_of::repeat<,Seq,&, Size>)

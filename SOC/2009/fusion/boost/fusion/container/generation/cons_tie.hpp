@@ -9,6 +9,7 @@
 #ifndef BOOST_FUSION_CONTAINER_GENERATION_CONS_TIE_HPP
 #define BOOST_FUSION_CONTAINER_GENERATION_CONS_TIE_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/container/list/cons.hpp>
 #include <boost/fusion/support/deduce.hpp>
 

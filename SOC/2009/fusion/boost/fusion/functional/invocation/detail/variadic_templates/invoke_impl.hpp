@@ -5,7 +5,6 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#include <boost/config.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
@@ -17,7 +16,6 @@
 #   include <boost/fusion/functional/invocation/detail/member_object_pointer_helper.hpp>
 #   include <boost/fusion/functional/invocation/detail/that_ptr.hpp>
 #endif
-#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/internal/result_of.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -205,7 +203,7 @@ namespace boost { namespace fusion { namespace detail
         template<typename F, typename Result>
         struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_INVOKE_NAME)
         {
-#if defined(BOOST_NO_AUTO_DECLARATIONS) || defined(BOOST_NO_RVALUE_REFERENCES)
+#if defined(BOOST_NO_AUTO_DECLARATIONS) || defined(BOOST_FUSION_NO_RVALUE_REFERENCES)
 #   define BOOST_FUSION_UNROLLED_INVOKE_IMPL_IT_DEF(Z, N, MAX_N)                \
     typedef typename                                                            \
         result_of::prior<BOOST_PP_CAT(It,BOOST_PP_SUB(MAX_N, N)) const&>::type  \

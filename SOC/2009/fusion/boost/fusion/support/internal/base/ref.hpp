@@ -5,20 +5,12 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_SUPPORT_INTERNAL_REF_HPP
-#define BOOST_FUSION_SUPPORT_INTERNAL_REF_HPP
+#ifndef BOOST_FUSION_SUPPORT_INTERNAL_BASE_REF_HPP
+#define BOOST_FUSION_SUPPORT_INTERNAL_BASE_REF_HPP
 
-#include <boost/detail/workaround.hpp>
-#if !defined(BOOST_NO_RVALUE_REFERENCES) &&                                     \
-    BOOST_WORKAROUND(__GNUC__,==4)&&                                            \
-    BOOST_WORKAROUND(__GNUC_MINOR__,<5)
-#   error The c++0x extension of your compiler is not supported!
-#endif
-
-#include <boost/config.hpp>
 #include <boost/preprocessor/empty.hpp>
 #include <boost/mpl/if.hpp>
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   include <boost/mpl/eval_if.hpp>
 #   include <boost/mpl/or.hpp>
 #   include <boost/mpl/identity.hpp>
@@ -40,14 +32,14 @@
 #   include <boost/type_traits/remove_const.hpp>
 #endif
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   include <utility>
 #endif
 
 //cschmidt: We ignore volatile in the BOOST_FUSION_ALL_CV_*-Macros, as we would
 //get a lot of problems with older compilers. On top of that, fusion
 //types are not meant to be volatile anyway.
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   define BOOST_FUSION_RREF_ELSE_OBJ(OBJECT) OBJECT
 #   define BOOST_FUSION_R_ELSE_LREF(OBJECT) OBJECT&
 #   define BOOST_FUSION_R_ELSE_CLREF(OBJECT) OBJECT const&
@@ -103,7 +95,7 @@ namespace boost { namespace fusion { namespace detail
       : mpl::false_
     {};
 
-#   ifndef BOOST_NO_RVALUE_REFERENCES
+#   ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename T>
     struct is_lrref<T&&>
       : mpl::true_
@@ -116,7 +108,7 @@ namespace boost { namespace fusion { namespace detail
       : mpl::true_
     {};
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename T>
     struct is_rref
       : mpl::false_
@@ -152,7 +144,7 @@ namespace boost { namespace fusion { namespace detail
         typedef T type;
     };
 
-#   ifndef BOOST_NO_RVALUE_REFERENCES
+#   ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename T>
     struct remove_reference<T&&>
     {
@@ -191,7 +183,7 @@ namespace boost { namespace fusion { namespace detail
         typedef T& type;
     };
 
-#   ifndef BOOST_NO_RVALUE_REFERENCES
+#   ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename T>
     struct add_lref<T&&>
     {
@@ -239,7 +231,7 @@ namespace boost { namespace fusion { namespace detail
               , const_type
             >::type
 #endif
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         &type;
 #else
         cv_type;
@@ -267,7 +259,7 @@ namespace boost { namespace fusion { namespace detail
     };
 #endif
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
     //8.5.3p5...
     template<typename TestType,typename Type>
     struct forward_as<TestType,Type&&>
@@ -292,7 +284,7 @@ namespace boost { namespace fusion { namespace detail
       : forward_as<TestType, Type>
     {};
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename TestType,typename Type>
     struct forward_as_lref<TestType,Type&&>
       : forward_as<TestType, Type&>

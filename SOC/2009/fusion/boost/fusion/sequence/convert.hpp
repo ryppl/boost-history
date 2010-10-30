@@ -8,10 +8,8 @@
 #ifndef BOOST_FUSION_SEQUENCE_CONVERT_HPP
 #define BOOST_FUSION_SEQUENCE_CONVERT_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/container/vector/convert.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 
 //TODO doc!!!
 namespace boost { namespace fusion
@@ -41,8 +39,8 @@ namespace boost { namespace fusion
         struct convert
           : extension::convert_impl<Tag>::template apply<Seq>
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
         };
     }
 

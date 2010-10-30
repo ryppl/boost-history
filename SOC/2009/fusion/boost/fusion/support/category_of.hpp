@@ -9,10 +9,8 @@
 #ifndef BOOST_FUSION_SUPPORT_CATEGORY_OF_HPP
 #define BOOST_FUSION_SUPPORT_CATEGORY_OF_HPP
 
-#include <boost/config.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/mpl/iterator_tags.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
@@ -90,7 +88,7 @@ namespace boost { namespace fusion
             struct apply
             {
                 BOOST_FUSION_MPL_ASSERT((
-                    mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+                    mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >))
 
                 typedef typename
                     detail::remove_reference<T>::type::category
@@ -108,7 +106,7 @@ namespace boost { namespace fusion
             >::template apply<T>
         {
             BOOST_FUSION_MPL_ASSERT((
-                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >))
         };
 
         template<typename T>
@@ -119,7 +117,7 @@ namespace boost { namespace fusion
             >
         {
             BOOST_FUSION_MPL_ASSERT((
-                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >))
         };
 
         template<typename T>
@@ -130,7 +128,7 @@ namespace boost { namespace fusion
             >
         {
             BOOST_FUSION_MPL_ASSERT((
-                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >))
         };
 
         template<typename T>
@@ -141,7 +139,7 @@ namespace boost { namespace fusion
             >
         {
             BOOST_FUSION_MPL_ASSERT((
-                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >))
         };
 
         template<typename T>
@@ -152,7 +150,7 @@ namespace boost { namespace fusion
             >
         {
             BOOST_FUSION_MPL_ASSERT((
-                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >))
         };
 
         template<typename T>
@@ -163,7 +161,7 @@ namespace boost { namespace fusion
             >
         {
             BOOST_FUSION_MPL_ASSERT((
-                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >))
         };
 
         template<typename T>
@@ -174,7 +172,7 @@ namespace boost { namespace fusion
             >
         {
             BOOST_FUSION_MPL_ASSERT((
-                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >))
         };
     }
 }}

@@ -9,16 +9,16 @@
 #ifndef BOOST_FUSION_FUNCTIONAL_ADAPTER_UNFUSED_TYPED_HPP
 #define BOOST_FUSION_FUNCTIONAL_ADAPTER_UNFUSED_TYPED_HPP
 
-#include <boost/config.hpp>
-#if defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES)
+#include <boost/fusion/support/internal/base.hpp>
+#if defined(BOOST_NO_VARIADIC_TEMPLATES) ||                                     \
+    defined(BOOST_FUSION_NO_RVALUE_REFERENCES)
 #   include <boost/fusion/sequence/intrinsic/size.hpp>
-#   ifdef BOOST_NO_RVALUE_REFERENCES
+#   ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
 #       include <boost/fusion/sequence/intrinsic/value_at.hpp>
 #   endif
 #endif
 #include <boost/fusion/container/vector/convert.hpp>
 #include <boost/fusion/functional/adapter/limits.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/result_of.hpp>
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
 #   include <boost/fusion/support/internal/template.hpp>
@@ -34,7 +34,9 @@
 
 namespace boost { namespace fusion
 {
-#if defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES)
+#if defined(BOOST_NO_VARIADIC_TEMPLATES) ||                                     \
+    defined(BOOST_FUSION_NO_RVALUE_REFERENCES)
+
     template<typename F, typename TransformSeq>
     struct unfused_typed;
 
@@ -59,7 +61,9 @@ namespace boost { namespace fusion
 
     template<typename F, typename TransformSeq>
     struct unfused_typed
-#if defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES)
+#if defined(BOOST_NO_VARIADIC_TEMPLATES) ||                                     \
+    defined(BOOST_FUSION_NO_RVALUE_REFERENCES)
+
       : detail::unfused_typed_impl<
             result_of::size<TransformSeq>::value
           , F
@@ -67,7 +71,9 @@ namespace boost { namespace fusion
         >
 #endif
     {
-#if !defined(BOOST_NO_VARIADIC_TEMPLATES) && !defined(BOOST_NO_RVALUE_REFERENCES)
+#if !defined(BOOST_NO_VARIADIC_TEMPLATES) &&                                    \
+    !defined(BOOST_FUSION_NO_RVALUE_REFERENCES)
+
         typedef typename
             result_of::as_vector<BOOST_FUSION_R_ELSE_CLREF(TransformSeq)>::type
         transformed_args;
@@ -99,7 +105,7 @@ namespace boost { namespace fusion
           : f(BOOST_FUSION_FORWARD(Args,args)...)
         {}
 
-#   ifdef BOOST_NO_RVALUE_REFERENCES
+#   ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         template<typename... Args>
         unfused_typed(Args&... args)
           : f(args...)
@@ -107,9 +113,9 @@ namespace boost { namespace fusion
 #   endif
 #endif
 
-#define BOOST_FUSION_UNFUSED_TYPED_CTOR(MODIFIER,_)\
-        unfused_typed(unfused_typed MODIFIER adapter)\
-          : f(static_cast<unfused_typed MODIFIER>(adapter).f)\
+#define BOOST_FUSION_UNFUSED_TYPED_CTOR(MODIFIER,_)                             \
+        unfused_typed(unfused_typed MODIFIER adapter)                           \
+          : f(static_cast<unfused_typed MODIFIER>(adapter).f)                   \
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_UNFUSED_TYPED_CTOR,_)
@@ -124,28 +130,30 @@ namespace boost { namespace fusion
             return *this;
         }
 
-#define BOOST_FUSION_ASSIGN_SPECIALIZATION(MODIFIER,_)\
-        unfused_typed&\
-        operator=(unfused_typed MODIFIER other_adapter)\
-        {\
-            f=static_cast<unfused_typed MODIFIER>(other_adapter).f;\
-            return *this;\
+#define BOOST_FUSION_ASSIGN_SPECIALIZATION(MODIFIER,_)                          \
+        unfused_typed&                                                          \
+        operator=(unfused_typed MODIFIER other_adapter)                         \
+        {                                                                       \
+            f=static_cast<unfused_typed MODIFIER>(other_adapter).f;             \
+            return *this;                                                       \
         }
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_ASSIGN_SPECIALIZATION,_)
 
 #undef BOOST_FUSION_ASSIGN_SPECIALIZATION
 
-#if !defined(BOOST_NO_VARIADIC_TEMPLATES) && !defined(BOOST_NO_RVALUE_REFERENCES)
-#   define BOOST_FUSION_CALL_OPERATOR(F,MODIFIER)\
-        template<typename... Args>\
-        typename boost::result_of<\
-            typename detail::get_func_base<F>::type(transformed_args&&)\
-        >::type\
-        operator()(Args&&... args) MODIFIER\
-        {\
-            return f(fusion::as_vector(\
-                TransformSeq(std::forward<Args>(args)...)));\
+#if !defined(BOOST_NO_VARIADIC_TEMPLATES) &&                                    \
+    !defined(BOOST_FUSION_NO_RVALUE_REFERENCES)
+
+#   define BOOST_FUSION_CALL_OPERATOR(F,MODIFIER)                               \
+        template<typename... Args>                                              \
+        typename boost::result_of<                                              \
+            typename detail::get_func_base<F>::type(transformed_args&&)         \
+        >::type                                                                 \
+        operator()(Args&&... args) MODIFIER                                     \
+        {                                                                       \
+            return f(fusion::as_vector(                                         \
+                TransformSeq(std::forward<Args>(args)...)));                    \
         }
 
         BOOST_FUSION_CALL_OPERATOR(F,BOOST_PP_EMPTY())

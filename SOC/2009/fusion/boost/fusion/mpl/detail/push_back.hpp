@@ -6,22 +6,22 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_MPL_POP_BACK_HPP
-#define BOOST_FUSION_MPL_POP_BACK_HPP
+#ifndef BOOST_FUSION_MPL_DETAIL_PUSH_BACK_HPP
+#define BOOST_FUSION_MPL_DETAIL_PUSH_BACK_HPP
 
-#include <boost/fusion/algorithm/transformation/pop_back.hpp>
+#include <boost/fusion/algorithm/transformation/push_back.hpp>
 
 namespace boost { namespace mpl
 {
     template<typename>
-    struct pop_back_impl;
+    struct push_back_impl;
 
     template<>
-    struct pop_back_impl<fusion::fusion_sequence_tag>
+    struct push_back_impl<fusion::fusion_sequence_tag>
     {
-        template<typename Seq>
+        template<typename Seq, typename T>
         struct apply
-          : fusion::result_of::pop_back<Seq>
+          : fusion::result_of::push_back<Seq, T>
         {};
     };
 }}

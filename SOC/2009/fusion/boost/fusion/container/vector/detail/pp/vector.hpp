@@ -9,7 +9,6 @@
 #ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_VECTOR_HPP
 #define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_VECTOR_HPP
 
-#include <boost/config.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/container/vector/detail/pp/vector_n_chooser.hpp>
 #include <boost/mpl/at.hpp>

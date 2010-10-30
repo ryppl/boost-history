@@ -9,15 +9,13 @@
 #ifndef BOOST_FUSION_SUPPORT_DEDUCE_HPP
 #define BOOST_FUSION_SUPPORT_DEDUCE_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/internal/result_of.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/detail/workaround.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   include <boost/mpl/not.hpp>
 #endif
 #include <boost/type_traits/is_same.hpp>
@@ -91,7 +89,7 @@ namespace boost { namespace fusion
         BOOST_FUSION_DEDUCE_CV_REF_SPECIALIZATION(&&,deduce_stage2)
         BOOST_FUSION_DEDUCE_CV_REF_SPECIALIZATION(const&&,deduce_stage2)
 #else
-#   ifndef BOOST_NO_RVALUE_REFERENCES
+#   ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
         BOOST_FUSION_DEDUCE_CV_REF_SPECIALIZATION(volatile&&,deduce)
         BOOST_FUSION_DEDUCE_CV_REF_SPECIALIZATION(const volatile&&,deduce)
 #   endif
@@ -120,7 +118,7 @@ namespace boost { namespace fusion
         BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(
             const volatile(&),const volatile,&)
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
         BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION((&&),BOOST_PP_EMPTY(),&&)
         BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(const(&&),const,&&)
         BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(volatile(&&),volatile,&&)
@@ -142,7 +140,7 @@ namespace boost { namespace fusion
                 >
             is_regular_reference;
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
             typedef typename
                 mpl::if_c<
                     is_regular_reference::value

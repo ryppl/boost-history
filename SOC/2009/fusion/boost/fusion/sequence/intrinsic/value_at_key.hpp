@@ -9,15 +9,13 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_VALUE_AT_KEY_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_VALUE_AT_KEY_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #   include <boost/fusion/sequence/intrinsic/has_key.hpp>
 #endif
 #include <boost/fusion/iterator/value_of_data.hpp>
 #include <boost/fusion/algorithm/query/find_key.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
-
 #include <boost/mpl/int.hpp>
 
 namespace boost { namespace fusion
@@ -43,9 +41,9 @@ namespace boost { namespace fusion
           : extension::value_at_key_impl<typename traits::tag_of<Seq>::type>::
                 template apply<Seq, Key>
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_associative<Seq>));
-            BOOST_FUSION_MPL_ASSERT((has_key<Seq,Key>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_associative<Seq>))
+            BOOST_FUSION_MPL_ASSERT((has_key<Seq,Key>))
         };
     }
 }}

@@ -10,15 +10,15 @@
 #ifndef BOOST_FUSION_SUPPORT_PAIR_HPP
 #define BOOST_FUSION_SUPPORT_PAIR_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/deduce.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/constexpr.hpp>
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
 #endif
 
 #include <boost/preprocessor/empty.hpp>
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   include <boost/call_traits.hpp>
 #else
 #   include <boost/utility/enable_if.hpp>
@@ -50,7 +50,7 @@ namespace boost { namespace fusion
         {}
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
-#   ifdef BOOST_NO_RVALUE_REFERENCES
+#   ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         pair(typename call_traits<second_type>::param_type second)
           : second(second)
         {}
@@ -113,9 +113,20 @@ namespace boost { namespace fusion
         struct make_pair
         {
             typedef
-                fusion::pair<
+                pair<
                     First
                   , typename traits::deduce<Second>::type
+                >
+            type;
+        };
+
+        template<typename Key, typename T>
+        struct pair_tie
+        {
+            typedef
+                pair<
+                    Key
+                  , typename detail::deduce_ref<T>::type
                 >
             type;
         };
@@ -138,18 +149,26 @@ namespace boost { namespace fusion
         result_of::make_pair<First,BOOST_FUSION_R_ELSE_CLREF(Second)>::type
     make_pair(BOOST_FUSION_R_ELSE_CLREF(Second) second)
     {
-        return typename
-            result_of::make_pair<
-                First
-              , BOOST_FUSION_R_ELSE_CLREF(Second)
-            >::type(BOOST_FUSION_FORWARD(Second,second));
+        return typename result_of::make_pair<
+            First
+          , BOOST_FUSION_R_ELSE_CLREF(Second)
+        >::type(BOOST_FUSION_FORWARD(Second,second));
+    }
+
+    template<typename Key, typename T>
+    typename result_of::pair_tie<Key, BOOST_FUSION_R_ELSE_CLREF(T)>::type
+    pair_tie(BOOST_FUSION_R_ELSE_LREF(T) t)
+    {
+        return typename result_of::pair_tie<
+            Key
+          , BOOST_FUSION_R_ELSE_CLREF(T)
+        >::type(BOOST_FUSION_FORWARD(T,t));
     }
 
     template<typename OStream, typename First, typename Second>
     inline BOOST_FUSION_R_ELSE_LREF(OStream)
-    operator<<(
-            BOOST_FUSION_R_ELSE_LREF(OStream) os,
-            pair<First, Second> const& p)
+    operator<<(BOOST_FUSION_R_ELSE_LREF(OStream) os,
+        pair<First, Second> const& p)
     {
         os << p.second;
         return os;
@@ -157,9 +176,8 @@ namespace boost { namespace fusion
 
     template<typename IStream, typename First, typename Second>
     inline BOOST_FUSION_R_ELSE_LREF(IStream)
-    operator>>(
-            BOOST_FUSION_R_ELSE_LREF(IStream) is
-          , pair<First, Second> BOOST_FUSION_R_ELSE_LREF(BOOST_PP_EMPTY()) p)
+    operator>>(BOOST_FUSION_R_ELSE_LREF(IStream) is,
+        pair<First, Second> BOOST_FUSION_R_ELSE_LREF(BOOST_PP_EMPTY()) p)
     {
         is >> static_cast<
             pair<First, Second>BOOST_FUSION_R_ELSE_LREF(BOOST_PP_EMPTY())

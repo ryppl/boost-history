@@ -10,7 +10,6 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_STRUCT_ADAPT_BASE_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_ADAPT_BASE_HPP
 
-#include <boost/config.hpp>
 #include <boost/fusion/support/tag_of_fwd.hpp>
 #include <boost/preprocessor/stringize.hpp>
 #include <boost/preprocessor/control/if.hpp>

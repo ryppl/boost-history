@@ -7,7 +7,6 @@
 ==============================================================================*/
 
 #ifndef BOOST_PP_IS_ITERATING
-#   include <boost/config.hpp>
 #   include <boost/fusion/container/vector/vector_fwd.hpp>
 #   ifdef BOOST_FUSION_TAGGED_VECTOR
 #       include <boost/fusion/container/vector/detail/variadic_templates/tagged_impl.hpp>
@@ -18,7 +17,6 @@
 #   include <boost/fusion/iterator/next.hpp>
 #   include <boost/fusion/iterator/advance_c.hpp>
 #   include <boost/fusion/support/sequence_base.hpp>
-#   include <boost/fusion/support/internal/ref.hpp>
 #   include <boost/fusion/support/internal/sequence_assign.hpp>
 #   include <boost/fusion/support/internal/template.hpp>
 #   include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
@@ -118,7 +116,7 @@ namespace boost { namespace fusion
 #   undef BOOST_FUSION_DEFAULT_MEMBER_INIT
 
 #   if BOOST_FUSION_N
-#       ifdef BOOST_NO_RVALUE_REFERENCES
+#       ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
 #           define BOOST_FUSION_MEMBER_INIT(Z, N, MODIFIER)\
                 BOOST_PP_CAT(m,N)(vec.BOOST_PP_CAT(m,N))
 #       else
@@ -154,12 +152,12 @@ namespace boost { namespace fusion
         BOOST_PP_CAT(m,N)(\
             BOOST_FUSION_FORWARD(BOOST_PP_CAT(A,N), BOOST_PP_CAT(_,N)))
 
-#       ifndef BOOST_NO_RVALUE_REFERENCES
+#       ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
         VARIADIC_TEMPLATE_A(BOOST_FUSION_N)
 #       endif
         explicit
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(
-#       ifdef BOOST_NO_RVALUE_REFERENCES
+#       ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
             EXPAND_TEMPLATE_ARGUMENTS_CALL_PARAMS(BOOST_FUSION_N)
 #       else
             EXPAND_TEMPLATE_ARGUMENTS_PARAMETERS_A_R_ELSE_CLREF(BOOST_FUSION_N)
@@ -204,7 +202,7 @@ namespace boost { namespace fusion
                 mpl::equal_to<
                     size
                   , result_of::size<BOOST_FUSION_R_ELSE_CLREF(Seq)>
-                >));
+                >))
         }
 
 #       define BOOST_FUSION_VECTOR_SEQ_ASSIGN_CTOR(MODIFIER,_)\
@@ -230,7 +228,7 @@ namespace boost { namespace fusion
         BOOST_PP_CAT(vector,BOOST_FUSION_N)(\
             detail::sequence_assign_type<SeqRef> MODIFIER)\
         {\
-            BOOST_FUSION_MPL_ASSERT((result_of::empty<SeqRef>));\
+            BOOST_FUSION_MPL_ASSERT((result_of::empty<SeqRef>))\
         }
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_VECTOR_ASSIGN_CTOR,_)
@@ -238,7 +236,7 @@ namespace boost { namespace fusion
         template<typename Seq>
         BOOST_PP_CAT(vector,BOOST_FUSION_N)(Seq const&)
         {
-            BOOST_FUSION_MPL_ASSERT((result_of::empty<Seq const&>));
+            BOOST_FUSION_MPL_ASSERT((result_of::empty<Seq const&>))
         }
 
 #       undef BOOST_FUSION_VECTOR_ASSIGN_CTOR
@@ -253,7 +251,7 @@ namespace boost { namespace fusion
                         )
         {
             BOOST_FUSION_MPL_ASSERT((
-                mpl::equal_to<size,result_of::size<Seq> >));
+                mpl::equal_to<size,result_of::size<Seq> >))
 
 #   if BOOST_FUSION_N
             typedef typename
@@ -287,7 +285,7 @@ namespace boost { namespace fusion
         BOOST_PP_CAT(vector, BOOST_FUSION_N)&
         operator=(BOOST_PP_CAT(vector, BOOST_FUSION_N)const& seq)
         {
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
             return this->operator=<BOOST_PP_CAT(vector, BOOST_FUSION_N)>(seq);
 #else
             return this->operator=<BOOST_PP_CAT(vector, BOOST_FUSION_N) const&>(

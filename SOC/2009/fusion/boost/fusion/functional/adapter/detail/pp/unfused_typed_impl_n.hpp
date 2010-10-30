@@ -32,7 +32,7 @@
             >
         {};
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   define BOOST_FUSION_CALL_PARAMETER(Z,N,__)\
     typename call_traits<\
         typename result_of::value_at_c<transformed_args,N>::type\
@@ -69,7 +69,7 @@
         BOOST_FUSION_CALL_OPERATOR(F,BOOST_PP_EMPTY());
         BOOST_FUSION_CALL_OPERATOR(typename add_const<F>::type,const);
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   undef BOOST_FUSION_CALL_PARAMETER
 #endif
 #undef BOOST_FUSION_CALL_OPERATOR

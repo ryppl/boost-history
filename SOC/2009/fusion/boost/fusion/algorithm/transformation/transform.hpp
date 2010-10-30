@@ -9,12 +9,9 @@
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_TRANSFORM_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_TRANSFORM_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/view/transform_view/transform_view.hpp>
 #include <boost/fusion/support/deduce.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
-
 #include <boost/preprocessor/empty.hpp>
 
 namespace boost { namespace fusion
@@ -31,10 +28,10 @@ namespace boost { namespace fusion
         >
         struct transform
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>))
 
             typedef
                 transform_view<
@@ -49,8 +46,8 @@ namespace boost { namespace fusion
         template<typename Seq, typename F>
         struct transform<Seq, F, mpl::false_, mpl::false_>
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
 
             typedef
                 transform_view<
@@ -64,8 +61,8 @@ namespace boost { namespace fusion
         template<typename Seq, typename F>
         struct transform<Seq, F, mpl::true_, mpl::false_>
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
 
             typedef
                 transform_view<
@@ -89,12 +86,11 @@ namespace boost { namespace fusion
     transform(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
             BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
-        return typename
-            result_of::transform<
-                BOOST_FUSION_R_ELSE_CLREF(Seq)
-              , BOOST_FUSION_RREF_ELSE_OBJ(F)
-              , IsAssociative
-            >::type(BOOST_FUSION_FORWARD(Seq,seq), BOOST_FUSION_FORWARD(F,f));
+        return typename result_of::transform<
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
+          , BOOST_FUSION_RREF_ELSE_OBJ(F)
+          , IsAssociative
+        >::type(BOOST_FUSION_FORWARD(Seq,seq), BOOST_FUSION_FORWARD(F,f));
     }
 
     template<typename Seq, typename F>
@@ -106,14 +102,13 @@ namespace boost { namespace fusion
     transform(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
             BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
-        return typename
-            result_of::transform<
-                BOOST_FUSION_R_ELSE_CLREF(Seq)
-              , BOOST_FUSION_RREF_ELSE_OBJ(F)
-            >::type(BOOST_FUSION_FORWARD(Seq,seq), BOOST_FUSION_FORWARD(F,f));
+        return typename result_of::transform<
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
+          , BOOST_FUSION_RREF_ELSE_OBJ(F)
+        >::type(BOOST_FUSION_FORWARD(Seq,seq), BOOST_FUSION_FORWARD(F,f));
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename IsAssociative,typename Seq, typename F>
     inline typename result_of::transform<Seq&, F>::type
     transform(Seq& seq, F f)
@@ -185,7 +180,7 @@ namespace boost { namespace fusion
     BOOST_FUSION_TRANSFORM_BINARY(
             BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()),
             BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()))
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     BOOST_FUSION_TRANSFORM_BINARY(&,const&)
     BOOST_FUSION_TRANSFORM_BINARY(const&,&)
     BOOST_FUSION_TRANSFORM_BINARY(&,&)

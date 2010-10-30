@@ -9,8 +9,8 @@
 #ifndef BOOST_FUSION_ITERATOR_VALUE_OF_HPP
 #define BOOST_FUSION_ITERATOR_VALUE_OF_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -27,7 +27,7 @@ namespace boost { namespace fusion
           : extension::value_of_impl<typename traits::tag_of<It>::type>::
                 template apply<It>
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>))
         };
     }
 }}

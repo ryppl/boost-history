@@ -11,8 +11,6 @@
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/mpl/bool.hpp>
 
@@ -54,7 +52,7 @@ namespace boost { namespace fusion
 
 #undef BOOST_FUSION_FILTER_KEY_VIEW_CTOR
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
             explicit
             filter_key_view(typename storage_type::call_param seq)
               : seq(seq)

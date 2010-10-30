@@ -9,12 +9,10 @@
 #ifndef BOOST_FUSION_CONTAINER_SET_SET_HPP
 #define BOOST_FUSION_CONTAINER_SET_SET_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/container/set/set_fwd.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-
 #include <boost/mpl/bool.hpp>
 
 #include <boost/fusion/container/set/detail/begin_impl.hpp>
@@ -24,7 +22,6 @@
 #include <boost/fusion/container/set/detail/value_of_data_impl.hpp>
 #include <boost/fusion/container/set/detail/deref_data_impl.hpp>
 #include <boost/fusion/container/set/detail/key_of_impl.hpp>
-
 #include <boost/fusion/container/detail/forward_interface.hpp>
 
 namespace boost { namespace fusion

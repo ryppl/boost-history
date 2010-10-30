@@ -8,15 +8,12 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_STRUCT_DEFINE_STRUCT_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_DEFINE_STRUCT_HPP
 
-#include <boost/config.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/advance_c.hpp>
 #include <boost/fusion/adapted/detail/struct/adapt_base.hpp>
 #include <boost/fusion/adapted/detail/struct/namespace.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/support/internal/sequence_assign.hpp>
 #include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
 #include <boost/fusion/support/internal/constexpr.hpp>
@@ -34,7 +31,7 @@
 #include <boost/preprocessor/seq/size.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   include <boost/preprocessor/repetition/enum_params.hpp>
 #   include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #else
@@ -252,7 +249,7 @@
                                                                                 \
         BOOST_FUSION_DEFINE_STRUCT_CTOR_1(                                      \
             NAME, ATTRIBUTES_SEQ, ATTRIBUTE_TUPEL_SIZE)
-#elif defined(BOOST_NO_RVALUE_REFERENCES)
+#elif defined(BOOST_FUSION_NO_RVALUE_REFERENCES)
 #   define BOOST_FUSION_DEFINE_STRUCT_CTOR_1(                                   \
         NAME, ATTRIBUTES_SEQ, ATTRIBUTE_TUPEL_SIZE)                             \
                                                                                 \
@@ -314,7 +311,7 @@
     BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE,1,ATTRIBUTE)(                      \
         BOOST_FUSION_FORWARD(BOOST_PP_CAT(A,I),BOOST_PP_CAT(_,I)))
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   define BOOST_FUSION_DEFINE_TPL_STRUCT_CTOR_ARG_I(R, DATA, I, ATTRIBUTE)     \
                                                                                 \
         BOOST_PP_COMMA_IF(I)                                                    \

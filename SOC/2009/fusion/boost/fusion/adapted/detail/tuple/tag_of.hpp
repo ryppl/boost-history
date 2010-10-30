@@ -6,7 +6,6 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#include <boost/config.hpp>
 #include <boost/fusion/support/tag_of_fwd.hpp>
 #if defined(BOOST_FUSION_ADAPTED_STD_TUPLE) &&\
     (defined(BOOST_NO_0X_HDR_TUPLE) || defined(BOOST_NO_VARIADIC_TEMPLATES))

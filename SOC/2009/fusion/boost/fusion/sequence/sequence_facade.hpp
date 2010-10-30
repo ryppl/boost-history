@@ -8,6 +8,7 @@
 #ifndef BOOST_FUSION_SEQUENCE_SEQUENCE_FACADE_HPP
 #define BOOST_FUSION_SEQUENCE_SEQUENCE_FACADE_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/internal/facade_generation.hpp>
 #include <boost/mpl/bool.hpp>
@@ -48,6 +49,6 @@ namespace boost { namespace fusion
     };
 }}
 
- #undef BOOST_FUSION_SEQUENCE_INTRINSIC_FUNCS
+#undef BOOST_FUSION_SEQUENCE_INTRINSIC_FUNCS
 
 #endif

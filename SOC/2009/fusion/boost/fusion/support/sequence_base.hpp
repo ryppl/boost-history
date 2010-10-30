@@ -9,6 +9,7 @@
 #ifndef BOOST_FUSION_SUPPORT_SEQUENCE_BASE_HPP
 #define BOOST_FUSION_SUPPORT_SEQUENCE_BASE_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/mpl/begin_end_fwd.hpp>
 
 namespace boost

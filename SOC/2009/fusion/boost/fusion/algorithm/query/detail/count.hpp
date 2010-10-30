@@ -46,7 +46,7 @@ namespace boost { namespace fusion { namespace detail
     template<typename T1Ref>
     struct count_helper
     {
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         typedef T1Ref x_type;
 #else
         typedef typename remove_reference<T1Ref>::type& x_type;
@@ -61,7 +61,7 @@ namespace boost { namespace fusion { namespace detail
         operator()(BOOST_FUSION_R_ELSE_CLREF(T2) y)const
         {
             typedef typename remove_reference<T1Ref>::type T1_nonref;
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
             typedef T2 T2_nonref;
 #else
             typedef typename remove_reference<T2>::type T2_nonref;

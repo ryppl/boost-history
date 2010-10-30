@@ -8,16 +8,14 @@
 #ifndef BOOST_FUSION_SEQUENCE_CONVENIENCE_MOVE_HPP
 #define BOOST_FUSION_SEQUENCE_CONVENIENCE_MOVE_HPP
 
-#include <boost/config.hpp>
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#include <boost/fusion/support/internal/base.hpp>
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   error "Your compiler must support rvalue reference in order to support moving."
 #endif
 
 #include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/sequence/intrinsic/back.hpp>
 #include <boost/fusion/algorithm/iteration/for_each.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -40,10 +38,10 @@ namespace boost { namespace fusion
         template<typename From, typename To>
         struct move
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<From>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<From>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<To>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<To>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<From>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<From>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<To>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<To>))
 
             typedef void type;
         };

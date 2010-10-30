@@ -8,9 +8,8 @@
 #ifndef BOOST_FUSION_ITERATOR_BASIC_ITERATOR_HPP
 #define BOOST_FUSION_ITERATOR_BASIC_ITERATOR_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/iterator/iterator_facade.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/minus.hpp>
@@ -41,7 +40,7 @@ namespace boost { namespace fusion
     struct basic_iterator
       : iterator_facade<basic_iterator<Tag,Category,SeqRef,I>, Category>
     {
-        BOOST_FUSION_MPL_ASSERT((detail::is_lrref<SeqRef>));
+        BOOST_FUSION_MPL_ASSERT((detail::is_lrref<SeqRef>))
 
         typedef mpl::int_<I> index;
         typedef SeqRef seq_type;
@@ -125,7 +124,7 @@ namespace boost { namespace fusion
             basic_iterator<Tag,Category,OtherSeqRef,I> const& other_it)
           : seq(other_it.seq)
         {
-            BOOST_FUSION_MPL_ASSERT((is_convertible<OtherSeqRef, SeqRef>));
+            BOOST_FUSION_MPL_ASSERT((is_convertible<OtherSeqRef, SeqRef>))
         }
 
         basic_iterator(seq_ptr_type seq)
@@ -136,7 +135,7 @@ namespace boost { namespace fusion
         basic_iterator&
         operator=(basic_iterator<Tag,Category,OtherSeqRef,I> const& other_it)
         {
-            BOOST_FUSION_MPL_ASSERT((is_convertible<OtherSeqRef, SeqRef>));
+            BOOST_FUSION_MPL_ASSERT((is_convertible<OtherSeqRef, SeqRef>))
 
             seq=other_it.seq;
             return *this;

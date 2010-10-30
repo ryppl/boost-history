@@ -10,6 +10,7 @@
 #ifndef BOOST_FUSION_ALGORITHM_ITERATION_FOLD_HPP
 #define BOOST_FUSION_ALGORITHM_ITERATION_FOLD_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/algorithm/iteration/detail/fold.hpp>
 
 #endif

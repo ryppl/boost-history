@@ -8,12 +8,11 @@
 #ifndef BOOST_FUSION_SEQUENCE_CONVENIENCE_COPY_HPP
 #define BOOST_FUSION_SEQUENCE_CONVENIENCE_COPY_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/sequence/intrinsic/back.hpp>
 #include <boost/fusion/algorithm/transformation/zip.hpp>
 #include <boost/fusion/algorithm/iteration/for_each.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 
 //TODO assoc_copy, assoc_move, assoc_swap
 
@@ -37,10 +36,10 @@ namespace boost { namespace fusion
         template<typename From, typename To>
         struct copy
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<From>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<From>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<To>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<To>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<From>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<From>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<To>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<To>))
 
             typedef void type;
         };

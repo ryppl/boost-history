@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_AT_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_LIST_DETAIL_AT_IMPL_HPP
 
-#include <boost/config.hpp>
 #include <boost/fusion/support/internal/workaround.hpp>
 #include <boost/mpl/int.hpp>
 

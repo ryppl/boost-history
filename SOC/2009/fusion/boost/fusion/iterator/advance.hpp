@@ -9,8 +9,8 @@
 #ifndef BOOST_FUSION_ITERATOR_ADVANCE_HPP
 #define BOOST_FUSION_ITERATOR_ADVANCE_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/iterator/detail/advance.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 
 namespace boost { namespace fusion
@@ -40,10 +40,10 @@ namespace boost { namespace fusion
           : extension::advance_impl<typename traits::tag_of<It>::type>::
                 template apply<It, mpl::int_<N> >
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>))
             BOOST_FUSION_STATIC_ASSERT((
                     N>=0 ||
-                    traits::is_bidirectional<It>::value));
+                    traits::is_bidirectional<It>::value))
 
         };
 
@@ -52,10 +52,10 @@ namespace boost { namespace fusion
           : extension::advance_impl<typename traits::tag_of<It>::type>::
                 template apply<It, N>
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>))
             BOOST_FUSION_STATIC_ASSERT((
                     N::value>=0 ||
-                    traits::is_bidirectional<It>::value));
+                    traits::is_bidirectional<It>::value))
         };
     }
 

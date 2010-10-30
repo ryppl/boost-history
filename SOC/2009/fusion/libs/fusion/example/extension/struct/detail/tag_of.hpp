@@ -9,7 +9,6 @@
 #ifndef EXTENSION_STRUCT_DETAIL_TAG_OF_HPP
 #define EXTENSION_STRUCT_DETAIL_TAG_OF_HPP
 
-#include <boost/config.hpp>
 #include <boost/fusion/support/tag_of_fwd.hpp>
 
 namespace fields

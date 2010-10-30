@@ -8,7 +8,7 @@
 #define BOOST_FUSION_N BOOST_PP_ITERATION()
 
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     explicit
     list(EXPAND_TEMPLATE_ARGUMENTS_CALL_PARAMS(BOOST_FUSION_N))
 #else
@@ -22,7 +22,7 @@
 #   if BOOST_FUSION_N <= 1
       : base_type(EXPAND_PARAMETERS_A(BOOST_FUSION_N))
 #   else
-#       ifdef BOOST_NO_RVALUE_REFERENCES
+#       ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
       : base_type(vector<
             BOOST_PP_ENUM_BINARY_PARAMS(
                BOOST_FUSION_N,

@@ -10,6 +10,8 @@
 #ifndef BOOST_FUSION_CONTAINER_GENERATION_IGNORE_HPP
 #define BOOST_FUSION_CONTAINER_GENERATION_IGNORE_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
+
 namespace boost { namespace fusion
 {
     //  Swallows any assignment (by Doug Gregor)

@@ -9,7 +9,7 @@
 #ifndef BOOST_FUSION_ADAPTED_STRUCT_ADAPT_STRUCT_HPP
 #define BOOST_FUSION_ADAPTED_STRUCT_ADAPT_STRUCT_HPP
 
-#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/preprocessor/cat.hpp>
 
 #include <boost/fusion/adapted/detail/struct/extension.hpp>

@@ -8,8 +8,9 @@
 #ifndef BOOST_FUSION_CONTAINER_MAP_HPP
 #define BOOST_FUSION_CONTAINER_MAP_HPP
 
+#include <boost/fusion/container/map/convert.hpp>
 #include <boost/fusion/container/map/limits.hpp>
 #include <boost/fusion/container/map/map.hpp>
-#include <boost/fusion/container/map/convert.hpp>
+#include <boost/fusion/container/map/map_fwd.hpp>
 
 #endif

@@ -9,9 +9,9 @@
 #ifndef BOOST_FUSION_ITERATOR_EQUAL_TO_HPP
 #define BOOST_FUSION_ITERATOR_EQUAL_TO_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/is_iterator.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/support/internal/constexpr.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -31,8 +31,8 @@ namespace boost { namespace fusion
           : extension::equal_to_impl<typename traits::tag_of<It1>::type>::
                 template apply<It1, It2>::type
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It1>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It2>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It1>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It2>))
         };
     }
 

@@ -8,7 +8,7 @@
 #ifndef BOOST_FUSION_CONTAINER_GENERATION_VECTOR_TIE_HPP
 #define BOOST_FUSION_CONTAINER_GENERATION_VECTOR_TIE_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES

@@ -1,6 +1,6 @@
 /*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,10 +9,9 @@
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_REPLACE_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_REPLACE_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/algorithm/transformation/replace_if.hpp>
 #include <boost/fusion/support/deduce.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #   include <boost/type_traits/is_convertible.hpp>
@@ -61,8 +60,8 @@ namespace boost { namespace fusion
         template<typename Seq, typename T>
         struct replace
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
 
             typedef
                 detail::replace_helper<typename traits::deduce<T>::type>
@@ -92,7 +91,7 @@ namespace boost { namespace fusion
               , typename traits::deduce<
                     BOOST_FUSION_R_ELSE_CLREF(OldValue)
                 >::type*
-            >));
+            >))
 
         typedef typename
             result_of::replace<
@@ -102,12 +101,12 @@ namespace boost { namespace fusion
         replacer;
 
         return replace_if(
-                    BOOST_FUSION_FORWARD(Seq,seq)
-                  , replacer(BOOST_FUSION_FORWARD(OldValue,old_value),0)
-                  , BOOST_FUSION_FORWARD(NewValue,new_value));
+            BOOST_FUSION_FORWARD(Seq,seq),
+            replacer(BOOST_FUSION_FORWARD(OldValue,old_value),0),
+            BOOST_FUSION_FORWARD(NewValue,new_value));
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename Seq, typename OldValue, typename NewValue>
     inline typename result_of::replace<Seq&, OldValue const&>::type
     replace(Seq& seq, OldValue const& old_value, NewValue const& new_value)
@@ -116,7 +115,7 @@ namespace boost { namespace fusion
             is_convertible<
                 typename traits::deduce<NewValue const&>::type*
               , typename traits::deduce<OldValue const&>::type*
-            >));
+            >))
 
         typedef typename
             result_of::replace<Seq&, OldValue const&>::replacer

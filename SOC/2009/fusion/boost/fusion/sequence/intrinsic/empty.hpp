@@ -9,11 +9,9 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_EMPTY_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_EMPTY_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-
 #include <boost/mpl/bool.hpp>
 
 namespace boost { namespace fusion
@@ -37,8 +35,8 @@ namespace boost { namespace fusion
           : extension::empty_impl<typename traits::tag_of<Seq>::type>::
                 template apply<Seq>::type
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
         };
     }
 

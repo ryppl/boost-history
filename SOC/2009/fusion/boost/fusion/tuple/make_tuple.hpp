@@ -9,7 +9,7 @@
 #ifndef BOOST_FUSION_TUPLE_MAKE_TUPLE_HPP
 #define BOOST_FUSION_TUPLE_MAKE_TUPLE_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/tuple/tuple.hpp>
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES

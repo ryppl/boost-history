@@ -8,8 +8,9 @@
 #ifndef BOOST_FUSION_CONTAINER_SET_HPP
 #define BOOST_FUSION_CONTAINER_SET_HPP
 
-#include <boost/fusion/container/set/limits.hpp>
-#include <boost/fusion/container/set/set.hpp>
 #include <boost/fusion/container/set/convert.hpp>
+#include <boost/fusion/container/set/limits.hpp>
+#include <boost/fusion/container/set/set_fwd.hpp>
+#include <boost/fusion/container/set/set.hpp>
 
 #endif

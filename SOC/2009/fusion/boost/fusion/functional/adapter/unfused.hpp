@@ -9,10 +9,9 @@
 #ifndef BOOST_FUSION_FUNCTIONAL_ADAPTER_UNFUSED_HPP
 #define BOOST_FUSION_FUNCTIONAL_ADAPTER_UNFUSED_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/container/generation/vector_tie.hpp>
 #include <boost/fusion/functional/adapter/limits.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/result_of.hpp>
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
 #   include <boost/fusion/support/internal/template.hpp>
@@ -67,7 +66,7 @@ namespace boost { namespace fusion
           : f(BOOST_FUSION_FORWARD(Args,args)...)
         {}
 
-#   ifdef BOOST_NO_RVALUE_REFERENCES
+#   ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         template<typename... Args>
         unfused(Args&... args)
           : f(args...)

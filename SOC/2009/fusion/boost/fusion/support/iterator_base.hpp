@@ -8,6 +8,8 @@
 #ifndef BOOST_FUSION_SUPPORT_ITERATOR_BASE_HPP
 #define BOOST_FUSION_SUPPORT_ITERATOR_BASE_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
+
 namespace boost { namespace fusion
 {
     struct iterator_root

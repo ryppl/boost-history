@@ -7,10 +7,10 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_ADAPTED_CLASS_ADAPT_ASSOC_CLASS_HPP
-#define BOOST_FUSION_ADAPTED_CLASS_ADAPT_ASSOC_CLASS_HPP
+#ifndef BOOST_FUSION_ADAPTED_ADT_ADAPT_ASSOC_ADT_HPP
+#define BOOST_FUSION_ADAPTED_ADT_ADAPT_ASSOC_ADT_HPP
 
-#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/empty.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
@@ -30,20 +30,20 @@
 #include <boost/fusion/adapted/detail/struct/deref_data_impl.hpp>
 #include <boost/fusion/adapted/detail/struct/key_of_impl.hpp>
 #include <boost/fusion/adapted/detail/struct/value_of_data_impl.hpp>
-#include <boost/fusion/adapted/detail/class/extension.hpp>
-#include <boost/fusion/adapted/detail/class/adapt_base.hpp>
+#include <boost/fusion/adapted/detail/adt/extension.hpp>
+#include <boost/fusion/adapted/detail/adt/adapt_base.hpp>
 
-#define BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_0(A, B, C, D, E)\
-    ((A, B, C, D, E)) BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_1
-#define BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_1(A, B, C, D, E)\
-    ((A, B, C, D, E)) BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_0
-#define BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_0_END
-#define BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_1_END
+#define BOOST_FUSION_ADAPT_ASSOC_ADT_FILLER_0(A, B, C, D, E)\
+    ((A, B, C, D, E)) BOOST_FUSION_ADAPT_ASSOC_ADT_FILLER_1
+#define BOOST_FUSION_ADAPT_ASSOC_ADT_FILLER_1(A, B, C, D, E)\
+    ((A, B, C, D, E)) BOOST_FUSION_ADAPT_ASSOC_ADT_FILLER_0
+#define BOOST_FUSION_ADAPT_ASSOC_ADT_FILLER_0_END
+#define BOOST_FUSION_ADAPT_ASSOC_ADT_FILLER_1_END
 
-#define BOOST_FUSION_ADAPT_ASSOC_CLASS_C(                                       \
+#define BOOST_FUSION_ADAPT_ASSOC_ADT_C(                                         \
     TEMPLATE_PARAMS_SEQ, NAME_SEQ, I, ATTRIBUTE)                                \
                                                                                 \
-    BOOST_FUSION_ADAPT_CLASS_C_BASE(TEMPLATE_PARAMS_SEQ,NAME_SEQ,I,ATTRIBUTE,5) \
+    BOOST_FUSION_ADAPT_ADT_C_BASE(TEMPLATE_PARAMS_SEQ,NAME_SEQ,I,ATTRIBUTE,5)   \
                                                                                 \
     template<                                                                   \
         BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(TEMPLATE_PARAMS_SEQ)   \
@@ -53,7 +53,7 @@
         typedef BOOST_PP_TUPLE_ELEM(5, 4, ATTRIBUTE) type;                      \
     };
 
-#define BOOST_FUSION_ADAPT_ASSOC_TPL_CLASS(                                     \
+#define BOOST_FUSION_ADAPT_ASSOC_TPL_ADT(                                       \
     TEMPLATE_PARAMS_SEQ, NAME_SEQ, ATTRIBUTES)                                  \
                                                                                 \
     BOOST_FUSION_ADAPT_STRUCT_BASE(                                             \
@@ -61,25 +61,25 @@
         (1)NAME_SEQ,                                                            \
         assoc_struct_tag,                                                       \
         0,                                                                      \
-        BOOST_PP_CAT(BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_0 ATTRIBUTES,_END),  \
-        BOOST_FUSION_ADAPT_ASSOC_CLASS_C)
+        BOOST_PP_CAT(BOOST_FUSION_ADAPT_ASSOC_ADT_FILLER_0 ATTRIBUTES,_END),    \
+        BOOST_FUSION_ADAPT_ASSOC_ADT_C)
 
-#define BOOST_FUSION_ADAPT_ASSOC_CLASS(NAME, ATTRIBUTES)                        \
+#define BOOST_FUSION_ADAPT_ASSOC_ADT(NAME, ATTRIBUTES)                        \
     BOOST_FUSION_ADAPT_STRUCT_BASE(                                             \
         (0),                                                                    \
         (0)(NAME),                                                              \
         assoc_struct_tag,                                                       \
         0,                                                                      \
-        BOOST_PP_CAT(BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_0 ATTRIBUTES,_END),  \
-        BOOST_FUSION_ADAPT_ASSOC_CLASS_C)
+        BOOST_PP_CAT(BOOST_FUSION_ADAPT_ASSOC_ADT_FILLER_0 ATTRIBUTES,_END),  \
+        BOOST_FUSION_ADAPT_ASSOC_ADT_C)
 
-#define BOOST_FUSION_ADAPT_ASSOC_CLASS_AS_VIEW(NAME, ATTRIBUTES)                \
+#define BOOST_FUSION_ADAPT_ASSOC_ADT_AS_VIEW(NAME, ATTRIBUTES)                  \
     BOOST_FUSION_ADAPT_STRUCT_BASE(                                             \
         (0),                                                                    \
         (0)(NAME),                                                              \
         assoc_struct_tag,                                                       \
         1,                                                                      \
-        BOOST_PP_CAT(BOOST_FUSION_ADAPT_ASSOC_CLASS_FILLER_0 ATTRIBUTES,_END),  \
-        BOOST_FUSION_ADAPT_ASSOC_CLASS_C)
+        BOOST_PP_CAT(BOOST_FUSION_ADAPT_ASSOC_ADT_FILLER_0 ATTRIBUTES,_END),    \
+        BOOST_FUSION_ADAPT_ASSOC_ADT_C)
 
 #endif

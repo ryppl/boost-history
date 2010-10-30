@@ -10,12 +10,10 @@
 #ifndef BOOST_FUSION_SEQUENCE_IO_OUT_HPP
 #define BOOST_FUSION_SEQUENCE_IO_OUT_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/is_sequence.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
-
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/or.hpp>
-
 #include <ostream>
 
 #include <boost/fusion/sequence/io/detail/out.hpp>
@@ -26,8 +24,8 @@ namespace boost { namespace fusion
     inline std::ostream&
     out(std::ostream& os, Seq& seq)
     {
-        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
 
         detail::print_sequence(os, seq);
         return os;
@@ -43,8 +41,8 @@ namespace boost { namespace fusion
             >::type
         operator<<(std::ostream& os, Seq const& seq)
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
 
             return fusion::out(os, seq);
         }

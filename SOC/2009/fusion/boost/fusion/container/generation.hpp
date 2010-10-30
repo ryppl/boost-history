@@ -17,7 +17,6 @@
 #include <boost/fusion/container/generation/make_set.hpp>
 #include <boost/fusion/container/generation/make_vector.hpp>
 #include <boost/fusion/container/generation/map_tie.hpp>
-#include <boost/fusion/container/generation/pair_tie.hpp>
 #include <boost/fusion/container/generation/vector_tie.hpp>
 
 #endif

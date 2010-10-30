@@ -11,8 +11,6 @@
 
 #include <boost/fusion/algorithm/iteration/fold.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
@@ -44,9 +42,10 @@ namespace boost { namespace fusion
 
             template<typename NextSeq,typename StrictestSoFar>
             typename result<
-                strictest_traversal_impl(NextSeq const&, StrictestSoFar const&)
+                strictest_traversal_impl const&(
+                    NextSeq const&, StrictestSoFar const&)
             >::type
-            operator()(NextSeq const&,StrictestSoFar const&);
+            operator()(NextSeq const&,StrictestSoFar const&)const;
         };
 
         template<typename Seq>

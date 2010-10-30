@@ -9,14 +9,14 @@
 
 //cschmidt: to avoid cyclic references - as some of the (here unneeded) mpl
 //sequence modification metafunctions might instantiate result_of::as_xxx - just
-//include the relevant /fusion/mpl/ headers.
-#include <boost/fusion/mpl/at.hpp>
-#include <boost/fusion/mpl/back.hpp>
-#include <boost/fusion/mpl/begin.hpp>
-#include <boost/fusion/mpl/empty.hpp>
-#include <boost/fusion/mpl/end.hpp>
-#include <boost/fusion/mpl/front.hpp>
-#include <boost/fusion/mpl/size.hpp>
+//include the relevant /fusion/mpl/detail/ headers.
+#include <boost/fusion/mpl/detail/at.hpp>
+#include <boost/fusion/mpl/detail/back.hpp>
+#include <boost/fusion/mpl/detail/begin.hpp>
+#include <boost/fusion/mpl/detail/empty.hpp>
+#include <boost/fusion/mpl/detail/end.hpp>
+#include <boost/fusion/mpl/detail/front.hpp>
+#include <boost/fusion/mpl/detail/size.hpp>
 
 #include <boost/fusion/support/internal/variadic_templates/variadic_quote.hpp>
 #include <boost/mpl/identity.hpp>

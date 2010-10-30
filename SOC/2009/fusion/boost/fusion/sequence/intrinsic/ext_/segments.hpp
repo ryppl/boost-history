@@ -10,7 +10,6 @@
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_EXT_SEGMENTS_HPP
 
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -28,8 +27,8 @@ namespace boost { namespace fusion
                 typename traits::tag_of<Seq>::type
             >::template apply<Seq>
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_segmented<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_segmented<Seq>))
         };
     }
 
@@ -52,10 +51,10 @@ namespace boost { namespace fusion
     segments(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
         return result_of::segments<BOOST_FUSION_R_ELSE_CLREF(Seq)>::call(
-                    BOOST_FUSION_FORWARD(Seq,seq));
+                    BOOST_FUSION_FORWARD(Seq,seq))
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename Seq>
     typename result_of::segments<Seq&>::type
     segments(Seq& seq)

@@ -9,7 +9,6 @@
     !defined(BOOST_FUSION_CONTAINER_DETAIL_FORWARD_INTERFACE_HPP)
 #   define BOOST_FUSION_CONTAINER_DETAIL_FORWARD_INTERFACE_HPP
 
-#   include <boost/config.hpp>
 #   include <boost/fusion/support/internal/sequence_assign.hpp>
 
 #endif
@@ -50,7 +49,7 @@
 #       include <boost/fusion/container/detail/variadic_templates/forward_interface.hpp>
 #   endif
 
-#   if defined(BOOST_NO_RVALUE_REFERENCES) || !defined(BOOST_NO_VARIADIC_TEMPLATES)
+#   if defined(BOOST_FUSION_NO_RVALUE_REFERENCES) || !defined(BOOST_NO_VARIADIC_TEMPLATES)
         template<typename Arg>
         BOOST_FUSION_SEQ_NAME(BOOST_FUSION_R_ELSE_CLREF(Arg) arg)
           : BOOST_FUSION_INIT_BASE(BOOST_FUSION_FORWARD(Arg, arg))

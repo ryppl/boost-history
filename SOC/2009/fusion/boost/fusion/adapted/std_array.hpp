@@ -1,5 +1,5 @@
 /*==============================================================================
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -8,10 +8,8 @@
 #ifndef BOOST_FUSION_ADAPTED_STD_ARRAY_HPP
 #define BOOST_FUSION_ADAPTED_STD_ARRAY_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #if !defined(BOOST_NO_0X_HDR_ARRAY) || defined(BOOST_HAS_TR1_ARRAY)
-#   include <boost/fusion/support/internal/ref.hpp>
-
 #   define BOOST_FUSION_ADAPTED_ARRAY_TYPE struct
 #   ifndef BOOST_NO_0X_HDR_ARRAY
 #       define BOOST_FUSION_ADAPTED_ARRAY_NAMESPACE std

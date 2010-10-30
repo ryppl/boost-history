@@ -5,13 +5,11 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#include <boost/config.hpp>
 #include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/internal/template.hpp>
-
 #include <boost/preprocessor/iterate.hpp>
 #include <boost/preprocessor/cat.hpp>
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   include <boost/preprocessor/cat.hpp>
 #   include <boost/preprocessor/repetition/enum.hpp>
 #endif

@@ -5,22 +5,28 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_MPL_SIZE_HPP
-#define BOOST_FUSION_MPL_SIZE_HPP
+#ifndef BOOST_FUSION_MPL_DETAIL_BACK_HPP
+#define BOOST_FUSION_MPL_DETAIL_BACK_HPP
 
-#include <boost/fusion/sequence/intrinsic/size.hpp>
+#include <boost/fusion/iterator/prior.hpp>
+#include <boost/fusion/iterator/value_of.hpp>
+#include <boost/fusion/sequence/intrinsic/back.hpp>
 
 namespace boost { namespace mpl
 {
     template<typename>
-    struct size_impl;
+    struct back_impl;
 
     template<>
-    struct size_impl<fusion::fusion_sequence_tag>
+    struct back_impl<fusion::fusion_sequence_tag>
     {
         template<typename Seq>
         struct apply
-          : fusion::result_of::size<Seq>
+          : fusion::result_of::value_of<
+                typename fusion::result_of::prior<
+                    typename fusion::result_of::end<Seq>::type
+                >::type
+            >
         {};
     };
 }}

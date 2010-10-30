@@ -10,9 +10,10 @@
 #ifndef BOOST_FUSION_FUNCTIONAL_ADAPTER_LIMITS_HPP
 #define BOOST_FUSION_FUNCTIONAL_ADAPTER_LIMITS_HPP
 
-#include <boost/config.hpp>
-
-#if defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES) || !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
+#include <boost/fusion/support/internal/base.hpp>
+#if defined(BOOST_NO_VARIADIC_TEMPLATES) ||                                     \
+    defined(BOOST_FUSION_NO_RVALUE_REFERENCES) ||                               \
+    !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
 #   include <boost/fusion/container/vector/limits.hpp>
 
 #   ifndef BOOST_FUSION_UNFUSED_MAX_ARITY

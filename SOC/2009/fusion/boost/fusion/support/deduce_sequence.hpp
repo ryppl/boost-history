@@ -10,10 +10,10 @@
 #ifndef BOOST_FUSION_SUPPORT_DEDUCE_SEQUENCE_HPP
 #define BOOST_FUSION_SUPPORT_DEDUCE_SEQUENCE_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/container/vector/convert.hpp>
 #include <boost/fusion/algorithm/transformation/transform.hpp>
 #include <boost/fusion/support/deduce.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -44,7 +44,7 @@ namespace boost { namespace fusion
                 typename result_of::transform<Seq, detail::deducer>::type
             >
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
         };
     }
 }}
@@ -53,8 +53,6 @@ namespace boost { namespace fusion
 //#include <boost/fusion/container/vector/convert.hpp>
 //#include <boost/fusion/adapted/mpl.hpp>
 //#include <boost/fusion/support/deduce.hpp>
-//#include <boost/fusion/support/internal/ref.hpp>
-//#include <boost/fusion/support/internal/assert.hpp>
 //
 //#include <boost/mpl/transform_view.hpp>
 //#include <boost/mpl/quote.hpp>
@@ -70,7 +68,7 @@ namespace boost { namespace fusion
 //            >
 //        >
 //    {
-//        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+//        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
 //    };
 //}}}
 

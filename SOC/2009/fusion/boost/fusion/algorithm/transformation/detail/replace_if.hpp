@@ -24,7 +24,7 @@ namespace boost { namespace fusion { namespace detail
 
         template<typename Self, typename U>
         struct result<Self(U)>
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         {
             typedef U type;
         };

@@ -9,6 +9,7 @@
 #ifndef BOOST_FUSION_FUNCTIONAL_ADAPTER_FUSED_HPP
 #define BOOST_FUSION_FUNCTIONAL_ADAPTER_FUSED_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/functional/invocation/invoke.hpp>
 
 #define BOOST_FUSION_INVOCATION_METHOD invoke

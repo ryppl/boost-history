@@ -10,7 +10,6 @@
 #define BOOST_FUSION_VIEW_NVIEW_DETAIL_NVIEW_ITERATOR_HPP
 
 #include <boost/fusion/support/iterator_base.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace fusion

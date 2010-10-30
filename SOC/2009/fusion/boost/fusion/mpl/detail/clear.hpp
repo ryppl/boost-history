@@ -1,26 +1,28 @@
 /*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_MPL_EMPTY_HPP
-#define BOOST_FUSION_MPL_EMPTY_HPP
+#ifndef BOOST_FUSION_MPL_DETAIL_CLEAR_HPP
+#define BOOST_FUSION_MPL_DETAIL_CLEAR_HPP
 
-#include <boost/fusion/sequence/intrinsic/empty.hpp>
+#include <boost/fusion/algorithm/transformation/clear.hpp>
+#include <boost/fusion/support/tag_of.hpp>
 
 namespace boost { namespace mpl
 {
     template<typename>
-    struct empty_impl;
+    struct clear_impl;
 
     template<>
-    struct empty_impl<fusion::fusion_sequence_tag>
+    struct clear_impl<fusion::fusion_sequence_tag>
     {
         template<typename Seq>
         struct apply
-          : fusion::result_of::empty<Seq>
+          : fusion::result_of::clear<Seq>
         {};
     };
 }}

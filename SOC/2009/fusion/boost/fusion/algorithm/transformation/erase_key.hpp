@@ -1,6 +1,6 @@
 /*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,13 +9,12 @@
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_ERASE_KEY_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_ERASE_KEY_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #   include <boost/fusion/sequence/intrinsic/has_key.hpp>
 #endif
 #include <boost/fusion/algorithm/query/find_key.hpp>
 #include <boost/fusion/algorithm/transformation/erase.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/workaround.hpp>
 
 #include <boost/mpl/eval_if.hpp>
@@ -32,9 +31,9 @@ namespace boost { namespace fusion
         template<typename Seq, typename Key>
         struct erase_key
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_associative<Seq>));
-            BOOST_FUSION_MPL_ASSERT((has_key<Seq,Key>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_associative<Seq>))
+            BOOST_FUSION_MPL_ASSERT((has_key<Seq,Key>))
 
             typedef typename
                 mpl::eval_if_c<
@@ -83,7 +82,7 @@ namespace boost { namespace fusion
         >::call(BOOST_FUSION_FORWARD(Seq,seq));
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename Key, typename Seq>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
         result_of::erase_key<,Seq,&, Key>)

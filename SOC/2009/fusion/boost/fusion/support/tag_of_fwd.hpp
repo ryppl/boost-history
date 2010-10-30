@@ -9,7 +9,7 @@
 #ifndef BOOST_FUSION_SUPPORT_TAG_OF_FWD_HPP
 #define BOOST_FUSION_SUPPORT_TAG_OF_FWD_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 
 namespace boost
 {

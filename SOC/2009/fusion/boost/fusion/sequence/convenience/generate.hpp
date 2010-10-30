@@ -8,9 +8,8 @@
 #ifndef BOOST_FUSION_SEQUENCE_CONVENIENCE_GENERATE_HPP
 #define BOOST_FUSION_SEQUENCE_CONVENIENCE_GENERATE_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/algorithm/iteration/for_each.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -22,7 +21,7 @@ namespace boost { namespace fusion
             F f;
 
             generator(F f)
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
               : f(f)
 #else
               : f(std::move(f))
@@ -43,18 +42,15 @@ namespace boost { namespace fusion
         template<typename Seq, typename F>
         struct generate
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
 
             typedef void type;
         };
     }
 
     template<typename Seq, typename F>
-    typename result_of::generate<
-        BOOST_FUSION_R_ELSE_LREF(Seq)
-      , BOOST_FUSION_RREF_ELSE_OBJ(F)
-    >::type
+    void
     generate(BOOST_FUSION_R_ELSE_LREF(Seq) seq,BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
         fusion::for_each(

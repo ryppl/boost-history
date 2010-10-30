@@ -9,12 +9,12 @@
 #   ifndef BOOST_FUSION_CONTAINER_DETAIL_VARIADIC_TEMPLATES_FORWARD_INTERFACE_HPP
 #       define BOOST_FUSION_CONTAINER_DETAIL_VARIADIC_TEMPLATES_FORWARD_INTERFACE_HPP
 
-#       ifdef BOOST_NO_RVALUE_REFERENCES
+#       ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
 #           include <boost/call_traits.hpp>
 #       endif
 #   endif
 #else
-#   ifdef BOOST_NO_RVALUE_REFERENCES
+#   ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         explicit
         BOOST_FUSION_SEQ_NAME(
             typename call_traits<Arguments>::param_type... arguments)

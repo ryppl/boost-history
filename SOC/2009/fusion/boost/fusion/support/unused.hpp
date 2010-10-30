@@ -8,8 +8,8 @@
 #ifndef BOOST_FUSION_SUPPORT_UNUSED_HPP
 #define BOOST_FUSION_SUPPORT_UNUSED_HPP
 
-#include <boost/config.hpp>
-#if defined(BOOST_MSVC)
+#include <boost/fusion/support/internal/base.hpp>
+#ifdef BOOST_MSVC
 #   pragma warning(push)
 // multiple assignment operators specified warning
 #   pragma warning(disable: 4522)

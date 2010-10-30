@@ -1,6 +1,6 @@
 /*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,13 +9,11 @@
 #ifndef BOOST_FUSION_ALGORITHM_QUERY_FIND_HPP
 #define BOOST_FUSION_ALGORITHM_QUERY_FIND_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/iterator/value_of.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/workaround.hpp>
-
 #include <boost/mpl/placeholders.hpp>
 #include <boost/type_traits/is_same.hpp>
 
@@ -33,8 +31,8 @@ namespace boost { namespace fusion
               , is_same<value_of<mpl::_1>, T>
             >
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
         };
     }
 
@@ -46,7 +44,7 @@ namespace boost { namespace fusion
         return result_of::find<BOOST_FUSION_R_ELSE_CLREF(Seq), T>::call(seq);
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename T, typename Seq>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
             result_of::find<,Seq,&, T>) const

@@ -10,22 +10,20 @@
 #ifndef BOOST_FUSION_CONTAINER_LIST_CONS_HPP
 #define BOOST_FUSION_CONTAINER_LIST_CONS_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assign_tags.hpp>
 #include <boost/fusion/support/internal/sequence_assign.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/or.hpp>
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   include <boost/call_traits.hpp>
 #endif
 #include <boost/utility/enable_if.hpp>
@@ -78,7 +76,7 @@ namespace boost { namespace fusion
         template<typename SeqAssign>
         nil(BOOST_FUSION_R_ELSE_CLREF(SeqAssign))
         {
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
             BOOST_FUSION_MPL_ASSERT((
                 result_of::empty<typename SeqAssign::seq_type>));
 #else
@@ -97,7 +95,7 @@ namespace boost { namespace fusion
         nil&
         operator=(BOOST_FUSION_R_ELSE_CLREF(Seq))
         {
-            BOOST_FUSION_MPL_ASSERT((result_of::empty<Seq>));
+            BOOST_FUSION_MPL_ASSERT((result_of::empty<Seq>))
             return *this;
         }
 
@@ -149,7 +147,7 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
 //cschmidt: https://svn.boost.org/trac/boost/ticket/4530#comment:1
-#   if defined(BOOST_NO_RVALUE_REFERENCES) || defined(BOOST_MSVC)
+#   if defined(BOOST_FUSION_NO_RVALUE_REFERENCES) || defined(BOOST_MSVC)
         explicit
         cons(typename call_traits<Car>::param_type car)
           : car(car)
@@ -180,7 +178,7 @@ namespace boost { namespace fusion
         {}
 #   endif
 #else
-#   ifdef BOOST_NO_RVALUE_REFERENCES
+#   ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         template<typename... CdrArgs>
         explicit
         cons(typename call_traits<Car>::param_type car,
@@ -212,7 +210,7 @@ namespace boost { namespace fusion
                   fusion::next(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq))))
         {
             BOOST_FUSION_MPL_ASSERT((
-                    mpl::equal_to<size,result_of::size<Seq> >));
+                    mpl::equal_to<size,result_of::size<Seq> >))
         }
 
 #define BOOST_FUSION_CONS_ASSIGN_CTOR(MODIFIER,_)\
@@ -223,7 +221,7 @@ namespace boost { namespace fusion
                   fusion::next(fusion::begin(seq_assign.get())))\
         {\
             BOOST_FUSION_MPL_ASSERT((\
-                mpl::equal_to<size,result_of::size<SeqRef> >));\
+                mpl::equal_to<size,result_of::size<SeqRef> >))\
         }
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_CONS_ASSIGN_CTOR,_)
@@ -234,7 +232,7 @@ namespace boost { namespace fusion
         cons&
         operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
         {
-            BOOST_FUSION_MPL_ASSERT_NOT((result_of::empty<Seq>));
+            BOOST_FUSION_MPL_ASSERT_NOT((result_of::empty<Seq>))
 
             assign(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)));
             return *this;
@@ -243,7 +241,7 @@ namespace boost { namespace fusion
         cons&
         operator=(cons const& cons_)
         {
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
             return this->operator=<cons<Car,Cdr> >(cons_);
 #else
             return this->operator=<cons<Car,Cdr> const&>(cons_);

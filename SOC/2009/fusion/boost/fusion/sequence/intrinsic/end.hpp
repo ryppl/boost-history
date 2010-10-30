@@ -8,9 +8,8 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_END_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_END_HPP
 
-#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -27,7 +26,7 @@ namespace boost { namespace fusion
           : extension::end_impl<typename traits::tag_of<Seq>::type>::
                 template apply<Seq>
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
         };
     }
 
@@ -40,7 +39,7 @@ namespace boost { namespace fusion
             BOOST_FUSION_FORWARD(Seq,seq));
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename Seq>
     inline typename result_of::end<Seq&>::type
     end(Seq& seq)

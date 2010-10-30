@@ -33,7 +33,7 @@ namespace boost { namespace fusion
         return typename result_of::BOOST_FUSION_FUNCTION_NAME<
             BOOST_FUSION_R_ELSE_LREF(Types)...
         >::type(
-#if BOOST_NO_RVALUE_REFERENCES
+#if BOOST_FUSION_NO_RVALUE_REFERENCES
             types
 #else
             static_cast<typename detail::deduce_ref<Types&&>::type>(types)...

@@ -16,7 +16,6 @@
 #include <boost/fusion/iterator/advance_c.hpp>
 #include <boost/fusion/iterator/distance.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/config.hpp>
 #include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/arithmetic/dec.hpp>
 #include <boost/preprocessor/control/iif.hpp>

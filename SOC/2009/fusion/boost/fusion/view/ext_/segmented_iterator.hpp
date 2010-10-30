@@ -9,6 +9,7 @@
 #ifndef BOOST_FUSION_VIEW_EXT_SEGMENTED_ITERATOR_HPP
 #define BOOST_FUSION_VIEW_EXT_SEGMENTED_ITERATOR_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/sequence/intrinsic/ext_/segments.hpp>
 #include <boost/fusion/sequence/intrinsic/empty.hpp>
 #include <boost/fusion/container/list/cons.hpp>
@@ -18,7 +19,6 @@
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/is_sequence.hpp>
 #include <boost/fusion/support/ext_/is_segmented.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/not.hpp>

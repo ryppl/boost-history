@@ -6,22 +6,22 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_MPL_PUSH_FRONT_HPP
-#define BOOST_FUSION_MPL_PUSH_FRONT_HPP
+#ifndef BOOST_FUSION_MPL_DETAIL_INSERT_HPP
+#define BOOST_FUSION_MPL_DETAIL_INSERT_HPP
 
-#include <boost/fusion/algorithm/transformation/push_front.hpp>
+#include <boost/fusion/algorithm/transformation/insert.hpp>
 
 namespace boost { namespace mpl
 {
     template<typename>
-    struct push_front_impl;
+    struct insert_impl;
 
     template<>
-    struct push_front_impl<fusion::fusion_sequence_tag>
+    struct insert_impl<fusion::fusion_sequence_tag>
     {
-        template<typename Seq, typename T>
+        template<typename Seq, typename Pos, typename T>
         struct apply
-          : fusion::result_of::push_front<Seq, T>
+          : fusion::result_of::insert<Seq, Pos, T>
         {};
     };
 }}

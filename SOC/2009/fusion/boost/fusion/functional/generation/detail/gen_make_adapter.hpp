@@ -6,9 +6,7 @@
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/deduce.hpp>
-
 #include <boost/preprocessor/cat.hpp>
 
 #define BOOST_FUSION_FUNC_NAME BOOST_PP_CAT(make_,BOOST_FUSION_FUSED_CLASS_NAME)
@@ -33,9 +31,9 @@ namespace boost { namespace fusion
         result_of::BOOST_FUSION_FUNC_NAME<BOOST_FUSION_RREF_ELSE_OBJ(F)>::type
     BOOST_FUSION_FUNC_NAME(BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
-        return typename
-            result_of::BOOST_FUSION_FUNC_NAME<BOOST_FUSION_RREF_ELSE_OBJ(F)>::
-                type(BOOST_FUSION_FORWARD(F,f));
+        return typename result_of::BOOST_FUSION_FUNC_NAME<
+            BOOST_FUSION_RREF_ELSE_OBJ(F)
+        >::type(BOOST_FUSION_FORWARD(F,f));
     }
 }}
 

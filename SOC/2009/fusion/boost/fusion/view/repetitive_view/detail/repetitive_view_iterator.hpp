@@ -11,7 +11,6 @@
 
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/mpl/int.hpp>
 
 namespace boost { namespace fusion

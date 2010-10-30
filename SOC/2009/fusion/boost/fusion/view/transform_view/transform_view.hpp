@@ -1,6 +1,6 @@
 /*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,6 +9,7 @@
 #ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_TRANSFORM_VIEW_HPP
 #define BOOST_FUSION_VIEW_TRANSFORM_VIEW_TRANSFORM_VIEW_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
@@ -19,9 +20,7 @@
 #   include <boost/fusion/container/vector/vector.hpp>
 #endif
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/view/detail/strictest_traversal.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 
@@ -65,12 +64,12 @@ namespace boost { namespace fusion
     struct transform_view
       : sequence_base<transform_view<Seq1, Seq2, F,IsAssociative> >
     {
-        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>))
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>))
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>))
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>))
         BOOST_FUSION_MPL_ASSERT((
-            mpl::equal_to<result_of::size<Seq1>,result_of::size<Seq2> >));
+            mpl::equal_to<result_of::size<Seq1>,result_of::size<Seq2> >))
 
         typedef IsAssociative is_associative;
         typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq1) storage1_type;
@@ -107,7 +106,7 @@ namespace boost { namespace fusion
           , f(BOOST_FUSION_FORWARD(OtherView,view).f)
         {}
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         explicit
         transform_view(typename storage1_type::call_param seq1,
                 typename storage2_type::call_param seq2,
@@ -150,8 +149,8 @@ namespace boost { namespace fusion
     struct unary_transform_view
       : sequence_base<unary_transform_view<Seq, F, void_> >
     {
-        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
 
         typedef IsAssociative is_associative;
         typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq) storage_type;
@@ -187,7 +186,7 @@ namespace boost { namespace fusion
           , f(BOOST_FUSION_FORWARD(OtherView,view).f)
         {}
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         explicit
         unary_transform_view(
             typename storage_type::call_param seq,
@@ -231,7 +230,7 @@ namespace boost { namespace fusion
           : base(BOOST_FUSION_FORWARD(OtherView,view))
         {}
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         explicit
         transform_view(
             typename base::storage_type::call_param seq,
@@ -266,7 +265,7 @@ namespace boost { namespace fusion
           : base(BOOST_FUSION_FORWARD(OtherView,view))
         {}
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         explicit
         transform_view(
             typename base::storage_type::call_param seq,

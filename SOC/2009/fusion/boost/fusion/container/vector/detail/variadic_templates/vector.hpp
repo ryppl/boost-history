@@ -13,14 +13,12 @@
 #include <boost/fusion/iterator/advance_c.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
-#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #ifdef BOOST_FUSION_PREFER_MPL
 #   include <boost/fusion/support/internal/variadic_templates/variadic_arguments_to_vector.hpp>
 #endif
 #include <boost/fusion/support/internal/sequence_assign.hpp>
 #include <boost/fusion/support/internal/assign_tags.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
 
 #ifndef BOOST_FUSION_TAGGED_VECTOR
@@ -34,7 +32,7 @@
 #endif
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp>
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   include <boost/call_traits.hpp>
 #endif
 #include <boost/type_traits/add_const.hpp>
@@ -86,12 +84,12 @@ namespace boost { namespace fusion
               : element(fusion::deref(fusion::advance_c<I>(it)))
             {}
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
             template<typename OtherArgument>
 #endif
             element(
                 assign_directly,
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
                 typename call_traits<Element>::param_type argument
 #else
                 OtherArgument&& argument
@@ -116,12 +114,12 @@ namespace boost { namespace fusion
               : element<Indices, Elements>(assign_by_deref(),it)...
             {}
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
             template<typename... OtherArguments>
 #endif
             vector_impl(
                 assign_directly,
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
                 typename call_traits<Elements>::param_type...  arguments
 #else
                 OtherArguments&&... arguments
@@ -194,7 +192,7 @@ namespace boost { namespace fusion
         BOOST_PP_CAT(It,BOOST_PP_INC(N)) BOOST_PP_CAT(it,BOOST_PP_INC(N))=\
             fusion::next(BOOST_PP_CAT(it,N));
 
-#   ifdef BOOST_NO_RVALUE_REFERENCES
+#   ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
 #       define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_TEMPLATE_ARGS(N)
 
 #       define BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_PARAMS(N)\
@@ -218,7 +216,7 @@ namespace boost { namespace fusion
         typedef BOOST_PP_CAT(H,N) BOOST_PP_CAT(h,N);
 #   endif
 
-#   if BOOST_NO_RVALUE_REFERENCES
+#   if BOOST_FUSION_NO_RVALUE_REFERENCES
 #       define BOOST_FUSION_UNROLLED_VECTOR_AT(Z,N,_)\
         BOOST_FUSION_META_VALUE_AT(N)\
         \
@@ -336,7 +334,7 @@ namespace boost { namespace fusion
                     _)
             {}
 
-#   ifndef BOOST_NO_RVALUE_REFERENCES
+#   ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
             template<
                 BOOST_PP_ENUM_PARAMS(
                     BOOST_FUSION_UNROLLED_DEPTH, typename OtherH)
@@ -347,7 +345,7 @@ namespace boost { namespace fusion
                 assign_directly,
                 BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DIRECT_ASSIGN_PARAMS(
                     BOOST_FUSION_UNROLLED_DEPTH),
-#   ifdef BOOST_NO_RVALUE_REFERENCES
+#   ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
                 typename call_traits<Others>::param_type...  elements
 #   else
                 OtherElements&&... elements
@@ -464,12 +462,12 @@ namespace boost { namespace fusion
 
 #undef VECTOR_CTOR
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
         template<typename... OtherArguments>
 #endif
         explicit
         vector(
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
             typename call_traits<Elements>::param_type...  arguments
 #else
             OtherArguments&&... arguments

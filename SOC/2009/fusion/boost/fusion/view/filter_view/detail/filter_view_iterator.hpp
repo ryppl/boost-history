@@ -12,8 +12,6 @@
 #include <boost/fusion/iterator/value_of.hpp>
 #include <boost/fusion/algorithm/query/detail/find_if.hpp>
 #include <boost/fusion/support/iterator_base.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
-
 #include <boost/mpl/quote.hpp>
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/bind.hpp>

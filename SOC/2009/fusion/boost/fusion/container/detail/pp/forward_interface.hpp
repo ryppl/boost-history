@@ -10,8 +10,6 @@
 #       define BOOST_FUSION_CONTAINER_DETAIL_PP_FORWARD_INTERFACE_HPP
 
 #       include <boost/fusion/support/internal/template.hpp>
-
-#       include <boost/config.hpp>
 #       include <boost/preprocessor/iterate.hpp>
 #       include <boost/preprocessor/repetition/enum_params.hpp>
 #       include <boost/preprocessor/repetition/enum_binary_params.hpp>

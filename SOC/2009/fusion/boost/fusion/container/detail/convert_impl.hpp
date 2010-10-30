@@ -9,8 +9,6 @@
 #   include <boost/fusion/sequence/intrinsic/begin.hpp>
 #   include <boost/fusion/sequence/intrinsic/size.hpp>
 #endif
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/preprocessor/cat.hpp>
 
@@ -74,8 +72,8 @@ namespace boost { namespace fusion
                 BOOST_PP_CAT(BOOST_FUSION_SEQ_NAME,_tag)
             >::template apply<Seq>
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
         };
     }
 

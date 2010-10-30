@@ -10,14 +10,14 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_AT_KEY_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_AT_KEY_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #   include <boost/fusion/sequence/intrinsic/has_key.hpp>
 #endif
 #include <boost/fusion/iterator/deref_data.hpp>
 #include <boost/fusion/algorithm/query/find_key.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
+#include <boost/fusion/support/internal/workaround.hpp>
 
 namespace boost { namespace fusion
 {
@@ -52,9 +52,9 @@ namespace boost { namespace fusion
             : extension::at_key_impl<typename traits::tag_of<Seq>::type>::
                 template apply<Seq, Key>
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_associative<Seq>));
-            BOOST_FUSION_MPL_ASSERT((has_key<Seq,Key>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_associative<Seq>))
+            BOOST_FUSION_MPL_ASSERT((has_key<Seq,Key>))
         };
     }
 
@@ -70,9 +70,10 @@ namespace boost { namespace fusion
             BOOST_FUSION_FORWARD(Seq,seq));
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename Key, typename Seq>
-    inline typename result_of::at_key<Seq&, Key>::type
+    inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
+        result_of::at_key<,Seq,&,Key>)
     at_key(Seq& seq)
     {
         return result_of::at_key<Seq&, Key>::call(seq);

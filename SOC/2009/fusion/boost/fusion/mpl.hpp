@@ -8,25 +8,26 @@
 #ifndef BOOST_FUSION_MPL_HPP
 #define BOOST_FUSION_MPL_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/category_of.hpp>
 
-#include <boost/fusion/mpl/at.hpp>
-#include <boost/fusion/mpl/back.hpp>
-#include <boost/fusion/mpl/begin.hpp>
-#include <boost/fusion/mpl/clear.hpp>
-#include <boost/fusion/mpl/empty.hpp>
-#include <boost/fusion/mpl/end.hpp>
-#include <boost/fusion/mpl/erase_key.hpp>
-#include <boost/fusion/mpl/erase.hpp>
-#include <boost/fusion/mpl/front.hpp>
-#include <boost/fusion/mpl/fusion_iterator.hpp>
-#include <boost/fusion/mpl/has_key.hpp>
-#include <boost/fusion/mpl/insert_range.hpp>
-#include <boost/fusion/mpl/insert.hpp>
-#include <boost/fusion/mpl/pop_back.hpp>
-#include <boost/fusion/mpl/pop_front.hpp>
-#include <boost/fusion/mpl/push_back.hpp>
-#include <boost/fusion/mpl/push_front.hpp>
-#include <boost/fusion/mpl/size.hpp>
+#include <boost/fusion/mpl/detail/at.hpp>
+#include <boost/fusion/mpl/detail/back.hpp>
+#include <boost/fusion/mpl/detail/begin.hpp>
+#include <boost/fusion/mpl/detail/clear.hpp>
+#include <boost/fusion/mpl/detail/empty.hpp>
+#include <boost/fusion/mpl/detail/end.hpp>
+#include <boost/fusion/mpl/detail/erase_key.hpp>
+#include <boost/fusion/mpl/detail/erase.hpp>
+#include <boost/fusion/mpl/detail/front.hpp>
+#include <boost/fusion/mpl/detail/fusion_iterator.hpp>
+#include <boost/fusion/mpl/detail/has_key.hpp>
+#include <boost/fusion/mpl/detail/insert_range.hpp>
+#include <boost/fusion/mpl/detail/insert.hpp>
+#include <boost/fusion/mpl/detail/pop_back.hpp>
+#include <boost/fusion/mpl/detail/pop_front.hpp>
+#include <boost/fusion/mpl/detail/push_back.hpp>
+#include <boost/fusion/mpl/detail/push_front.hpp>
+#include <boost/fusion/mpl/detail/size.hpp>
 
 #endif

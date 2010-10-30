@@ -26,7 +26,7 @@
 #define BOOST_FUSION_ADAPT_ADT_GET_IDENTITY_NON_TEMPLATE_IMPL(                  \
     TEMPLATE_PARAMS_SEQ)                                                        \
                                                                                 \
-    lvalue
+    detail::identity<lvalue>::type
 
 #define BOOST_FUSION_ADAPT_ADT_C_BASE(                                          \
     TEMPLATE_PARAMS_SEQ,NAME_SEQ,I,ATTRIBUTE,ATTRIBUTE_TUPEL_SIZE)              \
@@ -39,11 +39,11 @@
       , I                                                                       \
     >                                                                           \
     {                                                                           \
-        template<class Arg>                                                     \
+        template<class Val>                                                     \
         static void                                                             \
         boost_fusion_adapt_adt_impl_set(                                        \
             BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)& obj,               \
-            BOOST_FUSION_R_ELSE_CLREF(Arg) val)                                 \
+            BOOST_FUSION_R_ELSE_CLREF(Val) val)                                 \
         {                                                                       \
             BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 3, ATTRIBUTE);            \
         }                                                                       \
@@ -76,16 +76,21 @@
                                                                                 \
         explicit                                                                \
         adt_attribute_proxy(                                                    \
-            BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ) const*const o)      \
-          : obj(o)                                                              \
+            BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ) const& o)           \
+          : obj(boost::addressof(o))                                            \
         {}                                                                      \
                                                                                 \
-        operator type() const                                                   \
+        type get() const                                                        \
         {                                                                       \
             return access::adt_attribute_access<                                \
                 BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)                 \
               , I                                                               \
             >::boost_fusion_adapt_adt_impl_get(*obj);                           \
+        }                                                                       \
+                                                                                \
+        operator type() const                                                   \
+        {                                                                       \
+            return get();                                                       \
         }                                                                       \
                                                                                 \
         BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ) const* obj;             \
@@ -104,29 +109,34 @@
                                                                                 \
         explicit                                                                \
         adt_attribute_proxy(                                                    \
-            BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)*const o)            \
-          : obj(o)                                                              \
+            BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)& o)                 \
+          : obj(boost::addressof(o))                                            \
         {}                                                                      \
                                                                                 \
-        template<class Arg>                                                     \
+        template<class Val>                                                     \
         adt_attribute_proxy&                                                    \
-        operator=(BOOST_FUSION_R_ELSE_CLREF(Arg) val)                           \
+        operator=(BOOST_FUSION_R_ELSE_CLREF(Val) val)                           \
         {                                                                       \
             access::adt_attribute_access<                                       \
                 BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)                 \
               , I                                                               \
             >::boost_fusion_adapt_adt_impl_set(                                 \
                 *obj,                                                           \
-                BOOST_FUSION_FORWARD(Arg,val));                                 \
+                BOOST_FUSION_FORWARD(Val,val));                                 \
             return *this;                                                       \
         }                                                                       \
                                                                                 \
-        operator type() const                                                   \
+        type get() const                                                        \
         {                                                                       \
             return access::adt_attribute_access<                                \
                 BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)                 \
               , I                                                               \
             >::boost_fusion_adapt_adt_impl_get(*obj);                           \
+        }                                                                       \
+                                                                                \
+        operator type() const                                                   \
+        {                                                                       \
+            return get();                                                       \
         }                                                                       \
                                                                                 \
         BOOST_FUSION_ADAPT_STRUCT_UNPACK_NAME(NAME_SEQ)* obj;                   \
@@ -168,7 +178,7 @@
             static type                                                         \
             call(SeqRef obj)                                                    \
             {                                                                   \
-                return type(boost::addressof(obj));                             \
+                return type(obj);                                               \
             }                                                                   \
         };                                                                      \
     };

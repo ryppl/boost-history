@@ -1,15 +1,14 @@
 /*==============================================================================
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_SUPPORT_INTERNAL_ASSERT_HPP
-#define BOOST_FUSION_SUPPORT_INTERNAL_ASSERT_HPP
+#ifndef BOOST_FUSION_SUPPORT_INTERNAL_BASE_ASSERT_HPP
+#define BOOST_FUSION_SUPPORT_INTERNAL_BASE_ASSERT_HPP
 
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/config.hpp>
 #   include <boost/type_traits/is_base_of.hpp>
 
 #   ifdef BOOST_NO_STATIC_ASSERT
@@ -17,11 +16,11 @@
 #       include <boost/static_assert.hpp>
 
 #       define BOOST_FUSION_MPL_ASSERT(PRED)\
-            BOOST_MPL_ASSERT(PRED)
+            BOOST_MPL_ASSERT(PRED);
 #       define BOOST_FUSION_MPL_ASSERT_NOT(PRED)\
-            BOOST_MPL_ASSERT_NOT(PRED)
+            BOOST_MPL_ASSERT_NOT(PRED);
 #       define BOOST_FUSION_STATIC_ASSERT(PRED)\
-            BOOST_STATIC_ASSERT(PRED)
+            BOOST_STATIC_ASSERT(PRED);
 #       define BOOST_FUSION_MPL_ASSERT_MSG(PRED,MESSAGE)\
             BOOST_FUSION_MPL_ASSERT(PRED)
 #       define BOOST_FUSION_MPL_ASSERT_NOT_MSG(PRED,MESSAGE)\
@@ -46,44 +45,44 @@ namespace boost { namespace fusion { namespace detail
                 sizeof(detail::evaluate_pred(\
                     reinterpret_cast<void (*) PRED>(0)))==\
                 sizeof(detail::small_type)\
-              , "assert failed: " BOOST_PP_STRINGIZE(PRED))
+              , "assert failed: " BOOST_PP_STRINGIZE(PRED));
 #       define BOOST_FUSION_MPL_ASSERT_NOT(PRED)\
             static_assert(\
                 sizeof(detail::evaluate_pred(\
                     reinterpret_cast<void (*) PRED>(0)))==\
                 sizeof(detail::big_type)\
-              , "assert failed: " BOOST_PP_STRINGIZE(PRED))
+              , "assert failed: " BOOST_PP_STRINGIZE(PRED));
 #       define BOOST_FUSION_STATIC_ASSERT(PRED)\
             static_assert(\
                 PRED\
-              , "assert failed: " BOOST_PP_STRINGIZE(PRED))
+              , "assert failed: " BOOST_PP_STRINGIZE(PRED));
 #       define BOOST_FUSION_MPL_ASSERT_MSG(PRED,MESSAGE)\
             static_assert(\
                 sizeof(detail::evaluate_pred(\
                     reinterpret_cast<void (*) PRED>(0)))==\
                 sizeof(detail::small_type)\
               , "assert failed: " MESSAGE\
-                " - assert expression: " BOOST_PP_STRINGIZE(PRED))
+                " - assert expression: " BOOST_PP_STRINGIZE(PRED));
 #       define BOOST_FUSION_MPL_ASSERT_NOT_MSG(PRED,MESSAGE)\
             static_assert(\
                 sizeof(detail::evaluate_pred(\
                     reinterpret_cast<void (*) PRED>(0)))!=\
               , sizeof(detail::small_type)\
               , "assert failed: " MESSAGE\
-                " - assert expression: " BOOST_PP_STRINGIZE(PRED))
+                " - assert expression: " BOOST_PP_STRINGIZE(PRED));
 #       define BOOST_FUSION_STATIC_ASSERT_MSG(PRED,MESSAGE)\
             static_assert(\
                 PRED\
               , "assert failed: " MESSAGE\
-                " - assert expression: " BOOST_PP_STRINGIZE(PRED))
+                " - assert expression: " BOOST_PP_STRINGIZE(PRED));
 #   endif
 #else
-#   define BOOST_FUSION_MPL_ASSERT(PRED) enum {}
-#   define BOOST_FUSION_MPL_ASSERT_NOT(PRED) enum {}
-#   define BOOST_FUSION_STATIC_ASSERT(PRED) enum {}
-#   define BOOST_FUSION_MPL_ASSERT_MSG(PRED,MESSAGE) enum {}
-#   define BOOST_FUSION_MPL_ASSERT_NOT_MSG(PRED,MESSAGE) enum {}
-#   define BOOST_FUSION_STATIC_ASSERT_MSG(PRED,MESSAGE) enum {}
+#   define BOOST_FUSION_MPL_ASSERT(PRED)
+#   define BOOST_FUSION_MPL_ASSERT_NOT(PRED)
+#   define BOOST_FUSION_STATIC_ASSERT(PRED)
+#   define BOOST_FUSION_MPL_ASSERT_MSG(PRED,MESSAGE)
+#   define BOOST_FUSION_MPL_ASSERT_NOT_MSG(PRED,MESSAGE)
+#   define BOOST_FUSION_STATIC_ASSERT_MSG(PRED,MESSAGE)
 #endif
 
 #define BOOST_FUSION_INDEX_CHECK(INDEX,MAX)                                     \

@@ -26,8 +26,8 @@
         >
 #endif
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_random_access<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_random_access<Seq>))
 
             typedef
                 nview<
@@ -65,7 +65,7 @@
             >::type(BOOST_FUSION_FORWARD(Seq,seq));
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<
 #   if BOOST_FUSION_N
         BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, int I),

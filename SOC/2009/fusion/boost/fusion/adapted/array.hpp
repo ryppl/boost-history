@@ -8,10 +8,10 @@
 #ifndef BOOST_FUSION_ADAPTED_ARRAY_HPP
 #define BOOST_FUSION_ADAPTED_ARRAY_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
+
 //for backwards compatibility
 #include <boost/fusion/adapted/boost_array.hpp>
-
-#include <boost/fusion/support/internal/ref.hpp>
 
 #include <boost/fusion/adapted/detail/po_array/tag_of.hpp>
 #include <boost/fusion/adapted/detail/po_array/is_view_impl.hpp>

@@ -9,19 +9,16 @@
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_FILTER_IF_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_FILTER_IF_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/view/filter_view/filter_view.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/support/internal/workaround.hpp>
 #include <boost/mpl/bool.hpp>
-#ifdef BOOST_NO_RVALUE_REFERENCES
-#   include <boost/detail/workaround.hpp>
-#   if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) ||\
-        BOOST_WORKAROUND(__GNUC__,<4)
-#       include <boost/type_traits/is_const.hpp>
-#       include <boost/utility/enable_if.hpp>
-#   endif
+#if defined(BOOST_FUSION_NO_RVALUE_REFERENCES) &&                               \
+    (defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) ||                  \
+        BOOST_WORKAROUND(__GNUC__,<4))
+
+#   include <boost/type_traits/is_const.hpp>
+#   include <boost/utility/enable_if.hpp>
 #endif
 
 namespace boost { namespace fusion
@@ -35,8 +32,8 @@ namespace boost { namespace fusion
         >
         struct filter_if
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
 
             typedef filter_view<Seq, Pred, PredIsMetafunction> type;
         };
@@ -52,7 +49,7 @@ namespace boost { namespace fusion
         >::type(BOOST_FUSION_FORWARD(Seq,seq));
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename Pred, typename Seq>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
             result_of::filter_if<,Seq,&, Pred>)
@@ -77,7 +74,7 @@ namespace boost { namespace fusion
         >::type(BOOST_FUSION_FORWARD(Seq,seq));
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename Pred, typename PredIsMetafunction, typename Seq>
 #   if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) ||\
         BOOST_WORKAROUND(__GNUC__,<4)

@@ -1,7 +1,7 @@
 /*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2006 Dan Marsden
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -12,9 +12,7 @@
 
 #include <boost/fusion/container/generation/vector_tie.hpp>
 #include <boost/fusion/view/zip_view.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/template.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #   include <boost/preprocessor/cat.hpp>

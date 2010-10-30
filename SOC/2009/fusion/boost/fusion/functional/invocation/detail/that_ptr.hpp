@@ -11,8 +11,6 @@
 #define BOOST_FUSION_FUNCTIONAL_INVOCATION_DETAIL_THAT_PTR_HPP
 
 #include <boost/fusion/support/internal/small_big_type.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/is_convertible.hpp>

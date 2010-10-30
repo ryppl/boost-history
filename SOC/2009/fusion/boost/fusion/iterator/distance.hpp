@@ -9,8 +9,8 @@
 #ifndef BOOST_FUSION_ITERATOR_DISTANCE_HPP
 #define BOOST_FUSION_ITERATOR_DISTANCE_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/iterator/detail/distance.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 
 namespace boost { namespace fusion
@@ -36,8 +36,8 @@ namespace boost { namespace fusion
           : extension::distance_impl<typename traits::tag_of<Begin>::type>::
                 template apply<Begin, End>::type
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Begin>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<End>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Begin>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<End>))
         };
     }
 

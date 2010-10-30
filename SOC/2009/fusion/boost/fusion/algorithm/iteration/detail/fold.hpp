@@ -10,7 +10,6 @@
 #ifndef BOOST_FUSION_ALGORITHM_ITERATION_DETAIL_FOLD_HPP
 #define BOOST_FUSION_ALGORITHM_ITERATION_DETAIL_FOLD_HPP
 
-#include <boost/config.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/sequence/intrinsic/empty.hpp>
@@ -20,10 +19,7 @@
 #include <boost/fusion/iterator/value_of.hpp>
 #include <boost/fusion/iterator/prior.hpp>
 #include <boost/fusion/iterator/next.hpp>
-#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/support/internal/result_of.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
@@ -34,7 +30,7 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   include <boost/type_traits/add_const.hpp>
 #endif
 
@@ -81,7 +77,7 @@ namespace boost { namespace fusion
         struct BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _result_of_helper)
           : boost::result_of<
                 F(
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
                 typename add_lref<typename add_const<State>::type>::type,
 #else
                 typename remove_reference<State>::type&,
@@ -93,7 +89,7 @@ namespace boost { namespace fusion
         template<typename State0, typename It0, typename F, int N>
         struct BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_FOLD_NAME);
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   define BOOST_FUSION_CONST_IF_NO_RVALUE_REFERENCES const
 #else
 #   define BOOST_FUSION_CONST_IF_NO_RVALUE_REFERENCES
@@ -163,11 +159,21 @@ namespace boost { namespace fusion
             type;                                                               \
         };
 
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+//warning C4181: qualifier applied to reference type; ignored
+#   pragma warning(disable: 4181)
+#endif
+
         BOOST_PP_REPEAT_FROM_TO(
             1,
             BOOST_PP_INC(BOOST_FUSION_UNROLLED_DEPTH),
             BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL,
             _)
+
+#ifdef BOOST_MSVC
+#   pragma warning(pop)
+#endif
 
 #undef BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL
 #undef BOOST_FUSION_RESULT_OF_UNROLLED_FOLD_IMPL_DECLERATION
@@ -191,7 +197,7 @@ namespace boost { namespace fusion
         template<typename FFuncBase, typename Result,int N>
         struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME);
 
-#if defined(BOOST_NO_AUTO_DECLARATIONS) || defined(BOOST_NO_RVALUE_REFERENCES)
+#if defined(BOOST_NO_AUTO_DECLARATIONS) || defined(BOOST_FUSION_NO_RVALUE_REFERENCES)
 #   define BOOST_FUSION_UNROLLED_FOLD_IMPL_LOCAL_INIT(Z,N,_)                    \
         typedef typename                                                        \
             result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<                 \
@@ -373,11 +379,11 @@ namespace boost { namespace fusion
           : detail::BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME,_impl)<
                 size<Seq>::value
               , typename detail::add_lref<
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
                     typename add_const<
 #endif
                         State
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
                     >::type
 #endif
                 >::type
@@ -385,11 +391,11 @@ namespace boost { namespace fusion
               , F
             >
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
 #ifdef BOOST_FUSION_REVERSE_FOLD
-            BOOST_FUSION_MPL_ASSERT((traits::is_bidirectional<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_bidirectional<Seq>))
 #else
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
 #endif
         };
     }
@@ -415,7 +421,7 @@ namespace boost { namespace fusion
             BOOST_FUSION_FORWARD(F,f));
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename Seq, typename State, typename F>
     inline typename result_of::BOOST_FUSION_FOLD_NAME<
         Seq&

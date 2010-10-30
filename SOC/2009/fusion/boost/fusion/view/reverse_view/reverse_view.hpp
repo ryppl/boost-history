@@ -1,6 +1,6 @@
 /*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,13 +9,11 @@
 #ifndef BOOST_FUSION_VIEW_REVERSE_VIEW_REVERSE_VIEW_HPP
 #define BOOST_FUSION_VIEW_REVERSE_VIEW_REVERSE_VIEW_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
-
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/inherit.hpp>
@@ -46,8 +44,8 @@ namespace boost { namespace fusion
     struct reverse_view
       : sequence_base<reverse_view<Seq> >
     {
-        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_bidirectional<Seq>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+        BOOST_FUSION_MPL_ASSERT((traits::is_bidirectional<Seq>))
 
         typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq) storage_type;
         typedef typename storage_type::type seq_type;
@@ -68,7 +66,7 @@ namespace boost { namespace fusion
 
 #undef BOOST_FUSION_REVERSE_VIEW_CTOR
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         explicit
         reverse_view(typename storage_type::call_param seq)
           : seq(seq)

@@ -1,7 +1,7 @@
 /*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2006 Dan Marsden
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,6 +10,7 @@
 #ifndef BOOST_FUSION_VIEW_ZIP_VIEW_ZIP_VIEW_HPP
 #define BOOST_FUSION_VIEW_ZIP_VIEW_ZIP_VIEW_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/algorithm/query/find_if.hpp>
@@ -19,9 +20,6 @@
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/unused.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
-
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/transform_view.hpp>
@@ -65,7 +63,7 @@ namespace boost { namespace fusion
                         >
                     >::type
                   , typename fusion::result_of::end<Seqs>::type
-                >));
+                >))
             BOOST_FUSION_MPL_ASSERT((
                 result_of::equal_to<
                     typename fusion::result_of::find_if<
@@ -73,7 +71,7 @@ namespace boost { namespace fusion
                       , mpl::not_<detail::is_lrref<mpl::_1> >
                     >::type
                   , typename fusion::result_of::end<Seqs>::type
-                >));
+                >))
         };
 #endif
 
@@ -136,14 +134,14 @@ namespace boost { namespace fusion
     struct zip_view
       : sequence_base<zip_view<Seqs> >
     {
-        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seqs>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seqs>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seqs>))
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seqs>))
 
         typedef typename
             result_of::remove<Seqs, unused_type const&>::type
         real_seqs;
 
-        BOOST_FUSION_MPL_ASSERT((detail::all_forward_seqs<real_seqs>));
+        BOOST_FUSION_MPL_ASSERT((detail::all_forward_seqs<real_seqs>))
 
         typedef typename
             fusion::result_of::as_vector<Seqs>::type

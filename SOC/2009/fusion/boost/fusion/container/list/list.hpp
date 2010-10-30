@@ -9,7 +9,7 @@
 #ifndef BOOST_FUSION_CONTAINER_LIST_LIST_HPP
 #define BOOST_FUSION_CONTAINER_LIST_LIST_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/container/list/list_fwd.hpp>
 #include <boost/fusion/container/list/cons.hpp>
 #include <boost/fusion/container/list/detail/cons_gen.hpp>
@@ -50,7 +50,7 @@ namespace boost { namespace fusion
 
 #   include <boost/fusion/container/list/detail/pp/list_forward_ctor.hpp>
 
-#   ifdef BOOST_NO_RVALUE_REFERENCES
+#   ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         template<typename Seq>
         list(Seq const& seq)
           : base_type(seq)

@@ -5,10 +5,7 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#include <boost/config.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/result_of.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/support/internal/template.hpp>
 #include <boost/preprocessor/empty.hpp>
 #include <boost/type_traits/add_const.hpp>
@@ -54,7 +51,7 @@ namespace boost { namespace fusion
           : f(BOOST_FUSION_FORWARD(Args,args)...)
         {}
 
-#   ifdef BOOST_NO_RVALUE_REFERENCES
+#   ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         template<typename... Args>
         BOOST_FUSION_ADAPTER_NAME(Args&... args)
           : f(args...)
@@ -101,10 +98,10 @@ namespace boost { namespace fusion
         operator()(Seq SEQ_MODIFIER seq) MODIFIER\
         {\
             {\
-                BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));\
+                BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))\
             }\
             {\
-                BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));\
+                BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))\
             }\
             \
             return fusion::BOOST_FUSION_INVOCATION_METHOD<F>(\
@@ -112,7 +109,7 @@ namespace boost { namespace fusion
                 static_cast<Seq SEQ_MODIFIER>(seq));\
         }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         BOOST_FUSION_CALL_OPERATOR(F,&,BOOST_PP_EMPTY())
         BOOST_FUSION_CALL_OPERATOR(F,const&,BOOST_PP_EMPTY())
         BOOST_FUSION_CALL_OPERATOR(typename add_const<F>::type,&,const)

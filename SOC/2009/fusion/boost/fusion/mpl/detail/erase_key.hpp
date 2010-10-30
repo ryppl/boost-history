@@ -6,22 +6,22 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_MPL_INSERT_HPP
-#define BOOST_FUSION_MPL_INSERT_HPP
+#ifndef BOOST_FUSION_MPL_DETAIL_ERASE_KEY_HPP
+#define BOOST_FUSION_MPL_DETAIL_ERASE_KEY_HPP
 
-#include <boost/fusion/algorithm/transformation/insert.hpp>
+#include <boost/fusion/algorithm/transformation/erase_key.hpp>
 
 namespace boost { namespace mpl
 {
     template<typename>
-    struct insert_impl;
+    struct erase_key_impl;
 
     template<>
-    struct insert_impl<fusion::fusion_sequence_tag>
+    struct erase_key_impl<fusion::fusion_sequence_tag>
     {
-        template<typename Seq, typename Pos, typename T>
+        template<typename Seq, typename Key>
         struct apply
-          : fusion::result_of::insert<Seq, Pos, T>
+          : fusion::result_of::erase_key<Seq, Key>
         {};
     };
 }}

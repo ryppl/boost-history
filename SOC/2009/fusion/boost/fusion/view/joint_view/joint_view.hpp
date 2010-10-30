@@ -1,6 +1,6 @@
 /*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,15 +9,13 @@
 #ifndef BOOST_FUSION_VIEW_JOINT_VIEW_JOINT_VIEW_HPP
 #define BOOST_FUSION_VIEW_JOINT_VIEW_JOINT_VIEW_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
-
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/plus.hpp>
 #include <boost/mpl/bool.hpp>
@@ -45,10 +43,10 @@ namespace boost { namespace fusion
     struct joint_view
       : sequence_base<joint_view<Seq1, Seq2> >
     {
-        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>))
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>))
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>))
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>))
 
         typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq1) storage1_type;
         typedef typename storage1_type::type seq1_type;
@@ -83,7 +81,7 @@ namespace boost { namespace fusion
             BOOST_FUSION_TAG_CHECK(OtherView,joint_view_tag);
         }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         explicit
         joint_view(
             typename storage1_type::call_param seq1,

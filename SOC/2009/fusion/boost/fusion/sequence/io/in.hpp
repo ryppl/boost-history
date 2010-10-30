@@ -10,9 +10,8 @@
 #ifndef BOOST_FUSION_SEQUENCE_IO_IN_HPP
 #define BOOST_FUSION_SEQUENCE_IO_IN_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/is_sequence.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
-
 #include <istream>
 
 #include <boost/fusion/sequence/io/detail/in.hpp>
@@ -23,8 +22,8 @@ namespace boost { namespace fusion
     inline std::istream&
     in(std::istream& is, Seq& seq)
     {
-        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
 
         detail::read_sequence(is, seq);
         return is;
@@ -40,8 +39,8 @@ namespace boost { namespace fusion
             >::type
         operator>>(std::istream& is, Seq& seq)
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
 
             return fusion::in(is, seq);
         }

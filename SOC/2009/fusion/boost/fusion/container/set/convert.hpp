@@ -9,6 +9,7 @@
 #ifndef BOOST_FUSION_CONTAINER_SET_CONVERT_HPP
 #define BOOST_FUSION_CONTAINER_SET_CONVERT_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/container/set/set.hpp>
 #include <boost/fusion/container/generation/make_set.hpp>
 

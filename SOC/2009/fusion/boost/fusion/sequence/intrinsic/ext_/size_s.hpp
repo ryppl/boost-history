@@ -9,10 +9,10 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_EXT_SIZE_S_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_EXT_SIZE_S_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/sequence/intrinsic/ext_/segments.hpp>
 #include <boost/fusion/algorithm/iteration/fold.hpp>
 #include <boost/fusion/support/ext_/is_segmented.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/mpl/plus.hpp>
 #include <boost/mpl/size_t.hpp>
 

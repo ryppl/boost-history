@@ -9,12 +9,11 @@
 #ifndef BOOST_FUSION_CONTAINER_MAP_MAP_HPP
 #define BOOST_FUSION_CONTAINER_MAP_MAP_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/container/map/map_fwd.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/support/pair.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/mpl/bool.hpp>
 
 #include <boost/fusion/container/map/detail/begin_impl.hpp>

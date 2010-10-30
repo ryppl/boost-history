@@ -27,7 +27,7 @@
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/eval_if.hpp>
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   include <boost/call_traits.hpp>
 #endif
 #include <boost/type_traits/is_const.hpp>
@@ -73,7 +73,7 @@ namespace boost { namespace fusion
        tree()
        {}
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
        explicit
        tree(typename call_traits<Data>::type data,
            typename call_traits<Left>::type left = Left(),

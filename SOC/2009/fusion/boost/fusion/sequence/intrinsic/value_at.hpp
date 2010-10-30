@@ -8,9 +8,8 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_VALUE_AT_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_VALUE_AT_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/mpl/int.hpp>
 
 namespace boost { namespace fusion
@@ -33,7 +32,7 @@ namespace boost { namespace fusion
           : extension::value_at_impl<typename traits::tag_of<Seq>::type>::
                 template apply<Seq, N>
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
             BOOST_FUSION_MPL_ASSERT((
                 mpl::or_<
                     traits::is_random_access<Seq>
@@ -45,16 +44,16 @@ namespace boost { namespace fusion
                         typename traits::tag_of<Seq>::type
                       , cons_tag
                     >
-                >));
-            BOOST_FUSION_INDEX_CHECK(N::value,size<Seq>::value);
-            BOOST_FUSION_INDEX_CHECK(N::value,size<Seq>::value);
+                >))
+            BOOST_FUSION_INDEX_CHECK(N::value,size<Seq>::value)
+            BOOST_FUSION_INDEX_CHECK(N::value,size<Seq>::value)
         };
 
         template<typename Seq, int N>
         struct value_at_c
           : value_at<Seq,mpl::int_<N> >
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
             BOOST_FUSION_MPL_ASSERT((
                 mpl::or_<
                     traits::is_random_access<Seq>
@@ -66,9 +65,9 @@ namespace boost { namespace fusion
                         typename traits::tag_of<Seq>::type
                       , cons_tag
                     >
-                >));
-            BOOST_FUSION_INDEX_CHECK(N,size<Seq>::value);
-            BOOST_FUSION_INDEX_CHECK(N,size<Seq>::value);
+                >))
+            BOOST_FUSION_INDEX_CHECK(N,size<Seq>::value)
+            BOOST_FUSION_INDEX_CHECK(N,size<Seq>::value)
         };
     }
 }}

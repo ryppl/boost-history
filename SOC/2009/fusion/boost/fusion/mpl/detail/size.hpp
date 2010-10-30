@@ -1,27 +1,26 @@
 /*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_MPL_PUSH_BACK_HPP
-#define BOOST_FUSION_MPL_PUSH_BACK_HPP
+#ifndef BOOST_FUSION_MPL_DETAIL_SIZE_HPP
+#define BOOST_FUSION_MPL_DETAIL_SIZE_HPP
 
-#include <boost/fusion/algorithm/transformation/push_back.hpp>
+#include <boost/fusion/sequence/intrinsic/size.hpp>
 
 namespace boost { namespace mpl
 {
     template<typename>
-    struct push_back_impl;
+    struct size_impl;
 
     template<>
-    struct push_back_impl<fusion::fusion_sequence_tag>
+    struct size_impl<fusion::fusion_sequence_tag>
     {
-        template<typename Seq, typename T>
+        template<typename Seq>
         struct apply
-          : fusion::result_of::push_back<Seq, T>
+          : fusion::result_of::size<Seq>
         {};
     };
 }}

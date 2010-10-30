@@ -5,16 +5,13 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#include <boost/config.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/ref.hpp>
-#if defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES)
+#if defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_FUSION_NO_RVALUE_REFERENCES)
 #   include <boost/fusion/functional/invocation/detail/pp/invoke_impl.hpp>
 #else
 #   include <boost/fusion/functional/invocation/detail/variadic_templates/invoke_impl.hpp>
 #endif
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   include <boost/mpl/if.hpp>
 #   include <boost/type_traits/is_same.hpp>
 #endif
@@ -30,12 +27,12 @@ namespace boost { namespace fusion
               , typename detail::add_lref<Seq>::type
             >
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
         };
     }
 
-#if defined(BOOST_NO_RVALUE_REFERENCES) ||\
+#if defined(BOOST_FUSION_NO_RVALUE_REFERENCES) ||\
     defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
     template<typename F, typename Seq>
     inline typename result_of::BOOST_FUSION_INVOKE_NAME<F, Seq const&>::type
@@ -47,7 +44,7 @@ namespace boost { namespace fusion
          >::call(f,BOOST_FUSION_FORWARD(Seq,seq));
     }
 
-#   ifdef BOOST_NO_RVALUE_REFERENCES
+#   ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename F, typename Seq>
     inline typename result_of::BOOST_FUSION_INVOKE_NAME<F,Seq&>::type
     BOOST_FUSION_INVOKE_NAME(F f,Seq& seq)

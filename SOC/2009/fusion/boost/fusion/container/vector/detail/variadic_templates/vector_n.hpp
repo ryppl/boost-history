@@ -55,7 +55,7 @@ namespace boost { namespace fusion
 
 #   undef BOOST_FUSION_VECTOR_CTOR
 
-#if BOOST_FUSION_N>1 || !BOOST_FUSION_N || defined(BOOST_NO_RVALUE_REFERENCES)
+#if BOOST_FUSION_N>1 || !BOOST_FUSION_N || defined(BOOST_FUSION_NO_RVALUE_REFERENCES)
         template<typename Arg>
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(BOOST_FUSION_R_ELSE_CLREF(Arg) arg)
           : base_type(BOOST_FUSION_FORWARD(Arg,arg))
@@ -63,7 +63,7 @@ namespace boost { namespace fusion
 #endif
 
 #   if BOOST_FUSION_N
-#       ifdef BOOST_NO_RVALUE_REFERENCES
+#       ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         explicit
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(
             BOOST_PP_ENUM_BINARY_PARAMS(N, call_traits<T,>::param_type a))

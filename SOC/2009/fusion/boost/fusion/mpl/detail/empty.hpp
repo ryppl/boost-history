@@ -5,25 +5,22 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_MPL_FRONT_HPP
-#define BOOST_FUSION_MPL_FRONT_HPP
+#ifndef BOOST_FUSION_MPL_DETAIL_EMPTY_HPP
+#define BOOST_FUSION_MPL_DETAIL_EMPTY_HPP
 
-#include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/iterator/value_of.hpp>
+#include <boost/fusion/sequence/intrinsic/empty.hpp>
 
 namespace boost { namespace mpl
 {
     template<typename>
-    struct front_impl;
+    struct empty_impl;
 
     template<>
-    struct front_impl<fusion::fusion_sequence_tag>
+    struct empty_impl<fusion::fusion_sequence_tag>
     {
         template<typename Seq>
         struct apply
-          : fusion::result_of::value_of<
-                typename fusion::result_of::begin<Seq>::type
-            >
+          : fusion::result_of::empty<Seq>
         {};
     };
 }}

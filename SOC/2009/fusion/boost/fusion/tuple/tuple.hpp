@@ -9,7 +9,7 @@
 #ifndef BOOST_FUSION_TUPLE_TUPLE_HPP
 #define BOOST_FUSION_TUPLE_TUPLE_HPP
 
-#include <boost/config.hpp>
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/tuple/tuple_fwd.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
@@ -18,7 +18,6 @@
 #include <boost/fusion/sequence/comparison.hpp>
 #include <boost/fusion/sequence/io.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/workaround.hpp>
 
 #include <boost/fusion/container/detail/forward_interface.hpp>
@@ -75,7 +74,7 @@ namespace boost { namespace fusion
         return fusion::at_c<N>(tuple);
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<int N, typename Tuple>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
             result_of::at_c<,Tuple,&, N>)

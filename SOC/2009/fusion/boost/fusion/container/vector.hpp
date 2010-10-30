@@ -8,13 +8,14 @@
 #ifndef BOOST_FUSION_CONTAINER_VECTOR_HPP
 #define BOOST_FUSION_CONTAINER_VECTOR_HPP
 
+#include <boost/fusion/container/vector/convert.hpp>
 #include <boost/fusion/container/vector/limits.hpp>
+#include <boost/fusion/container/vector/vector_fwd.hpp>
+#include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/container/vector/vector10.hpp>
 #include <boost/fusion/container/vector/vector20.hpp>
 #include <boost/fusion/container/vector/vector30.hpp>
 #include <boost/fusion/container/vector/vector40.hpp>
 #include <boost/fusion/container/vector/vector50.hpp>
-#include <boost/fusion/container/vector/vector.hpp>
-#include <boost/fusion/container/vector/convert.hpp>
 
 #endif

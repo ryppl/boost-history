@@ -6,22 +6,22 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_MPL_ERASE_HPP
-#define BOOST_FUSION_MPL_ERASE_HPP
+#ifndef BOOST_FUSION_MPL_DETAIL_POP_BACK_HPP
+#define BOOST_FUSION_MPL_DETAIL_POP_BACK_HPP
 
-#include <boost/fusion/algorithm/transformation/erase.hpp>
+#include <boost/fusion/algorithm/transformation/pop_back.hpp>
 
 namespace boost { namespace mpl
 {
     template<typename>
-    struct erase_impl;
+    struct pop_back_impl;
 
     template<>
-    struct erase_impl<fusion::fusion_sequence_tag>
+    struct pop_back_impl<fusion::fusion_sequence_tag>
     {
-        template<typename Seq, typename Begin, typename End>
+        template<typename Seq>
         struct apply
-          : fusion::result_of::erase<Seq, Begin, End>
+          : fusion::result_of::pop_back<Seq>
         {};
     };
 }}

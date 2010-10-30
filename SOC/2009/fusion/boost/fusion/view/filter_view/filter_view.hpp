@@ -9,12 +9,11 @@
 #ifndef BOOST_FUSION_VIEW_FILTER_VIEW_FILTER_VIEW_HPP
 #define BOOST_FUSION_VIEW_FILTER_VIEW_FILTER_VIEW_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/bool.hpp>
@@ -46,8 +45,8 @@ namespace boost { namespace fusion
     struct filter_view
       : sequence_base<filter_view<Seq, Pred, PredIsMetafunction> >
     {
-        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
 
         typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq) storage_type;
         typedef typename storage_type::type seq_type;
@@ -78,7 +77,7 @@ namespace boost { namespace fusion
 
 #undef BOOST_FUSION_FILTER_VIEW_CTOR
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
         explicit
         filter_view(typename storage_type::call_param seq)
           : seq(seq)
@@ -102,7 +101,7 @@ namespace boost { namespace fusion
                   , typename detail::remove_reference<
                         OtherView
                     >::type::pred_type
-                >));
+                >))
 
             seq=BOOST_FUSION_FORWARD(OtherView,other_view).seq;
             return *this;

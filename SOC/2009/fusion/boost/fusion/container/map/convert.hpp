@@ -9,6 +9,7 @@
 #ifndef BOOST_FUSION_CONTAINER_MAP_CONVERT_HPP
 #define BOOST_FUSION_CONTAINER_MAP_CONVERT_HPP
 
+#include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/container/map/map.hpp>
 #include <boost/fusion/container/generation/make_map.hpp>
 
