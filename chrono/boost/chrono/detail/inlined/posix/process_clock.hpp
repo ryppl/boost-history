@@ -21,7 +21,7 @@
 namespace boost { namespace chrono {
 namespace chrono_detail
 {
-  long tick_factor()        // multiplier to convert ticks
+  inline long tick_factor()        // multiplier to convert ticks
                             //  to nanoseconds; -1 if unknown
   {
     static long factor = 0;

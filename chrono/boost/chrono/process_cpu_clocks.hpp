@@ -195,7 +195,7 @@ namespace boost { namespace chrono {
 
     template <class CharT, class Traits>
     std::basic_istream<CharT, Traits>& 
-    operator<<(std::basic_istream<CharT, Traits>& is, 
+    operator>>(std::basic_istream<CharT, Traits>& is, 
             process_cpu_clock_times const& rhs) 
     {
         rhs.read(is);
