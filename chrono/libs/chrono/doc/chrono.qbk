@@ -9,7 +9,7 @@
 
 [article Boost.Chrono
     [quickbook 1.5]
-    [version 0.6.0]
+    [version 0.7.0]
     [authors [Hinnant, Howard]]
     [authors [Dawes, Beman]]
     [authors [Botet Escriba, Vicente J.]]
@@ -1007,12 +1007,12 @@ The output could be:
 [section Examples]
 [/===============]
 
-[section Common type]
+[section Time point]
 
 [/==================]
 [section min utility]
 
-Returns the earliest time_point.
+The following function returns the earliest time_point.
 
     template <class Clock, class Duration1, class Duration2>
     typename boost::__common_type__<__time_point__<Clock, Duration1>,
@@ -1026,7 +1026,7 @@ Being able to *easily* write this function is a major feature!
 
     BOOST_AUTO(t1, system_clock::now() + seconds(3));
     BOOST_AUTO(t2, system_clock::now() + nanoseconds(3));
-    BOOST_AUTO(t3, (min)(t1, t2));
+    BOOST_AUTO(t3, min(t1, t2));
 
 ['See the source file [@../../example/min_time_point.cpp example/min_time_point.cpp]]
 
@@ -1041,7 +1041,7 @@ Being able to *easily* write this function is a major feature!
 [/===============]
 [section How you override the duration's default constructor]
 
-Next follows how you override the duration's default constructor to do anything you want (in this case zero). All we need to do is to change the representation
+Next follows how you override the duration's default constructor to do anything you want (in this case set it to zero). All we need to do is to change the representation
 
     namespace I_dont_like_the_default_duration_behavior {
 
@@ -1100,11 +1100,11 @@ Usage
 ['See the source file [@../../example/i_dont_like_the_default_duration_behavior.cpp example/i_dont_like_the_default_duration_behavior.cpp]]
 
 [endsect]
-
+[/
 [/=========================]
 [section runtime_resolution]
 
-Handle duration with resolution not known until run time
+This example shows how to handle duration with resolution not known until run time
 
     class duration
     {
@@ -1163,7 +1163,7 @@ Handle duration with resolution not known until run time
 ['See the source file [@../../example/runtime_resolution.cpp here]]
 
 [endsect]
-
+]
 [/================]
 [section Saturating]
 
@@ -1326,8 +1326,8 @@ Clock based on timeval-like struct.
     public:
         typedef xtime                                  rep;
         typedef boost::micro                           period;
-        typedef boost::chrono::__duration__<rep, period>   duration;
-        typedef boost::chrono::__time_point__<xtime_clock> time_point;
+        typedef boost::chrono::duration<rep, period>   duration;
+        typedef boost::chrono::time_point<xtime_clock> time_point;
 
         static time_point now()
         {
@@ -3880,7 +3880,7 @@ This operator is convenient for computing where in a time frame a given duration
 
 [heading Why ratio needs CopyConstruction and Assignment from ratios having the same normalized form]
 
-Current [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n3000.pdf [*N3000]] doesn't allows to copy-construct or assign ratio instances of ratio classes having the same normalized form.
+Current [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n3000.pdf [*N3000]] doesn't allows to copy-construct or assign `ratio` instances of `ratio` classes having the same normalized form.
 
 This simple example
 
@@ -3893,7 +3893,7 @@ fails to compile in (1). Other example
     __ratio__<1,3> r1;
     ratio_substract<__ratio__<2,3>,__ratio__<1,3> > r2=r1;  // (2)
 
-The type of ratio_substract<__ratio__<2,3>,__ratio__<1,3> > could be __ratio__<3,9> so the compilation could fail in (2). It could also be __ratio__<1,3> and the compilation succeeds.
+The type of `ratio_substract<__ratio__<2,3>,__ratio__<1,3> >` could be `__ratio__<3,9>` so the compilation could fail in (2). It could also be `__ratio__<1,3>` and the compilation succeeds.
 
 [heading Why ratio needs the nested normalizer typedef type]
 
@@ -3901,7 +3901,7 @@ In [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n3000.pdf [*N3000]]
 
 ['3 The nested typedef type shall be a synonym for __ratio__<T1, T2> where T1 has the value R1::num * R2::den - R2::num * R1::den and T2 has the value R1::den * R2::den.]
 
-The meaning of synonym let think that the result should be a normalized ratio equivalent to __ratio__<T1, T2>, but there is not an explicit definition of what synonym means in this context.
+The meaning of synonym let think that the result should be a normalized ratio equivalent to `__ratio__<T1, T2>`, but there is not an explicit definition of what synonym means in this context.
 
 If the CopyConstruction and Assignment ([[@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#12811281 [*LWG 1281]]) is not added we need a typedef for accessing the normalized ratio, and change 20.4.2 to return only this normalized result. In this case the user will need to
 
