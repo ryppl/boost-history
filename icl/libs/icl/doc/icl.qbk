@@ -245,7 +245,7 @@ Distributed under the Boost Software License, Version 1.0.
 [include implementation.qbk]
 [include functions.qbk]
 [include acknowledgments.qbk]
-[xinclude itldoc.xml]
+[xinclude icldoc.xml]
 
 
 14:46 15.10.2010
