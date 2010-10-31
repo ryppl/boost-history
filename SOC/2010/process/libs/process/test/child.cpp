@@ -30,6 +30,7 @@
 #include <vector> 
 #include <utility> 
 #include <istream> 
+#include <fstream> 
 #include <cstdlib> 
 
 BOOST_AUTO_TEST_CASE(test_close_stdin) 
@@ -604,6 +605,41 @@ BOOST_AUTO_TEST_CASE(test_null_stderr)
 #elif defined(BOOST_WINDOWS_API) 
     BOOST_CHECK_EQUAL(s, EXIT_SUCCESS); 
 #endif 
+} 
+
+BOOST_AUTO_TEST_CASE(test_inherit_file_descriptor) 
+{ 
+    check_helpers(); 
+
+    std::vector<std::string> args; 
+    args.push_back("echo-stdout"); 
+    args.push_back("message-stdout"); 
+
+    bio::file_descriptor_sink fd("6DB18578-DD0C-4ACB-AFD0-417F5CF2011D.txt"); 
+
+    bp::context ctx; 
+    ctx.streams[bp::stdout_id] = bpb::inherit(fd.handle()); 
+
+    bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
+
+    int s = c.wait(); 
+#if defined(BOOST_POSIX_API) 
+    BOOST_REQUIRE(WIFEXITED(s)); 
+    BOOST_CHECK_EQUAL(WEXITSTATUS(s), EXIT_SUCCESS); 
+#elif defined(BOOST_WINDOWS_API) 
+    BOOST_CHECK_EQUAL(s, EXIT_SUCCESS); 
+#endif 
+
+    fd.close(); 
+
+    std::string word; 
+    std::ifstream is("6DB18578-DD0C-4ACB-AFD0-417F5CF2011D.txt"); 
+    is >> word; 
+    is.close(); 
+
+    BOOST_CHECK_EQUAL(word, "message-stdout"); 
+
+    BOOST_REQUIRE(bfs::remove("6DB18578-DD0C-4ACB-AFD0-417F5CF2011D.txt")); 
 } 
 
 #if defined(BOOST_POSIX_API) 

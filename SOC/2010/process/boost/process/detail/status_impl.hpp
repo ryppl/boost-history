@@ -165,7 +165,7 @@ public:
     {
         boost::iterator_range<operations_type::iterator> r =
             ops_.equal_range(ph);
-        if (r.begin() == r.end())
+        if (r.empty())
             return false;
         for (operations_type::iterator it = r.begin(); it != r.end(); ++it)
             (*it->second)(exit_code);

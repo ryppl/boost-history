@@ -20,6 +20,7 @@
 #include <boost/filesystem.hpp> 
 #include <boost/asio.hpp> 
 #include <boost/thread.hpp> 
+#include <boost/iostreams/device/file_descriptor.hpp> 
 #include <boost/bind.hpp> 
 #include <boost/ref.hpp> 
 #include <boost/lexical_cast.hpp> 
@@ -34,6 +35,7 @@ namespace but = boost::unit_test;
 namespace butf = boost::unit_test::framework; 
 namespace bfs = boost::filesystem; 
 namespace ba = boost::asio; 
+namespace bio = boost::iostreams; 
 namespace bu = boost::uuids; 
 
 #endif 

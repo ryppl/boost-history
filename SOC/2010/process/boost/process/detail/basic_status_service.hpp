@@ -221,18 +221,14 @@ private:
                     BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
                         "GetExitCodeProcess() failed");
                 boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
-                bool regchild = false;
                 for (std::vector<implementation_type>::iterator it =
                     impls_.begin(); it != impls_.end(); ++it)
-                    regchild |= (*it)->complete(handle, exit_code);
-                if (regchild)
-                {
-                    std::vector<HANDLE>::iterator it = handles_.begin();
-                    std::advance(it, res - WAIT_OBJECT_0);
-                    handles_.erase(it);
-                    if (handles_.size() == 1)
-                        work_.reset();
-                }
+                    (*it)->complete(handle, exit_code);
+                std::vector<HANDLE>::iterator it = handles_.begin();
+                std::advance(it, res - WAIT_OBJECT_0);
+                handles_.erase(it);
+                if (handles_.size() == 1)
+                    work_.reset();
             }
         }
 #endif

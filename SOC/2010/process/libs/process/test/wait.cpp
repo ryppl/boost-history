@@ -130,14 +130,20 @@ BOOST_AUTO_TEST_CASE(test_status_async_wait_twice)
     ioservice.run(); 
 } 
 
-void start_child() 
+void start_child(const std::string &sec) 
 { 
     std::vector<std::string> args; 
     args.push_back("wait-exit"); 
-    args.push_back("1"); 
+    args.push_back(sec); 
 
     bp::child c = bp::create_child(get_helpers_path(), args); 
-    c.wait(); 
+    int exit_code = c.wait(); 
+#if defined(BOOST_POSIX_API) 
+    BOOST_REQUIRE(WIFEXITED(exit_code)); 
+    BOOST_CHECK_EQUAL(WEXITSTATUS(exit_code), EXIT_SUCCESS); 
+#elif defined(BOOST_WINDOWS_API) 
+    BOOST_CHECK_EQUAL(exit_code, EXIT_SUCCESS); 
+#endif 
 } 
 
 void handler2(boost::system::error_code ec, int exit_code, bool &called) 
@@ -152,7 +158,7 @@ void handler2(boost::system::error_code ec, int exit_code, bool &called)
 #endif 
 } 
 
-BOOST_AUTO_TEST_CASE(test_status_sync_and_async_wait) 
+BOOST_AUTO_TEST_CASE(test_sync_and_async_wait) 
 { 
     check_helpers(); 
 
@@ -166,13 +172,42 @@ BOOST_AUTO_TEST_CASE(test_status_sync_and_async_wait)
     args.push_back("2"); 
 
     bp::child c = bp::create_child(get_helpers_path(), args); 
-    s.async_wait(c.get_id(), boost::bind(handler2, _1, _2, boost::ref(called))); 
+    s.async_wait(c.get_id(), boost::bind(handler2, _1, _2, 
+        boost::ref(called))); 
 
-    boost::thread(start_child); 
+    boost::thread t(start_child, "1"); 
 
     ioservice.run(); 
 
     BOOST_CHECK_EQUAL(called, true); 
+
+    t.join(); 
+} 
+
+BOOST_AUTO_TEST_CASE(test_sync_and_async_wait2) 
+{ 
+    check_helpers(); 
+
+    bool called = false; 
+
+    ba::io_service ioservice; 
+    bp::status s(ioservice); 
+
+    std::vector<std::string> args; 
+    args.push_back("wait-exit"); 
+    args.push_back("1"); 
+
+    bp::child c = bp::create_child(get_helpers_path(), args); 
+    s.async_wait(c.get_id(), boost::bind(handler2, _1, _2, 
+        boost::ref(called))); 
+
+    boost::thread t(start_child, "2"); 
+
+    ioservice.run(); 
+
+    BOOST_CHECK_EQUAL(called, true); 
+
+    t.join(); 
 } 
 
 BOOST_AUTO_TEST_CASE(test_status_async_wait_shutdown) 
