@@ -11,7 +11,6 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define BOOST_ICL_VALIDATE_VALIDATER_ABELIAN_MONOID_VALIDATER_HPP_JOFA_100501
 
 #include <boost/icl/functors.hpp>
-//#include <boost/validate/laws/monoid.hpp>
 #include <boost/validate/validater/concept_validater.hpp>
 #include <boost/validate/validater/monoid_validater.hpp>
 

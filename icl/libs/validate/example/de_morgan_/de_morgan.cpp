@@ -137,12 +137,13 @@ Law successfully validated
 #include <boost/config/warning_disable.hpp>
 #include <iostream>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/validate/validater/law_validater.hpp>
-#include <boost/validate/gentor/gentorprofile.hpp>
 
-#include <boost/validate/laws/set_laws.hpp>
 #include <boost/icl/interval_set.hpp>
 #include <boost/icl/split_interval_map.hpp>
+
+#include <boost/validate/laws/set_laws.hpp>
+#include <boost/validate/validater/law_validater.hpp>
+#include <boost/validate/gentor/gentorprofile.hpp>
 
 using namespace std;
 using namespace boost;
