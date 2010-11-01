@@ -191,12 +191,10 @@ rule chrono-compile2 ( sources : name )
 
     test-suite "traits"
         :
-        [ chrono-compile traits/specializations/duration.pass.cpp ]
-        [ chrono-compile traits/specializations/time_point.pass.cpp ]
-        [ chrono-compile traits/is_fp/treat_as_floating_point.pass.cpp  ]
-        [ chrono-run traits/duration_values/max.pass.cpp  ]
-        [ chrono-run traits/duration_values/zero.pass.cpp ]
-        [ chrono-run traits/duration_values/min.pass.cpp  ]
+        [ chrono-compile traits/common_type_duration_pass.cpp ]
+        [ chrono-compile traits/common_type_time_point_pass.cpp ]
+        [ chrono-compile traits/treat_as_floating_point_pass.cpp  ]
+        [ chrono-run2 traits/duration_values_pass.cpp : traits_duration_values_pass ]
         ;
 
     test-suite "duration"
@@ -235,56 +233,49 @@ rule chrono-compile2 ( sources : name )
 
     test-suite "time_point"
         :
-        [ chrono-compile2 time_point/default_duration.pass.cpp : time_point.default_duration.pass ]
-        [ compile-fail time_point/duration.fail.cpp : : time_point.duration.fail   ]
+        [ chrono-compile2 time_point/default_duration_pass.cpp : time_point.default_duration_pass ]
+        [ compile-fail time_point/not_duration_fail.cpp : : time_point_not_duration_fail   ]
 
-        [ chrono-run2 time_point/arithmetic/op_plus_ass.pass.cpp  : time_point.op_plus_ass.pass ]
-        [ chrono-run2 time_point/arithmetic/op_minus_ass.pass.cpp  : time_point.op_minus_ass.pass ]
+        [ chrono-run2 time_point/arithmetic_pass.cpp  : time_point_arithmetic_pass ]
 
-        [ chrono-run2 time_point/cast/time_point_cast.pass.cpp  : time_point.time_point_cast.pass ]
-        [ compile-fail time_point/cast/toduration.fail.cpp : : time_point.toduration.fail   ]
+        [ chrono-run2 time_point/time_point_cast_pass.cpp  : time_point_time_point_cast_pass ]
+        [ compile-fail time_point/time_point_cast_int_fail.cpp : : time_point_time_point_cast_int_fail   ]
 
-        [ compile-fail time_point/comparisons/op_equal.fail.cpp : : time_point.op_equal.fail   ]
-        [ chrono-run2 time_point/comparisons/op_equal.pass.cpp  : time_point.op_equal.pass ]
-        [ compile-fail time_point/comparisons/op_less.fail.cpp : : time_point.op_less.fail   ]
-        [ chrono-run2 time_point/comparisons/op_less.pass.cpp  : time_point.op_less.pass ]
+        [ chrono-run2 time_point/comparisons_pass.cpp  : time_point_comparisons_pass ]
+        [ compile-fail time_point/comparisons/equal_fail.cpp : : time_point_equal_fail   ]
+        [ compile-fail time_point/comparisons/less_fail.cpp : : time_point_less_fail   ]
 
-        [ compile-fail time_point/cons/convert.fail.cpp : : time_point.convert.fail   ]
-        [ chrono-run2 time_point/cons/convert.pass.cpp  : time_point.convert.pass ]
-        [ chrono-run2 time_point/cons/default.pass.cpp  : time_point.default.pass ]
-        [ compile-fail time_point/cons/duration.fail.cpp : : time_point.cons.duration.fail   ]
-        [ chrono-run2 time_point/cons/duration.pass.cpp  : time_point.duration.pass ]
+        [ chrono-run2 time_point/constructor_pass.cpp  : time_point_constructor_pass ]
+        [ compile-fail time_point/cons/implicit_fail.cpp : : time_point_implicit_fail   ]
+        [ compile-fail time_point/cons/non_implicit_convertible_duration_fail.cpp : : time_point_non_implicit_convertible_duration_fail   ]
 
-        [ chrono-run2 time_point/nonmember/op_plus.pass.cpp  : time_point.op_plus.pass ]
-        [ chrono-run2 time_point/nonmember/op_minus_time_point.pass.cpp  : time_point.op_minus_time_point.pass ]
-        [ chrono-run2 time_point/nonmember/op_minus_duration.pass.cpp  : time_point.op_minus_duration.pass ]
-
-        [ chrono-run2 time_point/special/max.pass.cpp  : time_point.max.pass ]
-        [ chrono-run2 time_point/special/min.pass.cpp  : time_point.min.pass ]
+        [ chrono-run2 time_point/min_max_pass.cpp  : time_point_min_max_pass ]
         ;
 
     test-suite "clock"
         :
-        [ chrono-compile2 clock/hires/consistency.pass.cpp : clock.hires.consistency.pass ]
-        [ chrono-run2 clock/hires/now.pass.cpp  : clock.hires.now.pass ]
+        
+        [ chrono-run2 clock/clock_pass.cpp  : clock_clock_pass_ ]
+        #[ chrono-compile2 clock/hires/consistency.pass.cpp : clock.hires.consistency.pass ]
+        #[ chrono-run2 clock/hires/now.pass.cpp  : clock.hires.now.pass ]
 
-        [ chrono-compile2 clock/monotonic/consistency.pass.cpp : clock.monotonic.consistency.pass ]
-        [ chrono-run2 clock/monotonic/now.pass.cpp  : clock.monotonic.now.pass ]
+        #[ chrono-compile2 clock/monotonic/consistency.pass.cpp : clock.monotonic.consistency.pass ]
+        #[ chrono-run2 clock/monotonic/now.pass.cpp  : clock.monotonic.now.pass ]
 
-        [ chrono-compile2 clock/system/consistency.pass.cpp : clock.system.consistency.pass ]
-        [ chrono-run2 clock/system/now.pass.cpp  : clock.system.now.pass ]
-        [ chrono-run2 clock/system/from_time_t.pass.cpp  : clock.system.from_time_t.pass ]
-        [ chrono-run2 clock/system/rep_signed.pass.cpp  : clock.system.rep_signed.pass ]
-        [ chrono-run2 clock/system/to_time_t.pass.cpp  : clock.system.to_time_t.pass ]
+        #[ chrono-compile2 clock/system/consistency.pass.cpp : clock.system.consistency.pass ]
+        #[ chrono-run2 clock/system/now.pass.cpp  : clock.system.now.pass ]
+        #[ chrono-run2 clock/system/from_time_t.pass.cpp  : clock.system.from_time_t.pass ]
+        #[ chrono-run2 clock/system/rep_signed.pass.cpp  : clock.system.rep_signed.pass ]
+        #[ chrono-run2 clock/system/to_time_t.pass.cpp  : clock.system.to_time_t.pass ]
 
-        [ chrono-compile2 clock/process/consistency.pass.cpp : clock.process.consistency.pass ]
-        [ chrono-run2 clock/process/now.pass.cpp  : clock.process.now.pass ]
+        #[ chrono-compile2 clock/process/consistency.pass.cpp : clock.process.consistency.pass ]
+        #[ chrono-run2 clock/process/now.pass.cpp  : clock.process.now.pass ]
 
-        [ chrono-compile2 clock/thread/consistency.pass.cpp : clock.thread.consistency.pass ]
-        [ chrono-run2 clock/thread/now.pass.cpp  : clock.thread.now.pass ]
+        #[ chrono-compile2 clock/thread/consistency.pass.cpp : clock.thread.consistency.pass ]
+        #[ chrono-run2 clock/thread/now.pass.cpp  : clock.thread.now.pass ]
 
-        [ chrono-compile2 clock/errored/consistency.pass.cpp : clock.errored.consistency.pass ]
-        [ chrono-run2 clock/errored/now.pass.cpp  : clock.errored.now.pass ]
+        #[ chrono-compile2 clock/errored/consistency.pass.cpp : clock.errored.consistency.pass ]
+        #[ chrono-run2 clock/errored/now.pass.cpp  : clock.errored.now.pass ]
 
         ;
 
