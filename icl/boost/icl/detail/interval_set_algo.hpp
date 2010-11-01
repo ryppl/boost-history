@@ -8,6 +8,7 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 #ifndef BOOST_ICL_INTERVAL_SET_ALGO_HPP_JOFA_081005
 #define BOOST_ICL_INTERVAL_SET_ALGO_HPP_JOFA_081005
 
+#include <boost/next_prior.hpp>
 #include <boost/icl/detail/notate.hpp>
 #include <boost/icl/detail/relation_state.hpp>
 #include <boost/icl/type_traits/identity_element.hpp>

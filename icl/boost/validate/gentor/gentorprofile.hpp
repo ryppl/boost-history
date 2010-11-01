@@ -10,9 +10,10 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #pragma once
 
 #include <math.h>
-#include <boost/validate/type/nat.hpp>
+#include <boost/icl/concept/interval.hpp>
 #include <boost/icl/type_traits/interval_type_default.hpp>
 #include <boost/icl/interval.hpp>
+#include <boost/validate/type/nat.hpp>
 
 namespace boost{namespace icl
 {

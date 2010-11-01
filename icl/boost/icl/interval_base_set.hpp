@@ -21,6 +21,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 #include <limits>
 #include <boost/next_prior.hpp> 
+#include <boost/icl/associative_interval_container.hpp>
 #include <boost/icl/type_traits/interval_type_default.hpp>
 #include <boost/icl/interval.hpp>
 #include <boost/icl/type_traits/infinity.hpp>
