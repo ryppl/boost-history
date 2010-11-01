@@ -14,6 +14,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <stdio.h>
 #include <time.h>
 #include <boost/icl_xt/list.hpp>
+#include <boost/icl_xt/set.hpp>
 #include <boost/validate/validater/function_equality_validater.hpp>
 #include <boost/validate/driver/icl_driver.hpp>
 #include <boost/validate/utility.hpp>
@@ -32,11 +33,11 @@ namespace boost{namespace icl
             setValid(true);
             _rootChoice.setSize(RootType::Types_size);
             _rootChoice.setMaxWeights(100);
-            _rootChoice[RootType::itl_set]               = 25;
+            _rootChoice[RootType::icl_set]               = 25;
             _rootChoice[RootType::interval_set]          = 25;
             _rootChoice[RootType::separate_interval_set] = 25;
             _rootChoice[RootType::split_interval_set]    = 25;
-            _rootChoice[RootType::itl_map]               = 0;
+            _rootChoice[RootType::icl_map]               = 0;
             _rootChoice[RootType::interval_map]          = 0;
             _rootChoice[RootType::split_interval_map]    = 0;
             setRootTypeNames();
@@ -100,10 +101,10 @@ namespace boost{namespace icl
             switch(rootChoice)
             {
             //-----------------------------------------------------------------
-            case RootType::itl_set:               return new function_equality_validater<icl::list<int>,                        icl::set<int> >;
-            case RootType::interval_set:          return new function_equality_validater<icl::list<ICL_INTERVAL_DEFAULT<int> >, interval_set<int> >;
-            case RootType::separate_interval_set: return new function_equality_validater<icl::list<ICL_INTERVAL_DEFAULT<int> >, separate_interval_set<int> >;
-            case RootType::split_interval_set:    return new function_equality_validater<icl::list<ICL_INTERVAL_DEFAULT<int> >, split_interval_set<int> >;
+            case RootType::icl_set:               return new function_equality_validater<icl::list<int>,                 std::set<int> >;
+            case RootType::interval_set:          return new function_equality_validater<icl::list<interval<int>::type>, interval_set<int> >;
+            case RootType::separate_interval_set: return new function_equality_validater<icl::list<interval<int>::type>, separate_interval_set<int> >;
+            case RootType::split_interval_set:    return new function_equality_validater<icl::list<interval<int>::type>, split_interval_set<int> >;
             //-----------------------------------------------------------------
             default: return choiceError(ICL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
             } //switch()

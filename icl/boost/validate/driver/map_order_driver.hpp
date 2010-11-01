@@ -28,11 +28,11 @@ namespace boost{namespace icl
             setValid(true);
             _rootChoice.setSize(RootType::Types_size);
             _rootChoice.setMaxWeights(100);
-            _rootChoice[RootType::itl_set]               = 0;
+            _rootChoice[RootType::icl_set]               = 0;
             _rootChoice[RootType::interval_set]          = 0;
             _rootChoice[RootType::separate_interval_set] = 0;
             _rootChoice[RootType::split_interval_set]    = 0;
-            _rootChoice[RootType::itl_map]               = 33;
+            _rootChoice[RootType::icl_map]               = 33;
             _rootChoice[RootType::interval_map]          = 33;
             _rootChoice[RootType::split_interval_map]    = 34;
             setRootTypeNames();
@@ -99,14 +99,14 @@ namespace boost{namespace icl
             switch(rootChoice)
             {
             //-----------------------------------------------------------------
-            case RootType::itl_map: {
+            case RootType::icl_map: {
                 switch(domainChoice) {
                 case DomainType::Int: 
                     switch(codomainChoice) {
                     case CodomainType::Nat:     return new icl_order_validater<icl::map<int,nat,total_enricher> >;
                     case CodomainType::Int:     return new icl_order_validater<icl::map<int,int,partial_absorber> >;
                     case CodomainType::set_int: return new icl_order_validater<icl::map<int,std::set<int>,partial_enricher> >;
-                    default: return choiceError(ICL_LOCATION("\nRootType::itl_map: codomainChoice:\n"),
+                    default: return choiceError(ICL_LOCATION("\nRootType::icl_map: codomainChoice:\n"),
                                                 codomainChoice, _codomainChoice);
                     }//switch codomain
 
@@ -115,14 +115,14 @@ namespace boost{namespace icl
                     case CodomainType::Nat:     return new icl_order_validater<icl::map<double,nat,partial_enricher> >; 
                     case CodomainType::Int:     return new icl_order_validater<icl::map<double,int,total_absorber> >; 
                     case CodomainType::set_int: return new icl_order_validater<icl::map<double,std::set<int>,partial_absorber> >;
-                    default: return choiceError(ICL_LOCATION("\nRootType::itl_map: codomainChoice:\n"),
+                    default: return choiceError(ICL_LOCATION("\nRootType::icl_map: codomainChoice:\n"),
                                                 codomainChoice, _codomainChoice);
                     }//switch codomain
 
-                default: return choiceError(ICL_LOCATION("\nRootType::itl_map: domainChoice:\n"),
+                default: return choiceError(ICL_LOCATION("\nRootType::icl_map: domainChoice:\n"),
                                             domainChoice, _domainChoice);
                 }//switch domain
-            }//case itl_map 
+            }//case icl_map 
             //-----------------------------------------------------------------
             case RootType::interval_map: {
                 switch(domainChoice) {

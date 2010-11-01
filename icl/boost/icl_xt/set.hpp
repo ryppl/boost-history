@@ -179,7 +179,7 @@ public:
     //==========================================================================
     /** Add an \c element to the set. */
     set& add(const element_type& element) 
-    { return icl::insert(*this, element); } 
+    { icl::insert(*this, element); return *this; } 
 
     /** Add an element \c element after \c prior to the set. */
     iterator add(iterator prior, const element_type& element) 

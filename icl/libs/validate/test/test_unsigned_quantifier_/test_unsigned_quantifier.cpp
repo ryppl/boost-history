@@ -8,6 +8,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 #define BOOST_TEST_MODULE validate::itl_unsigned_quantifier unit test
+#include <libs/icl/test/disable_test_warnings.hpp>
 #include <string>
 #include <iostream>
 #include "../unit_test_unwarned.hpp"

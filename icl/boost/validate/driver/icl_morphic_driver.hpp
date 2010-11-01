@@ -27,11 +27,11 @@ public:
         setValid(true);
         _rootChoice.setSize(RootType::Types_size);
         _rootChoice.setMaxWeights(100);
-        _rootChoice[RootType::itl_set]               = 0;
+        _rootChoice[RootType::icl_set]               = 0;
         _rootChoice[RootType::interval_set]          = 20;
         _rootChoice[RootType::separate_interval_set] = 20;
         _rootChoice[RootType::split_interval_set]    = 20;
-        _rootChoice[RootType::itl_map]               = 0;
+        _rootChoice[RootType::icl_map]               = 0;
         _rootChoice[RootType::interval_map]          = 20;
         _rootChoice[RootType::split_interval_map]    = 20;
         setRootTypeNames();

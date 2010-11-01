@@ -8,6 +8,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #ifndef BOOST_ICL_CONCEPT_ELEMENT_ASSOCIATOR_HPP_JOFA_100921
 #define BOOST_ICL_CONCEPT_ELEMENT_ASSOCIATOR_HPP_JOFA_100921
 
+#include <boost/config.hpp>
 #include <boost/icl/type_traits/is_associative_element_container.hpp>
 #include <boost/icl/type_traits/is_key_container_of.hpp>
 #include <boost/icl/type_traits/is_combinable.hpp>

@@ -28,11 +28,11 @@ namespace boost{namespace icl
             setValid(true);
             _rootChoice.setSize(RootType::Types_size);
             _rootChoice.setMaxWeights(100);
-            _rootChoice[RootType::itl_set]               = 25;
+            _rootChoice[RootType::icl_set]               = 25;
             _rootChoice[RootType::interval_set]          = 25;
             _rootChoice[RootType::separate_interval_set] = 25;
             _rootChoice[RootType::split_interval_set]    = 25;
-            _rootChoice[RootType::itl_map]               = 0;
+            _rootChoice[RootType::icl_map]               = 0;
             _rootChoice[RootType::interval_map]          = 0;
             _rootChoice[RootType::split_interval_map]    = 0;
             setRootTypeNames();
@@ -98,11 +98,11 @@ namespace boost{namespace icl
 
             switch(rootChoice)
             {
-            case RootType::itl_set: {
+            case RootType::icl_set: {
                     switch(domainChoice) {
                     case DomainType::Int:    return new icl_order_validater<std::set<int> >; 
                     case DomainType::Double: return new icl_order_validater<std::set<double> >; 
-                    default: return choiceError(ICL_LOCATION("\nRootType::itl_set: domainChoice:\n"), 
+                    default: return choiceError(ICL_LOCATION("\nRootType::icl_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                 }

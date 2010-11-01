@@ -28,12 +28,10 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     \include month_and_week_grid_/month_and_week_grid.cpp
 */
 //[example_month_and_week_grid
-#include <iostream>
-
 // The next line includes <boost/gregorian/date.hpp>
 // and a few lines of adapter code.
 #include <boost/icl/gregorian.hpp> 
-
+#include <iostream>
 #include <boost/icl/split_interval_set.hpp>
 
 using namespace std;

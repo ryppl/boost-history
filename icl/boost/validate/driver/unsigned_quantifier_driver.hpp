@@ -29,11 +29,11 @@ namespace boost{namespace icl
             setValid(true);
             _rootChoice.setSize(RootType::Types_size);
             _rootChoice.setMaxWeights(100);
-            _rootChoice[RootType::itl_set]               = 0;
+            _rootChoice[RootType::icl_set]               = 0;
             _rootChoice[RootType::interval_set]          = 0;
             _rootChoice[RootType::separate_interval_set] = 0;
             _rootChoice[RootType::split_interval_set]    = 0;
-            _rootChoice[RootType::itl_map]               = 33;
+            _rootChoice[RootType::icl_map]               = 33;
             _rootChoice[RootType::interval_map]          = 33;
             _rootChoice[RootType::split_interval_map]    = 34;
             setRootTypeNames();
@@ -101,15 +101,15 @@ namespace boost{namespace icl
             switch(rootChoice)
             {
             //-----------------------------------------------------------------
-            case RootType::itl_map: {
+            case RootType::icl_map: {
                 switch(identityHandlerChoice) {
                 case IdentityHandlerType::partial_absorber: return new unsigned_quantifier_validater<icl::map<double,double,partial_absorber> >;
                 case IdentityHandlerType::partial_enricher: return new unsigned_quantifier_validater<icl::map<double,nat,   partial_enricher> >;
                 case IdentityHandlerType::total_absorber:   return new unsigned_quantifier_validater<icl::map<int,   double,total_absorber  > >;
                 case IdentityHandlerType::total_enricher:   return new unsigned_quantifier_validater<icl::map<int,   nat,   total_enricher  > >;
-                default: return choiceError(ICL_LOCATION("\nRootType::itl_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
+                default: return choiceError(ICL_LOCATION("\nRootType::icl_map: identityHandlerChoice:\n"), identityHandlerChoice, _identityHandlerChoice);
                 }//switch identityHandlerChoice
-            }//case itl_map 
+            }//case icl_map 
             //-----------------------------------------------------------------
             case RootType::interval_map: {
                 switch(identityHandlerChoice) {

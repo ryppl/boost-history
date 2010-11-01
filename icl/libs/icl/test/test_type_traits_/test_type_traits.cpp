@@ -7,13 +7,13 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 +-----------------------------------------------------------------------------*/
 #define BOOST_TEST_MODULE icl::test_type_traits unit test
 
+#include <libs/icl/test/disable_test_warnings.hpp>
 #include <limits>
 #include <complex>
 #include <string>
 #include <vector>
 #include <set>
 #include <boost/mpl/list.hpp>
-#include <boost/icl/iterator.hpp>
 #include "../unit_test_unwarned.hpp"
 #include <boost/test/test_case_template.hpp>
 

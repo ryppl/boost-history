@@ -48,16 +48,10 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     \include boost_party_/boost_party.cpp
 */
 //[example_boost_party
-#include <iostream>
 // The next line includes <boost/date_time/posix_time/posix_time.hpp>
 // and a few lines of adapter code.
 #include <boost/icl/ptime.hpp> 
-
-// Prior to other includes for interval containers we define ...
-#define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
-// ... so all interval containers will use right_open_intervals that
-// have static interval borders.
-
+#include <iostream>
 #include <boost/icl/interval_map.hpp>
 
 using namespace std;

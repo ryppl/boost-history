@@ -22,8 +22,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <vector>
 #include <algorithm>
 #include <boost/icl/interval_map.hpp>
-#include <boost/icl/iterator.hpp> // needed for icl::inserter and
-                                  // icl::adder.
 
 using namespace std;
 using namespace boost;

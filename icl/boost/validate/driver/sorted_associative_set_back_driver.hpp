@@ -29,11 +29,11 @@ namespace boost{namespace icl
             setValid(true);
             _rootChoice.setSize(RootType::Types_size);
             _rootChoice.setMaxWeights(100);
-            _rootChoice[RootType::itl_set]               = 0;
+            _rootChoice[RootType::icl_set]               = 0;
             _rootChoice[RootType::interval_set]          = 33;
             _rootChoice[RootType::separate_interval_set] = 33;
             _rootChoice[RootType::split_interval_set]    = 34;
-            _rootChoice[RootType::itl_map]               = 0;
+            _rootChoice[RootType::icl_map]               = 0;
             _rootChoice[RootType::interval_map]          = 0;
             _rootChoice[RootType::split_interval_map]    = 0;
             setRootTypeNames();

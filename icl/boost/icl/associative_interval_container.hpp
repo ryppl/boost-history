@@ -14,6 +14,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/icl/concept/interval_set.hpp>
 #include <boost/icl/concept/interval_map.hpp>
 #include <boost/icl/concept/interval_associator.hpp>
+#include <boost/icl/iterator.hpp>
 
 #endif
 

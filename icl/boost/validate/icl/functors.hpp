@@ -72,8 +72,7 @@ struct base_addition
     {
         icl::clear(collected);
         ICL_const_FORALL(typename SourceT, item_, items)
-            //JODO icl::add(collected, *item_);
-            collected.add(*item_);
+            icl::add(collected, *item_);
     }
 };
 
@@ -88,8 +87,7 @@ struct hint_addition
         icl::clear(collected);
         typename TargetT::iterator prior_ = collected.end();
         ICL_const_FORALL(typename SourceT, item_, items)
-            //JODO prior_ = add(collected, prior_, *item_);
-            prior_ = collected.add(prior_, *item_);
+            prior_ = icl::add(collected, prior_, *item_);
     }
 };
 

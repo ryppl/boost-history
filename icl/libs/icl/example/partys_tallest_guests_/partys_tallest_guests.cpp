@@ -28,11 +28,10 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     \include partys_tallest_guests_/partys_tallest_guests.cpp
 */
 //[example_partys_tallest_guests
-#include <iostream>
 // The next line includes <boost/date_time/posix_time/posix_time.hpp>
 // and a few lines of adapter code.
 #include <boost/icl/ptime.hpp> 
-
+#include <iostream>
 #include <boost/icl/interval_map.hpp>
 #include <boost/icl/split_interval_map.hpp>
 

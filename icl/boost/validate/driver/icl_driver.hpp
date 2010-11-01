@@ -28,8 +28,8 @@ namespace boost{namespace icl
     {
         enum RootTypes 
         { 
-            itl_set, interval_set, separate_interval_set, split_interval_set, 
-            itl_map, interval_map, split_interval_map, 
+            icl_set, interval_set, separate_interval_set, split_interval_set, 
+            icl_map, interval_map, split_interval_map, 
             Types_size 
         };
     }
@@ -212,11 +212,11 @@ namespace boost{namespace icl
         void setRootTypeNames()
         {
             std::vector<std::string> type_names(RootType::Types_size);
-            type_names[RootType::itl_set]               = "itl_set"; 
+            type_names[RootType::icl_set]               = "icl_set"; 
             type_names[RootType::interval_set]          = "interval_set"; 
             type_names[RootType::separate_interval_set] = "separate_interval_set"; 
             type_names[RootType::split_interval_set]    = "split_interval_set"; 
-            type_names[RootType::itl_map]               = "itl_map"; 
+            type_names[RootType::icl_map]               = "icl_map"; 
             type_names[RootType::interval_map]          = "interval_map"; 
             type_names[RootType::split_interval_map]    = "split_interval_map"; 
             _rootChoice.setTypeNames(type_names);

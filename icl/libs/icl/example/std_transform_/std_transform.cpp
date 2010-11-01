@@ -23,8 +23,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <algorithm>
 #include <boost/icl/split_interval_map.hpp>
 #include <boost/icl/separate_interval_set.hpp>
-#include <boost/icl/iterator.hpp> // needed for icl::inserter and
-                                  // icl::adder.
 
 using namespace std;
 using namespace boost;

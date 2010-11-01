@@ -7,7 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#define BOOST_TEST_MODULE validate::itl_set_copy_conformity unit test
+#define BOOST_TEST_MODULE validate::icl_set_copy_conformity unit test
+#include <libs/icl/test/disable_test_warnings.hpp>
 #include <string>
 #include <iostream>
 #include "../unit_test_unwarned.hpp"

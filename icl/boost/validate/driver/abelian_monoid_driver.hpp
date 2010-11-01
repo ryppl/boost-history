@@ -28,7 +28,7 @@ namespace boost{namespace icl
             setValid(true);
             _rootChoice.setSize(RootType::Types_size);
             _rootChoice.setMaxWeights(100);
-            _rootChoice[RootType::itl_set]               = 33;
+            _rootChoice[RootType::icl_set]               = 33;
             _rootChoice[RootType::interval_set]          = 33;
             _rootChoice[RootType::split_interval_set]    = 34;
             setRootTypeNames();
@@ -61,11 +61,11 @@ namespace boost{namespace icl
 
             switch(rootChoice)
             {
-            case RootType::itl_set: {
+            case RootType::icl_set: {
                     switch(domainChoice) {
                     case DomainType::Int:    return new abelian_monoid_validater<icl::set<int> >; 
                     case DomainType::Double: return new abelian_monoid_validater<icl::set<double> >; 
-                    default: return choiceError(ICL_LOCATION("\nRootType::itl_set: domainChoice:\n"), 
+                    default: return choiceError(ICL_LOCATION("\nRootType::icl_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                 }

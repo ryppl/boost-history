@@ -6,6 +6,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 #define BOOST_TEST_MODULE icl::test_doc_code unit test
+#include <libs/icl/test/disable_test_warnings.hpp>
 
 #include <limits>
 #include <complex>
@@ -14,7 +15,6 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <string>
 #include <vector>
 #include <boost/mpl/list.hpp>
-#include <boost/icl/iterator.hpp>
 #include "../unit_test_unwarned.hpp"
 #include <boost/test/test_case_template.hpp>
 

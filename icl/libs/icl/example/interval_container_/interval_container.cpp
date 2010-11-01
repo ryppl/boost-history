@@ -16,13 +16,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 */
 //[example_interval_container
 #include <iostream>
-
-// Prior to other includes for interval containers we define ...
-#define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
-// ... so all interval containers will use right_open_intervals that
-// have static interval borders.
-
-
 #include <boost/icl/interval_set.hpp>
 #include <boost/icl/separate_interval_set.hpp>
 #include <boost/icl/split_interval_set.hpp>

@@ -9,7 +9,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 +-----------------------------------------------------------------------------*/
 #include <iostream>
 #include <stdio.h>
-#include <boost/validate/driver/map_copy_conformity_driver.hpp>
+#include <boost/validate/driver/set_copy_conformity_driver.hpp>
 
 using namespace std;
 using namespace boost;
@@ -17,7 +17,7 @@ using namespace boost::icl;
 
 void test_Validater()
 {
-    map_copy_conformity_driver validater;
+    set_copy_conformity_driver validater;
     cout << 
     ">> ------------------------------------------------------ <<\n"
     ">> -------- Law based test automaton 'LaBatea' ---------- <<\n"

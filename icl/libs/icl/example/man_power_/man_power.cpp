@@ -23,12 +23,10 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     \include man_power_/man_power.cpp
 */
 //[example_man_power
-#include <iostream>
-
 // The next line includes <boost/gregorian/date.hpp>
 // and a few lines of adapter code.
 #include <boost/icl/gregorian.hpp> 
-
+#include <iostream>
 #include <boost/icl/discrete_interval.hpp>
 #include <boost/icl/interval_map.hpp>
 

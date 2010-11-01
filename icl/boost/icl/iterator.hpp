@@ -32,7 +32,7 @@ public:
         It maintains it's position by incrementing after addition.    */
     add_iterator& operator=(typename ContainerT::const_reference value)
     {
-        _iter = _cont->add(_iter, value);
+        _iter = icl::add(*_cont, _iter, value);
         if(_iter != _cont->end())
             ++_iter;
         return *this;
