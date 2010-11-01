@@ -86,10 +86,10 @@ public:
     { assign(src); }
 
     explicit interval_map(domain_mapping_type& base_pair): base_type()
-    { add(base_pair); }
+    { this->add(base_pair); }
 
     explicit interval_map(const value_type& value_pair): base_type()
-    { add(value_pair); }
+    { this->add(value_pair); }
 
     /// Assignment operator
     template<class SubType>
