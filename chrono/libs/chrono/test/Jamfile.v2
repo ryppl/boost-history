@@ -147,22 +147,22 @@ rule chrono-compile2 ( sources : name )
 
 
 
-   test-suite "minmax"
-        :
-        [ chrono-compile test_minmax.cpp ]
-        ;
+   #test-suite "minmax"
+   #     :
+   #     [ chrono-compile test_minmax.cpp ]
+   #     ;
 
-    test-suite "chrono"
-        :
-        [ chrono-run chrono_unit_test.cpp  ]
-        [ chrono-run explore_limits.cpp  ]
-        [ chrono-run test_duration.cpp ]
-        [ chrono-run test_clock.cpp ]
-        [ chrono-run miscellaneous.cpp ]
-        [ chrono-run test_special_values.cpp ]
-        [ chrono-run manipulate_clock_object.cpp ]
-        [ chrono-run chrono_accuracy_test.cpp ]
-        ;
+    #test-suite "chrono"
+    #    :
+    #    [ chrono-run chrono_unit_test.cpp  ]
+    #    [ chrono-run explore_limits.cpp  ]
+    #    [ chrono-run test_duration.cpp ]
+    #    [ chrono-run test_clock.cpp ]
+    #    [ chrono-run miscellaneous.cpp ]
+    #    [ chrono-run test_special_values.cpp ]
+    #    [ chrono-run manipulate_clock_object.cpp ]
+    #    [ chrono-run chrono_accuracy_test.cpp ]
+    #    ;
 
 
     test-suite "examples"
@@ -175,6 +175,15 @@ rule chrono-compile2 ( sources : name )
         [ chrono-run ../example/i_dont_like_the_default_duration_behavior.cpp ]
         [ chrono-run ../example/simulated_thread_interface_demo.cpp ]
         [ chrono-run ../example/timeval_demo.cpp ]
+        [ chrono-run ../example/chrono_unit_test.cpp  ]
+        [ chrono-run ../example/explore_limits.cpp  ]
+        [ chrono-run ../example/test_duration.cpp ]
+        [ chrono-run ../example/test_clock.cpp ]
+        [ chrono-run ../example/miscellaneous.cpp ]
+        [ chrono-run ../example/test_special_values.cpp ]
+        [ chrono-run ../example/manipulate_clock_object.cpp ]
+        [ chrono-run ../example/chrono_accuracy_test.cpp ]
+        [ chrono-run ../example/test_thread_clock.cpp  ]
         ;
 
     test-suite "timer"
@@ -184,10 +193,10 @@ rule chrono-compile2 ( sources : name )
         [ chrono-run run_timer_test.cpp  ]
         ;
 
-    test-suite "other_clocks"
-        :
-        [ chrono-run test_thread_clock.cpp  ]
-        ;
+    #test-suite "other_clocks"
+    #    :
+    #    [ chrono-run test_thread_clock.cpp  ]
+    #    ;
 
     test-suite "traits"
         :
