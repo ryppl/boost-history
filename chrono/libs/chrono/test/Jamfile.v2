@@ -189,16 +189,6 @@ rule chrono-compile2 ( sources : name )
         [ chrono-run test_thread_clock.cpp  ]
         ;
 
-    test-suite "typedefs"
-        :
-        [ chrono-compile hours.pass.cpp :  :  ]
-        [ chrono-compile minutes.pass.cpp :  : ]
-        [ chrono-compile seconds.pass.cpp :  : ]
-        [ chrono-compile milliseconds.pass.cpp :  : ]
-        [ chrono-compile microseconds.pass.cpp :  :  ]
-        [ chrono-compile nanoseconds.pass.cpp :  : ]
-        ;
-
     test-suite "traits"
         :
         [ chrono-compile traits/specializations/duration.pass.cpp ]
@@ -211,58 +201,36 @@ rule chrono-compile2 ( sources : name )
 
     test-suite "duration"
         :
-        [ compile-fail duration/duration.fail.cpp  ]
-        [ compile-fail duration/ratio.fail.cpp  ]
-        [ compile-fail duration/positive_num.fail.cpp  ]
-        [ chrono-compile duration/default_ratio.pass.cpp ]
-        [ chrono-compile duration/types.pass.cpp ]
+        [ compile-fail duration/duration_duration_fail.cpp  ]
+        [ compile-fail duration/ratio_fail.cpp  ]
+        [ compile-fail duration/positive_num_fail.cpp  ]
+        [ chrono-compile duration/default_ratio_pass.cpp ]
+        [ chrono-compile duration/types_pass.cpp ]
+        [ chrono-compile duration/ratio_alias_pass.cpp ]
 
-        [ chrono-run duration/arithmetic/op_divide_ass.pass.cpp  ]
-        [ chrono-run duration/arithmetic/op_minusminusint.pass.cpp  ]
-        [ chrono-run duration/arithmetic/op_plus_ass.pass.cpp  ]
-        [ chrono-run duration/arithmetic/op_minus.pass.cpp  ]
-        [ chrono-run duration/arithmetic/op_mod_ass_duration.pass.cpp  ]
-        [ chrono-run duration/arithmetic/op_plusplus.pass.cpp  ]
-        [ chrono-run duration/arithmetic/op_minus_ass.pass.cpp  ]
-        [ chrono-run duration/arithmetic/op_mod_ass_rep.pass.cpp  ]
-        [ chrono-run duration/arithmetic/op_plusplusint.pass.cpp  ]
-        [ chrono-run duration/arithmetic/op_minusminus.pass.cpp  ]
-        [ chrono-run duration/arithmetic/op_plus.pass.cpp  ]
-        [ chrono-run duration/arithmetic/op_times_ass.pass.cpp  ]
+        [ chrono-compile duration/typedefs_pass.cpp  ]
 
-        [ chrono-run duration/cast/duration_cast.pass.cpp  ]
-        [ compile-fail duration/cast/toduration.fail.cpp  ]
+        [ chrono-run duration/arithmetic_pass.cpp  ]
+      
+        [ chrono-run duration/duration_cast_pass.cpp  ]
+        [ compile-fail duration/duration_cast_int_fail.cpp  ]
 
-        [ chrono-run duration/comparisons/op_equal.pass.cpp  ]
-        [ chrono-run duration/comparisons/op_less.pass.cpp  ]
+        [ chrono-run duration/comparisons_pass.cpp  ]
 
-        [ chrono-run duration/cons/convert_exact.pass.cpp  ]
-        [ compile-fail duration/cons/convert_float_to_int.fail.cpp  ]
-        [ compile-fail duration/cons/convert_inexact.fail.cpp  ]
-        [ chrono-run duration/cons/convert_inexact.pass.cpp  ]
-        [ chrono-run duration/cons/convert_int_to_float.pass.cpp  ]
-        [ chrono-run duration/cons/default.pass.cpp  ]
-        [ chrono-run duration/cons/rep.pass.cpp  ]
-        [ compile-fail duration/cons/rep01.fail.cpp  ]
-        [ compile-fail duration/cons/rep02.fail.cpp  ]
-        [ chrono-run duration/cons/rep02.pass.cpp  ]
-        [ compile-fail duration/cons/rep03.fail.cpp  ]
+        [ chrono-run duration/constructor_pass.cpp  ]
 
-        [ chrono-run2 duration/nonmember/op_plus.pass.cpp  : nonmember_op_plus.pass ]
-        [ chrono-run2 duration/nonmember/op_minus.pass.cpp  : nonmember_op_minus.pass ]
-        [ chrono-run2 duration/nonmember/op_divide_duration.pass.cpp  : nonmember_op_divide_duration.pass  ]
-        [ compile-fail duration/nonmember/op_divide_rep.fail.cpp : : nonmember_op_divide_rep.fail   ]
-        [ chrono-run2 duration/nonmember/op_divide_rep.pass.cpp  : nonmember_op_divide_rep.pass  ]
-        [ chrono-run2 duration/nonmember/op_mod_duration.pass.cpp  : nonmember_op_mod_duration.pass  ]
-        [ chrono-run2 duration/nonmember/op_mod_rep.pass.cpp  : nonmember_op_mod_rep.pass  ]
-        [ compile-fail duration/nonmember/op_mod_rep.fail.cpp : : nonmember_op_mod_rep.fail   ]
-        [ chrono-run2 duration/nonmember/op_times_rep.pass.cpp  : nonmember_op_times_rep.pass  ]
-        [ compile-fail duration/nonmember/op_times_rep1.fail.cpp : : nonmember_op_times_rep1.fail   ]
-        [ compile-fail duration/nonmember/op_times_rep2.fail.cpp : : nonmember_op_times_rep2.fail   ]
+        [ compile-fail duration/cons/convert_float_to_int_fail.cpp  ]
+        [ compile-fail duration/cons/convert_inexact_fail.cpp  ]
+        [ compile-fail duration/cons/implicit_constructot_fail.cpp  ]
+        [ compile-fail duration/cons/non_implicit_convertible_rep_fail.cpp ]
+        [ compile-fail duration/cons/treat_as_floating_point_Rep2_true_fail.cpp  ]
 
-        [ chrono-run2 duration/special/max.pass.cpp  : duration_special_max.pass  ]
-        [ chrono-run2 duration/special/min.pass.cpp  : duration_special_min.pass  ]
-        [ chrono-run2 duration/special/zero.pass.cpp  : duration_special_zero.pass  ]
+        [ compile-fail duration/nonmember/divide_rep2_fail.cpp  ]
+        [ compile-fail duration/nonmember/modulus_rep2_fail.cpp  ]
+        [ compile-fail duration/nonmember/times_rep2_lhs_fail.cpp ]
+        [ compile-fail duration/nonmember/times_rep2_rhs_fail.cpp ]
+
+        [ chrono-run duration/duration_values_pass.cpp ]
         ;
 
     test-suite "time_point"

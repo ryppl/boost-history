@@ -8,8 +8,8 @@
 
 int main()
 {
-	check_clock_now<boost::chrono::high_resolution_clock>();
-	check_clock_now_ec<boost::chrono::high_resolution_clock>();
-	check_clock_now_throws<boost::chrono::high_resolution_clock>();
+    check_clock_now<boost::chrono::high_resolution_clock>();
+    check_clock_now_ec<boost::chrono::high_resolution_clock>();
+    check_clock_now_throws<boost::chrono::high_resolution_clock>();
     return boost::report_errors();
 }

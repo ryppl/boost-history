@@ -13,10 +13,9 @@
 int main()
 {
 #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-	check_clock_now<boost::chrono::monotonic_clock>();
-	check_clock_now_ec<boost::chrono::monotonic_clock>();
+    check_clock_now<boost::chrono::monotonic_clock>();
+    check_clock_now_ec<boost::chrono::monotonic_clock>();
     check_clock_now_throws<boost::chrono::monotonic_clock>();
-	
 #endif
     return boost::report_errors();
 }
