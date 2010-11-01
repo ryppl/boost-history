@@ -101,16 +101,16 @@ public:
     explicit interval_set
         (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
     { 
-        assign(src); 
+        this->assign(src); 
     }
 
     /// Constructor for a single element
     explicit interval_set(const domain_type& value): base_type() 
-    { add(interval_type(value)); }
+    { this->add(interval_type(value)); }
     /// Constructor for a single interval
     explicit interval_set(const interval_type& itv): base_type() 
     { 
-        add(itv); 
+        this->add(itv); 
     }
 
     /// Assignment operator
@@ -118,7 +118,7 @@ public:
     interval_set& operator =
         (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
     { 
-        assign(src); 
+        this->assign(src); 
         return *this; 
     }
 

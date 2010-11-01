@@ -83,7 +83,7 @@ public:
     explicit interval_map
         (const interval_base_map<SubType,DomainT,CodomainT,
                                  Traits,Compare,Combine,Section,Interval,Alloc>& src)
-    { assign(src); }
+    { this->assign(src); }
 
     explicit interval_map(domain_mapping_type& base_pair): base_type()
     { this->add(base_pair); }
@@ -96,7 +96,7 @@ public:
     interval_map& operator =
         (const interval_base_map<SubType,DomainT,CodomainT,
                                  Traits,Compare,Combine,Section,Interval,Alloc>& src)
-    { assign(src); return *this; }
+    { this->assign(src); return *this; }
 
     /// Assignment from a base interval_map.
     template<class SubType>

@@ -97,18 +97,18 @@ public:
     template<class SubType>
     split_interval_set
         (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
-    { assign(src); }
+    { this->assign(src); }
 
     /// Constructor for a single element
-    explicit split_interval_set(const interval_type& elem): base_type() { add(elem); }
+    explicit split_interval_set(const interval_type& elem): base_type() { this->add(elem); }
     /// Constructor for a single interval
-    explicit split_interval_set(const domain_type& itv): base_type() { add(itv); }
+    explicit split_interval_set(const domain_type& itv): base_type() { this->add(itv); }
 
     /// Assignment operator
     template<class SubType>
     split_interval_set& operator =
         (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
-    { assign(src); return *this; }
+    { this->assign(src); return *this; }
 
     /// Assignment from a base interval_set.
     template<class SubType>
