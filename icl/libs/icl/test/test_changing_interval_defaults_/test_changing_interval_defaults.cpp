@@ -56,8 +56,8 @@ BOOST_AUTO_TEST_CASE(test_intervals_4_changed_lib_defaults)
 
 
 #if defined(BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS) && !defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
-    BOOST_CHECK( (is_same<icl::interval<int   >::type, right_open_interval<int   > >::value) );
-    BOOST_CHECK( (is_same<icl::interval<double>::type, right_open_interval<double> >::value) );
+    BOOST_CHECK( (boost::is_same<icl::interval<int   >::type, right_open_interval<int   > >::value) );
+    BOOST_CHECK( (boost::is_same<icl::interval<double>::type, right_open_interval<double> >::value) );
 
     BOOST_CHECK_EQUAL( icl::interval<int>::open(0,2),       icl::construct<right_open_interval<int> >(1,2) );
     BOOST_CHECK_EQUAL( icl::interval<int>::left_open(0,1),  icl::construct<right_open_interval<int> >(1,2) );
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(test_intervals_4_changed_lib_defaults)
 #if defined(BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS) && defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
 #   if defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS) && (BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS == 0)
     cout << "discrete_interval == open_interval\n";
-    BOOST_CHECK( (is_same<icl::interval<int>::type, open_interval<int> >::value) );
+    BOOST_CHECK( (boost::is_same<icl::interval<int>::type, open_interval<int> >::value) );
     BOOST_CHECK_EQUAL( icl::interval<int>::open(0,2),       icl::construct<open_interval<int> >(0,2) );
     BOOST_CHECK_EQUAL( icl::interval<int>::left_open(0,1),  icl::construct<open_interval<int> >(0,2) );
     BOOST_CHECK_EQUAL( icl::interval<int>::right_open(1,2), icl::construct<open_interval<int> >(0,2) );
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(test_intervals_4_changed_lib_defaults)
 
 #   elif defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS) && (BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS == 1)
     cout << "discrete_interval == left_open_interval\n";
-    BOOST_CHECK( (is_same<icl::interval<int>::type, left_open_interval<int> >::value) );
+    BOOST_CHECK( (boost::is_same<icl::interval<int>::type, left_open_interval<int> >::value) );
     BOOST_CHECK_EQUAL( icl::interval<int>::open(0,2),       icl::construct<left_open_interval<int> >(0,1) );
     BOOST_CHECK_EQUAL( icl::interval<int>::left_open(0,1),  icl::construct<left_open_interval<int> >(0,1) );
     BOOST_CHECK_EQUAL( icl::interval<int>::right_open(1,2), icl::construct<left_open_interval<int> >(0,1) );
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE(test_intervals_4_changed_lib_defaults)
 
 #   elif defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS) && (BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS == 2)
     cout << "discrete_interval == right_open_interval\n";
-    BOOST_CHECK( (is_same<icl::interval<int>::type, right_open_interval<int> >::value) );
+    BOOST_CHECK( (boost::is_same<icl::interval<int>::type, right_open_interval<int> >::value) );
     BOOST_CHECK_EQUAL( icl::interval<int>::open(0,2),       icl::construct<right_open_interval<int> >(1,2) );
     BOOST_CHECK_EQUAL( icl::interval<int>::left_open(0,1),  icl::construct<right_open_interval<int> >(1,2) );
     BOOST_CHECK_EQUAL( icl::interval<int>::right_open(1,2), icl::construct<right_open_interval<int> >(1,2) );
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(test_intervals_4_changed_lib_defaults)
 
 #   elif defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS) && (BOOST_ICL_DISCRETE_STATIC_INTERVAL_BORDERS == 3)
     cout << "discrete_interval == closed_interval\n";
-    BOOST_CHECK( (is_same<icl::interval<int>::type, closed_interval<int> >::value) );
+    BOOST_CHECK( (boost::is_same<icl::interval<int>::type, closed_interval<int> >::value) );
     BOOST_CHECK_EQUAL( icl::interval<int>::open(0,2),       icl::construct<closed_interval<int> >(1,1) );
     BOOST_CHECK_EQUAL( icl::interval<int>::left_open(0,1),  icl::construct<closed_interval<int> >(1,1) );
     BOOST_CHECK_EQUAL( icl::interval<int>::right_open(1,2), icl::construct<closed_interval<int> >(1,1) );
@@ -107,8 +107,8 @@ BOOST_AUTO_TEST_CASE(test_intervals_4_changed_lib_defaults)
 #endif //defined(BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS) && defined(BOOST_ICL_DISCRETE_STATIC_INTERVAL_DEFAULT)
 
 #else
-    BOOST_CHECK( (is_same<icl::interval<int   >::type,   discrete_interval<int   > >::value) );
-    BOOST_CHECK( (is_same<icl::interval<double>::type, continuous_interval<double> >::value) );
+    BOOST_CHECK( (boost::is_same<icl::interval<int   >::type,   discrete_interval<int   > >::value) );
+    BOOST_CHECK( (boost::is_same<icl::interval<double>::type, continuous_interval<double> >::value) );
 #endif
 
 }

@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(test_miscellaneous_type_traits)
     typedef icl::map<int,int> MapII;
 
     BOOST_CHECK(has_codomain_type<MapII>::value);
-    BOOST_CHECK((is_same<MapII::codomain_type, int>::value));
+    BOOST_CHECK((boost::is_same<MapII::codomain_type, int>::value));
 
     BOOST_CHECK((is_map<MapII>::value));
     BOOST_CHECK((is_icl_container<MapII>::value));
@@ -112,12 +112,12 @@ BOOST_AUTO_TEST_CASE(test_miscellaneous_type_traits)
     BOOST_CHECK((boost::detail::is_incrementable<double>::value));
     BOOST_CHECK((!boost::detail::is_incrementable<std::string>::value));
 
-    BOOST_CHECK((is_floating_point<long double>::value));
-    BOOST_CHECK((is_floating_point<double>::value));
-    BOOST_CHECK((is_floating_point<float>::value));
+    BOOST_CHECK((boost::is_floating_point<long double>::value));
+    BOOST_CHECK((boost::is_floating_point<double>::value));
+    BOOST_CHECK((boost::is_floating_point<float>::value));
 
-    BOOST_CHECK( (is_same<key_type_of<std::set<int> >::type, int>::value) );
-    BOOST_CHECK( (is_same<value_type_of<std::set<int> >::type, int>::value) );
+    BOOST_CHECK( (boost::is_same<key_type_of<std::set<int> >::type, int>::value) );
+    BOOST_CHECK( (boost::is_same<value_type_of<std::set<int> >::type, int>::value) );
 
     BOOST_CHECK(  is_std_set<std::set<int> >::value);
     BOOST_CHECK( !is_std_set<interval_set<int> >::value);

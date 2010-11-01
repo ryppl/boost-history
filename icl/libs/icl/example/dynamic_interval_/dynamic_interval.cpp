@@ -44,29 +44,29 @@ int main()
     // Dynamically bounded intervals are the library default for 
     // interval parameters in interval containers.
     BOOST_STATIC_ASSERT((
-        is_same< interval_set<int>::interval_type
-               , discrete_interval<int> >::value
-               )); 
+        boost::is_same< interval_set<int>::interval_type
+                      , discrete_interval<int> >::value
+                      )); 
 
 
     BOOST_STATIC_ASSERT((
-        is_same< interval_set<float>::interval_type
-               , continuous_interval<float> >::value
-               )); 
+        boost::is_same< interval_set<float>::interval_type
+                      , continuous_interval<float> >::value
+                      )); 
 
     // As we can see the library default chooses the appropriate
     // class template instance discrete_interval<T> or continuous_interval<T>
     // dependent on the domain_type T. The library default for intervals
     // is also available via the template 'interval':
     BOOST_STATIC_ASSERT((
-        is_same< interval<int>::type
-               , discrete_interval<int> >::value
-               )); 
+        boost::is_same< interval<int>::type
+                      , discrete_interval<int> >::value
+                      )); 
 
     BOOST_STATIC_ASSERT((
-        is_same< interval<float>::type
-               , continuous_interval<float> >::value
-               )); 
+        boost::is_same< interval<float>::type
+                      , continuous_interval<float> >::value
+                      )); 
 
     // template interval also provides static functions for the four border types
 

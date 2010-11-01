@@ -53,23 +53,23 @@ int main()
     // Statically bounded intervals are the user defined library default for 
     // interval parameters in interval containers now.
     BOOST_STATIC_ASSERT((
-        is_same< interval_set<int>::interval_type
-               , right_open_interval<int> >::value
-               )); 
+        boost::is_same< interval_set<int>::interval_type
+                      , right_open_interval<int> >::value
+                      )); 
 
     BOOST_STATIC_ASSERT((
-        is_same< interval_set<float>::interval_type
-               , right_open_interval<float> >::value
-               )); 
+        boost::is_same< interval_set<float>::interval_type
+                      , right_open_interval<float> >::value
+                      )); 
 
     // As we can see the library default both for discrete and continuous
     // domain_types T is 'right_open_interval<T>'.
     // The user defined library default for intervals is also available via 
     // the template 'interval':
     BOOST_STATIC_ASSERT((
-        is_same< interval<int>::type
-               , right_open_interval<int> >::value
-               )); 
+        boost::is_same< interval<int>::type
+                      , right_open_interval<int> >::value
+                      )); 
 
     // Again we are declaring and initializing the four test intervals that have been used
     // in the example 'interval' and 'dynamic_interval'

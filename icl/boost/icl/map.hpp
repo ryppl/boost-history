@@ -207,7 +207,6 @@ public:
     using base_type::key_comp;
     using base_type::value_comp;
 
-    using base_type::insert;
     using base_type::erase;
     using base_type::find;
     using base_type::count;

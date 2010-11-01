@@ -7,6 +7,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
+#include <boost/config/warning_disable.hpp>
 #include <boost/icl/ptime.hpp>
 #include <boost/icl/interval_set.hpp>
 #include <boost/icl_xt/list.hpp>

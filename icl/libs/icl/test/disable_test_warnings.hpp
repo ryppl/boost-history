@@ -14,6 +14,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifdef BOOST_MSVC             // These warnings are disabled permanently for tests.
 #pragma warning(disable:4996) // Function call with parameters that may be unsafe
 #pragma warning(disable:4503) // decorated name length exceeded, name was truncated
+#pragma warning(disable:4702) // unreachable code
 #endif                        
 
 

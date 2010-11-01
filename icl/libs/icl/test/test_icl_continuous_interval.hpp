@@ -31,7 +31,7 @@ void distant_intervals_4_numeric_continuous_types()
     BOOST_CHECK( is_interval<L__D>::value ); 
     BOOST_CHECK( has_difference<typename interval_traits<L__D>::domain_type>::value ); 
     BOOST_CHECK( is_continuous<typename interval_traits<L__D>::domain_type>::value  ); 
-    BOOST_CHECK( (is_same<typename interval_traits<L__D>::domain_type, T>::value)   ); 
+    BOOST_CHECK( (boost::is_same<typename interval_traits<L__D>::domain_type, T>::value)   ); 
 
     typedef typename difference_type_of<T>::type DiffT;
 
