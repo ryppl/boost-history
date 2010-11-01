@@ -11,6 +11,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #define BOOST_ICL_XT_MAP_SEGMENT_GENTOR_HPP_JOFA_091004
 
 
+#include <boost/icl/interval.hpp>
 #include <boost/icl_xt/gentorit.hpp>
 #include <boost/icl_xt/numbergentor.hpp>
 #include <boost/icl_xt/itvgentor.hpp>
@@ -19,7 +20,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 namespace boost{namespace icl
 {
 
-template <class DomainT, class CodomainT, class IntervalT = icl::interval<DomainT>::type > 
+template <class DomainT, class CodomainT, class IntervalT = typename icl::interval<DomainT>::type > 
 class map_segment_gentor: public RandomGentorAT<std::pair<IntervalT, CodomainT> >
 {
 public:

@@ -13,6 +13,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/icl/concept/element_set_value.hpp>
 #include <boost/icl/concept/set_value.hpp>
 #include <boost/icl/concept/map_value.hpp>
+#include <boost/icl/associative_interval_container.hpp>
+#include <boost/icl/associative_element_container.hpp>
 
 namespace boost{namespace icl
 {
@@ -27,7 +29,7 @@ namespace boost{namespace icl
                 typename IntervalContainerT::codomain_type   coval = icl::co_value<IntervalContainerT>(itv_);
 
                 for(typename IntervalContainerT::domain_type element = first(itv); element <= last(itv); ++element)
-                    insert(result, icl::make_value<ElementContainerT>(element, coval));
+                    icl::insert(result, icl::make_value<ElementContainerT>(element, coval));
             }
         }
 

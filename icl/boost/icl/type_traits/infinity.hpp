@@ -9,6 +9,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #define BOOST_ICL_TYPE_TRAITS_INFINITY_HPP_JOFA_100322
 
 #include <string>
+#include <boost/static_assert.hpp>
 #include <boost/icl/type_traits/is_numeric.hpp>
 #include <boost/mpl/if.hpp>
 
@@ -26,7 +27,7 @@ namespace boost{ namespace icl
 
         static Type value()
         {
-            BOOST_CONCEPT_ASSERT((is_numeric<Type>));
+            BOOST_STATIC_ASSERT((is_numeric<Type>::value));
             if(std::numeric_limits<Type>::has_infinity)
                 return std::numeric_limits<Type>::infinity();
             else

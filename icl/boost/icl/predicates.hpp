@@ -106,7 +106,7 @@ namespace boost{namespace icl
             is contained in <tt>super</tt> */
         bool operator()(const Type& sub, const Type& super)const
         {
-            return contains(super, sub);
+            return icl::contains(super, sub);
         }
     };
 
@@ -123,7 +123,7 @@ namespace boost{namespace icl
             <tt>sub</tt> */
         bool operator()(const Type& super, const Type& sub)const
         {
-            return contains(super, sub);
+            return icl::contains(super, sub);
         }
     };
 

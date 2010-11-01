@@ -497,7 +497,7 @@ bool contains(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& sup
 
 template<class CharType, class CharTraits, 
     class DomainT, class BitSetT, 
-    ICL_COMPARE Compare, template<class,ICL_COMPARE>class Interval, ICL_ALLOC Alloc>
+    ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits>& stream, 
    const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
@@ -514,7 +514,7 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 //-----------------------------------------------------------------------------
 // type representation
 //-----------------------------------------------------------------------------
-template <class DomainT, class BitSetT, ICL_COMPARE Compare, template<class,ICL_COMPARE>class Interval, ICL_ALLOC Alloc>
+template <class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc>
 struct type_to_string<icl::interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc> >
 {
     static std::string apply()
