@@ -8,6 +8,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #ifndef BOOST_ICL_CONCEPT_MAP_VALUE_HPP_JOFA_100924
 #define BOOST_ICL_CONCEPT_MAP_VALUE_HPP_JOFA_100924
 
+#include <boost/icl/type_traits/predicate.hpp>
+#include <boost/icl/type_traits/identity_element.hpp>
 #include <boost/icl/type_traits/is_map.hpp>
 
 namespace boost{ namespace icl
@@ -37,6 +39,19 @@ make_value(const typename Type::     key_type& key_val,
 {
     return typename Type::value_type(key_val, co_val);
 }
+
+
+template <class Type>
+class content_is_identity_element: public property<Type>
+{
+public:
+    bool operator() (const Type& value_pair)const 
+    { 
+        return value_pair.second 
+            == identity_element<typename Type::second_type>::value(); 
+    }
+} ;
+
 
 
 }} // namespace boost icl

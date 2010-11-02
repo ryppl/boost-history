@@ -14,6 +14,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/icl/type_traits/is_continuous.hpp>
 #include <boost/icl/type_traits/has_inverse.hpp>
 #include <boost/icl/functors.hpp>
+#include <boost/icl/predicates/element_equal.hpp>
 #include <boost/icl/detail/interval_morphism.hpp>
 #include <boost/validate/laws/set_laws.hpp>
 #include <boost/validate/laws/order.hpp>

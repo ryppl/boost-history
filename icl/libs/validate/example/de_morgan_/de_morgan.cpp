@@ -138,6 +138,7 @@ Law successfully validated
 #include <iostream>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+#include <boost/icl/predicates/element_equal.hpp>
 #include <boost/icl/interval_set.hpp>
 #include <boost/icl/split_interval_map.hpp>
 

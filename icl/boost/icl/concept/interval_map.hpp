@@ -17,6 +17,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/icl/detail/set_algo.hpp>
 #include <boost/icl/detail/interval_map_algo.hpp>
 #include <boost/icl/concept/interval.hpp>
+#include <boost/icl/concept/joinable.hpp>
 
 namespace boost{ namespace icl
 {
@@ -25,6 +26,15 @@ template<class Type>
 typename enable_if<is_interval_container<Type>, Type>::type&
 join(Type&);
 
+
+template<class Type>
+inline typename enable_if<is_interval_map<Type>, typename Type::segment_type>::type
+make_segment(const typename Type::element_type& element)
+{
+    typedef typename Type::interval_type interval_type;
+    typedef typename Type::segment_type  segment_type;
+    return segment_type(icl::singleton<interval_type>(element.key), element.data);
+}
 
 //==============================================================================
 //= Containedness<IntervalMap>

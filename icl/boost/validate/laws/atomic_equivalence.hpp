@@ -13,7 +13,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <iterator>
 #include <boost/icl/type_traits/value_size.hpp>
 #include <boost/icl/functors.hpp>
-#include <boost/icl/predicates.hpp>
+#include <boost/icl/predicates/std_equal.hpp>
 #include <boost/icl/detail/interval_morphism.hpp>
 #include <boost/validate/laws/law.hpp>
 

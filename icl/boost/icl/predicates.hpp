@@ -10,9 +10,101 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #ifndef BOOST_ICL_PREDICATES_HPP_JOFA_990224
 #define BOOST_ICL_PREDICATES_HPP_JOFA_990224
 
-#include <functional>
-#include <boost/icl/type_traits/type_to_string.hpp>
+//JODO remove file
+//#include <functional>
+//#include <boost/icl/type_traits/predicate.hpp>
+//#include <boost/icl/type_traits/type_to_string.hpp>
+//
+//namespace boost{namespace icl
+//{
+//    // naming convention
+//    // predicate: n-ary predicate
+//    // property:  unary predicate
+//    // relation:  binary predicate
+//
+//
+//    // Binary predicates: relations
+//
+//    template <class Type> struct std_equal : public relation<Type,Type>
+//    {
+//        bool operator()(const Type& lhs, const Type& rhs)const
+//        {
+//            return lhs == rhs;
+//        }
+//    };
+//
+//    //-----------------------------------------------------------------------------
+//
+//    template<>         
+//    inline std::string unary_template_to_string<icl::std_equal>::apply()
+//    { return "=="; }
+//
+//    template <class Type> 
+//    struct element_equal : public relation<Type,Type>
+//    {
+//        bool operator()(const Type& lhs, const Type& rhs)const
+//        {
+//            return is_element_equal(lhs, rhs);
+//        }
+//    };
+//
+//    template<>
+//    inline std::string unary_template_to_string<icl::element_equal>::apply()  
+//    { return "="; }
+//
+//    template <class Type> 
+//    struct distinct_equal : public relation<Type,Type>
+//    {
+//        bool operator()(const Type& lhs, const Type& rhs)const
+//        {
+//            return is_distinct_equal(lhs, rhs);
+//        }
+//    };
+//
+//    template<>
+//    inline std::string unary_template_to_string<icl::distinct_equal>::apply()  
+//    { return "==/0"; }
+//
+//
+//
+//    /// Functor class template contained_in implements the subset relation.
+//    template<class Type> 
+//    struct sub_super_set : public relation<Type,Type>
+//    {
+//        /// Apply the subset relation.
+//        /** <tt>contained_in(sub, super)</tt> is true if <tt>sub</tt> 
+//            is contained in <tt>super</tt> */
+//        bool operator()(const Type& sub, const Type& super)const
+//        {
+//            return contains(super, sub);
+//        }
+//    };
+//
+//    template<>
+//    inline std::string unary_template_to_string<icl::sub_super_set>::apply()  
+//    { return "C="; }
+//
+//    /// Functor class template <b>contains</b> implements the superset relation. 
+//    template<class Type> 
+//    struct super_sub_set : public relation<Type,Type>
+//    {
+//        /// Apply the superset relation.
+//        /** <tt>contains(super, sub)</tt> is true if <tt>super</tt> containes 
+//            <tt>sub</tt> */
+//        bool operator()(const Type& super, const Type& sub)const
+//        {
+//            return contains(super, sub);
+//        }
+//    };
+//
+//    template<>
+//    inline std::string unary_template_to_string<icl::super_sub_set>::apply()  
+//    { return "D="; }
+//
+//}} // namespace icl boost
 
+<<<<<<< .mine
+=======
 namespace boost{namespace icl
 {
     // naming convention
@@ -133,5 +225,7 @@ namespace boost{namespace icl
 
 }} // namespace icl boost
 
+>>>>>>> .r66349
 #endif
+
 

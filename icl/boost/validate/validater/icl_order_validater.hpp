@@ -14,6 +14,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/icl/type_traits/is_continuous.hpp>
 #include <boost/icl/type_traits/has_inverse.hpp>
 #include <boost/icl/functors.hpp>
+#include <boost/icl/predicates/element_equal.hpp>
+#include <boost/icl/predicates/sub_super_set.hpp>
 #include <boost/validate/validater/strict_weak_order_validater.hpp>
 #include <boost/validate/validater/partial_order_validater.hpp>
 

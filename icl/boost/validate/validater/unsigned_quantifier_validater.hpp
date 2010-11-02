@@ -11,6 +11,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define BOOST_ICL_VALIDATE_VALIDATER_UNSIGNED_QUANTIFIER_VALIDATER_HPP_JOFA_090314
 
 #include <boost/icl/functors.hpp>
+#include <boost/icl/predicates/element_equal.hpp>
+#include <boost/icl/predicates/distinct_equal.hpp>
 #include <boost/icl/type_traits/absorbs_identities.hpp>
 #include <boost/icl/type_traits/is_total.hpp>
 #include <boost/validate/laws/monoid.hpp>

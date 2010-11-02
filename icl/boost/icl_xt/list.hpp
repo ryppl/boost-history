@@ -23,7 +23,6 @@ class icl::list
 #include <boost/icl/detail/design_config.hpp>
 #include <boost/icl/type_traits/to_string.hpp>
 #include <boost/icl/detail/set_algo.hpp>
-#include <boost/icl/predicates.hpp>
 
 
 namespace boost{namespace icl

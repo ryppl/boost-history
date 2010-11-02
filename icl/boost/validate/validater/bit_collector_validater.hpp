@@ -11,6 +11,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define BOOST_VALIDATE_VALIDATER_BIT_COLLECTOR_VALIDATER_HPP_JOFA_091009
 
 #include <boost/icl/functors.hpp>
+#include <boost/icl/predicates/element_equal.hpp>
 #include <boost/validate/laws/monoid.hpp>
 #include <boost/validate/laws/inversion_laws.hpp>
 #include <boost/validate/laws/symmetric_difference.hpp>

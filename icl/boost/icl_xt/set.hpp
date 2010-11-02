@@ -25,7 +25,6 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/icl/type_traits/is_set.hpp>
 #include <boost/icl/detail/subset_comparer.hpp>
 #include <boost/icl/detail/set_algo.hpp>
-#include <boost/icl/predicates.hpp>
 #include <boost/mpl/or.hpp> 
 #include <boost/mpl/not.hpp> 
 #include <boost/type_traits/is_same.hpp>

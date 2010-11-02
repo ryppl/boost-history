@@ -12,7 +12,6 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 #include <boost/icl/type_traits/value_size.hpp>
 #include <boost/icl/functors.hpp>
-#include <boost/icl/predicates.hpp>
 #include <boost/validate/laws/law.hpp>
 
 namespace boost{namespace icl

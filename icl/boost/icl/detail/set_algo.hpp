@@ -13,7 +13,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/type_traits/remove_const.hpp>
 
 #include <boost/icl/detail/notate.hpp>
-#include <boost/icl/predicates.hpp>
 #include <boost/icl/functors.hpp>
 
 #include <boost/icl/concept/container.hpp>

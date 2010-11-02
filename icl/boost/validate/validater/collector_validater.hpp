@@ -12,6 +12,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 
 #include <boost/icl/functors.hpp>
+#include <boost/icl/predicates/element_equal.hpp>
 #include <boost/validate/laws/monoid.hpp>
 #include <boost/validate/laws/inversion_laws.hpp>
 #include <boost/validate/laws/symmetric_difference.hpp>

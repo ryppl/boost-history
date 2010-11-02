@@ -11,6 +11,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define BOOST_ICL_VALIDATE_VALIDATER_ICL_INDUCED_RELATIONS_HPP_JOFA_090304
 
 #include <boost/icl/functors.hpp>
+#include <boost/icl/predicates/element_equal.hpp>
+#include <boost/icl/predicates/sub_super_set.hpp>
 #include <boost/icl/detail/interval_morphism.hpp>
 #include <boost/validate/laws/induced_relation.hpp>
 #include <boost/validate/validater/law_validater.hpp>

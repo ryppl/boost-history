@@ -18,6 +18,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/icl/map.hpp>
 #include <boost/icl/detail/interval_morphism.hpp>
 #include <boost/validate/icl/functors.hpp>
+#include <boost/icl/predicates/sub_super_set.hpp>
 #include <boost/validate/laws/induced_relation.hpp>
 #include <boost/validate/laws/symmetric_difference.hpp>
 #include <boost/validate/laws/pushouts.hpp>
