@@ -120,17 +120,17 @@ namespace boost{namespace icl
             Type a = this->template getInputValue<operand_a>();
             Type b = this->template getInputValue<operand_b>();
 
-            cout << "a    =  " << a << endl;
-            cout << "b    =  " << b << endl;
+            std::cout << "a    =  " << a << std::endl;
+            std::cout << "b    =  " << b << std::endl;
 
             bool a_R_b = Relation<Type>()(a,b);
-            cout << "a<=b == " << a_R_b << endl;
+            std::cout << "a<=b == " << a_R_b << std::endl;
 
             bool b_R_a = Relation<Type>()(b,a);
-            cout << "b<=a == " << b_R_a << endl;
+            std::cout << "b<=a == " << b_R_a << std::endl;
 
             bool a_E_b = Equality<Type>()(a,b);
-            cout << "b==a == " << a_E_b << endl;
+            std::cout << "b==a == " << a_E_b << std::endl;
 
             return !(Relation<Type>()(a,b) && Relation<Type>()(b,a)) || Equality<Type>()(a,b);
         }

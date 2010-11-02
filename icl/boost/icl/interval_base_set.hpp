@@ -31,8 +31,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/icl/detail/interval_set_algo.hpp>
 #include <boost/icl/detail/exclusive_less_than.hpp>
 
-#include <boost/icl/associative_interval_container.hpp>
-
 #include <boost/icl/right_open_interval.hpp>
 #include <boost/icl/continuous_interval.hpp>
 #include <boost/icl/detail/notate.hpp>

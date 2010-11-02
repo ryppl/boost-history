@@ -78,7 +78,7 @@ namespace boost{namespace icl
         Type lwb, upb;
         _lwbGentor.some(lwb);
         _upbGentor.some(upb);
-        _last = right_open_interval(lwb, upb);
+        _last = interval_type::right_open(lwb, upb);
         x = _last;
     }
 

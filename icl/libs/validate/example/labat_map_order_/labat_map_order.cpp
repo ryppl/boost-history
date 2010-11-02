@@ -12,7 +12,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <stdio.h>
 
 #include <boost/validate/loki_xt/Tuple.h>
-#include <boost/icl/map.hpp>
+#include <boost/icl/associative_element_container.hpp>
+#include <boost/icl/associative_interval_container.hpp>
 #include <boost/validate/gentor/gentorprofile.hpp>
 #include <boost/validate/gentor/rangegentor.hpp>
 
