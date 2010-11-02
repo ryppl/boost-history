@@ -21,6 +21,7 @@ int main()
     using namespace std;
     using namespace boost::chrono;
 
+#ifdef BOOST_CHRONO_IO_INPUT
     istringstream in("5000 milliseconds 4000 ms 3001 ms");
     seconds d(0);
     in >> d;
@@ -32,7 +33,7 @@ int main()
     in >> d;
     assert(in.fail());
     assert(d == seconds(4));
-
+#endif
     return 0;
 }
 
