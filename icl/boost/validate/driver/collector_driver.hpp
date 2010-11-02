@@ -13,6 +13,9 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <iostream>
 #include <stdio.h>
 #include <time.h>
+#include <boost/icl/map.hpp>
+#include <boost/icl/interval_map.hpp>
+#include <boost/icl/split_interval_map.hpp>
 #include <boost/validate/validater/collector_validater.hpp>
 #include <boost/validate/driver/icl_driver.hpp>
 #include <boost/validate/utility.hpp>

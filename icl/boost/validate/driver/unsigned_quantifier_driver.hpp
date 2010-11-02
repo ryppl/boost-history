@@ -7,10 +7,14 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#pragma once
+#ifndef BOOST_VALIDATE_DRIVER_UNSIGNED_QUANTIFIER_DRIVER_HPP_JOFA_091013
+#define BOOST_VALIDATE_DRIVER_UNSIGNED_QUANTIFIER_DRIVER_HPP_JOFA_091013
 
 #include <iostream>
 #include <stdio.h>
+#include <boost/icl/map.hpp>
+#include <boost/icl/interval_map.hpp>
+#include <boost/icl/split_interval_map.hpp>
 #include <boost/validate/validater/unsigned_quantifier_validater.hpp>
 #include <boost/validate/driver/icl_driver.hpp>
 #include <boost/validate/utility.hpp>
@@ -142,3 +146,4 @@ namespace boost{namespace icl
 
 }} // namespace icl boost
 
+#endif // BOOST_VALIDATE_DRIVER_UNSIGNED_QUANTIFIER_DRIVER_HPP_JOFA_091013

@@ -12,6 +12,8 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 
 #include <iostream>
 #include <stdio.h>
+#include <boost/icl/interval_set.hpp>
+#include <boost/icl/split_interval_set.hpp>
 #include <boost/validate/validater/abelian_monoid_validater.hpp>
 #include <boost/validate/driver/icl_driver.hpp>
 #include <boost/validate/utility.hpp>
@@ -63,8 +65,8 @@ namespace boost{namespace icl
             {
             case RootType::icl_set: {
                     switch(domainChoice) {
-                    case DomainType::Int:    return new abelian_monoid_validater<icl::set<int> >; 
-                    case DomainType::Double: return new abelian_monoid_validater<icl::set<double> >; 
+                    case DomainType::Int:    return new abelian_monoid_validater<std::set<int> >; 
+                    case DomainType::Double: return new abelian_monoid_validater<std::set<double> >; 
                     default: return choiceError(ICL_LOCATION("\nRootType::icl_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }

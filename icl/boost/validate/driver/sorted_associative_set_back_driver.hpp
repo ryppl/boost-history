@@ -12,6 +12,9 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 #include <iostream>
 #include <stdio.h>
+#include <boost/icl/interval_set.hpp>
+#include <boost/icl/separate_interval_set.hpp>
+#include <boost/icl/split_interval_set.hpp>
 #include <boost/validate/validater/sorted_associative_back_validater.hpp>
 #include <boost/validate/driver/icl_driver.hpp>
 #include <boost/validate/utility.hpp>

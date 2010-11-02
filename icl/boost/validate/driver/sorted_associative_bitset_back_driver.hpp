@@ -12,6 +12,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 #include <iostream>
 #include <stdio.h>
+#include <boost/icl_xt/interval_bitset.hpp>
 #include <boost/validate/validater/sorted_associative_back_validater.hpp>
 #include <boost/validate/driver/icl_driver.hpp>
 #include <boost/validate/utility.hpp>
