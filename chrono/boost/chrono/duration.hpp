@@ -406,7 +406,7 @@ namespace chrono {
     //BOOST_CHRONO_STATIC_ASSERT(boost::is_integral<Rep>::value, BOOST_CHRONO_A_DURATION_REPRESENTATION_MUST_BE_INTEGRAL, ());
     BOOST_CHRONO_STATIC_ASSERT(!boost::chrono::detail::is_duration<Rep>::value, 
             BOOST_CHRONO_A_DURATION_REPRESENTATION_CAN_NOT_BE_A_DURATION, ());
-    BOOST_CHRONO_STATIC_ASSERT(boost::ratio_detail::is_ratio<Period>::value, 
+    BOOST_CHRONO_STATIC_ASSERT(boost::ratio_detail::is_ratio<typename Period::type>::value, 
             BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_DURATION_MUST_BE_A_STD_RATIO, ());
     BOOST_CHRONO_STATIC_ASSERT(Period::num>0, 
             BOOST_CHRONO_DURATION_PERIOD_MUST_BE_POSITIVE, ());

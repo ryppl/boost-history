@@ -20,7 +20,9 @@
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/math/common_factor_rt.hpp>
+#ifdef BOOST_CHRONO_IO_INPUT
 #include <boost/chrono/detail/scan_keyword.hpp>
+#endif
 
 namespace boost
 {
@@ -205,6 +207,8 @@ struct duration_io_intermediate<Rep, true>
 };
 
 }
+
+#ifdef BOOST_CHRONO_IO_INPUT
 template <class CharT, class Traits, class Rep, class Period>
 std::basic_istream<CharT, Traits>&
 operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
@@ -467,6 +471,7 @@ operator>>(std::basic_istream<CharT, Traits>& is, duration<Rep, Period>& d)
         is.setstate(is.failbit);
     return is;
 }
+#endif
 
 template <class Clock, class CharT>
 struct clock_string;
@@ -614,6 +619,7 @@ operator<<(std::basic_ostream<CharT, Traits>& os,
     return os << tp.time_since_epoch() << clock_string<Clock, CharT>::since();
 }
 
+#ifdef BOOST_CHRONO_IO_INPUT
 template <class CharT, class Traits, class Clock, class Duration>
 std::basic_istream<CharT, Traits>&
 operator>>(std::basic_istream<CharT, Traits>& is,
@@ -644,6 +650,7 @@ operator>>(std::basic_istream<CharT, Traits>& is,
         is.setstate(is.failbit);
     return is;
 }
+#endif
 }  // chrono
 
 }
