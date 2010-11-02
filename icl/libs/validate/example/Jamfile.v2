@@ -29,6 +29,28 @@ exe de_morgan
         <include>../../..
         <include>$(BOOST_ROOT)
     ;
+
+
+exe boostcon_law_validater
+    :
+        boostcon_law_validater_/boostcon_law_validater.cpp
+        gentorprofile.obj
+        /boost/date_time//boost_date_time
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+exe boostcon_abelian_monoids
+    :
+        boostcon_abelian_monoids_/boostcon_abelian_monoids.cpp
+        gentorprofile.obj
+        /boost/date_time//boost_date_time
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
    
 # 2.19 msvc9 compilation time: 0:38  
 exe labat_val_relations
