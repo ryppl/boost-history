@@ -16,7 +16,6 @@
 
 #include <boost/config.hpp>
 #include <boost/detail/lightweight_test.hpp>
-
 #include <boost/fusion/sequence.hpp>
 #include <boost/fusion/iterator.hpp>
 #include <boost/fusion/support.hpp>
@@ -25,6 +24,7 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 #include <string>
 
 namespace mpl = boost::mpl;
@@ -41,9 +41,8 @@ namespace demo
     {
         typedef mpl::int_<N> index;
         typedef SeqRef seq_type;
-        //TODO
         typedef typename
-            fusion::detail::remove_reference<SeqRef>::type
+            boost::remove_reference<SeqRef>::type
         seq_nonref_type;
 
         triple_iterator(SeqRef seq)
@@ -167,8 +166,8 @@ namespace demo
         template<typename ItRef1, typename ItRef2>
         struct distance
           : mpl::minus<
-                typename fusion::detail::remove_reference<ItRef2>::type::index
-              , typename fusion::detail::remove_reference<ItRef1>::type::index
+                typename boost::remove_reference<ItRef2>::type::index
+              , typename boost::remove_reference<ItRef1>::type::index
             >
         {};
 
@@ -274,7 +273,7 @@ namespace demo
         template<typename SeqRef>
         struct at<SeqRef, mpl::int_<0> >
         {
-            typedef typename fusion::detail::remove_reference<SeqRef>::type seq;
+            typedef typename boost::remove_reference<SeqRef>::type seq;
 
             typedef typename
                 mpl::if_<boost::is_const<seq>, T0 const&, T0&>::type
@@ -290,7 +289,7 @@ namespace demo
         template<typename SeqRef>
         struct at<SeqRef, mpl::int_<1> >
         {
-            typedef typename fusion::detail::remove_reference<SeqRef>::type seq;
+            typedef typename boost::remove_reference<SeqRef>::type seq;
 
             typedef typename
                 mpl::if_<boost::is_const<seq>, T1 const&, T1&>::type
@@ -306,7 +305,7 @@ namespace demo
         template<typename SeqRef>
         struct at<SeqRef, mpl::int_<2> >
         {
-            typedef typename fusion::detail::remove_reference<SeqRef>::type seq;
+            typedef typename boost::remove_reference<SeqRef>::type seq;
 
             typedef typename
                 mpl::if_<boost::is_const<seq>, T2 const&, T2&>::type

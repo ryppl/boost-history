@@ -14,7 +14,6 @@ project
         <define>BOOST_FUSION_TEST_MAX_N=20
         <define>BOOST_FUSION_ENABLE_STATIC_ASSERTS
         <warnings>all
-        <toolset>gcc:<cxxflags>-Wno-long-long
         <library>/boost/test//boost_unit_test_framework
         <link>static
   ;

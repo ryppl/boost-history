@@ -33,6 +33,7 @@
 #include <boost/mpl/copy.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/is_reference.hpp>
 #include <iostream>
 
 namespace mpl=boost::mpl;
@@ -68,8 +69,8 @@ struct sum
           , int
         >
     {
-        BOOST_MPL_ASSERT((typename fusion::detail::is_lrref<State>::type));
-        BOOST_MPL_ASSERT((typename fusion::detail::is_lrref<T>::type));
+        BOOST_MPL_ASSERT((typename fusion::detail::is_reference<State>::type));
+        BOOST_MPL_ASSERT((typename fusion::detail::is_reference<T>::type));
     };
 
 #ifdef BOOST_FUSION_TEST_ITER_FOLD
@@ -100,8 +101,8 @@ struct meta_sum
     template<typename Self, typename State, typename T>
     struct result<Self(State,T)>
     {
-        BOOST_MPL_ASSERT((typename fusion::detail::is_lrref<State>::type));
-        BOOST_MPL_ASSERT((typename fusion::detail::is_lrref<T>::type));
+        BOOST_MPL_ASSERT((typename fusion::detail::is_reference<State>::type));
+        BOOST_MPL_ASSERT((typename fusion::detail::is_reference<T>::type));
 
         typedef typename boost::remove_reference<State>::type state;
         static const int n=mpl::front<state>::type::value;

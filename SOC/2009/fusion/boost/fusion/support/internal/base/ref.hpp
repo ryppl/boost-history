@@ -15,7 +15,6 @@
 #   include <boost/mpl/or.hpp>
 #   include <boost/mpl/identity.hpp>
 #endif
-#include <boost/mpl/bool.hpp>
 
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_array.hpp>
@@ -35,6 +34,8 @@
 #ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
 #   include <utility>
 #endif
+
+#include "ref_impl.hpp"
 
 //cschmidt: We ignore volatile in the BOOST_FUSION_ALL_CV_*-Macros, as we would
 //get a lot of problems with older compilers. On top of that, fusion
@@ -73,131 +74,6 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    //cschmidt: workaround until boost::is_reference supports rvalues
-#if BOOST_WORKAROUND(BOOST_MSVC, == 1600)
-    template<typename T>
-    struct is_lrref_stage2
-      : mpl::false_
-    {};
-
-    template<typename T>
-    struct is_lrref_stage2<T&&>
-      : mpl::true_
-    {};
-
-    template<typename T>
-    struct is_lrref
-      : is_lrref_stage2<T>
-    {};
-#else
-    template<typename T>
-    struct is_lrref
-      : mpl::false_
-    {};
-
-#   ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
-    template<typename T>
-    struct is_lrref<T&&>
-      : mpl::true_
-    {};
-#   endif
-#endif
-
-    template<typename T>
-    struct is_lrref<T&>
-      : mpl::true_
-    {};
-
-#ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
-    template<typename T>
-    struct is_rref
-      : mpl::false_
-    {};
-
-    template<typename T>
-    struct is_rref<T&&>
-      : mpl::true_
-    {};
-#endif
-
-#if BOOST_WORKAROUND(BOOST_MSVC, == 1600)
-    template<typename T>
-    struct remove_reference_stage2
-    {
-        typedef T type;
-    };
-
-    template<typename T>
-    struct remove_reference_stage2<T&&>
-    {
-        typedef T type;
-    };
-
-    template<typename T>
-    struct remove_reference
-      : remove_reference_stage2<T>
-    {};
-#else
-    template<typename T>
-    struct remove_reference
-    {
-        typedef T type;
-    };
-
-#   ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
-    template<typename T>
-    struct remove_reference<T&&>
-    {
-        typedef T type;
-    };
-#   endif
-#endif
-
-    template<typename T>
-    struct remove_reference<T&>
-    {
-        typedef T type;
-    };
-
-#if BOOST_WORKAROUND(BOOST_MSVC, == 1600)
-    template<typename T>
-    struct add_lref_stage2
-    {
-        typedef T& type;
-    };
-
-    template<typename T>
-    struct add_lref_stage2<T&&>
-    {
-        typedef T&& type;
-    };
-
-    template<typename T>
-    struct add_lref
-      : add_lref_stage2<T>
-    {};
-#else
-    template<typename T>
-    struct add_lref
-    {
-        typedef T& type;
-    };
-
-#   ifndef BOOST_FUSION_NO_RVALUE_REFERENCES
-    template<typename T>
-    struct add_lref<T&&>
-    {
-        typedef T&& type;
-    };
-#   endif
-#endif
-
-    template<typename T>
-    struct add_lref<T&>
-    {
-        typedef T& type;
-    };
-
     template<typename T>
     struct identity
       :

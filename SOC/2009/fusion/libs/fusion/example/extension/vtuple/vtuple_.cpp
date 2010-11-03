@@ -29,6 +29,7 @@ John Fletcher J.P.Fletcher@aston.ac.uk
 #   include <boost/type_traits/remove_reference.hpp>
 #   include <boost/type_traits/is_const.hpp>
 #   include <boost/type_traits/is_same.hpp>
+#   include <boost/type_traits/remove_reference.hpp>
 
 #   include <tuple>
 #   include <string>
@@ -327,7 +328,7 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
         struct end
         {
            typedef typename
-            fusion::detail::remove_reference<Sq>::type
+            boost::remove_reference<Sq>::type
             seq;
             typedef variadic_tuple::vtuple_iterator<
                 Sq, 

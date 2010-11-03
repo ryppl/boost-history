@@ -50,7 +50,7 @@
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/add_reference.hpp>
 #include <boost/type_traits/is_same.hpp>
-
+#include <boost/type_traits/remove_reference.hpp>
 
 #include <string>
 
@@ -102,7 +102,7 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
         typedef mpl::int_<NN> index;
         typedef SeqRef sequence_type;
         typedef typename
-            fusion::detail::remove_reference<SeqRef>::type
+            boost::remove_reference<SeqRef>::type
         seq_nonref_type;
 
         vtuple_iterator(SeqRef seq)
@@ -134,7 +134,7 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
         struct value_of<vtuple_iterator<SeqRef_, N> >
         {
             typedef typename
-            fusion::detail::remove_reference<SeqRef_>::type
+            boost::remove_reference<SeqRef_>::type
             seq_;
             BOOST_MPL_ASSERT_NOT((VARIADIC_TUPLE_INDEX_TOO_LARGE<seq_,N>));
 	    typedef typename std::tuple_element<N,
@@ -165,7 +165,7 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
         struct deref<vtuple_iterator<SeqRef_, N> >
         {
             typedef typename
-            fusion::detail::remove_reference<SeqRef_>::type
+            boost::remove_reference<SeqRef_>::type
             seq_;
             BOOST_MPL_ASSERT_NOT((VARIADIC_TUPLE_INDEX_TOO_LARGE<seq_,N>));
 	    typedef typename std::tuple_element<N,typename seq_::base_type>::type typeN;
@@ -187,8 +187,8 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
         template<typename ItRef1, typename ItRef2>
         struct distance
           : mpl::minus<
-                typename fusion::detail::remove_reference<ItRef2>::type::index
-              , typename fusion::detail::remove_reference<ItRef1>::type::index
+                typename boost::remove_reference<ItRef2>::type::index
+              , typename boost::remove_reference<ItRef1>::type::index
             >
         {};
 
@@ -355,7 +355,7 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
         struct end
         {
            typedef typename
-            fusion::detail::remove_reference<Sq>::type
+            boost::remove_reference<Sq>::type
             seq;
             typedef variadic_tuple::vtuple_iterator<
                 Sq, 
@@ -374,7 +374,7 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
         //    >
         {
             typedef typename
-            fusion::detail::remove_reference<Sq>::type
+            boost::remove_reference<Sq>::type
             seq;
             typedef typename mpl::int_<
           std::tuple_size<typename seq::base_type>::value>::type type;
@@ -388,7 +388,7 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
         struct value_at<Sq, mpl::int_<N> >
         {
             typedef typename
-            fusion::detail::remove_reference<Sq>::type
+            boost::remove_reference<Sq>::type
             seq;
             BOOST_MPL_ASSERT_NOT((VARIADIC_TUPLE_INDEX_TOO_LARGE<seq,N>));
           typedef typename std::tuple_element<N,
@@ -405,7 +405,7 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
         struct at<Sq, mpl::int_<N> >
         {
             typedef typename
-            fusion::detail::remove_reference<Sq>::type
+            boost::remove_reference<Sq>::type
             seq;
              BOOST_MPL_ASSERT_NOT((VARIADIC_TUPLE_INDEX_TOO_LARGE<seq,N>));
           typedef typename std::tuple_element<N,
