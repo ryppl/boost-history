@@ -278,5 +278,12 @@ clean:
 svn_clean:
 	../script/rm_svn $(ITL_ROOT_PATH)
 	
+tools:
+    cp ../script/rm_svn.sh ../script/rm_svn
+    cp ../script/rm_temps.sh ../script/rm_temps
+	
+
+	
+	
 	
 	
