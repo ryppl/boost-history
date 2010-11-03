@@ -70,7 +70,7 @@ to combine associated values in meaningful ways when intervals
 overlap on insertion.
 
 For a condensed introduction and overview you may want to look at the
-[@http://www.herold-faulhaber.de/boost_icl/doc/libs/itl/doc/boostcon09/intro_to_itl.pdf 
+[@http://www.herold-faulhaber.de/boost_icl/doc/libs/icl/doc/boostcon09/intro_to_itl.pdf 
 presentation material on the *ICL* from ['*BoostCon2009*]].
 
 
