@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Interval Template Library
+Interval Container Library (Boost.Icl)
 Author: Joachim Faulhaber
 Copyright (c) 2007-2010: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
@@ -9,16 +9,17 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 
-Interval Template Library (Boost.Itl) 3.2.1 Review Version Update 2
-===================================================================
+Interval Container Library (Boost.Icl) 4.0.0 Inclusion Version for boost 1.46 
+=============================================================================
 PLUS 
-Itl_xt    Extended by generalized cross tables (cubes) AND
+Icl_xt    Extended by generalized cross tables (cubes) AND
 validate  A law based test automaton (LaBatea).
 
 Abstract:
 =========
 
-The Interval Template Library (Itl) provides intervals 
+The Boost Interval Container Library (Icl) formerly known 
+as Interval Template Library (Itl) provides intervals 
 and two kinds of interval containers: Interval_sets and 
 interval_maps. Interval_sets and maps can be used just
 as the sets or maps of elements. Yet they are much more 
@@ -37,22 +38,66 @@ associated values, if added intervals overlap with
 intervals, that are stored in the interval_map. This 
 feature is called aggregate on overlap.
 
-Itl_xt's cubes and the law based test automaton (LaBatea)
+Icl_xt's cubes and the law based test automaton (LaBatea)
 are not yet proposed and prepared as Boost libraries.
 But LaBatea has been used in the development of the
-itl as test automaton and for checking sematical 
+icl as test automaton and for checking sematical 
 concepts.
 
-NOTE: Neither of the tree libraries itl, itl_xt and validate
-is an official boost library yet. They are named Boost.Itl,
-Boost.Itl_xt and Boost.Validate here, because they are already
-organized in the boost centric directory structure.
 
-The core library Boost.Itl is submitted for review which
-will probably take place end of February 2010.
+NOTE: The core library, Boost.Icl, has been accepted into 
+the Boost Library Collection on April 18, 2010. This is 
+the library version prepared for inclusion into Boost 1.46.0.
+
+The extended parts icl_xt and validate are not Boost libraries.
+
 
 Release Notes:
 ==============
+
+* Boost.Icl 4.0.0 (Inclusion Version for Boost 1.46.0)
+------------------------------------------------------------------------
++ Tested Compilers: gcc-3.4.4, gcc-4.4.1, 
+                    msvc-8.0, msvc-9.0, msvc-10.0.
+
++ The library has been renamed from
+  Interval Template Library (ITL) to
+  Interval Container Library (ICL)
+  Its namespace is now icl instead of itl.
+  
++ Introduction of dynamically bounded and statically bounded intervals
+  - The 'universal' interval class itl::interval has been replaced by
+  - dynamically bounded discrete_interval and continuous_interval
+  - statically bounded right_open_interval, left_open_interval
+    icl::closed_interval and icl::open_interval and a uniform set of
+    namespace global functions or interval_concept for them.
+  - Added functions 'distance' and 'inner_complement' for intervals.
+    
++ User defined interval types are now customizable
+  - A interval_trait and dynamic_interval_trait template describes
+    the generic properties of the interval concept ...
+  - and allows to customize the icl library for user defined interval 
+    types.
+
++ Extraction of namespace global functions.
+  - Member functions have been extracted form class templates as long
+    as they are not needed to maintain type invariants.
+  - The sets of namespace global functions build concepts
+    icl::element_set, icl::element_map, 
+    icl::interval_set, icl::interval_map
+  - Functions have been renamed to conform existing standards
+    (ISO/OGC).
+  - std::set and other stl conformant set types are models of the
+    icl's element_set concept. Class template icl::set has been 
+    removed.
+  - Member functions for element iterations are extracted from
+    the class templates.
+	
++ Names, refered to as 'colorful terminology' have been renamed
+  - neutron -> identity_element
+  - unon -> unit_element
+  - ... and also their occurrence in composite identifiers
+
 
 * Boost.Itl 3.2.1 (Review Version, update 2)
 ------------------------------------------------------------------------
@@ -121,82 +166,83 @@ Release Notes:
 Content:
 ========
 
-=== Itl =======================================================================						
-itl.html                html-documentation referring to 
-                        libs/itl/doc/html/index.html
+=== Icl =======================================================================						
+icl.html                html-documentation referring to 
+                        libs/icl/doc/html/index.html
 doc/html/images         Images for the html docs. You may delete this, if you 
-                        integrate itl_plus into an existing boost installation.
+                        integrate icl_plus into an existing boost installation.
 
-boost/itl               Interval containers, operators, algorithms
-boost/itl/type_traits   Metafunctions for types
-boost/itl/detail        Implementation details
+boost/icl               Interval containers, operators, algorithms
+boost/icl/type_traits   Metafunctions for types
+boost/icl/concept       Sets of namespace global functions that make up icl 
+                        concepts.
+boost/icl/predicates    Some boolean function objects
+boost/icl/detail        Implementation details
 
-libs/itl/example        Example programs
-libs/itl/test           Test suite
-libs/itl/doc            Quickbook documentatons
-libs/itl/doc/html       html documentation from Quickbook sources for Boost.Itl
-libs/itl/build/win32    vc9_all.sln. solution file for msvc-9 including LaBatea 
-                        programs.
+libs/icl/example        Example programs
+libs/icl/test           Test suite
+libs/icl/doc            Quickbook documentatons
+libs/icl/doc/html       html documentation from Quickbook sources for Boost.Icl
 						
-=== Itl extended ==============================================================						
-boost/itl_xt            Headers of extended itl classes like cubes.
-libs/itl_xt/example     Example programs
-libs/itl_xt/test        Test programs
+=== Icl extended ==============================================================						
+boost/icl_xt            Headers of extended icl classes like cubes.
+libs/icl_xt/example     Example programs
+libs/icl_xt/test        Test programs
 
 === LaBatea ===================================================================
 boost/validate          Headers of the law based test automaton (LaBatea).
-libs/validate/example   Projects for validating Boost.Itl with LaBatea.
+libs/validate/example   Projects for validating Boost.Icl with LaBatea.
 libs/validate/src       Sourcefiles.
 
-=== Itl, Itl_xt and Validate =================================================
-itl_plus_doxy.html      Html file that contains a link to the doygen docs:
-libs/itl/doxy_doc/doxygen_output/html/index.html: html documentation generated 
+=== Icl, Icl_xt and Validate =================================================
+icl_plus_doxy.html      Html file that contains a link to the doygen docs:
+libs/icl/doxy_doc/doxygen_output/html/index.html: html documentation generated 
                         by doxygen that covers a minimal documentation for 
-                        itl_xt and validate (LaBatea).
-itl.html                Html file that contains a link to the quickbook docs:
-libs/itl/doc/html/index.html: html documentation generated by doxygen
-                        that covers a minimal documentation for itl_xt and 
+                        icl_xt and validate (LaBatea).
+icl.html                Html file that contains a link to the quickbook docs:
+libs/icl/doc/html/index.html: html documentation generated by doxygen
+                        that covers a minimal documentation for icl_xt and 
                         validate (LaBatea).
 
-itl_plus and boost
+icl_plus and boost
 ==================
 						
 The interval template library comes in the boost centric project structure
-<boost-root>/boost/itl/  contains all include files
-<boost-root>/boost/itl/  examples, tests and documentation.
-So you can integrate itl, itl_xt and validate into an existing boost 
+<boost-root>/boost/icl/  contains all include files
+<boost-root>/boost/icl/  examples, tests and documentation.
+So you can integrate icl, icl_xt and validate into an existing boost 
 installation by copying 
-boost/{itl,itl_xt,validate} to the <boost-root>/boost directory and
-libs/{itl,itl_xt,validate}  to the <boost-root>/libs directory.
+boost/{icl,icl_xt,validate} to the <boost-root>/boost directory and
+libs/{icl,icl_xt,validate}  to the <boost-root>/libs directory.
 
-In subdirectories like libs/itl/example, libs/itl/test you will find a
+In subdirectories like libs/icl/example, libs/icl/test you will find a
 Jamfile.v2 that allows you to compile the related code with bjam.
 
 To learn more about boost libraries and bjam refer to the boost web site.
 http://www.boost.org/
 
 
-itl_plus_standalone
+icl_plus_standalone
 ===================
 
-You can also download itl_plus_standalone. Included in itl_plus_standalone are
-all sources from the boost libraries that are needed to compile itl code, 
+You can also download icl_plus_standalone. Included in icl_plus_standalone are
+all sources from the boost libraries that are needed to compile icl code, 
 examples and tests. For msvc-9 users it contains sln and vcproj files and a few
 precompiled libraries needed by examples and test projects. If you are lucky
 you can compile and run using
 
-libs/itl/example/vc9_itl_examples.sln            Examples for the itl
-libs/itl/test/vc9_itl_tests.sln                  Boost unit tests for the itl
-libs/validate/examples/vc9_validate_examples.sln Law based tests for itl
+libs/icl/example/vc9_icl_examples.sln            Examples for the icl
+libs/icl/test/vc9_icl_tests.sln                  Boost unit tests for the icl
+libs/validate/examples/vc9_validate_examples.sln Law based tests for icl
 libs/validate/test/vc9_validate_test.sln         Law based tests as unit tests
-libs/itl/build/win32/vc9_all.sln                 Almost everything in one project
+libs/icl/build/win32/vc9_all.sln                 Almost everything in one project
 
 If this does not work out of the box, you can reinstall the boost date_time and
 test binaries using
 
 install_libs.bat
 
-from the command line at the root directory of itl_plus_standalone.
+from the command line at the root directory of icl_plus_standalone.
 If this still does not work, get a new version of bjam (boost-jam) at
 http://sourceforge.net/projects/boost/files/boost-jam/
 

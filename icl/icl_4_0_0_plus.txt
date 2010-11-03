@@ -1,26 +1,17 @@
-File itl_plus_3_2_1.zip    or
-File itl_plus_3_2_1.tar.gz
+File icl_plus_4_0_0.zip    or
+File icl_plus_4_0_0.tar.gz
 
-+ itl_plus_3_2_1 is for users of different platforms that have a version of the
++ icl_plus_4_0_0 is for users of different platforms that have a version of the
   boost libraries and the build tool bjam installed.
-+ You can copy itl_plus/boost/{itl,itl_xt,validate} to the boost directory
-  and itl_plus/libs/{itl,itl_xt,validate} to the libs directory of your boost
++ You can copy icl_plus/boost/{icl,icl_xt,validate} to the boost directory
+  and icl_plus/libs/{icl,icl_xt,validate} to the libs directory of your boost
   installation and then run all examples and tests using bjam.
 
 Changes
-Version 3.2.1. (Boost review version update 2)
-+ All source files are now following the boost project conventions
-  <prj-root>/boost/itl/...    Header files *.hpp of the library itl
-  <prj-root>/libs/itl/...     Examples, Tests, Documentation for itl
-+ Added class template interval_bitset for large compressed bitsets.
-+ Added itl::insert_iterator itl::add_iterator to fill interval containers from
-  stl containers of intervals.  
-+ Added element iteration for all interval containers.
-+ Set theoretic operations union (+ += | |=), difference (- -=), intersection 
-  (& &=) and symmetric difference (^ ^=) are now available as namespace global 
-  operators in an infix and an assigning variant for all interval containers and
-  many overloads combining elements, segments and useful combinations of 
-  different interval containers.
-+ Operators for intersection changed from (* *=) to (& &=).
-+ Interval constructing functions changed from global function templates to
-  static functions.
+Version 4.0.0. (Inclusion version for Boost 1.46.0)
++ Renaming of the library to Interval Container Library (ICL)
++ Added intervals with static bound types, which are smaller and faster.
++ Added an interval concept that is customizable.
++ User defined interval class types can be used with the library easily.
++ Renamed functions according to existing standards (ISO/OCG).
+

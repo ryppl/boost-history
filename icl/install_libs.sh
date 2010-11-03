@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Installs boost::date_time and boost::test so all examples and tests can be run
-# for the Interval Template Library (ITL). You do not need to run this script,
+# for the Interval Container Library (ICL). You do not need to run this script,
 # if you have a working installation of the boost libraries.
 
 for option
@@ -18,7 +18,7 @@ if test "x$want_help" = xyes; then
   echo "          toolset : The compiler 'toolset' will be used with bjam.";
   echo "                    If the first argument is omitted 'gcc' is used as toolset.";
   echo "Installs boost::date_time and boost::test so all examples and tests can be run";
-  echo "for the Interval Template Library (ITL). You do not need to run this script, ";
+  echo "for the Interval Container Library (ICL). You do not need to run this script, ";
   echo "if you have a working installation of the boost libraries.";
 else
   TOOLSET=$1;
