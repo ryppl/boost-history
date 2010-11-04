@@ -75,6 +75,8 @@ You can download
 <li>The core library 
 <a HREF="http://www.boostpro.com/vault/index.php?&direction=0&order=&directory=Containers"><b>ICL</b></a>
 from the boost vault.
+\n
+
 <li>The full library 
 <a HREF="http://sourceforge.net/projects/itl/"><b>ICL+</b> (core + extensions)</a>
 from sourceforge.
