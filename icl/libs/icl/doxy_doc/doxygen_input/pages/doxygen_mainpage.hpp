@@ -11,9 +11,9 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #define BOOST_ICL_DOXYGEN_MAINPAGE_HPP_JOFA_091216
 
 /**
-\mainpage Interval Container Library (aka. Interval Template Library)
+\mainpage Interval Container Library
 
-\section header_sec Interval Container Library
+\section header_sec Interval Container Library (aka. Interval Template Library)
 
 Author: Joachim Faulhaber\n
 Copyright (c) 2007-2010: Joachim Faulhaber\n
@@ -36,12 +36,12 @@ The complete library constists of three parts.
 <ul>
 <li><b>Core library (Boost.Icl):</b> Interval containers. 
 
-The <b>core library</b> is accepted into the 
-<a href="http://lists.boost.org/boost-announce/2010/04/0257.php">Boost c++ Libraries Collection</a>
+The <b>core library</b> 
+<a href="http://lists.boost.org/boost-announce/2010/04/0257.php">
+is accepted into the Boost c++ Libraries Collection</a>
 as <b>Interval Container Library Boost.Icl</b>.
 A <b>detailed boost book documentation</b> for Boost.Icl is 
 <a href="http://www.herold-faulhaber.de/boost_icl/doc/libs/icl/doc/html/index.html">
-
 online available here</a>.
 We recommend to refer to this documentation for all informations related
 to interval containers. The boost book documentation also ships with 
@@ -66,6 +66,23 @@ for a number of laws.
 additional library parts \b icl_xt and \b validate
 that are not yet covered by a proper boost book documentation. 
 \n \n
+
+
+\section download_sec Download
+
+You can download
+<ul>
+<li>The core library 
+<a HREF="http://www.boostpro.com/vault/index.php?&direction=0&order=&directory=Containers"><b>ICL</b></a>
+from the boost vault.
+<li>The full library 
+<a HREF="http://sourceforge.net/projects/itl/"><b>ICL+</b> (core + extensions)</a>
+from sourceforge.
+</ul>
+\n \n
+
+
+
 
 \section news_sec News
 
@@ -99,7 +116,7 @@ than dynamically bounded intervals.
 <li> Extraction of algorithms to concepts.
 
 Most of the class templates member functions have been extracted to sets of namespace
-global functions that build <b>concepts</b>. Some functions have been have been renamed to
+global functions that represent <b>concepts</b>. Some functions have been renamed to
 conform existing standards.
 
 </ul>
