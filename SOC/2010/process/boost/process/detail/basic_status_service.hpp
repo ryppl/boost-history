@@ -41,6 +41,7 @@
 #include <boost/make_shared.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/system/error_code.hpp>
+#include <boost/unordered_map.hpp>
 #include <vector>
 #include <algorithm>
 
@@ -122,6 +123,24 @@ public:
     {
         boost::system::error_code ec;
         int status = impl->wait(pid, ec);
+#if defined(BOOST_POSIX_API)
+        if (ec.value() == ECHILD)
+        {
+            boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
+            boost::unordered_map<pid_t, int>::iterator it = statuses_.find(pid);
+            if (it == statuses_.end())
+            {
+                work_thread_cond_.wait(work_thread_mutex_);
+                it = statuses_.find(pid);
+            }
+            if (it != statuses_.end())
+            {
+                status = it->second;
+                statuses_.erase(it);
+                ec.clear();
+            }
+        }
+#endif
         boost::asio::detail::throw_error(ec);
         return status;
     }
@@ -194,6 +213,12 @@ private:
                 {
                     work_.reset();
                     break;
+                }
+                else if (!regchild)
+                {
+                    statuses_.insert(boost::unordered_map<pid_t, int>::
+                        value_type(pid, status));
+                    work_thread_cond_.notify_all();
                 }
             }
         }
@@ -275,12 +300,13 @@ private:
     std::vector<implementation_type> impls_;
     boost::mutex work_thread_mutex_;
     boost::thread work_thread_;
+    boost::condition_variable_any work_thread_cond_;
 #if defined(BOOST_POSIX_API)
     pid_t interrupt_pid_;
     int pids_;
+    boost::unordered_map<pid_t, int> statuses_;
 #elif defined(BOOST_WINDOWS_API)
     bool run_;
-    boost::condition_variable_any work_thread_cond_;
     std::vector<HANDLE> handles_;
 #endif
 };
