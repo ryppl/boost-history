@@ -11,12 +11,12 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #define BOOST_ICL_DOXYGEN_MAINPAGE_HPP_JOFA_091216
 
 /**
-\mainpage Boost Interval Container Library
+\mainpage Interval Container Library (aka. Interval Template Library)
 
-\section header_sec Boost Interval Container Library
+\section header_sec Interval Container Library
 
 Author: Joachim Faulhaber\n
-Copyright (c) 2007-2009: Joachim Faulhaber\n
+Copyright (c) 2007-2010: Joachim Faulhaber\n
 Copyright (c) 1999-2006: Cortex Software GmbH, Berlin\n
 
 Distributed under the Boost Software License, Version 1.0.\n
@@ -25,26 +25,29 @@ Distributed under the Boost Software License, Version 1.0.\n
 
 \section overview_sec Overview
 
-The <b>Boost Interval Container Library (ITL+)</b> is a collection of
+The <b>Interval Container Library (ICL+)</b> 
+formerly known as <b>Interval Template Library (ITL)</b>
+is a collection of
 generic c++ class templates for computations on intervals,
 interval containers, large bitsets and generalized crosstables or cubes.
 
 The complete library constists of three parts.
 
 <ul>
-<li><b>Core library (itl):</b> Interval containers. 
+<li><b>Core library (Boost.Icl):</b> Interval containers. 
 
-The <b>core library (ITL)</b> is currently submitted for review at the
-<a href="http://www.boost.org/community/review_schedule.html">Boost c++ Libraries Collection</a>
-as Boost.IntervalContainer Library.
-A <b>detailed boost book documentation</b> for Boost.IntervalContainers is 
-<a href="http://www.herold-faulhaber.de/boost_itl/doc/libs/icl/doc/html/index.html">
+The <b>core library</b> is accepted into the 
+<a href="http://lists.boost.org/boost-announce/2010/04/0257.php">Boost c++ Libraries Collection</a>
+as <b>Interval Container Library Boost.Icl</b>.
+A <b>detailed boost book documentation</b> for Boost.Icl is 
+<a href="http://www.herold-faulhaber.de/boost_icl/doc/libs/icl/doc/html/index.html">
+
 online available here</a>.
 We recommend to refer to this documentation for all informations related
 to interval containers. The boost book documentation also ships with 
 this release and can be found at "<boost_root>/libs/icl/doc/html/index.html".
 
-<li><b>Extended library (itl_xt):</b>
+<li><b>Extended library (icl_xt):</b>
 
 The extended part contains class templates interval_bitset, product_history, and tupel_computer
 (cubes). Those parts are not or not yet intended to be proposed for boost. 
@@ -53,14 +56,14 @@ The extended part contains class templates interval_bitset, product_history, and
 
 The Law Based Test Automaton (also refered to as \b \i LaBatea) is a tool for an
 automated teststing of code on the basis of laws or axioms. 
-\b LaBatea has been used to validate the core library (itl)
+\b LaBatea has been used to validate the core library (icl)
 for a number of laws.
 
 </ul>
 
 
 <b>This doxygen generated documentation</b> is provided for the 
-additional library parts \b itl_xt and \b validate
+additional library parts \b icl_xt and \b validate
 that are not yet covered by a proper boost book documentation. 
 \n \n
 
@@ -68,14 +71,47 @@ that are not yet covered by a proper boost book documentation.
 
 <ul>
 
+<li>Changes after the review
+
+A number of changes have been done after the review as a result of the
+reviews and the related discussion.
+
+<ul>
+
+<li>New library name
+
+The library's name has been changed form <b>Interval Template Library</b> 
+to <b>Interval Container Library</b>. 
+
+<li>Customizability
+
+The library is now customizable for user defined interval types. A user
+defined type can be registered and adapted by 
+<a href="http://www.herold-faulhaber.de/boost_icl/doc/libs/icl/doc/html/boost_icl/examples/custom_interval.html">
+partially instantiating a small interval_traits class.</a>
+
+<li>Intervals with static bounds
+
+Intervals with static or fixed bounds can now be used with the library. 
+Statically bounded intervals use less memory and perform 25% faster on average
+than dynamically bounded intervals.
+
+<li> Extraction of algorithms to concepts.
+
+Most of the class templates member functions have been extracted to sets of namespace
+global functions that build <b>concepts</b>. Some functions have been have been renamed to
+conform existing standards.
+
+</ul>
+
 <li>Interval_bitset.
 
-The lastest addition to the library are interval_bitsets.
+The lastest addition of a container class template to the library is interval_bitsets.
 Interval_bitsets use interval compression and bitset compression
 to achieve a very efficient and compact representation of large
 bitsets. The idea and implementation of interval_bitsets is
 explained in the
-<a href="http://www.herold-faulhaber.de/boost_itl/doc/libs/icl/doc/html/boost_itl/projects.html#boost_itl.projects.large_bitset">
+<a href="http://www.herold-faulhaber.de/boost_icl/doc/libs/icl/doc/html/boost_icl/projects.html#boost_icl.projects.large_bitset">
 project section</a>
 of the boost book documentation. 
 
@@ -84,9 +120,9 @@ of the boost book documentation.
 To copy or tranform data from std::containers of intervals or segments into
 interval containers you can use an icl::insert_iterator or an icl::add_iterator.
 See examples 
-<a href="http://www.herold-faulhaber.de/boost_itl/doc/libs/icl/doc/html/boost_itl/examples/std_copy.html">
+<a href="http://www.herold-faulhaber.de/boost_icl/doc/libs/icl/doc/html/boost_icl/examples/std_copy.html">
 std_copy</a> and 
-<a href="http://www.herold-faulhaber.de/boost_itl/doc/libs/icl/doc/html/boost_itl/examples/std_transform.html"> 
+<a href="http://www.herold-faulhaber.de/boost_icl/doc/libs/icl/doc/html/boost_icl/examples/std_transform.html"> 
 std_transform.</a>
 
 <li>Element iteration.
@@ -103,27 +139,27 @@ We provide a collection of examples that demonstrate the purpose and basic
 characteristics of the class templates offered by the library. To get an instant 
 impression you may browse these examples first.
 
-\subsection examples_itl_subsec Examples on Interval Containers (core library itl)
+\subsection examples_icl_subsec Examples on Interval Containers (core library icl)
 
 <ul>
 <li>A <b>collection of examples</b> on interval containers is
 included in the 
-<a href="http://www.herold-faulhaber.de/boost_itl/doc/libs/icl/doc/html/boost_itl/examples.html">
+<a href="http://www.herold-faulhaber.de/boost_icl/doc/libs/icl/doc/html/boost_icl/examples.html">
 boost book documentation</a>.
 </ul>
 \n \n
 
 
-\subsection examples_itl_xt_subsec Examples for the extended library (itl_xt)
+\subsection examples_icl_xt_subsec Examples for the extended library (icl_xt)
 
 <ul>
 <li> <b>Interval Bitset</b>
 
 A minimal implementation of \ref interval_bitset together with 
 sample applications is included in the boost book documentation in the 
-<a href="http://www.herold-faulhaber.de/boost_itl/doc/libs/icl/doc/html/boost_itl/projects.html#boost_itl.projects.large_bitset">
+<a href="http://www.herold-faulhaber.de/boost_icl/doc/libs/icl/doc/html/boost_icl/projects.html#boost_icl.projects.large_bitset">
 project section</a>. The full implementation of \ref interval_bitset is
-not yet part of the core library (itl). It's in the extended part (itl_xt)
+not yet part of the core library (icl). It's in the extended part (icl_xt)
 but it's integration into the core is intended.
 
 
@@ -137,7 +173,7 @@ data in time. Sample history.cpp shows how we can monitor a set of attributes in
 <li> <b>Amount Cube</b>
 
 Cubes or tuple computers allow to perform computations on values associated 
-to tuples. A ITL tuple computer works similar to pivot tables (in spreadsheet programs)
+to tuples. A ICL tuple computer works similar to pivot tables (in spreadsheet programs)
 olap cubes (online analytic processing) or crosstables (in statistical programs). 
 Sample amount_cube.cpp presents an application where values are \e 'amounts', 
 which is the simplest instance.

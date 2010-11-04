@@ -76,7 +76,7 @@ presentation material on the *ICL* from ['*BoostCon2009*]].
 
 [section Definition and Basic Example]
 
-The [*Interval Template Library (ICL)] provides __itvs__ and two kinds of 
+The [*Interval Container Library (ICL)] provides __itvs__ and two kinds of 
 interval containers: __itv_sets__ and __itv_maps__.
 
 * An __itv_bset__ is a *set* that is implemented as a set of intervals.
