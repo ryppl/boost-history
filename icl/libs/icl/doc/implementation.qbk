@@ -9,21 +9,21 @@
 [section Implementation]
 
 The [link boost_icl.interface previous section] gave an overview over the interface
-of the *itl* outlining 
+of the *icl* outlining 
 [link boost_icl.interface.class_templates class templates], 
 [link boost_icl.interface.associated_types associated types]
 and polymorphic 
 [link boost_icl.interface.function_synopsis functions and operators]. 
 In preparation to the 
 [link boost_icl.function_reference next section], 
-that describes the *itl's* polymorphic functions in
+that describes the *icl's* polymorphic functions in
 more detail together with ['*complexity characteristics*], 
 this section summarizes some general information on
 implementation and performance.
 
 [h5 STL based implementation]
 
-The *implementation* of the *itl's* containers is based on 
+The *implementation* of the *icl's* containers is based on 
 [*std::set] and [*std::map]. So the underlying data structure of
 interval containers is a red black tree of intervals or
 interval value pairs. 
@@ -32,7 +32,7 @@ classes of `std::set` and `std::map`.
 Interval containers are then using __icl_sets__ of intervals
 or __icl_maps__ of interval value pairs as implementing
 containers.
-So all the ['*complexity characteristics*] of itl containers
+So all the ['*complexity characteristics*] of icl containers
 are based on and limited by the ['*red-black tree implementation*]
 of the underlying std::AssociativeContainers.
 
@@ -57,8 +57,8 @@ the decisive kind of size concerning algorithmic behavior there is a function
 ``
 bool T::iterative_size()const; // Number of entities that can be iterated over.
 ``
-for all element and interval containers of the itl. So for
-complexity statements throughout the itl's documentation 
+for all element and interval containers of the icl. So for
+complexity statements throughout the icl's documentation 
 the sizes will be `iterative_sizes` and big /O/ expressions like
 __Omlgn__ will refer to sizes
 ``
@@ -97,7 +97,7 @@ As an example, time complexity of __biLAddition__ on
 interval containers is briefly discussed.
 
 More information on ['*complexity characteristics*] 
-of *itl's* functions is contained in section 
+of *icl's* functions is contained in section 
 [link boost_icl.function_reference Function Reference]
 
 
@@ -171,7 +171,7 @@ are large, performance tends to be /linear/.
 [section Inplace and infix operators]
 
 For the major operations /addition, subtraction, intersection/
-of *itl* containers and for /symmetric difference/
+of *icl* containers and for /symmetric difference/
 inplace `operator`s `+= |=, -=, &=` and `^=` 
 are provided.
 
@@ -179,7 +179,7 @@ For every ['*inplace*] operator
 ``
 T& operator o= (T& object, const P& operand)
 ``
-the *itl* provides corresponding ['*infix*] operators.
+the *icl* provides corresponding ['*infix*] operators.
 ``
 T operator o (T object, const P& operand){ return object o= operand; }
 T operator o (const P& operand, T object){ return object o= operand; }
@@ -204,7 +204,7 @@ Use infix operators only, if
 
 [h5 Time Complexity of infix `operators o`]
 
-The time complexity of all infix operators of the *itl*
+The time complexity of all infix operators of the *icl*
 is biased by the extra copy of the `object` argument.
 So all infix `operators o` are at least 
 /linear/ in `n = object.iterative_size()`.

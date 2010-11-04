@@ -11,7 +11,7 @@
 ["Beauty is the ultimate defense against complexity] -- [/David Gelernter]
 [@http://en.wikipedia.org/wiki/David_Gelernter David Gelernter]
 
-In the *itl* we follow the notion, that the semantics of a ['*concept*] or
+In the *icl* we follow the notion, that the semantics of a ['*concept*] or
 ['*abstract data type*] can be expressed by ['*laws*]. We formulate
 laws over interval containers that can be evaluated for a given
 instantiation of the variables contained in the law. The following
@@ -21,14 +21,14 @@ Commutativity<T,+>:
 T a, b; a + b == b + a;
 ``
 This can of course be coded as a proper c++ class template which has 
-been done for the validation of the *itl*. For sake of simplicity 
+been done for the validation of the *icl*. For sake of simplicity 
 we will use pseudocode here.
 
-The laws that describe the semantics of the *itl's* class templates
+The laws that describe the semantics of the *icl's* class templates
 were validated using the Law based Test Automaton ['*LaBatea*],
 a tool that generates instances for the law's variables and then
 tests it's validity.  
-Since the *itl* deals with sets, maps and relations, that are
+Since the *icl* deals with sets, maps and relations, that are
 well known objects from mathematics, the laws that we are
 using are mostly /recycled/ ones. Also some of those laws are grouped
 in notions like e.g. /orderings/ or /algebras/.
@@ -37,7 +37,7 @@ in notions like e.g. /orderings/ or /algebras/.
 
 [h4 Lexicographical Ordering and Equality]
 
-On all set and map containers of the itl, there is an `operator <`
+On all set and map containers of the icl, there is an `operator <`
 that implements a
 [@http://www.sgi.com/tech/stl/StrictWeakOrdering.html strict weak ordering].
 [/ (see also [@http://en.wikipedia.org/wiki/Strict_weak_ordering here]).]
@@ -53,11 +53,11 @@ Asymmetry<T,< >     : T a,b;   a<b implies !(b<a)
 Transitivity<T,< >  : T a,b,c; a<b && b<c implies a<c
 ``
 
-`Operator <` depends on the itl::container's template parameter
+`Operator <` depends on the icl::container's template parameter
 `Compare` that implements a ['strict weak ordering] for the container's
 `domain_type`.
 For a given `Compare` ordering, `operator <` implements a 
-lexicographical comparison on itl::containers, that uses the 
+lexicographical comparison on icl::containers, that uses the 
 `Compare` order to establish a unique sequence of values in 
 the container. 
 
@@ -102,9 +102,9 @@ is_element_equal(w1,w2);         //true:  Same elements contained
 
 For a constant `Compare` order on key elements,
 member function `contained_in` that is defined for all 
-itl::containers implements a
+icl::containers implements a
 [@http://en.wikipedia.org/wiki/Partially_ordered_set partial order]
-on itl::containers.
+on icl::containers.
 
 ``
 with <= for contained_in,
@@ -117,7 +117,7 @@ Transitivity<T,<= >    : T a,b,c; a <= b && b <= c implies a <= c
 The induced equivalence is the equality of elements that
 is implemented via function `is_element_equal`.
 ``
-//equivalence induced by the partial ordering contained_in on itl::container a,b
+//equivalence induced by the partial ordering contained_in on icl::container a,b
 a.contained_in(b) && b.contained_in(a) implies is_element_equal(a, b);
 ``
 
@@ -242,11 +242,10 @@ are valid for lexicographical equality (demoted as `==`) as well.
 correspond to containers according to
 ``
 style       set
-joining     interval_set, itl::set
+joining     interval_set
 separating  separate_interval_set
 splitting   split_interval_set
 ``
-where the __icl_set__ of elements can be subsumed in the `joining` rows.
 
 
 Finally there are two laws that combine all three major set operations:
@@ -280,7 +279,7 @@ the interval sets are non joining.
 SymmetricDifference<S,== > : S a,b,c; (a + b) - (a & b) == (a - b) + (b - a)
 ``
 
-Finally Symmetric Difference holds for all of itl set types and
+Finally Symmetric Difference holds for all of icl set types and
 lexicographical equality.
 
 [/ pushout laws]
@@ -291,11 +290,11 @@ lexicographical equality.
 
 By definition a map is set of pairs. So we would expect maps to
 obey the same laws that are valid for sets. Yet
-the semantics of the *itl's* maps may be a different one, because
+the semantics of the *icl's* maps may be a different one, because
 of it's aggregating facilities, where the aggregating combiner
 operations are passed to combine the map's associated values.
 It turns out, that the aggregation on overlap principle
-induces semantic properties to itl maps in such a way,
+induces semantic properties to icl maps in such a way,
 that the set of equations that are valid will depend on
 the semantics of the type `CodomainT` of the map's associated
 values.
@@ -324,7 +323,7 @@ This reduces the set of laws that can be valid for a richer `CodomainT`
 type to a smaller set of laws and thus to a less restricted semantics. 
 
 Currently we have investigated and validated two major instantiations 
-of itl::Maps,
+of icl::Maps,
 
 * ['*Maps of Sets*] that will be called ['*Collectors*]  and
 * ['*Maps of Numbers*] which will be called ['*Quantifiers*]
@@ -343,7 +342,7 @@ of the map.
 
 Icl ['*Maps of Sets*] or ['*Collectors*]
 are models of concept `Set`. This implies that all laws that have been
-stated as a semantics for `itl::Sets` in the previous chapter also hold for
+stated as a semantics for `icl::Sets` in the previous chapter also hold for
 `Maps of Sets`.
 Icl ['*Maps of Numbers*] or ['*Quantifiers*] on the contrary are not models 
 of concept `Set`.
@@ -369,11 +368,11 @@ every map of sets can be transformed to an equivalent
 set of pairs.
 For instance in the pseudocode below map `m`
 ``
-itl::map<int,set<int> >  m = {(1->{1,2}), (2->{1})}; 
+icl::map<int,set<int> >  m = {(1->{1,2}), (2->{1})}; 
 ``
 is equivalent to set `s`
 ``
-itl::set<pair<int,int> > s = {(1,1),(1,2),   //representing 1->{1,2}
+icl::set<pair<int,int> > s = {(1,1),(1,2),   //representing 1->{1,2}
                               (2,1)       }; //representing 2->{1}
 `` 
 
@@ -406,10 +405,10 @@ This problem can be dealt with in two ways.
   accounts for value pairs that that carry values unequal to the `neutron` value. 
 
 Solution (1) led to the introduction of map traits, particularly trait
-['*partial_absorber*], which is the default setting in all itl's map
+['*partial_absorber*], which is the default setting in all icl's map
 templates.
 
-Solution (2), is applied to check the semantics of itl::Maps for the
+Solution (2), is applied to check the semantics of icl::Maps for the
 partial_enricher trait that does not delete value pairs that carry
 neutrons. Protonic equality is implemented by a non member function
 called `is_protonic_equal`. Throughout this chapter
@@ -439,7 +438,7 @@ Inversion<C,-,=v= >     : C a;   a - a =v= C()
 ``
 
 All the fundamental laws could be validated for all 
-itl Maps in their instantiation as Maps of Sets or Collectors.
+icl Maps in their instantiation as Maps of Sets or Collectors.
 As expected Inversion only holds for protonic equality,
 if the map is not a `partial_absorber`.
 
@@ -495,7 +494,7 @@ SymmetricDifference<C,== > : C a,b,c; (a + b) - (a * b) == (a - b) + (b - a)
 ``
 
 Reviewing the validity tables above shows, that the sets of valid laws for
-`itl Sets` and `itl Maps of Sets` that are /neutron absorbing/ are exactly the same.
+`icl Sets` and `icl Maps of Sets` that are /neutron absorbing/ are exactly the same.
 As expected, only for Maps of Sets that represent empty sets as associated values,
 called /neutron enrichers/, there are marginal semantic differences.
 
@@ -516,20 +515,20 @@ the semantics of `operator -` may be different.
 The question is how subtraction should be defined here?
 ``
 //Pseudocode:
-itl::map<int,some_number> q = {(1->1)};
+icl::map<int,some_number> q = {(1->1)};
 q -= (2->1);
 `` 
 If type `some_number` is `unsigned` a /set difference/ kind of
 subtraction make sense 
 ``
-itl::map<int,some_number> q = {(1->1)};
+icl::map<int,some_number> q = {(1->1)};
 q -= (2->1);   // key 2 is not in the map so  
 q == {(1->1)}; // q is unchanged by 'aggregate on collision'
 `` 
 If `some_number` is a `signed` numerical type
 the result can also be this
 ``
-itl::map<int,some_number> q = {(1->1)};
+icl::map<int,some_number> q = {(1->1)};
 q -= (2->1);             // subtracting works like  
 q == {(1->1), (2-> -1)}; // adding the inverse element
 `` 
@@ -604,7 +603,7 @@ p&q =={[min   1)[1  2)[2 3)[3 4)[4   max]};
 
 [h4 Laws for Quantifiers of unsigned Numbers]
 
-The semantics of itl Maps of Numbers is different
+The semantics of icl Maps of Numbers is different
 for unsigned or signed numbers. So the sets of
 laws that are valid for Quantifiers will be different
 depending on the instantiation of an unsigned or
@@ -614,7 +613,7 @@ Again, we are presenting the investigated sets of laws, this time for
 `Quantifier` types `Q` which are
 __icl_map__`<D,N,T>`, __itv_map__`<D,N,T>` and __spl_itv_map__`<D,N,T>`
 where `CodomainT` type `N` is a `Number` and `Trait` type `T` is one of
-the itl's map traits. 
+the icl's map traits. 
 
 ``
 Associativity<Q,+,== >: Q a,b,c; a+(b+c) == (a+b)+c
@@ -628,7 +627,7 @@ RightNeutrality<Q,-,== >: Q a;   a-Q() ==  a
 Inversion<Q,-,=v= >     : Q a;   a - a =v= Q()
 ``
 
-For an `unsigned Quantifier`, an itl Map of `unsigned numbers`,
+For an `unsigned Quantifier`, an icl Map of `unsigned numbers`,
 the same basic laws apply that are
 valid for `Collectors`:
 
@@ -644,7 +643,7 @@ Inversion absorbs_neutrons             ==
 The subset of laws, that relates to `operator +` and the neutral
 element `Q()` is that of a commutative monoid. This is the same
 concept, that applies for the `CodomainT` type. This gives 
-rise to the assumption that an itl `Map` over a `CommutativeModoid`
+rise to the assumption that an icl `Map` over a `CommutativeModoid`
 is again a `CommutativeModoid`.
 
 Other laws that were valid for `Collectors` are not valid
@@ -673,7 +672,7 @@ equality relation `==` as this was the case for
 The differences are these:
 ``
                                    +  
-Associativity         itl::map     ==   
+Associativity         icl::map     ==   
                   interval_map     ==
             split_interval_map     =e=
 ``
@@ -746,12 +745,12 @@ if a scalar multiplication was added.
 
 Obviously we can observe the induction of semantics
 from the `CodomainT` parameter into the instantiations
-of itl maps.
+of icl maps.
 
 [table
 [[]                          [is model of]        [if]                       [example]]
 [[`Map<D,Monoid>`]           [`Modoid`]           []                         [`interval_map<int,string>`]]
-[[`Map<D,Set,Trait>`]        [`Set`]              [`Trait::absorbs_neutrons`][`interval_map<int,itl::set<int> >`]]
+[[`Map<D,Set,Trait>`]        [`Set`]              [`Trait::absorbs_neutrons`][`interval_map<int,std::set<int> >`]]
 [[`Map<D,CommutativeMonoid>`][`CommutativeMonoid`][]                         [`interval_map<int,unsigned int>`]]
 [[`Map<D,CommutativeGroup>`] [`CommutativeGroup`] [`Trait::is_total`]  [`interval_map<int,int,total_absorber>`]]
 ]

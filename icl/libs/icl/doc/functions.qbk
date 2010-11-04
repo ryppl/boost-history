@@ -10,8 +10,8 @@
 [section Function Reference]
 
 Section [link boost_icl.interface.function_synopsis Function Synopsis] 
-above gave an overview of the polymorphic functions of the itl.
-This is what you will need to find the desired possibilities to combine itl 
+above gave an overview of the polymorphic functions of the icl.
+This is what you will need to find the desired possibilities to combine icl 
 functions and objects most of the time.
 The functions and overloads that you intuitively expect
 should be provided, so you won't need to refer to the documentation very often.
@@ -22,7 +22,7 @@ If you are interested
 * in ['*complexity characteristics*] for certain overloads 
 * or if the compiler ['*refuses to resolve*] specific function application you want to use,
 
-refer to this section that describes the polymorphic function families of the itl
+refer to this section that describes the polymorphic function families of the icl
 in detail.
 
 [h5 Placeholders]
@@ -33,13 +33,13 @@ introduced in section [link boost_icl.interface.function_synopsis Function Synop
 [h5 More specific function documentation]
 
 This section covers the most important polymorphical and namespace global
-functions of the *itl*. More specific functions can be looked up
+functions of the *icl*. More specific functions can be looked up
 in the doxygen generated
 [link interval_template_library_reference reference documentation].
 
 [section Overload tables]
 
-Many of the *itl's* functions are overloaded for
+Many of the *icl's* functions are overloaded for
 elements, segments, element and interval containers.
 But not all type combinations are provided. Also
 the admissible type combinations are different for
@@ -183,14 +183,14 @@ In an *stl* map `map<K,D>` the first parameter type of the map
 template `K` is called `key_type`. It allows to select key-value pairs
 pairs via `find(const K&)` 
 and to remove key-value pairs using `erase(const K&)`.
-For itl Maps we have generalized key types to a larger
+For icl Maps we have generalized key types to a larger
 set of types. Not only the `key_type` (`domain_type`)
 but also an interval type and a set type can be ['*key types*],
 that allow for ['*selection*] and ['*removal*] of map elements 
 segments and submaps.
 
 [table Selection of elements, segments and sub maps using key types
-[[                     ][  __M: __itv_maps__    ][  __m: itl_map        ]]
+[[                     ][  __M: __itv_maps__    ][  __m: icl_map        ]]
 [[__e: `domain_type`   ][  key value pair       ][   key value pair ]]
 [[__i: `interval_type` ][  interval value pair  ][                     ]]
 [[__S: __itv_sets__    ][  interval map            ][                     ]]

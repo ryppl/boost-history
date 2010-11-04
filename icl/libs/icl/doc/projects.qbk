@@ -262,14 +262,14 @@ for `mini::bits` on a few lines:
 
 Finally there is one important piece of meta information, we have 
 to provide: `mini::bits` has to be recognized as a `Set` by the
-itl code. Otherwise we can not exploit the fact that a map of
+icl code. Otherwise we can not exploit the fact that a map of
 sets is model of `Set` and the resulting large_bitset would not
 behave like a set. So we have to say that `mini::bits` shall be sets:
 
 [mini_bits_is_set]
 
 This is done by adding a partial template specialization to
-the type trait template `itl::is_set`.
+the type trait template `icl::is_set`.
 For the extension of this type trait template and the result
 values of inclusion_compare we need these `#includes` for the
 implementation of `mini::bits`:
@@ -289,7 +289,7 @@ Let's start with the required `#include`s this time:
 [import ../example/large_bitset_/large_bitset.hpp]
 [large_bitset_includes]
 
-Besides `boost/itl/interval_map.hpp` and `bits.hpp` the most important
+Besides `boost/icl/interval_map.hpp` and `bits.hpp` the most important
 include here is `boost/operators.hpp`. We use this library in order
 to further minimize the code and to provide pretty extensive operator
 functionality using very little code.

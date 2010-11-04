@@ -75,7 +75,7 @@ continuous_interval<double> itv2 = continuous_interval<double>::right_open(0.0, 
                                                         We can get the library default interval type as `interval<P>::type`. 
                                                         The library default uses ['*dynamically bounded intervals*]. You
                                                         can switch to ['*statically bounded intervals*] by 
-                                                        `#define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS` prior to itl includes. ]]
+                                                        `#define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS` prior to icl includes. ]]
 [[``
 static T right_open(const P&, const P&)
 static T left_open(const P&, const P&)

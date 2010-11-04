@@ -220,7 +220,7 @@ method to implement arbitrary kinds of user defined aggregations.
 An alternative way to choose a desired aggregation is to
 instantiate an interval_map class template with an 
 appropriate ['*aggregation functor*]. For the most common 
-kinds of aggregation the [*itl]
+kinds of aggregation the [*icl]
 provides such functors as shown in the example.
 
 Example `partys_tallest_guests.cpp` also demonstrates 
@@ -308,7 +308,7 @@ can be empty or contain more than one element,
 the usage of `std::copy` differs from what we
 are familiar with using ['containers of elements].
 
-* Use `itl::inserter` from `#include <boost/itl/iterator.hpp>`
+* Use `icl::inserter` from `#include <boost/icl/iterator.hpp>`
   instead of `std::inserter` to call insertions on the target
   interval container.
   
@@ -316,8 +316,8 @@ are familiar with using ['containers of elements].
   the time we will not be interested to `insert` segments
   into __itv_maps__ but to __biLadd__
   them, in order to generate the desired aggregation results.
-  You can use `std::copy` with an `itl::adder` instead of an
-  `itl::inserter` to achieve this.
+  You can use `std::copy` with an `icl::adder` instead of an
+  `icl::inserter` to achieve this.
 
 [import ../example/std_copy_/std_copy.cpp]
 [example_std_copy]
@@ -336,7 +336,7 @@ maps the ['user defined object] into the
 ['segement type] of an interval map or the
 ['interval type] of an interval set.
 Based on that we can use `std::transform`
-with an `itl::inserter` or `itl::adder`
+with an `icl::inserter` or `icl::adder`
 to transform the user objects into interval
 containers. 
 
@@ -349,7 +349,7 @@ in the example, you may want to refer to the section about
 that uses the same data.
 
 [/
-Instead of `itl::inserter` we could also use an `std::inserter`
+Instead of `icl::inserter` we could also use an `std::inserter`
 with algorithms `std::copy` and `std::transform`.
 This is ['*depreciated*], because `std::inserter` is designed for
 containers of elements, where ['*exacty one*] element is inserted 

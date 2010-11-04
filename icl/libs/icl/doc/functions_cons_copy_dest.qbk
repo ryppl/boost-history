@@ -18,7 +18,7 @@
 [[`void T::swap(T&)`]                          [ ]       [1]      [1]     [1]      [1]   ]
 ]
 
-All *itl* types are ['*regular types*]. They are ['*default constructible*], 
+All *icl* types are ['*regular types*]. They are ['*default constructible*], 
 ['*copy constructible*] and ['*assignable*]. On icl Sets and Maps a `swap`
 function is available, that allows for *constant time* swapping of 
 container contents.

@@ -20,7 +20,7 @@
 [[`size_type interval_count(const T&)`]        [ ]    [__O1__] [__O1__]   [ ]      [ ]      ]
 ]
 
-For *itl* containers the single `size` function known from std containers
+For *icl* containers the single `size` function known from std containers
 branches into tree to five different members functions.
 The table above shows the types, `size` functions are implemented for,
 together with their *complexities*. Linear complexities __On__ refer to the container's

@@ -32,7 +32,7 @@
 
 ]
 
-Functions and operators that implement ['*Addition*] on *itl* objects
+Functions and operators that implement ['*Addition*] on *icl* objects
 are given in the table above.
 `operator |=` and `operator |` are behavioral identical to 
 `operator +=` and `operator +`.
@@ -142,8 +142,8 @@ T& operator += (T&, const P&)      += | e b s m            += | e i b p S M
 For the definition of admissible overloads
 we separate /element containers/ from /interval containers/.
 Within each group all combinations of types are supported 
-for an operation, that are in line with the *itl's* 
-design and the sets of laws, that establish the *itl's*
+for an operation, that are in line with the *icl's* 
+design and the sets of laws, that establish the *icl's*
 [link boost_icl.semantics semantics].
 
 
@@ -155,7 +155,7 @@ This makes the overload resolution by compilers more complex,
 error prone and slows down compilation speed. Error messages
 for unresolvable or ambiguous overloads are difficult
 to read and understand. Therefore overloading of namespace
-global functions in the *itl* are limited to a reasonable
+global functions in the *icl* are limited to a reasonable
 field of combinations, that are described here.
 
 [endsect][/ Inplace operators]
@@ -174,7 +174,7 @@ is faster than a combination of intervals (__i) or
 interval value pairs (__p) which in turn is faster than
 the combination of element or interval containers.
 The next table shows /time complexities/ of addition for
-*itl's* element containers.
+*icl's* element containers.
 
 Sizes `n` and `m` are in the complexity statements are sizes
 of objects `T y` and `P x`:
