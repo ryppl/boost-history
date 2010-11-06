@@ -17,7 +17,7 @@
 #include <boost/fusion/iterator/equal_to.hpp>
 #include <boost/fusion/container/vector/convert.hpp>
 #include <boost/fusion/algorithm/transformation/remove.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/fusion/support/unused.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/mpl/not.hpp>
@@ -132,7 +132,7 @@ namespace boost { namespace fusion
 
     template<typename Seqs>
     struct zip_view
-      : sequence_base<zip_view<Seqs> >
+      : detail::sequence_base<zip_view<Seqs> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seqs>))
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seqs>))

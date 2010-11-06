@@ -14,7 +14,7 @@
 #include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/fusion/support/internal/workaround.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 #include <boost/mpl/bool.hpp>
@@ -45,7 +45,7 @@ namespace boost { namespace fusion
       , typename Size=mpl::int_<integer_traits<int>::const_max-1>
     >
     struct repetitive_view
-      : sequence_base<repetitive_view<Seq> >
+      : detail::sequence_base<repetitive_view<Seq> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))

@@ -13,7 +13,7 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/bool.hpp>
@@ -43,7 +43,7 @@ namespace boost { namespace fusion
       , typename PredIsMetafunction=mpl::true_
     >
     struct filter_view
-      : sequence_base<filter_view<Seq, Pred, PredIsMetafunction> >
+      : detail::sequence_base<filter_view<Seq, Pred, PredIsMetafunction> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))

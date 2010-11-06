@@ -13,7 +13,7 @@
 #include <boost/fusion/container/map/map_fwd.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/support/pair.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/mpl/bool.hpp>
 
 #include <boost/fusion/container/map/detail/begin_impl.hpp>
@@ -37,7 +37,7 @@ namespace boost { namespace fusion
 
     VARIADIC_TEMPLATE(FUSION_MAX_MAP_SIZE)
     struct map
-      : sequence_base<map<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_MAP_SIZE)> >
+      : detail::sequence_base<map<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_MAP_SIZE)> >
     {
         typedef map_category category;
         typedef map_tag fusion_tag;

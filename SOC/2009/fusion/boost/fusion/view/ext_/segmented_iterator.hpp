@@ -43,7 +43,7 @@ namespace boost { namespace fusion
 
         template<typename Sequence, typename Iterator, bool IsSegmented>
         struct segmented_range
-          : sequence_base<segmented_range<Sequence, Iterator, IsSegmented> >
+          : detail::sequence_base<segmented_range<Sequence, Iterator, IsSegmented> >
         {
             typedef mpl::bool_<IsSegmented> is_segmented;
             // If this is a range of segments, skip over the empty ones

@@ -19,7 +19,7 @@
 #else
 #   include <boost/fusion/container/vector/vector.hpp>
 #endif
-#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/view/detail/strictest_traversal.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
@@ -62,7 +62,7 @@ namespace boost { namespace fusion
     // Binary Version
     template<typename Seq1, typename Seq2, typename F, typename IsAssociative>
     struct transform_view
-      : sequence_base<transform_view<Seq1, Seq2, F,IsAssociative> >
+      : detail::sequence_base<transform_view<Seq1, Seq2, F,IsAssociative> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>))
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>))
@@ -147,7 +147,7 @@ namespace boost { namespace fusion
     // Unary Version implementation
     template<typename Seq, typename F, typename IsAssociative>
     struct unary_transform_view
-      : sequence_base<unary_transform_view<Seq, F, void_> >
+      : detail::sequence_base<unary_transform_view<Seq, F, void_> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))

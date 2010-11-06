@@ -14,7 +14,7 @@
 #   include <boost/fusion/sequence/intrinsic/size.hpp>
 #endif
 #include <boost/fusion/sequence/intrinsic/front.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/internal/workaround.hpp>
 #include <boost/fusion/support/internal/sequence_assign.hpp>
@@ -53,7 +53,7 @@ namespace boost { namespace fusion
 
     template<typename T>
     struct single_view
-      : sequence_base<single_view<T> >
+      : detail::sequence_base<single_view<T> >
     {
         typedef T value_type;
 

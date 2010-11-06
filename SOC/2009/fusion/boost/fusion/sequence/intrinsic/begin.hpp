@@ -24,8 +24,9 @@ namespace boost { namespace fusion
     {
         template<typename Seq>
         struct begin
-            : extension::begin_impl<typename traits::tag_of<Seq>::type>::
-                template apply<Seq>
+          : extension::begin_impl<
+                typename traits::tag_of<Seq>::type
+            >::template apply<Seq>
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
@@ -33,8 +34,7 @@ namespace boost { namespace fusion
     }
 
     template<typename Seq>
-    inline typename
-        result_of::begin<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
+    inline typename result_of::begin<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
     begin(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
         return result_of::begin<BOOST_FUSION_R_ELSE_CLREF(Seq)>::call(

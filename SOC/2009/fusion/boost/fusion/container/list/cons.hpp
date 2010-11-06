@@ -15,7 +15,7 @@
 #include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
 #include <boost/fusion/support/internal/assign_tags.hpp>
 #include <boost/fusion/support/internal/sequence_assign.hpp>
@@ -51,7 +51,7 @@ namespace boost { namespace fusion
 #endif
 
     struct nil
-      : sequence_base<nil>
+      : detail::sequence_base<nil>
     {
         typedef void_ car_type;
         typedef void_ cdr_type;
@@ -107,7 +107,7 @@ namespace boost { namespace fusion
 
     template<typename Car, typename Cdr = nil>
     struct cons
-      : sequence_base<cons<Car, Cdr> >
+      : detail::sequence_base<cons<Car, Cdr> >
     {
         typedef Car car_type;
         typedef Cdr cdr_type;

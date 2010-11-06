@@ -13,7 +13,7 @@
 #include <boost/fusion/iterator/advance_c.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #ifdef BOOST_FUSION_PREFER_MPL
 #   include <boost/fusion/support/internal/variadic_templates/variadic_arguments_to_vector.hpp>
 #endif
@@ -416,7 +416,7 @@ namespace boost { namespace fusion
 
     template<typename... Elements>
     struct vector
-      : sequence_base<vector<Elements...> >
+      : detail::sequence_base<vector<Elements...> >
 #ifdef BOOST_FUSION_TAGGED_VECTOR
       , detail::vector_impl<
             typename detail::make_package<sizeof...(Elements)>::type

@@ -9,7 +9,7 @@
 #define BOOST_FUSION_SEQUENCE_SEQUENCE_FACADE_HPP
 
 #include <boost/fusion/support/internal/base.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/fusion/support/internal/facade_generation.hpp>
 #include <boost/mpl/bool.hpp>
 
@@ -36,7 +36,7 @@ namespace boost { namespace fusion
       , typename IsView = mpl::false_
     >
     struct sequence_facade
-      : sequence_base<Derived>
+      : detail::sequence_base<Derived>
     {
         typedef fusion_sequence_tag tag;
         typedef sequence_facade_tag fusion_tag;

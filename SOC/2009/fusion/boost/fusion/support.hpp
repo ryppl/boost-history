@@ -16,7 +16,6 @@
 #include <boost/fusion/support/is_view.hpp>
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/pair.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/tag_of_fwd.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/unused.hpp>

@@ -11,7 +11,7 @@
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 #include <boost/fusion/support/category_of.hpp>
-
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/mpl/bool.hpp>
 
 #include <boost/fusion/algorithm/transformation/detail/filter_key_view/filter_key_view_fwd.hpp>
@@ -27,7 +27,7 @@ namespace boost { namespace fusion
     {
         template<typename Seq, typename Pred>
         struct filter_key_view
-          : sequence_base<filter_key_view<Seq, Pred> >
+          : detail::sequence_base<filter_key_view<Seq, Pred> >
         {
             typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq) storage_type;
             typedef typename storage_type::type seq_type;

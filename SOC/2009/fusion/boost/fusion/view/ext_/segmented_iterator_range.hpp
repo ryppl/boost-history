@@ -69,7 +69,7 @@ namespace boost { namespace fusion
         // right or the left of a segmented iterator.
         template<typename Tag, typename Cons1, typename Cons2 = void_>
         struct segmented_view
-          : sequence_base<segmented_view<Tag, Cons1, Cons2> >
+          : detail::sequence_base<segmented_view<Tag, Cons1, Cons2> >
         {
             typedef segmented_view_tag<Tag> fusion_tag;
             typedef fusion_sequence_tag tag;
@@ -88,7 +88,7 @@ namespace boost { namespace fusion
         // two segmented iterators
         template<typename Cons1, typename Cons2>
         struct segmented_view<center_view, Cons1, Cons2>
-          : sequence_base<segmented_view<center_view, Cons1, Cons2> >
+          : detail::sequence_base<segmented_view<center_view, Cons1, Cons2> >
         {
             typedef segmented_view_tag<center_view> fusion_tag;
             typedef fusion_sequence_tag tag;
@@ -364,7 +364,7 @@ namespace boost { namespace fusion
 
     template<typename First, typename Last>
     struct iterator_range<segmented_iterator<First>, segmented_iterator<Last> >
-      : sequence_base<iterator_range<segmented_iterator<First>, segmented_iterator<Last> > >
+      : detail::sequence_base<iterator_range<segmented_iterator<First>, segmented_iterator<Last> > >
     {
         typedef segmented_iterator<First> begin_type;
         typedef segmented_iterator<Last> end_type;

@@ -11,7 +11,7 @@
 
 #include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/iterator/distance.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/bool.hpp>
@@ -31,7 +31,7 @@ namespace boost { namespace fusion
 
     template<typename Begin, typename End>
     struct iterator_range
-      : sequence_base<iterator_range<Begin, End> >
+      : detail::sequence_base<iterator_range<Begin, End> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Begin>))
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Begin>))

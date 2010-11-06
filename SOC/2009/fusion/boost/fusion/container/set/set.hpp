@@ -12,7 +12,7 @@
 #include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/container/set/set_fwd.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/mpl/bool.hpp>
 
 #include <boost/fusion/container/set/detail/begin_impl.hpp>
@@ -36,7 +36,7 @@ namespace boost { namespace fusion
 
     VARIADIC_TEMPLATE(FUSION_MAX_SET_SIZE)
     struct set
-      : sequence_base<set<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_SET_SIZE)> >
+      : detail::sequence_base<set<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_SET_SIZE)> >
     {
         typedef set_category category;
         typedef set_tag fusion_tag;

@@ -73,8 +73,10 @@ namespace boost { namespace fusion
     }
 
     template<typename Key, typename Seq>
-    inline typename
-        result_of::erase_key<BOOST_FUSION_R_ELSE_CLREF(Seq), Key>::type
+    inline typename result_of::erase_key<
+        BOOST_FUSION_R_ELSE_CLREF(Seq)
+      , Key
+    >::type
     erase_key(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
         return result_of::erase_key<

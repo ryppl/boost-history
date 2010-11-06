@@ -13,7 +13,7 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 #include <boost/mpl/eval_if.hpp>
@@ -41,7 +41,7 @@ namespace boost { namespace fusion
 
     template<typename Seq1, typename Seq2>
     struct joint_view
-      : sequence_base<joint_view<Seq1, Seq2> >
+      : detail::sequence_base<joint_view<Seq1, Seq2> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>))
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>))

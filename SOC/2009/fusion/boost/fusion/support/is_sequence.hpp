@@ -11,8 +11,8 @@
 
 #include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
-#include <boost/type_traits/is_base_of.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
+#include <boost/type_traits/is_convertible.hpp>
 
 namespace boost { namespace fusion
 {
@@ -23,10 +23,7 @@ namespace boost { namespace fusion
         {
             template<typename Seq>
             struct apply
-              : is_base_of<
-                    sequence_root
-                  , typename detail::identity<Seq>::type
-                >
+              : is_convertible<Seq, detail::from_sequence_convertible_type>
             {};
         };
     }
@@ -35,8 +32,9 @@ namespace boost { namespace fusion
     {
         template<typename T>
         struct is_sequence
-          : extension::is_sequence_impl<typename traits::tag_of<T>::type>::
-                template apply<T>
+          : extension::is_sequence_impl<
+                typename traits::tag_of<T>::type
+            >::template apply<T>
         {};
     }
 }}

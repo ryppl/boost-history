@@ -8,6 +8,6 @@
 #ifndef BOOST_FUSION_INCLUDE_SEQUENCE_BASE_HPP
 #define BOOST_FUSION_INCLUDE_SEQUENCE_BASE_HPP
 
-#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
 
 #endif

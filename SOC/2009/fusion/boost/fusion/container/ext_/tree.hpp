@@ -24,7 +24,7 @@
 #include <boost/fusion/support/ext_/is_segmented.hpp>
 #include <boost/fusion/support/is_sequence.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/eval_if.hpp>
 #ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
@@ -50,7 +50,7 @@ namespace boost { namespace fusion
 
    template<typename Data, typename Left = nil, typename Right = nil>
    struct tree
-     : sequence_base<tree<Data, Left, Right> >
+     : detail::sequence_base<tree<Data, Left, Right> >
    {
        typedef Data data_type;
        typedef Left left_type;

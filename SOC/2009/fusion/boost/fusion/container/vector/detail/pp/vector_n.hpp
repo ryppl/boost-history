@@ -16,7 +16,7 @@
 #   include <boost/fusion/iterator/deref.hpp>
 #   include <boost/fusion/iterator/next.hpp>
 #   include <boost/fusion/iterator/advance_c.hpp>
-#   include <boost/fusion/support/sequence_base.hpp>
+#   include <boost/fusion/support/internal/sequence_base.hpp>
 #   include <boost/fusion/support/internal/sequence_assign.hpp>
 #   include <boost/fusion/support/internal/template.hpp>
 #   include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
@@ -72,7 +72,7 @@ namespace boost { namespace fusion
 
     template<>
     struct vector0<void_>
-      : sequence_base<vector0<void_> >
+      : detail::sequence_base<vector0<void_> >
 #   else
 #       ifndef BOOST_FUSION_PREFER_MPL
     template<typename Vector>
@@ -87,7 +87,7 @@ namespace boost { namespace fusion
 
     VARIADIC_TEMPLATE(BOOST_FUSION_N)
     struct BOOST_PP_CAT(vector, BOOST_FUSION_N)
-      : sequence_base<BOOST_PP_CAT(vector, BOOST_FUSION_N)<
+      : detail::sequence_base<BOOST_PP_CAT(vector, BOOST_FUSION_N)<
             EXPAND_TEMPLATE_ARGUMENTS(BOOST_FUSION_N)>
         >
 #   endif

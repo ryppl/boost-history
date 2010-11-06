@@ -23,16 +23,16 @@ namespace boost { namespace fusion
     {
         template<typename Seq>
         struct end
-          : extension::end_impl<typename traits::tag_of<Seq>::type>::
-                template apply<Seq>
+          : extension::end_impl<
+                typename traits::tag_of<Seq>::type
+            >::template apply<Seq>
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
         };
     }
 
     template<typename Seq>
-    inline typename
-        result_of::end<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type const
+    inline typename result_of::end<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
     end(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
         return result_of::end<BOOST_FUSION_R_ELSE_CLREF(Seq)>::call(
