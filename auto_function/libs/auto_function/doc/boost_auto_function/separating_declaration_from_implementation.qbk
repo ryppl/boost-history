@@ -1,0 +1,56 @@
+[/==============================================================================
+    Copyright (C) 2010 Matt Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================/]
+
+[section Separating Declaration from Implementation]
+
+In the most general sense, it is impossible to separate a function or function
+template declaration from its implementation in cases where the return type is
+deduced because the declaration must have some kind of specified return type at
+the point of its declaration. However, not all uses of
+__boost_auto_function_macro__ imply an automatically deduced return type.
+Specifically, when an argument from the `explicit` category is used, the macro
+has enough information to yield a return type.
+
+An example of the separation of declaration and implementation can be seen here.
+
+ #include <boost/auto_function/auto_function.hpp>
+ #include <boost/type_traits/add_pointer.hpp>
+ #include <boost/type_traits/is_pointer.hpp>
+
+ // The declaration
+ template< class T >
+ BOOST_AUTO_FUNCTION
+ ( ( foo( T arg ) )
+ , ( not boost::is_pointer< T > )
+ , ( virtual explicit boost::add_pointer< T > )
+ );
+
+ // The implementation
+ template< class T >
+ BOOST_AUTO_FUNCTION
+ ( ( foo( T arg ) )
+ , ( not boost::is_pointer< T > )
+ , ( virtual explicit boost::add_pointer< T > )
+ )
+ {
+   return &arg;
+ }
+
+Notice that both the macro invocation that appears with the declaration and the
+one that appears with the definition are the same. The function body is /not/ a
+`do` argument to the macro. This is very important since making changes to the
+macro arguments will result in a different declaration entirely, meaning that
+the definition would be of an entirely separate function template than the one
+that was declared.
+
+[note You cannot separate the declaration of a __boost_auto_function_macro__
+from its implementation in any case where an argument from the `do` category is
+present, regardless of whether or not an argument from the `explicit` category
+was passed.]
+
+[endsect]

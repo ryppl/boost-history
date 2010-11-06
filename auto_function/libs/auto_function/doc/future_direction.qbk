@@ -1,0 +1,35 @@
+[/==============================================================================
+    Copyright (C) 2010 Matt Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================/]
+
+[section Future Direction]
+
+[heading Parameters]
+
+Some additional parameter kinds are planned for __boost_auto_function_macro__,
+including
+
+* A series of `break` categories that would `static_assert` when requirements
+are not met as opposed to force substitution to fail
+
+* An `auto try` parameter that would allow a programmer to check that instances
+of a function's return type could be used in specified expressions
+
+* An `auto explicit` parameter that would allow a programmer to apply a
+transformation to a deduced return type
+
+[heading Generic Programming]
+
+During the development of __boost_auto_function__ it became apparent that with
+some further effort, __boost_auto_function_macro__ and macros similar to it
+could be made to be more powerful replacements for many of the features of
+__boost_concept_check__. In particular, such macros may be used for specifying
+concept requirements and even allow for concept-based function template
+overloads. In releases to come, __boost_auto_function__ will likely introduce such
+functionality and may even spawn off a new version of __boost_concept_check__.
+
+[endsect]

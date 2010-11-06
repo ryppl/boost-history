@@ -1,0 +1,105 @@
+[/==============================================================================
+    Copyright (C) 2010 Matt Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================/]
+
+[section First (Beginner)]
+
+[heading Library Features Used]
+
+* The __boost_basic_auto_function_macro__ macro (an alternate implementation uses
+__boost_auto_function_macro__)
+
+* Extended SFINAE as applied to the function body
+
+[heading C++0x Features Used]
+
+* Extended SFINAE
+
+[heading Introduction]
+
+In this tutorial, we will walk through a very basic function template that takes
+a __boost_range_range__ and returns the first element.
+
+[heading Implementation without =Boost.Auto_Function=]
+
+Before going into how this function template will be implemented using
+__boost_auto_function__, let's see what it would look like without it (for the
+exact source code, refer to
+[@boost:libs/auto_function/example/first/no_auto_function_first.cpp
+example/first/no_auto_function_first.cpp]).
+
+[import ../example/first/no_auto_function_first.cpp]
+[no_auto_function_first]
+
+In order to specify the correct return type for the function, we must pull in
+a metafunction from __boost_range__ and apply it with our `RangeType`. While not
+horribly complicated, it is still a source for error and requires knowledge of
+the metafunctions of __boost_range__ to simply get the first element. This is
+frustrating since the compiler already knows the type of the expression in the
+return statement and it would be nice if it just used that for the return type
+of the function automatically.
+
+[heading Implementation with =Boost.Auto_Function=]
+
+[warning No known compilers yet support this implementation. To see one that is
+usable, scroll down to the alternate implementation.]
+
+Now let's see what such a function template would look like when using
+__boost_auto_function__. For this implementation, automatic return type
+deduction will be used along with SFINAE as applied to the expression in the
+function body (for the exact source code, refer to
+[@boost:libs/auto_function/example/first/basic_auto_function_first.cpp
+example/first/basic_auto_function_first.cpp]).
+
+[import ../example/first/basic_auto_function_first.cpp]
+[basic_auto_function_first]
+
+With this implementation we have no need to call a metafunction to retrieve the
+return type of the function since it is deduced automatically.
+
+Walking through the code, we have the headers required to pull in the
+__boost_basic_auto_function_macro__ macro as well as the header required to pull
+in the __boost_range_begin__ function template. The
+__boost_basic_auto_function_macro__ macro is used by passing in the function
+name and parameter list. Immediately following the invocation, a body for the
+function is provided as surrounded by parentheses.
+
+When using the __boost_basic_auto_function_macro__ macro, the function body is
+restricted in the same way that C++0x lambda functions are restricted. In
+particular, the return type is deduced as a non-void type /if and only if/ the
+function consists of exactly one statement which is a return statement.
+For multi-line functions the return type will be `void`.
+
+[important Look carefully at the implementation and notice that curly-braces are
+not used to surround the function body, but rather, parentheses appear instead.]
+
+[heading Alternate Implementation with =Boost.Auto_Function=]
+
+Unfortunately, at this point in time no known compilers are able to support the
+above implementation. Instead, we must use one that appears to be slightly more
+complicated (for the exact source code, refer to
+[@boost:libs/auto_function/example/first/auto_function_first.cpp
+example/first/auto_function_first.cpp]).
+
+[import ../example/first/auto_function_first.cpp]
+[auto_function_first]
+
+Once again, we include the appropriate headers required for our implementation.
+Now, however, the macro __boost_auto_function_macro__ is used instead of
+__boost_basic_auto_function_macro__. This new macro is actually more versatile,
+but its use appears to be slightly more complicated. It is variadic and takes
+several optional, named arguments that may appear in any order, though for this
+example we will use it to simply get automatic return type deduction and SFINAE.
+
+Examining the implementation more closely, the first argument is the function
+template name and its parameter list, all surrounded by an extra set of
+parentheses. For our second argument, which is again parenthesized, there is the
+keyword `return` followed by an expression that would appear in the return
+statement of the function body. Because this is an expression as opposed to a
+statement, it must not end in a semicolon.
+
+[endsect]

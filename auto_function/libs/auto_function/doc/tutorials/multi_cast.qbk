@@ -1,0 +1,124 @@
+[/==============================================================================
+    Copyright (C) 2010 Matt Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================/]
+
+[section Multi-Cast (Intermediate)]
+
+[heading Library Features Used]
+
+* The __boost_basic_auto_function_macro__ macro (an alternate implementation
+uses __boost_auto_function_macro__)
+
+* Extended SFINAE as applied to the function body
+
+[heading C++0x Features Used]
+
+* Extended SFINAE
+
+* Variadic templates
+
+* RValue references
+
+* `std::forward`
+
+[heading Introduction]
+
+In this tutorial, we will walk through the development of a `multi_cast`
+function template. The purpose of this template is to simplify the calling of
+several successive `static_cast` operations, such as for cross-casting between
+the bases of a type that is not =abstract=.
+
+[heading Implementation without =Boost.Auto_Function=]
+
+Let's see how such a macro would look without __boost_auto_function__ (for the
+exact source code, refer to
+[@boost:libs/auto_function/example/multi_cast/no_auto_function_multi_cast.cpp
+example/multi_cast/no_auto_function_multi_cast.cpp]).
+
+[import ../example/multi_cast/no_auto_function_multi_cast.cpp]
+[no_auto_function_multi_cast]
+
+The exact series of messages that GCC 4.5.1 produces may be seen below.
+
+ main.cpp: In function 'TargetType multi_cast(SourceType&&) [with TargetType = right&, IntermediateTypes = {unrelated_type&, child&}, SourceType = left&]':
+ main.cpp:49:73:   instantiated from here
+ main.cpp:22:11: error: invalid static_cast from type 'unrelated_type' to type 'right&'
+ main.cpp: In function 'TargetType multi_cast(SourceType&&) [with TargetType = unrelated_type&, IntermediateTypes = {child&}, SourceType = left&]':
+ main.cpp:22:11:   instantiated from 'TargetType multi_cast(SourceType&&) [with TargetType = right&, IntermediateTypes = {unrelated_type&, child&}, SourceType = left&]'
+ main.cpp:49:73:   instantiated from here
+ main.cpp:22:11: error: invalid static_cast from type 'child' to type 'unrelated_type&'
+ main.cpp: In function 'TargetType multi_cast(SourceType&&) [with TargetType = right&, IntermediateTypes = {unrelated_type&, child&}, SourceType = left&]':
+ main.cpp:23:2: warning: control reaches end of non-void function
+
+What a mess! While an experienced C++ programmer will be able to determine the
+problem from such messages, one not as familiar with templates may struggle.
+These types of errors are one reason why many people get frustrated with C++.
+
+What makes these errors so terrible? Most prominent is the fact that a single,
+simple user mistake has produced 9 separate lines in the build log, with only
+2 of those lines even pointing to the programmer's own code (and those lines are
+"instantiated from" messages, not the errors themselves). At first glance, it's
+not even clear that the problem is with user code since most of the log points
+to the innards of a `multi_cast` template. Upon further examination, a
+programmer should hopefully notice that the errors contain the text `invalid
+static_cast` and from that figure out that they provided a type that would imply
+an invalid conversion.
+
+Certainly, though, we must be able to do better, and we can.
+
+[heading Implementation with =Boost.Auto_Function=]
+
+[warning No known compilers yet support this implementation. To see one that is
+usable, scroll down to the alternate implementation.]
+
+For this function template, automatic return type deduction is a convenience,
+however, the main advantage of __boost_basic_auto_function_macro__ here is its
+ability to force substitution to fail when the body of our function would not
+compile. This functionality succeeds at emitting a single error message at the
+site of the top-level `multi_cast` call as opposed to one nested inside of
+multiple template instantiations and allows such `multi_cast` calls to be used
+to force even higher-level substitutions to fail.
+
+Let's look at an implementation (for the exact source code, refer to
+[@boost:libs/auto_function/example/multi_cast/basic_auto_function_multi_cast.cpp
+example/multi_cast/basic_auto_function_multi_cast.cpp]).
+
+[import ../example/multi_cast/basic_auto_function_multi_cast.cpp]
+[basic_auto_function_multi_cast]
+
+The code above has slightly less redundancy than our earlier example, but its
+advantages come more from its use.
+
+[heading Usage]
+
+With the same usage as we saw from our first solution, GCC 4.5.1 is able to emit
+a much simpler error message.
+
+ main.cpp:49:73: error: no matching function for call to 'multi_cast(left&)'
+
+The same user-mistake now produces exactly one error, pointing to the correct
+line in the programmer's code where the error was made rather than within a
+`multi_cast` template. The only downside is that there is no message explaining
+exactly /why/ the error is there, though in future releases of
+__boost_auto_function__ there will be a way for the developer to provide more
+descriptive messages to the user.
+
+[heading Alternate Implementation with =Boost.Auto_Function=]
+
+Much like with the previous tutorial, at this point in time no known compilers
+are able to support the above implementation. Instead, we must use one that
+appears to be slightly more complicated (for the exact source code, refer to
+[@boost:libs/auto_function/example/multi_cast/auto_function_multi_cast.cpp
+example/multi_cast/auto_function_multi_cast.cpp]).
+
+[import ../example/multi_cast/auto_function_multi_cast.cpp]
+[auto_function_multi_cast]
+
+Usage of this code should be just the same as our previous
+__boost_auto_function__ implementation with the same, simple error message.
+
+[endsect]

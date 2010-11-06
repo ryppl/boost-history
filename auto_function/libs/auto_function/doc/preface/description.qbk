@@ -1,0 +1,35 @@
+[/==============================================================================
+    Copyright (C) 2010 Matt Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================/]
+
+[section Description]
+
+[:['["Creativity is making the complicated simple.]]]
+[:*--Charles Mingus*]
+
+When writing code in C++, programmers are often forced to exploit the language
+in strange, unconventional ways in order to create powerful and expressive
+programs, metaprograms, and interfaces, especially when developing libraries.
+Several components of Boost exist for the sole purpose of formalizing these
+exploits and turning them into directly supported features.
+__boost_auto_function__ is one of those libraries as it aims to provide a way of
+specifying functions and function templates in a manner that allows the
+programmer to include metafunction requirements, expression requirements, and
+get automatic return type deduction. This is accomplished through a tricky mix
+of preprocessor metaprogramming, template metaprogramming, and the use of many
+C++0x features already supported by some compilers. The interface to the library
+is primarily done through a variadic macro called __boost_auto_function_macro__
+that receives "named parameters," similar to __boost_parameter__ functions, to
+which programmers may pick and choose from a variety of powerful ways to enhance
+their declarations.
+
+As far as macros are concerned, __boost_auto_function_macro__ is (or at least
+tries to be) fairly sophisticated and attempts to catch as many user errors as
+possible, producing easy-to-read messages when used incorrectly or when certain
+features are not supported by a given compiler.
+
+[endsect]

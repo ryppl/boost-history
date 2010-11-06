@@ -1,0 +1,56 @@
+[/==============================================================================
+    Copyright (C) 2010 Matt Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================/]
+
+[section Overview]
+
+Central to the design of __boost_auto_function__ is the named parameter
+interface to the __boost_auto_function_macro__ macro. The overall goal of this
+design is to provide users with one macro that augments declarations differently
+depending on which arguments are given. Arguments passed to the macro in this
+way may appear in any order, meaning that users may leave off any parameters
+they wish. It also makes it easy for future versions of the library to add even
+more parameter types without breaking existing code (see
+"__future_direction__").
+
+The basic format of a __boost_auto_function_macro__ invocation is as follows.
+
+ BOOST_AUTO_FUNCTION
+ ( ( ``/function_name/``( ``/function_parameters/`` ) ``/specifiers/`` )
+ , ( ``/named_parameter_id argument/`` )
+   ``/.../``
+ )
+
+Any number of named parameters may be passed to the macro as long as they do not
+conflict with previously specified parameters. For example, the following is a
+__boost_auto_function_macro__ invocation that creates a function template that
+uses several named parameters which will be elaborated on later in this section.
+
+ template< typename T >
+ BOOST_AUTO_FUNCTION
+ ( ( foo( T arg ) )
+ , ( try (arg++) )
+ , ( auto if is_integral< _1 > )
+ , ( return arg-- )
+ )
+
+In this contrived example, the function template `foo` has one function
+parameter and uses three named macro parameters: a `try`, an `auto if`, and a
+`return`. A `try` macro argument is a __boost_preprocessor_sequence__ of
+expressions and forces substitution to fail when such an expression would not
+compile. An `auto if` macro argument is a unary __boost_mpl_lambda_expression__
+that is invoked with the return type of the function and forces substitution to
+fail if the result is false. A `return` macro argument is an expression that
+will be used in the return statement of the function template and that will be
+used to deduce the return type in cases where one is not explicitly specified.
+
+So, the above code example creates a unary function template called foo that
+will be usable with arguments that support the postfix form of `operator++` and
+requires that the return type is an =integral= type. The function itself simply
+returns the result of `arg--` and automatically deduces the return type.
+
+[endsect]

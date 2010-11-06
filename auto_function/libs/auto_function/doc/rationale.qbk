@@ -1,0 +1,28 @@
+[/==============================================================================
+    Copyright (C) 2010 Matt Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================/]
+
+[section Rationale]
+
+[heading Keyword Parameter IDs]
+
+Most of the parameter IDs used in this library are C++ keywords by design. This
+is something that happened after a couple of early iterations of the library due
+to a suggestion by Dave Abrahams. Prior to using the keyword `if` as a parameter
+ID, `requires` was used in order to mimic the ill-fated feature of C++0x.
+Similarly, there was `requires_expr` instead of `try`. The problem with this
+approach is that it becomes very easy to misspell the parameter IDs since IDEs
+will not highlight them as keywords when spelled correctly. Common typos such as
+`require` or `required` would be very difficult to check for from within the
+macro due to its nature of being a preprocessor utility (though with some
+effort, these common misspellings were detected in a way that complicated the
+implementation). The compromise of using keywords wherever possible makes it
+less likely that programmers will attempt to compile code with such mistakes,
+makes the IDs stand out when reading the code, and implies fewer "magic words"
+for programmers to remember.
+
+[endsect]

@@ -1,0 +1,55 @@
+[/==============================================================================
+    Copyright (C) 2010 Matt Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================/]
+
+[section Combining `do` and `explicit`]
+
+[heading The "Problem"]
+
+*The purpose of an argument to __boost_auto_function_macro__ from the `explicit`
+category is to explicitly specify the return type of a function
+
+*The purpose of an argument from the `do` category is to provide a function body
+and automatically deduce the return type
+
+At first, there may seem to be a conflict here when both an `explicit` argument
+and a `do` argument appear in a single invocation since they both provide the
+function with a return type, but there is actually a special case for this very
+scenerio.
+
+[heading Behavior]
+
+The behavior that results when both categories of arguments appear is that the
+`explicit` argument is used and what would be the `do` argument's deduced return
+type will now just be checked for conversion to the explicitly specified return
+type. If there is no valid conversion then substitution will fail (or it will
+directly produce an error if the check is not dependent on a template
+parameter).
+
+For example, see the code below.
+
+ #include <boost/auto_function/auto_function.hpp>
+ #include <iostream>
+
+ // There is no conflict here because the type of &arg is T*
+ // (unless unary operator& is overloaded, in which case substitution may fail)
+ template< class T >
+ BOOST_AUTO_FUNCTION
+ ( ( foo( T arg ) )
+ , ( explicit T* )
+ , ( return &arg )
+ )
+
+ // Here substitution will fail when called because the types conflict
+ template< class T >
+ BOOST_AUTO_FUNCTION
+ ( ( bar( T arg ) )
+ , ( explicit T )
+ , ( return std::cout << arg )
+ )
+
+[endsect]

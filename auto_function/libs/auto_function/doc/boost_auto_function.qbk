@@ -1,0 +1,16 @@
+[/==============================================================================
+    Copyright (C) 2010 Matt Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================/]
+
+[section The `BOOST_AUTO_FUNCTION` Macro]
+
+[include boost_auto_function/overview.qbk]
+[include boost_auto_function/named_parameters.qbk]
+[include boost_auto_function/combining_do_and_explicit.qbk]
+[include boost_auto_function/separating_declaration_from_implementation.qbk]
+
+[endsect]

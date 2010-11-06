@@ -1,0 +1,113 @@
+[/==============================================================================
+    Copyright (C) 2010 Matt Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================/]
+
+[section Motivation]
+
+The importance of automatic type deduction is already well understood by the C++
+community, particularly when working with templates, and because of this, C++0x
+has introduced at least three new ways of deducing types. First, the keyword
+`decltype` has been introduced as a way to retrieve the type of a given
+expression. Second, the old use of the keyword `auto` has been removed and the
+name has been recycled as a way to deduce the type in an object declaration
+based on the expression that appears during its initialization. Finally, C++0x
+lambda functions have basic rules for automatically deducing their return type
+based on the statements in their body.
+
+However, despite these new facilities, there is still no simple way to get
+automatic return type deduction for functions in the more general sense nor for
+function templates at all. Consider the following hypothetical function
+template.
+
+ template< class LeftType, class RightType >
+ ``/???/`` add( LeftType const& left, RightType const& right )
+ {
+   return left + right;
+ }
+
+In the above code example, what should the return type be? Should it be
+`LeftType`? Should it be `RightType`? Should it be something else entirely?
+
+The problem, of course, is that we don't know what the return type should be
+because it is dependent on the types of `left` and `right` and how the
+associated binary `operator+` is defined, if at all. When `left` and `right`
+are both integers, C++ integral promotion rules must be used to determine the
+exact result type. When one operand is a pointer type and the other is an
+integer, the result type is that of the original pointer, given that the
+operation is defined at all. When `left` or `right` is a user-defined type and
+`operator+` is overloaded, the result could be one of any number of types.
+
+Thankfully, C++0x introduces a new way of declaring functions that aids
+programmers in solving this problem by allowing them to specify the return type
+/after/ the parameter list, meaning that the parameter names may be used as
+objects when forming the return type. The benefit of such a trailing return type
+is that it allows a programmer to write an expression involving the function's
+parameters, wrapped in `decltype`, as a way of determining the exact type that
+is needed. In C++0x, the above code example may be written as follows.
+
+ template< class LeftType, class RightType >
+ auto add( LeftType const& left, RightType const& right )
+   -> decltype( left + right )
+ {
+   return left + right;
+ }
+
+While this solves the problem of specifying the proper return type, it
+introduces redundancy since the expression `left + right` must be repeated.
+Unfortunately, function templates such as the one above are extremely common,
+especially in libraries. __boost_auto_function__ solves this problem via a macro
+that internally generates the proper return type so that the programmer does not
+have to introduce redundancy into his or her own code. With the library, the
+equivalent function template may be written as follows.
+
+ template< class LeftType, class RightType >
+ BOOST_BASIC_AUTO_FUNCTION( add( LeftType const& left, RightType const& right ) )
+ (
+   return left + right;
+ )
+
+The programmer is now relieved of having to explicitly specify any return type
+at all as it is completely pulled from the return expression.
+
+[heading Further Motivation]
+
+...but __boost_auto_function__ doesn't simply provide a means for creating
+functions and function templates with automatically deduced return types. It
+also provides mechanisms for checking arbitrary compile-time requirements on
+parameters and on a function's return type, whether those types be deduced or
+explicit.
+
+Consider again the example `add` function template and imagine that we wish to
+limit the parameter types to be C++ =integral= types. __boost_enable_if__
+provides some support for this functionality by exploiting SFINAE
+(Substitution-Failure-Is-Not-An-Error), however its return type form is not
+directly usable with __boost_basic_auto_function_macro__ when that type is
+deduced since no explicit return type ever appears directly in user code. As
+well, C++0x extended SFINAE rules make it possible, though not always simple, to
+force substitution to fail when arbitrary expressions in the return type or
+parameter list would fail to compile had they not been dependent on template
+arguments. __boost_enable_if__ does not directly support a way to check such
+expressions, making its use slightly limited in C++0x. In contrast,
+__boost_auto_function__ makes checking such conditions on types and expressions a
+trivial task by introducing named parameters to the macro used exclusively for
+such purposes.
+
+The following code presents, once again, an `add` function template, only now in
+a way that will force substitution to fail when `left` or `right` is not an
+=integral= type.
+
+ template< class LeftType, class RightType >
+ BOOST_AUTO_FUNCTION
+ ( ( add( LeftType const& left, RightType const& right ) )
+ , ( if is_integral< LeftType >::value && is_integral< RightType >::value )
+ , ( return left + right )
+ )
+
+Uses exceed those presented in this section and are detailed later on in this
+documentation.
+
+[endsect]

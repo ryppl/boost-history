@@ -1,0 +1,85 @@
+[/==============================================================================
+    Copyright (C) 2010 Matt Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================/]
+
+[library Boost.Auto_Function
+    [quickbook 1.5]
+    [authors [Calabrese, Matt]]
+    [copyright 2010 Matt Calabrese]
+    [purpose Function Templates with Automatically Deduced Return Types and User-Specified Requirements]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+[/
+[def __boost_type_traits__ [@boost:/libs/type_traits/index.html =Boost.Type_Traits=]]
+[def __boost_mpl__ [@boost:/libs/mpl/index.html =Boost.MPL=]]
+[def __boost_preprocessor__ [@boost:/libs/preprocessor/doc/index.html =Boost.Preprocessor=]]
+[def __boost_preprocessor_sequence__ [@boost:/libs/preprocessor/doc/data/sequences.html =Boost.Preprocessor= Sequence]]
+[def __boost_mpl_lambda_expression__ [@boost:/libs/mpl/doc/refmanual/lambda-expression.html =Boost.MPL= Lambda Expression]]
+[def __boost_mpl_metafunction__ [@boost:/libs/mpl/doc/refmanual/metafunction.html =Boost.MPL= Metafunction]]
+[def __boost_enable_if__ [@boost:/libs/utility/enable_if.html =Boost.Enable_If=]]
+[def __boost_concept_check__ [@boost:/libs/concept_check/concept_check.htm =Boost.Concept_Check=]]
+[def __boost_parameter__ [@boost:/libs/parameter/doc/html/index.html =Boost.Parameter=]]
+[def __boost_range__ [@boost:/libs/range/doc/html/index.html =Boost.Range=]]
+[def __boost_range_begin__ [@boost:/libs/range/doc/html/range/concepts/single_pass_range.html#range.concepts.single_pass_range.valid_expressions =Boost.Range= `begin`]]
+[def __boost_range_range__ [@boost:/libs/range/doc/html/range/concepts/overview.html =Boost.Range= Range]]
+]
+
+[def __boost_type_traits__ [@http://www.boost.org/libs/type_traits/index.html =Boost.Type_Traits=]]
+[def __boost_mpl__ [@http://www.boost.org/libs/mpl/index.html =Boost.MPL=]]
+[def __boost_preprocessor__ [@http://www.boost.org/libs/preprocessor/doc/index.html =Boost.Preprocessor=]]
+[def __boost_preprocessor_sequence__ [@http://www.boost.org/libs/preprocessor/doc/data/sequences.html =Boost.Preprocessor= Sequence]]
+[def __boost_mpl_lambda_expression__ [@http://www.boost.org/libs/mpl/doc/refmanual/lambda-expression.html =Boost.MPL= Lambda Expression]]
+[def __boost_mpl_metafunction__ [@http://www.boost.org/libs/mpl/doc/refmanual/metafunction.html =Boost.MPL= Metafunction]]
+[def __boost_enable_if__ [@http://www.boost.org/libs/utility/enable_if.html =Boost.Enable_If=]]
+[def __boost_concept_check__ [@http://www.boost.org/libs/concept_check/concept_check.htm =Boost.Concept_Check=]]
+[def __boost_parameter__ [@http://www.boost.org/libs/parameter/doc/html/index.html =Boost.Parameter=]]
+[def __boost_range__ [@http://www.boost.org/libs/range/doc/html/index.html =Boost.Range=]]
+[def __boost_range_begin__ [@http://www.boost.org/libs/range/doc/html/range/concepts/single_pass_range.html#range.concepts.single_pass_range.valid_expressions =Boost.Range= `begin`]]
+[def __boost_range_range__ [@http://www.boost.org/libs/range/doc/html/range/concepts/overview.html =Boost.Range= Range]]
+
+[def __boost_auto_function__ [link boost_auto_function =Boost.Auto_Function=]]
+[def __checking_support__ [link boost_auto_function.checking_support Checking Support]]
+[def __future_direction__ [link boost_auto_function.future_direction Future Direction]]
+[def __boost_auto_function_macro__ [link boost_auto_function.the__boost_auto_function__macro `BOOST_AUTO_FUNCTION`]]
+[def __boost_basic_auto_function_macro__ [link boost_auto_function.the__boost_basic_auto_function__macro `BOOST_BASIC_AUTO_FUNCTION`]]
+
+[heading Brief Description]
+
+__boost_auto_function__ is a library focused on making it simple for programmers
+to express functions and function declarations that have an automatically
+deduced return type and to provide a way to place arbitrary compile-time
+requirements on a function's signature.
+
+[include preface.qbk]
+[include support.qbk]
+[include tutorials.qbk]
+[include boost_basic_auto_function.qbk]
+[include boost_auto_function.qbk]
+[include checking_support.qbk]
+[include rationale.qbk]
+[include future_direction.qbk]
+[include acknowledgements.qbk]
+[/
+[:['["Creativity is making the complicated simple.]]]
+[:*--Charles Mingus*]
+
+[:['["Always listen to the experts. They'll tell you what can't be done and why. Then do it.]]]
+[:*--Robert A. Heinlein*]
+
+[:['["Comments lie. Code doesn't.]]]
+[:*--Ron Jeffries*]
+
+[:['["A language that doesn't affect the way you think about programming, is not worth knowing.]]]
+[:*--Alan Perlis*]
+
+[:['["Within C++, there is a much smaller and cleaner language struggling to get out.]]]
+[:*--Bjarne Stroustrup*]]

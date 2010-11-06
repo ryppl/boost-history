@@ -1,0 +1,119 @@
+[/==============================================================================
+    Copyright (C) 2010 Matt Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================/]
+
+[section Named Parameters]
+
+The following is a series of tables that specifies all of the parameter types
+currently supported by __boost_auto_function_macro__ and how they are used. No
+two parameters from the same category may be used with the same macro
+invocation. At least one argument of either the `do` category or the `explicit`
+category must be passed for any given invocation to be valid.
+
+When refering to examples in the following table, assume that the
+__boost_auto_function_macro__ invocation begins as
+
+ template< class L, class R >
+ BOOST_AUTO_FUNCTION( ( foo( L& left, R right ) ),
+
+and that both __boost_type_traits__ and __boost_mpl__ are included and their
+namespaces have been introduced via a using declaration.
+
+[table "do" category parameters
+[[Parameter ID][Purpose][Argument Kind][Example]]
+[[`do`]
+[To provide a body for a function with multiple statements, often used for
+automatic return type deduction and SFINAE (uses C++0x lambda function rules and
+restrictions)]
+[Statements that would appear in the function's body]
+[``
+    ( do
+      if( left == right )
+        do_something();
+      else
+        do_something_else();
+    )
+
+ ``]
+]
+[[`return`]
+[To provide a body for a 1-line function consisting of a return statement, often
+used for automatic return type deduction and SFINAE]
+[An expression that would appear in the function's return statement]
+[``( return left + right )``]]
+[[`return_ref`]
+[Same as `return` but forces the automatically deduced return type to be an
+lvalue reference type]
+[An expression that would appear in the function's return statement]
+[``( return_ref left += right )``]]
+[[`return_rvalue_ref`]
+[Same as `return` but forces the automatically deduced return type to be an
+rvalue reference type]
+[An expression that would appear in the function's return statement]
+[``( return_rvalue_ref left += right )``]]
+[[`return_value`]
+[Same as `return` but forces the automatically deduced return type to not be a
+reference type]
+[An expression that would appear in the function's return statement]
+[``( return_value left + right )``]]
+[[`void`]
+[To provide an expression that would appear in a statement in the body of a
+function with the return type `void`, often used for SFINAE]
+[An expression that would appear in a statement in the function's body]
+[``( void left + right )``]]
+]
+
+[table "if" category parameters
+[[Parameter ID][Purpose][Argument Kind][Example]]
+[[`if`]
+[To require that a given predicate yields `true`]
+[ nullary __boost_mpl_metafunction__ type ['*or*] compile-time bool value]
+[``( if is_arithmetic< L >::value && is_arithmetic< R >::value )``]]
+[[`not`]
+[To require that a given predicate yields `false`]
+[ nullary __boost_mpl_metafunction__ type ['*or*] compile-time bool value]
+[``( not is_same< L, R > )``]]
+]
+
+[table "try" category parameters
+[[Parameter ID][Purpose][Argument Kind][Example]]
+[[`try`]
+[To specify expressions that must be valid for substitution to succeed]
+[ __boost_preprocessor_sequence__ of expressions ]
+[``( try (left + right)(left - right)(-left) )``]]
+]
+
+[table "explicit" category parameters
+[[Parameter ID][Purpose][Argument Kind][Example]]
+[[`explicit`]
+[To provide an explicit return type for the function]
+[ type ]
+[``( explicit L )``]]
+[[`virtual explicit`]
+[To provide an explicit return type for the function]
+[ nullary __boost_mpl_metafunction__ type ]
+[``( virtual explicit add_pointer< L > )``]]
+[/[[`auto explicit`]
+[To provide a return type that is specified as a transformation of a deduced
+return type (requires an argument from the `do` category to also be present)]
+[ unary __boost_mpl_lambda_expression__ ]
+[``( auto explicit integral_promotion< _1 > )``]]]
+]
+
+[table "auto if" category parameters
+[[Parameter ID][Purpose][Argument Kind][Example]]
+[[`auto if`]
+[To require that a return type matches a given predicate]
+[ unary __boost_mpl_lambda_expression__ ]
+[``( auto if is_same< L, _1 > )``]]
+[[`auto not`]
+[To require that a return type /does not/ match a given predicate]
+[ unary __boost_mpl_lambda_expression__ ]
+[``( auto not is_arithmetic< _1 > )``]]
+]
+
+[endsect]

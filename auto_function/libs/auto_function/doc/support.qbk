@@ -1,0 +1,31 @@
+[/==============================================================================
+    Copyright (C) 2010 Matt Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================/]
+
+[section Support]
+
+__boost_auto_function__ is a C++0x library and therefore requires a compiler
+that has some minimal C++0x support with such features enabled. In particular,
+the following are base requirements to use the library's primary macro,
+__boost_auto_function_macro__.
+
+* `decltype`
+
+* trailing-return-type
+
+* variadic macros
+
+[important
+
+Further C++0x support is required to use the more complicated features of the
+library. If you would like to test at preprocessor-time whether or not a given
+feature of the library is supported by your compiler with its current options,
+please refer to the section "__checking_support__".
+
+]
+
+[endsect]

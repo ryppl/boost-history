@@ -1,0 +1,84 @@
+[/==============================================================================
+    Copyright (C) 2010 Matt Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================/]
+
+[section Checking Support]
+
+[heading Headers]
+
+  // For just support checking
+  #include <boost/auto_function/support.hpp>
+
+  // For the entire library (including support checking)
+  #include <boost/auto_function.hpp>
+
+[heading `BOOST_BASIC_AUTO_FUNCTION` Support]
+
+To check at preprocessor-time if your compiler is capable of supporting
+__boost_basic_auto_function_macro__, verify that
+`BOOST_NO_BOOST_BASIC_AUTO_FUNCTION` is not defined after including one of the
+headers specified above. If a programmer does not check for support, the library
+will do its best to emit a readable error message explaining why it is not
+supported upon the first invocation of the macro.
+
+For example:
+
+  #include <boost/auto_function/support.hpp>
+
+  #ifndef BOOST_NO_BOOST_BASIC_AUTO_FUNCTION
+    // Code to preprocess when support is available
+  #else
+    // Code to preprocess when support is not available
+  #endif
+
+[heading Top-Level `BOOST_AUTO_FUNCTION` Support]
+
+To check at preprocessor-time if your compiler is capable of supporting
+__boost_auto_function_macro__ in at least a trivial form, verify that
+`BOOST_NO_BOOST_AUTO_FUNCTION` is not defined after including one of the headers
+specified above. If a programmer does not check for support, the library will do
+its best to emit a readable error message explaining why it is not supported
+upon the first invocation of the macro.
+
+For example:
+
+  #include <boost/auto_function/support.hpp>
+
+  #ifndef BOOST_NO_BOOST_AUTO_FUNCTION
+    // Code to preprocess when support is available
+  #else
+    // Code to preprocess when support is not available
+  #endif
+
+[heading `BOOST_AUTO_FUNCTION` Individual Parameter Support]
+
+While a compiler may be able to handle some features of
+__boost_auto_function_macro__, it may not be able to handle them all. In order
+to check at preprocessor-time which parameter kinds are supported, a programmer
+may use the `BOOST_NO_BOOST_AUTO_FUNCTION_PARAM` macro by passing in the
+parameter ID of the parameter kind for which he or she wishes to determine
+whether or not there is support. When the parameter kind is supported, the macro
+invocation will yield `0`, otherwise it will yield `1`.
+
+For instance, to branch at preprocessor-time based on whether or not the `do`
+parameter kind is supported, code similar to the following may be used.
+
+  #include <boost/auto_function/support.hpp>
+
+  #if !BOOST_NO_BOOST_AUTO_FUNCTION_PARAM( do )
+    // Code preprocessed when "do" is supported
+  #else
+    // Code preprocessed when "do" is not supported
+  #endif
+
+Much like with `BOOST_NO_BOOST_AUTO_FUNCTION`, if a programmer does not
+explicitly check for support before using a particular parameter kind, the
+library will do its best to produce a readable error message during compilation
+in cases where the feature is used but not supported.
+
+[endsect]
+

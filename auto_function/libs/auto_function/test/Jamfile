@@ -1,0 +1,33 @@
+#===============================================================================
+#    Copyright (c) 2010 Matt Calabrese
+#
+#   Use, modification and distribution is subject to the Boost Software
+#   License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#===============================================================================
+# bring in rules for testing
+import testing ;
+
+{
+    test-suite auto_function :
+
+    [ run basic_auto_function.cpp :  :  :  : ]
+    [ run auto_function_if.cpp :  :  :  : ]
+    [ run auto_function_not.cpp :  :  :  : ]
+    [ run auto_function_try.cpp :  :  :  : ]
+    [ run auto_function_explicit.cpp :  :  :  : ]
+    [ run auto_function_virtual_explicit.cpp :  :  :  : ]
+    [ run auto_function_auto_if.cpp :  :  :  : ]
+    [ run auto_function_auto_not.cpp :  :  :  : ]
+    [ run auto_function_do.cpp :  :  :  : ]
+    [ run auto_function_return.cpp :  :  :  : ]
+    [ run auto_function_return_ref.cpp :  :  :  : ]
+    [ run auto_function_return_rvalue_ref.cpp :  :  :  : ]
+    [ run auto_function_return_value.cpp :  :  :  : ]
+    [ run auto_function_void.cpp :  :  :  : ]
+    [ run auto_function_do_and_explicit.cpp :  :  :  : ]
+    [ run auto_function_multiple_of_same_category.cpp :  :  :  : ]
+    [ run auto_function_combinations.cpp :  :  :  : ]
+
+    ;
+}

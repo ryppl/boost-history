@@ -1,0 +1,54 @@
+[/==============================================================================
+    Copyright (C) 2010 Matt Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================/]
+
+[section The `BOOST_BASIC_AUTO_FUNCTION` Macro]
+
+[warning No known compilers currently support
+__boost_basic_auto_function_macro__. For the time being, please use
+__boost_auto_function_macro__ instead.]
+
+[heading Description]
+
+When it comes down to it, the main purpose of __boost_auto_function__ is to allow
+programmers to write functions and function templates that have an automatically
+deduced return type in the same way that a C++0x lambda functions does. The
+__boost_basic_auto_function_macro__ macro is the most concise way to get this
+functionality without any extra boilerplate. The drawback of this simplicity is
+that it is not capable of directly handling __boost_enable_if__-style
+requirements. If such features are desired, the __boost_auto_function_macro__
+macro should be used instead.
+
+[heading Headers]
+
+ #include <boost/auto_function/basic_auto_function.hpp>
+
+ // Or, for the entire library including BOOST_BASIC_AUTO_FUNCTION
+ #include <boost/auto_function.hpp>
+
+[heading Synopsis]
+
+ #define BOOST_BASIC_AUTO_FUNCTION( ... ) /* implementation-defined */
+
+[heading Usage]
+
+Usage of the macro should be fairly intuitive. The argument to the macro is the
+function name and parameter list, along with any specifiers that may follow the
+parameter list. Immediately following the invocation of the macro should be a
+parenthesized function body.
+
+The rules for return type deduction are the same as those for C++0x lambda
+functions. In particular, the return type of the function is deduced /if and
+only if/ the function consists of exactly one line and that line is a return
+statement. Multi-line functions are resolved to have the return type `void`.
+When the declaration is a template, errors that would normally appear in the
+function body will instead cause substitution to fail.
+
+[import ../example/square.cpp]
+[square]
+
+[endsect]
