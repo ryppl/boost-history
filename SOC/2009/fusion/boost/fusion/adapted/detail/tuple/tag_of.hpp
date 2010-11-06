@@ -20,6 +20,7 @@ namespace boost
 {
     namespace fusion
     {
+        struct fusion_sequence_tag;
         struct std_tuple_tag;
         struct std_tuple_iterator_tag;
         struct boost_tuple_tag;

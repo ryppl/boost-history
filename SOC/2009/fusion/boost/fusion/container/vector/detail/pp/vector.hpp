@@ -9,17 +9,12 @@
 #ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_VECTOR_HPP
 #define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_VECTOR_HPP
 
-#include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/container/vector/detail/pp/vector_n_chooser.hpp>
-#include <boost/mpl/at.hpp>
-#include <boost/mpl/bool.hpp>
-
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/fusion/container/detail/forward_interface.hpp>
 
 namespace boost { namespace fusion
 {
-    struct fusion_sequence_tag;
-
 #ifdef BOOST_MSVC
 #   pragma warning(push)
     //'class' : multiple copy constructors specified

@@ -33,7 +33,7 @@
 #endif
 #include <boost/call_traits.hpp>
 
-#include <boost/fusion/view/transform_view/transform_view_fwd.hpp>
+#include <boost/fusion/view/transform_view/detail/transform_view_fwd.hpp>
 #include <boost/fusion/view/transform_view/detail/at_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/value_at_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/transform_view_iterator.hpp>
@@ -50,6 +50,9 @@
 #include <boost/fusion/view/transform_view/detail/distance_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/equal_to_impl.hpp>
 
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(transform_view_tag, 1)
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(transform_view2_tag, 1)
+
 namespace boost { namespace fusion
 {
     struct void_;
@@ -62,7 +65,6 @@ namespace boost { namespace fusion
     // Binary Version
     template<typename Seq1, typename Seq2, typename F, typename IsAssociative>
     struct transform_view
-      : detail::sequence_base<transform_view<Seq1, Seq2, F,IsAssociative> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>))
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>))
@@ -88,8 +90,6 @@ namespace boost { namespace fusion
         strictest_traversal;
 
         typedef transform_view2_tag fusion_tag;
-        typedef fusion_sequence_tag tag;
-        typedef mpl::true_ is_view;
         typedef typename
             mpl::eval_if_c<
                 is_associative::value
@@ -147,7 +147,6 @@ namespace boost { namespace fusion
     // Unary Version implementation
     template<typename Seq, typename F, typename IsAssociative>
     struct unary_transform_view
-      : detail::sequence_base<unary_transform_view<Seq, F, void_> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
@@ -178,7 +177,6 @@ namespace boost { namespace fusion
         typedef typename result_of::size<seq_type>::type size;
         typedef transform_view_tag fusion_tag;
         typedef fusion_sequence_tag tag;
-        typedef mpl::true_ is_view;
 
         template<typename OtherView>
         unary_transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherView) view)

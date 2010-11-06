@@ -24,6 +24,8 @@
 #include <boost/fusion/view/iterator_range/detail/at_impl.hpp>
 #include <boost/fusion/view/iterator_range/detail/value_at_impl.hpp>
 
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(iterator_range_tag, 1)
+
 namespace boost { namespace fusion
 {
     struct iterator_range_tag;
@@ -31,7 +33,6 @@ namespace boost { namespace fusion
 
     template<typename Begin, typename End>
     struct iterator_range
-      : detail::sequence_base<iterator_range<Begin, End> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Begin>))
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Begin>))
@@ -45,7 +46,6 @@ namespace boost { namespace fusion
         typedef typename result_of::distance<begin_type, end_type>::type size;
         typedef iterator_range_tag fusion_tag;
         typedef fusion_sequence_tag tag;
-        typedef mpl::true_ is_view;
 
         template<typename OtherRange>
         iterator_range(BOOST_FUSION_R_ELSE_CLREF(OtherRange) range)

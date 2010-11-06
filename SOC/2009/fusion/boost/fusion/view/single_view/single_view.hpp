@@ -40,6 +40,8 @@
 #include <boost/fusion/view/single_view/detail/prior_impl.hpp>
 #include <boost/fusion/view/single_view/detail/value_of_impl.hpp>
 
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(single_view_tag, 1)
+
 namespace boost { namespace fusion
 {
     struct single_view_tag;
@@ -53,14 +55,12 @@ namespace boost { namespace fusion
 
     template<typename T>
     struct single_view
-      : detail::sequence_base<single_view<T> >
     {
         typedef T value_type;
 
         typedef single_view_tag fusion_tag;
         typedef fusion_sequence_tag tag; 
         typedef random_access_traversal_tag category;
-        typedef mpl::true_ is_view;
         typedef mpl::int_<1> size;
 
 #define BOOST_FUSION_SINGLE_VIEW_CTOR(MODIFIER,_)\

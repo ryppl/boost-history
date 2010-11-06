@@ -36,6 +36,8 @@
 #include <boost/fusion/view/repetitive_view/detail/key_of_impl.hpp>
 #include <boost/fusion/view/repetitive_view/detail/value_of_data_impl.hpp>
 
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(repetitive_view_tag, 1)
+
 namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
@@ -45,7 +47,6 @@ namespace boost { namespace fusion
       , typename Size=mpl::int_<integer_traits<int>::const_max-1>
     >
     struct repetitive_view
-      : detail::sequence_base<repetitive_view<Seq> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
@@ -62,7 +63,6 @@ namespace boost { namespace fusion
         typedef Size size;
         typedef repetitive_view_tag fusion_tag;
         typedef fusion_sequence_tag tag;
-        typedef mpl::true_ is_view;
 
 #define BOOST_FUSION_REPETITIVE_VIEW_CTOR(MODIFIER,_)\
         template<typename OtherSeq>\

@@ -6,8 +6,8 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_TRANSFORM_VIEW_FWD_HPP
-#define BOOST_FUSION_VIEW_TRANSFORM_VIEW_TRANSFORM_VIEW_FWD_HPP
+#ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_TRANSFORM_VIEW_FWD_HPP
+#define BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_TRANSFORM_VIEW_FWD_HPP
 
 #include <boost/mpl/bool.hpp>
 

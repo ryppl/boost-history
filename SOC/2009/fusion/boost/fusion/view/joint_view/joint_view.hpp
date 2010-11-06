@@ -34,6 +34,8 @@
 #include <boost/fusion/view/joint_view/detail/key_of_impl.hpp>
 #include <boost/fusion/view/joint_view/detail/value_of_data_impl.hpp>
 
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(joint_view_tag, 1)
+
 namespace boost { namespace fusion
 {
     struct forward_traversal_tag;
@@ -41,7 +43,6 @@ namespace boost { namespace fusion
 
     template<typename Seq1, typename Seq2>
     struct joint_view
-      : detail::sequence_base<joint_view<Seq1, Seq2> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>))
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>))
@@ -65,7 +66,6 @@ namespace boost { namespace fusion
         category;
         typedef joint_view_tag fusion_tag;
         typedef fusion_sequence_tag tag;
-        typedef mpl::true_ is_view;
         typedef typename
             mpl::plus<
                 result_of::size<seq1_type>

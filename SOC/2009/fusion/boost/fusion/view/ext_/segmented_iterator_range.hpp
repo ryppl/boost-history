@@ -69,7 +69,6 @@ namespace boost { namespace fusion
         // right or the left of a segmented iterator.
         template<typename Tag, typename Cons1, typename Cons2 = void_>
         struct segmented_view
-          : detail::sequence_base<segmented_view<Tag, Cons1, Cons2> >
         {
             typedef segmented_view_tag<Tag> fusion_tag;
             typedef fusion_sequence_tag tag;
@@ -88,7 +87,6 @@ namespace boost { namespace fusion
         // two segmented iterators
         template<typename Cons1, typename Cons2>
         struct segmented_view<center_view, Cons1, Cons2>
-          : detail::sequence_base<segmented_view<center_view, Cons1, Cons2> >
         {
             typedef segmented_view_tag<center_view> fusion_tag;
             typedef fusion_sequence_tag tag;
@@ -183,6 +181,18 @@ namespace boost { namespace fusion
 
     namespace extension
     {
+        template<typename>
+        struct is_sequence_impl;
+
+        template<>
+        struct is_sequence_impl<detail::segmented_view_tag<Tag> >
+        {
+            template<typename>
+            struct apply
+              : mpl::true_
+            {};
+        };
+
         ////////////////////////////////////////////////////////////////////////////
         template<typename Tag>
         struct is_segmented_impl<detail::segmented_view_tag<Tag> >
@@ -364,7 +374,6 @@ namespace boost { namespace fusion
 
     template<typename First, typename Last>
     struct iterator_range<segmented_iterator<First>, segmented_iterator<Last> >
-      : detail::sequence_base<iterator_range<segmented_iterator<First>, segmented_iterator<Last> > >
     {
         typedef segmented_iterator<First> begin_type;
         typedef segmented_iterator<Last> end_type;
@@ -374,7 +383,6 @@ namespace boost { namespace fusion
         typedef fusion_sequence_tag tag;
         typedef typename traits::category_of<begin_type>::type category;
         typedef typename result_of::distance<begin_type, end_type>::type size;
-        typedef mpl::true_ is_view;
 
         iterator_range(segmented_iterator<First> const& first_, segmented_iterator<Last> const& last_)
           : first(first_)

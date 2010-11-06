@@ -20,6 +20,7 @@ namespace boost
 {
     namespace fusion
     {
+        struct fusion_sequence_tag;
         struct array_tag;
         struct array_iterator_tag;
         struct random_access_traversal_tag;

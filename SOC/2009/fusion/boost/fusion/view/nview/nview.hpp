@@ -46,6 +46,8 @@
 #include <boost/fusion/view/nview/detail/value_at_impl.hpp>
 #include <boost/fusion/view/nview/detail/value_of_impl.hpp>
 
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(nview_tag, 1)
+
 namespace boost { namespace fusion
 {
     struct nview_tag;
@@ -54,7 +56,6 @@ namespace boost { namespace fusion
 
     template<typename Seq, typename Indices>
     struct nview
-      : detail::sequence_base<nview<Seq, Indices> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
         BOOST_FUSION_MPL_ASSERT((traits::is_random_access<Seq>))
@@ -66,7 +67,6 @@ namespace boost { namespace fusion
         typedef nview_tag fusion_tag;
         typedef fusion_sequence_tag tag;
         typedef random_access_traversal_tag category;
-        typedef mpl::true_ is_view;
         typedef typename mpl::size<Indices>::type size;
 
 #define BOOST_FUSION_NVIEW_CTOR(MODIFIER,_)\

@@ -25,6 +25,8 @@
 #include <boost/fusion/container/map/detail/key_of_impl.hpp>
 #include <boost/fusion/container/detail/forward_interface.hpp>
 
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(map_tag, 0)
+
 namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
@@ -37,12 +39,10 @@ namespace boost { namespace fusion
 
     VARIADIC_TEMPLATE(FUSION_MAX_MAP_SIZE)
     struct map
-      : detail::sequence_base<map<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_MAP_SIZE)> >
     {
         typedef map_category category;
         typedef map_tag fusion_tag;
         typedef fusion_sequence_tag tag; 
-        typedef mpl::false_ is_view;
 
         typedef
             vector<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_MAP_SIZE)>

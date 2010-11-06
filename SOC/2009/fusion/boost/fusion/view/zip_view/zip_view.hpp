@@ -45,6 +45,8 @@
 #include <boost/fusion/view/zip_view/detail/value_of_impl.hpp>
 #include <boost/fusion/view/zip_view/detail/equal_to_impl.hpp>
 
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(zip_view_tag, 1)
+
 namespace boost { namespace fusion
 {
     namespace detail
@@ -127,12 +129,10 @@ namespace boost { namespace fusion
         };
     }
 
-    struct zip_view_tag;
     struct fusion_sequence_tag;
 
     template<typename Seqs>
     struct zip_view
-      : detail::sequence_base<zip_view<Seqs> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seqs>))
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seqs>))
@@ -152,7 +152,6 @@ namespace boost { namespace fusion
         category;
         typedef zip_view_tag fusion_tag;
         typedef fusion_sequence_tag tag; 
-        typedef mpl::true_ is_view;
         typedef typename
             mpl::eval_if_c<
                 result_of::size<Seqs>::value ? true : false

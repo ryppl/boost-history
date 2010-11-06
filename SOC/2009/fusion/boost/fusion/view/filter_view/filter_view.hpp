@@ -33,6 +33,8 @@
 #include <boost/fusion/view/filter_view/detail/key_of_impl.hpp>
 #include <boost/fusion/view/filter_view/detail/value_of_data_impl.hpp>
 
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(filter_view_tag, 1)
+
 namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
@@ -43,7 +45,6 @@ namespace boost { namespace fusion
       , typename PredIsMetafunction=mpl::true_
     >
     struct filter_view
-      : detail::sequence_base<filter_view<Seq, Pred, PredIsMetafunction> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>))
@@ -61,8 +62,7 @@ namespace boost { namespace fusion
             >::type
         category;
         typedef filter_view_tag fusion_tag;
-        typedef fusion_sequence_tag tag; 
-        typedef mpl::true_ is_view;
+        typedef fusion_sequence_tag tag;
 
 #define BOOST_FUSION_FILTER_VIEW_CTOR(MODIFIER,_)\
         template<typename OtherSeq>\

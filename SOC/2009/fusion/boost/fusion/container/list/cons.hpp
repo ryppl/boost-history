@@ -19,7 +19,6 @@
 #include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
 #include <boost/fusion/support/internal/assign_tags.hpp>
 #include <boost/fusion/support/internal/sequence_assign.hpp>
-
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/or.hpp>
@@ -39,6 +38,8 @@
 #include <boost/fusion/container/list/detail/value_of_impl.hpp>
 #include <boost/fusion/container/list/detail/equal_to_impl.hpp>
 
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(cons_tag, 0)
+
 namespace boost { namespace fusion
 {
     struct void_;
@@ -51,7 +52,6 @@ namespace boost { namespace fusion
 #endif
 
     struct nil
-      : detail::sequence_base<nil>
     {
         typedef void_ car_type;
         typedef void_ cdr_type;
@@ -59,7 +59,6 @@ namespace boost { namespace fusion
         typedef mpl::int_<0> size;
         typedef cons_tag fusion_tag;
         typedef fusion_sequence_tag tag; 
-        typedef mpl::false_ is_view;
         typedef forward_traversal_tag category;
 
         nil()
@@ -107,7 +106,6 @@ namespace boost { namespace fusion
 
     template<typename Car, typename Cdr = nil>
     struct cons
-      : detail::sequence_base<cons<Car, Cdr> >
     {
         typedef Car car_type;
         typedef Cdr cdr_type;
@@ -115,7 +113,6 @@ namespace boost { namespace fusion
         typedef mpl::int_<Cdr::size::value+1> size;
         typedef cons_tag fusion_tag;
         typedef fusion_sequence_tag tag; 
-        typedef mpl::false_ is_view;
         typedef forward_traversal_tag category;
 
         cons()

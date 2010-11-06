@@ -30,6 +30,11 @@ namespace example
 
 namespace boost
 {
+    namespace fusion
+    {
+        struct fusion_sequence_tag;
+    }
+
     namespace fusion { namespace traits
     {
         template<>

@@ -15,7 +15,10 @@
 #include <boost/fusion/container/list/detail/cons_gen.hpp>
 #include <boost/fusion/container/generation/vector_tie.hpp>
 #include <boost/fusion/container/detail/forward_interface.hpp>
+#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/fusion/support/internal/template.hpp>
+
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(list_tag, 0)
 
 namespace boost { namespace fusion
 {

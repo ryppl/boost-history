@@ -40,6 +40,8 @@
 
 #include <utility>
 
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(vector_tag, 0)
+
 namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
@@ -416,14 +418,13 @@ namespace boost { namespace fusion
 
     template<typename... Elements>
     struct vector
-      : detail::sequence_base<vector<Elements...> >
 #ifdef BOOST_FUSION_TAGGED_VECTOR
-      , detail::vector_impl<
+      : detail::vector_impl<
             typename detail::make_package<sizeof...(Elements)>::type
           , Elements...
         >
 #else
-      , detail::vector_impl<0,Elements...>
+      : detail::vector_impl<0,Elements...>
 #endif
     {
 #ifdef BOOST_FUSION_TAGGED_VECTOR
@@ -445,7 +446,6 @@ namespace boost { namespace fusion
 
         typedef vector_tag fusion_tag;
         typedef fusion_sequence_tag tag;
-        typedef mpl::false_ is_view;
         typedef random_access_traversal_tag category;
         typedef mpl::int_<sizeof...(Elements)> size;
 

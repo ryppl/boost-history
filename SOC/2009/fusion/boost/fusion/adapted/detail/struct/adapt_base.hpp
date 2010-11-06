@@ -162,6 +162,8 @@ namespace boost                                                                 
 {                                                                               \
     namespace fusion                                                            \
     {                                                                           \
+        struct fusion_sequence_tag;                                             \
+                                                                                \
         namespace traits                                                        \
         {                                                                       \
             BOOST_FUSION_ALL_CV_REF_NON_REF_COMBINATIONS(                       \

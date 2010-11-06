@@ -36,13 +36,14 @@
 #include <boost/fusion/view/reverse_view/detail/value_at_impl.hpp>
 #include <boost/fusion/view/reverse_view/detail/value_of_data_impl.hpp>
 
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(reverse_view_tag, 1)
+
 namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
 
     template<typename Seq>
     struct reverse_view
-      : detail::sequence_base<reverse_view<Seq> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>))
         BOOST_FUSION_MPL_ASSERT((traits::is_bidirectional<Seq>))
@@ -54,7 +55,6 @@ namespace boost { namespace fusion
         typedef typename result_of::size<seq_type>::type size;
         typedef reverse_view_tag fusion_tag;
         typedef fusion_sequence_tag tag; 
-        typedef mpl::true_ is_view;
 
 #define BOOST_FUSION_REVERSE_VIEW_CTOR(MODIFIER,_)\
         template<typename OtherSeq>\

@@ -1,5 +1,5 @@
 /*==============================================================================
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -19,6 +19,8 @@
 #include <boost/fusion/algorithm/transformation/detail/filter_key_view/at_key_impl.hpp>
 #include <boost/fusion/algorithm/transformation/detail/filter_key_view/value_at_key_impl.hpp>
 
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(detail::filter_key_view_tag, 1)
+
 namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
@@ -27,7 +29,6 @@ namespace boost { namespace fusion
     {
         template<typename Seq, typename Pred>
         struct filter_key_view
-          : detail::sequence_base<filter_key_view<Seq, Pred> >
         {
             typedef BOOST_FUSION_DETAIL_VIEW_STROAGE(Seq) storage_type;
             typedef typename storage_type::type seq_type;
@@ -36,7 +37,6 @@ namespace boost { namespace fusion
             typedef associative_tag category;
             typedef filter_key_view_tag fusion_tag;
             typedef fusion_sequence_tag tag;
-            typedef mpl::true_ is_view;
 
 #define BOOST_FUSION_FILTER_KEY_VIEW_CTOR(MODIFIER,_)\
             template<typename OtherSeq>\

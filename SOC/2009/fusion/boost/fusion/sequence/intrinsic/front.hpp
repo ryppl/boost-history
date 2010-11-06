@@ -16,8 +16,6 @@
 
 namespace boost { namespace fusion
 {
-    struct fusion_sequence_tag;
-
     namespace result_of
     {
         template<typename Seq>

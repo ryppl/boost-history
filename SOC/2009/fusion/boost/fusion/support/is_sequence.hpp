@@ -11,8 +11,7 @@
 
 #include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/internal/sequence_base.hpp>
-#include <boost/type_traits/is_convertible.hpp>
+#include <boost/mpl/bool.hpp>
 
 namespace boost { namespace fusion
 {
@@ -21,9 +20,9 @@ namespace boost { namespace fusion
         template<typename>
         struct is_sequence_impl
         {
-            template<typename Seq>
+            template<typename>
             struct apply
-              : is_convertible<Seq, detail::from_sequence_convertible_type>
+              : mpl::false_
             {};
         };
     }

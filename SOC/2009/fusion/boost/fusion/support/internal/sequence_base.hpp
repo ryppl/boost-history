@@ -8,24 +8,38 @@
 #ifndef BOOST_FUSION_SUPPORT_INTERNAL_SEQUENCE_BASE_HPP
 #define BOOST_FUSION_SUPPORT_INTERNAL_SEQUENCE_BASE_HPP
 
-namespace boost { namespace fusion
+#include <boost/preprocessor/control/iif.hpp>
+#include <boost/mpl/bool.hpp>
+
+#define BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(TAG, IS_VIEW)              \
+namespace boost { namespace fusion { namespace extension                        \
+{                                                                               \
+    template<>                                                                  \
+    struct is_sequence_impl<TAG>                                                \
+    {                                                                           \
+        template<typename>                                                      \
+        struct apply                                                            \
+          : mpl::true_                                                          \
+        {};                                                                     \
+    };                                                                          \
+                                                                                \
+    template<>                                                                  \
+    struct is_view_impl<TAG>                                                    \
+    {                                                                           \
+        template<typename>                                                      \
+        struct apply                                                            \
+          : BOOST_PP_IIF(IS_VIEW, mpl::true_, mpl::false_)                      \
+        {};                                                                     \
+    };                                                                          \
+}}}
+
+namespace boost { namespace fusion { namespace extension
 {
-    struct fusion_sequence_tag;
+    template<typename>
+    struct is_sequence_impl;
 
-    namespace detail
-    {
-        struct from_sequence_convertible_type
-        {};
-
-        template<typename>
-        struct sequence_base
-        {
-            operator from_sequence_convertible_type()const
-            {
-                return from_sequence_convertible_type();
-            }
-        };
-    }
-}}
+    template<typename>
+    struct is_view_impl;
+}}}
 
 #endif

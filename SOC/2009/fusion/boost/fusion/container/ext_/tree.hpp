@@ -47,10 +47,14 @@ namespace boost { namespace fusion
        template<typename T>
        struct reference<T &, true> : reference<T, false> {};
    }
+}
 
+BOOST_FUSION_DEFINE_IS_SEQUENCE_IS_VIEW_IMPL(tree_tag, 0)
+
+namespace boost { namespace fusion
+{
    template<typename Data, typename Left = nil, typename Right = nil>
    struct tree
-     : detail::sequence_base<tree<Data, Left, Right> >
    {
        typedef Data data_type;
        typedef Left left_type;
@@ -68,7 +72,6 @@ namespace boost { namespace fusion
 
        typedef tree_tag fusion_tag;
        typedef forward_traversal_tag category;
-       typedef mpl::false_ is_view;
 
        tree()
        {}

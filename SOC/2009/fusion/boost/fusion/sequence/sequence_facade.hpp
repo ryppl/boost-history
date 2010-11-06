@@ -9,7 +9,6 @@
 #define BOOST_FUSION_SEQUENCE_SEQUENCE_FACADE_HPP
 
 #include <boost/fusion/support/internal/base.hpp>
-#include <boost/fusion/support/internal/sequence_base.hpp>
 #include <boost/fusion/support/internal/facade_generation.hpp>
 #include <boost/mpl/bool.hpp>
 
@@ -30,13 +29,29 @@ BOOST_FUSION_FACADE_DEFINE_INTRINSIC_FUNCS_WRAPPER(
 
 namespace boost { namespace fusion
 {
+    struct fusion_sequence_tag;
+
+    namespace extension
+    {
+        template<typename>
+        struct is_sequence_impl;
+
+        template<>
+        struct is_sequence_impl<sequence_facade_tag>
+        {
+            template<typename>
+            struct apply
+              : mpl::true_
+            {};
+        };
+    }
+
     template<
         typename Derived
       , typename Category
       , typename IsView = mpl::false_
     >
     struct sequence_facade
-      : detail::sequence_base<Derived>
     {
         typedef fusion_sequence_tag tag;
         typedef sequence_facade_tag fusion_tag;

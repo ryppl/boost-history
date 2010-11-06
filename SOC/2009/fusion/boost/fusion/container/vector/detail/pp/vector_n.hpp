@@ -16,7 +16,6 @@
 #   include <boost/fusion/iterator/deref.hpp>
 #   include <boost/fusion/iterator/next.hpp>
 #   include <boost/fusion/iterator/advance_c.hpp>
-#   include <boost/fusion/support/internal/sequence_base.hpp>
 #   include <boost/fusion/support/internal/sequence_assign.hpp>
 #   include <boost/fusion/support/internal/template.hpp>
 #   include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
@@ -37,6 +36,7 @@
 #   include <boost/type_traits/add_const.hpp>
 #   include <boost/utility/enable_if.hpp>
 
+#   include <boost/fusion/container/vector/detail/pp/base.hpp>
 #   include <boost/fusion/container/vector/detail/at_impl.hpp>
 #   include <boost/fusion/container/vector/detail/value_at_impl.hpp>
 #   include <boost/fusion/container/vector/detail/begin_impl.hpp>
@@ -72,7 +72,6 @@ namespace boost { namespace fusion
 
     template<>
     struct vector0<void_>
-      : detail::sequence_base<vector0<void_> >
 #   else
 #       ifndef BOOST_FUSION_PREFER_MPL
     template<typename Vector>
@@ -87,9 +86,6 @@ namespace boost { namespace fusion
 
     VARIADIC_TEMPLATE(BOOST_FUSION_N)
     struct BOOST_PP_CAT(vector, BOOST_FUSION_N)
-      : detail::sequence_base<BOOST_PP_CAT(vector, BOOST_FUSION_N)<
-            EXPAND_TEMPLATE_ARGUMENTS(BOOST_FUSION_N)>
-        >
 #   endif
     {
 #   ifdef BOOST_FUSION_PREFER_MPL
@@ -101,7 +97,6 @@ namespace boost { namespace fusion
 #   endif
         typedef vector_tag fusion_tag;
         typedef fusion_sequence_tag tag;
-        typedef mpl::false_ is_view;
         typedef random_access_traversal_tag category;
         typedef mpl::int_<BOOST_FUSION_N> size;
 
