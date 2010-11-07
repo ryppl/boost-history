@@ -15,8 +15,8 @@
 #include <boost/mpl/integral_c.hpp>
 #include <boost/mpl/end.hpp>
 #include <boost/mpl/begin.hpp>
-#include  <boost/preprocessor/cat.hpp>
-#include  <boost/preprocessor/inc.hpp>
+#include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/inc.hpp>
 
 #if !defined(BOOST_STATIC_STRING_LIMIT_C_STR_SIZE)
 #   define BOOST_STATIC_STRING_LIMIT_C_STR_SIZE 32
@@ -55,12 +55,14 @@ struct c_str
 //    typedef typename value_type<Sequence>::type value_type;
     typedef typename mpl::end<Sequence>::type iend;
     typedef typename mpl::begin<Sequence>::type i0;
-    #define M0(z, n, data)                                                                      \
-    typedef                                                                                     \
-        typename static_string::detail::next_unless<BOOST_PP_CAT(i, n), iend>::type                         \
+    #define BOOST_STATIC_STRING_C_STR_M0(z, n, data)        \
+    typedef                                                 \
+        typename static_string::detail::next_unless<BOOST_PP_CAT(i, n), iend>::type \
     BOOST_PP_CAT(i, BOOST_PP_INC(n));
-    BOOST_PP_REPEAT(BOOST_MPL_LIMIT_STRING_SIZE, M0, ~)
-    #undef M0
+    
+    BOOST_PP_REPEAT(BOOST_STATIC_STRING_LIMIT_C_STR_SIZE, BOOST_STATIC_STRING_C_STR_M0, ~)
+    
+    #undef BOOST_STATIC_STRING_C_STR_M0
 
     typedef c_str type;
     static typename value_type<Sequence>::type const value[BOOST_STATIC_STRING_LIMIT_C_STR_SIZE+1];
@@ -69,12 +71,13 @@ struct c_str
 template<typename Sequence>
 typename value_type<Sequence>::type const c_str<Sequence>::value[BOOST_STATIC_STRING_LIMIT_C_STR_SIZE+1] =
 {
-    #define M0(z, n, data)                                                                      \
+    #define BOOST_STATIC_STRING_C_STR_M0(z, n, data)    \
     static_string::detail::deref_unless<typename value_type<Sequence>::type, BOOST_PP_CAT(i, n), iend>::type::value,
-    BOOST_PP_REPEAT(BOOST_STATIC_STRING_LIMIT_C_STR_SIZE, M0, ~)
-    #undef M0
+        
+    BOOST_PP_REPEAT(BOOST_STATIC_STRING_LIMIT_C_STR_SIZE, BOOST_STATIC_STRING_C_STR_M0, ~)
+    
+    #undef BOOST_STATIC_STRING_C_STR_M0
     mpl::integral_c<typename value_type<Sequence>::type, 0>::type::value
-//    '\0'
 };
 
 } // namespace static_string

@@ -9,8 +9,8 @@
 #ifndef BOOST_STATIC_STRING_MATCH_HPP
 #define BOOST_STATIC_STRING_MATCH_HPP
 
-#include <boost/static_string/static_string/basic_str.hpp>
-#include <boost/static_string/static_string/ptree.hpp>
+#include <boost/static_string/basic_str.hpp>
+#include <boost/static_string/ptree.hpp>
 #include <boost/mpl/integral_c.hpp>
 
 #include <ios>
