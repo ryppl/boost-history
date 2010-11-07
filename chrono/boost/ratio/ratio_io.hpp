@@ -19,7 +19,7 @@
 #include <ratio>
 #include <string>
 
-namespace std
+namespace boost
 {
 
 template <class Ratio, class CharT>
@@ -29,23 +29,26 @@ struct ratio_string
     static basic_string<CharT> long_name();
 };
 
-}  // std
+}  // boost
 
 */
 
-#include <boost/ratio.hpp>
 #include <boost/config.hpp>
+#include <boost/ratio.hpp>
 #include <string>
 #include <sstream>
 
+#include <boost/ratio/ratio_static_string.hpp>
+#include <boost/static_string/static_string.hpp>
 
 #if defined(BOOST_NO_UNICODE_LITERALS) || defined(BOOST_NO_CHAR16_T) || defined(BOOST_NO_CHAR32_T)
-//~ #define BOOST_HAS_UNICODE_SUPPORT 
+//~ #define BOOST_RATIO_HAS_UNICODE_SUPPORT 
 #else
-#define BOOST_HAS_UNICODE_SUPPORT 1
+#define BOOST_RATIO_HAS_UNICODE_SUPPORT 1
 #endif
+
 namespace boost {
-    
+
 template <class Ratio, class CharT>
 struct ratio_string
 {
@@ -62,9 +65,32 @@ ratio_string<Ratio, CharT>::long_name()
                         << Ratio::den << CharT(']');
     return os.str();
 }
-
+namespace ratio_detail {
+template <class Ratio, class CharT>
+struct ratio_string_static
+{
+    static std::string short_name() {
+        return std::basic_string<CharT>(
+                static_string::c_str<
+                        typename ratio_static_string<Ratio, CharT>::short_name
+                    >::value);
+    }
+    static std::string long_name()  {
+        return std::basic_string<CharT>(
+                static_string::c_str<
+                    typename ratio_static_string<Ratio, CharT>::long_name
+                >::value);
+    }
+};
+}
 // atto
+#if 1
+template <typename CharT>
+struct ratio_string<atto, CharT> : 
+    ratio_detail::ratio_string_static<atto,CharT> 
+{};
 
+#else
 template <>
 struct ratio_string<atto, char>
 {
@@ -72,7 +98,7 @@ struct ratio_string<atto, char>
     static std::string long_name()  {return std::string("atto");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<atto, char16_t>
@@ -98,9 +124,17 @@ struct ratio_string<atto, wchar_t>
     static std::wstring long_name()  {return std::wstring(L"atto");}
 };
 #endif
+#endif
 
 // femto
 
+#if 1
+template <typename CharT>
+struct ratio_string<femto, CharT> : 
+    ratio_detail::ratio_string_static<femto,CharT> 
+{};
+
+#else
 template <>
 struct ratio_string<femto, char>
 {
@@ -108,7 +142,7 @@ struct ratio_string<femto, char>
     static std::string long_name()  {return std::string("femto");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<femto, char16_t>
@@ -134,9 +168,17 @@ struct ratio_string<femto, wchar_t>
     static std::wstring long_name()  {return std::wstring(L"femto");}
 };
 #endif
+#endif
 
 // pico
 
+#if 1
+template <typename CharT>
+struct ratio_string<pico, CharT> : 
+    ratio_detail::ratio_string_static<pico,CharT> 
+{};
+
+#else
 template <>
 struct ratio_string<pico, char>
 {
@@ -144,7 +186,7 @@ struct ratio_string<pico, char>
     static std::string long_name()  {return std::string("pico");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<pico, char16_t>
@@ -170,9 +212,17 @@ struct ratio_string<pico, wchar_t>
     static std::wstring long_name()  {return std::wstring(L"pico");}
 };
 #endif
+#endif
 
 // nano
 
+#if 1
+template <typename CharT>
+struct ratio_string<nano, CharT> : 
+    ratio_detail::ratio_string_static<nano,CharT> 
+{};
+
+#else
 template <>
 struct ratio_string<nano, char>
 {
@@ -180,7 +230,7 @@ struct ratio_string<nano, char>
     static std::string long_name()  {return std::string("nano");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<nano, char16_t>
@@ -206,9 +256,17 @@ struct ratio_string<nano, wchar_t>
     static std::wstring long_name()  {return std::wstring(L"nano");}
 };
 #endif
+#endif
 
 // micro
 
+#if 1
+template <typename CharT>
+struct ratio_string<micro, CharT> : 
+    ratio_detail::ratio_string_static<micro,CharT> 
+{};
+
+#else
 template <>
 struct ratio_string<micro, char>
 {
@@ -216,7 +274,7 @@ struct ratio_string<micro, char>
     static std::string long_name()  {return std::string("micro");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<micro, char16_t>
@@ -242,9 +300,17 @@ struct ratio_string<micro, wchar_t>
     static std::wstring long_name()  {return std::wstring(L"micro");}
 };
 #endif
+#endif
 
 // milli
 
+#if 1
+template <typename CharT>
+struct ratio_string<milli, CharT> : 
+    ratio_detail::ratio_string_static<milli,CharT> 
+{};
+
+#else
 template <>
 struct ratio_string<milli, char>
 {
@@ -252,7 +318,7 @@ struct ratio_string<milli, char>
     static std::string long_name()  {return std::string("milli");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<milli, char16_t>
@@ -278,9 +344,17 @@ struct ratio_string<milli, wchar_t>
     static std::wstring long_name()  {return std::wstring(L"milli");}
 };
 #endif
+#endif
 
 // centi
 
+#if 1
+template <typename CharT>
+struct ratio_string<centi, CharT> : 
+    ratio_detail::ratio_string_static<centi,CharT> 
+{};
+
+#else
 template <>
 struct ratio_string<centi, char>
 {
@@ -288,7 +362,7 @@ struct ratio_string<centi, char>
     static std::string long_name()  {return std::string("centi");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<centi, char16_t>
@@ -314,8 +388,16 @@ struct ratio_string<centi, wchar_t>
     static std::wstring long_name()  {return std::wstring(L"centi");}
 };
 #endif
+#endif
 
 // deci
+#if 1
+template <typename CharT>
+struct ratio_string<deci, CharT> : 
+    ratio_detail::ratio_string_static<deci,CharT> 
+{};
+
+#else
 
 template <>
 struct ratio_string<deci, char>
@@ -324,7 +406,7 @@ struct ratio_string<deci, char>
     static std::string long_name()  {return std::string("deci");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<deci, char16_t>
@@ -350,9 +432,17 @@ struct ratio_string<deci, wchar_t>
     static std::wstring long_name()  {return std::wstring(L"deci");}
 };
 #endif
+#endif
 
 // deca
 
+#if 1
+template <typename CharT>
+struct ratio_string<deca, CharT> : 
+    ratio_detail::ratio_string_static<deca,CharT> 
+{};
+
+#else
 template <>
 struct ratio_string<deca, char>
 {
@@ -360,7 +450,7 @@ struct ratio_string<deca, char>
     static std::string long_name()  {return std::string("deca");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<deca, char16_t>
@@ -386,9 +476,17 @@ struct ratio_string<deca, wchar_t>
     static std::wstring long_name()  {return std::wstring(L"deca");}
 };
 #endif
+#endif
 
 // hecto
 
+#if 1
+template <typename CharT>
+struct ratio_string<hecto, CharT> : 
+    ratio_detail::ratio_string_static<hecto,CharT> 
+{};
+
+#else
 template <>
 struct ratio_string<hecto, char>
 {
@@ -396,7 +494,7 @@ struct ratio_string<hecto, char>
     static std::string long_name()  {return std::string("hecto");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<hecto, char16_t>
@@ -422,9 +520,17 @@ struct ratio_string<hecto, wchar_t>
     static std::wstring long_name()  {return std::wstring(L"hecto");}
 };
 #endif
+#endif
 
 // kilo
 
+#if 1
+template <typename CharT>
+struct ratio_string<kilo, CharT> : 
+    ratio_detail::ratio_string_static<kilo,CharT> 
+{};
+
+#else
 template <>
 struct ratio_string<kilo, char>
 {
@@ -432,7 +538,7 @@ struct ratio_string<kilo, char>
     static std::string long_name()  {return std::string("kilo");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<kilo, char16_t>
@@ -458,8 +564,17 @@ struct ratio_string<kilo, wchar_t>
     static std::wstring long_name()  {return std::wstring(L"kilo");}
 };
 #endif
+#endif
 
 // mega
+
+#if 1
+template <typename CharT>
+struct ratio_string<mega, CharT> : 
+    ratio_detail::ratio_string_static<mega,CharT> 
+{};
+
+#else
 
 template <>
 struct ratio_string<mega, char>
@@ -468,7 +583,7 @@ struct ratio_string<mega, char>
     static std::string long_name()  {return std::string("mega");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<mega, char16_t>
@@ -494,8 +609,16 @@ struct ratio_string<mega, wchar_t>
     static std::wstring long_name()  {return std::wstring(L"mega");}
 };
 #endif
+#endif
 
 // giga
+#if 1
+template <typename CharT>
+struct ratio_string<giga, CharT> : 
+    ratio_detail::ratio_string_static<giga,CharT> 
+{};
+
+#else
 
 template <>
 struct ratio_string<giga, char>
@@ -504,7 +627,7 @@ struct ratio_string<giga, char>
     static std::string long_name()  {return std::string("giga");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<giga, char16_t>
@@ -530,9 +653,16 @@ struct ratio_string<giga, wchar_t>
     static std::wstring long_name()  {return std::wstring(L"giga");}
 };
 #endif
+#endif
 
 // tera
+#if 1
+template <typename CharT>
+struct ratio_string<tera, CharT> : 
+    ratio_detail::ratio_string_static<tera,CharT> 
+{};
 
+#else
 template <>
 struct ratio_string<tera, char>
 {
@@ -540,7 +670,7 @@ struct ratio_string<tera, char>
     static std::string long_name()  {return std::string("tera");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<tera, char16_t>
@@ -566,9 +696,16 @@ struct ratio_string<tera, wchar_t>
     static std::wstring long_name()  {return std::wstring(L"tera");}
 };
 #endif
+#endif
 
 // peta
+#if 1
+template <typename CharT>
+struct ratio_string<peta, CharT> : 
+    ratio_detail::ratio_string_static<peta,CharT> 
+{};
 
+#else
 template <>
 struct ratio_string<peta, char>
 {
@@ -576,7 +713,7 @@ struct ratio_string<peta, char>
     static std::string long_name()  {return std::string("peta");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<peta, char16_t>
@@ -602,9 +739,16 @@ struct ratio_string<peta, wchar_t>
     static std::wstring long_name()  {return std::wstring(L"peta");}
 };
 #endif
+#endif
 
 // exa
+#if 1
+template <typename CharT>
+struct ratio_string<exa, CharT> : 
+    ratio_detail::ratio_string_static<exa,CharT> 
+{};
 
+#else
 template <>
 struct ratio_string<exa, char>
 {
@@ -612,7 +756,7 @@ struct ratio_string<exa, char>
     static std::string long_name()  {return std::string("exa");}
 };
 
-#if BOOST_HAS_UNICODE_SUPPORT
+#if BOOST_RATIO_HAS_UNICODE_SUPPORT
 
 template <>
 struct ratio_string<exa, char16_t>
@@ -637,6 +781,7 @@ struct ratio_string<exa, wchar_t>
     static std::wstring short_name() {return std::wstring(1, L'E');}
     static std::wstring long_name()  {return std::wstring(L"exa");}
 };
+#endif
 #endif
 
 }
