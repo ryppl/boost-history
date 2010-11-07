@@ -9,7 +9,7 @@
 #include <iostream>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/chrno/detail/static_assert.hpp>
+#include <boost/chrono/detail/static_assert.hpp>
 #include <boost/mpl/string.hpp>
 //#include <boost/mpl/wstring.hpp>
 #include <boost/mpl/integral_c.hpp>

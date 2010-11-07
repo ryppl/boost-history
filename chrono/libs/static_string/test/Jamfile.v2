@@ -40,7 +40,7 @@ project
 
    test-suite "match"
         :
-        [ chrono-compile match/match_pass.cpp ]
+        [ run match/match_pass.cpp ]
         ;
 
         
