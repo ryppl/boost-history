@@ -38,6 +38,18 @@ project
         <toolset>msvc:<cxxflags>/wd4127
     ;
 
+   test-suite "value_type"
+        :
+        [ run value_type/value_type_pass.cpp ]
+        #[ run value_type/value_type_fail.cpp ]
+        ;
+
+   #test-suite "c_str"
+   #     :
+   #     [ run c_str/c_str_pass.cpp ]
+   #     [ run c_str/c_str_fail.cpp ]
+   #     ;
+
    test-suite "match"
         :
         [ run match/match_pass.cpp ]
