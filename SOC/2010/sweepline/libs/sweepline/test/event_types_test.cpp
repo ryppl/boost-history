@@ -1,4 +1,4 @@
-// Boost sweepline library segment_event_types_test.cpp file
+// Boost sweepline library event_types_test.cpp file
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -7,8 +7,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#include "../test_type_list.hpp"
-#include "boost/sweepline/voronoi_segment_sweepline.hpp"
+#include "test_type_list.hpp"
+#include "boost/sweepline/voronoi_sweepline.hpp"
 using namespace boost::sweepline;
 using namespace boost::sweepline::detail;
 
@@ -168,7 +168,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(circle_event_test1, T, test_types) {
 
     BOOST_CHECK_EQUAL(circle1.x(), static_cast<T>(1));
     BOOST_CHECK_EQUAL(circle1.y(), static_cast<T>(2));
-    BOOST_CHECK_EQUAL(circle1.get_lower_x(), static_cast<T>(3));
+    BOOST_CHECK_EQUAL(circle1.lower_x(), static_cast<T>(3));
 
     circle2 = make_circle_event<T>(static_cast<T>(1), static_cast<T>(2), static_cast<T>(3));
     bool arr1[] = { false, false, true, true, true, false };

@@ -1,4 +1,4 @@
-// Boost sweepline library segment_event_queue_test.cpp file
+// Boost sweepline library event_queue_test.cpp file
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -9,15 +9,15 @@
 
 #include <cmath>
 
-#include "../test_type_list.hpp"
-#include "boost/sweepline/voronoi_segment_sweepline.hpp"
+#include "test_type_list.hpp"
+#include "boost/sweepline/voronoi_sweepline.hpp"
 using namespace boost::sweepline;
 
 #define BOOST_TEST_MODULE event_queue_test
 #include <boost/test/test_case_template.hpp>
 
 #define CHECK_TOP_ELEMENT_EQUALITY(TOP, X, Y) \
-    BOOST_CHECK_EQUAL(TOP.get_lower_x() == static_cast<T>(X) && \
+    BOOST_CHECK_EQUAL(TOP.lower_x() == static_cast<T>(X) && \
                       TOP.y() == static_cast<T>(Y), true)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test1, T, test_types) {

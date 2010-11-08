@@ -1,4 +1,4 @@
-// Boost sweepline library segment_voronoi_builder_test.cpp file 
+// Boost sweepline library builder_test.cpp file 
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -10,9 +10,9 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "../test_type_list.hpp"
-#include "../voronoi_output_verification.hpp"
-#include "boost/sweepline/voronoi_segment_sweepline.hpp"
+#include "test_type_list.hpp"
+#include "output_verification.hpp"
+#include "boost/sweepline/voronoi_sweepline.hpp"
 using namespace boost::sweepline;
 
 #define BOOST_TEST_MODULE voronoi_builder_test
@@ -23,6 +23,10 @@ using namespace boost::sweepline;
                           p1.y() == static_cast<coordinate_type>(p2.y()), true)
 
 #define VERIFY_VORONOI_OUTPUT(output, mask) BOOST_CHECK_EQUAL(verify_output(output, mask), true)
+
+#define ALMOST_EQUAL_TEST(a, b, ULP_ERR, ABS_ERR) \
+        BOOST_CHECK_EQUAL(detail::almost_equal(a, b, ULP_ERR) || \
+                          detail::abs_equal(a, b, ABS_ERR), true);
 
 // Sites: (0, 0).
 BOOST_AUTO_TEST_CASE_TEMPLATE(single_site_test, T, test_types) {
@@ -316,7 +320,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(triangle_test2, T, test_types) {
 }
 
 // Sites: (0, 0), (0, 1), (1, 0), (1, 1).
-BOOST_AUTO_TEST_CASE_TEMPLATE(square_test3, T, test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(square_test1, T, test_types) {
     typedef T coordinate_type;
     typedef typename voronoi_output_clipped<coordinate_type>::voronoi_edge_type voronoi_edge_type;
     typedef typename voronoi_output_clipped<coordinate_type>::voronoi_vertex_const_iterator_type
@@ -454,6 +458,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(grid_test3, T, test_types) {
     BOOST_CHECK_EQUAL(test_output.num_edge_records, 2112);
 }
 
+#ifndef _DEBUG
 // Sites: {(x, y) | x = 0 .. 100, y = 0 .. 100}.
 BOOST_AUTO_TEST_CASE_TEMPLATE(grid_test4, T, test_types) {
     typedef T coordinate_type;
@@ -474,7 +479,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(grid_test4, T, test_types) {
     BOOST_CHECK_EQUAL(test_output.num_vertex_records, 9801);
     BOOST_CHECK_EQUAL(test_output.num_edge_records, 19800);
 }
+#endif
 
+#ifndef _DEBUG
 // Sites: {(x, y) | x = 0 .. 333, y = 0 .. 333}.
 BOOST_AUTO_TEST_CASE_TEMPLATE(grid_test5, T, test_types) {
     typedef T coordinate_type;
@@ -495,7 +502,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(grid_test5, T, test_types) {
     BOOST_CHECK_EQUAL(test_output.num_vertex_records, 110224);
     BOOST_CHECK_EQUAL(test_output.num_edge_records, 221112);
 }
+#endif
 
+#ifndef _DEBUG
 // Generate 10 random sites 10000 times.
 BOOST_AUTO_TEST_CASE_TEMPLATE(random_test1, T, test_types) {
     typedef T coordinate_type;
@@ -516,7 +525,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(random_test1, T, test_types) {
         test_beach_line.reset();
     }
 }
+#endif
 
+#ifndef _DEBUG
 // Generate 100 random sites 1000 times.
 BOOST_AUTO_TEST_CASE_TEMPLATE(random_test2, T, test_types) {
     typedef T coordinate_type;
@@ -537,7 +548,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(random_test2, T, test_types) {
         test_beach_line.reset();
     }
 }
+#endif
 
+#ifndef _DEBUG
 // Generate 1000 random sites 100 times.
 BOOST_AUTO_TEST_CASE_TEMPLATE(random_test3, T, test_types) {
     typedef T coordinate_type;
@@ -558,7 +571,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(random_test3, T, test_types) {
         test_beach_line.reset();
     }
 }
+#endif
 
+#ifndef _DEBUG
 // Generate 10000 random sites 10 times.
 BOOST_AUTO_TEST_CASE_TEMPLATE(random_test4, T, test_types) {
     typedef T coordinate_type;
@@ -579,7 +594,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(random_test4, T, test_types) {
         test_beach_line.reset();
     }
 }
+#endif
 
+#ifndef _DEBUG
 // Generate 100000 random sites.
 BOOST_AUTO_TEST_CASE_TEMPLATE(random_test5, T, test_types) {
     typedef T coordinate_type;
@@ -600,7 +617,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(random_test5, T, test_types) {
         test_beach_line.reset();
     }
 }
+#endif
 
+#ifndef _DEBUG
 // Generate 1000000 random sites.
 BOOST_AUTO_TEST_CASE_TEMPLATE(random_test6, T, test_types) {
     typedef T coordinate_type;
@@ -621,6 +640,46 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(random_test6, T, test_types) {
         test_beach_line.reset();
     }
 }
+#endif
+
+#ifndef _DEBUG
+BOOST_AUTO_TEST_CASE_TEMPLATE(random_test7, T, test_types) {
+    typedef typename voronoi_output_clipped<T>::voronoi_vertex_const_iterator_type
+        voronoi_vertex_const_iterator_type;
+    srand(static_cast<unsigned int>(time(NULL)));
+    voronoi_builder<T> test_builder;
+    voronoi_output_clipped<T> test_output_small, test_output_large;
+    std::vector< point_2d<T> > points_small, points_large;
+    int num_points = 27;
+    int md = 10;
+    int half_md = md >> 1;
+    int koef = std::numeric_limits<int>::max() / half_md;
+    for (int i = 0; i < 10000; i++) {
+        points_small.clear();
+        points_large.clear();
+        for (int j = 0; j < num_points; j++) {
+            T x_small = static_cast<T>(rand() % md - half_md);
+            T y_small = static_cast<T>(rand() % md - half_md);
+            T x_large = x_small * koef;
+            T y_large = y_small * koef;
+            points_small.push_back(make_point_2d(x_small, y_small));
+            points_large.push_back(make_point_2d(x_large, y_large));
+        }
+        test_builder.init(points_small);
+        test_builder.run_sweepline();
+        test_builder.clip(test_output_small);
+        test_builder.init(points_large);
+        test_builder.run_sweepline();
+        test_builder.clip(test_output_large);
+        VERIFY_VORONOI_OUTPUT(test_output_small, COMPLETE_VERIFICATION);
+        VERIFY_VORONOI_OUTPUT(test_output_large, COMPLETE_VERIFICATION);
+        BOOST_CHECK_EQUAL(test_output_small.num_cell_records, test_output_large.num_cell_records);
+        BOOST_CHECK_EQUAL(test_output_small.num_vertex_records, test_output_large.num_vertex_records);
+        BOOST_CHECK_EQUAL(test_output_small.num_edge_records, test_output_large.num_edge_records);
+        test_builder.reset();
+    }
+}
+#endif
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(segment_sites_test1, T, test_types) {
     typedef T coordinate_type;

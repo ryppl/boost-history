@@ -1,4 +1,4 @@
-// Boost sweepline/voronoi_segment_formation.hpp header file 
+// Boost sweepline/voronoi_formation.hpp header file 
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -18,10 +18,6 @@
         if (a >= 0) { res = static_cast<unsigned long long>(a); sign = true; } \
         else { res = static_cast<unsigned long long>(-a); sign = false; }
 
-#define INT_PREDICATE_AVOID_CANCELLATION(val, first_expr, second_expr) \
-        if ((val) >= 0) first_expr += (val); \
-        else second_expr -= (val);
-
 namespace boost {
 namespace sweepline {
 namespace detail {
@@ -31,32 +27,42 @@ namespace detail {
     ///////////////////////////////////////////////////////////////////////////
 
     template <typename T>
-    struct beach_line_node;
+    class beach_line_node;
 
     template <typename T>
-    struct beach_line_node_data;
+    class beach_line_node_data;
 
     template <typename BeachLineNode>
     struct node_comparer;
+
+    template <typename T>
+    class epsilon_robust_comparator;
 
     enum kOrientation {
         RIGHT_ORIENTATION = -1,
         COLINEAR = 0,
         LEFT_ORIENTATION = 1,
     };
+    
+    enum kPredicateResult {
+        LESS = -1,
+        UNDEFINED = 0,
+        MORE = 1,
+    };
 
     // Site event type. 
     // Occurs when sweepline sweeps over one of the initial sites.
     // Contains index of a site among the other sorted sites.
     template <typename T>
-    struct site_event {
+    class site_event {
     public:
         typedef T coordinate_type;
         typedef point_2d<T> Point2D;
 
-        site_event() : is_segment_(false),
-                       is_vertical_(true),
-                       is_inverse_(false) {}
+        site_event() :
+            is_segment_(false),
+            is_vertical_(true),
+            is_inverse_(false) {}
         
         site_event(coordinate_type x, coordinate_type y, int index) :
             point0_(x, y),
@@ -242,7 +248,7 @@ namespace detail {
     // Circle event contains circle center, lowest x coordinate, event state and
     // iterator to the corresponding bisectors.
     template <typename T>
-    struct circle_event {
+    class circle_event {
     public:
         typedef T coordinate_type;
         typedef point_2d<T> Point2D;
@@ -253,29 +259,24 @@ namespace detail {
 
         circle_event() : is_active_(true) {}
 
-        circle_event(coordinate_type c_x, coordinate_type c_y, coordinate_type lower_x) :
-            center_(c_x, c_y), lower_x_(lower_x), is_active_(true) {}
+        circle_event(coordinate_type c_x, coordinate_type c_y,
+                     coordinate_type lower_x) :
+            center_x_(c_x),
+            center_y_(c_y),
+            lower_x_(lower_x),
+            is_active_(true) {}
 
-        circle_event(const Point2D &center, coordinate_type lower_x) :
-            center_(center), lower_x_(lower_x), is_active_(true) {}
-
-        circle_event(const circle_event& c_event) {
-            center_ = c_event.center_;
-            lower_x_ = c_event.lower_x_;
-            bisector_node_ = c_event.bisector_node_;
-            is_active_ = c_event.is_active_;
-        }
-
-        void operator=(const circle_event& c_event) {
-            center_ = c_event.center_;
-            lower_x_ = c_event.lower_x_;
-            bisector_node_ = c_event.bisector_node_;
-            is_active_ = c_event.is_active_;
-        }
+        circle_event(coordinate_type c_x_pos, coordinate_type c_x_neg,
+                     coordinate_type c_y_pos, coordinate_type c_y_neg,
+                     coordinate_type lower_x_pos, coordinate_type lower_x_neg) :
+            center_x_(c_x_pos, c_x_neg), 
+            center_y_(c_y_pos, c_y_neg),
+            lower_x_(lower_x_pos, lower_x_neg),
+            is_active_(true) {}
 
         bool operator==(const circle_event &c_event) const {
-            return (center_.y() == c_event.y()) &&
-                   (lower_x_ == c_event.lower_x_);
+            return (center_y_.compare(c_event.center_y_) == UNDEFINED &&
+                    lower_x_.compare(c_event.lower_x_) == UNDEFINED);
         }
 
         bool operator!=(const circle_event &c_event) const {
@@ -283,9 +284,10 @@ namespace detail {
         }
 
         bool operator<(const circle_event &c_event) const {
-            if (lower_x_ != c_event.lower_x_)
-                return lower_x_ < c_event.lower_x_;
-            return center_.y() < c_event.y();
+            kPredicateResult pres = lower_x_.compare(c_event.lower_x_);
+            if (pres != UNDEFINED)
+                return (pres == LESS);
+            return (center_y_.compare(c_event.center_y_) == LESS);
         }
 
         bool operator<=(const circle_event &c_event) const {
@@ -304,29 +306,35 @@ namespace detail {
         // If circle point is less than site point return -1.
         // If circle point is equal to site point return 0.
         // If circle point is greater than site point return 1.
-        int compare(const site_event<coordinate_type> &s_event) const {
-            if (s_event.x() != lower_x_) {
-                return (lower_x_ < s_event.x()) ? -1 : 1;
-            }
-            if (s_event.y() != center_.y())
-                return (center_.y() < s_event.y()) ? -1 : 1;
-            return 0;
+        kPredicateResult compare(const site_event<coordinate_type> &s_event) const {
+            kPredicateResult pres = lower_x_.compare(s_event.x());
+            if (pres != UNDEFINED)
+                return pres;
+            return center_y_.compare(s_event.y());
         }
 
         coordinate_type x() const {
-            return center_.x();
+            return center_x_.get_dif();
         }
 
         coordinate_type y() const {
-            return center_.y();
+            return center_y_.get_dif();
         }
 
-        const Point2D &get_center() const {
-            return center_;
+        coordinate_type lower_x() const {
+            return lower_x_.get_dif();
         }
 
-        const coordinate_type &get_lower_x() const {
-            return lower_x_;
+        Point2D get_center() const {
+            return make_point_2d(x(), y());
+        }
+
+        const epsilon_robust_comparator<T> &get_erc_x() const {
+            return center_x_;
+        }
+
+        const epsilon_robust_comparator<T> &get_erc_y() const {
+            return center_y_;
         }
 
         void set_bisector(beach_line_iterator iterator) {
@@ -346,8 +354,9 @@ namespace detail {
         }
 
     private:
-        Point2D center_;
-        coordinate_type lower_x_;
+        epsilon_robust_comparator<T> center_x_;
+        epsilon_robust_comparator<T> center_y_;
+        epsilon_robust_comparator<T> lower_x_;
         beach_line_iterator bisector_node_;
         bool is_active_;
     };
@@ -355,11 +364,6 @@ namespace detail {
     template <typename T>
     circle_event<T> make_circle_event(T c_x, T c_y, T lower_x) {
         return circle_event<T>(c_x, c_y, lower_x);
-    }
-
-    template <typename T>
-    circle_event<T> make_circle_event(point_2d<T> center, T lower_x) {
-        return circle_event<T>(center, lower_x);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -431,11 +435,21 @@ namespace detail {
     ///////////////////////////////////////////////////////////////////////////
     // GEOMETRY PREDICATES ////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
+    inline static void avoid_cancellation(double value, double &left_expr, double &right_expr) {
+        if (value >= 0)
+            left_expr += value;
+        else
+            right_expr -= value;
+    }
+
+    inline static bool abs_equal(double a, double b, double abs_error) {
+        return fabs(a - b) < abs_error;
+    }
 
     // If two floating-point numbers in the same format are ordered (x < y), then
     // they are ordered the same way when their bits are reinterpreted as
     // sign-magnitude integers.
-    bool almost_equal(double a, double b, long long maxUlps) {
+    static bool almost_equal(double a, double b, int maxUlps) {
         long long ll_a, ll_b;
         // Reinterpret double bits as long long.
         memcpy(&ll_a, &a, sizeof(double));
@@ -460,9 +474,9 @@ namespace detail {
     // TODO(asydorchuk): Make templates specification for integer coordinate type,
     // as it is actually working with integer input.
     template <typename T>
-    kOrientation orientation_test(const point_2d<T> &point1,
-                                  const point_2d<T> &point2,
-                                  const point_2d<T> &point3) {
+    static kOrientation orientation_test(const point_2d<T> &point1,
+                                         const point_2d<T> &point2,
+                                         const point_2d<T> &point3) {
         typedef long long ll;
         typedef unsigned long long ull;
         ull dif_x1, dif_x2, dif_y1, dif_y2;
@@ -505,8 +519,8 @@ namespace detail {
         }
     }
 
-	template <typename T>
-    kOrientation orientation_test(T dif_x1_, T dif_y1_, T dif_x2_, T dif_y2_) {
+    template <typename T>
+    static kOrientation orientation_test(T dif_x1_, T dif_y1_, T dif_x2_, T dif_y2_) {
         typedef unsigned long long ull;
         ull dif_x1, dif_y1, dif_x2, dif_y2;
         bool dif_x1_plus, dif_x2_plus, dif_y1_plus, dif_y2_plus;
@@ -541,16 +555,16 @@ namespace detail {
         }
     }
 
-	template <typename T>
-	kOrientation orientation_test(T value) {
-		if (value == static_cast<T>(0.0))
-			return COLINEAR;
-		return (value < static_cast<T>(0.0)) ? RIGHT_ORIENTATION : LEFT_ORIENTATION;
-	}
+    template <typename T>
+    static kOrientation orientation_test(T value) {
+        if (value == static_cast<T>(0.0))
+            return COLINEAR;
+        return (value < static_cast<T>(0.0)) ? RIGHT_ORIENTATION : LEFT_ORIENTATION;
+    }
 
-	template <typename T>
-	T robust_cross_product(T a1_, T b1_, T a2_, T b2_) {
-		typedef unsigned long long ull;
+    template <typename T>
+    static T robust_cross_product(T a1_, T b1_, T a2_, T b2_) {
+        typedef unsigned long long ull;
         ull a1, b1, a2, b2;
         bool a1_plus, a2_plus, b1_plus, b2_plus;
         INT_PREDICATE_CONVERT_65_BIT(a1_, a1, a1_plus);
@@ -558,12 +572,12 @@ namespace detail {
         INT_PREDICATE_CONVERT_65_BIT(a2_, a2, a2_plus);
         INT_PREDICATE_CONVERT_65_BIT(b2_, b2, b2_plus);
 
-		ull expr_l = a1 * b2;
+        ull expr_l = a1 * b2;
         bool expr_l_plus = (a1_plus == b2_plus) ? true : false;
         ull expr_r = b1 * a2;
         bool expr_r_plus = (a2_plus == b1_plus) ? true : false;
 
-		if (expr_l == 0)
+        if (expr_l == 0)
             expr_l_plus = true;
         if (expr_r == 0)
             expr_r_plus = true;
@@ -571,25 +585,67 @@ namespace detail {
         if ((expr_l_plus == expr_r_plus) && (expr_l == expr_r))
             return static_cast<T>(0.0);
 
-		if (!expr_l_plus) {
+        if (!expr_l_plus) {
             if (expr_r_plus)
                 return -static_cast<double>(expr_l) - static_cast<double>(expr_r);
             else
-				return (expr_l > expr_r) ? -static_cast<double>(expr_l - expr_r) :
-										   static_cast<double>(expr_r - expr_l);
+                return (expr_l > expr_r) ? -static_cast<double>(expr_l - expr_r) :
+                                           static_cast<double>(expr_r - expr_l);
         } else {
             if (!expr_r_plus)
                 return static_cast<double>(expr_l) + static_cast<double>(expr_r);
             else
-				return (expr_l < expr_r) ? -static_cast<double>(expr_r - expr_l) :
-										   static_cast<double>(expr_l - expr_r);
-		}
-	}
+                return (expr_l < expr_r) ? -static_cast<double>(expr_r - expr_l) :
+                                           static_cast<double>(expr_l - expr_r);
+        }
+    }
 
-    enum kPredicateResult {
-        LESS = -1,
-        UNDEFINED = 0,
-        MORE = 1,
+    template <typename T>
+    class epsilon_robust_comparator {
+    public:
+        epsilon_robust_comparator() : 
+          positive_sum_(0),
+          negative_sum_(0) {}
+
+        epsilon_robust_comparator(T value) : 
+          positive_sum_((value>0)?value:0),
+          negative_sum_((value<0)?-value:0) {}
+
+        epsilon_robust_comparator(T pos, T neg) :
+          positive_sum_(pos),
+          negative_sum_(neg) {}
+
+        T get_dif() const {
+            return positive_sum_ - negative_sum_;
+        }
+
+        T get_positive_sum() const {
+            return positive_sum_;
+        }
+
+        T get_negative_sum() const {
+            return negative_sum_;
+        }
+
+        kPredicateResult compare(T value, int ulp = 0) const {
+            T lhs = positive_sum_ - ((value < 0) ? value : 0);
+            T rhs = negative_sum_ + ((value > 0) ? value : 0);
+            if (almost_equal(lhs, rhs, ulp))
+                return UNDEFINED;
+            return (lhs < rhs) ? LESS : MORE;
+        }
+
+        kPredicateResult compare(const epsilon_robust_comparator &rc, int ulp = 0) const {
+            T lhs = positive_sum_ + rc.get_negative_sum();
+            T rhs = negative_sum_ + rc.get_positive_sum();
+            if (almost_equal(lhs, rhs, ulp))
+                return UNDEFINED;
+            return (lhs < rhs) ? LESS : MORE;
+        }
+
+    private:
+        T positive_sum_;
+        T negative_sum_;
     };
 
     // Returns true if horizontal line going through new site intersects
@@ -604,9 +660,9 @@ namespace detail {
     // at first if x2(y*) > x1(y*) or:
     // (x0-x2)*(x0-x1)*(x1-x2) + (x0-x2)*(y*-y1)^2 < (x0-x1)*(y*-y2)^2.
     template <typename T>
-    kPredicateResult fast_less_predicate(const point_2d<T> &left_point,
-                                         const point_2d<T> &right_point,
-                                         const point_2d<T> &new_point) {
+    static kPredicateResult fast_less_predicate(const point_2d<T> &left_point,
+                                                const point_2d<T> &right_point,
+                                                const point_2d<T> &new_point) {
         double fast_a1 = static_cast<double>(new_point.x()) - static_cast<double>(left_point.x());
         double fast_a2 = static_cast<double>(new_point.x()) - static_cast<double>(right_point.x());
         double fast_b1 = static_cast<double>(new_point.y()) - static_cast<double>(left_point.y());
@@ -616,17 +672,16 @@ namespace detail {
         double fast_right_expr = fast_a2 * fast_b1 * fast_b1;
         
         // Avoid cancellation.
-        INT_PREDICATE_AVOID_CANCELLATION(fast_a1 * fast_a2 * fast_c,
-                                         fast_left_expr, fast_right_expr);
+        avoid_cancellation(fast_a1 * fast_a2 * fast_c, fast_left_expr, fast_right_expr);
         if (!almost_equal(fast_left_expr, fast_right_expr, 5))
             return (fast_left_expr < fast_right_expr) ? LESS : MORE;
         return UNDEFINED;
     }
 
     template <typename T>
-    bool less_predicate(const point_2d<T> &left_point,
-                        const point_2d<T> &right_point,
-                        const point_2d<T> &new_point) {
+    static bool less_predicate(const point_2d<T> &left_point,
+                               const point_2d<T> &right_point,
+                               const point_2d<T> &new_point) {
         kPredicateResult fast_res = fast_less_predicate(left_point, right_point, new_point);
         if (fast_res != UNDEFINED)
             return (fast_res == LESS);
@@ -683,8 +738,8 @@ namespace detail {
     }
 
     template <typename T>
-    kPredicateResult fast_less_predicate(point_2d<T> site_point, site_event<T> segment_site,
-                                         point_2d<T> new_point, bool reverse_order) {
+    static kPredicateResult fast_less_predicate(point_2d<T> site_point, site_event<T> segment_site,
+                                                point_2d<T> new_point, bool reverse_order) {
         typedef long long ll;
         typedef unsigned long long ull;
         if (orientation_test(segment_site.get_point0(true), segment_site.get_point1(true),
@@ -788,8 +843,9 @@ namespace detail {
 
 #ifdef USE_MULTI_PRECISION_LIBRARY
     template<typename T>
-    bool mpz_less_predicate(point_2d<T> segment_start, point_2d<T> segment_end,
-                            point_2d<T> site_point, point_2d<T> new_point, bool reverse_order) {
+    static bool mpz_less_predicate(point_2d<T> segment_start, point_2d<T> segment_end,
+                                   point_2d<T> site_point, point_2d<T> new_point,
+                                   bool reverse_order) {
         mpz_class segment_start_x, segment_start_y, segment_end_x, segment_end_y,
                   site_point_x, site_point_y, new_point_x, new_point_y;
         segment_start_x = static_cast<int>(segment_start.x());
@@ -826,8 +882,8 @@ namespace detail {
     // (point, segment) and (segment, point) are two distinct points, except
     // case of vertical segment.
     template <typename T>
-    bool less_predicate(point_2d<T> site_point, site_event<T> segment_site,
-                        point_2d<T> new_point, bool reverse_order) {
+    static bool less_predicate(point_2d<T> site_point, site_event<T> segment_site,
+                               point_2d<T> new_point, bool reverse_order) {
         kPredicateResult fast_res = fast_less_predicate(
             site_point, segment_site, new_point, reverse_order);
         if (fast_res != UNDEFINED) {
@@ -853,8 +909,8 @@ namespace detail {
         double left_expr = (a_sqr * temp + (4.0 * dif_x * mul1) * b_sqr) * temp;
         double right_expr = (4.0 * dif_x * dif_x) * ((mul1 * mul1) * b_sqr + (mul2 * mul2) * a_sqr);
         double common_expr = (4.0 * dif_x * a) * (b * mul2);
-        INT_PREDICATE_AVOID_CANCELLATION(common_expr * temp, right_expr, left_expr);
-        INT_PREDICATE_AVOID_CANCELLATION(common_expr * (2.0 * dif_x * mul1), left_expr, right_expr);
+        avoid_cancellation(common_expr * temp, right_expr, left_expr);
+        avoid_cancellation(common_expr * (2.0 * dif_x * mul1), left_expr, right_expr);
 
         if (!almost_equal(left_expr, right_expr, 18)) {
             if (!reverse_order)
@@ -871,7 +927,9 @@ namespace detail {
     }
 
     template <typename T>
-    bool less_predicate(site_event<T> left_site, site_event<T> right_site, point_2d<T> new_point) {
+    static bool less_predicate(site_event<T> left_site,
+                               site_event<T> right_site,
+                               point_2d<T> new_point) {
         if (left_site.get_site_index() == right_site.get_site_index()) {
             return orientation_test(left_site.get_point0(), left_site.get_point1(),
                 new_point) == LEFT_ORIENTATION;
@@ -910,9 +968,9 @@ namespace detail {
                     mul1 = 1.0 / (b1 - mul1);
                 }
             }
-            INT_PREDICATE_AVOID_CANCELLATION(a1 * mul1 * static_cast<double>(new_point.y()),
+            avoid_cancellation(a1 * mul1 * static_cast<double>(new_point.y()),
                                              intersection_x1, intersection_x2);
-            INT_PREDICATE_AVOID_CANCELLATION(-c1 * mul1, intersection_x1, intersection_x2);
+            avoid_cancellation(-c1 * mul1, intersection_x1, intersection_x2);
         }
 
         double a2 = static_cast<double>(segment2_end.x()) -
@@ -941,9 +999,9 @@ namespace detail {
                     mul2 = 1.0 / (b2 - mul2);
                 }
             }
-            INT_PREDICATE_AVOID_CANCELLATION(a2 * static_cast<double>(new_point.y()) * mul2,
+            avoid_cancellation(a2 * static_cast<double>(new_point.y()) * mul2,
                                              intersection_x2, intersection_x1);
-            INT_PREDICATE_AVOID_CANCELLATION(-c2 * mul2, intersection_x2, intersection_x1);
+            avoid_cancellation(-c2 * mul2, intersection_x2, intersection_x1);
         }
 
         if (!almost_equal(intersection_x1, intersection_x2, 20)) {
@@ -957,6 +1015,10 @@ namespace detail {
     ///////////////////////////////////////////////////////////////////////////
     // CIRCLE EVENTS CREATION /////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    inline static T get_sqr_distance(T dif_x, T dif_y) {
+        return dif_x * dif_x + dif_y * dif_y;
+    }
 
     // Create circle event from three point sites.
     // TODO (asydorchuk): make precision optimizations.
@@ -965,27 +1027,43 @@ namespace detail {
                                         const site_event<T> &site2,
                                         const site_event<T> &site3,
                                         circle_event<T> &c_event) {
-        double dif_x1 = static_cast<double>(site1.x()) -
-                        static_cast<double>(site2.x());
-        double dif_x2 = static_cast<double>(site2.x()) -
-                        static_cast<double>(site3.x());
-        double dif_y1 = static_cast<double>(site1.y()) -
-                        static_cast<double>(site2.y());
-        double dif_y2 = static_cast<double>(site2.y()) -
-                        static_cast<double>(site3.y());
-		double orientation = robust_cross_product(dif_x1, dif_y1, dif_x2, dif_y2);
+        double dif_x1 = static_cast<double>(site1.x()) - static_cast<double>(site2.x());
+        double dif_x2 = static_cast<double>(site2.x()) - static_cast<double>(site3.x());
+        double dif_y1 = static_cast<double>(site1.y()) - static_cast<double>(site2.y());
+        double dif_y2 = static_cast<double>(site2.y()) - static_cast<double>(site3.y());
+        double orientation = robust_cross_product(dif_x1, dif_y1, dif_x2, dif_y2);
         if (orientation_test(orientation) != RIGHT_ORIENTATION)
             return false;
-		orientation *= 2.0;
-        double b1 = dif_x1 * (site1.x() + site2.x()) + dif_y1 * (site1.y() + site2.y());
-        double b2 = dif_x2 * (site2.x() + site3.x()) + dif_y2 * (site2.y() + site3.y());
-
-        // Create new circle event.
-        double c_x = (b1*dif_y2 - b2*dif_y1) / orientation;
-        double c_y = (b2*dif_x1 - b1*dif_x2) / orientation;
-        double radius = sqrt((c_x-site2.x())*(c_x-site2.x()) +
-                             (c_y-site2.y())*(c_y-site2.y()));
-        c_event = make_circle_event<double>(c_x, c_y, c_x + radius);
+        double inv_orientation = 0.5 / orientation;
+        double sum_x1 = static_cast<double>(site1.x()) + static_cast<double>(site2.x());
+        double sum_x2 = static_cast<double>(site2.x()) + static_cast<double>(site3.x());
+        double sum_y1 = static_cast<double>(site1.y()) + static_cast<double>(site2.y());
+        double sum_y2 = static_cast<double>(site2.y()) + static_cast<double>(site3.y());
+        double dif_x3 = static_cast<double>(site1.x()) - static_cast<double>(site3.x());
+        double dif_y3 = static_cast<double>(site1.y()) - static_cast<double>(site3.y());
+        double c_x_pos, c_x_neg, c_y_pos, c_y_neg;
+        c_x_pos = c_x_neg = c_y_pos = c_y_neg = 0;
+        detail::avoid_cancellation(dif_x1 * sum_x1 * dif_y2, c_x_pos, c_x_neg);
+        detail::avoid_cancellation(dif_y1 * sum_y1 * dif_y2, c_x_pos, c_x_neg);
+        detail::avoid_cancellation(dif_x2 * sum_x2 * dif_y1, c_x_neg, c_x_pos);
+        detail::avoid_cancellation(dif_y2 * sum_y2 * dif_y1, c_x_neg, c_x_pos);
+        detail::avoid_cancellation(dif_x2 * sum_x2 * dif_x1, c_y_pos, c_y_neg);
+        detail::avoid_cancellation(dif_y2 * sum_y2 * dif_x1, c_y_pos, c_y_neg);
+        detail::avoid_cancellation(dif_x1 * sum_x1 * dif_x2, c_y_neg, c_y_pos);
+        detail::avoid_cancellation(dif_y1 * sum_y1 * dif_x2, c_y_neg, c_y_pos);
+        if (orientation < 0) {
+            (std::swap)(c_x_pos, c_x_neg);
+            (std::swap)(c_y_pos, c_y_neg);
+            inv_orientation = -inv_orientation;
+        }
+        c_x_pos *= inv_orientation;
+        c_x_neg *= inv_orientation;
+        c_y_pos *= inv_orientation;
+        c_y_neg *= inv_orientation;
+        double radius = sqrt(get_sqr_distance(dif_x1, dif_y1) * get_sqr_distance(dif_x2, dif_y2) *
+                             get_sqr_distance(dif_x3, dif_y3)) * fabs(inv_orientation);
+        c_event = circle_event<double>(c_x_pos, c_x_neg, c_y_pos, c_y_neg,
+                                       c_x_pos + radius, c_x_neg);
         return true;
     }
 
@@ -1015,19 +1093,19 @@ namespace detail {
         double line_b = site3.get_point0().x() - site3.get_point1().x();
         double vec_x = site2.y() - site1.y();
         double vec_y = site1.x() - site2.x();
-		double teta = robust_cross_product(line_a, line_b, -vec_y, vec_x);
-		double A = robust_cross_product(line_a, line_b,
-			site3.get_point1().y() - site1.y(), 
-			site1.x() - site3.get_point1().x());
-		double B = robust_cross_product(line_a, line_b,
-			site3.get_point1().y() - site2.y(),
-			site2.x() - site3.get_point1().x());
-		double denom = robust_cross_product(vec_x, vec_y, line_a, line_b);
-		double t;
+        double teta = robust_cross_product(line_a, line_b, -vec_y, vec_x);
+        double A = robust_cross_product(line_a, line_b,
+            site3.get_point1().y() - site1.y(), 
+            site1.x() - site3.get_point1().x());
+        double B = robust_cross_product(line_a, line_b,
+            site3.get_point1().y() - site2.y(),
+            site2.x() - site3.get_point1().x());
+        double denom = robust_cross_product(vec_x, vec_y, line_a, line_b);
+        double t;
         if (orientation_test(denom) == COLINEAR) {
             t = (teta * teta - 4.0 * A * B) / (4.0 * teta * (A + B));;
         } else {
-			double det = sqrt((teta * teta + denom * denom) * A * B);
+            double det = sqrt((teta * teta + denom * denom) * A * B);
             if (segment_index == 2)
                 det = -det;
             t = (teta * (A + B) + 2.0 * det) / (2.0 * denom * denom);
@@ -1037,9 +1115,9 @@ namespace detail {
 
         double radius = sqrt((c_x-site2.x())*(c_x-site2.x()) +
                              (c_y-site2.y())*(c_y-site2.y()));
-		double lower_x = (site3.is_vertical() && site3.is_inverse()) ?
-			site3.get_point0().x() : c_x + radius;
-        c_event = make_circle_event<double>(c_x, c_y, lower_x);
+        double lower_x = (site3.is_vertical() && site3.is_inverse()) ?
+            site3.get_point0().x() : c_x + radius;
+        c_event = circle_event<double>(c_x, c_y, lower_x);
         return true;
     }
 
@@ -1055,27 +1133,27 @@ namespace detail {
         if (site2.get_site_index() == site3.get_site_index()) {
             return false;
         }
-		const point_2d<T> &site = site1.get_point0();		
+        const point_2d<T> &site = site1.get_point0();		
         const point_2d<T> &segm_start1 = site2.get_point1(true);
         const point_2d<T> &segm_end1 = site2.get_point0(true);
         const point_2d<T> &segm_start2 = site3.get_point0(true);
         const point_2d<T> &segm_end2 = site3.get_point1(true);
 
-		if (point_index != 2) {
-			if (orientation_test(segm_start1, segm_start2, site) == LEFT_ORIENTATION &&
-				orientation_test(segm_end1, segm_end2, site) == LEFT_ORIENTATION &&
-				orientation_test(segm_start1, segm_end2, site) == LEFT_ORIENTATION &&
-				orientation_test(segm_end1, segm_start2, site) == LEFT_ORIENTATION) {
-				return false;
-			}
-		} else {
-			if ((orientation_test(segm_end1, segm_start1, segm_start2) != RIGHT_ORIENTATION &&
-			     orientation_test(segm_end1, segm_start1, segm_end2) != RIGHT_ORIENTATION) ||
-			    (orientation_test(segm_start2, segm_end2, segm_start1) != RIGHT_ORIENTATION &&
-			     orientation_test(segm_start2, segm_end2, segm_end1) != RIGHT_ORIENTATION)) {
-			    return false;
-			}
-		}
+        if (point_index != 2) {
+            if (orientation_test(segm_start1, segm_start2, site) == LEFT_ORIENTATION &&
+                orientation_test(segm_end1, segm_end2, site) == LEFT_ORIENTATION &&
+                orientation_test(segm_start1, segm_end2, site) == LEFT_ORIENTATION &&
+                orientation_test(segm_end1, segm_start2, site) == LEFT_ORIENTATION) {
+                return false;
+            }
+        } else {
+            if ((orientation_test(segm_end1, segm_start1, segm_start2) != RIGHT_ORIENTATION &&
+                 orientation_test(segm_end1, segm_start1, segm_end2) != RIGHT_ORIENTATION) ||
+                (orientation_test(segm_start2, segm_end2, segm_start1) != RIGHT_ORIENTATION &&
+                 orientation_test(segm_start2, segm_end2, segm_end1) != RIGHT_ORIENTATION)) {
+                return false;
+            }
+        }
 
         double a1 = static_cast<double>(segm_end1.x() - segm_start1.x());
         double b1 = static_cast<double>(segm_end1.y() - segm_start1.y());
@@ -1094,22 +1172,22 @@ namespace detail {
                        b1 * ((static_cast<double>(segm_start1.y()) +
                               static_cast<double>(segm_start2.y())) * 0.5 -
                               static_cast<double>(site1.y()));
-			double c = robust_cross_product(b1, a1, segm_start2.y() - segm_start1.y(),
-										    segm_start2.x() - segm_start1.x());
-			double det = robust_cross_product(a1, b1, site1.x() - segm_start1.x(),
-											  site1.y() - segm_start1.y()) *
-					     robust_cross_product(b1, a1, site1.y() - segm_start2.y(),
-											  site1.x() - segm_start2.x());
+            double c = robust_cross_product(b1, a1, segm_start2.y() - segm_start1.y(),
+                                            segm_start2.x() - segm_start1.x());
+            double det = robust_cross_product(a1, b1, site1.x() - segm_start1.x(),
+                                              site1.y() - segm_start1.y()) *
+                         robust_cross_product(b1, a1, site1.y() - segm_start2.y(),
+                                              site1.x() - segm_start2.x());
             double t = ((point_index == 2) ? (-b + sqrt(det)) : (-b - sqrt(det))) / a;
             double c_x = 0.5 * (static_cast<double>(segm_start1.x() + segm_start2.x())) + a1 * t;
             double c_y = 0.5 * (static_cast<double>(segm_start1.y() + segm_start2.y())) + b1 * t;
             double radius = 0.5 * fabs(c) / sqrt(a);
-            c_event = make_circle_event<double>(c_x, c_y, c_x + radius);
+            c_event = circle_event<double>(c_x, c_y, c_x + radius);
             return true;
         } else {
             double c1 = robust_cross_product(b1, a1, segm_end1.y(), segm_end1.x());
-			double c2 = robust_cross_product(a2, b2, segm_end2.x(), segm_end2.y());
-			double denom = robust_cross_product(b1, a1, b2, a2);
+            double c2 = robust_cross_product(a2, b2, segm_end2.x(), segm_end2.y());
+            double denom = robust_cross_product(b1, a1, b2, a2);
             double intersection_x = (c1 * a2 + a1 * c2) / denom;
             double intersection_y = (b1 * c2 + b2 * c1) / denom;
             double sqr_sum1 = sqrt(a1 * a1 + b1 * b1);
@@ -1125,7 +1203,7 @@ namespace detail {
             double c_x = intersection_x + vec_x * t;
             double c_y = intersection_y + vec_y * t;
             double radius = fabs(denom * t);
-            c_event = make_circle_event<double>(c_x, c_y, c_x + radius);
+            c_event = circle_event<double>(c_x, c_y, c_x + radius);
             return true;
         }
     }
@@ -1165,7 +1243,7 @@ namespace detail {
         double c_x = (vec_a1 * vec_c2 - vec_c1 * vec_a2) / det;
         double c_y = (vec_b1 * vec_c2 - vec_c1 * vec_b2) / det;
         double radius = fabs(-b2 * c_x + a2 * c_y + c2) / sqr_sum2;
-        c_event = make_circle_event<double>(c_x, c_y, c_x + radius);
+        c_event = circle_event<double>(c_x, c_y, c_x + radius);
         return true;
     }
 
@@ -1183,7 +1261,7 @@ namespace detail {
     // In general case two arcs will create two different bisectors. That's why
     // the order of arcs is important to define unique bisector.
     template <typename T>
-    struct beach_line_node {
+    class beach_line_node {
     public:
         typedef T coordinate_type;
         typedef point_2d<T> Point2D;
@@ -1306,25 +1384,34 @@ namespace detail {
     // Represents edge data sturcture (bisector segment), which is
     // associated with beach line node key in the binary search tree.
     template <typename T>
-    struct beach_line_node_data {
-        voronoi_edge<T> *edge;
-        typename circle_events_queue<T>::circle_event_type_it circle_event_it;
-        bool contains_circle_event;
-
+    class beach_line_node_data {
+    public:
         explicit beach_line_node_data(voronoi_edge<T> *new_edge) :
-            edge(new_edge),
-            contains_circle_event(false) {}
+            edge_(new_edge),
+            contains_circle_event_(false) {}
 
         void activate_circle_event(typename circle_events_queue<T>::circle_event_type_it it) {
-            circle_event_it = it;
-            contains_circle_event = true;
+            circle_event_it_ = it;
+            contains_circle_event_ = true;
         }
 
         void deactivate_circle_event() {
-            if (contains_circle_event)
-                circle_event_it->deactivate();
-            contains_circle_event = false;
+            if (contains_circle_event_)
+                circle_event_it_->deactivate();
+            contains_circle_event_ = false;
         }
+
+        voronoi_edge<T> *get_edge() const {
+            return edge_;
+        }
+
+        void set_edge(voronoi_edge<T> *new_edge) {
+            edge_ = new_edge;
+        }
+    private:
+        typename circle_events_queue<T>::circle_event_type_it circle_event_it_;
+        voronoi_edge<T> *edge_;
+        bool contains_circle_event_;
     };
 
     template <typename BeachLineNode>
@@ -1373,36 +1460,42 @@ namespace detail {
     ///////////////////////////////////////////////////////////////////////////
     // VORONOI OUTPUT /////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
-	template <typename T>
-	struct voronoi_cell {
-		typedef T coordinate_type;
-		typedef site_event<T> site_event_type;
+    template <typename T>
+    struct voronoi_cell {
+        typedef T coordinate_type;
+        typedef site_event<T> site_event_type;
 
-		voronoi_edge<coordinate_type> *incident_edge;
-		site_event_type site;
-		int num_incident_edges;
+        voronoi_edge<coordinate_type> *incident_edge;
+        site_event_type site;
+        int num_incident_edges;
 
-		voronoi_cell(const site_event_type &new_site, voronoi_edge<coordinate_type>* edge) :
-			incident_edge(edge),
-			site(new_site),
-			num_incident_edges(0) {}
-	};
+        voronoi_cell(const site_event_type &new_site, voronoi_edge<coordinate_type>* edge) :
+            incident_edge(edge),
+            site(new_site),
+            num_incident_edges(0) {}
+    };
 
-	template <typename T>
-	struct voronoi_vertex {
-		typedef T coordinate_type;
-		typedef point_2d<T> Point2D;
+    template <typename T>
+    struct voronoi_vertex {
+        typedef T coordinate_type;
+        typedef point_2d<T> Point2D;
 
-		voronoi_edge<coordinate_type> *incident_edge;
-		Point2D vertex;
-		int num_incident_edges;
-	    typename std::list< voronoi_vertex<coordinate_type> >::iterator voronoi_record_it;
+        voronoi_edge<coordinate_type> *incident_edge;
+        epsilon_robust_comparator<T> center_x;
+        epsilon_robust_comparator<T> center_y;
+        Point2D vertex;
+        int num_incident_edges;
+        typename std::list< voronoi_vertex<coordinate_type> >::iterator voronoi_record_it;
 
-		voronoi_vertex(const Point2D &point, voronoi_edge<coordinate_type>* edge) :
-			incident_edge(edge),
-			vertex(point),
-			num_incident_edges(0) {}
-	};
+        voronoi_vertex(const epsilon_robust_comparator<T> &c_x,
+                       const epsilon_robust_comparator<T> &c_y,
+                       voronoi_edge<coordinate_type>* edge) :
+            incident_edge(edge),
+            center_x(c_x),
+            center_y(c_y),
+            vertex(c_x.get_dif(), c_y.get_dif()),
+            num_incident_edges(0) {}
+    };
 
     // Half-edge data structure. Represents voronoi edge.
     // Contains: 1) pointer to cell records;
@@ -1416,8 +1509,8 @@ namespace detail {
     struct voronoi_edge {
         typedef T coordinate_type;
         typedef point_2d<T> Point2D;
-		typedef voronoi_cell<coordinate_type> voronoi_cell_type;
-		typedef voronoi_vertex<coordinate_type> voronoi_vertex_type;
+        typedef voronoi_cell<coordinate_type> voronoi_cell_type;
+        typedef voronoi_vertex<coordinate_type> voronoi_vertex_type;
         typedef voronoi_edge<coordinate_type> voronoi_edge_type;
         typedef voronoi_edge_clipped<coordinate_type> voronoi_edge_clipped_type;
 
@@ -1454,15 +1547,15 @@ namespace detail {
         typedef site_event<coordinate_type> site_event_type;
         typedef circle_event<coordinate_type> circle_event_type;
 
-		typedef voronoi_cell<coordinate_type> voronoi_cell_type;
-		typedef std::list<voronoi_cell_type> voronoi_cells_type;
-		typedef typename voronoi_cells_type::iterator voronoi_cell_iterator_type;
-		typedef typename voronoi_cells_type::const_iterator voronoi_cell_const_iterator_type;
+        typedef voronoi_cell<coordinate_type> voronoi_cell_type;
+        typedef std::list<voronoi_cell_type> voronoi_cells_type;
+        typedef typename voronoi_cells_type::iterator voronoi_cell_iterator_type;
+        typedef typename voronoi_cells_type::const_iterator voronoi_cell_const_iterator_type;
 
-		typedef voronoi_vertex<coordinate_type> voronoi_vertex_type;
-		typedef std::list<voronoi_vertex_type> voronoi_vertices_type;
-		typedef typename voronoi_vertices_type::iterator voronoi_vertex_iterator_type;
-		typedef typename voronoi_vertices_type::const_iterator voronoi_vertex_const_iterator_type;
+        typedef voronoi_vertex<coordinate_type> voronoi_vertex_type;
+        typedef std::list<voronoi_vertex_type> voronoi_vertices_type;
+        typedef typename voronoi_vertices_type::iterator voronoi_vertex_iterator_type;
+        typedef typename voronoi_vertices_type::const_iterator voronoi_vertex_const_iterator_type;
 
         typedef voronoi_edge<coordinate_type> edge_type;
         typedef voronoi_edge_clipped<coordinate_type> clipped_edge_type;
@@ -1470,8 +1563,8 @@ namespace detail {
         typedef typename voronoi_edges_type::iterator edges_iterator_type;
 
         typedef voronoi_cell_clipped<coordinate_type> clipped_voronoi_cell_type;
-		typedef voronoi_vertex_clipped<coordinate_type> clipped_voronoi_vertex_type;
-		typedef voronoi_edge_clipped<coordinate_type> clipped_voronoi_edge_type;
+        typedef voronoi_vertex_clipped<coordinate_type> clipped_voronoi_vertex_type;
+        typedef voronoi_edge_clipped<coordinate_type> clipped_voronoi_edge_type;
 
         voronoi_output() {
             num_cell_records_ = 0;
@@ -1536,14 +1629,14 @@ namespace detail {
                     cell_records_.end(), voronoi_cell_type(site1, &edge1)));
                 num_cell_records_++;
                 voronoi_rect_ = BRect<coordinate_type>(site1.get_point0(), site1.get_point0());
-			}
-			cell_iterators_[site_index1]->num_incident_edges++;
+            }
+            cell_iterators_[site_index1]->num_incident_edges++;
 
             // Update bounding rectangle.
-			voronoi_rect_.update(site2.get_point0());
-			if (site2.is_segment()) {
-				voronoi_rect_.update(site2.get_point1());	
-			}
+            voronoi_rect_.update(site2.get_point0());
+            if (site2.is_segment()) {
+                voronoi_rect_.update(site2.get_point1());	
+            }
 
             // Second site represents new site during site event processing.
             // Add new cell to the cell records vector.
@@ -1567,7 +1660,6 @@ namespace detail {
                                    const circle_event_type &circle,
                                    edge_type *edge12,
                                    edge_type *edge23) {
-		    //voronoi_rect_.update(circle.get_center());
             // Update counters.
             num_vertex_records_++;
             num_edges_++;
@@ -1576,7 +1668,8 @@ namespace detail {
             //voronoi_rect_.update(circle.get_center());
 
             // Add new voronoi vertex with point at center of the circle.
-            vertex_records_.push_back(voronoi_vertex_type(circle.get_center(), edge12));
+            vertex_records_.push_back(voronoi_vertex_type(
+                circle.get_erc_x(), circle.get_erc_y(), edge12));
             voronoi_vertex_type &new_vertex = vertex_records_.back();
             new_vertex.num_incident_edges = 3;
             new_vertex.voronoi_record_it = vertex_records_.end();
@@ -1688,36 +1781,39 @@ namespace detail {
             // Iterate over all edges and remove degeneracies.
             while (edge_it != edges_.end()) {
                 edge_it1 = edge_it;
-				std::advance(edge_it, 2);
+                std::advance(edge_it, 2);
 
                 if (edge_it1->start_point && edge_it1->end_point &&
-                    edge_it1->start_point->vertex == edge_it1->end_point->vertex) {
+                    edge_it1->start_point->center_x.compare(
+                        edge_it1->end_point->center_x, 128) == UNDEFINED &&
+                    edge_it1->start_point->center_y.compare(
+                        edge_it1->end_point->center_y, 128) == UNDEFINED) {
                     // Decrease number of cell incident edges.
                     edge_it1->cell->num_incident_edges--;
                     edge_it1->twin->cell->num_incident_edges--;
 
                     // To guarantee N*lon(N) time we merge vertex with
                     // less incident edges to the one with more.
-					if (edge_it1->cell->incident_edge == &(*edge_it1)) {
-						if (edge_it1->cell->incident_edge == edge_it1->next) {
-							edge_it1->cell->incident_edge = NULL;
-						} else {
-							edge_it1->cell->incident_edge = edge_it1->next;
-						}
-					}
-					if (edge_it1->twin->cell->incident_edge == edge_it1->twin) {
-						if (edge_it1->twin->cell->incident_edge == edge_it1->twin->next) {
-							edge_it1->twin->cell->incident_edge = NULL;
-						} else {
-							edge_it1->twin->cell->incident_edge = edge_it1->twin->next;
-						}
-					}
+                    if (edge_it1->cell->incident_edge == &(*edge_it1)) {
+                        if (edge_it1->cell->incident_edge == edge_it1->next) {
+                            edge_it1->cell->incident_edge = NULL;
+                        } else {
+                            edge_it1->cell->incident_edge = edge_it1->next;
+                        }
+                    }
+                    if (edge_it1->twin->cell->incident_edge == edge_it1->twin) {
+                        if (edge_it1->twin->cell->incident_edge == edge_it1->twin->next) {
+                            edge_it1->twin->cell->incident_edge = NULL;
+                        } else {
+                            edge_it1->twin->cell->incident_edge = edge_it1->twin->next;
+                        }
+                    }
                     if (edge_it1->start_point->num_incident_edges >=
-						edge_it1->end_point->num_incident_edges) {
+                        edge_it1->end_point->num_incident_edges) {
                             simplify_edge(&(*edge_it1));
-					} else {
+                    } else {
                         simplify_edge(edge_it1->twin);
-					}
+                    }
 
                     // Remove zero length edges.
                     edges_.erase(edge_it1, edge_it);
@@ -1730,27 +1826,27 @@ namespace detail {
                 cell_it != cell_records_.end(); cell_it++) {
                 // Move to the previous edge while it is possible in the CW direction.
                 edge_type *cur_edge = cell_it->incident_edge;
-				if (cur_edge) {
-					while (cur_edge->prev != NULL) {
-						cur_edge = cur_edge->prev;
+                if (cur_edge) {
+                    while (cur_edge->prev != NULL) {
+                        cur_edge = cur_edge->prev;
 
-						// Terminate if this is not a boundary cell.
-						if (cur_edge == cell_it->incident_edge)
-							break;
-					}
+                        // Terminate if this is not a boundary cell.
+                        if (cur_edge == cell_it->incident_edge)
+                            break;
+                    }
 
-					// Rewind incident edge pointer to the leftmost edge for the boundary cells.
-					cell_it->incident_edge = cur_edge;
+                    // Rewind incident edge pointer to the leftmost edge for the boundary cells.
+                    cell_it->incident_edge = cur_edge;
 
-					// Set up prev/next half-edge pointers for ray edges.
-					if (cur_edge->prev == NULL) {
-						edge_type *last_edge = cell_it->incident_edge;
-						while (last_edge->next != NULL)
-							last_edge = last_edge->next;
-						last_edge->next = cur_edge;
-						cur_edge->prev = last_edge;
-					}
-				}
+                    // Set up prev/next half-edge pointers for ray edges.
+                    if (cur_edge->prev == NULL) {
+                        edge_type *last_edge = cell_it->incident_edge;
+                        while (last_edge->next != NULL)
+                            last_edge = last_edge->next;
+                        last_edge->next = cur_edge;
+                        cur_edge->prev = last_edge;
+                    }
+                }
             }
         }
 
@@ -1770,7 +1866,7 @@ namespace detail {
                 offset = 0.5;
 
             BRect<coordinate_type> new_brect(x_mid - offset, y_mid - offset,
-											 x_mid + offset, y_mid + offset);
+                                             x_mid + offset, y_mid + offset);
             clip(new_brect, clipped_output);
         }
 
@@ -1818,13 +1914,13 @@ namespace detail {
                 vertex1->incident_edge = edge->rot_prev;
 
             // Remove second vertex from the vertex records list.
-			if (vertex1->voronoi_record_it != vertex2->voronoi_record_it) {
-				vertex_records_.erase(vertex2->voronoi_record_it);
-				num_vertex_records_--;
-			}
+            if (vertex1->voronoi_record_it != vertex2->voronoi_record_it) {
+                vertex_records_.erase(vertex2->voronoi_record_it);
+                num_vertex_records_--;
+            }
         }
 
-		void clip(const BRect<coordinate_type> &brect,
+        void clip(const BRect<coordinate_type> &brect,
                   voronoi_output_clipped<coordinate_type> &clipped_output) {
             if (!brect.is_valid())
                 return;
@@ -1835,10 +1931,10 @@ namespace detail {
             if (num_vertex_records_ == 0) {
                 // Return in case of single site input.
                 if (num_cell_records_ == 1) {
-					clipped_output.cell_records.push_back(
-						clipped_voronoi_cell_type(cell_records_.back().site, NULL));
-					clipped_output.num_cell_records++;
-					return;
+                    clipped_output.cell_records.push_back(
+                        clipped_voronoi_cell_type(cell_records_.back().site, NULL));
+                    clipped_output.num_cell_records++;
+                    return;
                 }
 
                 edges_iterator_type edge_it = edges_.begin();
@@ -1860,107 +1956,107 @@ namespace detail {
                     cur_twin_edge->clipped_edge = &new_twin_edge;
                 }
             } else {
-				// Iterate over all voronoi vertices.
-				for (voronoi_vertex_const_iterator_type vertex_it = vertex_records_.begin();
-					 vertex_it != vertex_records_.end(); vertex_it++) {
-					edge_type *cur_edge = vertex_it->incident_edge;
-					const Point2D &cur_vertex_point = vertex_it->vertex;
+                // Iterate over all voronoi vertices.
+                for (voronoi_vertex_const_iterator_type vertex_it = vertex_records_.begin();
+                     vertex_it != vertex_records_.end(); vertex_it++) {
+                    edge_type *cur_edge = vertex_it->incident_edge;
+                    const Point2D &cur_vertex_point = vertex_it->vertex;
 
-					// Add current voronoi vertex to clipped output.
-					clipped_output.vertex_records.push_back(
-						clipped_voronoi_vertex_type(cur_vertex_point, NULL));
-					clipped_output.num_vertex_records++;
-					clipped_voronoi_vertex_type &new_vertex = clipped_output.vertex_records.back();
-					new_vertex.num_incident_edges = vertex_it->num_incident_edges;
-					clipped_edge_type *rot_prev_edge = NULL;
+                    // Add current voronoi vertex to clipped output.
+                    clipped_output.vertex_records.push_back(
+                        clipped_voronoi_vertex_type(cur_vertex_point, NULL));
+                    clipped_output.num_vertex_records++;
+                    clipped_voronoi_vertex_type &new_vertex = clipped_output.vertex_records.back();
+                    new_vertex.num_incident_edges = vertex_it->num_incident_edges;
+                    clipped_edge_type *rot_prev_edge = NULL;
 
-					// Process all half-edges incident to the current voronoi vertex.
-					do {
-						// Add new edge to the clipped output.
-						clipped_edge_type &new_edge = add_clipped_edge(clipped_output);
-						new_edge.start_point = &new_vertex;
-						cur_edge->clipped_edge = &new_edge;
+                    // Process all half-edges incident to the current voronoi vertex.
+                    do {
+                        // Add new edge to the clipped output.
+                        clipped_edge_type &new_edge = add_clipped_edge(clipped_output);
+                        new_edge.start_point = &new_vertex;
+                        cur_edge->clipped_edge = &new_edge;
 
-						// Ray edges with no start point don't correspond to any voronoi vertex.
-						// That's why ray edges are processed during their twin edge processing.
-						if (cur_edge->end_point == NULL) {
-							// Add new twin edge.
-							clipped_edge_type &new_twin_edge = add_clipped_edge(clipped_output);
-							cur_edge->twin->clipped_edge = &new_twin_edge;
-						}
+                        // Ray edges with no start point don't correspond to any voronoi vertex.
+                        // That's why ray edges are processed during their twin edge processing.
+                        if (cur_edge->end_point == NULL) {
+                            // Add new twin edge.
+                            clipped_edge_type &new_twin_edge = add_clipped_edge(clipped_output);
+                            cur_edge->twin->clipped_edge = &new_twin_edge;
+                        }
 
-						// Update twin and end point pointers.
-						clipped_edge_type *twin = cur_edge->twin->clipped_edge;
-						if (twin != NULL) {
-							new_edge.twin = twin;
-							twin->twin = &new_edge;
-							new_edge.end_point = twin->start_point;
-							twin->end_point = new_edge.start_point;
-						}
+                        // Update twin and end point pointers.
+                        clipped_edge_type *twin = cur_edge->twin->clipped_edge;
+                        if (twin != NULL) {
+                            new_edge.twin = twin;
+                            twin->twin = &new_edge;
+                            new_edge.end_point = twin->start_point;
+                            twin->end_point = new_edge.start_point;
+                        }
 
-						// Update rotation prev/next pointers.
-						if (rot_prev_edge != NULL) {
-							new_edge.rot_prev = rot_prev_edge;
-							rot_prev_edge->rot_next = &new_edge;
-						}
+                        // Update rotation prev/next pointers.
+                        if (rot_prev_edge != NULL) {
+                            new_edge.rot_prev = rot_prev_edge;
+                            rot_prev_edge->rot_next = &new_edge;
+                        }
 
-						rot_prev_edge = &new_edge;
-						cur_edge = cur_edge->rot_next;
-					} while(cur_edge != vertex_it->incident_edge);
-	                
-					// Update rotation prev/next pointers.
-					cur_edge->clipped_edge->rot_prev = rot_prev_edge;
-					rot_prev_edge->rot_next = cur_edge->clipped_edge;
-					new_vertex.incident_edge = cur_edge->clipped_edge;
-				}
+                        rot_prev_edge = &new_edge;
+                        cur_edge = cur_edge->rot_next;
+                    } while(cur_edge != vertex_it->incident_edge);
+                    
+                    // Update rotation prev/next pointers.
+                    cur_edge->clipped_edge->rot_prev = rot_prev_edge;
+                    rot_prev_edge->rot_next = cur_edge->clipped_edge;
+                    new_vertex.incident_edge = cur_edge->clipped_edge;
+                }
             }
 
             // Iterate over all voronoi cells.
             for (voronoi_cell_const_iterator_type cell_it = cell_records_.begin();
                  cell_it != cell_records_.end(); cell_it++) {
                 // Add new cell to the clipped output.
-			    clipped_output.cell_records.push_back(
-					clipped_voronoi_cell_type(cell_it->site, NULL));
-				clipped_output.num_cell_records++;
+                clipped_output.cell_records.push_back(
+                    clipped_voronoi_cell_type(cell_it->site, NULL));
+                clipped_output.num_cell_records++;
                 clipped_voronoi_cell_type &new_cell = clipped_output.cell_records.back();
                 edge_type *cur_edge = cell_it->incident_edge;
 
                 // Update cell, next/prev pointers.
-				if (cur_edge) {
-					clipped_edge_type *prev = NULL;
-					do {
-						clipped_edge_type *new_edge = cur_edge->clipped_edge;
-						if (new_edge) {
-							if (prev) {
-								new_edge->prev = prev;
-								prev->next = new_edge;
-							}
-							new_edge->cell = &new_cell;
-							if (new_cell.incident_edge == NULL)
-								new_cell.incident_edge = cur_edge->clipped_edge;
-							new_cell.num_incident_edges++;
-							prev = new_edge;
-							cur_edge->clipped_edge = NULL;
-						}
-						cur_edge = cur_edge->next;
-					} while(cur_edge != cell_it->incident_edge);
+                if (cur_edge) {
+                    clipped_edge_type *prev = NULL;
+                    do {
+                        clipped_edge_type *new_edge = cur_edge->clipped_edge;
+                        if (new_edge) {
+                            if (prev) {
+                                new_edge->prev = prev;
+                                prev->next = new_edge;
+                            }
+                            new_edge->cell = &new_cell;
+                            if (new_cell.incident_edge == NULL)
+                                new_cell.incident_edge = cur_edge->clipped_edge;
+                            new_cell.num_incident_edges++;
+                            prev = new_edge;
+                            cur_edge->clipped_edge = NULL;
+                        }
+                        cur_edge = cur_edge->next;
+                    } while(cur_edge != cell_it->incident_edge);
 
-					// Update prev/next pointers.
-					if (prev) {
-						prev->next = new_cell.incident_edge;
-						new_cell.incident_edge->prev = prev;
-					}
-				}
+                    // Update prev/next pointers.
+                    if (prev) {
+                        prev->next = new_cell.incident_edge;
+                        new_cell.incident_edge->prev = prev;
+                    }
+                }
             }
-			clipped_output.num_edge_records >>= 1;
+            clipped_output.num_edge_records >>= 1;
         }
 
-		inline clipped_voronoi_edge_type &add_clipped_edge(
-			voronoi_output_clipped<coordinate_type> &clipped_output) {
-			clipped_output.edge_records.push_back(clipped_voronoi_edge_type());
-			clipped_output.num_edge_records++;
-			return clipped_output.edge_records.back();
-		}
+        inline clipped_voronoi_edge_type &add_clipped_edge(
+            voronoi_output_clipped<coordinate_type> &clipped_output) {
+            clipped_output.edge_records.push_back(clipped_voronoi_edge_type());
+            clipped_output.num_edge_records++;
+            return clipped_output.edge_records.back();
+        }
 
         std::vector<voronoi_cell_iterator_type> cell_iterators_;
         voronoi_cells_type cell_records_;
@@ -1982,9 +2078,7 @@ namespace detail {
 } // boost
 } // detail
 
-#undef INV_LOG_2
-#undef INT_PREDICATE_COMPUTE_DIFFERENCE
 #undef INT_PREDICATE_CONVERT_65_BIT
-#undef INT_PREDICATE_AVOID_CANCELLATION
+#undef INT_PREDICATE_COMPUTE_DIFFERENCE
 
 #endif

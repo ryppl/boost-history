@@ -1,4 +1,4 @@
-// Boost sweepline/voronoi_segment_builder.hpp header file 
+// Boost sweepline/voronoi_builder.hpp header file 
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -129,7 +129,7 @@ namespace sweepline {
                 } else if (site_events_iterator_ == site_events_.end()) {
                     process_circle_event();
                 } else {
-                    if (circle_events_.top().compare(*site_events_iterator_) > 0) {
+                    if (circle_events_.top().compare(*site_events_iterator_) == detail::MORE) {
                         process_site_event();
                     } else {
                         process_circle_event();
@@ -152,12 +152,6 @@ namespace sweepline {
         void clip(ClippedOutput &clipped_output) {
             output_.clip(clipped_output);
         }
-
-        // Clip using defined rectangle.
-		// TODO(asydorchuk): Define what exactly it means to clip some region of voronoi diagram.
-        //void clip(const BRect<coordinate_type> &brect, ClippedOutput &clipped_output) {
-        //    output_.clip(brect, clipped_output);
-        //}
 
     protected:
         typedef typename std::vector<site_event_type>::const_iterator site_events_iterator_type;
@@ -280,7 +274,7 @@ namespace sweepline {
 
         // Doesn't use special comparison function as it works fine only for
         // the site events processing.
-        void process_circle_event() { 
+        void process_circle_event() {
             const circle_event_type &circle_event = circle_events_.top();
 
             // Retrieve the second bisector node that corresponds to the given
@@ -292,11 +286,11 @@ namespace sweepline {
             site_event_type site3 = it_first->first.get_right_site();
 
             // Get second bisector;
-            edge_type *bisector2 = it_first->second.edge;
+            edge_type *bisector2 = it_first->second.get_edge();
             
             // Get first bisector;
             it_first--;
-            edge_type *bisector1 = it_first->second.edge;
+            edge_type *bisector1 = it_first->second.get_edge();
             
             // Get the first site that creates given circle event.
             site_event_type site1 = it_first->first.get_left_site();
@@ -315,8 +309,8 @@ namespace sweepline {
             if (site3.is_segment() && site3.get_point1(true) == site1.get_point0(true)) {
                 const_cast<Key &>(it_first->first).set_right_site_inverse();
             }
-            it_first->second.edge = output_.insert_new_edge(site1, site3, circle_event,
-                                                            bisector1, bisector2);
+            it_first->second.set_edge(output_.insert_new_edge(site1, site3, circle_event,
+                                                              bisector1, bisector2));
             beach_line_.erase(it_last);
             it_last = it_first;
 
