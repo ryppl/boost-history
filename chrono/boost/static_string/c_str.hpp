@@ -1,9 +1,14 @@
 //  c_str.hpp  --------------------------------------------------------------//
 
-//  Copyright 2010 Vicente J. Botet Escriba
+// Copyright Eric Niebler 2009
+// Copyright Vicente J. Botet Escriba 2010
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/mpl for documentation.
 
-//  Distributed under the Boost Software License, Version 1.0.
-//  See http://www.boost.org/LICENSE_1_0.txt
 
 
 #ifndef BOOST_STATIC_STRING_C_STR_HPP
@@ -49,36 +54,36 @@ namespace detail
     };
 }
 
-template<typename Sequence>
+template<typename Sequence, typename ValueType=typename value_type<Sequence>::type>
 struct c_str
 {
-//    typedef typename value_type<Sequence>::type value_type;
     typedef typename mpl::end<Sequence>::type iend;
     typedef typename mpl::begin<Sequence>::type i0;
-    #define BOOST_STATIC_STRING_C_STR_M0(z, n, data)        \
+    #define M0(z, n, data)        \
     typedef                                                 \
         typename static_string::detail::next_unless<BOOST_PP_CAT(i, n), iend>::type \
     BOOST_PP_CAT(i, BOOST_PP_INC(n));
     
-    BOOST_PP_REPEAT(BOOST_STATIC_STRING_LIMIT_C_STR_SIZE, BOOST_STATIC_STRING_C_STR_M0, ~)
+    BOOST_PP_REPEAT(BOOST_STATIC_STRING_LIMIT_C_STR_SIZE, M0, ~)
     
-    #undef BOOST_STATIC_STRING_C_STR_M0
+    #undef M0
 
     typedef c_str type;
-    static typename value_type<Sequence>::type const value[BOOST_STATIC_STRING_LIMIT_C_STR_SIZE+1];
+    static ValueType const value[BOOST_STATIC_STRING_LIMIT_C_STR_SIZE+1];
 };
 
-template<typename Sequence>
-typename value_type<Sequence>::type const c_str<Sequence>::value[BOOST_STATIC_STRING_LIMIT_C_STR_SIZE+1] =
+template<typename Sequence, typename ValueType>
+ValueType const c_str<Sequence, ValueType>::value[BOOST_STATIC_STRING_LIMIT_C_STR_SIZE+1] =
 {
-    #define BOOST_STATIC_STRING_C_STR_M0(z, n, data)    \
+    #define M0(z, n, data)    \
     static_string::detail::deref_unless<typename value_type<Sequence>::type, BOOST_PP_CAT(i, n), iend>::type::value,
         
-    BOOST_PP_REPEAT(BOOST_STATIC_STRING_LIMIT_C_STR_SIZE, BOOST_STATIC_STRING_C_STR_M0, ~)
+    BOOST_PP_REPEAT(BOOST_STATIC_STRING_LIMIT_C_STR_SIZE, M0, ~)
     
-    #undef BOOST_STATIC_STRING_C_STR_M0
+    #undef M0
     mpl::integral_c<typename value_type<Sequence>::type, 0>::type::value
 };
+
 
 } // namespace static_string
 } // namespace boost
