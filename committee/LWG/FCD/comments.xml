@@ -8974,7 +8974,7 @@ add "constexpr" to shared_ptr(nullptr_t).
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="85" type="E" owner="" issue="1403" disp="accepted" date="2010-08-07" extdoc="">
+<comment nb="JP" num="85" type="E" owner="LWG" issue="1403" disp="accepted" date="2010-08-07" extdoc="">
 <section>
 20.9.1
 </section>
@@ -11957,7 +11957,7 @@ Repair as suggested
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="130" type="Ed" owner="" issue="1457" disp="" date="" extdoc="">
+<comment nb="GB" num="130" type="Ed" owner="LWG" issue="1457" disp="" date="" extdoc="">
 <section>
 29.2
 </section>
@@ -12391,7 +12391,7 @@ atomic_bool in 29.5.1
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="157" type="ed" owner="" issue="1463" disp="" date="" extdoc="">
+<comment nb="US" num="157" type="ed" owner="LWG" issue="1463" disp="" date="" extdoc="">
 <section>
 [atomics.types.integral] 29.5.1
 </section>
@@ -12684,7 +12684,7 @@ c&lt;T*&gt;&amp;,void**,void*,memory_order) = delete;
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="165" type="ed" owner="" issue="1470" disp="" date="" extdoc="">
+<comment nb="US" num="165" type="ed" owner="LWG" issue="1470" disp="" date="" extdoc="">
 <section>
 29.5.3
 </section>
@@ -12845,7 +12845,7 @@ compatibility with C. --end note]"
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="172" type="ed" owner="" issue="1473" disp="" date="" extdoc="">
+<comment nb="US" num="172" type="ed" owner="LWG" issue="1473" disp="" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12906,7 +12906,7 @@ the Returns clause refers to the "result of the comparison"
 from the Effects clause. Okay as written.
 </rationale>
 </comment>
-<comment nb="US" num="175" type="ed" owner="" issue="1474" disp="" date="" extdoc="">
+<comment nb="US" num="175" type="ed" owner="LWG" issue="1474" disp="" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12928,7 +12928,7 @@ operation."
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="23" type="ed" owner="" issue="1475" disp="" date="" extdoc="">
+<comment nb="CH" num="23" type="ed" owner="LWG" issue="1475" disp="" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -12968,7 +12968,7 @@ is in a loop,".
 Okay as written. Two different subjects, two paragraphs.
 </rationale>
 </comment>
-<comment nb="US" num="177" type="ed" owner="" issue="1476" disp="" date="" extdoc="">
+<comment nb="US" num="177" type="ed" owner="LWG" issue="1476" disp="" date="" extdoc="">
 <section>
 [atomics.types.operations] 29.6
 </section>
@@ -12985,7 +12985,7 @@ Figure out what it's supposed to say, and say it.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="135" type="Ed" owner="" issue="1477" disp="" date="" extdoc="">
+<comment nb="GB" num="135" type="Ed" owner="LWG" issue="1477" disp="" date="" extdoc="">
 <section>
 29.6
 </section>
@@ -14153,7 +14153,7 @@ The intent and meaning of the paragraph is not apparent.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="35" type="ed/te" owner="" issue="1503" disp="" date="" extdoc="">
+<comment nb="CH" num="35" type="ed/te" owner="LWG" issue="1503" disp="" date="" extdoc="">
 <section>
 30.6.4ff
 </section>
