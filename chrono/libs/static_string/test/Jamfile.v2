@@ -55,4 +55,9 @@ project
         [ run match/match_pass.cpp ]
         ;
 
+   test-suite "insert"
+        :
+        [ run insert/insert_pass.cpp ]
+        ;
+
         
