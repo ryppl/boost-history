@@ -44,11 +44,11 @@ project
         #[ run value_type/value_type_fail.cpp ]
         ;
 
-   #test-suite "c_str"
-   #     :
-   #     [ run c_str/c_str_pass.cpp ]
+   test-suite "c_str"
+        :
+        [ run c_str/c_str_pass.cpp ]
    #     [ run c_str/c_str_fail.cpp ]
-   #     ;
+        ;
 
    test-suite "match"
         :

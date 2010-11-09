@@ -2,8 +2,6 @@
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
 
-#define BOOST_MPL_LIMIT_STRING_SIZE 64
-
 #include <boost/static_string/value_type.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
