@@ -651,7 +651,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(random_test7, T, test_types) {
     voronoi_output_clipped<T> test_output_small, test_output_large;
     std::vector< point_2d<T> > points_small, points_large;
     int num_points = 27;
-    int md = 10;
+    int md = 20;
     int half_md = md >> 1;
     int koef = std::numeric_limits<int>::max() / half_md;
     for (int i = 0; i < 10000; i++) {

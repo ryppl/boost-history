@@ -284,10 +284,15 @@ namespace detail {
         }
 
         bool operator<(const circle_event &c_event) const {
-            kPredicateResult pres = lower_x_.compare(c_event.lower_x_);
+            double dif1 = lower_x();
+            double dif2 = c_event.lower_x();
+            if (dif1 != dif2)
+                return dif1 < dif2;
+            return center_y_.get_dif() < c_event.get_erc_y().get_dif();
+            /*kPredicateResult pres = lower_x_.compare(c_event.lower_x_, 64);
             if (pres != UNDEFINED)
                 return (pres == LESS);
-            return (center_y_.compare(c_event.center_y_) == LESS);
+            return (center_y_.compare(c_event.center_y_, 32) == LESS);*/
         }
 
         bool operator<=(const circle_event &c_event) const {
@@ -440,10 +445,6 @@ namespace detail {
             left_expr += value;
         else
             right_expr -= value;
-    }
-
-    inline static bool abs_equal(double a, double b, double abs_error) {
-        return fabs(a - b) < abs_error;
     }
 
     // If two floating-point numbers in the same format are ordered (x < y), then
@@ -1101,23 +1102,44 @@ namespace detail {
             site3.get_point1().y() - site2.y(),
             site2.x() - site3.get_point1().x());
         double denom = robust_cross_product(vec_x, vec_y, line_a, line_b);
-        double t;
+        double t_pos, t_neg;
+        t_pos = t_neg = 0;
         if (orientation_test(denom) == COLINEAR) {
-            t = (teta * teta - 4.0 * A * B) / (4.0 * teta * (A + B));;
+            avoid_cancellation(teta / (4.0 * (A + B)), t_pos, t_neg);
+            avoid_cancellation(A * B / (teta * (A + B)), t_neg, t_pos);
         } else {
             double det = sqrt((teta * teta + denom * denom) * A * B);
-            if (segment_index == 2)
-                det = -det;
-            t = (teta * (A + B) + 2.0 * det) / (2.0 * denom * denom);
+            if (segment_index == 2) {
+                t_neg += det / (denom * denom);
+            } else {
+                t_pos += det / (denom * denom);
+            }
+            avoid_cancellation(teta * (A + B) / (2.0 * denom * denom), t_pos, t_neg);
         }
-        double c_x = 0.5 * (site1.x() + site2.x()) + t * vec_x;
-        double c_y = 0.5 * (site1.y() + site2.y()) + t * vec_y;
+        double c_x_pos, c_x_neg, c_y_pos, c_y_neg, lower_x_pos, lower_x_neg;
+        c_x_pos = c_x_neg = c_y_pos = c_y_neg = lower_x_pos = lower_x_neg = 0;
+        avoid_cancellation(0.5 * (site1.x() + site2.x()), c_x_pos, c_x_neg);
+        avoid_cancellation(t_pos * vec_x, c_x_pos, c_x_neg);
+        avoid_cancellation(t_neg * vec_x, c_x_neg, c_x_pos);
+        avoid_cancellation(0.5 * (site1.y() + site2.y()), c_y_pos, c_y_neg);
+        avoid_cancellation(t_pos * vec_y, c_y_pos, c_y_neg);
+        avoid_cancellation(t_neg * vec_y, c_y_neg, c_y_pos);
 
-        double radius = sqrt((c_x-site2.x())*(c_x-site2.x()) +
-                             (c_y-site2.y())*(c_y-site2.y()));
-        double lower_x = (site3.is_vertical() && site3.is_inverse()) ?
-            site3.get_point0().x() : c_x + radius;
-        c_event = circle_event<double>(c_x, c_y, lower_x);
+        double inv_segm_len = 1.0 / sqrt(get_sqr_distance(line_a, line_b));
+        double radius_pos, radius_neg;
+        radius_pos = radius_neg = 0;
+        avoid_cancellation(line_a * site3.get_point0().x(), radius_neg, radius_pos);
+        avoid_cancellation(line_b * site3.get_point0().y(), radius_neg, radius_pos);
+        avoid_cancellation(line_a * c_x_pos, radius_pos, radius_neg);
+        avoid_cancellation(line_a * c_x_neg, radius_neg, radius_pos);
+        avoid_cancellation(line_b * c_y_pos, radius_pos, radius_neg);
+        avoid_cancellation(line_b * c_y_neg, radius_neg, radius_pos);
+        if (radius_pos < radius_neg) {
+            (std::swap)(radius_pos, radius_neg);
+        }
+        c_event = circle_event<double>(c_x_pos, c_x_neg, c_y_pos, c_y_neg,
+                                       c_x_pos + inv_segm_len * radius_pos,
+                                       c_x_neg + inv_segm_len * radius_neg);
         return true;
     }
 
