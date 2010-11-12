@@ -20,7 +20,7 @@ namespace v2{\
 namespace modifier_tag{ struct FUN{}; }\
 namespace put_aux{\
 \
-	template<>\
+    template<>\
     struct modifier<v2::modifier_tag::FUN>\
     {\
 \
@@ -38,9 +38,9 @@ namespace put_aux{\
 }\
 namespace{\
 \
-	put_aux::set_modifier<v2::modifier_tag::FUN> const\
-		BOOST_PP_CAT(_,FUN) = ( \
-        	_modifier = v2::modifier_tag::FUN() \
+    put_aux::set_modifier<v2::modifier_tag::FUN> const\
+        BOOST_PP_CAT(_,FUN) = ( \
+            _modifier = v2::modifier_tag::FUN() \
         );\
 \
 }\
