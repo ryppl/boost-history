@@ -11,14 +11,14 @@
 #include <boost/mpl/limits/arity.hpp>
 
 // Default upper bound on the arity of function and functors
-#ifndef BOOST_ASSIGN_V2_ARITY_BOUND
-#define BOOST_ASSIGN_V2_ARITY_BOUND\
-	BOOST_PP_INC(BOOST_MPL_LIMIT_METAFUNCTION_ARITY)\
+//#ifndef BOOST_ASSIGN_V2_ARITY_BOUND
+//#define BOOST_ASSIGN_V2_ARITY_BOUND\
+//	BOOST_PP_INC(BOOST_MPL_LIMIT_METAFUNCTION_ARITY)\
 /**/    
-#endif
+//#endif
 
-#if BOOST_ASSIGN_V2_ARITY_BOUND >  BOOST_PP_INC(BOOST_MPL_LIMIT_METAFUNCTION_ARITY)
-#error
+//#if BOOST_ASSIGN_V2_ARITY_BOUND >  BOOST_PP_INC(BOOST_MPL_LIMIT_METAFUNCTION_ARITY)
+//#error
 // This is required, at least, by /ref/fusion_matrix/container.hpp
-#endif
+//#endif
 
