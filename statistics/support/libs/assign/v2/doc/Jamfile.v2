@@ -10,5 +10,5 @@ boostbook boost_assign_v2
         <xsl:param>toc.max.depth=4
         <xsl:param>toc.section.depth=4
         <xsl:param>chunk.section.depth=2
-        <xsl:param>html.stylesheet="/usr/local/trunk/libs/non_parametric/doc/boostbook.css"
+        <xsl:param>html.stylesheet="/usr/local/trunk/libs/assign/v2/doc/boostbook.css"
 	;
