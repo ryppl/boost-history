@@ -756,17 +756,6 @@ to __cpp03__, not __cpp0x__. The third constant is the total limit for arity `__
 
 [/ ---------------------------------------------------------------------------------------------- ]
 
-[section Reference]
-
-TODO
-
-[/xinclude /usr/local/trunk/libs/assign/v2/doc/doxygen/xml/index.xml]
-[/xinclude ./doxygen/xml/index.xml]
-
-[endsect]
-
-[/ ---------------------------------------------------------------------------------------------- ]
-
 [section Runtime efficiency]
 
 In this section, we compare the execution time of various ways to fill an STL container or creating an anonymous container.
@@ -1118,5 +1107,15 @@ Special thanks go to
  2004, Addison-Wesley Professional.
 
 [endsect] [/ Bibliography]
+
+[/ ---------------------------------------------------------------------------------------------- ]
+
+[section Reference]
+
+[/xinclude /usr/local/trunk/libs/assign/v2/doc/doxygen/xml/index.xml]
+[/xinclude ./doxygen/xml/index.xml]
+
+[endsect]
+
 
 [endsect][/Dummy]
