@@ -19,6 +19,7 @@
 #include <boost/assign/v2/chain/chain.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
+#include <boost/assign/v2/detail/checking/check_convert.hpp>
 #include <libs/assign/v2/test/chain/convert.h>
 
 namespace test_assign_v2{
@@ -26,15 +27,15 @@ namespace xxx_chain{
 namespace xxx_convert{
 
     void test()
-    {	
+    {
     	using namespace boost::assign::v2;
     	{
             typedef std::vector<int> vec_;
-        	typedef boost::array<int,3> array_;
-			
+            typedef boost::array<int,3> array_;
+
             vec_ cont1, cont3;
             array_ cont2;
-            {	
+            {
             	using namespace checking::constants;
                 cont1.push_back( a ); cont1.push_back( b );
                 cont2[0] = c;
@@ -43,51 +44,37 @@ namespace xxx_convert{
                 cont3.push_back( f );
                 cont3.push_back( g );
                 cont3.push_back( h );
-            } 
+            }
             BOOST_AUTO(from, cont1 && cont2 && cont3);
             {	// Conversion
         		using namespace checking::container;
         		{
         			typedef boost::array<int,8> to_;
-            		do_check( from.convert<to_>() );
-                	to_ to; to = from;
-                	do_check( from );
+                    BOOST_ASSIGN_V2_check_convert
         		}
         		{
         			typedef std::deque<int> to_;
-            		do_check( from.convert<to_>() );
-                	to_ to; to = from;
-                	do_check( from );
+                    BOOST_ASSIGN_V2_check_convert
         		}
         		{
         			typedef std::list<int> to_;
-            		do_check( from.convert<to_>() );
-                	to_ to; to = from;
-                	do_check( from );
-        		}	
+                    BOOST_ASSIGN_V2_check_convert
+        		}
         		{
         			typedef std::queue<int> to_;
-            		do_check( from.convert<to_>() );
-                	to_ to; to = from;
-                	do_check( from );
+                    BOOST_ASSIGN_V2_check_convert
         		}
         		{
         			typedef std::set<int> to_;
-            		do_check( from.convert<to_>() );
-                	to_ to; to = from;
-                	do_check( from );
+                    BOOST_ASSIGN_V2_check_convert
         		}
         		{
         			typedef std::stack<int> to_;
-            		do_check( from.convert<to_>() );
-                	to_ to; to = from;
-                	do_check( from );
-        		}	
+                    BOOST_ASSIGN_V2_check_convert
+        		}
 	        	{
     	    		typedef std::vector<int> to_;
-        	    	do_check( from.convert<to_>() );
-                	to_ to; to = from;
-                	do_check( from );
+                    BOOST_ASSIGN_V2_check_convert
         		}
             }
         }

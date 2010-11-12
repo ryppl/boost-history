@@ -26,8 +26,6 @@ namespace xxx_ptr{
 	void test(){
 		using namespace boost::assign::v2;
         {	// Array
-// TODO
-/*        	
             {	
         		typedef boost::ptr_array<int,8> cont_;
                 cont_ cont;
@@ -35,12 +33,11 @@ namespace xxx_ptr{
             		using namespace checking::constants;
                     using namespace checking::container;
                 	do_check(
-                    	put( cont )
-                        	( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+                    	csv_put( cont )
+                        	( a , b , c , d , e , f , g , h ).unwrap()
                     );
                 }
 			}
-*/            
         }
         {	// Sequence
         	
@@ -86,4 +83,3 @@ namespace xxx_ptr{
 }// xxx_ptr
 }// xxx_put
 }// xxx_test_assign
-

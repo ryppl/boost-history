@@ -26,7 +26,7 @@ namespace xxx_modulo_op{
 		{	// Queue + Repeat
             typedef std::queue<int> cont_;
             cont_ cont;
-            ( put( cont ) % (_repeat = 3 ) ) (-1);
+            ( put( cont ) % ( _repeat = 3 ) ) ( -1 );
             BOOST_ASSIGN_V2_CHECK_EQUAL( cont.front(), -1); cont.pop();
             BOOST_ASSIGN_V2_CHECK_EQUAL( cont.front(), -1); cont.pop();
             BOOST_ASSIGN_V2_CHECK_EQUAL( cont.front(), -1); cont.pop();
@@ -41,13 +41,12 @@ namespace xxx_modulo_op{
             {
                 typedef std::map<const char*, int> cont_;
                 cont_ cont;
-                ( put( cont ) % _incr_lookup).csv( "x", "y", "x" );
+                ( put( cont ) % _incr_lookup)( "x" )( "y" )( "x" );
                 BOOST_ASSIGN_V2_CHECK_EQUAL( 2, cont["x"] );
                 BOOST_ASSIGN_V2_CHECK_EQUAL( 1, cont["y"] );
             }
         }
     }
-
 
 }// xxx_modulo_op
 }// xxx_put

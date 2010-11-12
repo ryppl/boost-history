@@ -47,29 +47,29 @@ namespace xxx_static{
     {
     	using namespace boost::assign::v2;
         {
-        	typedef put_tag::push_back wanted_;
-        	LIBS_ASSIGN_V2_TEST_PUT_static( std::list, 	int, ,	0 )
-        	LIBS_ASSIGN_V2_TEST_PUT_static( std::vector, 	int, ,	0 )
-			LIBS_ASSIGN_V2_TEST_PUT_static( std::deque, 	int, ,	0 )
+        	typedef modifier_tag::push_back wanted_;
+        	LIBS_ASSIGN_V2_TEST_PUT_static( std::list, int, , 0 )
+        	LIBS_ASSIGN_V2_TEST_PUT_static( std::vector, int, ,	0 )
+			LIBS_ASSIGN_V2_TEST_PUT_static( std::deque, int, , 0 )
 
-			LIBS_ASSIGN_V2_TEST_PUT_static( boost::ptr_deque, 	int, ,	0 )
-			LIBS_ASSIGN_V2_TEST_PUT_static( boost::ptr_list, 		int, ,	0 )
-			LIBS_ASSIGN_V2_TEST_PUT_static( boost::ptr_vector, 	int, ,	0 )
+			LIBS_ASSIGN_V2_TEST_PUT_static( boost::ptr_deque, int, , 0 )
+			LIBS_ASSIGN_V2_TEST_PUT_static( boost::ptr_list, int, ,	0 )
+			LIBS_ASSIGN_V2_TEST_PUT_static( boost::ptr_vector, int, , 0 )
         }
         {
-        	typedef put_tag::at_next wanted_;
-			LIBS_ASSIGN_V2_TEST_PUT_static( boost::array, 	int, 	1,	1 )
-			LIBS_ASSIGN_V2_TEST_PUT_static( boost::ptr_array, int, 	1,	1 )
+        	typedef modifier_tag::at_next wanted_;
+			LIBS_ASSIGN_V2_TEST_PUT_static( boost::array, int, 1, 1 )
+			LIBS_ASSIGN_V2_TEST_PUT_static( boost::ptr_array, int, 1, 1 )
         }
         {
-        	typedef put_tag::push wanted_;
-			LIBS_ASSIGN_V2_TEST_PUT_static( std::queue, 	int,	,	0 )
-			LIBS_ASSIGN_V2_TEST_PUT_static( std::stack, 	int,	,	0 )
+        	typedef modifier_tag::push wanted_;
+			LIBS_ASSIGN_V2_TEST_PUT_static( std::queue, int, , 0 )
+			LIBS_ASSIGN_V2_TEST_PUT_static( std::stack, int, ,0 )
         }
         {
-        	typedef put_tag::insert wanted_;
-        	LIBS_ASSIGN_V2_TEST_PUT_static( std::set, int, ,	0 )
-			LIBS_ASSIGN_V2_TEST_PUT_static( std::map, const char*, int,	1 )
+        	typedef modifier_tag::insert wanted_;
+        	LIBS_ASSIGN_V2_TEST_PUT_static( std::set, int, , 0 )
+			LIBS_ASSIGN_V2_TEST_PUT_static( std::map, const char* , int, 1 )
         }
         
     }

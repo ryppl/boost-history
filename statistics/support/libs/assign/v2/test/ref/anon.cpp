@@ -22,9 +22,10 @@
 #include <boost/assign/v2/detail/checking/check_equal.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
+#include <boost/assign/v2/detail/checking/check_convert.hpp> // TODO
 #include <boost/assign/v2/detail/checking/array.hpp>
 #include <boost/assign/v2/detail/checking/relational_op.hpp>
-#include <boost/assign/v2/ref/anon/functor/functor.hpp>
+#include <boost/assign/v2/ref/anon/unary/unary.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <libs/assign/v2/test/ref/anon.h>
 
@@ -85,7 +86,7 @@ namespace xxx_anon{
         	// Rebind
             typedef int const& cref_;
             using namespace checking::constants;
-			cref_ 	a1 = a, b1 = b, c1 = c, d1 = d, e1 = e, f1 = f, g1 = g, 
+			cref_ 	a1 = a, b1 = b, c1 = c, d1 = d, e1 = e, f1 = f, g1 = g,
             		h1 = h;
             BOOST_AUTO(ar, ref::assign_rebind::anon
             	( a1 )( b1 )( c1 )( d1 )( e1 )( f1 )( g1 )( h1 )
@@ -95,73 +96,59 @@ namespace xxx_anon{
                 do_check( ar );
             }
             ar.assign( b );
-            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[0] , &b ); 
-            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[1] , &b ); 
-            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[2] , &b ); 
-            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[3] , &b ); 
-            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[4] , &b ); 
-            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[5] , &b ); 
-            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[6] , &b ); 
-            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[7] , &b ); 
+            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[0] , &b );
+            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[1] , &b );
+            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[2] , &b );
+            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[3] , &b );
+            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[4] , &b );
+            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[5] , &b );
+            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[6] , &b );
+            BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[7] , &b );
 		}
-        {	
+        {
         	// Conversion
 			typedef ref::assign_copy::nth_result_of::anon<
             	8,int const>::type anon_;
 
             anon_ from;
-            {	
+            {
             	using namespace checking::constants;
             	from = ref::assign_copy::anon
                 	( a )( b )( c )( d )( e )( f )( g )( h );
             }
         	using namespace checking::container;
         	{
-        		typedef boost::array<int,8> to_;
-            	do_check( from.convert<to_>() );
-                to_ to; to = from;
-                do_check( from );
+                typedef boost::array<int,8> to_;
+                BOOST_ASSIGN_V2_check_convert
         	}
         	{
-        		typedef std::deque<int> to_;
-            	do_check( from.convert<to_>() );
-                to_ to; to = from;
-                do_check( from );
+                typedef std::deque<int> to_;
+                BOOST_ASSIGN_V2_check_convert
         	}
         	{
-        		typedef std::list<int> to_;
-            	do_check( from.convert<to_>() );
-                to_ to; to = from;
-                do_check( from );
+                typedef std::list<int> to_;
+                BOOST_ASSIGN_V2_check_convert
         	}
         	{
-        		typedef std::queue<int> to_;
-            	do_check( from.convert<to_>() );
-                to_ to; to = from;
-                do_check( from );
+                typedef std::queue<int> to_;
+                BOOST_ASSIGN_V2_check_convert
         	}
         	{
-        		typedef std::set<int> to_;
-            	do_check( from.convert<to_>() );
-                to_ to; to = from;
-                do_check( from );
+                typedef std::set<int> to_;
+                BOOST_ASSIGN_V2_check_convert
         	}
         	{
         		typedef std::stack<int> to_;
-            	do_check( from.convert<to_>() );
-                to_ to; to = from;
-                do_check( from );
+                BOOST_ASSIGN_V2_check_convert
         	}
 	        {
     	    	typedef std::vector<int> to_;
-        	    do_check( from.convert<to_>() );
-                to_ to; to = from;
-                do_check( from );
+                BOOST_ASSIGN_V2_check_convert
         	}
-        
+
         }
         { 	// Relational
-        	using namespace checking::constants;
+            using namespace checking::constants;
             using namespace checking::relational_op;
             do_check(
             	ref::assign_copy::anon

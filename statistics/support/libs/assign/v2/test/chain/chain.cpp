@@ -24,7 +24,7 @@ namespace xxx_chain{
       	distinct_values::do_check<float>();
       	distinct_values::do_check<double>();
     }
-    
+
 }// xxx_chain
 }// xxx_chain
 }// test_assign_v2
