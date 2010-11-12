@@ -10,8 +10,10 @@
 #ifndef BOOST_ASSIGN_V2_PUT_PUT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PUT_ER_2010_HPP
 
+#include <boost/assign/v2/put/compose/compose.hpp>
+#include <boost/assign/v2/put/generic/generic.hpp>
 #include <boost/assign/v2/put/modifier/modifier.hpp>
-#include <boost/assign/v2/put/wrapper/wrapper.hpp>
 #include <boost/assign/v2/put/range/range.hpp>
+#include <boost/assign/v2/put/sub/sub.hpp>
 
 #endif

@@ -10,7 +10,9 @@
 #ifndef BOOST_ASSIGN_V2_PUT_WRAPPER_WRAPPER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_WRAPPER_WRAPPER_ER_2010_HPP
 
-#include <boost/assign/v2/put/wrapper/crtp.hpp>
-#include <boost/assign/v2/put/wrapper/make.hpp>
+// TODO delete file
+
+//#include <boost/assign/v2/put/wrapper/crtp.hpp>
+//#include <boost/assign/v2/put/wrapper/make.hpp>
 
 #endif

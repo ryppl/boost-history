@@ -13,7 +13,7 @@
 #include <boost/assign/v2/ref/anon/csv/assign_xxx.hpp>
 
 #define xxx_Tag1 assign_tag::rebind
-BOOST_ASSIGN_V2_REF_CSV_ARRAY_ASSIGN_XXX(assign_rebind) 
+BOOST_ASSIGN_V2_REF_CSV_ARRAY_ASSIGN_XXX( assign_rebind ) 
 #undef xxx_Tag1
 
 #endif

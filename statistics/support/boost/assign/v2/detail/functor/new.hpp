@@ -17,7 +17,7 @@
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/assign/v2/detail/type_traits/container/value.hpp>
-#include <boost/assign/v2/detail/config/arity_bound.hpp>
+#include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
 
 namespace boost{
@@ -46,19 +46,19 @@ namespace functor_aux{
 
 		using super_::operator();
 
-#define BOOST_ASSIGN_V2_impl(z,N,data) \
-    template<BOOST_PP_ENUM_PARAMS(N,typename T)> \
+#define MACRO(z, N, data) \
+    template<BOOST_PP_ENUM_PARAMS(N, typename T)> \
     result_type impl( BOOST_PP_ENUM_BINARY_PARAMS(N, T, &_) )const{ \
-        return new T( BOOST_PP_ENUM_PARAMS(N,_) ); \
+        return new T( BOOST_PP_ENUM_PARAMS(N, _) ); \
     } \
 /**/
 BOOST_PP_REPEAT_FROM_TO(
 	1,
-    BOOST_ASSIGN_V2_ARITY_BOUND,
-    BOOST_ASSIGN_V2_impl,
+    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY),
+    MACRO,
     ~
 )
-#undef BOOST_ASSIGN_V2_impl
+#undef MACRO
 	
 	};
 
@@ -70,7 +70,7 @@ BOOST_PP_REPEAT_FROM_TO(
         static type call(){ return functor_aux::new_<value_>(); }
     };
 
-	// --- For testing only --- //
+// --- For testing only --- // TODO remove foo from this file.
 
 struct foo
 {

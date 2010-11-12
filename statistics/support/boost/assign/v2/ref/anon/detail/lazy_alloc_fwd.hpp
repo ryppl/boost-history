@@ -7,6 +7,7 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
+/*
 #ifndef BOOST_ASSIGN_V2_REF_CONTAINER_STATIC_ARRAY_DETAIL_LAZY_ALLOC_FWD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_CONTAINER_STATIC_ARRAY_DETAIL_LAZY_ALLOC_FWD_ER_2010_HPP
  
@@ -27,3 +28,4 @@ namespace anon_aux{
 }// boost
 
 #endif
+*/

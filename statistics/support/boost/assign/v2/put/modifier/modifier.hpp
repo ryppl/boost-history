@@ -11,13 +11,12 @@
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_MODIFIER_ER_2010_HPP
 
 #include <boost/assign/v2/put/modifier/at_next.hpp>
+#include <boost/assign/v2/put/modifier/deduce.hpp>
 #include <boost/assign/v2/put/modifier/incr_lookup.hpp>
 #include <boost/assign/v2/put/modifier/insert.hpp>
 #include <boost/assign/v2/put/modifier/push.hpp>
 #include <boost/assign/v2/put/modifier/push_back.hpp>
-
-#include <boost/assign/v2/put/modifier/deduce.hpp>
-#include <boost/assign/v2/put/modifier/keyword.hpp>
+#include <boost/assign/v2/put/modifier/push_front.hpp>
 #include <boost/assign/v2/put/modifier/repeat.hpp>
 
 #endif

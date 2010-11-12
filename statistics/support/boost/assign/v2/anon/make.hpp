@@ -28,8 +28,8 @@ namespace result_of{
     	typedef typename anon_aux::impl<t_>::type cont_;
         typedef result_of::put<cont_> traits_;
         typedef typename traits_::f_ f_;
-        typedef typename traits_::put_tag_ put_tag_;
-        typedef anon_aux::cont<t_,f_,put_tag_> type;
+        typedef typename traits_::modifier_tag_ modifier_tag_;
+        typedef anon_aux::cont<t_,f_,modifier_tag_> type;
     };
 
 }// result_of
@@ -42,20 +42,6 @@ namespace result_of{
         return result_();
     }
 
-	template<typename T>
-    typename result_of::anon<T>::type
-	anon( T& t )
-    {
-        return anon<T>( v2::_nil )( t );
-    }
-
-	template<typename T>
-    typename result_of::anon<T const>::type
-	anon( T const& t )
-    {
-       return anon<T>( v2::_nil )( t );
-    }
-    
 }// v2
 }// assign
 }// boost

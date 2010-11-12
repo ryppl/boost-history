@@ -9,9 +9,11 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_CONTAINER_ANON_CSV_MAKE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_CONTAINER_ANON_CSV_MAKE_ER_2010_HPP
+#include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/repeat_from_to.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
-#include <boost/assign/v2/detail/config/arity_bound.hpp>
+#include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
+#include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/ref/anon/csv/nth_result_of.hpp>
 #include <boost/assign/v2/ref/anon/csv/pp.hpp>
  
@@ -39,19 +41,19 @@ namespace result_of{
         return result_();
     }
 
-#define BOOST_ASSIGN_V2_REF_CSV_ARRAY_iter( z, n, data )\
+#define MACRO( z, n, data )\
  BOOST_ASSIGN_V2_REF_CSV_ARRAY_tpl(T      , 	n,	1,	Tag1 ) \
  BOOST_ASSIGN_V2_REF_CSV_ARRAY_tpl(T const, 	n,	1,	Tag1 ) \
 /**/
 
 BOOST_PP_REPEAT_FROM_TO(
 	1,
-    BOOST_ASSIGN_V2_CSV_ARITY_BOUND,
-    BOOST_ASSIGN_V2_REF_CSV_ARRAY_iter,
+    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),
+    MACRO,
     ~
 )
 
-#undef BOOST_ASSIGN_V2_REF_CSV_ARRAY_iter
+#undef MACRO
 
 }// ref
 }// v2

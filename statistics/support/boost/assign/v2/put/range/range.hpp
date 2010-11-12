@@ -19,7 +19,7 @@ namespace v2{
    	template<typename From,typename To>
    	To& put_range(From const& from, To& to)
    	{	
-		return to | adaptor::put_range( from );
+		return to | adaptor::_put_range( from );
    	}
 
 }// v2

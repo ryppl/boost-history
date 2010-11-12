@@ -18,6 +18,8 @@
 #include <boost/range/iterator_range.hpp> //iterator_range_detail::
 #include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/put/range/range.hpp>
+#include <boost/assign/v2/put/generic/result_of_modulo.hpp>
+#include <boost/assign/v2/put/generic/crtp.hpp>
 #include <boost/assign/v2/detail/relational_op/relational_op.hpp>
 
 namespace boost{
@@ -25,29 +27,38 @@ namespace assign{
 namespace v2{
 namespace anon_aux{
 
+	template<typename T,typename F,typename Tag> class cont;
+
+}// anon_aux
+namespace result_of_modulo{
+	
+    template<typename T,typename F,typename Tag>
+    struct new_fun<anon_aux::cont<T,F,Tag> >
+    {
+
+    	template<typename F1>
+        struct apply{ typedef anon_aux::cont<T, F1, Tag> type; };
+        
+    };
+
+    template<typename T,typename F,typename Tag>
+    struct new_modifier<anon_aux::cont<T,F,Tag> >
+    {
+
+    	template<typename NewTag>
+        struct apply{ typedef anon_aux::cont<T, F, NewTag> type; };
+        
+    };
+    
+}//result_of_modulo
+namespace anon_aux{
+
 	template<typename T>
     struct impl{ typedef std::deque<T> type; };
 
 	template<typename T,typename F,typename Tag>
-	class cont;
-
-	template<typename T,typename F,typename Tag>
     struct cont_modifier_traits
-    {
-		template<typename Tag1>
-        struct new_tag{
-        	typedef cont<T,F,Tag1> type;
-        };
-		template<typename F1>
-        struct new_fun{
-        	typedef cont<T,F1,Tag> type;
-        };
-        
-        template<typename F1,typename Tag1>
-        struct new_fun_tag{
-        	typedef cont<T,F1,Tag1> type;
-        };
-    };
+    { };
 
 
 	template<typename T,typename F,typename Tag>
@@ -63,6 +74,8 @@ namespace anon_aux{
         typedef cont_modifier_traits<T,F,Tag> modifier_traits_;
         typedef put_aux::crtp< impl_, F, Tag, cont, modifier_traits_> put_crtp_;
     
+		typedef put_aux::modifier<Tag> modifier_;
+    
     	public:
     
     	typedef T value_type;
@@ -74,11 +87,15 @@ namespace anon_aux{
 		// Construct
         cont(){}
         explicit cont(const F& f) : put_crtp_( f ){}
-        explicit cont(impl_ const& v, const F& f): put_crtp_( f ), impl( v )
+        explicit cont(impl_ const& v, F const& f): put_crtp_( f ), impl( v )
         {
         	// Required by crtp when Tag or F is modified.
-            // Note : unlike put_aux::derived, cont is copied. 
-			// Order of initialization is put_crtp_ then cont.
+        }
+
+		explicit cont( impl_ const& v, F const& f, modifier_ const& m ) 
+        	: put_crtp_( f, m ), impl( v )
+        {
+        	// Required by crtp when Tag or F is modified.
         }
         
         // Deque interface

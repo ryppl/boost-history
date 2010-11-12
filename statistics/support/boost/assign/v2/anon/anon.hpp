@@ -10,7 +10,8 @@
 #ifndef BOOST_ASSIGN_V2_ANON_ANON_ER_2010_HPP
 #define BOOST_ASSIGN_V2_ANON_ANON_ER_2010_HPP
 
-#include <boost/assign/v2/anon/cont.hpp>
 #include <boost/assign/v2/anon/make.hpp>
+#include <boost/assign/v2/anon/cont.hpp>
+#include <boost/assign/v2/anon/csv.hpp>
 
 #endif

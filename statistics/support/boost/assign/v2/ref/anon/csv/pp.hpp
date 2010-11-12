@@ -14,13 +14,18 @@
 #include <boost/preprocessor/expr_if.hpp>
 #include <boost/preprocessor/comma_if.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/assign/v2/detail/config/arity_bound.hpp>
-#include <boost/assign/v2/ref/anon/generic/make.hpp>
-#include <boost/assign/v2/ref/anon/detail/fast_alloc.hpp>
+#include <boost/assign/v2/detail/config/limit_arity.hpp>
+#include <boost/assign/v2/detail/keyword/nil.hpp>
+#include <boost/assign/v2/ref/fusion/make.hpp>
+#include <boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp>
 #include <boost/assign/v2/ref/anon/csv/nth_result_of.hpp>
  
-#define BOOST_ASSIGN_V2_REF_CSV_ARRAY_invoke(z,n,data) \
- ( BOOST_PP_CAT(_,n) ) \
+//#define BOOST_ASSIGN_V2_REF_CSV_ARRAY_invoke(z,n,data) \
+// ( BOOST_PP_CAT(_,n) ) \
+///**/
+
+#define BOOST_ASSIGN_V2_REF_CSV_ARRAY_invoke(z, n, data) \
+ result.get_wrapper( n ) = wrapper_( BOOST_PP_CAT(_,n) ); \
 /**/
 
 #define BOOST_ASSIGN_V2_REF_CSV_ARRAY_tpl(U, N, param, Tag1) \
@@ -33,12 +38,25 @@
     >::type \
     csv_anon( BOOST_PP_ENUM_PARAMS(N, U& _) ) \
     { \
-        return generic_anon< \
-        	Tag1, \
-            anon_aux::csv_tag2_ \
-        > \
-        BOOST_PP_REPEAT( N, BOOST_ASSIGN_V2_REF_CSV_ARRAY_invoke, ~ ) ; \
+    	typedef typename nth_result_of::csv_anon< \
+    		N, \
+        	BOOST_PP_EXPR_IF(param, Tag1) BOOST_PP_COMMA_IF(param) \
+        	U \
+    	>::type result_; typedef typename result_::wrapper_type wrapper_;\
+        result_ result;\
+        BOOST_PP_REPEAT( N, BOOST_ASSIGN_V2_REF_CSV_ARRAY_invoke, ~ )\
+        return result;\
     } \
 /**/
 
+// Old impelementation:
+//    	typedef anon_aux::csv_tag2_ tag2_; \
+//        return ref::fusion< \
+//        	Tag1, \
+//            tag2_, \
+//            U \
+//        >( v2::_nil ) \
+//        	BOOST_PP_REPEAT( N, BOOST_ASSIGN_V2_REF_CSV_ARRAY_invoke, ~ ) ; \
+
 #endif
+

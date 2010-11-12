@@ -10,7 +10,8 @@
 #ifndef BOOST_ASSIGN_V2_PUT_RANGE_MODIFIER_PUT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_RANGE_MODIFIER_PUT_ER_2010_HPP
 #include <boost/range/algorithm/for_each.hpp>
-#include <boost/assign/v2/put/wrapper/make.hpp>
+//#include <boost/assign/v2/put/wrapper/make.hpp>
+#include <boost/assign/v2/put/sub/make.hpp>
 
 namespace boost{
 namespace assign{

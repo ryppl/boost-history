@@ -10,8 +10,8 @@
 #ifndef BOOST_ASSIGN_V2_CHAIN_CHAIN_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHAIN_CHAIN_ER_2010_HPP
 #include <boost/assign/v2/chain/traits/result.hpp>
-#include <boost/assign/v2/chain/aux/bitwise_or.hpp>
-#include <boost/assign/v2/chain/aux/logical_and.hpp>
+#include <boost/assign/v2/chain/aux_/bitwise_or.hpp>
+#include <boost/assign/v2/chain/aux_/logical_and.hpp>
 
 // Usage
 //	using namespace boost::assign::v2;
@@ -21,4 +21,3 @@
 //  BOOST_ASSERT(v == w);
 
 #endif
-

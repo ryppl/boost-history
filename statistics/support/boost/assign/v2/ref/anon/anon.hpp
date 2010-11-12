@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_REF_ANON_ANON_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ANON_ANON_ER_2010_HPP
 
-#include <boost/assign/v2/ref/anon/functor/functor.hpp>
+#include <boost/assign/v2/ref/anon/unary/unary.hpp>
 #include <boost/assign/v2/ref/anon/csv/csv.hpp>
 
 #endif

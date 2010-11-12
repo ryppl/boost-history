@@ -12,12 +12,12 @@
 #include <boost/assign/v2/ref/detail/convert_traits/result.hpp>
 
 namespace boost{
-	struct boost::use_default;
+//	struct boost::use_default;
 namespace assign{
 namespace v2{
 namespace type_traits{
 
-    template<typename Tag = use_default>
+    template<typename Tag = boost::use_default>
     struct meta_convert{
 
         template<typename T1,typename T2>
@@ -26,7 +26,7 @@ namespace type_traits{
 	};
 
 	// Specialize on Tag as needed.
-    
+
 }// type_traits
 }// v2
 }// assign

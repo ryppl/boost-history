@@ -115,11 +115,15 @@ BOOST_ASSIGN_V2_CHAIN_CHECKING_mpl( const , const   , const   , false    )
                 vt.push_back( ns::f );
                 vt.push_back( ns::g );
                 vt.push_back( ns::h );
-                boost::copy( 
-                	vt, 
-                    boost::begin( vt1 | _chain( vt2 ) | _chain( vt3 ))
-                );
                 {
+                	using namespace adaptor;
+                	boost::copy( 
+                		vt, 
+                    	boost::begin( vt1 | _chain( vt2 ) | _chain( vt3 ))
+                	);
+                }
+                {
+                	using namespace adaptor;
                 	typedef v2::container_tag::range tag_;
                     v2::checking::do_check( 
                     	tag_(), 
@@ -146,7 +150,7 @@ BOOST_ASSIGN_V2_CHAIN_CHECKING_mpl( const , const   , const   , false    )
                 	vw3[ 1 ] = g1 ;
                 	vw3[ 2 ] = h1 ;
 				}
-
+				using namespace adaptor;
                 boost::copy( 
                 	vt, 
                     boost::begin( vw1 | _chain( vw2 ) | _chain( vw3 ) )

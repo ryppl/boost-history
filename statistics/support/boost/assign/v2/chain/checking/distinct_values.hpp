@@ -49,6 +49,7 @@ namespace distinct_values{
         }																       \
         namespace chk = checking::container;                                   \
         {                                                                      \
+        	using namespace adaptor;										   \
     		chk::do_check( vec1 | _chain( vec2 ) | _chain( vec3 ) );           \
         }                                                                      \
     }														                   \

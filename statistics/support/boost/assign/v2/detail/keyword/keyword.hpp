@@ -10,11 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_DETAIL_KEYWORD_KEYWORD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_KEYWORD_KEYWORD_ER_2010_HPP
 
-#include <boost/assign/v2/detail/keyword/deduce.hpp>
-#include <boost/assign/v2/detail/keyword/fun.hpp>
-#include <boost/assign/v2/detail/keyword/lookup.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/detail/keyword/unwrap.hpp>
-#include <boost/assign/v2/detail/keyword/repeat.hpp>
 
 #endif

@@ -10,12 +10,16 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_WRAPPER_CRTP_ER_MPG_2010_HPP
 #define BOOST_ASSIGN_V2_REF_WRAPPER_CRTP_ER_MPG_2010_HPP
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/remove_const.hpp>
+#include <boost/type_traits/add_const.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/operators.hpp>
 
 // This design is an outgrowth of assign_detail::assign_reference<> by TO. The 
 // new feature is that the assignment operator and swap member function are 
-// customizable and there are two options (for now), identified by MPG : the 
+// customizable and there are two options, identified by MPG : the 
 // reference is assigned a new value (copy), or a new address (rebind). 
 
 namespace boost{
@@ -42,25 +46,19 @@ namespace ref{
         >
     {
 
+		typedef typename boost::remove_const<T>::type lvalue_;
+		typedef typename boost::add_const<T>::type rvalue_;
+
         public: 
         // protected
 
-        D& derived()
-        {
-            return static_cast<D&>( *this );
-        }
-
-        D const & derived()const
-        {
-            return static_cast<D const&>( *this );
-        }
+        D& derived(){ return static_cast<D&>( *this ); }
+        D const & derived()const{ return static_cast<D const&>( *this ); }
 
         public:
 
-        void operator=(T& r )
-        {
-            this->derived().assign( r );
-        }
+        void operator=(lvalue_& r ){ this->derived().assign( r ); }
+		void operator=(rvalue_& r ){ this->derived().assign( r ); }
 
         void swap( wrapper_crtp& r )
         {
@@ -116,14 +114,28 @@ namespace functional{
     {
     	assigner(T& val):value( val ){}
         
+		typedef typename boost::remove_const<T>::type lvalue_;
+		typedef typename boost::add_const<T>::type rvalue_;
+        
         typedef void result_type;
         
-        template<typename D>
-        void operator()(wrapper_crtp<D,T>& w)const
+        template<typename D> void operator()(wrapper_crtp<D, lvalue_>& w)const
+        {
+			this->impl<D, lvalue_>( w );
+		}        
+
+        template<typename D> void operator()(wrapper_crtp<D, rvalue_>& w)const
+        {
+			this->impl<D, rvalue_>( w );
+		}        
+
+        private:
+		template<typename D, typename U>        
+        void impl(wrapper_crtp<D, U>& w)const
         {
 			w = this->value;
 		}        
-        private:
+        
         assigner();
         mutable T& value;
     };

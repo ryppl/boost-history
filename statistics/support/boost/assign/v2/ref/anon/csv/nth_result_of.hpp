@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_REF_CONTAINER_ANON_CSV_NTH_RESULT_OF_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_CONTAINER_ANON_CSV_NTH_RESULT_OF_ER_2010_HPP
 #include <boost/mpl/empty_base.hpp>
-#include <boost/assign/v2/ref/anon/detail/fast_alloc_fwd.hpp>
+#include <boost/assign/v2/ref/static_array/alloc/fast_alloc_fwd.hpp>
 
 namespace boost{
 	struct use_default;
@@ -22,9 +22,9 @@ namespace anon_aux{
 }// anon_aux
 namespace nth_result_of{
 
-    template<std::size_t N,typename Tag1,typename T>
+    template<std::size_t N, typename Tag1, typename T>
     struct csv_anon{
-    	typedef anon_aux::fast_alloc<N,Tag1,T> type;
+    	typedef static_array_aux::fast_alloc<N, Tag1, T> type;
     };
 
 }// nth_result_of

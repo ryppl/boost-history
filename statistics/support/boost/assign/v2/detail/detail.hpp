@@ -10,6 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_DETAIL_DETAIL_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_DETAIL_ER_2010_HPP
 
+#include <boost/assign/v2/detail/checking/checking.hpp>
 #include <boost/assign/v2/detail/functor/functor.hpp>
 #include <boost/assign/v2/detail/fwd/fwd.hpp>
 #include <boost/assign/v2/detail/keyword/keyword.hpp>

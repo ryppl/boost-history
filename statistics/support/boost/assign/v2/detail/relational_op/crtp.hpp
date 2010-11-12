@@ -27,15 +27,19 @@ namespace relational_op_aux{
     //	template<typename T> bool equal_to(const T&)const;
     // 	template<typename T> bool less_than(const T&)const;
 	template<typename D>
-	struct crtp : base{
+	struct crtp{// : base{
     
     	 D const& derived()const{ return static_cast<D const&>(*this); }
          
     };
 
+	template<typename T>
+    struct is_relational : boost::is_base_of<crtp<T>,T>{};
+
 	template< typename A ,typename B>
     typename boost::disable_if<
-    	boost::is_base_of<base,A>,
+		relational_op_aux::is_relational<A>,
+//    	boost::is_base_of<base,A>,
         bool
     >::type
     operator==( A const& a, crtp< B > const& b) 
@@ -51,7 +55,8 @@ namespace relational_op_aux{
 
 	template< typename A ,typename B>
     typename boost::disable_if<
-    	boost::is_base_of<base,A>,
+//    	boost::is_base_of<base,A>,
+		relational_op_aux::is_relational<A>,
         bool
     >::type
     operator<( A const& a, crtp< B > const& b) 
@@ -67,7 +72,7 @@ namespace relational_op_aux{
 
 	// Deduced
 
-#define op(symb,expr)\
+#define MACRO(symb,expr)\
 	template< typename A ,typename B> \
     typename boost::disable_if< \
     	boost::is_base_of<base,A>, \
@@ -85,12 +90,12 @@ namespace relational_op_aux{
 	} \
 /**/
 
-	op( !=,  !(a == b)  )
-	op( <=,  (a < b) || (a == b)  )
-	op( >,   !(a <= b) )
-	op( >=,  (a > b) || (a == b) )
+	MACRO( !=,  !(a == b)  )
+	MACRO( <=,  (a < b) || (a == b)  )
+	MACRO( >,   !(a <= b) )
+	MACRO( >=,  (a > b) || (a == b) )
 
-#undef op
+#undef MACRO
     
 }// relational_op_aux
 }// v2

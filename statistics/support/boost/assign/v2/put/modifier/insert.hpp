@@ -9,28 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_INSERT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_INSERT_ER_2010_HPP
-#include <boost/assign/v2/put/modifier/def.hpp>
+#include <boost/assign/v2/put/modifier/xxx.hpp>
 
-namespace boost{
-namespace assign{ 
-namespace v2{
-namespace put_tag{ struct insert{}; }
-namespace put_aux{
-
-	template<>
-    struct modifier<v2::put_tag::insert>
-    {
-    
-    	modifier(){}
-        
-    	template<typename V,typename T>
-        void impl(V& v,T& t)const{ v.insert( t ); }
-        
-    };
-
-}// assign_aux
-}// v2
-}// assign
-}// boost
+BOOST_ASSIGN_V2_PUT_MODIFIER_XXX(insert)
 
 #endif

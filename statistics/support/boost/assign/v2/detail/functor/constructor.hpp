@@ -16,34 +16,33 @@
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/assign/v2/detail/type_traits/container/value.hpp>
-#include <boost/assign/v2/detail/config/arity_bound.hpp>
+#include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
 
-
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace functor_aux{
 
 	template<typename T>
-	class constructor : public functor_aux::crtp_unary_and_up< 
-    	functor_aux::constructor<T>, 
-        boost::mpl::always<T> 
+	class constructor : public functor_aux::crtp_unary_and_up<
+    	functor_aux::constructor<T>,
+        boost::mpl::always<T>
     >
 	{
 		typedef functor_aux::constructor<T> this_;
         typedef boost::mpl::always<T> meta_result_;
         typedef functor_aux::crtp_unary_and_up<this_, meta_result_> super_;
-         
+
     	public:
-        
+
 		constructor(){}
-    
-		T operator()()const{ return T(); } 
+
+		T operator()()const{ return T(); }
 
 		using super_::operator();
 
-#define BOOST_ASSIGN_V2_impl(z,N,data) \
+#define MACRO(z,N,data) \
     template<BOOST_PP_ENUM_PARAMS(N,typename T)> \
     T impl( BOOST_PP_ENUM_BINARY_PARAMS(N, T, &_) )const{ \
         return T( BOOST_PP_ENUM_PARAMS(N,_) ); \
@@ -51,12 +50,12 @@ namespace functor_aux{
 /**/
 BOOST_PP_REPEAT_FROM_TO(
 	1,
-    BOOST_ASSIGN_V2_ARITY_BOUND,
-    BOOST_ASSIGN_V2_impl,
+    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY),
+    MACRO,
     ~
 )
-#undef BOOST_ASSIGN_V2_impl
-	
+#undef MACRO
+
 	};
 
 	template<typename V>
@@ -86,7 +85,7 @@ namespace result_of{
     	typedef typename result_of::constructor<T>::type result_;
     	return result_();
     }
-        	
+
 }// v2
 }// assign
 }// boost

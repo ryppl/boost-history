@@ -18,6 +18,9 @@
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/assign/v2/ref/detail/unwrap/reference.hpp>
 
+// Note : In Boost.Assign.v2, this is deprecated but it could be used 
+// elsewhere.
+
 // Calling
 // 	*unwrap_iterator( it );
 // is equivalent to
@@ -62,7 +65,8 @@ namespace unwrap_aux{
         iterator(I base):super_(base)
         {
             typedef typename boost::iterator_reference<I>::type ref_;
-            typedef typename boost::is_convertible<ref_,R>::type is_convertible_;
+            typedef typename 
+            	boost::is_convertible<ref_,R>::type is_convertible_;
             BOOST_MPL_ASSERT(( is_convertible_ ));
         }
     };

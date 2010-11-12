@@ -7,6 +7,7 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
+/*
 #ifndef BOOST_ASSIGN_V2_REF_CONTAINER_STATIC_ARRAY_DETAIL_LAZY_ALLOC_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_CONTAINER_STATIC_ARRAY_DETAIL_LAZY_ALLOC_ER_2010_HPP
 #include <boost/shared_ptr.hpp>
@@ -43,7 +44,7 @@ namespace anon_aux{
 
         void alloc()const{ 
             this->ptr = smart_ptr_(new array_);
-            fusion_list_aux::assign_array(
+            assign_array(
             	*this->ptr,
                 static_cast<const D&>(*this)
             );	
@@ -81,3 +82,4 @@ namespace anon_aux{
 }// boost
 
 #endif
+*/

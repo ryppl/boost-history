@@ -47,7 +47,7 @@ namespace put_range_aux
 }// put_range_aux
 namespace adaptor
 {
-	put_range_aux::adaptor2 const put_range
+	put_range_aux::adaptor2 const _put_range
     	= put_range_aux::adaptor2();	
 
 }// adaptor

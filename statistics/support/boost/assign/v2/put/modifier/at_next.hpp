@@ -9,34 +9,42 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_AT_NEXT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_AT_NEXT_ER_2010_HPP
+#include <boost/accumulators/framework/accumulator_base.hpp>
 #include <boost/assign/v2/put/modifier/def.hpp>
+#include <boost/assign/v2/put/generic/new_modifier.hpp>
 #include <boost/assign/v2/detail/type_traits/value.hpp>
 
 namespace boost{
 namespace assign{ 
 namespace v2{
-namespace put_tag{ struct at_next{}; }
+namespace modifier_tag{ struct at_next{}; }
 namespace put_aux{
 
 	template<>
-    struct modifier<v2::put_tag::at_next>{
+    struct modifier<v2::modifier_tag::at_next>
+    {
 
 		modifier():i( 0 ){};
+        modifier( boost::accumulators::dont_care ):i( 0 ){}
     
     	template<typename V,typename T>
-        void impl(V& v,T& t)const{ 
+        void impl(V& v, T& t)const{ 
         	v.at( i++ ) = t; 
         }
 
-        // TODO
+        // TODO check
     	template<typename V,typename T>
-        void impl(V& v,T* t)const{ v.replace( i++ , t); }
+        void impl(V& v, T* t)const{ v.replace( i++ , t); }
         
         private:
         mutable std::size_t i;
     };
 
 }// assign_aux
+
+	put_aux::set_modifier<modifier_tag::at_next> const
+		_at_next = ( _modifier = modifier_tag::at_next() );
+
 }// v2
 }// assign
 }// boost

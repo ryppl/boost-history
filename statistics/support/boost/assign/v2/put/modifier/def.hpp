@@ -13,7 +13,7 @@
 namespace boost{
 namespace assign{ 
 namespace v2{
-namespace put_tag{
+namespace modifier_tag{
 	// add as necessary
 }
 namespace put_aux{
@@ -25,7 +25,7 @@ namespace put_aux{
     	//	template<typename V,typename T>
         //	void impl(V& v,T& t)const;
 
-		// WARNING: some modifiers such as modifier<put_tag::array> have an 
+		// Warning: modifiers such as modifier<modifier_tag::at_next> have an 
         // internal state that affects impl()'s working. 
         
     };
