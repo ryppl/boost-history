@@ -1,0 +1,254 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>User's guide</title>
+<link rel="stylesheet" href="..//usr/local/trunk/libs/assign/v2/doc/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="prev" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="next" href="users_guide/working_assumptions.html" title="Working assumptions">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="users_guide/working_assumptions.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" title="User's guide">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_assign_v2.users_guide"></a><a class="link" href="users_guide.html" title="User's guide"> User's guide</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="users_guide.html#boost_assign_v2.users_guide.notation">Notation</a></span></dt>
+<dt><span class="section"><a href="users_guide/working_assumptions.html">Working
+      assumptions</a></span></dt>
+<dt><span class="section"><a href="users_guide/anonymous_container_of_references.html">Anonymous
+      container of references</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="users_guide/anonymous_container_of_references.html#boost_assign_v2.users_guide.anonymous_container_of_references.assign_copy">Assign
+        copy</a></span></dt>
+<dt><span class="section"><a href="users_guide/anonymous_container_of_references.html#boost_assign_v2.users_guide.anonymous_container_of_references.assign_rebind">Assign
+        rebind</a></span></dt>
+<dt><span class="section"><a href="users_guide/anonymous_container_of_references.html#boost_assign_v2.users_guide.anonymous_container_of_references.the_functor_interface">The
+        functor interface</a></span></dt>
+</dl></dd>
+</dl></div>
+<p>
+      This section describes the usage of the tools of this library. For specific
+      details, check the reference section.
+    </p>
+<p>
+      All the examples given therein are in the <code class="computeroutput"><span class="special">/</span><span class="identifier">libs</span><span class="special">/</span><span class="identifier">assign</span><span class="special">/</span><span class="identifier">v2</span><span class="special">/</span><span class="identifier">example</span><span class="special">/</span></code>
+      directory.
+    </p>
+<div class="section" title="Notation">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.users_guide.notation"></a><a class="link" href="users_guide.html#boost_assign_v2.users_guide.notation" title="Notation">Notation</a>
+</h3></div></div></div>
+<div class="table">
+<a name="boost_assign_v2.users_guide.notation.symbols"></a><p class="title"><b>Table&#160;1.1.&#160;Symbols</b></p>
+<div class="table-contents"><table class="table" summary="Symbols">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Symbol
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">cont</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  A container
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  A key
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">t</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  A data
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">u</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  A key data pair
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">arg</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  An argument to a function
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="boost_assign_v2.users_guide.notation.indexes"></a><p class="title"><b>Table&#160;1.2.&#160;Indexes</b></p>
+<div class="table-contents"><table class="table" summary="Indexes">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="literal"> <code class="literal">i</code> = 0, ..., <code class="literal">n</code>-1</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Indexes a sequences of <code class="computeroutput">t</code>'s
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal"> <code class="literal">j</code> = 0, ..., <code class="literal">k</code>-1</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Indexes arguments associated with a <code class="computeroutput">t</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal"> <code class="literal">k</code>[<code class="literal">i</code>] </code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Number of function arguments at <code class="literal">i</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal"> <code class="computeroutput">arg</code>[<code class="literal">i</code>] </code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Set of arguments at <code class="literal">i</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal"> <code class="computeroutput">arg</code>[<code class="literal">i</code>,<code class="literal">j</code>]</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">j</code> th argument at <code class="literal">i</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal">a</code>[<code class="literal">i</code>] , <code class="literal">b</code>[<code class="literal">i</code>]
+                  , <code class="literal">c</code>[<code class="literal">i</code>] etc.
+                </p>
+              </td>
+<td>
+                <p>
+                  Shorthand for <code class="literal">arg</code>[<code class="literal">i</code>,<code class="literal">0</code>],
+                  <code class="literal">arg</code>[<code class="literal">i</code>,<code class="literal">1</code>],
+                  <code class="literal">arg</code>[<code class="literal">i</code>,<code class="literal">2</code>]
+                  etc.
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="users_guide/working_assumptions.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
