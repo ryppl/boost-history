@@ -1,37 +1,37 @@
 #include <iostream>
 
-//#include <libs/assign/v2/test/anon/anon.h>
+#include <libs/assign/v2/test/anon/anon.h>
 
-//#include <libs/assign/v2/test/chain/chain.h>
-//#include <libs/assign/v2/test/chain/convert.h>
+#include <libs/assign/v2/test/chain/chain.h>
+#include <libs/assign/v2/test/chain/convert.h>
 
-//#include <libs/assign/v2/test/detail/functor.h>
+#include <libs/assign/v2/test/detail/functor.h>
 
-//#include <libs/assign/v2/test/put/modulo_op.h>
-//#include <libs/assign/v2/test/put/ptr.h>
-//#include <libs/assign/v2/test/put/static.h>
-//#include <libs/assign/v2/test/put/stl.h>
-//#include <libs/assign/v2/test/put/tuple_refs.h>
-//#include <libs/assign/v2/test/put/compose/common/forward_parameter.h>
-//#include <libs/assign/v2/test/put/compose/functor/composer.h>
-//#include <libs/assign/v2/test/put/compose/functor/forward_args.h>
-//#include <libs/assign/v2/test/put/compose/functor/forward_seq_args.h>
-//#include <libs/assign/v2/test/put/compose/functor/stl.h>
-//#include <libs/assign/v2/test/put/compose/csv/composer.h>
-//#include <libs/assign/v2/test/put/compose/csv/stl.h>
+#include <libs/assign/v2/test/put/modulo_op.h>
+#include <libs/assign/v2/test/put/ptr.h>
+#include <libs/assign/v2/test/put/static.h>
+#include <libs/assign/v2/test/put/stl.h>
+#include <libs/assign/v2/test/put/tuple_refs.h>
+#include <libs/assign/v2/test/put/compose/common/forward_parameter.h>
+#include <libs/assign/v2/test/put/compose/functor/composer.h>
+#include <libs/assign/v2/test/put/compose/functor/forward_args.h>
+#include <libs/assign/v2/test/put/compose/functor/forward_seq_args.h>
+#include <libs/assign/v2/test/put/compose/functor/stl.h>
+#include <libs/assign/v2/test/put/compose/csv/composer.h>
+#include <libs/assign/v2/test/put/compose/csv/stl.h>
 
-//#include <libs/assign/v2/test/put_range/convert.h>
+#include <libs/assign/v2/test/put_range/convert.h>
 
-//#include <libs/assign/v2/test/type_traits/has_push.h>
-//#include <libs/assign/v2/test/type_traits/has_value_type.h>
-//#include <libs/assign/v2/test/type_traits/has_static_size.h>
+#include <libs/assign/v2/test/type_traits/has_push.h>
+#include <libs/assign/v2/test/type_traits/has_value_type.h>
+#include <libs/assign/v2/test/type_traits/has_static_size.h>
 
-//#include <libs/assign/v2/test/ref/convert_traits.h>
-//#include <libs/assign/v2/test/ref/wrapper.h>
-//#include <libs/assign/v2/test/ref/fusion.h>
-//#include <libs/assign/v2/test/ref/fusion_matrix.h>
-//#include <libs/assign/v2/test/ref/csv_anon.h>
-//#include <libs/assign/v2/test/ref/anon.h>
+#include <libs/assign/v2/test/ref/convert_traits.h>
+#include <libs/assign/v2/test/ref/wrapper.h>
+#include <libs/assign/v2/test/ref/fusion.h>
+#include <libs/assign/v2/test/ref/fusion_matrix.h>
+#include <libs/assign/v2/test/ref/csv_anon.h>
+#include <libs/assign/v2/test/ref/anon.h>
 
 //#include <libs/assign/v2/example/foo.h>
 //#include <libs/assign/v2/example/put_adaptor.h>
