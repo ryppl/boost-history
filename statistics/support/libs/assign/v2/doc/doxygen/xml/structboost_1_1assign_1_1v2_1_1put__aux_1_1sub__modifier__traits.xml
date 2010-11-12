@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1put__aux_1_1sub__modifier__traits" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::put_aux::sub_modifier_traits</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename V</type>
+      </param>
+      <param>
+        <type>typename F</type>
+      </param>
+      <param>
+        <type>typename Tag</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/make.hpp" line="57" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/make.hpp" bodystart="56" bodyend="57"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="classboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1arg__forwarder" kind="class" prot="public">
+    <compoundname>boost::assign::v2::put_compose_csv_aux::arg_forwarder</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1ref_1_1wrapper" prot="private" virt="non-virtual">boost::assign::v2::ref::wrapper&lt; ref::assign_tag::copy, O const  &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename O</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-type">
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1arg__forwarder_1aca6e6207c8bae8bd359caa2dbbf37c9a" prot="private" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1assign__tag_1_1copy" kindref="compound">ref::assign_tag::copy</ref></type>
+        <definition>typedef ref::assign_tag::copy boost::assign::v2::put_compose_csv_aux::arg_forwarder&lt; O &gt;::assign_tag_</definition>
+        <argsstring></argsstring>
+        <name>assign_tag_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp" line="27" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1arg__forwarder_1a0217b38fc96f9eb98452fd0274172ca1" prot="private" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1wrapper" kindref="compound">ref::wrapper</ref>&lt; <ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1assign__tag_1_1copy" kindref="compound">assign_tag_</ref>, O const  &gt;</type>
+        <definition>typedef ref::wrapper&lt;assign_tag_, O const&gt; boost::assign::v2::put_compose_csv_aux::arg_forwarder&lt; O &gt;::super_t</definition>
+        <argsstring></argsstring>
+        <name>super_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp" line="28" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1arg__forwarder_1a6d2a98dd50d284deba30c6dda9bb57fe" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::put_compose_csv_aux::arg_forwarder&lt; O &gt;::arg_forwarder</definition>
+        <argsstring>()</argsstring>
+        <name>arg_forwarder</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp" line="32" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp" bodystart="32" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1arg__forwarder_1a67479150933810813554ebc303a69986" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::put_compose_csv_aux::arg_forwarder&lt; O &gt;::arg_forwarder</definition>
+        <argsstring>(O const &amp;object)</argsstring>
+        <name>arg_forwarder</name>
+        <param>
+          <type>O const &amp;</type>
+          <declname>object</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp" line="34" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp" bodystart="33" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1arg__forwarder_1a030c7ab3b586597fcf3dad2b5c071719" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::put_compose_csv_aux::arg_forwarder&lt; O &gt;::operator()</definition>
+        <argsstring>(T &amp;t) const </argsstring>
+        <name>operator()</name>
+        <param>
+          <type>T &amp;</type>
+          <declname>t</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp" line="38" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp" bodystart="37" bodyend="40"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1arg__forwarder_1a9155a78330b9611066be6006d82176fd" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::put_compose_csv_aux::arg_forwarder&lt; O &gt;::operator()</definition>
+        <argsstring>(T const &amp;t) const </argsstring>
+        <name>operator()</name>
+        <param>
+          <type>T const &amp;</type>
+          <declname>t</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp" line="43" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp" bodystart="42" bodyend="45"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="80">
+        <label>boost::assign::v2::put_compose_csv_aux::arg_forwarder&lt; O &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1arg__forwarder"/>
+        <childnode refid="81" relation="private-inheritance">
+        </childnode>
+      </node>
+      <node id="81">
+        <label>boost::assign::v2::ref::wrapper&lt; ref::assign_tag::copy, O const  &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1wrapper"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="82">
+        <label>boost::assign::v2::put_compose_csv_aux::arg_forwarder&lt; O &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1arg__forwarder"/>
+        <childnode refid="83" relation="private-inheritance">
+        </childnode>
+      </node>
+      <node id="83">
+        <label>boost::assign::v2::ref::wrapper&lt; ref::assign_tag::copy, O const  &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1wrapper"/>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp" line="26" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp" bodystart="25" bodyend="47"/>
+    <listofallmembers>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1arg__forwarder_1a6d2a98dd50d284deba30c6dda9bb57fe" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::arg_forwarder</scope><name>arg_forwarder</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1arg__forwarder_1a67479150933810813554ebc303a69986" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::arg_forwarder</scope><name>arg_forwarder</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1arg__forwarder_1aca6e6207c8bae8bd359caa2dbbf37c9a" prot="private" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::arg_forwarder</scope><name>assign_tag_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1arg__forwarder_1a030c7ab3b586597fcf3dad2b5c071719" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::arg_forwarder</scope><name>operator()</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1arg__forwarder_1a9155a78330b9611066be6006d82176fd" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::arg_forwarder</scope><name>operator()</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1arg__forwarder_1a0217b38fc96f9eb98452fd0274172ca1" prot="private" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::arg_forwarder</scope><name>super_t</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

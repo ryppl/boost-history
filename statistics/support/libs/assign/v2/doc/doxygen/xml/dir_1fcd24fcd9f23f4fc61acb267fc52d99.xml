@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_1fcd24fcd9f23f4fc61acb267fc52d99" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/</compoundname>
+    <innerfile refid="chain_2traits_2iterator_8hpp">iterator.hpp</innerfile>
+    <innerfile refid="chain_2traits_2range_8hpp">range.hpp</innerfile>
+    <innerfile refid="chain_2traits_2result_8hpp">result.hpp</innerfile>
+    <innerfile refid="use__lvalue_8hpp">use_lvalue.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/"/>
+  </compounddef>
+</doxygen>

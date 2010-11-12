@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1forward__seq__args__caller" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::put_compose_aux::forward_seq_args_caller</compoundname>
+    <templateparamlist>
+      <param>
+        <type>std::size_t</type>
+        <declname>I</declname>
+        <defname>I</defname>
+      </param>
+      <param>
+        <type>std::size_t</type>
+        <declname>N</declname>
+        <defname>N</defname>
+      </param>
+      <param>
+        <type>bool</type>
+        <declname>exit</declname>
+        <defname>exit</defname>
+        <defval>(I == N)</defval>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1forward__seq__args__caller_1ac1bd8a1b136152edb5840dd9a25b7a7b" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>typename H</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>static void boost::assign::v2::put_compose_aux::forward_seq_args_caller&lt; I, N, exit &gt;::call</definition>
+        <argsstring>(T const &amp;object, H const &amp;h)</argsstring>
+        <name>call</name>
+        <param>
+          <type>T const &amp;</type>
+          <declname>object</declname>
+        </param>
+        <param>
+          <type>H const &amp;</type>
+          <declname>h</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/forward_seq_args.hpp" line="27" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/forward_seq_args.hpp" bodystart="26" bodyend="37"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/forward_seq_args.hpp" line="23" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/forward_seq_args.hpp" bodystart="22" bodyend="39"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1forward__seq__args__caller_1ac1bd8a1b136152edb5840dd9a25b7a7b" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_aux::forward_seq_args_caller</scope><name>call</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

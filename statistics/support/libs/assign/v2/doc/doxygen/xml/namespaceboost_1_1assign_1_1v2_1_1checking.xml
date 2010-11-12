@@ -1,0 +1,208 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1checking" kind="namespace">
+    <compoundname>boost::assign::v2::checking</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1checking_1_1deduce__check" prot="public">boost::assign::v2::checking::deduce_check</innerclass>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1checking_1_1chain">boost::assign::v2::checking::chain</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1checking_1_1constants">boost::assign::v2::checking::constants</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1checking_1_1container">boost::assign::v2::checking::container</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1checking_1_1iterator">boost::assign::v2::checking::iterator</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1checking_1_1relational__op">boost::assign::v2::checking::relational_op</innernamespace>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1checking_1ae3b47a2aaa4c18f30f250a5d75d3c785" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename V</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::checking::do_check</definition>
+        <argsstring>(container_tag::static_array, V const &amp;ar1)</argsstring>
+        <name>do_check</name>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1container__tag_1_1static__array" kindref="compound">container_tag::static_array</ref></type>
+        </param>
+        <param>
+          <type>V const &amp;</type>
+          <declname>ar1</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/array.hpp" line="23" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/array.hpp" bodystart="22" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1checking_1aeb87295702039f20feeac8a1f1b093cd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename P</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::checking::do_assert</definition>
+        <argsstring>()</argsstring>
+        <name>do_assert</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/assert.hpp" line="22" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/assert.hpp" bodystart="21" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1checking_1a74fcfe5a4bbc2e87ae0b044e6d5d3a08" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename A</type>
+          </param>
+          <param>
+            <type>typename B</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::checking::do_assert_is_same</definition>
+        <argsstring>()</argsstring>
+        <name>do_assert_is_same</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/assert.hpp" line="27" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/assert.hpp" bodystart="27" bodyend="30"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1checking_1a2f9c5ff6696a1fc77a1a7a6bdf3fa9a2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename V</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::checking::do_check</definition>
+        <argsstring>(container_tag::fifo, V const &amp;v1)</argsstring>
+        <name>do_check</name>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1container__tag_1_1fifo" kindref="compound">container_tag::fifo</ref></type>
+        </param>
+        <param>
+          <type>V const &amp;</type>
+          <declname>v1</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/fifo.hpp" line="23" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/fifo.hpp" bodystart="22" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1checking_1a6618fefab6e6e87ae2c8ddd58bc0f74e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename V</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::checking::do_check</definition>
+        <argsstring>(container_tag::lifo, V const &amp;v1)</argsstring>
+        <name>do_check</name>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1container__tag_1_1lifo" kindref="compound">container_tag::lifo</ref></type>
+        </param>
+        <param>
+          <type>V const &amp;</type>
+          <declname>v1</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/lifo.hpp" line="23" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/lifo.hpp" bodystart="22" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1checking_1ae12f505fc7ad14efc35157a674d20769" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename V</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::checking::do_check</definition>
+        <argsstring>(container_tag::map, V &amp;map)</argsstring>
+        <name>do_check</name>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1container__tag_1_1map" kindref="compound">container_tag::map</ref></type>
+        </param>
+        <param>
+          <type>V &amp;</type>
+          <declname>map</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/map.hpp" line="28" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/map.hpp" bodystart="27" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1checking_1a9a78a58e92185c4fc58e37f75c736139" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename R</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::checking::do_check</definition>
+        <argsstring>(container_tag::range, R const &amp;r)</argsstring>
+        <name>do_check</name>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1container__tag_1_1range" kindref="compound">container_tag::range</ref></type>
+        </param>
+        <param>
+          <type>R const &amp;</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/range.hpp" line="27" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/range.hpp" bodystart="26" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1checking_1a490a9a5c08bc4b82c3f4a4e0eaedc2df" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename R</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::checking::do_check</definition>
+        <argsstring>(container_tag::sorted, R const &amp;r)</argsstring>
+        <name>do_check</name>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1container__tag_1_1sorted" kindref="compound">container_tag::sorted</ref></type>
+        </param>
+        <param>
+          <type>R const &amp;</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/range.hpp" line="38" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/range.hpp" bodystart="37" bodyend="45"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/distinct_values.hpp" line="22"/>
+  </compounddef>
+</doxygen>

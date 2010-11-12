@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1_1result__of__modulo_1_1deduce" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::put_aux::crtp::result_of_modulo::deduce</compoundname>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1_1result__of__modulo_1_1deduce_1a776091bf9f900119f5c126b093700d3d" prot="public" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1deduce__constructor" kindref="compound">functor_aux::deduce_constructor</ref>&lt; V &gt;</type>
+        <definition>typedef functor_aux::deduce_constructor&lt;V&gt; boost::assign::v2::put_aux::crtp&lt; V, F, Tag, D, Traits &gt;::result_of_modulo::deduce::caller_</definition>
+        <argsstring></argsstring>
+        <name>caller_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" line="136" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" bodystart="136" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1_1result__of__modulo_1_1deduce_1a52ec91c855d6a7a7c4019e0ecad2d019" prot="public" static="no">
+        <type><ref refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor" kindref="compound">caller_::type</ref></type>
+        <definition>typedef caller_::type boost::assign::v2::put_aux::crtp&lt; V, F, Tag, D, Traits &gt;::result_of_modulo::deduce::cons_</definition>
+        <argsstring></argsstring>
+        <name>cons_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" line="137" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" bodystart="137" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1_1result__of__modulo_1_1deduce_1a12a4b22abf1c3c03c1476316bdec153d" prot="public" static="no">
+        <type>boost::mpl::apply1&lt; <ref refid="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__fun" kindref="compound">v2::result_of_modulo::new_fun</ref>&lt; D &gt;, <ref refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor" kindref="compound">cons_</ref> &gt;::type</type>
+        <definition>typedef boost::mpl::apply1&lt; v2::result_of_modulo::new_fun&lt;D&gt;, cons_ &gt;::type boost::assign::v2::put_aux::crtp&lt; V, F, Tag, D, Traits &gt;::result_of_modulo::deduce::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" line="141" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" bodystart="141" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" line="135" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" bodystart="134" bodyend="142"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1_1result__of__modulo_1_1deduce_1a776091bf9f900119f5c126b093700d3d" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::crtp::result_of_modulo::deduce</scope><name>caller_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1_1result__of__modulo_1_1deduce_1a52ec91c855d6a7a7c4019e0ecad2d019" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::crtp::result_of_modulo::deduce</scope><name>cons_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1_1result__of__modulo_1_1deduce_1a12a4b22abf1c3c03c1476316bdec153d" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::crtp::result_of_modulo::deduce</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

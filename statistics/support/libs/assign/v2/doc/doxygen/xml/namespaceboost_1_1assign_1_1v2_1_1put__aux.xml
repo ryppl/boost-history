@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1put__aux" kind="namespace">
+    <compoundname>boost::assign::v2::put_aux</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1put__base" prot="public">boost::assign::v2::put_aux::put_base</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1crtp__traits" prot="public">boost::assign::v2::put_aux::crtp_traits</innerclass>
+    <innerclass refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp" prot="public">boost::assign::v2::put_aux::crtp</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1expose__fun" prot="public">boost::assign::v2::put_aux::expose_fun</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1expose__modifier" prot="public">boost::assign::v2::put_aux::expose_modifier</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1new__fun" prot="public">boost::assign::v2::put_aux::new_fun</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1kwd__fun" prot="public">boost::assign::v2::put_aux::kwd_fun</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1set__modifier" prot="public">boost::assign::v2::put_aux::set_modifier</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1new__modifier" prot="public">boost::assign::v2::put_aux::new_modifier</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1at__next_01_4" prot="public">boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::at_next &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1deduce__modifier" prot="public">boost::assign::v2::put_aux::deduce_modifier</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1kwd__deduce" prot="public">boost::assign::v2::put_aux::kwd_deduce</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1deduce" prot="public">boost::assign::v2::put_aux::deduce</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier" prot="public">boost::assign::v2::put_aux::modifier</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1incr__lookup_01_4" prot="public">boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::incr_lookup &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1modulo__incr__lookup" prot="public">boost::assign::v2::put_aux::modulo_incr_lookup</innerclass>
+    <innerclass refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4" prot="public">boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;</innerclass>
+    <innerclass refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1modulo__repeat" prot="public">boost::assign::v2::put_aux::modulo_repeat</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1sub__modifier__traits" prot="public">boost::assign::v2::put_aux::sub_modifier_traits</innerclass>
+    <innerclass refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1sub" prot="public">boost::assign::v2::put_aux::sub</innerclass>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1put__aux_1ab97485f96efeb5fefd33d55289a664a5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>typename F1</type>
+          </param>
+        </templateparamlist>
+        <type>boost::mpl::apply1&lt; <ref refid="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__fun" kindref="compound">result_of_modulo::new_fun</ref>&lt; T &gt;, F1 &gt;::type</type>
+        <definition>boost::mpl::apply1&lt;result_of_modulo::new_fun&lt;T&gt;, F1&gt;::type boost::assign::v2::put_aux::operator%</definition>
+        <argsstring>(T const &amp;t, put_aux::new_fun&lt; F1 &gt; const &amp;h)</argsstring>
+        <name>operator%</name>
+        <param>
+          <type>T const &amp;</type>
+          <declname>t</declname>
+        </param>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1new__fun" kindref="compound">put_aux::new_fun</ref>&lt; F1 &gt; const &amp;</type>
+          <declname>h</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_fun.hpp" line="38" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_fun.hpp" bodystart="34" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1put__aux_1a7284dc4a96b5a61bd596379c1dd8c712" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>typename NewTag</type>
+          </param>
+        </templateparamlist>
+        <type>boost::mpl::apply1&lt; <ref refid="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__modifier" kindref="compound">v2::result_of_modulo::new_modifier</ref>&lt; T &gt;, NewTag &gt;::type</type>
+        <definition>boost::mpl::apply1&lt; v2::result_of_modulo::new_modifier&lt;T&gt;, NewTag &gt;::type boost::assign::v2::put_aux::operator%</definition>
+        <argsstring>(T const &amp;t, put_aux::set_modifier&lt; NewTag &gt; const &amp;h)</argsstring>
+        <name>operator%</name>
+        <param>
+          <type>T const &amp;</type>
+          <declname>t</declname>
+        </param>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1set__modifier" kindref="compound">put_aux::set_modifier</ref>&lt; NewTag &gt; const &amp;</type>
+          <declname>h</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_modifier.hpp" line="52" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_modifier.hpp" bodystart="48" bodyend="59"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1put__aux_1a4a407f1d35503e17e84b765ac5c84a55" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>T::result_of_modulo::deduce::type</type>
+        <definition>T::result_of_modulo::deduce::type boost::assign::v2::put_aux::operator%</definition>
+        <argsstring>(T const &amp;t, kwd_deduce const &amp;kwd)</argsstring>
+        <name>operator%</name>
+        <param>
+          <type>T const &amp;</type>
+          <declname>t</declname>
+        </param>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1kwd__deduce" kindref="compound">kwd_deduce</ref> const &amp;</type>
+          <declname>kwd</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/deduce.hpp" line="80" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/deduce.hpp" bodystart="76" bodyend="82"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1put__aux_1a0183130e1e24b759282806d8d0a83700" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1incr__lookup" kindref="compound">result_of_modulo::incr_lookup</ref>&lt; T &gt;::type</type>
+        <definition>result_of_modulo::incr_lookup&lt;T&gt;::type boost::assign::v2::put_aux::operator%</definition>
+        <argsstring>(T const &amp;t, put_aux::modulo_incr_lookup const &amp;kwd)</argsstring>
+        <name>operator%</name>
+        <param>
+          <type>T const &amp;</type>
+          <declname>t</declname>
+        </param>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1modulo__incr__lookup" kindref="compound">put_aux::modulo_incr_lookup</ref> const &amp;</type>
+          <declname>kwd</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/incr_lookup.hpp" line="93" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/incr_lookup.hpp" bodystart="89" bodyend="96"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1put__aux_1afa7cd874723910a94edcd35deeca0e87" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>boost::lazy_enable_if&lt; boost::is_base_of&lt; <ref refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1put__base" kindref="compound">put_aux::put_base</ref>, T &gt;, <ref refid="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1repeat" kindref="compound">result_of_modulo::repeat</ref>&lt; T &gt; &gt;::type</type>
+        <definition>boost::lazy_enable_if&lt; boost::is_base_of&lt;put_aux::put_base, T&gt;, result_of_modulo::repeat&lt;T&gt; &gt;::type boost::assign::v2::put_aux::operator%</definition>
+        <argsstring>(T const &amp;t, put_aux::modulo_repeat const &amp;h)</argsstring>
+        <name>operator%</name>
+        <param>
+          <type>T const &amp;</type>
+          <declname>t</declname>
+        </param>
+        <param>
+          <type><ref refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1modulo__repeat" kindref="compound">put_aux::modulo_repeat</ref> const &amp;</type>
+          <declname>h</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" line="121" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" bodystart="117" bodyend="124"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/base.hpp" line="16"/>
+  </compounddef>
+</doxygen>

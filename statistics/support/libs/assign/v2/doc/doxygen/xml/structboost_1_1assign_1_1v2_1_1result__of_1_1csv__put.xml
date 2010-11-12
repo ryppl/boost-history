@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1result__of_1_1csv__put" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::result_of::csv_put</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>V</declname>
+        <defname>V</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1result__of_1_1csv__put_1a46c6592f9544d37ec37fd0697f1eb84b" prot="public" static="no">
+        <type><ref refid="classboost_1_1assign_1_1v2_1_1csv__put__aux_1_1sub" kindref="compound">csv_put_aux::sub</ref>&lt; V &gt;</type>
+        <definition>typedef csv_put_aux::sub&lt;V&gt; boost::assign::v2::result_of::csv_put&lt; V &gt;::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/csv.hpp" line="71" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/csv.hpp" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/csv.hpp" line="70" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/csv.hpp" bodystart="69" bodyend="72"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1result__of_1_1csv__put_1a46c6592f9544d37ec37fd0697f1eb84b" prot="public" virt="non-virtual"><scope>boost::assign::v2::result_of::csv_put</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1chain__aux_1_1sub" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::chain_aux::sub</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename R</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1chain__aux_1_1sub_1af2861e5c93d429e178e79a7420c4fe1b" prot="public" static="no">
+        <type>R</type>
+        <definition>typedef R boost::assign::v2::chain_aux::sub&lt; R &gt;::super_t</definition>
+        <argsstring></argsstring>
+        <name>super_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/sub.hpp" line="30" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/sub.hpp" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1chain__aux_1_1sub_1a9bb13cc2fec324461a587956806c5deb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::chain_aux::sub&lt; R &gt;::sub</definition>
+        <argsstring>()</argsstring>
+        <name>sub</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/sub.hpp" line="32" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/sub.hpp" bodystart="32" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1chain__aux_1_1sub_1abccd11f306755d64540f06497b32cf6d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::chain_aux::sub&lt; R &gt;::sub</definition>
+        <argsstring>(super_t const &amp;s)</argsstring>
+        <name>sub</name>
+        <param>
+          <type>super_t const &amp;</type>
+          <declname>s</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/sub.hpp" line="33" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/sub.hpp" bodystart="33" bodyend="33"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/sub.hpp" line="28" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/sub.hpp" bodystart="27" bodyend="50"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1chain__aux_1_1sub_1a9bb13cc2fec324461a587956806c5deb" prot="public" virt="non-virtual"><scope>boost::assign::v2::chain_aux::sub</scope><name>sub</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1chain__aux_1_1sub_1abccd11f306755d64540f06497b32cf6d" prot="public" virt="non-virtual"><scope>boost::assign::v2::chain_aux::sub</scope><name>sub</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1chain__aux_1_1sub_1af2861e5c93d429e178e79a7420c4fe1b" prot="public" virt="non-virtual"><scope>boost::assign::v2::chain_aux::sub</scope><name>super_t</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

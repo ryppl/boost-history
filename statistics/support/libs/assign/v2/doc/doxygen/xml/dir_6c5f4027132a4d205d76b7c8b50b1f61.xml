@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_6c5f4027132a4d205d76b7c8b50b1f61" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/keyword/</compoundname>
+    <innerfile refid="detail_2keyword_2deduce_8hpp">deduce.hpp</innerfile>
+    <innerfile refid="fun_8hpp">fun.hpp</innerfile>
+    <innerfile refid="detail_2keyword_2keyword_8hpp">keyword.hpp</innerfile>
+    <innerfile refid="lookup_8hpp">lookup.hpp</innerfile>
+    <innerfile refid="nil_8hpp">nil.hpp</innerfile>
+    <innerfile refid="detail_2keyword_2repeat_8hpp">repeat.hpp</innerfile>
+    <innerfile refid="unwrap_8hpp">unwrap.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/keyword/"/>
+  </compounddef>
+</doxygen>

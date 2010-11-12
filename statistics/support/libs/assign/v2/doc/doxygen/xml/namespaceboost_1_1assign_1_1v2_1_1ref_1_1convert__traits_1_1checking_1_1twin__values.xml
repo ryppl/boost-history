@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1checking_1_1twin__values" kind="namespace">
+    <compoundname>boost::assign::v2::ref::convert_traits::checking::twin_values</compoundname>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1checking_1_1twin__values_1a38835c48b69eb4a33ecbd975702ec621" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::ref::convert_traits::checking::twin_values::do_check</definition>
+        <argsstring>()</argsstring>
+        <name>do_check</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/checking.hpp" line="45" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/checking.hpp" bodystart="44" bodyend="67"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/checking.hpp" line="41"/>
+  </compounddef>
+</doxygen>

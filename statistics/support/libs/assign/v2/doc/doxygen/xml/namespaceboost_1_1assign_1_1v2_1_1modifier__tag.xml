@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1modifier__tag" kind="namespace">
+    <compoundname>boost::assign::v2::modifier_tag</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1modifier__tag_1_1at__next" prot="public">boost::assign::v2::modifier_tag::at_next</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1modifier__tag_1_1incr__lookup" prot="public">boost::assign::v2::modifier_tag::incr_lookup</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1modifier__tag_1_1repeat" prot="public">boost::assign::v2::modifier_tag::repeat</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/at_next.hpp" line="20"/>
+  </compounddef>
+</doxygen>

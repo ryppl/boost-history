@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1static__array__like" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::container_type_traits::ptr_to_value_aux::static_array_like</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1static__array__like_1_1is__applicable" prot="public">boost::assign::v2::container_type_traits::ptr_to_value_aux::static_array_like::is_applicable</innerclass>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>V</declname>
+        <defname>V</defname>
+      </param>
+      <param>
+        <type>template&lt; typename, std::size_t &gt; class</type>
+        <declname>F</declname>
+        <defname>F</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1static__array__like_1a5c027db4af160e4a6f9415da1f765443" prot="public" static="no">
+        <type>boost::remove_reference&lt; typename V::reference &gt;::type</type>
+        <definition>typedef boost::remove_reference&lt; typename V::reference &gt;::type boost::assign::v2::container_type_traits::ptr_to_value_aux::static_array_like&lt; V, F &gt;::value_type</definition>
+        <argsstring></argsstring>
+        <name>value_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp" line="67" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1static__array__like_1a6bbc422e89751aff62e794f69da574ae" prot="public" static="no">
+        <type>F&lt; typename static_array_like::value_type, <ref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1static__size" kindref="compound">container_type_traits::static_size</ref>&lt; V &gt;::<ref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1value" kindref="compound">value</ref> &gt;</type>
+        <definition>typedef F&lt; typename static_array_like::value_type, container_type_traits::static_size&lt;V&gt;::value &gt; boost::assign::v2::container_type_traits::ptr_to_value_aux::static_array_like&lt; V, F &gt;::container_type</definition>
+        <argsstring></argsstring>
+        <name>container_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp" line="72" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp" line="59" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp" bodystart="59" bodyend="74"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1static__array__like_1a6bbc422e89751aff62e794f69da574ae" prot="public" virt="non-virtual"><scope>boost::assign::v2::container_type_traits::ptr_to_value_aux::static_array_like</scope><name>container_type</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1static__array__like_1a5c027db4af160e4a6f9415da1f765443" prot="public" virt="non-virtual"><scope>boost::assign::v2::container_type_traits::ptr_to_value_aux::static_array_like</scope><name>value_type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

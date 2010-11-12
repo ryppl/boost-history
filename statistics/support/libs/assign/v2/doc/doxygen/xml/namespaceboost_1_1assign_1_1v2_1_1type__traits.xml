@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1type__traits" kind="namespace">
+    <compoundname>boost::assign::v2::type_traits</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1decay" prot="public">boost::assign::v2::type_traits::decay</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1has__value__type" prot="public">boost::assign::v2::type_traits::has_value_type</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1is__stl__pair" prot="public">boost::assign::v2::type_traits::is_stl_pair</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1is__stl__pair_3_01std_1_1pair_3_01_t_00_01_u_01_4_01_4" prot="public">boost::assign::v2::type_traits::is_stl_pair&lt; std::pair&lt; T, U &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1meta__convert" prot="public">boost::assign::v2::type_traits::meta_convert</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1same__remove__cv" prot="public">boost::assign::v2::type_traits::same_remove_cv</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1value__impl" prot="public">boost::assign::v2::type_traits::value_impl</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1value" prot="public">boost::assign::v2::type_traits::value</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/decay.hpp" line="19"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1incr__lookup_01_4" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::incr_lookup &gt;</compoundname>
+    <templateparamlist>
+    </templateparamlist>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1incr__lookup_01_4_1a9b9062706b70e7f2ec7cce1ca6ef3307" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::incr_lookup &gt;::n</definition>
+        <argsstring></argsstring>
+        <name>n</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/incr_lookup.hpp" line="45" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/incr_lookup.hpp" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1incr__lookup_01_4_1a0504565480ceeef3fb81dfcc1cf61082" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::incr_lookup &gt;::modifier</definition>
+        <argsstring>()</argsstring>
+        <name>modifier</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/incr_lookup.hpp" line="36" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/incr_lookup.hpp" bodystart="36" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1incr__lookup_01_4_1a85d3f9a326ac9323e2652340f82ce4e5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::incr_lookup &gt;::modifier</definition>
+        <argsstring>(std::size_t m)</argsstring>
+        <name>modifier</name>
+        <param>
+          <type>std::size_t</type>
+          <declname>m</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/incr_lookup.hpp" line="37" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/incr_lookup.hpp" bodystart="37" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1incr__lookup_01_4_1ac97d31c02208ea74ed709467eeebfc94" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename V</type>
+          </param>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::incr_lookup &gt;::impl</definition>
+        <argsstring>(V &amp;v, T &amp;t) const </argsstring>
+        <name>impl</name>
+        <param>
+          <type>V &amp;</type>
+          <declname>v</declname>
+        </param>
+        <param>
+          <type>T &amp;</type>
+          <declname>t</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/incr_lookup.hpp" line="40" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/incr_lookup.hpp" bodystart="40" bodyend="42"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/incr_lookup.hpp" line="34" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/incr_lookup.hpp" bodystart="33" bodyend="46"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1incr__lookup_01_4_1ac97d31c02208ea74ed709467eeebfc94" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::incr_lookup &gt;</scope><name>impl</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1incr__lookup_01_4_1a0504565480ceeef3fb81dfcc1cf61082" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::incr_lookup &gt;</scope><name>modifier</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1incr__lookup_01_4_1a85d3f9a326ac9323e2652340f82ce4e5" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::incr_lookup &gt;</scope><name>modifier</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1incr__lookup_01_4_1a9b9062706b70e7f2ec7cce1ca6ef3307" prot="private" virt="non-virtual"><scope>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::incr_lookup &gt;</scope><name>n</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1csv__put__aux" kind="namespace">
+    <compoundname>boost::assign::v2::csv_put_aux</compoundname>
+    <innerclass refid="classboost_1_1assign_1_1v2_1_1csv__put__aux_1_1sub" prot="public">boost::assign::v2::csv_put_aux::sub</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/csv.hpp" line="20"/>
+  </compounddef>
+</doxygen>

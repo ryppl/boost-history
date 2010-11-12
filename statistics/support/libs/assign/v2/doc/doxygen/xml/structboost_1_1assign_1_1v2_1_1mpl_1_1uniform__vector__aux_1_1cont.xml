@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1mpl_1_1uniform__vector__aux_1_1cont" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::mpl::uniform_vector_aux::cont</compoundname>
+    <templateparamlist>
+      <param>
+        <type>std::size_t</type>
+        <declname>N</declname>
+        <defname>N</defname>
+      </param>
+      <param>
+        <type>typename</type>
+        <declname>Seq</declname>
+        <defname>Seq</defname>
+      </param>
+      <param>
+        <type>typename</type>
+        <declname>T</declname>
+        <defname>T</defname>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/mpl/uniform_vector.hpp" line="30" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/mpl/uniform_vector.hpp" bodystart="23" bodyend="30"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

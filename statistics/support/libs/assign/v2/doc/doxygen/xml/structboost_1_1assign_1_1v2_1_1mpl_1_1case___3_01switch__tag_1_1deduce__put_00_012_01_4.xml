@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1mpl_1_1case___3_01switch__tag_1_1deduce__put_00_012_01_4" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::mpl::case_&lt; switch_tag::deduce_put, 2 &gt;</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1mpl_1_1wrap" prot="public" virt="non-virtual">boost::assign::v2::mpl::wrap&lt; v2::modifier_tag::push, container_type_traits::has_push_deduced_value &gt;</basecompoundref>
+    <templateparamlist>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="132">
+        <label>boost::assign::v2::mpl::case_&lt; switch_tag::deduce_put, 2 &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1mpl_1_1case___3_01switch__tag_1_1deduce__put_00_012_01_4"/>
+        <childnode refid="133" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="133">
+        <label>boost::assign::v2::mpl::wrap&lt; v2::modifier_tag::push, container_type_traits::has_push_deduced_value &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1mpl_1_1wrap"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="134">
+        <label>boost::assign::v2::mpl::case_&lt; switch_tag::deduce_put, 2 &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1mpl_1_1case___3_01switch__tag_1_1deduce__put_00_012_01_4"/>
+        <childnode refid="135" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="135">
+        <label>boost::assign::v2::mpl::wrap&lt; v2::modifier_tag::push, container_type_traits::has_push_deduced_value &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1mpl_1_1wrap"/>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/deduce.hpp" line="56" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/deduce.hpp" bodystart="52" bodyend="56"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1mpl_1_1wrap_1ae0b1d964657a1a9cd866a659a468b076" prot="public" virt="non-virtual"><scope>boost::assign::v2::mpl::case_&lt; switch_tag::deduce_put, 2 &gt;</scope><name>tag</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

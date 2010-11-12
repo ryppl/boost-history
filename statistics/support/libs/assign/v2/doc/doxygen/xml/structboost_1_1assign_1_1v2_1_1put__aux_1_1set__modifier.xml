@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1put__aux_1_1set__modifier" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::put_aux::set_modifier</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>Tag</declname>
+        <defname>Tag</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1set__modifier_1a9f4dda2583c3290a1dc9ff37359ee36b" prot="public" static="no" mutable="no">
+        <type>Tag</type>
+        <definition>Tag boost::assign::v2::put_aux::set_modifier&lt; Tag &gt;::modifier_tag</definition>
+        <argsstring></argsstring>
+        <name>modifier_tag</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_modifier.hpp" line="29" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_modifier.hpp" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1set__modifier_1a40834d1c8e8032fae5b368381ea3b1bc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::put_aux::set_modifier&lt; Tag &gt;::set_modifier</definition>
+        <argsstring>()</argsstring>
+        <name>set_modifier</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_modifier.hpp" line="26" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_modifier.hpp" bodystart="26" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1set__modifier_1a7bd51fa82a9bca51e8de62d34836f519" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::put_aux::set_modifier&lt; Tag &gt;::set_modifier</definition>
+        <argsstring>(Tag const &amp;t)</argsstring>
+        <name>set_modifier</name>
+        <param>
+          <type>Tag const &amp;</type>
+          <declname>t</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_modifier.hpp" line="27" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_modifier.hpp" bodystart="27" bodyend="27"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_modifier.hpp" line="24" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_modifier.hpp" bodystart="23" bodyend="30"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1set__modifier_1a9f4dda2583c3290a1dc9ff37359ee36b" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::set_modifier</scope><name>modifier_tag</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1set__modifier_1a40834d1c8e8032fae5b368381ea3b1bc" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::set_modifier</scope><name>set_modifier</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1set__modifier_1a7bd51fa82a9bca51e8de62d34836f519" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::set_modifier</scope><name>set_modifier</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

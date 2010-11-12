@@ -1,0 +1,422 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container" kind="class" prot="public">
+    <compoundname>boost::assign::v2::ref::fusion_matrix_aux::container</compoundname>
+    <basecompoundref refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1link__holder" prot="public" virt="non-virtual">boost::assign::v2::ref::fusion_aux::link_holder&lt; L, N==0 &gt;</basecompoundref>
+    <basecompoundref refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up" prot="public" virt="non-virtual">boost::assign::v2::functor_aux::crtp_unary_and_up&lt; fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, BOOST_PP_ENUM_PARAMS(BOOST_ASSIGN_V2_LIMIT_ARITY, T) &gt;, boost::mpl::unpack_args&lt; fusion_matrix_aux::meta_result&lt; N, L, Tag1, Tag2, BOOST_PP_ENUM_PARAMS(BOOST_ASSIGN_V2_LIMIT_ARITY, T) &gt; &gt; &gt;</basecompoundref>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1_1link__result__static__row" prot="public">boost::assign::v2::ref::fusion_matrix_aux::container::link_result_static_row</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1_1result" prot="public">boost::assign::v2::ref::fusion_matrix_aux::container::result</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1_1result__static__row" prot="public">boost::assign::v2::ref::fusion_matrix_aux::container::result_static_row</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1_1wrapper" prot="private">boost::assign::v2::ref::fusion_matrix_aux::container::wrapper</innerclass>
+    <templateparamlist>
+      <param>
+        <type>std::size_t</type>
+        <declname>N</declname>
+        <defname>N</defname>
+      </param>
+      <param>
+        <type>typename L</type>
+      </param>
+      <param>
+        <type>typename Tag1</type>
+      </param>
+      <param>
+        <type>typename Tag2</type>
+      </param>
+      <param>
+        <type>BOOST_PP_ENUM_PARAMS(BOOST_ASSIGN_V2_LIMIT_ARITY,typename T)</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-type">
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a9d5abd9afe0f7e4a0865cce9e0c4a856" prot="private" static="no">
+        <type>boost::mpl::int_&lt; 0 &gt;</type>
+        <definition>typedef boost::mpl::int_&lt;0&gt; boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::int0_</definition>
+        <argsstring></argsstring>
+        <name>int0_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="115" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="115" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1ad3eab548ad198a26df73abff549420b5" prot="private" static="no">
+        <type>boost::mpl::int_&lt; 1 &gt;</type>
+        <definition>typedef boost::mpl::int_&lt;1&gt; boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::int1_</definition>
+        <argsstring></argsstring>
+        <name>int1_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="116" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="116" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a4eb577a1206fecbdbc3093a4e7990a58" prot="private" static="no">
+        <type>boost::mpl::int_&lt; N &gt;</type>
+        <definition>typedef boost::mpl::int_&lt;N&gt; boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::size_</definition>
+        <argsstring></argsstring>
+        <name>size_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="117" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a95afa03c09543e04c3facfa94d43a61b" prot="private" static="no">
+        <type>boost::mpl::minus&lt; size_, int1_ &gt;::type</type>
+        <definition>typedef boost::mpl::minus&lt;size_,int1_&gt;::type boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::index_</definition>
+        <argsstring></argsstring>
+        <name>index_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="118" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="118" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a0b4063a4e3542b43ca87b434a4570944" prot="private" static="no">
+        <type>Tag1</type>
+        <definition>typedef Tag1 boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::assign_tag_</definition>
+        <argsstring></argsstring>
+        <name>assign_tag_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="119" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="119" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a5e26f87125b9cddb7935d15a32aa6c07" prot="private" static="no">
+        <type><ref refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1link__holder" kindref="compound">fusion_aux::link_holder</ref>&lt; L, N==0 &gt;</type>
+        <definition>typedef fusion_aux::link_holder&lt;L, N == 0&gt; boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::link_</definition>
+        <argsstring></argsstring>
+        <name>link_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="124" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="124" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a3e791fe563057bf62cd0375f195fb5e5" prot="private" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1meta__result" kindref="compound">fusion_matrix_aux::meta_result</ref>&lt; N, L, Tag1, Tag2, BOOST_PP_ENUM_PARAMS(BOOST_ASSIGN_V2_LIMIT_ARITY, T) &gt;</type>
+        <definition>typedef fusion_matrix_aux::meta_result&lt;N, L, Tag1, Tag2, BOOST_PP_ENUM_PARAMS( BOOST_ASSIGN_V2_LIMIT_ARITY, T ) &gt; boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::meta_result_</definition>
+        <argsstring></argsstring>
+        <name>meta_result_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="131" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="131" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a584a0b542cb55fc70dc4a73f32a8f22d" prot="private" static="no">
+        <type><ref refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up" kindref="compound">functor_aux::crtp_unary_and_up</ref>&lt; <ref refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container" kindref="compound">container</ref>, boost::mpl::unpack_args&lt; <ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1meta__result" kindref="compound">meta_result_</ref> &gt; &gt;</type>
+        <definition>typedef functor_aux::crtp_unary_and_up&lt; container, boost::mpl::unpack_args&lt; meta_result_ &gt; &gt; boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::super_t</definition>
+        <argsstring></argsstring>
+        <name>super_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="138" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="138" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a64e9f1b51719d4971f07c054c4140cea" prot="private" static="no">
+        <type>boost::mpl::vector&lt;  &gt;</type>
+        <definition>typedef boost::mpl::vector&lt; &gt; boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::vec_</definition>
+        <argsstring></argsstring>
+        <name>vec_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="142" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="142" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a0d59659d1cf18e0b0d865a7ef390c4fa" prot="public" static="no">
+        <type>std::size_t</type>
+        <definition>typedef std::size_t boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::size_type</definition>
+        <argsstring></argsstring>
+        <name>size_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="146" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="146" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a6040b84f97da53c4cacb91f08102720e" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::U</definition>
+        <argsstring></argsstring>
+        <name>U</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="180" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="180" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a10663050257fd0ea00ac14d1bff3cdd6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::BOOST_STATIC_CONSTANT</definition>
+        <argsstring>(size_type, static_row_size=N)</argsstring>
+        <name>BOOST_STATIC_CONSTANT</name>
+        <param>
+          <type>size_type</type>
+        </param>
+        <param>
+          <type>static_row_size</type>
+          <defval>N</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="147"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1ac20192bf609a0c91c62b1fd87cdb9a10" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::BOOST_STATIC_CONSTANT</definition>
+        <argsstring>(size_type, static_column_size=boost::mpl::size&lt; vec_ &gt;::value)</argsstring>
+        <name>BOOST_STATIC_CONSTANT</name>
+        <param>
+          <type>size_type</type>
+        </param>
+        <param>
+          <type>static_column_size</type>
+          <defval>boost::mpl::size&lt; vec_ &gt;::value</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="150"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a96056f94154a6507f1ce810f6b89fa62" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::container</definition>
+        <argsstring>()</argsstring>
+        <name>container</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="152" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="152" bodyend="152"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a35c146590298b320cf5ba8985a884881" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::BOOST_PP_REPEAT</definition>
+        <argsstring>(BOOST_ASSIGN_V2_LIMIT_ARITY, MACRO2,~) template&lt; BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY)</argsstring>
+        <name>BOOST_PP_REPEAT</name>
+        <param>
+          <type>BOOST_ASSIGN_V2_LIMIT_ARITY</type>
+        </param>
+        <param>
+          <type>MACRO2</type>
+        </param>
+        <param>
+          <type>~</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="179"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a773d8a66803ff83a53c81fd41046667c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>result::type</type>
+        <definition>result ::type boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::operator()</definition>
+        <argsstring>() const </argsstring>
+        <name>operator()</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="195" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="195" bodyend="198"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1af24705895158d6a7af39bd5fda313eea" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::BOOST_PP_REPEAT_FROM_TO</definition>
+        <argsstring>(1, BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY), MACRO2,~) template&lt; int I &gt; struct is_head</argsstring>
+        <name>BOOST_PP_REPEAT_FROM_TO</name>
+        <param>
+          <type>1</type>
+        </param>
+        <param>
+          <type>BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY)</type>
+        </param>
+        <param>
+          <type>MACRO2</type>
+        </param>
+        <param>
+          <type>~</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="224" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="212" bodyend="224"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a73ff234665e07e0e61a05ab21dcca388" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type>boost::lazy_enable_if&lt; is_head&lt; I &gt;, <ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1_1result__static__row" kindref="compound">result_static_row</ref>&lt; I &gt; &gt;::type</type>
+        <definition>boost::lazy_enable_if&lt; is_head&lt;I&gt;, result_static_row&lt;I&gt; &gt;::type boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::static_row</definition>
+        <argsstring>(boost::mpl::int_&lt; I &gt; index) const </argsstring>
+        <name>static_row</name>
+        <param>
+          <type>boost::mpl::int_&lt; I &gt;</type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="245" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="244" bodyend="247"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1ab9565adc0c44fdbd89cb621dfde5374d" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type>boost::lazy_disable_if&lt; is_head&lt; I &gt;, <ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1_1result__static__row" kindref="compound">result_static_row</ref>&lt; I &gt; &gt;::type</type>
+        <definition>boost::lazy_disable_if&lt; is_head&lt;I&gt;, result_static_row&lt;I&gt; &gt;::type boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::static_row</definition>
+        <argsstring>(boost::mpl::int_&lt; I &gt; index) const </argsstring>
+        <name>static_row</name>
+        <param>
+          <type>boost::mpl::int_&lt; I &gt;</type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="255" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="254" bodyend="259"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="201">
+        <label>boost::assign::v2::functor_aux::crtp_unary_and_up&lt; fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, BOOST_PP_ENUM_PARAMS(BOOST_ASSIGN_V2_LIMIT_ARITY, T) &gt;, boost::mpl::unpack_args&lt; fusion_matrix_aux::meta_result&lt; N, L, Tag1, Tag2, BOOST_PP_ENUM_PARAMS(BOOST_ASSIGN_V2_LIMIT_ARITY, T) &gt; &gt; &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up"/>
+      </node>
+      <node id="199">
+        <label>boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container"/>
+        <childnode refid="200" relation="public-inheritance">
+        </childnode>
+        <childnode refid="201" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="200">
+        <label>boost::assign::v2::ref::fusion_aux::link_holder&lt; L, N==0 &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1link__holder"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="204">
+        <label>boost::assign::v2::ref::wrapper&lt; tag_, const L &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1wrapper"/>
+      </node>
+      <node id="205">
+        <label>boost::assign::v2::functor_aux::crtp_unary_and_up&lt; fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, BOOST_PP_ENUM_PARAMS(BOOST_ASSIGN_V2_LIMIT_ARITY, T) &gt;, boost::mpl::unpack_args&lt; fusion_matrix_aux::meta_result&lt; N, L, Tag1, Tag2, BOOST_PP_ENUM_PARAMS(BOOST_ASSIGN_V2_LIMIT_ARITY, T) &gt; &gt; &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up"/>
+      </node>
+      <node id="202">
+        <label>boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container"/>
+        <childnode refid="203" relation="public-inheritance">
+        </childnode>
+        <childnode refid="205" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="203">
+        <label>boost::assign::v2::ref::fusion_aux::link_holder&lt; L, N==0 &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1link__holder"/>
+        <childnode refid="204" relation="usage">
+          <edgelabel>value</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="113" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="95" bodyend="279"/>
+    <listofallmembers>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a0b4063a4e3542b43ca87b434a4570944" prot="private" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>assign_tag_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up_1a737c7bc727771b900e07e6fac5659791" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>BOOST_PP_INC</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a35c146590298b320cf5ba8985a884881" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>BOOST_PP_REPEAT</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up_1aaf120dbd1766ed96fa5bbbde98f196ec" prot="public" virt="non-virtual" ambiguityscope="crtp_unary_and_up&lt; fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, BOOST_PP_ENUM_PARAMS(BOOST_ASSIGN_V2_LIMIT_ARITY, T) &gt;, boost::mpl::unpack_args&lt; fusion_matrix_aux::meta_result&lt; N, L, Tag1, Tag2, BOOST_PP_ENUM_PARAMS(BOOST_ASSIGN_V2_LIMIT_ARITY, T) &gt; &gt; &gt;::"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>BOOST_PP_REPEAT</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1af24705895158d6a7af39bd5fda313eea" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>BOOST_PP_REPEAT_FROM_TO</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a10663050257fd0ea00ac14d1bff3cdd6" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>BOOST_STATIC_CONSTANT</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1ac20192bf609a0c91c62b1fd87cdb9a10" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>BOOST_STATIC_CONSTANT</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a96056f94154a6507f1ce810f6b89fa62" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>container</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up_1a2a30f86339b81ea9449bb77fee734c10" prot="protected" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>derived</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up_1ac36585e7958e9d641cf842aacb080dc6" prot="protected" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>derived</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a95afa03c09543e04c3facfa94d43a61b" prot="private" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>index_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a9d5abd9afe0f7e4a0865cce9e0c4a856" prot="private" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>int0_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1ad3eab548ad198a26df73abff549420b5" prot="private" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>int1_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1link__holder_1aba7d4538aa6de17474d029facb291bf5" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>link</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a5e26f87125b9cddb7935d15a32aa6c07" prot="private" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>link_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1link__holder_1a48f05a4d5fd1c01fd614fd86322baa8f" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>link_holder</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1link__holder_1a0ee34ce60473ec1451d9190f1b2b059d" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>link_holder</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up_1a8403470cbea9dabd302b0671b817b92a" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>MACRO</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a3e791fe563057bf62cd0375f195fb5e5" prot="private" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>meta_result_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a773d8a66803ff83a53c81fd41046667c" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>operator()</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1link__holder_1a2ebd7abaa66bee40af63aa8f22ed5e74" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>pop</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a4eb577a1206fecbdbc3093a4e7990a58" prot="private" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>size_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a0d59659d1cf18e0b0d865a7ef390c4fa" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>size_type</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a73ff234665e07e0e61a05ab21dcca388" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>static_row</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1ab9565adc0c44fdbd89cb621dfde5374d" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>static_row</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a584a0b542cb55fc70dc4a73f32a8f22d" prot="private" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>super_t</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a6040b84f97da53c4cacb91f08102720e" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>U</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1link__holder_1a2928e4fb75b404cb28b36998c81fc60c" prot="protected" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>value</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1a64e9f1b51719d4971f07c054c4140cea" prot="private" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container</scope><name>vec_</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

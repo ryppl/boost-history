@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_624c7b284962194c03cf672cddd07c21" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/unwrap/</compoundname>
+    <innerfile refid="ref_2detail_2unwrap_2iterator_8hpp">iterator.hpp</innerfile>
+    <innerfile refid="ref_2detail_2unwrap_2range_8hpp">range.hpp</innerfile>
+    <innerfile refid="reference_8hpp">reference.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/unwrap/"/>
+  </compounddef>
+</doxygen>

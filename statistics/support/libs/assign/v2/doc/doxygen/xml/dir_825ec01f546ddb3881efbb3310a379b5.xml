@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_825ec01f546ddb3881efbb3310a379b5" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/</compoundname>
+    <innerfile refid="at__next_8hpp">at_next.hpp</innerfile>
+    <innerfile refid="put_2modifier_2deduce_8hpp">deduce.hpp</innerfile>
+    <innerfile refid="def_8hpp">def.hpp</innerfile>
+    <innerfile refid="incr__lookup_8hpp">incr_lookup.hpp</innerfile>
+    <innerfile refid="insert_8hpp">insert.hpp</innerfile>
+    <innerfile refid="put_2modifier_2keyword_8hpp">keyword.hpp</innerfile>
+    <innerfile refid="modifier_2modifier_8hpp">modifier.hpp</innerfile>
+    <innerfile refid="push_8hpp">push.hpp</innerfile>
+    <innerfile refid="push__back_8hpp">push_back.hpp</innerfile>
+    <innerfile refid="push__front_8hpp">push_front.hpp</innerfile>
+    <innerfile refid="put_2modifier_2repeat_8hpp">repeat.hpp</innerfile>
+    <innerfile refid="xxx_8hpp">xxx.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/"/>
+  </compounddef>
+</doxygen>

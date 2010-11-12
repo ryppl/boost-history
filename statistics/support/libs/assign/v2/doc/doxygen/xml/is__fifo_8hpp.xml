@@ -1,0 +1,251 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="is__fifo_8hpp" kind="file">
+    <compoundname>is_fifo.hpp</compoundname>
+    <includes local="no">boost/mpl/bool.hpp</includes>
+    <includes local="no">boost/type_traits/remove_cv.hpp</includes>
+    <includes refid="detail_2fwd_2container_8hpp" local="no">boost/assign/v2/detail/fwd/container.hpp</includes>
+    <includes refid="is__ptr__container_8hpp" local="no">boost/assign/v2/detail/type_traits/container/is_ptr_container.hpp</includes>
+    <includes refid="forward__to__value_8hpp" local="no">boost/assign/v2/detail/type_traits/container/forward_to_value.hpp</includes>
+    <includedby refid="deduce__check_8hpp" local="no">/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/deduce_check.hpp</includedby>
+    <includedby refid="fifo_8hpp" local="no">/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/fifo.hpp</includedby>
+    <includedby refid="detail_2type__traits_2container_2container_8hpp" local="no">/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/container.hpp</includedby>
+    <incdepgraph>
+      <node id="8120">
+        <label>boost/type_traits/remove_cv.hpp</label>
+      </node>
+      <node id="8132">
+        <label>boost/assign/v2/detail/type_traits/container/forward_to_value.hpp</label>
+        <link refid="forward__to__value_8hpp_source"/>
+        <childnode refid="8133" relation="include">
+        </childnode>
+      </node>
+      <node id="8134">
+        <label>boost/assign/v2/detail/type_traits/container/ptr_to_value_container.hpp</label>
+        <link refid="ptr__to__value__container_8hpp_source"/>
+        <childnode refid="8122" relation="include">
+        </childnode>
+      </node>
+      <node id="8130">
+        <label>boost/assign/v2/detail/type_traits/container/static_size.hpp</label>
+        <link refid="static__size_8hpp_source"/>
+        <childnode refid="8131" relation="include">
+        </childnode>
+        <childnode refid="8121" relation="include">
+        </childnode>
+        <childnode refid="8129" relation="include">
+        </childnode>
+      </node>
+      <node id="8128">
+        <label>boost/type_traits/remove_reference.hpp</label>
+      </node>
+      <node id="8131">
+        <label>boost/mpl/size_t.hpp</label>
+      </node>
+      <node id="8124">
+        <label>boost/mpl/eval_if.hpp</label>
+      </node>
+      <node id="8125">
+        <label>boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp</label>
+        <link refid="ptr__to__value_8hpp_source"/>
+        <childnode refid="8126" relation="include">
+        </childnode>
+        <childnode refid="8127" relation="include">
+        </childnode>
+        <childnode refid="8119" relation="include">
+        </childnode>
+        <childnode refid="8128" relation="include">
+        </childnode>
+        <childnode refid="8129" relation="include">
+        </childnode>
+        <childnode refid="8121" relation="include">
+        </childnode>
+        <childnode refid="8130" relation="include">
+        </childnode>
+      </node>
+      <node id="8121">
+        <label>boost/assign/v2/detail/fwd/container.hpp</label>
+        <link refid="detail_2fwd_2container_8hpp_source"/>
+      </node>
+      <node id="8133">
+        <label>boost/assign/v2/detail/type_traits/container/value_container.hpp</label>
+        <link refid="value__container_8hpp_source"/>
+        <childnode refid="8123" relation="include">
+        </childnode>
+        <childnode refid="8124" relation="include">
+        </childnode>
+        <childnode refid="8122" relation="include">
+        </childnode>
+        <childnode refid="8134" relation="include">
+        </childnode>
+      </node>
+      <node id="8129">
+        <label>boost/assign/v2/detail/fwd/ptr_container.hpp</label>
+        <link refid="ptr__container_8hpp_source"/>
+      </node>
+      <node id="8123">
+        <label>boost/mpl/identity.hpp</label>
+      </node>
+      <node id="8127">
+        <label>boost/preprocessor/cat.hpp</label>
+      </node>
+      <node id="8118">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/is_fifo.hpp</label>
+        <link refid="is_fifo.hpp"/>
+        <childnode refid="8119" relation="include">
+        </childnode>
+        <childnode refid="8120" relation="include">
+        </childnode>
+        <childnode refid="8121" relation="include">
+        </childnode>
+        <childnode refid="8122" relation="include">
+        </childnode>
+        <childnode refid="8132" relation="include">
+        </childnode>
+      </node>
+      <node id="8122">
+        <label>boost/assign/v2/detail/type_traits/container/is_ptr_container.hpp</label>
+        <link refid="is__ptr__container_8hpp_source"/>
+        <childnode refid="8123" relation="include">
+        </childnode>
+        <childnode refid="8124" relation="include">
+        </childnode>
+        <childnode refid="8125" relation="include">
+        </childnode>
+      </node>
+      <node id="8119">
+        <label>boost/mpl/bool.hpp</label>
+      </node>
+      <node id="8126">
+        <label>memory</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="8143">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/container.hpp</label>
+        <link refid="detail_2type__traits_2container_2container_8hpp_source"/>
+        <childnode refid="8144" relation="include">
+        </childnode>
+      </node>
+      <node id="8138">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/detail.hpp</label>
+        <link refid="detail_8hpp_source"/>
+        <childnode refid="8139" relation="include">
+        </childnode>
+      </node>
+      <node id="8142">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/fifo.hpp</label>
+        <link refid="fifo_8hpp_source"/>
+        <childnode refid="8137" relation="include">
+        </childnode>
+        <childnode refid="8140" relation="include">
+        </childnode>
+      </node>
+      <node id="8136">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/deduce_check.hpp</label>
+        <link refid="deduce__check_8hpp_source"/>
+        <childnode refid="8137" relation="include">
+        </childnode>
+        <childnode refid="8140" relation="include">
+        </childnode>
+      </node>
+      <node id="8140">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/container.hpp</label>
+        <link refid="detail_2checking_2container_8hpp_source"/>
+        <childnode refid="8141" relation="include">
+        </childnode>
+        <childnode refid="8137" relation="include">
+        </childnode>
+      </node>
+      <node id="8144">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/type_traits.hpp</label>
+        <link refid="type__traits_8hpp_source"/>
+        <childnode refid="8138" relation="include">
+        </childnode>
+      </node>
+      <node id="8139">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/v2.hpp</label>
+        <link refid="v2_8hpp_source"/>
+      </node>
+      <node id="8141">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/distinct_values.hpp</label>
+        <link refid="chain_2checking_2distinct__values_8hpp_source"/>
+      </node>
+      <node id="8137">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/checking.hpp</label>
+        <link refid="detail_2checking_2checking_8hpp_source"/>
+        <childnode refid="8138" relation="include">
+        </childnode>
+      </node>
+      <node id="8135">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/is_fifo.hpp</label>
+        <link refid="is_fifo.hpp"/>
+        <childnode refid="8136" relation="include">
+        </childnode>
+        <childnode refid="8142" relation="include">
+        </childnode>
+        <childnode refid="8143" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__tag_1_1fifo" prot="public">boost::assign::v2::container_tag::fifo</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__fifo__impl" prot="public">boost::assign::v2::container_type_traits::is_fifo_impl</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__fifo__impl_3_01std_1_1queue_3_01_t_00_01_a_01_4_01_4" prot="public">boost::assign::v2::container_type_traits::is_fifo_impl&lt; std::queue&lt; T, A &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__fifo" prot="public">boost::assign::v2::container_type_traits::is_fifo</innerclass>
+    <innernamespace refid="namespaceboost">boost</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign">boost::assign</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2">boost::assign::v2</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1container__tag">boost::assign::v2::container_tag</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1container__type__traits">boost::assign::v2::container_type_traits</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"></codeline>
+<codeline lineno="2"><highlight class="comment">//<sp/><sp/>Boost.Assign<sp/>v2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2003-2004<sp/>Thorsten<sp/>Ottosen<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2010<sp/>Erwann<sp/>Rogard<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Use,<sp/>modification<sp/>and<sp/>distribution<sp/>are<sp/>subject<sp/>to<sp/>the<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Boost<sp/>Software<sp/>License,<sp/>Version<sp/>1.0.<sp/>(See<sp/>accompanying<sp/>file<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>LICENSE_1_0.txt<sp/>or<sp/>copy<sp/>at<sp/>http://www.boost.org/LICENSE_1_0.txt)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"></highlight><highlight class="preprocessor">#ifndef<sp/>BOOST_ASSIGN_V2_TYPE_TRAITS_CONTAINER_IS_FIFO_ER_2010_HPP</highlight></codeline>
+<codeline lineno="11"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#define<sp/>BOOST_ASSIGN_V2_TYPE_TRAITS_CONTAINER_IS_FIFO_ER_2010_HPP</highlight></codeline>
+<codeline lineno="12"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/mpl/bool.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/type_traits/remove_cv.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/assign/v2/detail/fwd/container.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/assign/v2/detail/type_traits/container/is_ptr_container.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/assign/v2/detail/type_traits/container/forward_to_value.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">boost{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">assign{</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">v2{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">container_tag{</highlight></codeline>
+<codeline lineno="22" refid="structboost_1_1assign_1_1v2_1_1container__tag_1_1fifo" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structboost_1_1assign_1_1v2_1_1container__tag_1_1fifo" kindref="compound">fifo</ref>{};</highlight></codeline>
+<codeline lineno="23"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>container_tag</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">container_type_traits{</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="27" refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__fifo__impl" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__fifo__impl" kindref="compound">is_fifo_impl</ref><sp/>:<sp/>boost::mpl::<ref refid="classboost_1_1mpl_1_1false__" kindref="compound">false_</ref>{};</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>T,</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>A&gt;</highlight></codeline>
+<codeline lineno="30" refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__fifo__impl_3_01std_1_1queue_3_01_t_00_01_a_01_4_01_4" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__fifo__impl" kindref="compound">is_fifo_impl</ref>&lt;<sp/>std::queue&lt;T,A&gt;<sp/>&gt;<sp/>:<sp/>boost::mpl::true_{};</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="33" refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__fifo" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__fifo" kindref="compound">is_fifo</ref><sp/>:<sp/><ref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1forward__to__value" kindref="compound">forward_to_value</ref>&lt;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>is_fifo_impl,</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>typename<sp/>boost::remove_cv&lt;V&gt;::type</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>&gt;{};</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>container_type_traits</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>v2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>assign</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>boost</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/is_fifo.hpp"/>
+  </compounddef>
+</doxygen>

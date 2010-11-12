@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1ref_1_1wrapper" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::ref::wrapper</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename Tag</type>
+      </param>
+      <param>
+        <type>typename T</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/wrapper/framework.hpp" line="19" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/wrapper/framework.hpp" bodystart="19" bodyend="21"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

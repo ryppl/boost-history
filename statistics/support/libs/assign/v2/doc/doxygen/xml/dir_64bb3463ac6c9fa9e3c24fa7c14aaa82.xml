@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_64bb3463ac6c9fa9e3c24fa7c14aaa82" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/</compoundname>
+    <innerfile refid="anon_2anon_8hpp">anon.hpp</innerfile>
+    <innerfile refid="anon_2cont_8hpp">cont.hpp</innerfile>
+    <innerfile refid="anon_2csv_8hpp">csv.hpp</innerfile>
+    <innerfile refid="anon_2make_8hpp">make.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/"/>
+  </compounddef>
+</doxygen>

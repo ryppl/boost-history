@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_5179cc78aa54660bc284dc0304182859" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/</compoundname>
+    <innerfile refid="add__const_8hpp">add_const.hpp</innerfile>
+    <innerfile refid="ref_2detail_2convert__traits_2checking_8hpp">checking.hpp</innerfile>
+    <innerfile refid="ref_2detail_2convert__traits_2distinct__values_8hpp">distinct_values.hpp</innerfile>
+    <innerfile refid="ref_2detail_2convert__traits_2result_8hpp">result.hpp</innerfile>
+    <innerfile refid="ref_2detail_2convert__traits_2twin__values_8hpp">twin_values.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/"/>
+  </compounddef>
+</doxygen>

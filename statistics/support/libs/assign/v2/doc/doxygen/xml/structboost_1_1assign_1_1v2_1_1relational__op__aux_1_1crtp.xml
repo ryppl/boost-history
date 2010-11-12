@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1relational__op__aux_1_1crtp" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::relational_op_aux::crtp</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>D</declname>
+        <defname>D</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1relational__op__aux_1_1crtp_1a15a823411135acf4876b72c60c8c363b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>D const &amp;</type>
+        <definition>D const&amp; boost::assign::v2::relational_op_aux::crtp&lt; D &gt;::derived</definition>
+        <argsstring>() const </argsstring>
+        <name>derived</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/relational_op/crtp.hpp" line="32" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/relational_op/crtp.hpp" bodystart="32" bodyend="32"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/relational_op/crtp.hpp" line="30" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/relational_op/crtp.hpp" bodystart="30" bodyend="34"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1relational__op__aux_1_1crtp_1a15a823411135acf4876b72c60c8c363b" prot="public" virt="non-virtual"><scope>boost::assign::v2::relational_op_aux::crtp</scope><name>derived</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

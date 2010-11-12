@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1put__range__aux_1_1deduce__operation" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::put_range_aux::deduce_operation</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1mpl_1_1switch__" prot="public" virt="non-virtual">boost::assign::v2::mpl::switch_&lt; v2::switch_tag::put_range, T &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename T</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="266">
+        <label>boost::assign::v2::put_range_aux::deduce_operation&lt; T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1put__range__aux_1_1deduce__operation"/>
+        <childnode refid="267" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="267">
+        <label>boost::assign::v2::mpl::switch_&lt; v2::switch_tag::put_range, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1mpl_1_1switch__"/>
+        <childnode refid="268" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="268">
+        <label>boost::mpl::eval_if&lt; boost::mpl::apply1&lt; v2::mpl::case_&lt;v2::switch_tag::put_range , 0 &gt;, T &gt;, v2::mpl::extract_tag&lt; v2::mpl::case_&lt;v2::switch_tag::put_range , 0 &gt; &gt;, v2::mpl::switch_&lt; v2::switch_tag::put_range , T, 0  + 1 &gt; &gt;</label>
+        <link refid="classboost_1_1mpl_1_1eval__if"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="269">
+        <label>boost::assign::v2::put_range_aux::deduce_operation&lt; T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1put__range__aux_1_1deduce__operation"/>
+        <childnode refid="270" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="270">
+        <label>boost::assign::v2::mpl::switch_&lt; v2::switch_tag::put_range, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1mpl_1_1switch__"/>
+        <childnode refid="271" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="271">
+        <label>boost::mpl::eval_if&lt; boost::mpl::apply1&lt; v2::mpl::case_&lt;v2::switch_tag::put_range , 0 &gt;, T &gt;, v2::mpl::extract_tag&lt; v2::mpl::case_&lt;v2::switch_tag::put_range , 0 &gt; &gt;, v2::mpl::switch_&lt; v2::switch_tag::put_range , T, 0  + 1 &gt; &gt;</label>
+        <link refid="classboost_1_1mpl_1_1eval__if"/>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/modifier/deduce.hpp" line="55" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/modifier/deduce.hpp" bodystart="52" bodyend="55"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

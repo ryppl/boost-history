@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__fun_3_01put__aux_1_1sub_3_01_v_00_01_f_00_01_tag_01_4_01_4" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::result_of_modulo::new_fun&lt; put_aux::sub&lt; V, F, Tag &gt; &gt;</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__fun_3_01put__aux_1_1sub_3_01_v_00_01_f_00_01_tag_01_4_01_4_1_1apply" prot="public">boost::assign::v2::result_of_modulo::new_fun&lt; put_aux::sub&lt; V, F, Tag &gt; &gt;::apply</innerclass>
+    <templateparamlist>
+      <param>
+        <type>typename V</type>
+      </param>
+      <param>
+        <type>typename F</type>
+      </param>
+      <param>
+        <type>typename Tag</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/make.hpp" line="34" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/make.hpp" bodystart="33" bodyend="39"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

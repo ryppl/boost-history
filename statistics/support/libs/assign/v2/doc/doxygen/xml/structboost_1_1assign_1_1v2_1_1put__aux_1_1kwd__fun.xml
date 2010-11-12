@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1put__aux_1_1kwd__fun" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::put_aux::kwd_fun</compoundname>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1kwd__fun_1a22fed88915a2b2bc098368ce905b9c49" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename F</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1new__fun" kindref="compound">put_aux::new_fun</ref>&lt; F &gt;</type>
+        <definition>put_aux::new_fun&lt;F&gt; boost::assign::v2::put_aux::kwd_fun::operator=</definition>
+        <argsstring>(F const &amp;f) const </argsstring>
+        <name>operator=</name>
+        <param>
+          <type>F const &amp;</type>
+          <declname>f</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_fun.hpp" line="51" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_fun.hpp" bodystart="50" bodyend="53"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_fun.hpp" line="46" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_fun.hpp" bodystart="46" bodyend="55"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1kwd__fun_1a22fed88915a2b2bc098368ce905b9c49" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::kwd_fun</scope><name>operator=</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

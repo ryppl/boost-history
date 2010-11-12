@@ -1,0 +1,661 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="ref_2detail_2unwrap_2range_8hpp" kind="file">
+    <compoundname>range.hpp</compoundname>
+    <includes local="no">boost/type_traits/add_reference.hpp</includes>
+    <includes local="no">boost/range/begin.hpp</includes>
+    <includes local="no">boost/range/end.hpp</includes>
+    <includes local="no">boost/range/iterator.hpp</includes>
+    <includes local="no">boost/range/iterator_range.hpp</includes>
+    <includes refid="ref_2detail_2unwrap_2iterator_8hpp" local="no">boost/assign/v2/ref/detail/unwrap/iterator.hpp</includes>
+    <includedby refid="chain_2checking_2twin__values_8hpp" local="no">/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/twin_values.hpp</includedby>
+    <includedby refid="static__array_2interface_8hpp" local="no">/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp</includedby>
+    <incdepgraph>
+      <node id="4327">
+        <label>boost/type_traits/remove_cv.hpp</label>
+      </node>
+      <node id="4350">
+        <label>boost/type_traits/remove_const.hpp</label>
+      </node>
+      <node id="4345">
+        <label>boost/assign/v2/ref/wrapper/base.hpp</label>
+        <link refid="ref_2wrapper_2base_8hpp_source"/>
+        <childnode refid="4346" relation="include">
+        </childnode>
+        <childnode refid="4347" relation="include">
+        </childnode>
+      </node>
+      <node id="4335">
+        <label>boost/type_traits/is_reference.hpp</label>
+      </node>
+      <node id="4320">
+        <label>boost/range/end.hpp</label>
+      </node>
+      <node id="4321">
+        <label>boost/range/iterator.hpp</label>
+      </node>
+      <node id="4347">
+        <label>boost/type_traits/is_const.hpp</label>
+      </node>
+      <node id="4319">
+        <label>boost/range/begin.hpp</label>
+      </node>
+      <node id="4330">
+        <label>boost/iterator/iterator_adaptor.hpp</label>
+      </node>
+      <node id="4329">
+        <label>boost/type_traits/add_const.hpp</label>
+      </node>
+      <node id="4339">
+        <label>boost/assign/v2/ref/wrapper/wrapper.hpp</label>
+        <link refid="ref_2wrapper_2wrapper_8hpp_source"/>
+        <childnode refid="4340" relation="include">
+        </childnode>
+        <childnode refid="4342" relation="include">
+        </childnode>
+        <childnode refid="4352" relation="include">
+        </childnode>
+      </node>
+      <node id="4324">
+        <label>boost/mpl/assert.hpp</label>
+      </node>
+      <node id="4328">
+        <label>boost/type_traits/remove_reference.hpp</label>
+      </node>
+      <node id="4332">
+        <label>boost/mpl/eval_if.hpp</label>
+      </node>
+      <node id="4342">
+        <label>boost/assign/v2/ref/wrapper/copy.hpp</label>
+        <link refid="ref_2wrapper_2copy_8hpp_source"/>
+        <childnode refid="4343" relation="include">
+        </childnode>
+        <childnode refid="4325" relation="include">
+        </childnode>
+        <childnode refid="4344" relation="include">
+        </childnode>
+        <childnode refid="4327" relation="include">
+        </childnode>
+        <childnode refid="4337" relation="include">
+        </childnode>
+        <childnode refid="4345" relation="include">
+        </childnode>
+        <childnode refid="4348" relation="include">
+        </childnode>
+      </node>
+      <node id="4340">
+        <label>boost/assign/v2/ref/wrapper/deduce_assign_tag.hpp</label>
+        <link refid="deduce__assign__tag_8hpp_source"/>
+        <childnode refid="4332" relation="include">
+        </childnode>
+        <childnode refid="4333" relation="include">
+        </childnode>
+        <childnode refid="4341" relation="include">
+        </childnode>
+      </node>
+      <node id="4336">
+        <label>boost/range/reference.hpp</label>
+      </node>
+      <node id="4323">
+        <label>boost/assign/v2/ref/detail/unwrap/iterator.hpp</label>
+        <link refid="ref_2detail_2unwrap_2iterator_8hpp_source"/>
+        <childnode refid="4324" relation="include">
+        </childnode>
+        <childnode refid="4325" relation="include">
+        </childnode>
+        <childnode refid="4326" relation="include">
+        </childnode>
+        <childnode refid="4327" relation="include">
+        </childnode>
+        <childnode refid="4328" relation="include">
+        </childnode>
+        <childnode refid="4329" relation="include">
+        </childnode>
+        <childnode refid="4330" relation="include">
+        </childnode>
+        <childnode refid="4331" relation="include">
+        </childnode>
+      </node>
+      <node id="4349">
+        <label>boost/utility/enable_if.hpp</label>
+      </node>
+      <node id="4317">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/unwrap/range.hpp</label>
+        <link refid="ref/detail/unwrap/range.hpp"/>
+        <childnode refid="4318" relation="include">
+        </childnode>
+        <childnode refid="4319" relation="include">
+        </childnode>
+        <childnode refid="4320" relation="include">
+        </childnode>
+        <childnode refid="4321" relation="include">
+        </childnode>
+        <childnode refid="4322" relation="include">
+        </childnode>
+        <childnode refid="4323" relation="include">
+        </childnode>
+      </node>
+      <node id="4326">
+        <label>boost/type_traits/is_convertible.hpp</label>
+      </node>
+      <node id="4333">
+        <label>boost/mpl/identity.hpp</label>
+      </node>
+      <node id="4352">
+        <label>boost/assign/v2/ref/wrapper/rebind.hpp</label>
+        <link refid="rebind_8hpp_source"/>
+        <childnode refid="4343" relation="include">
+        </childnode>
+        <childnode refid="4337" relation="include">
+        </childnode>
+        <childnode refid="4345" relation="include">
+        </childnode>
+        <childnode refid="4348" relation="include">
+        </childnode>
+      </node>
+      <node id="4344">
+        <label>boost/call_traits.hpp</label>
+      </node>
+      <node id="4322">
+        <label>boost/range/iterator_range.hpp</label>
+      </node>
+      <node id="4338">
+        <label>boost/ref.hpp</label>
+      </node>
+      <node id="4337">
+        <label>boost/assign/v2/ref/wrapper/framework.hpp</label>
+        <link refid="framework_8hpp_source"/>
+        <childnode refid="4325" relation="include">
+        </childnode>
+        <childnode refid="4338" relation="include">
+        </childnode>
+        <childnode refid="4339" relation="include">
+        </childnode>
+      </node>
+      <node id="4351">
+        <label>boost/operators.hpp</label>
+      </node>
+      <node id="4346">
+        <label>boost/config.hpp</label>
+      </node>
+      <node id="4331">
+        <label>boost/assign/v2/ref/detail/unwrap/reference.hpp</label>
+        <link refid="reference_8hpp_source"/>
+        <childnode refid="4324" relation="include">
+        </childnode>
+        <childnode refid="4332" relation="include">
+        </childnode>
+        <childnode refid="4333" relation="include">
+        </childnode>
+        <childnode refid="4334" relation="include">
+        </childnode>
+        <childnode refid="4335" relation="include">
+        </childnode>
+        <childnode refid="4318" relation="include">
+        </childnode>
+        <childnode refid="4328" relation="include">
+        </childnode>
+        <childnode refid="4336" relation="include">
+        </childnode>
+        <childnode refid="4337" relation="include">
+        </childnode>
+      </node>
+      <node id="4334">
+        <label>boost/iterator/iterator_traits.hpp</label>
+      </node>
+      <node id="4343">
+        <label>algorithm</label>
+      </node>
+      <node id="4318">
+        <label>boost/type_traits/add_reference.hpp</label>
+      </node>
+      <node id="4325">
+        <label>boost/mpl/bool.hpp</label>
+      </node>
+      <node id="4348">
+        <label>boost/assign/v2/ref/wrapper/crtp.hpp</label>
+        <link refid="ref_2wrapper_2crtp_8hpp_source"/>
+        <childnode refid="4349" relation="include">
+        </childnode>
+        <childnode refid="4341" relation="include">
+        </childnode>
+        <childnode refid="4350" relation="include">
+        </childnode>
+        <childnode refid="4329" relation="include">
+        </childnode>
+        <childnode refid="4344" relation="include">
+        </childnode>
+        <childnode refid="4351" relation="include">
+        </childnode>
+      </node>
+      <node id="4341">
+        <label>boost/type_traits/is_same.hpp</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="4379">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/lazy_alloc.hpp</label>
+        <link refid="static__array_2alloc_2lazy__alloc_8hpp_source"/>
+        <childnode refid="4380" relation="include">
+        </childnode>
+        <childnode refid="4385" relation="include">
+        </childnode>
+        <childnode refid="4377" relation="include">
+        </childnode>
+      </node>
+      <node id="4383">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/unary.hpp</label>
+        <link refid="unary_8hpp_source"/>
+        <childnode refid="4373" relation="include">
+        </childnode>
+      </node>
+      <node id="4393">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/sub.hpp</label>
+        <link refid="put_2compose_2functor_2sub_8hpp_source"/>
+        <childnode refid="4392" relation="include">
+        </childnode>
+      </node>
+      <node id="4370">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp</label>
+        <link refid="forward__seq__arg_8hpp_source"/>
+        <childnode refid="4361" relation="include">
+        </childnode>
+        <childnode refid="4371" relation="include">
+        </childnode>
+      </node>
+      <node id="4391">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/composer.hpp</label>
+        <link refid="functor_2composer_8hpp_source"/>
+        <childnode refid="4392" relation="include">
+        </childnode>
+        <childnode refid="4393" relation="include">
+        </childnode>
+      </node>
+      <node id="4390">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/assign_copy.hpp</label>
+        <link refid="fusion_2assign__copy_8hpp_source"/>
+        <childnode refid="4369" relation="include">
+        </childnode>
+        <childnode refid="4391" relation="include">
+        </childnode>
+        <childnode refid="4387" relation="include">
+        </childnode>
+      </node>
+      <node id="4372">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/csv.hpp</label>
+        <link refid="ref_2anon_2csv_2csv_8hpp_source"/>
+        <childnode refid="4373" relation="include">
+        </childnode>
+      </node>
+      <node id="4363">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/put.hpp</label>
+        <link refid="put_8hpp_source"/>
+        <childnode refid="4364" relation="include">
+        </childnode>
+        <childnode refid="4366" relation="include">
+        </childnode>
+      </node>
+      <node id="4392">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/functor.hpp</label>
+        <link refid="put_2compose_2functor_2functor_8hpp_source"/>
+        <childnode refid="4362" relation="include">
+        </childnode>
+      </node>
+      <node id="4378">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/static_array.hpp</label>
+        <link refid="static__array_8hpp_source"/>
+      </node>
+      <node id="4380">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/make.hpp</label>
+        <link refid="ref_2anon_2unary_2make_8hpp_source"/>
+        <childnode refid="4381" relation="include">
+        </childnode>
+        <childnode refid="4383" relation="include">
+        </childnode>
+      </node>
+      <node id="4385">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/policy.hpp</label>
+        <link refid="fusion_2policy_8hpp_source"/>
+        <childnode refid="4386" relation="include">
+        </childnode>
+        <childnode refid="4387" relation="include">
+        </childnode>
+      </node>
+      <node id="4368">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/make.hpp</label>
+        <link refid="anon_2make_8hpp_source"/>
+        <childnode refid="4365" relation="include">
+        </childnode>
+        <childnode refid="4367" relation="include">
+        </childnode>
+      </node>
+      <node id="4394">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/assign_rebind.hpp</label>
+        <link refid="fusion_2assign__rebind_8hpp_source"/>
+        <childnode refid="4387" relation="include">
+        </childnode>
+      </node>
+      <node id="4357">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/pp.hpp</label>
+        <link refid="pp_8hpp_source"/>
+        <childnode refid="4358" relation="include">
+        </childnode>
+        <childnode refid="4376" relation="include">
+        </childnode>
+      </node>
+      <node id="4361">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/csv.hpp</label>
+        <link refid="put_2compose_2csv_2csv_8hpp_source"/>
+        <childnode refid="4362" relation="include">
+        </childnode>
+      </node>
+      <node id="4364">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp</label>
+        <link refid="anon_2cont_8hpp_source"/>
+        <childnode refid="4365" relation="include">
+        </childnode>
+        <childnode refid="4367" relation="include">
+        </childnode>
+        <childnode refid="4368" relation="include">
+        </childnode>
+      </node>
+      <node id="4373">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/anon.hpp</label>
+        <link refid="ref_2anon_2anon_8hpp_source"/>
+        <childnode refid="4374" relation="include">
+        </childnode>
+      </node>
+      <node id="4354">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/twin_values.hpp</label>
+        <link refid="chain_2checking_2twin__values_8hpp_source"/>
+      </node>
+      <node id="4376">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/make.hpp</label>
+        <link refid="ref_2anon_2csv_2make_8hpp_source"/>
+        <childnode refid="4358" relation="include">
+        </childnode>
+        <childnode refid="4372" relation="include">
+        </childnode>
+      </node>
+      <node id="4371">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/sub.hpp</label>
+        <link refid="put_2compose_2csv_2sub_8hpp_source"/>
+        <childnode refid="4361" relation="include">
+        </childnode>
+      </node>
+      <node id="4366">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/v2.hpp</label>
+        <link refid="v2_8hpp_source"/>
+      </node>
+      <node id="4367">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/csv.hpp</label>
+        <link refid="anon_2csv_8hpp_source"/>
+        <childnode refid="4365" relation="include">
+        </childnode>
+      </node>
+      <node id="4362">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/compose.hpp</label>
+        <link refid="compose_8hpp_source"/>
+        <childnode refid="4363" relation="include">
+        </childnode>
+      </node>
+      <node id="4353">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/unwrap/range.hpp</label>
+        <link refid="ref/detail/unwrap/range.hpp"/>
+        <childnode refid="4354" relation="include">
+        </childnode>
+        <childnode refid="4355" relation="include">
+        </childnode>
+      </node>
+      <node id="4359">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/assign_copy.hpp</label>
+        <link refid="anon_2csv_2assign__copy_8hpp_source"/>
+        <childnode refid="4360" relation="include">
+        </childnode>
+        <childnode refid="4369" relation="include">
+        </childnode>
+        <childnode refid="4372" relation="include">
+        </childnode>
+      </node>
+      <node id="4389">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/assign_xxx.hpp</label>
+        <link refid="fusion_2assign__xxx_8hpp_source"/>
+        <childnode refid="4390" relation="include">
+        </childnode>
+        <childnode refid="4394" relation="include">
+        </childnode>
+      </node>
+      <node id="4377">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/alloc.hpp</label>
+        <link refid="alloc_8hpp_source"/>
+        <childnode refid="4378" relation="include">
+        </childnode>
+      </node>
+      <node id="4358">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/assign_xxx.hpp</label>
+        <link refid="anon_2csv_2assign__xxx_8hpp_source"/>
+        <childnode refid="4359" relation="include">
+        </childnode>
+        <childnode refid="4375" relation="include">
+        </childnode>
+      </node>
+      <node id="4382">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/assign_copy.hpp</label>
+        <link refid="anon_2unary_2assign__copy_8hpp_source"/>
+        <childnode refid="4383" relation="include">
+        </childnode>
+      </node>
+      <node id="4356">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp</label>
+        <link refid="static__array_2alloc_2fast__alloc_8hpp_source"/>
+        <childnode refid="4357" relation="include">
+        </childnode>
+        <childnode refid="4377" relation="include">
+        </childnode>
+      </node>
+      <node id="4374">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/ref.hpp</label>
+        <link refid="ref_8hpp_source"/>
+        <childnode refid="4366" relation="include">
+        </childnode>
+      </node>
+      <node id="4369">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp</label>
+        <link refid="held_8hpp_source"/>
+        <childnode refid="4360" relation="include">
+        </childnode>
+        <childnode refid="4361" relation="include">
+        </childnode>
+        <childnode refid="4370" relation="include">
+        </childnode>
+        <childnode refid="4371" relation="include">
+        </childnode>
+      </node>
+      <node id="4381">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/assign_xxx.hpp</label>
+        <link refid="anon_2unary_2assign__xxx_8hpp_source"/>
+        <childnode refid="4382" relation="include">
+        </childnode>
+        <childnode refid="4384" relation="include">
+        </childnode>
+      </node>
+      <node id="4360">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/composer.hpp</label>
+        <link refid="csv_2composer_8hpp_source"/>
+        <childnode refid="4361" relation="include">
+        </childnode>
+      </node>
+      <node id="4384">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/assign_rebind.hpp</label>
+        <link refid="anon_2unary_2assign__rebind_8hpp_source"/>
+        <childnode refid="4383" relation="include">
+        </childnode>
+      </node>
+      <node id="4387">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/fusion.hpp</label>
+        <link refid="fusion_8hpp_source"/>
+        <childnode refid="4374" relation="include">
+        </childnode>
+      </node>
+      <node id="4375">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/assign_rebind.hpp</label>
+        <link refid="anon_2csv_2assign__rebind_8hpp_source"/>
+        <childnode refid="4372" relation="include">
+        </childnode>
+      </node>
+      <node id="4386">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/container.hpp</label>
+        <link refid="ref_2fusion_2container_8hpp_source"/>
+        <childnode refid="4387" relation="include">
+        </childnode>
+        <childnode refid="4388" relation="include">
+        </childnode>
+      </node>
+      <node id="4355">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp</label>
+        <link refid="static__array_2interface_8hpp_source"/>
+        <childnode refid="4356" relation="include">
+        </childnode>
+        <childnode refid="4379" relation="include">
+        </childnode>
+        <childnode refid="4378" relation="include">
+        </childnode>
+      </node>
+      <node id="4365">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/anon.hpp</label>
+        <link refid="anon_2anon_8hpp_source"/>
+        <childnode refid="4366" relation="include">
+        </childnode>
+      </node>
+      <node id="4388">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/make.hpp</label>
+        <link refid="ref_2fusion_2make_8hpp_source"/>
+        <childnode refid="4357" relation="include">
+        </childnode>
+        <childnode refid="4380" relation="include">
+        </childnode>
+        <childnode refid="4389" relation="include">
+        </childnode>
+        <childnode refid="4387" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1is__range" prot="public">boost::assign::v2::ref::unwrap_aux::is_range</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1result__of__unwrap__range" prot="public">boost::assign::v2::ref::unwrap_aux::result_of_unwrap_range</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1result__of__unwrap__range_3_01_r_00_01true_01_4" prot="public">boost::assign::v2::ref::unwrap_aux::result_of_unwrap_range&lt; R, true &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1is__unwrapped__range" prot="public">boost::assign::v2::ref::is_unwrapped_range</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1unwrap__range" prot="public">boost::assign::v2::ref::result_of::unwrap_range</innerclass>
+    <innernamespace refid="namespaceboost">boost</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign">boost::assign</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2">boost::assign::v2</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1ref">boost::assign::v2::ref</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux">boost::assign::v2::ref::unwrap_aux</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1ref_1_1result__of">boost::assign::v2::ref::result_of</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"></codeline>
+<codeline lineno="2"><highlight class="comment">//<sp/><sp/>Boost.Assign<sp/>v2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2003-2004<sp/>Thorsten<sp/>Ottosen<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2010<sp/>Erwann<sp/>Rogard<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Use,<sp/>modification<sp/>and<sp/>distribution<sp/>are<sp/>subject<sp/>to<sp/>the<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Boost<sp/>Software<sp/>License,<sp/>Version<sp/>1.0.<sp/>(See<sp/>accompanying<sp/>file<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>LICENSE_1_0.txt<sp/>or<sp/>copy<sp/>at<sp/>http://www.boost.org/LICENSE_1_0.txt)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"></highlight><highlight class="preprocessor">#ifndef<sp/>BOOST_ASSIGN_V2_REF_WRAPPER_UNWRAP_RANGE_ER_2010_HPP</highlight></codeline>
+<codeline lineno="11"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#define<sp/>BOOST_ASSIGN_V2_REF_WRAPPER_UNWRAP_RANGE_ER_2010_HPP</highlight></codeline>
+<codeline lineno="12"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/type_traits/add_reference.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/range/begin.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/range/end.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/range/iterator.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/range/iterator_range.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/assign/v2/ref/detail/unwrap/iterator.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Note<sp/>:<sp/>In<sp/>Boost.Assign.v2,<sp/>this<sp/>is<sp/>deprecated<sp/>but<sp/>it<sp/>could<sp/>be<sp/>used<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="comment">//<sp/>elsewhere.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="comment">//<sp/>See<sp/>iterator.hpp</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">boost{</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">assign{<sp/></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">v2{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">ref{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">unwrap_aux{</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>R&gt;</highlight></codeline>
+<codeline lineno="32" refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1is__range" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1is__range" kindref="compound">is_range</ref><sp/>:<sp/><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1is__unwrapped__iterator" kindref="compound">is_unwrapped_iterator</ref>&lt;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>typename<sp/>boost::range_iterator&lt;R&gt;::type</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>&gt;{};</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="comment">//<sp/>TODO<sp/>remove</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="comment">//<sp/>I<sp/>guess<sp/>this<sp/>is<sp/>subsumed<sp/>by<sp/>range_reference</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>template&lt;typename<sp/>R&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>struct<sp/>reference_of_unwrapped_range</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/>:<sp/>unwrap::reference_of_iterator&lt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>typename<sp/>boost::range_iterator&lt;R&gt;::type</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/>&gt;{};</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>template&lt;typename<sp/>R,<sp/>bool<sp/>=<sp/>unwrap_aux::is_range&lt;R&gt;::value&gt;</highlight></codeline>
+<codeline lineno="45" refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1result__of__unwrap__range" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1result__of__unwrap__range" kindref="compound">result_of_unwrap_range</ref></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>boost::range_iterator&lt;R&gt;::type<sp/>base_it_;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1iterator" kindref="compound">result_of::unwrap_iterator&lt;base_it_&gt;::type</ref><sp/><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1iterator" kindref="compound">it_</ref>;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>boost::iterator_range&lt;it_&gt;<sp/>type;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>type<sp/>call(<sp/>R&amp;<sp/>r){</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>type(</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ref::unwrap_iterator(<sp/>boost::begin(<sp/>r<sp/>)<sp/>),</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ref::unwrap_iterator(<sp/>boost::end(<sp/>r<sp/>)<sp/>)</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>No<sp/>need<sp/>to<sp/>unwrap<sp/>twice</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>R&gt;</highlight></codeline>
+<codeline lineno="61" refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1result__of__unwrap__range_3_01_r_00_01true_01_4" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1result__of__unwrap__range" kindref="compound">result_of_unwrap_range</ref>&lt;R,true&gt;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>R<sp/>type;<sp/></highlight><highlight class="comment">//<sp/>don&apos;t<sp/>change<sp/>this<sp/>to<sp/>R&amp;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>type<sp/>call(<sp/>R&amp;<sp/>r){<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>r;<sp/>}</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>unwrap_aux</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>R&gt;</highlight></codeline>
+<codeline lineno="70" refid="structboost_1_1assign_1_1v2_1_1ref_1_1is__unwrapped__range" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1is__unwrapped__range" kindref="compound">is_unwrapped_range</ref><sp/>:<sp/>unwrap_aux::is_range&lt;R&gt;{};</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">result_of{</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>R&gt;</highlight></codeline>
+<codeline lineno="75" refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1unwrap__range" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1unwrap__range" kindref="compound">unwrap_range</ref><sp/>:<sp/>unwrap_aux::result_of_unwrap_range&lt;R&gt;{};</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>result_of</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>R&gt;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1unwrap__range" kindref="compound">result_of::unwrap_range&lt;R&gt;::type</ref><sp/></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/>unwrap_range(<sp/>R&amp;<sp/>r)</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1unwrap__range" kindref="compound">result_of::unwrap_range&lt;R&gt;</ref><sp/>result_;</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>result_::call(<sp/>r<sp/>);</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>R&gt;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>result_of::unwrap_range&lt;R<sp/>const&gt;::type<sp/></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>unwrap_range(<sp/>R<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">&amp;<sp/>r)</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>result_of::unwrap_range&lt;R<sp/>const&gt;<sp/>result_;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>result_::call(<sp/>r<sp/>);</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>ref</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>v2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>assign</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>boost</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/unwrap/range.hpp"/>
+  </compounddef>
+</doxygen>

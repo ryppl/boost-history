@@ -1,0 +1,222 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2" kind="namespace">
+    <compoundname>boost::assign::v2</compoundname>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1adaptor">boost::assign::v2::adaptor</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1anon__aux">boost::assign::v2::anon_aux</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1chain__aux">boost::assign::v2::chain_aux</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1chain__traits">boost::assign::v2::chain_traits</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1checking">boost::assign::v2::checking</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1container__tag">boost::assign::v2::container_tag</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1container__type__traits">boost::assign::v2::container_type_traits</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1convert__aux">boost::assign::v2::convert_aux</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1csv__put__aux">boost::assign::v2::csv_put_aux</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1functor__aux">boost::assign::v2::functor_aux</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1keyword__aux">boost::assign::v2::keyword_aux</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1modifier__tag">boost::assign::v2::modifier_tag</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1mpl">boost::assign::v2::mpl</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1put__aux">boost::assign::v2::put_aux</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1put__compose__aux">boost::assign::v2::put_compose_aux</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1put__compose__csv__aux">boost::assign::v2::put_compose_csv_aux</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1put__range__aux">boost::assign::v2::put_range_aux</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1put__range__tag">boost::assign::v2::put_range_tag</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1ref">boost::assign::v2::ref</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1relational__op__aux">boost::assign::v2::relational_op_aux</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1result__of">boost::assign::v2::result_of</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1result__of__modulo">boost::assign::v2::result_of_modulo</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1switch__tag">boost::assign::v2::switch_tag</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1type__traits">boost::assign::v2::type_traits</innernamespace>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="namespaceboost_1_1assign_1_1v2_1a397239b8789e796d1e549d3d940ede65" prot="public" static="no" mutable="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1keyword__aux_1_1unwrap" kindref="compound">keyword_aux::unwrap</ref> const</type>
+        <definition>keyword_aux::unwrap const boost::assign::v2::_unwrap</definition>
+        <argsstring></argsstring>
+        <name>_unwrap</name>
+        <initializer> <ref refid="structboost_1_1assign_1_1v2_1_1keyword__aux_1_1unwrap" kindref="compound">keyword_aux::unwrap</ref>()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/keyword/unwrap.hpp" line="22" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/keyword/unwrap.hpp" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespaceboost_1_1assign_1_1v2_1aa4e7211c41cbb1450306e072975cd68f" prot="public" static="no" mutable="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1set__modifier" kindref="compound">put_aux::set_modifier</ref>&lt; <ref refid="structboost_1_1assign_1_1v2_1_1modifier__tag_1_1at__next" kindref="compound">modifier_tag::at_next</ref> &gt; const</type>
+        <definition>put_aux::set_modifier&lt;modifier_tag::at_next&gt; const boost::assign::v2::_at_next</definition>
+        <argsstring></argsstring>
+        <name>_at_next</name>
+        <initializer> ( _modifier = <ref refid="structboost_1_1assign_1_1v2_1_1modifier__tag_1_1at__next" kindref="compound">modifier_tag::at_next</ref>() )</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/at_next.hpp" line="46" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/at_next.hpp" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1a29bdc43701da42cabface6bb83f9e5d3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1result__of_1_1anon" kindref="compound">result_of::anon</ref>&lt; T &gt;::type</type>
+        <definition>result_of::anon&lt;T&gt;::type boost::assign::v2::anon</definition>
+        <argsstring>(keyword_aux::nil)</argsstring>
+        <name>anon</name>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1keyword__aux_1_1nil" kindref="compound">keyword_aux::nil</ref></type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/make.hpp" line="40" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/make.hpp" bodystart="39" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1ade6fe2acd95a9e82e052c1e4cb30df3a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1result__of_1_1constructor" kindref="compound">result_of::constructor</ref>&lt; T &gt;::type</type>
+        <definition>result_of::constructor&lt;T&gt;::type boost::assign::v2::constructor</definition>
+        <argsstring>()</argsstring>
+        <name>constructor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" line="84" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" bodystart="83" bodyend="87"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1a592a7236a2c46f0cc01259b1c051a70b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1result__of_1_1new__" kindref="compound">result_of::new_</ref>&lt; T &gt;::type</type>
+        <definition>result_of::new_&lt;T&gt;::type boost::assign::v2::new_</definition>
+        <argsstring>()</argsstring>
+        <name>new_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" line="120" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" bodystart="119" bodyend="123"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1a27578351b949ba05e5165fecdad82bde" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename To</type>
+          </param>
+          <param>
+            <type>typename From</type>
+          </param>
+        </templateparamlist>
+        <type>To</type>
+        <definition>To boost::assign::v2::convert</definition>
+        <argsstring>(From const &amp;from)</argsstring>
+        <name>convert</name>
+        <param>
+          <type>From const &amp;</type>
+          <declname>from</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/convert.hpp" line="41" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/convert.hpp" bodystart="41" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1aebda6808c678284dc07daf9ffbda2be5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename From</type>
+          </param>
+          <param>
+            <type>typename To</type>
+          </param>
+        </templateparamlist>
+        <type>To &amp;</type>
+        <definition>To&amp; boost::assign::v2::put_range</definition>
+        <argsstring>(From const &amp;from, To &amp;to)</argsstring>
+        <name>put_range</name>
+        <param>
+          <type>From const &amp;</type>
+          <declname>from</declname>
+        </param>
+        <param>
+          <type>To &amp;</type>
+          <declname>to</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/range.hpp" line="21" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/range.hpp" bodystart="20" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1af8a933f66354811e4c40b760acd54c9c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename V</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1result__of_1_1csv__put" kindref="compound">result_of::csv_put</ref>&lt; V &gt;::type</type>
+        <definition>result_of::csv_put&lt;V&gt;::type boost::assign::v2::csv_put</definition>
+        <argsstring>(V &amp;v)</argsstring>
+        <name>csv_put</name>
+        <param>
+          <type>V &amp;</type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/csv.hpp" line="79" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/csv.hpp" bodystart="78" bodyend="82"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1ae836f0cfd7b93c340e496e298bdfc45b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename V</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1result__of_1_1put" kindref="compound">result_of::put</ref>&lt; V &gt;::type</type>
+        <definition>result_of::put&lt;V&gt;::type boost::assign::v2::put</definition>
+        <argsstring>(V &amp;v)</argsstring>
+        <name>put</name>
+        <param>
+          <type>V &amp;</type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/make.hpp" line="133" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/make.hpp" bodystart="132" bodyend="136"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="27"/>
+  </compounddef>
+</doxygen>

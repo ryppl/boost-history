@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_cf850bb01f9d555d34361d0046e15f62" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/</compoundname>
+    <innerfile refid="put_2generic_2base_8hpp">base.hpp</innerfile>
+    <innerfile refid="put_2generic_2crtp_8hpp">crtp.hpp</innerfile>
+    <innerfile refid="expose__fun_8hpp">expose_fun.hpp</innerfile>
+    <innerfile refid="expose__modifier_8hpp">expose_modifier.hpp</innerfile>
+    <innerfile refid="put_2generic_2generic_8hpp">generic.hpp</innerfile>
+    <innerfile refid="new__fun_8hpp">new_fun.hpp</innerfile>
+    <innerfile refid="new__modifier_8hpp">new_modifier.hpp</innerfile>
+    <innerfile refid="result__of__modulo_8hpp">result_of_modulo.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/"/>
+  </compounddef>
+</doxygen>

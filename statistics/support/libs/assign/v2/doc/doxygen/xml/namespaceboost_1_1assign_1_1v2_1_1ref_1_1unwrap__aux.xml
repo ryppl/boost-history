@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux" kind="namespace">
+    <compoundname>boost::assign::v2::ref::unwrap_aux</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1reference__of__iterator" prot="public">boost::assign::v2::ref::unwrap_aux::reference_of_iterator</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1iterator" prot="public">boost::assign::v2::ref::unwrap_aux::iterator</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1is__iterator" prot="public">boost::assign::v2::ref::unwrap_aux::is_iterator</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1is__iterator_3_01unwrap__aux_1_1iterator_3_01_i_00_01_r_00_01_v_01_4_01_4" prot="public">boost::assign::v2::ref::unwrap_aux::is_iterator&lt; unwrap_aux::iterator&lt; I, R, V &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1is__range" prot="public">boost::assign::v2::ref::unwrap_aux::is_range</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1result__of__unwrap__range" prot="public">boost::assign::v2::ref::unwrap_aux::result_of_unwrap_range</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1result__of__unwrap__range_3_01_r_00_01true_01_4" prot="public">boost::assign::v2::ref::unwrap_aux::result_of_unwrap_range&lt; R, true &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1reference" prot="public">boost::assign::v2::ref::unwrap_aux::reference</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/unwrap/iterator.hpp" line="35"/>
+  </compounddef>
+</doxygen>

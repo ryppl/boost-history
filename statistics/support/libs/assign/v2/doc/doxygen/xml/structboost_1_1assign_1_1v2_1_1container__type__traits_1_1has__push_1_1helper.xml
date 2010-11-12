@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push_1_1helper" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::container_type_traits::has_push::helper</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename U</type>
+      </param>
+      <param>
+        <type>void(U::*)(T const &amp;)</type>
+        <declname>fp</declname>
+        <defname>fp</defname>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/has_push.hpp" line="32" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/has_push.hpp" bodystart="32" bodyend="34"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

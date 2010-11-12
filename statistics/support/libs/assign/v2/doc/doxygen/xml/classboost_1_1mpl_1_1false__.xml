@@ -1,0 +1,165 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="classboost_1_1mpl_1_1false__" kind="class" prot="public">
+    <compoundname>boost::mpl::false_</compoundname>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1ref_1_1type__traits_1_1does__assign__copy__impl" prot="public" virt="non-virtual">boost::assign::v2::ref::type_traits::does_assign_copy_impl&lt; boost::remove_cv&lt; T &gt;::type &gt;</derivedcompoundref>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__fifo__impl" prot="public" virt="non-virtual">boost::assign::v2::container_type_traits::is_fifo_impl&lt; value_container&lt; boost::remove_cv&lt; V &gt;::type &gt;::type &gt;</derivedcompoundref>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1is__iterator" prot="public" virt="non-virtual">boost::assign::v2::ref::unwrap_aux::is_iterator&lt; boost::remove_cv&lt; boost::range_iterator&lt; R &gt;::type &gt;::type &gt;</derivedcompoundref>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1is__iterator" prot="public" virt="non-virtual">boost::assign::v2::ref::unwrap_aux::is_iterator&lt; boost::remove_cv&lt; It &gt;::type &gt;</derivedcompoundref>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__lifo__impl" prot="public" virt="non-virtual">boost::assign::v2::container_type_traits::is_lifo_impl&lt; value_container&lt; boost::remove_cv&lt; V &gt;::type &gt;::type &gt;</derivedcompoundref>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__map__impl" prot="public" virt="non-virtual">boost::assign::v2::container_type_traits::is_map_impl&lt; value_container&lt; boost::remove_cv&lt; V &gt;::type &gt;::type &gt;</derivedcompoundref>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__set__impl" prot="public" virt="non-virtual">boost::assign::v2::container_type_traits::is_set_impl&lt; value_container&lt; boost::remove_cv&lt; V &gt;::type &gt;::type &gt;</derivedcompoundref>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__sorted__impl" prot="public" virt="non-virtual">boost::assign::v2::container_type_traits::is_sorted_impl&lt; value_container&lt; boost::remove_cv&lt; V &gt;::type &gt;::type &gt;</derivedcompoundref>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="339">
+        <label>boost::assign::v2::ref::unwrap_aux::is_iterator&lt; boost::remove_cv&lt; boost::range_iterator&lt; R &gt;::type &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1is__iterator"/>
+        <childnode refid="333" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="346">
+        <label>boost::assign::v2::container_type_traits::forward_to_value&lt; is_lifo_impl, boost::remove_cv&lt; V &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1forward__to__value"/>
+        <childnode refid="345" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="351">
+        <label>boost::assign::v2::container_type_traits::is_set_impl&lt; value_container&lt; boost::remove_cv&lt; V &gt;::type &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__set__impl"/>
+        <childnode refid="333" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="342">
+        <label>boost::assign::v2::ref::is_unwrapped_range&lt; R &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1is__unwrapped__range"/>
+        <childnode refid="341" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="348">
+        <label>boost::assign::v2::container_type_traits::is_map_impl&lt; value_container&lt; boost::remove_cv&lt; V &gt;::type &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__map__impl"/>
+        <childnode refid="333" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="352">
+        <label>boost::assign::v2::container_type_traits::forward_to_value&lt; is_set_impl, boost::remove_cv&lt; V &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1forward__to__value"/>
+        <childnode refid="351" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="333">
+        <label>false_</label>
+        <link refid="classboost_1_1mpl_1_1false__"/>
+      </node>
+      <node id="355">
+        <label>boost::assign::v2::container_type_traits::forward_to_value&lt; is_sorted_impl, boost::remove_cv&lt; V &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1forward__to__value"/>
+        <childnode refid="354" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="347">
+        <label>boost::assign::v2::container_type_traits::is_lifo&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__lifo"/>
+        <childnode refid="346" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="341">
+        <label>boost::assign::v2::ref::unwrap_aux::is_range&lt; R &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1is__range"/>
+        <childnode refid="340" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="354">
+        <label>boost::assign::v2::container_type_traits::is_sorted_impl&lt; value_container&lt; boost::remove_cv&lt; V &gt;::type &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__sorted__impl"/>
+        <childnode refid="333" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="336">
+        <label>boost::assign::v2::container_type_traits::is_fifo_impl&lt; value_container&lt; boost::remove_cv&lt; V &gt;::type &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__fifo__impl"/>
+        <childnode refid="333" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="340">
+        <label>boost::assign::v2::ref::is_unwrapped_iterator&lt; boost::range_iterator&lt; R &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1is__unwrapped__iterator"/>
+        <childnode refid="339" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="350">
+        <label>boost::assign::v2::container_type_traits::is_map&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__map"/>
+        <childnode refid="349" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="344">
+        <label>boost::assign::v2::ref::is_unwrapped_iterator&lt; It &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1is__unwrapped__iterator"/>
+        <childnode refid="343" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="343">
+        <label>boost::assign::v2::ref::unwrap_aux::is_iterator&lt; boost::remove_cv&lt; It &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1is__iterator"/>
+        <childnode refid="333" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="334">
+        <label>boost::assign::v2::ref::type_traits::does_assign_copy_impl&lt; boost::remove_cv&lt; T &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1type__traits_1_1does__assign__copy__impl"/>
+        <childnode refid="333" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="337">
+        <label>boost::assign::v2::container_type_traits::forward_to_value&lt; is_fifo_impl, boost::remove_cv&lt; V &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1forward__to__value"/>
+        <childnode refid="336" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="345">
+        <label>boost::assign::v2::container_type_traits::is_lifo_impl&lt; value_container&lt; boost::remove_cv&lt; V &gt;::type &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__lifo__impl"/>
+        <childnode refid="333" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="335">
+        <label>boost::assign::v2::ref::type_traits::does_assign_copy&lt; T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1type__traits_1_1does__assign__copy"/>
+        <childnode refid="334" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="349">
+        <label>boost::assign::v2::container_type_traits::forward_to_value&lt; is_map_impl, boost::remove_cv&lt; V &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1forward__to__value"/>
+        <childnode refid="348" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="356">
+        <label>boost::assign::v2::container_type_traits::is_sorted&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__sorted"/>
+        <childnode refid="355" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="353">
+        <label>boost::assign::v2::container_type_traits::is_set&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__set"/>
+        <childnode refid="352" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="338">
+        <label>boost::assign::v2::container_type_traits::is_fifo&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__fifo"/>
+        <childnode refid="337" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/is_set.hpp" line="27"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

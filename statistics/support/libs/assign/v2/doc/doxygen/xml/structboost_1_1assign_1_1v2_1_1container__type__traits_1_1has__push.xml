@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::container_type_traits::has_push</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push_1_1helper" prot="public">boost::assign::v2::container_type_traits::has_push::helper</innerclass>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>V</declname>
+        <defname>V</defname>
+      </param>
+      <param>
+        <type>typename</type>
+        <declname>T</declname>
+        <defname>T</defname>
+        <defval>typename <ref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1value" kindref="compound">container_type_traits::value</ref>&lt;V&gt;::type</defval>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push_1a352fbd090de31c4150a8327032a20683" prot="public" static="no">
+        <type>boost::type_traits::yes_type</type>
+        <definition>typedef boost::type_traits::yes_type boost::assign::v2::container_type_traits::has_push&lt; V, T &gt;::yes_</definition>
+        <argsstring></argsstring>
+        <name>yes_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/has_push.hpp" line="28" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/has_push.hpp" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push_1a923c6c07e7a8bc856842a1261fd97a40" prot="public" static="no">
+        <type>boost::type_traits::no_type</type>
+        <definition>typedef boost::type_traits::no_type boost::assign::v2::container_type_traits::has_push&lt; V, T &gt;::no_</definition>
+        <argsstring></argsstring>
+        <name>no_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/has_push.hpp" line="29" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/has_push.hpp" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push_1a3d2b7f7046ff02c05dd1a18979f84011" prot="public" static="no">
+        <type>boost::mpl::bool_&lt; <ref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1value" kindref="compound">value</ref> &gt;</type>
+        <definition>typedef boost::mpl::bool_&lt;value&gt; boost::assign::v2::container_type_traits::has_push&lt; V, T &gt;::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/has_push.hpp" line="45" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/has_push.hpp" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push_1afead176a3cb4eb1cccadb4def1d03064" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename U</type>
+          </param>
+        </templateparamlist>
+        <type>yes_</type>
+        <definition>static yes_ boost::assign::v2::container_type_traits::has_push&lt; V, T &gt;::test</definition>
+        <argsstring>(U *, helper&lt; U,&amp;U::push &gt; *p=0)</argsstring>
+        <name>test</name>
+        <param>
+          <type>U *</type>
+        </param>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push_1_1helper" kindref="compound">helper</ref>&lt; U,&amp;U::push &gt; *</type>
+          <declname>p</declname>
+          <defval>0</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/has_push.hpp" line="37"/>
+      </memberdef>
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push_1a33d52c07eec35d1ceb01d18d5aecfe29" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>no_</type>
+        <definition>static no_ boost::assign::v2::container_type_traits::has_push&lt; V, T &gt;::test</definition>
+        <argsstring>(...)</argsstring>
+        <name>test</name>
+        <param>
+          <type>...</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/has_push.hpp" line="38"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push_1a0af0c24720cb379818e4be3552ec4955" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::container_type_traits::has_push&lt; V, T &gt;::BOOST_STATIC_CONSTANT</definition>
+        <argsstring>(bool, value=sizeof(test((V *) 0))==sizeof(yes_))</argsstring>
+        <name>BOOST_STATIC_CONSTANT</name>
+        <param>
+          <type>bool</type>
+        </param>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1value" kindref="compound">value</ref></type>
+          <defval>sizeof(test((V *) 0))==sizeof(yes_)</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/has_push.hpp" line="43"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/has_push.hpp" line="26" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/has_push.hpp" bodystart="26" bodyend="47"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push_1a0af0c24720cb379818e4be3552ec4955" prot="public" virt="non-virtual"><scope>boost::assign::v2::container_type_traits::has_push</scope><name>BOOST_STATIC_CONSTANT</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push_1a923c6c07e7a8bc856842a1261fd97a40" prot="public" virt="non-virtual"><scope>boost::assign::v2::container_type_traits::has_push</scope><name>no_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push_1afead176a3cb4eb1cccadb4def1d03064" prot="public" virt="non-virtual"><scope>boost::assign::v2::container_type_traits::has_push</scope><name>test</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push_1a33d52c07eec35d1ceb01d18d5aecfe29" prot="public" virt="non-virtual"><scope>boost::assign::v2::container_type_traits::has_push</scope><name>test</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push_1a3d2b7f7046ff02c05dd1a18979f84011" prot="public" virt="non-virtual"><scope>boost::assign::v2::container_type_traits::has_push</scope><name>type</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push_1a352fbd090de31c4150a8327032a20683" prot="public" virt="non-virtual"><scope>boost::assign::v2::container_type_traits::has_push</scope><name>yes_</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1put__aux_1_1crtp__traits" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::put_aux::crtp_traits</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename V</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1crtp__traits_1a8ac1dabb789a2f5480411bf225635511" prot="public" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1value" kindref="compound">v2::container_type_traits::value</ref>&lt; V &gt;::type</type>
+        <definition>typedef v2::container_type_traits::value&lt;V&gt;::type boost::assign::v2::put_aux::crtp_traits&lt; V &gt;::value_type</definition>
+        <argsstring></argsstring>
+        <name>value_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" line="56" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1crtp__traits_1ad320e10ab36ed67dd89e1ab679103183" prot="public" static="no">
+        <type>boost::mpl::eval_if&lt; <ref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__ptr__container" kindref="compound">container_type_traits::is_ptr_container</ref>&lt; V &gt;, <ref refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1deduce__new__" kindref="compound">functor_aux::deduce_new_</ref>&lt; V &gt;, <ref refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1deduce__constructor" kindref="compound">functor_aux::deduce_constructor</ref>&lt; V &gt; &gt;::type</type>
+        <definition>typedef boost::mpl::eval_if&lt; container_type_traits::is_ptr_container&lt;V&gt;, functor_aux::deduce_new_&lt;V&gt;, functor_aux::deduce_constructor&lt;V&gt; &gt;::type boost::assign::v2::put_aux::crtp_traits&lt; V &gt;::functor_type</definition>
+        <argsstring></argsstring>
+        <name>functor_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" line="61" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1crtp__traits_1a8598ee88e2bc70accb3f898d6fb60436" prot="public" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1deduce__modifier" kindref="compound">put_aux::deduce_modifier</ref>&lt; V &gt;::type</type>
+        <definition>typedef put_aux::deduce_modifier&lt;V&gt;::type boost::assign::v2::put_aux::crtp_traits&lt; V &gt;::modifier_tag</definition>
+        <argsstring></argsstring>
+        <name>modifier_tag</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" line="62" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" line="55" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp" bodystart="54" bodyend="64"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1crtp__traits_1ad320e10ab36ed67dd89e1ab679103183" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::crtp_traits</scope><name>functor_type</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1crtp__traits_1a8598ee88e2bc70accb3f898d6fb60436" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::crtp_traits</scope><name>modifier_tag</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1crtp__traits_1a8ac1dabb789a2f5480411bf225635511" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::crtp_traits</scope><name>value_type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

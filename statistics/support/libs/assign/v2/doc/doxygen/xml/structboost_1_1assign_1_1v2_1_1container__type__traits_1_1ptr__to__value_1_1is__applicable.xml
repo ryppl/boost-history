@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value_1_1is__applicable" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::container_type_traits::ptr_to_value::is_applicable</compoundname>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__ptr__container" prot="public" virt="non-virtual">boost::assign::v2::container_type_traits::is_ptr_container&lt; V &gt;</derivedcompoundref>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="441">
+        <label>boost::assign::v2::container_type_traits::is_ptr_container&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__ptr__container"/>
+        <childnode refid="440" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="440">
+        <label>boost::assign::v2::container_type_traits::ptr_to_value&lt; V &gt;::is_applicable</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value_1_1is__applicable"/>
+      </node>
+    </inheritancegraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp" line="28" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp" bodystart="28" bodyend="28"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1common_1_1is__applicable" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::container_type_traits::ptr_to_value_aux::common::is_applicable</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp" line="46" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp" bodystart="46" bodyend="46"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

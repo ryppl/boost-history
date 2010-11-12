@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1ref_1_1type__traits_1_1does__assign__copy__impl" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::ref::type_traits::does_assign_copy_impl</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>T</declname>
+        <defname>T</defname>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/wrapper/copy.hpp" line="54" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/wrapper/copy.hpp" bodystart="54" bodyend="54"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="check__convert_8hpp" kind="file">
+    <compoundname>check_convert.hpp</compoundname>
+    <includes refid="enable__cpp0x_8hpp" local="no">boost/assign/v2/detail/config/enable_cpp0x.hpp</includes>
+    <incdepgraph>
+      <node id="4642">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/check_convert.hpp</label>
+        <link refid="check_convert.hpp"/>
+        <childnode refid="4643" relation="include">
+        </childnode>
+      </node>
+      <node id="4644">
+        <label>boost/preprocessor/logical/and.hpp</label>
+      </node>
+      <node id="4643">
+        <label>boost/assign/v2/detail/config/enable_cpp0x.hpp</label>
+        <link refid="enable__cpp0x_8hpp_source"/>
+        <childnode refid="4644" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="check__convert_8hpp_1af71dbe52628a3f83a77ab494817525c6" prot="public" static="no" mutable="no">
+        <type>to_</type>
+        <definition>to</definition>
+        <argsstring></argsstring>
+        <name>to</name>
+        <initializer> from</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/check_convert.hpp" line="14" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/check_convert.hpp" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="check__convert_8hpp_1acfb710435053c0f620083b4abe761cd4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>do_check</definition>
+        <argsstring>(from.convert&lt; to_ &gt;())</argsstring>
+        <name>do_check</name>
+        <param>
+          <type>from.convert&lt; to_ &gt;</type>
+          <array>()</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/check_convert.hpp" line="13"/>
+      </memberdef>
+      <memberdef kind="function" id="check__convert_8hpp_1a0a075d2203b9960bda1a6fd47b4499fd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>do_check</definition>
+        <argsstring>(to)</argsstring>
+        <name>do_check</name>
+        <param>
+          <type>to</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/check_convert.hpp" line="15"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;boost/assign/v2/detail/config/enable_cpp0x.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/>TODO<sp/>find<sp/>out<sp/>why<sp/>c++0x<sp/>won&apos;t<sp/>allow<sp/>to<sp/>=<sp/>from;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Usage:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>using<sp/>checking::container;<sp/>//<sp/>or<sp/>maybe<sp/>checking::array</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>BOOST_ASSIGN_V2_check_convert</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>BOOST_ASSIGN_V2_check_convert</highlight></codeline>
+<codeline lineno="9"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#if<sp/>BOOST_ASSIGN_V2_ENABLE_CPP0X</highlight></codeline>
+<codeline lineno="10"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#define<sp/>BOOST_ASSIGN_V2_check_convert<sp/>do_check(<sp/>from.convert&lt;to_&gt;()<sp/>);</highlight></codeline>
+<codeline lineno="11"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#else</highlight></codeline>
+<codeline lineno="12"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#define<sp/>BOOST_ASSIGN_V2_check_convert<sp/>\</highlight></codeline>
+<codeline lineno="13"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>do_check(<sp/>from.convert&lt;to_&gt;()<sp/>);<sp/>\</highlight></codeline>
+<codeline lineno="14"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>to_<sp/>to;<sp/>to<sp/>=<sp/>from;<sp/>\</highlight></codeline>
+<codeline lineno="15"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>do_check(<sp/>to<sp/>);<sp/>\</highlight></codeline>
+<codeline lineno="16"><highlight class="preprocessor"></highlight></codeline>
+<codeline lineno="17"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+<codeline lineno="18"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+<codeline lineno="19"><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/check_convert.hpp"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_4f8ad6cf0804598970c94f73164289cf" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/relational_op/</compoundname>
+    <innerfile refid="detail_2relational__op_2crtp_8hpp">crtp.hpp</innerfile>
+    <innerfile refid="relational__op_2relational__op_8hpp">relational_op.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/relational_op/"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,260 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="meta__convert_8hpp" kind="file">
+    <compoundname>meta_convert.hpp</compoundname>
+    <includes refid="ref_2detail_2convert__traits_2result_8hpp" local="no">boost/assign/v2/ref/detail/convert_traits/result.hpp</includes>
+    <includedby refid="chain_2traits_2iterator_8hpp" local="no">/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp</includedby>
+    <includedby refid="type__traits_8hpp" local="no">/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/type_traits.hpp</includedby>
+    <incdepgraph>
+      <node id="9147">
+        <label>boost/type_traits/remove_const.hpp</label>
+      </node>
+      <node id="9144">
+        <label>boost/type_traits/is_reference.hpp</label>
+      </node>
+      <node id="9148">
+        <label>boost/assign/v2/ref/detail/convert_traits/twin_values.hpp</label>
+        <link refid="ref_2detail_2convert__traits_2twin__values_8hpp_source"/>
+        <childnode refid="9149" relation="include">
+        </childnode>
+        <childnode refid="9150" relation="include">
+        </childnode>
+        <childnode refid="9151" relation="include">
+        </childnode>
+        <childnode refid="9152" relation="include">
+        </childnode>
+      </node>
+      <node id="9143">
+        <label>boost/type_traits/is_const.hpp</label>
+      </node>
+      <node id="9141">
+        <label>boost/static_assert.hpp</label>
+      </node>
+      <node id="9153">
+        <label>boost/type_traits/add_const.hpp</label>
+      </node>
+      <node id="9146">
+        <label>boost/type_traits/remove_reference.hpp</label>
+      </node>
+      <node id="9152">
+        <label>boost/assign/v2/ref/detail/convert_traits/add_const.hpp</label>
+        <link refid="add__const_8hpp_source"/>
+        <childnode refid="9149" relation="include">
+        </childnode>
+        <childnode refid="9150" relation="include">
+        </childnode>
+        <childnode refid="9153" relation="include">
+        </childnode>
+      </node>
+      <node id="9149">
+        <label>boost/mpl/eval_if.hpp</label>
+      </node>
+      <node id="9137">
+        <label>boost/assign/v2/ref/detail/convert_traits/result.hpp</label>
+        <link refid="ref_2detail_2convert__traits_2result_8hpp_source"/>
+        <childnode refid="9138" relation="include">
+        </childnode>
+        <childnode refid="9139" relation="include">
+        </childnode>
+        <childnode refid="9140" relation="include">
+        </childnode>
+        <childnode refid="9141" relation="include">
+        </childnode>
+        <childnode refid="9142" relation="include">
+        </childnode>
+        <childnode refid="9143" relation="include">
+        </childnode>
+        <childnode refid="9144" relation="include">
+        </childnode>
+        <childnode refid="9145" relation="include">
+        </childnode>
+        <childnode refid="9146" relation="include">
+        </childnode>
+        <childnode refid="9147" relation="include">
+        </childnode>
+        <childnode refid="9148" relation="include">
+        </childnode>
+        <childnode refid="9154" relation="include">
+        </childnode>
+      </node>
+      <node id="9156">
+        <label>boost/type_traits/is_arithmetic.hpp</label>
+      </node>
+      <node id="9155">
+        <label>boost/numeric/conversion/conversion_traits.hpp</label>
+      </node>
+      <node id="9136">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/meta_convert.hpp</label>
+        <link refid="meta_convert.hpp"/>
+        <childnode refid="9137" relation="include">
+        </childnode>
+      </node>
+      <node id="9145">
+        <label>boost/type_traits/is_convertible.hpp</label>
+      </node>
+      <node id="9150">
+        <label>boost/mpl/identity.hpp</label>
+      </node>
+      <node id="9140">
+        <label>boost/mpl/or.hpp</label>
+      </node>
+      <node id="9138">
+        <label>boost/config.hpp</label>
+      </node>
+      <node id="9139">
+        <label>boost/mpl/and.hpp</label>
+      </node>
+      <node id="9154">
+        <label>boost/assign/v2/ref/detail/convert_traits/distinct_values.hpp</label>
+        <link refid="ref_2detail_2convert__traits_2distinct__values_8hpp_source"/>
+        <childnode refid="9155" relation="include">
+        </childnode>
+        <childnode refid="9149" relation="include">
+        </childnode>
+        <childnode refid="9150" relation="include">
+        </childnode>
+        <childnode refid="9139" relation="include">
+        </childnode>
+        <childnode refid="9145" relation="include">
+        </childnode>
+        <childnode refid="9156" relation="include">
+        </childnode>
+        <childnode refid="9152" relation="include">
+        </childnode>
+      </node>
+      <node id="9151">
+        <label>boost/type_traits/add_reference.hpp</label>
+      </node>
+      <node id="9142">
+        <label>boost/type_traits/is_same.hpp</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="9168">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/detail.hpp</label>
+        <link refid="detail_8hpp_source"/>
+        <childnode refid="9166" relation="include">
+        </childnode>
+      </node>
+      <node id="9163">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/chain.hpp</label>
+        <link refid="chain_8hpp_source"/>
+        <childnode refid="9164" relation="include">
+        </childnode>
+        <childnode refid="9165" relation="include">
+        </childnode>
+        <childnode refid="9166" relation="include">
+        </childnode>
+      </node>
+      <node id="9161">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/bitwise_or.hpp</label>
+        <link refid="bitwise__or_8hpp_source"/>
+        <childnode refid="9162" relation="include">
+        </childnode>
+        <childnode refid="9163" relation="include">
+        </childnode>
+      </node>
+      <node id="9165">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/twin_values.hpp</label>
+        <link refid="chain_2checking_2twin__values_8hpp_source"/>
+      </node>
+      <node id="9167">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/type_traits.hpp</label>
+        <link refid="type__traits_8hpp_source"/>
+        <childnode refid="9168" relation="include">
+        </childnode>
+      </node>
+      <node id="9166">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/v2.hpp</label>
+        <link refid="v2_8hpp_source"/>
+      </node>
+      <node id="9164">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/distinct_values.hpp</label>
+        <link refid="chain_2checking_2distinct__values_8hpp_source"/>
+      </node>
+      <node id="9157">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/meta_convert.hpp</label>
+        <link refid="meta_convert.hpp"/>
+        <childnode refid="9158" relation="include">
+        </childnode>
+        <childnode refid="9167" relation="include">
+        </childnode>
+      </node>
+      <node id="9158">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp</label>
+        <link refid="chain_2traits_2iterator_8hpp_source"/>
+        <childnode refid="9159" relation="include">
+        </childnode>
+      </node>
+      <node id="9160">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/result.hpp</label>
+        <link refid="chain_2traits_2result_8hpp_source"/>
+        <childnode refid="9161" relation="include">
+        </childnode>
+        <childnode refid="9162" relation="include">
+        </childnode>
+        <childnode refid="9163" relation="include">
+        </childnode>
+      </node>
+      <node id="9162">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/logical_and.hpp</label>
+        <link refid="logical__and_8hpp_source"/>
+        <childnode refid="9163" relation="include">
+        </childnode>
+      </node>
+      <node id="9159">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/range.hpp</label>
+        <link refid="chain_2traits_2range_8hpp_source"/>
+        <childnode refid="9160" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1meta__convert" prot="public">boost::assign::v2::type_traits::meta_convert</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1meta__convert_1_1apply" prot="public">boost::assign::v2::type_traits::meta_convert::apply</innerclass>
+    <innernamespace refid="namespaceboost">boost</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign">boost::assign</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2">boost::assign::v2</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1type__traits">boost::assign::v2::type_traits</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"></codeline>
+<codeline lineno="2"><highlight class="comment">//<sp/><sp/>Boost.Assign<sp/>v2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2003-2004<sp/>Thorsten<sp/>Ottosen<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2010<sp/>Erwann<sp/>Rogard<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Use,<sp/>modification<sp/>and<sp/>distribution<sp/>are<sp/>subject<sp/>to<sp/>the<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Boost<sp/>Software<sp/>License,<sp/>Version<sp/>1.0.<sp/>(See<sp/>accompanying<sp/>file<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>LICENSE_1_0.txt<sp/>or<sp/>copy<sp/>at<sp/>http://www.boost.org/LICENSE_1_0.txt)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"></highlight><highlight class="preprocessor">#ifndef<sp/>BOOST_ASSIGN_V2_TYPE_TRAITS_HAS_VALUE_TYPE_ER_2010_HPP</highlight></codeline>
+<codeline lineno="11"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#define<sp/>BOOST_ASSIGN_V2_TYPE_TRAITS_HAS_VALUE_TYPE_ER_2010_HPP</highlight></codeline>
+<codeline lineno="12"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/assign/v2/ref/detail/convert_traits/result.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">boost{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/>struct<sp/>boost::use_default;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">assign{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">v2{</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">type_traits{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>Tag<sp/>=<sp/>boost::use_default&gt;</highlight></codeline>
+<codeline lineno="21" refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1meta__convert" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1meta__convert" kindref="compound">meta_convert</ref>{</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>T1,</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>T2&gt;</highlight></codeline>
+<codeline lineno="24" refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1meta__convert_1_1apply" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1meta__convert_1_1apply" kindref="compound">apply</ref><sp/>:<sp/>ref::convert_traits::result&lt;T1,T2&gt;{};</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Specialize<sp/>on<sp/>Tag<sp/>as<sp/>needed.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>type_traits</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>v2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>assign</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>boost</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/meta_convert.hpp"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1checking_1_1distinct__values_1_1arithmetic_1_1workaround" kind="namespace">
+    <compoundname>boost::assign::v2::ref::convert_traits::checking::distinct_values::arithmetic::workaround</compoundname>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="namespaceboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1checking_1_1distinct__values_1_1arithmetic_1_1workaround_1a1e5faff75562a38f9c5e416b3e4c109b" prot="public" static="no">
+        <type>boost::numeric::conversion_traits&lt; short, int &gt;::supertype</type>
+        <definition>typedef boost::numeric::conversion_traits&lt;short, int&gt;::supertype boost::assign::v2::ref::convert_traits::checking::distinct_values::arithmetic::workaround::a_</definition>
+        <argsstring></argsstring>
+        <name>a_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/checking.hpp" line="126" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/checking.hpp" bodystart="126" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespaceboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1checking_1_1distinct__values_1_1arithmetic_1_1workaround_1a538d9e15140006ba35c6dbff3aee2f74" prot="public" static="no">
+        <type>boost::numeric::conversion_traits&lt; int, long &gt;::supertype</type>
+        <definition>typedef boost::numeric::conversion_traits&lt;int, long&gt;::supertype boost::assign::v2::ref::convert_traits::checking::distinct_values::arithmetic::workaround::b_</definition>
+        <argsstring></argsstring>
+        <name>b_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/checking.hpp" line="127" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/checking.hpp" bodystart="127" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespaceboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1checking_1_1distinct__values_1_1arithmetic_1_1workaround_1aa02db1bc775c083c9a4486ca04a6beb9" prot="public" static="no">
+        <type>boost::numeric::conversion_traits&lt; float, double &gt;::supertype</type>
+        <definition>typedef boost::numeric::conversion_traits&lt;float, double&gt;::supertype boost::assign::v2::ref::convert_traits::checking::distinct_values::arithmetic::workaround::c_</definition>
+        <argsstring></argsstring>
+        <name>c_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/checking.hpp" line="128" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/checking.hpp" bodystart="128" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespaceboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1checking_1_1distinct__values_1_1arithmetic_1_1workaround_1a9deff95ce3651d43e42bbafe839b3270" prot="public" static="no">
+        <type>boost::numeric::conversion_traits&lt; double, long double &gt;::supertype</type>
+        <definition>typedef boost::numeric::conversion_traits&lt; double,long double&gt;::supertype boost::assign::v2::ref::convert_traits::checking::distinct_values::arithmetic::workaround::d_</definition>
+        <argsstring></argsstring>
+        <name>d_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/checking.hpp" line="130" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/checking.hpp" bodystart="130" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/checking.hpp" line="125"/>
+  </compounddef>
+</doxygen>

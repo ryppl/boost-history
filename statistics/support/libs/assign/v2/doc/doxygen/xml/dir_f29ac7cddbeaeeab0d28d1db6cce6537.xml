@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_f29ac7cddbeaeeab0d28d1db6cce6537" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/functor/</compoundname>
+    <innerfile refid="anon_2functor_2assign__copy_8hpp">assign_copy.hpp</innerfile>
+    <innerfile refid="anon_2functor_2assign__rebind_8hpp">assign_rebind.hpp</innerfile>
+    <innerfile refid="anon_2functor_2assign__xxx_8hpp">assign_xxx.hpp</innerfile>
+    <innerfile refid="ref_2anon_2functor_2functor_8hpp">functor.hpp</innerfile>
+    <innerfile refid="ref_2anon_2functor_2make_8hpp">make.hpp</innerfile>
+    <innerfile refid="anon_2functor_2nth__result__of_8hpp">nth_result_of.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/functor/"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1ref_1_1anon__aux" kind="namespace">
+    <compoundname>boost::assign::v2::ref::anon_aux</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1empty__anon" prot="public">boost::assign::v2::ref::anon_aux::empty_anon</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1recursive__result" prot="public">boost::assign::v2::ref::anon_aux::recursive_result</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1recursive__result_3_010_00_01_tag1_00_01_t_01_4" prot="public">boost::assign::v2::ref::anon_aux::recursive_result&lt; 0, Tag1, T &gt;</innerclass>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="namespaceboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1a9b53c6d918f6d2fb5306e662c363f985" prot="public" static="no">
+        <type>boost::use_default</type>
+        <definition>typedef boost::use_default boost::assign::v2::ref::anon_aux::csv_tag2_</definition>
+        <argsstring></argsstring>
+        <name>csv_tag2_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/nth_result_of.hpp" line="21" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/nth_result_of.hpp" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespaceboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1a7ac80963f16db499bbd476ba55b0fca1" prot="public" static="no">
+        <type>ref::alloc_tag::lazy_alloc</type>
+        <definition>typedef ref::alloc_tag::lazy_alloc boost::assign::v2::ref::anon_aux::unary_tag2_</definition>
+        <argsstring></argsstring>
+        <name>unary_tag2_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/tag2.hpp" line="19" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/tag2.hpp" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/nth_result_of.hpp" line="20"/>
+  </compounddef>
+</doxygen>

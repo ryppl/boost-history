@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1put__compose__aux" kind="namespace">
+    <compoundname>boost::assign::v2::put_compose_aux</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1result__of__forward__parameter" prot="public">boost::assign::v2::put_compose_aux::result_of_forward_parameter</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1result__of__forward__parameter_3_01_n_00_01_pars_00_01_t_00_01true_01_4" prot="public">boost::assign::v2::put_compose_aux::result_of_forward_parameter&lt; N, Pars, T, true &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1composer__result" prot="public">boost::assign::v2::put_compose_aux::composer_result</innerclass>
+    <innerclass refid="classboost_1_1assign_1_1v2_1_1put__compose__aux_1_1composer" prot="public">boost::assign::v2::put_compose_aux::composer</innerclass>
+    <innerclass refid="classboost_1_1assign_1_1v2_1_1put__compose__aux_1_1args" prot="public">boost::assign::v2::put_compose_aux::args</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1forward__seq__args__caller" prot="public">boost::assign::v2::put_compose_aux::forward_seq_args_caller</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1forward__seq__args__caller_3_01_i_00_01_n_00_01true_01_4" prot="public">boost::assign::v2::put_compose_aux::forward_seq_args_caller&lt; I, N, true &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1compose__tag" prot="public">boost::assign::v2::put_compose_aux::compose_tag</innerclass>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1put__compose__aux_1a0e91fbf927e8260ae771c1a581c92498" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename Pars</type>
+          </param>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>typename C</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1result__of__forward__parameter" kindref="compound">result_of_forward_parameter</ref>&lt; 0, Pars, T &gt;::type</type>
+        <definition>result_of_forward_parameter&lt;0, Pars, T&gt;::type boost::assign::v2::put_compose_aux::forward_parameter</definition>
+        <argsstring>(T const &amp;object, C const &amp;c)</argsstring>
+        <name>forward_parameter</name>
+        <param>
+          <type>T const &amp;</type>
+          <declname>object</declname>
+        </param>
+        <param>
+          <type>C const &amp;</type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/common/forward_parameter.hpp" line="73" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/common/forward_parameter.hpp" bodystart="69" bodyend="76"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1put__compose__aux_1a221d7af24144306b78508f9079e8b8c0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>std::size_t</type>
+            <declname>N</declname>
+            <defname>N</defname>
+          </param>
+          <param>
+            <type>typename L</type>
+          </param>
+          <param>
+            <type>typename Tag1</type>
+          </param>
+          <param>
+            <type>typename Tag2</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classboost_1_1assign_1_1v2_1_1put__compose__aux_1_1args" kindref="compound">args</ref>&lt; N, L, Tag1, Tag2, &gt;</type>
+        <definition>args&lt;N, L, Tag1, Tag2, &gt; boost::assign::v2::put_compose_aux::make_args</definition>
+        <argsstring>(ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt; const &amp;v)</argsstring>
+        <name>make_args</name>
+        <param>
+          <type><ref refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container" kindref="compound">ref::fusion_matrix_aux::container</ref>&lt; N, L, Tag1, Tag2, &gt; const &amp;</type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/forward_args.hpp" line="76" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/forward_args.hpp" bodystart="72" bodyend="81"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1put__compose__aux_1a22fc4057c195e55f1418c3fc6cd48b12" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>typename H</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::put_compose_aux::forward_seq_args</definition>
+        <argsstring>(T const &amp;object, H const &amp;h)</argsstring>
+        <name>forward_seq_args</name>
+        <param>
+          <type>T const &amp;</type>
+          <declname>object</declname>
+        </param>
+        <param>
+          <type>H const &amp;</type>
+          <declname>h</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/forward_seq_args.hpp" line="50" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/forward_seq_args.hpp" bodystart="49" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1put__compose__aux_1af52204f46906e9c00eee6cfb70aefb3e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename V</type>
+          </param>
+          <param>
+            <type>typename Pars</type>
+          </param>
+          <param>
+            <type>typename SeqArgs</type>
+          </param>
+          <param>
+            <type>bool</type>
+            <declname>enable_pars</declname>
+            <defname>enable_pars</defname>
+          </param>
+        </templateparamlist>
+        <type>V &amp;</type>
+        <definition>V&amp; boost::assign::v2::put_compose_aux::operator|</definition>
+        <argsstring>(V &amp;v, put_compose_aux::composer&lt; Pars, SeqArgs, enable_pars &gt; const &amp;c)</argsstring>
+        <name>operator|</name>
+        <param>
+          <type>V &amp;</type>
+          <declname>v</declname>
+        </param>
+        <param>
+          <type><ref refid="classboost_1_1assign_1_1v2_1_1put__compose__aux_1_1composer" kindref="compound">put_compose_aux::composer</ref>&lt; Pars, SeqArgs, enable_pars &gt; const &amp;</type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/sub.hpp" line="28" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/sub.hpp" bodystart="24" bodyend="37"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/common/forward_parameter.hpp" line="24"/>
+  </compounddef>
+</doxygen>

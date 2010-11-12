@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__sorted" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::container_type_traits::is_sorted</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1forward__to__value" prot="public" virt="non-virtual">boost::assign::v2::container_type_traits::forward_to_value&lt; is_sorted_impl, boost::remove_cv&lt; V &gt;::type &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename V</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="525">
+        <label>boost::mpl::false_</label>
+        <link refid="classboost_1_1mpl_1_1false__"/>
+      </node>
+      <node id="523">
+        <label>boost::assign::v2::container_type_traits::forward_to_value&lt; is_sorted_impl, boost::remove_cv&lt; V &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1forward__to__value"/>
+        <childnode refid="524" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="524">
+        <label>boost::assign::v2::container_type_traits::is_sorted_impl&lt; value_container&lt; boost::remove_cv&lt; V &gt;::type &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__sorted__impl"/>
+        <childnode refid="525" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="522">
+        <label>boost::assign::v2::container_type_traits::is_sorted&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__sorted"/>
+        <childnode refid="523" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="529">
+        <label>boost::mpl::false_</label>
+        <link refid="classboost_1_1mpl_1_1false__"/>
+      </node>
+      <node id="527">
+        <label>boost::assign::v2::container_type_traits::forward_to_value&lt; is_sorted_impl, boost::remove_cv&lt; V &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1forward__to__value"/>
+        <childnode refid="528" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="528">
+        <label>boost::assign::v2::container_type_traits::is_sorted_impl&lt; value_container&lt; boost::remove_cv&lt; V &gt;::type &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__sorted__impl"/>
+        <childnode refid="529" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="526">
+        <label>boost::assign::v2::container_type_traits::is_sorted&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__sorted"/>
+        <childnode refid="527" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/is_sorted.hpp" line="38" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/is_sorted.hpp" bodystart="35" bodyend="38"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1chain__aux_1_1adaptor2" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::chain_aux::adaptor2</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1chain__aux_1_1adaptor2_1_1result" prot="public">boost::assign::v2::chain_aux::adaptor2::result</innerclass>
+    <templateparamlist>
+      <param>
+        <type>typename Tag1</type>
+        <defval>use_default</defval>
+      </param>
+      <param>
+        <type>typename Tag2</type>
+        <defval>void_</defval>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1chain__aux_1_1adaptor2_1a181d5cb15c5a37ebae25fcaa0683b7b1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::chain_aux::adaptor2&lt; Tag1, Tag2 &gt;::adaptor2</definition>
+        <argsstring>()</argsstring>
+        <name>adaptor2</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/adaptor.hpp" line="38" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/adaptor.hpp" bodystart="38" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1chain__aux_1_1adaptor2_1aa6c5a36830d618b41026b80c8d82c024" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename R</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1chain__aux_1_1adaptor2_1_1result" kindref="compound">result</ref>&lt; R &gt;::type</type>
+        <definition>result&lt;R&gt;::type boost::assign::v2::chain_aux::adaptor2&lt; Tag1, Tag2 &gt;::operator()</definition>
+        <argsstring>(R &amp;r) const </argsstring>
+        <name>operator()</name>
+        <param>
+          <type>R &amp;</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/adaptor.hpp" line="48" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/adaptor.hpp" bodystart="48" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1chain__aux_1_1adaptor2_1a32380395e984fb99e11e401d584ba93f" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename R</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1chain__aux_1_1adaptor2_1_1result" kindref="compound">result</ref>&lt; R const  &gt;::type</type>
+        <definition>result&lt;R const&gt;::type boost::assign::v2::chain_aux::adaptor2&lt; Tag1, Tag2 &gt;::operator()</definition>
+        <argsstring>(R const &amp;r) const </argsstring>
+        <name>operator()</name>
+        <param>
+          <type>R const &amp;</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/adaptor.hpp" line="54" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/adaptor.hpp" bodystart="54" bodyend="56"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/adaptor.hpp" line="36" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/adaptor.hpp" bodystart="35" bodyend="58"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1chain__aux_1_1adaptor2_1a181d5cb15c5a37ebae25fcaa0683b7b1" prot="public" virt="non-virtual"><scope>boost::assign::v2::chain_aux::adaptor2</scope><name>adaptor2</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1chain__aux_1_1adaptor2_1aa6c5a36830d618b41026b80c8d82c024" prot="public" virt="non-virtual"><scope>boost::assign::v2::chain_aux::adaptor2</scope><name>operator()</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1chain__aux_1_1adaptor2_1a32380395e984fb99e11e401d584ba93f" prot="public" virt="non-virtual"><scope>boost::assign::v2::chain_aux::adaptor2</scope><name>operator()</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

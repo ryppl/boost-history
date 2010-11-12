@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1functor__aux_1_1result__of__identity_1_1disable" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::functor_aux::result_of_identity::disable</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename V</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/identity.hpp" line="41" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/identity.hpp" bodystart="41" bodyend="41"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

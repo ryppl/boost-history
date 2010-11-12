@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1checking_1_1relational__op" kind="namespace">
+    <compoundname>boost::assign::v2::checking::relational_op</compoundname>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1checking_1_1relational__op_1a8655e210b26eff493f83f0324a762464" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename R</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::checking::relational_op::do_check</definition>
+        <argsstring>(R const &amp;r)</argsstring>
+        <name>do_check</name>
+        <param>
+          <type>R const &amp;</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/relational_op.hpp" line="26" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/relational_op.hpp" bodystart="25" bodyend="49"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/relational_op.hpp" line="20"/>
+  </compounddef>
+</doxygen>

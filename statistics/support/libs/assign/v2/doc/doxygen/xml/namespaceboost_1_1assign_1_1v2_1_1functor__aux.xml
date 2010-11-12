@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1functor__aux" kind="namespace">
+    <compoundname>boost::assign::v2::functor_aux</compoundname>
+    <innerclass refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor" prot="public">boost::assign::v2::functor_aux::constructor</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1deduce__constructor" prot="public">boost::assign::v2::functor_aux::deduce_constructor</innerclass>
+    <innerclass refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up" prot="public">boost::assign::v2::functor_aux::crtp_unary_and_up</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1result__of__identity" prot="public">boost::assign::v2::functor_aux::result_of_identity</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1identity" prot="public">boost::assign::v2::functor_aux::identity</innerclass>
+    <innerclass refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1new__" prot="public">boost::assign::v2::functor_aux::new_</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1deduce__new__" prot="public">boost::assign::v2::functor_aux::deduce_new_</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo" prot="public">boost::assign::v2::functor_aux::foo</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo__bar" prot="public">boost::assign::v2::functor_aux::foo_bar</innerclass>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1functor__aux_1a02c801bcb2a65239c1bf39ec55181038" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool boost::assign::v2::functor_aux::operator&lt;</definition>
+        <argsstring>(const foo &amp;l, const foo &amp;r)</argsstring>
+        <name>operator&lt;</name>
+        <param>
+          <type>const <ref refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo" kindref="compound">foo</ref> &amp;</type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo" kindref="compound">foo</ref> &amp;</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" line="102" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" bodystart="101" bodyend="104"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" line="25"/>
+  </compounddef>
+</doxygen>

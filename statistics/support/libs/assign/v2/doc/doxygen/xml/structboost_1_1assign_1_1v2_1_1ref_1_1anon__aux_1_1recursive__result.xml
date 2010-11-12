@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1recursive__result" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::ref::anon_aux::recursive_result</compoundname>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1ref_1_1nth__result__of_1_1anon" prot="public" virt="non-virtual">boost::assign::v2::ref::nth_result_of::anon&lt; 0, Tag1, T &gt;</derivedcompoundref>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1ref_1_1nth__result__of_1_1anon" prot="public" virt="non-virtual">boost::assign::v2::ref::nth_result_of::anon&lt; 1, Tag1, T &gt;</derivedcompoundref>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1ref_1_1nth__result__of_1_1anon" prot="public" virt="non-virtual">boost::assign::v2::ref::nth_result_of::anon&lt; N, Tag1, T &gt;</derivedcompoundref>
+    <templateparamlist>
+      <param>
+        <type>std::size_t</type>
+        <declname>N</declname>
+        <defname>N</defname>
+      </param>
+      <param>
+        <type>typename</type>
+        <declname>Tag1</declname>
+        <defname>Tag1</defname>
+      </param>
+      <param>
+        <type>typename</type>
+        <declname>T</declname>
+        <defname>T</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1recursive__result_1a69320dce5fd52134ada3f3bd2035a74c" prot="public" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1recursive__result" kindref="compound">recursive_result</ref>&lt; N-1, Tag1, T &gt;::type</type>
+        <definition>typedef recursive_result&lt; N-1, Tag1, T &gt;::type boost::assign::v2::ref::anon_aux::recursive_result&lt; N, Tag1, T &gt;::previous_</definition>
+        <argsstring></argsstring>
+        <name>previous_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/nth_result_of.hpp" line="33" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/nth_result_of.hpp" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1recursive__result_1a311805ad195b27018dc87737dc3b53fd" prot="public" static="no">
+        <type>previous_::template result&lt; T &gt;::type</type>
+        <definition>typedef previous_::template result&lt;T&gt;::type boost::assign::v2::ref::anon_aux::recursive_result&lt; N, Tag1, T &gt;::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/nth_result_of.hpp" line="34" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/nth_result_of.hpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="733">
+        <label>boost::assign::v2::ref::nth_result_of::anon&lt; N, Tag1, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1nth__result__of_1_1anon"/>
+        <childnode refid="728" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="728">
+        <label>boost::assign::v2::ref::anon_aux::recursive_result&lt; N, Tag1, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1recursive__result"/>
+      </node>
+      <node id="729">
+        <label>anon&lt; 0, Tag1, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1nth__result__of_1_1anon"/>
+        <childnode refid="728" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="730">
+        <label>boost::assign::v2::ref::result_of::anon_nil&lt; Tag1, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1anon__nil"/>
+        <childnode refid="729" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="732">
+        <label>boost::assign::v2::ref::result_of::anon&lt; Tag1, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1anon"/>
+        <childnode refid="731" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="731">
+        <label>anon&lt; 1, Tag1, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1nth__result__of_1_1anon"/>
+        <childnode refid="728" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/nth_result_of.hpp" line="30" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/nth_result_of.hpp" bodystart="29" bodyend="35"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1recursive__result_1a69320dce5fd52134ada3f3bd2035a74c" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::anon_aux::recursive_result</scope><name>previous_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1recursive__result_1a311805ad195b27018dc87737dc3b53fd" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::anon_aux::recursive_result</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

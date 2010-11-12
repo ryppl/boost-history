@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_8d8c35ae80613fcf0715932d5d06bab2" kind="dir">
+    <compoundname>/Users/erwann/sandbox/</compoundname>
+    <innerdir refid="dir_58ce2c6aeac450ed05c3d0128c349cd2">/Users/erwann/sandbox/statistics/</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/"/>
+  </compounddef>
+</doxygen>

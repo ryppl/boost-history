@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__lifo" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::container_type_traits::is_lifo</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1forward__to__value" prot="public" virt="non-virtual">boost::assign::v2::container_type_traits::forward_to_value&lt; is_lifo_impl, boost::remove_cv&lt; V &gt;::type &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename V</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="468">
+        <label>boost::assign::v2::container_type_traits::forward_to_value&lt; is_lifo_impl, boost::remove_cv&lt; V &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1forward__to__value"/>
+        <childnode refid="469" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="470">
+        <label>boost::mpl::false_</label>
+        <link refid="classboost_1_1mpl_1_1false__"/>
+      </node>
+      <node id="467">
+        <label>boost::assign::v2::container_type_traits::is_lifo&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__lifo"/>
+        <childnode refid="468" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="469">
+        <label>boost::assign::v2::container_type_traits::is_lifo_impl&lt; value_container&lt; boost::remove_cv&lt; V &gt;::type &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__lifo__impl"/>
+        <childnode refid="470" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="472">
+        <label>boost::assign::v2::container_type_traits::forward_to_value&lt; is_lifo_impl, boost::remove_cv&lt; V &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1forward__to__value"/>
+        <childnode refid="473" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="474">
+        <label>boost::mpl::false_</label>
+        <link refid="classboost_1_1mpl_1_1false__"/>
+      </node>
+      <node id="471">
+        <label>boost::assign::v2::container_type_traits::is_lifo&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__lifo"/>
+        <childnode refid="472" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="473">
+        <label>boost::assign::v2::container_type_traits::is_lifo_impl&lt; value_container&lt; boost::remove_cv&lt; V &gt;::type &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__lifo__impl"/>
+        <childnode refid="474" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/is_lifo.hpp" line="36" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/is_lifo.hpp" bodystart="33" bodyend="36"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

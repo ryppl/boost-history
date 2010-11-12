@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_06e43e5c1786c8de1d41e9c51a26fac7" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/</compoundname>
+    <innerdir refid="dir_407d09455eeaacb7f5649246b7117bc4">/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/</innerdir>
+    <innerfile refid="static__array_2interface_8hpp">interface.hpp</innerfile>
+    <innerfile refid="static__array_8hpp">static_array.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/"/>
+  </compounddef>
+</doxygen>

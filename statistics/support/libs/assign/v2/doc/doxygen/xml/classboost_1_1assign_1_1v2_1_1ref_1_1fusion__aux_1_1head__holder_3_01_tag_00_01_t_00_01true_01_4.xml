@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1head__holder_3_01_tag_00_01_t_00_01true_01_4" kind="class" prot="public">
+    <compoundname>boost::assign::v2::ref::fusion_aux::head_holder&lt; Tag, T, true &gt;</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename Tag</type>
+      </param>
+      <param>
+        <type>typename T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1head__holder_3_01_tag_00_01_t_00_01true_01_4_1af2f243b52f2a2c38b460febffdd389f0" prot="public" static="no">
+        <type>boost::mpl::void_</type>
+        <definition>typedef boost::mpl::void_ boost::assign::v2::ref::fusion_aux::head_holder&lt; Tag, T, true &gt;::head_value_type</definition>
+        <argsstring></argsstring>
+        <name>head_value_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/head_holder.hpp" line="51" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/head_holder.hpp" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1head__holder_3_01_tag_00_01_t_00_01true_01_4_1a11347324c90efeecda5fa566961f7433" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>head_value_type</type>
+        <definition>head_value_type boost::assign::v2::ref::fusion_aux::head_holder&lt; Tag, T, true &gt;::back</definition>
+        <argsstring>() const </argsstring>
+        <name>back</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/head_holder.hpp" line="54" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/head_holder.hpp" bodystart="53" bodyend="56"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/head_holder.hpp" line="45" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/head_holder.hpp" bodystart="45" bodyend="58"/>
+    <listofallmembers>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1head__holder_3_01_tag_00_01_t_00_01true_01_4_1a11347324c90efeecda5fa566961f7433" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_aux::head_holder&lt; Tag, T, true &gt;</scope><name>back</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1head__holder_3_01_tag_00_01_t_00_01true_01_4_1af2f243b52f2a2c38b460febffdd389f0" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_aux::head_holder&lt; Tag, T, true &gt;</scope><name>head_value_type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

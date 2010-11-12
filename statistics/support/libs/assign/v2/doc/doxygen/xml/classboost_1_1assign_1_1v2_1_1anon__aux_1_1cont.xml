@@ -1,0 +1,691 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont" kind="class" prot="public">
+    <compoundname>boost::assign::v2::anon_aux::cont</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1relational__op__aux_1_1crtp" prot="public" virt="non-virtual">boost::assign::v2::relational_op_aux::crtp&lt; cont&lt; T, F, Tag &gt; &gt;</basecompoundref>
+    <basecompoundref refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp" prot="public" virt="non-virtual">boost::assign::v2::put_aux::crtp&lt; anon_aux::impl&lt; T &gt;::type, F, Tag, cont&lt; T, F, Tag &gt;, cont_modifier_traits&lt; T, F, Tag &gt; &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename T</type>
+      </param>
+      <param>
+        <type>typename F</type>
+      </param>
+      <param>
+        <type>typename Tag</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-type">
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a0affe02987b162318fffd8f0337ad2b4" prot="private" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1anon__aux_1_1impl" kindref="compound">anon_aux::impl</ref>&lt; T &gt;::type</type>
+        <definition>typedef anon_aux::impl&lt;T&gt;::type boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::impl_</definition>
+        <argsstring></argsstring>
+        <name>impl_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="73" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a749b1713536a3a2d4d6112ea04d1d189" prot="private" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1anon__aux_1_1cont__modifier__traits" kindref="compound">cont_modifier_traits</ref>&lt; T, F, Tag &gt;</type>
+        <definition>typedef cont_modifier_traits&lt;T,F,Tag&gt; boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::modifier_traits_</definition>
+        <argsstring></argsstring>
+        <name>modifier_traits_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="74" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1aa9df0725a5794b6cec78a1535d1ea191" prot="private" static="no">
+        <type><ref refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp" kindref="compound">put_aux::crtp</ref>&lt; impl_, F, Tag, <ref refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont" kindref="compound">cont</ref>, <ref refid="structboost_1_1assign_1_1v2_1_1anon__aux_1_1cont__modifier__traits" kindref="compound">modifier_traits_</ref> &gt;</type>
+        <definition>typedef put_aux::crtp&lt; impl_, F, Tag, cont, modifier_traits_&gt; boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::put_crtp_</definition>
+        <argsstring></argsstring>
+        <name>put_crtp_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="75" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a992655755967696fbbd55442dc206621" prot="private" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier" kindref="compound">put_aux::modifier</ref>&lt; Tag &gt;</type>
+        <definition>typedef put_aux::modifier&lt;Tag&gt; boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::modifier_</definition>
+        <argsstring></argsstring>
+        <name>modifier_</name>
+        <reimplements refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1a9fc50f3f6afd4d9920bd24490a8eb4d8">modifier_</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="77" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1ae322f820654ee59cff4faecc145143b8" prot="public" static="no">
+        <type>T</type>
+        <definition>typedef T boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::value_type</definition>
+        <argsstring></argsstring>
+        <name>value_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="81" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a5085a5ad102673743057192fd3620747" prot="public" static="no">
+        <type>boost::range_size&lt; impl_ &gt;::type</type>
+        <definition>typedef boost::range_size&lt;impl_&gt;::type boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::size_type</definition>
+        <argsstring></argsstring>
+        <name>size_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="82" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1ae066832866cb66332b425f4deaa591e0" prot="public" static="no">
+        <type>boost::range_iterator&lt; impl_ &gt;::type</type>
+        <definition>typedef boost::range_iterator&lt;impl_&gt;::type boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::iterator</definition>
+        <argsstring></argsstring>
+        <name>iterator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="83" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a3eb2aefd41221973c852cf630628f4aa" prot="public" static="no">
+        <type>boost::range_iterator&lt; const impl_ &gt;::type</type>
+        <definition>typedef boost::range_iterator&lt; const impl_&gt;::type boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::const_iterator</definition>
+        <argsstring></argsstring>
+        <name>const_iterator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="85" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1aa32fe125451d367b85758c9fdd608583" prot="public" static="no">
+        <type>impl_::reference</type>
+        <definition>typedef impl_::reference boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::reference</definition>
+        <argsstring></argsstring>
+        <name>reference</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="115" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="115" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a77fc3f697f473981bf05bed20c648b8b" prot="public" static="no">
+        <type>impl_::const_reference</type>
+        <definition>typedef impl_::const_reference boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::const_reference</definition>
+        <argsstring></argsstring>
+        <name>const_reference</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="116" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="116" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a2dad5b5a376320cd45e5419f07d0ad20" prot="public" static="no">
+        <type>impl_::difference_type</type>
+        <definition>typedef impl_::difference_type boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::difference_type</definition>
+        <argsstring></argsstring>
+        <name>difference_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="117" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a6b132302c182724f41dbef8dce4706d4" prot="protected" static="no" mutable="yes">
+        <type>impl_</type>
+        <definition>impl_ boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::impl</definition>
+        <argsstring></argsstring>
+        <name>impl</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="181" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="181" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a727de96011cd52fc3b398579716396d8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::cont</definition>
+        <argsstring>()</argsstring>
+        <name>cont</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="88" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="88" bodyend="88"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a3448144e80347b441f1107641f2af807" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::cont</definition>
+        <argsstring>(const F &amp;f)</argsstring>
+        <name>cont</name>
+        <param>
+          <type>const F &amp;</type>
+          <declname>f</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="89" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="89" bodyend="89"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1aea5013668abda9562bb0b87b4d9c25e6" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::cont</definition>
+        <argsstring>(impl_ const &amp;v, F const &amp;f)</argsstring>
+        <name>cont</name>
+        <param>
+          <type>impl_ const &amp;</type>
+          <declname>v</declname>
+        </param>
+        <param>
+          <type>F const &amp;</type>
+          <declname>f</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="91" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="90" bodyend="93"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a036317e8f8806b642c7f2b2d08074a76" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::cont</definition>
+        <argsstring>(impl_ const &amp;v, F const &amp;f, modifier_ const &amp;m)</argsstring>
+        <name>cont</name>
+        <param>
+          <type>impl_ const &amp;</type>
+          <declname>v</declname>
+        </param>
+        <param>
+          <type>F const &amp;</type>
+          <declname>f</declname>
+        </param>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier" kindref="compound">modifier_</ref> const &amp;</type>
+          <declname>m</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="97" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="95" bodyend="99"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a38254cce565cacff0220eff51ff08c56" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>iterator</type>
+        <definition>iterator boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::begin</definition>
+        <argsstring>()</argsstring>
+        <name>begin</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="102" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="102" bodyend="104"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1ae989e602b6323bf50930c125f18b1835" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>iterator</type>
+        <definition>iterator boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::end</definition>
+        <argsstring>()</argsstring>
+        <name>end</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="105" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="105" bodyend="107"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a42b6d17da382bbda94ef5c8861e8f2b4" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const_iterator</type>
+        <definition>const_iterator boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::begin</definition>
+        <argsstring>() const </argsstring>
+        <name>begin</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="108" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="108" bodyend="110"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a19b7be699e28c4f3f0366a59ab80b13b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const_iterator</type>
+        <definition>const_iterator boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::end</definition>
+        <argsstring>() const </argsstring>
+        <name>end</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="111" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="111" bodyend="113"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1ac0c472a340a59f02327ef13b6c6a7ac3" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>size_type</type>
+        <definition>size_type boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::size</definition>
+        <argsstring>() const </argsstring>
+        <name>size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="119" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="119" bodyend="121"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a3cc92fb45e4c29a998c587a5b20c0202" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>size_type</type>
+        <definition>size_type boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::max_size</definition>
+        <argsstring>() const </argsstring>
+        <name>max_size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="122" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="122" bodyend="124"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a75d9017720f3e83ef5052d2cf66eb060" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::empty</definition>
+        <argsstring>() const </argsstring>
+        <name>empty</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="125" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="125" bodyend="127"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a508a1302abb3cdfb1f3b62b643be0778" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>reference</type>
+        <definition>reference boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::operator[]</definition>
+        <argsstring>(size_type n)</argsstring>
+        <name>operator[]</name>
+        <param>
+          <type>size_type</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="128" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="128" bodyend="130"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1acd704ccd74e869c6f705221c93e9d0ff" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const_reference</type>
+        <definition>const_reference boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::operator[]</definition>
+        <argsstring>(size_type n) const </argsstring>
+        <name>operator[]</name>
+        <param>
+          <type>size_type</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="131" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="131" bodyend="133"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a754caf50af5fb8e163cb5ed9ac7b95c6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>reference</type>
+        <definition>reference boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::front</definition>
+        <argsstring>()</argsstring>
+        <name>front</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="134" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="134" bodyend="136"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1acb1a390cc1dfd9cd34d5020e1f518b27" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const_reference</type>
+        <definition>const_reference boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::front</definition>
+        <argsstring>() const </argsstring>
+        <name>front</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="137" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="137" bodyend="139"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a7038a6c38218ae62959442ebeb12741d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>reference</type>
+        <definition>reference boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::back</definition>
+        <argsstring>()</argsstring>
+        <name>back</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="140" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="140" bodyend="142"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a62158de9ae94e2e5be03ee97a022af94" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const_reference</type>
+        <definition>const_reference boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::back</definition>
+        <argsstring>() const </argsstring>
+        <name>back</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="143" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="143" bodyend="145"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a088cb9cc0df825140861f36d531bb68a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::pop_front</definition>
+        <argsstring>()</argsstring>
+        <name>pop_front</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="146" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="146" bodyend="148"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a1463c54f82f8dea0d6e63a99006feeae" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::pop_back</definition>
+        <argsstring>()</argsstring>
+        <name>pop_back</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="149" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="149" bodyend="151"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1aa64b59536c05fba104bf8a62c3e16eea" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::swap</definition>
+        <argsstring>(cont &amp;that)</argsstring>
+        <name>swap</name>
+        <param>
+          <type><ref refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont" kindref="compound">cont</ref> &amp;</type>
+          <declname>that</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="152" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="152" bodyend="154"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1ab68f6bed32122fbd322d0583ba5b340c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>BOOST_ASSIGN_V2_CONVERT_CONVERT_MF BOOST_ASSIGN_V2_CONVERT_OPERATOR_MF impl_ &amp;</type>
+        <definition>BOOST_ASSIGN_V2_CONVERT_CONVERT_MF BOOST_ASSIGN_V2_CONVERT_OPERATOR_MF impl_&amp; boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::unwrap</definition>
+        <argsstring>() const </argsstring>
+        <name>unwrap</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="164" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="164" bodyend="164"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a3749945814c234eaa0c65129c321dd1e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename R</type>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::equal_to</definition>
+        <argsstring>(const R &amp;r) const </argsstring>
+        <name>equal_to</name>
+        <param>
+          <type>const R &amp;</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="169" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="169" bodyend="172"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1ad7d6fa92d7cd5349aeef7163c1746c34" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename R</type>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;::less_than</definition>
+        <argsstring>(const R &amp;r) const </argsstring>
+        <name>less_than</name>
+        <param>
+          <type>const R &amp;</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="175" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="175" bodyend="178"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="179">
+        <label>boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont"/>
+        <childnode refid="180" relation="public-inheritance">
+        </childnode>
+        <childnode refid="181" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="184">
+        <label>boost::assign::v2::put_aux::expose_modifier&lt; Tag &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1expose__modifier"/>
+      </node>
+      <node id="183">
+        <label>boost::assign::v2::put_aux::expose_fun&lt; F &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1expose__fun"/>
+      </node>
+      <node id="181">
+        <label>boost::assign::v2::put_aux::crtp&lt; anon_aux::impl&lt; T &gt;::type, F, Tag, cont&lt; T, F, Tag &gt;, cont_modifier_traits&lt; T, F, Tag &gt; &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp"/>
+        <childnode refid="182" relation="public-inheritance">
+        </childnode>
+        <childnode refid="183" relation="public-inheritance">
+        </childnode>
+        <childnode refid="184" relation="public-inheritance">
+        </childnode>
+        <childnode refid="185" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="182">
+        <label>boost::assign::v2::put_aux::put_base</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1put__base"/>
+      </node>
+      <node id="180">
+        <label>boost::assign::v2::relational_op_aux::crtp&lt; cont&lt; T, F, Tag &gt; &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1relational__op__aux_1_1crtp"/>
+      </node>
+      <node id="185">
+        <label>boost::assign::v2::functor_aux::crtp_unary_and_up&lt; crtp&lt; anon_aux::impl&lt; T &gt;::type, F, Tag, cont&lt; T, F, Tag &gt;, cont_modifier_traits&lt; T, F, Tag &gt; &gt;, boost::mpl::always&lt; cont&lt; T, F, Tag &gt;const &amp; &gt; &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="186">
+        <label>boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont"/>
+        <childnode refid="187" relation="public-inheritance">
+        </childnode>
+        <childnode refid="188" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="191">
+        <label>boost::assign::v2::put_aux::expose_modifier&lt; Tag &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1expose__modifier"/>
+      </node>
+      <node id="190">
+        <label>boost::assign::v2::put_aux::expose_fun&lt; F &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1expose__fun"/>
+      </node>
+      <node id="188">
+        <label>boost::assign::v2::put_aux::crtp&lt; anon_aux::impl&lt; T &gt;::type, F, Tag, cont&lt; T, F, Tag &gt;, cont_modifier_traits&lt; T, F, Tag &gt; &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp"/>
+        <childnode refid="189" relation="public-inheritance">
+        </childnode>
+        <childnode refid="190" relation="public-inheritance">
+        </childnode>
+        <childnode refid="191" relation="public-inheritance">
+        </childnode>
+        <childnode refid="192" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="189">
+        <label>boost::assign::v2::put_aux::put_base</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1put__base"/>
+      </node>
+      <node id="187">
+        <label>boost::assign::v2::relational_op_aux::crtp&lt; cont&lt; T, F, Tag &gt; &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1relational__op__aux_1_1crtp"/>
+      </node>
+      <node id="192">
+        <label>boost::assign::v2::functor_aux::crtp_unary_and_up&lt; crtp&lt; anon_aux::impl&lt; T &gt;::type, F, Tag, cont&lt; T, F, Tag &gt;, cont_modifier_traits&lt; T, F, Tag &gt; &gt;, boost::mpl::always&lt; cont&lt; T, F, Tag &gt;const &amp; &gt; &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up"/>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" line="72" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp" bodystart="65" bodyend="183"/>
+    <listofallmembers>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1ac8735cdad99fa497a8be344264a3060f" prot="protected" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>arg_deduct</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1ad5ad9fd3eeef58318588c9a870370559" prot="protected" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>arg_deduct</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1a6e8883d53c92b5a3827470addbb153b2" prot="protected" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>arg_deduct</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a7038a6c38218ae62959442ebeb12741d" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>back</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a62158de9ae94e2e5be03ee97a022af94" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>back</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a38254cce565cacff0220eff51ff08c56" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>begin</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a42b6d17da382bbda94ef5c8861e8f2b4" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>begin</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up_1a737c7bc727771b900e07e6fac5659791" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>BOOST_PP_INC</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up_1aaf120dbd1766ed96fa5bbbde98f196ec" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>BOOST_PP_REPEAT</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1a151f822039f3b8b91007b4aea21c3a7a" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>BOOST_PP_REPEAT_FROM_TO</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a3eb2aefd41221973c852cf630628f4aa" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>const_iterator</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a77fc3f697f473981bf05bed20c648b8b" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>const_reference</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a727de96011cd52fc3b398579716396d8" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>cont</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a3448144e80347b441f1107641f2af807" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>cont</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1aea5013668abda9562bb0b87b4d9c25e6" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>cont</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a036317e8f8806b642c7f2b2d08074a76" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>cont</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1a868337a5a41651167782b7403406101f" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>crtp</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1ada50893e157c256d2cae440d987771bc" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>crtp</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1ab95b4cac42d45b5d922716e01a927f2a" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>crtp</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1relational__op__aux_1_1crtp_1a15a823411135acf4876b72c60c8c363b" prot="public" virt="non-virtual" ambiguityscope="crtp&lt; cont&lt; T, F, Tag &gt; &gt;::"><scope>boost::assign::v2::anon_aux::cont</scope><name>derived</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1a91cb2bb880993de5d5323079c3f25844" prot="public" virt="non-virtual" ambiguityscope="crtp&lt; anon_aux::impl&lt; T &gt;::type, F, Tag, cont&lt; T, F, Tag &gt;, cont_modifier_traits&lt; T, F, Tag &gt; &gt;::"><scope>boost::assign::v2::anon_aux::cont</scope><name>derived</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1afad8618b05828cba29d0a779fa7b6b26" prot="public" virt="non-virtual" ambiguityscope="crtp&lt; anon_aux::impl&lt; T &gt;::type, F, Tag, cont&lt; T, F, Tag &gt;, cont_modifier_traits&lt; T, F, Tag &gt; &gt;::"><scope>boost::assign::v2::anon_aux::cont</scope><name>derived</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a2dad5b5a376320cd45e5419f07d0ad20" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>difference_type</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a75d9017720f3e83ef5052d2cf66eb060" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>empty</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1ae989e602b6323bf50930c125f18b1835" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>end</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a19b7be699e28c4f3f0366a59ab80b13b" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>end</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a3749945814c234eaa0c65129c321dd1e" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>equal_to</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1expose__fun_1a36fa9b57664e804d135c1f74b30533e4" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>expose_fun</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1expose__fun_1aa3f7547deef0e4c51d32b3c099436112" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>expose_fun</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1aa2e47a5db9315a2f6be486b3c8fc87bc" prot="protected" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>expose_fun_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1expose__modifier_1a66eb894f19c0fc081c34372970145122" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>expose_modifier</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1expose__modifier_1a2443f1cf87d1838fa76d434eb035691f" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>expose_modifier</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1ac369537290b8f412bd451f3632eaff3b" prot="protected" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>expose_modifier_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a754caf50af5fb8e163cb5ed9ac7b95c6" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>front</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1acb1a390cc1dfd9cd34d5020e1f518b27" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>front</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1expose__fun_1a4b3329be1ede1c6532880ce2f1dd4e4c" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>fun</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1expose__fun_1a95f7312271508e44b4414e69f9654352" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>fun_type</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a6b132302c182724f41dbef8dce4706d4" prot="protected" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>impl</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a0affe02987b162318fffd8f0337ad2b4" prot="private" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>impl_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1ae066832866cb66332b425f4deaa591e0" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>iterator</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1ad7d6fa92d7cd5349aeef7163c1746c34" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>less_than</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up_1a8403470cbea9dabd302b0671b817b92a" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>MACRO</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a3cc92fb45e4c29a998c587a5b20c0202" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>max_size</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1expose__modifier_1a66c86fa4ff3786062c80de1babb9febd" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>modifier</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a992655755967696fbbd55442dc206621" prot="private" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>modifier_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1expose__modifier_1a186904d085158a1966fd378c1bd8ec43" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>modifier_tag</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a749b1713536a3a2d4d6112ea04d1d189" prot="private" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>modifier_traits_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1expose__modifier_1a0bcecdb16ba60bdec4810874d2cb6f1c" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>modifier_type</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1aaae58de595bf7e2419e0b542cb81b2ed" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>modulo_deduce</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1a07a6d5c5b8d6d2f0104bab76be2997cf" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>operator()</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a508a1302abb3cdfb1f3b62b643be0778" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>operator[]</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1acd704ccd74e869c6f705221c93e9d0ff" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>operator[]</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a1463c54f82f8dea0d6e63a99006feeae" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>pop_back</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a088cb9cc0df825140861f36d531bb68a" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>pop_front</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1aa9df0725a5794b6cec78a1535d1ea191" prot="private" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>put_crtp_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1aa32fe125451d367b85758c9fdd608583" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>reference</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1a475a4c7e7f5e4c35f805180bdf47892e" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>result_type</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1ac0c472a340a59f02327ef13b6c6a7ac3" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>size</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1a5085a5ad102673743057192fd3620747" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>size_type</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp_1a55a75571901532c6fbdf2daacef6b76e" prot="protected" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>super_t</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1aa64b59536c05fba104bf8a62c3e16eea" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>swap</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1ab68f6bed32122fbd322d0583ba5b340c" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>unwrap</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont_1ae322f820654ee59cff4faecc145143b8" prot="public" virt="non-virtual"><scope>boost::assign::v2::anon_aux::cont</scope><name>value_type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

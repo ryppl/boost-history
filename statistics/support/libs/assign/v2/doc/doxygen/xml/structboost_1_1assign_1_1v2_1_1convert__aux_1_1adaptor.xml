@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1convert__aux_1_1adaptor" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::convert_aux::adaptor</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>To</declname>
+        <defname>To</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1convert__aux_1_1adaptor_1a40ba9ac9dac78fd30933fce7ced0a882" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::convert_aux::adaptor&lt; To &gt;::adaptor</definition>
+        <argsstring>()</argsstring>
+        <name>adaptor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/convert.hpp" line="22" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/convert.hpp" bodystart="22" bodyend="22"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/convert.hpp" line="21" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/convert.hpp" bodystart="20" bodyend="23"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1convert__aux_1_1adaptor_1a40ba9ac9dac78fd30933fce7ced0a882" prot="public" virt="non-virtual"><scope>boost::assign::v2::convert_aux::adaptor</scope><name>adaptor</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

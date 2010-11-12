@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1composer__result" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::put_compose_aux::composer_result</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1composer__result_1_1apply" prot="public">boost::assign::v2::put_compose_aux::composer_result::apply</innerclass>
+    <templateparamlist>
+      <param>
+        <type>typename Pars</type>
+      </param>
+      <param>
+        <type>typename SeqArgs</type>
+      </param>
+      <param>
+        <type>bool</type>
+        <declname>enable_pars</declname>
+        <defname>enable_pars</defname>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/composer.hpp" line="60" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/composer.hpp" bodystart="59" bodyend="70"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

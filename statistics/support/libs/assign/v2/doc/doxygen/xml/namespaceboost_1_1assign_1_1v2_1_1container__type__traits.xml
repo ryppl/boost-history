@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1container__type__traits" kind="namespace">
+    <compoundname>boost::assign::v2::container_type_traits</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1forward__to__value" prot="public">boost::assign::v2::container_type_traits::forward_to_value</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push" prot="public">boost::assign::v2::container_type_traits::has_push</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__push__deduced__value" prot="public">boost::assign::v2::container_type_traits::has_push_deduced_value</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__static__size" prot="public">boost::assign::v2::container_type_traits::has_static_size</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1has__static__size_3_01boost_1_1ptr__arcff69838192255b8ed76c41f4cbaae9c" prot="public">boost::assign::v2::container_type_traits::has_static_size&lt; boost::ptr_array&lt; T, N, C &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__associative" prot="public">boost::assign::v2::container_type_traits::is_associative</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__fifo__impl" prot="public">boost::assign::v2::container_type_traits::is_fifo_impl</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__fifo__impl_3_01std_1_1queue_3_01_t_00_01_a_01_4_01_4" prot="public">boost::assign::v2::container_type_traits::is_fifo_impl&lt; std::queue&lt; T, A &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__fifo" prot="public">boost::assign::v2::container_type_traits::is_fifo</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__lifo__impl" prot="public">boost::assign::v2::container_type_traits::is_lifo_impl</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__lifo__impl_3_01std_1_1stack_3_01_t_00_01_a_01_4_01_4" prot="public">boost::assign::v2::container_type_traits::is_lifo_impl&lt; std::stack&lt; T, A &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__lifo" prot="public">boost::assign::v2::container_type_traits::is_lifo</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__map__impl" prot="public">boost::assign::v2::container_type_traits::is_map_impl</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__map__impl_3_01std_1_1map_3_01_k_00_01_d_00_01_c_00_01_a_01_4_01_4" prot="public">boost::assign::v2::container_type_traits::is_map_impl&lt; std::map&lt; K, D, C, A &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__map" prot="public">boost::assign::v2::container_type_traits::is_map</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__ptr__container" prot="public">boost::assign::v2::container_type_traits::is_ptr_container</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__range" prot="public">boost::assign::v2::container_type_traits::is_range</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__set__impl" prot="public">boost::assign::v2::container_type_traits::is_set_impl</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__set__impl_3_01std_1_1set_3_01_k_00_01_c_00_01_a_01_4_01_4" prot="public">boost::assign::v2::container_type_traits::is_set_impl&lt; std::set&lt; K, C, A &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__set" prot="public">boost::assign::v2::container_type_traits::is_set</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__sorted__impl" prot="public">boost::assign::v2::container_type_traits::is_sorted_impl</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__sorted__impl_3_01std_1_1set_3_01_t_00_01_c_00_01_a_01_4_01_4" prot="public">boost::assign::v2::container_type_traits::is_sorted_impl&lt; std::set&lt; T, C, A &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__sorted__impl_3_01std_1_1map_3_01_kbdfa8531d72625169882893d8487827b" prot="public">boost::assign::v2::container_type_traits::is_sorted_impl&lt; std::map&lt; K, T, C, A &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__sorted" prot="public">boost::assign::v2::container_type_traits::is_sorted</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__static__array__impl" prot="public">boost::assign::v2::container_type_traits::is_static_array_impl</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1is__static__array" prot="public">boost::assign::v2::container_type_traits::is_static_array</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value" prot="public">boost::assign::v2::container_type_traits::ptr_to_value</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value_3_01boost_1_1ptr__arraye0eb40434bf86791e47025bbfb14967c" prot="public">boost::assign::v2::container_type_traits::ptr_to_value&lt; boost::ptr_array&lt; T, N, A &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value_3_01boost_1_1ptr__deque99eff50c839444d1f41b55d354c6c38e" prot="public">boost::assign::v2::container_type_traits::ptr_to_value&lt; boost::ptr_deque&lt; T, C, A &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value_3_01boost_1_1ptr__list_d27ac01a9fd7f371120e92ae03b685d6" prot="public">boost::assign::v2::container_type_traits::ptr_to_value&lt; boost::ptr_list&lt; T, C, A &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value_3_01boost_1_1ptr__vectoab165915a61073a82301b017e69f8da1" prot="public">boost::assign::v2::container_type_traits::ptr_to_value&lt; boost::ptr_vector&lt; T, C, A &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__container" prot="public">boost::assign::v2::container_type_traits::ptr_to_value_container</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1static__size" prot="public">boost::assign::v2::container_type_traits::static_size</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1static__size_3_01boost_1_1array_3_01_t_00_01_n_01_4_01_4" prot="public">boost::assign::v2::container_type_traits::static_size&lt; boost::array&lt; T, N &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1static__size_3_01boost_1_1ptr__array_3_01_t_00_01_n_00_01_c_01_4_01_4" prot="public">boost::assign::v2::container_type_traits::static_size&lt; boost::ptr_array&lt; T, N, C &gt; &gt;</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1value" prot="public">boost::assign::v2::container_type_traits::value</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1value__container" prot="public">boost::assign::v2::container_type_traits::value_container</innerclass>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux">boost::assign::v2::container_type_traits::ptr_to_value_aux</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/forward_to_value.hpp" line="17"/>
+  </compounddef>
+</doxygen>

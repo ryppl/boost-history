@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1checking_1_1chain" kind="namespace">
+    <compoundname>boost::assign::v2::checking::chain</compoundname>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1checking_1_1chain_1_1distinct__values">boost::assign::v2::checking::chain::distinct_values</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1checking_1_1chain_1_1twin__values">boost::assign::v2::checking::chain::twin_values</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/distinct_values.hpp" line="23"/>
+  </compounddef>
+</doxygen>

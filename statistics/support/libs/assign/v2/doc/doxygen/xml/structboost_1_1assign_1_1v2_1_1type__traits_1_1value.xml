@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1type__traits_1_1value" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::type_traits::value</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1value__impl" prot="public" virt="non-virtual">boost::assign::v2::type_traits::value_impl&lt; boost::remove_cv&lt; V &gt;::type &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>V</declname>
+        <defname>V</defname>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="878">
+        <label>boost::assign::v2::type_traits::value_impl&lt; boost::remove_cv&lt; V &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1value__impl"/>
+        <childnode refid="879" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="877">
+        <label>boost::assign::v2::type_traits::value&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1value"/>
+        <childnode refid="878" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="879">
+        <label>boost::mpl::identity&lt; boost::remove_cv&lt; V &gt;::type ::value_type &gt;</label>
+        <link refid="classboost_1_1mpl_1_1identity"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="881">
+        <label>boost::assign::v2::type_traits::value_impl&lt; boost::remove_cv&lt; V &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1value__impl"/>
+        <childnode refid="882" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="880">
+        <label>boost::assign::v2::type_traits::value&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1value"/>
+        <childnode refid="881" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="882">
+        <label>boost::mpl::identity&lt; boost::remove_cv&lt; V &gt;::type ::value_type &gt;</label>
+        <link refid="classboost_1_1mpl_1_1identity"/>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/value.hpp" line="28" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/value.hpp" bodystart="26" bodyend="28"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

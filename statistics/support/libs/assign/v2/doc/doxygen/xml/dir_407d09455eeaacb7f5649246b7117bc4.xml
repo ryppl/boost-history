@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_407d09455eeaacb7f5649246b7117bc4" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/</compoundname>
+    <innerfile refid="alloc_8hpp">alloc.hpp</innerfile>
+    <innerfile refid="static__array_2alloc_2fast__alloc_8hpp">fast_alloc.hpp</innerfile>
+    <innerfile refid="static__array_2alloc_2fast__alloc__fwd_8hpp">fast_alloc_fwd.hpp</innerfile>
+    <innerfile refid="static__array_2alloc_2lazy__alloc_8hpp">lazy_alloc.hpp</innerfile>
+    <innerfile refid="static__array_2alloc_2lazy__alloc__fwd_8hpp">lazy_alloc_fwd.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/"/>
+  </compounddef>
+</doxygen>

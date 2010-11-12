@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_14430a2e96639137e0da992418bf15b6" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/</compoundname>
+    <innerdir refid="dir_55303b7a1e731f81f9699cc7326fa251">/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/</innerdir>
+    <innerdir refid="dir_b6c4e35360afd985901603a90a656d53">/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/detail/</innerdir>
+    <innerdir refid="dir_f29ac7cddbeaeeab0d28d1db6cce6537">/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/functor/</innerdir>
+    <innerdir refid="dir_56221b1374ace47ab22beeb1b4e63e57">/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/generic/</innerdir>
+    <innerdir refid="dir_e33697ebaca4ccbd3fe75ae666ab1f73">/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/</innerdir>
+    <innerfile refid="ref_2anon_2anon_8hpp">anon.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/"/>
+  </compounddef>
+</doxygen>

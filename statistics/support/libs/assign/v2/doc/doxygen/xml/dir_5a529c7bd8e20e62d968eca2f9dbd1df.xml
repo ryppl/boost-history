@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_5a529c7bd8e20e62d968eca2f9dbd1df" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/mpl/</compoundname>
+    <innerfile refid="always_8hpp">always.hpp</innerfile>
+    <innerfile refid="mpl_8hpp">mpl.hpp</innerfile>
+    <innerfile refid="switch_8hpp">switch.hpp</innerfile>
+    <innerfile refid="uniform__vector_8hpp">uniform_vector.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/mpl/"/>
+  </compounddef>
+</doxygen>

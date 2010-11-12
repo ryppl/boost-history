@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_5ab721af5d3747fd51f52dd85b843fa1" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/wrapper/</compoundname>
+    <innerfile refid="ref_2wrapper_2base_8hpp">base.hpp</innerfile>
+    <innerfile refid="ref_2wrapper_2copy_8hpp">copy.hpp</innerfile>
+    <innerfile refid="ref_2wrapper_2crtp_8hpp">crtp.hpp</innerfile>
+    <innerfile refid="deduce__assign__tag_8hpp">deduce_assign_tag.hpp</innerfile>
+    <innerfile refid="framework_8hpp">framework.hpp</innerfile>
+    <innerfile refid="rebind_8hpp">rebind.hpp</innerfile>
+    <innerfile refid="ref_2wrapper_2wrapper_8hpp">wrapper.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/wrapper/"/>
+  </compounddef>
+</doxygen>

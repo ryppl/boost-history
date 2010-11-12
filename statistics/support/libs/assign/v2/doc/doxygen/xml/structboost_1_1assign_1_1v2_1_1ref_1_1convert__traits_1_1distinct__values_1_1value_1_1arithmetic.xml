@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1distinct__values_1_1value_1_1arithmetic" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::ref::convert_traits::distinct_values::value::arithmetic</compoundname>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1distinct__values_1_1value_1_1arithmetic_1a08560d04c5f340f1910069271b92e892" prot="public" static="no">
+        <type>boost::numeric::conversion_traits&lt; V1, V2 &gt;::supertype</type>
+        <definition>typedef boost::numeric::conversion_traits&lt; V1, V2 &gt;::supertype boost::assign::v2::ref::convert_traits::distinct_values::value&lt; V1, V2 &gt;::arithmetic::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/distinct_values.hpp" line="35" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/distinct_values.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/distinct_values.hpp" line="31" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/distinct_values.hpp" bodystart="30" bodyend="37"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1distinct__values_1_1value_1_1arithmetic_1a08560d04c5f340f1910069271b92e892" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::convert_traits::distinct_values::value::arithmetic</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

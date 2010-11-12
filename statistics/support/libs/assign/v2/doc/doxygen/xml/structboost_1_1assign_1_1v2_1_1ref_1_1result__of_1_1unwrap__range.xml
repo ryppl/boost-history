@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1unwrap__range" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::ref::result_of::unwrap_range</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1result__of__unwrap__range" prot="public" virt="non-virtual">boost::assign::v2::ref::unwrap_aux::result_of_unwrap_range&lt; R &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename R</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="869">
+        <label>boost::assign::v2::ref::result_of::unwrap_range&lt; R &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1unwrap__range"/>
+        <childnode refid="870" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="870">
+        <label>boost::assign::v2::ref::unwrap_aux::result_of_unwrap_range&lt; R &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1result__of__unwrap__range"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="871">
+        <label>boost::assign::v2::ref::result_of::unwrap_range&lt; R &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1unwrap__range"/>
+        <childnode refid="872" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="872">
+        <label>boost::assign::v2::ref::unwrap_aux::result_of_unwrap_range&lt; R &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1result__of__unwrap__range"/>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/unwrap/range.hpp" line="75" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/unwrap/range.hpp" bodystart="75" bodyend="75"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1result__of__unwrap__range_1a1d370d563f6210eca89d780f00a4ee6a" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::result_of::unwrap_range</scope><name>base_it_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1result__of__unwrap__range_1a6a0ebcac1a7c65ccb74c5cf30f2fa994" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::result_of::unwrap_range</scope><name>call</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1result__of__unwrap__range_1a41074229b3a788b3e02bda30ebab493b" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::result_of::unwrap_range</scope><name>it_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1result__of__unwrap__range_1ac0b3f8c03d9b3ab1c338f66bb01f23ea" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::result_of::unwrap_range</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

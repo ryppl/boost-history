@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_4aea5e20e208c9bc0e797386df9db401" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/</compoundname>
+    <innerdir refid="dir_f0e98696f1d1d4bc3c6cfb002bb95bb0">/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/</innerdir>
+    <innerdir refid="dir_d073126623b24f10021f74fa28995f47">/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/</innerdir>
+    <innerdir refid="dir_1fcd24fcd9f23f4fc61acb267fc52d99">/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/</innerdir>
+    <innerfile refid="chain_8hpp">chain.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/"/>
+  </compounddef>
+</doxygen>

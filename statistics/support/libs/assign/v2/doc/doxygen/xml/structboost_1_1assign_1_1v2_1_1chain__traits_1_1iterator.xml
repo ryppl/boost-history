@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1chain__traits_1_1iterator" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::chain_traits::iterator</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>It1</declname>
+        <defname>It1</defname>
+      </param>
+      <param>
+        <type>typename</type>
+        <declname>It2</declname>
+        <defname>It2</defname>
+      </param>
+      <param>
+        <type>typename</type>
+        <declname>Tag</declname>
+        <defname>Tag</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1chain__traits_1_1iterator_1a4dde43d2d4804940607b551a38265f9f" prot="public" static="no">
+        <type>boost::iterator_reference&lt; It1 &gt;::type</type>
+        <definition>typedef boost::iterator_reference&lt;It1&gt;::type boost::assign::v2::chain_traits::iterator&lt; It1, It2, Tag &gt;::ref1_</definition>
+        <argsstring></argsstring>
+        <name>ref1_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp" line="31" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1chain__traits_1_1iterator_1a063a9967befd03e3011dffcde575e01c" prot="public" static="no">
+        <type>boost::iterator_reference&lt; It2 &gt;::type</type>
+        <definition>typedef boost::iterator_reference&lt;It2&gt;::type boost::assign::v2::chain_traits::iterator&lt; It1, It2, Tag &gt;::ref2_</definition>
+        <argsstring></argsstring>
+        <name>ref2_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp" line="32" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1chain__traits_1_1iterator_1a526cd4049025d17bc1219bf159508a77" prot="public" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1meta__convert" kindref="compound">assign::v2::type_traits::meta_convert</ref>&lt; Tag &gt;</type>
+        <definition>typedef assign::v2::type_traits::meta_convert&lt;Tag&gt; boost::assign::v2::chain_traits::iterator&lt; It1, It2, Tag &gt;::convert_</definition>
+        <argsstring></argsstring>
+        <name>convert_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp" line="34" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1chain__traits_1_1iterator_1af0bb4b9b3fe3939ff63c7edf11679f82" prot="public" static="no">
+        <type>boost::mpl::apply2&lt; <ref refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1meta__convert" kindref="compound">convert_</ref>, ref1_, ref2_ &gt;::type</type>
+        <definition>typedef boost::mpl::apply2&lt; convert_, ref1_, ref2_ &gt;::type boost::assign::v2::chain_traits::iterator&lt; It1, It2, Tag &gt;::reference</definition>
+        <argsstring></argsstring>
+        <name>reference</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp" line="39" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1chain__traits_1_1iterator_1a5579be53de6402718824a35568ddb4e3" prot="public" static="no">
+        <type>boost::remove_reference&lt; reference &gt;::type</type>
+        <definition>typedef boost::remove_reference&lt;reference&gt;::type boost::assign::v2::chain_traits::iterator&lt; It1, It2, Tag &gt;::value_type</definition>
+        <argsstring></argsstring>
+        <name>value_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp" line="41" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1chain__traits_1_1iterator_1a889a01b3d154286155eef371ee585ca5" prot="public" static="no">
+        <type>boost::range_detail::chain_iterator&lt; It1, It2, value_type, reference, boost::single_pass_traversal_tag &gt;</type>
+        <definition>typedef boost::range_detail::chain_iterator&lt; It1, It2, value_type, reference, boost::single_pass_traversal_tag &gt; boost::assign::v2::chain_traits::iterator&lt; It1, It2, Tag &gt;::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp" line="52" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp" line="30" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/iterator.hpp" bodystart="29" bodyend="54"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1iterator_1a526cd4049025d17bc1219bf159508a77" prot="public" virt="non-virtual"><scope>boost::assign::v2::chain_traits::iterator</scope><name>convert_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1iterator_1a4dde43d2d4804940607b551a38265f9f" prot="public" virt="non-virtual"><scope>boost::assign::v2::chain_traits::iterator</scope><name>ref1_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1iterator_1a063a9967befd03e3011dffcde575e01c" prot="public" virt="non-virtual"><scope>boost::assign::v2::chain_traits::iterator</scope><name>ref2_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1iterator_1af0bb4b9b3fe3939ff63c7edf11679f82" prot="public" virt="non-virtual"><scope>boost::assign::v2::chain_traits::iterator</scope><name>reference</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1iterator_1a889a01b3d154286155eef371ee585ca5" prot="public" virt="non-virtual"><scope>boost::assign::v2::chain_traits::iterator</scope><name>type</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1iterator_1a5579be53de6402718824a35568ddb4e3" prot="public" virt="non-virtual"><scope>boost::assign::v2::chain_traits::iterator</scope><name>value_type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

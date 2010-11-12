@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1chain__aux" kind="namespace">
+    <compoundname>boost::assign::v2::chain_aux</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1chain__aux_1_1adaptor1" prot="public">boost::assign::v2::chain_aux::adaptor1</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1chain__aux_1_1adaptor2" prot="public">boost::assign::v2::chain_aux::adaptor2</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1chain__aux_1_1sub" prot="public">boost::assign::v2::chain_aux::sub</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1chain__aux_1_1result" prot="public">boost::assign::v2::chain_aux::result</innerclass>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="namespaceboost_1_1assign_1_1v2_1_1chain__aux_1a02b5e333280a4fea8b095be573f8f9de" prot="public" static="no">
+        <type>boost::mpl::void_</type>
+        <definition>typedef boost::mpl::void_ boost::assign::v2::chain_aux::void_</definition>
+        <argsstring></argsstring>
+        <name>void_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/adaptor.hpp" line="20" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/adaptor.hpp" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1chain__aux_1aaf0a2e9f4b8adde77f03e505e9e97940" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename R</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1chain__aux_1_1sub" kindref="compound">sub</ref>&lt; R &gt;</type>
+        <definition>sub&lt;R&gt; boost::assign::v2::chain_aux::make_sub</definition>
+        <argsstring>(const R &amp;r)</argsstring>
+        <name>make_sub</name>
+        <param>
+          <type>const R &amp;</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/sub.hpp" line="53" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/sub.hpp" bodystart="53" bodyend="53"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/adaptor.hpp" line="18"/>
+  </compounddef>
+</doxygen>

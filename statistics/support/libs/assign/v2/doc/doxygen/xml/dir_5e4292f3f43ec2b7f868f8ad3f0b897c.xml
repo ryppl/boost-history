@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_5e4292f3f43ec2b7f868f8ad3f0b897c" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/config/</compoundname>
+    <innerfile refid="arity__bound_8hpp">arity_bound.hpp</innerfile>
+    <innerfile refid="borland__workaround_8hpp">borland_workaround.hpp</innerfile>
+    <innerfile refid="enable__cpp0x_8hpp">enable_cpp0x.hpp</innerfile>
+    <innerfile refid="limit__arity_8hpp">limit_arity.hpp</innerfile>
+    <innerfile refid="limit__csv__arity_8hpp">limit_csv_arity.hpp</innerfile>
+    <innerfile refid="limit__lvalue__const__arity_8hpp">limit_lvalue_const_arity.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/config/"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1empty__anon" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::ref::anon_aux::empty_anon</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1empty" prot="public" virt="non-virtual">boost::assign::v2::ref::fusion_aux::empty&lt; Tag1, anon_aux::unary_tag2_, T &gt;</basecompoundref>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1recursive__result_3_010_00_01_tag1_00_01_t_01_4" prot="public" virt="non-virtual">boost::assign::v2::ref::anon_aux::recursive_result&lt; 0, Tag1, T &gt;</derivedcompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename Tag1</type>
+      </param>
+      <param>
+        <type>typename T</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="291">
+        <label>boost::assign::v2::ref::fusion_aux::empty&lt; Tag1, anon_aux::unary_tag2_, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1empty"/>
+      </node>
+      <node id="290">
+        <label>boost::assign::v2::ref::anon_aux::empty_anon&lt; Tag1, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1empty__anon"/>
+        <childnode refid="291" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="292">
+        <label>boost::assign::v2::ref::anon_aux::recursive_result&lt; 0, Tag1, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1recursive__result_3_010_00_01_tag1_00_01_t_01_4"/>
+        <childnode refid="290" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="294">
+        <label>boost::assign::v2::ref::fusion_aux::empty&lt; Tag1, anon_aux::unary_tag2_, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1empty"/>
+      </node>
+      <node id="293">
+        <label>boost::assign::v2::ref::anon_aux::empty_anon&lt; Tag1, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1empty__anon"/>
+        <childnode refid="294" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/nth_result_of.hpp" line="26" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/nth_result_of.hpp" bodystart="22" bodyend="26"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1empty_1a0fc661bf77f229ca47769cfa1b043a36" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::anon_aux::empty_anon</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

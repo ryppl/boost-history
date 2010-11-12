@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1_1wrapper" kind="struct" prot="private">
+    <compoundname>boost::assign::v2::ref::fusion_matrix_aux::container::wrapper</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1_1wrapper_1ac4cc1a9cd0e9b5b00a08457e20400888" prot="public" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1wrapper" kindref="compound">ref::wrapper</ref>&lt; assign_tag_, T &gt;</type>
+        <definition>typedef ref::wrapper&lt;assign_tag_,T&gt; boost::assign::v2::ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt;::wrapper&lt; T &gt;::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="122" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="122" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" line="122" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/container.hpp" bodystart="122" bodyend="122"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container_1_1wrapper_1ac4cc1a9cd0e9b5b00a08457e20400888" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::container::wrapper</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1put__aux_1_1new__fun" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::put_aux::new_fun</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>F</declname>
+        <defname>F</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1new__fun_1a66e760629ee0d8c9a41200d4d0f2645d" prot="public" static="no" mutable="no">
+        <type>F</type>
+        <definition>F boost::assign::v2::put_aux::new_fun&lt; F &gt;::value</definition>
+        <argsstring></argsstring>
+        <name>value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_fun.hpp" line="29" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_fun.hpp" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1put__aux_1_1new__fun_1a129fb8cefaba289592fd2b0bd1073200" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::put_aux::new_fun&lt; F &gt;::new_fun</definition>
+        <argsstring>(const F &amp;f)</argsstring>
+        <name>new_fun</name>
+        <param>
+          <type>const F &amp;</type>
+          <declname>f</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_fun.hpp" line="27" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_fun.hpp" bodystart="27" bodyend="27"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_fun.hpp" line="25" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/new_fun.hpp" bodystart="24" bodyend="30"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1new__fun_1a129fb8cefaba289592fd2b0bd1073200" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::new_fun</scope><name>new_fun</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1new__fun_1a66e760629ee0d8c9a41200d4d0f2645d" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::new_fun</scope><name>value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

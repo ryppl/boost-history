@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="anon_2detail_2lazy__alloc__fwd_8hpp" kind="file">
+    <compoundname>lazy_alloc_fwd.hpp</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"></codeline>
+<codeline lineno="2"><highlight class="comment">//<sp/><sp/>Boost.Assign<sp/>v2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2003-2004<sp/>Thorsten<sp/>Ottosen<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2010<sp/>Erwann<sp/>Rogard<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Use,<sp/>modification<sp/>and<sp/>distribution<sp/>are<sp/>subject<sp/>to<sp/>the<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Boost<sp/>Software<sp/>License,<sp/>Version<sp/>1.0.<sp/>(See<sp/>accompanying<sp/>file<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>LICENSE_1_0.txt<sp/>or<sp/>copy<sp/>at<sp/>http://www.boost.org/LICENSE_1_0.txt)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="11"><highlight class="comment">#ifndef<sp/>BOOST_ASSIGN_V2_REF_CONTAINER_STATIC_ARRAY_DETAIL_LAZY_ALLOC_FWD_ER_2010_HPP</highlight></codeline>
+<codeline lineno="12"><highlight class="comment">#define<sp/>BOOST_ASSIGN_V2_REF_CONTAINER_STATIC_ARRAY_DETAIL_LAZY_ALLOC_FWD_ER_2010_HPP</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/></highlight></codeline>
+<codeline lineno="14"><highlight class="comment">namespace<sp/>boost{</highlight></codeline>
+<codeline lineno="15"><highlight class="comment">namespace<sp/>assign{</highlight></codeline>
+<codeline lineno="16"><highlight class="comment">namespace<sp/>v2{</highlight></codeline>
+<codeline lineno="17"><highlight class="comment">namespace<sp/>ref{</highlight></codeline>
+<codeline lineno="18"><highlight class="comment">namespace<sp/>alloc_tag{</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>struct<sp/>lazy_alloc;</highlight></codeline>
+<codeline lineno="20"><highlight class="comment">}//<sp/>alloc_tag</highlight></codeline>
+<codeline lineno="21"><highlight class="comment">namespace<sp/>anon_aux{<sp/></highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/><sp/><sp/>template&lt;std::size_t<sp/>N,<sp/>typename<sp/>Tag,<sp/>typename<sp/>T,<sp/>typename<sp/>D&gt;</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/><sp/><sp/>class<sp/>lazy_alloc;</highlight></codeline>
+<codeline lineno="24"><highlight class="comment">}//<sp/>anon_aux<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="25"><highlight class="comment">}//<sp/>ref<sp/></highlight></codeline>
+<codeline lineno="26"><highlight class="comment">}//<sp/>v2<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="27"><highlight class="comment">}//<sp/>assign</highlight></codeline>
+<codeline lineno="28"><highlight class="comment">}//<sp/>boost</highlight></codeline>
+<codeline lineno="29"><highlight class="comment"></highlight></codeline>
+<codeline lineno="30"><highlight class="comment">#endif</highlight></codeline>
+<codeline lineno="31"><highlight class="comment">*/</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/detail/lazy_alloc_fwd.hpp"/>
+  </compounddef>
+</doxygen>

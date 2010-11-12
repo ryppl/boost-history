@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1mpl_1_1case___3_01switch__tag_1_1put__range_00_010_01_4" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::mpl::case_&lt; switch_tag::put_range, 0 &gt;</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1mpl_1_1wrap" prot="public" virt="non-virtual">boost::assign::v2::mpl::wrap&lt; put_range_tag::put, container_type_traits::has_push_deduced_value &gt;</basecompoundref>
+    <templateparamlist>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="140">
+        <label>boost::assign::v2::mpl::case_&lt; switch_tag::put_range, 0 &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1mpl_1_1case___3_01switch__tag_1_1put__range_00_010_01_4"/>
+        <childnode refid="141" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="141">
+        <label>boost::assign::v2::mpl::wrap&lt; put_range_tag::put, container_type_traits::has_push_deduced_value &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1mpl_1_1wrap"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="142">
+        <label>boost::assign::v2::mpl::case_&lt; switch_tag::put_range, 0 &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1mpl_1_1case___3_01switch__tag_1_1put__range_00_010_01_4"/>
+        <childnode refid="143" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="143">
+        <label>boost::assign::v2::mpl::wrap&lt; put_range_tag::put, container_type_traits::has_push_deduced_value &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1mpl_1_1wrap"/>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/modifier/deduce.hpp" line="34" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/modifier/deduce.hpp" bodystart="30" bodyend="34"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1mpl_1_1wrap_1ae0b1d964657a1a9cd866a659a468b076" prot="public" virt="non-virtual"><scope>boost::assign::v2::mpl::case_&lt; switch_tag::put_range, 0 &gt;</scope><name>tag</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

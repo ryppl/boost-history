@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1reference__of__iterator" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::ref::unwrap_aux::reference_of_iterator</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1reference" prot="public" virt="non-virtual">boost::assign::v2::ref::unwrap_aux::reference&lt; boost::iterator_reference&lt; I &gt;::type &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename I</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="752">
+        <label>boost::assign::v2::ref::unwrap_aux::reference&lt; boost::iterator_reference&lt; I &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1reference"/>
+        <childnode refid="753" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="753">
+        <label>boost::mpl::eval_if&lt; boost::is_reference_wrapper&lt;typename boost::remove_reference&lt;boost::iterator_reference&lt; I &gt;::type &gt;::type &gt;, boost::add_reference&lt; boost::unwrap_reference&lt;typename boost::remove_reference&lt;boost::iterator_reference&lt; I &gt;::type &gt;::type &gt;::type &gt;, boost::mpl::identity&lt;boost::iterator_reference&lt; I &gt;::type &gt; &gt;</label>
+        <link refid="classboost_1_1mpl_1_1eval__if"/>
+      </node>
+      <node id="751">
+        <label>boost::assign::v2::ref::unwrap_aux::reference_of_iterator&lt; I &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1reference__of__iterator"/>
+        <childnode refid="752" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="755">
+        <label>boost::assign::v2::ref::unwrap_aux::reference&lt; boost::iterator_reference&lt; I &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1reference"/>
+        <childnode refid="756" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="756">
+        <label>boost::mpl::eval_if&lt; boost::is_reference_wrapper&lt;typename boost::remove_reference&lt;boost::iterator_reference&lt; I &gt;::type &gt;::type &gt;, boost::add_reference&lt; boost::unwrap_reference&lt;typename boost::remove_reference&lt;boost::iterator_reference&lt; I &gt;::type &gt;::type &gt;::type &gt;, boost::mpl::identity&lt;boost::iterator_reference&lt; I &gt;::type &gt; &gt;</label>
+        <link refid="classboost_1_1mpl_1_1eval__if"/>
+      </node>
+      <node id="754">
+        <label>boost::assign::v2::ref::unwrap_aux::reference_of_iterator&lt; I &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1reference__of__iterator"/>
+        <childnode refid="755" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/unwrap/iterator.hpp" line="40" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/unwrap/iterator.hpp" bodystart="38" bodyend="40"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1unwrap__aux_1_1reference_1a397dbf28f91b68bea52361d1b4453973" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::unwrap_aux::reference_of_iterator</scope><name>test</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="classboost_1_1mpl_1_1identity" kind="class" prot="public">
+    <compoundname>boost::mpl::identity</compoundname>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1value__impl" prot="public" virt="non-virtual">boost::assign::v2::type_traits::value_impl&lt; boost::remove_cv&lt; V &gt;::type &gt;</derivedcompoundref>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1value__impl" prot="public" virt="non-virtual">boost::assign::v2::type_traits::value_impl&lt; boost::remove_cv&lt; value_container&lt; V &gt;::type &gt;::type &gt;</derivedcompoundref>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="424">
+        <label>boost::assign::v2::container_type_traits::value&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1value"/>
+        <childnode refid="423" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="419">
+        <label>value_impl&lt; boost::remove_cv&lt; V &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1value__impl"/>
+        <childnode refid="418" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="418">
+        <label>identity</label>
+        <link refid="classboost_1_1mpl_1_1identity"/>
+      </node>
+      <node id="420">
+        <label>boost::assign::v2::type_traits::value&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1value"/>
+        <childnode refid="419" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="423">
+        <label>boost::assign::v2::container_type_traits::forward_to_value&lt; type_traits::value, V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1forward__to__value"/>
+        <childnode refid="422" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="421">
+        <label>value_impl&lt; boost::remove_cv&lt; value_container&lt; V &gt;::type &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1value__impl"/>
+        <childnode refid="418" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="422">
+        <label>boost::assign::v2::type_traits::value&lt; value_container&lt; V &gt;::type &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1value"/>
+        <childnode refid="421" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/value.hpp" line="23"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

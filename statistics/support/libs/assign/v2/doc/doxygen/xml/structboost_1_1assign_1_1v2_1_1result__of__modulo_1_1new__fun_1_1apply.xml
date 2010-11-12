@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__fun_1_1apply" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::result_of_modulo::new_fun::apply</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename F</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/result_of_modulo.hpp" line="23" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/result_of_modulo.hpp" bodystart="23" bodyend="23"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

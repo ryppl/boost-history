@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_12286724c5c7a7975542d7d6b6ce079c" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/</compoundname>
+    <innerfile refid="fusion_2assign__array_8hpp">assign_array.hpp</innerfile>
+    <innerfile refid="fusion_2assign__copy_8hpp">assign_copy.hpp</innerfile>
+    <innerfile refid="fusion_2assign__rebind_8hpp">assign_rebind.hpp</innerfile>
+    <innerfile refid="fusion_2assign__xxx_8hpp">assign_xxx.hpp</innerfile>
+    <innerfile refid="ref_2fusion_2container_8hpp">container.hpp</innerfile>
+    <innerfile refid="fusion_8hpp">fusion.hpp</innerfile>
+    <innerfile refid="ref_2fusion_2fwd_8hpp">fwd.hpp</innerfile>
+    <innerfile refid="head__holder_8hpp">head_holder.hpp</innerfile>
+    <innerfile refid="link__holder_8hpp">link_holder.hpp</innerfile>
+    <innerfile refid="ref_2fusion_2make_8hpp">make.hpp</innerfile>
+    <innerfile refid="most__const_8hpp">most_const.hpp</innerfile>
+    <innerfile refid="nil__arg_8hpp">nil_arg.hpp</innerfile>
+    <innerfile refid="fusion_2nth__result__of_8hpp">nth_result_of.hpp</innerfile>
+    <innerfile refid="fusion_2policy_8hpp">policy.hpp</innerfile>
+    <innerfile refid="root_8hpp">root.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/"/>
+  </compounddef>
+</doxygen>

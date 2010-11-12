@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1mpl_1_1case___3_01switch__tag_1_1deduce__check_00_014_01_4" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::mpl::case_&lt; switch_tag::deduce_check, 4 &gt;</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1mpl_1_1wrap" prot="public" virt="non-virtual">boost::assign::v2::mpl::wrap&lt; v2::container_tag::static_array, v2::container_type_traits::is_static_array &gt;</basecompoundref>
+    <templateparamlist>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="116">
+        <label>boost::assign::v2::mpl::case_&lt; switch_tag::deduce_check, 4 &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1mpl_1_1case___3_01switch__tag_1_1deduce__check_00_014_01_4"/>
+        <childnode refid="117" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="117">
+        <label>boost::assign::v2::mpl::wrap&lt; v2::container_tag::static_array, v2::container_type_traits::is_static_array &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1mpl_1_1wrap"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="118">
+        <label>boost::assign::v2::mpl::case_&lt; switch_tag::deduce_check, 4 &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1mpl_1_1case___3_01switch__tag_1_1deduce__check_00_014_01_4"/>
+        <childnode refid="119" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="119">
+        <label>boost::assign::v2::mpl::wrap&lt; v2::container_tag::static_array, v2::container_type_traits::is_static_array &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1mpl_1_1wrap"/>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/deduce_check.hpp" line="61" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/deduce_check.hpp" bodystart="57" bodyend="61"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1mpl_1_1wrap_1ae0b1d964657a1a9cd866a659a468b076" prot="public" virt="non-virtual"><scope>boost::assign::v2::mpl::case_&lt; switch_tag::deduce_check, 4 &gt;</scope><name>tag</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,198 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::put_compose_csv_aux::held</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>Pars</declname>
+        <defname>Pars</defname>
+      </param>
+      <param>
+        <type>std::size_t</type>
+        <declname>N</declname>
+        <defname>N</defname>
+      </param>
+      <param>
+        <type>typename</type>
+        <declname>U</declname>
+        <defname>U</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a44b43615f77f8c8a5a23e4ff6f9f89e8" prot="public" static="no">
+        <type>boost::use_default</type>
+        <definition>typedef boost::use_default boost::assign::v2::put_compose_csv_aux::held&lt; Pars, N, U &gt;::tag2_</definition>
+        <argsstring></argsstring>
+        <name>tag2_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" line="26" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1af11edc6d69ff8d99a4c23c01ad563f45" prot="public" static="no">
+        <type>v2::ref::assign_copy::nth_result_of::fusion&lt; tag2_ &gt;</type>
+        <definition>typedef v2::ref::assign_copy::nth_result_of::fusion&lt;tag2_&gt; boost::assign::v2::put_compose_csv_aux::held&lt; Pars, N, U &gt;::meta1_</definition>
+        <argsstring></argsstring>
+        <name>meta1_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" line="27" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a5547e97b030ad0dfce0b17aa7ce72c34" prot="public" static="no">
+        <type>boost::mpl::apply1&lt; meta1_, Pars &gt;::type</type>
+        <definition>typedef boost::mpl::apply1&lt;meta1_, Pars&gt;::type boost::assign::v2::put_compose_csv_aux::held&lt; Pars, N, U &gt;::pars_cont_type</definition>
+        <argsstring></argsstring>
+        <name>pars_cont_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" line="28" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a687b013cb72fb8ada5507ade1469c10a" prot="public" static="no">
+        <type>v2::ref::assign_copy::nth_result_of::csv_anon&lt; N, U &gt;::type</type>
+        <definition>typedef v2::ref::assign_copy::nth_result_of::csv_anon&lt; N, U &gt;::type boost::assign::v2::put_compose_csv_aux::held&lt; Pars, N, U &gt;::seq_arg_cont_type</definition>
+        <argsstring></argsstring>
+        <name>seq_arg_cont_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" line="32" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1aa046ce43861a951484f1f0dae1b7d6ef" prot="protected" static="no" mutable="no">
+        <type>pars_cont_type</type>
+        <definition>pars_cont_type boost::assign::v2::put_compose_csv_aux::held&lt; Pars, N, U &gt;::pars_cont</definition>
+        <argsstring></argsstring>
+        <name>pars_cont</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" line="53" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a5915e3dab66e2951b7f702df2b691360" prot="protected" static="no" mutable="no">
+        <type>seq_arg_cont_type</type>
+        <definition>seq_arg_cont_type boost::assign::v2::put_compose_csv_aux::held&lt; Pars, N, U &gt;::seq_arg</definition>
+        <argsstring></argsstring>
+        <name>seq_arg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" line="54" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a23dd38abab4f26d7ca4f7919c3418111" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::put_compose_csv_aux::held&lt; Pars, N, U &gt;::held</definition>
+        <argsstring>()</argsstring>
+        <name>held</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" line="34" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" bodystart="34" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a14a1346baf9e492f79f89f831c04cb0f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::put_compose_csv_aux::held&lt; Pars, N, U &gt;::held</definition>
+        <argsstring>(pars_cont_type const &amp;p, seq_arg_cont_type const &amp;s)</argsstring>
+        <name>held</name>
+        <param>
+          <type>pars_cont_type const &amp;</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>seq_arg_cont_type const &amp;</type>
+          <declname>s</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" line="36" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" bodystart="35" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a6998fb0ea2af07b097c5e437ccad27f4" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>pars_cont_type const &amp;</type>
+        <definition>pars_cont_type const&amp; boost::assign::v2::put_compose_csv_aux::held&lt; Pars, N, U &gt;::parameters</definition>
+        <argsstring>() const </argsstring>
+        <name>parameters</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" line="39" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" bodystart="38" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a196d1bf6e7fbfe5cf6df15a5b3f27624" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>seq_arg_cont_type const &amp;</type>
+        <definition>seq_arg_cont_type const&amp; boost::assign::v2::put_compose_csv_aux::held&lt; Pars, N, U &gt;::sequence_arg</definition>
+        <argsstring>() const </argsstring>
+        <name>sequence_arg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" line="44" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" bodystart="43" bodyend="46"/>
+      </memberdef>
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1aef1d846ac35a0aadc758c35493724688" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>seq_arg_cont_type &amp;</type>
+        <definition>seq_arg_cont_type&amp; boost::assign::v2::put_compose_csv_aux::held&lt; Pars, N, U &gt;::sequence_arg</definition>
+        <argsstring>()</argsstring>
+        <name>sequence_arg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" line="48" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" bodystart="47" bodyend="50"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" line="25" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp" bodystart="24" bodyend="56"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a23dd38abab4f26d7ca4f7919c3418111" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::held</scope><name>held</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a14a1346baf9e492f79f89f831c04cb0f" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::held</scope><name>held</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1af11edc6d69ff8d99a4c23c01ad563f45" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::held</scope><name>meta1_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a6998fb0ea2af07b097c5e437ccad27f4" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::held</scope><name>parameters</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1aa046ce43861a951484f1f0dae1b7d6ef" prot="protected" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::held</scope><name>pars_cont</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a5547e97b030ad0dfce0b17aa7ce72c34" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::held</scope><name>pars_cont_type</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a5915e3dab66e2951b7f702df2b691360" prot="protected" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::held</scope><name>seq_arg</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a687b013cb72fb8ada5507ade1469c10a" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::held</scope><name>seq_arg_cont_type</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a196d1bf6e7fbfe5cf6df15a5b3f27624" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::held</scope><name>sequence_arg</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1aef1d846ac35a0aadc758c35493724688" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::held</scope><name>sequence_arg</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__compose__csv__aux_1_1held_1a44b43615f77f8c8a5a23e4ff6f9f89e8" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_csv_aux::held</scope><name>tag2_</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

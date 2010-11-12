@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1container_1_1is__head" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::ref::fusion_aux::container::is_head</compoundname>
+    <templateparamlist>
+      <param>
+        <type>int</type>
+        <declname>I</declname>
+        <defname>I</defname>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/container.hpp" line="117" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/container.hpp" bodystart="117" bodyend="117"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

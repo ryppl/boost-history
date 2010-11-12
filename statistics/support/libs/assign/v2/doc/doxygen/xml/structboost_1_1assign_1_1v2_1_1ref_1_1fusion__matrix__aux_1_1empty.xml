@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1empty" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::ref::fusion_matrix_aux::empty</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename Tag1</type>
+        <defval><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1assign__tag_1_1copy" kindref="compound">ref::assign_tag::copy</ref></defval>
+      </param>
+      <param>
+        <type>typename Tag2</type>
+        <defval>boost::use_default</defval>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1empty_1aea7155df26655bee212de637dce78fca" prot="public" static="no">
+        <type><ref refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1container" kindref="compound">fusion_matrix_aux::container</ref>&lt; 0, typename fusion_aux::root_type, Tag1, Tag2 &gt;</type>
+        <definition>typedef fusion_matrix_aux::container&lt; 0, typename fusion_aux::root_type, Tag1, Tag2 &gt; boost::assign::v2::ref::fusion_matrix_aux::empty&lt; Tag1, Tag2 &gt;::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/nth_result_of.hpp" line="53" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/nth_result_of.hpp" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/nth_result_of.hpp" line="47" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion_matrix/nth_result_of.hpp" bodystart="46" bodyend="54"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__matrix__aux_1_1empty_1aea7155df26655bee212de637dce78fca" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_matrix_aux::empty</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

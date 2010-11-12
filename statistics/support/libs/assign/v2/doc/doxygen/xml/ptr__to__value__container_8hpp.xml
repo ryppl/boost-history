@@ -1,0 +1,802 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="ptr__to__value__container_8hpp" kind="file">
+    <compoundname>ptr_to_value_container.hpp</compoundname>
+    <includes refid="is__ptr__container_8hpp" local="no">boost/assign/v2/detail/type_traits/container/is_ptr_container.hpp</includes>
+    <includedby refid="detail_2type__traits_2container_2container_8hpp" local="no">/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/container.hpp</includedby>
+    <includedby refid="value__container_8hpp" local="no">/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/value_container.hpp</includedby>
+    <incdepgraph>
+      <node id="8660">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value_container.hpp</label>
+        <link refid="ptr_to_value_container.hpp"/>
+        <childnode refid="8661" relation="include">
+        </childnode>
+      </node>
+      <node id="8671">
+        <label>boost/assign/v2/detail/type_traits/container/static_size.hpp</label>
+        <link refid="static__size_8hpp_source"/>
+        <childnode refid="8672" relation="include">
+        </childnode>
+        <childnode refid="8670" relation="include">
+        </childnode>
+        <childnode refid="8669" relation="include">
+        </childnode>
+      </node>
+      <node id="8668">
+        <label>boost/type_traits/remove_reference.hpp</label>
+      </node>
+      <node id="8672">
+        <label>boost/mpl/size_t.hpp</label>
+      </node>
+      <node id="8663">
+        <label>boost/mpl/eval_if.hpp</label>
+      </node>
+      <node id="8664">
+        <label>boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp</label>
+        <link refid="ptr__to__value_8hpp_source"/>
+        <childnode refid="8665" relation="include">
+        </childnode>
+        <childnode refid="8666" relation="include">
+        </childnode>
+        <childnode refid="8667" relation="include">
+        </childnode>
+        <childnode refid="8668" relation="include">
+        </childnode>
+        <childnode refid="8669" relation="include">
+        </childnode>
+        <childnode refid="8670" relation="include">
+        </childnode>
+        <childnode refid="8671" relation="include">
+        </childnode>
+      </node>
+      <node id="8670">
+        <label>boost/assign/v2/detail/fwd/container.hpp</label>
+        <link refid="detail_2fwd_2container_8hpp_source"/>
+      </node>
+      <node id="8669">
+        <label>boost/assign/v2/detail/fwd/ptr_container.hpp</label>
+        <link refid="ptr__container_8hpp_source"/>
+      </node>
+      <node id="8662">
+        <label>boost/mpl/identity.hpp</label>
+      </node>
+      <node id="8666">
+        <label>boost/preprocessor/cat.hpp</label>
+      </node>
+      <node id="8661">
+        <label>boost/assign/v2/detail/type_traits/container/is_ptr_container.hpp</label>
+        <link refid="is__ptr__container_8hpp_source"/>
+        <childnode refid="8662" relation="include">
+        </childnode>
+        <childnode refid="8663" relation="include">
+        </childnode>
+        <childnode refid="8664" relation="include">
+        </childnode>
+      </node>
+      <node id="8667">
+        <label>boost/mpl/bool.hpp</label>
+      </node>
+      <node id="8665">
+        <label>memory</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="8679">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/forward_to_value.hpp</label>
+        <link refid="forward__to__value_8hpp_source"/>
+        <childnode refid="8674" relation="include">
+        </childnode>
+        <childnode refid="8680" relation="include">
+        </childnode>
+        <childnode refid="8686" relation="include">
+        </childnode>
+        <childnode refid="8688" relation="include">
+        </childnode>
+        <childnode refid="8748" relation="include">
+        </childnode>
+        <childnode refid="8749" relation="include">
+        </childnode>
+        <childnode refid="8751" relation="include">
+        </childnode>
+        <childnode refid="8753" relation="include">
+        </childnode>
+      </node>
+      <node id="8732">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/lazy_alloc.hpp</label>
+        <link refid="static__array_2alloc_2lazy__alloc_8hpp_source"/>
+        <childnode refid="8733" relation="include">
+        </childnode>
+        <childnode refid="8738" relation="include">
+        </childnode>
+        <childnode refid="8730" relation="include">
+        </childnode>
+      </node>
+      <node id="8736">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/unary.hpp</label>
+        <link refid="unary_8hpp_source"/>
+        <childnode refid="8726" relation="include">
+        </childnode>
+      </node>
+      <node id="8673">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value_container.hpp</label>
+        <link refid="ptr_to_value_container.hpp"/>
+        <childnode refid="8674" relation="include">
+        </childnode>
+        <childnode refid="8678" relation="include">
+        </childnode>
+      </node>
+      <node id="8699">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/sub.hpp</label>
+        <link refid="put_2compose_2functor_2sub_8hpp_source"/>
+        <childnode refid="8700" relation="include">
+        </childnode>
+      </node>
+      <node id="8689">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/map.hpp</label>
+        <link refid="map_8hpp_source"/>
+        <childnode refid="8682" relation="include">
+        </childnode>
+        <childnode refid="8683" relation="include">
+        </childnode>
+      </node>
+      <node id="8708">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/sub.hpp</label>
+        <link refid="chain_2aux___2sub_8hpp_source"/>
+        <childnode refid="8709" relation="include">
+        </childnode>
+        <childnode refid="8713" relation="include">
+        </childnode>
+      </node>
+      <node id="8723">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/forward_seq_arg.hpp</label>
+        <link refid="forward__seq__arg_8hpp_source"/>
+        <childnode refid="8721" relation="include">
+        </childnode>
+        <childnode refid="8724" relation="include">
+        </childnode>
+      </node>
+      <node id="8744">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/composer.hpp</label>
+        <link refid="functor_2composer_8hpp_source"/>
+        <childnode refid="8700" relation="include">
+        </childnode>
+        <childnode refid="8699" relation="include">
+        </childnode>
+      </node>
+      <node id="8698">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/generic.hpp</label>
+        <link refid="put_2generic_2generic_8hpp_source"/>
+        <childnode refid="8699" relation="include">
+        </childnode>
+        <childnode refid="8702" relation="include">
+        </childnode>
+      </node>
+      <node id="8756">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp</label>
+        <link refid="new_8hpp_source"/>
+        <childnode refid="8755" relation="include">
+        </childnode>
+      </node>
+      <node id="8743">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/assign_copy.hpp</label>
+        <link refid="fusion_2assign__copy_8hpp_source"/>
+        <childnode refid="8722" relation="include">
+        </childnode>
+        <childnode refid="8744" relation="include">
+        </childnode>
+        <childnode refid="8740" relation="include">
+        </childnode>
+      </node>
+      <node id="8725">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/csv.hpp</label>
+        <link refid="ref_2anon_2csv_2csv_8hpp_source"/>
+        <childnode refid="8726" relation="include">
+        </childnode>
+      </node>
+      <node id="8702">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/put.hpp</label>
+        <link refid="put_8hpp_source"/>
+        <childnode refid="8694" relation="include">
+        </childnode>
+        <childnode refid="8677" relation="include">
+        </childnode>
+      </node>
+      <node id="8700">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/functor.hpp</label>
+        <link refid="put_2compose_2functor_2functor_8hpp_source"/>
+        <childnode refid="8701" relation="include">
+        </childnode>
+      </node>
+      <node id="8674">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/container.hpp</label>
+        <link refid="detail_2type__traits_2container_2container_8hpp_source"/>
+        <childnode refid="8675" relation="include">
+        </childnode>
+      </node>
+      <node id="8731">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/static_array.hpp</label>
+        <link refid="static__array_8hpp_source"/>
+      </node>
+      <node id="8748">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/is_set.hpp</label>
+        <link refid="is__set_8hpp_source"/>
+        <childnode refid="8674" relation="include">
+        </childnode>
+        <childnode refid="8690" relation="include">
+        </childnode>
+      </node>
+      <node id="8703">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/make.hpp</label>
+        <link refid="put_2sub_2make_8hpp_source"/>
+        <childnode refid="8699" relation="include">
+        </childnode>
+        <childnode refid="8704" relation="include">
+        </childnode>
+        <childnode refid="8746" relation="include">
+        </childnode>
+        <childnode refid="8747" relation="include">
+        </childnode>
+      </node>
+      <node id="8676">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/detail.hpp</label>
+        <link refid="detail_8hpp_source"/>
+        <childnode refid="8677" relation="include">
+        </childnode>
+      </node>
+      <node id="8685">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/fifo.hpp</label>
+        <link refid="fifo_8hpp_source"/>
+        <childnode refid="8682" relation="include">
+        </childnode>
+        <childnode refid="8683" relation="include">
+        </childnode>
+      </node>
+      <node id="8705">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/modifier/modifier.hpp</label>
+        <link refid="range_2modifier_2modifier_8hpp_source"/>
+        <childnode refid="8706" relation="include">
+        </childnode>
+      </node>
+      <node id="8733">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/make.hpp</label>
+        <link refid="ref_2anon_2unary_2make_8hpp_source"/>
+        <childnode refid="8734" relation="include">
+        </childnode>
+        <childnode refid="8736" relation="include">
+        </childnode>
+      </node>
+      <node id="8752">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/array.hpp</label>
+        <link refid="array_8hpp_source"/>
+        <childnode refid="8682" relation="include">
+        </childnode>
+        <childnode refid="8683" relation="include">
+        </childnode>
+      </node>
+      <node id="8706">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/adaptor.hpp</label>
+        <link refid="put_2range_2adaptor_8hpp_source"/>
+        <childnode refid="8707" relation="include">
+        </childnode>
+        <childnode refid="8714" relation="include">
+        </childnode>
+      </node>
+      <node id="8738">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/policy.hpp</label>
+        <link refid="fusion_2policy_8hpp_source"/>
+        <childnode refid="8739" relation="include">
+        </childnode>
+        <childnode refid="8740" relation="include">
+        </childnode>
+      </node>
+      <node id="8697">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/make.hpp</label>
+        <link refid="anon_2make_8hpp_source"/>
+        <childnode refid="8695" relation="include">
+        </childnode>
+        <childnode refid="8696" relation="include">
+        </childnode>
+      </node>
+      <node id="8745">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/assign_rebind.hpp</label>
+        <link refid="fusion_2assign__rebind_8hpp_source"/>
+        <childnode refid="8740" relation="include">
+        </childnode>
+      </node>
+      <node id="8717">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/pp.hpp</label>
+        <link refid="pp_8hpp_source"/>
+        <childnode refid="8718" relation="include">
+        </childnode>
+        <childnode refid="8729" relation="include">
+        </childnode>
+      </node>
+      <node id="8711">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/chain.hpp</label>
+        <link refid="chain_8hpp_source"/>
+        <childnode refid="8684" relation="include">
+        </childnode>
+        <childnode refid="8712" relation="include">
+        </childnode>
+        <childnode refid="8677" relation="include">
+        </childnode>
+      </node>
+      <node id="8755">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/functor.hpp</label>
+        <link refid="detail_2functor_2functor_8hpp_source"/>
+        <childnode refid="8676" relation="include">
+        </childnode>
+        <childnode refid="8693" relation="include">
+        </childnode>
+      </node>
+      <node id="8721">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/csv.hpp</label>
+        <link refid="put_2compose_2csv_2csv_8hpp_source"/>
+        <childnode refid="8701" relation="include">
+        </childnode>
+      </node>
+      <node id="8681">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/deduce_check.hpp</label>
+        <link refid="deduce__check_8hpp_source"/>
+        <childnode refid="8682" relation="include">
+        </childnode>
+        <childnode refid="8683" relation="include">
+        </childnode>
+      </node>
+      <node id="8709">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/bitwise_or.hpp</label>
+        <link refid="bitwise__or_8hpp_source"/>
+        <childnode refid="8710" relation="include">
+        </childnode>
+        <childnode refid="8711" relation="include">
+        </childnode>
+      </node>
+      <node id="8683">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/container.hpp</label>
+        <link refid="detail_2checking_2container_8hpp_source"/>
+        <childnode refid="8684" relation="include">
+        </childnode>
+        <childnode refid="8682" relation="include">
+        </childnode>
+      </node>
+      <node id="8690">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/is_associative.hpp</label>
+        <link refid="is__associative_8hpp_source"/>
+        <childnode refid="8674" relation="include">
+        </childnode>
+        <childnode refid="8691" relation="include">
+        </childnode>
+      </node>
+      <node id="8694">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/cont.hpp</label>
+        <link refid="anon_2cont_8hpp_source"/>
+        <childnode refid="8695" relation="include">
+        </childnode>
+        <childnode refid="8696" relation="include">
+        </childnode>
+        <childnode refid="8697" relation="include">
+        </childnode>
+      </node>
+      <node id="8726">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/anon.hpp</label>
+        <link refid="ref_2anon_2anon_8hpp_source"/>
+        <childnode refid="8727" relation="include">
+        </childnode>
+      </node>
+      <node id="8712">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/twin_values.hpp</label>
+        <link refid="chain_2checking_2twin__values_8hpp_source"/>
+      </node>
+      <node id="8729">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/make.hpp</label>
+        <link refid="ref_2anon_2csv_2make_8hpp_source"/>
+        <childnode refid="8718" relation="include">
+        </childnode>
+        <childnode refid="8725" relation="include">
+        </childnode>
+      </node>
+      <node id="8704">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/modifier/put.hpp</label>
+        <link refid="range_2modifier_2put_8hpp_source"/>
+        <childnode refid="8705" relation="include">
+        </childnode>
+      </node>
+      <node id="8675">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/type_traits.hpp</label>
+        <link refid="type__traits_8hpp_source"/>
+        <childnode refid="8676" relation="include">
+        </childnode>
+      </node>
+      <node id="8724">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/sub.hpp</label>
+        <link refid="put_2compose_2csv_2sub_8hpp_source"/>
+        <childnode refid="8721" relation="include">
+        </childnode>
+      </node>
+      <node id="8688">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/is_map.hpp</label>
+        <link refid="is__map_8hpp_source"/>
+        <childnode refid="8681" relation="include">
+        </childnode>
+        <childnode refid="8689" relation="include">
+        </childnode>
+        <childnode refid="8674" relation="include">
+        </childnode>
+        <childnode refid="8690" relation="include">
+        </childnode>
+      </node>
+      <node id="8677">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/v2.hpp</label>
+        <link refid="v2_8hpp_source"/>
+      </node>
+      <node id="8684">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/distinct_values.hpp</label>
+        <link refid="chain_2checking_2distinct__values_8hpp_source"/>
+      </node>
+      <node id="8696">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/csv.hpp</label>
+        <link refid="anon_2csv_8hpp_source"/>
+        <childnode refid="8695" relation="include">
+        </childnode>
+      </node>
+      <node id="8714">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/range.hpp</label>
+        <link refid="put_2range_2range_8hpp_source"/>
+        <childnode refid="8694" relation="include">
+        </childnode>
+        <childnode refid="8702" relation="include">
+        </childnode>
+      </node>
+      <node id="8749">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/is_sorted.hpp</label>
+        <link refid="is__sorted_8hpp_source"/>
+        <childnode refid="8681" relation="include">
+        </childnode>
+        <childnode refid="8750" relation="include">
+        </childnode>
+        <childnode refid="8674" relation="include">
+        </childnode>
+      </node>
+      <node id="8751">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/is_static_array.hpp</label>
+        <link refid="is__static__array_8hpp_source"/>
+        <childnode refid="8752" relation="include">
+        </childnode>
+        <childnode refid="8681" relation="include">
+        </childnode>
+        <childnode refid="8674" relation="include">
+        </childnode>
+        <childnode refid="8691" relation="include">
+        </childnode>
+      </node>
+      <node id="8691">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/deduce.hpp</label>
+        <link refid="put_2modifier_2deduce_8hpp_source"/>
+        <childnode refid="8692" relation="include">
+        </childnode>
+      </node>
+      <node id="8701">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/compose.hpp</label>
+        <link refid="compose_8hpp_source"/>
+        <childnode refid="8702" relation="include">
+        </childnode>
+      </node>
+      <node id="8757">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/has_push.hpp</label>
+        <link refid="has__push_8hpp_source"/>
+        <childnode refid="8674" relation="include">
+        </childnode>
+        <childnode refid="8691" relation="include">
+        </childnode>
+        <childnode refid="8758" relation="include">
+        </childnode>
+      </node>
+      <node id="8678">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/value_container.hpp</label>
+        <link refid="value__container_8hpp_source"/>
+        <childnode refid="8674" relation="include">
+        </childnode>
+        <childnode refid="8679" relation="include">
+        </childnode>
+      </node>
+      <node id="8719">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/assign_copy.hpp</label>
+        <link refid="anon_2csv_2assign__copy_8hpp_source"/>
+        <childnode refid="8720" relation="include">
+        </childnode>
+        <childnode refid="8722" relation="include">
+        </childnode>
+        <childnode refid="8725" relation="include">
+        </childnode>
+      </node>
+      <node id="8742">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/assign_xxx.hpp</label>
+        <link refid="fusion_2assign__xxx_8hpp_source"/>
+        <childnode refid="8743" relation="include">
+        </childnode>
+        <childnode refid="8745" relation="include">
+        </childnode>
+      </node>
+      <node id="8730">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/alloc.hpp</label>
+        <link refid="alloc_8hpp_source"/>
+        <childnode refid="8731" relation="include">
+        </childnode>
+      </node>
+      <node id="8718">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/assign_xxx.hpp</label>
+        <link refid="anon_2csv_2assign__xxx_8hpp_source"/>
+        <childnode refid="8719" relation="include">
+        </childnode>
+        <childnode refid="8728" relation="include">
+        </childnode>
+      </node>
+      <node id="8735">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/assign_copy.hpp</label>
+        <link refid="anon_2unary_2assign__copy_8hpp_source"/>
+        <childnode refid="8736" relation="include">
+        </childnode>
+      </node>
+      <node id="8713">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/result.hpp</label>
+        <link refid="chain_2traits_2result_8hpp_source"/>
+        <childnode refid="8709" relation="include">
+        </childnode>
+        <childnode refid="8710" relation="include">
+        </childnode>
+        <childnode refid="8711" relation="include">
+        </childnode>
+      </node>
+      <node id="8716">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp</label>
+        <link refid="static__array_2alloc_2fast__alloc_8hpp_source"/>
+        <childnode refid="8717" relation="include">
+        </childnode>
+        <childnode refid="8730" relation="include">
+        </childnode>
+      </node>
+      <node id="8727">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/ref.hpp</label>
+        <link refid="ref_8hpp_source"/>
+        <childnode refid="8677" relation="include">
+        </childnode>
+      </node>
+      <node id="8722">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/held.hpp</label>
+        <link refid="held_8hpp_source"/>
+        <childnode refid="8720" relation="include">
+        </childnode>
+        <childnode refid="8721" relation="include">
+        </childnode>
+        <childnode refid="8723" relation="include">
+        </childnode>
+        <childnode refid="8724" relation="include">
+        </childnode>
+      </node>
+      <node id="8734">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/assign_xxx.hpp</label>
+        <link refid="anon_2unary_2assign__xxx_8hpp_source"/>
+        <childnode refid="8735" relation="include">
+        </childnode>
+        <childnode refid="8737" relation="include">
+        </childnode>
+      </node>
+      <node id="8720">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/composer.hpp</label>
+        <link refid="csv_2composer_8hpp_source"/>
+        <childnode refid="8721" relation="include">
+        </childnode>
+      </node>
+      <node id="8687">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/lifo.hpp</label>
+        <link refid="lifo_8hpp_source"/>
+        <childnode refid="8682" relation="include">
+        </childnode>
+        <childnode refid="8683" relation="include">
+        </childnode>
+      </node>
+      <node id="8737">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/assign_rebind.hpp</label>
+        <link refid="anon_2unary_2assign__rebind_8hpp_source"/>
+        <childnode refid="8736" relation="include">
+        </childnode>
+      </node>
+      <node id="8750">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/range.hpp</label>
+        <link refid="detail_2checking_2range_8hpp_source"/>
+        <childnode refid="8712" relation="include">
+        </childnode>
+        <childnode refid="8682" relation="include">
+        </childnode>
+        <childnode refid="8683" relation="include">
+        </childnode>
+      </node>
+      <node id="8693">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/crtp.hpp</label>
+        <link refid="put_2generic_2crtp_8hpp_source"/>
+        <childnode refid="8694" relation="include">
+        </childnode>
+        <childnode refid="8698" relation="include">
+        </childnode>
+        <childnode refid="8703" relation="include">
+        </childnode>
+      </node>
+      <node id="8746">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/csv.hpp</label>
+        <link refid="put_2sub_2csv_8hpp_source"/>
+        <childnode refid="8747" relation="include">
+        </childnode>
+      </node>
+      <node id="8686">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/is_lifo.hpp</label>
+        <link refid="is__lifo_8hpp_source"/>
+        <childnode refid="8681" relation="include">
+        </childnode>
+        <childnode refid="8687" relation="include">
+        </childnode>
+        <childnode refid="8674" relation="include">
+        </childnode>
+      </node>
+      <node id="8710">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/logical_and.hpp</label>
+        <link refid="logical__and_8hpp_source"/>
+        <childnode refid="8711" relation="include">
+        </childnode>
+      </node>
+      <node id="8707">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/convert.hpp</label>
+        <link refid="convert_8hpp_source"/>
+        <childnode refid="8708" relation="include">
+        </childnode>
+        <childnode refid="8714" relation="include">
+        </childnode>
+        <childnode refid="8715" relation="include">
+        </childnode>
+      </node>
+      <node id="8740">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/fusion.hpp</label>
+        <link refid="fusion_8hpp_source"/>
+        <childnode refid="8727" relation="include">
+        </childnode>
+      </node>
+      <node id="8682">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/checking.hpp</label>
+        <link refid="detail_2checking_2checking_8hpp_source"/>
+        <childnode refid="8676" relation="include">
+        </childnode>
+      </node>
+      <node id="8758">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/modifier/deduce.hpp</label>
+        <link refid="put_2range_2modifier_2deduce_8hpp_source"/>
+        <childnode refid="8705" relation="include">
+        </childnode>
+      </node>
+      <node id="8728">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/assign_rebind.hpp</label>
+        <link refid="anon_2csv_2assign__rebind_8hpp_source"/>
+        <childnode refid="8725" relation="include">
+        </childnode>
+      </node>
+      <node id="8680">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/is_fifo.hpp</label>
+        <link refid="is__fifo_8hpp_source"/>
+        <childnode refid="8681" relation="include">
+        </childnode>
+        <childnode refid="8685" relation="include">
+        </childnode>
+        <childnode refid="8674" relation="include">
+        </childnode>
+      </node>
+      <node id="8739">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/container.hpp</label>
+        <link refid="ref_2fusion_2container_8hpp_source"/>
+        <childnode refid="8740" relation="include">
+        </childnode>
+        <childnode refid="8741" relation="include">
+        </childnode>
+      </node>
+      <node id="8753">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/value.hpp</label>
+        <link refid="container_2value_8hpp_source"/>
+        <childnode refid="8754" relation="include">
+        </childnode>
+        <childnode refid="8756" relation="include">
+        </childnode>
+        <childnode refid="8674" relation="include">
+        </childnode>
+        <childnode refid="8757" relation="include">
+        </childnode>
+        <childnode refid="8746" relation="include">
+        </childnode>
+      </node>
+      <node id="8754">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp</label>
+        <link refid="constructor_8hpp_source"/>
+        <childnode refid="8755" relation="include">
+        </childnode>
+      </node>
+      <node id="8715">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp</label>
+        <link refid="static__array_2interface_8hpp_source"/>
+        <childnode refid="8716" relation="include">
+        </childnode>
+        <childnode refid="8732" relation="include">
+        </childnode>
+        <childnode refid="8731" relation="include">
+        </childnode>
+      </node>
+      <node id="8695">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/anon/anon.hpp</label>
+        <link refid="anon_2anon_8hpp_source"/>
+        <childnode refid="8677" relation="include">
+        </childnode>
+      </node>
+      <node id="8692">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/modifier.hpp</label>
+        <link refid="modifier_2modifier_8hpp_source"/>
+        <childnode refid="8693" relation="include">
+        </childnode>
+        <childnode refid="8702" relation="include">
+        </childnode>
+      </node>
+      <node id="8747">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/sub/sub.hpp</label>
+        <link refid="put_2sub_2sub_8hpp_source"/>
+        <childnode refid="8702" relation="include">
+        </childnode>
+      </node>
+      <node id="8741">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/make.hpp</label>
+        <link refid="ref_2fusion_2make_8hpp_source"/>
+        <childnode refid="8717" relation="include">
+        </childnode>
+        <childnode refid="8733" relation="include">
+        </childnode>
+        <childnode refid="8742" relation="include">
+        </childnode>
+        <childnode refid="8740" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__container" prot="public">boost::assign::v2::container_type_traits::ptr_to_value_container</innerclass>
+    <innernamespace refid="namespaceboost">boost</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign">boost::assign</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2">boost::assign::v2</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1container__type__traits">boost::assign::v2::container_type_traits</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"></codeline>
+<codeline lineno="2"><highlight class="comment">//<sp/><sp/>Boost.Assign<sp/>v2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2003-2004<sp/>Thorsten<sp/>Ottosen<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2010<sp/>Erwann<sp/>Rogard<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Use,<sp/>modification<sp/>and<sp/>distribution<sp/>are<sp/>subject<sp/>to<sp/>the<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Boost<sp/>Software<sp/>License,<sp/>Version<sp/>1.0.<sp/>(See<sp/>accompanying<sp/>file<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>LICENSE_1_0.txt<sp/>or<sp/>copy<sp/>at<sp/>http://www.boost.org/LICENSE_1_0.txt)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"></highlight><highlight class="preprocessor">#ifndef<sp/>BOOST_ASSIGN_V2_TYPE_TRAITS_CONTAINER_PTR_TO_VALUE_CONTAINER_ER_2010_HPP</highlight></codeline>
+<codeline lineno="11"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#define<sp/>BOOST_ASSIGN_V2_TYPE_TRAITS_CONTAINER_PTR_TO_VALUE_CONTAINER_ER_2010_HPP</highlight></codeline>
+<codeline lineno="12"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/assign/v2/detail/type_traits/container/is_ptr_container.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">boost{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">assign{</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">v2{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">container_type_traits{</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="20" refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__container" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__container" kindref="compound">ptr_to_value_container</ref>{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value" kindref="compound">ptr_to_value&lt;V&gt;::container_type</ref><sp/>type;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="24"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>container_type_traits</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>v2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>assign</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>boost</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value_container.hpp"/>
+  </compounddef>
+</doxygen>

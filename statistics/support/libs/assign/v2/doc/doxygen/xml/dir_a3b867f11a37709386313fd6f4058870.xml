@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_a3b867f11a37709386313fd6f4058870" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/</compoundname>
+    <innerfile refid="csv_2composer_8hpp">composer.hpp</innerfile>
+    <innerfile refid="put_2compose_2csv_2csv_8hpp">csv.hpp</innerfile>
+    <innerfile refid="forward__seq__arg_8hpp">forward_seq_arg.hpp</innerfile>
+    <innerfile refid="held_8hpp">held.hpp</innerfile>
+    <innerfile refid="put_2compose_2csv_2sub_8hpp">sub.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/csv/"/>
+  </compounddef>
+</doxygen>

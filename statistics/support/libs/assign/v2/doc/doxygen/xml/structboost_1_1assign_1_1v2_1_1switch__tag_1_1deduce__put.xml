@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1switch__tag_1_1deduce__put" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::switch_tag::deduce_put</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/deduce.hpp" line="27" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/deduce.hpp" bodystart="27" bodyend="27"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

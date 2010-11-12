@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1composer__result_1_1apply" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::put_compose_aux::composer_result::apply</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename Args</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1composer__result_1_1apply_1ae1f7e244a84771222851aaba160ac860" prot="public" static="no">
+        <type>boost::mpl::push_back&lt; SeqArgs, Args &gt;::<ref refid="classboost_1_1assign_1_1v2_1_1put__compose__aux_1_1composer" kindref="compound">type</ref></type>
+        <definition>typedef boost::mpl::push_back&lt; SeqArgs, Args &gt;::type boost::assign::v2::put_compose_aux::composer_result&lt; Pars, SeqArgs, enable_pars &gt;::apply&lt; Args &gt;::new_</definition>
+        <argsstring></argsstring>
+        <name>new_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/composer.hpp" line="67" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/composer.hpp" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1composer__result_1_1apply_1ac1546553fa800326acbbfc11c8594730" prot="public" static="no">
+        <type><ref refid="classboost_1_1assign_1_1v2_1_1put__compose__aux_1_1composer" kindref="compound">composer</ref>&lt; Pars, new_ &gt;</type>
+        <definition>typedef composer&lt;Pars, new_&gt; boost::assign::v2::put_compose_aux::composer_result&lt; Pars, SeqArgs, enable_pars &gt;::apply&lt; Args &gt;::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/composer.hpp" line="68" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/composer.hpp" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/composer.hpp" line="63" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/compose/functor/composer.hpp" bodystart="62" bodyend="69"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1composer__result_1_1apply_1ae1f7e244a84771222851aaba160ac860" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_aux::composer_result::apply</scope><name>new_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__compose__aux_1_1composer__result_1_1apply_1ac1546553fa800326acbbfc11c8594730" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_compose_aux::composer_result::apply</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

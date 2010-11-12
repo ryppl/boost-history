@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1checking_1_1chain_1_1distinct__values" kind="namespace">
+    <compoundname>boost::assign::v2::checking::chain::distinct_values</compoundname>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1checking_1_1chain_1_1distinct__values_1ae6c46119e7b836c7660d3273e8d7b19a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::checking::chain::distinct_values::m</definition>
+        <argsstring>(short, int) m(int</argsstring>
+        <name>m</name>
+        <param>
+          <type>short</type>
+        </param>
+        <param>
+          <type>int</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/distinct_values.hpp" line="60"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1checking_1_1chain_1_1distinct__values_1a6d7c17ed3fa1ce622166f2b756ee062e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>long</type>
+        <definition>long boost::assign::v2::checking::chain::distinct_values::m</definition>
+        <argsstring>(float, double) m(double</argsstring>
+        <name>m</name>
+        <param>
+          <type>float</type>
+        </param>
+        <param>
+          <type>double</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/distinct_values.hpp" line="62"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/distinct_values.hpp" line="24"/>
+  </compounddef>
+</doxygen>

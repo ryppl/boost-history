@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::functor_aux::foo</compoundname>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo__bar" prot="public" virt="non-virtual">boost::assign::v2::functor_aux::foo_bar</derivedcompoundref>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo_1a82865395fb3b3799fbe2e1507b66ed22" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int boost::assign::v2::functor_aux::foo::i</definition>
+        <argsstring></argsstring>
+        <name>i</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" line="77" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo_1aadf0b90b6e5fc71538dfd8fb41562473" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::functor_aux::foo::foo</definition>
+        <argsstring>()</argsstring>
+        <name>foo</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" line="80" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" bodystart="79" bodyend="80"/>
+      </memberdef>
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo_1a5dc98119f1c99fa8bcd0531c81fbcc7c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::functor_aux::foo::foo</definition>
+        <argsstring>(int i)</argsstring>
+        <name>foo</name>
+        <param>
+          <type>int</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" line="82" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" bodystart="81" bodyend="82"/>
+      </memberdef>
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo_1a06096ff00e581670dd382955ff600436" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::functor_aux::foo::foo</definition>
+        <argsstring>(int i, int)</argsstring>
+        <name>foo</name>
+        <param>
+          <type>int</type>
+          <declname>i</declname>
+        </param>
+        <param>
+          <type>int</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" line="84" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" bodystart="83" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo_1ab6937b077199837d28b97576338efc8a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::functor_aux::foo::foo</definition>
+        <argsstring>(const char *, int i, int)</argsstring>
+        <name>foo</name>
+        <param>
+          <type>const char *</type>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>i</declname>
+        </param>
+        <param>
+          <type>int</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" line="86" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" bodystart="85" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo_1a9caf4d34e3e7297eab708e4afe6136dd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual boost::assign::v2::functor_aux::foo::~foo</definition>
+        <argsstring>()</argsstring>
+        <name>~foo</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" line="89" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" bodystart="88" bodyend="89"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="368">
+        <label>boost::assign::v2::functor_aux::foo</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo"/>
+      </node>
+      <node id="369">
+        <label>boost::assign::v2::functor_aux::foo_bar</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo__bar"/>
+        <childnode refid="368" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" line="76" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/new.hpp" bodystart="75" bodyend="90"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo_1aadf0b90b6e5fc71538dfd8fb41562473" prot="public" virt="non-virtual"><scope>boost::assign::v2::functor_aux::foo</scope><name>foo</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo_1a5dc98119f1c99fa8bcd0531c81fbcc7c" prot="public" virt="non-virtual"><scope>boost::assign::v2::functor_aux::foo</scope><name>foo</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo_1a06096ff00e581670dd382955ff600436" prot="public" virt="non-virtual"><scope>boost::assign::v2::functor_aux::foo</scope><name>foo</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo_1ab6937b077199837d28b97576338efc8a" prot="public" virt="non-virtual"><scope>boost::assign::v2::functor_aux::foo</scope><name>foo</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo_1a82865395fb3b3799fbe2e1507b66ed22" prot="public" virt="non-virtual"><scope>boost::assign::v2::functor_aux::foo</scope><name>i</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1foo_1a9caf4d34e3e7297eab708e4afe6136dd" prot="public" virt="virtual"><scope>boost::assign::v2::functor_aux::foo</scope><name>~foo</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

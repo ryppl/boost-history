@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_bf423544ef249e89c35e47ed3d941c74" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/</compoundname>
+    <innerfile refid="array_8hpp">array.hpp</innerfile>
+    <innerfile refid="assert_8hpp">assert.hpp</innerfile>
+    <innerfile refid="check__convert_8hpp">check_convert.hpp</innerfile>
+    <innerfile refid="check__equal_8hpp">check_equal.hpp</innerfile>
+    <innerfile refid="detail_2checking_2checking_8hpp">checking.hpp</innerfile>
+    <innerfile refid="constants_8hpp">constants.hpp</innerfile>
+    <innerfile refid="detail_2checking_2container_8hpp">container.hpp</innerfile>
+    <innerfile refid="deduce__check_8hpp">deduce_check.hpp</innerfile>
+    <innerfile refid="fifo_8hpp">fifo.hpp</innerfile>
+    <innerfile refid="detail_2checking_2iterator_8hpp">iterator.hpp</innerfile>
+    <innerfile refid="lifo_8hpp">lifo.hpp</innerfile>
+    <innerfile refid="map_8hpp">map.hpp</innerfile>
+    <innerfile refid="detail_2checking_2range_8hpp">range.hpp</innerfile>
+    <innerfile refid="checking_2relational__op_8hpp">relational_op.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/"/>
+  </compounddef>
+</doxygen>

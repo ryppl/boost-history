@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1functor__aux_1_1deduce__constructor" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::functor_aux::deduce_constructor</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename V</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1functor__aux_1_1deduce__constructor_1a7b529a5c09f0347d838b1229f67c4ea9" prot="public" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1value" kindref="compound">container_type_traits::value</ref>&lt; V &gt;::<ref refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor" kindref="compound">type</ref></type>
+        <definition>typedef container_type_traits::value&lt;V&gt;::type boost::assign::v2::functor_aux::deduce_constructor&lt; V &gt;::value_</definition>
+        <argsstring></argsstring>
+        <name>value_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" line="64" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1functor__aux_1_1deduce__constructor_1ae9306c98d8c6fef3f3328452bb78107d" prot="public" static="no">
+        <type><ref refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor" kindref="compound">functor_aux::constructor</ref>&lt; value_ &gt;</type>
+        <definition>typedef functor_aux::constructor&lt;value_&gt; boost::assign::v2::functor_aux::deduce_constructor&lt; V &gt;::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" line="65" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1functor__aux_1_1deduce__constructor_1aa326f863a61ead88885f6b899e6bb862" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor" kindref="compound">type</ref></type>
+        <definition>static type boost::assign::v2::functor_aux::deduce_constructor&lt; V &gt;::call</definition>
+        <argsstring>()</argsstring>
+        <name>call</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" line="66" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" bodystart="66" bodyend="66"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" line="63" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" bodystart="62" bodyend="67"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1deduce__constructor_1aa326f863a61ead88885f6b899e6bb862" prot="public" virt="non-virtual"><scope>boost::assign::v2::functor_aux::deduce_constructor</scope><name>call</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1deduce__constructor_1ae9306c98d8c6fef3f3328452bb78107d" prot="public" virt="non-virtual"><scope>boost::assign::v2::functor_aux::deduce_constructor</scope><name>type</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1functor__aux_1_1deduce__constructor_1a7b529a5c09f0347d838b1229f67c4ea9" prot="public" virt="non-virtual"><scope>boost::assign::v2::functor_aux::deduce_constructor</scope><name>value_</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1modifier__tag_1_1incr__lookup" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::modifier_tag::incr_lookup</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/incr_lookup.hpp" line="29" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/incr_lookup.hpp" bodystart="29" bodyend="29"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

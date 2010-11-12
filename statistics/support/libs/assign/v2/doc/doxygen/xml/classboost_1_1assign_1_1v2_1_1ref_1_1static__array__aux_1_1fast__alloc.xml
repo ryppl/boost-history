@@ -1,0 +1,229 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc" kind="class" prot="public">
+    <compoundname>boost::assign::v2::ref::static_array_aux::fast_alloc</compoundname>
+    <basecompoundref refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface" prot="public" virt="non-virtual">boost::assign::v2::ref::static_array_aux::interface&lt; N, Tag, T, fast_alloc&lt; N, Tag, T &gt; &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>std::size_t</type>
+        <declname>N</declname>
+        <defname>N</defname>
+      </param>
+      <param>
+        <type>typename Tag</type>
+      </param>
+      <param>
+        <type>typename T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-type">
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1a36ca8cbde0261371d1490b6a5ffff858" prot="private" static="no">
+        <type>Tag</type>
+        <definition>typedef Tag boost::assign::v2::ref::static_array_aux::fast_alloc&lt; N, Tag, T &gt;::assign_tag_</definition>
+        <argsstring></argsstring>
+        <name>assign_tag_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" line="33" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1aee1e600b750c183c1d710ea46f980cda" prot="private" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1wrapper" kindref="compound">ref::wrapper</ref>&lt; assign_tag_, T &gt;</type>
+        <definition>typedef ref::wrapper&lt;assign_tag_,T&gt; boost::assign::v2::ref::static_array_aux::fast_alloc&lt; N, Tag, T &gt;::wrapper_</definition>
+        <argsstring></argsstring>
+        <name>wrapper_</name>
+        <reimplements refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a92e8e47f5f115227422557a7685896d7">wrapper_</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" line="34" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1a075a93c76e61ad88d8c96a9bf5599588" prot="private" static="no">
+        <type>boost::array&lt; <ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1wrapper" kindref="compound">wrapper_</ref>, N &gt;</type>
+        <definition>typedef boost::array&lt;wrapper_,N&gt; boost::assign::v2::ref::static_array_aux::fast_alloc&lt; N, Tag, T &gt;::array_</definition>
+        <argsstring></argsstring>
+        <name>array_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" line="35" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1a16fee6bd47f9c0925ef47807322cc3f4" prot="protected" static="no" mutable="yes">
+        <type>array_</type>
+        <definition>array_ boost::assign::v2::ref::static_array_aux::fast_alloc&lt; N, Tag, T &gt;::array</definition>
+        <argsstring></argsstring>
+        <name>array</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" line="58" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1a57bbad0461b5d7a1a65f16adf7a9b302" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::ref::static_array_aux::fast_alloc&lt; N, Tag, T &gt;::fast_alloc</definition>
+        <argsstring>()</argsstring>
+        <name>fast_alloc</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" line="39" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" bodystart="39" bodyend="39"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1a626a775e76a791734f33e1412640ee66" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename L</type>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>boost::assign::v2::ref::static_array_aux::fast_alloc&lt; N, Tag, T &gt;::fast_alloc</definition>
+        <argsstring>(const L &amp;l)</argsstring>
+        <name>fast_alloc</name>
+        <param>
+          <type>const L &amp;</type>
+          <declname>l</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" line="42" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" bodystart="42" bodyend="47"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1a6791fe5f47a20d09337055b4f4e1b74d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>array_ &amp;</type>
+        <definition>array_&amp; boost::assign::v2::ref::static_array_aux::fast_alloc&lt; N, Tag, T &gt;::impl</definition>
+        <argsstring>()</argsstring>
+        <name>impl</name>
+        <reimplements refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a9923fac5fc74908bed04121acb459263">impl</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" line="49" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" bodystart="49" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1af130d59087bd09ac6990d3b6e6e2f423" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>array_ const &amp;</type>
+        <definition>array_ const&amp; boost::assign::v2::ref::static_array_aux::fast_alloc&lt; N, Tag, T &gt;::impl</definition>
+        <argsstring>() const </argsstring>
+        <name>impl</name>
+        <reimplements refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a70e079a9aa0402262297640566f41a1c">impl</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" line="53" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" bodystart="53" bodyend="55"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="360">
+        <label>boost::assign::v2::ref::static_array_aux::fast_alloc&lt; N, Tag, T &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc"/>
+        <childnode refid="361" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="361">
+        <label>boost::assign::v2::ref::static_array_aux::interface&lt; N, Tag, T, fast_alloc&lt; N, Tag, T &gt; &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface"/>
+        <childnode refid="362" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="362">
+        <label>boost::assign::v2::relational_op_aux::crtp&lt; interface&lt; N, Tag, T, fast_alloc&lt; N, Tag, T &gt; &gt; &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1relational__op__aux_1_1crtp"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="363">
+        <label>boost::assign::v2::ref::static_array_aux::fast_alloc&lt; N, Tag, T &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc"/>
+        <childnode refid="364" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="364">
+        <label>boost::assign::v2::ref::static_array_aux::interface&lt; N, Tag, T, fast_alloc&lt; N, Tag, T &gt; &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface"/>
+        <childnode refid="365" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="365">
+        <label>boost::assign::v2::relational_op_aux::crtp&lt; interface&lt; N, Tag, T, fast_alloc&lt; N, Tag, T &gt; &gt; &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1relational__op__aux_1_1crtp"/>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" line="31" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp" bodystart="27" bodyend="60"/>
+    <listofallmembers>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1a16fee6bd47f9c0925ef47807322cc3f4" prot="protected" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>array</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1a075a93c76e61ad88d8c96a9bf5599588" prot="private" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>array_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1afe6a1ec2c0b9756178673cb0ed542563" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>assign</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a5febfd4249331afeff7df58e8f52e015" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>assign</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1ac44c2d3f50267e9b0fb0c9a73d78080e" prot="protected" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>assign_impl</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1a36ca8cbde0261371d1490b6a5ffff858" prot="private" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>assign_tag_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a925d4b50f7fe6293daf23c9045db5daa" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>back</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a627ae13bfb2c1862d81db8805a341e16" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>back</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a6c20c4f5096c604d68bc2c824ef06cda" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>begin</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a5ab32435ab78bfa4619e8cfcb7905dbe" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>begin</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1ad58b36417ce6a55a7b021bb2435e2e93" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>BOOST_STATIC_CONSTANT</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a3992ddd1bfde93fab8d83487d869fbd2" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>const_iterator</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a70053a33d096efb4e689cdabeda021b1" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>const_reference</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1relational__op__aux_1_1crtp_1a15a823411135acf4876b72c60c8c363b" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>derived</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a7de6c7e8e8521fc49571704f8fc2354e" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>difference_type</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a7e2505d458b383e7a71b8ed45331d419" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>empty</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1af89f91039e8e2819459090a7f6a91256" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>end</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a03238d668c3e158d4cb422dca2d1d112" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>end</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1afbe34dff6c1903df3879de3fd4ffabdb" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>equal_to</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a484548538930b82ed79e6204c2d90c78" prot="protected" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>false_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1a57bbad0461b5d7a1a65f16adf7a9b302" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>fast_alloc</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1a626a775e76a791734f33e1412640ee66" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>fast_alloc</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1ad72fc282fd47d02fa1581f9daaf4457f" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>front</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1acb0a3aaf6b89c45cc852883f19e6c79a" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>front</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a296b4bb660149b281038f486ca232bef" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>get_wrapper</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1acf488d043b7bf9256471235e9418c075" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>get_wrapper</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1a6791fe5f47a20d09337055b4f4e1b74d" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>impl</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1af130d59087bd09ac6990d3b6e6e2f423" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>impl</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1aac7a8a03e995d3f4bece0194ae26e28d" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>iterator</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1ad59844555a9c23ad029e9126b5312220" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>less_than</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1acf5e312410cb3a5ade5187b51e410ca1" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>operator[]</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1adb880aba6173a6be1a47a3db6838dfa3" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>operator[]</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a65fc102c086aadf21abf6028da7e67d0" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>reference</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a94544e8654ab2aa1067e7aeabe586bcd" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>size</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1af226150d8ad187f9913a7397f40216fe" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>size_type</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a3342b2d379e66ff0c8c561416d3a2e81" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>swap</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a68a218e864409098042f6a500b46a97d" prot="protected" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>swap_impl</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1adfac998a98c85294c1a4b60ec2190783" prot="protected" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>swap_impl</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a01c2d510d9499dbdae9f197e7d3360c1" prot="protected" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>true_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a760153526a9abf66b6989f2fecea9ab2" prot="protected" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>unwrap</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1a3d2ada6aa20dbbd03f733d3171e364f6" prot="protected" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>unwrap</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1ac42859540e886707d3d3b3a7f1f908ff" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>value_type</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1fast__alloc_1aee1e600b750c183c1d710ea46f980cda" prot="private" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>wrapper_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface_1ad2a554426ba36d6a353543ef04a54229" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::fast_alloc</scope><name>wrapper_type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

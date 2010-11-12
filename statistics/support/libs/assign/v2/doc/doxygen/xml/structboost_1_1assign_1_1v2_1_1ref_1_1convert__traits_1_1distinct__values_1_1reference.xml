@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1distinct__values_1_1reference" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::ref::convert_traits::distinct_values::reference</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1add__const" prot="public" virt="non-virtual">boost::assign::v2::ref::convert_traits::add_const&lt; distinct_values::value&lt; V1, V2 &gt;::type, or_const &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename V1</type>
+      </param>
+      <param>
+        <type>typename V2</type>
+      </param>
+      <param>
+        <type>bool</type>
+        <declname>or_const</declname>
+        <defname>or_const</defname>
+      </param>
+      <param>
+        <type>bool</type>
+        <declname>and_ref</declname>
+        <defname>and_ref</defname>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="745">
+        <label>boost::mpl::eval_if_c&lt; or_const, boost::add_const&lt;distinct_values::value&lt; V1, V2 &gt;::type &gt;, boost::mpl::identity&lt;distinct_values::value&lt; V1, V2 &gt;::type &gt; &gt;</label>
+        <link refid="classboost_1_1mpl_1_1eval__if__c"/>
+      </node>
+      <node id="743">
+        <label>boost::assign::v2::ref::convert_traits::distinct_values::reference&lt; V1, V2, or_const, and_ref &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1distinct__values_1_1reference"/>
+        <childnode refid="744" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="744">
+        <label>boost::assign::v2::ref::convert_traits::add_const&lt; distinct_values::value&lt; V1, V2 &gt;::type, or_const &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1add__const"/>
+        <childnode refid="745" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="748">
+        <label>boost::mpl::eval_if_c&lt; or_const, boost::add_const&lt;distinct_values::value&lt; V1, V2 &gt;::type &gt;, boost::mpl::identity&lt;distinct_values::value&lt; V1, V2 &gt;::type &gt; &gt;</label>
+        <link refid="classboost_1_1mpl_1_1eval__if__c"/>
+      </node>
+      <node id="746">
+        <label>boost::assign::v2::ref::convert_traits::distinct_values::reference&lt; V1, V2, or_const, and_ref &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1distinct__values_1_1reference"/>
+        <childnode refid="747" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="747">
+        <label>boost::assign::v2::ref::convert_traits::add_const&lt; distinct_values::value&lt; V1, V2 &gt;::type, or_const &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1add__const"/>
+        <childnode refid="748" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/distinct_values.hpp" line="61" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/distinct_values.hpp" bodystart="58" bodyend="61"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

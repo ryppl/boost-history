@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1ref_1_1assign__copy" kind="namespace">
+    <compoundname>boost::assign::v2::ref::assign_copy</compoundname>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="namespaceboost_1_1assign_1_1v2_1_1ref_1_1assign__copy_1af02afb81f9be3fa154ea48c78eee46d8" prot="public" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1assign__tag_1_1copy" kindref="compound">assign_tag::copy</ref></type>
+        <definition>typedef assign_tag::copy boost::assign::v2::ref::assign_copy::assign_tag_</definition>
+        <argsstring></argsstring>
+        <name>assign_tag_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/wrapper/copy.hpp" line="25" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/wrapper/copy.hpp" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/wrapper/copy.hpp" line="25"/>
+  </compounddef>
+</doxygen>

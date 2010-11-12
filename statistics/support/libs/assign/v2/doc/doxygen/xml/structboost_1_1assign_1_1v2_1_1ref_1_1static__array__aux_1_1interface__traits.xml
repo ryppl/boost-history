@@ -1,0 +1,196 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::ref::static_array_aux::interface_traits</compoundname>
+    <templateparamlist>
+      <param>
+        <type>std::size_t</type>
+        <declname>N</declname>
+        <defname>N</defname>
+      </param>
+      <param>
+        <type>typename Tag</type>
+      </param>
+      <param>
+        <type>typename T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a92ce76ac6c854dbfd0431e4840448a1d" prot="public" static="no">
+        <type>Tag</type>
+        <definition>typedef Tag boost::assign::v2::ref::static_array_aux::interface_traits&lt; N, Tag, T &gt;::assign_tag_</definition>
+        <argsstring></argsstring>
+        <name>assign_tag_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" line="42" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a611baaf1d2f2d3fe772488826fe4cf38" prot="public" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1wrapper" kindref="compound">ref::wrapper</ref>&lt; assign_tag_, T &gt;</type>
+        <definition>typedef ref::wrapper&lt;assign_tag_,T&gt; boost::assign::v2::ref::static_array_aux::interface_traits&lt; N, Tag, T &gt;::wrapper_</definition>
+        <argsstring></argsstring>
+        <name>wrapper_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" line="43" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a5bf73127cf00d1ed8449f6640673e0cb" prot="public" static="no">
+        <type>boost::array&lt; <ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1wrapper" kindref="compound">wrapper_</ref>, N &gt;</type>
+        <definition>typedef boost::array&lt;wrapper_,N&gt; boost::assign::v2::ref::static_array_aux::interface_traits&lt; N, Tag, T &gt;::impl_</definition>
+        <argsstring></argsstring>
+        <name>impl_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" line="44" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1ab2dd427c76679ef49b4a0fb9c8fafc4b" prot="public" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1unwrap__range" kindref="compound">ref::result_of::unwrap_range</ref>&lt; impl_ &gt;::type</type>
+        <definition>typedef ref::result_of::unwrap_range&lt;impl_&gt;::type boost::assign::v2::ref::static_array_aux::interface_traits&lt; N, Tag, T &gt;::range_</definition>
+        <argsstring></argsstring>
+        <name>range_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" line="45" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a1fe1b91a5fa92a3a77a03036817c20ba" prot="public" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1unwrap__range" kindref="compound">ref::result_of::unwrap_range</ref>&lt; impl_ const  &gt;::type</type>
+        <definition>typedef ref::result_of::unwrap_range&lt; impl_ const&gt;::type boost::assign::v2::ref::static_array_aux::interface_traits&lt; N, Tag, T &gt;::range_c_</definition>
+        <argsstring></argsstring>
+        <name>range_c_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" line="47" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a551c6878c32fed06182b4a4a39ec9355" prot="public" static="no">
+        <type>boost::unwrap_reference&lt; T &gt;::type</type>
+        <definition>typedef boost::unwrap_reference&lt;T&gt;::type boost::assign::v2::ref::static_array_aux::interface_traits&lt; N, Tag, T &gt;::value_type</definition>
+        <argsstring></argsstring>
+        <name>value_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" line="49" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1aba67431f3d5df0732640e246138081c1" prot="public" static="no">
+        <type>boost::add_reference&lt; value_type &gt;::type</type>
+        <definition>typedef boost::add_reference&lt;value_type&gt;::type boost::assign::v2::ref::static_array_aux::interface_traits&lt; N, Tag, T &gt;::reference</definition>
+        <argsstring></argsstring>
+        <name>reference</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" line="50" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a1c537131188f50f9702edf85ed4a191d" prot="public" static="no">
+        <type>boost::call_traits&lt; reference &gt;::const_reference</type>
+        <definition>typedef boost::call_traits&lt;reference&gt;::const_reference boost::assign::v2::ref::static_array_aux::interface_traits&lt; N, Tag, T &gt;::const_reference</definition>
+        <argsstring></argsstring>
+        <name>const_reference</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" line="52" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a4d61a2296ecb2876c80f66b052c9f3be" prot="public" static="no">
+        <type>boost::range_iterator&lt; range_ &gt;::type</type>
+        <definition>typedef boost::range_iterator&lt;range_&gt;::type boost::assign::v2::ref::static_array_aux::interface_traits&lt; N, Tag, T &gt;::iterator</definition>
+        <argsstring></argsstring>
+        <name>iterator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" line="53" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1af7a7aeebb22e963bdd42a089769a8ca7" prot="public" static="no">
+        <type>boost::range_iterator&lt; range_c_ &gt;::type</type>
+        <definition>typedef boost::range_iterator&lt;range_c_&gt;::type boost::assign::v2::ref::static_array_aux::interface_traits&lt; N, Tag, T &gt;::const_iterator</definition>
+        <argsstring></argsstring>
+        <name>const_iterator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" line="54" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a9687b44c2b1dc2e3d88c83c82a3d105b" prot="public" static="no">
+        <type>boost::range_size&lt; impl_ &gt;::type</type>
+        <definition>typedef boost::range_size&lt;impl_&gt;::type boost::assign::v2::ref::static_array_aux::interface_traits&lt; N, Tag, T &gt;::size_type</definition>
+        <argsstring></argsstring>
+        <name>size_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" line="57" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a1c0863b2dda9b01c6b61c44a9b2101fb" prot="public" static="no">
+        <type>boost::range_difference&lt; range_ &gt;::type</type>
+        <definition>typedef boost::range_difference&lt;range_&gt;::type boost::assign::v2::ref::static_array_aux::interface_traits&lt; N, Tag, T &gt;::difference_type</definition>
+        <argsstring></argsstring>
+        <name>difference_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" line="62" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" line="40" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/interface.hpp" bodystart="40" bodyend="64"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a92ce76ac6c854dbfd0431e4840448a1d" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::interface_traits</scope><name>assign_tag_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1af7a7aeebb22e963bdd42a089769a8ca7" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::interface_traits</scope><name>const_iterator</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a1c537131188f50f9702edf85ed4a191d" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::interface_traits</scope><name>const_reference</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a1c0863b2dda9b01c6b61c44a9b2101fb" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::interface_traits</scope><name>difference_type</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a5bf73127cf00d1ed8449f6640673e0cb" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::interface_traits</scope><name>impl_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a4d61a2296ecb2876c80f66b052c9f3be" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::interface_traits</scope><name>iterator</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1ab2dd427c76679ef49b4a0fb9c8fafc4b" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::interface_traits</scope><name>range_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a1fe1b91a5fa92a3a77a03036817c20ba" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::interface_traits</scope><name>range_c_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1aba67431f3d5df0732640e246138081c1" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::interface_traits</scope><name>reference</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a9687b44c2b1dc2e3d88c83c82a3d105b" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::interface_traits</scope><name>size_type</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a551c6878c32fed06182b4a4a39ec9355" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::interface_traits</scope><name>value_type</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1interface__traits_1a611baaf1d2f2d3fe772488826fe4cf38" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::static_array_aux::interface_traits</scope><name>wrapper_</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

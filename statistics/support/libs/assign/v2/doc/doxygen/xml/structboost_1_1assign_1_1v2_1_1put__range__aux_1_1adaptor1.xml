@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1put__range__aux_1_1adaptor1" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::put_range_aux::adaptor1</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>From</declname>
+        <defname>From</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structboost_1_1assign_1_1v2_1_1put__range__aux_1_1adaptor1_1ab8717da0448f5e8871cfb29c9b037d09" prot="public" static="no" mutable="yes">
+        <type>From const &amp;</type>
+        <definition>From const&amp; boost::assign::v2::put_range_aux::adaptor1&lt; From &gt;::value</definition>
+        <argsstring></argsstring>
+        <name>value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/adaptor.hpp" line="23" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/adaptor.hpp" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1put__range__aux_1_1adaptor1_1a5559ac7cebb82c91668f41f4dee8d090" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::put_range_aux::adaptor1&lt; From &gt;::adaptor1</definition>
+        <argsstring>(From const &amp;from)</argsstring>
+        <name>adaptor1</name>
+        <param>
+          <type>From const &amp;</type>
+          <declname>from</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/adaptor.hpp" line="22" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/adaptor.hpp" bodystart="22" bodyend="22"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1put__range__aux_1_1adaptor1_1ae7d9d60eaf1160b120a6d958246a7d4a" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::put_range_aux::adaptor1&lt; From &gt;::adaptor1</definition>
+        <argsstring>()</argsstring>
+        <name>adaptor1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/adaptor.hpp" line="25"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/adaptor.hpp" line="21" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/adaptor.hpp" bodystart="20" bodyend="26"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__range__aux_1_1adaptor1_1a5559ac7cebb82c91668f41f4dee8d090" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_range_aux::adaptor1</scope><name>adaptor1</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__range__aux_1_1adaptor1_1ae7d9d60eaf1160b120a6d958246a7d4a" prot="private" virt="non-virtual"><scope>boost::assign::v2::put_range_aux::adaptor1</scope><name>adaptor1</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1put__range__aux_1_1adaptor1_1ab8717da0448f5e8871cfb29c9b037d09" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_range_aux::adaptor1</scope><name>value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

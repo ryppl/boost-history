@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1policy_3_01alloc__tag_1_1lazy__alloc_01_4_1_1apply" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::ref::fusion_aux::policy&lt; alloc_tag::lazy_alloc &gt;::apply</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename N</type>
+      </param>
+      <param>
+        <type>typename L</type>
+      </param>
+      <param>
+        <type>typename Tag1</type>
+      </param>
+      <param>
+        <type>typename T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1policy_3_01alloc__tag_1_1lazy__alloc_01_4_1_1apply_1a0f93b268f4092e1fe692681e5662761c" prot="public" static="no">
+        <type>alloc_tag::lazy_alloc</type>
+        <definition>typedef alloc_tag::lazy_alloc boost::assign::v2::ref::fusion_aux::policy&lt; alloc_tag::lazy_alloc &gt;::apply&lt; N, L, Tag1, T &gt;::tag2_</definition>
+        <argsstring></argsstring>
+        <name>tag2_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/policy.hpp" line="39" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/policy.hpp" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1policy_3_01alloc__tag_1_1lazy__alloc_01_4_1_1apply_1a0ba2dd6a7f3b4699ff937906db64e165" prot="public" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1most__const" kindref="compound">fusion_aux::most_const</ref>&lt; L, T &gt;::<ref refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1lazy__alloc" kindref="compound">type</ref></type>
+        <definition>typedef fusion_aux::most_const&lt;L, T&gt;::type boost::assign::v2::ref::fusion_aux::policy&lt; alloc_tag::lazy_alloc &gt;::apply&lt; N, L, Tag1, T &gt;::most_c_</definition>
+        <argsstring></argsstring>
+        <name>most_c_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/policy.hpp" line="40" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/policy.hpp" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1policy_3_01alloc__tag_1_1lazy__alloc_01_4_1_1apply_1a2d2f601ac5e96f0ec59228a943c3e018" prot="public" static="no">
+        <type><ref refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1container" kindref="compound">fusion_aux::container</ref>&lt; N::value, L, Tag1, tag2_, T &gt;</type>
+        <definition>typedef fusion_aux::container&lt; N::value, L, Tag1, tag2_, T &gt; boost::assign::v2::ref::fusion_aux::policy&lt; alloc_tag::lazy_alloc &gt;::apply&lt; N, L, Tag1, T &gt;::derived_</definition>
+        <argsstring></argsstring>
+        <name>derived_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/policy.hpp" line="47" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/policy.hpp" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1policy_3_01alloc__tag_1_1lazy__alloc_01_4_1_1apply_1abc78bbc1209affe1b44d690bb475e650" prot="public" static="no">
+        <type><ref refid="classboost_1_1assign_1_1v2_1_1ref_1_1static__array__aux_1_1lazy__alloc" kindref="compound">static_array_aux::lazy_alloc</ref>&lt; N::value, Tag1, most_c_, <ref refid="classboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1container" kindref="compound">derived_</ref> &gt;</type>
+        <definition>typedef static_array_aux::lazy_alloc&lt; N::value, Tag1, most_c_, derived_ &gt; boost::assign::v2::ref::fusion_aux::policy&lt; alloc_tag::lazy_alloc &gt;::apply&lt; N, L, Tag1, T &gt;::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/policy.hpp" line="53" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/policy.hpp" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/policy.hpp" line="38" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/fusion/policy.hpp" bodystart="37" bodyend="54"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1policy_3_01alloc__tag_1_1lazy__alloc_01_4_1_1apply_1a2d2f601ac5e96f0ec59228a943c3e018" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_aux::policy&lt; alloc_tag::lazy_alloc &gt;::apply</scope><name>derived_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1policy_3_01alloc__tag_1_1lazy__alloc_01_4_1_1apply_1a0ba2dd6a7f3b4699ff937906db64e165" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_aux::policy&lt; alloc_tag::lazy_alloc &gt;::apply</scope><name>most_c_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1policy_3_01alloc__tag_1_1lazy__alloc_01_4_1_1apply_1a0f93b268f4092e1fe692681e5662761c" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_aux::policy&lt; alloc_tag::lazy_alloc &gt;::apply</scope><name>tag2_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1fusion__aux_1_1policy_3_01alloc__tag_1_1lazy__alloc_01_4_1_1apply_1abc78bbc1209affe1b44d690bb475e650" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::fusion_aux::policy&lt; alloc_tag::lazy_alloc &gt;::apply</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

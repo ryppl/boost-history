@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1checking_1_1chain_1_1twin__values" kind="namespace">
+    <compoundname>boost::assign::v2::checking::chain::twin_values</compoundname>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1checking_1_1chain_1_1twin__values_1a3077c7bfaf271680e5c24dbb3806d421" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::checking::chain::twin_values::do_check</definition>
+        <argsstring>()</argsstring>
+        <name>do_check</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/twin_values.hpp" line="78" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/twin_values.hpp" bodystart="77" bodyend="167"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/twin_values.hpp" line="27"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4" kind="class" prot="public">
+    <compoundname>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1ref_1_1wrapper" prot="private" virt="non-virtual">boost::assign::v2::ref::wrapper&lt; v2::ref::assign_tag::copy, std::size_t const  &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename Tag</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-type">
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4_1ae54690a0723c2c803d701358ac26b0f8" prot="private" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier" kindref="compound">modifier</ref>&lt; Tag &gt;</type>
+        <definition>typedef modifier&lt;Tag&gt; boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;::inner_</definition>
+        <argsstring></argsstring>
+        <name>inner_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" line="34" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4_1ada95469edbcaa4eef2258ef2ab552a28" prot="private" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1wrapper" kindref="compound">v2::ref::wrapper</ref>&lt; <ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1assign__tag_1_1copy" kindref="compound">v2::ref::assign_tag::copy</ref>, std::size_t const  &gt;</type>
+        <definition>typedef v2::ref::wrapper&lt; v2::ref::assign_tag::copy, std::size_t const &gt; boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;::super_t</definition>
+        <argsstring></argsstring>
+        <name>super_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" line="38" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4_1a32c720cf9ca3213849adcb2530205f8f" prot="public" static="no">
+        <type>std::size_t</type>
+        <definition>typedef std::size_t boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;::size_type</definition>
+        <argsstring></argsstring>
+        <name>size_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" line="42" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4_1a3aa2d9e2a1052c02a3c089e4a0ab80d6" prot="private" static="no" mutable="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1modifier" kindref="compound">inner_</ref></type>
+        <definition>inner_ boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;::inner</definition>
+        <argsstring></argsstring>
+        <name>inner</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" line="54" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4_1a9e5bbc0a3d27c93cab2070650ce17e4d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;::modifier</definition>
+        <argsstring>()</argsstring>
+        <name>modifier</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" line="44" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" bodystart="44" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4_1a365ba0b94813787fba2f151fdaa4da86" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;::modifier</definition>
+        <argsstring>(size_type const &amp;n)</argsstring>
+        <name>modifier</name>
+        <param>
+          <type>size_type const &amp;</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" line="45" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" bodystart="45" bodyend="45"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4_1a495562dda09efecb6049991fe7e1bdc6" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename V</type>
+          </param>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;::impl</definition>
+        <argsstring>(V &amp;v, T &amp;t) const </argsstring>
+        <name>impl</name>
+        <param>
+          <type>V &amp;</type>
+          <declname>v</declname>
+        </param>
+        <param>
+          <type>T &amp;</type>
+          <declname>t</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" line="48" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" bodystart="48" bodyend="51"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="616">
+        <label>boost::assign::v2::ref::wrapper&lt; v2::ref::assign_tag::copy, std::size_t const  &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1wrapper"/>
+      </node>
+      <node id="615">
+        <label>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4"/>
+        <childnode refid="616" relation="private-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="618">
+        <label>boost::assign::v2::ref::wrapper&lt; v2::ref::assign_tag::copy, std::size_t const  &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1wrapper"/>
+      </node>
+      <node id="617">
+        <label>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4"/>
+        <childnode refid="618" relation="private-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" line="33" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/modifier/repeat.hpp" bodystart="29" bodyend="55"/>
+    <listofallmembers>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4_1a495562dda09efecb6049991fe7e1bdc6" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;</scope><name>impl</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4_1a3aa2d9e2a1052c02a3c089e4a0ab80d6" prot="private" virt="non-virtual"><scope>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;</scope><name>inner</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4_1ae54690a0723c2c803d701358ac26b0f8" prot="private" virt="non-virtual"><scope>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;</scope><name>inner_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4_1a9e5bbc0a3d27c93cab2070650ce17e4d" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;</scope><name>modifier</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4_1a365ba0b94813787fba2f151fdaa4da86" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;</scope><name>modifier</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4_1a32c720cf9ca3213849adcb2530205f8f" prot="public" virt="non-virtual"><scope>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;</scope><name>size_type</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1modifier_3_01v2_1_1modifier__tag_1_1repeat_3_01_tag_01_4_01_4_1ada95469edbcaa4eef2258ef2ab552a28" prot="private" virt="non-virtual"><scope>boost::assign::v2::put_aux::modifier&lt; v2::modifier_tag::repeat&lt; Tag &gt; &gt;</scope><name>super_t</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

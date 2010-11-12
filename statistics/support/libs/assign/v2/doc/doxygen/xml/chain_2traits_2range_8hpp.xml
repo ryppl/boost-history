@@ -1,0 +1,310 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="chain_2traits_2range_8hpp" kind="file">
+    <compoundname>range.hpp</compoundname>
+    <includes local="no">boost/concept/assert.hpp</includes>
+    <includes local="no">boost/range/iterator_range.hpp</includes>
+    <includes local="no">boost/range/iterator.hpp</includes>
+    <includes refid="chain_2traits_2iterator_8hpp" local="no">boost/assign/v2/chain/traits/iterator.hpp</includes>
+    <includedby refid="chain_2traits_2result_8hpp" local="no">/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/result.hpp</includedby>
+    <incdepgraph>
+      <node id="4076">
+        <label>boost/type_traits/remove_const.hpp</label>
+      </node>
+      <node id="4061">
+        <label>boost/mpl/apply.hpp</label>
+      </node>
+      <node id="4074">
+        <label>boost/type_traits/is_reference.hpp</label>
+      </node>
+      <node id="4077">
+        <label>boost/assign/v2/ref/detail/convert_traits/twin_values.hpp</label>
+        <link refid="ref_2detail_2convert__traits_2twin__values_8hpp_source"/>
+        <childnode refid="4078" relation="include">
+        </childnode>
+        <childnode refid="4079" relation="include">
+        </childnode>
+        <childnode refid="4080" relation="include">
+        </childnode>
+        <childnode refid="4081" relation="include">
+        </childnode>
+      </node>
+      <node id="4059">
+        <label>boost/range/iterator.hpp</label>
+      </node>
+      <node id="4073">
+        <label>boost/type_traits/is_const.hpp</label>
+      </node>
+      <node id="4071">
+        <label>boost/static_assert.hpp</label>
+      </node>
+      <node id="4082">
+        <label>boost/type_traits/add_const.hpp</label>
+      </node>
+      <node id="4062">
+        <label>boost/type_traits/remove_reference.hpp</label>
+      </node>
+      <node id="4081">
+        <label>boost/assign/v2/ref/detail/convert_traits/add_const.hpp</label>
+        <link refid="add__const_8hpp_source"/>
+        <childnode refid="4078" relation="include">
+        </childnode>
+        <childnode refid="4079" relation="include">
+        </childnode>
+        <childnode refid="4082" relation="include">
+        </childnode>
+      </node>
+      <node id="4065">
+        <label>boost/range/detail/demote_iterator_traversal_tag.hpp</label>
+      </node>
+      <node id="4078">
+        <label>boost/mpl/eval_if.hpp</label>
+      </node>
+      <node id="4067">
+        <label>boost/assign/v2/ref/detail/convert_traits/result.hpp</label>
+        <link refid="ref_2detail_2convert__traits_2result_8hpp_source"/>
+        <childnode refid="4068" relation="include">
+        </childnode>
+        <childnode refid="4069" relation="include">
+        </childnode>
+        <childnode refid="4070" relation="include">
+        </childnode>
+        <childnode refid="4071" relation="include">
+        </childnode>
+        <childnode refid="4072" relation="include">
+        </childnode>
+        <childnode refid="4073" relation="include">
+        </childnode>
+        <childnode refid="4074" relation="include">
+        </childnode>
+        <childnode refid="4075" relation="include">
+        </childnode>
+        <childnode refid="4062" relation="include">
+        </childnode>
+        <childnode refid="4076" relation="include">
+        </childnode>
+        <childnode refid="4077" relation="include">
+        </childnode>
+        <childnode refid="4083" relation="include">
+        </childnode>
+      </node>
+      <node id="4085">
+        <label>boost/type_traits/is_arithmetic.hpp</label>
+      </node>
+      <node id="4084">
+        <label>boost/numeric/conversion/conversion_traits.hpp</label>
+      </node>
+      <node id="4066">
+        <label>boost/assign/v2/detail/type_traits/meta_convert.hpp</label>
+        <link refid="meta__convert_8hpp_source"/>
+        <childnode refid="4067" relation="include">
+        </childnode>
+      </node>
+      <node id="4075">
+        <label>boost/type_traits/is_convertible.hpp</label>
+      </node>
+      <node id="4079">
+        <label>boost/mpl/identity.hpp</label>
+      </node>
+      <node id="4060">
+        <label>boost/assign/v2/chain/traits/iterator.hpp</label>
+        <link refid="chain_2traits_2iterator_8hpp_source"/>
+        <childnode refid="4061" relation="include">
+        </childnode>
+        <childnode refid="4062" relation="include">
+        </childnode>
+        <childnode refid="4063" relation="include">
+        </childnode>
+        <childnode refid="4064" relation="include">
+        </childnode>
+        <childnode refid="4065" relation="include">
+        </childnode>
+        <childnode refid="4066" relation="include">
+        </childnode>
+      </node>
+      <node id="4058">
+        <label>boost/range/iterator_range.hpp</label>
+      </node>
+      <node id="4070">
+        <label>boost/mpl/or.hpp</label>
+      </node>
+      <node id="4057">
+        <label>boost/concept/assert.hpp</label>
+      </node>
+      <node id="4068">
+        <label>boost/config.hpp</label>
+      </node>
+      <node id="4056">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/range.hpp</label>
+        <link refid="chain/traits/range.hpp"/>
+        <childnode refid="4057" relation="include">
+        </childnode>
+        <childnode refid="4058" relation="include">
+        </childnode>
+        <childnode refid="4059" relation="include">
+        </childnode>
+        <childnode refid="4060" relation="include">
+        </childnode>
+      </node>
+      <node id="4069">
+        <label>boost/mpl/and.hpp</label>
+      </node>
+      <node id="4083">
+        <label>boost/assign/v2/ref/detail/convert_traits/distinct_values.hpp</label>
+        <link refid="ref_2detail_2convert__traits_2distinct__values_8hpp_source"/>
+        <childnode refid="4084" relation="include">
+        </childnode>
+        <childnode refid="4078" relation="include">
+        </childnode>
+        <childnode refid="4079" relation="include">
+        </childnode>
+        <childnode refid="4069" relation="include">
+        </childnode>
+        <childnode refid="4075" relation="include">
+        </childnode>
+        <childnode refid="4085" relation="include">
+        </childnode>
+        <childnode refid="4081" relation="include">
+        </childnode>
+      </node>
+      <node id="4064">
+        <label>boost/range/detail/chain_iterator.hpp</label>
+      </node>
+      <node id="4063">
+        <label>boost/iterator/iterator_traits.hpp</label>
+      </node>
+      <node id="4080">
+        <label>boost/type_traits/add_reference.hpp</label>
+      </node>
+      <node id="4072">
+        <label>boost/type_traits/is_same.hpp</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="4090">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/chain.hpp</label>
+        <link refid="chain_8hpp_source"/>
+        <childnode refid="4091" relation="include">
+        </childnode>
+        <childnode refid="4092" relation="include">
+        </childnode>
+        <childnode refid="4093" relation="include">
+        </childnode>
+      </node>
+      <node id="4088">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/bitwise_or.hpp</label>
+        <link refid="bitwise__or_8hpp_source"/>
+        <childnode refid="4089" relation="include">
+        </childnode>
+        <childnode refid="4090" relation="include">
+        </childnode>
+      </node>
+      <node id="4092">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/twin_values.hpp</label>
+        <link refid="chain_2checking_2twin__values_8hpp_source"/>
+      </node>
+      <node id="4093">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/v2.hpp</label>
+        <link refid="v2_8hpp_source"/>
+      </node>
+      <node id="4091">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/distinct_values.hpp</label>
+        <link refid="chain_2checking_2distinct__values_8hpp_source"/>
+      </node>
+      <node id="4087">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/result.hpp</label>
+        <link refid="chain_2traits_2result_8hpp_source"/>
+        <childnode refid="4088" relation="include">
+        </childnode>
+        <childnode refid="4089" relation="include">
+        </childnode>
+        <childnode refid="4090" relation="include">
+        </childnode>
+      </node>
+      <node id="4089">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/aux_/logical_and.hpp</label>
+        <link refid="logical__and_8hpp_source"/>
+        <childnode refid="4090" relation="include">
+        </childnode>
+      </node>
+      <node id="4086">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/range.hpp</label>
+        <link refid="chain/traits/range.hpp"/>
+        <childnode refid="4087" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range" prot="public">boost::assign::v2::chain_traits::range</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range__l" prot="public">boost::assign::v2::chain_traits::range_l</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range__r" prot="public">boost::assign::v2::chain_traits::range_r</innerclass>
+    <innernamespace refid="namespaceboost">boost</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign">boost::assign</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2">boost::assign::v2</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1chain__traits">boost::assign::v2::chain_traits</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"></codeline>
+<codeline lineno="2"><highlight class="comment">//<sp/><sp/>Boost.Assign<sp/>v2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2003-2004<sp/>Thorsten<sp/>Ottosen<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2010<sp/>Erwann<sp/>Rogard<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Use,<sp/>modification<sp/>and<sp/>distribution<sp/>are<sp/>subject<sp/>to<sp/>the<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Boost<sp/>Software<sp/>License,<sp/>Version<sp/>1.0.<sp/>(See<sp/>accompanying<sp/>file<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>LICENSE_1_0.txt<sp/>or<sp/>copy<sp/>at<sp/>http://www.boost.org/LICENSE_1_0.txt)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"></highlight><highlight class="preprocessor">#ifndef<sp/>BOOST_ASSIGN_V2_CHAIN_TRAITS_RANGE_ER_2010_HPP</highlight></codeline>
+<codeline lineno="11"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#define<sp/>BOOST_ASSIGN_V2_CHAIN_TRAITS_RANGE_ER_2010_HPP</highlight></codeline>
+<codeline lineno="12"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/concept/assert.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/range/iterator_range.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/range/iterator.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/assign/v2/chain/traits/iterator.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">boost{</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">assign{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">v2{</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">chain_traits{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>R1,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>R2,<sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal">&gt;<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">F,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>Tag&gt;</highlight></codeline>
+<codeline lineno="23" refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range" kindref="compound">range</ref>{</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1iterator" kindref="compound">chain_traits::iterator</ref>&lt;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>F&lt;R1&gt;::type,</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>F&lt;R2&gt;::type,</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tag</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&gt;::type<sp/>iterator_t;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>boost::iterator_range&lt;<sp/>iterator_t<sp/>&gt;<sp/>type;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>type<sp/>call(R1&amp;<sp/>r1,<sp/>R2&amp;<sp/>r2)</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>BOOST_CONCEPT_ASSERT((SinglePassRangeConcept&lt;R1&gt;));</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>BOOST_CONCEPT_ASSERT((SinglePassRangeConcept&lt;R2&gt;));</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">ns<sp/>=<sp/>boost::range_detail;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>ns::chain_iterator_begin_tag<sp/>begin_tag_;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>ns::chain_iterator_end_tag<sp/>end_tag_;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>type(</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>iterator_t(r1,<sp/>r2,<sp/>begin_tag_()),</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>iterator_t(r1,<sp/>r2,<sp/>end_tag_())</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>R1,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>R2,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>Tag&gt;</highlight></codeline>
+<codeline lineno="47" refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range__l" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range__l" kindref="compound">range_l</ref></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>chain_traits::<ref refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range" kindref="compound">range</ref>&lt;<sp/>R1,<sp/>R2,<sp/>boost::range_iterator,Tag&gt;{};</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>R1,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>R2,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>Tag&gt;</highlight></codeline>
+<codeline lineno="51" refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range__r" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range__r" kindref="compound">range_r</ref></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>chain_traits::<ref refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range" kindref="compound">range</ref>&lt;R1,<sp/>R2,<sp/>boost::range_const_iterator,Tag&gt;{};</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>chain_traits</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>v2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>assign</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>boost</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/range.hpp"/>
+  </compounddef>
+</doxygen>

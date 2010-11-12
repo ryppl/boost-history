@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1anon__nil" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::ref::result_of::anon_nil</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1ref_1_1nth__result__of_1_1anon" prot="public" virt="non-virtual">boost::assign::v2::ref::nth_result_of::anon&lt; 0, Tag1, T &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename Tag1</type>
+      </param>
+      <param>
+        <type>typename T</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="32">
+        <label>boost::assign::v2::ref::anon_aux::recursive_result&lt; N, Tag1, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1recursive__result"/>
+      </node>
+      <node id="31">
+        <label>boost::assign::v2::ref::nth_result_of::anon&lt; 0, Tag1, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1nth__result__of_1_1anon"/>
+        <childnode refid="32" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="30">
+        <label>boost::assign::v2::ref::result_of::anon_nil&lt; Tag1, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1anon__nil"/>
+        <childnode refid="31" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="35">
+        <label>boost::assign::v2::ref::anon_aux::recursive_result&lt; N, Tag1, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1recursive__result"/>
+      </node>
+      <node id="34">
+        <label>boost::assign::v2::ref::nth_result_of::anon&lt; 0, Tag1, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1nth__result__of_1_1anon"/>
+        <childnode refid="35" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="33">
+        <label>boost::assign::v2::ref::result_of::anon_nil&lt; Tag1, T &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1anon__nil"/>
+        <childnode refid="34" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/make.hpp" line="26" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/unary/make.hpp" bodystart="25" bodyend="26"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1recursive__result_1a69320dce5fd52134ada3f3bd2035a74c" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::result_of::anon_nil</scope><name>previous_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1anon__aux_1_1recursive__result_1a311805ad195b27018dc87737dc3b53fd" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::result_of::anon_nil</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

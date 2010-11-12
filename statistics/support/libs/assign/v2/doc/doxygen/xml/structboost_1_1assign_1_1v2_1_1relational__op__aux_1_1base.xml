@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1relational__op__aux_1_1base" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::relational_op_aux::base</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/relational_op/crtp.hpp" line="24" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/relational_op/crtp.hpp" bodystart="24" bodyend="24"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

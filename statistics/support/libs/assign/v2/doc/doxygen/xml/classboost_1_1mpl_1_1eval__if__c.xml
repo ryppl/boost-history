@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="classboost_1_1mpl_1_1eval__if__c" kind="class" prot="public">
+    <compoundname>boost::mpl::eval_if_c</compoundname>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1add__const" prot="public" virt="non-virtual">boost::assign::v2::ref::convert_traits::add_const&lt; distinct_values::value&lt; V1, V2 &gt;::type, or_const &gt;</derivedcompoundref>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="313">
+        <label>eval_if_c</label>
+        <link refid="classboost_1_1mpl_1_1eval__if__c"/>
+      </node>
+      <node id="314">
+        <label>add_const&lt; distinct_values::value&lt; V1, V2 &gt;::type, or_const &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1add__const"/>
+        <childnode refid="313" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="315">
+        <label>boost::assign::v2::ref::convert_traits::distinct_values::reference&lt; V1, V2, or_const, and_ref &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1distinct__values_1_1reference"/>
+        <childnode refid="314" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/add_const.hpp" line="27"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

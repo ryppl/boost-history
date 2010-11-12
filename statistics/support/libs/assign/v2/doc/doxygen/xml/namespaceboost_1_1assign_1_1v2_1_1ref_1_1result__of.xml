@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1ref_1_1result__of" kind="namespace">
+    <compoundname>boost::assign::v2::ref::result_of</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1empty__csv__anon" prot="public">boost::assign::v2::ref::result_of::empty_csv_anon</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1anon__nil" prot="public">boost::assign::v2::ref::result_of::anon_nil</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1anon" prot="public">boost::assign::v2::ref::result_of::anon</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1unwrap__iterator" prot="public">boost::assign::v2::ref::result_of::unwrap_iterator</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1unwrap__range" prot="public">boost::assign::v2::ref::result_of::unwrap_range</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1empty__fusion" prot="public">boost::assign::v2::ref::result_of::empty_fusion</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1result__of_1_1wrap" prot="public">boost::assign::v2::ref::result_of::wrap</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/anon/csv/make.hpp" line="28"/>
+  </compounddef>
+</doxygen>

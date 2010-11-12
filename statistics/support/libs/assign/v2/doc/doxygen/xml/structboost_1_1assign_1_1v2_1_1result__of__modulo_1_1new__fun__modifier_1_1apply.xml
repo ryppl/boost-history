@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__fun__modifier_1_1apply" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::result_of_modulo::new_fun_modifier::apply</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename F</type>
+      </param>
+      <param>
+        <type>typename Tag</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__fun__modifier_1_1apply_1a7ca00ea295f1c951515b391eef42d329" prot="public" static="no">
+        <type>boost::mpl::apply1&lt; <ref refid="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__fun" kindref="compound">new_fun</ref>&lt; T &gt;, F &gt;::type</type>
+        <definition>typedef boost::mpl::apply1&lt; new_fun&lt;T&gt;, F &gt;::type boost::assign::v2::result_of_modulo::new_fun_modifier&lt; T &gt;::apply&lt; F, Tag &gt;::new_fun_</definition>
+        <argsstring></argsstring>
+        <name>new_fun_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/result_of_modulo.hpp" line="41" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/result_of_modulo.hpp" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__fun__modifier_1_1apply_1ae64f8b7b9987f4d6c12ee98997b92cab" prot="public" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__modifier" kindref="compound">result_of_modulo::new_modifier</ref>&lt; new_fun_ &gt;</type>
+        <definition>typedef result_of_modulo::new_modifier&lt;new_fun_&gt; boost::assign::v2::result_of_modulo::new_fun_modifier&lt; T &gt;::apply&lt; F, Tag &gt;::new_modifier_</definition>
+        <argsstring></argsstring>
+        <name>new_modifier_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/result_of_modulo.hpp" line="42" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/result_of_modulo.hpp" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__fun__modifier_1_1apply_1a8d033e7c64e30de3c28dd66f86e68ec5" prot="public" static="no">
+        <type>boost::mpl::apply1&lt; <ref refid="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__modifier" kindref="compound">new_modifier_</ref>, Tag &gt;::type</type>
+        <definition>typedef boost::mpl::apply1&lt; new_modifier_, Tag &gt;::type boost::assign::v2::result_of_modulo::new_fun_modifier&lt; T &gt;::apply&lt; F, Tag &gt;::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/result_of_modulo.hpp" line="46" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/result_of_modulo.hpp" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/result_of_modulo.hpp" line="37" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/result_of_modulo.hpp" bodystart="36" bodyend="47"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__fun__modifier_1_1apply_1a7ca00ea295f1c951515b391eef42d329" prot="public" virt="non-virtual"><scope>boost::assign::v2::result_of_modulo::new_fun_modifier::apply</scope><name>new_fun_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__fun__modifier_1_1apply_1ae64f8b7b9987f4d6c12ee98997b92cab" prot="public" virt="non-virtual"><scope>boost::assign::v2::result_of_modulo::new_fun_modifier::apply</scope><name>new_modifier_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1result__of__modulo_1_1new__fun__modifier_1_1apply_1a8d033e7c64e30de3c28dd66f86e68ec5" prot="public" virt="non-virtual"><scope>boost::assign::v2::result_of_modulo::new_fun_modifier::apply</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

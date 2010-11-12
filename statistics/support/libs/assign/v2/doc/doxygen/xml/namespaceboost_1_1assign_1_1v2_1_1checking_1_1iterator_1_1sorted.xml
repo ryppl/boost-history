@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1checking_1_1iterator_1_1sorted" kind="namespace">
+    <compoundname>boost::assign::v2::checking::iterator::sorted</compoundname>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1checking_1_1iterator_1_1sorted_1a7513ee9323aa978b3f6725c17cfc8d44" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename It</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::checking::iterator::sorted::do_check</definition>
+        <argsstring>(It it)</argsstring>
+        <name>do_check</name>
+        <param>
+          <type>It</type>
+          <declname>it</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/iterator.hpp" line="42" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/iterator.hpp" bodystart="41" bodyend="54"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/iterator.hpp" line="38"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range__l" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::chain_traits::range_l</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range" prot="public" virt="non-virtual">boost::assign::v2::chain_traits::range&lt; R1, R2, boost::range_iterator, Tag &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename R1</type>
+      </param>
+      <param>
+        <type>typename R2</type>
+      </param>
+      <param>
+        <type>typename Tag</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="716">
+        <label>boost::assign::v2::chain_traits::range_l&lt; R1, R2, Tag &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range__l"/>
+        <childnode refid="717" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="717">
+        <label>boost::assign::v2::chain_traits::range&lt; R1, R2, boost::range_iterator, Tag &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="718">
+        <label>boost::assign::v2::chain_traits::range_l&lt; R1, R2, Tag &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range__l"/>
+        <childnode refid="719" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="719">
+        <label>boost::assign::v2::chain_traits::range&lt; R1, R2, boost::range_iterator, Tag &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range"/>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/range.hpp" line="48" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/traits/range.hpp" bodystart="47" bodyend="48"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range_1a72d41f2076b271a68b9036561851ef96" prot="public" virt="non-virtual"><scope>boost::assign::v2::chain_traits::range_l</scope><name>call</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range_1a6e196965e5acec991ccf57afb4f7cc8c" prot="public" virt="non-virtual"><scope>boost::assign::v2::chain_traits::range_l</scope><name>iterator_t</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1chain__traits_1_1range_1a4329c18ff8af4f4c4b4762e50a427ba8" prot="public" virt="non-virtual"><scope>boost::assign::v2::chain_traits::range_l</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

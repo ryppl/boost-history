@@ -1,0 +1,256 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="array_8hpp" kind="file">
+    <compoundname>array.hpp</compoundname>
+    <includes refid="check__equal_8hpp" local="no">boost/assign/v2/detail/checking/check_equal.hpp</includes>
+    <includes refid="constants_8hpp" local="no">boost/assign/v2/detail/checking/constants.hpp</includes>
+    <includes refid="is__static__array_8hpp" local="no">boost/assign/v2/detail/type_traits/container/is_static_array.hpp</includes>
+    <includedby refid="detail_2checking_2checking_8hpp" local="no">/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/checking.hpp</includedby>
+    <includedby refid="detail_2checking_2container_8hpp" local="no">/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/container.hpp</includedby>
+    <incdepgraph>
+      <node id="4612">
+        <label>boost/type_traits/remove_cv.hpp</label>
+      </node>
+      <node id="4616">
+        <label>boost/assign/v2/detail/type_traits/container/forward_to_value.hpp</label>
+        <link refid="forward__to__value_8hpp_source"/>
+        <childnode refid="4617" relation="include">
+        </childnode>
+      </node>
+      <node id="4628">
+        <label>boost/assign/v2/detail/type_traits/container/ptr_to_value_container.hpp</label>
+        <link refid="ptr__to__value__container_8hpp_source"/>
+        <childnode refid="4620" relation="include">
+        </childnode>
+      </node>
+      <node id="4604">
+        <label>boost/assign/v2/detail/checking/check_equal.hpp</label>
+        <link refid="check__equal_8hpp_source"/>
+        <childnode refid="4605" relation="include">
+        </childnode>
+      </node>
+      <node id="4607">
+        <label>boost/next_prior.hpp</label>
+      </node>
+      <node id="4603">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/array.hpp</label>
+        <link refid="array.hpp"/>
+        <childnode refid="4604" relation="include">
+        </childnode>
+        <childnode refid="4606" relation="include">
+        </childnode>
+        <childnode refid="4611" relation="include">
+        </childnode>
+      </node>
+      <node id="4626">
+        <label>boost/assign/v2/detail/type_traits/container/static_size.hpp</label>
+        <link refid="static__size_8hpp_source"/>
+        <childnode refid="4627" relation="include">
+        </childnode>
+        <childnode refid="4625" relation="include">
+        </childnode>
+        <childnode refid="4614" relation="include">
+        </childnode>
+      </node>
+      <node id="4624">
+        <label>boost/type_traits/remove_reference.hpp</label>
+      </node>
+      <node id="4610">
+        <label>boost/numeric/conversion/converter.hpp</label>
+      </node>
+      <node id="4627">
+        <label>boost/mpl/size_t.hpp</label>
+      </node>
+      <node id="4605">
+        <label>boost/assert.hpp</label>
+      </node>
+      <node id="4619">
+        <label>boost/mpl/eval_if.hpp</label>
+      </node>
+      <node id="4608">
+        <label>boost/range.hpp</label>
+      </node>
+      <node id="4611">
+        <label>boost/assign/v2/detail/type_traits/container/is_static_array.hpp</label>
+        <link refid="is__static__array_8hpp_source"/>
+        <childnode refid="4612" relation="include">
+        </childnode>
+        <childnode refid="4613" relation="include">
+        </childnode>
+        <childnode refid="4616" relation="include">
+        </childnode>
+      </node>
+      <node id="4621">
+        <label>boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp</label>
+        <link refid="ptr__to__value_8hpp_source"/>
+        <childnode refid="4622" relation="include">
+        </childnode>
+        <childnode refid="4623" relation="include">
+        </childnode>
+        <childnode refid="4615" relation="include">
+        </childnode>
+        <childnode refid="4624" relation="include">
+        </childnode>
+        <childnode refid="4614" relation="include">
+        </childnode>
+        <childnode refid="4625" relation="include">
+        </childnode>
+        <childnode refid="4626" relation="include">
+        </childnode>
+      </node>
+      <node id="4625">
+        <label>boost/assign/v2/detail/fwd/container.hpp</label>
+        <link refid="detail_2fwd_2container_8hpp_source"/>
+      </node>
+      <node id="4617">
+        <label>boost/assign/v2/detail/type_traits/container/value_container.hpp</label>
+        <link refid="value__container_8hpp_source"/>
+        <childnode refid="4618" relation="include">
+        </childnode>
+        <childnode refid="4619" relation="include">
+        </childnode>
+        <childnode refid="4620" relation="include">
+        </childnode>
+        <childnode refid="4628" relation="include">
+        </childnode>
+      </node>
+      <node id="4614">
+        <label>boost/assign/v2/detail/fwd/ptr_container.hpp</label>
+        <link refid="ptr__container_8hpp_source"/>
+      </node>
+      <node id="4618">
+        <label>boost/mpl/identity.hpp</label>
+      </node>
+      <node id="4606">
+        <label>boost/assign/v2/detail/checking/constants.hpp</label>
+        <link refid="constants_8hpp_source"/>
+        <childnode refid="4607" relation="include">
+        </childnode>
+        <childnode refid="4608" relation="include">
+        </childnode>
+        <childnode refid="4609" relation="include">
+        </childnode>
+        <childnode refid="4610" relation="include">
+        </childnode>
+        <childnode refid="4604" relation="include">
+        </childnode>
+      </node>
+      <node id="4623">
+        <label>boost/preprocessor/cat.hpp</label>
+      </node>
+      <node id="4609">
+        <label>boost/array.hpp</label>
+      </node>
+      <node id="4620">
+        <label>boost/assign/v2/detail/type_traits/container/is_ptr_container.hpp</label>
+        <link refid="is__ptr__container_8hpp_source"/>
+        <childnode refid="4618" relation="include">
+        </childnode>
+        <childnode refid="4619" relation="include">
+        </childnode>
+        <childnode refid="4621" relation="include">
+        </childnode>
+      </node>
+      <node id="4615">
+        <label>boost/mpl/bool.hpp</label>
+      </node>
+      <node id="4622">
+        <label>memory</label>
+      </node>
+      <node id="4613">
+        <label>boost/assign/v2/detail/type_traits/container/has_static_size.hpp</label>
+        <link refid="has__static__size_8hpp_source"/>
+        <childnode refid="4614" relation="include">
+        </childnode>
+        <childnode refid="4615" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="4631">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/detail.hpp</label>
+        <link refid="detail_8hpp_source"/>
+        <childnode refid="4632" relation="include">
+        </childnode>
+      </node>
+      <node id="4629">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/array.hpp</label>
+        <link refid="array.hpp"/>
+        <childnode refid="4630" relation="include">
+        </childnode>
+        <childnode refid="4633" relation="include">
+        </childnode>
+      </node>
+      <node id="4633">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/container.hpp</label>
+        <link refid="detail_2checking_2container_8hpp_source"/>
+        <childnode refid="4634" relation="include">
+        </childnode>
+        <childnode refid="4630" relation="include">
+        </childnode>
+      </node>
+      <node id="4632">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/v2.hpp</label>
+        <link refid="v2_8hpp_source"/>
+      </node>
+      <node id="4634">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/chain/checking/distinct_values.hpp</label>
+        <link refid="chain_2checking_2distinct__values_8hpp_source"/>
+      </node>
+      <node id="4630">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/checking.hpp</label>
+        <link refid="detail_2checking_2checking_8hpp_source"/>
+        <childnode refid="4631" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespaceboost">boost</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign">boost::assign</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2">boost::assign::v2</innernamespace>
+    <innernamespace refid="namespaceboost_1_1assign_1_1v2_1_1checking">boost::assign::v2::checking</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"></codeline>
+<codeline lineno="2"><highlight class="comment">//<sp/><sp/>Boost.Assign<sp/>v2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2003-2004<sp/>Thorsten<sp/>Ottosen<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2010<sp/>Erwann<sp/>Rogard<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Use,<sp/>modification<sp/>and<sp/>distribution<sp/>are<sp/>subject<sp/>to<sp/>the<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Boost<sp/>Software<sp/>License,<sp/>Version<sp/>1.0.<sp/>(See<sp/>accompanying<sp/>file<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>LICENSE_1_0.txt<sp/>or<sp/>copy<sp/>at<sp/>http://www.boost.org/LICENSE_1_0.txt)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"></highlight><highlight class="preprocessor">#ifndef<sp/>BOOST_ASSIGN_V2_CHECKING_ARRAY_ER_2010_HPP</highlight></codeline>
+<codeline lineno="11"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#define<sp/>BOOST_ASSIGN_V2_CHECKING_ARRAY_ER_2010_HPP</highlight></codeline>
+<codeline lineno="12"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/assign/v2/detail/checking/check_equal.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/assign/v2/detail/checking/constants.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/assign/v2/detail/type_traits/container/is_static_array.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">boost{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">assign{<sp/></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">v2{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">checking{<sp/></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>do_check(container_tag::static_array,V<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">&amp;<sp/>ar1)</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>BOOST_ASSIGN_V2_CHECK_EQUAL(<sp/>ar1.empty()<sp/>,<sp/>false<sp/>);</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>V<sp/>ar<sp/>=<sp/>ar1;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">ns<sp/>=<sp/>checking::constants;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ns::do_check(</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ar[0],ar[1],ar[2],ar[3],</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ar[4],ar[5],ar[6],ar[7]</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>checking</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>v2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>assign</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal">}</highlight><highlight class="comment">//<sp/>boost<sp/><sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/checking/array.hpp"/>
+  </compounddef>
+</doxygen>

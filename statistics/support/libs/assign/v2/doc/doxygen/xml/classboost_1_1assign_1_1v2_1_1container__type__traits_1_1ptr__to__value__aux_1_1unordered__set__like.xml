@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="classboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1unordered__set__like" kind="class" prot="public">
+    <compoundname>boost::assign::v2::container_type_traits::ptr_to_value_aux::unordered_set_like</compoundname>
+    <basecompoundref refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1common" prot="private" virt="non-virtual">boost::assign::v2::container_type_traits::ptr_to_value_aux::common&lt; V &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename V</type>
+      </param>
+      <param>
+        <type>template&lt; typename, typename, typename, typename &gt; class</type>
+        <declname>F</declname>
+        <defname>F</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-type">
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1unordered__set__like_1aa0fb6eddb477e3eb31dc5da487b66e68" prot="private" static="no">
+        <type>F&lt; typename V::key_type, typename V::hasher, typename V::key_equal, typename unordered_set_like::allocator_type &gt;</type>
+        <definition>typedef F&lt; typename V::key_type, typename V::hasher, typename V::key_equal, typename unordered_set_like::allocator_type &gt; boost::assign::v2::container_type_traits::ptr_to_value_aux::unordered_set_like&lt; V, F &gt;::container_type</definition>
+        <argsstring></argsstring>
+        <name>container_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp" line="132" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp" bodystart="132" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="862">
+        <label>boost::assign::v2::container_type_traits::ptr_to_value_aux::common&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1common"/>
+      </node>
+      <node id="861">
+        <label>boost::assign::v2::container_type_traits::ptr_to_value_aux::unordered_set_like&lt; V, F &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1unordered__set__like"/>
+        <childnode refid="862" relation="private-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="864">
+        <label>boost::assign::v2::container_type_traits::ptr_to_value_aux::common&lt; V &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1common"/>
+      </node>
+      <node id="863">
+        <label>boost::assign::v2::container_type_traits::ptr_to_value_aux::unordered_set_like&lt; V, F &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1unordered__set__like"/>
+        <childnode refid="864" relation="private-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp" line="125" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp" bodystart="125" bodyend="134"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1common_1a6b0e3327c71017cabcf59c77930f020a" prot="private" virt="non-virtual"><scope>boost::assign::v2::container_type_traits::ptr_to_value_aux::unordered_set_like</scope><name>allocator_type</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1unordered__set__like_1aa0fb6eddb477e3eb31dc5da487b66e68" prot="private" virt="non-virtual"><scope>boost::assign::v2::container_type_traits::ptr_to_value_aux::unordered_set_like</scope><name>container_type</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1container__type__traits_1_1ptr__to__value__aux_1_1common_1aff6bd83aaf10810d880629ab3b6e5fc9" prot="private" virt="non-virtual"><scope>boost::assign::v2::container_type_traits::ptr_to_value_aux::unordered_set_like</scope><name>value_type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

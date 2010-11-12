@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::ref::convert_traits::result</compoundname>
+    <derivedcompoundref refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1meta__convert_1_1apply" prot="public" virt="non-virtual">boost::assign::v2::type_traits::meta_convert&lt; Tag &gt;::apply&lt; T1, T2 &gt;</derivedcompoundref>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1_1traits" prot="public">boost::assign::v2::ref::convert_traits::result::traits</innerclass>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>T1</declname>
+        <defname>T1</defname>
+      </param>
+      <param>
+        <type>typename</type>
+        <declname>T2</declname>
+        <defname>T2</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1a4b8a377dbdae0365a186d4346c673a2d" prot="public" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1_1traits" kindref="compound">traits</ref>&lt; T1 &gt;</type>
+        <definition>typedef traits&lt;T1&gt; boost::assign::v2::ref::convert_traits::result&lt; T1, T2 &gt;::traits1_</definition>
+        <argsstring></argsstring>
+        <name>traits1_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" line="45" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1ad7a6afdc757e6fd1e6cb97d4501349bd" prot="public" static="no">
+        <type><ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1_1traits" kindref="compound">traits</ref>&lt; T2 &gt;</type>
+        <definition>typedef traits&lt;T2&gt; boost::assign::v2::ref::convert_traits::result&lt; T1, T2 &gt;::traits2_</definition>
+        <argsstring></argsstring>
+        <name>traits2_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" line="46" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1ad0efd6ce0f6c16034b1938ffa85adafa" prot="public" static="no">
+        <type>traits1_::val_</type>
+        <definition>typedef traits1_::val_ boost::assign::v2::ref::convert_traits::result&lt; T1, T2 &gt;::val1_</definition>
+        <argsstring></argsstring>
+        <name>val1_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" line="48" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1ae98c30e337a2e53012ed0dc59535bff0" prot="public" static="no">
+        <type>traits2_::val_</type>
+        <definition>typedef traits2_::val_ boost::assign::v2::ref::convert_traits::result&lt; T1, T2 &gt;::val2_</definition>
+        <argsstring></argsstring>
+        <name>val2_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" line="49" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1a4885168a1b5c49b6fe2785d1ac9848bb" prot="public" static="no">
+        <type>boost::is_same&lt; val1_, val2_ &gt;</type>
+        <definition>typedef boost::is_same&lt;val1_,val2_&gt; boost::assign::v2::ref::convert_traits::result&lt; T1, T2 &gt;::same_val_</definition>
+        <argsstring></argsstring>
+        <name>same_val_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" line="51" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1a12757092ed32f7294c88e5ccafda3713" prot="public" static="no">
+        <type>boost::mpl::and_&lt; typename traits1_::is_ref_, typename traits2_::is_ref_ &gt;::type</type>
+        <definition>typedef boost::mpl::and_&lt; typename traits1_::is_ref_, typename traits2_::is_ref_ &gt;::type boost::assign::v2::ref::convert_traits::result&lt; T1, T2 &gt;::and_ref_</definition>
+        <argsstring></argsstring>
+        <name>and_ref_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" line="56" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1a32285b88aec35a074e5fb4cd4ed8dd25" prot="public" static="no">
+        <type>boost::mpl::or_&lt; typename traits1_::is_const_, typename traits2_::is_const_ &gt;::type</type>
+        <definition>typedef boost::mpl::or_&lt; typename traits1_::is_const_, typename traits2_::is_const_ &gt;::type boost::assign::v2::ref::convert_traits::result&lt; T1, T2 &gt;::or_const_</definition>
+        <argsstring></argsstring>
+        <name>or_const_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" line="61" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1a1965e532a09e065bd0283ce78f83c7b4" prot="public" static="no">
+        <type>boost::mpl::eval_if&lt; same_val_, <ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1twin__values_1_1reference" kindref="compound">twin_values::reference</ref>&lt; val1_, or_const_::value, and_ref_::value &gt;, <ref refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1distinct__values_1_1reference" kindref="compound">distinct_values::reference</ref>&lt; val1_, val2_, or_const_::value, and_ref_::value &gt; &gt;::type</type>
+        <definition>typedef boost::mpl::eval_if&lt; same_val_, twin_values::reference&lt; val1_, or_const_::value, and_ref_::value &gt;, distinct_values::reference&lt; val1_, val2_, or_const_::value, and_ref_::value &gt; &gt;::type boost::assign::v2::ref::convert_traits::result&lt; T1, T2 &gt;::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" line="76" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1a8e75aadda9194e053521e12819f650c5" prot="public" static="no">
+        <type>boost::mpl::and_&lt; boost::is_convertible&lt; T1, type &gt;, boost::is_convertible&lt; T2, type &gt; &gt;</type>
+        <definition>typedef boost::mpl::and_&lt; boost::is_convertible&lt;T1,type&gt;, boost::is_convertible&lt;T2,type&gt; &gt; boost::assign::v2::ref::convert_traits::result&lt; T1, T2 &gt;::is_valid_type</definition>
+        <argsstring></argsstring>
+        <name>is_valid_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" line="81" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1a18fd2b8cb41a578492f2dc66f8148832" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::ref::convert_traits::result&lt; T1, T2 &gt;::BOOST_STATIC_CONSTANT</definition>
+        <argsstring>(bool, is_valid=is_valid_type::value)</argsstring>
+        <name>BOOST_STATIC_CONSTANT</name>
+        <param>
+          <type>bool</type>
+        </param>
+        <param>
+          <type>is_valid</type>
+          <defval>is_valid_type::value</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" line="83"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1abd18505499aea94aaf1b47de6178c5c1" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void boost::assign::v2::ref::convert_traits::result&lt; T1, T2 &gt;::test</definition>
+        <argsstring>()</argsstring>
+        <name>test</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" line="86" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" bodystart="85" bodyend="88"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="777">
+        <label>boost::assign::v2::type_traits::meta_convert&lt; T1, T2 &gt;::apply</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1type__traits_1_1meta__convert_1_1apply"/>
+        <childnode refid="776" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="776">
+        <label>boost::assign::v2::ref::convert_traits::result&lt; T1, T2 &gt;</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result"/>
+      </node>
+    </inheritancegraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" line="33" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/detail/convert_traits/result.hpp" bodystart="32" bodyend="90"/>
+    <listofallmembers>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1a12757092ed32f7294c88e5ccafda3713" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::convert_traits::result</scope><name>and_ref_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1a18fd2b8cb41a578492f2dc66f8148832" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::convert_traits::result</scope><name>BOOST_STATIC_CONSTANT</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1a8e75aadda9194e053521e12819f650c5" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::convert_traits::result</scope><name>is_valid_type</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1a32285b88aec35a074e5fb4cd4ed8dd25" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::convert_traits::result</scope><name>or_const_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1a4885168a1b5c49b6fe2785d1ac9848bb" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::convert_traits::result</scope><name>same_val_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1abd18505499aea94aaf1b47de6178c5c1" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::convert_traits::result</scope><name>test</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1a4b8a377dbdae0365a186d4346c673a2d" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::convert_traits::result</scope><name>traits1_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1ad7a6afdc757e6fd1e6cb97d4501349bd" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::convert_traits::result</scope><name>traits2_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1a1965e532a09e065bd0283ce78f83c7b4" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::convert_traits::result</scope><name>type</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1ad0efd6ce0f6c16034b1938ffa85adafa" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::convert_traits::result</scope><name>val1_</name></member>
+      <member refid="structboost_1_1assign_1_1v2_1_1ref_1_1convert__traits_1_1result_1ae98c30e337a2e53012ed0dc59535bff0" prot="public" virt="non-virtual"><scope>boost::assign::v2::ref::convert_traits::result</scope><name>val2_</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

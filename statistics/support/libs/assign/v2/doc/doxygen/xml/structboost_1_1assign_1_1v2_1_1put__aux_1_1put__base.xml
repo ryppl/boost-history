@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="structboost_1_1assign_1_1v2_1_1put__aux_1_1put__base" kind="struct" prot="public">
+    <compoundname>boost::assign::v2::put_aux::put_base</compoundname>
+    <derivedcompoundref refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp" prot="public" virt="non-virtual">boost::assign::v2::put_aux::crtp&lt; V, F, Tag, D, Traits &gt;</derivedcompoundref>
+    <derivedcompoundref refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp" prot="public" virt="non-virtual">boost::assign::v2::put_aux::crtp&lt; anon_aux::impl&lt; T &gt;::type, F, Tag, cont&lt; T, F, Tag &gt;, cont_modifier_traits&lt; T, F, Tag &gt; &gt;</derivedcompoundref>
+    <derivedcompoundref refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp" prot="public" virt="non-virtual">boost::assign::v2::put_aux::crtp&lt; V, F, Tag, sub&lt; V, F, Tag &gt;, sub_modifier_traits&lt; V, F, Tag &gt; &gt;</derivedcompoundref>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="705">
+        <label>boost::assign::v2::put_aux::crtp&lt; V, F, Tag, sub&lt; V, F, Tag &gt;, sub_modifier_traits&lt; V, F, Tag &gt; &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp"/>
+        <childnode refid="701" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="704">
+        <label>boost::assign::v2::anon_aux::cont&lt; T, F, Tag &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1anon__aux_1_1cont"/>
+        <childnode refid="703" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="703">
+        <label>boost::assign::v2::put_aux::crtp&lt; anon_aux::impl&lt; T &gt;::type, F, Tag, cont&lt; T, F, Tag &gt;, cont_modifier_traits&lt; T, F, Tag &gt; &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp"/>
+        <childnode refid="701" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="701">
+        <label>boost::assign::v2::put_aux::put_base</label>
+        <link refid="structboost_1_1assign_1_1v2_1_1put__aux_1_1put__base"/>
+      </node>
+      <node id="706">
+        <label>boost::assign::v2::put_aux::sub&lt; V, F, Tag &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1sub"/>
+        <childnode refid="705" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="702">
+        <label>boost::assign::v2::put_aux::crtp&lt; V, F, Tag, D, Traits &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1put__aux_1_1crtp"/>
+        <childnode refid="701" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/base.hpp" line="18" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/generic/base.hpp" bodystart="18" bodyend="18"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

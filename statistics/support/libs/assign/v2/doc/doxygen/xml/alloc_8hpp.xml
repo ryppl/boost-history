@@ -1,0 +1,1173 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="alloc_8hpp" kind="file">
+    <compoundname>alloc.hpp</compoundname>
+    <includes refid="static__array_2alloc_2fast__alloc_8hpp" local="no">boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp</includes>
+    <includes refid="static__array_2alloc_2lazy__alloc_8hpp" local="no">boost/assign/v2/ref/static_array/alloc/lazy_alloc.hpp</includes>
+    <includedby refid="static__array_8hpp" local="no">/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/static_array.hpp</includedby>
+    <incdepgraph>
+      <node id="16590">
+        <label>boost/assign/v2/put/modifier/def.hpp</label>
+        <link refid="def_8hpp_source"/>
+      </node>
+      <node id="16582">
+        <label>boost/mpl/size.hpp</label>
+      </node>
+      <node id="16492">
+        <label>boost/type_traits/remove_cv.hpp</label>
+      </node>
+      <node id="16577">
+        <label>boost/assign/v2/detail/type_traits/container/forward_to_value.hpp</label>
+        <link refid="forward__to__value_8hpp_source"/>
+        <childnode refid="16578" relation="include">
+        </childnode>
+      </node>
+      <node id="16626">
+        <label>boost/assign/v2/ref/static_array/alloc/lazy_alloc.hpp</label>
+        <link refid="static__array_2alloc_2lazy__alloc_8hpp_source"/>
+        <childnode refid="16627" relation="include">
+        </childnode>
+        <childnode refid="16483" relation="include">
+        </childnode>
+        <childnode refid="16504" relation="include">
+        </childnode>
+        <childnode refid="16628" relation="include">
+        </childnode>
+        <childnode refid="16509" relation="include">
+        </childnode>
+      </node>
+      <node id="16543">
+        <label>boost/mpl/always.hpp</label>
+      </node>
+      <node id="16579">
+        <label>boost/assign/v2/detail/type_traits/container/ptr_to_value_container.hpp</label>
+        <link refid="ptr__to__value__container_8hpp_source"/>
+        <childnode refid="16548" relation="include">
+        </childnode>
+      </node>
+      <node id="16500">
+        <label>boost/type_traits/remove_const.hpp</label>
+      </node>
+      <node id="16561">
+        <label>boost/mpl/vector.hpp</label>
+      </node>
+      <node id="16546">
+        <label>boost/assign/v2/detail/config/limit_arity.hpp</label>
+        <link refid="limit__arity_8hpp_source"/>
+        <childnode refid="16538" relation="include">
+        </childnode>
+        <childnode refid="16547" relation="include">
+        </childnode>
+      </node>
+      <node id="16627">
+        <label>boost/shared_ptr.hpp</label>
+      </node>
+      <node id="16544">
+        <label>boost/mpl/apply.hpp</label>
+      </node>
+      <node id="16495">
+        <label>boost/assign/v2/ref/wrapper/base.hpp</label>
+        <link refid="ref_2wrapper_2base_8hpp_source"/>
+        <childnode refid="16496" relation="include">
+        </childnode>
+        <childnode refid="16497" relation="include">
+        </childnode>
+      </node>
+      <node id="16583">
+        <label>boost/assign/v2/detail/functor/new.hpp</label>
+        <link refid="new_8hpp_source"/>
+        <childnode refid="16550" relation="include">
+        </childnode>
+        <childnode refid="16557" relation="include">
+        </childnode>
+        <childnode refid="16540" relation="include">
+        </childnode>
+        <childnode refid="16541" relation="include">
+        </childnode>
+        <childnode refid="16527" relation="include">
+        </childnode>
+        <childnode refid="16492" relation="include">
+        </childnode>
+        <childnode refid="16543" relation="include">
+        </childnode>
+        <childnode refid="16574" relation="include">
+        </childnode>
+        <childnode refid="16546" relation="include">
+        </childnode>
+        <childnode refid="16556" relation="include">
+        </childnode>
+      </node>
+      <node id="16526">
+        <label>boost/type_traits/is_reference.hpp</label>
+      </node>
+      <node id="16557">
+        <label>boost/preprocessor/repetition/repeat_from_to.hpp</label>
+      </node>
+      <node id="16517">
+        <label>boost/range/end.hpp</label>
+      </node>
+      <node id="16572">
+        <label>boost/preprocessor/tuple/to_seq.hpp</label>
+      </node>
+      <node id="16594">
+        <label>boost/typeof/typeof.hpp</label>
+      </node>
+      <node id="16518">
+        <label>boost/range/iterator.hpp</label>
+      </node>
+      <node id="16605">
+        <label>boost/assign/v2/detail/type_traits/container/is_set.hpp</label>
+        <link refid="is__set_8hpp_source"/>
+        <childnode refid="16490" relation="include">
+        </childnode>
+        <childnode refid="16492" relation="include">
+        </childnode>
+        <childnode refid="16552" relation="include">
+        </childnode>
+        <childnode refid="16548" relation="include">
+        </childnode>
+        <childnode refid="16577" relation="include">
+        </childnode>
+      </node>
+      <node id="16535">
+        <label>boost/assign/v2/put/sub/make.hpp</label>
+        <link refid="put_2sub_2make_8hpp_source"/>
+        <childnode refid="16488" relation="include">
+        </childnode>
+        <childnode refid="16536" relation="include">
+        </childnode>
+        <childnode refid="16593" relation="include">
+        </childnode>
+      </node>
+      <node id="16545">
+        <label>boost/assign/v2/detail/config/limit_csv_arity.hpp</label>
+        <link refid="limit__csv__arity_8hpp_source"/>
+      </node>
+      <node id="16497">
+        <label>boost/type_traits/is_const.hpp</label>
+      </node>
+      <node id="16584">
+        <label>boost/assign/v2/detail/keyword/keyword.hpp</label>
+        <link refid="detail_2keyword_2keyword_8hpp_source"/>
+        <childnode refid="16585" relation="include">
+        </childnode>
+        <childnode refid="16586" relation="include">
+        </childnode>
+      </node>
+      <node id="16622">
+        <label>boost/range/algorithm/copy.hpp</label>
+      </node>
+      <node id="16565">
+        <label>boost/assign/v2/detail/pp/args.hpp</label>
+        <link refid="args_8hpp_source"/>
+        <childnode refid="16539" relation="include">
+        </childnode>
+        <childnode refid="16566" relation="include">
+        </childnode>
+        <childnode refid="16540" relation="include">
+        </childnode>
+        <childnode refid="16567" relation="include">
+        </childnode>
+        <childnode refid="16568" relation="include">
+        </childnode>
+      </node>
+      <node id="16533">
+        <label>boost/assign/v2/put/range/modifier/modifier.hpp</label>
+        <link refid="range_2modifier_2modifier_8hpp_source"/>
+        <childnode refid="16534" relation="include">
+        </childnode>
+        <childnode refid="16617" relation="include">
+        </childnode>
+        <childnode refid="16623" relation="include">
+        </childnode>
+        <childnode refid="16624" relation="include">
+        </childnode>
+      </node>
+      <node id="16516">
+        <label>boost/range/begin.hpp</label>
+      </node>
+      <node id="16505">
+        <label>boost/static_assert.hpp</label>
+      </node>
+      <node id="16619">
+        <label>stdexcept</label>
+      </node>
+      <node id="16532">
+        <label>boost/assign/v2/put/range/adaptor.hpp</label>
+        <link refid="put_2range_2adaptor_8hpp_source"/>
+        <childnode refid="16533" relation="include">
+        </childnode>
+      </node>
+      <node id="16523">
+        <label>boost/iterator/iterator_adaptor.hpp</label>
+      </node>
+      <node id="16501">
+        <label>boost/type_traits/add_const.hpp</label>
+      </node>
+      <node id="16483">
+        <label>boost/assign/v2/ref/wrapper/wrapper.hpp</label>
+        <link refid="ref_2wrapper_2wrapper_8hpp_source"/>
+        <childnode refid="16484" relation="include">
+        </childnode>
+        <childnode refid="16488" relation="include">
+        </childnode>
+        <childnode refid="16503" relation="include">
+        </childnode>
+      </node>
+      <node id="16620">
+        <label>boost/throw_exception.hpp</label>
+      </node>
+      <node id="16618">
+        <label>string</label>
+      </node>
+      <node id="16581">
+        <label>boost/mpl/at.hpp</label>
+      </node>
+      <node id="16520">
+        <label>boost/mpl/assert.hpp</label>
+      </node>
+      <node id="16555">
+        <label>boost/assign/v2/detail/functor/functor.hpp</label>
+        <link refid="detail_2functor_2functor_8hpp_source"/>
+        <childnode refid="16556" relation="include">
+        </childnode>
+        <childnode refid="16573" relation="include">
+        </childnode>
+        <childnode refid="16580" relation="include">
+        </childnode>
+        <childnode refid="16583" relation="include">
+        </childnode>
+      </node>
+      <node id="16538">
+        <label>boost/preprocessor/arithmetic/inc.hpp</label>
+      </node>
+      <node id="16529">
+        <label>boost/assign/v2/detail/relational_op/crtp.hpp</label>
+        <link refid="detail_2relational__op_2crtp_8hpp_source"/>
+        <childnode refid="16499" relation="include">
+        </childnode>
+        <childnode refid="16530" relation="include">
+        </childnode>
+      </node>
+      <node id="16553">
+        <label>boost/assign/v2/detail/type_traits/container/static_size.hpp</label>
+        <link refid="static__size_8hpp_source"/>
+        <childnode refid="16554" relation="include">
+        </childnode>
+        <childnode refid="16552" relation="include">
+        </childnode>
+        <childnode refid="16551" relation="include">
+        </childnode>
+      </node>
+      <node id="16522">
+        <label>boost/type_traits/remove_reference.hpp</label>
+      </node>
+      <node id="16602">
+        <label>boost/assign/v2/detail/type_traits/container/is_associative.hpp</label>
+        <link refid="is__associative_8hpp_source"/>
+        <childnode refid="16603" relation="include">
+        </childnode>
+        <childnode refid="16604" relation="include">
+        </childnode>
+        <childnode refid="16605" relation="include">
+        </childnode>
+      </node>
+      <node id="16592">
+        <label>boost/mpl/void.hpp</label>
+      </node>
+      <node id="16601">
+        <label>boost/type_traits/detail/yes_no_type.hpp</label>
+      </node>
+      <node id="16554">
+        <label>boost/mpl/size_t.hpp</label>
+      </node>
+      <node id="16534">
+        <label>boost/assign/v2/put/range/modifier/put.hpp</label>
+        <link refid="range_2modifier_2put_8hpp_source"/>
+        <childnode refid="16512" relation="include">
+        </childnode>
+        <childnode refid="16535" relation="include">
+        </childnode>
+      </node>
+      <node id="16623">
+        <label>boost/assign/v2/put/range/modifier/range.hpp</label>
+        <link refid="put_2range_2modifier_2range_8hpp_source"/>
+        <childnode refid="16516" relation="include">
+        </childnode>
+        <childnode refid="16517" relation="include">
+        </childnode>
+      </node>
+      <node id="16485">
+        <label>boost/mpl/eval_if.hpp</label>
+      </node>
+      <node id="16615">
+        <label>boost/assign/v2/put/generic/expose_modifier.hpp</label>
+        <link refid="expose__modifier_8hpp_source"/>
+        <childnode refid="16590" relation="include">
+        </childnode>
+      </node>
+      <node id="16604">
+        <label>boost/assign/v2/detail/type_traits/container/is_map.hpp</label>
+        <link refid="is__map_8hpp_source"/>
+        <childnode refid="16490" relation="include">
+        </childnode>
+        <childnode refid="16492" relation="include">
+        </childnode>
+        <childnode refid="16552" relation="include">
+        </childnode>
+        <childnode refid="16548" relation="include">
+        </childnode>
+        <childnode refid="16577" relation="include">
+        </childnode>
+      </node>
+      <node id="16488">
+        <label>boost/assign/v2/ref/wrapper/copy.hpp</label>
+        <link refid="ref_2wrapper_2copy_8hpp_source"/>
+        <childnode refid="16489" relation="include">
+        </childnode>
+        <childnode refid="16490" relation="include">
+        </childnode>
+        <childnode refid="16491" relation="include">
+        </childnode>
+        <childnode refid="16492" relation="include">
+        </childnode>
+        <childnode refid="16493" relation="include">
+        </childnode>
+        <childnode refid="16495" relation="include">
+        </childnode>
+        <childnode refid="16498" relation="include">
+        </childnode>
+      </node>
+      <node id="16571">
+        <label>boost/assign/v2/detail/pp/seq.hpp</label>
+        <link refid="seq_8hpp_source"/>
+        <childnode refid="16572" relation="include">
+        </childnode>
+      </node>
+      <node id="16527">
+        <label>boost/range/reference.hpp</label>
+      </node>
+      <node id="16484">
+        <label>boost/assign/v2/ref/wrapper/deduce_assign_tag.hpp</label>
+        <link refid="deduce__assign__tag_8hpp_source"/>
+        <childnode refid="16485" relation="include">
+        </childnode>
+        <childnode refid="16486" relation="include">
+        </childnode>
+        <childnode refid="16487" relation="include">
+        </childnode>
+      </node>
+      <node id="16611">
+        <label>boost/assign/v2/put/modifier/push_back.hpp</label>
+        <link refid="push__back_8hpp_source"/>
+        <childnode refid="16609" relation="include">
+        </childnode>
+      </node>
+      <node id="16568">
+        <label>boost/preprocessor/seq/size.hpp</label>
+      </node>
+      <node id="16616">
+        <label>boost/assign/v2/put/generic/expose_fun.hpp</label>
+        <link refid="expose__fun_8hpp_source"/>
+      </node>
+      <node id="16610">
+        <label>boost/assign/v2/put/modifier/push.hpp</label>
+        <link refid="push_8hpp_source"/>
+        <childnode refid="16609" relation="include">
+        </childnode>
+      </node>
+      <node id="16519">
+        <label>boost/assign/v2/ref/detail/unwrap/iterator.hpp</label>
+        <link refid="ref_2detail_2unwrap_2iterator_8hpp_source"/>
+        <childnode refid="16520" relation="include">
+        </childnode>
+        <childnode refid="16490" relation="include">
+        </childnode>
+        <childnode refid="16521" relation="include">
+        </childnode>
+        <childnode refid="16492" relation="include">
+        </childnode>
+        <childnode refid="16522" relation="include">
+        </childnode>
+        <childnode refid="16501" relation="include">
+        </childnode>
+        <childnode refid="16523" relation="include">
+        </childnode>
+        <childnode refid="16524" relation="include">
+        </childnode>
+      </node>
+      <node id="16537">
+        <label>boost/preprocessor/arithmetic/add.hpp</label>
+      </node>
+      <node id="16586">
+        <label>boost/assign/v2/detail/keyword/unwrap.hpp</label>
+        <link refid="unwrap_8hpp_source"/>
+      </node>
+      <node id="16511">
+        <label>boost/range.hpp</label>
+      </node>
+      <node id="16607">
+        <label>boost/assign/v2/put/generic/new_fun.hpp</label>
+        <link refid="new__fun_8hpp_source"/>
+        <childnode refid="16544" relation="include">
+        </childnode>
+        <childnode refid="16592" relation="include">
+        </childnode>
+        <childnode refid="16499" relation="include">
+        </childnode>
+        <childnode refid="16487" relation="include">
+        </childnode>
+        <childnode refid="16593" relation="include">
+        </childnode>
+      </node>
+      <node id="16612">
+        <label>boost/assign/v2/put/modifier/push_front.hpp</label>
+        <link refid="push__front_8hpp_source"/>
+        <childnode refid="16609" relation="include">
+        </childnode>
+      </node>
+      <node id="16598">
+        <label>boost/assign/v2/detail/type_traits/container/is_static_array.hpp</label>
+        <link refid="is__static__array_8hpp_source"/>
+        <childnode refid="16492" relation="include">
+        </childnode>
+        <childnode refid="16599" relation="include">
+        </childnode>
+        <childnode refid="16577" relation="include">
+        </childnode>
+      </node>
+      <node id="16499">
+        <label>boost/utility/enable_if.hpp</label>
+      </node>
+      <node id="16549">
+        <label>boost/assign/v2/detail/type_traits/container/ptr_to_value.hpp</label>
+        <link refid="ptr__to__value_8hpp_source"/>
+        <childnode refid="16550" relation="include">
+        </childnode>
+        <childnode refid="16539" relation="include">
+        </childnode>
+        <childnode refid="16490" relation="include">
+        </childnode>
+        <childnode refid="16522" relation="include">
+        </childnode>
+        <childnode refid="16551" relation="include">
+        </childnode>
+        <childnode refid="16552" relation="include">
+        </childnode>
+        <childnode refid="16553" relation="include">
+        </childnode>
+      </node>
+      <node id="16552">
+        <label>boost/assign/v2/detail/fwd/container.hpp</label>
+        <link refid="detail_2fwd_2container_8hpp_source"/>
+      </node>
+      <node id="16595">
+        <label>boost/assign/v2/put/modifier/deduce.hpp</label>
+        <link refid="put_2modifier_2deduce_8hpp_source"/>
+        <childnode refid="16485" relation="include">
+        </childnode>
+        <childnode refid="16487" relation="include">
+        </childnode>
+        <childnode refid="16486" relation="include">
+        </childnode>
+        <childnode refid="16596" relation="include">
+        </childnode>
+        <childnode refid="16598" relation="include">
+        </childnode>
+        <childnode refid="16600" relation="include">
+        </childnode>
+        <childnode refid="16602" relation="include">
+        </childnode>
+      </node>
+      <node id="16597">
+        <label>boost/mpl/placeholders.hpp</label>
+      </node>
+      <node id="16562">
+        <label>boost/assign/v2/detail/config/limit_lvalue_const_arity.hpp</label>
+        <link refid="limit__lvalue__const__arity_8hpp_source"/>
+        <childnode refid="16538" relation="include">
+        </childnode>
+        <childnode refid="16547" relation="include">
+        </childnode>
+        <childnode refid="16546" relation="include">
+        </childnode>
+      </node>
+      <node id="16540">
+        <label>boost/preprocessor/repetition/enum_params.hpp</label>
+      </node>
+      <node id="16600">
+        <label>boost/assign/v2/detail/type_traits/container/has_push.hpp</label>
+        <link refid="has__push_8hpp_source"/>
+        <childnode refid="16490" relation="include">
+        </childnode>
+        <childnode refid="16501" relation="include">
+        </childnode>
+        <childnode refid="16496" relation="include">
+        </childnode>
+        <childnode refid="16601" relation="include">
+        </childnode>
+        <childnode refid="16574" relation="include">
+        </childnode>
+      </node>
+      <node id="16578">
+        <label>boost/assign/v2/detail/type_traits/container/value_container.hpp</label>
+        <link refid="value__container_8hpp_source"/>
+        <childnode refid="16486" relation="include">
+        </childnode>
+        <childnode refid="16485" relation="include">
+        </childnode>
+        <childnode refid="16548" relation="include">
+        </childnode>
+        <childnode refid="16579" relation="include">
+        </childnode>
+      </node>
+      <node id="16589">
+        <label>boost/accumulators/framework/accumulator_base.hpp</label>
+      </node>
+      <node id="16514">
+        <label>boost/assign/v2/ref/detail/unwrap/range.hpp</label>
+        <link refid="ref_2detail_2unwrap_2range_8hpp_source"/>
+        <childnode refid="16515" relation="include">
+        </childnode>
+        <childnode refid="16516" relation="include">
+        </childnode>
+        <childnode refid="16517" relation="include">
+        </childnode>
+        <childnode refid="16518" relation="include">
+        </childnode>
+        <childnode refid="16513" relation="include">
+        </childnode>
+        <childnode refid="16519" relation="include">
+        </childnode>
+      </node>
+      <node id="16585">
+        <label>boost/assign/v2/detail/keyword/nil.hpp</label>
+        <link refid="nil_8hpp_source"/>
+      </node>
+      <node id="16593">
+        <label>boost/assign/v2/put/generic/result_of_modulo.hpp</label>
+        <link refid="result__of__modulo_8hpp_source"/>
+        <childnode refid="16544" relation="include">
+        </childnode>
+        <childnode refid="16594" relation="include">
+        </childnode>
+      </node>
+      <node id="16551">
+        <label>boost/assign/v2/detail/fwd/ptr_container.hpp</label>
+        <link refid="ptr__container_8hpp_source"/>
+      </node>
+      <node id="16506">
+        <label>boost/mpl/int.hpp</label>
+      </node>
+      <node id="16521">
+        <label>boost/type_traits/is_convertible.hpp</label>
+      </node>
+      <node id="16617">
+        <label>boost/assign/v2/put/range/modifier/copy.hpp</label>
+        <link refid="put_2range_2modifier_2copy_8hpp_source"/>
+        <childnode refid="16618" relation="include">
+        </childnode>
+        <childnode refid="16619" relation="include">
+        </childnode>
+        <childnode refid="16620" relation="include">
+        </childnode>
+        <childnode refid="16516" relation="include">
+        </childnode>
+        <childnode refid="16621" relation="include">
+        </childnode>
+        <childnode refid="16622" relation="include">
+        </childnode>
+      </node>
+      <node id="16481">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/alloc.hpp</label>
+        <link refid="alloc.hpp"/>
+        <childnode refid="16482" relation="include">
+        </childnode>
+        <childnode refid="16626" relation="include">
+        </childnode>
+      </node>
+      <node id="16541">
+        <label>boost/preprocessor/repetition/enum_binary_params.hpp</label>
+      </node>
+      <node id="16486">
+        <label>boost/mpl/identity.hpp</label>
+      </node>
+      <node id="16503">
+        <label>boost/assign/v2/ref/wrapper/rebind.hpp</label>
+        <link refid="rebind_8hpp_source"/>
+        <childnode refid="16489" relation="include">
+        </childnode>
+        <childnode refid="16493" relation="include">
+        </childnode>
+        <childnode refid="16495" relation="include">
+        </childnode>
+        <childnode refid="16498" relation="include">
+        </childnode>
+      </node>
+      <node id="16491">
+        <label>boost/call_traits.hpp</label>
+      </node>
+      <node id="16508">
+        <label>boost/assign/v2/ref/fusion/fwd.hpp</label>
+        <link refid="ref_2fusion_2fwd_8hpp_source"/>
+      </node>
+      <node id="16528">
+        <label>boost/assign/v2/detail/relational_op/relational_op.hpp</label>
+        <link refid="relational__op_2relational__op_8hpp_source"/>
+        <childnode refid="16529" relation="include">
+        </childnode>
+      </node>
+      <node id="16559">
+        <label>boost/preprocessor/seq/for_each_product.hpp</label>
+      </node>
+      <node id="16513">
+        <label>boost/range/iterator_range.hpp</label>
+      </node>
+      <node id="16606">
+        <label>boost/assign/v2/put/modifier/incr_lookup.hpp</label>
+        <link refid="incr__lookup_8hpp_source"/>
+        <childnode refid="16544" relation="include">
+        </childnode>
+        <childnode refid="16589" relation="include">
+        </childnode>
+        <childnode refid="16590" relation="include">
+        </childnode>
+        <childnode refid="16576" relation="include">
+        </childnode>
+        <childnode refid="16580" relation="include">
+        </childnode>
+        <childnode refid="16607" relation="include">
+        </childnode>
+        <childnode refid="16591" relation="include">
+        </childnode>
+        <childnode refid="16593" relation="include">
+        </childnode>
+      </node>
+      <node id="16494">
+        <label>boost/ref.hpp</label>
+      </node>
+      <node id="16603">
+        <label>boost/mpl/or.hpp</label>
+      </node>
+      <node id="16542">
+        <label>boost/preprocessor/repeat_from_to.hpp</label>
+      </node>
+      <node id="16556">
+        <label>boost/assign/v2/detail/functor/crtp_unary_and_up.hpp</label>
+        <link refid="crtp__unary__and__up_8hpp_source"/>
+        <childnode refid="16538" relation="include">
+        </childnode>
+        <childnode refid="16557" relation="include">
+        </childnode>
+        <childnode refid="16541" relation="include">
+        </childnode>
+        <childnode refid="16540" relation="include">
+        </childnode>
+        <childnode refid="16558" relation="include">
+        </childnode>
+        <childnode refid="16559" relation="include">
+        </childnode>
+        <childnode refid="16560" relation="include">
+        </childnode>
+        <childnode refid="16544" relation="include">
+        </childnode>
+        <childnode refid="16561" relation="include">
+        </childnode>
+        <childnode refid="16499" relation="include">
+        </childnode>
+        <childnode refid="16546" relation="include">
+        </childnode>
+        <childnode refid="16562" relation="include">
+        </childnode>
+        <childnode refid="16563" relation="include">
+        </childnode>
+        <childnode refid="16565" relation="include">
+        </childnode>
+        <childnode refid="16569" relation="include">
+        </childnode>
+        <childnode refid="16571" relation="include">
+        </childnode>
+      </node>
+      <node id="16482">
+        <label>boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp</label>
+        <link refid="static__array_2alloc_2fast__alloc_8hpp_source"/>
+        <childnode refid="16483" relation="include">
+        </childnode>
+        <childnode refid="16504" relation="include">
+        </childnode>
+        <childnode refid="16509" relation="include">
+        </childnode>
+        <childnode refid="16625" relation="include">
+        </childnode>
+      </node>
+      <node id="16609">
+        <label>boost/assign/v2/put/modifier/xxx.hpp</label>
+        <link refid="xxx_8hpp_source"/>
+        <childnode refid="16539" relation="include">
+        </childnode>
+        <childnode refid="16589" relation="include">
+        </childnode>
+        <childnode refid="16590" relation="include">
+        </childnode>
+        <childnode refid="16591" relation="include">
+        </childnode>
+      </node>
+      <node id="16558">
+        <label>boost/preprocessor/repetition/repeat.hpp</label>
+      </node>
+      <node id="16613">
+        <label>boost/assign/v2/put/modifier/repeat.hpp</label>
+        <link refid="put_2modifier_2repeat_8hpp_source"/>
+        <childnode refid="16530" relation="include">
+        </childnode>
+        <childnode refid="16499" relation="include">
+        </childnode>
+        <childnode refid="16589" relation="include">
+        </childnode>
+        <childnode refid="16590" relation="include">
+        </childnode>
+        <childnode refid="16614" relation="include">
+        </childnode>
+        <childnode refid="16591" relation="include">
+        </childnode>
+        <childnode refid="16488" relation="include">
+        </childnode>
+      </node>
+      <node id="16493">
+        <label>boost/assign/v2/ref/wrapper/framework.hpp</label>
+        <link refid="framework_8hpp_source"/>
+        <childnode refid="16490" relation="include">
+        </childnode>
+        <childnode refid="16494" relation="include">
+        </childnode>
+        <childnode refid="16483" relation="include">
+        </childnode>
+      </node>
+      <node id="16580">
+        <label>boost/assign/v2/detail/functor/identity.hpp</label>
+        <link refid="identity_8hpp_source"/>
+        <childnode refid="16507" relation="include">
+        </childnode>
+        <childnode refid="16581" relation="include">
+        </childnode>
+        <childnode refid="16506" relation="include">
+        </childnode>
+        <childnode refid="16582" relation="include">
+        </childnode>
+        <childnode refid="16485" relation="include">
+        </childnode>
+        <childnode refid="16515" relation="include">
+        </childnode>
+        <childnode refid="16556" relation="include">
+        </childnode>
+      </node>
+      <node id="16576">
+        <label>boost/assign/v2/detail/type_traits/value.hpp</label>
+        <link refid="value_8hpp_source"/>
+        <childnode refid="16492" relation="include">
+        </childnode>
+        <childnode refid="16486" relation="include">
+        </childnode>
+      </node>
+      <node id="16536">
+        <label>boost/assign/v2/put/generic/crtp.hpp</label>
+        <link refid="put_2generic_2crtp_8hpp_source"/>
+        <childnode refid="16537" relation="include">
+        </childnode>
+        <childnode refid="16538" relation="include">
+        </childnode>
+        <childnode refid="16539" relation="include">
+        </childnode>
+        <childnode refid="16540" relation="include">
+        </childnode>
+        <childnode refid="16541" relation="include">
+        </childnode>
+        <childnode refid="16542" relation="include">
+        </childnode>
+        <childnode refid="16543" relation="include">
+        </childnode>
+        <childnode refid="16544" relation="include">
+        </childnode>
+        <childnode refid="16485" relation="include">
+        </childnode>
+        <childnode refid="16492" relation="include">
+        </childnode>
+        <childnode refid="16527" relation="include">
+        </childnode>
+        <childnode refid="16545" relation="include">
+        </childnode>
+        <childnode refid="16546" relation="include">
+        </childnode>
+        <childnode refid="16548" relation="include">
+        </childnode>
+        <childnode refid="16555" relation="include">
+        </childnode>
+        <childnode refid="16584" relation="include">
+        </childnode>
+        <childnode refid="16563" relation="include">
+        </childnode>
+        <childnode refid="16587" relation="include">
+        </childnode>
+        <childnode refid="16593" relation="include">
+        </childnode>
+        <childnode refid="16615" relation="include">
+        </childnode>
+        <childnode refid="16616" relation="include">
+        </childnode>
+        <childnode refid="16614" relation="include">
+        </childnode>
+      </node>
+      <node id="16539">
+        <label>boost/preprocessor/cat.hpp</label>
+      </node>
+      <node id="16560">
+        <label>boost/preprocessor/seq/first_n.hpp</label>
+      </node>
+      <node id="16570">
+        <label>boost/preprocessor/seq/enum.hpp</label>
+      </node>
+      <node id="16547">
+        <label>boost/mpl/limits/arity.hpp</label>
+      </node>
+      <node id="16531">
+        <label>boost/assign/v2/put/range/convert.hpp</label>
+        <link refid="convert_8hpp_source"/>
+        <childnode refid="16532" relation="include">
+        </childnode>
+      </node>
+      <node id="16502">
+        <label>boost/operators.hpp</label>
+      </node>
+      <node id="16496">
+        <label>boost/config.hpp</label>
+      </node>
+      <node id="16504">
+        <label>boost/assign/v2/ref/fusion/assign_array.hpp</label>
+        <link refid="fusion_2assign__array_8hpp_source"/>
+        <childnode refid="16505" relation="include">
+        </childnode>
+        <childnode refid="16490" relation="include">
+        </childnode>
+        <childnode refid="16506" relation="include">
+        </childnode>
+        <childnode refid="16507" relation="include">
+        </childnode>
+        <childnode refid="16508" relation="include">
+        </childnode>
+      </node>
+      <node id="16524">
+        <label>boost/assign/v2/ref/detail/unwrap/reference.hpp</label>
+        <link refid="reference_8hpp_source"/>
+        <childnode refid="16520" relation="include">
+        </childnode>
+        <childnode refid="16485" relation="include">
+        </childnode>
+        <childnode refid="16486" relation="include">
+        </childnode>
+        <childnode refid="16525" relation="include">
+        </childnode>
+        <childnode refid="16526" relation="include">
+        </childnode>
+        <childnode refid="16515" relation="include">
+        </childnode>
+        <childnode refid="16522" relation="include">
+        </childnode>
+        <childnode refid="16527" relation="include">
+        </childnode>
+        <childnode refid="16493" relation="include">
+        </childnode>
+      </node>
+      <node id="16510">
+        <label>boost/array.hpp</label>
+      </node>
+      <node id="16567">
+        <label>boost/preprocessor/seq/for_each_i.hpp</label>
+      </node>
+      <node id="16628">
+        <label>boost/assign/v2/ref/static_array/alloc/lazy_alloc_fwd.hpp</label>
+        <link refid="static__array_2alloc_2lazy__alloc__fwd_8hpp_source"/>
+      </node>
+      <node id="16530">
+        <label>boost/type_traits/is_base_of.hpp</label>
+      </node>
+      <node id="16588">
+        <label>boost/assign/v2/put/modifier/at_next.hpp</label>
+        <link refid="at__next_8hpp_source"/>
+        <childnode refid="16589" relation="include">
+        </childnode>
+        <childnode refid="16590" relation="include">
+        </childnode>
+        <childnode refid="16591" relation="include">
+        </childnode>
+        <childnode refid="16576" relation="include">
+        </childnode>
+      </node>
+      <node id="16624">
+        <label>boost/assign/v2/put/range/modifier/deduce.hpp</label>
+        <link refid="put_2range_2modifier_2deduce_8hpp_source"/>
+        <childnode refid="16599" relation="include">
+        </childnode>
+        <childnode refid="16600" relation="include">
+        </childnode>
+        <childnode refid="16596" relation="include">
+        </childnode>
+      </node>
+      <node id="16564">
+        <label>boost/preprocessor/logical/and.hpp</label>
+      </node>
+      <node id="16608">
+        <label>boost/assign/v2/put/modifier/insert.hpp</label>
+        <link refid="insert_8hpp_source"/>
+        <childnode refid="16609" relation="include">
+        </childnode>
+      </node>
+      <node id="16512">
+        <label>boost/range/algorithm/for_each.hpp</label>
+      </node>
+      <node id="16621">
+        <label>boost/range/size.hpp</label>
+      </node>
+      <node id="16591">
+        <label>boost/assign/v2/put/generic/new_modifier.hpp</label>
+        <link refid="new__modifier_8hpp_source"/>
+        <childnode refid="16544" relation="include">
+        </childnode>
+        <childnode refid="16592" relation="include">
+        </childnode>
+        <childnode refid="16499" relation="include">
+        </childnode>
+        <childnode refid="16487" relation="include">
+        </childnode>
+        <childnode refid="16593" relation="include">
+        </childnode>
+      </node>
+      <node id="16525">
+        <label>boost/iterator/iterator_traits.hpp</label>
+      </node>
+      <node id="16574">
+        <label>boost/assign/v2/detail/type_traits/container/value.hpp</label>
+        <link refid="container_2value_8hpp_source"/>
+        <childnode refid="16485" relation="include">
+        </childnode>
+        <childnode refid="16486" relation="include">
+        </childnode>
+        <childnode refid="16575" relation="include">
+        </childnode>
+        <childnode refid="16576" relation="include">
+        </childnode>
+        <childnode refid="16577" relation="include">
+        </childnode>
+      </node>
+      <node id="16489">
+        <label>algorithm</label>
+      </node>
+      <node id="16575">
+        <label>boost/type_traits/remove_pointer.hpp</label>
+      </node>
+      <node id="16548">
+        <label>boost/assign/v2/detail/type_traits/container/is_ptr_container.hpp</label>
+        <link refid="is__ptr__container_8hpp_source"/>
+        <childnode refid="16486" relation="include">
+        </childnode>
+        <childnode refid="16485" relation="include">
+        </childnode>
+        <childnode refid="16549" relation="include">
+        </childnode>
+      </node>
+      <node id="16625">
+        <label>boost/assign/v2/ref/static_array/alloc/fast_alloc_fwd.hpp</label>
+        <link refid="static__array_2alloc_2fast__alloc__fwd_8hpp_source"/>
+      </node>
+      <node id="16573">
+        <label>boost/assign/v2/detail/functor/constructor.hpp</label>
+        <link refid="constructor_8hpp_source"/>
+        <childnode refid="16557" relation="include">
+        </childnode>
+        <childnode refid="16540" relation="include">
+        </childnode>
+        <childnode refid="16541" relation="include">
+        </childnode>
+        <childnode refid="16527" relation="include">
+        </childnode>
+        <childnode refid="16492" relation="include">
+        </childnode>
+        <childnode refid="16543" relation="include">
+        </childnode>
+        <childnode refid="16574" relation="include">
+        </childnode>
+        <childnode refid="16546" relation="include">
+        </childnode>
+        <childnode refid="16556" relation="include">
+        </childnode>
+      </node>
+      <node id="16596">
+        <label>boost/assign/v2/detail/mpl/switch.hpp</label>
+        <link refid="switch_8hpp_source"/>
+        <childnode refid="16490" relation="include">
+        </childnode>
+        <childnode refid="16485" relation="include">
+        </childnode>
+        <childnode refid="16486" relation="include">
+        </childnode>
+        <childnode refid="16544" relation="include">
+        </childnode>
+        <childnode refid="16543" relation="include">
+        </childnode>
+        <childnode refid="16597" relation="include">
+        </childnode>
+      </node>
+      <node id="16515">
+        <label>boost/type_traits/add_reference.hpp</label>
+      </node>
+      <node id="16490">
+        <label>boost/mpl/bool.hpp</label>
+      </node>
+      <node id="16569">
+        <label>boost/assign/v2/detail/pp/params.hpp</label>
+        <link refid="params_8hpp_source"/>
+        <childnode refid="16568" relation="include">
+        </childnode>
+        <childnode refid="16570" relation="include">
+        </childnode>
+      </node>
+      <node id="16509">
+        <label>boost/assign/v2/ref/static_array/interface.hpp</label>
+        <link refid="static__array_2interface_8hpp_source"/>
+        <childnode refid="16489" relation="include">
+        </childnode>
+        <childnode refid="16490" relation="include">
+        </childnode>
+        <childnode refid="16506" relation="include">
+        </childnode>
+        <childnode refid="16499" relation="include">
+        </childnode>
+        <childnode refid="16487" relation="include">
+        </childnode>
+        <childnode refid="16500" relation="include">
+        </childnode>
+        <childnode refid="16501" relation="include">
+        </childnode>
+        <childnode refid="16510" relation="include">
+        </childnode>
+        <childnode refid="16511" relation="include">
+        </childnode>
+        <childnode refid="16491" relation="include">
+        </childnode>
+        <childnode refid="16512" relation="include">
+        </childnode>
+        <childnode refid="16513" relation="include">
+        </childnode>
+        <childnode refid="16493" relation="include">
+        </childnode>
+        <childnode refid="16498" relation="include">
+        </childnode>
+        <childnode refid="16514" relation="include">
+        </childnode>
+        <childnode refid="16528" relation="include">
+        </childnode>
+        <childnode refid="16531" relation="include">
+        </childnode>
+      </node>
+      <node id="16614">
+        <label>boost/assign/v2/put/generic/base.hpp</label>
+        <link refid="put_2generic_2base_8hpp_source"/>
+      </node>
+      <node id="16566">
+        <label>boost/preprocessor/comma_if.hpp</label>
+      </node>
+      <node id="16498">
+        <label>boost/assign/v2/ref/wrapper/crtp.hpp</label>
+        <link refid="ref_2wrapper_2crtp_8hpp_source"/>
+        <childnode refid="16499" relation="include">
+        </childnode>
+        <childnode refid="16487" relation="include">
+        </childnode>
+        <childnode refid="16500" relation="include">
+        </childnode>
+        <childnode refid="16501" relation="include">
+        </childnode>
+        <childnode refid="16491" relation="include">
+        </childnode>
+        <childnode refid="16502" relation="include">
+        </childnode>
+      </node>
+      <node id="16550">
+        <label>memory</label>
+      </node>
+      <node id="16563">
+        <label>boost/assign/v2/detail/config/enable_cpp0x.hpp</label>
+        <link refid="enable__cpp0x_8hpp_source"/>
+        <childnode refid="16564" relation="include">
+        </childnode>
+      </node>
+      <node id="16587">
+        <label>boost/assign/v2/put/modifier/modifier.hpp</label>
+        <link refid="modifier_2modifier_8hpp_source"/>
+        <childnode refid="16588" relation="include">
+        </childnode>
+        <childnode refid="16595" relation="include">
+        </childnode>
+        <childnode refid="16606" relation="include">
+        </childnode>
+        <childnode refid="16608" relation="include">
+        </childnode>
+        <childnode refid="16610" relation="include">
+        </childnode>
+        <childnode refid="16611" relation="include">
+        </childnode>
+        <childnode refid="16612" relation="include">
+        </childnode>
+        <childnode refid="16613" relation="include">
+        </childnode>
+      </node>
+      <node id="16487">
+        <label>boost/type_traits/is_same.hpp</label>
+      </node>
+      <node id="16599">
+        <label>boost/assign/v2/detail/type_traits/container/has_static_size.hpp</label>
+        <link refid="has__static__size_8hpp_source"/>
+        <childnode refid="16551" relation="include">
+        </childnode>
+        <childnode refid="16490" relation="include">
+        </childnode>
+      </node>
+      <node id="16507">
+        <label>boost/mpl/equal_to.hpp</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="16630">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/static_array.hpp</label>
+        <link refid="static__array_8hpp_source"/>
+      </node>
+      <node id="16629">
+        <label>/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/alloc.hpp</label>
+        <link refid="alloc.hpp"/>
+        <childnode refid="16630" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"></codeline>
+<codeline lineno="2"><highlight class="comment">//<sp/><sp/>Boost.Assign<sp/>v2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2003-2004<sp/>Thorsten<sp/>Ottosen<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(C)<sp/>2010<sp/>Erwann<sp/>Rogard<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Use,<sp/>modification<sp/>and<sp/>distribution<sp/>are<sp/>subject<sp/>to<sp/>the<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Boost<sp/>Software<sp/>License,<sp/>Version<sp/>1.0.<sp/>(See<sp/>accompanying<sp/>file<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>LICENSE_1_0.txt<sp/>or<sp/>copy<sp/>at<sp/>http://www.boost.org/LICENSE_1_0.txt)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"></highlight><highlight class="preprocessor">#ifndef<sp/>BOOST_ASSIGN_V2_REF_STATIC_ARRAY_ALLOC_ALLOC_ER_2010_HPP</highlight></codeline>
+<codeline lineno="11"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#define<sp/>BOOST_ASSIGN_V2_REF_STATIC_ARRAY_ALLOC_ALLOC_ER_2010_HPP</highlight></codeline>
+<codeline lineno="12"><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/assign/v2/ref/static_array/alloc/fast_alloc.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/assign/v2/ref/static_array/alloc/lazy_alloc.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/ref/static_array/alloc/alloc.hpp"/>
+  </compounddef>
+</doxygen>

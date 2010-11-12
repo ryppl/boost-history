@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="namespaceboost_1_1assign_1_1v2_1_1put__range__aux" kind="namespace">
+    <compoundname>boost::assign::v2::put_range_aux</compoundname>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__range__aux_1_1adaptor1" prot="public">boost::assign::v2::put_range_aux::adaptor1</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__range__aux_1_1adaptor2" prot="public">boost::assign::v2::put_range_aux::adaptor2</innerclass>
+    <innerclass refid="structboost_1_1assign_1_1v2_1_1put__range__aux_1_1deduce__operation" prot="public">boost::assign::v2::put_range_aux::deduce_operation</innerclass>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1put__range__aux_1a4b71321ab713a4cd9b0d8e0a2b0eb5ea" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename To</type>
+          </param>
+          <param>
+            <type>typename From</type>
+          </param>
+        </templateparamlist>
+        <type>To &amp;</type>
+        <definition>To&amp; boost::assign::v2::put_range_aux::operator|</definition>
+        <argsstring>(To &amp;to, put_range_aux::adaptor1&lt; From &gt; const &amp;from)</argsstring>
+        <name>operator|</name>
+        <param>
+          <type>To &amp;</type>
+          <declname>to</declname>
+        </param>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1put__range__aux_1_1adaptor1" kindref="compound">put_range_aux::adaptor1</ref>&lt; From &gt; const &amp;</type>
+          <declname>from</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/adaptor.hpp" line="41" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/adaptor.hpp" bodystart="40" bodyend="45"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1put__range__aux_1ace46226c758d783753d1562c5899b02a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename From</type>
+          </param>
+          <param>
+            <type>typename To</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::put_range_aux::put_range</definition>
+        <argsstring>(put_range_tag::copy, From const &amp;from, To &amp;to)</argsstring>
+        <name>put_range</name>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1put__range__tag_1_1copy" kindref="compound">put_range_tag::copy</ref></type>
+        </param>
+        <param>
+          <type>From const &amp;</type>
+          <declname>from</declname>
+        </param>
+        <param>
+          <type>To &amp;</type>
+          <declname>to</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/modifier/copy.hpp" line="30" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/modifier/copy.hpp" bodystart="29" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1put__range__aux_1a41e9723b0015c48cb13d253d45da61c2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename From</type>
+          </param>
+          <param>
+            <type>typename To</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::put_range_aux::put_range</definition>
+        <argsstring>(put_range_tag::put, From const &amp;from, To &amp;to)</argsstring>
+        <name>put_range</name>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1put__range__tag_1_1put" kindref="compound">put_range_tag::put</ref></type>
+        </param>
+        <param>
+          <type>From const &amp;</type>
+          <declname>from</declname>
+        </param>
+        <param>
+          <type>To &amp;</type>
+          <declname>to</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/modifier/put.hpp" line="31" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/modifier/put.hpp" bodystart="26" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1_1assign_1_1v2_1_1put__range__aux_1af02375ecd3b5f665231da2d6b2170219" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename From</type>
+          </param>
+          <param>
+            <type>typename To</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::assign::v2::put_range_aux::put_range</definition>
+        <argsstring>(put_range_tag::range, From const &amp;from, To &amp;to)</argsstring>
+        <name>put_range</name>
+        <param>
+          <type><ref refid="structboost_1_1assign_1_1v2_1_1put__range__tag_1_1range" kindref="compound">put_range_tag::range</ref></type>
+        </param>
+        <param>
+          <type>From const &amp;</type>
+          <declname>from</declname>
+        </param>
+        <param>
+          <type>To &amp;</type>
+          <declname>to</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/modifier/range.hpp" line="30" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/modifier/range.hpp" bodystart="25" bodyend="32"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/put/range/adaptor.hpp" line="18"/>
+  </compounddef>
+</doxygen>

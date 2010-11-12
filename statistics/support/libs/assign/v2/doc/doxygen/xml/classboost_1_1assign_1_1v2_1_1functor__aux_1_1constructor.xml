@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor" kind="class" prot="public">
+    <compoundname>boost::assign::v2::functor_aux::constructor</compoundname>
+    <basecompoundref refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up" prot="public" virt="non-virtual">boost::assign::v2::functor_aux::crtp_unary_and_up&lt; functor_aux::constructor&lt; T &gt;, boost::mpl::always&lt; T &gt; &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>typename T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-type">
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor_1a2e3bd02ceaf52970694cb9292cbed899" prot="private" static="no">
+        <type><ref refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor" kindref="compound">functor_aux::constructor</ref>&lt; T &gt;</type>
+        <definition>typedef functor_aux::constructor&lt;T&gt; boost::assign::v2::functor_aux::constructor&lt; T &gt;::this_</definition>
+        <argsstring></argsstring>
+        <name>this_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" line="33" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor_1a2e60c7070946ef0692708f60bb3dc75d" prot="private" static="no">
+        <type>boost::mpl::always&lt; T &gt;</type>
+        <definition>typedef boost::mpl::always&lt;T&gt; boost::assign::v2::functor_aux::constructor&lt; T &gt;::meta_result_</definition>
+        <argsstring></argsstring>
+        <name>meta_result_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" line="34" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor_1ae9296ecac4b876f4670d6231178030fb" prot="private" static="no">
+        <type><ref refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up" kindref="compound">functor_aux::crtp_unary_and_up</ref>&lt; <ref refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor" kindref="compound">this_</ref>, meta_result_ &gt;</type>
+        <definition>typedef functor_aux::crtp_unary_and_up&lt;this_, meta_result_&gt; boost::assign::v2::functor_aux::constructor&lt; T &gt;::super_</definition>
+        <argsstring></argsstring>
+        <name>super_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" line="35" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor_1a5510b17170d082284bc7735c98889368" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::assign::v2::functor_aux::constructor&lt; T &gt;::constructor</definition>
+        <argsstring>()</argsstring>
+        <name>constructor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" line="39" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" bodystart="39" bodyend="39"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor_1a3bc19aedf13f01bdd5dc98856092de0e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T boost::assign::v2::functor_aux::constructor&lt; T &gt;::operator()</definition>
+        <argsstring>() const </argsstring>
+        <name>operator()</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" line="41" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" bodystart="41" bodyend="41"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="174">
+        <label>boost::assign::v2::functor_aux::crtp_unary_and_up&lt; functor_aux::constructor&lt; T &gt;, boost::mpl::always&lt; T &gt; &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up"/>
+      </node>
+      <node id="173">
+        <label>boost::assign::v2::functor_aux::constructor&lt; T &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor"/>
+        <childnode refid="174" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="176">
+        <label>boost::assign::v2::functor_aux::crtp_unary_and_up&lt; functor_aux::constructor&lt; T &gt;, boost::mpl::always&lt; T &gt; &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up"/>
+      </node>
+      <node id="175">
+        <label>boost::assign::v2::functor_aux::constructor&lt; T &gt;</label>
+        <link refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor"/>
+        <childnode refid="176" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" line="32" bodyfile="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/functor/constructor.hpp" bodystart="28" bodyend="59"/>
+    <listofallmembers>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up_1a737c7bc727771b900e07e6fac5659791" prot="public" virt="non-virtual"><scope>boost::assign::v2::functor_aux::constructor</scope><name>BOOST_PP_INC</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up_1aaf120dbd1766ed96fa5bbbde98f196ec" prot="public" virt="non-virtual"><scope>boost::assign::v2::functor_aux::constructor</scope><name>BOOST_PP_REPEAT</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor_1a5510b17170d082284bc7735c98889368" prot="public" virt="non-virtual"><scope>boost::assign::v2::functor_aux::constructor</scope><name>constructor</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up_1a2a30f86339b81ea9449bb77fee734c10" prot="protected" virt="non-virtual"><scope>boost::assign::v2::functor_aux::constructor</scope><name>derived</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up_1ac36585e7958e9d641cf842aacb080dc6" prot="protected" virt="non-virtual"><scope>boost::assign::v2::functor_aux::constructor</scope><name>derived</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1crtp__unary__and__up_1a8403470cbea9dabd302b0671b817b92a" prot="public" virt="non-virtual"><scope>boost::assign::v2::functor_aux::constructor</scope><name>MACRO</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor_1a2e60c7070946ef0692708f60bb3dc75d" prot="private" virt="non-virtual"><scope>boost::assign::v2::functor_aux::constructor</scope><name>meta_result_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor_1a3bc19aedf13f01bdd5dc98856092de0e" prot="public" virt="non-virtual"><scope>boost::assign::v2::functor_aux::constructor</scope><name>operator()</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor_1ae9296ecac4b876f4670d6231178030fb" prot="private" virt="non-virtual"><scope>boost::assign::v2::functor_aux::constructor</scope><name>super_</name></member>
+      <member refid="classboost_1_1assign_1_1v2_1_1functor__aux_1_1constructor_1a2e3bd02ceaf52970694cb9292cbed899" prot="private" virt="non-virtual"><scope>boost::assign::v2::functor_aux::constructor</scope><name>this_</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

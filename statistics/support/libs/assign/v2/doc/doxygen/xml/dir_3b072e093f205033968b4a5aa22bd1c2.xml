@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="dir_3b072e093f205033968b4a5aa22bd1c2" kind="dir">
+    <compoundname>/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/</compoundname>
+    <innerfile refid="detail_2type__traits_2container_2container_8hpp">container.hpp</innerfile>
+    <innerfile refid="forward__to__value_8hpp">forward_to_value.hpp</innerfile>
+    <innerfile refid="has__push_8hpp">has_push.hpp</innerfile>
+    <innerfile refid="has__static__size_8hpp">has_static_size.hpp</innerfile>
+    <innerfile refid="is__associative_8hpp">is_associative.hpp</innerfile>
+    <innerfile refid="is__fifo_8hpp">is_fifo.hpp</innerfile>
+    <innerfile refid="is__lifo_8hpp">is_lifo.hpp</innerfile>
+    <innerfile refid="is__map_8hpp">is_map.hpp</innerfile>
+    <innerfile refid="is__ptr__container_8hpp">is_ptr_container.hpp</innerfile>
+    <innerfile refid="is__range_8hpp">is_range.hpp</innerfile>
+    <innerfile refid="is__set_8hpp">is_set.hpp</innerfile>
+    <innerfile refid="is__sorted_8hpp">is_sorted.hpp</innerfile>
+    <innerfile refid="is__static__array_8hpp">is_static_array.hpp</innerfile>
+    <innerfile refid="ptr__to__value_8hpp">ptr_to_value.hpp</innerfile>
+    <innerfile refid="ptr__to__value__container_8hpp">ptr_to_value_container.hpp</innerfile>
+    <innerfile refid="static__size_8hpp">static_size.hpp</innerfile>
+    <innerfile refid="container_2value_8hpp">value.hpp</innerfile>
+    <innerfile refid="value__container_8hpp">value_container.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/erwann/sandbox/statistics/support/boost/assign/v2/detail/type_traits/container/"/>
+  </compounddef>
+</doxygen>
