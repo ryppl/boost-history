@@ -38,10 +38,10 @@ namespace nth_result_of{ \
     struct csv_anon : ref::nth_result_of::csv_anon<N, xxx_Tag1, T>{};\
 } \
 	template<typename T>\
-    typename ref::result_of::csv_anon_nil<xxx_Tag1, T>::type\
+    typename ref::result_of::empty_csv_anon<xxx_Tag1, T>::type\
 	csv_anon( keyword_aux::nil )\
     {\
-    	typedef typename ref::result_of::csv_anon_nil<\
+    	typedef typename ref::result_of::empty_csv_anon<\
         	xxx_Tag1,\
             T\
         >::type result_;\

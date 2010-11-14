@@ -25,7 +25,7 @@ namespace nth_result_of{ \
 namespace result_of{ \
  \
 	template<typename T> \
-    struct anon_nil : ref::result_of::anon_nil< \
+    struct empty_anon : ref::result_of::empty_anon< \
         Tag1, T \
     >{}; \
  \
@@ -36,7 +36,7 @@ namespace result_of{ \
  \
 } \
 	template<typename T> \
-    typename NS::result_of::anon_nil<T>::type \
+    typename NS::result_of::empty_anon<T>::type \
 	anon( keyword_aux::nil const& ) \
     { \
     	return ref::anon<Tag1,T>( v2::_nil ); \

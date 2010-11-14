@@ -22,7 +22,7 @@ namespace ref{
 namespace result_of{
 
 	template<typename Tag1,typename T>
-    struct anon_nil 
+    struct empty_anon 
     	: nth_result_of::anon<0, Tag1, T>{};
 
 	template<typename Tag1, typename T>
@@ -32,7 +32,7 @@ namespace result_of{
 }// result_of
 
 	template<typename Tag1, typename T>
-    typename result_of::anon_nil<Tag1, T>::type
+    typename result_of::empty_anon<Tag1, T>::type
 	anon( keyword_aux::nil const& )
     {
     	typedef anon_aux::unary_tag2_ tag2_;
