@@ -28,16 +28,16 @@ namespace ref{
 namespace result_of{
 
 	template<typename Tag1,typename T>
-    struct empty_csv_anon 
+    struct csv_anon_nil 
     	: nth_result_of::csv_anon<0, Tag1, T>{};
     
 }// result_of
 
 	template<typename Tag1, typename T>
-    typename result_of::empty_csv_anon<Tag1, T>::type
+    typename result_of::csv_anon_nil<Tag1, T>::type
 	csv_anon( keyword_aux::nil )
     {
-    	typedef typename result_of::empty_csv_anon<Tag1, T>::type result_;
+    	typedef typename result_of::csv_anon_nil<Tag1, T>::type result_;
         return result_();
     }
 

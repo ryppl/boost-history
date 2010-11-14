@@ -23,7 +23,7 @@ namespace nth_result_of{ \
 	struct fusion : ref::nth_result_of::fusion<Tag1, Tag2, Tnil>{}; \
 } \
 	template<typename Tag2> \
-    typename ref::result_of::empty_fusion< \
+    typename ref::result_of::fusion_nil< \
     	Tag1, \
         Tag2, \
         fusion_aux::nil_arg_type \

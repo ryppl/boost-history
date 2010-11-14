@@ -27,7 +27,7 @@ namespace ref{
 namespace result_of{
 
 	template<typename Tag1,typename Tag2,typename Tnil>
-    struct empty_fusion : boost::mpl::apply1< 
+    struct fusion_nil : boost::mpl::apply1< 
         nth_result_of::fusion<Tag1, Tag2, Tnil>,
         boost::mpl::vector0<>
     >{};
@@ -35,10 +35,10 @@ namespace result_of{
 }// result_of
 
 	template<typename Tag1, typename Tag2, typename Tnil>
-    typename result_of::empty_fusion<Tag1, Tag2, Tnil>::type
+    typename result_of::fusion_nil<Tag1, Tag2, Tnil>::type
     fusion( keyword_aux::nil )
     {
-    	typedef typename result_of::empty_fusion<
+    	typedef typename result_of::fusion_nil<
             Tag1,
             Tag2,
         	Tnil
@@ -47,7 +47,7 @@ namespace result_of{
     }
 
 	template<typename Tag1, typename Tag2>
-    typename result_of::empty_fusion<
+    typename result_of::fusion_nil<
     	Tag1, 
         Tag2, 
         fusion_aux::nil_arg_type
@@ -55,7 +55,7 @@ namespace result_of{
 	fusion( keyword_aux::nil )
     {
     	typedef fusion_aux::nil_arg_type nil_arg_;
-    	typedef typename result_of::empty_fusion<
+    	typedef typename result_of::fusion_nil<
             Tag1,
             Tag2,
         	nil_arg_
