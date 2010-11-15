@@ -292,10 +292,10 @@ namespace detail {
             }
 
         bool operator==(const circle_event &c_event) const {
-            epsilon_robust_comparator<T> &lhs1 = center_y_ * c_event.denom_;
-            epsilon_robust_comparator<T> &rhs1 = denom_ * c_event.center_y_;
-            epsilon_robust_comparator<T> &lhs2 = lower_x_ * c_event.denom_;
-            epsilon_robust_comparator<T> &rhs2 = denom_ * c_event.lower_x_;
+            const epsilon_robust_comparator<T> &lhs1 = center_y_ * c_event.denom_;
+            const epsilon_robust_comparator<T> &rhs1 = denom_ * c_event.center_y_;
+            const epsilon_robust_comparator<T> &lhs2 = lower_x_ * c_event.denom_;
+            const epsilon_robust_comparator<T> &rhs2 = denom_ * c_event.lower_x_;
             return (lhs1.compare(rhs1) == UNDEFINED && lhs2.compare(rhs2) == UNDEFINED);
         }
 
@@ -304,13 +304,13 @@ namespace detail {
         }
 
         bool operator<(const circle_event &c_event) const {
-            epsilon_robust_comparator<T> &lhs1 = lower_x_ * c_event.denom_;
-            epsilon_robust_comparator<T> &rhs1 = denom_ * c_event.lower_x_;
+            const epsilon_robust_comparator<T> &lhs1 = lower_x_ * c_event.denom_;
+            const epsilon_robust_comparator<T> &rhs1 = denom_ * c_event.lower_x_;
             kPredicateResult pres = lhs1.compare(rhs1, 64);
             if (pres != UNDEFINED)
                 return (pres == LESS);
-            epsilon_robust_comparator<T> &lhs2 = center_y_ * c_event.denom_;
-            epsilon_robust_comparator<T> &rhs2 = denom_ * c_event.center_y_;
+            const epsilon_robust_comparator<T> &lhs2 = center_y_ * c_event.denom_;
+            const epsilon_robust_comparator<T> &rhs2 = denom_ * c_event.center_y_;
             return (lhs2.compare(rhs2, 64) == LESS);
         }
 
