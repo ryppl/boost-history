@@ -38,11 +38,11 @@ namespace re_detail{
 #pragma warning(disable:4244 4800)
 #endif
 
-template <class charT, class traits>
-class basic_regex_parser : public basic_regex_creator<charT, traits>
+template <class charT, class traits, class Allocator>
+class basic_regex_parser : public basic_regex_creator<charT, traits, Allocator>
 {
 public:
-   basic_regex_parser(regex_data<charT, traits>* data);
+   basic_regex_parser(regex_data<charT, traits, Allocator>* data);
    void parse(const charT* p1, const charT* p2, unsigned flags);
    void fail(regex_constants::error_type error_code, std::ptrdiff_t position);
    void fail(regex_constants::error_type error_code, std::ptrdiff_t position, std::string message, std::ptrdiff_t start_pos);
@@ -101,14 +101,14 @@ private:
    basic_regex_parser(const basic_regex_parser&);
 };
 
-template <class charT, class traits>
-basic_regex_parser<charT, traits>::basic_regex_parser(regex_data<charT, traits>* data)
-   : basic_regex_creator<charT, traits>(data), m_mark_count(0), m_mark_reset(-1), m_max_mark(0), m_paren_start(0), m_alt_insert_point(0), m_has_case_change(false)
+template <class charT, class traits, class Allocator>
+basic_regex_parser<charT, traits, Allocator>::basic_regex_parser(regex_data<charT, traits, Allocator>* data)
+   : basic_regex_creator<charT, traits, Allocator>(data), m_mark_count(0), m_mark_reset(-1), m_max_mark(0), m_paren_start(0), m_alt_insert_point(0), m_has_case_change(false)
 {
 }
 
-template <class charT, class traits>
-void basic_regex_parser<charT, traits>::parse(const charT* p1, const charT* p2, unsigned l_flags)
+template <class charT, class traits, class Allocator>
+void basic_regex_parser<charT, traits, Allocator>::parse(const charT* p1, const charT* p2, unsigned l_flags)
 {
    // pass l_flags on to base class:
    this->init(l_flags);
@@ -131,7 +131,7 @@ void basic_regex_parser<charT, traits>::parse(const charT* p1, const charT* p2, 
    {
    case regbase::perl_syntax_group:
       {
-         m_parser_proc = &basic_regex_parser<charT, traits>::parse_extended;
+         m_parser_proc = &basic_regex_parser<charT, traits, Allocator>::parse_extended;
          //
          // Add a leading paren with index zero to give recursions a target:
          //
@@ -141,10 +141,10 @@ void basic_regex_parser<charT, traits>::parse(const charT* p1, const charT* p2, 
          break;
       }
    case regbase::basic_syntax_group:
-      m_parser_proc = &basic_regex_parser<charT, traits>::parse_basic;
+      m_parser_proc = &basic_regex_parser<charT, traits, Allocator>::parse_basic;
       break;
    case regbase::literal:
-      m_parser_proc = &basic_regex_parser<charT, traits>::parse_literal;
+      m_parser_proc = &basic_regex_parser<charT, traits, Allocator>::parse_literal;
       break;
    default:
       // Ooops, someone has managed to set more than one of the main option flags, 
@@ -176,16 +176,16 @@ void basic_regex_parser<charT, traits>::parse(const charT* p1, const charT* p2, 
    this->finalize(p1, p2);
 }
 
-template <class charT, class traits>
-void basic_regex_parser<charT, traits>::fail(regex_constants::error_type error_code, std::ptrdiff_t position)
+template <class charT, class traits, class Allocator>
+void basic_regex_parser<charT, traits, Allocator>::fail(regex_constants::error_type error_code, std::ptrdiff_t position)
 {
    // get the error message:
    std::string message = this->m_pdata->m_ptraits->error_string(error_code);
    fail(error_code, position, message);
 }
 
-template <class charT, class traits>
-void basic_regex_parser<charT, traits>::fail(regex_constants::error_type error_code, std::ptrdiff_t position, std::string message, std::ptrdiff_t start_pos)
+template <class charT, class traits, class Allocator>
+void basic_regex_parser<charT, traits, Allocator>::fail(regex_constants::error_type error_code, std::ptrdiff_t position, std::string message, std::ptrdiff_t start_pos)
 {
    if(0 == this->m_pdata->m_status) // update the error code if not already set
       this->m_pdata->m_status = error_code;
@@ -223,8 +223,8 @@ void basic_regex_parser<charT, traits>::fail(regex_constants::error_type error_c
 #endif
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_all()
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_all()
 {
    bool result = true;
    while(result && (m_position != m_end))
@@ -238,8 +238,8 @@ bool basic_regex_parser<charT, traits>::parse_all()
 #pragma warning(push)
 #pragma warning(disable:4702)
 #endif
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_basic()
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_basic()
 {
    switch(this->m_traits.syntax_type(*m_position))
    {
@@ -292,8 +292,8 @@ bool basic_regex_parser<charT, traits>::parse_basic()
    return true;
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_extended()
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_extended()
 {
    bool result = true;
    switch(this->m_traits.syntax_type(*m_position))
@@ -378,8 +378,8 @@ bool basic_regex_parser<charT, traits>::parse_extended()
 #pragma warning(pop)
 #endif
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_literal()
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_literal()
 {
    // append this as a literal provided it's not a space character
    // or the perl option regbase::mod_x is not set:
@@ -393,8 +393,8 @@ bool basic_regex_parser<charT, traits>::parse_literal()
    return true;
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_open_paren()
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_open_paren()
 {
    //
    // skip the '(' and error check:
@@ -514,8 +514,8 @@ bool basic_regex_parser<charT, traits>::parse_open_paren()
    return true;
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_basic_escape()
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_basic_escape()
 {
    ++m_position;
    bool result = true;
@@ -656,8 +656,8 @@ bool basic_regex_parser<charT, traits>::parse_basic_escape()
    return result;
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_extended_escape()
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_extended_escape()
 {
    ++m_position;
    bool negate = false; // in case this is a character class escape: \w \d etc
@@ -902,8 +902,8 @@ escape_type_class_jump:
    return true;
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_match_any()
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_match_any()
 {
    //
    // we have a '.' that can match any character:
@@ -918,8 +918,8 @@ bool basic_regex_parser<charT, traits>::parse_match_any()
    return true;
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_repeat(std::size_t low, std::size_t high)
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_repeat(std::size_t low, std::size_t high)
 {
    bool greedy = true;
    bool pocessive = false;
@@ -1049,8 +1049,8 @@ bool basic_regex_parser<charT, traits>::parse_repeat(std::size_t low, std::size_
    return true;
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_repeat_range(bool isbasic)
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_repeat_range(bool isbasic)
 {
    static const char* incomplete_message = "Missing } in quantified repetition.";
    //
@@ -1153,8 +1153,8 @@ bool basic_regex_parser<charT, traits>::parse_repeat_range(bool isbasic)
    return parse_repeat(min, max);
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_alt()
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_alt()
 {
    //
    // error check: if there have been no previous states,
@@ -1219,8 +1219,8 @@ bool basic_regex_parser<charT, traits>::parse_alt()
    return true;
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_set()
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_set()
 {
    static const char* incomplete_message = "Character set declaration starting with [ terminated prematurely - either no ] was found or the set had no content.";
    ++m_position;
@@ -1311,8 +1311,8 @@ bool basic_regex_parser<charT, traits>::parse_set()
    return m_position != m_end;
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_inner_set(basic_char_set<charT, traits>& char_set)
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_inner_set(basic_char_set<charT, traits>& char_set)
 {
    static const char* incomplete_message = "Character class declaration starting with [ terminated prematurely - either no ] was found or the set had no content.";
    //
@@ -1473,8 +1473,8 @@ bool basic_regex_parser<charT, traits>::parse_inner_set(basic_char_set<charT, tr
    return true;
 }
 
-template <class charT, class traits>
-void basic_regex_parser<charT, traits>::parse_set_literal(basic_char_set<charT, traits>& char_set)
+template <class charT, class traits, class Allocator>
+void basic_regex_parser<charT, traits, Allocator>::parse_set_literal(basic_char_set<charT, traits>& char_set)
 {
    digraph<charT> start_range(get_next_set_literal(char_set));
    if(m_end == m_position)
@@ -1517,8 +1517,8 @@ void basic_regex_parser<charT, traits>::parse_set_literal(basic_char_set<charT, 
    char_set.add_single(start_range);
 }
 
-template <class charT, class traits>
-digraph<charT> basic_regex_parser<charT, traits>::get_next_set_literal(basic_char_set<charT, traits>& char_set)
+template <class charT, class traits, class Allocator>
+digraph<charT> basic_regex_parser<charT, traits, Allocator>::get_next_set_literal(basic_char_set<charT, traits>& char_set)
 {
    digraph<charT> result;
    switch(this->m_traits.syntax_type(*m_position))
@@ -1626,8 +1626,8 @@ bool valid_value(charT c, int v)
    return valid_value(c, v, mpl::bool_<(sizeof(charT) < sizeof(int))>());
 }
 
-template <class charT, class traits>
-charT basic_regex_parser<charT, traits>::unescape_character()
+template <class charT, class traits, class Allocator>
+charT basic_regex_parser<charT, traits, Allocator>::unescape_character()
 {
 #ifdef BOOST_MSVC
 #pragma warning(push)
@@ -1815,8 +1815,8 @@ charT basic_regex_parser<charT, traits>::unescape_character()
 #endif
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_backref()
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_backref()
 {
    BOOST_ASSERT(m_position != m_end);
    const charT* pc = m_position;
@@ -1845,8 +1845,8 @@ bool basic_regex_parser<charT, traits>::parse_backref()
    return true;
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_QE()
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_QE()
 {
 #ifdef BOOST_MSVC
 #pragma warning(push)
@@ -1897,8 +1897,8 @@ bool basic_regex_parser<charT, traits>::parse_QE()
 #endif
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::parse_perl_extension()
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::parse_perl_extension()
 {
    if(++m_position == m_end)
    {
@@ -2592,8 +2592,8 @@ option_group_jump:
    return true;
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::add_emacs_code(bool negate)
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::add_emacs_code(bool negate)
 {
    //
    // parses an emacs style \sx or \Sx construct.
@@ -2674,8 +2674,8 @@ bool basic_regex_parser<charT, traits>::add_emacs_code(bool negate)
    return true;
 }
 
-template <class charT, class traits>
-regex_constants::syntax_option_type basic_regex_parser<charT, traits>::parse_options()
+template <class charT, class traits, class Allocator>
+regex_constants::syntax_option_type basic_regex_parser<charT, traits, Allocator>::parse_options()
 {
    // we have a (?imsx-imsx) group, convert it into a set of flags:
    regex_constants::syntax_option_type f = this->flags();
@@ -2757,8 +2757,8 @@ regex_constants::syntax_option_type basic_regex_parser<charT, traits>::parse_opt
    return f;
 }
 
-template <class charT, class traits>
-bool basic_regex_parser<charT, traits>::unwind_alts(std::ptrdiff_t last_paren_start)
+template <class charT, class traits, class Allocator>
+bool basic_regex_parser<charT, traits, Allocator>::unwind_alts(std::ptrdiff_t last_paren_start)
 {
    //
    // If we didn't actually add any states after the last 

@@ -137,11 +137,11 @@ inline const charT* re_skip_past_null(const charT* p)
   return ++p;
 }
 
-template <class iterator, class charT, class traits_type, class char_classT>
+template <class iterator, class charT, class traits_type, class char_classT, class Allocator>
 iterator BOOST_REGEX_CALL re_is_set_member(iterator next, 
                           iterator last, 
                           const re_set_long<char_classT>* set_, 
-                          const regex_data<charT, traits_type>& e, bool icase)
+                          const regex_data<charT, traits_type, Allocator>& e, bool icase)
 {   
    const charT* p = reinterpret_cast<const charT*>(set_+1);
    iterator ptr;
@@ -347,12 +347,12 @@ struct recursion_info
 #pragma warning(disable : 4251 4231 4660)
 #endif
 
-template <class BidiIterator, class Allocator, class traits>
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
 class perl_matcher
 {
 public:
    typedef typename traits::char_type char_type;
-   typedef perl_matcher<BidiIterator, Allocator, traits> self_type;
+   typedef perl_matcher<BidiIterator, Allocator, traits, Allocator2> self_type;
    typedef bool (self_type::*matcher_proc_type)(void);
    typedef std::size_t traits_size_type;
    typedef typename is_byte<char_type>::width_type width_type;
@@ -361,7 +361,7 @@ public:
 
    perl_matcher(BidiIterator first, BidiIterator end, 
       match_results<BidiIterator, Allocator>& what, 
-      const basic_regex<char_type, traits>& e,
+      const basic_regex<char_type, traits, Allocator2>& e,
       match_flag_type f,
       BidiIterator l_base)
       :  m_result(what), base(first), last(end), 
@@ -380,7 +380,7 @@ public:
    { m_match_flags &= ~f; }
 
 private:
-   void construct_init(const basic_regex<char_type, traits>& e, match_flag_type f);
+   void construct_init(const basic_regex<char_type, traits, Allocator2>& e, match_flag_type f);
 
    bool find_imp();
    bool match_imp();
@@ -460,7 +460,7 @@ private:
    // how far we can go back when matching lookbehind:
    BidiIterator backstop;
    // the expression being examined:
-   const basic_regex<char_type, traits>& re;
+   const basic_regex<char_type, traits, Allocator2>& re;
    // the expression's traits class:
    const ::boost::regex_traits_wrapper<traits>& traits_inst;
    // the next state in the machine being matched:

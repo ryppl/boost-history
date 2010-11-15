@@ -8,6 +8,7 @@ import modules ;
 project : requirements
    # default to all warnings on:
    <warnings>all
+   <include>../../..
    ;
 
 local disable-icu = [ MATCH (--disable-icu) : [ modules.peek : ARGV ] ] ;
@@ -107,7 +108,9 @@ lib boost_regex : ../src/$(SOURCES) icu_options
 	     <toolset>gcc-cygwin:<link>static
     ;
 
-boost-install boost_regex ;
+#boost-install boost_regex ;
+
+
 
 
 

@@ -44,7 +44,7 @@ namespace re_detail{
 //
 // forward declaration, we will need this one later:
 //
-template <class charT, class traits>
+template <class charT, class traits, class Allocator>
 class basic_regex_parser;
 
 template <class I>
@@ -153,7 +153,7 @@ private:
 // class regex_data:
 // represents the data we wish to expose to the matching algorithms.
 //
-template <class charT, class traits>
+template <class charT, class traits, class Allocator>
 struct regex_data : public named_subexpressions
 {
    typedef regex_constants::syntax_option_type   flag_type;
@@ -188,9 +188,9 @@ struct regex_data : public named_subexpressions
 // class basic_regex_implementation
 // pimpl implementation class for basic_regex.
 //
-template <class charT, class traits>
+template <class charT, class traits, class Allocator>
 class basic_regex_implementation
-   : public regex_data<charT, traits>
+   : public regex_data<charT, traits, Allocator>
 {
 public:
    typedef regex_constants::syntax_option_type   flag_type;
@@ -202,13 +202,13 @@ public:
    basic_regex_implementation(){}
    basic_regex_implementation(const ::boost::shared_ptr<
       ::boost::regex_traits_wrapper<traits> >& t)
-      : regex_data<charT, traits>(t) {}
+      : regex_data<charT, traits, Allocator>(t) {}
    void assign(const charT* arg_first,
                           const charT* arg_last,
                           flag_type f)
    {
-      regex_data<charT, traits>* pdat = this;
-      basic_regex_parser<charT, traits> parser(pdat);
+      regex_data<charT, traits, Allocator>* pdat = this;
+      basic_regex_parser<charT, traits, Allocator> parser(pdat);
       parser.parse(arg_first, arg_last, f);
    }
 
@@ -285,10 +285,10 @@ public:
    {
       return this->m_can_be_null;
    }
-   const regex_data<charT, traits>& get_data()const
+   const regex_data<charT, traits, Allocator>& get_data()const
    {
-      basic_regex_implementation<charT, traits> const* p = this;
-      return *static_cast<const regex_data<charT, traits>*>(p);
+      basic_regex_implementation<charT, traits, Allocator> const* p = this;
+      return *static_cast<const regex_data<charT, traits, Allocator>*>(p);
    }
 };
 
@@ -300,9 +300,9 @@ public:
 //
 
 #ifdef BOOST_REGEX_NO_FWD
-template <class charT, class traits = regex_traits<charT> >
+template <class charT, class traits = regex_traits<charT>, class Allocator = std::allocator<charT> >
 #else
-template <class charT, class traits >
+template <class charT, class traits, class Allocator >
 #endif
 class basic_regex : public regbase
 {
@@ -325,6 +325,7 @@ public:
    // placeholder for actual locale type used by the
    // traits class to localise *this.
    typedef typename traits::locale_type          locale_type;
+   typedef Allocator                             allocator_type;
    
 public:
    explicit basic_regex(){}
@@ -621,7 +622,7 @@ public:
       BOOST_ASSERT(0 != m_pimpl.get());
       return m_pimpl->can_be_null();
    }
-   const re_detail::regex_data<charT, traits>& get_data()const
+   const re_detail::regex_data<charT, traits, Allocator>& get_data()const
    {
       BOOST_ASSERT(0 != m_pimpl.get());
       return m_pimpl->get_data();
@@ -632,7 +633,7 @@ public:
    }
 
 private:
-   shared_ptr<re_detail::basic_regex_implementation<charT, traits> > m_pimpl;
+   shared_ptr<re_detail::basic_regex_implementation<charT, traits, Allocator> > m_pimpl;
 };
 
 //
@@ -641,29 +642,29 @@ private:
 // and are designed to provide the strong exception guarentee
 // (in the event of a throw, the state of the object remains unchanged).
 //
-template <class charT, class traits>
-basic_regex<charT, traits>& basic_regex<charT, traits>::do_assign(const charT* p1,
+template <class charT, class traits, class Allocator>
+basic_regex<charT, traits, Allocator>& basic_regex<charT, traits, Allocator>::do_assign(const charT* p1,
                         const charT* p2,
                         flag_type f)
 {
-   shared_ptr<re_detail::basic_regex_implementation<charT, traits> > temp;
+   shared_ptr<re_detail::basic_regex_implementation<charT, traits, Allocator> > temp;
    if(!m_pimpl.get())
    {
-      temp = shared_ptr<re_detail::basic_regex_implementation<charT, traits> >(new re_detail::basic_regex_implementation<charT, traits>());
+      temp = shared_ptr<re_detail::basic_regex_implementation<charT, traits, Allocator> >(new re_detail::basic_regex_implementation<charT, traits, Allocator>());
    }
    else
    {
-      temp = shared_ptr<re_detail::basic_regex_implementation<charT, traits> >(new re_detail::basic_regex_implementation<charT, traits>(m_pimpl->m_ptraits));
+      temp = shared_ptr<re_detail::basic_regex_implementation<charT, traits, Allocator> >(new re_detail::basic_regex_implementation<charT, traits, Allocator>(m_pimpl->m_ptraits));
    }
    temp->assign(p1, p2, f);
    temp.swap(m_pimpl);
    return *this;
 }
 
-template <class charT, class traits>
-typename basic_regex<charT, traits>::locale_type BOOST_REGEX_CALL basic_regex<charT, traits>::imbue(locale_type l)
+template <class charT, class traits, class Allocator>
+typename basic_regex<charT, traits, Allocator>::locale_type BOOST_REGEX_CALL basic_regex<charT, traits, Allocator>::imbue(locale_type l)
 { 
-   shared_ptr<re_detail::basic_regex_implementation<charT, traits> > temp(new re_detail::basic_regex_implementation<charT, traits>());
+   shared_ptr<re_detail::basic_regex_implementation<charT, traits, Allocator> > temp(new re_detail::basic_regex_implementation<charT, traits, Allocator>());
    locale_type result = temp->imbue(l);
    temp.swap(m_pimpl);
    return result;
@@ -672,23 +673,23 @@ typename basic_regex<charT, traits>::locale_type BOOST_REGEX_CALL basic_regex<ch
 //
 // non-members:
 //
-template <class charT, class traits>
-void swap(basic_regex<charT, traits>& e1, basic_regex<charT, traits>& e2)
+template <class charT, class traits, class Allocator>
+void swap(basic_regex<charT, traits, Allocator>& e1, basic_regex<charT, traits, Allocator>& e2)
 {
    e1.swap(e2);
 }
 
 #ifndef BOOST_NO_STD_LOCALE
-template <class charT, class traits, class traits2>
+template <class charT, class traits, class traits2, class Allocator>
 std::basic_ostream<charT, traits>& 
    operator << (std::basic_ostream<charT, traits>& os, 
-                const basic_regex<charT, traits2>& e)
+                const basic_regex<charT, traits2, Allocator>& e)
 {
    return (os << e.str());
 }
 #else
-template <class traits>
-std::ostream& operator << (std::ostream& os, const basic_regex<char, traits>& e)
+template <class traits, class Allocator>
+std::ostream& operator << (std::ostream& os, const basic_regex<char, traits, Allocator>& e)
 {
    return (os << e.str());
 }
@@ -700,15 +701,15 @@ std::ostream& operator << (std::ostream& os, const basic_regex<char, traits>& e)
 // it is deprecated, no not use!
 //
 #ifdef BOOST_REGEX_NO_FWD
-template <class charT, class traits = regex_traits<charT> >
+template <class charT, class traits = regex_traits<charT>, class Allocator = std::allocator<char> >
 #else
-template <class charT, class traits >
+template <class charT, class traits, class Allocator >
 #endif
-class reg_expression : public basic_regex<charT, traits>
+class reg_expression : public basic_regex<charT, traits, Allocator>
 {
 public:
-   typedef typename basic_regex<charT, traits>::flag_type flag_type;
-   typedef typename basic_regex<charT, traits>::size_type size_type;
+   typedef typename basic_regex<charT, traits, Allocator>::flag_type flag_type;
+   typedef typename basic_regex<charT, traits, Allocator>::size_type size_type;
    explicit reg_expression(){}
    explicit reg_expression(const charT* p, flag_type f = regex_constants::normal)
       : basic_regex<charT, traits>(p, f){}
@@ -727,13 +728,13 @@ public:
 #if !defined(BOOST_NO_MEMBER_TEMPLATES)
    template <class ST, class SA>
    explicit reg_expression(const std::basic_string<charT, ST, SA>& p, flag_type f = regex_constants::normal)
-   : basic_regex<charT, traits>(p, f)
+   : basic_regex<charT, traits, Allocator>(p, f)
    { 
    }
 
    template <class InputIterator>
    reg_expression(InputIterator arg_first, InputIterator arg_last, flag_type f = regex_constants::normal)
-   : basic_regex<charT, traits>(arg_first, arg_last, f)
+   : basic_regex<charT, traits, Allocator>(arg_first, arg_last, f)
    {
    }
 
@@ -745,7 +746,7 @@ public:
    }
 #else
    explicit reg_expression(const std::basic_string<charT>& p, flag_type f = regex_constants::normal)
-   : basic_regex<charT, traits>(p, f)
+   : basic_regex<charT, traits, Allocator>(p, f)
    { 
    }
 

@@ -119,6 +119,46 @@ bool operator == (const allocator_architype<T>&, const allocator_architype<T>&);
 template <class T>
 bool operator != (const allocator_architype<T>&, const allocator_architype<T>&);
 
+template <class T>
+class allocator_architype_2
+{
+public:
+   typedef T* pointer;
+   typedef const T* const_pointer;
+   typedef T& reference;
+   typedef const T& const_reference;
+   typedef T value_type;
+   typedef unsigned size_type;
+   typedef int difference_type;
+
+   template <class U>
+   struct rebind
+   {
+      typedef allocator_architype_2<U> other;
+   };
+
+   pointer address(reference r);
+   const_pointer address(const_reference r);
+   pointer allocate(size_type);
+   pointer allocate(size_type, pointer);
+   void deallocate(pointer, size_type);
+   size_type max_size()const;
+
+   allocator_architype_2();
+   allocator_architype_2(const allocator_architype_2&);
+
+   template <class Other>
+   allocator_architype_2(const allocator_architype_2<Other>&);
+
+   void construct(pointer, const_reference);
+   void destroy(pointer);
+};
+
+template <class T>
+bool operator == (const allocator_architype_2<T>&, const allocator_architype_2<T>&);
+template <class T>
+bool operator != (const allocator_architype_2<T>&, const allocator_architype_2<T>&);
+
 namespace boost{
 //
 // regex_traits_architype:
@@ -264,8 +304,8 @@ private:
 template <class Regex>
 struct regex_traits_computer;
 
-template <class charT, class traits>
-struct regex_traits_computer< global_regex_namespace::basic_regex<charT, traits> >
+template <class charT, class traits, class Allocator>
+struct regex_traits_computer< global_regex_namespace::basic_regex<charT, traits, Allocator> >
 {
    typedef traits type;
 };
@@ -291,8 +331,9 @@ struct BaseRegexConcept
    typedef global_regex_namespace::match_results<BidiIterator> match_results_default_type;
    typedef output_iterator_archetype<value_type> OutIterator;
    typedef typename regex_traits_computer<Regex>::type traits_type;
-   typedef global_regex_namespace::regex_iterator<BidiIterator, value_type, traits_type> regex_iterator_type;
-   typedef global_regex_namespace::regex_token_iterator<BidiIterator, value_type, traits_type> regex_token_iterator_type;
+   typedef typename Regex::allocator_type regex_allocator_type;
+   typedef global_regex_namespace::regex_iterator<BidiIterator, value_type, traits_type, regex_allocator_type> regex_iterator_type;
+   typedef global_regex_namespace::regex_token_iterator<BidiIterator, value_type, traits_type, regex_allocator_type> regex_token_iterator_type;
 
    void global_constraints()
    {

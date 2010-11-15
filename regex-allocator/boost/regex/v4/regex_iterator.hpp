@@ -36,10 +36,11 @@ namespace boost{
 
 template <class BidirectionalIterator, 
           class charT,
-          class traits>
+          class traits, 
+          class Allocator>
 class regex_iterator_implementation 
 {
-   typedef basic_regex<charT, traits> regex_type;
+   typedef basic_regex<charT, traits, Allocator> regex_type;
 
    match_results<BidirectionalIterator> what;  // current match
    BidirectionalIterator                base;  // start of sequence
@@ -83,7 +84,8 @@ private:
 
 template <class BidirectionalIterator, 
           class charT = BOOST_DEDUCED_TYPENAME re_detail::regex_iterator_traits<BidirectionalIterator>::value_type,
-          class traits = regex_traits<charT> >
+          class traits = regex_traits<charT>, 
+          class Allocator = std::allocator<charT> >
 class regex_iterator 
 #ifndef BOOST_NO_STD_ITERATOR
    : public std::iterator<
@@ -95,10 +97,10 @@ class regex_iterator
 #endif
 {
 private:
-   typedef regex_iterator_implementation<BidirectionalIterator, charT, traits> impl;
+   typedef regex_iterator_implementation<BidirectionalIterator, charT, traits, Allocator> impl;
    typedef shared_ptr<impl> pimpl;
 public:
-   typedef          basic_regex<charT, traits>                   regex_type;
+   typedef          basic_regex<charT, traits, Allocator>                   regex_type;
    typedef          match_results<BidirectionalIterator>                    value_type;
    typedef typename re_detail::regex_iterator_traits<BidirectionalIterator>::difference_type 
                                                                             difference_type;
@@ -173,15 +175,15 @@ typedef regex_iterator<std::wstring::const_iterator> wsregex_iterator;
 #endif
 
 // make_regex_iterator:
-template <class charT, class traits>
-inline regex_iterator<const charT*, charT, traits> make_regex_iterator(const charT* p, const basic_regex<charT, traits>& e, regex_constants::match_flag_type m = regex_constants::match_default)
+template <class charT, class traits, class Allocator>
+inline regex_iterator<const charT*, charT, traits> make_regex_iterator(const charT* p, const basic_regex<charT, traits, Allocator>& e, regex_constants::match_flag_type m = regex_constants::match_default)
 {
-   return regex_iterator<const charT*, charT, traits>(p, p+traits::length(p), e, m);
+   return regex_iterator<const charT*, charT, traits, Allocator>(p, p+traits::length(p), e, m);
 }
-template <class charT, class traits, class ST, class SA>
-inline regex_iterator<typename std::basic_string<charT, ST, SA>::const_iterator, charT, traits> make_regex_iterator(const std::basic_string<charT, ST, SA>& p, const basic_regex<charT, traits>& e, regex_constants::match_flag_type m = regex_constants::match_default)
+template <class charT, class traits, class ST, class SA, class Allocator>
+inline regex_iterator<typename std::basic_string<charT, ST, SA>::const_iterator, charT, traits, Allocator> make_regex_iterator(const std::basic_string<charT, ST, SA>& p, const basic_regex<charT, traits, Allocator>& e, regex_constants::match_flag_type m = regex_constants::match_default)
 {
-   return regex_iterator<typename std::basic_string<charT, ST, SA>::const_iterator, charT, traits>(p.begin(), p.end(), e, m);
+   return regex_iterator<typename std::basic_string<charT, ST, SA>::const_iterator, charT, traits, Allocator>(p.begin(), p.end(), e, m);
 }
 
 #ifdef BOOST_MSVC

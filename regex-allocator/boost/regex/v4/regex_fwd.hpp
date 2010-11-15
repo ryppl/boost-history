@@ -54,7 +54,7 @@ template <class charT, class implementationT = c_regex_traits<charT> >
 struct regex_traits;
 #endif
 
-template <class charT, class traits = regex_traits<charT> >
+template <class charT, class traits = regex_traits<charT>, class Allocator = std::allocator<charT> >
 class basic_regex;
 
 typedef basic_regex<char, regex_traits<char> > regex;

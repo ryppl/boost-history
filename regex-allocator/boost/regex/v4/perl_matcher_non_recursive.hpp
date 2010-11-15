@@ -138,45 +138,45 @@ struct saved_recursion : public saved_state
    Results results;
 };
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::match_all_states()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_all_states()
 {
    static matcher_proc_type const s_match_vtable[30] = 
    {
-      (&perl_matcher<BidiIterator, Allocator, traits>::match_startmark),
-      &perl_matcher<BidiIterator, Allocator, traits>::match_endmark,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_literal,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_start_line,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_end_line,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_wild,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_match,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_word_boundary,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_within_word,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_word_start,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_word_end,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_buffer_start,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_buffer_end,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_backref,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_long_set,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_set,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_jump,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_alt,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_rep,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_combining,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_soft_buffer_end,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_restart_continue,
+      (&perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_startmark),
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_endmark,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_literal,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_start_line,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_end_line,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_wild,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_match,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_word_boundary,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_within_word,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_word_start,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_word_end,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_buffer_start,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_buffer_end,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_backref,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_long_set,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_set,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_jump,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_alt,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_rep,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_combining,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_soft_buffer_end,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_restart_continue,
       // Although this next line *should* be evaluated at compile time, in practice
       // some compilers (VC++) emit run-time initialisation which breaks thread
       // safety, so use a dispatch function instead:
-      //(::boost::is_random_access_iterator<BidiIterator>::value ? &perl_matcher<BidiIterator, Allocator, traits>::match_dot_repeat_fast : &perl_matcher<BidiIterator, Allocator, traits>::match_dot_repeat_slow),
-      &perl_matcher<BidiIterator, Allocator, traits>::match_dot_repeat_dispatch,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_char_repeat,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_set_repeat,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_long_set_repeat,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_backstep,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_assert_backref,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_toggle_case,
-      &perl_matcher<BidiIterator, Allocator, traits>::match_recursion,
+      //(::boost::is_random_access_iterator<BidiIterator>::value ? &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_dot_repeat_fast : &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_dot_repeat_slow),
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_dot_repeat_dispatch,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_char_repeat,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_set_repeat,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_long_set_repeat,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_backstep,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_assert_backref,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_toggle_case,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_recursion,
    };
 
    push_recursion_stopper();
@@ -202,8 +202,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::match_all_states()
    return m_recursive_result;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-void perl_matcher<BidiIterator, Allocator, traits>::extend_stack()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+void perl_matcher<BidiIterator, Allocator, traits, Allocator2>::extend_stack()
 {
    if(used_block_count)
    {
@@ -222,8 +222,8 @@ void perl_matcher<BidiIterator, Allocator, traits>::extend_stack()
       raise_error(traits_inst, regex_constants::error_stack);
 }
 
-template <class BidiIterator, class Allocator, class traits>
-inline void perl_matcher<BidiIterator, Allocator, traits>::push_matched_paren(int index, const sub_match<BidiIterator>& sub)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+inline void perl_matcher<BidiIterator, Allocator, traits, Allocator2>::push_matched_paren(int index, const sub_match<BidiIterator>& sub)
 {
    //BOOST_ASSERT(index);
    saved_matched_paren<BidiIterator>* pmp = static_cast<saved_matched_paren<BidiIterator>*>(m_backup_state);
@@ -238,8 +238,8 @@ inline void perl_matcher<BidiIterator, Allocator, traits>::push_matched_paren(in
    m_backup_state = pmp;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-inline void perl_matcher<BidiIterator, Allocator, traits>::push_recursion_stopper()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+inline void perl_matcher<BidiIterator, Allocator, traits, Allocator2>::push_recursion_stopper()
 {
    saved_state* pmp = m_backup_state;
    --pmp;
@@ -253,8 +253,8 @@ inline void perl_matcher<BidiIterator, Allocator, traits>::push_recursion_stoppe
    m_backup_state = pmp;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-inline void perl_matcher<BidiIterator, Allocator, traits>::push_assertion(const re_syntax_base* ps, bool positive)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+inline void perl_matcher<BidiIterator, Allocator, traits, Allocator2>::push_assertion(const re_syntax_base* ps, bool positive)
 {
    saved_assertion<BidiIterator>* pmp = static_cast<saved_assertion<BidiIterator>*>(m_backup_state);
    --pmp;
@@ -268,8 +268,8 @@ inline void perl_matcher<BidiIterator, Allocator, traits>::push_assertion(const 
    m_backup_state = pmp;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-inline void perl_matcher<BidiIterator, Allocator, traits>::push_alt(const re_syntax_base* ps)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+inline void perl_matcher<BidiIterator, Allocator, traits, Allocator2>::push_alt(const re_syntax_base* ps)
 {
    saved_position<BidiIterator>* pmp = static_cast<saved_position<BidiIterator>*>(m_backup_state);
    --pmp;
@@ -283,8 +283,8 @@ inline void perl_matcher<BidiIterator, Allocator, traits>::push_alt(const re_syn
    m_backup_state = pmp;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-inline void perl_matcher<BidiIterator, Allocator, traits>::push_non_greedy_repeat(const re_syntax_base* ps)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+inline void perl_matcher<BidiIterator, Allocator, traits, Allocator2>::push_non_greedy_repeat(const re_syntax_base* ps)
 {
    saved_position<BidiIterator>* pmp = static_cast<saved_position<BidiIterator>*>(m_backup_state);
    --pmp;
@@ -298,8 +298,8 @@ inline void perl_matcher<BidiIterator, Allocator, traits>::push_non_greedy_repea
    m_backup_state = pmp;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-inline void perl_matcher<BidiIterator, Allocator, traits>::push_repeater_count(int i, repeater_count<BidiIterator>** s)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+inline void perl_matcher<BidiIterator, Allocator, traits, Allocator2>::push_repeater_count(int i, repeater_count<BidiIterator>** s)
 {
    saved_repeater<BidiIterator>* pmp = static_cast<saved_repeater<BidiIterator>*>(m_backup_state);
    --pmp;
@@ -313,8 +313,8 @@ inline void perl_matcher<BidiIterator, Allocator, traits>::push_repeater_count(i
    m_backup_state = pmp;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-inline void perl_matcher<BidiIterator, Allocator, traits>::push_single_repeat(std::size_t c, const re_repeat* r, BidiIterator last_position, int state_id)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+inline void perl_matcher<BidiIterator, Allocator, traits, Allocator2>::push_single_repeat(std::size_t c, const re_repeat* r, BidiIterator last_position, int state_id)
 {
    saved_single_repeat<BidiIterator>* pmp = static_cast<saved_single_repeat<BidiIterator>*>(m_backup_state);
    --pmp;
@@ -328,8 +328,8 @@ inline void perl_matcher<BidiIterator, Allocator, traits>::push_single_repeat(st
    m_backup_state = pmp;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-inline void perl_matcher<BidiIterator, Allocator, traits>::push_recursion(int idx, const re_syntax_base* p, results_type* presults)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+inline void perl_matcher<BidiIterator, Allocator, traits, Allocator2>::push_recursion(int idx, const re_syntax_base* p, results_type* presults)
 {
    saved_recursion<results_type>* pmp = static_cast<saved_recursion<results_type>*>(m_backup_state);
    --pmp;
@@ -343,8 +343,8 @@ inline void perl_matcher<BidiIterator, Allocator, traits>::push_recursion(int id
    m_backup_state = pmp;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::match_startmark()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_startmark()
 {
    int index = static_cast<const re_brace*>(pstate)->index;
    icase = static_cast<const re_brace*>(pstate)->icase;
@@ -454,8 +454,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::match_startmark()
    return true;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::match_alt()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_alt()
 {
    bool take_first, take_second;
    const re_alt* jmp = static_cast<const re_alt*>(pstate);
@@ -491,8 +491,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::match_alt()
    return false;  // neither option is possible
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::match_rep()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_rep()
 {
 #ifdef BOOST_MSVC
 #pragma warning(push)
@@ -597,8 +597,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::match_rep()
 #endif
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::match_dot_repeat_slow()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_dot_repeat_slow()
 {
    unsigned count = 0;
    const re_repeat* rep = static_cast<const re_repeat*>(pstate);
@@ -642,8 +642,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::match_dot_repeat_slow()
    }
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::match_dot_repeat_fast()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_dot_repeat_fast()
 {
    if(m_match_flags & match_not_dot_null)
       return match_dot_repeat_slow();
@@ -681,8 +681,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::match_dot_repeat_fast()
    }
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::match_char_repeat()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_char_repeat()
 {
 #ifdef BOOST_MSVC
 #pragma warning(push)
@@ -750,8 +750,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::match_char_repeat()
 #endif
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::match_set_repeat()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_set_repeat()
 {
 #ifdef BOOST_MSVC
 #pragma warning(push)
@@ -818,8 +818,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::match_set_repeat()
 #endif
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::match_long_set_repeat()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_long_set_repeat()
 {
 #ifdef BOOST_MSVC
 #pragma warning(push)
@@ -887,8 +887,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::match_long_set_repeat()
 #endif
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::match_recursion()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_recursion()
 {
    BOOST_ASSERT(pstate->type == syntax_element_recurse);
    //
@@ -915,8 +915,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::match_recursion()
    return true;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::match_endmark()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_endmark()
 {
    int index = static_cast<const re_brace*>(pstate)->index;
    icase = static_cast<const re_brace*>(pstate)->icase;
@@ -947,8 +947,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::match_endmark()
    return true;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::match_match()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::match_match()
 {
    if(!recursion_stack.empty())
    {
@@ -992,27 +992,27 @@ unwinding does in the recursive implementation.
 
 ****************************************************************************/
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind(bool have_match)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind(bool have_match)
 {
    static unwind_proc_type const s_unwind_table[18] = 
    {
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_end,
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_paren,
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_recursion_stopper,
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_assertion,
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_alt,
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_repeater_counter,
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_extra_block,
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_greedy_single_repeat,
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_slow_dot_repeat,
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_fast_dot_repeat,
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_char_repeat,
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_short_set_repeat,
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_long_set_repeat,
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_non_greedy_repeat,
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_recursion,
-      &perl_matcher<BidiIterator, Allocator, traits>::unwind_recursion_pop,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_end,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_paren,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_recursion_stopper,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_assertion,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_alt,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_repeater_counter,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_extra_block,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_greedy_single_repeat,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_slow_dot_repeat,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_fast_dot_repeat,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_char_repeat,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_short_set_repeat,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_long_set_repeat,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_non_greedy_repeat,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_recursion,
+      &perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_recursion_pop,
    };
 
    m_recursive_result = have_match;
@@ -1032,15 +1032,15 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind(bool have_match)
    return pstate ? true : false;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_end(bool)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_end(bool)
 {
    pstate = 0;   // nothing left to search
    return false; // end of stack nothing more to search
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_paren(bool have_match)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_paren(bool have_match)
 {
    saved_matched_paren<BidiIterator>* pmp = static_cast<saved_matched_paren<BidiIterator>*>(m_backup_state);
    // restore previous values if no match was found:
@@ -1062,16 +1062,16 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_paren(bool have_match
    return true; // keep looking
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_recursion_stopper(bool)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_recursion_stopper(bool)
 {
    boost::re_detail::inplace_destroy(m_backup_state++);
    pstate = 0;   // nothing left to search
    return false; // end of stack nothing more to search
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_assertion(bool r)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_assertion(bool r)
 {
    saved_assertion<BidiIterator>* pmp = static_cast<saved_assertion<BidiIterator>*>(m_backup_state);
    pstate = pmp->pstate;
@@ -1083,8 +1083,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_assertion(bool r)
    return !result; // return false if the assertion was matched to stop search.
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_alt(bool r)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_alt(bool r)
 {
    saved_position<BidiIterator>* pmp = static_cast<saved_position<BidiIterator>*>(m_backup_state);
    if(!r)
@@ -1097,8 +1097,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_alt(bool r)
    return r; 
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_repeater_counter(bool)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_repeater_counter(bool)
 {
    saved_repeater<BidiIterator>* pmp = static_cast<saved_repeater<BidiIterator>*>(m_backup_state);
    boost::re_detail::inplace_destroy(pmp++);
@@ -1106,8 +1106,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_repeater_counter(bool
    return true; // keep looking
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_extra_block(bool)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_extra_block(bool)
 {
    saved_extra_block* pmp = static_cast<saved_extra_block*>(m_backup_state);
    void* condemmed = m_stack_base;
@@ -1118,16 +1118,16 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_extra_block(bool)
    return true; // keep looking
 }
 
-template <class BidiIterator, class Allocator, class traits>
-inline void perl_matcher<BidiIterator, Allocator, traits>::destroy_single_repeat()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+inline void perl_matcher<BidiIterator, Allocator, traits, Allocator2>::destroy_single_repeat()
 {
    saved_single_repeat<BidiIterator>* p = static_cast<saved_single_repeat<BidiIterator>*>(m_backup_state);
    boost::re_detail::inplace_destroy(p++);
    m_backup_state = p;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_greedy_single_repeat(bool r)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_greedy_single_repeat(bool r)
 {
    saved_single_repeat<BidiIterator>* pmp = static_cast<saved_single_repeat<BidiIterator>*>(m_backup_state);
 
@@ -1175,8 +1175,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_greedy_single_repeat(
    return false;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_slow_dot_repeat(bool r)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_slow_dot_repeat(bool r)
 {
    saved_single_repeat<BidiIterator>* pmp = static_cast<saved_single_repeat<BidiIterator>*>(m_backup_state);
 
@@ -1239,8 +1239,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_slow_dot_repeat(bool 
    return false;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_fast_dot_repeat(bool r)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_fast_dot_repeat(bool r)
 {
    saved_single_repeat<BidiIterator>* pmp = static_cast<saved_single_repeat<BidiIterator>*>(m_backup_state);
 
@@ -1293,8 +1293,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_fast_dot_repeat(bool 
    return false;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_char_repeat(bool r)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_char_repeat(bool r)
 {
    saved_single_repeat<BidiIterator>* pmp = static_cast<saved_single_repeat<BidiIterator>*>(m_backup_state);
 
@@ -1362,8 +1362,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_char_repeat(bool r)
    return false;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_short_set_repeat(bool r)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_short_set_repeat(bool r)
 {
    saved_single_repeat<BidiIterator>* pmp = static_cast<saved_single_repeat<BidiIterator>*>(m_backup_state);
 
@@ -1431,8 +1431,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_short_set_repeat(bool
    return false;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_long_set_repeat(bool r)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_long_set_repeat(bool r)
 {
    typedef typename traits::char_class_type mask_type;
    saved_single_repeat<BidiIterator>* pmp = static_cast<saved_single_repeat<BidiIterator>*>(m_backup_state);
@@ -1501,8 +1501,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_long_set_repeat(bool 
    return false;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_non_greedy_repeat(bool r)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_non_greedy_repeat(bool r)
 {
    saved_position<BidiIterator>* pmp = static_cast<saved_position<BidiIterator>*>(m_backup_state);
    if(!r)
@@ -1516,8 +1516,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_non_greedy_repeat(boo
    return r;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_recursion(bool r)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_recursion(bool r)
 {
    saved_recursion<results_type>* pmp = static_cast<saved_recursion<results_type>*>(m_backup_state);
    if(!r)
@@ -1532,8 +1532,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_recursion(bool r)
    return true;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_recursion_pop(bool r)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_recursion_pop(bool r)
 {
    saved_state* pmp = static_cast<saved_state*>(m_backup_state);
    if(!r)
@@ -1545,8 +1545,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_recursion_pop(bool r)
    return true;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-void perl_matcher<BidiIterator, Allocator, traits>::push_recursion_pop()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+void perl_matcher<BidiIterator, Allocator, traits, Allocator2>::push_recursion_pop()
 {
    saved_state* pmp = static_cast<saved_state*>(m_backup_state);
    --pmp;
@@ -1560,8 +1560,8 @@ void perl_matcher<BidiIterator, Allocator, traits>::push_recursion_pop()
    m_backup_state = pmp;
 }
 /*
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_parenthesis_pop(bool r)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_parenthesis_pop(bool r)
 {
    saved_state* pmp = static_cast<saved_state*>(m_backup_state);
    if(!r)
@@ -1573,8 +1573,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_parenthesis_pop(bool 
    return true;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-void perl_matcher<BidiIterator, Allocator, traits>::push_parenthesis_pop()
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+void perl_matcher<BidiIterator, Allocator, traits, Allocator2>::push_parenthesis_pop()
 {
    saved_state* pmp = static_cast<saved_state*>(m_backup_state);
    --pmp;
@@ -1588,8 +1588,8 @@ void perl_matcher<BidiIterator, Allocator, traits>::push_parenthesis_pop()
    m_backup_state = pmp;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-bool perl_matcher<BidiIterator, Allocator, traits>::unwind_parenthesis_push(bool r)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+bool perl_matcher<BidiIterator, Allocator, traits, Allocator2>::unwind_parenthesis_push(bool r)
 {
    saved_position<BidiIterator>* pmp = static_cast<saved_position<BidiIterator>*>(m_backup_state);
    if(!r)
@@ -1601,8 +1601,8 @@ bool perl_matcher<BidiIterator, Allocator, traits>::unwind_parenthesis_push(bool
    return true;
 }
 
-template <class BidiIterator, class Allocator, class traits>
-inline void perl_matcher<BidiIterator, Allocator, traits>::push_parenthesis_push(BidiIterator p)
+template <class BidiIterator, class Allocator, class traits, class Allocator2>
+inline void perl_matcher<BidiIterator, Allocator, traits, Allocator2>::push_parenthesis_push(BidiIterator p)
 {
    saved_position<BidiIterator>* pmp = static_cast<saved_position<BidiIterator>*>(m_backup_state);
    --pmp;

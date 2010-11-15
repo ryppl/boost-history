@@ -3,6 +3,12 @@
 # (See accompanying file LICENSE_1_0.txt or copy at 
 # http://www.boost.org/LICENSE_1_0.txt.
 
+import modules ;
+
+local boost = [ modules.peek : BOOST ] ;
+
+path-constant inc : ../../../ ;
+
 project
     : requirements 
       <threading>multi 
@@ -15,8 +21,10 @@ project
       <toolset>gcc:<cxxflags>-Wextra
       <define>U_USING_ICU_NAMESPACE=0
       #<toolset>gcc-mw:<link>static
-	  #<toolset>gcc-mingw:<link>static
-	  <toolset>gcc-cygwin:<link>static
+      #<toolset>gcc-mingw:<link>static
+      <toolset>gcc-cygwin:<link>static
+      <include>$(inc)
+      <define>BOOST_ALL_NO_LIB
     ;
 
 rule regex-test-run ( sources + : input * : name * )
@@ -40,7 +48,7 @@ rule regex-test-run ( sources + : input * : name * )
 test-suite regex-examples :
 
 [ regex-test-run timer/regex_timer.cpp : $(BOOST_ROOT)/libs/regex/example/timer/input_script.txt ]
-[ regex-test-run grep/grep.cpp ../../program_options/build//boost_program_options/<link>static : -n -b $(BOOST_ROOT)/boost/regex.hpp $(BOOST_ROOT)/boost/type_traits.hpp : test_grep ]
+[ regex-test-run grep/grep.cpp $(boost)/libs/program_options/build//boost_program_options/<link>static : -n -b $(BOOST_ROOT)/boost/regex.hpp $(BOOST_ROOT)/boost/type_traits.hpp : test_grep ]
 [ regex-test-run snippets/credit_card_example.cpp ]
 [ regex-test-run snippets/mfc_example.cpp ]
 [ regex-test-run snippets/icu_example.cpp ]

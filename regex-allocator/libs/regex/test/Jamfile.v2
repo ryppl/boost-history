@@ -3,6 +3,12 @@
 # (See accompanying file LICENSE_1_0.txt or copy at 
 # http://www.boost.org/LICENSE_1_0.txt.
 
+import modules ;
+
+local boost = [ modules.peek : BOOST ] ;
+
+path-constant inc : ../../../ ;
+
 project
     : requirements 
       <threading>multi 
@@ -20,6 +26,8 @@ project
       #<toolset>gcc-mw:<link>static
       #<toolset>gcc-mingw:<link>static
       <toolset>gcc-cygwin:<link>static
+      <include>$(inc)
+      <define>BOOST_ALL_NO_LIB
     ;
 
 #
@@ -95,7 +103,7 @@ test-suite regex
         : regex_regress ]
 
       [ run regress/$(R_SOURCE) ../build//boost_regex
-                                ../../thread/build//boost_thread ../build//icu_options
+                                $(boost)/libs/thread/build//boost_thread ../build//icu_options
         : # command line
         : # input files
         : # requirements
@@ -126,7 +134,7 @@ test-suite regex
       
       [ run unicode/unicode_iterator_test.cpp ../build//boost_regex ]
       [ run static_mutex/static_mutex_test.cpp
-            ../../thread/build//boost_thread ../build//boost_regex
+            $(boost)/libs/thread/build//boost_thread ../build//boost_regex
       ]
       [ run object_cache/object_cache_test.cpp ../build//boost_regex
       ]

@@ -185,11 +185,11 @@ private:
    std::vector<digraph_type> m_equivalents;     // a list of equivalence classes
 };
    
-template <class charT, class traits>
+template <class charT, class traits, class Allocator>
 class basic_regex_creator
 {
 public:
-   basic_regex_creator(regex_data<charT, traits>* data);
+   basic_regex_creator(regex_data<charT, traits, Allocator>* data);
    std::ptrdiff_t getoffset(void* addr)
    {
       return getoffset(addr, m_pdata->m_data.data());
@@ -231,7 +231,7 @@ public:
    re_syntax_base* append_set(const basic_char_set<charT, traits>& char_set, mpl::true_*);
    void finalize(const charT* p1, const charT* p2);
 protected:
-   regex_data<charT, traits>*    m_pdata;              // pointer to the basic_regex_data struct we are filling in
+   regex_data<charT, traits, Allocator>*    m_pdata;   // pointer to the basic_regex_data struct we are filling in
    const ::boost::regex_traits_wrapper<traits>&  
                                  m_traits;             // convenience reference to traits class
    re_syntax_base*               m_last_state;         // the last state we added
@@ -263,8 +263,8 @@ private:
    void probe_leading_repeat(re_syntax_base* state);
 };
 
-template <class charT, class traits>
-basic_regex_creator<charT, traits>::basic_regex_creator(regex_data<charT, traits>* data)
+template <class charT, class traits, class Allocator>
+basic_regex_creator<charT, traits, Allocator>::basic_regex_creator(regex_data<charT, traits, Allocator>* data)
    : m_pdata(data), m_traits(*(data->m_ptraits)), m_last_state(0), m_repeater_id(0), m_has_backrefs(false), m_backrefs(0), m_has_recursions(false)
 {
    m_pdata->m_data.clear();
@@ -287,8 +287,8 @@ basic_regex_creator<charT, traits>::basic_regex_creator(regex_data<charT, traits
    BOOST_ASSERT(m_alpha_mask != 0); 
 }
 
-template <class charT, class traits>
-re_syntax_base* basic_regex_creator<charT, traits>::append_state(syntax_element_type t, std::size_t s)
+template <class charT, class traits, class Allocator>
+re_syntax_base* basic_regex_creator<charT, traits, Allocator>::append_state(syntax_element_type t, std::size_t s)
 {
    // if the state is a backref then make a note of it:
    if(t == syntax_element_backref)
@@ -306,8 +306,8 @@ re_syntax_base* basic_regex_creator<charT, traits>::append_state(syntax_element_
    return m_last_state;
 }
 
-template <class charT, class traits>
-re_syntax_base* basic_regex_creator<charT, traits>::insert_state(std::ptrdiff_t pos, syntax_element_type t, std::size_t s)
+template <class charT, class traits, class Allocator>
+re_syntax_base* basic_regex_creator<charT, traits, Allocator>::insert_state(std::ptrdiff_t pos, syntax_element_type t, std::size_t s)
 {
    // append a new state, start by aligning our last one:
    m_pdata->m_data.align();
@@ -325,8 +325,8 @@ re_syntax_base* basic_regex_creator<charT, traits>::insert_state(std::ptrdiff_t 
    return new_state;
 }
 
-template <class charT, class traits>
-re_literal* basic_regex_creator<charT, traits>::append_literal(charT c)
+template <class charT, class traits, class Allocator>
+re_literal* basic_regex_creator<charT, traits, Allocator>::append_literal(charT c)
 {
    re_literal* result;
    // start by seeing if we have an existing re_literal we can extend:
@@ -350,8 +350,8 @@ re_literal* basic_regex_creator<charT, traits>::append_literal(charT c)
    return result;
 }
 
-template <class charT, class traits>
-inline re_syntax_base* basic_regex_creator<charT, traits>::append_set(
+template <class charT, class traits, class Allocator>
+inline re_syntax_base* basic_regex_creator<charT, traits, Allocator>::append_set(
    const basic_char_set<charT, traits>& char_set)
 {
    typedef mpl::bool_< (sizeof(charT) == 1) > truth_type;
@@ -360,8 +360,8 @@ inline re_syntax_base* basic_regex_creator<charT, traits>::append_set(
       : append_set(char_set, static_cast<truth_type*>(0));
 }
 
-template <class charT, class traits>
-re_syntax_base* basic_regex_creator<charT, traits>::append_set(
+template <class charT, class traits, class Allocator>
+re_syntax_base* basic_regex_creator<charT, traits, Allocator>::append_set(
    const basic_char_set<charT, traits>& char_set, mpl::false_*)
 {
    typedef typename traits::string_type string_type;
@@ -535,8 +535,8 @@ inline bool char_less<signed char>(signed char t1, signed char t2)
 }
 }
 
-template <class charT, class traits>
-re_syntax_base* basic_regex_creator<charT, traits>::append_set(
+template <class charT, class traits, class Allocator>
+re_syntax_base* basic_regex_creator<charT, traits, Allocator>::append_set(
    const basic_char_set<charT, traits>& char_set, mpl::true_*)
 {
    typedef typename traits::string_type string_type;
@@ -674,8 +674,8 @@ re_syntax_base* basic_regex_creator<charT, traits>::append_set(
    return result;
 }
 
-template <class charT, class traits>
-void basic_regex_creator<charT, traits>::finalize(const charT* p1, const charT* p2)
+template <class charT, class traits, class Allocator>
+void basic_regex_creator<charT, traits, Allocator>::finalize(const charT* p1, const charT* p2)
 {
    if(this->m_pdata->m_status)
       return;
@@ -719,8 +719,8 @@ void basic_regex_creator<charT, traits>::finalize(const charT* p1, const charT* 
    probe_leading_repeat(m_pdata->m_first_state);
 }
 
-template <class charT, class traits>
-void basic_regex_creator<charT, traits>::fixup_pointers(re_syntax_base* state)
+template <class charT, class traits, class Allocator>
+void basic_regex_creator<charT, traits, Allocator>::fixup_pointers(re_syntax_base* state)
 {
    while(state)
    {
@@ -758,8 +758,8 @@ void basic_regex_creator<charT, traits>::fixup_pointers(re_syntax_base* state)
    }
 }
 
-template <class charT, class traits>
-void basic_regex_creator<charT, traits>::fixup_recursions(re_syntax_base* state)
+template <class charT, class traits, class Allocator>
+void basic_regex_creator<charT, traits, Allocator>::fixup_recursions(re_syntax_base* state)
 {
    re_syntax_base* base = state;
    while(state)
@@ -886,8 +886,8 @@ void basic_regex_creator<charT, traits>::fixup_recursions(re_syntax_base* state)
    }
 }
 
-template <class charT, class traits>
-void basic_regex_creator<charT, traits>::create_startmaps(re_syntax_base* state)
+template <class charT, class traits, class Allocator>
+void basic_regex_creator<charT, traits, Allocator>::create_startmaps(re_syntax_base* state)
 {
    // non-recursive implementation:
    // create the last map in the machine first, so that earlier maps
@@ -968,8 +968,8 @@ void basic_regex_creator<charT, traits>::create_startmaps(re_syntax_base* state)
    m_icase = l_icase;
 }
 
-template <class charT, class traits>
-int basic_regex_creator<charT, traits>::calculate_backstep(re_syntax_base* state)
+template <class charT, class traits, class Allocator>
+int basic_regex_creator<charT, traits, Allocator>::calculate_backstep(re_syntax_base* state)
 {
    typedef typename traits::char_class_type mask_type;
    int result = 0;
@@ -1061,8 +1061,8 @@ int basic_regex_creator<charT, traits>::calculate_backstep(re_syntax_base* state
    return -1;
 }
 
-template <class charT, class traits>
-void basic_regex_creator<charT, traits>::create_startmap(re_syntax_base* state, unsigned char* l_map, unsigned int* pnull, unsigned char mask)
+template <class charT, class traits, class Allocator>
+void basic_regex_creator<charT, traits, Allocator>::create_startmap(re_syntax_base* state, unsigned char* l_map, unsigned int* pnull, unsigned char mask)
 {
    int not_last_jump = 1;
    re_syntax_base* recursion_start = 0;
@@ -1359,8 +1359,8 @@ void basic_regex_creator<charT, traits>::create_startmap(re_syntax_base* state, 
    }
 }
 
-template <class charT, class traits>
-unsigned basic_regex_creator<charT, traits>::get_restart_type(re_syntax_base* state)
+template <class charT, class traits, class Allocator>
+unsigned basic_regex_creator<charT, traits, Allocator>::get_restart_type(re_syntax_base* state)
 {
    //
    // find out how the machine starts, so we can optimise the search:
@@ -1389,8 +1389,8 @@ unsigned basic_regex_creator<charT, traits>::get_restart_type(re_syntax_base* st
    return regbase::restart_any;
 }
 
-template <class charT, class traits>
-void basic_regex_creator<charT, traits>::set_all_masks(unsigned char* bits, unsigned char mask)
+template <class charT, class traits, class Allocator>
+void basic_regex_creator<charT, traits, Allocator>::set_all_masks(unsigned char* bits, unsigned char mask)
 {
    //
    // set mask in all of bits elements, 
@@ -1410,8 +1410,8 @@ void basic_regex_creator<charT, traits>::set_all_masks(unsigned char* bits, unsi
    }
 }
 
-template <class charT, class traits>
-bool basic_regex_creator<charT, traits>::is_bad_repeat(re_syntax_base* pt)
+template <class charT, class traits, class Allocator>
+bool basic_regex_creator<charT, traits, Allocator>::is_bad_repeat(re_syntax_base* pt)
 {
    switch(pt->type)
    {
@@ -1432,8 +1432,8 @@ bool basic_regex_creator<charT, traits>::is_bad_repeat(re_syntax_base* pt)
    }
 }
 
-template <class charT, class traits>
-void basic_regex_creator<charT, traits>::set_bad_repeat(re_syntax_base* pt)
+template <class charT, class traits, class Allocator>
+void basic_regex_creator<charT, traits, Allocator>::set_bad_repeat(re_syntax_base* pt)
 {
    switch(pt->type)
    {
@@ -1453,8 +1453,8 @@ void basic_regex_creator<charT, traits>::set_bad_repeat(re_syntax_base* pt)
    }
 }
 
-template <class charT, class traits>
-syntax_element_type basic_regex_creator<charT, traits>::get_repeat_type(re_syntax_base* state)
+template <class charT, class traits, class Allocator>
+syntax_element_type basic_regex_creator<charT, traits, Allocator>::get_repeat_type(re_syntax_base* state)
 {
    typedef typename traits::char_class_type mask_type;
    if(state->type == syntax_element_rep)
@@ -1482,8 +1482,8 @@ syntax_element_type basic_regex_creator<charT, traits>::get_repeat_type(re_synta
    return state->type;
 }
 
-template <class charT, class traits>
-void basic_regex_creator<charT, traits>::probe_leading_repeat(re_syntax_base* state)
+template <class charT, class traits, class Allocator>
+void basic_regex_creator<charT, traits, Allocator>::probe_leading_repeat(re_syntax_base* state)
 {
    // enumerate our states, and see if we have a leading repeat 
    // for which failed search restarts can be optimised;

@@ -84,14 +84,14 @@ int main()
    //
    // now test the regex_traits concepts:
    //
-   typedef boost::basic_regex<char, boost::regex_traits_architype<char> > regex_traits_tester_type1;
+   typedef boost::basic_regex<char, boost::regex_traits_architype<char>, allocator_architype_2<char> > regex_traits_tester_type1;
    boost::function_requires<
       boost::BoostRegexConcept<
          regex_traits_tester_type1
       >
    >();
 #if !defined(__MWERKS__) && !defined(__SUNPRO_CC) // MWCW tries to instantiate std::basic_string<boost::char_architype>, not sure whose bug this is....
-   typedef boost::basic_regex<boost::char_architype, boost::regex_traits_architype<boost::char_architype> > regex_traits_tester_type2;
+   typedef boost::basic_regex<boost::char_architype, boost::regex_traits_architype<boost::char_architype>, allocator_architype_2<char> > regex_traits_tester_type2;
    boost::function_requires<
       boost::BaseRegexConcept<
          regex_traits_tester_type2

@@ -93,7 +93,7 @@ template class BOOST_REGEX_TEMPLATE_DECL basic_regex< BOOST_REGEX_CHAR_T BOOST_R
 template class BOOST_REGEX_TEMPLATE_DECL match_results< const BOOST_REGEX_CHAR_T* >;
 #endif
 #ifndef BOOST_NO_STD_ALLOCATOR
-template class BOOST_REGEX_TEMPLATE_DECL ::boost::re_detail::perl_matcher<BOOST_REGEX_CHAR_T const *, match_results< const BOOST_REGEX_CHAR_T* >::allocator_type BOOST_REGEX_TRAITS_T >;
+template class BOOST_REGEX_TEMPLATE_DECL ::boost::re_detail::perl_matcher<BOOST_REGEX_CHAR_T const *, match_results< const BOOST_REGEX_CHAR_T* >::allocator_type BOOST_REGEX_TRAITS_T, std::allocator<BOOST_REGEX_CHAR_T> >;
 #endif
 #if !(defined(BOOST_DINKUMWARE_STDLIB) && (BOOST_DINKUMWARE_STDLIB <= 1))\
    && !(defined(BOOST_INTEL_CXX_VERSION) && (BOOST_INTEL_CXX_VERSION <= 800))\
@@ -103,7 +103,7 @@ template class BOOST_REGEX_TEMPLATE_DECL ::boost::re_detail::perl_matcher<BOOST_
 template class BOOST_REGEX_TEMPLATE_DECL match_results< std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator >;
 #endif
 #ifndef BOOST_NO_STD_ALLOCATOR
-template class BOOST_REGEX_TEMPLATE_DECL ::boost::re_detail::perl_matcher< std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator, match_results< std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator >::allocator_type, boost::regex_traits<BOOST_REGEX_CHAR_T > >;
+template class BOOST_REGEX_TEMPLATE_DECL ::boost::re_detail::perl_matcher< std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator, match_results< std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator >::allocator_type, boost::regex_traits<BOOST_REGEX_CHAR_T >, std::allocator<BOOST_REGEX_CHAR_T> >;
 #endif
 #endif
 

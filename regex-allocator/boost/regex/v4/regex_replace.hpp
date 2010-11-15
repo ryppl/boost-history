@@ -35,16 +35,16 @@ namespace boost{
 #pragma warning(pop)
 #endif
 
-template <class OutputIterator, class BidirectionalIterator, class traits, class charT, class Formatter>
+template <class OutputIterator, class BidirectionalIterator, class traits, class charT, class Formatter, class Allocator>
 OutputIterator regex_replace(OutputIterator out,
                          BidirectionalIterator first,
                          BidirectionalIterator last,
-                         const basic_regex<charT, traits>& e, 
+                         const basic_regex<charT, traits, Allocator>& e, 
                          Formatter fmt, 
                          match_flag_type flags = match_default)
 {
-   regex_iterator<BidirectionalIterator, charT, traits> i(first, last, e, flags);
-   regex_iterator<BidirectionalIterator, charT, traits> j;
+   regex_iterator<BidirectionalIterator, charT, traits, Allocator> i(first, last, e, flags);
+   regex_iterator<BidirectionalIterator, charT, traits, Allocator> j;
    if(i == j)
    {
       if(!(flags & regex_constants::format_no_copy))
@@ -69,9 +69,9 @@ OutputIterator regex_replace(OutputIterator out,
    return out;
 }
 
-template <class traits, class charT, class Formatter>
+template <class traits, class charT, class Formatter, class Allocator>
 std::basic_string<charT> regex_replace(const std::basic_string<charT>& s,
-                         const basic_regex<charT, traits>& e, 
+                         const basic_regex<charT, traits, Allocator>& e, 
                          Formatter fmt,
                          match_flag_type flags = match_default)
 {

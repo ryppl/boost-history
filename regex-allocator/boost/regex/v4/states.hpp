@@ -272,14 +272,14 @@ enum re_jump_size_type
 Forward declaration: we'll need this one later...
 ***********************************************************************/
 
-template<class charT, class traits>
+template<class charT, class traits, class Allocator>
 struct regex_data;
 
-template <class iterator, class charT, class traits_type, class char_classT>
+template <class iterator, class charT, class traits_type, class char_classT, class Allocator>
 iterator BOOST_REGEX_CALL re_is_set_member(iterator next, 
                           iterator last, 
                           const re_set_long<char_classT>* set_, 
-                          const regex_data<charT, traits_type>& e, bool icase);
+                          const regex_data<charT, traits_type, Allocator>& e, bool icase);
 
 } // namespace re_detail
 
