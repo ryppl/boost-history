@@ -13,12 +13,6 @@
 #include <boost/assign/v2/put/generic/crtp.hpp>
 #include <boost/assign/v2/put/generic/result_of_modulo.hpp>
 
-// Usage:
-// 	put( v ) % ( _modifier = Tag() );	
-// 	put( v ) % ( _fun = F() );		
-// 	put( v ) % ( _incr_lookup );		
-// 	put( v ) % ( _repeat = n );		
-
 namespace boost{
 namespace assign{ 
 namespace v2{
