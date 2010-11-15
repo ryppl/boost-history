@@ -1,0 +1,396 @@
+---------11/14/10---------
+...patience...
+...patience...
+...found 1427 targets...
+...updating 32 targets...
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/type_traits.test/darwin-4.2.1/debug/type_traits.o
+In file included from ../../../../../boost/assign/v2/detail/functor/crtp_unary_and_up.hpp:26,
+                 from ../../../../../boost/assign/v2/detail/functor/functor.hpp:13,
+                 from ../../../../../boost/assign/v2/put/generic/crtp.hpp:27,
+                 from ../../../../../boost/assign/v2/put/sub/make.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/modifier/put.hpp:14,
+                 from ../../../../../boost/assign/v2/put/range/modifier/modifier.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/adaptor.hpp:12,
+                 from ../../../../../boost/assign/v2/put/range/convert.hpp:12,
+                 from ../../../../../boost/assign/v2/ref/static_array/interface.hpp:31,
+                 from ../../../../../boost/assign/v2/ref/static_array/alloc/lazy_alloc.hpp:16,
+                 from ../../../../../boost/assign/v2/ref/fusion/policy.hpp:14,
+                 from ../../../../../boost/assign/v2/ref/fusion/container.hpp:26,
+                 from ../../../../../boost/assign/v2/ref/fusion/make.hpp:19,
+                 from ../../../../../boost/assign/v2/ref/anon/unary/make.hpp:12,
+                 from ../../../../../boost/assign/v2/ref/anon/unary/assign_xxx.hpp:13,
+                 from ../../../../../boost/assign/v2/ref/anon/unary/assign_copy.hpp:13,
+                 from ../../../../../libs/assign/v2/test/type_traits/has_static_size.cpp:13,
+                 from type_traits.cpp:19:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/put/generic/crtp.hpp:29,
+                 from ../../../../../boost/assign/v2/put/sub/make.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/modifier/put.hpp:14,
+                 from ../../../../../boost/assign/v2/put/range/modifier/modifier.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/adaptor.hpp:12,
+                 from ../../../../../boost/assign/v2/put/range/convert.hpp:12,
+                 from ../../../../../boost/assign/v2/ref/static_array/interface.hpp:31,
+                 from ../../../../../boost/assign/v2/ref/static_array/alloc/lazy_alloc.hpp:16,
+                 from ../../../../../boost/assign/v2/ref/fusion/policy.hpp:14,
+                 from ../../../../../boost/assign/v2/ref/fusion/container.hpp:26,
+                 from ../../../../../boost/assign/v2/ref/fusion/make.hpp:19,
+                 from ../../../../../boost/assign/v2/ref/anon/unary/make.hpp:12,
+                 from ../../../../../boost/assign/v2/ref/anon/unary/assign_xxx.hpp:13,
+                 from ../../../../../boost/assign/v2/ref/anon/unary/assign_copy.hpp:13,
+                 from ../../../../../libs/assign/v2/test/type_traits/has_static_size.cpp:13,
+                 from type_traits.cpp:19:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/type_traits.test/darwin-4.2.1/debug/type_traits
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/type_traits.test/darwin-4.2.1/debug/type_traits.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/type_traits.test/darwin-4.2.1/debug/type_traits.test
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/darwin-4.2.1/debug/detail.o
+In file included from ../../../../../libs/assign/v2/test/detail/functor.cpp:22,
+                 from detail.cpp:17:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/detail/functor/crtp_unary_and_up.hpp:26,
+                 from ../../../../../boost/assign/v2/detail/functor/constructor.hpp:20,
+                 from ../../../../../libs/assign/v2/test/detail/functor.cpp:26,
+                 from detail.cpp:17:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/darwin-4.2.1/debug/detail
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/darwin-4.2.1/debug/detail.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/darwin-4.2.1/debug/detail.test
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/anon.test/darwin-4.2.1/debug/anon.o
+In file included from ../../../../../boost/assign/v2/detail/checking/check_convert.hpp:1,
+                 from ../../../../../libs/assign/v2/test/anon/anon.cpp:23,
+                 from anon.cpp:17:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/detail/functor/crtp_unary_and_up.hpp:26,
+                 from ../../../../../boost/assign/v2/put/compose/functor/composer.hpp:38,
+                 from ../../../../../boost/assign/v2/put/compose/functor/functor.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/compose.hpp:14,
+                 from ../../../../../boost/assign/v2/put/put.hpp:13,
+                 from ../../../../../boost/assign/v2/anon/cont.hpp:19,
+                 from ../../../../../boost/assign/v2/anon/make.hpp:17,
+                 from ../../../../../boost/assign/v2/anon/anon.hpp:13,
+                 from ../../../../../libs/assign/v2/test/anon/anon.cpp:25,
+                 from anon.cpp:17:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/put/generic/crtp.hpp:29,
+                 from ../../../../../boost/assign/v2/put/sub/make.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/modifier/put.hpp:14,
+                 from ../../../../../boost/assign/v2/put/range/modifier/modifier.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/adaptor.hpp:12,
+                 from ../../../../../boost/assign/v2/put/range/convert.hpp:12,
+                 from ../../../../../boost/assign/v2/ref/static_array/interface.hpp:31,
+                 from ../../../../../boost/assign/v2/ref/static_array/alloc/lazy_alloc.hpp:16,
+                 from ../../../../../boost/assign/v2/ref/fusion/policy.hpp:14,
+                 from ../../../../../boost/assign/v2/ref/fusion/container.hpp:26,
+                 from ../../../../../boost/assign/v2/ref/fusion/make.hpp:19,
+                 from ../../../../../boost/assign/v2/ref/fusion/assign_xxx.hpp:12,
+                 from ../../../../../boost/assign/v2/ref/fusion/assign_copy.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/functor/composer.hpp:39,
+                 from ../../../../../boost/assign/v2/put/compose/functor/functor.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/compose.hpp:14,
+                 from ../../../../../boost/assign/v2/put/put.hpp:13,
+                 from ../../../../../boost/assign/v2/anon/cont.hpp:19,
+                 from ../../../../../boost/assign/v2/anon/make.hpp:17,
+                 from ../../../../../boost/assign/v2/anon/anon.hpp:13,
+                 from ../../../../../libs/assign/v2/test/anon/anon.cpp:25,
+                 from anon.cpp:17:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/ref/anon/csv/make.hpp:18,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/assign_xxx.hpp:14,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/assign_copy.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/csv/held.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/csv/csv.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/compose.hpp:15,
+                 from ../../../../../boost/assign/v2/put/put.hpp:13,
+                 from ../../../../../boost/assign/v2/anon/cont.hpp:19,
+                 from ../../../../../boost/assign/v2/anon/make.hpp:17,
+                 from ../../../../../boost/assign/v2/anon/anon.hpp:13,
+                 from ../../../../../libs/assign/v2/test/anon/anon.cpp:25,
+                 from anon.cpp:17:
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:23:1: warning: multi-line comment
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:53:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/ref/anon/csv/assign_xxx.hpp:15,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/assign_copy.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/csv/held.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/csv/csv.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/compose.hpp:15,
+                 from ../../../../../boost/assign/v2/put/put.hpp:13,
+                 from ../../../../../boost/assign/v2/anon/cont.hpp:19,
+                 from ../../../../../boost/assign/v2/anon/make.hpp:17,
+                 from ../../../../../boost/assign/v2/anon/anon.hpp:13,
+                 from ../../../../../libs/assign/v2/test/anon/anon.cpp:25,
+                 from anon.cpp:17:
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:23:1: warning: multi-line comment
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:53:1: warning: multi-line comment
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/anon.test/darwin-4.2.1/debug/anon
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/anon.test/darwin-4.2.1/debug/anon.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/anon.test/darwin-4.2.1/debug/anon.test
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/chain.test/darwin-4.2.1/debug/chain.o
+In file included from ../../../../../boost/assign/v2/detail/functor/crtp_unary_and_up.hpp:26,
+                 from ../../../../../boost/assign/v2/detail/functor/functor.hpp:13,
+                 from ../../../../../boost/assign/v2/put/generic/crtp.hpp:27,
+                 from ../../../../../boost/assign/v2/put/sub/make.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/modifier/put.hpp:14,
+                 from ../../../../../boost/assign/v2/put/range/modifier/modifier.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/adaptor.hpp:12,
+                 from ../../../../../boost/assign/v2/put/range/convert.hpp:12,
+                 from ../../../../../boost/assign/v2/chain/aux_/sub.hpp:14,
+                 from ../../../../../boost/assign/v2/chain/traits/result.hpp:16,
+                 from ../../../../../boost/assign/v2/chain/chain.hpp:12,
+                 from ../../../../../libs/assign/v2/test/chain/convert.cpp:19,
+                 from chain.cpp:17:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/put/generic/crtp.hpp:29,
+                 from ../../../../../boost/assign/v2/put/sub/make.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/modifier/put.hpp:14,
+                 from ../../../../../boost/assign/v2/put/range/modifier/modifier.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/adaptor.hpp:12,
+                 from ../../../../../boost/assign/v2/put/range/convert.hpp:12,
+                 from ../../../../../boost/assign/v2/chain/aux_/sub.hpp:14,
+                 from ../../../../../boost/assign/v2/chain/traits/result.hpp:16,
+                 from ../../../../../boost/assign/v2/chain/chain.hpp:12,
+                 from ../../../../../libs/assign/v2/test/chain/convert.cpp:19,
+                 from chain.cpp:17:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/chain/chain.hpp:13,
+                 from ../../../../../libs/assign/v2/test/chain/convert.cpp:19,
+                 from chain.cpp:17:
+../../../../../boost/assign/v2/chain/aux_/bitwise_or.hpp:62:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/chain/aux_/logical_and.hpp:13,
+                 from ../../../../../boost/assign/v2/chain/chain.hpp:14,
+                 from ../../../../../libs/assign/v2/test/chain/convert.cpp:19,
+                 from chain.cpp:17:
+../../../../../boost/assign/v2/chain/aux_/bitwise_or.hpp:62:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/detail/checking/check_convert.hpp:1,
+                 from ../../../../../libs/assign/v2/test/chain/convert.cpp:22,
+                 from chain.cpp:17:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/chain.test/darwin-4.2.1/debug/chain
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/chain.test/darwin-4.2.1/debug/chain.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/chain.test/darwin-4.2.1/debug/chain.test
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/darwin-4.2.1/debug/put.o
+In file included from ../../../../../boost/assign/v2/detail/functor/crtp_unary_and_up.hpp:26,
+                 from ../../../../../boost/assign/v2/put/compose/functor/composer.hpp:38,
+                 from ../../../../../boost/assign/v2/put/compose/functor/functor.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/compose.hpp:14,
+                 from ../../../../../boost/assign/v2/put/put.hpp:13,
+                 from ../../../../../libs/assign/v2/test/put/modulo_op.cpp:14,
+                 from put.cpp:17:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/put/generic/crtp.hpp:29,
+                 from ../../../../../boost/assign/v2/put/sub/make.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/modifier/put.hpp:14,
+                 from ../../../../../boost/assign/v2/put/range/modifier/modifier.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/adaptor.hpp:12,
+                 from ../../../../../boost/assign/v2/put/range/convert.hpp:12,
+                 from ../../../../../boost/assign/v2/ref/static_array/interface.hpp:31,
+                 from ../../../../../boost/assign/v2/ref/static_array/alloc/lazy_alloc.hpp:16,
+                 from ../../../../../boost/assign/v2/ref/fusion/policy.hpp:14,
+                 from ../../../../../boost/assign/v2/ref/fusion/container.hpp:26,
+                 from ../../../../../boost/assign/v2/ref/fusion/make.hpp:19,
+                 from ../../../../../boost/assign/v2/ref/fusion/assign_xxx.hpp:12,
+                 from ../../../../../boost/assign/v2/ref/fusion/assign_copy.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/functor/composer.hpp:39,
+                 from ../../../../../boost/assign/v2/put/compose/functor/functor.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/compose.hpp:14,
+                 from ../../../../../boost/assign/v2/put/put.hpp:13,
+                 from ../../../../../libs/assign/v2/test/put/modulo_op.cpp:14,
+                 from put.cpp:17:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/ref/anon/csv/make.hpp:18,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/assign_xxx.hpp:14,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/assign_copy.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/csv/held.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/csv/csv.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/compose.hpp:15,
+                 from ../../../../../boost/assign/v2/put/put.hpp:13,
+                 from ../../../../../libs/assign/v2/test/put/modulo_op.cpp:14,
+                 from put.cpp:17:
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:23:1: warning: multi-line comment
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:53:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/ref/anon/csv/assign_xxx.hpp:15,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/assign_copy.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/csv/held.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/csv/csv.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/compose.hpp:15,
+                 from ../../../../../boost/assign/v2/put/put.hpp:13,
+                 from ../../../../../libs/assign/v2/test/put/modulo_op.cpp:14,
+                 from put.cpp:17:
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:23:1: warning: multi-line comment
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:53:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/chain/chain.hpp:13,
+                 from ../../../../../boost/assign/v2/v2.hpp:14,
+                 from ../../../../../libs/assign/v2/test/put/ptr.cpp:18,
+                 from put.cpp:18:
+../../../../../boost/assign/v2/chain/aux_/bitwise_or.hpp:62:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/chain/aux_/logical_and.hpp:13,
+                 from ../../../../../boost/assign/v2/chain/chain.hpp:14,
+                 from ../../../../../boost/assign/v2/v2.hpp:14,
+                 from ../../../../../libs/assign/v2/test/put/ptr.cpp:18,
+                 from put.cpp:18:
+../../../../../boost/assign/v2/chain/aux_/bitwise_or.hpp:62:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/ref/anon/csv/assign_xxx.hpp:15,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/assign_rebind.hpp:13,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/csv.hpp:15,
+                 from ../../../../../boost/assign/v2/ref/anon/anon.hpp:14,
+                 from ../../../../../boost/assign/v2/ref/ref.hpp:13,
+                 from ../../../../../boost/assign/v2/v2.hpp:17,
+                 from ../../../../../libs/assign/v2/test/put/ptr.cpp:18,
+                 from put.cpp:18:
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:23:1: warning: multi-line comment
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:53:1: warning: multi-line comment
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/darwin-4.2.1/debug/put
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/darwin-4.2.1/debug/put.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/darwin-4.2.1/debug/put.test
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_compose.test/darwin-4.2.1/debug/put_compose.o
+In file included from ../../../../../boost/assign/v2/detail/functor/crtp_unary_and_up.hpp:26,
+                 from ../../../../../boost/assign/v2/detail/functor/identity.hpp:18,
+                 from ../../../../../libs/assign/v2/test/put/compose/common/forward_parameter.cpp:12,
+                 from put_compose.cpp:17:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/put/generic/crtp.hpp:29,
+                 from ../../../../../boost/assign/v2/put/generic/generic.hpp:13,
+                 from ../../../../../libs/assign/v2/test/put/compose/common/forward_parameter.cpp:15,
+                 from put_compose.cpp:17:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/ref/anon/csv/make.hpp:18,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/assign_xxx.hpp:14,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/assign_copy.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/csv/held.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/csv/csv.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/compose.hpp:15,
+                 from ../../../../../boost/assign/v2/put/put.hpp:13,
+                 from ../../../../../boost/assign/v2/anon/cont.hpp:19,
+                 from ../../../../../boost/assign/v2/anon/make.hpp:17,
+                 from ../../../../../boost/assign/v2/anon/anon.hpp:13,
+                 from ../../../../../boost/assign/v2/v2.hpp:13,
+                 from ../../../../../libs/assign/v2/test/put/compose/csv/composer.cpp:13,
+                 from put_compose.cpp:18:
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:23:1: warning: multi-line comment
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:53:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/ref/anon/csv/assign_xxx.hpp:15,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/assign_copy.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/csv/held.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/csv/csv.hpp:13,
+                 from ../../../../../boost/assign/v2/put/compose/compose.hpp:15,
+                 from ../../../../../boost/assign/v2/put/put.hpp:13,
+                 from ../../../../../boost/assign/v2/anon/cont.hpp:19,
+                 from ../../../../../boost/assign/v2/anon/make.hpp:17,
+                 from ../../../../../boost/assign/v2/anon/anon.hpp:13,
+                 from ../../../../../boost/assign/v2/v2.hpp:13,
+                 from ../../../../../libs/assign/v2/test/put/compose/csv/composer.cpp:13,
+                 from put_compose.cpp:18:
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:23:1: warning: multi-line comment
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:53:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/chain/chain.hpp:13,
+                 from ../../../../../boost/assign/v2/v2.hpp:14,
+                 from ../../../../../libs/assign/v2/test/put/compose/csv/composer.cpp:13,
+                 from put_compose.cpp:18:
+../../../../../boost/assign/v2/chain/aux_/bitwise_or.hpp:62:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/chain/aux_/logical_and.hpp:13,
+                 from ../../../../../boost/assign/v2/chain/chain.hpp:14,
+                 from ../../../../../boost/assign/v2/v2.hpp:14,
+                 from ../../../../../libs/assign/v2/test/put/compose/csv/composer.cpp:13,
+                 from put_compose.cpp:18:
+../../../../../boost/assign/v2/chain/aux_/bitwise_or.hpp:62:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/ref/anon/csv/assign_xxx.hpp:15,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/assign_rebind.hpp:13,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/csv.hpp:15,
+                 from ../../../../../boost/assign/v2/ref/anon/anon.hpp:14,
+                 from ../../../../../boost/assign/v2/ref/ref.hpp:13,
+                 from ../../../../../boost/assign/v2/v2.hpp:17,
+                 from ../../../../../libs/assign/v2/test/put/compose/csv/composer.cpp:13,
+                 from put_compose.cpp:18:
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:23:1: warning: multi-line comment
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:53:1: warning: multi-line comment
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_compose.test/darwin-4.2.1/debug/put_compose
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_compose.test/darwin-4.2.1/debug/put_compose.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_compose.test/darwin-4.2.1/debug/put_compose.test
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_range.test/darwin-4.2.1/debug/put_range.o
+In file included from ../../../../../boost/assign/v2/detail/functor/crtp_unary_and_up.hpp:26,
+                 from ../../../../../boost/assign/v2/detail/functor/functor.hpp:13,
+                 from ../../../../../boost/assign/v2/put/generic/crtp.hpp:27,
+                 from ../../../../../boost/assign/v2/put/sub/make.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/modifier/put.hpp:14,
+                 from ../../../../../boost/assign/v2/put/range/modifier/modifier.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/adaptor.hpp:12,
+                 from ../../../../../boost/assign/v2/put/range/range.hpp:12,
+                 from ../../../../../libs/assign/v2/test/put_range/convert.cpp:21,
+                 from put_range.cpp:17:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/put/generic/crtp.hpp:29,
+                 from ../../../../../boost/assign/v2/put/sub/make.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/modifier/put.hpp:14,
+                 from ../../../../../boost/assign/v2/put/range/modifier/modifier.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/adaptor.hpp:12,
+                 from ../../../../../boost/assign/v2/put/range/range.hpp:12,
+                 from ../../../../../libs/assign/v2/test/put_range/convert.cpp:21,
+                 from put_range.cpp:17:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_range.test/darwin-4.2.1/debug/put_range
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_range.test/darwin-4.2.1/debug/put_range.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_range.test/darwin-4.2.1/debug/put_range.test
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/darwin-4.2.1/debug/ref.o
+In file included from ../../../../../boost/assign/v2/detail/functor/crtp_unary_and_up.hpp:26,
+                 from ../../../../../boost/assign/v2/detail/functor/functor.hpp:13,
+                 from ../../../../../boost/assign/v2/put/generic/crtp.hpp:27,
+                 from ../../../../../boost/assign/v2/put/sub/make.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/modifier/put.hpp:14,
+                 from ../../../../../boost/assign/v2/put/range/modifier/modifier.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/adaptor.hpp:12,
+                 from ../../../../../boost/assign/v2/put/range/convert.hpp:12,
+                 from ../../../../../boost/assign/v2/ref/static_array/interface.hpp:31,
+                 from ../../../../../boost/assign/v2/ref/static_array/alloc/lazy_alloc.hpp:16,
+                 from ../../../../../boost/assign/v2/ref/fusion/policy.hpp:14,
+                 from ../../../../../boost/assign/v2/ref/fusion/container.hpp:26,
+                 from ../../../../../boost/assign/v2/ref/fusion/make.hpp:19,
+                 from ../../../../../boost/assign/v2/ref/fusion/assign_xxx.hpp:12,
+                 from ../../../../../boost/assign/v2/ref/fusion/assign_copy.hpp:13,
+                 from ../../../../../boost/assign/v2/ref/fusion/fusion.hpp:14,
+                 from ../../../../../libs/assign/v2/test/ref/fusion.cpp:18,
+                 from ref.cpp:19:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/put/generic/crtp.hpp:29,
+                 from ../../../../../boost/assign/v2/put/sub/make.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/modifier/put.hpp:14,
+                 from ../../../../../boost/assign/v2/put/range/modifier/modifier.hpp:13,
+                 from ../../../../../boost/assign/v2/put/range/adaptor.hpp:12,
+                 from ../../../../../boost/assign/v2/put/range/convert.hpp:12,
+                 from ../../../../../boost/assign/v2/ref/static_array/interface.hpp:31,
+                 from ../../../../../boost/assign/v2/ref/static_array/alloc/lazy_alloc.hpp:16,
+                 from ../../../../../boost/assign/v2/ref/fusion/policy.hpp:14,
+                 from ../../../../../boost/assign/v2/ref/fusion/container.hpp:26,
+                 from ../../../../../boost/assign/v2/ref/fusion/make.hpp:19,
+                 from ../../../../../boost/assign/v2/ref/fusion/assign_xxx.hpp:12,
+                 from ../../../../../boost/assign/v2/ref/fusion/assign_copy.hpp:13,
+                 from ../../../../../boost/assign/v2/ref/fusion/fusion.hpp:14,
+                 from ../../../../../libs/assign/v2/test/ref/fusion.cpp:18,
+                 from ref.cpp:19:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/ref/anon/csv/make.hpp:18,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/csv.hpp:13,
+                 from ../../../../../libs/assign/v2/test/ref/csv_anon.cpp:20,
+                 from ref.cpp:21:
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:23:1: warning: multi-line comment
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:53:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/ref/anon/csv/assign_xxx.hpp:15,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/assign_copy.hpp:13,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/csv.hpp:14,
+                 from ../../../../../libs/assign/v2/test/ref/csv_anon.cpp:20,
+                 from ref.cpp:21:
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:23:1: warning: multi-line comment
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:53:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/ref/anon/csv/assign_xxx.hpp:15,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/assign_rebind.hpp:13,
+                 from ../../../../../boost/assign/v2/ref/anon/csv/csv.hpp:15,
+                 from ../../../../../libs/assign/v2/test/ref/csv_anon.cpp:20,
+                 from ref.cpp:21:
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:23:1: warning: multi-line comment
+../../../../../boost/assign/v2/ref/anon/csv/pp.hpp:53:1: warning: multi-line comment
+In file included from ../../../../../boost/assign/v2/detail/checking/check_convert.hpp:1,
+                 from ../../../../../libs/assign/v2/test/ref/anon.cpp:25,
+                 from ref.cpp:22:
+../../../../../boost/assign/v2/detail/config/enable_cpp0x.hpp:24:1: warning: multi-line comment
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/darwin-4.2.1/debug/ref
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/darwin-4.2.1/debug/ref.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/darwin-4.2.1/debug/ref.test
+...updated 32 targets...

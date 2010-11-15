@@ -1,0 +1,82 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Class template arg_forwarder</title>
+<link rel="stylesheet" href="../../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../../../../header/boost/assign/v2/put/compose/csv/forward_seq_arg_hpp.html" title="Header &lt;boost/assign/v2/put/compose/csv/forward_seq_arg.hpp&gt;">
+<link rel="prev" href="../../../../header/boost/assign/v2/put/compose/csv/forward_seq_arg_hpp.html" title="Header &lt;boost/assign/v2/put/compose/csv/forward_seq_arg.hpp&gt;">
+<link rel="next" href="../../../../header/boost/assign/v2/put/compose/csv/held_hpp.html" title="Header &lt;boost/assign/v2/put/compose/csv/held.hpp&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../../../header/boost/assign/v2/put/compose/csv/forward_seq_arg_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../header/boost/assign/v2/put/compose/csv/forward_seq_arg_hpp.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../../../header/boost/assign/v2/put/compose/csv/held_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" title="Class template arg_forwarder">
+<a name="boost.assign.v2.put_compose_csv_aux.arg_forwarder"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template arg_forwarder</span></h2>
+<p>boost::assign::v2::put_compose_csv_aux::arg_forwarder</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../../../header/boost/assign/v2/put/compose/csv/forward_seq_arg_hpp.html" title="Header &lt;boost/assign/v2/put/compose/csv/forward_seq_arg.hpp&gt;">boost/assign/v2/put/compose/csv/forward_seq_arg.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> O&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="arg_forwarder.html" title="Class template arg_forwarder">arg_forwarder</a> :
+  <span class="bold"><strong>private</strong></span> boost::assign::v2::ref::wrapper&lt; ref::assign_tag::copy, O <span class="bold"><strong>const</strong></span>  &gt;
+{
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// <a class="link" href="arg_forwarder.html#boost.assign.v2.put_compose_csv_aux.arg_forwarderconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a class="link" href="arg_forwarder.html#id35985300-bb">arg_forwarder</a>();
+  <a class="link" href="arg_forwarder.html#id35985301-bb">arg_forwarder</a>(O <span class="bold"><strong>const</strong></span> &amp;);
+
+  <span class="emphasis"><em>// <a class="link" href="arg_forwarder.html#id35985258-bb">public member functions</a></em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="arg_forwarder.html#id35985262-bb"><span class="bold"><strong>operator</strong></span>()</a>(T &amp;) <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="arg_forwarder.html#id35985281-bb"><span class="bold"><strong>operator</strong></span>()</a>(T <span class="bold"><strong>const</strong></span> &amp;) <span class="bold"><strong>const</strong></span>;
+};</pre></div>
+<div class="refsect1" title="Description">
+<a name="id36203331"></a><h2>Description</h2>
+<div class="refsect2" title="arg_forwarder public construct/copy/destruct">
+<a name="id36203334"></a><h3>
+<a name="boost.assign.v2.put_compose_csv_aux.arg_forwarderconstruct-copy-destruct"></a><code class="computeroutput">arg_forwarder</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem"><pre class="literallayout"><a name="id35985300-bb"></a>arg_forwarder();</pre></li>
+<li class="listitem"><pre class="literallayout"><a name="id35985301-bb"></a>arg_forwarder(O <span class="bold"><strong>const</strong></span> &amp; object);</pre></li>
+</ol></div>
+</div>
+<div class="refsect2" title="arg_forwarder public member functions">
+<a name="id36203383"></a><h3>
+<a name="id35985258-bb"></a><code class="computeroutput">arg_forwarder</code> public member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem"><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id35985262-bb"></a><span class="bold"><strong>operator</strong></span>()(T &amp; t) <span class="bold"><strong>const</strong></span>;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id35985281-bb"></a><span class="bold"><strong>operator</strong></span>()(T <span class="bold"><strong>const</strong></span> &amp; t) <span class="bold"><strong>const</strong></span>;</pre></li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../../../header/boost/assign/v2/put/compose/csv/forward_seq_arg_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../header/boost/assign/v2/put/compose/csv/forward_seq_arg_hpp.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../../../header/boost/assign/v2/put/compose/csv/held_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

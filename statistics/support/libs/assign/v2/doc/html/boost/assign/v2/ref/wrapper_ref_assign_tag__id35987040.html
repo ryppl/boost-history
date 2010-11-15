@@ -1,0 +1,69 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Struct template wrapper&lt;ref::assign_tag::copy, T&gt;</title>
+<link rel="stylesheet" href="../../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../../../../header/boost/assign/v2/ref/wrapper/copy_hpp.html" title="Header &lt;boost/assign/v2/ref/wrapper/copy.hpp&gt;">
+<link rel="prev" href="type_traits/does_assign_copy.html" title="Struct template does_assign_copy">
+<link rel="next" href="../../../../header/boost/assign/v2/put/range/modifier/put_hpp.html" title="Header &lt;boost/assign/v2/put/range/modifier/put.hpp&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="type_traits/does_assign_copy.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../header/boost/assign/v2/ref/wrapper/copy_hpp.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../../../header/boost/assign/v2/put/range/modifier/put_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" title="Struct template wrapper&lt;ref::assign_tag::copy, T&gt;">
+<a name="boost.assign.v2.ref.wrapper_ref_assign_tag__id35987040"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Struct template wrapper&lt;ref::assign_tag::copy, T&gt;</span></h2>
+<p>boost::assign::v2::ref::wrapper&lt;ref::assign_tag::copy, T&gt;</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../../../header/boost/assign/v2/ref/wrapper/copy_hpp.html" title="Header &lt;boost/assign/v2/ref/wrapper/copy.hpp&gt;">boost/assign/v2/ref/wrapper/copy.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+<span class="bold"><strong>struct</strong></span> <a class="link" href="wrapper_ref_assign_tag__id35987040.html" title="Struct template wrapper&lt;ref::assign_tag::copy, T&gt;">wrapper</a>&lt;ref::assign_tag::copy, T&gt; : <span class="bold"><strong>public</strong></span> boost::assign::v2::ref::wrapper_crtp&lt; wrapper&lt; ref::assign_tag::copy, T &gt;, T &gt;
+{
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="assign_tag/copy.html" title="Struct copy">ref::assign_tag::copy</a> <a name="boost.assign.v2.ref.wrapper_ref_assign_tag__id35987040.assign_tag"></a>assign_tag;
+
+  <span class="emphasis"><em>// <a class="link" href="wrapper_ref_assign_tag__id35987040.html#id35987066-bb">public member functions</a></em></span>
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="wrapper_ref_assign_tag__id35987040.html#id35987070-bb">assign</a>(<span class="bold"><strong>typename</strong></span> boost::call_traits&lt; T &gt;::param_type) ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="wrapper_ref_assign_tag__id35987040.html#id35987082-bb">swap</a>(<a class="link" href="wrapper.html" title="Struct template wrapper">wrapper</a> &amp;) ;
+};</pre></div>
+<div class="refsect1" title="Description">
+<a name="id36210619"></a><h2>Description</h2>
+<div class="refsect2" title="wrapper public member functions">
+<a name="id36210623"></a><h3>
+<a name="id35987066-bb"></a><code class="computeroutput">wrapper</code> public member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem"><pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id35987070-bb"></a>assign(<span class="bold"><strong>typename</strong></span> boost::call_traits&lt; T &gt;::param_type r) ;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id35987082-bb"></a>swap(<a class="link" href="wrapper.html" title="Struct template wrapper">wrapper</a> &amp; r) ;</pre></li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="type_traits/does_assign_copy.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../header/boost/assign/v2/ref/wrapper/copy_hpp.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../../../header/boost/assign/v2/put/range/modifier/put_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Struct template result</title>
+<link rel="stylesheet" href="../../../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../../../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../../../../../header/boost/assign/v2/ref/detail/convert_traits/result_hpp.html" title="Header &lt;boost/assign/v2/ref/detail/convert_traits/result.hpp&gt;">
+<link rel="prev" href="../../../../../header/boost/assign/v2/ref/detail/convert_traits/result_hpp.html" title="Header &lt;boost/assign/v2/ref/detail/convert_traits/result.hpp&gt;">
+<link rel="next" href="result/traits.html" title="Struct template traits">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../../../../header/boost/assign/v2/ref/detail/convert_traits/result_hpp.html"><img src="../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../../header/boost/assign/v2/ref/detail/convert_traits/result_hpp.html"><img src="../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../../index.html"><img src="../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="result/traits.html"><img src="../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" title="Struct template result">
+<a name="boost.assign.v2.ref.convert_traits.result"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Struct template result</span></h2>
+<p>boost::assign::v2::ref::convert_traits::result</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../../../../header/boost/assign/v2/ref/detail/convert_traits/result_hpp.html" title="Header &lt;boost/assign/v2/ref/detail/convert_traits/result.hpp&gt;">boost/assign/v2/ref/detail/convert_traits/result.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T1, <span class="bold"><strong>typename</strong></span> T2&gt; 
+<span class="bold"><strong>struct</strong></span> <a class="link" href="result.html" title="Struct template result">result</a> {
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="result/traits.html" title="Struct template traits">traits</a>&lt; T1 &gt;                                                                                                                                                                              <a name="boost.assign.v2.ref.convert_traits.result.traits1_"></a>traits1_;     
+  <span class="bold"><strong>typedef</strong></span> <a class="link" href="result/traits.html" title="Struct template traits">traits</a>&lt; T2 &gt;                                                                                                                                                                              <a name="boost.assign.v2.ref.convert_traits.result.traits2_"></a>traits2_;     
+  <span class="bold"><strong>typedef</strong></span> traits1_::val_                                                                                                                                                                            <a name="boost.assign.v2.ref.convert_traits.result.val1_"></a>val1_;        
+  <span class="bold"><strong>typedef</strong></span> traits2_::val_                                                                                                                                                                            <a name="boost.assign.v2.ref.convert_traits.result.val2_"></a>val2_;        
+  <span class="bold"><strong>typedef</strong></span> boost::is_same&lt; val1_, val2_ &gt;                                                                                                                                                            <a name="boost.assign.v2.ref.convert_traits.result.same_val_"></a>same_val_;    
+  <span class="bold"><strong>typedef</strong></span> boost::mpl::and_&lt; <span class="bold"><strong>typename</strong></span> traits1_::is_ref_, <span class="bold"><strong>typename</strong></span> traits2_::is_ref_ &gt;::type                                                                                                          <a name="boost.assign.v2.ref.convert_traits.result.and_ref_"></a>and_ref_;     
+  <span class="bold"><strong>typedef</strong></span> boost::mpl::or_&lt; <span class="bold"><strong>typename</strong></span> traits1_::is_const_, <span class="bold"><strong>typename</strong></span> traits2_::is_const_ &gt;::type                                                                                                       <a name="boost.assign.v2.ref.convert_traits.result.or_const_"></a>or_const_;    
+  <span class="bold"><strong>typedef</strong></span> boost::mpl::eval_if&lt; same_val_, <a class="link" href="twin_values/reference.html" title="Struct template reference">twin_values::reference</a>&lt; val1_, or_const_::value, and_ref_::value &gt;, <a class="link" href="distinct_values/reference.html" title="Struct template reference">distinct_values::reference</a>&lt; val1_, val2_, or_const_::value, and_ref_::value &gt; &gt;::type <a name="boost.assign.v2.ref.convert_traits.result.type"></a>type;         
+  <span class="bold"><strong>typedef</strong></span> boost::mpl::and_&lt; boost::is_convertible&lt; T1, type &gt;, boost::is_convertible&lt; T2, type &gt; &gt;                                                                                                  <a name="boost.assign.v2.ref.convert_traits.result.is_valid_type"></a>is_valid_type;
+
+  <span class="emphasis"><em>// member classes/structs/unions</em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+  <span class="bold"><strong>struct</strong></span> <a class="link" href="result/traits.html" title="Struct template traits">traits</a> {
+    <span class="emphasis"><em>// types</em></span>
+    <span class="bold"><strong>typedef</strong></span> boost::is_reference&lt; T &gt;::type      <a class="link" href="result/traits.html#boost.assign.v2.ref.convert_traits.result.traits.is_ref_">is_ref_</a>;  
+    <span class="bold"><strong>typedef</strong></span> boost::remove_reference&lt; T &gt;::type  <a class="link" href="result/traits.html#boost.assign.v2.ref.convert_traits.result.traits.const_">const_</a>;   
+    <span class="bold"><strong>typedef</strong></span> boost::is_const&lt; const_ &gt;::type     <a class="link" href="result/traits.html#boost.assign.v2.ref.convert_traits.result.traits.is_const_">is_const_</a>;
+    <span class="bold"><strong>typedef</strong></span> boost::remove_const&lt; const_ &gt;::type <a class="link" href="result/traits.html#boost.assign.v2.ref.convert_traits.result.traits.val_">val_</a>;     
+  };
+
+  <span class="emphasis"><em>// <a class="link" href="result.html#id35979258-bb">public member functions</a></em></span>
+  <span class="type"></span> <a class="link" href="result.html#id35979261-bb">BOOST_STATIC_CONSTANT</a>(<span class="bold"><strong>bool</strong></span>, is_valid = is_valid_type::value) ;
+
+  <span class="emphasis"><em>// <a class="link" href="result.html#id35979280-bb">public static functions</a></em></span>
+  <span class="type"><span class="bold"><strong>static</strong></span> <span class="bold"><strong>void</strong></span></span> <a class="link" href="result.html#id35979283-bb">test</a>() ;
+};</pre></div>
+<div class="refsect1" title="Description">
+<a name="id36178159"></a><h2>Description</h2>
+<div class="refsect2" title="result public member functions">
+<a name="id36178162"></a><h3>
+<a name="id35979258-bb"></a><code class="computeroutput">result</code> public member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><pre class="literallayout"><span class="type"></span> <a name="id35979261-bb"></a>BOOST_STATIC_CONSTANT(<span class="bold"><strong>bool</strong></span>, is_valid = is_valid_type::value) ;</pre></li></ol></div>
+</div>
+<div class="refsect2" title="result public static functions">
+<a name="id36178200"></a><h3>
+<a name="id35979280-bb"></a><code class="computeroutput">result</code> public static functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> <span class="bold"><strong>void</strong></span></span> <a name="id35979283-bb"></a>test() ;</pre></li></ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../../../../header/boost/assign/v2/ref/detail/convert_traits/result_hpp.html"><img src="../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../../header/boost/assign/v2/ref/detail/convert_traits/result_hpp.html"><img src="../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../../index.html"><img src="../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="result/traits.html"><img src="../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
