@@ -21,7 +21,7 @@ namespace assign{
 namespace v2{
 namespace result_of{
 
-	template<typename T>
+    template<typename T>
     struct anon
     {
     	typedef typename boost::remove_cv<T>::type t_;
@@ -34,7 +34,7 @@ namespace result_of{
 
 }// result_of
 
-	template<typename T>
+    template<typename T>
     typename result_of::anon<T>::type
 	anon( keyword_aux::nil )
     {

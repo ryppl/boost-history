@@ -27,7 +27,7 @@ namespace assign{
 namespace v2{
 namespace anon_aux{
 
-	template<typename T,typename F,typename Tag> class cont;
+    template<typename T,typename F,typename Tag> class cont;
 
 }// anon_aux
 namespace result_of_modulo{
@@ -53,16 +53,16 @@ namespace result_of_modulo{
 }//result_of_modulo
 namespace anon_aux{
 
-	template<typename T>
+    template<typename T>
     struct impl{ typedef std::deque<T> type; };
 
-	template<typename T,typename F,typename Tag>
+    template<typename T,typename F,typename Tag>
     struct cont_modifier_traits
     { };
 
 
-	template<typename T,typename F,typename Tag>
-	class cont : 
+    template<typename T,typename F,typename Tag>
+    class cont : 
     	public relational_op_aux::crtp< cont<T,F,Tag> >,
         public put_aux::crtp< 
         	typename anon_aux::impl<T>::type, F, Tag,
@@ -74,17 +74,17 @@ namespace anon_aux{
         typedef cont_modifier_traits<T,F,Tag> modifier_traits_;
         typedef put_aux::crtp< impl_, F, Tag, cont, modifier_traits_> put_crtp_;
     
-		typedef put_aux::modifier<Tag> modifier_;
+        typedef put_aux::modifier<Tag> modifier_;
     
     	public:
     
     	typedef T value_type;
         typedef typename boost::range_size<impl_>::type size_type;
-		typedef typename boost::range_iterator<impl_>::type iterator;
+        typedef typename boost::range_iterator<impl_>::type iterator;
         typedef typename boost::range_iterator<
         	const impl_>::type const_iterator;
 
-		// Construct
+        // Construct
         cont(){}
         explicit cont(const F& f) : put_crtp_( f ){}
         explicit cont(impl_ const& v, F const& f): put_crtp_( f ), impl( v )
@@ -92,90 +92,90 @@ namespace anon_aux{
         	// Required by crtp when Tag or F is modified.
         }
 
-		explicit cont( impl_ const& v, F const& f, modifier_ const& m ) 
-        	: put_crtp_( f, m ), impl( v )
+        explicit cont( impl_ const& v, F const& f, modifier_ const& m ) 
+            : put_crtp_( f, m ), impl( v )
         {
         	// Required by crtp when Tag or F is modified.
         }
         
         // Deque interface
-		iterator begin(){ 
-        	return boost::begin( this->impl ); 
+        iterator begin(){ 
+            return boost::begin( this->impl ); 
         }
-		iterator end(){ 
-        	return boost::end( this->impl ); 
+        iterator end(){ 
+            return boost::end( this->impl ); 
         }
-		const_iterator begin()const{ 
-        	return boost::begin( this->impl ); 
+        const_iterator begin()const{ 
+            return boost::begin( this->impl ); 
         }
-		const_iterator end()const{ 
+        const_iterator end()const{ 
         	return boost::end( this->impl ); 
         }
 
-		typedef typename impl_::reference reference;
-		typedef typename impl_::const_reference const_reference;
-		typedef typename impl_::difference_type difference_type;
+        typedef typename impl_::reference reference;
+        typedef typename impl_::const_reference const_reference;
+        typedef typename impl_::difference_type difference_type;
 
-		size_type size()const{ 
-        	return this->unwrap().size(); 
+        size_type size()const{ 
+            return this->unwrap().size(); 
         }
-		size_type max_size()const{ 
-        	return this->unwrap().max_size(); 
+        size_type max_size()const{ 
+            return this->unwrap().max_size(); 
         }
-		bool empty()const{ 
-        	return this->unwrap().empty(); 
+        bool empty()const{ 
+            return this->unwrap().empty(); 
         }
-		reference operator[](size_type n){ 
-        	return this->unwrap()[n]; 
+        reference operator[](size_type n){ 
+            return this->unwrap()[n]; 
         }
-		const_reference operator[](size_type n)const{ 
-        	return this->unwrap()[n]; 
+        const_reference operator[](size_type n)const{ 
+            return this->unwrap()[n]; 
         }
-		reference front(){ 
-        	return this->unwrap().front(); 
+        reference front(){ 
+            return this->unwrap().front(); 
         }
-		const_reference front()const{ 
-        	return this->unwrap().front(); 
+        const_reference front()const{ 
+            return this->unwrap().front(); 
         }
 		reference back(){ 
         	return this->unwrap().back(); 
         }
-		const_reference back()const{ 
-        	return this->unwrap().back(); 
+        const_reference back()const{ 
+            return this->unwrap().back(); 
         }
-		void pop_front(){ 
-        	this->unwrap().pop_front(); 
+        void pop_front(){ 
+            this->unwrap().pop_front(); 
         }
-		void pop_back(){ 
-        	this->unwrap().pop_back(); 
+        void pop_back(){ 
+            this->unwrap().pop_back(); 
         }
-		void swap(cont& that){ 
-        	this->unwrap().swap( that.unwrap() ); 
+        void swap(cont& that){ 
+            this->unwrap().swap( that.unwrap() ); 
         }
 
-		// Note : the modifiers such as push_back() are ommitted as they 
+        // Note : the modifiers such as push_back() are ommitted as they 
         // accessible through the put interface.
 
-		// Convert
+        // Convert
 
-		BOOST_ASSIGN_V2_CONVERT_CONVERT_MF
-		BOOST_ASSIGN_V2_CONVERT_OPERATOR_MF
+        BOOST_ASSIGN_V2_CONVERT_CONVERT_MF
+        BOOST_ASSIGN_V2_CONVERT_OPERATOR_MF
 
-		impl_& unwrap()const{ return this->impl; }
+       impl_& unwrap()const{ return this->impl; }
         
         // Relational op
 
-		template<typename R>
+        template<typename R>
         bool equal_to(const R& r)const{
-         	return ::boost::iterator_range_detail::equal( 
-            	(*this), r );
-		}
+            return ::boost::iterator_range_detail::equal( 
+            (*this), r );
+        }
 
-		template<typename R>
+        template<typename R>
         bool less_than(const R& r)const{
-         	return ::boost::iterator_range_detail::less_than( 
-            	(*this), r );
-		}
+            return ::boost::iterator_range_detail::less_than( 
+            (*this), r );
+        }
 
         protected:
         mutable impl_ impl;
