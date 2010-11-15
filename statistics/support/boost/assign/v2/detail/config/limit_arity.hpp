@@ -23,11 +23,11 @@
 // Functors are by default overloaded as follows:
 // 
 // n = BOOST_ASSIGN_V2_LIMIT_ARITY
-// Overload						| Arity
+// Overload                     | Arity
 // -------------------------------------
-// f()							|	0
-// f(x[0])						|	1
-// f(x[0], x[1])				|	2
+// f()                          |	0
+// f(x[0])                      |	1
+// f(x[0], x[1])                |	2
 // ...
-// f(x[0], ...., x[n-1])		|	n
+// f(x[0], ...., x[n-1])        |	n
 
