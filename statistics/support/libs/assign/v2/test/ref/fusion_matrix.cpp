@@ -30,18 +30,57 @@ namespace xxx_fusion_matrix{
         typedef boost::mpl::vector1<int const> v1_;
         typedef boost::mpl::vector2<int const, int const> v2_;
         typedef ref::nth_result_of::fusion_matrix<> meta_result_;
-		typedef boost::mpl::apply1<
-        	meta_result_,
-            boost::mpl::vector<
-            	v2_,
-                v1_,
-                v0_
-            >
-        >::type result_;
+		//typedef boost::mpl::apply1<
+        //    meta_result_,
+        //    boost::mpl::vector<
+        //        v2_,
+        //        v1_,
+        //        v0_
+        //    >
+        //>::type result_;
+
+    // TODO restore short version
+    typedef boost::assign::v2::ref::fusion_matrix_aux::container<
+        3ul,
+        boost::assign::v2::ref::fusion_matrix_aux::container<
+            2ul,
+            boost::assign::v2::ref::fusion_matrix_aux::container<
+                1ul,
+                boost::assign::v2::ref::fusion_matrix_aux::container<
+                    0ul,
+                    mpl_::void_,
+                    boost::assign::v2::ref::assign_tag::copy,
+                    boost::use_default,
+                    mpl_::na, mpl_::na, mpl_::na, mpl_::na, mpl_::na
+                >,
+                boost::assign::v2::ref::assign_tag::copy,
+                boost::use_default,
+                int,
+                int,
+                mpl_::na,
+                mpl_::na,
+                mpl_::na
+            >,
+            boost::assign::v2::ref::assign_tag::copy,
+            boost::use_default,
+            int,
+            mpl_::na,
+            mpl_::na,
+            mpl_::na,
+            mpl_::na
+        >,
+        boost::assign::v2::ref::assign_tag::copy,
+        boost::use_default,
+        mpl_::na,
+        mpl_::na,
+        mpl_::na,
+        mpl_::na,
+        mpl_::na
+    > result_;
 
         empty_ e;
         result_ result = e( 1, 2 )( 1 )();
-        
+
         typedef boost::mpl::int_<0> int0_;
         typedef boost::mpl::int_<1> int1_;
         typedef boost::mpl::int_<2> int2_;
@@ -57,7 +96,7 @@ namespace xxx_fusion_matrix{
         {
         	BOOST_AUTO(tmp, result.static_row( int2_() ) );
         }
-        
+
     }
 
 }// xxx_fusion_matrix
