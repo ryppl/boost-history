@@ -259,24 +259,44 @@ namespace detail {
 
         circle_event() : is_active_(true) {}
 
-        circle_event(coordinate_type c_x, coordinate_type c_y,
-                     coordinate_type lower_x) :
+        circle_event(coordinate_type c_x, coordinate_type c_y, coordinate_type lower_x) :
             center_x_(c_x),
             center_y_(c_y),
             lower_x_(lower_x),
+            denom_(1),
             is_active_(true) {}
 
-        circle_event(coordinate_type c_x_pos, coordinate_type c_x_neg,
-                     coordinate_type c_y_pos, coordinate_type c_y_neg,
-                     coordinate_type lower_x_pos, coordinate_type lower_x_neg) :
-            center_x_(c_x_pos, c_x_neg), 
-            center_y_(c_y_pos, c_y_neg),
-            lower_x_(lower_x_pos, lower_x_neg),
+        circle_event(const epsilon_robust_comparator<T> &c_x,
+                     const epsilon_robust_comparator<T> &c_y,
+                     const epsilon_robust_comparator<T> &lower_x) :
+            center_x_(c_x),
+            center_y_(c_y),
+            lower_x_(lower_x),
+            denom_(1),
             is_active_(true) {}
+
+        circle_event(const epsilon_robust_comparator<T> &c_x,
+                     const epsilon_robust_comparator<T> &c_y,
+                     const epsilon_robust_comparator<T> &lower_x,
+                     const epsilon_robust_comparator<T> &denom) :
+            center_x_(c_x),
+            center_y_(c_y),
+            lower_x_(lower_x),
+            denom_(denom),
+            is_active_(true) {
+                if (denom_.abs()) {
+                    center_x_.swap();
+                    center_y_.swap();
+                    lower_x_.swap();
+                }
+            }
 
         bool operator==(const circle_event &c_event) const {
-            return (center_y_.compare(c_event.center_y_) == UNDEFINED &&
-                    lower_x_.compare(c_event.lower_x_) == UNDEFINED);
+            epsilon_robust_comparator<T> &lhs1 = center_y_ * c_event.denom_;
+            epsilon_robust_comparator<T> &rhs1 = denom_ * c_event.center_y_;
+            epsilon_robust_comparator<T> &lhs2 = lower_x_ * c_event.denom_;
+            epsilon_robust_comparator<T> &rhs2 = denom_ * c_event.lower_x_;
+            return (lhs1.compare(rhs1) == UNDEFINED && lhs2.compare(rhs2) == UNDEFINED);
         }
 
         bool operator!=(const circle_event &c_event) const {
@@ -284,15 +304,14 @@ namespace detail {
         }
 
         bool operator<(const circle_event &c_event) const {
-            double dif1 = lower_x();
-            double dif2 = c_event.lower_x();
-            if (dif1 != dif2)
-                return dif1 < dif2;
-            return center_y_.get_dif() < c_event.get_erc_y().get_dif();
-            /*kPredicateResult pres = lower_x_.compare(c_event.lower_x_, 64);
+            epsilon_robust_comparator<T> &lhs1 = lower_x_ * c_event.denom_;
+            epsilon_robust_comparator<T> &rhs1 = denom_ * c_event.lower_x_;
+            kPredicateResult pres = lhs1.compare(rhs1, 64);
             if (pres != UNDEFINED)
                 return (pres == LESS);
-            return (center_y_.compare(c_event.center_y_, 32) == LESS);*/
+            epsilon_robust_comparator<T> &lhs2 = center_y_ * c_event.denom_;
+            epsilon_robust_comparator<T> &rhs2 = denom_ * c_event.center_y_;
+            return (lhs2.compare(rhs2, 64) == LESS);
         }
 
         bool operator<=(const circle_event &c_event) const {
@@ -312,22 +331,22 @@ namespace detail {
         // If circle point is equal to site point return 0.
         // If circle point is greater than site point return 1.
         kPredicateResult compare(const site_event<coordinate_type> &s_event) const {
-            kPredicateResult pres = lower_x_.compare(s_event.x());
+            kPredicateResult pres = lower_x_.compare(denom_ * s_event.x(), 64);
             if (pres != UNDEFINED)
                 return pres;
-            return center_y_.compare(s_event.y());
+            return center_y_.compare(denom_ * s_event.y(), 64);
         }
 
         coordinate_type x() const {
-            return center_x_.get_dif();
+            return center_x_.dif() / denom_.dif();
         }
 
         coordinate_type y() const {
-            return center_y_.get_dif();
+            return center_y_.dif() / denom_.dif();
         }
 
         coordinate_type lower_x() const {
-            return lower_x_.get_dif();
+            return lower_x_.dif() / denom_.dif();
         }
 
         Point2D get_center() const {
@@ -340,6 +359,10 @@ namespace detail {
 
         const epsilon_robust_comparator<T> &get_erc_y() const {
             return center_y_;
+        }
+
+        const epsilon_robust_comparator<T> &get_erc_denom() const {
+            return denom_;
         }
 
         void set_bisector(beach_line_iterator iterator) {
@@ -362,6 +385,7 @@ namespace detail {
         epsilon_robust_comparator<T> center_x_;
         epsilon_robust_comparator<T> center_y_;
         epsilon_robust_comparator<T> lower_x_;
+        epsilon_robust_comparator<T> denom_;
         beach_line_iterator bisector_node_;
         bool is_active_;
     };
@@ -616,16 +640,68 @@ namespace detail {
           positive_sum_(pos),
           negative_sum_(neg) {}
 
-        T get_dif() const {
+        T dif() const {
             return positive_sum_ - negative_sum_;
         }
 
-        T get_positive_sum() const {
+        T pos() const {
             return positive_sum_;
         }
 
-        T get_negative_sum() const {
+        T neg() const {
             return negative_sum_;
+        }
+
+        void swap() {
+            (std::swap)(positive_sum_, negative_sum_);
+        }
+
+        bool abs() {
+            if (positive_sum_ < negative_sum_) {
+                swap();
+                return true;
+            }
+            return false;
+        }
+
+        epsilon_robust_comparator<T>& operator+=(const T& val) {
+            avoid_cancellation(val, positive_sum_, negative_sum_);
+            return *this;
+        }
+
+        epsilon_robust_comparator<T>& operator+=(const epsilon_robust_comparator<T>& erc) {
+            positive_sum_ += erc.positive_sum_;
+            negative_sum_ += erc.negative_sum_;
+            return *this;
+        }
+
+        epsilon_robust_comparator<T>& operator-=(const T& val) {
+            avoid_cancellation(val, negative_sum_, positive_sum_);
+            return *this;
+        }
+
+        epsilon_robust_comparator<T>& operator-=(const epsilon_robust_comparator<T>& erc) {
+            positive_sum_ += erc.negative_sum_;
+            negative_sum_ += erc.positive_sum_;
+            return *this;
+        }
+
+        epsilon_robust_comparator<T>& operator*=(const T& val) {
+            positive_sum_ *= fabs(val);
+            negative_sum_ *= fabs(val);
+            if (val < 0) {
+                swap();
+            }
+            return *this;
+        }
+
+        epsilon_robust_comparator<T>& operator/=(const T& val) {
+            positive_sum_ /= fabs(val);
+            negative_sum_ /= fabs(val);
+            if (val < 0) {
+                swap();
+            }
+            return *this;
         }
 
         kPredicateResult compare(T value, int ulp = 0) const {
@@ -637,8 +713,8 @@ namespace detail {
         }
 
         kPredicateResult compare(const epsilon_robust_comparator &rc, int ulp = 0) const {
-            T lhs = positive_sum_ + rc.get_negative_sum();
-            T rhs = negative_sum_ + rc.get_positive_sum();
+            T lhs = positive_sum_ + rc.neg();
+            T rhs = negative_sum_ + rc.pos();
             if (almost_equal(lhs, rhs, ulp))
                 return UNDEFINED;
             return (lhs < rhs) ? LESS : MORE;
@@ -648,6 +724,42 @@ namespace detail {
         T positive_sum_;
         T negative_sum_;
     };
+
+    template<typename T>
+    epsilon_robust_comparator<T> operator+(const epsilon_robust_comparator<T>& lhs,
+                                           const epsilon_robust_comparator<T>& rhs) {
+        return epsilon_robust_comparator<T>(lhs.pos() + rhs.pos(), lhs.neg() + rhs.neg());
+    }
+
+    template<typename T>
+    epsilon_robust_comparator<T> operator-(const epsilon_robust_comparator<T>& lhs,
+                                           const epsilon_robust_comparator<T>& rhs) {
+        return epsilon_robust_comparator<T>(lhs.pos() - rhs.neg(), lhs.neg() + rhs.pos());
+    }
+
+    template<typename T>
+    epsilon_robust_comparator<T> operator*(const epsilon_robust_comparator<T>& lhs,
+                                           const epsilon_robust_comparator<T>& rhs) {
+        double res_pos = lhs.pos() * rhs.pos() + lhs.neg() * rhs.neg();
+        double res_neg = lhs.pos() * rhs.neg() + lhs.neg() * rhs.pos();
+        return epsilon_robust_comparator<T>(res_pos, res_neg);
+    }
+
+    template<typename T>
+    epsilon_robust_comparator<T> operator*(const epsilon_robust_comparator<T>& lhs,
+                                           const T& val) {
+        if (val >= 0)
+            return epsilon_robust_comparator<T>(lhs.pos() * val, lhs.neg() * val);
+        return epsilon_robust_comparator<T>(-lhs.neg() * val, -lhs.pos() * val);
+    }
+
+    template<typename T>
+    epsilon_robust_comparator<T> operator*(const T& val,
+                                           const epsilon_robust_comparator<T>& rhs) {
+        if (val >= 0)
+            return epsilon_robust_comparator<T>(val * rhs.pos(), val * rhs.neg());
+        return epsilon_robust_comparator<T>(-val * rhs.neg(), -val * rhs.pos());
+    }
 
     // Returns true if horizontal line going through new site intersects
     // right arc at first, else returns false. If horizontal line goes
@@ -1028,43 +1140,35 @@ namespace detail {
                                         const site_event<T> &site2,
                                         const site_event<T> &site3,
                                         circle_event<T> &c_event) {
-        double dif_x1 = static_cast<double>(site1.x()) - static_cast<double>(site2.x());
-        double dif_x2 = static_cast<double>(site2.x()) - static_cast<double>(site3.x());
-        double dif_y1 = static_cast<double>(site1.y()) - static_cast<double>(site2.y());
-        double dif_y2 = static_cast<double>(site2.y()) - static_cast<double>(site3.y());
+        double dif_x1 = site1.x() - site2.x();
+        double dif_x2 = site2.x() - site3.x();
+        double dif_y1 = site1.y() - site2.y();
+        double dif_y2 = site2.y() - site3.y();
         double orientation = robust_cross_product(dif_x1, dif_y1, dif_x2, dif_y2);
         if (orientation_test(orientation) != RIGHT_ORIENTATION)
             return false;
         double inv_orientation = 0.5 / orientation;
-        double sum_x1 = static_cast<double>(site1.x()) + static_cast<double>(site2.x());
-        double sum_x2 = static_cast<double>(site2.x()) + static_cast<double>(site3.x());
-        double sum_y1 = static_cast<double>(site1.y()) + static_cast<double>(site2.y());
-        double sum_y2 = static_cast<double>(site2.y()) + static_cast<double>(site3.y());
-        double dif_x3 = static_cast<double>(site1.x()) - static_cast<double>(site3.x());
-        double dif_y3 = static_cast<double>(site1.y()) - static_cast<double>(site3.y());
-        double c_x_pos, c_x_neg, c_y_pos, c_y_neg;
-        c_x_pos = c_x_neg = c_y_pos = c_y_neg = 0;
-        detail::avoid_cancellation(dif_x1 * sum_x1 * dif_y2, c_x_pos, c_x_neg);
-        detail::avoid_cancellation(dif_y1 * sum_y1 * dif_y2, c_x_pos, c_x_neg);
-        detail::avoid_cancellation(dif_x2 * sum_x2 * dif_y1, c_x_neg, c_x_pos);
-        detail::avoid_cancellation(dif_y2 * sum_y2 * dif_y1, c_x_neg, c_x_pos);
-        detail::avoid_cancellation(dif_x2 * sum_x2 * dif_x1, c_y_pos, c_y_neg);
-        detail::avoid_cancellation(dif_y2 * sum_y2 * dif_x1, c_y_pos, c_y_neg);
-        detail::avoid_cancellation(dif_x1 * sum_x1 * dif_x2, c_y_neg, c_y_pos);
-        detail::avoid_cancellation(dif_y1 * sum_y1 * dif_x2, c_y_neg, c_y_pos);
-        if (orientation < 0) {
-            (std::swap)(c_x_pos, c_x_neg);
-            (std::swap)(c_y_pos, c_y_neg);
-            inv_orientation = -inv_orientation;
-        }
-        c_x_pos *= inv_orientation;
-        c_x_neg *= inv_orientation;
-        c_y_pos *= inv_orientation;
-        c_y_neg *= inv_orientation;
-        double radius = sqrt(get_sqr_distance(dif_x1, dif_y1) * get_sqr_distance(dif_x2, dif_y2) *
-                             get_sqr_distance(dif_x3, dif_y3)) * fabs(inv_orientation);
-        c_event = circle_event<double>(c_x_pos, c_x_neg, c_y_pos, c_y_neg,
-                                       c_x_pos + radius, c_x_neg);
+        double sum_x1 = site1.x() + site2.x();
+        double sum_x2 = site2.x() + site3.x();
+        double sum_y1 = site1.y() + site2.y();
+        double sum_y2 = site2.y() + site3.y();
+        double dif_x3 = site1.x() - site3.x();
+        double dif_y3 = site1.y() - site3.y();
+        epsilon_robust_comparator<T> c_x, c_y;
+        c_x += dif_x1 * sum_x1 * dif_y2;
+        c_x += dif_y1 * sum_y1 * dif_y2;
+        c_x -= dif_x2 * sum_x2 * dif_y1;
+        c_x -= dif_y2 * sum_y2 * dif_y1;
+        c_y += dif_x2 * sum_x2 * dif_x1;
+        c_y += dif_y2 * sum_y2 * dif_x1;
+        c_y -= dif_x1 * sum_x1 * dif_x2;
+        c_y -= dif_y1 * sum_y1 * dif_x2;
+        c_x *= inv_orientation;
+        c_y *= inv_orientation;
+        epsilon_robust_comparator<T> lower_x(c_x);
+        lower_x += sqrt(get_sqr_distance(dif_x1, dif_y1) * get_sqr_distance(dif_x2, dif_y2) *
+                        get_sqr_distance(dif_x3, dif_y3)) * fabs(inv_orientation);
+        c_event = circle_event<double>(c_x, c_y, lower_x);
         return true;
     }
 
@@ -1083,10 +1187,8 @@ namespace detail {
                 site2.get_point0()) != RIGHT_ORIENTATION)
                 return false;
         } else {
-            if (orientation_test(site1.get_point0(), site3.get_point0(),
-                site2.get_point0()) != RIGHT_ORIENTATION &&
-                detail::orientation_test(site1.get_point0(), site3.get_point1(),
-                site2.get_point0()) != RIGHT_ORIENTATION)
+            if (site3.get_point0(true) == site1.get_point0() &&
+                site3.get_point1(true) == site2.get_point0())
                 return false;
         }
 
@@ -1102,44 +1204,33 @@ namespace detail {
             site3.get_point1().y() - site2.y(),
             site2.x() - site3.get_point1().x());
         double denom = robust_cross_product(vec_x, vec_y, line_a, line_b);
-        double t_pos, t_neg;
-        t_pos = t_neg = 0;
+        double inv_segm_len = 1.0 / sqrt(get_sqr_distance(line_a, line_b));
+        epsilon_robust_comparator<double> t;
         if (orientation_test(denom) == COLINEAR) {
-            avoid_cancellation(teta / (4.0 * (A + B)), t_pos, t_neg);
-            avoid_cancellation(A * B / (teta * (A + B)), t_neg, t_pos);
+            t += teta / (4.0 * (A + B));
+            t -= A * B / (teta * (A + B));
         } else {
             double det = sqrt((teta * teta + denom * denom) * A * B);
             if (segment_index == 2) {
-                t_neg += det / (denom * denom);
+                t -= det / (denom * denom);
             } else {
-                t_pos += det / (denom * denom);
+                t += det / (denom * denom);
             }
-            avoid_cancellation(teta * (A + B) / (2.0 * denom * denom), t_pos, t_neg);
+            t += teta * (A + B) / (2.0 * denom * denom);
         }
-        double c_x_pos, c_x_neg, c_y_pos, c_y_neg, lower_x_pos, lower_x_neg;
-        c_x_pos = c_x_neg = c_y_pos = c_y_neg = lower_x_pos = lower_x_neg = 0;
-        avoid_cancellation(0.5 * (site1.x() + site2.x()), c_x_pos, c_x_neg);
-        avoid_cancellation(t_pos * vec_x, c_x_pos, c_x_neg);
-        avoid_cancellation(t_neg * vec_x, c_x_neg, c_x_pos);
-        avoid_cancellation(0.5 * (site1.y() + site2.y()), c_y_pos, c_y_neg);
-        avoid_cancellation(t_pos * vec_y, c_y_pos, c_y_neg);
-        avoid_cancellation(t_neg * vec_y, c_y_neg, c_y_pos);
-
-        double inv_segm_len = 1.0 / sqrt(get_sqr_distance(line_a, line_b));
-        double radius_pos, radius_neg;
-        radius_pos = radius_neg = 0;
-        avoid_cancellation(line_a * site3.get_point0().x(), radius_neg, radius_pos);
-        avoid_cancellation(line_b * site3.get_point0().y(), radius_neg, radius_pos);
-        avoid_cancellation(line_a * c_x_pos, radius_pos, radius_neg);
-        avoid_cancellation(line_a * c_x_neg, radius_neg, radius_pos);
-        avoid_cancellation(line_b * c_y_pos, radius_pos, radius_neg);
-        avoid_cancellation(line_b * c_y_neg, radius_neg, radius_pos);
-        if (radius_pos < radius_neg) {
-            (std::swap)(radius_pos, radius_neg);
-        }
-        c_event = circle_event<double>(c_x_pos, c_x_neg, c_y_pos, c_y_neg,
-                                       c_x_pos + inv_segm_len * radius_pos,
-                                       c_x_neg + inv_segm_len * radius_neg);
+        epsilon_robust_comparator<double> c_x, c_y;
+        c_x += 0.5 * (site1.x() + site2.x());
+        c_x += t * vec_x;
+        c_y += 0.5 * (site1.y() + site2.y());
+        c_y += t * vec_y;
+        epsilon_robust_comparator<double> r, lower_x(c_x);
+        r -= line_a * site3.x0();
+        r -= line_b * site3.y0();
+        r += line_a * c_x;
+        r += line_b * c_y;
+        r.abs();
+        lower_x += r * inv_segm_len;
+        c_event = circle_event<double>(c_x, c_y, lower_x);
         return true;
     }
 
@@ -1177,57 +1268,83 @@ namespace detail {
             }
         }
 
-        double a1 = static_cast<double>(segm_end1.x() - segm_start1.x());
-        double b1 = static_cast<double>(segm_end1.y() - segm_start1.y());
-        double a2 = static_cast<double>(segm_end2.x() - segm_start2.x());
-        double b2 = static_cast<double>(segm_end2.y() - segm_start2.y());
-
-        kOrientation segm_orient = orientation_test(
-            static_cast<long long>(a1), static_cast<long long>(b1),
-            static_cast<long long>(a2), static_cast<long long>(b2));
-
-        if (segm_orient == COLINEAR) {
+        double a1 = segm_end1.x() - segm_start1.x();
+        double b1 = segm_end1.y() - segm_start1.y();
+        double a2 = segm_end2.x() - segm_start2.x();
+        double b2 = segm_end2.y() - segm_start2.y();
+        double orientation = robust_cross_product(b1, a1, b2, a2);
+        if (orientation_test(orientation) == COLINEAR) {
             double a = a1 * a1 + b1 * b1;
-            double b = a1 * ((static_cast<double>(segm_start1.x()) +
-                              static_cast<double>(segm_start2.x())) * 0.5 -
-                              static_cast<double>(site1.x())) +
-                       b1 * ((static_cast<double>(segm_start1.y()) +
-                              static_cast<double>(segm_start2.y())) * 0.5 -
-                              static_cast<double>(site1.y()));
             double c = robust_cross_product(b1, a1, segm_start2.y() - segm_start1.y(),
                                             segm_start2.x() - segm_start1.x());
             double det = robust_cross_product(a1, b1, site1.x() - segm_start1.x(),
                                               site1.y() - segm_start1.y()) *
                          robust_cross_product(b1, a1, site1.y() - segm_start2.y(),
                                               site1.x() - segm_start2.x());
-            double t = ((point_index == 2) ? (-b + sqrt(det)) : (-b - sqrt(det))) / a;
-            double c_x = 0.5 * (static_cast<double>(segm_start1.x() + segm_start2.x())) + a1 * t;
-            double c_y = 0.5 * (static_cast<double>(segm_start1.y() + segm_start2.y())) + b1 * t;
-            double radius = 0.5 * fabs(c) / sqrt(a);
-            c_event = circle_event<double>(c_x, c_y, c_x + radius);
+            epsilon_robust_comparator<double> t;
+            t -= a1 * ((segm_start1.x() + segm_start2.x()) * 0.5 - site1.x());
+            t -= b1 * ((segm_start1.y() + segm_start2.y()) * 0.5 - site1.y());
+            if (point_index == 2) {
+                t += sqrt(det);
+            } else {
+                t -= sqrt(det);
+            }
+            t /= a;
+            epsilon_robust_comparator<double> c_x, c_y;
+            c_x += 0.5 * (segm_start1.x() + segm_start2.x());
+            c_x += a1 * t;
+            c_y += 0.5 * (segm_start1.y() + segm_start2.y());
+            c_y += b1 * t;
+            epsilon_robust_comparator<double> lower_x(c_x);
+            lower_x += 0.5 * fabs(c) / sqrt(a);
+            c_event = circle_event<double>(c_x, c_y, lower_x);
             return true;
         } else {
-            double c1 = robust_cross_product(b1, a1, segm_end1.y(), segm_end1.x());
-            double c2 = robust_cross_product(a2, b2, segm_end2.x(), segm_end2.y());
-            double denom = robust_cross_product(b1, a1, b2, a2);
-            double intersection_x = (c1 * a2 + a1 * c2) / denom;
-            double intersection_y = (b1 * c2 + b2 * c1) / denom;
             double sqr_sum1 = sqrt(a1 * a1 + b1 * b1);
             double sqr_sum2 = sqrt(a2 * a2 + b2 * b2);
-            double vec_x = a1 * sqr_sum2 + a2 * sqr_sum1;
-            double vec_y = b1 * sqr_sum2 + b2 * sqr_sum1;
-            double dx = intersection_x - site1.get_point0().x();
-            double dy = intersection_y - site1.get_point0().y();
-            double a = robust_cross_product(a1, b1, -b2, a2) + sqr_sum1 * sqr_sum2;
-            double b = dx * vec_x + dy * vec_y;
-            double det = fabs(-2.0 * a * (b1 * dx - a1 * dy) * (b2 * dx - a2 * dy));
-            double t = ((point_index == 2) ? (-b + sqrt(det)) : (-b - sqrt(det))) / (a * a);
-            double c_x = intersection_x + vec_x * t;
-            double c_y = intersection_y + vec_y * t;
-            double radius = fabs(denom * t);
-            c_event = circle_event<double>(c_x, c_y, c_x + radius);
-            return true;
+            double a = robust_cross_product(a1, b1, -b2, a2);
+            if (a >= 0) {
+                a += sqr_sum1 * sqr_sum2;
+            } else {
+                a = (orientation * orientation) / (sqr_sum1 * sqr_sum2 - a);
+            }
+            double or1 = robust_cross_product(b1, a1, segm_end1.y() - site1.y(),
+                                              segm_end1.x() - site1.x());
+            double or2 = robust_cross_product(a2, b2, segm_end2.x() - site1.x(),
+                                              segm_end2.y() - site1.y());
+            double det = 2.0 * a * or1 * or2;
+            double c1 = robust_cross_product(b1, a1, segm_end1.y(), segm_end1.x());
+            double c2 = robust_cross_product(a2, b2, segm_end2.x(), segm_end2.y());
+            double inv_orientation = 1.0 / orientation;
+            epsilon_robust_comparator<double> t, b, ix, iy;
+            ix += c1 * a2 * inv_orientation;
+            ix += a1 * c2 * inv_orientation;
+            iy += b1 * c2 * inv_orientation;
+            iy += b2 * c1 * inv_orientation;
+            b += ix * (a1 * sqr_sum2);
+            b += ix * (a2 * sqr_sum1);
+            b += iy * (b1 * sqr_sum2);
+            b += iy * (b2 * sqr_sum1);
+            b -= sqr_sum1 * robust_cross_product(a2, b2, -site1.y(), site1.x());
+            b -= sqr_sum2 * robust_cross_product(a1, b1, -site1.y(), site1.x());
+            t -= b;
+            if (point_index == 2) {
+                t += sqrt(det);
+            } else {
+                t -= sqrt(det);
+            }
+            t /= (a * a);
+            epsilon_robust_comparator<double> c_x(ix), c_y(iy);
+            c_x += t * (a1 * sqr_sum2);
+            c_x += t * (a2 * sqr_sum1);
+            c_y += t * (b1 * sqr_sum2);
+            c_y += t * (b2 * sqr_sum1);
+            t.abs();
+            epsilon_robust_comparator<double> lower_x(c_x);
+            lower_x += t * fabs(orientation);
+            c_event = circle_event<double>(c_x, c_y, lower_x);
         }
+        return true;
     }
 
     // Create circle event from three segment sites.
@@ -1240,32 +1357,42 @@ namespace detail {
             site2.get_site_index() == site3.get_site_index()) {
             return false;
         }
-        double a1 = static_cast<double>(site1.x1(true) - site1.x0(true));
-        double b1 = static_cast<double>(site1.y1(true) - site1.y0(true));
-        double c1 = b1 * static_cast<double>(site1.x0(true)) -
-                    a1 * static_cast<double>(site1.y0(true));
-        double a2 = static_cast<double>(site2.x1(true) - site2.x0(true));
-        double b2 = static_cast<double>(site2.y1(true) - site2.y0(true));
-        double c2 = b2 * static_cast<double>(site2.x0(true)) -
-                    a2 * static_cast<double>(site2.y0(true));
-        double a3 = static_cast<double>(site3.x1(true) - site3.x0(true));
-        double b3 = static_cast<double>(site3.y1(true) - site3.y0(true));
-        double c3 = b3 * static_cast<double>(site3.x0(true)) -
-                    a3 * static_cast<double>(site3.y0(true));
-        double sqr_sum1 = sqrt(a1 * a1 + b1 * b1);
-        double sqr_sum2 = sqrt(a2 * a2 + b2 * b2);
-        double sqr_sum3 = sqrt(a3 * a3 + b3 * b3);
-        double vec_a1 = -a1 * sqr_sum2 + a2 * sqr_sum1;
-        double vec_b1 = -b1 * sqr_sum2 + b2 * sqr_sum1;
-        double vec_c1 = -c1 * sqr_sum2 + c2 * sqr_sum1;
-        double vec_a2 = -a2 * sqr_sum3 + a3 * sqr_sum2;
-        double vec_b2 = -b2 * sqr_sum3 + b3 * sqr_sum2;
-        double vec_c2 = -c2 * sqr_sum3 + c3 * sqr_sum2;
-        double det = vec_a1 * vec_b2 - vec_b1 * vec_a2;
-        double c_x = (vec_a1 * vec_c2 - vec_c1 * vec_a2) / det;
-        double c_y = (vec_b1 * vec_c2 - vec_c1 * vec_b2) / det;
-        double radius = fabs(-b2 * c_x + a2 * c_y + c2) / sqr_sum2;
-        c_event = circle_event<double>(c_x, c_y, c_x + radius);
+        double a1 = site1.x1(true) - site1.x0(true);
+        double b1 = site1.y1(true) - site1.y0(true);
+        double c1 = robust_cross_product(b1, a1, site1.y0(true), site1.x0(true)); 
+        double a2 = site2.x1(true) - site2.x0(true);
+        double b2 = site2.y1(true) - site2.y0(true);
+        double c2 = robust_cross_product(b2, a2, site2.y0(true), site2.x0(true));
+        double a3 = site3.x1(true) - site3.x0(true);
+        double b3 = site3.y1(true) - site3.y0(true);
+        double c3 = robust_cross_product(b3, a3, site3.y0(true), site3.x0(true));
+        double len1 = sqrt(a1 * a1 + b1 * b1);
+        double len2 = sqrt(a2 * a2 + b2 * b2);
+        double len3 = sqrt(a3 * a3 + b3 * b3);
+        double cross_12 = robust_cross_product(a1, b1, a2, b2);
+        double cross_23 = robust_cross_product(a2, b2, a3, b3);
+        double cross_31 = robust_cross_product(a3, b3, a1, b1);
+        epsilon_robust_comparator<double> det, c_x, c_y, r;
+        det += cross_12 * len3;
+        det += cross_23 * len1;
+        det += cross_31 * len2;
+        c_x += a1 * c2 * len3;
+        c_x -= a2 * c1 * len3;
+        c_x += a2 * c3 * len1;
+        c_x -= a3 * c2 * len1;
+        c_x += a3 * c1 * len2;
+        c_x -= a1 * c3 * len2;
+        c_y += b1 * c2 * len3;
+        c_y -= b2 * c1 * len3;
+        c_y += b2 * c3 * len1;
+        c_y -= b3 * c2 * len1;
+        c_y += b3 * c1 * len2;
+        c_y -= b1 * c3 * len2;
+        r += b2 * c_x;
+        r -= a2 * c_y;
+        r -= c2 * det;
+        r /= len2;
+        c_event = circle_event<double>(c_x, c_y, c_x + r, det);
         return true;
     }
 
@@ -1505,17 +1632,20 @@ namespace detail {
         voronoi_edge<coordinate_type> *incident_edge;
         epsilon_robust_comparator<T> center_x;
         epsilon_robust_comparator<T> center_y;
+        epsilon_robust_comparator<T> denom;
         Point2D vertex;
         int num_incident_edges;
         typename std::list< voronoi_vertex<coordinate_type> >::iterator voronoi_record_it;
 
         voronoi_vertex(const epsilon_robust_comparator<T> &c_x,
                        const epsilon_robust_comparator<T> &c_y,
+                       const epsilon_robust_comparator<T> &den,
                        voronoi_edge<coordinate_type>* edge) :
             incident_edge(edge),
             center_x(c_x),
             center_y(c_y),
-            vertex(c_x.get_dif(), c_y.get_dif()),
+            denom(den),
+            vertex(c_x.dif() / den.dif(), c_y.dif() / den.dif()),
             num_incident_edges(0) {}
     };
 
@@ -1691,7 +1821,7 @@ namespace detail {
 
             // Add new voronoi vertex with point at center of the circle.
             vertex_records_.push_back(voronoi_vertex_type(
-                circle.get_erc_x(), circle.get_erc_y(), edge12));
+                circle.get_erc_x(), circle.get_erc_y(), circle.get_erc_denom(), edge12));
             voronoi_vertex_type &new_vertex = vertex_records_.back();
             new_vertex.num_incident_edges = 3;
             new_vertex.voronoi_record_it = vertex_records_.end();
@@ -1805,11 +1935,17 @@ namespace detail {
                 edge_it1 = edge_it;
                 std::advance(edge_it, 2);
 
-                if (edge_it1->start_point && edge_it1->end_point &&
-                    edge_it1->start_point->center_x.compare(
-                        edge_it1->end_point->center_x, 128) == UNDEFINED &&
-                    edge_it1->start_point->center_y.compare(
-                        edge_it1->end_point->center_y, 128) == UNDEFINED) {
+                if (!edge_it1->start_point || !edge_it1->end_point)
+                    continue;
+
+                const voronoi_vertex_type *p1 = edge_it1->start_point;
+                const voronoi_vertex_type *p2 = edge_it1->end_point;
+                epsilon_robust_comparator<T> lhs1 = p1->center_x * p2->denom;
+                epsilon_robust_comparator<T> rhs1 = p1->denom * p2->center_x;
+                epsilon_robust_comparator<T> lhs2 = p1->center_y * p2->denom;
+                epsilon_robust_comparator<T> rhs2 = p1->denom * p2->center_y;
+
+                if (lhs1.compare(rhs1, 64) == UNDEFINED && lhs2.compare(rhs2, 64) == UNDEFINED) {
                     // Decrease number of cell incident edges.
                     edge_it1->cell->num_incident_edges--;
                     edge_it1->twin->cell->num_incident_edges--;
