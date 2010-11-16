@@ -105,22 +105,25 @@ enum{
 // basically this is a simplified vector<unsigned char>
 // this is used by basic_regex for expression storage
 //
-
-class BOOST_REGEX_DECL raw_storage
+template <class Allocator>
+class BOOST_REGEX_DECL raw_storage : public Allocator
 {
 public:
    typedef std::size_t           size_type;
    typedef unsigned char*        pointer;
 private:
    pointer last, start, end;
+   typedef typename Allocator::template rebind<unsigned char> bound_type;
+   typedef typename bound_type::other byte_allocator;
 public:
 
-   raw_storage();
-   raw_storage(size_type n);
+   raw_storage(const Allocator& a);
+   raw_storage(size_type n, const Allocator& a);
 
    ~raw_storage()
    {
-      ::operator delete(start);
+      byte_allocator a(*this);
+      a.deallocate(start, end - start);
    }
 
    void BOOST_REGEX_CALL resize(size_type n);
@@ -168,22 +171,63 @@ public:
    }
    void swap(raw_storage& that)
    {
+      std::swap(static_cast<Allocator&>(*this), static_cast<Allocator&>(that));
       std::swap(start, that.start);
       std::swap(end, that.end);
       std::swap(last, that.last);
   }
 };
 
-inline raw_storage::raw_storage()
+template <class Allocator>
+inline raw_storage<Allocator>::raw_storage(const Allocator& a) : Allocator(a)
 {
    last = start = end = 0;
 }
 
-inline raw_storage::raw_storage(size_type n)
+template <class Allocator>
+inline raw_storage<Allocator>::raw_storage(size_type n, const Allocator& a1) : Allocator(a1)
 {
-   start = end = static_cast<pointer>(::operator new(n));
+   byte_allocator a(a1);
+   start = end = a.allocate(n);
    BOOST_REGEX_NOEH_ASSERT(start)
    last = start + n;
+}
+
+template <class Allocator>
+void BOOST_REGEX_CALL raw_storage<Allocator>::resize(size_type n)
+{
+   byte_allocator a(*this);
+   register size_type newsize = start ? last - start : 1024;
+   while(newsize < n)
+      newsize *= 2;
+   register size_type datasize = end - start;
+   // extend newsize to WORD/DWORD boundary:
+   newsize = (newsize + padding_mask) & ~(padding_mask);
+
+   // allocate and copy data:
+   register pointer ptr = a.allocate(newsize);
+   BOOST_REGEX_NOEH_ASSERT(ptr)
+   std::memcpy(ptr, start, datasize);
+
+   // get rid of old buffer:
+   a.deallocate(start, last - start);
+
+   // and set up pointers:
+   start = ptr;
+   end = ptr + datasize;
+   last = ptr + newsize;
+}
+
+template <class Allocator>
+void* BOOST_REGEX_CALL raw_storage<Allocator>::insert(size_type pos, size_type n)
+{
+   BOOST_ASSERT(pos <= size_type(end - start));
+   if(size_type(last - end) < n)
+      resize(n + (end - start));
+   register void* result = start + pos;
+   std::memmove(start + pos + n, start + pos, (end - start) - pos);
+   end += n;
+   return result;
 }
 
 

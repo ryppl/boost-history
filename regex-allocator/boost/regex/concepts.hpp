@@ -159,6 +159,36 @@ bool operator == (const allocator_architype_2<T>&, const allocator_architype_2<T
 template <class T>
 bool operator != (const allocator_architype_2<T>&, const allocator_architype_2<T>&);
 
+template <>
+class allocator_architype_2<void>
+{
+public:
+   typedef void* pointer;
+   typedef const void* const_pointer;
+   typedef void value_type;
+   typedef unsigned size_type;
+   typedef int difference_type;
+
+   template <class U>
+   struct rebind
+   {
+      typedef allocator_architype_2<U> other;
+   };
+
+   pointer allocate(size_type);
+   pointer allocate(size_type, pointer);
+   void deallocate(pointer, size_type);
+   size_type max_size()const;
+
+   allocator_architype_2();
+   allocator_architype_2(const allocator_architype_2&);
+
+   template <class Other>
+   allocator_architype_2(const allocator_architype_2<Other>&);
+
+   void destroy(pointer);
+};
+
 namespace boost{
 //
 // regex_traits_architype:
@@ -654,6 +684,7 @@ struct RegexConcept
    typedef global_regex_namespace::sub_match<BidiIterator> sub_match_type;
    typedef global_regex_namespace::match_results<BidiIterator, allocator_architype<sub_match_type> > match_results_type;
    typedef output_iterator_archetype<value_type> OutIterator;
+   typedef input_iterator_archetype<value_type> input_iterator_type;
 
 
    void constraints() 
@@ -664,6 +695,18 @@ struct RegexConcept
       ignore_unused_variable_warning(e1);
       Regex e2(m_string, m_flags);
       ignore_unused_variable_warning(e2);
+
+      // Allocator based construction:
+      typedef typename Regex::allocator_type regex_alloc;
+      regex_alloc a;
+      Regex e3(a);
+      ignore_unused_variable_warning(e3);
+      Regex e5(m_pointer, m_flags, a);
+      ignore_unused_variable_warning(e5);
+      Regex e6(m_pointer, m_size, m_flags, a);
+      ignore_unused_variable_warning(e6);
+      Regex e8(in1, in2, m_flags, a);
+      ignore_unused_variable_warning(e8);
 
       // assign etc:
       Regex e;
@@ -826,6 +869,8 @@ struct RegexConcept
    const match_results_type m_cresults;
    OutIterator m_out;
    BidiIterator m_in;
+   std::size_t m_size;
+   input_iterator_type in1, in2;
    global_regex_namespace::regex_constants::match_flag_type m_mft;
    global_regex_namespace::match_results<typename string_type::const_iterator, allocator_architype<global_regex_namespace::sub_match<typename string_type::const_iterator> > > m_smatch;
 

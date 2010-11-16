@@ -21,6 +21,7 @@
 
 #include <boost/type_traits/is_same.hpp>
 #include <boost/functional/hash.hpp>
+#include <boost/regex/v4/allocator_support.hpp>
 
 #ifdef BOOST_MSVC
 #pragma warning(push)
@@ -105,7 +106,7 @@ public:
    typedef std::vector<name>::const_iterator const_iterator;
    typedef std::pair<const_iterator, const_iterator> range_type;
 
-   named_subexpressions(){}
+   named_subexpressions() {}
 
    template <class charT>
    void set_name(const charT* i, const charT* j, int index)
@@ -154,16 +155,16 @@ private:
 // represents the data we wish to expose to the matching algorithms.
 //
 template <class charT, class traits, class Allocator>
-struct regex_data : public named_subexpressions
+struct regex_data : public named_subexpressions, public Allocator
 {
    typedef regex_constants::syntax_option_type   flag_type;
    typedef std::size_t                           size_type;  
 
    regex_data(const ::boost::shared_ptr<
-      ::boost::regex_traits_wrapper<traits> >& t) 
-      : m_ptraits(t), m_expression(0), m_expression_len(0) {}
-   regex_data() 
-      : m_ptraits(new ::boost::regex_traits_wrapper<traits>()), m_expression(0), m_expression_len(0) {}
+      ::boost::regex_traits_wrapper<traits> >& t, const Allocator& a) 
+      : Allocator(a), m_ptraits(t), m_expression(0), m_expression_len(0), m_data(a), m_subs(a) {}
+   regex_data(const Allocator& a) 
+      : Allocator(a), m_ptraits(create_shared_ptr< ::boost::regex_traits_wrapper<traits> >(a)), m_expression(0), m_expression_len(0), m_data(a), m_subs(a) {}
 
    ::boost::shared_ptr<
       ::boost::regex_traits_wrapper<traits>
@@ -177,12 +178,17 @@ struct regex_data : public named_subexpressions
    unsigned                    m_restart_type;            // search optimisation type
    unsigned char               m_startmap[1 << CHAR_BIT]; // which characters can start a match
    unsigned int                m_can_be_null;             // whether we can match a null string
-   re_detail::raw_storage      m_data;                    // the buffer in which our states are constructed
+   re_detail::raw_storage<Allocator>   m_data;                    // the buffer in which our states are constructed
    typename traits::char_class_type    m_word_mask;       // mask used to determine if a character is a word character
    std::vector<
       std::pair<
-      std::size_t, std::size_t> > m_subs;                 // Position of sub-expressions within the *string*.
+      std::size_t, std::size_t>, Allocator> m_subs;       // Position of sub-expressions within the *string*.
    bool                        m_has_recursions;          // whether we have recursive expressions;
+
+   const Allocator& get_allocator()const
+   {
+      return *this;
+   }
 };
 //
 // class basic_regex_implementation
@@ -199,10 +205,10 @@ public:
    typedef typename traits::locale_type          locale_type;
    typedef const charT*                          const_iterator;
 
-   basic_regex_implementation(){}
+   basic_regex_implementation(const Allocator& a) : regex_data<charT, traits, Allocator>(a) {}
    basic_regex_implementation(const ::boost::shared_ptr<
-      ::boost::regex_traits_wrapper<traits> >& t)
-      : regex_data<charT, traits, Allocator>(t) {}
+      ::boost::regex_traits_wrapper<traits> >& t, const Allocator& a)
+      : regex_data<charT, traits, Allocator>(t, a) {}
    void assign(const charT* arg_first,
                           const charT* arg_last,
                           flag_type f)
@@ -326,20 +332,28 @@ public:
    // traits class to localise *this.
    typedef typename traits::locale_type          locale_type;
    typedef Allocator                             allocator_type;
+
+private:
+   typedef typename Allocator::template rebind<unsigned char>  rebind_type;
+   typedef typename rebind_type::other                         forwarding_allocator;
    
 public:
    explicit basic_regex(){}
-   explicit basic_regex(const charT* p, flag_type f = regex_constants::normal)
+   explicit basic_regex(const Allocator& a)
    {
-      assign(p, f);
+      m_pimpl = re_detail::create_shared_ptr<re_detail::basic_regex_implementation<charT, traits, forwarding_allocator> >(forwarding_allocator(a), a);
    }
-   basic_regex(const charT* p1, const charT* p2, flag_type f = regex_constants::normal)
+   explicit basic_regex(const charT* p, flag_type f = regex_constants::normal, const Allocator& a = Allocator())
    {
-      assign(p1, p2, f);
+      do_assign(p, p + traits::length(p), f, &a);
    }
-   basic_regex(const charT* p, size_type len, flag_type f)
+   basic_regex(const charT* p1, const charT* p2, flag_type f = regex_constants::normal, const Allocator& a = Allocator())
    {
-      assign(p, len, f);
+      do_assign(p1, p2, f, &a);
+   }
+   basic_regex(const charT* p, size_type len, flag_type f, const Allocator& a = Allocator())
+   {
+      do_assign(p, p + len, f, &a);
    }
    basic_regex(const basic_regex& that)
       : m_pimpl(that.m_pimpl) {}
@@ -371,7 +385,8 @@ public:
 private:
    basic_regex& do_assign(const charT* p1,
                           const charT* p2,
-                          flag_type f);
+                          flag_type f,
+                          const Allocator* pa = 0);
 public:
    basic_regex& assign(const charT* p1,
                           const charT* p2,
@@ -388,20 +403,20 @@ public:
    }
 
    template <class ST, class SA>
-   explicit basic_regex(const std::basic_string<charT, ST, SA>& p, flag_type f = regex_constants::normal)
+   explicit basic_regex(const std::basic_string<charT, ST, SA>& p, flag_type f = regex_constants::normal, const Allocator& a = Allocator())
    { 
-      assign(p, f); 
+      do_assign(p.c_str(), p.c_str() + p.size(), f, &a);
    }
 
    template <class InputIterator>
-   basic_regex(InputIterator arg_first, InputIterator arg_last, flag_type f = regex_constants::normal)
+   basic_regex(InputIterator arg_first, InputIterator arg_last, flag_type f = regex_constants::normal, const Allocator& a = Allocator())
    {
       typedef typename traits::string_type seq_type;
-      seq_type a(arg_first, arg_last);
-      if(a.size())
-         assign(&*a.begin(), &*a.begin() + a.size(), f);
+      seq_type t(arg_first, arg_last);
+      if(t.size())
+         do_assign(&*t.begin(), &*t.begin() + t.size(), f, &a);
       else
-         assign(static_cast<const charT*>(0), static_cast<const charT*>(0), f);
+         do_assign(static_cast<const charT*>(0), static_cast<const charT*>(0), f, &a);
    }
 
    template <class ST, class SA>
@@ -622,7 +637,7 @@ public:
       BOOST_ASSERT(0 != m_pimpl.get());
       return m_pimpl->can_be_null();
    }
-   const re_detail::regex_data<charT, traits, Allocator>& get_data()const
+   const re_detail::regex_data<charT, traits, forwarding_allocator>& get_data()const
    {
       BOOST_ASSERT(0 != m_pimpl.get());
       return m_pimpl->get_data();
@@ -633,7 +648,7 @@ public:
    }
 
 private:
-   shared_ptr<re_detail::basic_regex_implementation<charT, traits, Allocator> > m_pimpl;
+   shared_ptr<re_detail::basic_regex_implementation<charT, traits, forwarding_allocator> > m_pimpl;
 };
 
 //
@@ -645,16 +660,18 @@ private:
 template <class charT, class traits, class Allocator>
 basic_regex<charT, traits, Allocator>& basic_regex<charT, traits, Allocator>::do_assign(const charT* p1,
                         const charT* p2,
-                        flag_type f)
+                        flag_type f,
+                        const Allocator* pa)
 {
-   shared_ptr<re_detail::basic_regex_implementation<charT, traits, Allocator> > temp;
+   shared_ptr<re_detail::basic_regex_implementation<charT, traits, forwarding_allocator> > temp;
+   Allocator a = pa ? *pa : m_pimpl.get() ? Allocator(m_pimpl->get_allocator()) : Allocator();
    if(!m_pimpl.get())
    {
-      temp = shared_ptr<re_detail::basic_regex_implementation<charT, traits, Allocator> >(new re_detail::basic_regex_implementation<charT, traits, Allocator>());
+      temp = re_detail::create_shared_ptr<re_detail::basic_regex_implementation<charT, traits, forwarding_allocator> >(forwarding_allocator(a), a);
    }
    else
    {
-      temp = shared_ptr<re_detail::basic_regex_implementation<charT, traits, Allocator> >(new re_detail::basic_regex_implementation<charT, traits, Allocator>(m_pimpl->m_ptraits));
+      temp = re_detail::create_shared_ptr<re_detail::basic_regex_implementation<charT, traits, forwarding_allocator> >(m_pimpl->m_ptraits, forwarding_allocator(a), a);
    }
    temp->assign(p1, p2, f);
    temp.swap(m_pimpl);
@@ -664,7 +681,8 @@ basic_regex<charT, traits, Allocator>& basic_regex<charT, traits, Allocator>::do
 template <class charT, class traits, class Allocator>
 typename basic_regex<charT, traits, Allocator>::locale_type BOOST_REGEX_CALL basic_regex<charT, traits, Allocator>::imbue(locale_type l)
 { 
-   shared_ptr<re_detail::basic_regex_implementation<charT, traits, Allocator> > temp(new re_detail::basic_regex_implementation<charT, traits, Allocator>());
+   Allocator a(m_pimpl.get() ? Allocator(m_pimpl->get_allocator()) : Allocator());
+   shared_ptr<re_detail::basic_regex_implementation<charT, traits, forwarding_allocator> > temp(re_detail::create_shared_ptr<re_detail::basic_regex_implementation<charT, traits, forwarding_allocator> >(forwarding_allocator(a), a));
    locale_type result = temp->imbue(l);
    temp.swap(m_pimpl);
    return result;
