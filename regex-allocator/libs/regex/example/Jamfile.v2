@@ -47,43 +47,30 @@ rule regex-test-run ( sources + : input * : name * )
 
 test-suite regex-examples :
 
-[ regex-test-run timer/regex_timer.cpp : $(BOOST_ROOT)/libs/regex/example/timer/input_script.txt ]
-[ regex-test-run grep/grep.cpp $(boost)/libs/program_options/build//boost_program_options/<link>static : -n -b $(BOOST_ROOT)/boost/regex.hpp $(BOOST_ROOT)/boost/type_traits.hpp : test_grep ]
+[ regex-test-run timer/regex_timer.cpp : $(boost)/libs/regex/example/timer/input_script.txt ]
+[ regex-test-run grep/grep.cpp $(boost)/libs/program_options/build//boost_program_options/<link>static : -n -b $(boost)/boost/regex.hpp $(boost)/boost/type_traits.hpp : test_grep ]
 [ regex-test-run snippets/credit_card_example.cpp ]
 [ regex-test-run snippets/mfc_example.cpp ]
 [ regex-test-run snippets/icu_example.cpp ]
-[ regex-test-run snippets/partial_regex_grep.cpp : $(BOOST_ROOT)/libs/regex/index.htm ]
-[ regex-test-run snippets/partial_regex_iterate.cpp : $(BOOST_ROOT)/libs/regex/index.htm ]
+[ regex-test-run snippets/partial_regex_grep.cpp : $(boost)/libs/regex/index.htm ]
+[ regex-test-run snippets/partial_regex_iterate.cpp : $(boost)/libs/regex/index.htm ]
 [ regex-test-run snippets/partial_regex_match.cpp : 1234-5678-8765-4 ]
-[ regex-test-run snippets/regex_grep_example_1.cpp : $(BOOST_ROOT)/boost/rational.hpp ]
-[ regex-test-run snippets/regex_grep_example_2.cpp : $(BOOST_ROOT)/boost/rational.hpp ]
-[ regex-test-run snippets/regex_grep_example_3.cpp : $(BOOST_ROOT)/boost/rational.hpp ]
-[ regex-test-run snippets/regex_grep_example_4.cpp : $(BOOST_ROOT)/boost/rational.hpp ]
+[ regex-test-run snippets/regex_grep_example_1.cpp : $(boost)/boost/rational.hpp ]
+[ regex-test-run snippets/regex_grep_example_2.cpp : $(boost)/boost/rational.hpp ]
+[ regex-test-run snippets/regex_grep_example_3.cpp : $(boost)/boost/rational.hpp ]
+[ regex-test-run snippets/regex_grep_example_4.cpp : $(boost)/boost/rational.hpp ]
 [ regex-test-run snippets/regex_match_example.cpp : -auto ]
-[ regex-test-run snippets/regex_merge_example.cpp : $(BOOST_ROOT)/boost/rational.hpp ]
-[ regex-test-run snippets/regex_replace_example.cpp : $(BOOST_ROOT)/boost/rational.hpp ]
-[ regex-test-run snippets/regex_search_example.cpp : $(BOOST_ROOT)/boost/rational.hpp ]
+[ regex-test-run snippets/regex_merge_example.cpp : $(boost)/boost/rational.hpp ]
+[ regex-test-run snippets/regex_replace_example.cpp : $(boost)/boost/rational.hpp ]
+[ regex-test-run snippets/regex_search_example.cpp : $(boost)/boost/rational.hpp ]
 [ regex-test-run snippets/regex_split_example_1.cpp : -auto ]
-[ regex-test-run snippets/regex_split_example_2.cpp : $(BOOST_ROOT)/libs/regex/doc/html/index.html ]
+[ regex-test-run snippets/regex_split_example_2.cpp : $(boost)/libs/regex/doc/html/index.html ]
 [ regex-test-run snippets/regex_token_iterator_eg_1.cpp : -auto ]
-[ regex-test-run snippets/regex_token_iterator_eg_2.cpp : $(BOOST_ROOT)/libs/regex/doc/html/index.html ]
-[ regex-test-run snippets/regex_iterator_example.cpp : $(BOOST_ROOT)/boost/rational.hpp ]
+[ regex-test-run snippets/regex_token_iterator_eg_2.cpp : $(boost)/libs/regex/doc/html/index.html ]
+[ regex-test-run snippets/regex_iterator_example.cpp : $(boost)/boost/rational.hpp ]
 [ run snippets/captures_example.cpp
   ../test/captures//boost_regex_extra
   : : :  <threading>multi <define>BOOST_REGEX_MATCH_EXTRA=1 ]
 
 ;
-
-
-
-
-
-
-
-
-
-
-
-
-
 

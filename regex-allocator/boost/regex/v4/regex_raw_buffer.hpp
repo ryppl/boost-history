@@ -106,7 +106,7 @@ enum{
 // this is used by basic_regex for expression storage
 //
 template <class Allocator>
-class BOOST_REGEX_DECL raw_storage : public Allocator
+class raw_storage : public Allocator
 {
 public:
    typedef std::size_t           size_type;
