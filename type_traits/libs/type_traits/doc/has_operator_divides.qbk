@@ -1,0 +1,42 @@
+[/
+  Copyright 2010  Frédéric Bron.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:has_operator_divides has_operator_divides]
+   template <class LHS, class RHS=LHS, class RET=void>
+   struct has_operator_divides : public __tof {};
+
+__inherit
+  If (i) `lhs` of type `LHS` and `rhs` of type `RHS` can be used in expression `lhs/rhs`,
+  and (ii) `RET=void` or the result of expression `lhs/rhs` is convertible to `RET`
+  then inherits from __true_type,
+  otherwise inherits from __false_type.
+  Thus the default behaviour is to not check for the return value of the operator (`RET=void`).
+  If `RET` is different from the default `void` type, the return value is checked to be convertible to `RET`.
+
+__header ` #include <boost/type_traits/has_operator_divides.hpp>` or ` #include <boost/type_traits.hpp>`
+
+__examples
+
+[:`has_operator_divides<LHS, RHS, RET>::value_type` is the type `bool`.]
+
+[:`has_operator_divides<int>` inherits from `__true_type`.]
+
+[:`has_operator_divides<int, int, int>` inherits from `__true_type`.]
+
+[:`has_operator_divides<int, int, long>` inherits from `__true_type`.]
+
+[:`has_operator_divides<int, double, double>` inherits from `__true_type`.]
+
+[:`has_operator_divides<int, double, int>` inherits from `__true_type`.]
+
+[:`has_operator_divides<int, int, std::string>` inherits from `__false_type`.]
+
+[:`has_operator_divides<long>::value` is a `bool` integral constant
+expression that evaluates to /true/.]
+
+[endsect]
+
