@@ -8,8 +8,11 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_XXX
+
 #include <boost/preprocessor/cat.hpp>
 #include <boost/accumulators/framework/accumulator_base.hpp>
+
+#include <boost/assign/v2/detail/pp/forward.hpp>
 #include <boost/assign/v2/put/modifier/def.hpp>
 #include <boost/assign/v2/put/generic/new_modifier.hpp>
 
@@ -24,11 +27,15 @@ namespace put_aux{\
     struct modifier<v2::modifier_tag::FUN>\
     {\
 \
-    	modifier(){}\
+        modifier(){}\
         modifier( boost::accumulators::dont_care ){}\
 \
     	template<typename V, typename T>\
-       	void impl(V& v, T& t)const{ v.FUN( t ); }\
+        void impl(V& v, BOOST_ASSIGN_V2_forward_param(T, t) )const{\
+            v.FUN(\
+                BOOST_ASSIGN_V2_forward_arg(T, t)\
+            );\
+        }\
 \
     	template<typename V, typename T>\
         void impl(V& v, T* t)const{ v.FUN( t ); }\
@@ -50,9 +57,4 @@ namespace{\
 /**/
 
 #endif
-
-/*
-
-*/
-
 

@@ -12,8 +12,7 @@
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/assign/v2/ref/anon/csv/assign_xxx.hpp>
 
-#define xxx_Tag1 assign_tag::copy
-BOOST_ASSIGN_V2_REF_CSV_ARRAY_ASSIGN_XXX( assign_copy ) 
-#undef xxx_Tag1
+BOOST_ASSIGN_V2_REF_ANON_CSV_ASSIGN_XXX_1( assign_copy, assign_tag::copy )
+BOOST_ASSIGN_V2_REF_ANON_CSV_ASSIGN_XXX_2( assign_copy, assign_tag::copy )
 
 #endif

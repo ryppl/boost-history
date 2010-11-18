@@ -9,6 +9,26 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_FUSION_MATRIX_CONTAINER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_FUSION_MATRIX_CONTAINER_ER_2010_HPP
+#include <boost/mpl/apply.hpp>
+#include <boost/mpl/unpack_args.hpp>
+//#include <boost/mpl/aux_/na.hpp>
+#include <boost/mpl/int.hpp>
+#include <boost/mpl/minus.hpp>
+#include <boost/mpl/size.hpp>
+#include <boost/mpl/vector.hpp>
+
+#include <boost/utility/enable_if.hpp>
+
+#include <boost/assign/v2/ref/wrapper/framework.hpp>
+#include <boost/assign/v2/ref/fusion/link_holder.hpp>
+#include <boost/assign/v2/ref/fusion_matrix/fwd.hpp>
+
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+#include <utility>
+
+#else
+
 #include <boost/preprocessor/arithmetic/dec.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/punctuation/comma.hpp>
@@ -19,24 +39,16 @@
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/preprocessor/repetition/enum_trailing.hpp>
 #include <boost/preprocessor/repetition/enum_trailing_params.hpp>
+#include <boost/preprocessor/repetition/enum_trailing_binary_params.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
-
-#include <boost/mpl/apply.hpp>
-#include <boost/mpl/unpack_args.hpp>
 #include <boost/mpl/aux_/na.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/minus.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/vector.hpp>
-
-#include <boost/utility/enable_if.hpp>
-
+#include <boost/mpl/eval_if.hpp>
+#include <boost/tuple/tuple.hpp>
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
-#include <boost/assign/v2/ref/wrapper/framework.hpp>
-#include <boost/assign/v2/ref/fusion/link_holder.hpp>
-#include <boost/assign/v2/ref/fusion_matrix/fwd.hpp>
+
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
 namespace boost{
 	struct use_default;
@@ -45,8 +57,34 @@ namespace v2{
 namespace ref{
 namespace fusion_matrix_aux{
 
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
     template<
-    	std::size_t N, typename L, typename Tag1, typename Tag2, 
+    	std::size_t N, typename L, typename Tag1, typename Tag2,
+    	typename...Args
+    >
+    struct meta_result{
+
+        typedef fusion_matrix_aux::container<N, L, Tag1, Tag2,
+            Args...> this_;
+
+		template<typename ... NewArgs>
+        struct apply
+        {
+
+            typedef fusion_matrix_aux::container<
+            	N + 1,
+                this_,
+                Tag1,
+                Tag2,
+                typename wrapper_param<NewArgs>::type...
+            > type;
+
+        };
+
+	};
+#else
+    template<
+    	std::size_t N, typename L, typename Tag1, typename Tag2,
         BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
             BOOST_ASSIGN_V2_LIMIT_ARITY,
             typename T,
@@ -55,10 +93,9 @@ namespace fusion_matrix_aux{
     >
     struct meta_result{
 
-        typedef fusion_matrix_aux::container<N, L, Tag1, Tag2, 
+        typedef fusion_matrix_aux::container<N, L, Tag1, Tag2,
 	        BOOST_PP_ENUM_PARAMS(BOOST_ASSIGN_V2_LIMIT_ARITY, T)
         > this_;
-
 
 		template<
         	BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
@@ -71,12 +108,12 @@ namespace fusion_matrix_aux{
         {
 
             typedef fusion_matrix_aux::container<
-            	N+1, 
-                this_, 
-                Tag1, 
-                Tag2, 
+            	N + 1,
+                this_,
+                Tag1,
+                Tag2,
                 BOOST_PP_ENUM_PARAMS(
-                	BOOST_ASSIGN_V2_LIMIT_ARITY, 
+                    BOOST_ASSIGN_V2_LIMIT_ARITY,
                     U
                 )
             > type;
@@ -85,31 +122,41 @@ namespace fusion_matrix_aux{
 
 	};
 
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
+
     template<
-    	std::size_t N, typename L, typename Tag1, typename Tag2, 
+    	std::size_t N, typename L, typename Tag1, typename Tag2,
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+    typename... Args
+#else
         BOOST_PP_ENUM_PARAMS(
-        	BOOST_ASSIGN_V2_LIMIT_ARITY, 
+        	BOOST_ASSIGN_V2_LIMIT_ARITY,
             typename T
         )
+#endif
     >
-    class container 
-    	: public fusion_aux::link_holder<L, N == 0>,
-    	public functor_aux::crtp_unary_and_up<
+    class container
+    	: public fusion_aux::link_holder<L, N == 0>
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+// do nothing
+#else
+    	, public functor_aux::crtp_unary_and_up<
         	fusion_matrix_aux::container<N, L, Tag1, Tag2,
             	BOOST_PP_ENUM_PARAMS(
-                	BOOST_ASSIGN_V2_LIMIT_ARITY, 
+                	BOOST_ASSIGN_V2_LIMIT_ARITY,
                     T
-                )	
-            >,
-            boost::mpl::unpack_args<
+                )
+            >
+            , boost::mpl::unpack_args<
         		fusion_matrix_aux::meta_result<N, L, Tag1, Tag2,
             		BOOST_PP_ENUM_PARAMS(
-                		BOOST_ASSIGN_V2_LIMIT_ARITY, 
+                		BOOST_ASSIGN_V2_LIMIT_ARITY,
                     	T
-                	)	
+                	)
             	>
             >
     	>
+#endif
     {
 
     	typedef boost::mpl::int_<0> int0_;
@@ -120,56 +167,106 @@ namespace fusion_matrix_aux{
 
 		template<typename T>
         struct wrapper{ typedef ref::wrapper<assign_tag_,T> type; };
-        
+
         typedef fusion_aux::link_holder<L, N == 0> link_;
 
 		typedef fusion_matrix_aux::meta_result<N, L, Tag1, Tag2,
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+            Args...
+#else
             BOOST_PP_ENUM_PARAMS(
-                BOOST_ASSIGN_V2_LIMIT_ARITY, 
+                BOOST_ASSIGN_V2_LIMIT_ARITY,
                 T
-            )	
+            )
+#endif
         > meta_result_;
 
-		typedef functor_aux::crtp_unary_and_up<
-        	container,
-            boost::mpl::unpack_args<
-        		meta_result_
-            >
-    	> super_t;
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+// do nothing
+#else
+        typedef boost::mpl::na na_;
+        typedef boost::tuples::null_type null_;
 
 		typedef boost::mpl::vector<
         	BOOST_PP_ENUM_PARAMS(BOOST_ASSIGN_V2_LIMIT_ARITY, T)
         > vec_;
 
+        template<typename T>
+        struct tuple_elem : boost::mpl::eval_if<
+            boost::is_same<T, na_>,
+            boost::mpl::identity<null_>,
+            wrapper<T>
+        >{};
+
+
+#define MACRO(z, n, data) typename tuple_elem<BOOST_PP_CAT(T,n)>::type
+
+        typedef boost::tuples::tuple<
+            BOOST_PP_ENUM(
+                BOOST_ASSIGN_V2_LIMIT_ARITY,
+                MACRO,
+                ~
+            )
+        > tuple_;
+#undef MACRO
+
+#endif
+
+        tuple_ tuple;
+
         public:
 
 		typedef std::size_t size_type;
         BOOST_STATIC_CONSTANT(size_type, static_row_size = N);
-        BOOST_STATIC_CONSTANT(size_type, 
-        	static_column_size = boost::mpl::size<vec_>::value
+        BOOST_STATIC_CONSTANT(size_type,
+        	static_column_size =
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+                sizeof...(Args)
+#else
+                boost::mpl::size<vec_>::value
+#endif
         );
 
 		container(){}
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+    explicit container(
+    	const L& l, Args&...args
+    ) : link_( l ), tuple( ref::wrap<assign_tag_>(args)... )
 
-#define MACRO1(z, n, data)\
-    BOOST_PP_CAT(w, n) ( BOOST_PP_CAT(_, n) )\
+//          w... = args...
+    {}
+
+#else
+//#define MACRO1(z, n, data)\
+//    BOOST_PP_CAT(w, n) ( BOOST_PP_CAT(_, n) )\
 /**/
-#define MACRO2(z, n, data) \
+#define MACRO1(z, n, data) ref::wrap<assign_tag_>( BOOST_PP_CAT(data, n) )
+#define MACRO(z, n, data) \
     explicit container( \
-    	const L& l BOOST_PP_COMMA_IF(n) \
-        BOOST_PP_ENUM_BINARY_PARAMS(n, T, & _) \
+    	const L& l\
+        BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(n, T, & _)\
     ) : link_( l )\
-          BOOST_PP_ENUM_TRAILING(n, MACRO1, ~)\
+    , tuple( BOOST_PP_ENUM(n, MACRO1, _) )\
     {}\
-/**/        
+/**/
+
+//#define MACRO2(z, n, data) \
+//    explicit container( \
+//    	const L& l BOOST_PP_COMMA_IF(n) \
+//        BOOST_PP_ENUM_BINARY_PARAMS(n, T, & _) \
+//    ) : link_( l )\
+//          BOOST_PP_ENUM_TRAILING(n, MACRO1, ~)\
+//    {}\
+/**/
 BOOST_PP_REPEAT(
 	BOOST_ASSIGN_V2_LIMIT_ARITY,
-    MACRO2,
+    MACRO,
     ~
 )
 #undef MACRO1
-#undef MACRO2
-
+//#undef MACRO2
+#undef MACRO
+#endif
         // ------ operator() ----- //
 		//       adds a row	   	   //
         // ----------------------- //
@@ -189,13 +286,44 @@ BOOST_PP_REPEAT(
         	)
         >{};
 
-		using super_t::operator();
-
         typename result<>::type
         operator()()const{
         	typedef typename result<>::type result_;
         	return result_( *this );
         }
+
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+
+        protected:
+        template<typename ... Args>
+        struct cpp0x_helper
+        {
+
+            typedef typename boost::mpl::detail::variadic_vector<
+                Args...
+            >::type args_;
+
+            typedef typename boost::mpl::transform<
+                args_,
+                wrapper_param<boost::mpl::_>
+            >::type params_;
+
+            typedef typename boost::mpl::apply<
+                meta_result_,
+
+            >::type result_;
+
+        };
+
+
+#else
+		typedef functor_aux::crtp_unary_and_up<
+        	container,
+            boost::mpl::unpack_args<
+        		meta_result_
+            >
+    	> super_t;
+		using super_t::operator();
 
 #define MACRO1( z, n, data ) \
  ( BOOST_PP_CAT(_,n) ) \
@@ -218,13 +346,15 @@ BOOST_PP_REPEAT_FROM_TO(
 #undef MACRO1
 #undef MACRO2
 
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
+
 		// Row extraction
 
         template<int I>
         struct is_head : boost::mpl::bool_< I + 1 == N >{};
 
         template<int I>
-        struct link_result_static_row 
+        struct link_result_static_row
         	: L::template result_static_row<I>{};
 
 		template<int I>
@@ -245,7 +375,7 @@ BOOST_PP_REPEAT_FROM_TO(
         {
         	return (*this);
         }
-		
+
         template<int I>
         typename boost::lazy_disable_if<
         	is_head<I>,
@@ -253,13 +383,37 @@ BOOST_PP_REPEAT_FROM_TO(
         >::type
         static_row( boost::mpl::int_<I> index )const
         {
-        	return static_cast<link_ const&>( 
-            	*this 
-            ).link().static_row( index );	
+        	return static_cast<link_ const&>(
+            	*this
+            ).link().static_row( index );
         }
 
 		// Column extraction
 
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+// TODO
+#else
+
+        template<int n>
+        struct static_column_result
+        {
+            typedef typename boost::tuples::element<
+                n,
+                tuple_
+            >::type wrapper_;
+            typedef typename wrapper_::unwrap_type type;
+        };
+
+        template<int n>
+        typename static_column_result<n>::type
+        static_column( boost::mpl::int_<n> )const
+        {
+            return boost::get<n>( this->tuple ).unwrap();
+        }
+
+// TODO remove
+// Prior to 11/2010:
+/*
 #define MACRO(z, n, data)\
     private: \
         typename wrapper<BOOST_PP_CAT(T,n)>::type BOOST_PP_CAT(w,n); \
@@ -268,13 +422,16 @@ BOOST_PP_REPEAT_FROM_TO(
     {\
         return this->BOOST_PP_CAT(w,n).unwrap(); \
     }\
-/**/
 BOOST_PP_REPEAT(
 	BOOST_ASSIGN_V2_LIMIT_ARITY,
     MACRO,
     ~
 )
 #undef MACRO
+*/
+/**/
+
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
     };
 
@@ -284,5 +441,5 @@ BOOST_PP_REPEAT(
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_FUSION_MATRIX_CONTAINER_ER_2010_HPP
 

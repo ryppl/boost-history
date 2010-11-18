@@ -9,6 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DETAIL_FUNCTOR_IDENTITY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_FUNCTOR_IDENTITY_ER_2010_HPP
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+#include <utility>
+#else
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/int.hpp>
@@ -16,12 +20,16 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/type_traits/add_reference.hpp>
 #include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
+#endif
 
 namespace boost{
 namespace assign{
 namespace v2{
 namespace functor_aux{
 
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+//do nothing
+#else
     struct result_of_identity{
 
         template<typename V>
@@ -33,7 +41,7 @@ namespace functor_aux{
     	template<typename V>
         struct enable
         {
-        	typedef typename boost::mpl::at_c<V,0>::type t_;
+        	typedef typename boost::mpl::at_c<V, 0>::type t_;
             typedef typename boost::add_reference<t_>::type type;
         };
 
@@ -49,16 +57,27 @@ namespace functor_aux{
 
     };
 
-	struct identity : functor_aux::crtp_unary_and_up<
+#endif
+
+	struct identity
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+// do nothing
+#else
+	 : functor_aux::crtp_unary_and_up<
         functor_aux::identity,
         functor_aux::result_of_identity
     >
+#endif
     {
     	identity(){}
 
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+        template<typename T>
+        T&& operator()(T&& t)const{ return t; }
+#else
     	template<typename T> T& impl(T& t)const{ return t; }
     	template<typename T> T const& impl(T const& t)const{ return t; }
-
+#endif
     };
 
 }// functor_aux
@@ -66,7 +85,7 @@ namespace{
 	functor_aux::identity const _identity = functor_aux::identity();
 }
 }// v2
-}// assign
+}// assigns
 }// boost
 
 #endif

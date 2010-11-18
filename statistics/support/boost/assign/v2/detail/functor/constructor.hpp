@@ -9,15 +9,20 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CONSTRUCTOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CONSTRUCTOR_ER_2010_HPP
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/detail/type_traits/container/value.hpp>
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+#include <utility>
+#else
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/range/reference.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/mpl/always.hpp>
-#include <boost/assign/v2/detail/type_traits/container/value.hpp>
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
+#endif
 
 namespace boost{
 namespace assign{
@@ -25,14 +30,17 @@ namespace v2{
 namespace functor_aux{
 
 	template<typename T>
-	class constructor : public functor_aux::crtp_unary_and_up<
+	class constructor
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+// do nothing
+#else
+	: public functor_aux::crtp_unary_and_up<
     	functor_aux::constructor<T>,
         boost::mpl::always<T>
     >
+#endif
 	{
 		typedef functor_aux::constructor<T> this_;
-        typedef boost::mpl::always<T> meta_result_;
-        typedef functor_aux::crtp_unary_and_up<this_, meta_result_> super_;
 
     	public:
 
@@ -40,12 +48,25 @@ namespace functor_aux{
 
 		T operator()()const{ return T(); }
 
-		using super_::operator();
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+    template<typename... Args>
+    T operator()(Args&&...args)const
+    {
+        return T( std::forward<Args>(args)... );
+    }
+#else
+    protected:
+        typedef boost::mpl::always<T> meta_result_;
+        typedef functor_aux::crtp_unary_and_up<this_, meta_result_> super_;
+
+    public:
+
+    using super_::operator();
 
 #define MACRO(z,N,data) \
     template<BOOST_PP_ENUM_PARAMS(N,typename T)> \
     T impl( BOOST_PP_ENUM_BINARY_PARAMS(N, T, &_) )const{ \
-        return T( BOOST_PP_ENUM_PARAMS(N,_) ); \
+        return T( BOOST_PP_ENUM_PARAMS(N, _) ); \
     } \
 /**/
 BOOST_PP_REPEAT_FROM_TO(
@@ -56,6 +77,7 @@ BOOST_PP_REPEAT_FROM_TO(
 )
 #undef MACRO
 
+#endif
 	};
 
 	template<typename V>

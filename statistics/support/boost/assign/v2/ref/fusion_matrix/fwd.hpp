@@ -9,10 +9,15 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_FUSION_MATRIX_FWD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_FUSION_MATRIX_FWD_ER_2010_HPP
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+// do nothing
+#else
 #include <boost/preprocessor/arithmetic/dec.hpp>
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
+#endif
 
 namespace boost{
 namespace assign{
@@ -20,8 +25,18 @@ namespace v2{
 namespace ref{
 namespace fusion_matrix_aux{
 
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+
     template<
-    	std::size_t N, typename L,typename Tag1, typename Tag2, 
+    	std::size_t N, typename L,typename Tag1, typename Tag2,
+        typename...Args
+    >
+    class container;
+
+#else
+
+    template<
+    	std::size_t N, typename L,typename Tag1, typename Tag2,
         BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
             BOOST_ASSIGN_V2_LIMIT_ARITY,
             typename T,
@@ -29,8 +44,9 @@ namespace fusion_matrix_aux{
         )
     >
     class container;
+#endif
 
-}// fusion_matrix_aux                
+}// fusion_matrix_aux
 }// ref
 }// v2
 }// assign

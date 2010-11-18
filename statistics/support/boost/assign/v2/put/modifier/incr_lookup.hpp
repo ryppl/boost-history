@@ -14,6 +14,7 @@
 #include <boost/assign/v2/put/modifier/def.hpp>
 #include <boost/assign/v2/detail/type_traits/value.hpp>
 #include <boost/assign/v2/detail/functor/identity.hpp>
+#include <boost/assign/v2/detail/pp/forward.hpp>
 #include <boost/assign/v2/put/generic/new_fun.hpp>
 #include <boost/assign/v2/put/generic/new_modifier.hpp>
 #include <boost/assign/v2/put/generic/result_of_modulo.hpp>
@@ -22,7 +23,7 @@
 // TODO fix compile errors using put adaptor.
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 
 // lookup_key
@@ -35,12 +36,12 @@ namespace put_aux{
 
 		modifier():n( 0 ){}
 		modifier(std::size_t m):n( m ){};
-    
+
     	template<typename V,typename T>
-        void impl(V& v, T& t)const{ 
-        	v[ t ] += this->n; 
+        void impl(V& v, BOOST_ASSIGN_V2_forward_param(T, t) )const{
+        	v[ BOOST_ASSIGN_V2_forward_arg(T, t) ] += this->n;
         }
-        
+
         private:
         std::size_t n;
     };
@@ -50,8 +51,8 @@ namespace put_aux{
     	modulo_incr_lookup() : n( 1 ){}
         modulo_incr_lookup(std::size_t m) : n( m ){}
 
-        modulo_incr_lookup 
-        operator=(std::size_t m)const{ 
+        modulo_incr_lookup
+        operator=(std::size_t m)const{
         	typedef modulo_incr_lookup result_;
             return result_( m );
         }
@@ -73,7 +74,7 @@ namespace result_of_modulo{
 
         typedef v2::modifier_tag::incr_lookup new_tag_;
         typedef put_aux::modifier<new_tag_> modifier_;
-        
+
         static type call(const T& t, put_aux::modulo_incr_lookup const& kwd)
         {
 			return type( t.unwrap(), _identity, kwd.n );
@@ -97,7 +98,7 @@ namespace put_aux{
 
 }// put_aux
 namespace{
-	put_aux::modulo_incr_lookup const _incr_lookup 
+	put_aux::modulo_incr_lookup const _incr_lookup
     	= put_aux::modulo_incr_lookup();
 }
 }// v2

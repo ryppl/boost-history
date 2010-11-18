@@ -13,9 +13,10 @@
 #include <boost/assign/v2/put/modifier/def.hpp>
 #include <boost/assign/v2/put/generic/new_modifier.hpp>
 #include <boost/assign/v2/detail/type_traits/value.hpp>
+#include <boost/assign/v2/detail/pp/forward.hpp>
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace modifier_tag{ struct at_next{}; }
 namespace put_aux{
@@ -26,16 +27,20 @@ namespace put_aux{
 
 		modifier():i( 0 ){};
         modifier( boost::accumulators::dont_care ):i( 0 ){}
-    
+
     	template<typename V,typename T>
-        void impl(V& v, T& t)const{ 
-        	v.at( i++ ) = t; 
+        void impl(
+            V& v,
+            BOOST_ASSIGN_V2_forward_param(T, t)
+        )const
+        {
+        	v.at( i++ ) = BOOST_ASSIGN_V2_forward_arg(T, t);
         }
 
         // TODO check
     	template<typename V,typename T>
         void impl(V& v, T* t)const{ v.replace( i++ , t); }
-        
+
         private:
         mutable std::size_t i;
     };

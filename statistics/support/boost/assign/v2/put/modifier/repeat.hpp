@@ -16,12 +16,13 @@
 #include <boost/assign/v2/put/generic/base.hpp>
 #include <boost/assign/v2/put/generic/new_modifier.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
+#include <boost/assign/v2/detail/pp/forward.hpp>
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
-namespace modifier_tag{ 
-	template<typename Tag> struct repeat{}; 
+namespace modifier_tag{
+	template<typename Tag> struct repeat{};
 }// modifier_tag
 namespace put_aux{
 
@@ -43,13 +44,18 @@ namespace put_aux{
 
 		modifier(){}
 		explicit modifier( size_type const& n ):super_t( n ){};
-            
+
     	template<typename V,typename T>
-        void impl(V& v, T& t)const{ 
+        void impl(V& v, BOOST_ASSIGN_V2_forward_param(T, t) )
+        const{
+
         	size_type m = static_cast<super_t const&>(*this).unwrap();
-        	while(m--) this->inner.impl( v, t );
+        	while(m--) this->inner.impl(
+                v,
+                BOOST_ASSIGN_V2_forward_arg(T, t)
+            );
         }
-        
+
         private:
         inner_ inner;
     };
@@ -65,7 +71,7 @@ namespace put_aux{
     	> super_t;
 
 		public:
-        
+
         typedef std::size_t size_type;
 
         modulo_repeat(){}
@@ -76,17 +82,17 @@ namespace put_aux{
         	modulo_repeat result( n );
             return result;
         }
-        
+
         size_type const& unwrap()const
-        { 
+        {
         	return static_cast<super_t const&>(*this).unwrap();
         }
-        
+
     };
 
 }// put_aux
 namespace result_of_modulo{
-    
+
     template<typename T>
     struct repeat
     {
@@ -97,17 +103,17 @@ namespace result_of_modulo{
         	result_of_modulo::new_modifier<T>,
             new_tag_
         >::type type;
-        
+
         static type call(const T& t, put_aux::modulo_repeat const& h)
         {
         	modifier_ m( h.unwrap() );
-            return type( t.unwrap(), t.fun, m ); 
+            return type( t.unwrap(), t.fun, m );
         }
-        
+
     };
 
 }// result_of_modulo
-namespace put_aux{ 
+namespace put_aux{
 
 	template<typename T>
     typename boost::lazy_enable_if<
@@ -115,10 +121,10 @@ namespace put_aux{
     	result_of_modulo::repeat<T>
     >::type
 	operator%(
-    	T const& t, 
+    	T const& t,
         put_aux::modulo_repeat const& h
     )
-    {	
+    {
     	typedef result_of_modulo::repeat<T> caller_;
         return caller_::call( t, h );
     }

@@ -13,15 +13,22 @@
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/assign/v2/detail/type_traits/container/value.hpp>
 #include <boost/assign/v2/put/sub/make.hpp>
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+#include <utility>
+#else
+#include <boost/preprocessor/repetition/repeat_from_to.hpp>
+#include <boost/assign/v2/detail/config/limit_arity.hpp>
+#endif
 
 namespace boost{
 namespace assign{
 namespace v2{
 namespace csv_put_aux{
 
-    template<typename V> 
-    class sub 
-    	: protected ref::wrapper< 
+    template<typename V>
+    class sub
+    	: protected ref::wrapper<
         	ref::assign_tag::copy,
             V
         >
@@ -32,13 +39,45 @@ namespace csv_put_aux{
 		typedef ref::assign_tag::copy assign_tag_;
 		typedef ref::wrapper<assign_tag_,V> super1_t;
 
-		typedef typename v2::container_type_traits::value<V>::type value_type;
+		typedef typename v2::container_type_traits::value<
+            V
+        >::type value_type;
 
 		public:
 
 		sub(){}
 		explicit sub( V& v ) : super1_t( v ) {}
 
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+
+        protected:
+        template<typename R>
+        void impl(R& r){}
+
+        template<typename R,typename... Args>
+        //implicit conversion to value_type desired
+        // TODO make sure it is achieved.
+        void impl(R& r, value_type const& t, Args&&...args)
+        {
+            r( t );
+            this->impl( r, std::forward<Args>( args )... );
+        }
+
+        public:
+        template<typename... Args>
+        typename result_of::put<V>::type
+        operator()(Args&&...args)
+        {
+            typedef typename result_of::put<V>::type result_;
+            result_ result = put( this->unwrap() );
+            this->impl(
+                result,
+                args...
+            );
+            return result;
+        }
+
+#else
 #define MACRO1(z, i, data) ( BOOST_PP_CAT(_, i) )
 #define MACRO2(z, N, data)\
     typename result_of::put<V>::type\
@@ -48,16 +87,16 @@ namespace csv_put_aux{
     }\
 /**/
 BOOST_PP_REPEAT_FROM_TO(
-	1, 
+	1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),
     MACRO2,
     ~
 )
 #undef MACRO1
-#undef MACRO2		
-
-		V& unwrap()const{ 
-        	return static_cast<super1_t const&>(*this).unwrap(); 
+#undef MACRO2
+#endif
+		V& unwrap()const{
+        	return static_cast<super1_t const&>(*this).unwrap();
         }
 
     };
@@ -70,7 +109,7 @@ namespace result_of{
     {
 		typedef csv_put_aux::sub<V> type;
 	};
-    
+
 }// result_of
 
 	template<typename V>

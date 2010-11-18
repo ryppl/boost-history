@@ -8,7 +8,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_ASSIGN_V2_REF_WRAPPER_BASE 
+#ifndef BOOST_ASSIGN_V2_REF_WRAPPER_BASE
 #include <boost/config.hpp>
 #include <boost/type_traits/is_const.hpp>
     template<typename D, typename T>
@@ -30,6 +30,7 @@
             this->ref_ = &r; \
     	} \
         \
+        typedef T& unwrap_type;\
         T& unwrap() const \
         { \
             return *this->ref_; \

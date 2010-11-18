@@ -12,8 +12,17 @@
 #include <boost/assign/v2/ref/wrapper/rebind.hpp>
 #include <boost/assign/v2/ref/anon/csv/assign_xxx.hpp>
 
-#define xxx_Tag1 assign_tag::rebind
-BOOST_ASSIGN_V2_REF_CSV_ARRAY_ASSIGN_XXX( assign_rebind ) 
-#undef xxx_Tag1
+//#define xxx_Tag1 assign_tag::rebind
+//BOOST_ASSIGN_V2_REF_CSV_ARRAY_ASSIGN_XXX( assign_rebind )
+//#undef xxx_Tag1
+
+BOOST_ASSIGN_V2_REF_ANON_CSV_ASSIGN_XXX_1(
+    assign_rebind,
+    assign_tag::rebind
+)
+BOOST_ASSIGN_V2_REF_ANON_CSV_ASSIGN_XXX_2(
+    assign_rebind,
+    assign_tag::rebind
+)
 
 #endif

@@ -9,40 +9,60 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DETAIL_FUNCTOR_NEW_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_FUNCTOR_NEW_ER_2010_HPP
-#include <memory>
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+#include <utility>
+#else
+#include <memory> // TODO what for?!
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#include <boost/mpl/always.hpp>
 #include <boost/range/reference.hpp>
 #include <boost/type_traits/remove_cv.hpp>
-#include <boost/mpl/always.hpp>
 #include <boost/assign/v2/detail/type_traits/container/value.hpp>
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
+#endif
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace functor_aux{
 
 	template<typename T>
-	class new_ : public functor_aux::crtp_unary_and_up< 
-    	functor_aux::new_<T>, 
-        boost::mpl::always<T*> 
+	class new_
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+// do nothing
+#else
+	: public functor_aux::crtp_unary_and_up<
+    	functor_aux::new_<T>,
+        boost::mpl::always<T*>
     >
+#endif
 	{
     	typedef T* ptr_;
 		typedef functor_aux::new_<T> this_;
+
+    	public:
+
+        typedef ptr_ result_type;
+
+		new_(){}
+
+		result_type operator()()const{ return new T(); }
+
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+        template<typename... Args>
+        result_type operator()(Args&&...args)const
+        {
+            return new T(std::forward<Args>(args)...);
+        }
+#else
+        protected:
         typedef boost::mpl::always< ptr_ > meta_result_;
         typedef functor_aux::crtp_unary_and_up<this_, meta_result_> super_;
-         
-    	public:
-        
-        typedef ptr_ result_type;
-        
-		new_(){}
-    
-		result_type operator()()const{ return new T(); } 
+        public:
 
 		using super_::operator();
 
@@ -59,7 +79,8 @@ BOOST_PP_REPEAT_FROM_TO(
     ~
 )
 #undef MACRO
-	
+#endif
+
 	};
 
 	template<typename V>
@@ -75,7 +96,7 @@ BOOST_PP_REPEAT_FROM_TO(
 struct foo
 {
     int i;
-    
+
     foo() : i(0)
     { }
     foo( int i ) : i(i)
@@ -93,7 +114,7 @@ struct foo_bar : foo
 {
     foo_bar( int i ) : foo(i)
     { }
-    
+
     foo_bar( int i, const char* )
     { }
 };
@@ -102,7 +123,7 @@ inline bool operator<( const foo& l, const foo& r )
 {
     return l.i < r.i;
 }
-    
+
 }// functor_aux
 namespace result_of{
 
@@ -121,7 +142,7 @@ namespace result_of{
     	typedef typename result_of::new_<T>::type result_;
     	return result_();
     }
-        	
+
 }// v2
 }// assign
 }// boost

@@ -37,7 +37,7 @@ wrap(T & t)
 }
 
 template<typename Tag, typename T> 
-inline ref::wrapper<Tag,T const> 
+inline ref::wrapper<Tag, T const> 
 wrap(T const & t)
 { 
     typedef ref::wrapper<Tag,T const> result_;

@@ -9,6 +9,36 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CRTP_UNARY_AND_UP_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CRTP_UNARY_AND_UP_ER_2010_HPP
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+
+#include <iostream> // TODO remove
+
+#ifndef BOOST_ASSIGN_V2_ENABLE_CPP0X
+#error
+#endif
+
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+
+// There should be no use for this file under CPP0x
+
+#else
+
+// The crtp defined below makes it easy to overload on the number of
+// arguments, while allowing within a certain limit, any mixture of
+// lvalue and rvalues. Specifically,
+// let
+// 	m = BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY
+// 	n = BOOST_ASSIGN_V2_LIMIT_ARITY
+//
+// Given a metafunction class, F, and a derived class, D, that defines
+//  template<typename T0, ..., typename Tk>
+//  typename apply1<F, mpl::vector<T0,...,Tk> >::type
+//	impl(T0& , ..., Tk&)const;
+// for k = 0, ..., n-1, crtp<F,D> defines, under C++03, a set of overloaded
+// operator()'s, each forwarding to impl(), for each combination of lvalues and
+// const arguments for k = 0, ..., m-1, and either only lvalues or only const
+// for k = m, ..., n-1.
+
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
@@ -18,37 +48,23 @@
 #include <boost/preprocessor/seq/first_n.hpp>
 
 #include <boost/mpl/apply.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/transform.hpp>
+
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/is_reference.hpp>
+#include <boost/type_traits/add_const.hpp>
+#include <boost/type_traits/is_const.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/config/limit_lvalue_const_arity.hpp>
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/args.hpp>
 #include <boost/assign/v2/detail/pp/params.hpp>
 #include <boost/assign/v2/detail/pp/seq.hpp>
-
-#ifndef BOOST_ASSIGN_V2_ENABLE_CPP0X
-#error
-#endif
-
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-#include <boost/mpl/detail/variadic_vector.hpp>
-#endif
-
-// Notation:
-// 	m = BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY
-// 	n = BOOST_ASSIGN_V2_LIMIT_ARITY
-//
-// Given a metafunction class, F, and a derived class, D, that defines 
-//  template<typename T0, ..., typename Tk>
-//  typename apply1<F, mpl::vector<T0,...,Tk> >::type 
-//	impl(T0& , ..., Tk&)const;
-// for k = 0, ..., n-1, crtp<F,D> defines, under C++03, a set of overloaded 
-// operator()'s, each forwarding to impl(), for each combination of lvalues and 
-// const arguments for k = 0, ..., m-1, and either only lvalues or only const 
-// for k = m, ..., n-1. Under C++0x, operator() forwards to impl() for any 
-// combination of lvalues and const and k = 0,...,n-1.
 
 namespace boost{
 namespace assign{
@@ -66,14 +82,52 @@ namespace functor_aux{
 		public:
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+
+/*
+    template<typename Vec>
+    struct apply_f
+    {
+        template<typename T>
+        struct op : boost::mpl::eval_if<
+            boost::is_reference<T>,
+            boost::remove_reference<T>,
+            boost::add_const<T>
+        >
+        {
+        };
+
+        typedef typename boost::mpl::transform<
+            Vec,
+            op<boost::mpl::_>
+        >::type unrefs_;
+        typedef typename boost::mpl::apply1<
+            F,
+            unrefs_
+        >::type type;
+    };
+
     template<typename T0,typename...Args>
-    typename boost::mpl::apply1<
-        F,
-        typename boost::mpl::detail::variadic_vector<T0, Args...>::type
+//    typename boost::mpl::apply1<
+//        F,
+//        typename boost::mpl::detail::variadic_vector<T0, Args...>::type
+//    >::type
+    typename apply_f<
+        typename boost::mpl::detail::variadic_vector<
+            T0,
+            Args...
+        >::type
     >::type
     operator()(T0&& t0, Args&&...args)const{
-        return this->derived().template impl<T0, Args...>(t0, args...);
+        //return this->derived().template impl<T0, Args...>(t0, args...);
+        return this->derived().template impl(
+            std::forward<T0>( t0 ),
+            std::forward<Args>( args )...
+            //t0,
+            //args...
+        );
     }
+*/
+
 #else
 
 #define MACRO1(r, SeqU) \
@@ -96,8 +150,8 @@ namespace functor_aux{
 ) \
 /**/
 BOOST_PP_REPEAT(
-	BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY, 
-    MACRO2, 
+	BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY,
+    MACRO2,
     ~
 )
 
@@ -145,4 +199,7 @@ BOOST_PP_REPEAT_FROM_TO(
 }// assign
 }// boost
 
-#endif
+
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
+
+#endif // BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CRTP_UNARY_AND_UP_ER_2010_HPP

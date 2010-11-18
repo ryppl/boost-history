@@ -13,5 +13,6 @@
 #include <boost/assign/v2/ref/wrapper/deduce_assign_tag.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/assign/v2/ref/wrapper/rebind.hpp>
+#include <boost/assign/v2/ref/wrapper/cpp0x.hpp>
 
 #endif
