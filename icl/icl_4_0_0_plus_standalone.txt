@@ -6,7 +6,7 @@ File icl_plus_4_0_0_standalone.zip
   so busy that they think they do not have time to do so ;)
 + icl_plus_4_0_0_standalone contains all parts of boost that are needed to run 
   icl code, examples and tests under a ms windows os (vista, windows7) using 
-  msvc-9/10.
+  msvc-9.
 
 Changes
 Version 4.0.0. (Inclusion version for Boost 1.46.0)
