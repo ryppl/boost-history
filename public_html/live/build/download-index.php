@@ -1,6 +1,6 @@
 <?php
-require_once(dirname(__FILE__) . '/../../common/code/boost_feed.php');
-$_downloads = new boost_feed(dirname(__FILE__) . '/../../feed/downloads.rss', '/users/download');
+require_once(dirname(__FILE__) . '/../common/code/boost_feed.php');
+$_downloads = new boost_feed(dirname(__FILE__) . '/../feed/downloads.rss', '/users/download');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -52,8 +52,9 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/../../feed/downloads.rss', '/
                 <li>
                 <?php print '<a href="'.htmlentities($_item['link']).'">Release Notes</a>'; ?></li>
 
-                <li>
+                <?php if(!empty($_item['boostbook:download'])) : ?><li>
                 <?php print '<a href="'.htmlentities($_item['boostbook:download']).'">Download</a>'; ?></li>
+                <?php endif ?>
               </ul><?php } ?>
 
               <h2><a name="history" id="history"></a>Old Boost Releases</h2>

@@ -1,6 +1,6 @@
 <?php
-require_once(dirname(__FILE__) . '/../../common/code/boost_feed.php');
-$_history = new boost_feed(dirname(__FILE__) . '/../../feed/history.rss', '/users/history');
+require_once(dirname(__FILE__) . '/../common/code/boost_feed.php');
+$_history = new boost_feed(dirname(__FILE__) . '/../feed/history.rss', '/users/history');
 $_history->sort_by('pubdate');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -45,7 +45,7 @@ $_history->sort_by('pubdate');
                 <li>
                 <?php print '<a href="'.htmlentities($_item['link']).'">Details</a>'; ?></li>
 
-                <?php if(isset($_item['boostbook:download'])) : ?>
+                <?php if(!empty($_item['boostbook:download'])) : ?>
                 <li><?php print '<a href="'.htmlentities($_item['boostbook:download']).'">Download</a>'; ?></li>
                 <?php endif; ?>
               </ul><?php } ?>
