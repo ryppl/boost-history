@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
-<document date="2010-08-23"
-  rev="0"
-  docno="PL22.16 10/0108 = WG21 N3118"
+<document date="2010-11-20"
+  rev="4"
+  docno="PL22.16 10/xxxx = WG21 Nyyyy"
 >
 
 <comment nb="ITTF" num="1" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
@@ -41,7 +41,7 @@ from changes to the WG14 C standard draft.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="2" type="ge" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="2" type="ge" owner="" issue="" disp="accepted" date="" extdoc="">
 <section>
 1-30
 </section>
@@ -61,7 +61,7 @@ draft or a later standard.
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="1" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="1" type="te" owner="" issue="" disp="accepted" date="" extdoc="">
 <section>
 1 through 15
 </section>
@@ -76,7 +76,7 @@ in Ready status (see WG21 N3083).
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="1" type="ge/te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="1" type="ge/te" owner="" issue="" disp="accepted" date="" extdoc="">
 <section>
 all
 </section>
@@ -91,7 +91,7 @@ shall be addressed before the standard becomes final.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="3" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="3" type="te" owner="CWG" issue="" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/N3209.htm">
 <section>
 1 - 29
 </section>
@@ -424,7 +424,7 @@ character set"
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="5" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="5" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1.9
 </section>
@@ -445,7 +445,7 @@ should be used here.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="6" type="Ed" owner="CWG" issue="1102" disp="accepted" date="" extdoc="">
+<comment nb="GB" num="6" type="Ed" owner="CWG" issue="1102" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 1.9
 </section>
@@ -469,7 +469,7 @@ propose]
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="2" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="2" type="te" owner="CWG" issue="" disp="rejected" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.9 and 1.10
 </section>
@@ -483,9 +483,13 @@ Clarify it.
 </suggestion>
 <notes>For concurrency group.</notes>
 <rationale>
+Normatively, the behavior is well-defined by 1.9p8. If
+the atomic object is volatile, then all operations on it
+are observable, otherwise not. Note that &#8220;observable&#8221;
+means &#8220;observable outside of the program.&#8221;
 </rationale>
 </comment>
-<comment nb="GB" num="7" type="Te" owner="CWG" issue="1173" disp="accepted" date="" extdoc="">
+<comment nb="GB" num="7" type="Te" owner="CWG" issue="1173" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 1.9.6
 </section>
@@ -554,7 +558,7 @@ commutative only under the &#8220;as-if&#8221; rule, so the statement
 is clear enough.
 </rationale>
 </comment>
-<comment nb="CA" num="23" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="23" type="Te" owner="" issue="" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3193.html">
 <section>
 1.10, 29
 </section>
@@ -575,7 +579,7 @@ atomics
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="14" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="14" type="ed" owner="CWG" issue="" disp="modified" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10p4
 </section>
@@ -621,9 +625,10 @@ on initialization and renitialization. - end note]
 </suggestion>
 <notes>For concurrency group.</notes>
 <rationale>
+The suggested update from US 168 was adopted.
 </rationale>
 </comment>
-<comment nb="CA" num="12" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="12" type="te" owner="CWG" issue="1176" disp="accepted" date="" extdoc="">
 <section>
 1.10p6
 </section>
@@ -674,7 +679,7 @@ operation.</suggestion>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="9" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="9" type="te" owner="CWG" issue="" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10
 </section>
@@ -693,7 +698,7 @@ operations".
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="20" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="20" type="Te" owner="CWG" issue="" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10p1
 </section>
@@ -782,7 +787,7 @@ Please clarify.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="19" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="19" type="Te" owner="CWG" issue="" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10p5 1.10p13
 </section>
@@ -853,7 +858,7 @@ Please clarify.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="22" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="22" type="Te" owner="CWG" issue="" disp="rejected" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10p8
 </section>
@@ -874,9 +879,15 @@ Please clarify.
 </suggestion>
 <notes>For concurrency group.</notes>
 <rationale>
+At the time that the memory model was formulated, there
+was considerable uncertainty as to what architectures
+respect control dependencies, and to what extent. It
+appears that this uncertainty is being cleared up, and
+our hope is that it will be ripe for standardization in
+a later TR. 
 </rationale>
 </comment>
-<comment nb="CA" num="15" type="Ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="15" type="Ed" owner="CWG" issue="1177" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10p9
 </section>
@@ -888,7 +899,6 @@ Intra-thread dependency-ordered-before<BR/>
 The current draft has release/acquire synchronize-with
 edges only between a release on one thread and an
 acquire on a *different* thread, whereas the definition of
-We suggest changing the definition of
 dependency-ordered-before permits the release and
 consume to be on the same thread; it seems odd to permit
 the latter. (At the moment function arguments can't race or
@@ -909,6 +919,7 @@ or<BR/>
 before X and X carries a dependency to B.
 </description>
 <suggestion>
+We suggest changing the definition of
 dependency-ordered-before in 1.10p9 to the
 following:<BR/>
 An evaluation A is dependency-ordered
@@ -928,7 +939,7 @@ X carries a dependency to B.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="11" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="11" type="te" owner="CWG" issue="" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10p12
 </section>
@@ -981,7 +992,7 @@ reasonable way to phrase it in the less formal context of
 a note.
 </rationale>
 </comment>
-<comment nb="CA" num="13" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="13" type="ed" owner="CWG" issue="" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10p13
 </section>
@@ -1044,7 +1055,7 @@ of M."
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="18" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="18" type="Te" owner="CWG" issue="" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10p13
 </section>
@@ -1141,7 +1152,7 @@ respect to B"
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="10" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="10" type="te" owner="CWG" issue="" disp="rejected" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10
 </section>
@@ -1163,9 +1174,18 @@ happens before the other.
 </suggestion>
 <notes>For concurrency group.</notes>
 <rationale>
+The premise is incorrect; atomic objects may not
+overlap. The type argument to the atomic template
+must be a trivially-copyable type (29.5.3p1) and
+atomic objects are not trivially copyable. The atomic
+types provide no means to obtain a reference to
+internal members; all atomic operations are
+copy-in/copy-out. In short, any attempt to generate a
+pair of atomic variables whose memory overlaps results
+in undefined behavior.
 </rationale>
 </comment>
-<comment nb="US" num="11" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="11" type="te" owner="CWG" issue="" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10
 </section>
@@ -1182,7 +1202,7 @@ Change "lock" when used as a noun to "mutex".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="12" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="12" type="te" owner="CWG" issue="" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10
 </section>
@@ -1218,7 +1238,7 @@ Resolve as suggested in these comments
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="8" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="8" type="Te" owner="CWG" issue="" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10
 </section>
@@ -1292,7 +1312,7 @@ mutex.  &#8212;end note ]"
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="9" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="9" type="Te" owner="CWG" issue="1176" disp="accepted" date="" extdoc="">
 <section>
 1.10
 </section>
@@ -1310,7 +1330,7 @@ determine if changes are needed
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="10" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="10" type="Te" owner="CWG" issue="" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10
 </section>
@@ -1350,7 +1370,7 @@ determine if changes are needed
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="8" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CA" num="8" type="te" owner="CWG" issue="" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10p10
 </section>
@@ -1382,7 +1402,7 @@ execution must be acyclic"
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="11" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="11" type="Te" owner="CWG" issue="" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10
 </section>
@@ -1429,7 +1449,7 @@ determine if changes are needed
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="12" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="12" type="Te" owner="CWG" issue="" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10
 </section>
@@ -1506,7 +1526,7 @@ determine if changes are needed.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="15" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="15" type="Te" owner="CWG" issue="" disp="rejected" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 1.10
 </section>
@@ -1520,6 +1540,12 @@ determine if changes are needed.
 </suggestion>
 <notes>For concurrency group.</notes>
 <rationale>
+At the time that the memory model was formulated,
+there was considerable uncertainty as to what
+architectures respect control dependencies, and to
+what extent. It appears that this uncertainty is
+being cleared up, and our hope is that it will be
+ripe for standardization in a later TR. 
 </rationale>
 </comment>
 <comment nb="GB" num="16" type="Ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
@@ -1544,7 +1570,7 @@ would be "in this International Standard", but for a note,
 the text as written is sufficient.
 </rationale>
 </comment>
-<comment nb="US" num="13" type="te" owner="CWG" issue="1103" disp="accepted" date="" extdoc="">
+<comment nb="US" num="13" type="te" owner="CWG" issue="1103" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 2.2
 </section>
@@ -1562,7 +1588,7 @@ Make the reversion apply to the entire raw-string.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="14" type="te" owner="CWG" issue="1103" disp="accepted" date="" extdoc="">
+<comment nb="US" num="14" type="te" owner="CWG" issue="1103" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 2.2 2.3 2.5 2.14.5
 </section>
@@ -1724,7 +1750,7 @@ analysis to fail.</LI></UL>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="15" type="te" owner="CWG" issue="1104" disp="accepted" date="" extdoc="">
+<comment nb="US" num="15" type="te" owner="CWG" issue="1104" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 2.6
 </section>
@@ -1744,7 +1770,7 @@ hack for &gt;&gt;.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="24" type="Te" owner="CWG" issue="1105" disp="" date="" extdoc="">
+<comment nb="CA" num="24" type="Te" owner="CWG" issue="1105" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3146.html">
 <section>
 2.11
 </section>
@@ -1886,7 +1912,7 @@ paper prior the FDIS.
 The feature has been implemented.
 </rationale>
 </comment>
-<comment nb="DE" num="3" type="te" owner="CWG" issue="1106" disp="accepted" date="" extdoc="">
+<comment nb="DE" num="3" type="te" owner="CWG" issue="1106" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 2.14.7
 </section>
@@ -1921,7 +1947,7 @@ Move footnote 24 from page 28 to page 27
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="17" type="te" owner="CWG" issue="1107" disp="accepted" date="" extdoc="">
+<comment nb="US" num="17" type="te" owner="CWG" issue="1107" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 2.14.8
 </section>
@@ -2008,7 +2034,7 @@ paper prior the FDIS.
 (Reference should be to 2.14.8, not 2.24.8.)
 </rationale>
 </comment>
-<comment nb="US" num="19" type="te" owner="CWG" issue="1109" disp="accepted" date="" extdoc="">
+<comment nb="US" num="19" type="te" owner="CWG" issue="1109" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3214.html">
 <section>
 3
 </section>
@@ -2159,7 +2185,7 @@ template,". See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="24" type="te" owner="CWG" issue="1112" disp="accepted" date="" extdoc="">
+<comment nb="US" num="24" type="te" owner="CWG" issue="1112" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 3.5
 </section>
@@ -2180,7 +2206,7 @@ Add parallel wording for the constexpr specifier.
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="4" type="te" owner="CWG" issue="1113" disp="accepted" date="" extdoc="">
+<comment nb="DE" num="4" type="te" owner="CWG" issue="1113" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 3.5
 </section>
@@ -2256,7 +2282,7 @@ pointer conversion"
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="18" type="Te" owner="CWG" issue="1114" disp="accepted" date="" extdoc="">
+<comment nb="GB" num="18" type="Te" owner="CWG" issue="1114" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 3.8
 </section>
@@ -2458,7 +2484,7 @@ Change "(5)" to "(Clause 5)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="1" type="TL" owner="CWG" issue="1117" disp="accepted" date="" extdoc="">
+<comment nb="JP" num="1" type="TL" owner="CWG" issue="1117" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 5
 </section>
@@ -2504,7 +2530,7 @@ There was no consensus for making the suggested change at this point
 in the standardization process.
 </rationale>
 </comment>
-<comment nb="CH" num="4" type="ed" owner="CWG" issue="1062" disp="accepted" date="" extdoc="">
+<comment nb="CH" num="4" type="ed" owner="CWG" issue="1062" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 5.1.2
 </section>
@@ -2799,7 +2825,7 @@ range.]"
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="32" type="te" owner="CWG" issue="1119" disp="accepted" date="" extdoc="">
+<comment nb="US" num="32" type="te" owner="CWG" issue="1119" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 5.2.5
 </section>
@@ -2883,7 +2909,7 @@ reinterpret_cast cannot cast away constness.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="33" type="te" owner="CWG" issue="1121" disp="accepted" date="" extdoc="">
+<comment nb="US" num="33" type="te" owner="CWG" issue="1121" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 5.3.1
 </section>
@@ -2906,7 +2932,7 @@ list, add a link to issue 203).
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="24" type="Te" owner="CWG" issue="1122" disp="accepted" date="" extdoc="">
+<comment nb="GB" num="24" type="Te" owner="CWG" issue="1122" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 5.3.3
 </section>
@@ -2971,7 +2997,7 @@ paper prior the FDIS.
 The feature has been implemented.
 </rationale>
 </comment>
-<comment nb="FI" num="17" type="te" owner="CWG" issue="1123" disp="accepted" date="" extdoc="">
+<comment nb="FI" num="17" type="te" owner="CWG" issue="1123" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3204.html">
 <section>
 5.3.7 [expr.unary.noexcept]
 </section>
@@ -2992,7 +3018,7 @@ explicitly declared noexcept(false).
 <rationale>
 </rationale>
 </comment>
-<comment nb="JP" num="2" type="TL" owner="CWG" issue="1124" disp="accepted" date="" extdoc="">
+<comment nb="JP" num="2" type="TL" owner="CWG" issue="1124" disp="rejected" date="" extdoc="">
 <section>
 5.5
 </section>
@@ -3009,6 +3035,7 @@ reference type
 </suggestion>
 <notes></notes>
 <rationale>
+There are no pointers to members of reference type (8.3.3p3).
 </rationale>
 </comment>
 <comment nb="US" num="36" type="ge" owner="CWG" issue="" disp="rejected" date="" extdoc="">
@@ -3090,7 +3117,7 @@ constexpr int f3(bool v) { return v &amp;&amp; (throw 0, 0); }
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="25" type="Te" owner="CWG" issue="1126" disp="accepted" date="" extdoc="">
+<comment nb="GB" num="25" type="Te" owner="CWG" issue="1126" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 5.19
 </section>
@@ -3223,7 +3250,7 @@ Resolve as suggested in these comments
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="38" type="te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="38" type="te" owner="CWG" issue="" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 6.5 5
 </section>
@@ -3367,7 +3394,7 @@ Replace "Atrributes" with "Attributes"
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="39" type="te" owner="CWG" issue="1128" disp="accepted" date="" extdoc="">
+<comment nb="US" num="39" type="te" owner="CWG" issue="1128" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 7.1
 </section>
@@ -3391,7 +3418,7 @@ or outermost decl-specifier-seq is intended.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="29" type="Te" owner="CWG" issue="1129" disp="modified" date="" extdoc="">
+<comment nb="GB" num="29" type="Te" owner="CWG" issue="1129" disp="modified" date="2010-11-13" extdoc="">
 <section>
 7.1.5
 </section>
@@ -3421,7 +3448,7 @@ of the <TT>noexcept</TT> operator was changed, based on whether the
 invocation of the function is a constant expression or not.
 </rationale>
 </comment>
-<comment nb="US" num="40" type="te" owner="CWG" issue="1130" disp="accepted" date="" extdoc="">
+<comment nb="US" num="40" type="te" owner="CWG" issue="1130" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 7.1.6.2
 </section>
@@ -3476,7 +3503,7 @@ language issue 1110 will remain open for possible consideration in a
 future revision.
 </rationale>
 </comment>
-<comment nb="US" num="41" type="te" owner="CWG" issue="1131" disp="accepted" date="" extdoc="">
+<comment nb="US" num="41" type="te" owner="CWG" issue="1131" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 7.1.6.3
 </section>
@@ -3511,7 +3538,7 @@ The overloaded meaning of the auto specifier is confusing
 and prevents possible future language enhancements.
 </description>
 <suggestion>
-Choose another keyword to indicate a latespecified
+Choose another keyword to indicate a late-specified
 return type. The identifiers lateret and
 postret have no Google code search hits. The
 identifiers late, latetype, and posttype have 30-40
@@ -3601,7 +3628,7 @@ Clause 8)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="31" type="Te" owner="CWG" issue="1115" disp="accepted" date="" extdoc="">
+<comment nb="GB" num="31" type="Te" owner="CWG" issue="1115" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3190.html">
 <section>
 7.6.2
 </section>
@@ -3647,7 +3674,7 @@ that a function can be overloaded upon.
 There was no consensus to make the suggested change.
 </rationale>
 </comment>
-<comment nb="US" num="44" type="te" owner="CWG" issue="1133" disp="accepted" date="" extdoc="">
+<comment nb="US" num="44" type="te" owner="CWG" issue="1133" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3206.html">
 <section>
 7.6.5
 </section>
@@ -3744,7 +3771,7 @@ class [[base_check]] D : public B {
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="8" type="ed" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="CH" num="8" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 8.1
 </section>
@@ -3822,7 +3849,7 @@ storage class specifiers do not affect the type, so mentioning
 storage class specifiers was incorrect and has been removed.
 </rationale>
 </comment>
-<comment nb="US" num="47" type="te" owner="CWG" issue="1134" disp="" date="" extdoc="">
+<comment nb="US" num="47" type="te" owner="CWG" issue="1134" disp="modified" date="2010-11-13" extdoc="">
 <section>
 8.4.2
 </section>
@@ -4038,7 +4065,7 @@ Update union u as: "union u { int a; const char* b;
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="48" type="te" owner="CWG" issue="1138" disp="accepted" date="" extdoc="">
+<comment nb="US" num="48" type="te" owner="CWG" issue="1138" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 8.5.3
 </section>
@@ -4069,7 +4096,7 @@ appropriate type.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="49" type="te" owner="CWG" issue="1139" disp="accepted" date="" extdoc="">
+<comment nb="US" num="49" type="te" owner="CWG" issue="1139" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 8.5.3
 </section>
@@ -4096,7 +4123,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="37" type="Te" owner="CWG" issue="1138" disp="accepted" date="" extdoc="">
+<comment nb="GB" num="37" type="Te" owner="CWG" issue="1138" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 8.5.3
 </section>
@@ -4189,7 +4216,7 @@ last example would also need to be deleted.]
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="10" type="Te" owner="CWG" issue="1138" disp="accepted" date="" extdoc="">
+<comment nb="DE" num="10" type="Te" owner="CWG" issue="1138" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 8.5.3
 </section>
@@ -4307,7 +4334,7 @@ paper prior the FDIS.
 C++/CLI has a very similar feature that has been implemented.
 </rationale>
 </comment>
-<comment nb="US" num="52" type="te" owner="CWG" issue="1142" disp="accepted" date="" extdoc="">
+<comment nb="US" num="52" type="te" owner="CWG" issue="1142" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 9.3
 </section>
@@ -4560,7 +4587,7 @@ It is necessary to be able to calculate the offsets applied to
 covariant return values when only the class definition is available.
 </rationale>
 </comment>
-<comment nb="US" num="56" type="te" owner="CWG" issue="1144" disp="accepted" date="" extdoc="">
+<comment nb="US" num="56" type="te" owner="CWG" issue="1144" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 11.3 [class.access.decl]
 </section>
@@ -4665,7 +4692,7 @@ paper prior the FDIS.
 The feature has been implemented.
 </rationale>
 </comment>
-<comment nb="GB" num="39" type="Te" owner="CWG" issue="1146" disp="accepted" date="" extdoc="">
+<comment nb="GB" num="39" type="Te" owner="CWG" issue="1146" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 12.4
 </section>
@@ -4688,7 +4715,7 @@ specification.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="40" type="Te" owner="CWG" issue="1147" disp="" date="" extdoc="">
+<comment nb="GB" num="40" type="Te" owner="CWG" issue="1147" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3204.html">
 <section>
 12.4
 </section>
@@ -4704,7 +4731,7 @@ practice to want a user-declared destructor to be declared
 noexcept. This becomes important evaluating the
 noexcept operator, where any of the unevaluated subexpressions
 may produce a temporary object. As this is
-expected to be the overwhelmingly common case, a userdeclared
+expected to be the overwhelmingly common case, a user-declared
 destructor that does not supply an exception
 specification should be considered as if declared
 noexcept(true) rather than noexcept(false), the default for
@@ -4721,7 +4748,7 @@ function
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="9" type="te" owner="CWG" issue="1147" disp="" date="" extdoc="">
+<comment nb="CH" num="9" type="te" owner="CWG" issue="1147" disp="accepted" date="" extdoc="">
 <section>
 12.4 and 15.4
 </section>
@@ -4796,7 +4823,7 @@ paper prior the FDIS.
 The feature has been implemented.
 </rationale>
 </comment>
-<comment nb="DE" num="11" type="te" owner="CWG" issue="1148" disp="accepted" date="" extdoc="">
+<comment nb="DE" num="11" type="te" owner="CWG" issue="1148" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 12.8
 </section>
@@ -4850,7 +4877,7 @@ There was no consensus to make the suggested change at this point in
 the standardization process.
 </rationale>
 </comment>
-<comment nb="GB" num="41" type="Te" owner="CWG" issue="1146" disp="accepted" date="" extdoc="">
+<comment nb="GB" num="41" type="Te" owner="CWG" issue="1146" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 12.8
 </section>
@@ -4890,7 +4917,7 @@ do not hyphenate static_cast
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="62" type="te" owner="CWG" issue="1051" disp="accepted" date="" extdoc="">
+<comment nb="US" num="62" type="te" owner="CWG" issue="1051" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 12.8
 </section>
@@ -4909,7 +4936,7 @@ Add the required description.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="63" type="te" owner="CWG" issue="1064" disp="accepted" date="" extdoc="">
+<comment nb="US" num="63" type="te" owner="CWG" issue="1064" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 12.8
 </section>
@@ -4931,7 +4958,7 @@ Add the required description.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="64" type="te" owner="CWG" issue="1066" disp="accepted" date="" extdoc="">
+<comment nb="US" num="64" type="te" owner="CWG" issue="1066" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 12.8
 </section>
@@ -5028,7 +5055,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="67" type="ge" owner="CWG" issue="1152" disp="modified" date="" extdoc="">
+<comment nb="US" num="67" type="ge" owner="CWG" issue="1152" disp="modified" date="2010-11-13" extdoc="">
 <section>
 13.3.2
 </section>
@@ -5163,7 +5190,7 @@ int I = 1 + 1; // Always evaluates to 2 even if
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="68" type="te" owner="CWG" issue="1153" disp="accepted" date="" extdoc="">
+<comment nb="US" num="68" type="te" owner="CWG" issue="1153" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 13.4
 </section>
@@ -5219,7 +5246,7 @@ Correct typo.<BR/>
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="69" type="te" owner="CWG" issue="1154" disp="accepted" date="" extdoc="">
+<comment nb="US" num="69" type="te" owner="CWG" issue="1154" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 14.3.2
 </section>
@@ -5239,7 +5266,7 @@ parameters.
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="12" type="te" owner="CWG" issue="1155" disp="accepted" date="" extdoc="">
+<comment nb="DE" num="12" type="te" owner="CWG" issue="1155" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 14.3.2
 </section>
@@ -5369,7 +5396,7 @@ Change "(10)" to "(Clause 10)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="70" type="te" owner="CWG" issue="1156" disp="accepted" date="" extdoc="">
+<comment nb="US" num="70" type="te" owner="CWG" issue="1156" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 14.5.6.2
 </section>
@@ -5395,7 +5422,7 @@ and not to specify which types are used.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="71" type="unused" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="71" type="unused" owner="" issue="" disp="accepted" date="" extdoc="">
 <section>
 unused
 </section>
@@ -5509,7 +5536,7 @@ paper prior the FDIS.
 The feature has been implemented.
 </rationale>
 </comment>
-<comment nb="US" num="73" type="te" owner="CWG" issue="1158" disp="accepted" date="" extdoc="">
+<comment nb="US" num="73" type="te" owner="CWG" issue="1158" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 14.5.7
 </section>
@@ -5542,7 +5569,7 @@ template aliases are ill-formed.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="74" type="te" owner="CWG" issue="1159" disp="accepted" date="" extdoc="">
+<comment nb="US" num="74" type="te" owner="CWG" issue="1159" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 14.5.7
 </section>
@@ -5655,7 +5682,7 @@ Change "(9)" to "(Clause 9)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="43" type="Te" owner="CWG" issue="1160" disp="accepted" date="" extdoc="">
+<comment nb="GB" num="43" type="Te" owner="CWG" issue="1160" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 14.6.2.1p3
 </section>
@@ -5701,7 +5728,7 @@ enclosed in &lt;&gt;,"
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="44" type="Te" owner="CWG" issue="1161" disp="accepted" date="" extdoc="">
+<comment nb="GB" num="44" type="Te" owner="CWG" issue="1161" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 14.6p5
 </section>
@@ -5944,7 +5971,7 @@ in a silent change of meaning between implementations if speculative
 instantiation for inlining is allowed.
 </rationale>
 </comment>
-<comment nb="US" num="77" type="te" owner="CWG" issue="1164" disp="accepted" date="" extdoc="">
+<comment nb="US" num="77" type="te" owner="CWG" issue="1164" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 14.8.2.1
 </section>
@@ -5971,7 +5998,7 @@ to be more specialized than z(T&amp;&amp;).
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="78" type="te" owner="CWG" issue="1165" disp="accepted" date="" extdoc="">
+<comment nb="US" num="78" type="te" owner="CWG" issue="1165" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 15.2
 </section>
@@ -6132,7 +6159,7 @@ There was no consensus to reconsider the explicit decision of the
 Committee on this point.
 </rationale>
 </comment>
-<comment nb="GB" num="47" type="Te" owner="CWG" issue="1168" disp="accepted" date="" extdoc="">
+<comment nb="GB" num="47" type="Te" owner="CWG" issue="1168" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 15.5.1
 </section>
@@ -6318,7 +6345,7 @@ items.");
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="13" type="te" owner="CWG" issue="1169" disp="accepted" date="" extdoc="">
+<comment nb="DE" num="13" type="te" owner="CWG" issue="1169" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 16.8
 </section>
@@ -6353,7 +6380,7 @@ Consider applying noexcept to all of the std::lib.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="60" type="Ge" owner="LWG" issue="1344" disp="" date="" extdoc="">
+<comment nb="GB" num="60" type="Ge" owner="LWG" issue="1344" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 17-30
 </section>
@@ -6370,6 +6397,7 @@ of the form 'throw()' with the 'noexcept' form.
 </suggestion>
 <notes></notes>
 <rationale>
+See documents N3148, N3150, N3195, N3155, N3156, N3199, and N3180.
 </rationale>
 </comment>
 <comment nb="GB" num="61" type="te" owner="LWG" issue="1345" disp="" date="" extdoc="">
@@ -6549,7 +6577,7 @@ Make them copyable again.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="16" type="te" owner="LWG" issue="1351" disp="" date="" extdoc="">
+<comment nb="CH" num="16" type="te" owner="LWG" issue="1351" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 Library clauses
 </section>
@@ -6564,6 +6592,7 @@ noexcept.
 </suggestion>
 <notes></notes>
 <rationale>
+See documents N3148, N3150, N3195, N3155, N3156, N3199, and N3180.
 </rationale>
 </comment>
 <comment nb="CH" num="17" type="te" owner="LWG" issue="1352" disp="" date="" extdoc="">
@@ -6628,7 +6657,7 @@ Change "(25)" to "(Clause 25)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="52" type="te" owner="LWG" issue="1354" disp="" date="" extdoc="">
+<comment nb="GB" num="52" type="te" owner="LWG" issue="1354" disp="" date="2010-11-13" extdoc="">
 <section>
 17.3.7
 </section>
@@ -6644,7 +6673,7 @@ The definition should be corrected.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="50" type="te" owner="LWG" issue="1355" disp="" date="" extdoc="">
+<comment nb="GB" num="50" type="te" owner="LWG" issue="1355" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3142.htm">
 <section>
 17.3.13
 </section>
@@ -6663,7 +6692,7 @@ Add a cross-reference to (12.8) to 17.3.12.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="51" type="te" owner="LWG" issue="1356" disp="" date="" extdoc="">
+<comment nb="GB" num="51" type="te" owner="LWG" issue="1356" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3142.htm">
 <section>
 17.3.14
 </section>
@@ -6716,7 +6745,7 @@ static const
 This is pseudo-code; okay as written.
 </rationale>
 </comment>
-<comment nb="GB" num="53" type="te" owner="LWG" issue="1357" disp="" date="" extdoc="">
+<comment nb="GB" num="53" type="te" owner="LWG" issue="1357" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3110.htm">
 <section>
 17.5.2.1.3
 </section>
@@ -6924,7 +6953,7 @@ s/statements/ specifications/
 Removed the offending word.
 </rationale>
 </comment>
-<comment nb="US" num="82" type="te" owner="LWG" issue="1362" disp="" date="" extdoc="">
+<comment nb="US" num="82" type="te" owner="LWG" issue="1362" disp="" date="2010-11-13" extdoc="">
 <section>
 17.6.3.9
 </section>
@@ -7099,7 +7128,7 @@ constexpr nothrow_t nothrow{};
 <rationale>There was consensus that it is too late to make such a change at this time.
 </rationale>
 </comment>
-<comment nb="GB" num="71" type="te" owner="LWG" issue="1365" disp="" date="" extdoc="">
+<comment nb="GB" num="71" type="te" owner="LWG" issue="1365" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/N3189.html">
 <section>
 18.6.2.4 / 18.8.2.2 / 18.8.3.2
 </section>
@@ -7120,7 +7149,7 @@ handlers in a thread safe way.
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="14" type="te" owner="LWG" issue="1366" disp="" date="" extdoc="">
+<comment nb="DE" num="14" type="te" owner="LWG" issue="1366" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/N3189.html">
 <section>
 18.6.1.4
 </section>
@@ -7163,7 +7192,7 @@ move clause 18.8.2 diectly to Annex D.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="73" type="te" owner="LWG" issue="1368" disp="" date="" extdoc="">
+<comment nb="GB" num="73" type="te" owner="LWG" issue="1368" disp="" date="2010-11-13" extdoc="">
 <section>
 18.8.4
 </section>
@@ -7212,7 +7241,7 @@ refers.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="84" type="te" owner="LWG" issue="1370" disp="" date="" extdoc="">
+<comment nb="US" num="84" type="te" owner="LWG" issue="1370" disp="" date="2010-11-13" extdoc="">
 <section>
 18.8.6 [except.nested]
 </section>
@@ -7648,7 +7677,7 @@ Piecewise construction"
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="90" type="te" owner="LWG" issue="1377" disp="" date="" extdoc="">
+<comment nb="US" num="90" type="te" owner="LWG" issue="1377" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3143.html">
 <section>
 20.3
 </section>
@@ -7762,7 +7791,7 @@ Change "(36)" to "(Table 36)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="91" type="E" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="91" type="E" owner="LWG" issue="1377" disp="" date="" extdoc="">
 <section>
 Merged with US 90
 </section>
@@ -7838,7 +7867,7 @@ Returns: std::move(<del>t</del><ins>x</ins>).
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="15" type="te" owner="LWG" issue="1378" disp="" date="" extdoc="">
+<comment nb="DE" num="15" type="te" owner="LWG" issue="1378" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3140.html">
 <section>
 20.3.5.2, 20.4.2.1
 </section>
@@ -7909,7 +7938,7 @@ containing everything below paragraph 17 in
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="95" type="te" owner="LWG" issue="1379" disp="" date="" extdoc="">
+<comment nb="US" num="95" type="te" owner="LWG" issue="1379" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3140.html">
 <section>
 20.3.5.2
 </section>
@@ -7940,7 +7969,7 @@ Returns: *this.
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="16" type="te" owner="LWG" issue="1380" disp="" date="" extdoc="">
+<comment nb="DE" num="16" type="te" owner="LWG" issue="1380" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3140.html">
 <section>
 20.3.5.2, 20.4.2.1
 </section>
@@ -8005,7 +8034,7 @@ Provide a separate template range&lt;Iterator&gt;.
 <rationale>No consensus to make this change.
 </rationale>
 </comment>
-<comment nb="US" num="96" type="te" owner="LWG" issue="1382" disp="" date="" extdoc="">
+<comment nb="US" num="96" type="te" owner="LWG" issue="1382" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3140.html">
 <section>
 20.3.5.2 20.4.2.1 20.4.2.2
 </section>
@@ -8026,7 +8055,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="97" type="te" owner="LWG" issue="1383" disp="" date="" extdoc="">
+<comment nb="US" num="97" type="te" owner="LWG" issue="1383" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3140.html">
 <section>
 20.3.5.2 and 20.4.2
 </section>
@@ -8240,7 +8269,7 @@ typedef ratio&lt;num, den&gt; type;
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="89" type="te" owner="LWG" issue="1389" disp="" date="" extdoc="">
+<comment nb="GB" num="89" type="te" owner="LWG" issue="1389" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/N3210.pdf">
 <section>
 20.6.2
 </section>
@@ -8373,7 +8402,7 @@ Type traits support queries about all types, not just
 built-in types. They do not belong in Clause 18.
 </rationale>
 </comment>
-<comment nb="DE" num="17" type="te" owner="LWG" issue="1390" disp="" date="" extdoc="">
+<comment nb="DE" num="17" type="te" owner="LWG" issue="1390" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3142.htm">
 <section>
 20.7
 </section>
@@ -8389,7 +8418,7 @@ language (see 14.8.2 paragraph 8).
 <rationale>
 </rationale>
 </comment>
-<comment nb="DE" num="18" type="te" owner="LWG" issue="1391" disp="" date="" extdoc="">
+<comment nb="DE" num="18" type="te" owner="LWG" issue="1391" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3142.htm">
 <section>
 20.7
 </section>
@@ -8418,7 +8447,7 @@ constructors/conversion functions.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="102" type="te" owner="LWG" issue="1392" disp="" date="" extdoc="">
+<comment nb="US" num="102" type="te" owner="LWG" issue="1392" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3123.html">
 <section>
 20.7.4
 </section>
@@ -8437,7 +8466,7 @@ functions and pointers to data members.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="91" type="Ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
+<comment nb="GB" num="91" type="Ed" owner="editor" issue="" disp="rejected" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3142.htm">
 <section>
 20.7.4.3
 </section>
@@ -8464,7 +8493,7 @@ is an unevaluated operand. It's not at all clear that
 the proposed change would be clearer.
 </rationale>
 </comment>
-<comment nb="GB" num="92" type="te" owner="LWG" issue="1393" disp="" date="" extdoc="">
+<comment nb="GB" num="92" type="te" owner="LWG" issue="1393" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3142.htm">
 <section>
 20.7.4.3
 </section>
@@ -8486,7 +8515,7 @@ has_trivial_something traits.
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="18" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
+<comment nb="FI" num="18" type="te" owner="LWG" issue="" disp="rejected" date="2010-11-132010-08-07" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3142.htm">
 <section>
 20.7.4.3, Table 45 (Type property predicates)
 </section>
@@ -8659,7 +8688,7 @@ numbered clause.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="95" type="Ge" owner="LWG" issue="1397" disp="" date="" extdoc="">
+<comment nb="GB" num="95" type="Ge" owner="LWG" issue="1397" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3198.html">
 <section>
 20.8
 </section>
@@ -9003,7 +9032,7 @@ allocator_arg_t();
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="106" type="te" owner="LWG" issue="1404" disp="" date="" extdoc="">
+<comment nb="US" num="106" type="te" owner="LWG" issue="1404" disp="" date="2010-11-13" extdoc="">
 <section>
 20.9.3
 </section>
@@ -9631,7 +9660,7 @@ Add a cross-reference to from 27.2.2 to 27.3.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="109" type="te" owner="LWG" issue="1414" disp="" date="" extdoc="">
+<comment nb="GB" num="109" type="te" owner="LWG" issue="1414" disp="" date="2010-11-13" extdoc="">
 <section>
 21.2.3.2/3/4
 </section>
@@ -9875,7 +9904,7 @@ erase_after overloads in 23.3.3.4.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="115" type="te" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="115" type="te" owner="editor" issue="" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3173.pdf">
 <section>
 23.2.1
 </section>
@@ -10678,7 +10707,7 @@ Change "(4)" to "(Clause 4)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="121" type="te" owner="LWG" issue="1432" disp="" date="" extdoc="">
+<comment nb="US" num="121" type="te" owner="LWG" issue="1432" disp="" date="2010-11-13" extdoc="">
 <section>
 25.3.12 [alg.random.shuffle]
 </section>
@@ -10698,7 +10727,7 @@ RandomNumberGenerator by lvalue reference.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="119" type="te" owner="LWG" issue="1433" disp="" date="" extdoc="">
+<comment nb="GB" num="119" type="te" owner="LWG" issue="1433" disp="" date="2010-11-13" extdoc="">
 <section>
 25.3.12
 </section>
@@ -10824,7 +10853,7 @@ environment."
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="120" type="Ge" owner="LWG" issue="1435" disp="" date="" extdoc="">
+<comment nb="GB" num="120" type="Ge" owner="LWG" issue="1435" disp="" date="2010-11-13" extdoc="">
 <section>
 26.4.7
 </section>
@@ -10877,7 +10906,7 @@ Change "Clause 21 and 27" to "Clauses 21 and
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="121" type="te" owner="LWG" issue="1436" disp="" date="" extdoc="">
+<comment nb="GB" num="121" type="te" owner="LWG" issue="1436" disp="" date="2010-11-13" extdoc="">
 <section>
 26.5.3
 </section>
@@ -10904,7 +10933,7 @@ DIRECTION IS INDICATED]
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="124" type="te" owner="LWG" issue="1437" disp="" date="" extdoc="">
+<comment nb="US" num="124" type="te" owner="LWG" issue="1437" disp="" date="2010-11-13" extdoc="">
 <section>
 26.5.3.2
 </section>
@@ -11103,7 +11132,7 @@ r4, and ...
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="134" type="te" owner="LWG" issue="1439" disp="" date="" extdoc="">
+<comment nb="US" num="134" type="te" owner="LWG" issue="1439" disp="" date="2010-11-13" extdoc="">
 <section>
 26.5.8.5.2 [rand.dist.samp.pconst], 26.5.8.5.3 [rand.dist.samp.plinear]
 </section>
@@ -11132,7 +11161,7 @@ the return of densities as a vector&lt;result_type&gt;.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="135" type="te" owner="LWG" issue="1440" disp="" date="" extdoc="">
+<comment nb="US" num="135" type="te" owner="LWG" issue="1440" disp="" date="2010-11-13" extdoc="">
 <section>
 26.5.8.5.3
 </section>
@@ -11243,7 +11272,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="9" type="te" owner="LWG" issue="1442" disp="" date="" extdoc="">
+<comment nb="CA" num="9" type="te" owner="LWG" issue="1442" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 27.2.3p2 30.3.1.2p6 30.3.1.5p7 30.6.4p7 30.6.9p5 30.6.10.1p23
 </section>
@@ -11300,7 +11329,7 @@ determine if changes are needed
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="123" type="te" owner="LWG" issue="1414, 1444" disp="" date="" extdoc="">
+<comment nb="GB" num="123" type="te" owner="LWG" issue="1414, 1444" disp="" date="2010-11-13" extdoc="">
 <section>
 27.5.3.2
 </section>
@@ -11320,7 +11349,7 @@ type 'OFF_T'.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="137" type="te" owner="LWG" issue="1445" disp="" date="" extdoc="">
+<comment nb="US" num="137" type="te" owner="LWG" issue="1445" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3168.htm">
 <section>
 27.7
 </section>
@@ -11365,7 +11394,7 @@ See Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="139" type="te" owner="LWG" issue="1447" disp="" date="" extdoc="">
+<comment nb="US" num="139" type="te" owner="LWG" issue="1447" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3168.htm">
 <section>
 27.7
 </section>
@@ -11473,7 +11502,7 @@ matter, but it looks a bit inconsistent.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="4" type="te" owner="LWG" issue="1449" disp="" date="" extdoc="">
+<comment nb="CA" num="4" type="te" owner="LWG" issue="1449" disp="" date="2010-11-13" extdoc="">
 <section>
 27.8.2
 </section>
@@ -11646,7 +11675,7 @@ searched/matched"
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="126" type="te" owner="LWG" issue="1453" disp="" date="" extdoc="">
+<comment nb="GB" num="126" type="te" owner="LWG" issue="1453" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3158.html">
 <section>
 28.10.3
 </section>
@@ -12360,7 +12389,7 @@ Change "table 142" to "Table 142".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="132" type="te" owner="LWG" issue="1462" disp="" date="" extdoc="">
+<comment nb="GB" num="132" type="te" owner="LWG" issue="1462" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3193.html">
 <section>
 29.5.1
 </section>
@@ -12481,7 +12510,7 @@ Remove Table 143 and the last sentence of
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="161" type="te" owner="LWG" issue="1465" disp="" date="" extdoc="">
+<comment nb="US" num="161" type="te" owner="LWG" issue="1465" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3193.html">
 <section>
 [atomic.types.address] 29.5.2
 </section>
@@ -12524,7 +12553,7 @@ compare_exchange_strong
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="163" type="te" owner="LWG" issue="1467" disp="" date="" extdoc="">
+<comment nb="US" num="163" type="te" owner="LWG" issue="1467" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3193.html">
 <section>
 [atomics.type.address], [atomics.types.generic] 29.5.2, 29.5.3
 </section>
@@ -12548,7 +12577,7 @@ derived from atomic_address.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="164" type="te" owner="LWG" issue="1468" disp="" date="" extdoc="">
+<comment nb="US" num="164" type="te" owner="LWG" issue="1468" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3193.html">
 <section>
 [atomics.types.address] 29.5.2
 </section>
@@ -12600,7 +12629,7 @@ Table 143".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="133" type="te" owner="LWG" issue="1469" disp="" date="" extdoc="">
+<comment nb="GB" num="133" type="te" owner="LWG" issue="1469" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3193.html">
 <section>
 29.5.3
 </section>
@@ -12738,7 +12767,7 @@ Add semicolons to ends of the bullets.
 Seems to be a duplicate of US 166 but with the wrong section number.
 </rationale>
 </comment>
-<comment nb="US" num="168" type="te" owner="LWG" issue="1471" disp="" date="" extdoc="">
+<comment nb="US" num="168" type="te" owner="LWG" issue="1471" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 29.6
 </section>
@@ -12821,7 +12850,7 @@ bool A::is_lock_free() const;
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="171" type="te" owner="LWG" issue="1472" disp="" date="" extdoc="">
+<comment nb="US" num="171" type="te" owner="LWG" issue="1472" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3196.html">
 <section>
 29.6
 </section>
@@ -13116,7 +13145,7 @@ between threads".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="138" type="te" owner="LWG" issue="1481" disp="" date="" extdoc="">
+<comment nb="GB" num="138" type="te" owner="LWG" issue="1481" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3197.html">
 <section>
 30.2
 </section>
@@ -13133,7 +13162,7 @@ See attached Appendix 1 - Additional Details
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="181" type="te" owner="LWG" issue="1482" disp="" date="" extdoc="">
+<comment nb="US" num="181" type="te" owner="LWG" issue="1482" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3191.html">
 <section>
 30.2.4
 </section>
@@ -13342,7 +13371,7 @@ development of more compatible APIs.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="26" type="te" owner="LWG" issue="1489" disp="" date="" extdoc="">
+<comment nb="CH" num="26" type="te" owner="LWG" issue="1489" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3197.html">
 <section>
 30.4
 </section>
@@ -13370,7 +13399,7 @@ needed to be called.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="27" type="te" owner="LWG" issue="1490" disp="" date="" extdoc="">
+<comment nb="CH" num="27" type="te" owner="LWG" issue="1490" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3197.html">
 <section>
 30.4.1
 </section>
@@ -13414,7 +13443,7 @@ Throws: system_error
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="186" type="te" owner="LWG" issue="1491" disp="" date="" extdoc="">
+<comment nb="US" num="186" type="te" owner="LWG" issue="1491" disp="accepted" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/N3209.htm">
 <section>
 30.4.1
 </section>
@@ -13478,7 +13507,7 @@ Change "(29)" to "(Clause 29)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="188" type="te" owner="LWG" issue="1492" disp="" date="" extdoc="">
+<comment nb="US" num="188" type="te" owner="LWG" issue="1492" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3197.html">
 <section>
 30.4.1
 </section>
@@ -13705,7 +13734,7 @@ Throws: system_error
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="191" type="te" owner="LWG" issue="1495" disp="" date="" extdoc="">
+<comment nb="US" num="191" type="te" owner="LWG" issue="1495" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3191.html">
 <section>
 30.5
 </section>
@@ -13758,7 +13787,7 @@ Replace "threds" with "threads".
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="28" type="te" owner="LWG" issue="1496" disp="" date="" extdoc="">
+<comment nb="CH" num="28" type="te" owner="LWG" issue="1496" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3191.html">
 <section>
 30.5.1
 </section>
@@ -13904,7 +13933,7 @@ Change it to code font.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="29" type="te" owner="LWG" issue="1498" disp="" date="" extdoc="">
+<comment nb="CH" num="29" type="te" owner="LWG" issue="1498" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3191.html">
 <section>
 30.5.1 and 30.5.2
 </section>
@@ -14094,7 +14123,7 @@ constexpr adopt_lock_t adopt_lock { };
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="194" type="te" owner="LWG" issue="1501" disp="" date="" extdoc="">
+<comment nb="US" num="194" type="te" owner="LWG" issue="1501" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3192.html">
 <section>
 30.6
 </section>
@@ -14280,7 +14309,7 @@ Add the label.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="201" type="te" owner="LWG" issue="1508" disp="" date="" extdoc="">
+<comment nb="US" num="201" type="te" owner="LWG" issue="1508" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3194.html">
 <section>
 [futures.unique_future], [futures.shared_future], [futures.atomic_future], [futures.task] 30.6.6 30.6.7 30.6.8 30.6.10
 </section>
@@ -14303,7 +14332,7 @@ specification (before 30.6.10.1
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="202" type="te" owner="LWG" issue="1509" disp="" date="" extdoc="">
+<comment nb="US" num="202" type="te" owner="LWG" issue="1509" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3194.html">
 <section>
 [futures.atomic_future] 30.6.8
 </section>
@@ -14326,7 +14355,7 @@ says.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="203" type="te" owner="LWG" issue="1510" disp="" date="" extdoc="">
+<comment nb="US" num="203" type="te" owner="LWG" issue="1510" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3194.html">
 <section>
 [futures.atomic_future] 30.6.8
 </section>
@@ -14346,7 +14375,7 @@ Add a new paragraph after 30.6.8
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="204" type="te" owner="LWG" issue="1511" disp="" date="" extdoc="">
+<comment nb="US" num="204" type="te" owner="LWG" issue="1511" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3194.html">
 <section>
 30.6.8
 </section>
@@ -14371,7 +14400,7 @@ the source
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="205" type="te" owner="LWG" issue="1512" disp="" date="" extdoc="">
+<comment nb="US" num="205" type="te" owner="LWG" issue="1512" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3194.html">
 <section>
 [futures.async] 30.6.9
 </section>
@@ -14396,7 +14425,7 @@ finished or to call join, and rewrite to match.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="36" type="te" owner="LWG" issue="1513" disp="" date="" extdoc="">
+<comment nb="CH" num="36" type="te" owner="LWG" issue="1513" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/N3188.html">
 <section>
 30.6.9 and 30.6.1
 </section>
@@ -14596,7 +14625,7 @@ Change "(clause 14)" to "(Clause 14)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="FI" num="6" type="te" owner="CWG" issue="1012" disp="accepted" date="" extdoc="">
+<comment nb="FI" num="6" type="te" owner="CWG" issue="1012" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 D.2 [depr.static]
 </section>
@@ -14615,7 +14644,7 @@ Strike [depr.static] completely.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="142" type="Ge" owner="LWG" issue="1516" disp="" date="" extdoc="">
+<comment nb="GB" num="142" type="Ge" owner="LWG" issue="1516" disp="" date="2010-11-13" extdoc="">
 <section>
 D10
 </section>
