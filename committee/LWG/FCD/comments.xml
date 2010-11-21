@@ -7791,7 +7791,7 @@ Change "(36)" to "(Table 36)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="91" type="E" owner="LWG" issue="1377" disp="" date="" extdoc="">
+<comment nb="US" num="91" type="E" owner="LWG" issue="1377" disp="modified" date="2010-11-13" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3143.html">
 <section>
 Merged with US 90
 </section>
