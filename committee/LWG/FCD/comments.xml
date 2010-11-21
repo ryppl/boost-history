@@ -558,7 +558,7 @@ commutative only under the &#8220;as-if&#8221; rule, so the statement
 is clear enough.
 </rationale>
 </comment>
-<comment nb="CA" num="23" type="Te" owner="" issue="" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3193.html">
+<comment nb="CA" num="23" type="Te" owner="" issue="" disp="modified" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3193.html">
 <section>
 1.10, 29
 </section>
@@ -6657,7 +6657,7 @@ Change "(25)" to "(Clause 25)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="52" type="te" owner="LWG" issue="1354" disp="" date="2010-11-13" extdoc="">
+<comment nb="GB" num="52" type="te" owner="LWG" issue="1354" disp="modified" date="2010-11-13" extdoc="">
 <section>
 17.3.7
 </section>
@@ -6953,7 +6953,7 @@ s/statements/ specifications/
 Removed the offending word.
 </rationale>
 </comment>
-<comment nb="US" num="82" type="te" owner="LWG" issue="1362" disp="" date="2010-11-13" extdoc="">
+<comment nb="US" num="82" type="te" owner="LWG" issue="1362" disp="modified" date="2010-11-13" extdoc="">
 <section>
 17.6.3.9
 </section>
@@ -7192,7 +7192,7 @@ move clause 18.8.2 diectly to Annex D.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="73" type="te" owner="LWG" issue="1368" disp="" date="2010-11-13" extdoc="">
+<comment nb="GB" num="73" type="te" owner="LWG" issue="1368" disp="modified" date="2010-11-13" extdoc="">
 <section>
 18.8.4
 </section>
@@ -7241,7 +7241,7 @@ refers.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="84" type="te" owner="LWG" issue="1370" disp="" date="2010-11-13" extdoc="">
+<comment nb="US" num="84" type="te" owner="LWG" issue="1370" disp="modified" date="2010-11-13" extdoc="">
 <section>
 18.8.6 [except.nested]
 </section>
@@ -9032,7 +9032,7 @@ allocator_arg_t();
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="106" type="te" owner="LWG" issue="1404" disp="" date="2010-11-13" extdoc="">
+<comment nb="US" num="106" type="te" owner="LWG" issue="1404" disp="modified" date="2010-11-13" extdoc="">
 <section>
 20.9.3
 </section>
@@ -9660,7 +9660,7 @@ Add a cross-reference to from 27.2.2 to 27.3.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="109" type="te" owner="LWG" issue="1414" disp="" date="2010-11-13" extdoc="">
+<comment nb="GB" num="109" type="te" owner="LWG" issue="1414" disp="modified" date="2010-11-13" extdoc="">
 <section>
 21.2.3.2/3/4
 </section>
@@ -9904,7 +9904,7 @@ erase_after overloads in 23.3.3.4.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="115" type="te" owner="editor" issue="" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3173.pdf">
+<comment nb="US" num="115" type="te" owner="editor" issue="" disp="modified" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3173.pdf">
 <section>
 23.2.1
 </section>
@@ -10707,7 +10707,7 @@ Change "(4)" to "(Clause 4)".
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="121" type="te" owner="LWG" issue="1432" disp="" date="2010-11-13" extdoc="">
+<comment nb="US" num="121" type="te" owner="LWG" issue="1432" disp="modified" date="2010-11-13" extdoc="">
 <section>
 25.3.12 [alg.random.shuffle]
 </section>
@@ -10727,7 +10727,7 @@ RandomNumberGenerator by lvalue reference.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="119" type="te" owner="LWG" issue="1433" disp="" date="2010-11-13" extdoc="">
+<comment nb="GB" num="119" type="te" owner="LWG" issue="1433" disp="modified" date="2010-11-13" extdoc="">
 <section>
 25.3.12
 </section>
@@ -10853,7 +10853,7 @@ environment."
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="120" type="Ge" owner="LWG" issue="1435" disp="" date="2010-11-13" extdoc="">
+<comment nb="GB" num="120" type="Ge" owner="LWG" issue="1435" disp="modified" date="2010-11-13" extdoc="">
 <section>
 26.4.7
 </section>
@@ -10906,7 +10906,7 @@ Change "Clause 21 and 27" to "Clauses 21 and
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="121" type="te" owner="LWG" issue="1436" disp="" date="2010-11-13" extdoc="">
+<comment nb="GB" num="121" type="te" owner="LWG" issue="1436" disp="modified" date="2010-11-13" extdoc="">
 <section>
 26.5.3
 </section>
@@ -10933,7 +10933,7 @@ DIRECTION IS INDICATED]
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="124" type="te" owner="LWG" issue="1437" disp="" date="2010-11-13" extdoc="">
+<comment nb="US" num="124" type="te" owner="LWG" issue="1437" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 26.5.3.2
 </section>
@@ -11132,7 +11132,7 @@ r4, and ...
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="134" type="te" owner="LWG" issue="1439" disp="" date="2010-11-13" extdoc="">
+<comment nb="US" num="134" type="te" owner="LWG" issue="1439" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 26.5.8.5.2 [rand.dist.samp.pconst], 26.5.8.5.3 [rand.dist.samp.plinear]
 </section>
@@ -11161,7 +11161,7 @@ the return of densities as a vector&lt;result_type&gt;.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="135" type="te" owner="LWG" issue="1440" disp="" date="2010-11-13" extdoc="">
+<comment nb="US" num="135" type="te" owner="LWG" issue="1440" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 26.5.8.5.3
 </section>
@@ -11329,7 +11329,7 @@ determine if changes are needed
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="123" type="te" owner="LWG" issue="1414, 1444" disp="" date="2010-11-13" extdoc="">
+<comment nb="GB" num="123" type="te" owner="LWG" issue="1414, 1444" disp="modified" date="2010-11-13" extdoc="">
 <section>
 27.5.3.2
 </section>
@@ -11502,7 +11502,7 @@ matter, but it looks a bit inconsistent.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CA" num="4" type="te" owner="LWG" issue="1449" disp="" date="2010-11-13" extdoc="">
+<comment nb="CA" num="4" type="te" owner="LWG" issue="1449" disp="modified" date="2010-11-13" extdoc="">
 <section>
 27.8.2
 </section>
@@ -13371,7 +13371,7 @@ development of more compatible APIs.
 <rationale>The concurrency group reviewed the options, and decided that closer harmony should wait until both standards are published.
 </rationale>
 </comment>
-<comment nb="CH" num="26" type="te" owner="LWG" issue="1489" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3197.html">
+<comment nb="CH" num="26" type="te" owner="LWG" issue="1489" disp="modified" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3197.html">
 <section>
 30.4
 </section>
@@ -13734,7 +13734,7 @@ Throws: system_error
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="191" type="te" owner="LWG" issue="1495" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3191.html">
+<comment nb="US" num="191" type="te" owner="LWG" issue="1495" disp="modified" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3191.html">
 <section>
 30.5
 </section>
@@ -13787,7 +13787,7 @@ Replace "threds" with "threads".
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="28" type="te" owner="LWG" issue="1496" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3191.html">
+<comment nb="CH" num="28" type="te" owner="LWG" issue="1496" disp="modified" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3191.html">
 <section>
 30.5.1
 </section>
@@ -13933,7 +13933,7 @@ Change it to code font.
 <rationale>
 </rationale>
 </comment>
-<comment nb="CH" num="29" type="te" owner="LWG" issue="1498" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3191.html">
+<comment nb="CH" num="29" type="te" owner="LWG" issue="1498" disp="modified" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3191.html">
 <section>
 30.5.1 and 30.5.2
 </section>
@@ -14332,7 +14332,7 @@ specification (before 30.6.10.1
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="202" type="te" owner="LWG" issue="1509" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3194.html">
+<comment nb="US" num="202" type="te" owner="LWG" issue="1509" disp="modified" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3194.html">
 <section>
 [futures.atomic_future] 30.6.8
 </section>
@@ -14355,7 +14355,7 @@ says.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="203" type="te" owner="LWG" issue="1510" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3194.html">
+<comment nb="US" num="203" type="te" owner="LWG" issue="1510" disp="modified" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3194.html">
 <section>
 [futures.atomic_future] 30.6.8
 </section>
@@ -14375,7 +14375,7 @@ Add a new paragraph after 30.6.8
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="204" type="te" owner="LWG" issue="1511" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3194.html">
+<comment nb="US" num="204" type="te" owner="LWG" issue="1511" disp="modified" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3194.html">
 <section>
 30.6.8
 </section>
@@ -14400,7 +14400,7 @@ the source
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="205" type="te" owner="LWG" issue="1512" disp="" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3194.html">
+<comment nb="US" num="205" type="te" owner="LWG" issue="1512" disp="modified" date="2010-11-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3194.html">
 <section>
 [futures.async] 30.6.9
 </section>
@@ -14644,7 +14644,7 @@ Strike [depr.static] completely.
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="142" type="Ge" owner="LWG" issue="1516" disp="" date="2010-11-13" extdoc="">
+<comment nb="GB" num="142" type="Ge" owner="LWG" issue="1516" disp="accepted" date="2010-11-13" extdoc="">
 <section>
 D10
 </section>
