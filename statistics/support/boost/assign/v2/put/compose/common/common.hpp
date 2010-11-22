@@ -10,6 +10,6 @@
 #ifndef BOOST_ASSIGN_V2_PUT_COMPOSE_COMMON_COMMON_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_COMPOSE_COMMON_COMMON_ER_2010_HPP
 
-#include <boost/assign/v2/put/compose/common/common.hpp>
+#include <boost/assign/v2/put/compose/common/forward_parameter.hpp>
 
 #endif
