@@ -10,9 +10,9 @@
 #ifndef BOOST_ASSIGN_V2_REF_REF_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_REF_ER_2010_HPP
 
-#include <boost/assign/v2/ref/anon/anon.hpp>
-#include <boost/assign/v2/ref/fusion/fusion.hpp>
-#include <boost/assign/v2/ref/fusion_matrix/fusion_matrix.hpp>
-#include <boost/assign/v2/ref/wrapper/wrapper.hpp>
+#include <boost/assign/v2/ref/anon.hpp>
+#include <boost/assign/v2/ref/fusion.hpp>
+#include <boost/assign/v2/ref/fusion_matrix.hpp>
+#include <boost/assign/v2/ref/wrapper.hpp>
 
 #endif

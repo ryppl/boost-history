@@ -10,7 +10,6 @@
 #ifndef BOOST_ASSIGN_V2_PUT_RANGE_RANGE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_RANGE_RANGE_ER_2010_HPP
 #include <boost/assign/v2/put/range/adaptor.hpp>
-#include <boost/assign/v2/put/range/convert.hpp>
 
 namespace boost{
 namespace assign{

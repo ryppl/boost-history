@@ -16,11 +16,11 @@
 #include <boost/range/size.hpp>
 #include <boost/range/size_type.hpp>
 #include <boost/range/iterator_range.hpp> //iterator_range_detail::
-#include <boost/assign/v2/put/put.hpp>
-#include <boost/assign/v2/put/range/range.hpp>
+#include <boost/assign/v2/put.hpp>
+#include <boost/assign/v2/put/range.hpp>
 #include <boost/assign/v2/put/generic/result_of_modulo.hpp>
 #include <boost/assign/v2/put/generic/crtp.hpp>
-#include <boost/assign/v2/detail/relational_op/relational_op.hpp>
+#include <boost/assign/v2/detail/relational_op.hpp>
 
 namespace boost{
 namespace assign{

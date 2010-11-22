@@ -27,7 +27,7 @@
 #include <boost/assign/v2/ref/wrapper/framework.hpp>
 #include <boost/assign/v2/ref/wrapper/crtp.hpp>
 #include <boost/assign/v2/ref/detail/unwrap/range.hpp>
-#include <boost/assign/v2/detail/relational_op/relational_op.hpp>
+#include <boost/assign/v2/detail/relational_op.hpp>
 #include <boost/assign/v2/put/range/convert.hpp>
 
 namespace boost{

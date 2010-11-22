@@ -12,7 +12,7 @@
 #define BOOST_ASSIGN_V2_RANGE_CHAIN_AUX_SUB_ER_2010_HPP
 #include <boost/range/iterator_range.hpp> //iterator_range_detail::
 #include <boost/assign/v2/put/range/convert.hpp>
-#include <boost/assign/v2/detail/relational_op/relational_op.hpp>
+#include <boost/assign/v2/detail/relational_op.hpp>
 
 namespace boost{
 namespace assign{

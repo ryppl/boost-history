@@ -51,7 +51,7 @@ wrap(T const & t)
 
 #include <boost/mpl/bool.hpp>
 #include <boost/ref.hpp>
-#include <boost/assign/v2/ref/wrapper/wrapper.hpp>
+#include <boost/assign/v2/ref/wrapper.hpp>
 
 // These are specializations of classes in boost/ref.hpp.
 

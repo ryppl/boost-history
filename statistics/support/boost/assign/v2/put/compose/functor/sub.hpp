@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_COMPOSE_SUB_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_COMPOSE_SUB_ER_2010_HPP
 #include <boost/assign/v2/put/sub/make.hpp>
-#include <boost/assign/v2/put/generic/generic.hpp>
+#include <boost/assign/v2/put/generic.hpp>
 #include <boost/assign/v2/put/compose/common/forward_parameter.hpp>
 #include <boost/assign/v2/put/compose/functor/composer.hpp>
 #include <boost/assign/v2/put/compose/functor/forward_seq_args.hpp>

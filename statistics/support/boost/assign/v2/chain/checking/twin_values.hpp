@@ -17,7 +17,7 @@
 #include <boost/assign/v2/ref/detail/unwrap/range.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/assign/v2/chain/traits/use_lvalue.hpp>
-#include <boost/assign/v2/chain/chain.hpp>
+#include <boost/assign/v2/chain.hpp>
 
 namespace boost{
 namespace assign{ 

@@ -10,10 +10,10 @@
 #ifndef BOOST_ASSIGN_V2_V2_ER_2010_HPP
 #define BOOST_ASSIGN_V2_V2_ER_2010_HPP
 
-#include <boost/assign/v2/anon/anon.hpp>
-#include <boost/assign/v2/chain/chain.hpp>
+#include <boost/assign/v2/anon.hpp>
+#include <boost/assign/v2/chain.hpp>
 #include <boost/assign/v2/detail/detail.hpp>
-#include <boost/assign/v2/put/put.hpp>
+#include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/ref/ref.hpp>
 
 #endif

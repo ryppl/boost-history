@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_STATIC_ARRAY_ALLOC_FAST_ALLOC_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_STATIC_ARRAY_ALLOC_FAST_ALLOC_ER_2010_HPP
-#include <boost/assign/v2/ref/wrapper/wrapper.hpp>
+#include <boost/assign/v2/ref/wrapper.hpp>
 #include <boost/assign/v2/ref/fusion/assign_array.hpp>
 #include <boost/assign/v2/ref/static_array/interface.hpp>
 #include <boost/assign/v2/ref/static_array/alloc/fast_alloc_fwd.hpp>

@@ -16,10 +16,10 @@
 #include <boost/range/reference.hpp>
 
 #include <boost/assign/v2/detail/type_traits/container/is_ptr_container.hpp>
-#include <boost/assign/v2/detail/functor/functor.hpp>
-#include <boost/assign/v2/detail/keyword/keyword.hpp>
+#include <boost/assign/v2/detail/functor.hpp>
+#include <boost/assign/v2/detail/keyword.hpp>
 
-#include <boost/assign/v2/put/modifier/modifier.hpp>
+#include <boost/assign/v2/put/modifier.hpp>
 #include <boost/assign/v2/put/generic/result_of_modulo.hpp>
 #include <boost/assign/v2/put/generic/expose_modifier.hpp>
 #include <boost/assign/v2/put/generic/expose_fun.hpp>
