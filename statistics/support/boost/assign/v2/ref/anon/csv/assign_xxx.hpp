@@ -86,7 +86,6 @@ BOOST_ASSIGN_V2_REF_ANON_CSV_ASSIGN_XXX_M(NS, TAG, T const  , Args const)\
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
-//#include <boost/assign/v2/ref/anon/csv/pp.hpp>
 
 #ifndef BOOST_ASSIGN_V2_REF_ANON_CSV_ASSIGN_XXX_M1
 #define BOOST_ASSIGN_V2_REF_ANON_CSV_ASSIGN_XXX_M1(n, U, TAG)\
