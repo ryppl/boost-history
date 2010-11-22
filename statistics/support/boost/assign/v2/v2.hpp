@@ -12,7 +12,7 @@
 
 #include <boost/assign/v2/anon.hpp>
 #include <boost/assign/v2/chain.hpp>
-#include <boost/assign/v2/detail/detail.hpp>
+#include <boost/assign/v2/detail.hpp>
 #include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/ref/ref.hpp>
 
