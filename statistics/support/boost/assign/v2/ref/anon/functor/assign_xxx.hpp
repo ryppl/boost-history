@@ -8,10 +8,10 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_ASSIGN_V2_REF_ANON_UNARY_XXX
+#ifndef BOOST_ASSIGN_V2_REF_ANON_FUNCTOR_XXX
 #include <boost/assign/v2/detail/keyword/nil.hpp>
-#include <boost/assign/v2/ref/anon/unary/make.hpp>
-#define BOOST_ASSIGN_V2_REF_ANON_UNARY_XXX(NS, Tag1) \
+#include <boost/assign/v2/ref/anon/functor/make.hpp>
+#define BOOST_ASSIGN_V2_REF_ANON_FUNCTOR_XXX(NS, Tag1) \
  \
 namespace boost{ \
 namespace assign{ \

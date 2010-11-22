@@ -7,13 +7,13 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_ANON_UNARY_MAKE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_ANON_UNARY_MAKE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_REF_ANON_FUNCTOR_MAKE_ER_2010_HPP
+#define BOOST_ASSIGN_V2_REF_ANON_FUNCTOR_MAKE_ER_2010_HPP
 #include <boost/assign/v2/ref/fusion/make.hpp>
 #include <boost/assign/v2/ref/static_array/alloc/lazy_alloc.hpp>
 #include <boost/assign/v2/ref/fusion/assign_array.hpp>
-#include <boost/assign/v2/ref/anon/unary/nth_result_of.hpp>
-#include <boost/assign/v2/ref/anon/unary/tag2.hpp>
+#include <boost/assign/v2/ref/anon/functor/nth_result_of.hpp>
+#include <boost/assign/v2/ref/anon/functor/tag2.hpp>
  
 namespace boost{
 namespace assign{

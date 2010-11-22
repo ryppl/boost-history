@@ -7,9 +7,9 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_ANON_UNARY_NTH_RESULT_OF2_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_ANON_UNARY_NTH_RESULT_OF2_ER_2010_HPP
-#include <boost/assign/v2/ref/anon/unary/tag2.hpp>
+#ifndef BOOST_ASSIGN_V2_REF_ANON_FUNCTOR_NTH_RESULT_OF2_ER_2010_HPP
+#define BOOST_ASSIGN_V2_REF_ANON_FUNCTOR_NTH_RESULT_OF2_ER_2010_HPP
+#include <boost/assign/v2/ref/anon/functor/tag2.hpp>
 #include <boost/assign/v2/ref/fusion/nth_result_of.hpp>
 
 namespace boost{
