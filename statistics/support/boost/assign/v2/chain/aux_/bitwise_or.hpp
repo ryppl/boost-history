@@ -59,21 +59,21 @@ BOOST_ASSIGN_V2_FRAMEWORK_CHAIN(R1 const)
 
 }// chain_aux
 
-//#define BOOST_ASSIGN_V2_FRAMEWORK_CHAIN(U1, U2) \
-//    template<typename Tag,typename R1,typename R2> \
-//    typename chain_aux::result<U1, U2, Tag>::type \
-//    chain(U1 & r1, U2 & r2) \
-//    { \
-//        return r1 | adaptor::_chain( r2 ); \
-//    } \
-//\
-///**/
+/*#define MACRO(U1, U2) \
+    template<typename Tag,typename R1,typename R2> \
+    typename chain_aux::result<U1, U2, Tag>::type \
+    chain(U1 & r1, U2 & r2) \
+    { \
+        return r1 | adaptor::_chain( r2 ); \
+    } \
+\
+MACRO(R1      , R2        )
+MACRO(R1      , R2 const  )
+MACRO(R1 const, R2        )
+MACRO(R1 const, R2 const  )
+#undef MACRO
+*/
 
-//BOOST_ASSIGN_V2_FRAMEWORK_CHAIN(R1      , R2        )
-//BOOST_ASSIGN_V2_FRAMEWORK_CHAIN(R1      , R2 const  )
-//BOOST_ASSIGN_V2_FRAMEWORK_CHAIN(R1 const, R2        )
-//BOOST_ASSIGN_V2_FRAMEWORK_CHAIN(R1 const, R2 const  )
-//#undef BOOST_ASSIGN_V2_FRAMEWORK_CHAIN
 
 }// v2
 }// assign

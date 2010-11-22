@@ -65,15 +65,15 @@ namespace nth_result_of{ \
 
 #endif // BOOST_ASSIGN_V2_REF_ANON_CSV_ASSIGN_XXX_M
 
-#ifndef BOOST_ASSIGN_V2_REF_ANON_CSV_ASSIGN_XXX_2(NS, TAG)
+#ifndef BOOST_ASSIGN_V2_REF_ANON_CSV_ASSIGN_XXX_2
 #define BOOST_ASSIGN_V2_REF_ANON_CSV_ASSIGN_XXX_2(NS, TAG)\
 namespace boost{ \
 namespace assign{ \
 namespace v2{ \
 namespace ref{ \
 namespace NS{ \
-BOOST_ASSIGN_V2_REF_ANON_CSV_ASSIGN_XXX_M(NS, TAG, T, Args)\
-BOOST_ASSIGN_V2_REF_ANON_CSV_ASSIGN_XXX_M(NS, TAG, T const, Args const)\
+BOOST_ASSIGN_V2_REF_ANON_CSV_ASSIGN_XXX_M(NS, TAG, T        , Args)\
+BOOST_ASSIGN_V2_REF_ANON_CSV_ASSIGN_XXX_M(NS, TAG, T const  , Args const)\
 } \
 } \
 } \

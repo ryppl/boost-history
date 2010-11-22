@@ -13,6 +13,7 @@
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/push_back.hpp>
+#include <boost/mpl/transform.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/vector/vector0.hpp>
 #include <boost/mpl/vector/vector10.hpp>
@@ -29,6 +30,8 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
+#include <boost/assign/v2/ref/wrapper/cpp0x.hpp>
+#include <boost/mpl/detail/variadic_vector.hpp>
 #else
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -62,6 +65,7 @@ namespace put_compose_aux{
     template<typename Pars, typename SeqArgs, bool enable_pars>
     struct composer_result
     {
+
     	template<typename Args>
         struct apply
         {
@@ -71,6 +75,7 @@ namespace put_compose_aux{
         	>::type new_;
         	typedef composer<Pars, new_> type;
         };
+
     };
 
 
@@ -105,7 +110,10 @@ namespace put_compose_aux{
             static_sequence_args_size = boost::mpl::size<SeqArgs>::value
         );
 
-        typedef typename boost::mpl::apply1<meta1_, Pars>::type pars_cont_type;
+        typedef typename boost::mpl::apply1<
+            meta1_,
+            Pars
+        >::type pars_cont_type;
         typedef typename boost::mpl::apply1<
         	meta2_,
             SeqArgs
@@ -118,6 +126,8 @@ namespace put_compose_aux{
         )
         	: pars_cont( p ),
             seq_args_cont( s ){}
+
+        // operator%
 
         template<typename T>
         struct modulo_result
@@ -140,12 +150,55 @@ namespace put_compose_aux{
             return result_( this->pars_cont( t ), this->seq_args_cont );
         }
 
-        template<typename Args>
+        // operator()
+
+        template<typename VecArg>
         struct result : boost::mpl::apply1<
         	composer_result<Pars, SeqArgs, enable_pars>,
-            Args
-        >
-        {};
+            VecArg
+        >{};
+
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+
+    protected:
+
+    template<typename ...RArgs>
+    struct cpp0x_traits
+    {
+        typedef typename boost::mpl::detail::variadic_vector<
+            RArgs...
+        >::type refs_;
+        typedef typename boost::mpl::transform<
+            refs_,
+            ref::wrapper_param<boost::mpl::_>
+        >::type wrapper_params_;
+        typedef typename result<wrapper_params_>::type result_type;
+    };
+
+    public:
+
+    template<typename ...RArgs>
+    typename cpp0x_traits<RArgs...>::result_type
+    operator()(RArgs&&...args )const
+    {
+        typedef typename cpp0x_traits<RArgs...>::result_type result_;
+        return result_(
+            this->pars_cont,
+            this->seq_args_cont(
+                std::forward<RArgs>( args )...
+            )
+        );
+    }
+
+#else
+        protected:
+
+		typedef functor_aux::crtp_unary_and_up<
+    		composer,
+        	composer_result<Pars, SeqArgs, enable_pars>
+    	> super_t;
+
+        public:
 
         typename result<
         	boost::mpl::vector0<>
@@ -157,35 +210,7 @@ namespace put_compose_aux{
             return result_( this->pars_cont, this->seq_args_cont() );
         }
 
-
-
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-
-/*
-    template<typename U, typename ...Args>
-    typename result<
-        boost::mpl::vector<XXX>
-    >::type
-    operator()( U&& u, Args&&...args )const{
-        typedef boost::mpl::vector<XXX> args_;
-        typedef typename result<args_>::type result_;
-        return result_(
-        	this->pars_cont,
-            this->seq_args_cont(
-                std::forward<U>( u ),
-                std::forward<Args>( args )...
-            )
-        );
-    }
-*/
-
-#else
-		typedef functor_aux::crtp_unary_and_up<
-    		composer,
-        	composer_result<Pars, SeqArgs, enable_pars>
-    	> super_t;
 		using super_t::operator();
-
 
 #define MACRO1( z, n, data ) \
  ( BOOST_PP_CAT(_,n) ) \

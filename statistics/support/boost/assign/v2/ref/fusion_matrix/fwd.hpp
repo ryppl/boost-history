@@ -25,26 +25,19 @@ namespace v2{
 namespace ref{
 namespace fusion_matrix_aux{
 
+    template<
+    	std::size_t N, typename L,typename Tag1, typename Tag2,
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-
-    template<
-    	std::size_t N, typename L,typename Tag1, typename Tag2,
         typename...Args
-    >
-    class container;
-
 #else
-
-    template<
-    	std::size_t N, typename L,typename Tag1, typename Tag2,
         BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
             BOOST_ASSIGN_V2_LIMIT_ARITY,
             typename T,
             boost::mpl::na
         )
+#endif
     >
     class container;
-#endif
 
 }// fusion_matrix_aux
 }// ref

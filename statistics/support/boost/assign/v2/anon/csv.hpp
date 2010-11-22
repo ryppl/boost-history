@@ -45,14 +45,14 @@ namespace csv_anon_aux{
 
 }//csv_anon_aux
 
-	template<typename T,typename...Args>
+	template<typename T,typename... Args>
     typename result_of::anon<T>::type
     // implicit conversion to T desired
-    csv_anon(T const& t, Args&&...args)
+    csv_anon(const T& t, Args const& ...  args)
     {
         typedef typename result_of::anon<T>::type result_;
         result_ result = anon<T>( v2::_nil );
-        csv_anon_aux::impl<T>(result, std::forward<Args>(args)...);
+        csv_anon_aux::impl<T>(result, t, args...);
         return result;
     }
 

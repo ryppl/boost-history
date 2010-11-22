@@ -9,10 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_FUSION_MATRIX_NTH_RESULT_OF_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_FUSION_MATRIX_NTH_RESULT_OF_ER_2010_HPP
-#include <boost/preprocessor/arithmetic/dec.hpp>
-#include <boost/preprocessor/repetition/enum_trailing.hpp>
-#include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
-
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/aux_/na.hpp>
@@ -28,9 +24,16 @@
 #include <boost/assign/v2/ref/fusion_matrix/fwd.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+// do nothing
+#else
+#include <boost/preprocessor/arithmetic/dec.hpp>
+#include <boost/preprocessor/repetition/enum_trailing.hpp>
+#include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
-
+#endif
 
 namespace boost{
 	struct use_default;
@@ -40,13 +43,13 @@ namespace ref{
 namespace fusion_matrix_aux{
 
 	template<
-    	typename Tag1 = ref::assign_tag::copy, 
+    	typename Tag1 = ref::assign_tag::copy,
         typename Tag2 = boost::use_default
     >
     struct empty
     {
         typedef fusion_matrix_aux::container<
-        	0,
+            0,
             typename fusion_aux::root_type,
             Tag1,
             Tag2
@@ -57,56 +60,67 @@ namespace fusion_matrix_aux{
 	struct nth_result
     {
 
-		typedef typename fusion_matrix_aux::empty<Tag1, Tag2>::type state_;
+		typedef typename fusion_matrix_aux::empty<
+            Tag1,
+            Tag2
+        >::type state_;
 
 		template<typename NewState>
         struct result
         {
         	template<
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+                typename...Args
+#else
 				BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
             		BOOST_ASSIGN_V2_LIMIT_ARITY,
             		typename T,
             		boost::mpl::na
-        		) 
+        		)
+#endif
             >
             struct apply : NewState::template result<
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+                Args...
+#else
             	BOOST_PP_ENUM_PARAMS(
                 	BOOST_ASSIGN_V2_LIMIT_ARITY,
                     T
                 )
+#endif
             >{};
-         
-        }; 
+
+        };
 
         struct forward_op{
-        
+
 			template<typename NewState, typename Vec>
             struct apply{
             	typedef result<NewState> meta_;
             	typedef boost::mpl::unpack_args< meta_ > g_;
                 typedef typename boost::mpl::apply1<
-                	g_,
+                    g_,
                     Vec
                 >::type type;
-                
+
             };
 
 		};
 
 		template<typename VecTypes>
     	struct apply : boost::mpl::fold<
-        	VecTypes,
+            VecTypes,
             state_,
             forward_op
         >{};
 
 	};
-    
+
 }// fusion_matrix_aux
 namespace nth_result_of{
 
 	template<
-    	typename Tag1 = ref::assign_tag::copy, 
+    	typename Tag1 = ref::assign_tag::copy,
         typename Tag2 = boost::use_default
 	>
 	struct fusion_matrix
