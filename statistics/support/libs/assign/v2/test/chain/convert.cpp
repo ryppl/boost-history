@@ -16,7 +16,7 @@
 #include <vector>
 #include <boost/array.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <boost/assign/v2/chain/chain.hpp>
+#include <boost/assign/v2/chain.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/checking/check_convert.hpp>

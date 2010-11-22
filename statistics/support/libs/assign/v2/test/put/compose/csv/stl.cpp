@@ -19,7 +19,7 @@
 #include <vector>
 #include <utility>
 
-#include <boost/assign/v2/v2.hpp>
+#include <boost/assign/v2.hpp>
 
 #include <libs/assign/v2/test/put/compose/csv/stl.h>
 

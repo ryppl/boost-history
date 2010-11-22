@@ -15,7 +15,7 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/assign/v2/detail/checking/check_equal.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/ref/fusion/fusion.hpp>
+#include <boost/assign/v2/ref/fusion.hpp>
 #include <libs/assign/v2/test/ref/fusion.h>
 
 namespace test_assign_v2{

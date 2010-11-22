@@ -16,13 +16,13 @@
 #include <vector>
 #include <boost/array.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <boost/assign/v2/detail/keyword/keyword.hpp>
+#include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/checking/relational_op.hpp>
 #include <boost/assign/v2/detail/checking/check_convert.hpp>
 
-#include <boost/assign/v2/anon/anon.hpp>
+#include <boost/assign/v2/anon.hpp>
 
 #include <libs/assign/v2/test/anon/anon.h>
 
@@ -32,13 +32,14 @@ namespace xxx_anon{
 
 	void test()
     {
-    	using namespace boost::assign::v2; 
+    	using namespace boost::assign::v2;
         {
         	// CSV
             using namespace checking::constants;
             using namespace checking::container;
             do_check( csv_anon( a,  b, c, d, e, f, g, h ) );
         }
+/*
         {
         	// Operator%
             BOOST_AUTO(tmp, ( anon<int>( _nil ) % (_repeat = 3) ) );
@@ -96,7 +97,7 @@ namespace xxx_anon{
             	csv_anon( a, b, c, d, e, f, g, h )
             );
         }
-
+*/
     }
 
 }// xxx_anon

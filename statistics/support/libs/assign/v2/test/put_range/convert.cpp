@@ -18,7 +18,7 @@
 
 #include <boost/assign/v2/detail/checking/container.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
-#include <boost/assign/v2/put/range/range.hpp>
+#include <boost/assign/v2/put/range.hpp>
 
 #include <libs/assign/v2/test/put_range/convert.h>
 

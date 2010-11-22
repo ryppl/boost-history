@@ -12,8 +12,8 @@
 #include <boost/assign/v2/detail/functor/identity.hpp>
 #include <boost/assign/v2/detail/checking/check_equal.hpp>
 #include <boost/assign/v2/put/modifier/push_front.hpp>
-#include <boost/assign/v2/put/generic/generic.hpp>
-#include <boost/assign/v2/put/sub/sub.hpp>
+#include <boost/assign/v2/put/generic.hpp>
+#include <boost/assign/v2/put/sub.hpp>
 #include <boost/assign/v2/put/generic/new_fun.hpp>
 #include <boost/assign/v2/put/generic/new_modifier.hpp>
 #include <boost/assign/v2/put/compose/functor/composer.hpp>

@@ -11,7 +11,7 @@
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/assign/v2/detail/checking/check_equal.hpp>
-#include <boost/assign/v2/ref/fusion/fusion.hpp>
+#include <boost/assign/v2/ref/fusion.hpp>
 
 #include <libs/assign/v2/example/fusion.h>
 

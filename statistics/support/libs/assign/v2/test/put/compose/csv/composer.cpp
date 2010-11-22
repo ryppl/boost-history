@@ -10,7 +10,7 @@
 #ifndef LIBS_ASSIGN_V2_TEST_PUT_COMPOSE_CSV_COMPOSER_ER_2010_H
 #define LIBS_ASSIGN_V2_TEST_PUT_COMPOSE_CSV_COMPOSER_ER_2010_H
 #include <boost/mpl/int.hpp>
-#include <boost/assign/v2/v2.hpp>
+#include <boost/assign/v2.hpp>
 
 namespace test_assign_v2{
 namespace xxx_put{

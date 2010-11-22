@@ -28,7 +28,7 @@
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/control/expr_if.hpp>
 #include <boost/assign/v2/detail/checking/assert.hpp>
-#include <boost/assign/v2/put/modifier/modifier.hpp>
+#include <boost/assign/v2/put/modifier.hpp>
 #include <libs/assign/v2/test/put/static.h>
 
 namespace test_assign_v2{

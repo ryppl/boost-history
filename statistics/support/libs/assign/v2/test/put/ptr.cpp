@@ -15,7 +15,7 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
-#include <boost/assign/v2/v2.hpp>
+#include <boost/assign/v2.hpp>
 
 #include <libs/assign/v2/test/put/ptr.h>
 

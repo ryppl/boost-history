@@ -10,11 +10,22 @@
 #include <boost/mpl/vector/vector0.hpp>
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/assert.hpp>
 
+#include <boost/type_traits/is_same.hpp>
 #include <boost/typeof/typeof.hpp>
+
 #include <boost/assign/v2/detail/checking/check_equal.hpp>
 #include <boost/assign/v2/ref/fusion_matrix/container.hpp>
 #include <boost/assign/v2/ref/fusion_matrix/nth_result_of.hpp>
+
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+#else
+#include <boost/assign/v2/detail/config/limit_lvalue_const_arity.hpp>
+#if BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY < 2
+#error
+#endif
+#endif
 
 #include <libs/assign/v2/test/ref/fusion_matrix.h>
 
@@ -26,76 +37,87 @@ namespace xxx_fusion_matrix{
     {
     	using namespace boost::assign::v2;
         typedef ref::fusion_matrix_aux::empty<>::type empty_;
-        typedef boost::mpl::vector0<> v0_;
-        typedef boost::mpl::vector1<int const> v1_;
-        typedef boost::mpl::vector2<int const, int const> v2_;
+        typedef int value_; typedef value_ const cvalue_;
+        typedef value_ a_; typedef cvalue_ b_;
         typedef ref::nth_result_of::fusion_matrix<> meta_result_;
-		//typedef boost::mpl::apply1<
-        //    meta_result_,
-        //    boost::mpl::vector<
-        //        v2_,
-        //        v1_,
-        //        v0_
-        //    >
-        //>::type result_;
-
-    // TODO restore short version
-    typedef boost::assign::v2::ref::fusion_matrix_aux::container<
-        3ul,
-        boost::assign::v2::ref::fusion_matrix_aux::container<
-            2ul,
-            boost::assign::v2::ref::fusion_matrix_aux::container<
-                1ul,
-                boost::assign::v2::ref::fusion_matrix_aux::container<
-                    0ul,
-                    mpl_::void_,
-                    boost::assign::v2::ref::assign_tag::copy,
-                    boost::use_default,
-                    mpl_::na, mpl_::na, mpl_::na, mpl_::na, mpl_::na
-                >,
-                boost::assign::v2::ref::assign_tag::copy,
-                boost::use_default,
-                int,
-                int,
-                mpl_::na,
-                mpl_::na,
-                mpl_::na
-            >,
-            boost::assign::v2::ref::assign_tag::copy,
-            boost::use_default,
-            int,
-            mpl_::na,
-            mpl_::na,
-            mpl_::na,
-            mpl_::na
-        >,
-        boost::assign::v2::ref::assign_tag::copy,
-        boost::use_default,
-        mpl_::na,
-        mpl_::na,
-        mpl_::na,
-        mpl_::na,
-        mpl_::na
-    > result_;
-
-        empty_ e;
-        result_ result = e( 1, 2 )( 1 )();
-
-        typedef boost::mpl::int_<0> int0_;
-        typedef boost::mpl::int_<1> int1_;
-        typedef boost::mpl::int_<2> int2_;
+        typedef boost::mpl::vector0<>          v0_;
+        typedef boost::mpl::vector1<a_>        v1_a_;
+        typedef boost::mpl::vector1<b_>        v1_b_;
+        typedef boost::mpl::vector2<a_, a_>    v2_a_a_;
+        typedef boost::mpl::vector2<a_, b_>    v2_a_b_;
+        typedef boost::mpl::vector2<b_, b_>    v2_b_b_;
+#define MACRO(i, j, t)\
+    {\
+        typedef result_::static_row_result<i>::type row_;\
+        row_ row = result.static_row( boost::mpl::int_<i>() );\
+        BOOST_ASSIGN_V2_CHECK_EQUAL(\
+            row.static_elem(boost::mpl::int_<j>() ), \
+            t\
+        );\
+    }\
+/**/
+        a_ a = 1;
+        b_ b = 2;
         {
-        	BOOST_AUTO(tmp, result.static_row( int0_() ) );
-            BOOST_ASSIGN_V2_CHECK_EQUAL( tmp.static_column( int0_() ), 1);
-            BOOST_ASSIGN_V2_CHECK_EQUAL( tmp.static_column( int1_() ), 2);
+
+            typedef boost::mpl::apply1<
+                meta_result_,
+                boost::mpl::vector<
+                    v1_a_,
+                    v1_b_,
+                    v0_,
+                    v2_a_a_,
+                    v2_a_b_,
+                    v2_b_b_
+                >
+            >::type result_;
+            {
+                // b passed as const lvalue
+
+                empty_ e;
+                result_ result = e          //  i   k
+                    ( a )                   //  0   1
+                    ( b )                   //  1   1
+                    ( )                     //  2   0
+                    ( a, a )                //  3   2
+                    ( a, b )                //  4   2
+                    ( b, b );               //  5   2
+
+                MACRO(0, 0, a)
+                MACRO(1, 0, b)
+                typedef result_::static_row_result<3>::type row_;
+                row_ row = result.static_row( boost::mpl::int_<3>() );
+                MACRO(3, 0, a)
+                    MACRO(3, 1, a)
+                MACRO(4, 0, a)
+                    MACRO(4, 1, b)
+                MACRO(5, 0, b)
+                    MACRO(5, 1, b)
+            }
+            {
+                // b passed as rvalue
+                empty_ e;
+                result_ result = e                  //  i   k
+                    ( a )                           //  0   1
+                    ( value_( b ) )                 //  1   1
+                    ( )                             //  2   0
+                    ( a, a )                        //  3   2
+                    ( a, value_( b ) )              //  4   2
+                    ( value_( b ), value_( b ) );   //  5   2
+
+                MACRO(0, 0, a)
+                MACRO(1, 0, b)
+                typedef result_::static_row_result<3>::type row_;
+                row_ row = result.static_row( boost::mpl::int_<3>() );
+                MACRO(3, 0, a)
+                    MACRO(3, 1, a)
+                MACRO(4, 0, a)
+                    MACRO(4, 1, b)
+                MACRO(5, 0, b)
+                    MACRO(5, 1, b)
+            }
         }
-        {
-        	BOOST_AUTO(tmp, result.static_row( int1_() ) );
-            BOOST_ASSIGN_V2_CHECK_EQUAL( tmp.static_column( int0_() ), 1);
-        }
-        {
-        	BOOST_AUTO(tmp, result.static_row( int2_() ) );
-        }
+#undef MACRO
 
     }
 

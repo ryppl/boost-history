@@ -25,7 +25,8 @@ namespace xxx_composer{
 
 	void test()
     {
-		using namespace boost::assign::v2;
+
+        using namespace boost::assign::v2;
         using namespace checking::constants;
         typedef boost::mpl::int_<0> zero_;
         typedef boost::mpl::int_<1> one_;
@@ -33,6 +34,7 @@ namespace xxx_composer{
         {
         	using namespace adaptor;
             int x = -1;
+            put_compose_aux::composer<>();
 
             BOOST_AUTO(
             	tmp,
@@ -42,8 +44,9 @@ namespace xxx_composer{
                 .parameters()
                 .static_lookup( zero_() ).unwrap();
             BOOST_ASSIGN_V2_CHECK_EQUAL( n, 3 );
+
         }
-        {	
+        {
             int a1, b1, c1, d1;//, e1, f1, g1, h1;
             using namespace checking::constants;
             {
@@ -54,25 +57,25 @@ namespace xxx_composer{
             BOOST_AUTO(
             	tmp,
                 ( _put( a1, b1 )( c1 )() )
-            );            
+            );
             {
             	int & x = tmp.sequence_args()
             		.static_row( zero_() )
-                	.static_column( zero_() );
+                	.static_elem( zero_() );
                 BOOST_ASSIGN_V2_CHECK_EQUAL( &a1, &x );
                 BOOST_ASSIGN_V2_CHECK_EQUAL( a, x );
             }
             {
             	int & x = tmp.sequence_args()
             		.static_row( zero_() )
-                	.static_column( one_() );
+                	.static_elem( one_() );
                 BOOST_ASSIGN_V2_CHECK_EQUAL( &b1, &x );
                 BOOST_ASSIGN_V2_CHECK_EQUAL( b, x );
             }
             {
             	int & x = tmp.sequence_args()
             		.static_row( one_() )
-                	.static_column( zero_() );
+                	.static_elem( zero_() );
                 BOOST_ASSIGN_V2_CHECK_EQUAL( &c1, &x );
             	BOOST_ASSIGN_V2_CHECK_EQUAL( c, x );
             }
@@ -81,9 +84,8 @@ namespace xxx_composer{
             		.static_row( two_() );
             }
         }
-
     }
-		
+
 }// xxx_composer
 }// xxx_functor
 }// xxx_compose

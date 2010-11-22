@@ -27,7 +27,7 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/assign/list_inserter.hpp>
 #define BOOST_ASSIGN_V2_LIMIT_CSV_ARITY 100
-#include <boost/assign/v2/v2.hpp>
+#include <boost/assign/v2.hpp>
 
 
 #include <libs/assign/v2/speed/tools.h>

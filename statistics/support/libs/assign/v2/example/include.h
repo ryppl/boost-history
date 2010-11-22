@@ -15,7 +15,7 @@
 #include <utility> // std::pair
 #include <boost/assert.hpp>
 #include <boost/range/algorithm.hpp>
-#include <boost/assign/v2/v2.hpp>
+#include <boost/assign/v2.hpp>
 //]
 
 #endif

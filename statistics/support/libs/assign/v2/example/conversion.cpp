@@ -39,13 +39,13 @@ namespace xxx_conversion{
                 to.pop_back(); BOOST_ASSERT( to.back() == y );
                 //]
             }
-            {	
+            {
             	//[convert_explicit
                 typedef boost::array<T, 3> from_;
                 typedef std::stack<T> to_;
                 from_ from; from[0] = x; from[1] = y; from[2] = z;
                 using namespace adaptor;
-                BOOST_ASSERT( 
+                BOOST_ASSERT(
                 	( from | convert<to_>() ).top() == z // because LIFO
                 );
                 //]
@@ -57,15 +57,15 @@ namespace xxx_conversion{
                 from_ from; from[0] = x; from[1] = y;
                 using namespace adaptor;
                 namespace ns = ref::assign_copy;
-                BOOST_ASSERT( 
-                    ( 
+                BOOST_ASSERT(
+                    (
                         (
-                            from | _chain( ns::csv_anon( z ) ) 
+                            from | _chain( ns::csv_anon( z ) )
                         ).convert<to_>()
                     ).top() == z // because LIFO
                 );
                 //]
-            
+
             }
 
         }

@@ -17,7 +17,7 @@
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/checking/range.hpp>
 #include <boost/assign/v2/detail/checking/array.hpp> 
-#include <boost/assign/v2/ref/anon/csv/csv.hpp>
+#include <boost/assign/v2/ref/anon/csv.hpp>
 #include <libs/assign/v2/test/ref/csv_anon.h>
 
 namespace test_assign_v2{

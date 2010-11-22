@@ -55,7 +55,7 @@ namespace xxx_forward_seq_args{
         	BOOST_ASSIGN_V2_CHECK_EQUAL(  boost::get<1>( cont[1] ), d 	);
         }
     }
-    
+
 }// xxx_forward_seq_args
 }// xxx_functor
 }// xxx_compose

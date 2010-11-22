@@ -25,7 +25,7 @@
 #include <boost/assign/v2/detail/checking/check_convert.hpp> // TODO
 #include <boost/assign/v2/detail/checking/array.hpp>
 #include <boost/assign/v2/detail/checking/relational_op.hpp>
-#include <boost/assign/v2/ref/anon/unary/unary.hpp>
+#include <boost/assign/v2/ref/anon/functor.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <libs/assign/v2/test/ref/anon.h>
 

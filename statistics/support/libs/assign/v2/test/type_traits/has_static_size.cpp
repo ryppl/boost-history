@@ -10,7 +10,7 @@
 #include <boost/array.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/assign/v2/detail/type_traits/container/has_static_size.hpp>
-#include <boost/assign/v2/ref/anon/unary/assign_copy.hpp>
+#include <boost/assign/v2/ref/anon/functor/assign_copy.hpp>
 #include <libs/assign/v2/test/type_traits/has_static_size.h>
 
 struct foo{
