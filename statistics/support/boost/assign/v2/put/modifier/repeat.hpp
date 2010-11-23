@@ -15,7 +15,7 @@
 #include <boost/assign/v2/put/modifier/def.hpp>
 #include <boost/assign/v2/put/generic/base.hpp>
 #include <boost/assign/v2/put/generic/new_modifier.hpp>
-#include <boost/assign/v2/ref/wrapper/copy.hpp>
+//#include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
 
 namespace boost{
@@ -27,66 +27,81 @@ namespace modifier_tag{
 namespace put_aux{
 
 	template<typename Tag>
-    class modifier<v2::modifier_tag::repeat<Tag> > : v2::ref::wrapper<
+    class modifier<v2::modifier_tag::repeat<Tag> > 
+    /*: v2::ref::wrapper<
     	v2::ref::assign_tag::copy,
         std::size_t const
-    >
+    >*/
     {
 		typedef modifier<Tag> inner_;
-		typedef v2::ref::wrapper<
+		/*typedef v2::ref::wrapper<
     		v2::ref::assign_tag::copy,
         	std::size_t const
-    	> super_t;
+    	> super_t;*/
 
     	public:
 
         typedef std::size_t size_type;
 
-		modifier(){}
-		explicit modifier( size_type const& n ):super_t( n ){};
+		modifier() : n( 1 ){}
+		// explicit modifier( size_type const& n ):super_t( n ){};
+		explicit modifier( size_type const& n_ ) : n( n ){};
 
-    	template<typename V,typename T>
-        void impl(V& v, BOOST_ASSIGN_V2_forward_param(T, t) )
-        const{
+    	template<typename V, typename T>
+        void impl(V& v, BOOST_ASSIGN_V2_forward_param(T, t) )const
+        {
 
-        	size_type m = static_cast<super_t const&>(*this).unwrap();
+        	size_type m = this->n; //static_cast<super_t const&>(*this).unwrap();
         	while(m--) this->inner.impl(
                 v,
                 BOOST_ASSIGN_V2_forward_arg(T, t)
             );
         }
 
-        private:
+		size_type const& size()const{ return this->n; }
+
+        protected:
         inner_ inner;
+        size_type n;
     };
 
-	class modulo_repeat : v2::ref::wrapper<
+	class param_repeat 
+    /*: v2::ref::wrapper<
         v2::ref::assign_tag::copy,
         std::size_t const
-    >
+    >*/
     {
-    	typedef v2::ref::wrapper<
+
+    	/*typedef v2::ref::wrapper<
         	v2::ref::assign_tag::copy,
         	std::size_t const
-    	> super_t;
+    	> super_t;*/
 
 		public:
 
         typedef std::size_t size_type;
 
-        modulo_repeat(){}
-        modulo_repeat( size_type const& n) : super_t( n ){}
+        param_repeat(){}
+        /*param_repeat( size_type const& n) : super_t( n ){}*/
+        param_repeat( size_type const& n_) : n( n_ ){}
 
-		modulo_repeat operator=( size_type const& n)const
+		param_repeat operator=( size_type const& n_)const
         {
-        	modulo_repeat result( n );
+        	param_repeat result( n_ );
             return result;
         }
 
+		/*
         size_type const& unwrap()const
         {
         	return static_cast<super_t const&>(*this).unwrap();
         }
+        */
+        
+        size_type const& pop()const{ return this->n; }
+
+        protected:
+        size_type n;
 
     };
 
@@ -104,10 +119,10 @@ namespace result_of_modulo{
             new_tag_
         >::type type;
 
-        static type call(const T& t, put_aux::modulo_repeat const& h)
+		typedef put_aux::param_repeat param_;
+        static type call(const T& t, param_ const& p)
         {
-        	modifier_ m( h.unwrap() );
-            return type( t.unwrap(), t.fun, m );
+            return type( t.unwrap(), t.fun, p.pop() );
         }
 
     };
@@ -122,7 +137,7 @@ namespace put_aux{
     >::type
 	operator%(
     	T const& t,
-        put_aux::modulo_repeat const& h
+        put_aux::param_repeat const& h
     )
     {
     	typedef result_of_modulo::repeat<T> caller_;
@@ -131,7 +146,7 @@ namespace put_aux{
 
 }// put_aux
 namespace{
-	put_aux::modulo_repeat const _repeat = put_aux::modulo_repeat();
+	put_aux::param_repeat const _repeat = put_aux::param_repeat();
 }
 }// v2
 }// assign

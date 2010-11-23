@@ -10,6 +10,8 @@
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_INCR_LOOKUP_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_INCR_LOOKUP_ER_2010_HPP
 #include <boost/mpl/apply.hpp>
+#include <boost/type_traits/is_base_of.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/accumulators/framework/accumulator_base.hpp>
 #include <boost/assign/v2/put/modifier/def.hpp>
 #include <boost/assign/v2/detail/type_traits/value.hpp>
@@ -18,24 +20,20 @@
 #include <boost/assign/v2/put/generic/new_fun.hpp>
 #include <boost/assign/v2/put/generic/new_modifier.hpp>
 #include <boost/assign/v2/put/generic/result_of_modulo.hpp>
-
-// Warning : Not yet supported.
-// TODO fix compile errors using put adaptor.
+#include <boost/assign/v2/put/generic/base.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
-
-// lookup_key
 namespace modifier_tag{ struct incr_lookup{}; }
 namespace put_aux{
 
 	template<>
     struct modifier<v2::modifier_tag::incr_lookup>
     {
-
+		typedef std::size_t size_type;
 		modifier():n( 0 ){}
-		modifier(std::size_t m):n( m ){};
+		modifier(size_type const& m):n( m ){};
 
     	template<typename V,typename T>
         void impl(V& v, BOOST_ASSIGN_V2_forward_param(T, t) )const{
@@ -43,21 +41,28 @@ namespace put_aux{
         }
 
         private:
-        std::size_t n;
+        size_type n;
     };
 
-    struct modulo_incr_lookup{
+    struct param_incr_lookup
+    {
 
-    	modulo_incr_lookup() : n( 1 ){}
-        modulo_incr_lookup(std::size_t m) : n( m ){}
+		typedef std::size_t size_type;
 
-        modulo_incr_lookup
-        operator=(std::size_t m)const{
-        	typedef modulo_incr_lookup result_;
+    	param_incr_lookup() : n( 1 ){}
+        param_incr_lookup(std::size_t m) : n( m ){}
+
+        param_incr_lookup
+        operator=(size_type const& m)const{
+        	typedef param_incr_lookup result_;
             return result_( m );
         }
 
-    	std::size_t n;
+		size_type const& pop()const{ return this->n; }
+
+		private:
+
+    	size_type n;
     };
 
 }// put_aux
@@ -66,18 +71,21 @@ namespace result_of_modulo{
     template<typename T>
     struct incr_lookup
     {
+    	typedef result_of_modulo::new_fun_modifier<T> meta_;
+        typedef functor_aux::identity fun_;
+        typedef v2::modifier_tag::incr_lookup tag_;
     	typedef typename boost::mpl::apply2<
-        	result_of_modulo::new_fun_modifier<T>,
-            functor_aux::identity,
-            v2::modifier_tag::incr_lookup
+        	meta_,
+            fun_,
+            tag_
         >::type type;
 
-        typedef v2::modifier_tag::incr_lookup new_tag_;
-        typedef put_aux::modifier<new_tag_> modifier_;
+        typedef put_aux::modifier<tag_> new_modifier_;
 
-        static type call(const T& t, put_aux::modulo_incr_lookup const& kwd)
+		typedef put_aux::param_incr_lookup param_;
+        static type call(const T& t, param_ const& p)
         {
-			return type( t.unwrap(), _identity, kwd.n );
+			return type( t.unwrap(), _identity, param.pop() );
 		}
 
     };
@@ -86,10 +94,13 @@ namespace result_of_modulo{
 namespace put_aux{
 
 	template<typename T>
-    typename result_of_modulo::incr_lookup<T>::type
+    typename boost::lazy_enable_if<
+    	boost::is_base_of<put_aux::put_base, T>,
+    	result_of_modulo::incr_lookup<T>
+    >::type
 	operator%(
     	T const& t,
-        put_aux::modulo_incr_lookup const& kwd
+        put_aux::param_incr_lookup const& kwd
     )
     {
     	typedef result_of_modulo::incr_lookup<T> caller_;
@@ -98,8 +109,8 @@ namespace put_aux{
 
 }// put_aux
 namespace{
-	put_aux::modulo_incr_lookup const _incr_lookup
-    	= put_aux::modulo_incr_lookup();
+	put_aux::param_incr_lookup const _incr_lookup
+    	= put_aux::param_incr_lookup();
 }
 }// v2
 }// assign
