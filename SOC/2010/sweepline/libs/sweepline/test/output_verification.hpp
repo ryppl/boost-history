@@ -203,10 +203,10 @@ void remove_intersections(std::vector< std::pair<P, P> >& segm_vec) {
     }
     sort(segm_vec.begin(), segm_vec.end());
     std::vector< std::pair<P, P> > dest_vec;
-    std::vector< std::pair<P, P> >::iterator it, b_it, l_bound;
+    typename std::vector< std::pair<P, P> >::iterator it, b_it, l_bound;
     for (it = segm_vec.begin(); it != segm_vec.end(); it++) {
         std::pair<P, P> bound = std::make_pair(it->second, it->second);
-        l_bound = std::upper_bound(segm_vec.begin(), segm_vec.end(), bound, segm_comparison<P>());
+        l_bound = upper_bound(segm_vec.begin(), segm_vec.end(), bound, segm_comparison<P>());
         bool add = true;
         for (b_it = it + 1; b_it != l_bound; b_it++) {
             if (intersect(*it, *b_it)) {

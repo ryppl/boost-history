@@ -33,10 +33,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(benchmark_test1, T, test_types) {
     FILE *bench_file = fopen("benchmark.txt", "a");
     fprintf(bench_file, "Voronoi Segment Sweepline Benchmark Test (time in seconds):\n");
 
-#ifdef _DEBUG
-    int max_points = 1000;
-#else
+#ifdef NDEBUG
     int max_points = 1000000;
+#else
+    int max_points = 1000;
 #endif
 
     for (int num_points = 10; num_points <= max_points; num_points *= 10) {

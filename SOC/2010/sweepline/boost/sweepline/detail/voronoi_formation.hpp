@@ -1236,8 +1236,7 @@ namespace detail {
         // Intersection check.
         if (site2.get_site_index() == site3.get_site_index()) {
             return false;
-        }
-        const point_2d<T> &site = site1.get_point0();		
+        }	
         const point_2d<T> &segm_start1 = site2.get_point1(true);
         const point_2d<T> &segm_end1 = site2.get_point0(true);
         const point_2d<T> &segm_start2 = site3.get_point0(true);

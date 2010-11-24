@@ -11,9 +11,9 @@
 #include <time.h>
 
 #include "test_type_list.hpp"
-#include "output_verification.hpp"
 #include "boost/sweepline/voronoi_sweepline.hpp"
 using namespace boost::sweepline;
+#include "output_verification.hpp"
 
 #define BOOST_TEST_MODULE voronoi_builder_test
 #include <boost/test/test_case_template.hpp>
@@ -395,7 +395,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(square_test1, T, test_types) {
     BOOST_CHECK_EQUAL(edge2_1->rot_next == edge1_1, true);
 }
 
-#ifndef _DEBUG
+#ifdef NDEBUG
 BOOST_AUTO_TEST_CASE_TEMPLATE(grid_test, T, test_types) {
     voronoi_builder<T> test_builder;
     voronoi_output_clipped<T> test_output_small, test_output_large;
@@ -427,7 +427,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(grid_test, T, test_types) {
 }
 #endif
 
-#ifndef _DEBUG
+#ifdef NDEBUG
 BOOST_AUTO_TEST_CASE_TEMPLATE(random_test, T, test_types) {
     srand(static_cast<unsigned int>(time(NULL)));
     voronoi_builder<T> test_builder;
@@ -465,7 +465,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(random_test, T, test_types) {
 }
 #endif
 
-#ifndef _DEBUG
+#ifdef NDEBUG
 BOOST_AUTO_TEST_CASE_TEMPLATE(enormous_random_test, T, test_types) {
     srand(static_cast<unsigned int>(time(NULL)));
     voronoi_builder<T> test_builder;
@@ -653,7 +653,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(segment_site_test8, T, test_types) {
     VERIFY_VORONOI_OUTPUT(test_output, NO_HALF_EDGE_INTERSECTIONS);
 }
 
-#ifndef _DEBUG
+#ifdef NDEBUG
 BOOST_AUTO_TEST_CASE_TEMPLATE(segment_grid_test, T, test_types) {
     voronoi_builder<T> test_builder;
     voronoi_output_clipped<T> test_output_small, test_output_large;
@@ -696,7 +696,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(segment_grid_test, T, test_types) {
 }
 #endif
 
-#ifndef _DEBUG
+#ifdef NDEBUG
 BOOST_AUTO_TEST_CASE_TEMPLATE(segment_random_test, T, test_types) {
     srand(static_cast<unsigned int>(time(NULL)));
     voronoi_builder<T> test_builder;
