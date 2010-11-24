@@ -328,7 +328,7 @@ namespace sweepline {
             num_incident_edges(0),
             site(new_site) {}
 
-        bool is_segment() const {
+        bool contains_segment() const {
             return site.is_segment();
         }
 
@@ -399,7 +399,7 @@ namespace sweepline {
             const voronoi_cell_type *cell1 = cell;
             const voronoi_cell_type *cell2 = twin->cell;
             std::vector<Point2D> edge_points;
-            if (!(cell1->is_segment() ^ cell2->is_segment())) {
+            if (!(cell1->contains_segment() ^ cell2->contains_segment())) {
                 if (start_point != NULL && end_point != NULL) {
                     edge_points.push_back(start_point->vertex);
                     edge_points.push_back(end_point->vertex);
@@ -417,20 +417,20 @@ namespace sweepline {
                         edge_points[0] = start_point->vertex;
                 }
             } else {
-                const Point2D &point1 = (cell1->is_segment()) ?
+                const Point2D &point1 = (cell1->contains_segment()) ?
                     cell2->get_point0() : cell1->get_point0();
-                const Point2D &point2 = (cell1->is_segment()) ?
+                const Point2D &point2 = (cell1->contains_segment()) ?
                     cell1->get_point0() : cell2->get_point0();
-                const Point2D &point3 = (cell1->is_segment()) ?
+                const Point2D &point3 = (cell1->contains_segment()) ?
                     cell1->get_point1() : cell2->get_point1();
                 if (start_point != NULL && end_point != NULL) {
                     edge_points.push_back(start_point->vertex);
                     edge_points.push_back(end_point->vertex);
                     Helper<T>::fill_intermediate_points(point1, point2, point3, edge_points);
                 } else {
-                    coordinate_type dir_x = (cell1->is_segment() ^ (point1 == point3)) ?
+                    coordinate_type dir_x = (cell1->contains_segment() ^ (point1 == point3)) ?
                         point3.y() - point2.y() : point2.y() - point3.y();
-                    coordinate_type dir_y = (cell1->is_segment() ^ (point1 == point3)) ?
+                    coordinate_type dir_y = (cell1->contains_segment() ^ (point1 == point3)) ?
                         point2.x() - point3.x() : point3.x() - point2.x();
                     Point2D direction(dir_x, dir_y);
                     Helper<T>::find_intersections(point1, direction, Helper<T>::LINE,

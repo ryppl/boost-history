@@ -1,4 +1,4 @@
-// Boost sweepline library segment_voronoi_benchmark_test.cpp file
+// Boost sweepline library benchmark_test.cpp file
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -12,12 +12,16 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "../test_type_list.hpp"
-#include "boost/sweepline/voronoi_segment_sweepline.hpp"
+#include "test_type_list.hpp"
+#include "boost/sweepline/voronoi_sweepline.hpp"
 using namespace boost::sweepline;
 
 #define BOOST_TEST_MODULE voronoi_benchmark_test
 #include <boost/test/test_case_template.hpp>
+
+#ifdef WIN32
+#pragma warning( disable : 4996 )
+#endif
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(benchmark_test1, T, test_types) {
     typedef T coordinate_type;
@@ -29,12 +33,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(benchmark_test1, T, test_types) {
     FILE *bench_file = fopen("benchmark.txt", "a");
     fprintf(bench_file, "Voronoi Segment Sweepline Benchmark Test (time in seconds):\n");
 
-    for (int num_points = 10; num_points <= 1000000; num_points *= 10) {
+#ifdef _DEBUG
+    int max_points = 1000;
+#else
+    int max_points = 1000000;
+#endif
+
+    for (int num_points = 10; num_points <= max_points; num_points *= 10) {
         std::vector< point_2d<coordinate_type> > points;
         points.reserve(num_points);
 
         time_t start_time = time(NULL);
-        int num_times = 1000000 / num_points;
+        int num_times = max_points / num_points;
         for (int cur = 0; cur < num_times; cur++) {
             for (int cur_point = 0; cur_point < num_points; cur_point++) {
                 points.push_back(make_point_2d<coordinate_type>(

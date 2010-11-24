@@ -1,4 +1,4 @@
-// Boost sweepline library segment_predicates_test.cpp file 
+// Boost sweepline library predicates_test.cpp file 
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -7,8 +7,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#include "../test_type_list.hpp"
-#include "boost/sweepline/voronoi_segment_sweepline.hpp"
+#include "test_type_list.hpp"
+#include "boost/sweepline/voronoi_sweepline.hpp"
 using namespace boost::sweepline;
 
 #define BOOST_TEST_MODULE predicates_test
@@ -284,28 +284,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(less_predicate_segment_segment_test2, T, test_type
     CHECK_LESS_PREDICATE_SS(segm_site3, segm_site1_2, new_site4, true);
 }
 
-//BOOST_AUTO_TEST_CASE_TEMPLATE(point_projection_test1, T, test_types) {
-//	point_2d<T> segm_start = make_point_2d<T>(static_cast<T>(0), static_cast<T>(0));
-//	point_2d<T> segm_end = make_point_2d<T>(static_cast<T>(5), static_cast<T>(-3));
-//	point_2d<T> point1 = make_point_2d<T>(static_cast<T>(4), static_cast<T>(1));
-//	point_2d<T> point2 = make_point_2d<T>(static_cast<T>(1), static_cast<T>(-4));
-//	double projection1 = detail::get_point_projection(point1, segm_start, segm_end);
-//	BOOST_CHECK_EQUAL(projection1 == 0.5, true);
-//	double projection2 = detail::get_point_projection(point2, segm_start, segm_end);
-//	BOOST_CHECK_EQUAL(projection2 == 0.5, true);
-//}
-//
-//BOOST_AUTO_TEST_CASE_TEMPLATE(compute_intermediate_points_test1, T, test_types) {
-//	point_2d<T> point_site = make_point_2d<T>(static_cast<T>(5), static_cast<T>(-7));
-//	point_2d<T> segm_site_start = make_point_2d<T>(static_cast<T>(1), static_cast<T>(-2));
-//	point_2d<T> segm_site_end = make_point_2d<T>(static_cast<T>(1), static_cast<T>(-12));
-//	std::vector< point_2d<T> > intermediate_points;
-//	intermediate_points.push_back(make_point_2d<T>(static_cast<T>(5), static_cast<T>(-3)));
-//	intermediate_points.push_back(make_point_2d<T>(static_cast<T>(5), static_cast<T>(-11)));
-//	detail::fill_intermediate_points(point_site, segm_site_start, segm_site_end,
-//									 intermediate_points);
-//	BOOST_CHECK_EQUAL(intermediate_points.size() == 5, true);
-//	BOOST_CHECK_EQUAL(intermediate_points[1] == make_point_2d(3.5, -5.0), true);
-//	BOOST_CHECK_EQUAL(intermediate_points[2] == make_point_2d(3.0, -7.0), true);
-//	BOOST_CHECK_EQUAL(intermediate_points[3] == make_point_2d(3.5, -9.0), true);
-//}
+BOOST_AUTO_TEST_CASE_TEMPLATE(less_predicate_segment_segment_test3, T, test_types) {
+    typedef typename detail::site_event<T> site_event_type;
+
+    point_2d<T> segm_start1 = make_point_2d<T>(static_cast<T>(-5), static_cast<T>(3));
+    point_2d<T> segm_start2 = make_point_2d<T>(static_cast<T>(-5), static_cast<T>(5));
+    point_2d<T> segm_end = make_point_2d<T>(static_cast<T>(-2), static_cast<T>(2));
+    site_event_type segm_site1(segm_start1, segm_end, 0);
+    segm_site1.set_inverse();
+    site_event_type segm_site2(segm_start2, segm_end, 1);
+    point_2d<T> point(-4, 2);
+    CHECK_LESS_PREDICATE_SS(segm_site1, segm_site2, point, false);
+}

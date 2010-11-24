@@ -1,4 +1,4 @@
-// Boost sweepline library voronoi_output_verification.hpp file 
+// Boost sweepline library output_verification.hpp file 
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -20,9 +20,7 @@ enum kOrientation {
 };
 
 template <typename Point2D>
-kOrientation get_orientation(const Point2D &point1,
-                     const Point2D &point2,
-                     const Point2D &point3) {
+kOrientation get_orientation(const Point2D &point1, const Point2D &point2, const Point2D &point3) {
     typename Point2D::coordinate_type a = (point2.x() - point1.x()) * (point3.y() - point2.y());
     typename Point2D::coordinate_type b = (point2.y() - point1.y()) * (point3.x() - point2.x());
     if (a == b)
@@ -113,6 +111,8 @@ bool verfiy_no_half_edge_intersections(const Output &output) {
     typename Output::voronoi_edge_const_iterator_type edge_it;
     for (edge_it = output.edge_records.begin();
          edge_it != output.edge_records.end(); edge_it++) {
+        if (edge_it->cell->contains_segment() && edge_it->twin->cell->contains_segment())
+            continue;
         if (edge_it->start_point != NULL && edge_it->end_point != NULL) {
             const Point2D &start_point = edge_it->start_point->vertex;
             const Point2D &end_point = edge_it->end_point->vertex;
@@ -155,15 +155,70 @@ bool verfiy_no_half_edge_intersections(const Output &output) {
 
                     // Intersection check.
                     if (get_orientation(point1, point2, point3) *
-                        get_orientation(point1, point2, point4) == -1 &&
+                        get_orientation(point1, point2, point4) == RIGHT_ORIENTATION &&
                         get_orientation(point3, point4, point1) *
-                        get_orientation(point3, point4, point2) == -1)
+                        get_orientation(point3, point4, point2) == RIGHT_ORIENTATION)
                         return false;
                 }
             }
         }
     }
     return true;
+}
+
+template<typename P>
+struct segm_comparison {
+    bool operator()(const std::pair<P, P>& segm1, const std::pair<P, P>& segm2) const {
+        return segm1.first.x() < segm2.first.x();
+    }
+};
+
+template<typename P>
+bool intersect(const std::pair<P, P> &segm1, const std::pair<P, P> &segm2) {
+    if ((std::max)(segm1.first.y(), segm1.second.y()) <
+        (std::min)(segm2.first.y(), segm2.second.y()) ||
+        (std::max)(segm2.first.y(), segm2.second.y()) <
+        (std::min)(segm1.first.y(), segm1.second.y()))
+        return false;
+    if (segm1.first == segm2.first)
+        return detail::orientation_test(segm1.first, segm1.second, segm2.second)
+               == detail::COLINEAR;
+    if (segm1.second == segm2.second)
+        return detail::orientation_test(segm1.first, segm1.second, segm2.first)
+               == detail::COLINEAR;
+    if ((get_orientation(segm1.first, segm1.second, segm2.first) *
+         get_orientation(segm1.first, segm1.second, segm2.second) != LEFT_ORIENTATION) &&
+        (get_orientation(segm2.first, segm2.second, segm1.first) *
+         get_orientation(segm2.first, segm2.second, segm1.second) != LEFT_ORIENTATION))
+        return true;
+    return false;
+}
+
+template<typename P>
+void remove_intersections(std::vector< std::pair<P, P> >& segm_vec) {
+    for (int i = 0; i < static_cast<int>(segm_vec.size()); i++) {
+        if (segm_vec[i].first > segm_vec[i].second) {
+            (std::swap(segm_vec[i].first, segm_vec[i].second));
+        }
+    }
+    sort(segm_vec.begin(), segm_vec.end());
+    std::vector< std::pair<P, P> > dest_vec;
+    std::vector< std::pair<P, P> >::iterator it, b_it, l_bound;
+    for (it = segm_vec.begin(); it != segm_vec.end(); it++) {
+        std::pair<P, P> bound = std::make_pair(it->second, it->second);
+        l_bound = std::upper_bound(segm_vec.begin(), segm_vec.end(), bound, segm_comparison<P>());
+        bool add = true;
+        for (b_it = it + 1; b_it != l_bound; b_it++) {
+            if (intersect(*it, *b_it)) {
+                add = false;
+                break;
+            }
+        }
+        if (add) {
+            dest_vec.push_back(*it);
+        }
+    }
+    segm_vec.swap(dest_vec);
 }
 
 enum kVerification {

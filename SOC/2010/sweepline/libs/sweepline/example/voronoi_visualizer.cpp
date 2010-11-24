@@ -75,7 +75,7 @@ protected:
             glPointSize(9);
             glBegin(GL_POINTS);
             for (it = cells.begin(); it != cells.end(); it++) {
-                if (!it->is_segment())
+                if (!it->contains_segment())
                     glVertex2f(it->get_point0().x(), it->get_point0().y());
             }
             glEnd();
@@ -83,7 +83,7 @@ protected:
             glLineWidth(2.7f);
             glBegin(GL_LINES);
             for (it = cells.begin(); it != cells.end(); it++) {
-                if (it->is_segment()) {
+                if (it->contains_segment()) {
                     glVertex2f(it->get_point0().x(), it->get_point0().y());
                     glVertex2f(it->get_point1().x(), it->get_point1().y());
                 }

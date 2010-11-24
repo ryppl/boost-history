@@ -302,13 +302,11 @@ namespace sweepline {
             // (B, C) bisector and change (A, B) bisector to the (A, C). That's
             // why we use const_cast there and take all the responsibility that
             // map data structure keeps correct ordering.
+            if (!site1.is_segment() && site3.is_segment() &&
+                site3.get_point1(true) == site1.get_point0()) {
+                site3.set_inverse();
+            }
             const_cast<Key &>(it_first->first).set_right_site(site3);
-            if (site1.is_segment() && site1.get_point0(true) == site3.get_point0(true)) {
-                const_cast<Key &>(it_first->first).set_left_site_inverse();
-            }
-            if (site3.is_segment() && site3.get_point1(true) == site1.get_point0(true)) {
-                const_cast<Key &>(it_first->first).set_right_site_inverse();
-            }
             it_first->second.set_edge(output_.insert_new_edge(site1, site3, circle_event,
                                                               bisector1, bisector2));
             beach_line_.erase(it_last);

@@ -1044,29 +1044,27 @@ namespace detail {
                                site_event<T> right_site,
                                point_2d<T> new_point) {
         if (left_site.get_site_index() == right_site.get_site_index()) {
-            return orientation_test(left_site.get_point0(), left_site.get_point1(),
-                new_point) == LEFT_ORIENTATION;
+            return orientation_test(left_site.get_point0(), left_site.get_point1(), new_point) ==
+                   LEFT_ORIENTATION;
         }
 
-        const point_2d<T> segment1_start = left_site.get_point1();
-        const point_2d<T> segment1_end = left_site.get_point0();
-        const point_2d<T> segment2_start = right_site.get_point1();
-        const point_2d<T> segment2_end = right_site.get_point0();
+        if (left_site.get_point1() == new_point && right_site.get_point1() == new_point)
+            return false;
+
+        const point_2d<T> &segment1_start = left_site.get_point1();
+        const point_2d<T> &segment1_end = left_site.get_point0();
+        const point_2d<T> &segment2_start = right_site.get_point1();
+        const point_2d<T> &segment2_end = right_site.get_point0();
         double intersection_x1 = 0.0;
         double intersection_x2 = 0.0;
         
-        double a1 = static_cast<double>(segment1_end.x()) -
-                    static_cast<double>(segment1_start.x());
+        double a1 = segment1_end.x() - segment1_start.x();
         if (a1 == 0.0) {
             // Avoid cancellation.
-            intersection_x2 += (static_cast<double>(new_point.x()) -
-                                static_cast<double>(segment1_end.x())) * 0.5;
+            intersection_x2 += (new_point.x() - segment1_end.x()) * 0.5;
         } else {
-            double b1 = static_cast<double>(segment1_end.y()) -
-                        static_cast<double>(segment1_start.y());
-            double c1 = b1 * (static_cast<double>(new_point.x()) -
-                              static_cast<double>(segment1_start.x())) +
-                        a1 * segment1_start.y();
+            double b1 = segment1_end.y() - segment1_start.y();
+            double c1 = b1 * (new_point.x() - segment1_start.x()) + a1 * segment1_start.y();
             double mul1 = sqrt(a1 * a1 + b1 * b1);
             if (left_site.is_inverse()) {
                 if (b1 >= 0.0) {
@@ -1081,23 +1079,17 @@ namespace detail {
                     mul1 = 1.0 / (b1 - mul1);
                 }
             }
-            avoid_cancellation(a1 * mul1 * static_cast<double>(new_point.y()),
-                                             intersection_x1, intersection_x2);
+            avoid_cancellation(a1 * mul1 * new_point.y(), intersection_x1, intersection_x2);
             avoid_cancellation(-c1 * mul1, intersection_x1, intersection_x2);
         }
 
-        double a2 = static_cast<double>(segment2_end.x()) -
-                    static_cast<double>(segment2_start.x());
+        double a2 = segment2_end.x() - segment2_start.x();
         if (a2 == 0.0) {
             // Avoid cancellation.
-            intersection_x1 += (static_cast<double>(new_point.x()) - 
-                                static_cast<double>(segment2_end.x())) * 0.5;
+            intersection_x1 += (new_point.x() - segment2_end.x()) * 0.5;
         } else {
-            double b2 = static_cast<double>(segment2_end.y()) -
-                        static_cast<double>(segment2_start.y());
-            double c2 = b2 * (static_cast<double>(new_point.x()) -
-                              static_cast<double>(segment2_start.x())) +
-                        a2 * segment2_start.y();
+            double b2 = segment2_end.y() - segment2_start.y();
+            double c2 = b2 * (new_point.x() - segment2_start.x()) + a2 * segment2_start.y();
             double mul2 = sqrt(a2 * a2 + b2 * b2);
             if (right_site.is_inverse()) {
                 if (b2 >= 0.0) {
@@ -1112,8 +1104,7 @@ namespace detail {
                     mul2 = 1.0 / (b2 - mul2);
                 }
             }
-            avoid_cancellation(a2 * static_cast<double>(new_point.y()) * mul2,
-                                             intersection_x2, intersection_x1);
+            avoid_cancellation(a2 * new_point.y() * mul2, intersection_x2, intersection_x1);
             avoid_cancellation(-c2 * mul2, intersection_x2, intersection_x1);
         }
 
@@ -1252,20 +1243,13 @@ namespace detail {
         const point_2d<T> &segm_start2 = site3.get_point0(true);
         const point_2d<T> &segm_end2 = site3.get_point1(true);
 
-        if (point_index != 2) {
-            if (orientation_test(segm_start1, segm_start2, site) == LEFT_ORIENTATION &&
-                orientation_test(segm_end1, segm_end2, site) == LEFT_ORIENTATION &&
-                orientation_test(segm_start1, segm_end2, site) == LEFT_ORIENTATION &&
-                orientation_test(segm_end1, segm_start2, site) == LEFT_ORIENTATION) {
+        if (point_index == 2) {
+            if (!site2.is_inverse() && site3.is_inverse())
                 return false;
-            }
-        } else {
-            if ((orientation_test(segm_end1, segm_start1, segm_start2) != RIGHT_ORIENTATION &&
-                 orientation_test(segm_end1, segm_start1, segm_end2) != RIGHT_ORIENTATION) ||
-                (orientation_test(segm_start2, segm_end2, segm_start1) != RIGHT_ORIENTATION &&
-                 orientation_test(segm_start2, segm_end2, segm_end1) != RIGHT_ORIENTATION)) {
+            if (site2.is_inverse() == site3.is_inverse() &&
+                //orientation_test(orientation) != RIGHT_ORIENTATION)
+                orientation_test(segm_end1, site1.get_point0(), segm_end2) != RIGHT_ORIENTATION)
                 return false;
-            }
         }
 
         double a1 = segm_end1.x() - segm_start1.x();
@@ -1505,8 +1489,7 @@ namespace detail {
                     return true;
                 return less_predicate(left_site_.get_point0(), right_site_.get_point0(), new_site);
             } else {
-                return left_site_.y() + right_site_.y() <
-                       static_cast<coordinate_type>(2.0) * new_site.y();
+                return left_site_.y() + right_site_.y() < 2.0 * new_site.y();
             }
         }
 
