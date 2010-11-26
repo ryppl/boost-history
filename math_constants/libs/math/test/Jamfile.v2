@@ -1,0 +1,58 @@
+
+
+# Copyright Daryle Walker, Hubert Holin, John Maddock 2006 - 2007
+# copyright Paul A. Bristow 2006 - 2010
+# Distributed under the Boost Software License, Version 1.0. 
+# (See accompanying file LICENSE_1_0.txt or copy at 
+# http://www.boost.org/LICENSE_1_0.txt.
+# \math_toolkit\libs\math\test\jamfile.v2
+# Runs all math toolkit tests, functions & distributions,
+# and build math examples.
+
+# bring in the rules for testing
+import testing ;
+import modules ;
+import path ;
+
+local ntl-path = [ modules.peek : NTL_PATH ] ;
+local gmp_path = [ modules.peek : GMP_PATH ] ;
+
+local boost-path = [ modules.peek : BOOST ] ;
+
+project  
+    : requirements 
+      <toolset>gcc:<cxxflags>-Wno-missing-braces
+      <toolset>darwin:<cxxflags>-Wno-missing-braces
+      <toolset>acc:<cxxflags>+W2068,2461,2236,4070,4069
+      <toolset>intel-win:<cxxflags>-nologo 
+      <toolset>intel-win:<linkflags>-nologo 
+      #<toolset>intel-linux:<pch>off
+      <toolset>intel-darwin:<pch>off
+      <toolset>msvc:<warnings>all
+      <toolset>msvc:<asynch-exceptions>on
+      <toolset>msvc:<cxxflags>/wd4996
+      <toolset>msvc:<cxxflags>/wd4512 
+      <toolset>msvc:<cxxflags>/wd4610 
+      <toolset>msvc:<cxxflags>/wd4510 
+      <toolset>msvc:<cxxflags>/wd4127 
+      <toolset>msvc:<cxxflags>/wd4701 # needed for lexical cast - temporary.
+      <toolset>msvc:<cxxflags>/wd4189 # local variable is initialized but not referenced
+      <toolset>borland:<link>static
+      <toolset>borland:<runtime-link>static
+      <include>../../..
+      #<source>../../regex/build//boost_regex
+      <link>shared:<define>BOOST_REGEX_DYN_LINK=1
+      # Sunpro and cygwin/Mingw have problems building regex as a shared lib:
+      <toolset>sun:<link>static
+      <toolset>gcc-mw:<link>static
+	   <toolset>gcc-mingw:<link>static
+      <toolset>gcc-cygwin:<link>static
+      <define>BOOST_ALL_NO_LIB=1
+      <define>BOOST_UBLAS_UNSUPPORTED_COMPILER=0
+      <include>.
+      <include>$(boost-path)/libs/math/test
+      <include>$(ntl-path)/include
+      <include>$(gmp_path) <include>$(gmp_path)/mpfr <include>$(gmp_path)/gmpfrxx
+    ;
+
+run test_constants.cpp $(boost-path)/libs/test/build//boost_test_exec_monitor ;
