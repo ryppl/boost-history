@@ -30,6 +30,7 @@ void test_spots(RealType)
    using std::exp;
 
    BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(3.14159265358979323846264338327950288419716939937510L), pi<RealType>(), tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(3.14159265358979323846264338327950288419716939937510L), (pi<RealType, boost::math::policies::policy<> >)(), tolerance); 
    BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(sqrt(3.14159265358979323846264338327950288419716939937510L)), root_pi<RealType>(), tolerance); 
    BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(sqrt(3.14159265358979323846264338327950288419716939937510L/2)), root_half_pi<RealType>(), tolerance); 
    BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(sqrt(3.14159265358979323846264338327950288419716939937510L * 2)), root_two_pi<RealType>(), tolerance); 
@@ -54,9 +55,115 @@ void test_spots(RealType)
 
 } // template <class RealType>void test_spots(RealType)
 
+void test_float_spots()
+{
+   // Basic sanity checks for constants in boost::math::float_constants::
+
+   float tolerance = boost::math::tools::epsilon<float>() * 2;
+
+   using namespace boost::math::float_constants;
+   BOOST_MATH_STD_USING
+
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(3.14159265358979323846264338327950288419716939937510L), pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(sqrt(3.14159265358979323846264338327950288419716939937510L)), root_pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(sqrt(3.14159265358979323846264338327950288419716939937510L/2)), root_half_pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(sqrt(3.14159265358979323846264338327950288419716939937510L * 2)), root_two_pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(sqrt(log(4.0L))), root_ln_four, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(2.71828182845904523536028747135266249775724709369995L), e, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(0.5), half, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(0.57721566490153286060651209008240243104259335L), euler, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(sqrt(2.0L)), root_two, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(log(2.0L)), ln_two, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(log(log(2.0L))), ln_ln_two, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(1)/3, third, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(2)/3, twothirds, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(0.14159265358979323846264338327950288419716939937510L), pi_minus_three, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(4. - 3.14159265358979323846264338327950288419716939937510L), four_minus_pi, tolerance); 
+#ifndef BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(pow((4 - 3.14159265358979323846264338327950288419716939937510L), 1.5L)), pow23_four_minus_pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(exp(-0.5L)), exp_minus_half, tolerance); 
+#else
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(pow((4 - 3.14159265358979323846264338327950288419716939937510), 1.5)), pow23_four_minus_pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<float>(exp(-0.5)), exp_minus_half, tolerance); 
+#endif
+
+} // template <class RealType>void test_spots(RealType)
+
+void test_double_spots()
+{
+   // Basic sanity checks for constants in boost::math::double_constants::
+
+   double tolerance = boost::math::tools::epsilon<double>() * 2;
+
+   using namespace boost::math::double_constants;
+   BOOST_MATH_STD_USING
+
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(3.14159265358979323846264338327950288419716939937510L), pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(sqrt(3.14159265358979323846264338327950288419716939937510L)), root_pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(sqrt(3.14159265358979323846264338327950288419716939937510L/2)), root_half_pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(sqrt(3.14159265358979323846264338327950288419716939937510L * 2)), root_two_pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(sqrt(log(4.0L))), root_ln_four, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(2.71828182845904523536028747135266249775724709369995L), e, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(0.5), half, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(0.57721566490153286060651209008240243104259335L), euler, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(sqrt(2.0L)), root_two, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(log(2.0L)), ln_two, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(log(log(2.0L))), ln_ln_two, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(1)/3, third, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(2)/3, twothirds, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(0.14159265358979323846264338327950288419716939937510L), pi_minus_three, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(4. - 3.14159265358979323846264338327950288419716939937510L), four_minus_pi, tolerance); 
+#ifndef BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(pow((4 - 3.14159265358979323846264338327950288419716939937510L), 1.5L)), pow23_four_minus_pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(exp(-0.5L)), exp_minus_half, tolerance); 
+#else
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(pow((4 - 3.14159265358979323846264338327950288419716939937510), 1.5)), pow23_four_minus_pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<double>(exp(-0.5)), exp_minus_half, tolerance); 
+#endif
+
+} // template <class RealType>void test_spots(RealType)
+
+void test_long_double_spots()
+{
+   // Basic sanity checks for constants in boost::math::long double_constants::
+
+   long double tolerance = boost::math::tools::epsilon<long double>() * 2;
+
+   using namespace boost::math::long_double_constants;
+   BOOST_MATH_STD_USING
+
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(3.14159265358979323846264338327950288419716939937510L), pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(sqrt(3.14159265358979323846264338327950288419716939937510L)), root_pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(sqrt(3.14159265358979323846264338327950288419716939937510L/2)), root_half_pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(sqrt(3.14159265358979323846264338327950288419716939937510L * 2)), root_two_pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(sqrt(log(4.0L))), root_ln_four, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(2.71828182845904523536028747135266249775724709369995L), e, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(0.5), half, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(0.57721566490153286060651209008240243104259335L), euler, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(sqrt(2.0L)), root_two, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(log(2.0L)), ln_two, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(log(log(2.0L))), ln_ln_two, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(1)/3, third, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(2)/3, twothirds, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(0.14159265358979323846264338327950288419716939937510L), pi_minus_three, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(4. - 3.14159265358979323846264338327950288419716939937510L), four_minus_pi, tolerance); 
+#ifndef BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(pow((4 - 3.14159265358979323846264338327950288419716939937510L), 1.5L)), pow23_four_minus_pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(exp(-0.5L)), exp_minus_half, tolerance); 
+#else
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(pow((4 - 3.14159265358979323846264338327950288419716939937510), 1.5)), pow23_four_minus_pi, tolerance); 
+   BOOST_CHECK_CLOSE_FRACTION(static_cast<long double>(exp(-0.5)), exp_minus_half, tolerance); 
+#endif
+
+} // template <class RealType>void test_spots(RealType)
+
 int test_main(int, char* [])
 {
    // Basic sanity-check spot values.
+
+   test_float_spots();
+   test_double_spots();
+   test_long_double_spots();
 
    // (Parameter value, arbitrarily zero, only communicates the floating point type).
    test_spots(0.0F); // Test float. OK at decdigits = 0 tolerance = 0.0001 %
