@@ -17,7 +17,10 @@
 #ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/and.hpp>
 #include <boost/mpl/int.hpp>
+#include <boost/type_traits/is_convertible.hpp>
 
 namespace boost{ namespace math
 {
@@ -39,37 +42,49 @@ namespace boost{ namespace math
 
    enum construction_method
    {
-      construct_from_float = 0,
-      construct_from_double = 1,
-      construct_from_long_double = 2,
-      construct_from_string = 3,
-      construct_from_calculation = 4,
+      construct_from_float = 1,
+      construct_from_double = 2,
+      construct_from_long_double = 3,
+      construct_from_string = 4,
    };
 
-   template <class Real>
+   //
+   // Max number of binary digits in the string representations
+   // of our constants:
+   //
+   BOOST_STATIC_CONSTANT(int, max_string_digits = (101 * 1000L) / 301L);
+
+   template <class Real, class Policy>
    struct construction_traits
    {
-      BOOST_STATIC_CONSTANT(construction_method, value = construct_from_string);
-   };
-   template <>
-   struct construction_traits<float>
-   {
-      BOOST_STATIC_CONSTANT(construction_method, value = construct_from_float);
-   };
-   template <>
-   struct construction_traits<double>
-   {
-      BOOST_STATIC_CONSTANT(construction_method, value = construct_from_double);
-   };
-   template <>
-   struct construction_traits<long double>
-   {
-      BOOST_STATIC_CONSTANT(construction_method, value = construct_from_long_double);
+   private:
+      typedef typename policies::precision<Real, Policy>::type t1;
+      typedef typename policies::precision<float, Policy>::type t2;
+      typedef typename policies::precision<double, Policy>::type t3;
+      typedef typename policies::precision<long double, Policy>::type t4;
+   public:
+      typedef typename mpl::if_<
+         mpl::and_<boost::is_convertible<float, Real>, mpl::bool_< t1::value <= t2::value>, mpl::bool_<0 != t1::value> >,
+         mpl::int_<construct_from_float>,
+         typename mpl::if_<
+            mpl::and_<boost::is_convertible<double, Real>, mpl::bool_< t1::value <= t3::value>, mpl::bool_<0 != t1::value> >,
+            mpl::int_<construct_from_double>,
+            typename mpl::if_<
+               mpl::and_<boost::is_convertible<long double, Real>, mpl::bool_< t1::value <= t4::value>, mpl::bool_<0 != t1::value> >,
+               mpl::int_<construct_from_long_double>,
+               typename mpl::if_<
+                  mpl::and_<mpl::bool_< t1::value <= max_string_digits>, mpl::bool_<0 != t1::value> >,
+                  mpl::int_<construct_from_string>,
+                  mpl::int_<t1::value>
+               >::type
+            >::type
+         >::type
+      >::type type;
    };
 
    #define BOOST_DEFINE_MATH_CONSTANT(name, x, y, exp)\
    /* Forward declaration of the calculation method, just in case it's not been provided yet */ \
-   template <class T> T BOOST_JOIN(calculate_, name)(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(T)); \
+   template <class T> T BOOST_JOIN(calculate_, name)(int BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T)); \
    /* The default implementations come next: */ \
    template <class T> inline T BOOST_JOIN(get_, name)(const mpl::int_<construct_from_string>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE(T))\
    {\
@@ -82,13 +97,13 @@ namespace boost{ namespace math
    { return BOOST_JOIN(x, BOOST_JOIN(e, exp)); }\
    template <class T> inline T BOOST_JOIN(get_, name)(const mpl::int_<construct_from_long_double>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
    { return BOOST_JOIN(BOOST_JOIN(x, BOOST_JOIN(e, exp)), L); }\
-   template <class T> inline T BOOST_JOIN(get_, name)(const mpl::int_<construct_from_calculation>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
-   { static const T result = BOOST_JOIN(calculate_, name)<T>(); return result; }\
+   template <class T, int N> inline T BOOST_JOIN(get_, name)(const mpl::int_<N>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
+   { static const T result = BOOST_JOIN(calculate_, name)<T>(N ? N : tools::digits<T>()); return result; }\
    /* The actual forwarding function: */ \
+   template <class T, class Policy> inline T name(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(T) BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(Policy))\
+   { return BOOST_JOIN(get_, name)<T>(typename construction_traits<T, Policy>::type()); }\
    template <class T> inline T name(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
    { return name<T, boost::math::policies::policy<> >(); }\
-   template <class T, class Policy> inline T name(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(T) BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(Policy))\
-   { return BOOST_JOIN(get_, name)<T>(mpl::int_<construction_traits<T>::value>()); }\
    /* Now the namespace specific versions: */ \
    } namespace float_constants{ static const float name = BOOST_JOIN(BOOST_JOIN(x, BOOST_JOIN(e, exp)), F); }\
    namespace double_constants{ static const double name = BOOST_JOIN(x, BOOST_JOIN(e, exp)); } \
