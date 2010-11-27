@@ -84,7 +84,7 @@ namespace boost{ namespace math
 
    #define BOOST_DEFINE_MATH_CONSTANT(name, x, y, exp)\
    /* Forward declaration of the calculation method, just in case it's not been provided yet */ \
-   template <class T> T BOOST_JOIN(calculate_, name)(int BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T)); \
+   template <class T, int N> T BOOST_JOIN(calculate_, name)(const mpl::int_<N>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T)); \
    /* The default implementations come next: */ \
    template <class T> inline T BOOST_JOIN(get_, name)(const mpl::int_<construct_from_string>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE(T))\
    {\
@@ -97,8 +97,8 @@ namespace boost{ namespace math
    { return BOOST_JOIN(x, BOOST_JOIN(e, exp)); }\
    template <class T> inline T BOOST_JOIN(get_, name)(const mpl::int_<construct_from_long_double>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
    { return BOOST_JOIN(BOOST_JOIN(x, BOOST_JOIN(e, exp)), L); }\
-   template <class T, int N> inline T BOOST_JOIN(get_, name)(const mpl::int_<N>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
-   { static const T result = BOOST_JOIN(calculate_, name)<T>(N ? N : tools::digits<T>()); return result; }\
+   template <class T, int N> inline T BOOST_JOIN(get_, name)(const mpl::int_<N>& n BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
+   { static const T result = BOOST_JOIN(calculate_, name)<T>(n); return result; }\
    /* The actual forwarding function: */ \
    template <class T, class Policy> inline T name(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(T) BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(Policy))\
    { return BOOST_JOIN(get_, name)<T>(typename construction_traits<T, Policy>::type()); }\
@@ -137,5 +137,11 @@ namespace boost{ namespace math
   } // namespace constants
 } // namespace math
 } // namespace boost
+
+//
+// We deliberately include this after all the declarations above,
+// that way the calculation routines can call on other constants:
+//
+#include <boost/math/constants/calculate_constants.hpp>
 
 #endif // BOOST_MATH_CONSTANTS_CONSTANTS_INCLUDED

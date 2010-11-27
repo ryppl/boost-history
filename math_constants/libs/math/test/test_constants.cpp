@@ -232,7 +232,7 @@ int test_main(int, char* [])
 #ifndef BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
    test_spots(0.0L); // Test long double.
 #if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x0582))
-   //test_spots(boost::math::concepts::real_concept(0.)); // Test real concept.
+   test_spots(boost::math::concepts::real_concept(0.)); // Test real concept.
 #endif
 #else
   std::cout << "<note>The long double tests have been disabled on this platform "
