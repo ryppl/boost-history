@@ -29,12 +29,41 @@ typedef boost::math::policies::policy<boost::math::policies::digits2<LDBL_MANT_D
 BOOST_STATIC_ASSERT((boost::is_same<boost::math::constants::construction_traits<boost::math::concepts::real_concept, real_concept_policy_1 >::type, boost::mpl::int_<(sizeof(double) == sizeof(long double) ? boost::math::constants::construct_from_double : boost::math::constants::construct_from_long_double) > >::value));
 BOOST_STATIC_ASSERT((boost::is_same<boost::math::constants::construction_traits<boost::math::concepts::real_concept, real_concept_policy_2 >::type, boost::mpl::int_<boost::math::constants::construct_from_string> >::value));
 
+//
+// We need to declare a conceptual type whose precision is unknown at
+// compile time, and is so enormous when checked at runtime, that we're
+// forced to calculate the values of the constants ourselves.
+//
+namespace boost{ namespace math{ namespace concepts{
+
+class big_real_concept : public real_concept
+{
+public:
+   big_real_concept() {}
+   template <class T>
+   big_real_concept(const T& t) : real_concept(t) {}
+};
+
+}
+namespace tools{
+
+template <>
+inline int digits<concepts::big_real_concept>(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(T))
+{
+   return 2 * boost::math::constants::max_string_digits;
+}
+
+}}}
+
 template <class RealType>
 void test_spots(RealType)
 {
    // Basic sanity checks for constants.
-
-   RealType tolerance = boost::math::tools::epsilon<RealType>() * 2;  // double
+   //
+   // Actual tolerance is never really smaller than epsilon for long double, even if some of our
+   // test types pretend otherwise:
+   //
+   RealType tolerance = std::max(static_cast<RealType>(boost::math::tools::epsilon<long double>()), boost::math::tools::epsilon<RealType>()) * 2;  // double
    std::cout << "Tolerance for type " << typeid(RealType).name()  << " is " << tolerance << "." << std::endl;
 
    //typedef typename boost::math::policies::precision<RealType, boost::math::policies::policy<> >::type t1;
@@ -53,14 +82,11 @@ void test_spots(RealType)
    BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(sqrt(log(4.0L))), root_ln_four<RealType>(), tolerance); 
    BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(2.71828182845904523536028747135266249775724709369995L), e<RealType>(), tolerance); 
    BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(0.5), half<RealType>(), tolerance); 
-   BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(0.57721566490153286060651209008240243104259335L), euler<RealType>(), tolerance); 
    BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(sqrt(2.0L)), root_two<RealType>(), tolerance); 
    BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(log(2.0L)), ln_two<RealType>(), tolerance); 
    BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(log(log(2.0L))), ln_ln_two<RealType>(), tolerance); 
    BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(1)/3, third<RealType>(), tolerance); 
    BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(2)/3, twothirds<RealType>(), tolerance); 
-   BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(0.14159265358979323846264338327950288419716939937510L), pi_minus_three<RealType>(), tolerance); 
-   BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(4. - 3.14159265358979323846264338327950288419716939937510L), four_minus_pi<RealType>(), tolerance); 
 #ifndef BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
    BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(pow((4 - 3.14159265358979323846264338327950288419716939937510L), 1.5L)), pow23_four_minus_pi<RealType>(), tolerance); 
    BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(exp(-0.5L)), exp_minus_half<RealType>(), tolerance); 
@@ -69,6 +95,23 @@ void test_spots(RealType)
    BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(exp(-0.5)), exp_minus_half<RealType>(), tolerance); 
 #endif
 
+   //
+   // Last of all come the test cases that behave differently if we're calculating the constants on the fly:
+   //
+   if(boost::math::tools::digits<RealType>() > boost::math::constants::max_string_digits)
+   {
+      // We have no implementation for eulers constant / takes too long to calculate.
+      BOOST_CHECK_THROW(euler<RealType>(), std::runtime_error);
+      // This suffers from cancelation error:
+      BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(4. - 3.14159265358979323846264338327950288419716939937510L), four_minus_pi<RealType>(), tolerance * 3); 
+      BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(0.14159265358979323846264338327950288419716939937510L), pi_minus_three<RealType>(), tolerance * 3); 
+   }
+   else
+   {
+      BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(0.57721566490153286060651209008240243104259335L), euler<RealType>(), tolerance); 
+      BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(4. - 3.14159265358979323846264338327950288419716939937510L), four_minus_pi<RealType>(), tolerance); 
+      BOOST_CHECK_CLOSE_FRACTION(static_cast<RealType>(0.14159265358979323846264338327950288419716939937510L), pi_minus_three<RealType>(), tolerance); 
+   }
 } // template <class RealType>void test_spots(RealType)
 
 void test_float_spots()
@@ -233,6 +276,7 @@ int test_main(int, char* [])
    test_spots(0.0L); // Test long double.
 #if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x0582))
    test_spots(boost::math::concepts::real_concept(0.)); // Test real concept.
+   test_spots(boost::math::concepts::big_real_concept(0.)); // Test real concept.
 #endif
 #else
   std::cout << "<note>The long double tests have been disabled on this platform "
