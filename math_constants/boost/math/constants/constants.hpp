@@ -21,6 +21,9 @@
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/type_traits/is_convertible.hpp>
+#ifdef BOOST_HAS_THREADS
+#  include <boost/thread/once.hpp>
+#endif
 
 namespace boost{ namespace math
 {
@@ -82,14 +85,29 @@ namespace boost{ namespace math
       >::type type;
    };
 
+#ifdef BOOST_HAS_THREADS
+#define BOOST_MATH_CONSTANT_THREAD_HELPER(name, prefix) \
+      boost::once_flag f = BOOST_ONCE_INIT;\
+      boost::call_once(f, &BOOST_JOIN(BOOST_JOIN(string_, get_), name)<T>);
+#else
+#define BOOST_MATH_CONSTANT_THREAD_HELPER(name, prefix)
+#endif
+
    #define BOOST_DEFINE_MATH_CONSTANT(name, x, y, exp)\
+   namespace detail{\
    /* Forward declaration of the calculation method, just in case it's not been provided yet */ \
    template <class T, int N> T BOOST_JOIN(calculate_, name)(const mpl::int_<N>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T)); \
+   \
    /* The default implementations come next: */ \
-   template <class T> inline T BOOST_JOIN(get_, name)(const mpl::int_<construct_from_string>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE(T))\
+   template <class T> inline T BOOST_JOIN(string_get_, name)(BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE(T))\
    {\
       static const T result = ::boost::lexical_cast<T>(BOOST_STRINGIZE(BOOST_JOIN(BOOST_JOIN(x, y), BOOST_JOIN(e, exp))));\
       return result;\
+   }\
+   template <class T> inline T BOOST_JOIN(get_, name)(const mpl::int_<construct_from_string>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE(T))\
+   {\
+      BOOST_MATH_CONSTANT_THREAD_HELPER(name, string_)\
+      return BOOST_JOIN(string_get_, name)<T>();\
    }\
    template <class T> inline T BOOST_JOIN(get_, name)(const mpl::int_<construct_from_float>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
    { return BOOST_JOIN(BOOST_JOIN(x, BOOST_JOIN(e, exp)), F); }\
@@ -97,13 +115,27 @@ namespace boost{ namespace math
    { return BOOST_JOIN(x, BOOST_JOIN(e, exp)); }\
    template <class T> inline T BOOST_JOIN(get_, name)(const mpl::int_<construct_from_long_double>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
    { return BOOST_JOIN(BOOST_JOIN(x, BOOST_JOIN(e, exp)), L); }\
-   template <class T, int N> inline T BOOST_JOIN(get_, name)(const mpl::int_<N>& n BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
+   /* This one is for very high precision that is none the less known at compile time: */ \
+   template <class T, int N> inline T BOOST_JOIN(compute_get_, name)(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(mpl::int_<N>) BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
    { static const T result = BOOST_JOIN(calculate_, name)<T>(n); return result; }\
+   template <class T, int N> inline T BOOST_JOIN(get_, name)(const mpl::int_<N>& n BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
+   {\
+      BOOST_MATH_CONSTANT_THREAD_HELPER(name, compute_)\
+      BOOST_JOIN(compute_get_, name)<T, N>(); \
+   }\
+   /* This one is for true arbitary precision, which may well vary at runtime: */ \
+   template <class T> inline T BOOST_JOIN(get_, name)(const mpl::int_<0>& n BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
+   { return tools::digits<T>() > max_string_digits ? BOOST_JOIN(calculate_, name)<T>(n) : BOOST_JOIN(get_, name)<T>(mpl::int_<construct_from_string>()); }\
+   } /* namespace detail */ \
+   \
+   \
    /* The actual forwarding function: */ \
    template <class T, class Policy> inline T name(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(T) BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(Policy))\
-   { return BOOST_JOIN(get_, name)<T>(typename construction_traits<T, Policy>::type()); }\
+   { return detail:: BOOST_JOIN(get_, name)<T>(typename construction_traits<T, Policy>::type()); }\
    template <class T> inline T name(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
    { return name<T, boost::math::policies::policy<> >(); }\
+   \
+   \
    /* Now the namespace specific versions: */ \
    } namespace float_constants{ static const float name = BOOST_JOIN(BOOST_JOIN(x, BOOST_JOIN(e, exp)), F); }\
    namespace double_constants{ static const double name = BOOST_JOIN(x, BOOST_JOIN(e, exp)); } \

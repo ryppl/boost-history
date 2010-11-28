@@ -6,7 +6,7 @@
 #ifndef BOOST_MATH_CALCULATE_CONSTANTS_CONSTANTS_INCLUDED
 #define BOOST_MATH_CALCULATE_CONSTANTS_CONSTANTS_INCLUDED
 
-namespace boost{ namespace math{ namespace constants{
+namespace boost{ namespace math{ namespace constants{ namespace detail{
 
 template <class T, int N> 
 inline T calculate_pi(const mpl::int_<N>&BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))
@@ -71,6 +71,7 @@ inline T calculate_half(const mpl::int_<N>&BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_T
 template <class T, int N> 
 inline T calculate_euler(const mpl::int_<N>&BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))
 {
+   throw std::runtime_error("A true arbitrary precision Euler's constant is not available - it's too expensive to calculate on the fly - this constant is only supported up to 100 decimal digits.");
    return 0;
 }
 
@@ -154,6 +155,6 @@ inline T calculate_one_div_root_two_pi(const mpl::int_<N>&BOOST_MATH_APPEND_EXPL
    return static_cast<T>(1) / root_two_pi<T, policies::policy<policies::digits2<N> > >();
 }
 
-}}} // namespaces
+}}}} // namespaces
 
 #endif // BOOST_MATH_CALCULATE_CONSTANTS_CONSTANTS_INCLUDED
