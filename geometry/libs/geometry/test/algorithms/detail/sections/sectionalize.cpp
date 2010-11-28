@@ -22,14 +22,13 @@
 #include <test_common/test_point.hpp>
 
 
-namespace bg = boost::geometry;
 
 
 template <int DimensionCount, typename Geometry>
 void test_sectionalize_part()
 {
     typedef typename bg::point_type<Geometry>::type point_type;
-    typedef bg::box<point_type> box_type;
+    typedef bg::model::box<point_type> box_type;
 
     typedef bg::sections<box_type, DimensionCount> sections_type;
     typedef typename boost::range_value<sections_type>::type section_type;
@@ -50,7 +49,7 @@ void test_sectionalize_part()
     int ndi = 0;
     sectionalize_part::apply(sections, section, index, ndi, geometry);
     // There should not yet be anything generated, because it is only ONE point
-    
+
     geometry.push_back(bg::make<point_type>(2, 2));
     sectionalize_part::apply(sections, section, index, ndi, geometry);
 
@@ -62,7 +61,7 @@ void test_sectionalize(G const& g, std::size_t section_count,
         std::string const& index_check, std::string const& dir_check)
 {
     typedef typename bg::point_type<G>::type point;
-    typedef bg::box<point> box;
+    typedef bg::model::box<point> box;
     typedef bg::sections<box, DimensionCount> sections;
 
     sections s;
@@ -149,51 +148,73 @@ void test_sectionalize(std::string const& wkt,
 template <typename P>
 void test_all()
 {
-    test_sectionalize_part<1, bg::linestring<P> >();
+    test_sectionalize_part<1, bg::model::linestring<P> >();
 
-    test_sectionalize<bg::linestring<P> >(
+    test_sectionalize<bg::model::linestring<P> >(
         "LINESTRING(1 1,2 2,3 0,5 0,5 8)",
         4, "0..1|1..2|2..3|3..4", "+ +|+ -|+ .|. +",
         2, "0..3|3..4", "+|.");
 
-    test_sectionalize<bg::polygon<P> >(
+    // These strings mean:
+    // 0..1|1..2 -> first section: [0, 1] | second section [1, 2], etc
+    // + +|+ -   -> X increases, Y increases | X increases, Y decreases
+    // +|.       -> (only X considered) X increases | X constant
+
+    test_sectionalize<bg::model::polygon<P> >(
         "POLYGON((0 0,0 7,4 2,2 0,0 0))",
         4, "0..1|1..2|2..3|3..4", ". +|+ -|- -|- .",
         //            .   +   -   -   -> 3 sections
         3, "0..1|1..2|2..4", ".|+|-");
 
-    test_sectionalize<bg::polygon<P> >
+    // CCW polygon - orientation is not relevant for sections,
+    // they are just generated in the order they come.
+    test_sectionalize<bg::model::polygon<P, false> >(
+        "POLYGON((0 0,2 0,4 2,0 7,0 0))",
+        4, "0..1|1..2|2..3|3..4", "+ .|+ +|- +|. -",
+        //            .   +   -   -   -> 3 sections
+        3, "0..2|2..3|3..4", "+|-|.");
+
+    // Open polygon - closeness IS relevant for sections, the
+    // last section which is not explicit here should be included.
+    // So results are the same as the pre-previous one.
+    test_sectionalize<bg::model::polygon<P, true, false> >(
+        "POLYGON((0 0,0 7,4 2,2 0))",
+        4, "0..1|1..2|2..3|3..4", ". +|+ -|- -|- .",
+        //            .   +   -   -   -> 3 sections
+        3, "0..1|1..2|2..4", ".|+|-");
+
+    test_sectionalize<bg::model::polygon<P> >
         ("polygon((2.0 1.3, 2.4 1.7, 2.8 1.8, 3.4 1.2, 3.7 1.6,3.4 2.0, 4.1 3.0, 5.3 2.6, 5.4 1.2, 4.9 0.8, 2.9 0.7,2.0 1.3))",
         8, "0..2|2..3|3..4|4..5|5..6|6..8|8..10|10..11", "+ +|+ -|+ +|- +|+ +|+ -|- -|- +",
         4, "0..4|4..5|5..8|8..11", "+|-|+|-");
 
 
-    test_sectionalize<bg::polygon<P> >(
+    test_sectionalize<bg::model::polygon<P> >(
         "POLYGON((3 1,2 2,1 3,2 4,3 5,4 4,5 3,4 2,3 1))",
         4, "0..2|2..4|4..6|6..8", "- +|+ +|+ -|- -",
         //        -   -   -   +   +   +   +   -   - -> 3 sections
         3, "0..2|2..6|6..8", "-|+|-");
 
     // With holes
-    test_sectionalize<bg::polygon<P> >(
+    test_sectionalize<bg::model::polygon<P> >(
         "POLYGON((3 1,2 2,1 3,2 4,3 5,4 4,5 3,4 2,3 1), (3 2,2 2,3 4,3 2))",
         7, "0..2|2..4|4..6|6..8|0..1|1..2|2..3", "- +|+ +|+ -|- -|- .|+ +|. -",
         //        -   -   -   +   +   +   +   -   -          -   +   . -> 6 sections
         6, "0..2|2..6|6..8|0..1|1..2|2..3", "-|+|-|-|+|.");
 
     // With duplicates
-    test_sectionalize<bg::linestring<P> >(
+    test_sectionalize<bg::model::linestring<P> >(
         "LINESTRING(1 1,2 2,3 0,3 0,5 0,5 8)",
         5, "0..1|1..2|2..3|3..4|4..5", "+ +|+ -|DUP DUP|+ .|. +",
         4, "0..2|2..3|3..4|4..5", "+|DUP|+|.");
     // With two subsequent duplicate segments
-    test_sectionalize<bg::linestring<P> >(
+    test_sectionalize<bg::model::linestring<P> >(
         "LINESTRING(1 1,2 2,3 0,3 0,3 0,5 0,5 0,5 0,5 0,5 8)",
         6, "0..1|1..2|2..4|4..5|5..8|8..9", "+ +|+ -|DUP DUP|+ .|DUP DUP|. +",
         5, "0..2|2..4|4..5|5..8|8..9", "+|DUP|+|DUP|.");
 
 
-    typedef bg::box<P> B;
+    typedef bg::model::box<P> B;
     test_sectionalize<2, B>(bg::make<B>(0,0,4,4),
             4, "0..1|1..2|2..3|3..4", ". +|+ .|. -|- .");
     test_sectionalize<1, B>(bg::make<B>(0,0,4,4),
@@ -201,7 +222,7 @@ void test_all()
 
     return;
     // Buffer-case
-    test_sectionalize<bg::polygon<P> >(
+    test_sectionalize<bg::model::polygon<P> >(
     "POLYGON((-1.1713 0.937043,2.8287 5.93704,2.90334 6.02339,2.98433 6.10382,2.98433 6.10382,3.07121 6.17786,3.16346 6.24507,3.16346 6.24507,3.16346 6.24507,3.26056 6.30508,3.36193 6.35752,3.36193 6.35752,3.46701 6.40211,3.57517 6.43858,3.57517 6.43858,3.57517 6.43858,3.57517 6.43858,3.68579 6.46672,3.79822 6.48637,3.79822 6.48637,3.91183 6.49741,4.02595 6.49978,4.02595 6.49978,4.02595 6.49978,4.13991 6.49346,4.25307 6.4785,4.25307 6.4785,4.36476 6.45497,4.47434 6.42302,4.47434 6.42302,4.47434 6.42302,4.47434 6.42302,7.47434 5.42302,6.84189 3.52566,4.39043 4.68765,0.390434 -0.312348,-1.1713 0.937043))",
         8, "0..2|2..3|3..4|4..5|5..6|6..8|8..10|10..11", "+ +|+ -|+ +|- +|+ +|+ -|- -|- +",
         4, "0..4|4..5|5..8|8..11", "+|-|+|-");
@@ -209,8 +230,8 @@ void test_all()
 
 int test_main(int, char* [])
 {
-    //test_all<bg::point_xy<float> >();
-    test_all<boost::geometry::point_xy<double> >();
+    //test_all<bg::model::point_xy<float> >();
+    test_all<bg::model::point_xy<double> >();
 
     return 0;
 }

@@ -19,7 +19,7 @@
 #include <boost/geometry/geometries/cartesian2d.hpp>
 #include <boost/geometry/geometries/point.hpp>
 #include <boost/geometry/geometries/segment.hpp>
-#include <boost/geometry/iterators/segment_iterator.hpp>
+#include <boost/geometry/iterators/segment_returning_iterator.hpp>
 #include <boost/geometry/extensions/gis/io/wkt/read_wkt.hpp>
 
 template <typename C>
@@ -28,26 +28,26 @@ void test_linestring(std::string const& wkt, std::string const& expected)
     typedef C point_list;
     typedef typename C::value_type point;
     typedef typename C::iterator base_iterator;
-    typedef boost::geometry::segment_iterator<base_iterator, point> segment_iterator;
-    typedef typename segment_iterator::value_type segment;
-    typedef boost::geometry::linestring<point> linestring;
+    typedef bg::segment_returning_iterator<base_iterator, point> segment_returning_iterator;
+    typedef typename segment_returning_iterator::value_type segment;
+    typedef bg::model::linestring<point> linestring;
 
     linestring g;
-    boost::geometry::read_wkt(wkt, g);
+    bg::read_wkt(wkt, g);
 
     point_list v;
     std::copy(g.begin(), g.end(), std::back_insert_iterator<point_list>(v));
     BOOST_CHECK_EQUAL(g.size(), v.size());
 
-    segment_iterator it(v.begin(), v.end());
-    segment_iterator end(v.end());
+    segment_returning_iterator it(v.begin(), v.end());
+    segment_returning_iterator end(v.end());
 
     std::ostringstream oss;
     while (it != end)
     {
         segment const& s = *it;
-        oss << boost::geometry::get<0>(s.first) << boost::geometry::get<1>(s.first)
-            << boost::geometry::get<0>(s.second) << boost::geometry::get<1>(s.second);
+        oss << bg::get<0>(s.first) << bg::get<1>(s.first)
+            << bg::get<0>(s.second) << bg::get<1>(s.second);
         ++it;
     }
     BOOST_CHECK_EQUAL(oss.str(), expected);
@@ -56,7 +56,7 @@ void test_linestring(std::string const& wkt, std::string const& expected)
 int test_main(int, char* [])
 {
     // Test std::vector
-    typedef std::vector<boost::geometry::point_2d> points_v;
+    typedef std::vector<bg::model::point_2d> points_v;
     test_linestring<points_v>("linestring empty", "");
     test_linestring<points_v>("linestring ()", "");
     test_linestring<points_v>("linestring (1 1)", "");
@@ -65,7 +65,7 @@ int test_main(int, char* [])
     test_linestring<points_v>("linestring (1 1, 2 2, 3 3, 4 4, 5 5, 6 6)", "11222233334444555566");
 
     // Test std::list
-    typedef std::list<boost::geometry::point_2d> points_l;
+    typedef std::list<bg::model::point_2d> points_l;
     test_linestring<points_l>("linestring empty", "");
     test_linestring<points_l>("linestring ()", "");
     test_linestring<points_l>("linestring (1 1)", "");
