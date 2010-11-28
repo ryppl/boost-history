@@ -12,7 +12,8 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/checking/check_equal.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
-#include <boost/assign/v2/put/modifier/repeat.hpp>
+#include <boost/assign/v2/put/modifier/ext/repeat.hpp>
+#include <boost/assign/v2/put/modifier/ext/incr_lookup.hpp>
 #include <boost/assign/v2/put/compose/functor/composer.hpp>
 
 #include <libs/assign/v2/test/put/compose/functor/composer.h>
@@ -32,20 +33,30 @@ namespace xxx_composer{
         typedef boost::mpl::int_<1> one_;
         typedef boost::mpl::int_<2> two_;
         {
-        	using namespace adaptor;
             int x = -1;
-            put_compose_aux::composer<>();
+			typedef put_compose_aux::composer<> composer_;
 
             BOOST_AUTO(
             	tmp,
-            	( ( put_compose_aux::composer<>() %  ( _repeat = 3 ) )( x ) )
+            	( ( composer_() %  ( _repeat = 3 ) )( x ) )
             );
             int n = tmp
                 .parameters()
-                .static_lookup( zero_() ).unwrap();
+                .static_lookup( zero_() ).get();
             BOOST_ASSIGN_V2_CHECK_EQUAL( n, 3 );
 
         }
+		{
+			typedef put_compose_aux::composer<> composer_;
+            BOOST_AUTO(
+            	tmp,
+            	( composer_() % ( _incr_lookup = 3 ) ) 
+            );
+            int n = tmp
+                .parameters()
+                .static_lookup( zero_() ).get();
+            BOOST_ASSIGN_V2_CHECK_EQUAL( n, 3 );
+		}
         {
             int a1, b1, c1, d1;//, e1, f1, g1, h1;
             using namespace checking::constants;

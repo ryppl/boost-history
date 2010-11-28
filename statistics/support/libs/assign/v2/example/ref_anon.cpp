@@ -10,21 +10,22 @@
 #include <vector>
 #include <libs/assign/v2/example/include.h>
 #include <libs/assign/v2/example/foo.h>
+#include <libs/assign/v2/example/constants.h>
 #include <libs/assign/v2/example/ref_anon.h>
 
 namespace example_assign_v2{
 namespace xxx_ref_anon{
 
-	void run()
+	void run(std::ostream& os)
     {
 
         using namespace boost::assign::v2;
-        std::cout << "---xxx_ref_anon " << std::endl;
+        os << "---xxx_ref_anon " << std::endl;
         {
-			std::cout << "ref::assign_copy::csv_anon" << std::endl;
+			os << "ref::assign_copy::csv_anon";
         	//[assign_copy_read
             namespace ns = ref::assign_copy;
-            boost::for_each( ns::csv_anon( x, y, z ), printer(std::cout) );
+            boost::for_each( ns::csv_anon( x, y, z ), printer(os) );
             //outputs (1,0)(NULL,0)(1,5)
             //]
         	//[assign_copy_write
@@ -59,10 +60,10 @@ namespace xxx_ref_anon{
             result2_ result2 = result1( z );
             //]
             //[anon_read_print
-                boost::for_each( result2, printer(std::cout) );
+                boost::for_each( result2, printer(os) );
             //]
 		}
-        std::cout << std::endl;
+        os << std::endl;
     }
 
 }// xxx_ref_anon

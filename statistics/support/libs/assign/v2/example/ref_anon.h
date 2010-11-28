@@ -9,11 +9,12 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_EXAMPLE_REF_ANON_ER_2010_H
 #define BOOST_ASSIGN_V2_EXAMPLE_REF_ANON_ER_2010_H
+#include <ostream>
 
 namespace example_assign_v2{
 namespace xxx_ref_anon{
 
-	void run();
+	void run(std::ostream& os);
 
 }// xxx_ref_anon
 }// example_assign_v2

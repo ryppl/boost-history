@@ -18,6 +18,7 @@
 #include <boost/preprocessor/comparison/greater.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/seq/first_n.hpp>
+#include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 
 #include <boost/format.hpp>
@@ -26,9 +27,8 @@
 
 #include <boost/assign/list_of.hpp>
 #include <boost/assign/list_inserter.hpp>
-#define BOOST_ASSIGN_V2_LIMIT_CSV_ARITY 100
+#define BOOST_ASSIGN_V2_LIMIT_CSV_ARITY 128
 #include <boost/assign/v2.hpp>
-
 
 #include <libs/assign/v2/speed/tools.h>
 #include <libs/assign/v2/speed/anon_put_ref.h>
@@ -52,16 +52,16 @@ void run(std::ostream& os)
 
 	//[types
     typedef std::vector<int> elem_; // T
-    // This STL container is of the same type as that internally used by the 
-    // anon container of values, so we have a common basis for comparing 
+    // This STL container is of the same type as that internally used by the
+    // anon container of values, so we have a common basis for comparing
     // their exec time.
     typedef std::deque< elem_ > cont_;
     //]
     //[sim_param
     // t is a random size element, with max size :
-    const int elem_size = 100;			
+    const int elem_size = 100;
     // Number of loops over which exec time is summed
-    const int n_loops = 1000 * 1000;	
+    const int n_loops = 1000 * 1000;
     //]
 
 // ----]
@@ -69,11 +69,10 @@ void run(std::ostream& os)
 // The number of values is n :
 // 	fun(t[0], ....,t[n-1])
 // 	fun( t[0] )...( t[n-1] )
-// The mapping N -> n is  
+// The mapping N -> n is
 // [1-> 1, 2-> 2, 3->4, 4->8, 5->16, 6->32, 7->64, 8->128]
-// Warning : limit_N > 6 may suffer long compile times
-//#define limit_N 6 // uncomment when you're actually going to run the test
-#define limit_N 0 // uncomment when you don't want to compile this file
+// Warning : limit_N > 6 may cause a long compilation time
+#define limit_N 0
 #if BOOST_PP_GREATER(limit_N, 8)
 #error
 #endif
@@ -94,7 +93,7 @@ void run(std::ostream& os)
     	f % n_loops;
         os << f.str() << std::endl;
     }
-    
+
 #define SEQ (a0)(a1)(a2)(a3)(a4)(a5)(a6)(a7)(a8)(a9)(a10)(a11)(a12)(a13)(a14)\
 (a15)(a16)(a17)(a18)(a19)(a20)(a21)(a22)(a23)(a24)(a25)(a26)(a27)(a28)(a29)\
 (a30)(a31)(a32)(a33)(a34)(a35)(a36)(a37)(a38)(a39)(a40)(a41)(a42)(a43)(a44)\
@@ -172,13 +171,13 @@ void run(std::ostream& os)
     }\
 /**/
 
-    cont_ cont; 
+    cont_ cont;
 
     str_ str_n = "[";
     str_ str_t = "[";
-    
+
     for(int i = 0; i < limit_N ; i++)
-    {	
+    {
         f_ f( "%1%" ); f % ( i + 1 );
         str_n += "%" + f.str() + "% ";
         str_t += "%" + f.str() + "% " + "s ";
@@ -188,9 +187,10 @@ void run(std::ostream& os)
 
     //os << str_n << std::endl;
     //os << str_t << std::endl;
-        
+
     str_ str_stl_push_back = "vec.push_back( t0 ); ... vec.push_back( tN-1 );";
 
+    str_ str_v1_cref_list_of = "cref_list_of<N>( t0 )...( tN-1 )";
     str_ str_v1_list_of = "list_of( t0 )...( tN-1 )";
     str_ str_v1_push_back = "push_back( vec )( t0 )...( tN-1 )";
 
@@ -202,12 +202,13 @@ void run(std::ostream& os)
     str_ str_v2_put = "put( vec )( t0 )...( tN-1 )";
     str_ str_v2_adaptor_csv_put = "vec | _csv_put(t0, ...,tN-1)";
     str_ str_v2_adaptor_put = "vec | _put( t0 )...( tN-1 )";
-        
+
 	f_ f_n( str_( "n = " ) + str_n );
 
     f_ f_stl_push_back( str_stl_push_back + str_t );
 
     f_ f_v1_list_of( str_v1_list_of + str_t );
+    f_ f_v1_cref_list_of( str_v1_cref_list_of + str_t );
     f_ f_v1_push_back( str_v1_push_back + str_t );
 
     f_ f_v2_csv_anon( str_v2_csv_anon + str_t );
@@ -226,7 +227,7 @@ void run(std::ostream& os)
 // param4 : v2_adaptor_put
 // param5 : v2_adaptor_csv_put
 // param6 : v1_push_back
-    
+
 #define MACRO(N)\
     os << "N = " << N << " . . . ";\
     {\
@@ -246,6 +247,9 @@ void run(std::ostream& os)
     	MACRO1( boost::assign::list_of, N, 1 )\
         f_v1_list_of % elapsed;\
         \
+    	MACRO1( boost::assign::cref_list_of<N>, N, 1 )\
+        f_v1_cref_list_of % elapsed;\
+        \
     	MACRO1( boost::assign::v2::csv_anon, N, 0 )\
         f_v2_csv_anon % elapsed;\
         \
@@ -261,18 +265,18 @@ void run(std::ostream& os)
         f_n % N;\
     }\
 /**/
-	
+
     double elapsed = 0;
 // -----------------------------------N------------------n----------
 // Dont uncomment. Modify instead limit_N
-BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(1, limit_N), MACRO(1) )		
-BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(2, limit_N), MACRO(2) )		
-BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(3, limit_N), MACRO(4) )		
-BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(4, limit_N), MACRO(8) )		
+BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(1, limit_N), MACRO(1) )
+BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(2, limit_N), MACRO(2) )
+BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(3, limit_N), MACRO(4) )
+BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(4, limit_N), MACRO(8) )
 BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(5, limit_N), MACRO(16) )
-BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(6, limit_N), MACRO(32) )		
-BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(7, limit_N), MACRO(64) )		
-BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(8, limit_N), MACRO(128) )	
+BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(6, limit_N), MACRO(32) )
+BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(7, limit_N), MACRO(64) )
+BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(8, limit_N), MACRO(128) )
 
 #undef limit_n
 #undef SEQ
@@ -287,6 +291,7 @@ BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(8, limit_N), MACRO(128) )
 	os << f_stl_push_back.str() << std::endl;
 
     os << f_v1_list_of.str() << std::endl;
+    os << f_v1_cref_list_of.str() << std::endl;
     os << f_v1_push_back.str() << std::endl;
 
     os << f_v2_csv_anon.str() << std::endl;

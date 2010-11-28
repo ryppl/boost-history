@@ -12,16 +12,18 @@
 #include <boost/array.hpp>
 #include <libs/assign/v2/example/include.h>
 #include <libs/assign/v2/example/foo.h>
+#include <libs/assign/v2/example/constants.h>
 #include <libs/assign/v2/example/chain.h>
 
 namespace example_assign_v2{
 namespace xxx_chain{
 
-	void run()
+	void run(std::ostream& os)
     {
     	using namespace boost::assign::v2;
-		std::cout << "chain_read" << std::endl;
+        os << "---xxx_chain";
 		{
+			os << "chain_read";
         	//[chain_read
             typedef boost::array<T, 1> cont1_; cont1_ cont1; cont1[0] = x; 
             typedef std::list<T> cont3_; cont3_ cont3; cont3.push_back( z );
@@ -29,7 +31,7 @@ namespace xxx_chain{
             namespace ns = ref::assign_copy;
             boost::for_each(
                 cont1 | _chain( ns::csv_anon( y ) ) | _chain( cont3 ),
-                printer( std::cout )
+                printer( os )
             );
             // outputs (1,0)(NULL,0)(1,5)
         	//]

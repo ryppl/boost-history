@@ -9,32 +9,33 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/example/include.h>
 #include <libs/assign/v2/example/foo.h>
+#include <libs/assign/v2/example/constants.h>
 #include <libs/assign/v2/example/anon.h>
 
 namespace example_assign_v2{
 namespace xxx_anon{
 
-	void run()
+	void run(std::ostream& os)
     {
 		using namespace boost::assign::v2;
-        std::cout << "---xxx_anon " << std::endl;
+        os << "---xxx_anon " << std::endl;
         {
-			std::cout << "csv_anon" << ' ';
+			os << "csv_anon" << ' ';
             //[csv_anon
-            boost::for_each( csv_anon<T>( x, y ,z ), printer(std::cout) );
+            boost::for_each( csv_anon<T>( x, y ,z ), printer(os) );
             // outputs (1,0)(NULL,0)(1,5)
             //]
-            std::cout << std::endl;
-			std::cout << "anon" << ' ';
+            os << std::endl;
+			os << "anon" << ' ';
             //[anon
             boost::for_each( 
                 (anon<T>( _nil ) % _push_front)( a )()( a, b ), 
-                printer(std::cout) 
+                printer(os) 
             );
             // outputs (1,5)(NULL,0)(1,0)
             //]
         }
-        std::cout << std::endl;
+        os << std::endl;
     }
 
 }// xxx_anon

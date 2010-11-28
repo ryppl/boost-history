@@ -11,26 +11,28 @@
 #include <vector>
 #include <libs/assign/v2/example/include.h>
 #include <libs/assign/v2/example/foo.h>
+#include <libs/assign/v2/example/constants.h>
 #include <libs/assign/v2/example/put_range.h>
 
 namespace example_assign_v2{
 namespace xxx_put_range{
 
-	void run()
+	void run(std::ostream& os)
     {
 		using namespace boost::assign::v2;
-        std::cout << "---xxx_put_range " << std::endl;
+        os << "---xxx_put_range " << std::endl;
         {
         	//[put_range_queue
             typedef std::vector<T> from_; from_ from( 3 );
             from[0] = x; from[1] = y; from[2] = z;
-            typedef std::queue<T> to_; to_ to;
+            typedef std::queue<T> to_; // FIFO
+            to_ to;
             using namespace adaptor;
-            BOOST_ASSERT( (to | _put_range( from ) ).front() == x );
+            BOOST_ASSERT( ( to | _put_range( from ) ).front() == x );
             BOOST_ASSERT( to.back() == z );
             //]
         }
-        std::cout << std::endl;
+        os << std::endl;
     }
 
 }// xxx_put_range

@@ -10,12 +10,14 @@
 #ifndef BOOST_ASSIGN_V2_EXAMPLE_INCLUDE_ER_2010_H
 #define BOOST_ASSIGN_V2_EXAMPLE_INCLUDE_ER_2010_H
 
+// Exlc. from markup bec. already included in section Getting started
+#include <boost/assign/v2.hpp> 
+
 //[include_statements
 #include <iostream>
 #include <utility> // std::pair
 #include <boost/assert.hpp>
 #include <boost/range/algorithm.hpp>
-#include <boost/assign/v2.hpp>
 //]
 
 #endif

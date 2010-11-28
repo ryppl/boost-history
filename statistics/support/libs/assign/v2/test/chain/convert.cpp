@@ -17,9 +17,10 @@
 #include <boost/array.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/chain.hpp>
+#include <boost/assign/v2/put/range.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
-#include <boost/assign/v2/detail/checking/check_convert.hpp>
+// #include <boost/assign/v2/detail/checking/check_convert.hpp> // TODO remove
 #include <libs/assign/v2/test/chain/convert.h>
 
 namespace test_assign_v2{
@@ -45,37 +46,41 @@ namespace xxx_convert{
                 cont3.push_back( g );
                 cont3.push_back( h );
             }
+
+#define MACRO do_check( from | adaptor::put_convert<to_>() );
+            
             BOOST_AUTO(from, cont1 && cont2 && cont3);
             {	// Conversion
         		using namespace checking::container;
         		{
         			typedef boost::array<int,8> to_;
-                    BOOST_ASSIGN_V2_check_convert
+                    MACRO
         		}
         		{
         			typedef std::deque<int> to_;
-                    BOOST_ASSIGN_V2_check_convert
+                    MACRO
         		}
         		{
         			typedef std::list<int> to_;
-                    BOOST_ASSIGN_V2_check_convert
+                    MACRO
         		}
         		{
         			typedef std::queue<int> to_;
-                    BOOST_ASSIGN_V2_check_convert
+                    MACRO
         		}
         		{
         			typedef std::set<int> to_;
-                    BOOST_ASSIGN_V2_check_convert
+                    MACRO
         		}
         		{
         			typedef std::stack<int> to_;
-                    BOOST_ASSIGN_V2_check_convert
+                    MACRO
         		}
 	        	{
     	    		typedef std::vector<int> to_;
-                    BOOST_ASSIGN_V2_check_convert
+                    MACRO
         		}
+#undef MACRO
             }
         }
     }

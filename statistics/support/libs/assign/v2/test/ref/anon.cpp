@@ -22,9 +22,10 @@
 #include <boost/assign/v2/detail/checking/check_equal.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
-#include <boost/assign/v2/detail/checking/check_convert.hpp> // TODO
+//#include <boost/assign/v2/detail/checking/check_convert.hpp> // TODO remove
 #include <boost/assign/v2/detail/checking/array.hpp>
 #include <boost/assign/v2/detail/checking/relational_op.hpp>
+#include <boost/assign/v2/put/range.hpp>
 #include <boost/assign/v2/ref/anon/functor.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <libs/assign/v2/test/ref/anon.h>
@@ -105,6 +106,7 @@ namespace xxx_anon{
             BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[6] , &b );
             BOOST_ASSIGN_V2_CHECK_EQUAL( &ar[7] , &b );
 		}
+#define MACRO do_check( from | adaptor::put_convert<to_>() );
         {
         	// Conversion
 			typedef ref::assign_copy::nth_result_of::anon<
@@ -119,33 +121,33 @@ namespace xxx_anon{
         	using namespace checking::container;
         	{
                 typedef boost::array<int,8> to_;
-                BOOST_ASSIGN_V2_check_convert
+                MACRO
         	}
         	{
                 typedef std::deque<int> to_;
-                BOOST_ASSIGN_V2_check_convert
+                MACRO
         	}
         	{
                 typedef std::list<int> to_;
-                BOOST_ASSIGN_V2_check_convert
+                MACRO
         	}
         	{
                 typedef std::queue<int> to_;
-                BOOST_ASSIGN_V2_check_convert
+                MACRO
         	}
         	{
                 typedef std::set<int> to_;
-                BOOST_ASSIGN_V2_check_convert
+                MACRO
         	}
         	{
         		typedef std::stack<int> to_;
-                BOOST_ASSIGN_V2_check_convert
+                MACRO
         	}
 	        {
     	    	typedef std::vector<int> to_;
-                BOOST_ASSIGN_V2_check_convert
+                MACRO
         	}
-
+#undef MACRO
         }
         { 	// Relational
             using namespace checking::constants;

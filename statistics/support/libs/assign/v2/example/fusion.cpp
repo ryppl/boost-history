@@ -18,7 +18,7 @@
 namespace example_assign_v2{
 namespace xxx_fusion{
 
-    void run()
+    void run(std::ostream& os)
     {
     	using namespace boost::assign::v2;
         typedef int t0_;

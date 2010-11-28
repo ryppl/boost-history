@@ -18,6 +18,7 @@
 #include <boost/assign/v2/ref/fusion/assign_copy.hpp>
 #include <boost/assign/v2/put/compose/functor/composer.hpp>
 #include <boost/assign/v2/put/compose/functor/forward_seq_args.hpp>
+#include <boost/assign/v2/put/sub.hpp>
 
 #include <libs/assign/v2/test/put/compose/functor/forward_seq_args.h>
 

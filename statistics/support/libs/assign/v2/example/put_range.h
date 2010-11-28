@@ -9,11 +9,12 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_EXAMPLE_PUT_RANGE_ER_2010_H
 #define BOOST_ASSIGN_V2_EXAMPLE_PUT_RANGE_ER_2010_H
+#include <ostream>
 
 namespace example_assign_v2{
 namespace xxx_put_range{
 
-	void run();
+	void run(std::ostream& os);
 
 }// xxx_put_range
 }// example_assign_v2

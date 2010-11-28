@@ -43,33 +43,34 @@ namespace xxx_convert{
             from.push_back( g );
             from.push_back( h );
         }
+        using namespace adaptor;
         {
         	typedef boost::array<int,8> to_;
-            chk_cont::do_check( convert<to_>( from ) );
+            chk_cont::do_check( from | put_convert<to_>() );
         }
         {
         	typedef std::deque<int> to_;
-            chk_cont::do_check( convert<to_>( from ) );
+            chk_cont::do_check( from | put_convert<to_>() );
         }
         {
         	typedef std::list<int> to_;
-            chk_cont::do_check( convert<to_>( from ) );
+            chk_cont::do_check( from | put_convert<to_>() );
         }
         {
         	typedef std::queue<int> to_;
-            chk_cont::do_check( convert<to_>( from ) );
+            chk_cont::do_check( from | put_convert<to_>() );
         }
         {
         	typedef std::set<int> to_;
-            chk_cont::do_check( convert<to_>( from ) );
+            chk_cont::do_check( from | put_convert<to_>() );
         }
         {
         	typedef std::stack<int> to_;
-            chk_cont::do_check( convert<to_>( from ) );
+            chk_cont::do_check( from | put_convert<to_>() );
         }
         {
         	typedef std::vector<int> to_;
-            chk_cont::do_check( convert<to_>( from ) );
+            chk_cont::do_check( from | put_convert<to_>() );
         }
     }
 

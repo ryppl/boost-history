@@ -26,7 +26,7 @@ namespace xxx_modulo_op{
 		{	// Queue + Repeat
             typedef std::queue<int> cont_;
             cont_ cont;
-            ( put( cont ) % ( _repeat = 3 ) ) ( -1 );
+            ( put( cont ) % ( _repeat = 3 ) )( -1 );
             BOOST_ASSIGN_V2_CHECK_EQUAL( cont.front(), -1); cont.pop();
             BOOST_ASSIGN_V2_CHECK_EQUAL( cont.front(), -1); cont.pop();
             BOOST_ASSIGN_V2_CHECK_EQUAL( cont.front(), -1); cont.pop();

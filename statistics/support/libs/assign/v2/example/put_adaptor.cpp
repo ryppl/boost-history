@@ -15,28 +15,28 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <libs/assign/v2/example/include.h>
 #include <libs/assign/v2/example/foo.h>
+#include <libs/assign/v2/example/constants.h>
 #include <libs/assign/v2/example/put_adaptor.h>
 
 namespace example_assign_v2{
 namespace xxx_put_adaptor{
 
-	void run()
+	void run(std::ostream& os)
     {
 		using namespace boost::assign::v2;
-        std::cout << "---xxx_put_adaptor " << std::endl;
+        os << "---xxx_put_adaptor " << std::endl;
         {
-            std::cout << "vector" << ' ';
+            os << "vector" << ' ';
             //[vector
             typedef std::vector<T> cont_;
             cont_ cont;
             using namespace adaptor;
-            boost::for_each( cont | _csv_put( x, y, z ), printer(std::cout) );
+            boost::for_each( cont | _csv_put( x, y, z ), printer(os) );
             //outputs (1,0)(NULL,0)(1,5)
             //]
-            std::cout << std::endl;
+            os << std::endl;
         }
         {
-            std::cout << "map" << ' ';
             //[map
             typedef std::map<S,T> cont_;
             typedef cont_::value_type key_data_;
@@ -58,71 +58,70 @@ namespace xxx_put_adaptor{
                 ( cont | _put (key_z, z)(key_y, y)(key_x, x) )[key_x] == x
             );
 			//]            
-            std::cout << std::endl;
         }
         {
-            std::cout << "static_array" << ' ';
+            os << "static_array" << ' ';
 			//[static_array
             typedef boost::array<T,3> cont_;
             cont_ cont;
             using namespace adaptor;
-            boost::for_each( cont | _csv_put( x, y, z ), printer(std::cout) );
+            boost::for_each( cont | _csv_put( x, y, z ), printer(os) );
         	//]
-            std::cout << std::endl;
+            os << std::endl;
         }
         {
-            std::cout << "ptr_vector" << ' ';
+            os << "ptr_vector" << ' ';
         	//[ptr_vector
             typedef boost::ptr_vector<T> cont_; cont_ cont;
             using namespace adaptor;
             boost::for_each( 
-            	cont | _csv_put( x, y, z ), 
-                printer(std::cout) 
+                cont | _csv_put( x, y, z ), 
+                printer(os) 
             );
             //]
-            std::cout << std::endl;
+            os << std::endl;
         }
         {
-            std::cout << "list" << ' ';
+            os << "list" << ' ';
             //[list
             typedef std::list<T> cont_;
             cont_ cont;
             using namespace adaptor;
             boost::for_each( 
                 cont | (_csv_put % _push_front)( x, y, z ), 
-                printer(std::cout) 
+                printer(os) 
             );
             //outputs (1,5)(NULL,0)(1,0)
             //]
-            std::cout << std::endl;
+            os << std::endl;
         }
         {
-            std::cout << "in_place" << ' ';
+            os << "in_place" << ' ';
             //[in_place
             typedef std::vector<T> cont_;
             cont_ cont;
             using namespace adaptor;
             boost::for_each( 
                 cont | _csv_put( foo( a ), foo(), foo( a, b ) ), 
-                printer(std::cout) 
+                printer(os) 
             );
             //]
-            std::cout << std::endl;
+            os << std::endl;
         }
         {
-            std::cout << "forward_to_constructor" << ' ';
+            os << "forward_to_constructor" << ' ';
             //[forward_to_constructor
             typedef std::vector<T> cont_;
             cont_ cont;
             using namespace adaptor;
             boost::for_each( 
                 cont | _put( a )()( a, b ), 
-                printer(std::cout) 
+                printer(os) 
             );
             //]
 
-            std::cout << std::endl;
-            std::cout << "forward_to_make_foo" << ' ';
+            os << std::endl;
+            os << "forward_to_make_foo" << ' ';
 
             //[forward_to_make_foo
             int a0 = -1, a1 = 0, a2 = 1;
@@ -131,13 +130,13 @@ namespace xxx_put_adaptor{
                 cont | (
                     _put % ( _fun = make_foo() )
                 )( a0, b )( a1, b )( a2, b ),
-                printer(std::cout)
+                printer(os)
             );
             //outputs (-1,5)(0,5)(1,5)
             //]
 
-            std::cout << std::endl;
-            std::cout << "forward_to_bind" << ' ';
+            os << std::endl;
+            os << "forward_to_bind" << ' ';
 
             //[forward_to_bind
             cont.clear();
@@ -146,23 +145,44 @@ namespace xxx_put_adaptor{
                 cont | (
                     _csv_put % (_fun = bind<T>( make_foo(), _1, b)  )
                 )(a0, a1, a2), 
-                printer(std::cout) 
+                printer(os) 
             );
             //]
-            
-            std::cout << std::endl;
-            std::cout << "repeat_simpl" << ' ';
-            //[repeat_simple
-            cont.clear();
-            boost::for_each( 
-                cont | ( _csv_put % ( _repeat = 2  ) )( x ),
-                printer(std::cout) 
-            );
-            // outputs (1,0)(1,0)
-            //]
+            os << std::endl;
+            os << "repeat_simpl" << ' ';
             {
-	            std::cout << std::endl;
-            	std::cout << "complex_ex1" << ' ';
+                //[repeat_simple
+                typedef std::vector<T> cont_;
+                cont_ cont;
+                using namespace adaptor;
+                boost::for_each( 
+                    cont | ( _csv_put % ( _repeat = 2  ) )( x ),
+                    printer(os) 
+                );
+                // outputs (1,0)(1,0)
+                //]
+            }
+            {
+	            os << std::endl;
+            	os << "incr_lookup" << ' ';
+                //[incr_lookup
+                typedef std::map<S,int> cont_;
+                cont_ cont;
+                using namespace adaptor;
+                cont | (
+                    _csv_put % ( _incr_lookup = 2 ) 
+                )( key_z, key_x, key_y );
+                os 
+                    << '('
+                    << cont[key_x] << ',' 
+                    << cont[key_y] << ',' 
+                    << cont[key_z] << ')';
+                // outputs (2,2,2)
+                //]
+            }
+            {
+	            os << std::endl;
+            	os << "complex_ex1" << ' ';
             	//[complex_ex1
                 typedef std::list<T> cont_;	
                 cont_ cont;
@@ -173,7 +193,7 @@ namespace xxx_put_adaptor{
                     )()( b, a ) /*(NULL,0)(5,1)*/ | ( 
                         _csv_put % ( _fun = bind<T>( make_foo(), _1, b) )
                     )( a0, a1, a2 ), /*(-1,5)(0,5)(1,5)*/
-                    printer(std::cout) 
+                    printer(os) 
                 );
                 //]
                 //[complex_ex1_answer
@@ -181,7 +201,7 @@ namespace xxx_put_adaptor{
                 //]
 			}
         }
-        std::cout << std::endl;
+        os << std::endl;
     }
 
 }// xxx_put_adaptor

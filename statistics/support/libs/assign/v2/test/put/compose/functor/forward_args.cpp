@@ -21,6 +21,7 @@
 #include <boost/assign/v2/ref/fusion_matrix/container.hpp>
 #include <boost/assign/v2/ref/fusion_matrix/nth_result_of.hpp>
 #include <boost/assign/v2/put/compose/functor/forward_args.hpp>
+#include <boost/assign/v2/put/sub.hpp>
 
 #include <libs/assign/v2/test/put/compose/functor/forward_args.h>
 
