@@ -26,42 +26,42 @@ namespace distinct_values{
 // If the value types of the two ranges differ, their references must be 
 // converted to value_type. In particular, lvalue cannot be preserved.
 
-#define m(T1,T2)															   \
-    template<typename T>													   \
-    void do_check(typename boost::enable_if<boost::is_same<T,T1> >::type* = 0) \
-    {																		   \
-        typedef T1 t1_;														   \
-        typedef T2 t2_;														   \
-        typedef std::vector<T1> vec1_;                                         \
-        typedef std::vector<T2> vec2_;                                         \
-        vec1_ vec1, vec3;                                                      \
-        vec2_ vec2;                                                            \
-        {																       \
-            namespace ns = v2::checking::constants;			                   \
-            vec1.push_back( ns::a ); 									       \
-            vec1.push_back( ns::b );									       \
-            vec2.push_back( ns::c ); 									       \
-            vec2.push_back( ns::d );									       \
-            vec2.push_back( ns::e );									       \
-            vec3.push_back( ns::f ); 									       \
-            vec3.push_back( ns::g ); 									       \
-            vec3.push_back( ns::h );									       \
-        }																       \
-        namespace chk = checking::container;                                   \
-        {                                                                      \
-        	using namespace adaptor;										   \
-    		chk::do_check( vec1 | _chain( vec2 ) | _chain( vec3 ) );           \
-        }                                                                      \
-    }														                   \
+#define MACRO(T1,T2)\
+    template<typename T>\
+    void do_check(typename boost::enable_if<boost::is_same<T,T1> >::type* = 0)\
+    {\
+        typedef T1 t1_;\
+        typedef T2 t2_;\
+        typedef std::vector<T1> vec1_;\
+        typedef std::vector<T2> vec2_;\
+        vec1_ vec1, vec3;\
+        vec2_ vec2;\
+        {\
+            namespace ns = v2::checking::constants;\
+            vec1.push_back( ns::a );\
+            vec1.push_back( ns::b );\
+            vec2.push_back( ns::c );\
+            vec2.push_back( ns::d );\
+            vec2.push_back( ns::e );\
+            vec3.push_back( ns::f );\
+            vec3.push_back( ns::g );\
+            vec3.push_back( ns::h );\
+        }\
+        namespace chk = checking::container;\
+        {\
+        	using namespace adaptor;\
+    		chk::do_check( vec1 | _chain( vec2 ) | _chain( vec3 ) );\
+        }\
+    }\
 /**/
 
 
-m(short  , int)
-m(int    , long)
-m(float  , double)
-m(double , long double)
+MACRO(short  , int)
+MACRO(int    , long)
+MACRO(float  , double)
+MACRO(double , long double)
 
-#undef m
+#undef MACRO
 
 }// distinct_values
 }// chain

@@ -26,8 +26,6 @@ namespace assign{
 namespace v2{
 namespace chain_traits{
 
-    // TODO use is_lvalue_iterator or is_read_iterator
-
     template<typename U1,typename U2,typename Tag = use_default> 
     struct use_lvalue
     {
