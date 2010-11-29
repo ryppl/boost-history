@@ -5,11 +5,17 @@
 
 # Run the example tests.
 
-# First create an alias for the boost unit test framework. You don't need this
+# Import the testing module.
+
+using testing ;
+
+# Create an alias for the boost unit test framework. You don't need this
 # if you're using minimal or lightweight test.
 
 use-project /boost/test : $(BOOST_ROOT)/libs/test/build ;
 alias boost_unit_test : /boost/test//boost_unit_test_framework/<link>static ;
+
+# Define the test suite.
 
 test-suite "example test"
     :
