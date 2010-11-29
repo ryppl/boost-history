@@ -36,7 +36,7 @@ tag operator BOOST_TT_TRAIT_OP (const any&, const any&);
 
 namespace {
 	template <typename T>
-	typename ::boost::remove_cv<T>::type make();
+	typename ::boost::remove_cv<T>::type &make();
 }
 
 template < typename LHS, typename RHS >

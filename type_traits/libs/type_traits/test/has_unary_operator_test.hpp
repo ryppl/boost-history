@@ -24,6 +24,8 @@ struct internal { ret operator BOOST_TT_TRAIT_OP () const; };
 struct external { };
 ret operator BOOST_TT_TRAIT_OP (const external&);
 
+class internal_private { ret operator BOOST_TT_TRAIT_OP () const; };
+
 struct returns_int { int operator BOOST_TT_TRAIT_OP (); };
 
 struct returns_void { void operator BOOST_TT_TRAIT_OP (); };
@@ -34,18 +36,18 @@ struct returns_double { double operator BOOST_TT_TRAIT_OP (); };
 
 struct returns_string { std::string operator BOOST_TT_TRAIT_OP (); };
 
-//struct convertible_to_bool { operator bool () const ; } ;
-//struct returns_convertible_to_bool { convertible_to_bool operator BOOST_TT_TRAIT_OP () ; } ;
+//struct convertible_to_bool { operator bool () const; };
+//struct returns_convertible_to_bool { convertible_to_bool operator BOOST_TT_TRAIT_OP (); };
 
-class Base1 { } ;
-class Derived1 : public Base1 { } ;
+class Base1 { };
+class Derived1 : public Base1 { };
 
 bool operator BOOST_TT_TRAIT_OP (const Base1&) { return true; }
 
-class Base2 { } ;
+class Base2 { };
 struct Derived2 : public Base2 {
-	Derived2(int) ; // to check if it works with a class that is not default constructible
-} ;
+	Derived2(int); // to check if it works with a class that is not default constructible
+};
 
 bool operator BOOST_TT_TRAIT_OP (const Derived2&) { return true; }
 
@@ -99,39 +101,41 @@ void run() {
 	TEST_TR(double, tag, false);
 	TEST_TR(long double, tag, false);
 
-	TEST_T(without, false) ;
-	TEST_T(internal, true) ;
-	TEST_T(external, true) ;
-	TEST_T(returns_int, true) ;
-	TEST_T(returns_void, true) ;
-	TEST_T(returns_void_star, true) ;
-	TEST_T(returns_double, true) ;
-	TEST_T(returns_string, true) ;
-//	TEST_T(convertible_to_bool, true) ;
-	TEST_T(Base1, true) ;
-	TEST_T(Derived1, true) ;
-	TEST_T(Base2, false) ;
-	TEST_T(Derived2, true) ;
+	TEST_T(without, false);
+	TEST_T(internal, true);
+	TEST_T(external, true);
+//	compile time error
+//	TEST_T(internal_private, false);
+	TEST_T(returns_int, true);
+	TEST_T(returns_void, true);
+	TEST_T(returns_void_star, true);
+	TEST_T(returns_double, true);
+	TEST_T(returns_string, true);
+//	TEST_T(convertible_to_bool, true);
+	TEST_T(Base1, true);
+	TEST_T(Derived1, true);
+	TEST_T(Base2, false);
+	TEST_T(Derived2, true);
 
-	TEST_TR(without, bool, false) ;
-	TEST_TR(internal, bool, false) ;
-	TEST_TR(internal, ret, true) ;
-	TEST_TR(external, bool, false) ;
-	TEST_TR(external, ret, true) ;
-	TEST_TR(returns_int, bool, true) ;
-	TEST_TR(returns_int, int, true) ;
-	TEST_TR(returns_void, void, true) ;
-	TEST_TR(returns_void, bool, false) ;
-	TEST_TR(returns_void_star, bool, true) ;
-	TEST_TR(returns_double, bool, true) ;
-	TEST_TR(returns_double, double, true) ;
-	TEST_TR(returns_string, bool, false) ;
-	TEST_TR(returns_string, std::string, true) ;
-//	TEST_TR(convertible_to_bool, bool, true) ;
-	TEST_TR(Base1, bool, true) ;
-	TEST_TR(Derived1, bool, true) ;
-	TEST_TR(Base2, bool, false) ;
-	TEST_TR(Derived2, bool, true) ;
+	TEST_TR(without, bool, false);
+	TEST_TR(internal, bool, false);
+	TEST_TR(internal, ret, true);
+	TEST_TR(external, bool, false);
+	TEST_TR(external, ret, true);
+	TEST_TR(returns_int, bool, true);
+	TEST_TR(returns_int, int, true);
+	TEST_TR(returns_void, void, true);
+	TEST_TR(returns_void, bool, false);
+	TEST_TR(returns_void_star, bool, true);
+	TEST_TR(returns_double, bool, true);
+	TEST_TR(returns_double, double, true);
+	TEST_TR(returns_string, bool, false);
+	TEST_TR(returns_string, std::string, true);
+//	TEST_TR(convertible_to_bool, bool, true);
+	TEST_TR(Base1, bool, true);
+	TEST_TR(Derived1, bool, true);
+	TEST_TR(Base2, bool, false);
+	TEST_TR(Derived2, bool, true);
 }
 }
 
