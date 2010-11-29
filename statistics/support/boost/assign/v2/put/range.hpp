@@ -12,6 +12,5 @@
 
 #include <boost/assign/v2/put/range/adaptor.hpp>
 #include <boost/assign/v2/put/range/convert.hpp>
-// #include <boost/assign/v2/put/range.hpp> // TODO remove
 
 #endif
