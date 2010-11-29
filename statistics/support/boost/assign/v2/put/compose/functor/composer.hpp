@@ -31,7 +31,7 @@
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #include <boost/assign/v2/ref/wrapper/cpp0x.hpp>
-#include <boost/boost/assign/v2/temporary/variadic_vector.hpp>
+#include <boost/assign/v2/temporary/variadic_vector.hpp>
 #else
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/cat.hpp>
