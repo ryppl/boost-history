@@ -19,9 +19,6 @@
 #include <boost/range/reference.hpp>
 #include <boost/assign/v2/ref/wrapper/framework.hpp>
 
-// Note : In Boost.Assign.v2, this is deprecated but it could be used 
-// elsewhere.
-
 namespace boost{
 namespace assign{ 
 namespace v2{

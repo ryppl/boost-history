@@ -13,6 +13,8 @@
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/decay.hpp>
 
+// TODO (maybe) remove file
+
 namespace boost{
 namespace assign{
 namespace v2{

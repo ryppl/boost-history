@@ -7,50 +7,27 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_XXX_EXT_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_XXX_EXT_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_EXT_XXX_ER_2010_HPP
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_EXT_XXX_ER_2010_HPP
+#include <boost/preprocessor/cat.hpp>
+#include <boost/mpl/apply.hpp>
+#include <boost/mpl/quote.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_base_of.hpp>
+#include <boost/assign/v2/put/generic/base.hpp>
+#include <boost/assign/v2/put/modifier/ext/result_of_modulo.hpp>
 
-namespace boost{
-namespace assign{
-namespace v2{
-namespace result_of_modulo_ext{
-
-    template<typename T, template<typename> class Tag>
-    struct same_fun : result_of_modulo_aux::traits<T, Tag>{
-
-		typedef traits<T,Tag> super_t;
-		typedef result_of_modulo::new_modifier<T> meta_;
-
-        typedef typename boost::mpl::apply1<meta_, 
-        	typename super_t::new_tag_
-        >::type type;
-
-		template<typename P>
-        static type call(const T& t, P const& p)
-        {
-            return type( 
-            	t.unwrap(), 
-                t.fun, 
-                p.pop() 
-            );
-        }
-
-    };
-
-}// result_of_modulo_aux
-}// v2
-}// assign
-}// boost
-
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_XXX_EXT(Param)\
-namespace boost{\
-namespace assign{\
-namespace v2{\
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_EXT_XXX(Param)\
 namespace result_of_modulo{\
 \
 	template<typename T>\
-	struct Param \
-    	: result_of_modulo_aux::same_fun<T, modulo_tag::Param>\
+	struct Param\
+    	: boost::mpl::apply1<\
+    		result_of_modulo::ext_generic<T>\
+        	, boost::mpl::quote2<\
+            	put_parameter::Param\
+            >\
+        >\
     {};\
 \
 }\
@@ -73,9 +50,6 @@ namespace put_aux{\
 }\
 namespace{\
 	put_aux::Param const BOOST_PP_CAT(_,Param) = put_aux::Param();\
-}\
-}\
-}\
 }\
 /**/
 

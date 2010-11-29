@@ -12,7 +12,7 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/iterator/iterator_traits.hpp>
-#include <boost/range/detail/chain_iterator.hpp>
+#include <boost/assign/v2/temporary/chain_iterator.hpp> // TODO temporary
 #include <boost/range/detail/demote_iterator_traversal_tag.hpp>
 #include <boost/assign/v2/detail/type_traits/meta_convert.hpp>
 

@@ -16,12 +16,6 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/assign/v2/ref/detail/unwrap/iterator.hpp>
 
-// Note : In Boost.Assign.v2, this is deprecated but it could be used 
-// elsewhere.
-
-
-// See iterator.hpp
-
 namespace boost{
 namespace assign{ 
 namespace v2{

@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_TYPE_TRAITS_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TYPE_TRAITS_ER_2010_HPP
 
-#include <boost/assign/v2/detail/type_traits/decay.hpp>
+// #include <boost/assign/v2/detail/type_traits/decay.hpp> // TODO (maybe) remove
 #include <boost/assign/v2/detail/type_traits/has_value_type.hpp>
 #include <boost/assign/v2/detail/type_traits/is_stl_pair.hpp>
 #include <boost/assign/v2/detail/type_traits/meta_convert.hpp>

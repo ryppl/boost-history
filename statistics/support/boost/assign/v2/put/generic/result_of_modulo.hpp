@@ -18,17 +18,20 @@ namespace assign{
 namespace v2{
 namespace result_of_modulo{
 
+	//   Specialize on T's that derives from crtp
 	template<typename T> struct new_fun{
     
     	template<typename F> struct apply{};
     
     };
 
+	//   Specialize on T's that derives from crtp
 	template<typename T> struct new_modifier{
     
     	template<typename Tag> struct apply{};
 
     };
+
 	template<typename T> struct new_fun_modifier
     {
     

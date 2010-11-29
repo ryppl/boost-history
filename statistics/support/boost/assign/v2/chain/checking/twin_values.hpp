@@ -13,6 +13,7 @@
 #include <vector>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/range/algorithm/copy.hpp>
 #include <boost/assign/v2/detail/checking/range.hpp>
 #include <boost/assign/v2/ref/detail/unwrap/range.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>

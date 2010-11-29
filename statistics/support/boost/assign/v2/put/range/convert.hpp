@@ -14,7 +14,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace convert_aux
+namespace put_convert_aux
 {
 	template<typename To>
 	struct adaptor
@@ -23,7 +23,7 @@ namespace convert_aux
     };
 
 	template<typename From,typename To>
-	To operator|(From& from, convert_aux::adaptor<To> const& dummy)
+	To operator|(From& from, put_convert_aux::adaptor<To> const& dummy)
     {
     	To to;
     	return to | v2::adaptor::_put_range( from );
@@ -33,21 +33,27 @@ namespace convert_aux
 namespace adaptor{
 
 	template<typename To>
-	convert_aux::adaptor<To> convert(){ return convert_aux::adaptor<To>(); }
+	put_convert_aux::adaptor<To> put_convert()
+    {
+    	return put_convert_aux::adaptor<To>();
+    }
 
 }// adaptor
 
+// TODO remove
+/*
 	template<typename To,typename From>
     To convert(From const& from){
-    	return from | adaptor::convert<To>();
+    	return from | adaptor::put_convert<To>();
     }
-
+*/
 }// v2
 }// assign
 }// boost
 
 #endif
 
+// TODO remove
 // ------ CLASS MEMBER ---- //
 
 #ifndef BOOST_ASSIGN_V2_CONVERT_CONVERT_MF
@@ -56,7 +62,7 @@ namespace adaptor{
    To convert()const \
    { \
 		namespace ns = boost::assign::v2; \
-       	return (*this) | adaptor::convert<To>(); \
+       	return (*this) | ns::adaptor::put_convert<To>(); \
    } \
 /**/
 #endif
@@ -67,7 +73,7 @@ namespace adaptor{
    operator To ()const \
    { \
 		namespace ns = boost::assign::v2; \
-       	return (*this) | adaptor::convert<To>(); \
+       	return (*this) | ns::adaptor::put_convert<To>(); \
    } \
 /**/
 

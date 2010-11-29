@@ -17,7 +17,7 @@
 #include <boost/range/size_type.hpp>
 #include <boost/range/iterator_range.hpp> //iterator_range_detail::
 #include <boost/assign/v2/put.hpp>
-#include <boost/assign/v2/put/range.hpp>
+//#include <boost/assign/v2/put/range.hpp> // TODO remove
 #include <boost/assign/v2/put/generic/result_of_modulo.hpp>
 #include <boost/assign/v2/put/generic/crtp.hpp>
 #include <boost/assign/v2/detail/relational_op.hpp>
@@ -159,8 +159,9 @@ namespace anon_aux{
 
         // Convert
 
-        BOOST_ASSIGN_V2_CONVERT_CONVERT_MF
-        BOOST_ASSIGN_V2_CONVERT_OPERATOR_MF
+		// TODO remove
+        // BOOST_ASSIGN_V2_CONVERT_CONVERT_MF
+        // BOOST_ASSIGN_V2_CONVERT_OPERATOR_MF
 
        impl_& unwrap()const{ return this->impl; }
 

@@ -9,7 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_RANGE_ADAPTOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_RANGE_ADAPTOR_ER_2010_HPP
-#include <boost/assign/v2/put/range/modifier.hpp>
+//#include <boost/assign/v2/put/range/modifier.hpp> // TODO remove
+#include <boost/range/algorithm/for_each.hpp>
+#include <boost/assign/v2/put/sub/make.hpp>
+#include <boost/assign/v2/ref/wrapper/copy.hpp>
 
 namespace boost{
 namespace assign{
@@ -17,10 +20,16 @@ namespace v2{
 namespace put_range_aux
 {
 	template<typename From>
-	struct adaptor1
+	class adaptor1 : ref::wrapper<ref::assign_tag::copy, From const>
     {
-    	adaptor1(From const& from):value(from){}
-        mutable From const& value;
+        typedef ref::wrapper<ref::assign_tag::copy, From const> super_t;
+
+        public:
+
+    	adaptor1(From const& from):super_t(from){}
+
+        From const& from()const{ return this->unwrap(); }
+
         private:
         adaptor1();
     };
@@ -37,18 +46,20 @@ namespace put_range_aux
     };
 
 	template<typename To,typename From>
-	To& operator|(To& to, put_range_aux::adaptor1<From> const& from)
+	To& operator|(To& to, put_range_aux::adaptor1<From> const& h)
     {
-		typedef typename put_range_aux::deduce_operation<To>::type tag_;
-    	put_range_aux::put_range( tag_(), from.value, to );
+		// TODO remove
+		// typedef typename put_range_aux::deduce_operation<To>::type tag_;
+    	// put_range_aux::put_range( tag_(), h.from(), to );
+
+        ::boost::for_each( h.from(), put( to ) );
         return to;
     }
 
 }// put_range_aux
 namespace adaptor
 {
-	put_range_aux::adaptor2 const _put_range
-    	= put_range_aux::adaptor2();	
+	put_range_aux::adaptor2 const _put_range = put_range_aux::adaptor2();
 
 }// adaptor
 }// v2

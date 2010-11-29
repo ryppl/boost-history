@@ -18,9 +18,6 @@
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/assign/v2/ref/detail/unwrap/reference.hpp>
 
-// Note : In Boost.Assign.v2, this is deprecated but it could be used 
-// elsewhere.
-
 // Calling
 // 	*unwrap_iterator( it );
 // is equivalent to

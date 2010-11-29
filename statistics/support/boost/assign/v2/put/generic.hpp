@@ -10,11 +10,14 @@
 #ifndef BOOST_ASSIGN_V2_PUT_GENERIC_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_GENERIC_ER_2010_HPP
 
+#include <boost/assign/v2/put/generic/concept_modifier.hpp>
+#include <boost/assign/v2/put/generic/concept_sub.hpp>
 #include <boost/assign/v2/put/generic/crtp.hpp>
 #include <boost/assign/v2/put/generic/expose_fun.hpp>
 #include <boost/assign/v2/put/generic/expose_modifier.hpp>
 #include <boost/assign/v2/put/generic/new_fun.hpp>
 #include <boost/assign/v2/put/generic/new_modifier.hpp>
+#include <boost/assign/v2/put/generic/parameter.hpp>
 #include <boost/assign/v2/put/generic/result_of_modulo.hpp>
 
 #endif

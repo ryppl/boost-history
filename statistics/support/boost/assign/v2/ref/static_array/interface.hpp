@@ -28,7 +28,7 @@
 #include <boost/assign/v2/ref/wrapper/crtp.hpp>
 #include <boost/assign/v2/ref/detail/unwrap/range.hpp>
 #include <boost/assign/v2/detail/relational_op.hpp>
-#include <boost/assign/v2/put/range/convert.hpp>
+// #include <boost/assign/v2/put/range/convert.hpp> // TODO remove
 
 namespace boost{
 namespace assign{
@@ -63,9 +63,6 @@ namespace static_array_aux{
 
     };
                    
-    // Requirements: 
-    // D.impl()				Returns an array of ref-wrappers
-    // D.impl()const		Returns a const array of ref-wrappers
     template<std::size_t N, typename Tag, typename T, typename D>
     class interface 
       :  public relational_op_aux::crtp<
@@ -164,8 +161,9 @@ namespace static_array_aux{
         void assign(lvalue_& val){ this->assign_impl<lvalue_>( val ); }
         void assign(rvalue_& val){ this->assign_impl<rvalue_>( val ); }
 
-		BOOST_ASSIGN_V2_CONVERT_CONVERT_MF
-		BOOST_ASSIGN_V2_CONVERT_OPERATOR_MF
+		// TODO remove
+		// BOOST_ASSIGN_V2_CONVERT_CONVERT_MF
+		// BOOST_ASSIGN_V2_CONVERT_OPERATOR_MF
 
         // Relational op
 

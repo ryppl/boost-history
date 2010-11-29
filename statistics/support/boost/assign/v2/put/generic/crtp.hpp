@@ -18,12 +18,14 @@
 #include <boost/assign/v2/detail/type_traits/container/is_ptr_container.hpp>
 #include <boost/assign/v2/detail/functor.hpp>
 #include <boost/assign/v2/detail/keyword.hpp>
+#include <boost/assign/v2/detail/pp/forward.hpp>
 
 #include <boost/assign/v2/put/modifier.hpp>
 #include <boost/assign/v2/put/generic/result_of_modulo.hpp>
 #include <boost/assign/v2/put/generic/expose_modifier.hpp>
 #include <boost/assign/v2/put/generic/expose_fun.hpp>
 #include <boost/assign/v2/put/generic/base.hpp>
+#include <boost/assign/v2/put/generic/concept_modifier.hpp>
 
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -62,9 +64,10 @@ namespace put_aux{
 
     };
 
-	// Requirements:
-    // 	d.unwrap() 				returns a reference to V&
-    // 	D d(U v, F const& f);   Constructs an object, d, of type D.
+	// In order for a class X, to derive from put_aux::crtp<>, it has to model
+	// concept_sub::Pre3, with respect to container V, functor F and Tag. It 
+    // then models concept_sub::Post
+    // 
     // Usually, f is passed to the crtp. U = V& or V const& depending on need.
     // Traits are deprecated but a use may be find in the future.
     template<typename V,typename F, typename Tag, typename D, typename Traits>
@@ -178,14 +181,31 @@ BOOST_PP_REPEAT_FROM_TO(
 		template<typename T>
         result_type arg_deduct(T* t)const
         {
+        	typedef put_concept::ModifierImpl<modifier_, V, T*> concept_;
+            BOOST_CONCEPT_ASSERT(( concept_ ));
 			this->modifier.impl( this->derived().unwrap(), t );
             return this->derived();
         }
 
+		template<typename T>
+		void check_modifier( BOOST_ASSIGN_V2_forward_param(T, t) )const
+        {
+        	typedef put_concept::ModifierImpl<modifier_, V, 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+            	T&&
+#else
+				T&
+#endif                                
+            > concept_;
+            BOOST_CONCEPT_ASSERT(( concept_ ));
+        }
+
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+
 		template<typename T>
         result_type arg_deduct(T&& t)const
         {
+			check_modifier( t );
 			this->modifier.impl(
                 this->derived().unwrap(),
                 std::forward<T>( t )
@@ -196,6 +216,7 @@ BOOST_PP_REPEAT_FROM_TO(
 		template<typename T>
         result_type arg_deduct(T& t)const
         {
+			check_modifier( t );
 			this->modifier.impl( this->derived().unwrap(), t );
             return this->derived();
         }
@@ -203,6 +224,7 @@ BOOST_PP_REPEAT_FROM_TO(
 		template<typename T>
         result_type arg_deduct(T const& t)const
         {
+			check_modifier( t );
 			this->modifier.impl( this->derived().unwrap(), t );
             return this->derived();
         }

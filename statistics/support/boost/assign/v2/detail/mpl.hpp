@@ -10,7 +10,6 @@
 #ifndef BOOST_ASSIGN_V2_TYPE_TRAITS_MPL_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TYPE_TRAITS_MPL_ER_2010_HPP
 
-#include <boost/assign/v2/detail/mpl/always.hpp>
 #include <boost/assign/v2/detail/mpl/switch.hpp>
 
 #endif

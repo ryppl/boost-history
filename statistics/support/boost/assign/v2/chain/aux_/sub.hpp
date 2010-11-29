@@ -11,7 +11,7 @@
 #ifndef BOOST_ASSIGN_V2_RANGE_CHAIN_AUX_SUB_ER_2010_HPP
 #define BOOST_ASSIGN_V2_RANGE_CHAIN_AUX_SUB_ER_2010_HPP
 #include <boost/range/iterator_range.hpp> //iterator_range_detail::
-#include <boost/assign/v2/put/range/convert.hpp>
+//#include <boost/assign/v2/put/range/convert.hpp> // TODO remove
 #include <boost/assign/v2/detail/relational_op.hpp>
 
 namespace boost{
@@ -32,8 +32,9 @@ namespace chain_aux{
         sub(){}
         sub(super_t const& s):super_t( s ){}
 
-        BOOST_ASSIGN_V2_CONVERT_CONVERT_MF
-        BOOST_ASSIGN_V2_CONVERT_OPERATOR_MF
+		// TODO remove
+        //BOOST_ASSIGN_V2_CONVERT_CONVERT_MF
+        //BOOST_ASSIGN_V2_CONVERT_OPERATOR_MF
 
         // Relational op
 		//template<typename R1>

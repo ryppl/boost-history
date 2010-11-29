@@ -30,7 +30,6 @@
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #include <tuple>
-//#include <boost/mpl/detail/variadic_vector.hpp> // TODO remove
 #else
 #include <boost/preprocessor/arithmetic/dec.hpp>
 #include <boost/preprocessor/cat.hpp>
