@@ -14,4 +14,8 @@
 #include <boost/assign/v2/anon/cont.hpp>
 #include <boost/assign/v2/anon/csv.hpp>
 
+// Basic usage
+//	using namespace boost::assign::v2;
+//  boost::copy(csv_anon(x, y, z), std::ostream_iterator<T>(std::cout," "));
+
 #endif

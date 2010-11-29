@@ -16,4 +16,8 @@
 #include <boost/assign/v2/put/range.hpp>
 #include <boost/assign/v2/put/sub.hpp>
 
+// Basic usage:
+//  using namespace boost::assign::v2;
+//  cont | adaptor::_csv_put(x, y, z)
+
 #endif

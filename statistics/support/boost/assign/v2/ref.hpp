@@ -11,8 +11,11 @@
 #define BOOST_ASSIGN_V2_REF_ER_2010_HPP
 
 #include <boost/assign/v2/ref/anon.hpp>
-#include <boost/assign/v2/ref/fusion.hpp>
-#include <boost/assign/v2/ref/fusion_matrix.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
+
+// Basic usage
+// using namespace boost::assign:v2;
+// namespace ns = ref::assign_copy;
+// ns::csv_anon( x, y ,z ).assign( w );
 
 #endif
