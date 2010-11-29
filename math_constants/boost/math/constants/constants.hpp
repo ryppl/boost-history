@@ -9,6 +9,7 @@
 
 #include <boost/math/tools/config.hpp>
 #include <boost/math/policies/policy.hpp>
+#include <boost/math/tools/precision.hpp>
 #ifdef BOOST_MSVC
 #pragma warning(push)
 #pragma warning(disable: 4127 4701)
