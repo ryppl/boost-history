@@ -20,7 +20,7 @@
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 // TODO eventually replace by mpl/variadic_template/package_range_c.hpp>
-#include <boost/mpl/detail/variadic_args_to_indices.hpp>
+#include <boost/assign/v2/temporary/variadic_args_to_indices.hpp>
 #else
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/control/expr_if.hpp>
