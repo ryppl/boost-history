@@ -49,7 +49,10 @@ namespace xxx_convert{
 
 #define MACRO do_check( from | adaptor::put_convert<to_>() );
             
-            BOOST_AUTO(from, cont1 && cont2 && cont3);
+            BOOST_AUTO(
+            	from, 
+                cont1 | adaptor::_chain( cont2 ) | adaptor::_chain(cont3) 
+            );
             {	// Conversion
         		using namespace checking::container;
         		{

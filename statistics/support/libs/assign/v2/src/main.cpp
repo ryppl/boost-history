@@ -1,5 +1,5 @@
 #include <iostream>
-/*
+
 #include <libs/assign/v2/test/type_traits/has_push.h>
 #include <libs/assign/v2/test/type_traits/has_value_type.h>
 #include <libs/assign/v2/test/type_traits/has_static_size.h>
@@ -41,16 +41,15 @@
 #include <libs/assign/v2/example/conversion.h>
 #include <libs/assign/v2/example/chain.h>
 #include <libs/assign/v2/example/fusion.h>
-*/
+
 #include <libs/assign/v2/speed/anon_put_ref.h>
 
 int main (int argc, char * const argv[]) {
 
-    // Warning : Do not include libs/assign/v2/test/unit_testing
-    // in your project. That would cause a conflict.
+    // Warning : Do not compile libs/assign/v2/test/unit_testing together with
+    // this file.
 
 	{
-/*
 		using namespace test_assign_v2;
 
     	xxx_type_traits::xxx_has_push::test();
@@ -86,10 +85,9 @@ int main (int argc, char * const argv[]) {
 		xxx_put::xxx_compose::xxx_functor::xxx_forward_args::test();
     	xxx_put::xxx_compose::xxx_functor::xxx_forward_seq_args::test();
     	xxx_put::xxx_compose::xxx_functor::xxx_stl::test();
-*/
+
 	}
     {
-/*
         using namespace example_assign_v2;
         xxx_put_adaptor::run(std::cout);
         xxx_anon::run(std::cout);
@@ -98,7 +96,6 @@ int main (int argc, char * const argv[]) {
         xxx_conversion::run(std::cout);
         xxx_chain::run(std::cout);
         xxx_fusion::run(std::cout);
-*/
     }
     {
         using namespace speed_assign_v2;
