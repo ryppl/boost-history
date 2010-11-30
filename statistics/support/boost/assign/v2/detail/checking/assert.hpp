@@ -17,8 +17,8 @@ namespace assign{
 namespace v2{
 namespace checking{ 
 
-	template<typename P>
-	void do_assert()
+    template<typename P>
+    void do_assert()
     {
     	BOOST_STATIC_ASSERT( P::value );
     }
@@ -27,7 +27,7 @@ namespace checking{
     void do_assert_is_same(){
         typedef boost::is_same<A,B> pred_;
         checking::do_assert<pred_>();
-	}
+    }
     
 }// checking
 }// v2

@@ -27,21 +27,21 @@ namespace checking{
     void do_check(container_tag::map, V & map) // non-const due to operator[]
     {                                      
     	{  // Key                                
-        	using namespace checking::constants::sorted;
+            using namespace checking::constants::sorted;
         	do_check(
-           		boost::next( boost::begin( map ), 0 )->first,
-           		boost::next( boost::begin( map ), 1 )->first,
-           		boost::next( boost::begin( map ), 2 )->first,
-           		boost::next( boost::begin( map ), 3 )->first,
-           		boost::next( boost::begin( map ), 4 )->first,
-           		boost::next( boost::begin( map ), 5 )->first,
-           		boost::next( boost::begin( map ), 6 )->first,
-           		boost::next( boost::begin( map ), 7 )->first
+                boost::next( boost::begin( map ), 0 )->first,
+                boost::next( boost::begin( map ), 1 )->first,
+                boost::next( boost::begin( map ), 2 )->first,
+                boost::next( boost::begin( map ), 3 )->first,
+                boost::next( boost::begin( map ), 4 )->first,
+                boost::next( boost::begin( map ), 5 )->first,
+                boost::next( boost::begin( map ), 6 )->first,
+                boost::next( boost::begin( map ), 7 )->first
         	);
         }
         {  // Data
-        	using namespace checking::constants;
-        	do_check(
+            using namespace checking::constants;
+            do_check(
             	map[ a ],
             	map[ b ],
             	map[ c ],
@@ -50,8 +50,7 @@ namespace checking{
             	map[ f ],
             	map[ g ],
             	map[ h ]
-        	);
-            
+            );
         }
     }                                           
 

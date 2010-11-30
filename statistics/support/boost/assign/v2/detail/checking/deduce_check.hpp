@@ -21,7 +21,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace switch_tag{
-	struct deduce_check{};
+    struct deduce_check{};
 }// switch_tag
 namespace mpl{
 
