@@ -21,7 +21,7 @@ namespace checking{
     template<typename V>
     void do_check(container_tag::fifo,V const & v1)
     {
-		V v = v1;
+        V v = v1;
     	using namespace constants; 
         BOOST_ASSIGN_V2_CHECK_EQUAL( v.front() , a ); v.pop(); 
     	BOOST_ASSIGN_V2_CHECK_EQUAL( v.front() , b ); v.pop(); 
@@ -32,7 +32,7 @@ namespace checking{
     	BOOST_ASSIGN_V2_CHECK_EQUAL( v.front() , g ); v.pop(); 
     	BOOST_ASSIGN_V2_CHECK_EQUAL( v.front() , h ); v.pop();
     	BOOST_ASSIGN_V2_CHECK_EQUAL( v.empty() , true); 
-	} 
+    }
 
 }// checking
 }// v2
