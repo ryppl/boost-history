@@ -1,1 +1,0 @@
-Download wykobi from http://www.wykobi.com and put it in a subfolder called 'wykobi'
