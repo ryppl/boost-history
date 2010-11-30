@@ -21,7 +21,7 @@
 #include <boost/assign/v2/chain.hpp>
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace checking{
 namespace chain{
@@ -76,7 +76,7 @@ namespace twin_values{
 
     template<typename T>
     void do_check()
-    {  	
+    {
     	// mpl checks
         {
         	typedef std::vector<T> vec_;
@@ -88,7 +88,7 @@ namespace twin_values{
         	typedef v2::result_of::chain<range1_ const,vec_> caller2_;
         	typedef typename caller2_::type range2_;
         	typedef typename boost::range_reference<range2_>::type ref2_;
-        	typedef boost::is_same<ref2_,T &> is_same2_; 
+        	typedef boost::is_same<ref2_,T &> is_same2_;
         	BOOST_STATIC_ASSERT(is_same2_::value);
 	    }
 //                                (qual_v1, qual_e2 , qual_v2 , the_value)
@@ -102,7 +102,7 @@ BOOST_ASSIGN_V2_CHAIN_CHECKING_mpl( const , const   ,         , false    )
 BOOST_ASSIGN_V2_CHAIN_CHECKING_mpl( const , const   , const   , false    )
 
         // runtime checks
-    	{    
+    	{
 		    typedef std::vector<T> vt_;
             vt_ vt1( 2 ), vt2( 3 ), vt3( 3 );
 			vt_ vt;
@@ -118,16 +118,16 @@ BOOST_ASSIGN_V2_CHAIN_CHECKING_mpl( const , const   , const   , false    )
                 vt.push_back( ns::h );
                 {
                 	using namespace adaptor;
-                	boost::copy( 
-                		vt, 
+                	boost::copy(
+                		vt,
                     	boost::begin( vt1 | _chain( vt2 ) | _chain( vt3 ))
                 	);
                 }
                 {
                 	using namespace adaptor;
                 	typedef v2::container_tag::range tag_;
-                    v2::checking::do_check( 
-                    	tag_(), 
+                    v2::checking::do_check(
+                    	tag_(),
                         vt1 | _chain( vt2 ) | _chain( vt3 )
                     );
                 }
@@ -137,11 +137,13 @@ BOOST_ASSIGN_V2_CHAIN_CHECKING_mpl( const , const   , const   , false    )
 
 	            typedef typename ref::type_traits::copy_wrapper<T>::type w_;
     	        typedef boost::is_reference_wrapper<w_> is_;
-                
+
                 // TODO std::vector causes problems.
-                boost::array<int, 2> vw1;
-                boost::array<int, 3> vw2, vw3;
-                {
+                //boost::array<int, 2> vw1;
+                boost::array<int, 3> vw2;//, vw3;
+                std::vector<int> vw1( 2 );
+                std::vector<int> vw3( 3 );
+                /*{
                 	vw1[ 0 ] = a1 ;
                 	vw1[ 1 ] = b1 ;
                 	vw2[ 0 ] = c1 ;
@@ -150,16 +152,16 @@ BOOST_ASSIGN_V2_CHAIN_CHECKING_mpl( const , const   , const   , false    )
                 	vw3[ 0 ] = f1 ;
                 	vw3[ 1 ] = g1 ;
                 	vw3[ 2 ] = h1 ;
-				}
+				}*/
 				using namespace adaptor;
-                boost::copy( 
-                	vt, 
+                boost::copy(
+                	vt,
                     boost::begin( vw1 | _chain( vw2 ) | _chain( vw3 ) )
                 );
                 {
                 	typedef v2::container_tag::range tag_;
-                    v2::checking::do_check( 
-                    	tag_(), 
+                    v2::checking::do_check(
+                    	tag_(),
                         vw1 | _chain( vw2 ) | _chain( vw3 )
                     );
                 }
