@@ -71,62 +71,19 @@ namespace assign{
 namespace v2{
 namespace functor_aux{
 
-	template<typename D,typename F>
-	class crtp_unary_and_up
-	{
-		protected:
+    template<typename D,typename F>
+    class crtp_unary_and_up
+    {
+        protected:
 
-		D& derived(){ return static_cast<D&>(*this); }
-		D const& derived()const{ return static_cast<D const&>(*this); }
+        D& derived(){ return static_cast<D&>(*this); }
+        D const& derived()const{ return static_cast<D const&>(*this); }
 
-		public:
+        public:
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-/*
-    template<typename Vec>
-    struct apply_f
-    {
-        template<typename T>
-        struct op : boost::mpl::eval_if<
-            boost::is_reference<T>,
-            boost::remove_reference<T>,
-            boost::add_const<T>
-        >
-        {
-        };
-
-        typedef typename boost::mpl::transform<
-            Vec,
-            op<boost::mpl::_>
-        >::type unrefs_;
-        typedef typename boost::mpl::apply1<
-            F,
-            unrefs_
-        >::type type;
-    };
-
-    template<typename T0,typename...Args>
-//    typename boost::mpl::apply1<
-//        F,
-//        typename boost::mpl::detail::variadic_vector<T0, Args...>::type
-//    >::type
-    typename apply_f<
-        typename boost::mpl::detail::variadic_vector<
-            T0,
-            Args...
-        >::type
-    >::type
-    operator()(T0&& t0, Args&&...args)const{
-        //return this->derived().template impl<T0, Args...>(t0, args...);
-        return this->derived().template impl(
-            std::forward<T0>( t0 ),
-            std::forward<Args>( args )...
-            //t0,
-            //args...
-        );
-    }
-*/
+// do nothing
 
 #else
 
