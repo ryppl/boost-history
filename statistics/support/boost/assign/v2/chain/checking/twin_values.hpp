@@ -103,11 +103,11 @@ BOOST_ASSIGN_V2_CHAIN_CHECKING_mpl( const , const   , const   , false    )
 
         // runtime checks
     	{
-		    typedef std::vector<T> vt_;
+            typedef std::vector<T> vt_;
             vt_ vt1( 2 ), vt2( 3 ), vt3( 3 );
-			vt_ vt;
+            vt_ vt;
     		{
-        		namespace ns = v2::checking::constants;
+                namespace ns = v2::checking::constants;
                 vt.push_back( ns::a );
                 vt.push_back( ns::b );
                 vt.push_back( ns::c );
@@ -117,11 +117,11 @@ BOOST_ASSIGN_V2_CHAIN_CHECKING_mpl( const , const   , const   , false    )
                 vt.push_back( ns::g );
                 vt.push_back( ns::h );
                 {
-                	using namespace adaptor;
-                	boost::copy(
-                		vt,
-                    	boost::begin( vt1 | _chain( vt2 ) | _chain( vt3 ))
-                	);
+                    using namespace adaptor;
+                    boost::copy(
+                        vt,
+                        boost::begin( vt1 | _chain( vt2 ) | _chain( vt3 ))
+                    );
                 }
                 {
                 	using namespace adaptor;
@@ -153,8 +153,8 @@ BOOST_ASSIGN_V2_CHAIN_CHECKING_mpl( const , const   , const   , false    )
                         vw1 | _chain( vw2 ) | _chain( vw3 )
                     );
                 }
-                // only to avoid warning unused
-                a1 + b1 + c1 + d1 + e1 + g1 + h1; 
+                // suppresses warning unused
+                if(a1 && b1 && c1 && d1 && e1 && f1 && g1 && h1){} 
 			}
         }// runtime checks
     }// do_check
