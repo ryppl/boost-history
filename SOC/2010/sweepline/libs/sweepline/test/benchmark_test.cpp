@@ -26,9 +26,7 @@ using namespace boost::sweepline;
 BOOST_AUTO_TEST_CASE_TEMPLATE(benchmark_test1, T, test_types) {
     typedef T coordinate_type;
     srand(static_cast<unsigned int>(time(NULL)));
-
-    voronoi_builder<coordinate_type> test_builder;
-    voronoi_output_clipped<coordinate_type> test_output;
+    voronoi_output<coordinate_type> test_output;
 
     FILE *bench_file = fopen("benchmark.txt", "a");
     fprintf(bench_file, "Voronoi Segment Sweepline Benchmark Test (time in seconds):\n");
@@ -40,7 +38,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(benchmark_test1, T, test_types) {
 #endif
 
     for (int num_points = 10; num_points <= max_points; num_points *= 10) {
-        std::vector< point_2d<coordinate_type> > points;
+        std::vector< point_2d<T> > points;
         points.reserve(num_points);
 
         time_t start_time = time(NULL);
@@ -51,11 +49,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(benchmark_test1, T, test_types) {
                     static_cast<coordinate_type>(rand() % 5000 - 10000),
                     static_cast<coordinate_type>(rand() % 5000 - 10000)));
             }
-            test_builder.init(points);
-            test_builder.run_sweepline();
-            test_builder.clip(test_output);
-            test_builder.reset();
-            test_output.reset();
+            build_voronoi(points, test_output);
             points.clear();
         }
         time_t end_time = time(NULL);

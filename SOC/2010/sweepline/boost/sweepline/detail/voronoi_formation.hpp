@@ -7,8 +7,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#ifndef BOOST_SWEEPLINE_VORONOI_SEGMENT_FORMATION
-#define BOOST_SWEEPLINE_VORONOI_SEGMENT_FORMATION
+#ifndef BOOST_SWEEPLINE_VORONOI_FORMATION
+#define BOOST_SWEEPLINE_VORONOI_FORMATION
 
 #define INT_PREDICATE_COMPUTE_DIFFERENCE(a, b, res, sign) \
         if (a >= b) { res = static_cast<unsigned long long>(a - b); sign = true; } \
@@ -26,6 +26,7 @@ namespace detail {
     // VORONOI EVENT TYPES ////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    // Forward declarations.
     template <typename T>
     class beach_line_node;
 
@@ -77,6 +78,18 @@ namespace detail {
             is_segment_(false),
             is_vertical_(true),
             is_inverse_(false) {}
+
+        site_event(coordinate_type x1, coordinate_type y1,
+                   coordinate_type x2, coordinate_type y2, int index):
+            point0_(x1, y1),
+            point1_(x2, y2),
+            site_index_(index),
+            is_segment_(true),
+            is_inverse_(false) {
+            if (point0_ > point1_)
+                (std::swap)(point0_, point1_);
+            is_vertical_ = (point0_.x() == point1_.x());
+        }
 
         site_event(const Point2D &point1, const Point2D &point2, int index) :
             point0_(point1),
@@ -235,6 +248,11 @@ namespace detail {
     template <typename T>
     site_event<T> make_site_event(const point_2d<T> &point, int index) {
         return site_event<T>(point, index);
+    }
+
+    template <typename T>
+    site_event<T> make_site_event(T x1, T y1, T x2, T y2, int index) {
+        return site_event<T>(x1, y1, x2, y2, index);
     }
 
     template <typename T>
@@ -404,7 +422,6 @@ namespace detail {
     class circle_events_queue {
     public:
         typedef T coordinate_type;
-        typedef point_2d<T> Point2D;
         typedef circle_event<T> circle_event_type;
         typedef typename std::list<circle_event_type>::iterator circle_event_type_it;
 
@@ -464,7 +481,7 @@ namespace detail {
     ///////////////////////////////////////////////////////////////////////////
     // GEOMETRY PREDICATES ////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
-    inline static void avoid_cancellation(double value, double &left_expr, double &right_expr) {
+    static void avoid_cancellation(double value, double &left_expr, double &right_expr) {
         if (value >= 0)
             left_expr += value;
         else
@@ -588,7 +605,7 @@ namespace detail {
     }
 
     template <typename T>
-    static T robust_cross_product(T a1_, T b1_, T a2_, T b2_) {
+    static double robust_cross_product(T a1_, T b1_, T a2_, T b2_) {
         typedef unsigned long long ull;
         ull a1, b1, a2, b2;
         bool a1_plus, a2_plus, b1_plus, b2_plus;
@@ -718,6 +735,10 @@ namespace detail {
             if (almost_equal(lhs, rhs, ulp))
                 return UNDEFINED;
             return (lhs < rhs) ? LESS : MORE;
+        }
+
+        bool compares_undefined(const epsilon_robust_comparator &rc, int ulp) const {
+            return this->compare(rc, ulp) == UNDEFINED;
         }
 
     private:
@@ -1120,7 +1141,7 @@ namespace detail {
     // CIRCLE EVENTS CREATION /////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
-    inline static T get_sqr_distance(T dif_x, T dif_y) {
+    static T get_sqr_distance(T dif_x, T dif_y) {
         return dif_x * dif_x + dif_y * dif_y;
     }
 
@@ -1509,9 +1530,6 @@ namespace detail {
         site_event_type right_site_;
     };
 
-    template <typename T>
-    struct voronoi_edge;
-
     // Represents edge data sturcture (bisector segment), which is
     // associated with beach line node key in the binary search tree.
     template <typename T>
@@ -1588,632 +1606,406 @@ namespace detail {
         }
     };
 
-    ///////////////////////////////////////////////////////////////////////////
-    // VORONOI OUTPUT /////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
+    // Voronoi diagram builder. Sweepline sweeps from left to right.
     template <typename T>
-    struct voronoi_cell {
-        typedef T coordinate_type;
-        typedef site_event<T> site_event_type;
-
-        voronoi_edge<coordinate_type> *incident_edge;
-        site_event_type site;
-        int num_incident_edges;
-
-        voronoi_cell(const site_event_type &new_site, voronoi_edge<coordinate_type>* edge) :
-            incident_edge(edge),
-            site(new_site),
-            num_incident_edges(0) {}
-    };
-
-    template <typename T>
-    struct voronoi_vertex {
-        typedef T coordinate_type;
-        typedef point_2d<T> Point2D;
-
-        voronoi_edge<coordinate_type> *incident_edge;
-        epsilon_robust_comparator<T> center_x;
-        epsilon_robust_comparator<T> center_y;
-        epsilon_robust_comparator<T> denom;
-        Point2D vertex;
-        int num_incident_edges;
-        typename std::list< voronoi_vertex<coordinate_type> >::iterator voronoi_record_it;
-
-        voronoi_vertex(const epsilon_robust_comparator<T> &c_x,
-                       const epsilon_robust_comparator<T> &c_y,
-                       const epsilon_robust_comparator<T> &den,
-                       voronoi_edge<coordinate_type>* edge) :
-            incident_edge(edge),
-            center_x(c_x),
-            center_y(c_y),
-            denom(den),
-            vertex(c_x.dif() / den.dif(), c_y.dif() / den.dif()),
-            num_incident_edges(0) {}
-    };
-
-    // Half-edge data structure. Represents voronoi edge.
-    // Contains: 1) pointer to cell records;
-    //           2) pointers to start/end vertices of half-edge;
-    //           3) pointers to previous/next half-edges(CCW);
-    //           4) pointers to previous/next half-edges rotated
-    //              around start point;
-    //           5) pointer to twin half-edge;
-    //           6) pointer to clipped edge during clipping.
-    template <typename T>
-    struct voronoi_edge {
-        typedef T coordinate_type;
-        typedef point_2d<T> Point2D;
-        typedef voronoi_cell<coordinate_type> voronoi_cell_type;
-        typedef voronoi_vertex<coordinate_type> voronoi_vertex_type;
-        typedef voronoi_edge<coordinate_type> voronoi_edge_type;
-        typedef voronoi_edge_clipped<coordinate_type> voronoi_edge_clipped_type;
-
-        voronoi_cell_type *cell;
-        voronoi_vertex_type *start_point;
-        voronoi_vertex_type *end_point;
-        voronoi_edge_type *prev;
-        voronoi_edge_type *next;
-        voronoi_edge_type *rot_prev;
-        voronoi_edge_type *rot_next;
-        voronoi_edge_type *twin;
-        voronoi_edge_clipped_type *clipped_edge;
-
-        voronoi_edge() :
-            cell(NULL),
-            start_point(NULL),
-            end_point(NULL),
-            prev(NULL),
-            next(NULL),
-            rot_prev(NULL),
-            rot_next(NULL),
-            twin(NULL),
-            clipped_edge(NULL) {}
-    };
-
-    // Voronoi output data structure based on the half-edges.
-    // Contains vector of voronoi cells, doubly linked list of
-    // voronoi vertices and voronoi edges.
-    template <typename T>
-    class voronoi_output {
+    class voronoi_builder {
     public:
         typedef T coordinate_type;
-        typedef point_2d<T> Point2D;
+        typedef point_2d<coordinate_type> Point2D;
+        typedef voronoi_output<coordinate_type> Output;
         typedef site_event<coordinate_type> site_event_type;
         typedef circle_event<coordinate_type> circle_event_type;
 
-        typedef voronoi_cell<coordinate_type> voronoi_cell_type;
-        typedef std::list<voronoi_cell_type> voronoi_cells_type;
-        typedef typename voronoi_cells_type::iterator voronoi_cell_iterator_type;
-        typedef typename voronoi_cells_type::const_iterator voronoi_cell_const_iterator_type;
-
-        typedef voronoi_vertex<coordinate_type> voronoi_vertex_type;
-        typedef std::list<voronoi_vertex_type> voronoi_vertices_type;
-        typedef typename voronoi_vertices_type::iterator voronoi_vertex_iterator_type;
-        typedef typename voronoi_vertices_type::const_iterator voronoi_vertex_const_iterator_type;
-
-        typedef voronoi_edge<coordinate_type> edge_type;
-        typedef voronoi_edge_clipped<coordinate_type> clipped_edge_type;
-        typedef std::list<edge_type> voronoi_edges_type;
-        typedef typename voronoi_edges_type::iterator edges_iterator_type;
-
-        typedef voronoi_cell_clipped<coordinate_type> clipped_voronoi_cell_type;
-        typedef voronoi_vertex_clipped<coordinate_type> clipped_voronoi_vertex_type;
-        typedef voronoi_edge_clipped<coordinate_type> clipped_voronoi_edge_type;
-
-        voronoi_output() {
-            num_cell_records_ = 0;
-            num_edges_ = 0;
-            num_vertex_records_ = 0;
+        voronoi_builder(Output &output) : output_(output) {
+            // Set sites iterator.
+            site_events_iterator_ = site_events_.begin();
         }
 
-        void init(int num_sites) {
-            cell_iterators_.reserve(num_sites);
-            num_cell_records_ = 0;
-            num_edges_ = 0;
-            num_vertex_records_ = 0;
-        }
+        // Init beach line before sweepline run.
+        // In case of a few first sites situated on the same
+        // vertical line, we init beach line with all of them.
+        // In other case just use the first two sites for the initialization.
+        template <typename iType>
+        void init(const std::vector< point_2d<iType> > &points,
+                  const std::vector< std::pair< point_2d<iType>, point_2d<iType> > > &segments) {
+            typedef std::pair< point_2d<iType>, point_2d<iType> > iSegment2D;
+            // Clear all data structures.
+            output_.reset();
 
-        void reset() {
-            cell_iterators_.clear();
-            cell_records_.clear();
-            vertex_records_.clear();
-            edges_.clear();
+            // TODO(asydorchuk): Add segments intersection check.
 
-            num_cell_records_ = 0;
-            num_edges_ = 0;
-            num_vertex_records_ = 0;
-        }
+            // Avoid additional memory reallocations.
+            site_events_.reserve(points.size() + segments.size() * 3);
 
-        // Update voronoi output in case of single site input.
-        void process_single_site(const site_event_type &site) {
-            // Update counters.
-            num_cell_records_++;
-
-            // Update bounding rectangle.
-            voronoi_rect_ = BRect<coordinate_type>(site.get_point0(), site.get_point0());
-
-            // Update cell records.
-            cell_records_.push_back(voronoi_cell_type(site, NULL));
-        }
-
-        // Inserts new half-edge into the output data structure during site
-        // event processing. Takes as input left and right sites of the new
-        // beach line node and returns pointer to the new half-edge. 
-        edge_type *insert_new_edge(const site_event_type &site1,
-                                   const site_event_type &site2) {
-            // Update counters.
-            num_cell_records_++;
-            num_edges_++;
-
-            // Get indices of sites.           
-            int site_index1 = site1.get_site_index();
-            int site_index2 = site2.get_site_index();
-
-            // Create new half-edge that belongs to the first site.
-            edges_.push_back(edge_type());
-            edge_type &edge1 = edges_.back();
-
-            // Create new half-edge that belongs to the second site.
-            edges_.push_back(edge_type());
-            edge_type &edge2 = edges_.back();
-
-            // Add initial cell during first edge insertion.
-            if (cell_records_.empty()) {
-                cell_iterators_.push_back(cell_records_.insert(
-                    cell_records_.end(), voronoi_cell_type(site1, &edge1)));
-                num_cell_records_++;
-                voronoi_rect_ = BRect<coordinate_type>(site1.get_point0(), site1.get_point0());
+            // Create site events from point sites.
+            for (typename std::vector< point_2d<iType> >::const_iterator it = points.begin();
+                 it != points.end(); it++) {
+                site_events_.push_back(make_site_event(static_cast<T>(it->x()),
+                                                       static_cast<T>(it->y()), 0));
             }
-            cell_iterators_[site_index1]->num_incident_edges++;
-
-            // Update bounding rectangle.
-            voronoi_rect_.update(site2.get_point0());
-            if (site2.is_segment()) {
-                voronoi_rect_.update(site2.get_point1());	
-            }
-
-            // Second site represents new site during site event processing.
-            // Add new cell to the cell records vector.
-            cell_iterators_.push_back(cell_records_.insert(
-                cell_records_.end(), voronoi_cell_type(site2, &edge2)));
-            cell_records_.back().num_incident_edges++;
             
-            // Update pointers to cells.
-            edge1.cell = &(*cell_iterators_[site_index1]);
-            edge2.cell = &(*cell_iterators_[site_index2]);
+            // Create site events from end points of segment sites and segment itself.
+            for (typename std::vector<iSegment2D>::const_iterator it = segments.begin();
+                 it != segments.end(); it++) {
+                T x1 = static_cast<T>(it->first.x());
+                T y1 = static_cast<T>(it->first.y());
+                T x2 = static_cast<T>(it->second.x());
+                T y2 = static_cast<T>(it->second.y());
+                site_events_.push_back(make_site_event(x1, y1, 0));
+                site_events_.push_back(make_site_event(x2, y2, 0));
+                site_events_.push_back(make_site_event(x1, y1, x2, y2, 0));
+            }
 
-            // Update twin pointers.
-            edge1.twin = &edge2;
-            edge2.twin = &edge1;
+            // Sort site events.
+            sort(site_events_.begin(), site_events_.end());
 
-            return &edge1;
+            // Remove duplicates.
+            site_events_.erase(unique(site_events_.begin(), site_events_.end()),
+                               site_events_.end());
+
+            // Number sites.
+            for (int cur_index = 0; cur_index < static_cast<int>(site_events_.size()); cur_index++)
+                site_events_[cur_index].set_site_index(cur_index);
+
+            // Set site iterator.
+            site_events_iterator_ = site_events_.begin();
+
+            // Init output with number of site events.
+            // There will be one site event for each input point and three site events
+            // for each input segment: both ends of a segment and the segment itself.
+            output_.init(site_events_.size());
         }
 
-        edge_type *insert_new_edge(const site_event_type &site1,
-                                   const site_event_type &site3,
-                                   const circle_event_type &circle,
-                                   edge_type *edge12,
-                                   edge_type *edge23) {
-            // Update counters.
-            num_vertex_records_++;
-            num_edges_++;
-
-            // Update bounding rectangle.
-            //voronoi_rect_.update(circle.get_center());
-
-            // Add new voronoi vertex with point at center of the circle.
-            vertex_records_.push_back(voronoi_vertex_type(
-                circle.get_erc_x(), circle.get_erc_y(), circle.get_erc_denom(), edge12));
-            voronoi_vertex_type &new_vertex = vertex_records_.back();
-            new_vertex.num_incident_edges = 3;
-            new_vertex.voronoi_record_it = vertex_records_.end();
-            new_vertex.voronoi_record_it--;
-
-            // Update two input bisectors and their twin half-edges with
-            // new voronoi vertex.
-            edge12->start_point = &new_vertex;
-            edge12->twin->end_point = &new_vertex;
-            edge23->start_point = &new_vertex;
-            edge23->twin->end_point = &new_vertex;
-
-            // Add new half-edge.
-            edges_.push_back(edge_type());
-            edge_type &new_edge1 = edges_.back();
-            new_edge1.cell = &(*cell_iterators_[site1.get_site_index()]);
-            new_edge1.cell->num_incident_edges++;
-            new_edge1.end_point = &new_vertex;
-
-            // Add new half-edge.
-            edges_.push_back(edge_type());
-            edge_type &new_edge2 = edges_.back();
-            new_edge2.cell = &(*cell_iterators_[site3.get_site_index()]);
-            new_edge2.cell->num_incident_edges++;
-            new_edge2.start_point = &new_vertex;
-
-            // Update twin pointers of the new half-edges.
-            new_edge1.twin = &new_edge2;
-            new_edge2.twin = &new_edge1;
-
-            // Update voronoi prev/next pointers of all half-edges incident
-            // to the new voronoi vertex.
-            edge12->prev = &new_edge1;
-            new_edge1.next = edge12;
-            edge12->twin->next = edge23;
-            edge23->prev = edge12->twin;
-            edge23->twin->next = &new_edge2;
-            new_edge2.prev = edge23->twin;
-
-            // Update voronoi vertices incident edges pointers.
-            edge12->rot_next = &new_edge2;
-            new_edge2.rot_prev = edge12;
-            edge23->rot_next = edge12;
-            edge12->rot_prev = edge23;
-            new_edge2.rot_next = edge23;
-            edge23->rot_prev = &new_edge2;
-
-            return &new_edge1;
+        void clear() {
+            circle_events_.reset();
+            beach_line_.clear();
+            site_events_.clear();
         }
 
-        const voronoi_cells_type &get_cell_records() const {
-            return cell_records_;
-        }
-
-        const voronoi_vertices_type &get_voronoi_vertices() const {
-            return vertex_records_;
-        }
-
-        const voronoi_edges_type &get_voronoi_edges() const {
-            return edges_;
-        }
-
-        int get_num_voronoi_cells() const {
-            return num_cell_records_;
-        }
-
-        int get_num_voronoi_vertices() const {
-            return num_vertex_records_;
-        }
-
-        int get_num_voronoi_edges() const {
-            return num_edges_;
-        }
-
-        const BRect<coordinate_type> &get_bounding_rectangle() const {
-            return voronoi_rect_;
-        }
-
-        void simplify() {
-            edges_iterator_type edge_it1;
-            edges_iterator_type edge_it = edges_.begin();
-
-            // Return in case of collinear sites input.
-            if (num_vertex_records_ == 0) {
-                if (edge_it == edges_.end())
-                    return;
-
-                edge_type *edge1 = &(*edge_it);
-                edge1->next = edge1->prev = edge1;
-                edge_it++;
-                edge1 = &(*edge_it);
-                edge_it++;
-
-                while (edge_it != edges_.end()) {
-                    edge_type *edge2 = &(*edge_it);
-                    edge_it++;
-                
-                    edge1->next = edge1->prev = edge2;
-                    edge2->next = edge2->prev = edge1;
-
-                    edge1 = &(*edge_it);
-                    edge_it++;
-                }
-
-                edge1->next = edge1->prev = edge1;
+        void run_sweepline() {
+            // Init beach line.
+            if (site_events_.empty()) {
                 return;
+            } else if (site_events_.size() == 1) {
+                // Handle one input site case.
+                output_.process_single_site(site_events_[0]);
+                site_events_iterator_++;
+            } else {
+                int skip = 0;
+                // Init beach line.
+                while(site_events_iterator_ != site_events_.end() &&
+                      site_events_iterator_->x() == site_events_.begin()->x() &&
+                      site_events_iterator_->is_vertical()) {
+                    site_events_iterator_++;
+                    skip++;
+                }
+
+                if (skip == 1) {
+                    // Init beach line with two sites.
+                    init_beach_line();
+                } else {
+                    // Init beach line with sites situated on the same vertical line.
+                    init_beach_line_collinear_sites();
+                }
             }
 
-            // Iterate over all edges and remove degeneracies.
-            while (edge_it != edges_.end()) {
-                edge_it1 = edge_it;
-                std::advance(edge_it, 2);
-
-                if (!edge_it1->start_point || !edge_it1->end_point)
-                    continue;
-
-                const voronoi_vertex_type *p1 = edge_it1->start_point;
-                const voronoi_vertex_type *p2 = edge_it1->end_point;
-                epsilon_robust_comparator<T> lhs1 = p1->center_x * p2->denom;
-                epsilon_robust_comparator<T> rhs1 = p1->denom * p2->center_x;
-                epsilon_robust_comparator<T> lhs2 = p1->center_y * p2->denom;
-                epsilon_robust_comparator<T> rhs2 = p1->denom * p2->center_y;
-
-                if (lhs1.compare(rhs1, 64) == UNDEFINED && lhs2.compare(rhs2, 64) == UNDEFINED) {
-                    // Decrease number of cell incident edges.
-                    edge_it1->cell->num_incident_edges--;
-                    edge_it1->twin->cell->num_incident_edges--;
-
-                    // To guarantee N*lon(N) time we merge vertex with
-                    // less incident edges to the one with more.
-                    if (edge_it1->cell->incident_edge == &(*edge_it1)) {
-                        if (edge_it1->cell->incident_edge == edge_it1->next) {
-                            edge_it1->cell->incident_edge = NULL;
-                        } else {
-                            edge_it1->cell->incident_edge = edge_it1->next;
-                        }
-                    }
-                    if (edge_it1->twin->cell->incident_edge == edge_it1->twin) {
-                        if (edge_it1->twin->cell->incident_edge == edge_it1->twin->next) {
-                            edge_it1->twin->cell->incident_edge = NULL;
-                        } else {
-                            edge_it1->twin->cell->incident_edge = edge_it1->twin->next;
-                        }
-                    }
-                    if (edge_it1->start_point->num_incident_edges >=
-                        edge_it1->end_point->num_incident_edges) {
-                            simplify_edge(&(*edge_it1));
+            // Algorithm stops when there are no events to process.
+            while (!circle_events_.empty() || 
+                   !(site_events_iterator_ == site_events_.end())) {
+                if (circle_events_.empty()) {
+                    process_site_event();
+                } else if (site_events_iterator_ == site_events_.end()) {
+                    process_circle_event();
+                } else {
+                    if (circle_events_.top().compare(*site_events_iterator_) == MORE) {
+                        process_site_event();
                     } else {
-                        simplify_edge(edge_it1->twin);
-                    }
-
-                    // Remove zero length edges.
-                    edges_.erase(edge_it1, edge_it);
-                    num_edges_--;
-                }
-            }
-
-            // Make some post processing.
-            for (voronoi_cell_iterator_type cell_it = cell_records_.begin();
-                cell_it != cell_records_.end(); cell_it++) {
-                // Move to the previous edge while it is possible in the CW direction.
-                edge_type *cur_edge = cell_it->incident_edge;
-                if (cur_edge) {
-                    while (cur_edge->prev != NULL) {
-                        cur_edge = cur_edge->prev;
-
-                        // Terminate if this is not a boundary cell.
-                        if (cur_edge == cell_it->incident_edge)
-                            break;
-                    }
-
-                    // Rewind incident edge pointer to the leftmost edge for the boundary cells.
-                    cell_it->incident_edge = cur_edge;
-
-                    // Set up prev/next half-edge pointers for ray edges.
-                    if (cur_edge->prev == NULL) {
-                        edge_type *last_edge = cell_it->incident_edge;
-                        while (last_edge->next != NULL)
-                            last_edge = last_edge->next;
-                        last_edge->next = cur_edge;
-                        cur_edge->prev = last_edge;
+                        process_circle_event();
                     }
                 }
             }
-        }
 
-        void clip(voronoi_output_clipped<coordinate_type> &clipped_output) {
-            coordinate_type x_len = (voronoi_rect_.x_max - voronoi_rect_.x_min);
-            coordinate_type y_len = (voronoi_rect_.y_max - voronoi_rect_.y_min);
-            coordinate_type x_mid = (voronoi_rect_.x_max + voronoi_rect_.x_min) /
-                static_cast<coordinate_type>(2);
-            coordinate_type y_mid = (voronoi_rect_.y_max + voronoi_rect_.y_min) /
-                static_cast<coordinate_type>(2);
-
-            coordinate_type offset = x_len;
-            if (offset < y_len)
-                offset = y_len;
-
-            if (offset == static_cast<coordinate_type>(0.0))
-                offset = 0.5;
-
-            BRect<coordinate_type> new_brect(x_mid - offset, y_mid - offset,
-                                             x_mid + offset, y_mid + offset);
-            clip(new_brect, clipped_output);
+            // Simplify output.
+            output_.simplify();
+            clear();
         }
 
     private:
-        // Simplify degenerate edge.
-        void simplify_edge(edge_type *edge) {
-            voronoi_vertex_type *vertex1 = edge->start_point;
-            voronoi_vertex_type *vertex2 = edge->end_point;
+        typedef typename std::vector<site_event_type>::const_iterator site_events_iterator_type;
+        typedef typename Output::voronoi_edge_type edge_type;
+        typedef circle_events_queue<coordinate_type> CircleEventsQueue;
+        typedef beach_line_node<coordinate_type> Key;
+        typedef beach_line_node_data<coordinate_type> Value;
+        typedef node_comparer<Key> NodeComparer;
+        typedef std::map< Key, Value, NodeComparer > BeachLine;
+        typedef typename std::map< Key, Value, NodeComparer >::iterator beach_line_iterator;
+        typedef typename std::pair<Point2D, beach_line_iterator> end_point_type;
 
-            // Update number of incident edges.
-            vertex1->num_incident_edges += vertex2->num_incident_edges - 2;
+        void init_beach_line() {
+            // The first site is always a point.
+            // Get the first and the second site events.
+            site_events_iterator_type it_first = site_events_.begin();
+            site_events_iterator_type it_second = site_events_.begin();
+            it_second++;
 
-            // Update second vertex incident edges start and end points.
-            edge_type *updated_edge = edge->twin->rot_next;
-            while (updated_edge != edge->twin) {
-                updated_edge->start_point = vertex1;
-                updated_edge->twin->end_point = vertex1;
-                updated_edge = updated_edge->rot_next;
+            // Insert new nodes.
+            insert_new_arc(*it_first, *it_first, *it_second, beach_line_.begin());
+
+            // The second site has been already processed.
+            site_events_iterator_++;
+        }
+
+        // Insert bisectors for all collinear initial sites.
+        // There should be at least two colinear sites.
+        void init_beach_line_collinear_sites() {
+             site_events_iterator_type it_first = site_events_.begin();
+             site_events_iterator_type it_second = site_events_.begin();
+             it_second++;
+             while (it_second != site_events_iterator_) {
+                 // Create new beach line node.
+                 Key new_node(*it_first, *it_second);
+                 
+                 // Update output.
+                 edge_type *edge = output_.insert_new_edge(*it_first, *it_second);
+
+                 // Insert new node into the binary search tree.
+                 beach_line_.insert(std::pair<Key, Value>(new_node, Value(edge)));
+                 
+                 // Update iterators.
+                 it_first++;
+                 it_second++;
+             }
+        }
+
+        // Uses special comparison function for the lower bound and insertion
+        // operations.
+        void process_site_event() {
+            site_event_type site_event = *site_events_iterator_;
+            site_events_iterator_++;
+
+            // If new site is end point of some segment, remove temporary nodes from
+            // beach line data structure.
+            if (!site_event.is_segment()) {
+                while (!end_points_.empty() && end_points_.top().first == site_event.get_point0()) {
+                    beach_line_.erase(end_points_.top().second);
+                    end_points_.pop();
+                }
             }
 
-            edge_type *edge1 = edge;
-            edge_type *edge2 = edge->twin;
+            // Find the node in the binary search tree with left arc
+            // lying above the new site point.
+            Key new_key(site_event);
+            beach_line_iterator it = beach_line_.lower_bound(new_key);
+            int it_dist = site_event.is_segment() ? 2 : 1;
 
-            edge_type *edge1_rot_prev = edge1->rot_prev;
-            edge_type *edge1_rot_next = edge1->rot_next;
+            if (it == beach_line_.end()) {
+                it--;
+                const site_event_type &site_arc = it->first.get_right_site();
 
-            edge_type *edge2_rot_prev = edge2->rot_prev;
-            edge_type *edge2_rot_next = edge2->rot_next;
+                // Insert new arc into the sweepline.
+                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_arc, site_event, it);
+                std::advance(new_node_it, -it_dist);
 
-            // Update prev and next pointers of incident edges.
-            edge1_rot_next->twin->next = edge2_rot_prev;
-            edge2_rot_prev->prev = edge1_rot_next->twin;
-            edge1_rot_prev->prev = edge2_rot_next->twin;
-            edge2_rot_next->twin->next = edge1_rot_prev;
+                // Add candidate circle to the event queue.
+                activate_circle_event(it->first.get_left_site(), it->first.get_right_site(),
+                                      site_event, new_node_it);
+            } else if (it == beach_line_.begin()) {
+                const site_event_type &site_arc = it->first.get_left_site();
 
-            // Update rotation prev and next pointers of incident edges.
-            edge1_rot_prev->rot_next = edge2_rot_next;
-            edge2_rot_next->rot_prev = edge1_rot_prev;
-            edge1_rot_next->rot_prev = edge2_rot_prev;
-            edge2_rot_prev->rot_next = edge1_rot_next;
+                // Insert new arc into the sweepline.
+                insert_new_arc(site_arc, site_arc, site_event, it);
 
-            // Change incident edge pointer of a vertex if it correspongs to the
-            // degenerate edge.
-            if (vertex1->incident_edge == edge)
-                vertex1->incident_edge = edge->rot_prev;
+                // Add candidate circle to the event queue.
+                if (site_event.is_segment()) {
+                    site_event.set_inverse();
+                }
+                activate_circle_event(site_event, it->first.get_left_site(),
+                                      it->first.get_right_site(), it);
+            } else {
+                const site_event_type &site_arc2 = it->first.get_left_site();
+                const site_event_type &site3 = it->first.get_right_site();
 
-            // Remove second vertex from the vertex records list.
-            if (vertex1->voronoi_record_it != vertex2->voronoi_record_it) {
-                vertex_records_.erase(vertex2->voronoi_record_it);
-                num_vertex_records_--;
+                // Remove candidate circle from the event queue.
+                it->second.deactivate_circle_event();
+                it--;
+                const site_event_type &site_arc1 = it->first.get_right_site();
+                const site_event_type &site1 = it->first.get_left_site();
+
+                // Insert new arc into the sweepline.
+                beach_line_iterator new_node_it =
+                    insert_new_arc(site_arc1, site_arc2, site_event, it);
+
+                // Add candidate circles to the event queue.
+                std::advance(new_node_it, -it_dist);
+                activate_circle_event(site1, site_arc1, site_event, new_node_it);
+                if (site_event.is_segment()) {
+                    site_event.set_inverse();
+                }
+                std::advance(new_node_it, it_dist + 1);
+                activate_circle_event(site_event, site_arc2, site3, new_node_it);
             }
         }
 
-        void clip(const BRect<coordinate_type> &brect,
-                  voronoi_output_clipped<coordinate_type> &clipped_output) {
-            if (!brect.is_valid())
-                return;
-            clipped_output.reset();
-            clipped_output.bounding_rectangle = brect;
+        // Doesn't use special comparison function as it works fine only for
+        // the site events processing.
+        void process_circle_event() {
+            const circle_event_type &circle_event = circle_events_.top();
+
+            // Retrieve the second bisector node that corresponds to the given
+            // circle event.
+            beach_line_iterator it_first = circle_event.get_bisector();
+            beach_line_iterator it_last = it_first;
+
+            // Get the the third site.
+            site_event_type site3 = it_first->first.get_right_site();
+
+            // Get second bisector;
+            edge_type *bisector2 = it_first->second.get_edge();
             
-            // collinear input sites case.
-            if (num_vertex_records_ == 0) {
-                // Return in case of single site input.
-                if (num_cell_records_ == 1) {
-                    clipped_output.cell_records.push_back(
-                        clipped_voronoi_cell_type(cell_records_.back().site, NULL));
-                    clipped_output.num_cell_records++;
-                    return;
-                }
+            // Get first bisector;
+            it_first--;
+            edge_type *bisector1 = it_first->second.get_edge();
+            
+            // Get the first site that creates given circle event.
+            site_event_type site1 = it_first->first.get_left_site();
 
-                edges_iterator_type edge_it = edges_.begin();
-                while (edge_it != edges_.end()) {
-                    edge_type *cur_edge = &(*edge_it);
-                    edge_it++;
-                    edge_type *cur_twin_edge = &(*edge_it);
-                    edge_it++;
-                    // Add new clipped edges.
-                    clipped_edge_type &new_edge = add_clipped_edge(clipped_output);
-                    clipped_edge_type &new_twin_edge = add_clipped_edge(clipped_output);
+            // Let circle event sites be A, B, C, two bisectors that define
+            // circle event be (A, B), (B, C). During circle event processing
+            // we remove (A, B), (B, C) and insert (A, C). As beach line nodes 
+            // comparer doesn't work fine for the circle events we only remove
+            // (B, C) bisector and change (A, B) bisector to the (A, C). That's
+            // why we use const_cast there and take all the responsibility that
+            // map data structure keeps correct ordering.
+            if (!site1.is_segment() && site3.is_segment() &&
+                site3.get_point1(true) == site1.get_point0()) {
+                site3.set_inverse();
+            }
+            const_cast<Key &>(it_first->first).set_right_site(site3);
+            it_first->second.set_edge(output_.insert_new_edge(site1, site3, circle_event,
+                                                              bisector1, bisector2));
+            beach_line_.erase(it_last);
+            it_last = it_first;
 
-                    // Update twin pointers.
-                    new_edge.twin = &new_twin_edge;
-                    new_twin_edge.twin = &new_edge;
+            // Pop circle event from the event queue, before we might
+            // insert new events in it.
+            circle_events_.pop();
 
-                    // Update clipped edge pointers.
-                    cur_edge->clipped_edge = &new_edge;
-                    cur_twin_edge->clipped_edge = &new_twin_edge;
-                }
-            } else {
-                // Iterate over all voronoi vertices.
-                for (voronoi_vertex_const_iterator_type vertex_it = vertex_records_.begin();
-                     vertex_it != vertex_records_.end(); vertex_it++) {
-                    edge_type *cur_edge = vertex_it->incident_edge;
-                    const Point2D &cur_vertex_point = vertex_it->vertex;
-
-                    // Add current voronoi vertex to clipped output.
-                    clipped_output.vertex_records.push_back(
-                        clipped_voronoi_vertex_type(cur_vertex_point, NULL));
-                    clipped_output.num_vertex_records++;
-                    clipped_voronoi_vertex_type &new_vertex = clipped_output.vertex_records.back();
-                    new_vertex.num_incident_edges = vertex_it->num_incident_edges;
-                    clipped_edge_type *rot_prev_edge = NULL;
-
-                    // Process all half-edges incident to the current voronoi vertex.
-                    do {
-                        // Add new edge to the clipped output.
-                        clipped_edge_type &new_edge = add_clipped_edge(clipped_output);
-                        new_edge.start_point = &new_vertex;
-                        cur_edge->clipped_edge = &new_edge;
-
-                        // Ray edges with no start point don't correspond to any voronoi vertex.
-                        // That's why ray edges are processed during their twin edge processing.
-                        if (cur_edge->end_point == NULL) {
-                            // Add new twin edge.
-                            clipped_edge_type &new_twin_edge = add_clipped_edge(clipped_output);
-                            cur_edge->twin->clipped_edge = &new_twin_edge;
-                        }
-
-                        // Update twin and end point pointers.
-                        clipped_edge_type *twin = cur_edge->twin->clipped_edge;
-                        if (twin != NULL) {
-                            new_edge.twin = twin;
-                            twin->twin = &new_edge;
-                            new_edge.end_point = twin->start_point;
-                            twin->end_point = new_edge.start_point;
-                        }
-
-                        // Update rotation prev/next pointers.
-                        if (rot_prev_edge != NULL) {
-                            new_edge.rot_prev = rot_prev_edge;
-                            rot_prev_edge->rot_next = &new_edge;
-                        }
-
-                        rot_prev_edge = &new_edge;
-                        cur_edge = cur_edge->rot_next;
-                    } while(cur_edge != vertex_it->incident_edge);
-                    
-                    // Update rotation prev/next pointers.
-                    cur_edge->clipped_edge->rot_prev = rot_prev_edge;
-                    rot_prev_edge->rot_next = cur_edge->clipped_edge;
-                    new_vertex.incident_edge = cur_edge->clipped_edge;
-                }
+            // Check the new triplets formed by the neighboring arcs
+            // for potential circle events. Check left.
+            if (it_first != beach_line_.begin()) {
+                it_first->second.deactivate_circle_event();
+                it_first--;
+                const site_event_type &site_l1 = it_first->first.get_left_site();
+                activate_circle_event(site_l1, site1, site3, it_last);
             }
 
-            // Iterate over all voronoi cells.
-            for (voronoi_cell_const_iterator_type cell_it = cell_records_.begin();
-                 cell_it != cell_records_.end(); cell_it++) {
-                // Add new cell to the clipped output.
-                clipped_output.cell_records.push_back(
-                    clipped_voronoi_cell_type(cell_it->site, NULL));
-                clipped_output.num_cell_records++;
-                clipped_voronoi_cell_type &new_cell = clipped_output.cell_records.back();
-                edge_type *cur_edge = cell_it->incident_edge;
+            // Check the new triplets formed by the neighboring arcs
+            // for potential circle events. Check right.
+            it_last++;
+            if (it_last != beach_line_.end()) {
+                it_last->second.deactivate_circle_event();
+                const site_event_type &site_r1 = it_last->first.get_right_site();
+                activate_circle_event(site1, site3, site_r1, it_last);
+            }
 
-                // Update cell, next/prev pointers.
-                if (cur_edge) {
-                    clipped_edge_type *prev = NULL;
-                    do {
-                        clipped_edge_type *new_edge = cur_edge->clipped_edge;
-                        if (new_edge) {
-                            if (prev) {
-                                new_edge->prev = prev;
-                                prev->next = new_edge;
-                            }
-                            new_edge->cell = &new_cell;
-                            if (new_cell.incident_edge == NULL)
-                                new_cell.incident_edge = cur_edge->clipped_edge;
-                            new_cell.num_incident_edges++;
-                            prev = new_edge;
-                            cur_edge->clipped_edge = NULL;
-                        }
-                        cur_edge = cur_edge->next;
-                    } while(cur_edge != cell_it->incident_edge);
+        }
 
-                    // Update prev/next pointers.
-                    if (prev) {
-                        prev->next = new_cell.incident_edge;
-                        new_cell.incident_edge->prev = prev;
+        // Insert new arc below site arc into the beach line.
+        beach_line_iterator insert_new_arc(const site_event_type &site_arc1,
+                                           const site_event_type &site_arc2,
+                                           const site_event_type &site_event,
+                                           const beach_line_iterator &position) {
+            // Create two new nodes.
+            Key new_left_node(site_arc1, site_event);
+            Key new_right_node(site_event, site_arc2);
+            if (site_event.is_segment()) {
+                new_right_node.set_left_site_inverse();
+            }
+            
+            // Insert two new nodes into the binary search tree.
+            // Update output.
+            edge_type *edge = output_.insert_new_edge(site_arc2, site_event);
+            beach_line_iterator it = beach_line_.insert(position,
+                std::pair<Key, Value>(new_right_node, Value(edge->twin())));
+            if (site_event.is_segment()) {
+                Key new_node(site_event, site_event);
+                new_node.set_right_site_inverse();
+                beach_line_iterator temp_it = beach_line_.insert(position,
+                    std::pair<Key, Value>(new_node, Value(NULL)));
+                end_points_.push(std::make_pair(site_event.get_point1(), temp_it));
+            }
+            beach_line_.insert(position, std::pair<Key, Value>(new_left_node, Value(edge)));
+            return it;
+        }
+
+        // Create circle event from the given three points.
+        bool create_circle_event(const site_event_type &site1,
+                                 const site_event_type &site2,
+                                 const site_event_type &site3,
+                                 circle_event_type &c_event) const {
+            if (!site1.is_segment()) {
+                if (!site2.is_segment()) {
+                    if (!site3.is_segment()) {
+                        return create_circle_event_ppp(site1, site2, site3, c_event);
+                    } else {
+                        return create_circle_event_pps(site1, site2, site3, 3, c_event);
+                    }
+                } else {
+                    if (!site3.is_segment()) {
+                        return create_circle_event_pps(site1, site3, site2, 2, c_event);
+                    } else {
+                        return create_circle_event_pss(site1, site2, site3, 1, c_event);
+                    }
+                }
+            } else {
+                if (!site2.is_segment()) {
+                    if (!site3.is_segment()) {
+                        return create_circle_event_pps(site2, site3, site1, 1, c_event);
+                    } else {
+                        return create_circle_event_pss(site2, site1, site3, 2, c_event);
+                    }
+                } else {
+                    if (!site3.is_segment()) {
+                        return create_circle_event_pss(site3, site1, site2, 3, c_event);
+                    } else {
+                        return create_circle_event_sss(site1, site2, site3, c_event);
                     }
                 }
             }
-            clipped_output.num_edge_records >>= 1;
         }
 
-        inline clipped_voronoi_edge_type &add_clipped_edge(
-            voronoi_output_clipped<coordinate_type> &clipped_output) {
-            clipped_output.edge_records.push_back(clipped_voronoi_edge_type());
-            clipped_output.num_edge_records++;
-            return clipped_output.edge_records.back();
+        // Add new circle event to the event queue.
+        void activate_circle_event(const site_event_type &site1,
+                                   const site_event_type &site2,
+                                   const site_event_type &site3,
+                                   beach_line_iterator bisector_node) {
+            circle_event_type c_event;
+            if (create_circle_event(site1, site2, site3, c_event)) {
+                c_event.set_bisector(bisector_node);
+                bisector_node->second.activate_circle_event(circle_events_.push(c_event));
+            }
         }
 
-        std::vector<voronoi_cell_iterator_type> cell_iterators_;
-        voronoi_cells_type cell_records_;
-        voronoi_vertices_type vertex_records_;
-        voronoi_edges_type edges_;
+    private:
+        struct end_point_comparison {
+            bool operator() (const end_point_type &end1, const end_point_type &end2) const {
+                return end1.first > end2.first;
+            }
+        };
 
-        int num_cell_records_;
-        int num_vertex_records_;
-        int num_edges_;
+        std::vector<site_event_type> site_events_;
+        site_events_iterator_type site_events_iterator_;
+        std::priority_queue< end_point_type, std::vector<end_point_type>,
+                             end_point_comparison > end_points_;
+        CircleEventsQueue circle_events_;
+        BeachLine beach_line_;
+        Output &output_;
 
-        BRect<coordinate_type> voronoi_rect_;
-
-        // Disallow copy constructor and operator=
-        voronoi_output(const voronoi_output&);
-        void operator=(const voronoi_output&);
+        //Disallow copy constructor and operator=
+        voronoi_builder(const voronoi_builder&);
+        void operator=(const voronoi_builder&);
     };
-  
+
 } // sweepline
 } // boost
 } // detail

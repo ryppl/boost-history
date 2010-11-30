@@ -25,8 +25,8 @@ public:
     }
 
     void build(QString file_path) {
-        std::vector<Point2D> point_sites;
-        std::vector<Segment2D> segment_sites;
+        std::vector<iPoint2D> point_sites;
+        std::vector<iSegment2D> segment_sites;
 
         // Open file.
         QFile data(file_path);
@@ -38,7 +38,7 @@ public:
         QTextStream in_stream(&data);
         int num_point_sites = 0;
         int num_edge_sites = 0;
-        coordinate_type x1, y1, x2, y2;
+        int x1, y1, x2, y2;
         in_stream >> num_point_sites;
         for (int i = 0; i < num_point_sites; i++) {
             in_stream >> x1 >> y1;
@@ -53,10 +53,9 @@ public:
         in_stream.flush();
 
         // Build voronoi diagram.
-        voronoi_builder_.init(point_sites, segment_sites);
-        voronoi_builder_.run_sweepline();
-        voronoi_builder_.clip(voronoi_output_);
-        brect_ = voronoi_output_.bounding_rectangle;
+        build_voronoi(point_sites, segment_sites, voronoi_output_);
+        brect_ = voronoi_helper<coordinate_type>::get_view_rectangle(
+            voronoi_output_.bounding_rectangle());
 
         // Update view.
         update_view_port();
@@ -69,7 +68,7 @@ protected:
 
         // Draw voronoi sites.
         {
-            voronoi_cells_type cells = voronoi_output_.cell_records;
+            const voronoi_cells_type &cells = voronoi_output_.cell_records();
             voronoi_cell_const_iterator_type it;
             glColor3f(0.0f, 0.0f, 1.0f);
             glPointSize(9);
@@ -94,23 +93,24 @@ protected:
 
         // Draw voronoi vertices.
         {
-            voronoi_vertices_type vertices = voronoi_output_.vertex_records;
+            const voronoi_vertices_type &vertices = voronoi_output_.vertex_records();
             voronoi_vertex_const_iterator_type it;
             glColor3f(0.0f, 1.0f, 0.0f);
             glBegin(GL_POINTS);
             for (it = vertices.begin(); it != vertices.end(); it++)
-                glVertex2f(it->vertex.x(), it->vertex.y());
+                glVertex2f(it->vertex().x(), it->vertex().y());
             glEnd();
         }
 
         // Draw voronoi edges.
         {
-            voronoi_edges_type edges = voronoi_output_.edge_records;
+            const voronoi_edges_type &edges = voronoi_output_.edge_records();
             voronoi_edge_const_iterator_type it;
             glColor3f(0.0f, 1.0f, 0.0f);
             glBegin(GL_LINES);
             for (it = edges.begin(); it != edges.end(); it++) {
-                std::vector<Point2D> temp_v = it->get_intermediate_points(brect_);
+                std::vector<Point2D> temp_v = 
+                    voronoi_helper<coordinate_type>::get_intermediate_points(&(*it), brect_);
                 for (int i = 0; i < static_cast<int>(temp_v.size()) - 1; i++) {
                     glVertex2f(temp_v[i].x(), temp_v[i].y());
                     glVertex2f(temp_v[i+1].x(), temp_v[i+1].y());
@@ -133,28 +133,25 @@ private:
     void update_view_port() {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(brect_.x_min, brect_.x_max, brect_.y_min, brect_.y_max, -1.0, 1.0);
+        glOrtho(brect_.x_min(), brect_.x_max(), brect_.y_min(), brect_.y_max(), -1.0, 1.0);
         glMatrixMode(GL_MODELVIEW);
     }
 
     typedef double coordinate_type;
     typedef point_2d<coordinate_type> Point2D;
-    typedef voronoi_builder<coordinate_type>::Segment2D Segment2D;
-    typedef voronoi_output_clipped<coordinate_type>::voronoi_cells_type
-        voronoi_cells_type;
-    typedef voronoi_output_clipped<coordinate_type>::voronoi_vertices_type
-        voronoi_vertices_type;
-    typedef voronoi_output_clipped<coordinate_type>::voronoi_edges_type
-        voronoi_edges_type;
-    typedef voronoi_output_clipped<coordinate_type>::voronoi_cell_const_iterator_type
+    typedef point_2d<int> iPoint2D;
+    typedef std::pair<iPoint2D, iPoint2D> iSegment2D;
+    typedef voronoi_output<coordinate_type>::voronoi_cells_type voronoi_cells_type;
+    typedef voronoi_output<coordinate_type>::voronoi_vertices_type voronoi_vertices_type;
+    typedef voronoi_output<coordinate_type>::voronoi_edges_type voronoi_edges_type;
+    typedef voronoi_output<coordinate_type>::voronoi_cell_const_iterator_type
         voronoi_cell_const_iterator_type;
-    typedef voronoi_output_clipped<coordinate_type>::voronoi_vertex_const_iterator_type
+    typedef voronoi_output<coordinate_type>::voronoi_vertex_const_iterator_type
         voronoi_vertex_const_iterator_type;
-    typedef voronoi_output_clipped<coordinate_type>::voronoi_edge_const_iterator_type
+    typedef voronoi_output<coordinate_type>::voronoi_edge_const_iterator_type
         voronoi_edge_const_iterator_type;
-    voronoi_builder<coordinate_type> voronoi_builder_;
     BRect<coordinate_type> brect_;
-    voronoi_output_clipped<coordinate_type> voronoi_output_;
+    voronoi_output<coordinate_type> voronoi_output_;
 };
 
 class MainWindow : public QWidget {
