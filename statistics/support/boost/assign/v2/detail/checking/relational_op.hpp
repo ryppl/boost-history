@@ -19,34 +19,34 @@ namespace v2{
 namespace checking{ 
 namespace relational_op{
 
-	// R must derive from relational_op_aux::crtp<> and r contain the checking
+    // R must derive from relational_op_aux::crtp<> and r contain the checking
     // constants.
     template<typename R>
     void do_check(R const& r)
-		{
-    		typedef boost::array<int,8> ar_;
-			ar_ ar;
-        	{
-            	using namespace constants;
-    			ar[0] = a; ar[1] = b; ar[2] = c;
-    			ar[3] = d; ar[4] = e; ar[5] = f;
-    			ar[6] = g; ar[7] = h; 
-    		}
-        	BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  ==  r), true );
-        	BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  !=  r), false );
-        	BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  <  r), false );
-        	BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  >  r), false );
-        	BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  <=  r), true );
-        	BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  >=  r), true );
-        	++ar[2];
-        	BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  ==  r), false );
-        	BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  !=  r), true );
-        	BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  <  r), false );
-        	BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  >  r), true );
-        	BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  <=  r), false );
-        	BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  >=  r), true );
+    {
+        typedef boost::array<int,8> ar_;
+        ar_ ar;
+        {
+            using namespace constants;
+            ar[0] = a; ar[1] = b; ar[2] = c;
+            ar[3] = d; ar[4] = e; ar[5] = f;
+            ar[6] = g; ar[7] = h; 
+        }
+        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  ==  r), true );
+        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  !=  r), false );
+        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  <  r), false );
+        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  >  r), false );
+        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  <=  r), true );
+        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  >=  r), true );
+        ++ar[2];
+        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  ==  r), false );
+        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  !=  r), true );
+        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  <  r), false );
+        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  >  r), true );
+        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  <=  r), false );
+        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  >=  r), true );
 
-		}
+    }
 
 }// relational_op
 }// checking
