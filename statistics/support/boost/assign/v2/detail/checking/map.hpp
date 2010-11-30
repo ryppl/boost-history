@@ -28,7 +28,7 @@ namespace checking{
     {                                      
     	{  // Key                                
             using namespace checking::constants::sorted;
-        	do_check(
+            do_check(
                 boost::next( boost::begin( map ), 0 )->first,
                 boost::next( boost::begin( map ), 1 )->first,
                 boost::next( boost::begin( map ), 2 )->first,
