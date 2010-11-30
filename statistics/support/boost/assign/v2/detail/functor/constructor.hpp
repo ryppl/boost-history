@@ -29,39 +29,39 @@ namespace assign{
 namespace v2{
 namespace functor_aux{
 
-	template<typename T>
-	class constructor
+    template<typename T>
+    class constructor
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 // do nothing
 #else
-	: public functor_aux::crtp_unary_and_up<
+    : public functor_aux::crtp_unary_and_up<
     	functor_aux::constructor<T>,
         boost::mpl::always<T>
     >
 #endif
 	{
-		typedef functor_aux::constructor<T> this_;
+        typedef functor_aux::constructor<T> this_;
 
-    	public:
+        public:
 
-		constructor(){}
+        constructor(){}
 
-		T operator()()const{ return T(); }
+        T operator()()const{ return T(); }
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-    template<typename... Args>
-    T operator()(Args&&...args)const
-    {
-        return T( std::forward<Args>(args)... );
-    }
+        template<typename... Args>
+        T operator()(Args&&...args)const
+        {
+            return T( std::forward<Args>(args)... );
+        }
 #else
-    protected:
-        typedef boost::mpl::always<T> meta_result_;
-        typedef functor_aux::crtp_unary_and_up<this_, meta_result_> super_;
+        protected:
+            typedef boost::mpl::always<T> meta_result_;
+            typedef functor_aux::crtp_unary_and_up<this_, meta_result_> super_;
 
-    public:
+        public:
 
-    using super_::operator();
+        using super_::operator();
 
 #define MACRO(z,N,data) \
     template<BOOST_PP_ENUM_PARAMS(N,typename T)> \
@@ -80,7 +80,7 @@ BOOST_PP_REPEAT_FROM_TO(
 #endif
 	};
 
-	template<typename V>
+    template<typename V>
     struct deduce_constructor
     {
     	typedef typename container_type_traits::value<V>::type value_;
@@ -92,16 +92,16 @@ BOOST_PP_REPEAT_FROM_TO(
 }// functor_aux
 namespace result_of{
 
-	template<typename T>
-	struct constructor
+    template<typename T>
+    struct constructor
     {
         typedef functor_aux::constructor<T> type;
     };
 
 }// result_of
 
-	template<typename T>
-	typename result_of::constructor<T>::type
+    template<typename T>
+    typename result_of::constructor<T>::type
     constructor()
     {
     	typedef typename result_of::constructor<T>::type result_;
