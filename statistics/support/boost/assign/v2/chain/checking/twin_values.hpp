@@ -133,7 +133,8 @@ BOOST_ASSIGN_V2_CHAIN_CHECKING_mpl( const , const   , const   , false    )
                 }
             }
             {
-	            T a1 , b1, c1, d1, e1, f1, g1, h1;
+	            T a1 = -1, b1 = -1, c1 = -1, d1 = -1, 
+                  e1 = -1, f1 = -1, g1 = -1, h1 = -1;
 
                 typedef typename ref::type_traits::copy_wrapper<T>::type w_;
     	        typedef boost::is_reference_wrapper<w_> is_;

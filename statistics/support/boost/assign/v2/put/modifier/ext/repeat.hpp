@@ -25,7 +25,7 @@ namespace modifier_tag{
 namespace put_parameter{
 
 	template<typename OldFun,typename OldTag>
-    struct repeat : put_parameter::helper<
+    struct repeat : put_parameter::pair<
     	OldFun,
         modifier_tag::repeat<OldTag>
     >{ };

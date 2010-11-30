@@ -13,7 +13,7 @@
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
-#include <memory> // TODO what for?!
+//#include <memory> // TODO what for?!
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
@@ -90,39 +90,6 @@ BOOST_PP_REPEAT_FROM_TO(
         typedef functor_aux::new_<value_> type;
         static type call(){ return functor_aux::new_<value_>(); }
     };
-
-// --- For testing only --- // TODO remove foo from this file.
-
-struct foo
-{
-    int i;
-
-    foo() : i(0)
-    { }
-    foo( int i ) : i(i)
-    { }
-    foo( int i, int ) : i(i)
-    { }
-    foo( const char*, int i, int ) : i(i)
-    { }
-
-    virtual ~foo()
-    { }
-};
-
-struct foo_bar : foo
-{
-    foo_bar( int i ) : foo(i)
-    { }
-
-    foo_bar( int i, const char* )
-    { }
-};
-
-inline bool operator<( const foo& l, const foo& r )
-{
-    return l.i < r.i;
-}
 
 }// functor_aux
 namespace result_of{

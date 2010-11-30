@@ -27,7 +27,7 @@ namespace modifier_tag{
 namespace put_parameter{
 
 	template<typename OldFun,typename OldTag>
-    struct incr_lookup : put_parameter::helper<
+    struct incr_lookup : put_parameter::pair<
     	functor_aux::identity,
         modifier_tag::incr_lookup
     >{};
