@@ -14,7 +14,7 @@
 namespace example_assign_v2{
 namespace xxx_put_adaptor{
 
-	void run(std::ostream& os);
+    void run(std::ostream& os);
 
 }// xxx_put_adaptor
 }// example_assign_v2

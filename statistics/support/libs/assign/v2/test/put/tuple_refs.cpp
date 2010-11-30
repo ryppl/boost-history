@@ -19,7 +19,7 @@ namespace xxx_tuple_refs{
 
     void test()
     {
-		using namespace boost::assign::v2;
+        using namespace boost::assign::v2;
         using namespace checking::constants;
         {
         	int a1, b1, c1, d1;//, e1, f1, g1, h1;

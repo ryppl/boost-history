@@ -39,18 +39,18 @@ namespace xxx_anon_put_ref{
 void run(std::ostream& os)
 {
 
-	using namespace boost::assign;
+    using namespace boost::assign;
     using namespace v2;
 
-	os << "-> Runtime efficiency " << std::endl;
+    os << "-> Runtime efficiency " << std::endl;
 
-	typedef boost::timer timer_;
+    typedef boost::timer timer_;
     typedef std::string str_;
     typedef boost::format f_;
 
 // [---- Warning : don't override these markups as they are used by the doc
 
-	//[types
+    //[types
     typedef std::vector<int> elem_; // T
     // This STL container is of the same type as that internally used by the
     // anon container of values, so we have a common basis for comparing

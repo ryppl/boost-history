@@ -15,18 +15,18 @@
 namespace example_assign_v2{
 namespace xxx_anon{
 
-	void run(std::ostream& os)
+    void run(std::ostream& os)
     {
-		using namespace boost::assign::v2;
+        using namespace boost::assign::v2;
         os << "* xxx_anon " << std::endl;
         {
-			os << "csv_anon" << ' ';
+            os << "csv_anon" << ' ';
             //[csv_anon
             boost::for_each( csv_anon<T>( x, y ,z ), printer(os) );
             // outputs (1,0)(NULL,0)(1,5)
             //]
             os << std::endl;
-			os << "anon" << ' ';
+            os << "anon" << ' ';
             //[anon
             boost::for_each( 
                 (anon<T>( _nil ) % _push_front)( a )()( a, b ), 

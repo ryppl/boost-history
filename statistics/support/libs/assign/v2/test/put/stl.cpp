@@ -17,9 +17,6 @@
 #include <set>
 #include <stack>
 #include <vector>
-
-//#include <boost/assign/v2/detail/checking/constants.hpp>
-//#include <boost/assign/v2/detail/checking/container.hpp>
 #include <boost/assign/v2.hpp>
 
 #include <libs/assign/v2/test/put/stl.h>
@@ -28,72 +25,72 @@ namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_stl{
 
-	void test(){
-		using namespace boost::assign::v2;
+    void test(){
+        using namespace boost::assign::v2;
         {	// Array
-        	
+        
             {	
-        		typedef boost::array<int,8> cont_;
+                typedef boost::array<int,8> cont_;
                 cont_ cont;
                 {
-            		using namespace checking::constants;
-                	put( cont )( a )( b )( c )( d )( e )( f )( g )( h );
+                    using namespace checking::constants;
+                    put( cont )( a )( b )( c )( d )( e )( f )( g )( h );
                 }
                 {
-                	using namespace checking::container;
-                 	do_check( cont );   
+                    using namespace checking::container;
+                    do_check( cont );   
                 }
-			}
+            }
         }
         {	// Associative
         	
             {	
-        		typedef std::map<int,int> cont_;
+                typedef std::map<int,int> cont_;
                 cont_ cont;
                 {
-            		using namespace checking::container;
+                    using namespace checking::container;
                     using namespace checking::constants;
                     do_check(
-                		put( cont )
-                    		( a, a )( b, b )( c, c )
-                        	( d, d )( e, e )( f, f )
-                        	( g, g )( h, h ).unwrap()
+                        put( cont )
+                            ( a, a )( b, b )( c, c )
+                            ( d, d )( e, e )( f, f )
+                            ( g, g )( h, h ).unwrap()
                     );
                 }
             }// map
             {	
         		typedef std::set<int> cont_;
-                cont_ cont;
-                {
-            		using namespace checking::container;
-                    using namespace checking::constants;
-                    do_check(
-                		put( cont )
-                    		( a )( b )( c )
-                        	( d )( e )( f )
-                        	( g )( h ).unwrap()
-                    );
-                }
+        		cont_ cont;
+        		{
+        		    using namespace checking::container;
+        		    using namespace checking::constants;
+        		    do_check(
+                        put( cont )
+        		            ( a )( b )( c )
+        		            ( d )( e )( f )
+        		            ( g )( h ).unwrap()
+        		        );
+        		}
             }// map
         }// Associative
         {
-        	// Sequence
+            // Sequence
             {	
         		typedef std::deque<int> cont_;
-                cont_ cont;
-                {
-            		using namespace checking::constants;
-                	using namespace checking::container;
-                    do_check(
-                		put( cont )
-                        	( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
-                    );
-                }
+        		cont_ cont;
+        		{
+        		    using namespace checking::constants;
+        		    using namespace checking::container;
+        		    do_check(
+        		        put( cont )
+        		            ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+        		    );
+        		}
             }// deque
             {	
         		typedef std::list<int> cont_;
-                cont_ cont;
-                {
+        		cont_ cont;
+        		{
             		using namespace checking::constants;
                 	using namespace checking::container;
                     do_check(
@@ -116,34 +113,34 @@ namespace xxx_stl{
             }// vector
         } // Sequence
         {
-        	// Push
+            // Push
             {	
-        		typedef std::queue<int> cont_;
+                typedef std::queue<int> cont_;
                 cont_ cont;
                 {
-            		using namespace checking::constants;
-                	using namespace checking::container;
+                    using namespace checking::constants;
+                    using namespace checking::container;
                     do_check(
-                		put( cont )
-                        	( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+                        put( cont )
+                            ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
                     );
                 }
             }// queue
-        	// Push
+            // Push
             {	
-        		typedef std::stack<int> cont_;
+                typedef std::stack<int> cont_;
                 cont_ cont;
                 {
-            		using namespace checking::constants;
-                	using namespace checking::container;
+                    using namespace checking::constants;
+                    using namespace checking::container;
                     do_check(
-                		put( cont )
-                        	( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+                        put( cont )
+                            ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
                     );
                 }
             }// queue
         }// Push
-	}// test()
+    }// test()
   
 }// xxx_stl
 }// xxx_put

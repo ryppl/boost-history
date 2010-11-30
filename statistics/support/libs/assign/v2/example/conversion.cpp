@@ -20,9 +20,9 @@
 namespace example_assign_v2{
 namespace xxx_conversion{
 
-	void run(std::ostream& os)
+    void run(std::ostream& os)
     {
-		using namespace boost::assign::v2;
+        using namespace boost::assign::v2;
         namespace ns_ref = ref::assign_copy;
         {
             {

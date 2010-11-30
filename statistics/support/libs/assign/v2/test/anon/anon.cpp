@@ -20,7 +20,6 @@
 #include <boost/assign/v2/detail/checking/container.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/checking/relational_op.hpp>
-#include <boost/assign/v2/detail/checking/check_convert.hpp>
 
 #include <boost/assign/v2/anon.hpp>
 
@@ -39,7 +38,6 @@ namespace xxx_anon{
             using namespace checking::container;
             do_check( csv_anon( a,  b, c, d, e, f, g, h ) );
         }
-/*
         {
         	// Operator%
             BOOST_AUTO(tmp, ( anon<int>( _nil ) % (_repeat = 3) ) );
@@ -57,38 +55,36 @@ namespace xxx_anon{
             	from = csv_anon( a, b, c, d, e, f, g, h );
             }
         	using namespace checking::container;
+#define MACRO do_check( from | adaptor::put_convert<to_>() );
         	{
                 typedef boost::array<int,8> to_;
-                BOOST_ASSIGN_V2_check_convert
-                {
-                    to_ to; to = from;
-                }
+                MACRO
         	}
         	{
                 typedef std::deque<int> to_;
-                BOOST_ASSIGN_V2_check_convert
+                MACRO
         	}
         	{
                 typedef std::list<int> to_;
-                BOOST_ASSIGN_V2_check_convert
+                MACRO
         	}
         	{
                 typedef std::queue<int> to_;
-                BOOST_ASSIGN_V2_check_convert
+                MACRO
         	}
         	{
                 typedef std::set<int> to_;
-                BOOST_ASSIGN_V2_check_convert
+                MACRO
         	}
         	{
                 typedef std::stack<int> to_;
-                BOOST_ASSIGN_V2_check_convert
+                MACRO
         	}
 	        {
                 typedef std::vector<int> to_;
-                BOOST_ASSIGN_V2_check_convert
+                MACRO
         	}
-#undef BOOST_ASSIGN_V2_check_convert
+#undef MACRO
         }
         { 	// Relational
             using namespace checking::constants;
@@ -97,7 +93,6 @@ namespace xxx_anon{
             	csv_anon( a, b, c, d, e, f, g, h )
             );
         }
-*/
     }
 
 }// xxx_anon

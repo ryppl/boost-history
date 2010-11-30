@@ -20,7 +20,6 @@
 #include <boost/assign/v2/put/range.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
-// #include <boost/assign/v2/detail/checking/check_convert.hpp> // TODO remove
 #include <libs/assign/v2/test/chain/convert.h>
 
 namespace test_assign_v2{
@@ -54,12 +53,12 @@ namespace xxx_convert{
                 cont1 | adaptor::_chain( cont2 ) | adaptor::_chain(cont3) 
             );
             {	// Conversion
-        		using namespace checking::container;
-        		{
-        			typedef boost::array<int,8> to_;
+                using namespace checking::container;
+                {
+                    typedef boost::array<int,8> to_;
                     MACRO
-        		}
-        		{
+                }
+                {
         			typedef std::deque<int> to_;
                     MACRO
         		}
@@ -67,22 +66,22 @@ namespace xxx_convert{
         			typedef std::list<int> to_;
                     MACRO
         		}
-        		{
-        			typedef std::queue<int> to_;
+                {
+                    typedef std::queue<int> to_;
                     MACRO
-        		}
-        		{
-        			typedef std::set<int> to_;
+                }
+                {
+                    typedef std::set<int> to_;
                     MACRO
-        		}
-        		{
-        			typedef std::stack<int> to_;
+                }
+                {
+                    typedef std::stack<int> to_;
                     MACRO
-        		}
-	        	{
-    	    		typedef std::vector<int> to_;
+                }
+                {
+                    typedef std::vector<int> to_;
                     MACRO
-        		}
+                }
 #undef MACRO
             }
         }

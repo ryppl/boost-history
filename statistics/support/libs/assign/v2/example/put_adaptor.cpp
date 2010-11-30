@@ -21,9 +21,9 @@
 namespace example_assign_v2{
 namespace xxx_put_adaptor{
 
-	void run(std::ostream& os)
+    void run(std::ostream& os)
     {
-		using namespace boost::assign::v2;
+        using namespace boost::assign::v2;
         os << "* xxx_put_adaptor " << std::endl;
         {
             os << "vector" << ' ';
@@ -57,21 +57,21 @@ namespace xxx_put_adaptor{
             BOOST_ASSERT( 
                 ( cont | _put (key_z, z)(key_y, y)(key_x, x) )[key_x] == x
             );
-			//]            
+            //]            
         }
         {
             os << "static_array" << ' ';
-			//[static_array
+            //[static_array
             typedef boost::array<T,3> cont_;
             cont_ cont;
             using namespace adaptor;
             boost::for_each( cont | _csv_put( x, y, z ), printer(os) );
-        	//]
+            //]
             os << std::endl;
         }
         {
             os << "ptr_vector" << ' ';
-        	//[ptr_vector
+            //[ptr_vector
             typedef boost::ptr_vector<T> cont_; cont_ cont;
             using namespace adaptor;
             boost::for_each( 
@@ -163,7 +163,7 @@ namespace xxx_put_adaptor{
                 //]
             }
             {
-	            os << std::endl;
+                os << std::endl;
             	os << "incr_lookup" << ' ';
                 //[incr_lookup
                 typedef std::map<S,int> cont_;
@@ -181,7 +181,7 @@ namespace xxx_put_adaptor{
                 //]
             }
             {
-	            os << std::endl;
+                os << std::endl;
             	os << "complex_ex1" << ' ';
             	//[complex_ex1
                 typedef std::list<T> cont_;	

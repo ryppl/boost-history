@@ -17,11 +17,11 @@
 namespace example_assign_v2{
 namespace xxx_put_range{
 
-	void run(std::ostream& os)
+    void run(std::ostream& os)
     {
-		using namespace boost::assign::v2;
+        using namespace boost::assign::v2;
         {
-        	//[put_range_queue
+            //[put_range_queue
             typedef std::vector<T> from_; from_ from( 3 );
             from[0] = x; from[1] = y; from[2] = z;
             typedef std::queue<T> to_; // FIFO

@@ -18,13 +18,13 @@
 namespace example_assign_v2{
 namespace xxx_chain{
 
-	void run(std::ostream& os)
+    void run(std::ostream& os)
     {
     	using namespace boost::assign::v2;
         os << "* xxx_chain" << std::endl;
-		{
-			os << "chain_read";
-        	//[chain_read
+        {
+            os << "chain_read";
+            //[chain_read
             typedef boost::array<T, 1> cont1_; cont1_ cont1; cont1[0] = x;
             typedef std::list<T> cont3_; cont3_ cont3; cont3.push_back( z );
             using namespace adaptor;
@@ -34,7 +34,7 @@ namespace xxx_chain{
                 printer( os )
             );
             // outputs (1,0)(NULL,0)(1,5)
-        	//]
+            //]
             //[chain_write
             T y1;
             typedef std::vector<T> vec_; vec_ vec( 3, y );
@@ -49,13 +49,9 @@ namespace xxx_chain{
             BOOST_ASSERT( cont1[0] == y );
             BOOST_ASSERT( y1 == y );
             BOOST_ASSERT( cont3.front() == y1 );
-        	//]
+            //]
         }
-		{
-
-        }
-
-	}
+    }
 
 }// xxx_chain
 }// example_assign_v2

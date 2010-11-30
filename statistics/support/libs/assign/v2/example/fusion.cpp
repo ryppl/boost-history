@@ -34,8 +34,7 @@ namespace xxx_fusion{
         	meta_result_,
             boost::mpl::vector<t0_,t1_>
         >::type result_;
-		result_ result = 
-        	ref::fusion<tag1_, tag2_, t0_>( _nil )( a )( 2 );
+        result_ result = ref::fusion<tag1_, tag2_, t0_>( _nil )( a )( 2 );
         BOOST_ASSIGN_V2_CHECK_EQUAL( result[ 0 ] , a );
         BOOST_ASSIGN_V2_CHECK_EQUAL( result[ 1 ] , 2 );
     }

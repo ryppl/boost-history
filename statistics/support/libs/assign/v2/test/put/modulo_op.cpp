@@ -20,10 +20,10 @@ namespace xxx_modulo_op{
 
     void test()
     {
-		using namespace boost::assign::v2;
+        using namespace boost::assign::v2;
         using namespace checking::constants;
         namespace chk_cont = checking::container;
-		{	// Queue + Repeat
+        {	// Queue + Repeat
             typedef std::queue<int> cont_;
             cont_ cont;
             ( put( cont ) % ( _repeat = 3 ) )( -1 );
@@ -31,7 +31,7 @@ namespace xxx_modulo_op{
             BOOST_ASSIGN_V2_CHECK_EQUAL( cont.front(), -1); cont.pop();
             BOOST_ASSIGN_V2_CHECK_EQUAL( cont.front(), -1); cont.pop();
             BOOST_ASSIGN_V2_CHECK_EQUAL( cont.empty(), true);
-		}
+        }
         {	// Map + IncrLookup
             {
                 typedef std::map<const char*, int> cont_;

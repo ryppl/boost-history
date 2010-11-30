@@ -30,10 +30,9 @@ printer::result_type printer::operator()( foo const& t)const
 }
 
 make_foo::result_type make_foo::operator()(int& a, int const& b)const
-    {
-    	return result_type( a, b );
-    }
-
+{
+    return result_type( a, b );
+}
 
 std::ostream& operator<<( std::ostream& os, foo const& t)
 {

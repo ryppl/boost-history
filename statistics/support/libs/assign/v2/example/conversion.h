@@ -14,7 +14,7 @@
 namespace example_assign_v2{
 namespace xxx_conversion{
 
-	void run(std::ostream& os);
+    void run(std::ostream& os);
 
 }// xxx_conversion
 }// example_assign_v2
