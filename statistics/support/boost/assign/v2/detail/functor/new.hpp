@@ -30,27 +30,27 @@ namespace assign{
 namespace v2{
 namespace functor_aux{
 
-	template<typename T>
-	class new_
+    template<typename T>
+    class new_
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 // do nothing
 #else
-	: public functor_aux::crtp_unary_and_up<
+    : public functor_aux::crtp_unary_and_up<
     	functor_aux::new_<T>,
         boost::mpl::always<T*>
     >
 #endif
-	{
+    {
     	typedef T* ptr_;
-		typedef functor_aux::new_<T> this_;
+        typedef functor_aux::new_<T> this_;
 
     	public:
 
         typedef ptr_ result_type;
 
-		new_(){}
+        new_(){}
 
-		result_type operator()()const{ return new T(); }
+        result_type operator()()const{ return new T(); }
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         template<typename... Args>
@@ -64,7 +64,7 @@ namespace functor_aux{
         typedef functor_aux::crtp_unary_and_up<this_, meta_result_> super_;
         public:
 
-		using super_::operator();
+        using super_::operator();
 
 #define MACRO(z, N, data) \
     template<BOOST_PP_ENUM_PARAMS(N, typename T)> \
@@ -83,7 +83,7 @@ BOOST_PP_REPEAT_FROM_TO(
 
 	};
 
-	template<typename V>
+    template<typename V>
     struct deduce_new_
     {
     	typedef typename container_type_traits::value<V>::type value_;
@@ -94,16 +94,16 @@ BOOST_PP_REPEAT_FROM_TO(
 }// functor_aux
 namespace result_of{
 
-	template<typename T>
-	struct new_
+    template<typename T>
+    struct new_
     {
         typedef functor_aux::new_<T> type;
     };
 
 }// result_of
 
-	template<typename T>
-	typename result_of::new_<T>::type
+    template<typename T>
+    typename result_of::new_<T>::type
     new_()
     {
     	typedef typename result_of::new_<T>::type result_;

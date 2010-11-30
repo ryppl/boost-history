@@ -59,7 +59,7 @@ namespace functor_aux{
 
 #endif
 
-	struct identity
+    struct identity
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 // do nothing
 #else
