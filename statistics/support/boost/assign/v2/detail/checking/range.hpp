@@ -39,7 +39,7 @@ namespace checking{
     	namespace ns = checking::iterator::sorted;     
         ns::do_check( boost::begin( r ) );
         BOOST_ASSIGN_V2_CHECK_EQUAL( 
-        	boost::next( boost::begin( r ), 8 ) , 
+            boost::next( boost::begin( r ), 8 ) , 
             boost::end( r ) 
         );
     }                                                                              
