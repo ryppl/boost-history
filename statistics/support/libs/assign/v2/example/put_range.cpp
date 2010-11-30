@@ -20,7 +20,6 @@ namespace xxx_put_range{
 	void run(std::ostream& os)
     {
 		using namespace boost::assign::v2;
-        os << "---xxx_put_range " << std::endl;
         {
         	//[put_range_queue
             typedef std::vector<T> from_; from_ from( 3 );
@@ -32,7 +31,6 @@ namespace xxx_put_range{
             BOOST_ASSERT( to.back() == z );
             //]
         }
-        os << std::endl;
     }
 
 }// xxx_put_range

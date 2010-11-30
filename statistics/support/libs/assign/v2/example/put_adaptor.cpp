@@ -24,7 +24,7 @@ namespace xxx_put_adaptor{
 	void run(std::ostream& os)
     {
 		using namespace boost::assign::v2;
-        os << "---xxx_put_adaptor " << std::endl;
+        os << "* xxx_put_adaptor " << std::endl;
         {
             os << "vector" << ' ';
             //[vector

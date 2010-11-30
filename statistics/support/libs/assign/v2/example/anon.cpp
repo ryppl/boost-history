@@ -18,7 +18,7 @@ namespace xxx_anon{
 	void run(std::ostream& os)
     {
 		using namespace boost::assign::v2;
-        os << "---xxx_anon " << std::endl;
+        os << "* xxx_anon " << std::endl;
         {
 			os << "csv_anon" << ' ';
             //[csv_anon

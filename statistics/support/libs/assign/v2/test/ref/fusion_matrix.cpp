@@ -56,8 +56,8 @@ namespace xxx_fusion_matrix{
         );\
     }\
 /**/
-        a_ a = 1;
-        b_ b = 2;
+        int a = 1;
+        #define B 2
         {
 
             typedef boost::mpl::apply1<
@@ -73,6 +73,7 @@ namespace xxx_fusion_matrix{
             >::type result_;
             {
                 // b passed as const lvalue
+                cvalue_ b = B;
 
                 empty_ e;
                 result_ result = e          //  i   k
@@ -99,23 +100,25 @@ namespace xxx_fusion_matrix{
                 empty_ e;
                 result_ result = e                  //  i   k
                     ( a )                           //  0   1
-                    ( value_( b ) )                 //  1   1
+                    ( B )                           //  1   1
                     ( )                             //  2   0
                     ( a, a )                        //  3   2
-                    ( a, value_( b ) )              //  4   2
-                    ( value_( b ), value_( b ) );   //  5   2
+                    ( a, B )                        //  4   2
+                    ( B, B );                       //  5   2
 
                 MACRO(0, 0, a)
-                MACRO(1, 0, b)
+                MACRO(1, 0, B)
                 typedef result_::static_row_result<3>::type row_;
                 row_ row = result.static_row( boost::mpl::int_<3>() );
                 MACRO(3, 0, a)
                     MACRO(3, 1, a)
                 MACRO(4, 0, a)
-                    MACRO(4, 1, b)
-                MACRO(5, 0, b)
-                    MACRO(5, 1, b)
+                    MACRO(4, 1, B)
+                MACRO(5, 0, B)
+                    MACRO(5, 1, B)
             }
+
+            #undef B
         }
 #undef MACRO
 

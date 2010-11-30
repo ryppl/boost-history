@@ -25,25 +25,6 @@ namespace xxx_conversion{
 		using namespace boost::assign::v2;
         namespace ns_ref = ref::assign_copy;
         {
-// TODO remove
-/*
-            {
-            	//[convert_anon_explicit
-                typedef std::queue<T> to_;
-                to_ to = ref::assign_copy::csv_anon( x, y, z ).put_convert<to_>();
-                to.pop();
-                BOOST_ASSERT( to.front() == y ); // because FIFO
-                //]
-            }
-            {
-            	//[convert_anon_auto
-                typedef std::deque<T> to_;
-                to_ to;
-                csv_anon( x, y, z ).put_convert<to_>( );
-                to.pop_back(); BOOST_ASSERT( to.back() == y );
-                //]
-            }
-*/
             {
             	//[convert_stack
                 typedef boost::array<T, 3> from_;
@@ -55,26 +36,6 @@ namespace xxx_conversion{
                 );
                 //]
             }
-// TODO remove
-/*
-            {
-            	//[convert_chain
-                typedef boost::array<T, 2> from_;
-                typedef std::stack<T> to_;
-                from_ from; from[0] = x; from[1] = y;
-                using namespace adaptor;
-                namespace ns = ref::assign_copy;
-                BOOST_ASSERT(
-                    (
-                        (
-                            from | _chain( ns::csv_anon( z ) )
-                        ).put_convert<to_>()
-                    ).top() == z // because LIFO
-                );
-                //]
-
-            }
-*/
         }
     }
 

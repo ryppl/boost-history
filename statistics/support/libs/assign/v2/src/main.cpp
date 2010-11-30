@@ -42,7 +42,7 @@
 #include <libs/assign/v2/example/chain.h>
 #include <libs/assign/v2/example/fusion.h>
 
-#include <libs/assign/v2/speed/anon_put_ref.h>
+//#include <libs/assign/v2/speed/anon_put_ref.h>
 
 int main (int argc, char * const argv[]) {
 
@@ -52,6 +52,7 @@ int main (int argc, char * const argv[]) {
 	{
 		using namespace test_assign_v2;
 
+        std::cout << "** tests:" << std::endl;
     	xxx_type_traits::xxx_has_push::test();
     	xxx_type_traits::xxx_has_value_type::test();
     	xxx_type_traits::xxx_has_static_size::test();
@@ -89,6 +90,7 @@ int main (int argc, char * const argv[]) {
 	}
     {
         using namespace example_assign_v2;
+        std::cout << "** examples:" << std::endl;
         xxx_put_adaptor::run(std::cout);
         xxx_anon::run(std::cout);
         xxx_put_range::run(std::cout);
@@ -98,11 +100,10 @@ int main (int argc, char * const argv[]) {
         xxx_fusion::run(std::cout);
     }
     {
-        using namespace speed_assign_v2;
-        xxx_anon_put_ref::run(std::cout);
+        //using namespace speed_assign_v2;
+        //std::cout << "** speed:" << std::endl;
+        //xxx_anon_put_ref::run(std::cout);
     }
-
-    std::cout << "main.cpp" << std::endl;
 
     return 0;
 

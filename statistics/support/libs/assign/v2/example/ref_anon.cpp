@@ -20,7 +20,7 @@ namespace xxx_ref_anon{
     {
 
         using namespace boost::assign::v2;
-        os << "---xxx_ref_anon " << std::endl;
+        os << "* xxx_ref_anon " << std::endl;
         {
 			os << "ref::assign_copy::csv_anon";
         	//[assign_copy_read

@@ -21,11 +21,11 @@ namespace xxx_chain{
 	void run(std::ostream& os)
     {
     	using namespace boost::assign::v2;
-        os << "---xxx_chain";
+        os << "* xxx_chain" << std::endl;
 		{
 			os << "chain_read";
         	//[chain_read
-            typedef boost::array<T, 1> cont1_; cont1_ cont1; cont1[0] = x; 
+            typedef boost::array<T, 1> cont1_; cont1_ cont1; cont1[0] = x;
             typedef std::list<T> cont3_; cont3_ cont3; cont3.push_back( z );
             using namespace adaptor;
             namespace ns = ref::assign_copy;
@@ -41,7 +41,7 @@ namespace xxx_chain{
             boost::copy(
                 vec,
                 boost::begin(
-                    cont1 /* lvalue */ | _chain( 
+                    cont1 /* lvalue */ | _chain(
                         ns::csv_anon( y1 /* lvalue */ ) /* rvalue */
                     ) | _chain( cont3 /* lvalue */ )
                 )
@@ -52,10 +52,10 @@ namespace xxx_chain{
         	//]
         }
 		{
-        
+
         }
 
 	}
-	
+
 }// xxx_chain
 }// example_assign_v2

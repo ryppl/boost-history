@@ -60,7 +60,7 @@ namespace xxx_wrapper{
             }
             {
                 cval_ a = 1;
-                w_ w = w_( val_(a) );
+                w_ w = w_( 1 );
                 BOOST_ASSIGN_V2_CHECK_EQUAL( w.unwrap(), a );
             }
         }
