@@ -110,6 +110,7 @@ namespace xxx_fusion_matrix{
                 MACRO(1, 0, B)
                 typedef result_::static_row_result<3>::type row_;
                 row_ row = result.static_row( boost::mpl::int_<3>() );
+                
                 MACRO(3, 0, a)
                     MACRO(3, 1, a)
                 MACRO(4, 0, a)

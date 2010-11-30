@@ -266,7 +266,10 @@ void run(std::ostream& os)
     }\
 /**/
 
-    double elapsed = 0;
+    double elapsed = 0; 
+    if(elapsed){ 
+        //nothing
+    }
 // -----------------------------------N------------------n----------
 // Dont uncomment. Modify instead limit_N
 BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(1, limit_N), MACRO(1) )
