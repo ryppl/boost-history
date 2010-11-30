@@ -37,7 +37,7 @@ namespace checking{
                 boost::next( boost::begin( map ), 5 )->first,
                 boost::next( boost::begin( map ), 6 )->first,
                 boost::next( boost::begin( map ), 7 )->first
-        	);
+            );
         }
         {  // Data
             using namespace checking::constants;
