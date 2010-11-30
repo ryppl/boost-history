@@ -37,6 +37,17 @@ namespace dbr
  *  mentioned above (after //Purpose:) is for *values*.
  */
 {
+
+#define EVAL_MPL_PRINT
+#ifdef EVAL_MPL_PRINT
+  template
+  < typename Term
+  , typename Args
+  >
+struct eval_show
+{};
+#endif
+
   template
   < typename Repl=package<> //Replacements for varb's
   , unsigned DepthAbstraction=0 //which are bound this high up.
@@ -58,10 +69,10 @@ struct eval
    *  Defaults to identity metafunction.
    *
    *  Where:
-   *    Term = lamb<typename Body>
+   *    Term = lamb<Term Body>
    *         | varb<unsigned ArgIndex,unsigned DepthBinding>
-   *         | Prim<typename... Args>
-   *         | appl<typename Fun,typename... Args>
+   *         | Prim<Term... Args>
+   *         | appl<Term Fun,Term... Args>
    *         | //anything else
    */
 {
@@ -160,8 +171,8 @@ struct eval
 {
 };
   template
-  < template<typename...> class Prim //meta function (has typename Prim<Args...>::type ).
-  , typename... PArgs//Arguments to Prim.
+  < template<typename...> class Prim
+  , typename... PArgs
   , typename ArgsDepth//instance of args
   >
 struct eval
@@ -169,12 +180,21 @@ struct eval
   , ArgsDepth
   >
 {
+  #ifdef EVAL_MPL_PRINT
+      print
+      < eval_show
+        < Prim<PArgs...>
+        , ArgsDepth
+        >
+      >
+    print_eval;
+  #endif
     typedef Prim<typename eval<PArgs,ArgsDepth>::type...> type;
 };
 
   template
-  < template<typename...> class Prim
-  , typename... PArgs
+  < template<typename...> class Prim //meta function (has typename Prim<Args...>::type ).
+  , typename... PArgs //Arguments to Prim.
   , typename Repl
   >
 struct eval
@@ -183,6 +203,15 @@ struct eval
   >
   : Prim<typename eval<PArgs,args<Repl,0> >::type...>
 {
+  #ifdef EVAL_MPL_PRINT
+      print
+      < eval_show
+        < Prim<PArgs...>
+        , args<Repl,0>
+        >
+      >
+    print_eval;
+  #endif
 };
 
   template
@@ -220,8 +249,18 @@ struct eval
     , args<Args,1>
     >
 {
+  #ifdef EVAL_MPL_PRINT
+      print
+      < eval_show
+        < lamb
+          < Body
+          >
+        , args<Args,0>
+        >
+      >
+    print_eval;
+  #endif
 };
-
   template
   < typename Fun
   , typename... Args
@@ -230,9 +269,13 @@ struct appl
   /**@brief
    *  Apply function, Fun to args, Args...
    */
+#if 1
+;
+#else
 {
     typedef appl type;
 };
+#endif
   template
   < typename Fun
   , typename... FArgs
@@ -258,19 +301,59 @@ struct eval
   , args<ArgsD,0>
   >
   : eval
+  #if 0
+    < typename eval<Fun,args<ArgsD,0> >::type
+  #else
     < Fun
+  #endif
     , args
       < package
-      #if 1
         < typename eval<FArgs,args<ArgsD,0> >::type...
-      #else
-        < FArgs...
-      #endif
         >
       , 0
       > 
     >
-{};
+{
+  #ifdef EVAL_MPL_PRINT
+      print
+      < eval_show
+        < appl<Fun,FArgs...>
+        , args<ArgsD,0>
+        >
+      >
+    print_eval
+    ;
+  #endif
+};
+
+  template
+  < typename Fun
+  , typename... FArgs
+  >
+struct eval
+  < appl<Fun,FArgs...>
+  , args<package<>,0>
+  >
+  : eval
+    < Fun
+    , args
+      < package
+        < FArgs...
+        >
+      , 0
+      > 
+    >
+{
+  #ifdef EVAL_MPL_PRINT
+      print
+      < eval_show
+        < appl<Fun,FArgs...>
+        , args<package<>,0>
+        >
+      > 
+    print_eval;
+  #endif
+};
 
   template
   < typename Term
@@ -352,7 +435,7 @@ namespace shorthand
     };
     
 }//exit shorthand namespace
-#if 1
+#if 0
 #include <boost/mpl/next.hpp>
 namespace test_basic
 {
@@ -422,10 +505,10 @@ BOOST_MPL_ASSERT((is_same<appl_lamb_int0_edefault,int_<0> >));
       >
     , 0
     >
-  >
+  >::type
 appl_v0_v1_next_9
 ;
-#if 1
+#if 0
 print<appl_v0_v1_next_9> print_appl_v0_v1_next_9;
 #else 
 BOOST_MPL_ASSERT((equal_to<appl_v0_v1_next_9,int_<10> >));
@@ -640,7 +723,7 @@ BOOST_MPL_ASSERT
 }
 #endif //#if namespace wiki
 
-#if 0
+#if 1
 #include <boost/mpl/plus.hpp>
 #include <boost/mpl/push_front.hpp>
 #include <boost/mpl/front.hpp>
@@ -651,8 +734,7 @@ BOOST_MPL_ASSERT
 namespace fold_composed_op
 {
 /**@brief
- *  The is the real problem which prompted creation of
- *  the simplified problem in [apply_apply].
+ *  Fold with a composed binary op.
  */
    using namespace dbr;
    using namespace shorthand;
@@ -711,6 +793,7 @@ namespace fold_composed_op
       >
     ints
     ;
+  #if 0
         typedef
       fold_pack
       < op0
@@ -725,7 +808,7 @@ namespace fold_composed_op
        , i<106>::_
        >
      ));
-     
+   #endif
         typedef
       wrap_lamb<op0>::type
     lamb_op0
@@ -741,11 +824,18 @@ namespace fold_composed_op
       >
     op1
     ;
+  //#define LAMB_OP1
+  #ifdef LAMB_OP1  
+        typedef
+      wrap_lamb<op1>::type
+    lamb_op1
+    ;
+  #endif
         typedef
       package<state_now0>
     state_now1
     ;
-      
+  #if 0
         typedef
       eval
       < appl
@@ -778,11 +868,15 @@ namespace fold_composed_op
         , i<10>::_
         >
       ));
-      
+  #endif      
         typedef
       eval
       < appl
+      #ifdef LAMB_OP1
+        < lamb_op1
+      #else
         < op1
+      #endif
         , i<1>::_
         , state_now1
         >
@@ -795,11 +889,16 @@ namespace fold_composed_op
         , package<i<101>::_,i<100>::_>
         >
       ));
-      
+  #if 0      
+    print<op1_state1> print_op1_state1;
         typedef
       eval
       < appl
+      #ifdef LAMB_OP1
+        < lamb_op1
+      #else
         < op1
+      #endif
         , i<2>::_
         , op1_state1
         >
@@ -812,10 +911,9 @@ namespace fold_composed_op
         , package<i<103>::_,i<101>::_,i<100>::_>
         >
       ));
-      
         typedef
       fold_pack
-      < op1
+      < lamb_op1
       , state_now1
       , ints
       >::type
@@ -827,6 +925,6 @@ namespace fold_composed_op
         , package<i<106>::_,i<103>::_,i<101>::_,i<100>::_>
         >
       ));
-
+  #endif
 }
 #endif //#if namespace fold_composed_op
