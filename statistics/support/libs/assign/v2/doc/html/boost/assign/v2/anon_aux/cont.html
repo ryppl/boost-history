@@ -1,0 +1,129 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Class template cont</title>
+<link rel="stylesheet" href="../../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../../../../boost_assign_v2/reference.html#header.boost.assign.v2.anon.cont_hpp" title="Header &lt;boost/assign/v2/anon/cont.hpp&gt;">
+<link rel="prev" href="cont_modifier_traits.html" title="Struct template cont_modifier_traits">
+<link rel="next" href="../result_of_modulo/new_fun_anon_aux_cont_T_id35970779.html" title="Struct template new_fun&lt;anon_aux::cont&lt; T, F, Tag &gt;&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="cont_modifier_traits.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../boost_assign_v2/reference.html#header.boost.assign.v2.anon.cont_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../result_of_modulo/new_fun_anon_aux_cont_T_id35970779.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" title="Class template cont">
+<a name="boost.assign.v2.anon_aux.cont"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template cont</span></h2>
+<p>boost::assign::v2::anon_aux::cont</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../../../boost_assign_v2/reference.html#header.boost.assign.v2.anon.cont_hpp" title="Header &lt;boost/assign/v2/anon/cont.hpp&gt;">boost/assign/v2/anon/cont.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> F, <span class="bold"><strong>typename</strong></span> Tag&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="cont.html" title="Class template cont">cont</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> T                                          <a name="boost.assign.v2.anon_aux.cont.value_type"></a>value_type;     
+  <span class="bold"><strong>typedef</strong></span> boost::range_size&lt; impl_ &gt;::type           <a name="boost.assign.v2.anon_aux.cont.size_type"></a>size_type;      
+  <span class="bold"><strong>typedef</strong></span> boost::range_iterator&lt; impl_ &gt;::type       <a name="boost.assign.v2.anon_aux.cont.iterator"></a>iterator;       
+  <span class="bold"><strong>typedef</strong></span> boost::range_iterator&lt; <span class="bold"><strong>const</strong></span> impl_ &gt;::type <a name="boost.assign.v2.anon_aux.cont.const_iterator"></a>const_iterator; 
+  <span class="bold"><strong>typedef</strong></span> impl_::reference                           <a name="boost.assign.v2.anon_aux.cont.reference"></a>reference;      
+  <span class="bold"><strong>typedef</strong></span> impl_::const_reference                     <a name="boost.assign.v2.anon_aux.cont.const_reference"></a>const_reference;
+  <span class="bold"><strong>typedef</strong></span> impl_::difference_type                     <a name="boost.assign.v2.anon_aux.cont.difference_type"></a>difference_type;
+
+  <span class="emphasis"><em>// <a class="link" href="cont.html#boost.assign.v2.anon_aux.contconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a class="link" href="cont.html#id35970740-bb">cont</a>();
+  <a class="link" href="cont.html#id35970741-bb">cont</a>(<span class="bold"><strong>const</strong></span> F &amp;);
+  <a class="link" href="cont.html#id35970747-bb">cont</a>(impl_ <span class="bold"><strong>const</strong></span> &amp;, F <span class="bold"><strong>const</strong></span> &amp;);
+  <a class="link" href="cont.html#id35970759-bb">cont</a>(impl_ <span class="bold"><strong>const</strong></span> &amp;, F <span class="bold"><strong>const</strong></span> &amp;, modifier_ <span class="bold"><strong>const</strong></span> &amp;);
+
+  <span class="emphasis"><em>// <a class="link" href="cont.html#id35970554-bb">public member functions</a></em></span>
+  <span class="type">iterator</span> <a class="link" href="cont.html#id35970558-bb">begin</a>() ;
+  <span class="type">iterator</span> <a class="link" href="cont.html#id35970565-bb">end</a>() ;
+  <span class="type">const_iterator</span> <a class="link" href="cont.html#id35970572-bb">begin</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">const_iterator</span> <a class="link" href="cont.html#id35970580-bb">end</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">size_type</span> <a class="link" href="cont.html#id35970587-bb">size</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">size_type</span> <a class="link" href="cont.html#id35970594-bb">max_size</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type"><span class="bold"><strong>bool</strong></span></span> <a class="link" href="cont.html#id35970602-bb">empty</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">reference</span> <a class="link" href="cont.html#id35970609-bb"><span class="bold"><strong>operator</strong></span>[]</a>(size_type) ;
+  <span class="type">const_reference</span> <a class="link" href="cont.html#id35970622-bb"><span class="bold"><strong>operator</strong></span>[]</a>(size_type) <span class="bold"><strong>const</strong></span>;
+  <span class="type">reference</span> <a class="link" href="cont.html#id35970634-bb">front</a>() ;
+  <span class="type">const_reference</span> <a class="link" href="cont.html#id35970642-bb">front</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type">reference</span> <a class="link" href="cont.html#id35970649-bb">back</a>() ;
+  <span class="type">const_reference</span> <a class="link" href="cont.html#id35970656-bb">back</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="cont.html#id35970664-bb">pop_front</a>() ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="cont.html#id35970671-bb">pop_back</a>() ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="cont.html#id35970678-bb">swap</a>(<a class="link" href="cont.html" title="Class template cont">cont</a> &amp;) ;
+  <span class="type">BOOST_ASSIGN_V2_CONVERT_CONVERT_MF BOOST_ASSIGN_V2_CONVERT_OPERATOR_MF impl_ &amp;</span> 
+  <a class="link" href="cont.html#id35970693-bb">unwrap</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> R&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a class="link" href="cont.html#id35970701-bb">equal_to</a>(<span class="bold"><strong>const</strong></span> R &amp;) <span class="bold"><strong>const</strong></span>;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> R&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a class="link" href="cont.html#id35970720-bb">less_than</a>(<span class="bold"><strong>const</strong></span> R &amp;) <span class="bold"><strong>const</strong></span>;
+};</pre></div>
+<div class="refsect1" title="Description">
+<a name="id36175053"></a><h2>Description</h2>
+<div class="refsect2" title="cont public construct/copy/destruct">
+<a name="id36175056"></a><h3>
+<a name="boost.assign.v2.anon_aux.contconstruct-copy-destruct"></a><code class="computeroutput">cont</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem"><pre class="literallayout"><a name="id35970740-bb"></a>cont();</pre></li>
+<li class="listitem"><pre class="literallayout"><a name="id35970741-bb"></a>cont(<span class="bold"><strong>const</strong></span> F &amp; f);</pre></li>
+<li class="listitem"><pre class="literallayout"><a name="id35970747-bb"></a>cont(impl_ <span class="bold"><strong>const</strong></span> &amp; v, F <span class="bold"><strong>const</strong></span> &amp; f);</pre></li>
+<li class="listitem"><pre class="literallayout"><a name="id35970759-bb"></a>cont(impl_ <span class="bold"><strong>const</strong></span> &amp; v, F <span class="bold"><strong>const</strong></span> &amp; f, modifier_ <span class="bold"><strong>const</strong></span> &amp; m);</pre></li>
+</ol></div>
+</div>
+<div class="refsect2" title="cont public member functions">
+<a name="id36175156"></a><h3>
+<a name="id35970554-bb"></a><code class="computeroutput">cont</code> public member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem"><pre class="literallayout"><span class="type">iterator</span> <a name="id35970558-bb"></a>begin() ;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type">iterator</span> <a name="id35970565-bb"></a>end() ;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type">const_iterator</span> <a name="id35970572-bb"></a>begin() <span class="bold"><strong>const</strong></span>;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type">const_iterator</span> <a name="id35970580-bb"></a>end() <span class="bold"><strong>const</strong></span>;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type">size_type</span> <a name="id35970587-bb"></a>size() <span class="bold"><strong>const</strong></span>;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type">size_type</span> <a name="id35970594-bb"></a>max_size() <span class="bold"><strong>const</strong></span>;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id35970602-bb"></a>empty() <span class="bold"><strong>const</strong></span>;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type">reference</span> <a name="id35970609-bb"></a><span class="bold"><strong>operator</strong></span>[](size_type n) ;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type">const_reference</span> <a name="id35970622-bb"></a><span class="bold"><strong>operator</strong></span>[](size_type n) <span class="bold"><strong>const</strong></span>;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type">reference</span> <a name="id35970634-bb"></a>front() ;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type">const_reference</span> <a name="id35970642-bb"></a>front() <span class="bold"><strong>const</strong></span>;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type">reference</span> <a name="id35970649-bb"></a>back() ;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type">const_reference</span> <a name="id35970656-bb"></a>back() <span class="bold"><strong>const</strong></span>;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id35970664-bb"></a>pop_front() ;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id35970671-bb"></a>pop_back() ;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id35970678-bb"></a>swap(<a class="link" href="cont.html" title="Class template cont">cont</a> &amp; that) ;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="type">BOOST_ASSIGN_V2_CONVERT_CONVERT_MF BOOST_ASSIGN_V2_CONVERT_OPERATOR_MF impl_ &amp;</span> 
+<a name="id35970693-bb"></a>unwrap() <span class="bold"><strong>const</strong></span>;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> R&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id35970701-bb"></a>equal_to(<span class="bold"><strong>const</strong></span> R &amp; r) <span class="bold"><strong>const</strong></span>;</pre></li>
+<li class="listitem"><pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> R&gt; <span class="type"><span class="bold"><strong>bool</strong></span></span> <a name="id35970720-bb"></a>less_than(<span class="bold"><strong>const</strong></span> R &amp; r) <span class="bold"><strong>const</strong></span>;</pre></li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="cont_modifier_traits.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../boost_assign_v2/reference.html#header.boost.assign.v2.anon.cont_hpp"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../result_of_modulo/new_fun_anon_aux_cont_T_id35970779.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

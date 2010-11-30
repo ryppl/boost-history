@@ -1,0 +1,1106 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Appendix</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../ug.html" title="User's guide">
+<link rel="prev" href="arity.html" title="Configuring arity">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="arity.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../ug.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a>
+</div>
+<div class="section" title="Appendix">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.ug.appendix"></a><a class="link" href="appendix.html" title="Appendix">Appendix</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="appendix.html#boost_assign_v2.ug.appendix.runtime_efficiency">Runtime
+        efficiency</a></span></dt>
+<dt><span class="section"><a href="appendix.html#boost_assign_v2.ug.appendix.portability">Portability</a></span></dt>
+<dt><span class="section"><a href="appendix.html#boost_assign_v2.ug.appendix.change_log"> Change log</a></span></dt>
+<dd><dl><dt><span class="section"><a href="appendix.html#boost_assign_v2.ug.appendix.change_log.v2"> [Proposal
+          for] Upgrading from Boost v1.4x : Boost.Assign 2.0</a></span></dt></dl></dd>
+<dt><span class="section"><a href="appendix.html#boost_assign_v2.ug.appendix.support">Support</a></span></dt>
+<dt><span class="section"><a href="appendix.html#boost_assign_v2.ug.appendix.history_and_acknowledgement">History
+        and acknowledgement</a></span></dt>
+<dt><span class="section"><a href="appendix.html#boost_assign_v2.ug.appendix.bibliography">Bibliography</a></span></dt>
+</dl></div>
+<div class="section" title="Runtime efficiency">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.ug.appendix.runtime_efficiency"></a><a class="link" href="appendix.html#boost_assign_v2.ug.appendix.runtime_efficiency" title="Runtime efficiency">Runtime
+        efficiency</a>
+</h4></div></div></div>
+<p>
+          This section relies on notational conventions laid out in section <a class="link" href="notation.html" title="Notation">Notation</a>
+        </p>
+<a name="boost_assign_v2.ug.appendix.runtime_efficiency.testing_platform"></a><h6>
+<a name="id36170017"></a>
+          <a class="link" href="appendix.html#boost_assign_v2.ug.appendix.runtime_efficiency.testing_platform">Testing
+          platform</a>
+        </h6>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Processor</span></dt>
+<dd><p>
+                2.4 Ghz Intel Core 2 Duo
+              </p></dd>
+<dt><span class="term">Memory</span></dt>
+<dd><p>
+                4GB 1067 Mhz DDR3
+              </p></dd>
+<dt><span class="term">OS</span></dt>
+<dd><p>
+                OS X 10.6.4
+              </p></dd>
+<dt><span class="term">Compiler</span></dt>
+<dd><p>
+                gcc4.2
+              </p></dd>
+<dt><span class="term">Optimization</span></dt>
+<dd><p>
+                Release | x86_64
+              </p></dd>
+</dl>
+</div>
+<a name="boost_assign_v2.ug.appendix.runtime_efficiency.set_up"></a><h6>
+<a name="id36170108"></a>
+          <a class="link" href="appendix.html#boost_assign_v2.ug.appendix.runtime_efficiency.set_up">Set
+          up</a>
+        </h6>
+<p>
+          In this section, we compare the execution time of various ways to fill
+          an STL container or creating an anonymous container.
+        </p>
+<p>
+          Here are the types that are used:
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">elem_</span><span class="special">;</span> <span class="comment">// T
+</span><span class="comment">// This STL container is of the same type as that internally used by the 
+</span><span class="comment">// anon container of values, so we have a common basis for comparing 
+</span><span class="comment">// their exec time.
+</span><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span> <span class="identifier">elem_</span> <span class="special">&gt;</span> <span class="identifier">cont_</span><span class="special">;</span>
+</pre>
+<p>
+          </p>
+<p>
+          And here are the simulation parameters:
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="comment">// t is a random size element, with max size :
+</span><span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">elem_size</span> <span class="special">=</span> <span class="number">100</span><span class="special">;</span>			
+<span class="comment">// Number of loops over which exec time is summed
+</span><span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">n_loops</span> <span class="special">=</span> <span class="number">1000</span> <span class="special">*</span> <span class="number">1000</span><span class="special">;</span>	
+</pre>
+<p>
+          </p>
+<p>
+        </p>
+<a name="boost_assign_v2.ug.appendix.runtime_efficiency.results"></a><h6>
+<a name="id36170335"></a>
+          <a class="link" href="appendix.html#boost_assign_v2.ug.appendix.runtime_efficiency.results">Results</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Library
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                </th>
+<th>
+                  <p>
+                    <code class="literal">n = 1</code>
+                  </p>
+                </th>
+<th>
+                  <p>
+                    <code class="literal">n = 2</code>
+                  </p>
+                </th>
+<th>
+                  <p>
+                    <code class="literal">n = 4</code>
+                  </p>
+                </th>
+<th>
+                  <p>
+                    <code class="literal">n = 8</code>
+                  </p>
+                </th>
+<th>
+                  <p>
+                    <code class="literal">n = 16</code>
+                  </p>
+                </th>
+<th>
+                  <p>
+                    <code class="literal">n = 32</code>
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <a href="http://en.wikipedia.org/wiki/Standard_Template_Library" target="_top">STL</a>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">cont<span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> t<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">);...</span>cont<span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">);</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.094 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.364 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.756 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">1.737 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">3.852 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">7.807 s</code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">Boost.Assign 1.0	
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">list_of</span><span class="special">(</span> t<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)...(</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">1.211 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">2.618 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">4.219 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">7.226 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">13.125 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">26.486 s</code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">Boost.Assign 1.0	
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">push_back</span><span class="special">(</span> cont <span class="special">)(</span> t<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)...(</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.251 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.726 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">1.709 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">3.780 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">7.869 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">16.117 s</code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">Boost.Assign 2.0	
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">csv_anon</span><span class="special">(</span> t<span class="special">[</span><span class="number">0</span><span class="special">],</span> <span class="special">...,</span>t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">1.252 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">2.067 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">3.562 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">6.363 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">12.365 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">25.760 s</code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">Boost.Assign 2.0	
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">anon</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span>_nil<span class="special">)(</span> t<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)...(</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">1.286 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">2.160 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">3.663 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">6.570 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">12.559 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">25.841 s</code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">Boost.Assign 2.0	
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">ref</span><span class="special">::</span><span class="identifier">assign_copy</span><span class="special">::</span><span class="identifier">csv_anon</span><span class="special">(</span> t<span class="special">[</span><span class="number">0</span><span class="special">],</span> <span class="special">...,</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">1e-06 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.003 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.003 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.008 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.016 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.030 s</code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">Boost.Assign 2.0	
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">ref</span><span class="special">::</span><span class="identifier">assign_copy</span><span class="special">::</span><span class="identifier">anon</span><span class="special">(</span> t<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)...(</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.289 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.289 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.320 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.367 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.472 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.778 s</code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">Boost.Assign 2.0	
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">csv_put</span><span class="special">(</span> cont <span class="special">)(</span> t<span class="special">[</span><span class="number">0</span><span class="special">],</span> <span class="special">....,</span>t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.257 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.647 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">1.692 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">3.717 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">7.913 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">16.192 s</code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">Boost.Assign 2.0	
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">put</span><span class="special">(</span> cont <span class="special">)(</span> t<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)...(</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.260 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.716 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">1.748 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">3.856 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">8.040 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">16.462 s</code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">Boost.Assign 2.0	
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">cont <span class="special">|</span> <span class="identifier">csv_put</span><span class="special">(</span> t<span class="special">[</span><span class="number">0</span><span class="special">],</span> <span class="special">....,</span>t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.280 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.723 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">1.716 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">3.712 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">7.969 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">16.241 s</code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">Boost.Assign 2.0	
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">cont <span class="special">|</span> _put<span class="special">(</span> t<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)...(</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.266 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">0.718 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">1.729 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">3.810 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">8.129 s</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">16.949 s</code>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+          The functions <code class="computeroutput"><span class="identifier">csv_put</span><span class="special">()</span></code>
+          <code class="computeroutput"><span class="identifier">put</span><span class="special">()</span></code>
+          are part of the implementation of the adaptors <code class="computeroutput">_csv_put</code> and
+          <code class="computeroutput">_put</code>, respectively. Their execution time is given here only
+          to gauge the overhead of the layer of code between them and the final product
+          (the adaptors).
+        </p>
+</div>
+<div class="section" title="Portability">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.ug.appendix.portability"></a><a class="link" href="appendix.html#boost_assign_v2.ug.appendix.portability" title="Portability">Portability</a>
+</h4></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    OS
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Compiler
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Option(s)
+                  </p>
+                </th>
+<th>
+                  <p>
+                    <a href="http://www.boost.org" target="_top">Boost</a> version(s)
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Result
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Log file
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    OS X 10.6.4
+                  </p>
+                </td>
+<td>
+                  <p>
+                    gcc4.2
+                  </p>
+                </td>
+<td>
+                  <p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal">1.41</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    OK
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a href="../../../../test/unit_testing/log_mac_gcc42" target="_top"><code class="literal">log_mac_gcc42</code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    Ubuntu 9.10
+                  </p>
+                </td>
+<td>
+                  <p>
+                    gcc4.4
+                  </p>
+                </td>
+<td>
+                  <p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal"> <a href="http://svn.boost.org/svn/boost/trunk" target="_top"><code class="literal">boost-trunk</code></a></code>
+                    as of 11/2010
+                  </p>
+                </td>
+<td>
+                  <p>
+                    OK
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a href="../../../../test/unit_testing/log_ubuntu_gcc44" target="_top"><code class="literal">log_ubuntu_gcc44</code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    Ubuntu 9.10
+                  </p>
+                </td>
+<td>
+                  <p>
+                    gcc4.4
+                  </p>
+                </td>
+<td>
+                  <p>
+                    C++0x
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="literal"> <a href="http://svn.boost.org/svn/boost/trunk" target="_top"><code class="literal">boost-trunk</code></a></code>
+                    as of 11/2010
+                  </p>
+                </td>
+<td>
+                  <p>
+                    NA
+                  </p>
+                </td>
+<td>
+                  <p>
+                    NA
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" title="Change log">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.ug.appendix.change_log"></a><a class="link" href="appendix.html#boost_assign_v2.ug.appendix.change_log" title="Change log"> Change log</a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="appendix.html#boost_assign_v2.ug.appendix.change_log.v2"> [Proposal
+          for] Upgrading from Boost v1.4x : Boost.Assign 2.0</a></span></dt></dl></div>
+<div class="section" title="[Proposal for] Upgrading from Boost v1.4x : Boost.Assign 2.0">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign_v2.ug.appendix.change_log.v2"></a><a class="link" href="appendix.html#boost_assign_v2.ug.appendix.change_log.v2" title="[Proposal for] Upgrading from Boost v1.4x : Boost.Assign 2.0"> [Proposal
+          for] Upgrading from Boost v1.4x : Boost.Assign 2.0</a>
+</h5></div></div></div>
+<p>
+            An overview of the library is given in the <a class="link" href="../../index.html#boost_assign_v2.preface" title="Preface">preface</a>.
+            The organizational change is apparent from the user's guide section,
+            <a class="link" href="../ug.html#boost_assign_v2.ug.start" title="Getting started">Getting started</a>. The
+            remainder of this section discusses the rationale for this library.
+          </p>
+<p>
+            <a href="../../../../../../../libs/assign/doc/index.html" target="_top">Boost.Assign 1.0</a>
+            will continue to be supported in <a href="http://www.boost.org" target="_top">Boost</a>
+            not only to allow backward compatibility, but also to permit a smooth
+            transition for users that have been using this popular library for some
+            time.
+          </p>
+<p>
+            <a class="link" href="ref.html" title="Anonymous container of references">Anonymous container of references</a>,
+            and being able to <a class="link" href="chain.html" title="Adaptor _chain">chain</a>
+            them together or with <a href="http://www.boost.org/doc/libs/1_43_0/libs/range/doc/html/range/concepts.html" target="_top">ranges</a>,
+            were already the subject of a <a href="http://lists.boost.org/Archives/boost/2010/06/168028.php" target="_top">mini-review</a>
+            during which it became apparent that the existing and proposed features
+            lacked homogeneity in their interface. Furthermore, some newly introduced
+            features, such as <code class="computeroutput"><span class="identifier">csv</span></code>
+            functions, had received sufficient interest to warrant their generalization
+            throughout the rest of the library. Another consensus was the request
+            for supporting C++0x features. Finally, some confusion was expressed
+            as to whether <code class="computeroutput"><span class="identifier">fun</span><span class="special">()</span></code>
+            returns a container that is empty or one that contains a default constructed
+            value. Boost.Assign 2.0 adresses these requests with a new design that
+            incorporates added benefits, such as greater code-reuse and decoupling,
+            and the ability to interact with the library through <a href="http://www.boost.org/doc/libs/1_44_0/libs/range/doc/html/range/reference/adaptors/introduction.html#range.reference.adaptors.introduction.composition_of_adaptors" target="_top">composable
+            adaptors</a>.
+          </p>
+<p>
+            The solution to the <code class="computeroutput"><span class="identifier">fun</span><span class="special">()</span></code> problem, adopted in <a href="../.././index.html" target="_top">Boost.Assign
+            2.0</a>, is to keep <a href="../../../../../../../libs/assign/doc/index.html" target="_top">Boost.Assign
+            1.0</a>'s convention that <code class="computeroutput"><span class="identifier">fun</span><span class="special">()</span></code> creates a default value, but, in addition,
+            <code class="computeroutput"><span class="identifier">fun</span><span class="special">(</span>_nil<span class="special">)</span></code> returns an empty container.
+          </p>
+<p>
+            Regarding the interface, whereas <a href="../../../../../../../libs/assign/doc/index.html" target="_top">Boost.Assign
+            1.0</a> stresses operator idioms (say <code class="computeroutput"><span class="special">+=</span></code>)
+            to achieve specific purposes, <a href="../.././index.html" target="_top">Boost.Assign
+            2.0</a> only uses two, <code class="computeroutput"><span class="keyword">operator</span><span class="special">|</span></code> in a way that is consistent across different
+            tools, as seen <a class="link" href="../../index.html#preface_csv_put">here</a> and, optionally,
+            <code class="computeroutput"><span class="keyword">operator</span><span class="special">%</span></code>
+            for a subset of the library, the <a class="link" href="put.html" title="Put">put</a>
+            and <a class="link" href="anon_cont.html" title="Anonymous container of values">anon</a> frameworks,
+            respectively. This compact interface is made possible by deducing much
+            of the required implementation from a container's traits, while being
+            able to override the implementation selectively. An advantage resulting
+            from a completely new interface, is that users that are familiar with
+            <a href="../../../../../../../libs/assign/doc/index.html" target="_top">Boost.Assign 1.0</a>
+            can continue to use it, alongside <a href="../.././index.html" target="_top">Boost.Assign
+            2.0</a>, without risking ambiguity resolution.
+          </p>
+<p>
+            Regarding code-reuse, several separate implementations under <a href="../../../../../../../libs/assign/doc/index.html" target="_top">Boost.Assign
+            1.0</a> were merged, under <a href="../.././index.html" target="_top">Boost.Assign
+            2.0</a>. These are the cases, between <code class="computeroutput"><span class="identifier">list_of</span><span class="special">()</span></code>, and the <span class="emphasis"><em>list inserters</em></span>
+            such as <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code>,
+            in <a href="../../../../../../../libs/assign/doc/index.html" target="_top">Boost.Assign
+            1.0</a>, and between their counterparts under <a href="../.././index.html" target="_top">Boost.Assign
+            2.0</a>, <a class="link" href="anon_cont.html" title="Anonymous container of values"><code class="computeroutput"><span class="identifier">anon</span><span class="special">()</span></code></a>
+            <sup>[<a name="id36172846" href="#ftn.id36172846" class="footnote">6</a>]</sup>
+            and adaptor <a class="link" href="put.html" title="Put"><code class="computeroutput">_put</code></a>,
+            whose results both derive from a common <a href="http://en.wikipedia.org/wiki/Curiously_recurring_template_pattern" target="_top">crtp</a>
+            <code class="computeroutput"><span class="keyword">class</span></code>, respectively.
+          </p>
+<p>
+            Among the byproducts of the new design, passing a key and data as two
+            arguments to a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;&gt;</span></code>
+            works seamlessly with the same interface as that of other container categories,
+            as illustrated in the second code snippet of the <a class="link" href="../../index.html#preface_map">preface</a>,
+            whereas, in <a href="../../../../../../../libs/assign/doc/index.html" target="_top">Boost.Assign
+            1.0</a>, a dedicated function is needed, <code class="computeroutput"><span class="identifier">map_list_of</span><span class="special">()</span></code>. Likewise, the <a class="link" href="put.html" title="Put">put
+            framework</a> works for <a href="http://www.boost.org/doc/libs/release/libs/ptr_container/doc/ptr_container.html" target="_top">pointer
+            containers</a> thanks, only, to minor adjustments to the underlying
+            code. Finally, the implementation is open to customization and that job
+            is facilitated by macros. See the relevant sections pertaining to the
+            <a class="link" href="put.html#boost_assign_v2.ug.put.std_modifier.custom" title="Customization">standard modifier</a>
+            and <a class="link" href="put.html#boost_assign_v2.ug.put.ext.custom" title="Customization">extending functionality</a>
+            in the <a class="link" href="put.html" title="Put">put framework</a>.
+          </p>
+<p>
+            Regarding decoupling, several functions in <a href="../../../../../../../libs/assign/doc/index.html" target="_top">Boost.Assign
+            1.0</a> that are member functions of particular objects, such as
+            that returned by <code class="computeroutput"><span class="identifier">put_range</span><span class="special">&lt;&gt;()</span></code> in the result from <code class="computeroutput"><span class="identifier">list_of</span><span class="special">()</span></code>
+            are now adaptors, and therefore decoupled from any <code class="computeroutput"><span class="keyword">class</span></code>,
+            and come with the benefit that they are <a href="http://www.boost.org/doc/libs/1_44_0/libs/range/doc/html/range/reference/adaptors/introduction.html#range.reference.adaptors.introduction.composition_of_adaptors" target="_top">composable</a>,
+            a salient feature of <a href="../.././index.html" target="_top">Boost.Assign 2.0</a>.
+          </p>
+<p>
+            A welcomed spillover from the fea
+          </p>
+<p>
+            The other part comes about as spillovers from some of the new features,
+            <a class="link" href="ref.html" title="Anonymous container of references">anynomous container of references</a>,
+            to the ones we took on to refactor, resulting, notably, in the <a class="link" href="put.html" title="Put"><code class="computeroutput"><span class="identifier">_kwd_put</span></code>
+            adaptor</a>. In this case, the container of references serves as a
+            cost-efficient buffer on the right hand side of <code class="computeroutput"><span class="keyword">operator</span><span class="special">|</span></code>
+          </p>
+<p>
+            References an chaining....
+          </p>
+</div>
+</div>
+<div class="section" title="Support">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.ug.appendix.support"></a><a class="link" href="appendix.html#boost_assign_v2.ug.appendix.support" title="Support">Support</a>
+</h4></div></div></div>
+<p>
+          For support, post to the <a href="http://www.boost.org/community/groups.html#users" target="_top">Boost
+          Users Mailing List</a>, and CC <a href="http://www.boost.org/users/people/thorsten_ottosen.html" target="_top">TO</a>
+          and <a href="mailto:erDOTciDOT2020ATgmailDOTcom" target="_top">ER</a>.
+        </p>
+</div>
+<div class="section" title="History and acknowledgement">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.ug.appendix.history_and_acknowledgement"></a><a class="link" href="appendix.html#boost_assign_v2.ug.appendix.history_and_acknowledgement" title="History and acknowledgement">History
+        and acknowledgement</a>
+</h4></div></div></div>
+<a name="boost_assign_v2.ug.appendix.history_and_acknowledgement.boost_assign_1_0"></a><h6>
+<a name="id36173237"></a>
+          <a class="link" href="appendix.html#boost_assign_v2.ug.appendix.history_and_acknowledgement.boost_assign_1_0">Boost.Assign
+          1.0</a>
+        </h6>
+<p>
+          The idea for an assignment/initialization library is not new. The functionality
+          of this library resembles Leor Zolman's STL Container Initialization Library
+          a great deal, but it does not rely on string parsing to achieve its goals.
+        </p>
+<p>
+          Special thanks go to
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            Leor Zolman for our many discussion that eventually led to this library.
+          </li>
+<li class="listitem">
+            Tom Brinkman for being review manager.
+          </li>
+<li class="listitem">
+            Joaqu&#237;n Mu&#241;oz for vc6/vc7 portability.
+          </li>
+<li class="listitem">
+            Pavel Vozenilek for his countless suggestions, improvements and portability
+            fixes.
+          </li>
+<li class="listitem">
+            Rene Rivera for Code Warrior portability.
+          </li>
+</ul></div>
+<a name="boost_assign_v2.ug.appendix.history_and_acknowledgement.boost_assign_2_0_"></a><h6>
+<a name="id36173289"></a>
+          <a class="link" href="appendix.html#boost_assign_v2.ug.appendix.history_and_acknowledgement.boost_assign_2_0_">Boost.Assign
+          2.0 </a>
+        </h6>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+            Manuel Peinado Gallego identified the need for an anonymous container
+            of references, and provided valuable advice throughout the early development
+            of Boost.Assign 2.0, such as proposing a <a href="http://gist.github.com/287791" target="_top">design</a>
+            that laid the foundation for <a class="link" href="chain.html" title="Adaptor _chain">chaining</a>.
+          </li></ul></div>
+</div>
+<div class="section" title="Bibliography">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.ug.appendix.bibliography"></a><a class="link" href="appendix.html#boost_assign_v2.ug.appendix.bibliography" title="Bibliography">Bibliography</a>
+</h4></div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            Scott. Meyers, "More Effective C++", Item 7, Addison Wesley,
+            1996
+          </li>
+<li class="listitem">
+            K. Czarnecki and U.W. Eisenecker, "Generative programming",
+            Addison-Wesley, 2000
+          </li>
+<li class="listitem"><a href="http://www.oonumerics.org/blitz/" target="_top">Blitz</a></li>
+<li class="listitem">
+            Gabriel Dos Reis and Bjarne Stroustrup, <a href="http://anubis.dkuug.dk/jtc1/sc22/wg21/docs/papers/2003/n1509.pdf" target="_top">Generalized
+            Initializer Lists</a>, 2003
+          </li>
+<li class="listitem">
+            Abrahams, David and Gurtovoy, Aleksey, <a href="http://portal.acm.org/citation.cfm?id=1044941#" target="_top">C++
+            Template Metaprogramming: Concepts, Tools, and Techniques from Boost
+            and Beyond (C++ in Depth Series)</a>, 2004, Addison-Wesley Professional.
+          </li>
+</ul></div>
+</div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a name="ftn.id36172846" href="#id36172846" class="para">6</a>] </sup>
+                The function <code class="computeroutput"><span class="identifier">list_of</span><span class="special">()</span></code> is renamed, under <a href="../.././index.html" target="_top">Boost.Assign
+                2.0</a>, to <code class="computeroutput"><span class="identifier">anon</span><span class="special">()</span></code>, for the following reasons. First,
+                <code class="computeroutput"><span class="identifier">list_of</span></code> evokes a
+                particular data-structure (forward traversal) that is different from
+                the actual underlying one, <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;&gt;</span></code> (random access). Second,
+                in <a href="../../../../../../../libs/assign/doc/index.html" target="_top">Boost.Assign
+                1.0</a>'s documentation, the result of <code class="computeroutput"><span class="identifier">list_of</span><span class="special">()</span></code> is referred to as an anon-ymous
+                container. The new identifier is therefore consistent with this established
+                practice. Finally, it avoids ambiguity resolution, in case both
+                <a href="../../../../../../../libs/assign/doc/index.html" target="_top">Boost.Assign
+                1.0</a> and <a href="../.././index.html" target="_top">Boost.Assign 2.0</a>
+                are used in the same project.
+              </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="arity.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../ug.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a>
+</div>
+</body>
+</html>

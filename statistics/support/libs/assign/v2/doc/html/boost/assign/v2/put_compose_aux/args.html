@@ -1,0 +1,78 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Class template args</title>
+<link rel="stylesheet" href="../../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../../../../header/boost/assign/v2/put/compose/functor/forward_args_hpp.html" title="Header &lt;boost/assign/v2/put/compose/functor/forward_args.hpp&gt;">
+<link rel="prev" href="../../../../header/boost/assign/v2/put/compose/functor/forward_args_hpp.html" title="Header &lt;boost/assign/v2/put/compose/functor/forward_args.hpp&gt;">
+<link rel="next" href="../../../../MACRO1_id35985669.html" title="Macro MACRO1">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../../../header/boost/assign/v2/put/compose/functor/forward_args_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../header/boost/assign/v2/put/compose/functor/forward_args_hpp.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../../../MACRO1_id35985669.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" title="Class template args">
+<a name="boost.assign.v2.put_compose_aux.args"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template args</span></h2>
+<p>boost::assign::v2::put_compose_aux::args</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../../../../header/boost/assign/v2/put/compose/functor/forward_args_hpp.html" title="Header &lt;boost/assign/v2/put/compose/functor/forward_args.hpp&gt;">boost/assign/v2/put/compose/functor/forward_args.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;std::size_t N, <span class="bold"><strong>typename</strong></span> L, <span class="bold"><strong>typename</strong></span> Tag1, <span class="bold"><strong>typename</strong></span> Tag2, 
+         BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_ASSIGN_V2_LIMIT_ARITY,<span class="bold"><strong>typename</strong></span> T,boost::mpl::na) &gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="args.html" title="Class template args">args</a> : <span class="bold"><strong>private</strong></span> boost::assign::v2::ref::wrapper&lt; ref::assign_tag::copy, ref::fusion_matrix_aux::container&lt; N, L, Tag1, Tag2, &gt; const  &gt;
+{
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// <a class="link" href="args.html#boost.assign.v2.put_compose_aux.argsconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a class="link" href="args.html#id35985622-bb">args</a>();
+  <a class="link" href="args.html#id35985623-bb">args</a>(value_ <span class="bold"><strong>const</strong></span> &amp;);
+
+  <span class="emphasis"><em>// <a class="link" href="args.html#id35985609-bb">public member functions</a></em></span>
+  <span class="type">value_ <span class="bold"><strong>const</strong></span> &amp;</span> <a class="link" href="args.html#id35985613-bb">value</a>() <span class="bold"><strong>const</strong></span>;
+};</pre></div>
+<div class="refsect1" title="Description">
+<a name="id36204388"></a><h2>Description</h2>
+<div class="refsect2" title="args public construct/copy/destruct">
+<a name="id36204391"></a><h3>
+<a name="boost.assign.v2.put_compose_aux.argsconstruct-copy-destruct"></a><code class="computeroutput">args</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem"><pre class="literallayout"><a name="id35985622-bb"></a>args();</pre></li>
+<li class="listitem"><pre class="literallayout"><a name="id35985623-bb"></a>args(value_ <span class="bold"><strong>const</strong></span> &amp; v);</pre></li>
+</ol></div>
+</div>
+<div class="refsect2" title="args public member functions">
+<a name="id36204439"></a><h3>
+<a name="id35985609-bb"></a><code class="computeroutput">args</code> public member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><pre class="literallayout"><span class="type">value_ <span class="bold"><strong>const</strong></span> &amp;</span> <a name="id35985613-bb"></a>value() <span class="bold"><strong>const</strong></span>;</pre></li></ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../../../header/boost/assign/v2/put/compose/functor/forward_args_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../header/boost/assign/v2/put/compose/functor/forward_args_hpp.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../../../MACRO1_id35985669.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,733 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Runtime efficiency</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../ug.html" title="User's guide">
+<link rel="prev" href="arity.html" title="Configuring arity">
+<link rel="next" href="portability.html" title="Portability">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="arity.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../ug.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="portability.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" title="Runtime efficiency">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.ug.runtime_efficiency"></a><a class="link" href="runtime_efficiency.html" title="Runtime efficiency">Runtime efficiency</a>
+</h3></div></div></div>
+<p>
+        This section relies on notational conventions laid out in section <a class="link" href="notation.html" title="Notation">Notation</a>
+      </p>
+<a name="boost_assign_v2.ug.runtime_efficiency.testing_platform"></a><h5>
+<a name="id36170004"></a>
+        <a class="link" href="runtime_efficiency.html#boost_assign_v2.ug.runtime_efficiency.testing_platform">Testing
+        platform</a>
+      </h5>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Processor</span></dt>
+<dd><p>
+              2.4 Ghz Intel Core 2 Duo
+            </p></dd>
+<dt><span class="term">Memory</span></dt>
+<dd><p>
+              4GB 1067 Mhz DDR3
+            </p></dd>
+<dt><span class="term">OS</span></dt>
+<dd><p>
+              OS X 10.6.4
+            </p></dd>
+<dt><span class="term">Compiler</span></dt>
+<dd><p>
+              gcc4.2
+            </p></dd>
+<dt><span class="term">Optimization</span></dt>
+<dd><p>
+              Release | x86_64
+            </p></dd>
+</dl>
+</div>
+<a name="boost_assign_v2.ug.runtime_efficiency.set_up"></a><h5>
+<a name="id36170094"></a>
+        <a class="link" href="runtime_efficiency.html#boost_assign_v2.ug.runtime_efficiency.set_up">Set up</a>
+      </h5>
+<p>
+        In this section, we compare the execution time of various ways to fill an
+        STL container or creating an anonymous container.
+      </p>
+<p>
+        Here are the types that are used:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">elem_</span><span class="special">;</span> <span class="comment">// T
+</span><span class="comment">// This STL container is of the same type as that internally used by the 
+</span><span class="comment">// anon container of values, so we have a common basis for comparing 
+</span><span class="comment">// their exec time.
+</span><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span> <span class="identifier">elem_</span> <span class="special">&gt;</span> <span class="identifier">cont_</span><span class="special">;</span>
+</pre>
+<p>
+        </p>
+<p>
+        And here are the simulation parameters:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="comment">// t is a random size element, with max size :
+</span><span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">elem_size</span> <span class="special">=</span> <span class="number">100</span><span class="special">;</span>			
+<span class="comment">// Number of loops over which exec time is summed
+</span><span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">n_loops</span> <span class="special">=</span> <span class="number">1000</span> <span class="special">*</span> <span class="number">1000</span><span class="special">;</span>	
+</pre>
+<p>
+        </p>
+<p>
+      </p>
+<a name="boost_assign_v2.ug.runtime_efficiency.results"></a><h5>
+<a name="id36170321"></a>
+        <a class="link" href="runtime_efficiency.html#boost_assign_v2.ug.runtime_efficiency.results">Results</a>
+      </h5>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Library
+                </p>
+              </th>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  <code class="literal">n = 1</code>
+                </p>
+              </th>
+<th>
+                <p>
+                  <code class="literal">n = 2</code>
+                </p>
+              </th>
+<th>
+                <p>
+                  <code class="literal">n = 4</code>
+                </p>
+              </th>
+<th>
+                <p>
+                  <code class="literal">n = 8</code>
+                </p>
+              </th>
+<th>
+                <p>
+                  <code class="literal">n = 16</code>
+                </p>
+              </th>
+<th>
+                <p>
+                  <code class="literal">n = 32</code>
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <a href="http://en.wikipedia.org/wiki/Standard_Template_Library" target="_top">STL</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">cont<span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> t<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">);...</span>cont<span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">);</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.094 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.364 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.756 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">1.737 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">3.852 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">7.807 s</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"> 						<a href="../../../../../../../libs/assign/doc/index.html" target="_top">Boost.Assign 1.0</a>	
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">list_of</span><span class="special">(</span> t<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)...(</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">1.211 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">2.618 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">4.219 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">7.226 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">13.125 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">26.486 s</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"> 						<a href="../../../../../../../libs/assign/doc/index.html" target="_top">Boost.Assign 1.0</a>	
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">push_back</span><span class="special">(</span> cont <span class="special">)(</span> t<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)...(</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.251 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.726 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">1.709 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">3.780 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">7.869 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">16.117 s</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"> 						<a href="../.././index.html" target="_top">Boost.Assign 2.0</a>	
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">csv_anon</span><span class="special">(</span> t<span class="special">[</span><span class="number">0</span><span class="special">],</span> <span class="special">...,</span>t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">1.252 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">2.067 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">3.562 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">6.363 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">12.365 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">25.760 s</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"> 						<a href="../.././index.html" target="_top">Boost.Assign 2.0</a>	
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">anon</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span>_nil<span class="special">)(</span> t<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)...(</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">1.286 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">2.160 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">3.663 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">6.570 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">12.559 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">25.841 s</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"> 						<a href="../.././index.html" target="_top">Boost.Assign 2.0</a>	
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">ref</span><span class="special">::</span><span class="identifier">assign_copy</span><span class="special">::</span><span class="identifier">csv_anon</span><span class="special">(</span> t<span class="special">[</span><span class="number">0</span><span class="special">],</span> <span class="special">...,</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">1e-06 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.003 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.003 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.008 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.016 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.030 s</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"> 						<a href="../.././index.html" target="_top">Boost.Assign 2.0</a>	
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">ref</span><span class="special">::</span><span class="identifier">assign_copy</span><span class="special">::</span><span class="identifier">anon</span><span class="special">(</span> t<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)...(</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.289 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.289 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.320 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.367 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.472 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.778 s</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"> 						<a href="../.././index.html" target="_top">Boost.Assign 2.0</a>	
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">csv_put</span><span class="special">(</span> cont <span class="special">)(</span> t<span class="special">[</span><span class="number">0</span><span class="special">],</span> <span class="special">....,</span>t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.257 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.647 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">1.692 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">3.717 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">7.913 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">16.192 s</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"> 						<a href="../.././index.html" target="_top">Boost.Assign 2.0</a>	
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">put</span><span class="special">(</span> cont <span class="special">)(</span> t<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)...(</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.260 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.716 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">1.748 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">3.856 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">8.040 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">16.462 s</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"> 						<a href="../.././index.html" target="_top">Boost.Assign 2.0</a>	
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">cont <span class="special">|</span> <span class="identifier">csv_put</span><span class="special">(</span> t<span class="special">[</span><span class="number">0</span><span class="special">],</span> <span class="special">....,</span>t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.280 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.723 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">1.716 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">3.712 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">7.969 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">16.241 s</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"> 						<a href="../.././index.html" target="_top">Boost.Assign 2.0</a>	
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">cont <span class="special">|</span> _put<span class="special">(</span> t<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)...(</span> t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.266 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">0.718 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">1.729 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">3.810 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">8.129 s</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">16.949 s</code>
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<div class="note" title="Note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          The call <code class="computeroutput"><span class="identifier">csv_put</span><span class="special">(</span>
+          cont <span class="special">)(</span> t<span class="special">[</span><span class="number">0</span><span class="special">],</span> <span class="special">....,</span>t<span class="special">[</span>n<span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span></code> and
+          its <code class="computeroutput"><span class="identifier">_put</span></code> analog, are part
+          of the implementation of <code class="computeroutput">_csv_put</code> and <code class="computeroutput">_put</code>, respectively.
+          They are given here only to gauge the overhead between these two layers
+          of code.
+        </p></td></tr>
+</table></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="arity.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../ug.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="portability.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

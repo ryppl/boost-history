@@ -49,8 +49,8 @@ int main (int argc, char * const argv[]) {
     // Warning : Do not compile libs/assign/v2/test/unit_testing together with
     // this file.
 
-	{
-		using namespace test_assign_v2;
+    {
+        using namespace test_assign_v2;
 
         std::cout << "** tests:" << std::endl;
     	xxx_type_traits::xxx_has_push::test();
@@ -79,15 +79,15 @@ int main (int argc, char * const argv[]) {
     	xxx_ref::xxx_anon::test();
     	xxx_ref::xxx_fusion_matrix::test();
 
-		xxx_put::xxx_compose::xxx_common::xxx_forward_parameter::test();
+        xxx_put::xxx_compose::xxx_common::xxx_forward_parameter::test();
     	xxx_put::xxx_compose::xxx_csv::xxx_composer::test();
     	xxx_put::xxx_compose::xxx_csv::xxx_stl::test();
-		xxx_put::xxx_compose::xxx_functor::xxx_composer::test();
-		xxx_put::xxx_compose::xxx_functor::xxx_forward_args::test();
+        xxx_put::xxx_compose::xxx_functor::xxx_composer::test();
+        xxx_put::xxx_compose::xxx_functor::xxx_forward_args::test();
     	xxx_put::xxx_compose::xxx_functor::xxx_forward_seq_args::test();
     	xxx_put::xxx_compose::xxx_functor::xxx_stl::test();
 
-	}
+    }
     {
         using namespace example_assign_v2;
         std::cout << "** examples:" << std::endl;
