@@ -138,21 +138,9 @@ BOOST_ASSIGN_V2_CHAIN_CHECKING_mpl( const , const   , const   , false    )
 	            typedef typename ref::type_traits::copy_wrapper<T>::type w_;
     	        typedef boost::is_reference_wrapper<w_> is_;
 
-                // TODO std::vector causes problems.
-                //boost::array<int, 2> vw1;
                 boost::array<int, 3> vw2;//, vw3;
                 std::vector<int> vw1( 2 );
                 std::vector<int> vw3( 3 );
-                /*{
-                	vw1[ 0 ] = a1 ;
-                	vw1[ 1 ] = b1 ;
-                	vw2[ 0 ] = c1 ;
-                	vw2[ 1 ] = d1 ;
-                	vw2[ 2 ] = e1 ;
-                	vw3[ 0 ] = f1 ;
-                	vw3[ 1 ] = g1 ;
-                	vw3[ 2 ] = h1 ;
-				}*/
 				using namespace adaptor;
                 boost::copy(
                 	vt,
@@ -165,6 +153,8 @@ BOOST_ASSIGN_V2_CHAIN_CHECKING_mpl( const , const   , const   , false    )
                         vw1 | _chain( vw2 ) | _chain( vw3 )
                     );
                 }
+                // only to avoid warning unused
+                a1 + b1 + c1 + d1 + e1 + g1 + h1; 
 			}
         }// runtime checks
     }// do_check
