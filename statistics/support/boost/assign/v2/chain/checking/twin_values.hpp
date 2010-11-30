@@ -138,7 +138,7 @@ BOOST_ASSIGN_V2_CHAIN_CHECKING_mpl( const , const   , const   , false    )
                 typedef typename ref::type_traits::copy_wrapper<T>::type w_;
     	        typedef boost::is_reference_wrapper<w_> is_;
 
-                boost::array<int, 3> vw2;//, vw3;
+                boost::array<int, 3> vw2;
                 std::vector<int> vw1( 2 );
                 std::vector<int> vw3( 3 );
 				using namespace adaptor;
