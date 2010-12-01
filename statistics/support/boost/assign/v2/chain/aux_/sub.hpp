@@ -32,7 +32,7 @@ namespace chain_aux{
         sub(super_t const& s):super_t( s ){}
 
         // Relational op
-		//template<typename R1>
+        //template<typename R1>
         //bool equal_to(const R1& r)const{
         // 	return ::boost::iterator_range_detail::equal(
         //    	(*this), r );
