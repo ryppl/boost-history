@@ -59,22 +59,6 @@ BOOST_ASSIGN_V2_FRAMEWORK_CHAIN(R1 const)
 
 }// chain_aux
 
-/*#define MACRO(U1, U2) \
-    template<typename Tag,typename R1,typename R2> \
-    typename chain_aux::result<U1, U2, Tag>::type \
-    chain(U1 & r1, U2 & r2) \
-    { \
-        return r1 | adaptor::_chain( r2 ); \
-    } \
-\
-MACRO(R1      , R2        )
-MACRO(R1      , R2 const  )
-MACRO(R1 const, R2        )
-MACRO(R1 const, R2 const  )
-#undef MACRO
-*/
-
-
 }// v2
 }// assign
 }// boost
