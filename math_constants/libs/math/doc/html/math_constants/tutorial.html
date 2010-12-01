@@ -1,0 +1,172 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Tutorial</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="../index.html" title="Math Constants">
+<link rel="up" href="../index.html" title="Math Constants">
+<link rel="prev" href="../index.html" title="Math Constants">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="math_constants.tutorial"></a><a class="link" href="tutorial.html" title="Tutorial"> Tutorial</a>
+</h2></div></div></div>
+<a name="math_constants.tutorial.use_in_non_template_code"></a><h5>
+<a name="id1012468"></a>
+      <a class="link" href="tutorial.html#math_constants.tutorial.use_in_non_template_code">Use in non-template
+      code</a>
+    </h5>
+<p>
+      When using the constants at fixed precision in non-template code, you can simply
+      add a using declaration to make the constants of the correct precision for
+      your code visible in the current scope, and then use each constant as a simple
+      variable:
+    </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">constants</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">double</span> <span class="identifier">area</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">r</span><span class="special">)</span>
+<span class="special">{</span>
+   <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">math</span><span class="special">::</span><span class="identifier">double_constants</span><span class="special">;</span>
+   <span class="keyword">return</span> <span class="identifier">pi</span> <span class="special">*</span> <span class="identifier">r</span> <span class="special">*</span> <span class="identifier">r</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      Had our function been written as taking a <code class="computeroutput"><span class="keyword">float</span></code>
+      rather than a <code class="computeroutput"><span class="keyword">double</span></code> we could
+      have written instead:
+    </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">constants</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">float</span> <span class="identifier">area</span><span class="special">(</span><span class="keyword">float</span> <span class="identifier">r</span><span class="special">)</span>
+<span class="special">{</span>
+   <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">math</span><span class="special">::</span><span class="identifier">float_constants</span><span class="special">;</span>
+   <span class="keyword">return</span> <span class="identifier">pi</span> <span class="special">*</span> <span class="identifier">r</span> <span class="special">*</span> <span class="identifier">r</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      Likewise constants that are suitable for use at <code class="computeroutput"><span class="keyword">long</span>
+      <span class="keyword">double</span></code> precision are available in the
+      namespace <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">math</span><span class="special">::</span><span class="identifier">long_double_constants</span></code>.
+    </p>
+<a name="math_constants.tutorial.use_in_template_code"></a><h5>
+<a name="id1012814"></a>
+      <a class="link" href="tutorial.html#math_constants.tutorial.use_in_template_code">Use in template
+      code</a>
+    </h5>
+<p>
+      When using the constants inside a function template, we need to ensure that
+      we use the a constant of the correct precision for our template parameters.
+      We can do this by calling the function-template versions of the constants like
+      this:
+    </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">constants</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Real</span><span class="special">&gt;</span>
+<span class="identifier">Real</span> <span class="identifier">area</span><span class="special">(</span><span class="identifier">Real</span> <span class="identifier">r</span><span class="special">)</span>
+<span class="special">{</span>
+   <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">math</span><span class="special">::</span><span class="identifier">constants</span><span class="special">;</span>
+   <span class="keyword">return</span> <span class="identifier">pi</span><span class="special">&lt;</span><span class="identifier">Real</span><span class="special">&gt;()</span> <span class="special">*</span> <span class="identifier">r</span> <span class="special">*</span> <span class="identifier">r</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      Although this syntax is a little less "cute" than the non-template
+      version the code is no less efficient (at least for the builtin types float,
+      double and long double) - the function template versions of the constants are
+      simple inline functions that return a constant of the correct precision for
+      the type used. In addition these functions are declared <code class="computeroutput"><span class="identifier">constexp</span></code>
+      for those compilers that support this, allowing the result to be used in constant-expressions
+      provided the template argument is a literal type.
+    </p>
+<a name="math_constants.tutorial.use_with_user_defined_types"></a><h5>
+<a name="id1013016"></a>
+      <a class="link" href="tutorial.html#math_constants.tutorial.use_with_user_defined_types">Use With
+      User Defined Types</a>
+    </h5>
+<p>
+      The syntax for using the constants with user-defined types is the same as it
+      is in the template clase, which is to say we use:
+    </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">constants</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">math</span><span class="special">::</span><span class="identifier">constants</span><span class="special">::</span><span class="identifier">pi</span><span class="special">&lt;</span><span class="identifier">UserDefinedType</span><span class="special">&gt;();</span>
+</pre>
+<p>
+      However, since the precision of the user-defined type may be much greater than
+      that of the builtin floating pointer types, how the value returned is created
+      is as follows:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          If the precision of the type is known at compile time:
+          <div class="itemizedlist"><ul type="circle">
+<li>
+                If the precision is less than or equal to that of a <code class="computeroutput"><span class="keyword">float</span></code> and the type is constructable
+                from a <code class="computeroutput"><span class="keyword">float</span></code> then our
+                code returns a <code class="computeroutput"><span class="keyword">float</span></code>
+                literal. If the user-defined type is a literal type then the function
+                call that returns the constant will be a <code class="computeroutput"><span class="identifier">constexp</span></code>.
+              </li>
+<li>
+                If the precision is less than or equal to that of a <code class="computeroutput"><span class="keyword">double</span></code> and the type is constructable
+                from a <code class="computeroutput"><span class="keyword">double</span></code> then our
+                code returns a <code class="computeroutput"><span class="keyword">double</span></code>
+                literal. If the user-defined type is a literal type then the function
+                call that returns the constant will be a <code class="computeroutput"><span class="identifier">constexp</span></code>.
+              </li>
+<li>
+                If the precision is less than or equal to that of a <code class="computeroutput"><span class="keyword">long</span> <span class="keyword">double</span></code>
+                and the type is constructable from a <code class="computeroutput"><span class="keyword">long</span>
+                <span class="keyword">double</span></code> then our code returns
+                a <code class="computeroutput"><span class="keyword">long</span> <span class="keyword">double</span></code>
+                literal. If the user-defined type is a literal type then the function
+                call that returns the constant will be a <code class="computeroutput"><span class="identifier">constexp</span></code>.
+              </li>
+<li>
+                If the precision is less than 100 decimal digits, then the constant
+                will be constructed (just the once, then cached in a thread safe
+                manner) from a string representation of the constant.
+              </li>
+<li>
+                Otherwise the value is computed (just once, then cached in a thread
+                safe manner).
+              </li>
+</ul></div>
+        </li>
+<li>
+          If the precision is unknown at compile time then:
+          <div class="itemizedlist"><ul type="circle">
+<li>
+                If the runtime precision (obtained from a call to <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">math</span><span class="special">::</span><span class="identifier">tools</span><span class="special">::</span><span class="identifier">digits</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;()</span></code>) is less than 100 decimal digits,
+                then the constant is constructed "on the fly" from the
+                string representation of the constant.
+              </li>
+<li>
+                Otherwise the value is constructed "on the fly" by calculating
+                then value of the constant using the current default precision of
+                the type. Note that this can make use of the constants rather expensive.
+              </li>
+</ul></div>
+        </li>
+</ul></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2010 John Maddock, Paul A. Bristow<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a>
+</div>
+</body>
+</html>

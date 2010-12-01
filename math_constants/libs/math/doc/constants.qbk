@@ -1,0 +1,225 @@
+[article Math Constants
+    [quickbook 1.5]
+    [copyright 2010 John Maddock, Paul A. Bristow]
+    [/purpose ISBN 0-9504833-2-X  978-0-9504833-2-0, Classification 519.2-dc22]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+    [authors [Maddock, John], [Bristow, Paul A.]]
+    [/last-revision $Date: 2010-11-25 09:56:01 +0000 (Thu, 25 Nov 2010) $]
+]
+
+[section:tutorial Tutorial]
+
+[section:non_templ Use in non-template code]
+
+When using the constants at fixed precision in non-template code, you can simply
+add a using declaration to make the constants of the correct precision for your code
+visible in the current scope, and then use each constant as a simple variable:
+
+   #include <boost/math/constants.hpp>
+
+   double area(double r)
+   {
+      using boost::math::double_constants;
+      return pi * r * r;
+   }
+
+Had our function been written as taking a `float` rather than a `double`
+we could have written instead:
+
+   #include <boost/math/constants.hpp>
+
+   float area(float r)
+   {
+      using boost::math::float_constants;
+      return pi * r * r;
+   }
+
+Likewise constants that are suitable for use at `long double` precision
+are available in the namespace `boost::math::long_double_constants`.
+
+[endsect]
+[section:templ Use in template code]
+
+When using the constants inside a function template, we need to ensure that
+we use the a constant of the correct precision for our template parameters.
+We can do this by calling the function-template versions of the constants
+like this:
+
+   #include <boost/math/constants.hpp>
+
+   template <class Real>
+   Real area(Real r)
+   {
+      using namespace boost::math::constants;
+      return pi<Real>() * r * r;
+   }
+
+Although this syntax is a little less "cute" than the non-template version
+the code is no less efficient (at least for the builtin types float, double and long double)
+- the function template versions of the constants are simple inline functions that
+return a constant of the correct precision for the type used.  In addition these
+functions are declared `constexp` for those compilers that support this, allowing
+the result to be used in constant-expressions provided the template argument is a literal type.
+
+[endsect]
+[section:user_def Use With User Defined Types]
+
+The syntax for using the constants with user-defined types is the same as it is in
+the template clase, which is to say we use:
+
+   #include <boost/math/constants.hpp>
+
+   boost::math::constants::pi<UserDefinedType>();
+
+However, since the precision of the user-defined type may be much greater than that
+of the builtin floating pointer types, how the value returned is created is as follows:
+
+* If the precision of the type is known at compile time:
+   * If the precision is less than or equal to that of a `float` and the type is constructable from a `float`
+     then our code returns a `float` literal.  If the user-defined type is a literal type
+     then the function call that returns the constant will be a `constexp`.
+   * If the precision is less than or equal to that of a `double` and the type is constructable from a `double`
+     then our code returns a `double` literal.  If the user-defined type is a literal type
+     then the function call that returns the constant will be a `constexp`.
+   * If the precision is less than or equal to that of a `long double` and the type is constructable from a `long double`
+     then our code returns a `long double` literal.  If the user-defined type is a literal type
+     then the function call that returns the constant will be a `constexp`.
+   * If the precision is less than 100 decimal digits, then the constant will be constructed 
+      (just the once, then cached in a thread safe manner) from a string representation of the constant.
+   * Otherwise the value is computed (just once, then cached in a thread safe manner).
+* If the precision is unknown at compile time then:
+   * If the runtime precision (obtained from a call to `boost::math::tools::digits<T>()`) is
+     less than 100 decimal digits, then the constant is constructed "on the fly" from the string
+     representation of the constant.
+   * Otherwise the value is constructed "on the fly" by calculating then value of the constant
+     using the current default precision of the type.  Note that this can make use of the constants
+     rather expensive.
+
+In addition, it is possible to pass a "Policy" type as a second template argument, and use this to control
+the precision:
+
+   #include <boost/math/constants/constants.hpp>
+
+   typedef boost::math::policies::policy<boost::math::policies::digits2<80> > my_policy_type;
+   boost::math::constants::pi<MyType, my_policy_type>();
+
+Note that Boost.Math doesn't know how to control the internal precision of `MyType`, the policy
+just controls how the selection process above is carried out, and the calculation precision
+if the result is computed.
+
+It is also possible to control which method is used to construct the constant by specialising
+the traits class `construction_traits`:
+
+   namespace boost{ namespace math{ namespace constant{
+
+   template <class T, class Policy>
+   struct construction_traits
+   {
+      typedef mpl::int_<N> type;
+   };
+
+   }}} // namespaces
+
+Where /N/ takes one of the following values:
+
+[table
+[[N][Meaning]]
+[[0][The precision is unavailable at compile time, either construct from a string or calculate on the fly
+     depending upon the runtime precision.]]
+[[1][Return a float precision constant.]]
+[[2][Return a double precision constant.]]
+[[3][Return a long double precision constant.]]
+[[4][Construct the result from the string representation, and cache the result.]]
+[[Any other value N][Sets the compile time precision to N bits.]]
+]
+
+Finally, sice it can be tricky to diagnose what meta-programmed code is doing, there is a
+diagnostic routine that prints information about how this library will handle a specific type,
+it can be used like this:
+
+   #include <boost/math/constants/info.hpp>
+
+   int main()
+   {
+      boost::math::constants::print_info_on_type<MyType>();
+   }
+
+If you wish you can also pass an optional std::ostream argument to the `print_info_on_type` function.
+Typical output for a user-defined type looks like this:
+
+[pre
+Information on the Implementation and Handling of
+Mathematical Constants for Type class boost::math::concepts::real_concept
+
+Checking for std::numeric_limits<class boost::math::concepts::real_concept> specialisation: no
+boost::math::policies::precision<class boost::math::concepts::real_concept, Policy>
+reports that there is no compile type precision available.
+boost::math::tools::digits<class boost::math::concepts::real_concept>()
+reports that the current runtime precision is
+53 binary digits.
+No compile time precision is available, the construction method
+will be decided at runtime and results will not be cached
+- this may lead to poor runtime performance.
+Current runtime precision indicates that
+the constant will be constructed from a string on each call.
+]
+
+[endsect]
+[endsect]
+
+[section:constants The constants]
+
+TODO!!
+
+[endsect]
+
+[section:new_const Defining New Constants]
+
+The library provides some helper code to assist in defining new constants, the process 
+for defining a constant called "boost" goes like this:
+
+1. Define a function that calculates the value of the constant, this should be a template
+function, and be placed in boost/math/constants/calculate_constants.hpp if the constant is to be
+added to this library, or else defined at the top of your source file if not.  The function should look like this:
+
+   namespace boost{ namespace math{ namespace constants{ namespace detail{
+
+   template <class Real, int N>
+   Real calculate_boost((const mpl::int_<N>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))
+   {
+      int required_precision = N ? N : tools::digits<Real>();
+      Real result = /* value computed to required_precision bits */ ;
+      return result;
+   }
+
+   }}}} // namespaces
+
+2. You will need an arbitary precision type to use to calculate the value - this library
+currently supports either NTL::RR or mpfr_class used via the bindings in boost/math/bindings.
+The default is to use NTL::RR unles you define `USE_MPFR` at the start of your program.
+
+3. The complete program to calculate the constant is then:
+
+   #define USE_MPFR // if required
+   #include <boost/math/constants/generate.hpp>
+
+   int main()
+   {
+      BOOST_CONSTANTS_GENERATE(boost);
+   }
+
+The output from the program is a snippet of C++ code (actually a macro call) that can be cut and pasted
+into boost/math/constants/constants.hpp or else into your own code:
+
+[pre
+BOOST_DEFINE_MATH_CONSTANT(boost, 3.141592653589793238462643383279502884, 19716939937510582097494459230781640628620899862803482534211706798, 0);
+]
+
+This code snippet declares the float, double and long double versions of the constant, plus a string representation correct to 100 decimal
+digits, and all the meta-programming machinary needed to select between them.
+
+[endsect]

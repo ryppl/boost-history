@@ -110,11 +110,11 @@ namespace boost{ namespace math
       BOOST_MATH_CONSTANT_THREAD_HELPER(name, string_)\
       return BOOST_JOIN(string_get_, name)<T>();\
    }\
-   template <class T> inline T BOOST_JOIN(get_, name)(const mpl::int_<construct_from_float>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
+   template <class T> inline BOOST_CONSTEXPR T BOOST_JOIN(get_, name)(const mpl::int_<construct_from_float>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
    { return BOOST_JOIN(BOOST_JOIN(x, BOOST_JOIN(e, exp)), F); }\
-   template <class T> inline T BOOST_JOIN(get_, name)(const mpl::int_<construct_from_double>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
+   template <class T> inline BOOST_CONSTEXPR T BOOST_JOIN(get_, name)(const mpl::int_<construct_from_double>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
    { return BOOST_JOIN(x, BOOST_JOIN(e, exp)); }\
-   template <class T> inline T BOOST_JOIN(get_, name)(const mpl::int_<construct_from_long_double>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
+   template <class T> inline BOOST_CONSTEXPR T BOOST_JOIN(get_, name)(const mpl::int_<construct_from_long_double>& BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
    { return BOOST_JOIN(BOOST_JOIN(x, BOOST_JOIN(e, exp)), L); }\
    /* This one is for very high precision that is none the less known at compile time: */ \
    template <class T, int N> inline T BOOST_JOIN(compute_get_, name)(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(mpl::int_<N>) BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
@@ -122,7 +122,7 @@ namespace boost{ namespace math
    template <class T, int N> inline T BOOST_JOIN(get_, name)(const mpl::int_<N>& n BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
    {\
       BOOST_MATH_CONSTANT_THREAD_HELPER(name, compute_)\
-      BOOST_JOIN(compute_get_, name)<T, N>(); \
+      return BOOST_JOIN(compute_get_, name)<T, N>(); \
    }\
    /* This one is for true arbitary precision, which may well vary at runtime: */ \
    template <class T> inline T BOOST_JOIN(get_, name)(const mpl::int_<0>& n BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
@@ -131,9 +131,9 @@ namespace boost{ namespace math
    \
    \
    /* The actual forwarding function: */ \
-   template <class T, class Policy> inline T name(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(T) BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(Policy))\
+   template <class T, class Policy> inline BOOST_CONSTEXPR T name(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(T) BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(Policy))\
    { return detail:: BOOST_JOIN(get_, name)<T>(typename construction_traits<T, Policy>::type()); }\
-   template <class T> inline T name(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
+   template <class T> inline BOOST_CONSTEXPR T name(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
    { return name<T, boost::math::policies::policy<> >(); }\
    \
    \
