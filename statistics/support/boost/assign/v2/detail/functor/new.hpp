@@ -13,7 +13,6 @@
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
-//#include <memory> // TODO what for?!
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
