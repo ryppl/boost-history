@@ -23,8 +23,8 @@ BOOST_STATIC_ASSERT((boost::is_same<boost::math::constants::construction_traits<
 BOOST_STATIC_ASSERT((boost::is_same<boost::math::constants::construction_traits<long double, boost::math::policies::policy<> >::type, boost::mpl::int_<(sizeof(double) == sizeof(long double) ? boost::math::constants::construct_from_double : boost::math::constants::construct_from_long_double)> >::value));
 BOOST_STATIC_ASSERT((boost::is_same<boost::math::constants::construction_traits<boost::math::concepts::real_concept, boost::math::policies::policy<> >::type, boost::mpl::int_<0> >::value));
 
-typedef boost::math::policies::policy<boost::math::policies::digits2<LDBL_MANT_DIG> > real_concept_policy_1;
-typedef boost::math::policies::policy<boost::math::policies::digits2<LDBL_MANT_DIG + 2> > real_concept_policy_2;
+typedef boost::math::policies::policy<boost::math::policies::digits2<std::numeric_limits<long double>::digits> > real_concept_policy_1;
+typedef boost::math::policies::policy<boost::math::policies::digits2<std::numeric_limits<long double>::digits + 2> > real_concept_policy_2;
 
 BOOST_STATIC_ASSERT((boost::is_same<boost::math::constants::construction_traits<boost::math::concepts::real_concept, real_concept_policy_1 >::type, boost::mpl::int_<(sizeof(double) == sizeof(long double) ? boost::math::constants::construct_from_double : boost::math::constants::construct_from_long_double) > >::value));
 BOOST_STATIC_ASSERT((boost::is_same<boost::math::constants::construction_traits<boost::math::concepts::real_concept, real_concept_policy_2 >::type, boost::mpl::int_<boost::math::constants::construct_from_string> >::value));

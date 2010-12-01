@@ -49,7 +49,7 @@ namespace boost{ namespace math
       construct_from_float = 1,
       construct_from_double = 2,
       construct_from_long_double = 3,
-      construct_from_string = 4,
+      construct_from_string = 4
    };
 
    //
@@ -118,7 +118,7 @@ namespace boost{ namespace math
    { return BOOST_JOIN(BOOST_JOIN(x, BOOST_JOIN(e, exp)), L); }\
    /* This one is for very high precision that is none the less known at compile time: */ \
    template <class T, int N> inline T BOOST_JOIN(compute_get_, name)(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(mpl::int_<N>) BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
-   { static const T result = BOOST_JOIN(calculate_, name)<T>(n); return result; }\
+   { static const T result = BOOST_JOIN(calculate_, name)<T>(mpl::int_<N>()); return result; }\
    template <class T, int N> inline T BOOST_JOIN(get_, name)(const mpl::int_<N>& n BOOST_MATH_APPEND_EXPLICIT_TEMPLATE_TYPE_SPEC(T))\
    {\
       BOOST_MATH_CONSTANT_THREAD_HELPER(name, compute_)\

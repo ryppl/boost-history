@@ -37,4 +37,33 @@ project
       <include>$(gmp_path) <include>$(gmp_path)/mpfr <include>$(gmp_path)/gmpfrxx
     ;
 
-run test_constants.cpp $(boost-path)/libs/test/build//boost_test_exec_monitor ;
+if $(ntl-path)
+{
+   lib ntl : [ GLOB $(ntl-path)/src : *.cpp ] ;
+}
+else
+{
+   lib ntl ;
+}
+
+explicit ntl ;
+
+if $(gmp_path)
+{
+   lib mpfr_class : $(gmp_path)/gmpfrxx/gmpfrxx.cpp ;
+}
+else
+{
+   lib mpfr_class ;
+}
+
+explicit mpfr_class ;
+
+lib gmp : : <search>$(gmp_path)/lib <search>$(gmp_path)/bin ;
+lib mpfr : : <search>$(gmp_path)/mpfr/lib <search>$(gmp_path)/mpfr/bin ;
+
+
+run test_constants.cpp $(boost-path)/libs/test/build//boost_test_exec_monitor $(boost-path)/libs/thread/build//boost_thread ;
+run test_print_info_on_type.cpp ;
+run test_constant_generate.cpp ntl/<link>static $(boost-path)/libs/regex/build//boost_regex : : : [ check-target-builds $(boost-path)/libs/math/config//has_ntl_rr : : <build>no ] : test_constant_generate_ntl ;
+run test_constant_generate.cpp mpfr_class/<link>static mpfr gmp $(boost-path)/libs/regex/build//boost_regex : : : [ check-target-builds $(boost-path)/libs/math/config//has_mpfr_class : : <build>no ] <define>USE_MPFR : test_constant_generate_mpfr ;
