@@ -442,14 +442,6 @@ private:
         return *this; 
     }
     friend class detail::singleton< single_configurator >;
-public:
-    void parse( const std::string& path_to_configuration_file ) {
-        configurator::parse( path_to_configuration_file );
-    }
-
-    void load( const std::string& path_to_configuration_file ) {
-        configurator::load( path_to_configuration_file );
-    }
 };
 #endif
 
