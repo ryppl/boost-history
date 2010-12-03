@@ -39,16 +39,30 @@ public:
             , open_section_tag_begin_sign( "<" )
             , open_section_tag_end_sign( ">" )
             , close_section_tag_begin_sign( "</" )
-            , close_section_tag_end_sign( ">" ) {}
+            , close_section_tag_end_sign( ">" )
+            , regex_open_section_tag( "[" 
+                                      + open_section_tag_begin_sign
+                                      + "]{1}[a-zA-Z0-9_.-]{1,}["
+                                      + open_section_tag_end_sign
+                                      + "]{1}" )
+            , regex_close_section_tag( "[" 
+                                       + open_section_tag_begin_sign
+                                       + "]{1}[/]{1}[a-zA-Z0-9_.-]{1,}["
+                                       + open_section_tag_end_sign
+                                       + "]{1}" ) {}
 private:
     std::string&        option_name_value_separator;
     const std::string&  sections_separator;
     const str_set&      unique_names_of_sections;
     const bool&         case_sensitivity_for_names;
+private:
     const std::string   open_section_tag_begin_sign;
     const std::string   open_section_tag_end_sign;
     const std::string   close_section_tag_begin_sign;
     const std::string   close_section_tag_end_sign;
+    const boost::regex  regex_open_section_tag;
+    const boost::regex  regex_close_section_tag;
+private:
     std::string         current_section_path;
     str_set             nonmulti_sections_uniqueness_checker;
 public:
@@ -69,18 +83,7 @@ public:
         nonmulti_sections_uniqueness_checker.clear();
         return factual_obtained_options;
     }
-private:
-    bool open_section_tag_exists_in_this( const std::string& s ) const {
-        return boost::contains( s, open_section_tag_begin_sign )
-               && boost::contains( s, open_section_tag_end_sign )
-               && !boost::contains( s, close_section_tag_begin_sign );
-    }
-
-    bool close_section_tag_exists_in_this( const std::string& s ) const {
-        return boost::contains( s, close_section_tag_begin_sign )
-               && boost::contains( s, close_section_tag_end_sign );
-    }
- 
+private: 
     bool option_exists_in_this( const std::string& s ) const {
         char separator = *option_name_value_separator.begin();
         bool extended_predicat = false;
@@ -90,6 +93,14 @@ private:
         } else {}
         return boost::contains( s, option_name_value_separator )
                || extended_predicat ;
+    }
+    
+    bool open_section_tag_exists_in_this( const std::string& s ) const {
+        return regex_match( s, regex_open_section_tag );
+    }
+
+    bool close_section_tag_exists_in_this( const std::string& s ) const {
+        return regex_match( s, regex_close_section_tag );
     }
 private:
     void obtain_option( const std::string& s, pure_options& factual_obtained_options ) const {
