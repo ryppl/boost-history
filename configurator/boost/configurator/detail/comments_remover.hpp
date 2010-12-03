@@ -130,10 +130,6 @@ private:
     void resplit( const std::string& s, str_storage& obtained_strings ) const {
         obtained_strings.clear();
         boost::split( obtained_strings, s, boost::is_any_of( "\n" ) );
-
-        BOOST_FOREACH ( const std::string& s, obtained_strings ) {
-            std::cout << "resplit s: " << s << std::endl;
-        }
     } 
 };
 
