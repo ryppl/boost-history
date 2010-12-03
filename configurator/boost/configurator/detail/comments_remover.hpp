@@ -13,6 +13,8 @@
 #include <boost/mem_fn.hpp>
 #include <boost/assign.hpp>
 
+#include <iostream>
+
 namespace boost {
 
 /// \namespace cf
@@ -51,86 +53,87 @@ public:
     }
 private:
     void remove_one_line_comments_from( str_storage& obtained_strings ) const {
-        BOOST_FOREACH ( std::string& s, obtained_strings ) {
-            if ( one_line_comment_in_this( s ) ) {
-                remove_one_line_comment_from_this( s );
-            } else {}
-        }
+        std::for_each( obtained_strings.begin()
+                       , obtained_strings.end()
+                       , boost::bind( &comments_remover::remove_one_line_comment
+                                      , this
+                                      , _1 ) );
     }
     
-    bool one_line_comment_in_this( const std::string& s ) const {
-        return boost::contains( s, one_line_comment_sign );
-    }
-
-    void remove_one_line_comment_from_this( std::string& s ) const {
-        s.erase( boost::find_first( s, one_line_comment_sign ).begin()
-                 , s.end() );
+    void remove_one_line_comment( std::string& s ) const {
+        if ( boost::contains( s, one_line_comment_sign ) ) {
+            s.erase( boost::find_first( s, one_line_comment_sign ).begin()
+                     , s.end() );
+        } else {}
     }
 private:
     void remove_multi_line_comments_from( str_storage& obtained_strings ) const {
-        align_multi_line_comments_in( obtained_strings ); 
-        remove_aligned_multi_line_comments_from( obtained_strings );
-    } 
+        if ( at_least_one_multi_line_comment_exists_in( obtained_strings ) ) {
+            std::string s = concatenate( obtained_strings );
+            std::string uncomment_s = extract_uncomment_strings_from( s );
+            resplit( uncomment_s, obtained_strings );
+        } else {}
+    }
     
-    void align_multi_line_comments_in( str_storage& obtained_strings ) const {
-        bool waiting_for_comment_closing = false; 
-        str_it last_string;
-        
-        for ( str_it it = obtained_strings.begin(); obtained_strings.end() != it; ++it ) {
-            std::string& s = *it;
-
-            if ( waiting_for_comment_closing ) {
-                if ( comment_closing_in_this( s ) ) {
-                    waiting_for_comment_closing = false;
-                } else {}
-                *last_string += s;
-                s.clear();
-            } else {
-                check_unopened_multi_line_comment( s );
-                string_it begin_of_comment = boost::find_first( s, multi_line_comment_begin_sign ).begin();
-                if ( s.end() != begin_of_comment ) {
-                    if ( comment_closing_in_this( s ) ) {
-                        remove_multi_line_comment_from_this( s, begin_of_comment );
-                    } else {
-                        waiting_for_comment_closing = true;
-                        last_string = it;
-                    }
-                } else {}
-            }
-        }
-
-        check_unclosed_multi_line_comment( waiting_for_comment_closing );
-    }
-
-    bool comment_closing_in_this( const std::string& s ) const {
-        return boost::contains( s, multi_line_comment_end_sign );
-    }
-
-    void remove_aligned_multi_line_comments_from( str_storage& obtained_strings ) const {
-        BOOST_FOREACH ( std::string& s, obtained_strings ) {
-            string_it begin_of_comment = boost::find_first( s, multi_line_comment_begin_sign ).begin();
-            if ( s.end() != begin_of_comment ) {
-                remove_multi_line_comment_from_this( s, begin_of_comment ); 
+    bool at_least_one_multi_line_comment_exists_in( const str_storage& obtained_strings ) const {
+        BOOST_FOREACH ( const std::string& s, obtained_strings ) {
+            if ( multi_line_comment_exists_in( s ) ) {
+                return true;
             } else {}
         }
+        return false;
     }
 
-    void remove_multi_line_comment_from_this( std::string& s, string_it begin_of_comment ) const {
-        s.erase( begin_of_comment
-                 , boost::find_first( s, multi_line_comment_end_sign ).end() );
+    bool multi_line_comment_exists_in( const std::string& s ) const {
+        return boost::contains( s, multi_line_comment_begin_sign )
+               && boost::contains( s, multi_line_comment_end_sign );
+    }
+
+    std::string concatenate( const str_storage& obtained_strings ) const {
+        std::string conc;
+        BOOST_FOREACH ( const std::string& s, obtained_strings ) {
+            conc += s + '\n';
+        }
+        return conc;
     }
     
-    void check_unopened_multi_line_comment( const std::string& s ) const {
-        if ( !boost::contains( s, multi_line_comment_begin_sign ) 
-             && boost::contains( s, multi_line_comment_end_sign ) ) {
-            notify( "Unopened multi-line comment detected in string '" + s + "'!" );
-        } else {}
+    std::string extract_uncomment_strings_from( const std::string& s ) const {
+        string_const_it first_it = s.begin();
+        string_const_it end_it   = s.end();
+        const size_t multi_line_comment_sign_size = 2;
+
+        std::string uncomment_strings;
+        while ( true ) {
+            string_const_it begin_of_comment = std::search( first_it
+                                                            , end_it
+                                                            , multi_line_comment_begin_sign.begin()
+                                                            , multi_line_comment_begin_sign.end() );
+            string_const_it end_of_comment = std::search( first_it
+                                                          , end_it
+                                                          , multi_line_comment_end_sign.begin()
+                                                          , multi_line_comment_end_sign.end() );
+            if ( end_it == begin_of_comment ) {
+                uncomment_strings.append( first_it, end_it );
+                break;
+            } else if ( end_it == end_of_comment ) {
+                notify( "Unclosed multi-line comment detected!" );
+            } else if ( begin_of_comment > end_of_comment ) {
+                notify( "Unopened multi-line comment detected!" );
+            }
+
+            uncomment_strings.append( first_it, begin_of_comment );
+            first_it = end_of_comment + multi_line_comment_sign_size;
+        }
+        return uncomment_strings;
     }
-    
-    void check_unclosed_multi_line_comment( bool waiting_for_comment_closing ) const {
-        if ( waiting_for_comment_closing ) {
-            notify( "Unclosed multi-line comment detected!" );
-        } else {}
+
+    void resplit( const std::string& s, str_storage& obtained_strings ) const {
+        obtained_strings.clear();
+        boost::split( obtained_strings, s, boost::is_any_of( "\n" ) );
+
+        BOOST_FOREACH ( const std::string& s, obtained_strings ) {
+            std::cout << "resplit s: " << s << std::endl;
+        }
     } 
 };
 
