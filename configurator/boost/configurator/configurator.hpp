@@ -436,11 +436,7 @@ class single_configurator :
         , public detail::singleton< single_configurator > {
 private:
     single_configurator() {}
-    single_configurator( const single_configurator& another ) {}
     ~single_configurator() {}
-    single_configurator& operator=( const single_configurator& another ) {
-        return *this; 
-    }
     friend class detail::singleton< single_configurator >;
 };
 #endif
