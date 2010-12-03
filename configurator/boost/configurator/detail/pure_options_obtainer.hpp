@@ -10,6 +10,7 @@
 
 #include <boost/configurator/detail/misc.hpp>
 #include <boost/configurator/detail/option.hpp>
+#include <boost/algorithm/string/regex.hpp>
 
 namespace boost {
 
@@ -85,16 +86,22 @@ public:
     }
 private: 
     bool option_exists_in_this( const std::string& s ) const {
-        char separator = *option_name_value_separator.begin();
-        bool extended_predicat = false;
+        const char separator = *option_name_value_separator.begin();
+        boost::regex regex_valid_option; 
         if ( ' ' == separator ) {
-            // In this case allowed tabulations as name-value separator.
-            extended_predicat = boost::contains( s, "\t" );
-        } else {}
-        return boost::contains( s, option_name_value_separator )
-               || extended_predicat ;
-    }
-    
+            regex_valid_option = boost::regex( "[ \t]{0,}[^ \t]{1,}[ \t]{1,}[^ \t]{1,}[ \t]{0,}" );
+        } else {
+            regex_valid_option = boost::regex( std::string( "[^" )
+                                               + separator
+                                               + "]{1,}["
+                                               + separator
+                                               + "]{1}[^"
+                                               + separator
+                                               + "]{1,}" );
+        }
+        return regex_match( s, regex_valid_option );
+    } 
+
     bool open_section_tag_exists_in_this( const std::string& s ) const {
         return regex_match( s, regex_open_section_tag );
     }
@@ -105,73 +112,24 @@ private:
 private:
     void obtain_option( const std::string& s, pure_options& factual_obtained_options ) const {
         str_storage option_parts = get_option_parts_from( s );
-        check_separator_repetition_in( option_parts );
-        check_parts_quantity_if_use_space_separator( option_parts );
         std::string name  = option_parts.front();
         std::string value = option_parts.back();
         boost::trim( name );
         boost::trim( value );
-        check_option_validity( name, value );
         const std::string full_name_of_option = current_section_path + name;
         factual_obtained_options += pure_option( full_name_of_option, value );
     }
     
     str_storage get_option_parts_from( const std::string& s ) const {
         str_storage option_parts;
-        std::string s_for_replacing( s.begin(), s.end() );
         const char separator = *option_name_value_separator.begin();
         if ( ' ' == separator ) {
-            // In this case allowed tabulations as name-value separator. 
-            boost::replace_all( s_for_replacing, "\t", " " );
-        } else {}
-        boost::split( option_parts, s_for_replacing, boost::is_any_of( option_name_value_separator ) );
-        remove_empty_strings_from( option_parts );
+            boost::find_all_regex( option_parts, s, boost::regex( "[^ \t]{1,}" ) );
+        } else {
+            boost::find_all_regex( option_parts, s, boost::regex( std::string( "[^" ) + separator + "]{1,}" ) );
+        } 
         return option_parts;
-    }
-    
-    void check_parts_quantity_if_use_space_separator( const str_storage& option_parts ) const {
-        const char separator = *option_name_value_separator.begin();
-        if ( ' ' == separator && option_parts.size() > 2 ) {
-            o_stream what_happened;
-            what_happened << "in section '" 
-                          << prepare_full_name_for_log( current_section_path, sections_separator ) 
-                          << "' detected option (name '" + option_parts[0] << "') "
-                          << "with spaces repetition, "
-                          << "but you using space symbol as name-value separator, it's incorrect!"
-                          ;
-            notify( what_happened.str() );
-        } else {}
-    }
-
-    void check_separator_repetition_in( const str_storage& option_parts ) const {
-        if ( 2 != option_parts.size() ) {
-            const char separator = *option_name_value_separator.begin();
-            if ( ' ' == separator ) {
-                // If separator is space symbol - allows it repetition.
-                return;
-            } else {}
-
-            notify( "Near option '"
-                    + option_parts.front()
-                    + "' repetition of name-value separator '"
-                    + option_name_value_separator
-                    + "' detected!" );
-        } else {}
-    }
-
-    void check_option_validity( const std::string& name, const std::string& value ) const {
-        if ( name.empty() ) {
-            notify( "Some option in section '"
-                    + prepare_full_name_for_log( current_section_path, sections_separator )
-                    + "' have not name!" );
-        } else {}
-
-        if ( value.empty() ) {
-            notify( "Option '"
-                    + prepare_full_name_for_log( current_section_path + name, sections_separator )
-                    + "' have not value!" );
-        } else {}
-    }
+    } 
 private:
     void handle_opening_of_section( const std::string& s ) {
         std::string opening_section_name = retrieve_section_name_from_open_tag( s );
