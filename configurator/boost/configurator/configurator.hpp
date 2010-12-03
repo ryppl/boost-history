@@ -153,7 +153,7 @@ private:
 private:
     // detail::str_storage multiply_sections_names;
 public:
-    configurator& allow_section_multiplicity() {
+    configurator& allow_multiplicity() {
         // Not implemented yet, planning...
         //
         // std::string section_name( current_section_path.begin(), current_section_path.end() );
@@ -243,6 +243,10 @@ private:
             return;
         } else {} 
         
+        BOOST_FOREACH ( std::string& s, obtained_strings ) {
+            boost::trim( s );
+        }
+
         if ( obtained_strings.empty() ) {
             notify( "No actual data in configuration file, is file empty?" );
         } else {} 

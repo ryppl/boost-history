@@ -116,9 +116,11 @@ private:
                 uncomment_strings.append( first_it, end_it );
                 break;
             } else if ( end_it == end_of_comment ) {
-                notify( "Unclosed multi-line comment detected!" );
+                notify( "Unclosed multi-line comment detected in line "
+                        + get_line_number( s, begin_of_comment ) + "!" );
             } else if ( begin_of_comment > end_of_comment ) {
-                notify( "Unopened multi-line comment detected!" );
+                notify( "Unopened multi-line comment detected in line "
+                        + get_line_number( s, end_of_comment ) + "!" );
             }
 
             uncomment_strings.append( first_it, begin_of_comment );
@@ -130,7 +132,12 @@ private:
     void resplit( const std::string& s, str_storage& obtained_strings ) const {
         obtained_strings.clear();
         boost::split( obtained_strings, s, boost::is_any_of( "\n" ) );
-    } 
+    }
+
+    std::string get_line_number( const std::string& s, string_const_it it ) const {
+        const size_t ln_quantity = (size_t)std::count( s.begin(), it, '\n' );
+        return boost::lexical_cast< std::string >( ln_quantity + 1 );
+    }
 };
 
 } // namespace detail

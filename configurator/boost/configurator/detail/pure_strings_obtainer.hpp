@@ -59,9 +59,7 @@ private:
         std::string s;
         while ( std::getline( configuration_file, s ) ) {
             boost::trim( s );
-            if ( !s.empty() ) {
-                strings += s;
-            } else {}
+            strings += s;
         }
         return strings;
     } 
