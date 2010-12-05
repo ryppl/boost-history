@@ -18,7 +18,7 @@ template < typename TimeMap > class bfs_time_visitor:public default_bfs_visitor 
 public:
   bfs_time_visitor(TimeMap tmap, T & t):m_timemap(tmap), m_time(t) { }
   template < typename Vertex, typename Graph >
-  void discover_vertex(Vertex u, const Graph & g) const
+    void discover_vertex(Vertex u, const Graph & g) const
   {
     put(m_timemap, u, m_time++);
   }
@@ -27,18 +27,12 @@ public:
 };
 
 
-struct VertexProps {
-  boost::default_color_type color;
-  std::size_t discover_time;
-};
-
 int
 main()
 {
   using namespace boost;
   // Select the graph type we wish to use
-  typedef adjacency_list < listS, listS, undirectedS,
-    VertexProps> graph_t;
+  typedef adjacency_list < vecS, vecS, undirectedS > graph_t;
   // Set up the vertex IDs and names
   enum { r, s, t, u, v, w, x, y, N };
   const char *name = "rstuvwxy";
@@ -51,35 +45,25 @@ main()
   const int n_edges = sizeof(edge_array) / sizeof(E);
 #if defined(BOOST_MSVC) && BOOST_MSVC <= 1300
   // VC++ has trouble with the edge iterator constructor
-  graph_t g;
-  std::vector<graph_traits<graph_t>::vertex_descriptor> verts;
-  for (std::size_t i = 0; i < N; ++i)
-    verts.push_back(add_vertex(g));
+  graph_t g(N);
   for (std::size_t j = 0; j < n_edges; ++j)
-    add_edge(verts[edge_array[j].first], verts[edge_array[j].second], g);
+    add_edge(edge_array[j].first, edge_array[j].second, g);
 #else
   typedef graph_traits<graph_t>::vertices_size_type v_size_t;
   graph_t g(edge_array, edge_array + n_edges, v_size_t(N));
 #endif
 
   // Typedefs
-  typedef graph_traits<graph_t>::vertex_descriptor Vertex;
-  typedef graph_traits<graph_t>::vertices_size_type Size;
+  typedef graph_traits < graph_t >::vertex_descriptor Vertex;
+  typedef graph_traits < graph_t >::vertices_size_type Size;
   typedef Size* Iiter;
-
-  Size time = 0;
-  typedef property_map<graph_t, std::size_t VertexProps::*>::type dtime_map_t;
-  dtime_map_t dtime_map = get(&VertexProps::discover_time, g);
-  bfs_time_visitor < dtime_map_t > vis(dtime_map, time);
-  breadth_first_search(g, vertex(s, g), color_map(get(&VertexProps::color, g)).
-    visitor(vis));
 
   // a vector to hold the discover time property for each vertex
   std::vector < Size > dtime(num_vertices(g));
-  graph_traits<graph_t>::vertex_iterator vi, vi_end;
-  std::size_t c = 0;
-  for (boost::tie(vi, vi_end) = vertices(g); vi != vi_end; ++vi, ++c)
-    dtime[c] = dtime_map[*vi];
+
+  Size time = 0;
+  bfs_time_visitor < Size * >vis(&dtime[0], time);
+  breadth_first_search(g, vertex(s, g), visitor(vis));
 
   // Use std::sort to order the vertices by their discover time
   std::vector<graph_traits<graph_t>::vertices_size_type > discover_order(N);
