@@ -671,9 +671,9 @@ class raii_dup2
 { 
 public: 
     raii_dup2(int fd1, int fd2) 
-    : reverted_(false), 
-    fd1_(fd1), 
-    fd2_(fd2) 
+        : reverted_(false), 
+        fd1_(fd1), 
+        fd2_(fd2) 
     { 
         BOOST_REQUIRE(dup2(fd1_, fd2_) != -1); 
     } 

@@ -67,9 +67,11 @@ public:
     : h_(h, handle::dont_close)
     {
 #if defined(BOOST_WINDOWS_API)
-    if (!SetHandleInformation(h_.native(), HANDLE_FLAG_INHERIT,
-        HANDLE_FLAG_INHERIT))
-        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("SetHandleInformation() failed");
+        if (h != INVALID_HANDLE_VALUE &&
+            !SetHandleInformation(h_.native(), HANDLE_FLAG_INHERIT,
+            HANDLE_FLAG_INHERIT))
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
+                "SetHandleInformation() failed");
 #endif
     }
 
