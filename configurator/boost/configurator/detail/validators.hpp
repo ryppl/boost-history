@@ -422,12 +422,13 @@ public:
     void check( const std::string& exp_record, const std::string& option_name ) {
         #ifdef WITH_SEMANTIC_CHECK
         using boost::spirit::qi::long_double;
+        using boost::spirit::qi::print;
         using boost::spirit::qi::parse;
     
         double number = 0.0;
         bool valid_exp_record = parse( exp_record.begin()
                                        , exp_record.end()
-                                       , long_double
+                                       , long_double >> !print
                                        , number );
         if ( valid_exp_record ) {
             store_for_option( option_name, number );

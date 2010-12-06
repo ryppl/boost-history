@@ -69,6 +69,7 @@ private:
 public:
     pure_options operator()( const str_storage& obtained_strings ) {
         pure_options factual_obtained_options;
+
         BOOST_FOREACH ( const std::string& s, obtained_strings ) {
             if ( option_exists_in_this( s ) ) {
                 obtain_option( s, factual_obtained_options );
@@ -80,6 +81,7 @@ public:
                 notify_about_meaningless_string( s );
             }
         }
+
         check_last_section_closing();
         nonmulti_sections_uniqueness_checker.clear();
         return factual_obtained_options;
