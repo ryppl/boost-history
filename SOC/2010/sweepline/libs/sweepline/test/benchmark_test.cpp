@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(benchmark_test1, T, test_types) {
         std::vector< point_2d<T> > points;
         points.reserve(num_points);
 
-        time_t start_time = time(NULL);
+        clock_t start_time = clock();
         int num_times = max_points / num_points;
         for (int cur = 0; cur < num_times; cur++) {
             for (int cur_point = 0; cur_point < num_points; cur_point++) {
@@ -52,8 +52,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(benchmark_test1, T, test_types) {
             build_voronoi(points, test_output);
             points.clear();
         }
-        time_t end_time = time(NULL);
-        double running_time = static_cast<double>(end_time - start_time) / num_times;
+        clock_t end_time = clock();
+        double running_time = static_cast<double>(end_time - start_time) / CLOCKS_PER_SEC / num_times;
 
         fprintf(bench_file,
                 "Number of points = %8d; Overall time = %2d; Time per one input = %9.6f.\n",

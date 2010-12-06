@@ -414,6 +414,11 @@ namespace sweepline {
         typedef T coordinate_type;
         typedef detail::site_event<T> site_event_type;
         typedef voronoi_edge<T> voronoi_edge_type;
+        
+        voronoi_cell(const site_event_type &new_site, voronoi_edge_type *edge) :
+            site_(new_site),
+            incident_edge_(edge),
+            num_incident_edges_(0) {}
 
         bool contains_segment() const {
             return site_.is_segment();
@@ -439,17 +444,30 @@ namespace sweepline {
             return num_incident_edges_;
         }
 
-        voronoi_cell(const site_event_type &new_site, voronoi_edge_type *edge) :
-            site_(new_site),
-            incident_edge_(edge),
-            num_incident_edges_(0) {}
-
     private:
         friend class voronoi_output<T>;
+
+        void incident_edge(voronoi_edge_type *e) { incident_edge_ = e; }
+        void inc_num_incident_edges() { num_incident_edges_++; }
+        void dec_num_incident_edges() { num_incident_edges_--; }
         
         site_event_type site_;
         voronoi_edge_type *incident_edge_;
         int num_incident_edges_;
+    };
+    
+    template <typename T>
+    struct robust_voronoi_vertex {
+        detail::epsilon_robust_comparator<T> center_x;
+        detail::epsilon_robust_comparator<T> center_y;
+        detail::epsilon_robust_comparator<T> denom;
+
+        robust_voronoi_vertex(const detail::epsilon_robust_comparator<T> &c_x,
+                              const detail::epsilon_robust_comparator<T> &c_y,
+                              const detail::epsilon_robust_comparator<T> &den) :
+            center_x(c_x),
+            center_y(c_y),
+            denom(den) {}
     };
 
     template <typename T>
@@ -458,24 +476,20 @@ namespace sweepline {
         typedef T coordinate_type;
         typedef voronoi_edge<T> voronoi_edge_type;
 
-        detail::epsilon_robust_comparator<T> center_x;
-        detail::epsilon_robust_comparator<T> center_y;
-        detail::epsilon_robust_comparator<T> denom;
-        typename std::list< voronoi_vertex<coordinate_type> >::iterator voronoi_record_it;
-
-        voronoi_vertex(const detail::epsilon_robust_comparator<T> &c_x,
-                       const detail::epsilon_robust_comparator<T> &c_y,
-                       const detail::epsilon_robust_comparator<T> &den,
+        voronoi_vertex(robust_voronoi_vertex<T> *robust_vertex,
                        voronoi_edge_type *edge) :
-            center_x(c_x),
-            center_y(c_y),
-            denom(den),
-            vertex_(c_x.dif() / den.dif(), c_y.dif() / den.dif()),
+            robust_vertex_(robust_vertex),
+            vertex_(robust_vertex->center_x.dif() / robust_vertex->denom.dif(),
+                    robust_vertex->center_y.dif() / robust_vertex->denom.dif()),
             incident_edge_(edge),
-            num_incident_edges_(0) {}
+            num_incident_edges_(3) {}
 
         const point_2d<T> &vertex() const {
             return vertex_;
+        }
+
+        const robust_voronoi_vertex<T> *robust_vertex() const {
+            return robust_vertex_;
         }
 
         voronoi_edge_type *incident_edge() {
@@ -492,7 +506,11 @@ namespace sweepline {
 
     private:
         friend class voronoi_output<T>;
+        
+        void incident_edge(voronoi_edge_type *e) { incident_edge_ = e; }
+        void num_incident_edges(int n) { num_incident_edges_ = n; }
 
+        robust_voronoi_vertex<T> *robust_vertex_;
         point_2d<T> vertex_;
         voronoi_edge_type *incident_edge_;
         int num_incident_edges_;
@@ -538,18 +556,26 @@ namespace sweepline {
         const voronoi_edge_type *prev() const { return prev_; }
 
         voronoi_edge_type *rot_next() {
-            if (prev_)
+            if (vertex_)
                 return prev_->twin();
             return NULL;
         }
         const voronoi_edge_type *rot_next() const {
-            if (prev_)
+            if (vertex_)
                 return prev_->twin();
             return NULL;
         }
 
-        voronoi_edge_type *rot_prev() { return twin_->next(); }
-        const voronoi_edge_type *rot_prev() const { return twin_->next(); }
+        voronoi_edge_type *rot_prev() {
+            if (vertex_)
+                return twin_->next();
+            return NULL;
+        }
+        const voronoi_edge_type *rot_prev() const {
+            if (vertex_)
+                return twin_->next();
+            return NULL;
+        }
 
     private:
         friend class voronoi_output<T>;
@@ -559,7 +585,7 @@ namespace sweepline {
         void vertex1(voronoi_vertex_type *v) { twin_->vertex0(v); }
         void twin(voronoi_edge_type *e) { twin_ = e; }
         void next(voronoi_edge_type *e) { next_ = e; }
-        void prev(voronoi_edge_type *e) { prev_ = e; }
+        void prev(voronoi_edge_type *e) { prev_ = e; }        
 
         voronoi_cell_type *cell_;
         voronoi_vertex_type *vertex_;
@@ -600,8 +626,9 @@ namespace sweepline {
             num_vertex_records_ = 0;
         }
 
-        void reset() {
-            cell_records_.clear();
+        void clear() {
+            robust_vertices_.clear();
+            voronoi_cells_type().swap(cell_records_);
             vertex_records_.clear();
             edge_records_.clear();
 
@@ -650,9 +677,6 @@ namespace sweepline {
 
         // Update voronoi output in case of single site input.
         void process_single_site(const site_event_type &site) {
-            // Update counters.
-            num_cell_records_++;
-
             // Update bounding rectangle.
             voronoi_rect_ = BRect<coordinate_type>(site.get_point0(), site.get_point0());
 
@@ -665,10 +689,6 @@ namespace sweepline {
         // beach line node and returns pointer to the new half-edge. 
         voronoi_edge_type *insert_new_edge(const site_event_type &site1,
                                            const site_event_type &site2) {
-            // Update counters.
-            num_cell_records_++;
-            num_edge_records_++;
-
             // Get indices of sites.           
             int site_index1 = site1.get_site_index();
             int site_index2 = site2.get_site_index();
@@ -684,10 +704,9 @@ namespace sweepline {
             // Add initial cell during first edge insertion.
             if (cell_records_.empty()) {
                 cell_records_.push_back(voronoi_cell_type(site1, &edge1));
-                num_cell_records_++;
                 voronoi_rect_ = BRect<coordinate_type>(site1.get_point0(), site1.get_point0());
             }
-            cell_records_[site_index1].num_incident_edges_++;
+            cell_records_[site_index1].inc_num_incident_edges();
 
             // Update bounding rectangle.
             voronoi_rect_.update(site2.get_point0());
@@ -698,7 +717,7 @@ namespace sweepline {
             // Second site represents new site during site event processing.
             // Add new cell to the cell records vector.
             cell_records_.push_back(voronoi_cell_type(site2, &edge2));
-            cell_records_.back().num_incident_edges_++;
+            cell_records_.back().inc_num_incident_edges();
             
             // Update pointers to cells.
             edge1.cell(&cell_records_[site_index1]);
@@ -716,20 +735,14 @@ namespace sweepline {
                                            const circle_event_type &circle,
                                            voronoi_edge_type *edge12,
                                            voronoi_edge_type *edge23) {
-            // Update counters.
-            num_vertex_records_++;
-            num_edge_records_++;
-
             // Update bounding rectangle.
             //voronoi_rect_.update(circle.get_center());
 
             // Add new voronoi vertex with point at center of the circle.
-            vertex_records_.push_back(voronoi_vertex_type(
-                circle.get_erc_x(), circle.get_erc_y(), circle.get_erc_denom(), edge12));
+            robust_vertices_.push_back(robust_voronoi_vertex<T>(
+                circle.get_erc_x(), circle.get_erc_y(), circle.get_erc_denom()));
+            vertex_records_.push_back(voronoi_vertex_type(&robust_vertices_.back(), edge12));
             voronoi_vertex_type &new_vertex = vertex_records_.back();
-            new_vertex.num_incident_edges_ = 3;
-            new_vertex.voronoi_record_it = vertex_records_.end();
-            new_vertex.voronoi_record_it--;
 
             // Update two input bisectors and their twin half-edges with
             // new voronoi vertex.
@@ -740,13 +753,13 @@ namespace sweepline {
             edge_records_.push_back(voronoi_edge_type());
             voronoi_edge_type &new_edge1 = edge_records_.back();
             new_edge1.cell(&cell_records_[site1.get_site_index()]);
-            new_edge1.cell_->num_incident_edges_++;
+            new_edge1.cell()->inc_num_incident_edges();
 
             // Add new half-edge.
             edge_records_.push_back(voronoi_edge_type());
             voronoi_edge_type &new_edge2 = edge_records_.back();
             new_edge2.cell(&cell_records_[site3.get_site_index()]);
-            new_edge2.cell_->num_incident_edges_++;
+            new_edge2.cell()->inc_num_incident_edges();
 
             // Update twin pointers of the new half-edges.
             new_edge1.twin(&new_edge2);
@@ -757,9 +770,9 @@ namespace sweepline {
             // to the new voronoi vertex.
             edge12->prev(&new_edge1);
             new_edge1.next(edge12);
-            edge12->twin_->next(edge23);
+            edge12->twin()->next(edge23);
             edge23->prev(edge12->twin());
-            edge23->twin_->next(&new_edge2);
+            edge23->twin()->next(&new_edge2);
             new_edge2.prev(edge23->twin());
 
             return &new_edge1;
@@ -768,9 +781,11 @@ namespace sweepline {
         void simplify() {
             voronoi_edge_iterator_type edge_it1;
             voronoi_edge_iterator_type edge_it = edge_records_.begin();
+            num_cell_records_ = cell_records_.size();
 
             // Return in case of collinear sites input.
-            if (num_vertex_records_ == 0) {
+            if (vertex_records_.empty()) {
+                num_edge_records_ = num_cell_records_ - 1;
                 if (edge_it == edge_records_.end())
                     return;
 
@@ -804,47 +819,61 @@ namespace sweepline {
                 edge_it1 = edge_it;
                 std::advance(edge_it, 2);
 
-                if (!edge_it1->vertex0() || !edge_it1->vertex1())
+                if (!edge_it1->vertex0() || !edge_it1->vertex1()) {
+                    num_edge_records_++;
                     continue;
+                }
 
-                const voronoi_vertex_type *p1 = edge_it1->vertex0();
-                const voronoi_vertex_type *p2 = edge_it1->vertex1();
-                detail::epsilon_robust_comparator<T> lhs1(p1->center_x * p2->denom);
-                detail::epsilon_robust_comparator<T> rhs1(p1->denom * p2->center_x);
-                detail::epsilon_robust_comparator<T> lhs2(p1->center_y * p2->denom);
-                detail::epsilon_robust_comparator<T> rhs2(p1->denom * p2->center_y);
+                const robust_voronoi_vertex<T> *v1 = edge_it1->vertex0()->robust_vertex();
+                const robust_voronoi_vertex<T> *v2 = edge_it1->vertex1()->robust_vertex();
+                detail::epsilon_robust_comparator<T> lhs1(v1->center_x * v2->denom);
+                detail::epsilon_robust_comparator<T> rhs1(v1->denom * v2->center_x);
+                detail::epsilon_robust_comparator<T> lhs2(v1->center_y * v2->denom);
+                detail::epsilon_robust_comparator<T> rhs2(v1->denom * v2->center_y);
 
                 if (lhs1.compares_undefined(rhs1, 64) && lhs2.compares_undefined(rhs2, 64)) {
                     // Decrease number of cell incident edges.
-                    edge_it1->cell_->num_incident_edges_--;
-                    edge_it1->twin_->cell_->num_incident_edges_--;
+                    edge_it1->cell()->dec_num_incident_edges();
+                    edge_it1->twin()->cell()->dec_num_incident_edges();
 
                     // To guarantee N*lon(N) time we merge vertex with
                     // less incident edges to the one with more.
-                    if (edge_it1->cell_->incident_edge_ == &(*edge_it1)) {
-                        if (edge_it1->cell_->incident_edge_ == edge_it1->next_) {
-                            edge_it1->cell_->incident_edge_ = NULL;
+                    if (edge_it1->cell()->incident_edge() == &(*edge_it1)) {
+                        if (edge_it1->cell()->incident_edge() == edge_it1->next()) {
+                            edge_it1->cell()->incident_edge(NULL);
                         } else {
-                            edge_it1->cell_->incident_edge_ = edge_it1->next_;
+                            edge_it1->cell()->incident_edge(edge_it1->next());
                         }
                     }
-                    if (edge_it1->twin_->cell_->incident_edge_ == edge_it1->twin_) {
-                        if (edge_it1->twin_->cell_->incident_edge_ == edge_it1->twin_->next_) {
-                            edge_it1->twin_->cell_->incident_edge_ = NULL;
+                    if (edge_it1->twin()->cell()->incident_edge() == edge_it1->twin()) {
+                        if (edge_it1->twin()->cell()->incident_edge() == edge_it1->twin()->next()) {
+                            edge_it1->twin()->cell()->incident_edge(NULL);
                         } else {
-                            edge_it1->twin_->cell_->incident_edge_ = edge_it1->twin_->next_;
+                            edge_it1->twin()->cell()->incident_edge(edge_it1->twin()->next());
                         }
                     }
-                    if (edge_it1->vertex0()->num_incident_edges_ >=
-                        edge_it1->vertex1()->num_incident_edges_) {
+                    if (edge_it1->vertex0()->num_incident_edges() >=
+                        edge_it1->vertex1()->num_incident_edges()) {
                             simplify_edge(&(*edge_it1));
                     } else {
-                        simplify_edge(edge_it1->twin_);
+                        simplify_edge(edge_it1->twin());
                     }
 
                     // Remove zero length edges.
                     edge_records_.erase(edge_it1, edge_it);
-                    num_edge_records_--;
+                } else {
+                    num_edge_records_++;
+                }
+            }
+            robust_vertices_.clear();
+
+            for (voronoi_vertex_iterator_type vertex_it = vertex_records_.begin();
+                vertex_it != vertex_records_.end();) {
+                if (vertex_it->incident_edge() == NULL) {
+                    vertex_it = vertex_records_.erase(vertex_it);
+                } else {
+                    vertex_it++;
+                    num_vertex_records_++;
                 }
             }
 
@@ -852,24 +881,24 @@ namespace sweepline {
             for (voronoi_cell_iterator_type cell_it = cell_records_.begin();
                 cell_it != cell_records_.end(); cell_it++) {
                 // Move to the previous edge while it is possible in the CW direction.
-                voronoi_edge_type *cur_edge = cell_it->incident_edge_;
+                voronoi_edge_type *cur_edge = cell_it->incident_edge();
                 if (cur_edge) {
-                    while (cur_edge->prev_ != NULL) {
-                        cur_edge = cur_edge->prev_;
+                    while (cur_edge->prev() != NULL) {
+                        cur_edge = cur_edge->prev();
 
                         // Terminate if this is not a boundary cell.
-                        if (cur_edge == cell_it->incident_edge_)
+                        if (cur_edge == cell_it->incident_edge())
                             break;
                     }
 
                     // Rewind incident edge pointer to the leftmost edge for the boundary cells.
-                    cell_it->incident_edge_ = cur_edge;
+                    cell_it->incident_edge(cur_edge);
 
                     // Set up prev/next half-edge pointers for ray edges.
-                    if (cur_edge->prev_ == NULL) {
-                        voronoi_edge_type *last_edge = cell_it->incident_edge_;
-                        while (last_edge->next_ != NULL)
-                            last_edge = last_edge->next_;
+                    if (cur_edge->prev() == NULL) {
+                        voronoi_edge_type *last_edge = cell_it->incident_edge();
+                        while (last_edge->next() != NULL)
+                            last_edge = last_edge->next();
                         last_edge->next(cur_edge);
                         cur_edge->prev(last_edge);
                     }
@@ -883,7 +912,8 @@ namespace sweepline {
             voronoi_vertex_type *vertex2 = edge->vertex1();
 
             // Update number of incident edges.
-            vertex1->num_incident_edges_ += vertex2->num_incident_edges_ - 2;
+            vertex1->num_incident_edges(
+                vertex1->num_incident_edges() + vertex2->num_incident_edges() - 2);
 
             // Update second vertex incident edges start and end points.
             voronoi_edge_type *updated_edge = edge->twin()->rot_next();
@@ -909,16 +939,17 @@ namespace sweepline {
 
             // Change incident edge pointer of a vertex if it corresponds to the
             // degenerate edge.
-            if (vertex1->incident_edge() == edge)
-                vertex1->incident_edge_ = edge->rot_prev();
+            if (vertex1->incident_edge() == edge) {
+                vertex1->incident_edge(edge->rot_prev());
+            }
 
             // Remove second vertex from the vertex records list.
-            if (vertex1->voronoi_record_it != vertex2->voronoi_record_it) {
-                vertex_records_.erase(vertex2->voronoi_record_it);
-                num_vertex_records_--;
+            if (vertex1 != vertex2) {
+                vertex2->incident_edge(NULL);
             }
         }
 
+        std::list< robust_voronoi_vertex<T> > robust_vertices_;
         voronoi_cells_type cell_records_;
         voronoi_vertices_type vertex_records_;
         voronoi_edges_type edge_records_;

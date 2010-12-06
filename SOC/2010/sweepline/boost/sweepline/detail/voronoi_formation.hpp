@@ -816,6 +816,16 @@ namespace detail {
     static bool less_predicate(const point_2d<T> &left_point,
                                const point_2d<T> &right_point,
                                const point_2d<T> &new_point) {
+        if (left_point.x() > right_point.x()) {
+            if (new_point.y() <= left_point.y())
+                return false;
+        } else if (left_point.x() < right_point.x()) {
+            if (new_point.y() >= right_point.y())
+                return true;
+        } else {
+            return left_point.y() + right_point.y() < 2.0 * new_point.y();
+        }
+
         kPredicateResult fast_res = fast_less_predicate(left_point, right_point, new_point);
         if (fast_res != UNDEFINED)
             return (fast_res == LESS);
@@ -1146,7 +1156,6 @@ namespace detail {
     }
 
     // Create circle event from three point sites.
-    // TODO (asydorchuk): make precision optimizations.
     template <typename T>
     static bool create_circle_event_ppp(const site_event<T> &site1,
                                         const site_event<T> &site2,
@@ -1185,7 +1194,6 @@ namespace detail {
     }
 
     // Create circle event from two point sites and one segment site.
-    // TODO (asydorchuk): make_precision optimizations.
     template <typename T>
     static bool create_circle_event_pps(const site_event<T> &site1,
                                         const site_event<T> &site2,
@@ -1193,11 +1201,19 @@ namespace detail {
                                         int segment_index,
                                         circle_event<T> &c_event) {
         if (segment_index != 2) {
-            if (orientation_test(site3.get_point0(), site1.get_point0(),
-                site2.get_point0()) != RIGHT_ORIENTATION &&
-                detail::orientation_test(site3.get_point1(), site1.get_point0(),
-                site2.get_point0()) != RIGHT_ORIENTATION)
+            kOrientation orient1 = orientation_test(site1.get_point0(), 
+                site2.get_point0(), site3.get_point0(true));
+            kOrientation orient2 = orientation_test(site1.get_point0(),
+                site2.get_point0(), site3.get_point1(true));
+            if (segment_index == 1 && site1.x0() >= site2.x0()) {
+                if (orient1 != RIGHT_ORIENTATION)
+                    return false;
+            } else if (segment_index == 3 && site2.x0() >= site1.x0()) {
+                if (orient2 != RIGHT_ORIENTATION)
+                    return false;
+            } else if (orient1 != RIGHT_ORIENTATION && orient2 != RIGHT_ORIENTATION) {
                 return false;
+            }
         } else {
             if (site3.get_point0(true) == site1.get_point0() &&
                 site3.get_point1(true) == site2.get_point0())
@@ -1247,7 +1263,6 @@ namespace detail {
     }
 
     // Create circle event from one point site and two segment sites.
-    // TODO (asydorchuk): make precision optimizations.
     template <typename T>
     static bool create_circle_event_pss(const site_event<T> &site1,
                                         const site_event<T> &site2,
@@ -1267,7 +1282,6 @@ namespace detail {
             if (!site2.is_inverse() && site3.is_inverse())
                 return false;
             if (site2.is_inverse() == site3.is_inverse() &&
-                //orientation_test(orientation) != RIGHT_ORIENTATION)
                 orientation_test(segm_end1, site1.get_point0(), segm_end2) != RIGHT_ORIENTATION)
                 return false;
         }
@@ -1500,17 +1514,7 @@ namespace detail {
         }
 
         bool less_pp(const Point2D &new_site) const {
-            if (left_site_.x() > right_site_.x()) {
-                if (new_site.y() <= left_site_.y())
-                    return false;
-                return less_predicate(left_site_.get_point0(), right_site_.get_point0(), new_site);
-            } else if (left_site_.x() < right_site_.x()) {
-                if (new_site.y() >= right_site_.y())
-                    return true;
-                return less_predicate(left_site_.get_point0(), right_site_.get_point0(), new_site);
-            } else {
-                return left_site_.y() + right_site_.y() < 2.0 * new_site.y();
-            }
+            return less_predicate(left_site_.get_point0(), right_site_.get_point0(), new_site);
         }
 
         bool less_ps(const Point2D &new_site) const {
@@ -1630,7 +1634,7 @@ namespace detail {
                   const std::vector< std::pair< point_2d<iType>, point_2d<iType> > > &segments) {
             typedef std::pair< point_2d<iType>, point_2d<iType> > iSegment2D;
             // Clear all data structures.
-            output_.reset();
+            output_.clear();
 
             // TODO(asydorchuk): Add segments intersection check.
 
