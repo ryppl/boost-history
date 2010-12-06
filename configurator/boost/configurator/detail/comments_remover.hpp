@@ -13,7 +13,7 @@
 #include <boost/mem_fn.hpp>
 #include <boost/assign.hpp>
 
-#include <iostream>
+// #include <iostream>
 
 namespace boost {
 
@@ -58,13 +58,12 @@ private:
                        , boost::bind( &comments_remover::remove_one_line_comment
                                       , this
                                       , _1 ) );
+        trim_all( obtained_strings );
     }
     
     void remove_one_line_comment( std::string& s ) const {
-        if ( boost::contains( s, one_line_comment_sign ) ) {
-            s.erase( boost::find_first( s, one_line_comment_sign ).begin()
-                     , s.end() );
-        } else {}
+        s.erase( boost::find_first( s, one_line_comment_sign ).begin()
+                 , s.end() );
     }
 private:
     void remove_multi_line_comments_from( str_storage& obtained_strings ) const {

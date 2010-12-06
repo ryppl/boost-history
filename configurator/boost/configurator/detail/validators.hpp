@@ -36,8 +36,6 @@ namespace cf {
 namespace detail {
 
 using namespace boost::assign;
-using namespace boost::spirit;
-using namespace boost::spirit::qi;
 
 inline std::string semantic_error_prefix() { return "Semantic error: "; }
 
@@ -416,21 +414,22 @@ private:
 /// \brief Exponential record validator.
 ///
 /// Check exponential record semantics.
-class exp_record_validator : common_validator {
+class exp_record_validator : common_validator { 
 public:
     exp_record_validator( options& registered_options, const std::string& sections_separator ) :
             common_validator( registered_options, sections_separator ) {}
 public:
     void check( const std::string& exp_record, const std::string& option_name ) {
-        #ifdef WITH_SEMANTIC_CHECK 
-        double mantissa = 0.0;
-        int degree = 0;
+        #ifdef WITH_SEMANTIC_CHECK
+        using boost::spirit::qi::long_double;
+        using boost::spirit::qi::parse;
+    
+        double number = 0.0;
         bool valid_exp_record = parse( exp_record.begin()
                                        , exp_record.end()
-                                       , double_ >> 'e' | 'E' >> int_
-                                       , mantissa, degree );
+                                       , long_double
+                                       , number );
         if ( valid_exp_record ) {
-            long double number = mantissa * calculate_ten_in_degree( degree, option_name );
             store_for_option( option_name, number );
         } else {
             notify_about_invalid_exp_record( option_name, exp_record );
@@ -438,25 +437,11 @@ public:
         #endif
     }
 #ifdef WITH_SEMANTIC_CHECK
-private: 
-    long double calculate_ten_in_degree( int degree, const std::string& option_name ) const {
-        long double ten_in_degree = ::pow( 10, degree );
-        if ( HUGE_VAL == ten_in_degree ) {
-            o_stream what_happened;
-            what_happened << "value of option '"
-                          << prepare_full_name_for_log( option_name, sections_separator )
-                          << "' define in correct exponential record, "
-                          << "but it degree '" << degree << "' is too big!";
-            notify( semantic_error_prefix() + what_happened.str() );
-        } else {}
-        return ten_in_degree;
-    }
-
+private:
     void notify_about_invalid_exp_record( const std::string& option_name
                                           , const std::string& exp_record ) const {
-        notify( semantic_error_prefix()
-                    + "option '" + option_name
-                    + "' has invalid 'EXP_RECORD' value '" + exp_record + "'!" );
+        notify( semantic_error_prefix() + "option '" + option_name
+                + "' has invalid 'EXP_RECORD' value '" + exp_record + "'!" );
     }
 #endif
 };

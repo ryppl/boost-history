@@ -99,6 +99,12 @@ inline void remove_empty_strings_from( str_storage& strings ) {
                    , strings.end() );
 }
 
+inline trim_all( str_storage& storage ) {
+    BOOST_FOREACH ( std::string& s, storage ) {
+        boost::trim( s );
+    }
+}
+
 } // namespace detail
 } // namespace cf
 } // namespace boost
