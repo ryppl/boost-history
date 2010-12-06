@@ -18,6 +18,7 @@
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 #include <boost/foreach.hpp>
+#include <boost/spirit/include/qi.hpp>
 
 #include <cmath>
 #endif
@@ -35,6 +36,8 @@ namespace cf {
 namespace detail {
 
 using namespace boost::assign;
+using namespace boost::spirit;
+using namespace boost::spirit::qi;
 
 inline std::string semantic_error_prefix() { return "Semantic error: "; }
 
@@ -416,53 +419,26 @@ private:
 class exp_record_validator : common_validator {
 public:
     exp_record_validator( options& registered_options, const std::string& sections_separator ) :
-            common_validator( registered_options, sections_separator )
-            #ifdef WITH_SEMANTIC_CHECK
-            , regex_exp_record( "[-]{0,1}[0-9.]{1,}[eE]{1}[-+]{0,1}[0-9]{0,}" )
-            #endif
-    {}
-#ifdef WITH_SEMANTIC_CHECK
-private:
-    const boost::regex regex_exp_record;
-#endif
+            common_validator( registered_options, sections_separator ) {}
 public:
     void check( const std::string& exp_record, const std::string& option_name ) {
         #ifdef WITH_SEMANTIC_CHECK 
-        if ( valid_exp_record( exp_record ) ) {
-            store_number_from_exp_record( exp_record, option_name );
+        double mantissa = 0.0;
+        int degree = 0;
+        bool valid_exp_record = parse( exp_record.begin()
+                                       , exp_record.end()
+                                       , double_ >> 'e' | 'E' >> int_
+                                       , mantissa, degree );
+        if ( valid_exp_record ) {
+            long double number = mantissa * calculate_ten_in_degree( degree, option_name );
+            store_for_option( option_name, number );
         } else {
             notify_about_invalid_exp_record( option_name, exp_record );
-        }
+        } 
         #endif
     }
 #ifdef WITH_SEMANTIC_CHECK
-private:
-    bool valid_exp_record( const std::string& exp_record ) const {
-        return regex_match( exp_record, regex_exp_record );
-    }
-private:
-    void store_number_from_exp_record( const std::string& exp_record, const std::string& option_name ) {
-        str_storage number_parts = extract_parts_of_number_from( exp_record ); 
-        double mantissa = 0.0;
-        int degree = 0;
-        try {    
-            mantissa = boost::lexical_cast< double >( number_parts[0] );
-            degree   = boost::lexical_cast< int >( number_parts[1] );
-        } catch ( const std::exception& exc ) {
-            notify_about_invalid_exp_record( option_name, exp_record );
-        }
-        long double number = mantissa * calculate_ten_in_degree( degree, option_name );
-        store_for_option( option_name, number );
-    }
-private:
-    str_storage extract_parts_of_number_from( const std::string& exp_record ) const {
-        std::string exp_record_for_analize( exp_record.begin(), exp_record.end() );
-        boost::to_lower( exp_record_for_analize );
-        str_storage number_parts;
-        boost::split( number_parts, exp_record_for_analize, boost::is_any_of( "e" ) );
-        return number_parts;
-    }
-    
+private: 
     long double calculate_ten_in_degree( int degree, const std::string& option_name ) const {
         long double ten_in_degree = ::pow( 10, degree );
         if ( HUGE_VAL == ten_in_degree ) {
