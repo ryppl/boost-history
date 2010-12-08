@@ -18,6 +18,9 @@
 #include <boost/configurator/detail/necessary_options_checker.hpp>
 #include <boost/configurator/detail/semantics_checker.hpp>
 #include <boost/configurator/detail/options_repetition_handler.hpp>
+#include <boost/spirit/include/phoenix_core.hpp>
+#include <boost/spirit/include/phoenix_operator.hpp>
+#include <boost/spirit/include/phoenix_stl.hpp>
 
 #ifdef WITH_SINGLETON
 #include <boost/configurator/detail/singleton.hpp>
@@ -106,9 +109,7 @@ public:
                                                    , registered_options.end()
                                                    , typeid( Option ) );
         if ( registered_options.end() == it ) {
-            notify( std::string( "Option with type '" )
-                    + BOOST_PP_STRINGIZE( Option )
-                    + "' is not registered!" );
+            notify( "Option with type '" + name_of< Option >() + "' is not registered!" );
         } else {}
         const std::string& value = it->value;
         check_factual_existence_of_value< Option >( value );
@@ -118,8 +119,8 @@ private:
     template< typename Option >
     void check_factual_existence_of_value( const std::string& value ) const {
         if ( value.empty() ) {
-            notify( std::string( "You have requested a value of option '" )
-                    + BOOST_PP_STRINGIZE( Option ) + "' and such option was registered, "
+            notify( "You have requested a value of option '"
+                    + name_of< Option >() + "' and such option was registered, "
                     + "but it missed in configuration file and have not default value!" );
         } else {}
     }
@@ -131,7 +132,13 @@ public:
     >
     Value get_value_of() {
         const std::string value_as_string = get_value_of< Option >();
-        return detail::cast< std::string, Value >( value_as_string );
+        Value value();
+        try {
+            value = boost::lexical_cast< Value >( value_as_string );
+        } catch ( const std::exception& /* exc */ ) {
+            notify_about_incorrect_type_of_value< Option, Value >( value_as_string );
+        }
+        return value;
     }
 
     template
@@ -141,8 +148,40 @@ public:
     >
     configurator& get_value_of( Value& value ) {
         const std::string value_as_string = get_value_of< Option >();
-        value = detail::cast< std::string, Value >( value_as_string );
+        try {
+            value = boost::lexical_cast< Value >( value_as_string );
+        } catch ( const std::exception& /* exc */ ) {
+            notify_about_incorrect_type_of_value< Option, Value >( value_as_string );
+        }
         return *this;
+    }
+private:
+    template
+    <
+        typename Option
+        , typename Value
+    >
+    void notify_about_incorrect_type_of_value( const std::string& value_as_string ) const {
+        detail::type_name type;
+        notify( "Value '" + value_as_string + "' of option '" + name_of< Option >()
+                + "' cannot be cast to type " + type.name_of< Value >() + "!" );
+    }
+
+    template< typename Option >
+    std::string name_of() const {
+        using boost::spirit::qi::int_;
+        using boost::spirit::qi::char_;
+        using boost::spirit::qi::parse;
+        using boost::spirit::qi::_1;
+        using boost::phoenix::ref;
+        using boost::phoenix::push_back;
+        
+        std::string pure_name = typeid( Option ).name();
+        std::string name;
+        parse( pure_name.begin()
+               , pure_name.end()
+               , int_ >> +( char_[ push_back( ref(name), _1 ) ] ) );
+        return name; 
     }
 private:
     options registered_options;

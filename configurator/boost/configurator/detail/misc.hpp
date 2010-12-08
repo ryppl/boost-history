@@ -10,6 +10,7 @@
 #define BOOST_CONFIGURATOR_MISC_HPP
 
 #include <boost/configurator/detail/types.hpp>
+#include <boost/configurator/detail/type_name.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -112,24 +113,6 @@ inline trim_all( str_storage& storage ) {
     BOOST_FOREACH ( std::string& s, storage ) {
         boost::trim( s );
     }
-}
-
-template
-<
-    typename Source
-    , typename Target
->
-inline Target cast( const Source& source ) {
-    Target target;
-    try {
-        target = boost::lexical_cast< Target >( source );
-    } catch ( const std::exception& /* exc */ ) {
-        notify( std::string( "Cannot cast value of type '" )
-                + BOOST_PP_STRINGIZE( Source )
-                + "' to type '" 
-                + BOOST_PP_STRINGIZE( Target ) + "'!" );
-    }
-    return target;
 }
 
 } // namespace detail
