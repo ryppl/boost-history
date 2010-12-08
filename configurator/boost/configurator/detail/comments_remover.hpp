@@ -1,5 +1,6 @@
-// Configurator (C++ library for configuration file parsing)
-// 
+// detail/comments_remover.hpp
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//
 // Copyright (C) 2010 Denis Shevchenko (for @ dshevchenko.biz)
 //
 // Distributed under the Boost Software License, version 1.0
@@ -12,8 +13,6 @@
 #include <boost/foreach.hpp>
 #include <boost/mem_fn.hpp>
 #include <boost/assign.hpp>
-
-// #include <iostream>
 
 namespace boost {
 

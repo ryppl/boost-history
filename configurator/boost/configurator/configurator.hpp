@@ -1,4 +1,5 @@
-// Configurator (C++ library for configuration file parsing)
+// configurator.hpp
+// ~~~~~~~~~~~~~~~~
 // 
 // Copyright (C) 2010 Denis Shevchenko (for @ dshevchenko.biz)
 //
@@ -130,7 +131,7 @@ public:
     >
     Value get_value_of() {
         const std::string value_as_string = get_value_of< Option >();
-        return detail::cast< Value >( value_as_string );
+        return detail::cast< std::string, Value >( value_as_string );
     }
 
     template
@@ -140,7 +141,7 @@ public:
     >
     configurator& get_value_of( Value& value ) {
         const std::string value_as_string = get_value_of< Option >();
-        value = detail::cast< Value >( value_as_string );
+        value = detail::cast< std::string, Value >( value_as_string );
         return *this;
     }
 private:

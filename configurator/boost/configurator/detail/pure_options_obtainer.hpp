@@ -1,4 +1,5 @@
-// Boost.Configurator
+// detail/pure_options_obtainer.hpp
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // 
 // Copyright (C) 2010 Denis Shevchenko (for @ dshevchenko.biz)
 //

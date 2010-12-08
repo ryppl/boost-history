@@ -1,4 +1,5 @@
-// Configurator (C++ library for configuration file parsing)
+// detail/options_repetition_handler.hpp
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // 
 // Copyright (C) 2010 Denis Shevchenko (for @ dshevchenko.biz)
 //

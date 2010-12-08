@@ -1,4 +1,5 @@
-// Configurator (C++ library for configuration file parsing)
+// detail/option.hpp
+// ~~~~~~~~~~~~~~~~~
 // 
 // Copyright (C) 2010 Denis Shevchenko (for @ dshevchenko.biz)
 //
@@ -68,6 +69,20 @@ public:
     option& set_default_value( const Value& _value ) {
         check_option_necessity();
         value = cast< std::string >( _value );
+        default_value.assign( value.begin(), value.end() );
+        return *this;
+    }
+
+    option& set_default_value( const std::string& _value ) {
+        check_option_necessity();
+        value.assign( _value.begin(), _value.end() );
+        default_value.assign( value.begin(), value.end() );
+        return *this;
+    }
+
+    option& set_default_value( const char* _value ) {
+        check_option_necessity();
+        value.assign( _value );
         default_value.assign( value.begin(), value.end() );
         return *this;
     }

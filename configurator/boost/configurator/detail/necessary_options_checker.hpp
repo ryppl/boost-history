@@ -1,4 +1,5 @@
-// Configurator (C++ library for configuration file parsing)
+// detail/necessary_options_checker.hpp
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // 
 // Copyright (C) 2010 Denis Shevchenko (for @ dshevchenko.biz)
 //

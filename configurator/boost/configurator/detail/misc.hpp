@@ -1,4 +1,5 @@
-// Configurator (C++ library for configuration file parsing)
+// detail/misc.hpp
+// ~~~~~~~~~~~~~~~
 // 
 // Copyright (C) 2010 Denis Shevchenko (for @ dshevchenko.biz)
 //
@@ -115,18 +116,18 @@ inline trim_all( str_storage& storage ) {
 
 template
 <
-    typename SourceType
-    , typename TargetType
+    typename Source
+    , typename Target
 >
-inline TargetType cast( const SourceType& source ) {
-    TargetType target;
+inline Target cast( const Source& source ) {
+    Target target;
     try {
-        target = boost::lexical_cast< TargetType >( source );
+        target = boost::lexical_cast< Target >( source );
     } catch ( const std::exception& /* exc */ ) {
         notify( std::string( "Cannot cast value of type '" )
-                + BOOST_PP_STRINGIZE( SourceType )
+                + BOOST_PP_STRINGIZE( Source )
                 + "' to type '" 
-                + BOOST_PP_STRINGIZE( TargetType ) + "'!" );
+                + BOOST_PP_STRINGIZE( Target ) + "'!" );
     }
     return target;
 }
