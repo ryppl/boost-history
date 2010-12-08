@@ -1,4 +1,4 @@
-// Configurator (C++ library for configuration file parsing)
+// Boost.Configurator
 // 
 // Copyright (C) 2010 Denis Shevchenko (for @ dshevchenko.biz)
 //
@@ -31,11 +31,11 @@ class pure_options_obtainer {
 public:
     pure_options_obtainer( std::string&         _option_name_value_separator
                            , const std::string& _sections_separator
-                           , const str_set&     _unique_names_of_sections
+                           , const options&     _registered_options
                            , const bool&        _case_sensitivity_for_names ) :
             option_name_value_separator( _option_name_value_separator )
             , sections_separator( _sections_separator )
-            , unique_names_of_sections( _unique_names_of_sections )
+            , registered_options( _registered_options )
             , case_sensitivity_for_names( _case_sensitivity_for_names )
             , open_section_tag_begin_sign( "<" )
             , open_section_tag_end_sign( ">" )
@@ -54,7 +54,7 @@ public:
 private:
     std::string&        option_name_value_separator;
     const std::string&  sections_separator;
-    const str_set&      unique_names_of_sections;
+    const options&      registered_options;
     const bool&         case_sensitivity_for_names;
 private:
     const std::string   open_section_tag_begin_sign;
@@ -229,9 +229,12 @@ private:
     }
 
     void check_section_existence( std::string& section_name ) const {
-        convert_name_depending_on_case_sensitivity( section_name );
-        str_unique_const_it it = unique_names_of_sections.find( section_name );
-        if ( unique_names_of_sections.end() == it ) {
+        registered_option_const_it it = std::find_if( registered_options.begin()
+                                                      , registered_options.end()
+                                                      , boost::bind( &option::corresponds_by_section
+                                                                     , _1
+                                                                     , section_name ) );
+        if ( registered_options.end() == it ) {
             notify_about_incorrect_section_name( section_name );
         } else {}
     }

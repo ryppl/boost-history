@@ -42,8 +42,8 @@ private:
     const std::string multi_line_comment_begin_sign;
     const std::string multi_line_comment_end_sign;
 public:
-    void use_canonical_one_line_comments() {
-        one_line_comment_sign = "#";
+    void set_one_line_comment_sign( const std::string& sign ) {
+        one_line_comment_sign = sign;
     }
 public:
     void operator()( str_storage& obtained_strings ) const {

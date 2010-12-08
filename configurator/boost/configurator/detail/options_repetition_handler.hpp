@@ -49,11 +49,11 @@ public:
         BOOST_FOREACH ( const pure_option& unique_option, unique_options ) {
             pure_option_it first_repeating = std::find( factual_obtained_options.begin()
                                                         , factual_obtained_options.end()
-                                                        , unique_option.name );
+                                                        , unique_option.location );
             if ( factual_obtained_options.end() != first_repeating ) {
                 size_t how_many_times_it_repeats = (size_t)std::count( factual_obtained_options.begin()
                                                                         , factual_obtained_options.end()
-                                                                        , unique_option.name );
+                                                                        , unique_option.location );
                 if ( 1 == how_many_times_it_repeats ) {
                     continue;
                 } else {}
@@ -92,10 +92,10 @@ private:
     void check_multi_values_allowance( const pure_option& factual_obtained_option ) const {
         option_const_it it = std::find( registered_options.begin()
                                         , registered_options.end()
-                                        , factual_obtained_option.name );
+                                        , factual_obtained_option.location );
         if ( registered_options.end() != it ) {
             if ( !it->multi_values_allowed ) {
-                notify( "Option '" + prepare_full_name_for_log( factual_obtained_option.name
+                notify( "Option '" + prepare_full_name_for_log( factual_obtained_option.location
                                                                 , sections_separator )
                         + "' has multiple values, but it not allowed to have multiply values!" );
             } else {}

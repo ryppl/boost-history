@@ -45,8 +45,8 @@ private:
     str_storage collect_names_of_necessary_options() const {
         str_storage names;
     	BOOST_FOREACH ( const option& registered_option, registered_options ) {
-            if ( registered_option.is_necessary ) {
-            	names += registered_option.name;
+            if ( registered_option.is_necessary() ) {
+            	names += registered_option.location;
             } else {}
         }
         return names;
@@ -55,7 +55,7 @@ private:
     void remove_names_of_inputed_necessary_options( const pure_options& factual_obtained_options
                                                     , str_storage&      names_that_should_be ) const {
         BOOST_FOREACH ( const pure_option& obtained_option, factual_obtained_options ) {
-            delete_element( names_that_should_be, obtained_option.name );
+            delete_element( names_that_should_be, obtained_option.location );
         }
     }
 

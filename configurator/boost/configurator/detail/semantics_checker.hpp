@@ -93,7 +93,7 @@ public:
             if ( !registered_options.empty() 
                  && registered_option.semantic_defined() ) {
                 const std::string& value = registered_option.value;
-                const std::string name = prepare_full_name_for_log( registered_option.name
+                const std::string name = prepare_full_name_for_log( registered_option.location
                                                                     , sections_separator );
                 semantic_checkers[ registered_option.semantic ]( value, name );
             } else {}

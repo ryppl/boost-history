@@ -21,98 +21,93 @@ namespace cf {
 /// \brief Details of realization.
 namespace detail {
 
-/// \class option
-/// \brief One option.
-///
-/// Presents functionality of one configuration option.
-class option {
-public:    
-    explicit option( const std::string& _name, const std::string& _sections_separator ) :
-            sections_separator( _sections_separator )
-            , name( _name.begin(), _name.end() )
+
+struct option {
+    option() {}
+    explicit option( const std::string& _type_id, const std::string& _type_name ) :
+            type_id( _type_id.begin(), _type_id.end() )
+            , type_name( _type_name.begin(), _type_name.end() )
+            , location( _type_name.begin(), _type_name.end() )
             , value()
             , semantic( no_semantic )
-            , is_necessary( false )
+            , necessary( false )
             , multi_values_allowed( false ) {}
+    virtual ~option() {}
 private:
-    const std::string& sections_separator;
+    const std::string   type_id;
+    const std::string   type_name;
 public:
-    std::string name;
-    std::string value;
-    value_semantic semantic;
-    bool is_necessary;
-    bool multi_values_allowed;
+    std::string         location;
+    std::string         section;
+    std::string         value;
+    value_semantic      semantic;
+    bool                necessary;
+    bool                multi_values_allowed;
+    std::string         default_value;
 public:
-    bool operator==( const std::string& full_name ) const {
-        return full_name == name;
+    option& set_location( const std::string& _location ) {
+        location.assign( _location.begin(), _location.end() );
+        string_it end_it = boost::find_last( location, "::" ).begin();
+        section.assign( location.begin(), end_it );
+        return *this;
     }
-private:
-    std::string default_value_reserve;
-public:
-    void use_default_value_reserve() {
-        if ( !default_value_reserve.empty() ) {
-            value.assign( default_value_reserve.begin(), default_value_reserve.end() );
-        } else {}
+public:    
+    bool operator==( const std::type_info& type ) const {
+        return type_id == type.name();
     }
-public:
-    template< typename ValueType >
-    option& default_value( const ValueType& _value ) {
+
+    bool operator==( const std::string& _location ) const {
+        return _location == location;
+    }
+ 
+    bool corresponds_by_section( const std::string& _section ) const {
+        return _section == section;
+    }
+public: 
+    template< typename Value >
+    option& set_default_value( const Value& _value ) {
         check_option_necessity();
-        try {
-            value = boost::lexical_cast< std::string >( _value );
-            default_value_reserve.assign( value.begin(), value.end() );
-        } catch ( const std::exception& /* exc */ ) {
-            notify( "Default value for option '" + name + "' cannot be stringified!" );
-        }
+        value = cast< std::string >( _value );
+        default_value.assign( value.begin(), value.end() );
         return *this;
     }
 private:
     void check_option_necessity() const {
-        if ( is_necessary ) {
-            notify( "Option '"
-                    + prepare_full_name_for_log( name, sections_separator )
+        if ( necessary ) {
+            notify( "Option '" + type_name
                     + "' registered as necessary, so it cannot have default_value!" );
         } else {}
     }
 public:
-    option& default_value( const std::string& _value ) {
-        value.assign( _value.begin(), _value.end() );
-        return *this;
-    }
-public:
-    option& necessary() {
+    option& set_necessity() {
         check_default_value_existence();
-        is_necessary = true;
+        necessary = true;
         return *this;
     }
 private:
     void check_default_value_existence() const {
-        if ( !value.empty() ) {
-            notify( "Option '"
-                    + prepare_full_name_for_log( name, sections_separator )
-                    + "' already have default value '" + value + "', "
+        if ( !default_value.empty() ) {
+            notify( "Option '" + type_name
+                    + "' already have default value '" + default_value + "', "
                     + "so it cannot be necessary!" );
         } else {}
     }
 public:
     option& check_semantic( const value_semantic& _semantic ) {
-        check_correctness_of( _semantic );
+        check_semantic_correctness( _semantic );
         semantic = _semantic;
         return *this;
     }
 private:
-    void check_correctness_of( const value_semantic& semantic ) const {
+    void check_semantic_correctness( const value_semantic& semantic ) const {
         if ( semantic < no_semantic || semantic > exp_record ) {
             o_stream what_happened;
-            what_happened << "invalid semantic value '" << semantic
+            what_happened << "Invalid semantic value '" << semantic
+                          << "' for option '" << type_name 
                           << "', use supported semantic only (see documentation)!"
                           ;
             notify( what_happened.str() );
         } else {}
-    }
-public:
-    bool semantic_defined() const {
-        return no_semantic != semantic;
     }
 public:
     option& allow_multi_values() {
@@ -120,8 +115,9 @@ public:
         return *this;
     }
 public:
-    bool already_has_default_value() const  { return !value.empty(); }
-    bool it_is_necessary() const            { return is_necessary; }
+    bool semantic_defined() const           { return no_semantic != semantic; }
+    bool already_has_default_value() const  { return !default_value.empty(); }
+    bool is_necessary() const               { return necessary; }
     bool empty() const                      { return value.empty(); }
 };
 
@@ -131,28 +127,28 @@ public:
 /// Presents pure option obtained from configuration file.
 struct pure_option {
     pure_option() {}
-    pure_option( const std::string& _name, const std::string& _value ) :
-            name( _name.begin(), _name.end() )
+    pure_option( const std::string& _location, const std::string& _value ) :
+            location( _location.begin(), _location.end() )
             , value( _value.begin(), _value.end() ) {}
 public:
-    std::string name;
+    std::string location;
     std::string value;
 public:
     bool empty() const {
         return value.empty();
     }
 
-    bool operator==( const std::string& _name ) const {
-        return _name == name;
+    bool operator==( const std::string& _location ) const {
+        return _location == location;
     }
 
     bool operator==( const pure_option& another ) const {
-        return another.name == name;
+        return another.location == location;
     }
 };
 
 inline bool operator<( const pure_option& left, const pure_option& right ) {
-    return left.name < right.name;
+    return left.location < right.location;
 }
 
 } // namespace detail
@@ -160,8 +156,10 @@ inline bool operator<( const pure_option& left, const pure_option& right ) {
 typedef detail::option              option;
 
 typedef boost::ptr_vector< option > options;
-typedef options::iterator           option_it;
-typedef options::const_iterator     option_const_it;
+typedef options::iterator           registered_option_it;
+typedef options::const_iterator     registered_option_const_it;
+typedef registered_option_it        option_it;
+typedef registered_option_const_it  option_const_it;
 
 typedef detail::pure_option         pure_option;
 typedef std::vector< pure_option >  pure_options;

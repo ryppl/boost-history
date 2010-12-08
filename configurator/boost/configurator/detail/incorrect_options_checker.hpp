@@ -38,9 +38,9 @@ public:
         BOOST_FOREACH ( const pure_option& option, factual_obtained_options ) {
             option_const_it it = std::find( registered_options.begin()
                                             , registered_options.end()
-                                            , option.name );
+                                            , option.location );
             if ( registered_options.end() == it ) {
-                store_incorrect_option( option.name );
+                store_incorrect_option( option.location );
             } else {}
         }
 
@@ -49,8 +49,8 @@ public:
 private:
     str_storage incorrect_options;
 private:
-    void store_incorrect_option( const std::string& option_name ) {
-        incorrect_options += option_name;
+    void store_incorrect_option( const std::string& option_location ) {
+        incorrect_options += option_location;
     }
 
     void notify_about_incorrect_options_if_such_exists() const {

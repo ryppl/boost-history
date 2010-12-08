@@ -74,11 +74,19 @@ inline void pure_check_path_existence( const std::string& _path ) {
 
     if ( boost::filesystem::exists( path_name ) ) {
         if ( !boost::filesystem::exists( full_path_name ) ) {
-            notify_without_prefix( "directory '" + path_name + "' exists, but there is no file '" + file_name + "'!" );
+            notify_without_prefix( "directory '" + path_name
+                                   + "' exists, but there is no file '" + file_name + "'!" );
         } else {}
     } else {
         notify_without_prefix( "directory '" + path_name + "' not exists!" );
     }	
+}
+
+inline void check_is_it_file( const std::string& _path ) {
+    boost::filesystem::path path( _path );
+    if ( !boost::filesystem::is_regular_file( path ) ) {
+        notify_without_prefix( "path '" + _path + "' exists, but it is not a regular file!" );
+    } else {}
 }
 
 inline std::string prepare_full_name_for_log( const std::string& full_name_of_option
@@ -103,6 +111,24 @@ inline trim_all( str_storage& storage ) {
     BOOST_FOREACH ( std::string& s, storage ) {
         boost::trim( s );
     }
+}
+
+template
+<
+    typename SourceType
+    , typename TargetType
+>
+inline TargetType cast( const SourceType& source ) {
+    TargetType target;
+    try {
+        target = boost::lexical_cast< TargetType >( source );
+    } catch ( const std::exception& /* exc */ ) {
+        notify( std::string( "Cannot cast value of type '" )
+                + BOOST_PP_STRINGIZE( SourceType )
+                + "' to type '" 
+                + BOOST_PP_STRINGIZE( TargetType ) + "'!" );
+    }
+    return target;
 }
 
 } // namespace detail
