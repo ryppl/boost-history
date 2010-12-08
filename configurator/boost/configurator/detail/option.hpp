@@ -68,7 +68,7 @@ public:
     template< typename Value >
     option& set_default_value( const Value& _value ) {
         check_option_necessity();
-        value = cast< std::string >( _value );
+        value = cast< Value, std::string >( _value );
         default_value.assign( value.begin(), value.end() );
         return *this;
     }
