@@ -132,7 +132,7 @@ public:
     >
     Value get_value_of() {
         const std::string value_as_string = get_value_of< Option >();
-        Value value();
+        Value value;
         try {
             value = boost::lexical_cast< Value >( value_as_string );
         } catch ( const std::exception& /* exc */ ) {
