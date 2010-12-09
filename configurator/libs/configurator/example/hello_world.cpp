@@ -9,15 +9,17 @@
 
 #include <iostream>
 
+BOOST_CONFIGURATOR_OPTION( Host )
+
 int main( int argc, char* argv[] ) {	
     try {
         boost::cf::configurator conf; 
-        conf.add_option( "Host" );
+        conf.add< Host>();
 
         conf.load( "/some/path/to/hello_world_conf.txt" ); // See hello_world_conf.txt in 'example'.
 
-        std::string value_of_host = conf.get_value( "Host" );
-        std::cout << "Value of host: " << value_of_host << std::endl;
+        std::string host = conf.get_value_of< Host >();
+        std::cout << "Host: " << host << std::endl;
     } catch ( const std::exception& exc ) {
 		std::cerr << exc.what() << std::endl;
 	} 
