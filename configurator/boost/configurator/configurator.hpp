@@ -175,12 +175,19 @@ private:
         using boost::spirit::qi::_1;
         using boost::phoenix::ref;
         using boost::phoenix::push_back;
-        
+        using boost::spirit::qi::rule;
+
         std::string pure_name = typeid( Option ).name();
         std::string name;
-        parse( pure_name.begin()
-               , pure_name.end()
-               , int_ >> +( char_[ push_back( ref(name), _1 ) ] ) );
+        
+        rule< detail::string_it > name_extractor = +( char_[ push_back( ref(name), _1 ) ] );
+        rule< detail::string_it > unnecessary_prefix;
+        #ifdef WIN_32
+            unnecessary_prefix = *( char_ - ' ' ) >> ' ';
+        #else
+            unnecessary_prefix = int_;
+        #endif
+        parse( pure_name.begin(), pure_name.end(), unnecessary_prefix >> name_extractor );
         return name; 
     }
 private:

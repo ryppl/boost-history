@@ -109,7 +109,7 @@ inline void remove_empty_strings_from( str_storage& strings ) {
                    , strings.end() );
 }
 
-inline trim_all( str_storage& storage ) {
+inline void trim_all( str_storage& storage ) {
     BOOST_FOREACH ( std::string& s, storage ) {
         boost::trim( s );
     }
