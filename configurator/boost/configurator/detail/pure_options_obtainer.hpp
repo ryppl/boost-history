@@ -27,6 +27,11 @@ namespace cf {
 /// \brief Details of realization.
 namespace detail {
 
+using boost::spirit::qi::char_;
+using boost::spirit::qi::string;
+using boost::spirit::qi::parse;
+using boost::phoenix::ref;
+
 class pure_options_obtainer {
     typedef boost::function< bool ( std::string& /* analized string */
                                     , pure_options& /* factual obtained options */ ) >
@@ -88,12 +93,7 @@ private:
     }
 private:
     bool handle_section_opening( std::string& s, pure_options& /* factual_obtained_options */ ) {
-        using boost::spirit::qi::char_;
-        using boost::spirit::qi::string;
-        using boost::spirit::qi::lit;
-        using boost::spirit::qi::parse;
         using boost::spirit::qi::_1;
-        using boost::phoenix::ref;
         using boost::phoenix::push_back;
 
         std::string name_of_opening_section;
@@ -119,7 +119,7 @@ private:
         current_section_path += name_of_opening_section + sections_separator;
     }
     
-    void check_duplication_of( const std::string& opening_section_name ) {
+    void check_duplication_of( const std::string& opening_section_name ) const {
         const std::string name_of_last_opening_section = retrieve_name_of_last_opening_section();
         if ( opening_section_name == name_of_last_opening_section ) {
             notify( "Duplication of open tag for section '"
@@ -144,12 +144,7 @@ private:
     }
 private:
     bool handle_section_closing( std::string& s, pure_options& /* factual_obtained_options */ ) {
-        using boost::spirit::qi::char_;
-        using boost::spirit::qi::string;
-        using boost::spirit::qi::lit;
-        using boost::spirit::qi::parse;
         using boost::spirit::qi::_1;
-        using boost::phoenix::ref;
         using boost::phoenix::push_back;
 
         std::string name_of_closing_section;
@@ -195,12 +190,7 @@ private:
     }
 private:
     bool handle_option( std::string& s, pure_options& factual_obtained_options ) {
-        using boost::spirit::qi::char_;
-        using boost::spirit::qi::string;
-        using boost::spirit::qi::lit;
-        using boost::spirit::qi::parse;
         using boost::spirit::qi::_1;
-        using boost::phoenix::ref;
         using boost::phoenix::push_back;
 
         std::string option_name;
@@ -237,9 +227,9 @@ private:
         std::string what_happened = "in global scope";
         if ( !current_section_path.empty() ) {
             what_happened = "in section '"
-                          + prepare_full_name_for_log( current_section_path, sections_separator )
-                          + "'"
-                          ;
+                            + prepare_full_name_for_log( current_section_path, sections_separator )
+                            + "'"
+                            ;
         } else {}
         what_happened = "Meaningless string '" + s + "' detected " + what_happened + "!";
         notify( what_happened );
@@ -247,10 +237,10 @@ private:
     }
 private:
     void check_last_section_closing() {
-        // if ( !current_section_path.empty() ) {
-        //     boost::erase_last( current_section_path, sections_separator );
-        //     notify( "Section '" + current_section_path + "' unclosed!" );
-        // } else {}
+        if ( !current_section_path.empty() ) {
+            boost::erase_last( current_section_path, sections_separator );
+            notify( "Section '" + current_section_path + "' unclosed!" );
+        } else {}
     }
 
     void convert_name_depending_on_case_sensitivity( std::string& section_name ) const {
