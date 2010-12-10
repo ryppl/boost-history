@@ -84,7 +84,7 @@ private:
 
     bool multi_line_comment_exists_in( const std::string& s ) const {
         return boost::contains( s, multi_line_comment_begin_sign )
-               && boost::contains( s, multi_line_comment_end_sign );
+               || boost::contains( s, multi_line_comment_end_sign );
     }
 
     std::string concatenate( const str_storage& obtained_strings ) const {
