@@ -11,7 +11,11 @@
 
 #include <boost/configurator/detail/misc.hpp>
 #include <boost/configurator/detail/option.hpp>
-#include <boost/algorithm/string/regex.hpp>
+#include <boost/spirit/include/phoenix_core.hpp>
+#include <boost/spirit/include/phoenix_operator.hpp>
+#include <boost/spirit/include/phoenix_stl.hpp>
+
+#include <iostream>
 
 namespace boost {
 
@@ -23,12 +27,14 @@ namespace cf {
 /// \brief Details of realization.
 namespace detail {
 
-/// \class pure_options_obtainer
-/// \brief Pure options obtainer.
-/// 
-/// Obtains pure options from pure strings.
-/// Checks sections correctness.
 class pure_options_obtainer {
+    typedef boost::function< bool ( std::string& /* analized string */
+                                    , pure_options& /* factual obtained options */ ) >
+            string_handler;
+    typedef std::vector< string_handler >
+            string_handlers;
+    typedef boost::spirit::qi::rule< string_it >
+            simple_rule;
 public:
     pure_options_obtainer( std::string&         _option_name_value_separator
                            , const std::string& _sections_separator
@@ -37,117 +43,80 @@ public:
             option_name_value_separator( _option_name_value_separator )
             , sections_separator( _sections_separator )
             , registered_options( _registered_options )
-            , case_sensitivity_for_names( _case_sensitivity_for_names )
+            , case_sensitivity_for_names( _case_sensitivity_for_names ) 
             , open_section_tag_begin_sign( "<" )
             , open_section_tag_end_sign( ">" )
             , close_section_tag_begin_sign( "</" )
-            , close_section_tag_end_sign( ">" )
-            , regex_open_section_tag( "[" 
-                                      + open_section_tag_begin_sign
-                                      + "]{1}[a-zA-Z0-9_.-]{1,}["
-                                      + open_section_tag_end_sign
-                                      + "]{1}" )
-            , regex_close_section_tag( "[" 
-                                       + open_section_tag_begin_sign
-                                       + "]{1}[/]{1}[a-zA-Z0-9_.-]{1,}["
-                                       + open_section_tag_end_sign
-                                       + "]{1}" ) {}
+            , close_section_tag_end_sign( ">" ) {
+        using namespace boost::assign;
+        handlers +=   boost::bind( &pure_options_obtainer::handle_section_opening, this, _1, _2 )
+                    , boost::bind( &pure_options_obtainer::handle_section_closing, this, _1, _2 )
+                    , boost::bind( &pure_options_obtainer::handle_option,          this, _1, _2 )
+                    , boost::bind( &pure_options_obtainer::meaningless_string,     this, _1, _2 )
+                    ;
+    }
 private:
     std::string&        option_name_value_separator;
     const std::string&  sections_separator;
     const options&      registered_options;
     const bool&         case_sensitivity_for_names;
 private:
-    const std::string   open_section_tag_begin_sign;
-    const std::string   open_section_tag_end_sign;
-    const std::string   close_section_tag_begin_sign;
-    const std::string   close_section_tag_end_sign;
-    const boost::regex  regex_open_section_tag;
-    const boost::regex  regex_close_section_tag;
+    std::string open_section_tag_begin_sign;
+    std::string open_section_tag_end_sign;
+    std::string close_section_tag_begin_sign;
+    std::string close_section_tag_end_sign;
+    std::string current_section_path;
 private:
-    std::string         current_section_path;
-    str_set             nonmulti_sections_uniqueness_checker;
+    string_handlers handlers;
 public:
-    pure_options operator()( const str_storage& obtained_strings ) {
+    pure_options operator()( str_storage& obtained_strings ) {
         pure_options factual_obtained_options;
-
-        BOOST_FOREACH ( const std::string& s, obtained_strings ) {
-            if ( option_exists_in_this( s ) ) {
-                obtain_option( s, factual_obtained_options );
-            } else if ( open_section_tag_exists_in_this( s ) ) {
-                handle_opening_of_section( s );
-            } else if ( close_section_tag_exists_in_this( s ) ) {
-                handle_closing_of_section( s );
-            } else {
-                notify_about_meaningless_string( s );
-            }
+        BOOST_FOREACH ( std::string& s, obtained_strings ) {
+            handle( s, factual_obtained_options ); 
         }
-
         check_last_section_closing();
-        nonmulti_sections_uniqueness_checker.clear();
         return factual_obtained_options;
     }
-private: 
-    bool option_exists_in_this( const std::string& s ) const {
-        const char separator = *option_name_value_separator.begin();
-        boost::regex regex_valid_option; 
-        if ( ' ' == separator ) {
-            regex_valid_option = boost::regex( "[ \t]{0,}[^ \t]{1,}[ \t]{1,}[^ \t]{1,}[ \t]{0,}" );
-        } else {
-            regex_valid_option = boost::regex( std::string( "[^" )
-                                               + separator
-                                               + "]{1,}["
-                                               + separator
-                                               + "]{1}[^"
-                                               + separator
-                                               + "]{1,}" );
+private:
+    void handle( std::string& s, pure_options& factual_obtained_options ) {
+        BOOST_FOREACH ( string_handler& handler, handlers ) {
+            const bool handling_success = handler( s, factual_obtained_options );
+            if ( handling_success ) {
+                break;
+            } else {}
         }
-        return regex_match( s, regex_valid_option );
-    } 
-
-    bool open_section_tag_exists_in_this( const std::string& s ) const {
-        return regex_match( s, regex_open_section_tag );
-    }
-
-    bool close_section_tag_exists_in_this( const std::string& s ) const {
-        return regex_match( s, regex_close_section_tag );
     }
 private:
-    void obtain_option( const std::string& s, pure_options& factual_obtained_options ) const {
-        str_storage option_parts = get_option_parts_from( s );
-        std::string name  = option_parts.front();
-        std::string value = option_parts.back();
-        boost::trim( name );
-        boost::trim( value );
-        const std::string full_name_of_option = current_section_path + name;
-        factual_obtained_options += pure_option( full_name_of_option, value );
+    bool handle_section_opening( std::string& s, pure_options& /* factual_obtained_options */ ) {
+        using boost::spirit::qi::char_;
+        using boost::spirit::qi::string;
+        using boost::spirit::qi::lit;
+        using boost::spirit::qi::parse;
+        using boost::spirit::qi::_1;
+        using boost::phoenix::ref;
+        using boost::phoenix::push_back;
+
+        std::string name_of_opening_section;
+
+        simple_rule open_edge = !string( close_section_tag_begin_sign ) 
+                                >> string( open_section_tag_begin_sign );
+        simple_rule name_extractor = +( char_[ push_back( ref(name_of_opening_section), _1 ) ]
+                                        - string( open_section_tag_end_sign ) );
+        simple_rule close_edge = string( open_section_tag_end_sign );
+        simple_rule full = open_edge >> name_extractor >> close_edge;
+
+        bool parsing_success = parse( s.begin(), s.end(), full );
+        if ( parsing_success ) {
+            boost::trim( name_of_opening_section );
+            final_handle_section_opening( name_of_opening_section );
+        } else {}
+        return parsing_success;
     }
     
-    str_storage get_option_parts_from( const std::string& s ) const {
-        str_storage option_parts;
-        const char separator = *option_name_value_separator.begin();
-        if ( ' ' == separator ) {
-            boost::find_all_regex( option_parts, s, boost::regex( "[^ \t]{1,}" ) );
-        } else {
-            boost::find_all_regex( option_parts, s, boost::regex( std::string( "[^" ) + separator + "]{1,}" ) );
-        } 
-        return option_parts;
-    } 
-private:
-    void handle_opening_of_section( const std::string& s ) {
-        std::string opening_section_name = retrieve_section_name_from_open_tag( s );
-        convert_name_depending_on_case_sensitivity( opening_section_name );
-        check_duplication_of( opening_section_name );
-        current_section_path += opening_section_name + sections_separator;
-        check_nonmulti_sections_uniqueness();
-    }
-
-    void handle_closing_of_section( const std::string& s ) {
-        std::string closing_section_name = retrieve_section_name_from_close_tag( s );
-        convert_name_depending_on_case_sensitivity( closing_section_name );
-        check_is_any_section_was_opened( closing_section_name );
-        check_section_symmetry( closing_section_name );
-        cut_current_section_name_by( closing_section_name );
+    void final_handle_section_opening( std::string& name_of_opening_section ) {
+        convert_name_depending_on_case_sensitivity( name_of_opening_section );
+        check_duplication_of( name_of_opening_section );
+        current_section_path += name_of_opening_section + sections_separator;
     }
     
     void check_duplication_of( const std::string& opening_section_name ) {
@@ -156,14 +125,6 @@ private:
             notify( "Duplication of open tag for section '"
                     + prepare_full_name_for_log( current_section_path, sections_separator )
                     + "' detected!" );
-        } else {}
-    }
-private:
-    void check_section_symmetry( const std::string& closing_section_name ) const {
-        const std::string name_of_last_opening_section = retrieve_name_of_last_opening_section();
-        if ( closing_section_name != name_of_last_opening_section ) {
-            notify( "Dissymmetry of sections detected: last opening section '"
-                    + name_of_last_opening_section + "', but closing is '" + closing_section_name + "'!" );
         } else {}
     }
 
@@ -181,40 +142,39 @@ private:
         }
         return std::string( name_begin, name_end );
     }
+private:
+    bool handle_section_closing( std::string& s, pure_options& /* factual_obtained_options */ ) {
+        using boost::spirit::qi::char_;
+        using boost::spirit::qi::string;
+        using boost::spirit::qi::lit;
+        using boost::spirit::qi::parse;
+        using boost::spirit::qi::_1;
+        using boost::phoenix::ref;
+        using boost::phoenix::push_back;
 
-    void check_nonmulti_sections_uniqueness() {
-        const size_t current_nonmulti_sections_quantity = nonmulti_sections_uniqueness_checker.size();
-        nonmulti_sections_uniqueness_checker.insert( current_section_path );
-        const size_t new_nonmulti_sections_quantity = nonmulti_sections_uniqueness_checker.size();
-        if ( current_nonmulti_sections_quantity == new_nonmulti_sections_quantity ) {
-            notify( "Section '"
-                    + prepare_full_name_for_log( current_section_path, sections_separator )
-                    + "' repeats, but it no allowed repeating!" );
+        std::string name_of_closing_section;
+
+        simple_rule open_edge = string( close_section_tag_begin_sign ); 
+        simple_rule name_extractor = +( char_[ push_back( ref(name_of_closing_section), _1 ) ] 
+                                        - string( close_section_tag_end_sign ) );
+        simple_rule close_edge = string( close_section_tag_end_sign );
+        simple_rule full = open_edge >> name_extractor >> close_edge;
+
+        bool parsing_success = parse( s.begin(), s.end(), full );
+        if ( parsing_success ) {
+            boost::trim( name_of_closing_section );
+            final_handle_section_closing( name_of_closing_section );
         } else {}
+        return parsing_success;
     }
-private:
-    std::string retrieve_section_name_from_open_tag( const std::string& s ) const {
-        string_const_it section_name_begin = boost::find_first( s, open_section_tag_begin_sign ).end();
-        string_const_it section_name_end   = boost::find_first( s, open_section_tag_end_sign ).begin();
-        std::string section_name( section_name_begin, section_name_end );
-        boost::trim( section_name );
-        check_section_existence( section_name );
-        return section_name;
+    
+    void final_handle_section_closing( std::string& name_of_closing_section ) {
+        convert_name_depending_on_case_sensitivity( name_of_closing_section );
+        check_is_any_section_was_opened( name_of_closing_section );
+        check_section_symmetry( name_of_closing_section );
+        cut_current_section_name_by( name_of_closing_section );
     }
 
-    std::string retrieve_section_name_from_close_tag( const std::string& s ) const { 
-        string_const_it section_name_begin = boost::find_first( s, close_section_tag_begin_sign ).end();
-        string_const_it section_name_end   = boost::find_first( s, close_section_tag_end_sign ).begin();
-        std::string section_name( section_name_begin, section_name_end );
-        boost::trim( section_name );
-        check_section_existence( section_name );
-        return section_name;
-    }
-private:
-    void cut_current_section_name_by( const std::string& closing_section_name ) {
-        boost::erase_last( current_section_path, closing_section_name + sections_separator );
-    }
-private: 
     void check_is_any_section_was_opened( const std::string& closing_section_name ) const {
         if ( current_section_path.empty() ) {
             notify( "Closing of section '" + closing_section_name + "' detected, "
@@ -222,45 +182,58 @@ private:
         } else {}
     }
 
-    void check_last_section_closing() {
-        if ( !current_section_path.empty() ) {
-            boost::erase_last( current_section_path, sections_separator );
-            notify( "Section '" + current_section_path + "' unclosed!" );
-        } else {}
-    }
-
-    void check_section_existence( std::string& section_name ) const {
-        registered_option_const_it it = std::find_if( registered_options.begin()
-                                                      , registered_options.end()
-                                                      , boost::bind( &option::corresponds_by_section
-                                                                     , _1
-                                                                     , section_name ) );
-        if ( registered_options.end() == it ) {
-            notify_about_incorrect_section_name( section_name );
+    void check_section_symmetry( const std::string& closing_section_name ) const {
+        const std::string name_of_last_opening_section = retrieve_name_of_last_opening_section();
+        if ( closing_section_name != name_of_last_opening_section ) {
+            notify( "Dissymmetry of sections detected: last opening section '"
+                    + name_of_last_opening_section + "', but closing is '" + closing_section_name + "'!" );
         } else {}
     }
     
-    void notify_about_incorrect_section_name( const std::string& incorrect_section_name ) const {
-        std::string what_happened = "Incorrect section name '"
-                                    + incorrect_section_name
-                                    + "' detected!";
-        if ( !current_section_path.empty() ) {
-            boost::erase_last( what_happened, "!" );
-            what_happened += " in section '"
-                             + prepare_full_name_for_log( current_section_path, sections_separator )
-                             + "'!"
-                             ;
-        } else {}
-        notify( what_happened );
-    }
-
-    void convert_name_depending_on_case_sensitivity( std::string& section_name ) const {
-        if ( !case_sensitivity_for_names ) {
-            boost::to_lower( section_name );
-        } else {}
+    void cut_current_section_name_by( const std::string& closing_section_name ) {
+        boost::erase_last( current_section_path, closing_section_name + sections_separator );
     }
 private:
-    void notify_about_meaningless_string( const std::string& s ) const {
+    bool handle_option( std::string& s, pure_options& factual_obtained_options ) {
+        using boost::spirit::qi::char_;
+        using boost::spirit::qi::string;
+        using boost::spirit::qi::lit;
+        using boost::spirit::qi::parse;
+        using boost::spirit::qi::_1;
+        using boost::phoenix::ref;
+        using boost::phoenix::push_back;
+
+        std::string option_name;
+        std::string option_value;
+
+        simple_rule name_extractor = +( char_[ push_back( ref(option_name), _1 ) ] 
+                                        - string( option_name_value_separator ) );
+
+        simple_rule separator = string( option_name_value_separator );
+        if ( ' ' == *option_name_value_separator.begin() ) {
+            separator = +( string( option_name_value_separator ) );
+        } else {}
+
+        simple_rule value_extractor = +( char_[ push_back( ref(option_value), _1 ) ] );
+        simple_rule full = name_extractor >> separator >> value_extractor;
+
+        bool parsing_success = parse( s.begin(), s.end(), full );
+        if ( parsing_success ) {
+            boost::trim( option_name );
+            boost::trim( option_value );
+            final_handle_option( option_name, option_value, factual_obtained_options );
+        } else {}
+        return parsing_success;
+    }
+
+    void final_handle_option( const std::string&    option_name
+                              , const std::string&  option_value
+                              , pure_options&       factual_obtained_options ) {
+        const std::string option_location = current_section_path + option_name;
+        factual_obtained_options += pure_option( option_location, option_value );
+    }
+private:
+    bool meaningless_string( std::string& s, pure_options& /* factual_obtained_options */ ) const {
         std::string what_happened = "in global scope";
         if ( !current_section_path.empty() ) {
             what_happened = "in section '"
@@ -270,7 +243,21 @@ private:
         } else {}
         what_happened = "Meaningless string '" + s + "' detected " + what_happened + "!";
         notify( what_happened );
+        return true;
     }
+private:
+    void check_last_section_closing() {
+        // if ( !current_section_path.empty() ) {
+        //     boost::erase_last( current_section_path, sections_separator );
+        //     notify( "Section '" + current_section_path + "' unclosed!" );
+        // } else {}
+    }
+
+    void convert_name_depending_on_case_sensitivity( std::string& section_name ) const {
+        if ( !case_sensitivity_for_names ) {
+            boost::to_lower( section_name );
+        } else {}
+    } 
 };
 
 } // namespace detail
