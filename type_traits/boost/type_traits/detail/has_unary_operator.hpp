@@ -36,7 +36,7 @@ tag operator BOOST_TT_TRAIT_OP (const any&);
 
 namespace {
 	template <typename T>
-	typename ::boost::remove_cv<T>::type make();
+	typename ::boost::remove_cv<T>::type &make();
 }
 
 template < typename RHS >
@@ -69,7 +69,7 @@ struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1)< RHS, RET, ::boost::true_type > {
 	static const bool value=false;
 };
 
-// checks for return type if 3rd template parameter RET is non void
+// checks for return type if 2nd template parameter RET is non void
 template < typename RHS, typename RET >
 struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) {
 	static const bool value=
