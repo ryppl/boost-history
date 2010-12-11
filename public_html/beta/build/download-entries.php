@@ -1,12 +1,14 @@
 <?php
-require_once(dirname(__FILE__) . '/../../common/code/boost_feed.php');
-$_downloads = new boost_feed(dirname(__FILE__) . '/../../feed/downloads.rss', '/users/download');
-$_guid = basename($_SERVER["PATH_INFO"]);
-if(!isset($_downloads->db[$_guid])) {
-    require_once(dirname(__FILE__) . '/../../common/code/boost_error_page.php');
-    error_page_404();
-    exit(0);
-}
+
+echo "Download entries\n";
+echo "================\n";
+
+require_once(dirname(__FILE__) . '/../common/code/boost_feed.php');
+$_downloads = new boost_feed(dirname(__FILE__) . '/../feed/downloads.rss', '/users/download');
+foreach($_downloads->db as $_guid => $_value) {
+    echo "Building $_guid\n";
+
+    ob_start();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -62,7 +64,7 @@ if(!isset($_downloads->db[$_guid])) {
   <div id="footer">
     <div id="footer-left">
       <div id="revised">
-        <p>Revised $Date$</p>
+        <p>Revised $<?php ?>Date$</p>
       </div>
 
       <div id="copyright">
@@ -78,3 +80,13 @@ if(!isset($_downloads->db[$_guid])) {
   </div>
 </body>
 </html>
+<?php
+    $_page = ob_get_contents();
+    ob_end_clean();
+    
+    file_put_contents(dirname(__FILE__) . "/../users/download/$_guid.html", $_page);
+}
+
+echo "\n";
+
+?>
