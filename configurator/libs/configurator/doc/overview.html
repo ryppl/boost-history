@@ -1,667 +1,108 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 
 <html>
-<head>
-  <meta http-equiv="Content-Language" content="en-us">
-  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
-  <link rel="stylesheet" type="text/css" href="../../../boost.css">
-
-  <title>Configurator - Overview</title>
-<link rel="icon" href="/favicon.ico" type="image/ico"><link rel="stylesheet" type="text/css" href="/style-v2/section-basic.css"></head>
-
-<body link="#0000FF" vlink="#800080">  <div id="boost-common-heading-doc">
-    <div class="heading-inner">
-  <div class="heading-placard"></div>
-
-  <h1 class="heading-title">
-  <a href="/">
-  <img src="/gfx/space.png" alt= "Boost C++ Libraries" class="heading-logo" />
-  <span class="heading-boost">Boost</span>
-  <span class="heading-cpplibraries">C++ Libraries</span>
-  </a></h1>
-
-  <p class="heading-quote">
-  <q>...one of the most highly
-  regarded and expertly designed C++ library projects in the
-  world.</q> <span class="heading-attribution">&mdash; <a href=
-  "http://www.gotw.ca/" class="external">Herb Sutter</a> and <a href=
-  "http://en.wikipedia.org/wiki/Andrei_Alexandrescu" class="external">Andrei
-  Alexandrescu</a>, <a href=
-  "http://safari.awprofessional.com/?XmlId=0321113586" class="external">C++
-  Coding Standards</a></span></p>
-
-  <div class="heading-sections">
-    <ul>
-      <li class="welcome-section-tab"><a href="http://www.boost.org/">Welcome</a></li>
-      <li class="boost-section-tab"><a href="http://www.boost.org/users/">Introduction</a></li>
-      <li class="community-section-tab"><a href="http://www.boost.org/community/">Community</a></li>
-      <li class="development-section-tab"><a href="http://www.boost.org/development/">Development</a></li>
-      <li class="support-section-tab"><a href="http://www.boost.org/support/">Support</a></li>
-      <li class="doc-section-tab"><a href="http://www.boost.org/doc/">Documentation</a></li>
-    </ul>
-  </div>
-</div>
-  </div>
-
-  <div id="boost-common-heading-doc-spacer"></div>
-
+	<head>
+  		<meta http-equiv="Content-Language" content="en-us">
+  		<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  		<link rel="stylesheet" type="text/css" href="own.css">
+  		<title>Boost.Configurator</title>
+	</head>
+	
+	<body>
+		<table cellpadding="2" width="100%">
+			<tr>
+				<td valign="top"><a href="http://www.boost.org">
+				<img style="border: 0pt none;" alt="Boost C++ Libraries" width="277" height="86" src="boost.png"></a></td>
+				<td align="center"><a href="http://www.boost.org">Home</a></td>
+				<td align="center"><a href="http://www.boost.org/doc/libs/">Libraries</a></td>
+				<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+				<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+			</tr>
+		</table>
+		
+		<hr/>
   
-        <h1 align="center">Configurator</h1>
+		<h2>Overview</h2>
+		 
+      	<dl class="index">
+   			<dt><a href="#motivation">Motivation</a></dt>
+    		<dt><a href="#hello">Hello, world!</a></dt>
+    		<dt><a href="#features">Features</a></dt>
+  		</dl>
 
-        <h2 align="center">Overview</h2>
-      <dl class="index">
-    <dt><a href="#introduction">Introduction</a></dt>
-    <dt><a href="#topic1">Common usage</a></dt>
-    <dt><a href="#topic2">Advanced usage</a></dt>
-  </dl>
+  		<h3><a name="motivation"></a>Motivation</h3>
 
-  <h2><a name="introduction" id="introduction"></a>Introduction</h2>
+  		Many programs (especially servers, daemons, etc.) requires configuration file for work, so it handling is very common task. Actually, this handling add up to four tasks:
+   		<ol>
+   			<li>obtaining options from configuration file,</li>
+   			<li>check correctness (in all senses of this word) of obtained options,</li>
+   			<li>storing options,</li>
+   			<li>issuance of the options values on demand.</li>
+    	</ol>
 
-  <p>
-<a name="simplest_config_format"><h3>Simplest configuration file format</h3></a>
-In fact, configuration file contains a set of data. This set presented by options stored in global scope or in section(s). Option has <strong>name</strong> and <strong>value</strong> separated by a some separator.
+		Boost.Configurator provides general solution for this tasks.
+		<br/><br/>
+  		<h3><a name="hello"></a>Hello, world!</h3>
 
-Simplest configuration file looks like this:
-<br/>
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
+  		Simplest configuration file:
+<pre class="config">
 Host = 127.0.0.1
 </pre>
-</div>
-<br/>
-There is one option, with name <strong>Host</strong> and value <strong>127.0.0.1</strong>. Default name-value separator is "<strong>=</strong>".
-<br/>
-<a name="necessity"><h3>Option's necessity</h3></a>
-Option can be necessary or optionally.
 
-In examples above option <strong>Host</strong> may be optional, so user can skip it. But in some cases this option may be necessary, so user must input it in configuration file.
-<br/>
-<a name="default_value"><h3>Option's default value</h3></a>
-Option can have default value, in this case not required input it.
-This option can be useful for options with predefined default values.
+Code for work with it:
 
-In example above option <strong>Host</strong> may have some default value of address, so user can skip it.
-<br/>
-<a name="value_semantic"><h3>Semantic of option's value</h3></a>
-It is often necessary to check the semantic of concrete option's value. For example, user must inputs valid IP:
-<br/>
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-Host = 127.0.0.1
-</pre>
-</div>
-<br/>
-But what if the user inputs an incorrect value, for example:
-<br/>
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-Host = 127.678.988.1
-</pre>
-</div>
-<br/>
-Configurator allows to define semantic check for each option.
-<br/>
-Supported semantics:
-<ul>
-    <li><strong>path</strong>			   (Path semantics check)</li>
-    <li><strong>optional_path</strong>	   (Optional path semantics check)</li>
-	<li><strong>ipv4</strong>			   (IPv4 semantics check)</li>
-    <li><strong>ipv6</strong>              (IPv6 semantics check)</li>
-    <li><strong>ip</strong>                (IP semantics check)</li>
-    <li><strong>email</strong>             (E-mail semantics check)</li>
-    <li><strong>size</strong>              (Size semantics check)</li>
-    <li><strong>time_period</strong>       (Time period semantics check)</li>
-    <li><strong>exp_record</strong>        (Exponential record semantics check)</li>
-</ul>
-Note that 'optional_path' semantic check path correctness and in case of failure NOT throw exception,
-but print warning message in std::cout. It may be useful for programs that must create missing files/folders.
-
-
-  </p>
-
-  <h2><a name="topic1" id="topic1"></a>Common usage</h2>
-
-  <p>
-  <a name="config_file_format"><h3>Configuration file format</h3></a>
-Configuration file is a set of options placed in global scope and/or in section(s).
-
-Global options example:
-<br/>
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-Host     = 127.0.0.1
-Port     = 80
-User     = user
-Password = password
-</pre></div>
-<br/>
-Section is similar to XML: open tag enclosed in '&lt;' and '&gt;', close tag - in '&lt;/' and '&gt;'.
-<br/>
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-&lt;Server&gt;
-    Host = 127.0.0.1
-    Port = 80
-&lt;/Server&gt;
-</pre></div>
-<br/>
-You can use nested sections:
-<br/>
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-&lt;Server&gt;
-    Host = 127.0.0.1
-    Port = 80
-    
-    &lt;Security&gt;
-        User     = user
-        Password = password
-    &lt;/Security&gt;
-&lt;/Server&gt;
-</pre></div>
-
-<br/>
-<a name="preparing"><h3>Preparing</h3></a>
-Copy 'configurator' folder in some place where your compiler is looking for header files and add:
-<pre>
+<pre class="cpp">
 #include &lt;boost/configurator/configurator.hpp&gt;
-</pre>in your program.
 
-<a name="options_registering"><h3>Options registering</h3></a>
-Registration of new option included three tasks:
-<ol>
-  <li>define section where this option will be placed <em>(optionally)</em>,</li>
-  <li>define option's name,</li>
-  <li>define required checks and additional settings <em>(optionally)</em>.</li>
-</ol>
-<br/>
-Register option in global scope of configuration file:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    conf.add_option( "Host" );
-    // ...
-}
-</pre>
-or in short variant:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    conf.add( "Host" );
-    // ...
-}
-</pre>
-<br/>
-Register option in section:
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    conf.in_section( "Server" ).add_option_here( "Host" );
-    // ...
-}
-</pre>
-or in short variant:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    conf.in( "Server" ).add_here( "Host" );
-    // ...
-}
-</pre>
+#include &lt;iostream&gt;
 
-<a name="parsing"><h3>Parsing</h3></a>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    // ...
-    conf.parse( "/some/path/to/config_file" );
-    // ...
-}
-</pre>After that you can obtain values of options. Of course, <strong>/some/path/to/config_file</strong> must be valid in your filesystem.
-<br/>
-<a name="options_values_obtaining"><h3>Obtaining of option's values</h3></a>
+BOOST_CONFIGURATOR_OPTION( Host )
 
-Configuration file:
-<br/>
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-DatabaseName = my_db
-&lt;Server&gt;
-    Host = 127.0.0.1
-    
-    &lt;Security&gt;
-        User = user
-    &lt;/Security&gt;
-&lt;/Server&gt;
-</pre></div>
-<br/>
-Obtaining values of options example:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    // ...
-    std::string db   = conf.get_value( "DatabaseName" );
-    std::string host = conf.from_section( "Server" )
-                           .get_value_from_here( "Host" )
-                           ;
-    std::string user = conf.from_section( "Server" )
-                           .from_section( "Security" )
-                           .get_value_from_here( "User" )
-                           ;
-    // ...
-}
-</pre>
-or in short variant:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    // ...
-    std::string db   = conf.get( "DatabaseName" );
-    std::string host = conf.from( "Server" ).get_from_here( "Host" );
-    std::string user = conf.from( "Server" ).from( "Security" ).get_from_here( "User" );
-    // ...
-}
-</pre>
-
-  </p>
-
-  <h2><a name="topic2" id="topic2"></a>Advanced usage</h2>
-
-  <p>
-  <a name="options_necessity"><h3>How to set option's necessity</h3></a>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    // ...
-    conf.in( "Server" ).add_here( "Host" ).necessary();
-    // ...
-}
-</pre>
-After this user must inputs "Host" option in configuration file. If not, exception will thrown:
-<br/>
-<strong>[Configurator] Option 'Server > Host' is defined as necessary, but it missed!</strong>
-<br/>
-<a name="options_default_value"><h3>How to set option's default value</h3></a>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    // ...
-    conf.in( "Server" ).add_here( "Host" ).default_value( "127.0.0.1" );
-    // ...
-}
-</pre>
-After this user can skip "Host" option in configuration file.  
-<br/>
-<a name="options_semantics_check"><h3>How to set option's semantics check</h3></a>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    // ...
-    conf.in( "Server" ).add_here( "Host" ).check_semantic( boost::cf::ip );
-    // ...
-}
-</pre>
-After this value of "Host" option must be valid IP address (IPv4 or IPv6). If not, exception will be thrown:
-<br/>
-<strong>[Configurator] Semantic error: option 'Server > Host' has invalid value 'asdfasdfasd' (not IPv4, not IPv6)!</strong>
-<br/>
-<br/>
-<strong>IMPORTANT!</strong>
-<br/>
-If you use semantics check, you must compile your program with flag WITH_SEMANTIC_CHECK, for example:
-<br/>
-<strong>g++ -DWITH_SEMANTIC_CHECK -o test main.cpp -lboost_system -lboost_filesystem -lboost_regex</strong> 
-<br/>
-Note that in this case you must link <strong>boost_system</strong> and <strong>boost_regex</strong> libraries. You only pay for what you use.
-
-<a name="combine_options_settings"><h3>Combine settings</h3></a>
-Of course, you can combine settings for option:
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    // ...
-    conf.in( "Server" ).add_here( "Host" )
-    				   .check_semantic( boost::cf::ip )
-    				   .default_value( "34.67.56.89" )
-    				   ;
-    // ...
-}
-</pre>
-But you can not use contradictory settings, for example:
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    // ...
-    conf.in( "Server" ).add_here( "Host" )
-                       .necessary()
-                       .default_value( "34.67.56.89" ) // Default value for necessary option? Hm...
-                       ;
-    // ...
-}
-</pre>
-In this case exception will be thrown:
-<br/>
-<strong>[Configurator] Option 'Server > Host' registered as necessary, so it cannot have default_value!</strong>
-
-<a name="advanced_options_values_obtaining"><h3>Advanced obtaining option's value</h3></a>
-You can obtain option's value different ways.
-<br>
-<br>
-Simplest way is pure string obtaining:
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    // ...
-    std::string host = conf.from( "Server" ).get_from_here( "Host" );
-    // ...
-}
-</pre>
-
-You can obtain value by passing:
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    // ...
-    std::string host;
-    conf.from( "Server" ).get_from_here( "Host", host );
-    // ...
-}
-</pre>
-It is useful when you want obtain many values from one section:
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    // ...
-    std::string user;
-    std::string password;
-    conf.from( "Server" ).from( "Security" ).get_from_here( "User", user )
-                                            .get_from_here( "Password", password )
-                                            ;
-    // ...
-}
-</pre>
-Of course, you can obtain not only string values:
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    // ...
-    std::string host;
-    unsigned int port = 0;
-    conf.from( "Server" ).get_from_here( "Host", host )
-                         .get_from_here( "Port", port )
-                         ;
-    // ...
-}
-</pre>
-In this case value oh "Port" must be correspond to <strong>unsigned int</strong> type. If not, exception will be thrown:
-<br/>
-<strong>[Configurator] Value 'asdfasdfasd' of option 'Server > Port' cannot be cast to &lt;unsigned int&gt;!</strong>
-<br/>
-<br/>
-You can obtain values with explicitly defining type:
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    // ...
-    unsigned int port = conf.from( "Server" ).get_from_here< unsigned int >( "Port" );
-    // ...
-}
-</pre>
-<a name="advanced_options_values_semantics"><h3>Advanced obtaining option's semantics</h3></a>
-If you use semantics <strong>'size'</strong> and <strong>'time_period'</strong>, you can obtain such values
-in minimal units (bytes and seconds respectively).
-<br/>
-Configuration file:
-<br/>
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-some_period = 10h
-some_file_size = 10Mb
-</pre></div>
-<br/>
-Code:
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    conf.add( "some_period" ).check_semantic( boost::cf::time_period );
-    conf.add( "some_file_size" ).check_semantic( boost::cf::size );
-    // ...
-    unsigned long int period_in_sec = 0;
-    unsigned long int size_in_bytes = 0;
-    conf.get( "some_period", period_in_sec )
-        .get( "some_file_size", size_in_bytes )
-        ;
+int main( int argc, char* argv[] ) {	
+    try {
+        boost::cf::configurator conf; 
+        conf.add< Host >();
         
-    std::cout << "period in sec: " << period_in_sec << std::endl;
-    std::cout << "size in bytes: " << size_in_bytes << std::endl;
-    
-    // ...
-}
-</pre>
-You will see:
-<pre><strong>
-period in sec: 36000
-size in bytes: 10485760
-</strong> </pre>
-Supported time periods:
-<ul>
-	<li><strong>10</strong> (seconds)</li>
-	<li><strong>10s</strong> (seconds)</li>
-	<li><strong>10m</strong> (minutes)</li>
-	<li><strong>10h</strong> (hours)</li>
-	<li><strong>10d</strong> (days)</li>
-</ul>
-Supported sizes (size literals are case-insensitive):
-<ul>
-	<li><strong>10</strong> (bytes)</li>
-	<li><strong>10b</strong> (bytes)</li>
-	<li><strong>10K</strong> (Kbytes)</li>
-	<li><strong>10Kb</strong> (Kbytes)</li>
-	<li><strong>10M</strong> (Mbytes)</li>
-	<li><strong>10Mb</strong> (Mbytes)</li>
-	<li><strong>10G</strong> (Gbytes)</li>
-	<li><strong>10Gb</strong> (Gbytes)</li>
-</ul>
-Between numbers and literals can be space(s), so "10MB" equal to "10 MB".
+        conf.load( "/some/path/to/hello_world.conf" );
 
-<a name="options_with_multi_values"><h3>Options with multi-values</h3></a>
-By default option can't repeat in configuration file, so if you write:
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-DatabaseName = my_db
-DatabaseName = my_db_2
-</pre></div>
-<br/>
-exception will be thrown:
-<br/>
-<strong>[Configurator] Option 'Database' has multiple values, but it not allowed to have multiply values!</strong>
-<br/>
-<br/>
-But you can use multiply values:
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    conf.add( "DatabaseName" ).allow_multi_values();
-    std::cout << "DatabaseName: " << conf.get( "DatabaseName" ) << std::endl;
-    
-    // ...
-}
-</pre>
-In this case values of "DatabaseName" option will be accumulated, and you will see:
-<br/>
-<strong>DatabaseName = my_db my_db_2</strong>
-<br/>
-<br/>
-This may be very useful for example, when you register some plugins:
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-Plugin = plug_a plug_b
-Plugin = plug_c
-Plugin = plug_d
-Plugin = plug_e
-</pre></div>
-<br/>
-In this case value of "Plugin" option will be <strong>plug_a plug_b plug_c plug_d plug_e</strong>.
+        std::string host = conf.get_value_of< Host >();
+        std::cout << "Value of host: " << host << std::endl;
+    } catch ( const std::exception& exc ) {
+        std::cerr << exc.what() << std::endl;
+    } 
 
-<a name="case_sensitivity_for_names"><h3>Case sensitivity for names</h3></a>
-You can set case sensitivity for names of options and sections. By default it is case insensitive.
-<br/>
-So if we have:
-<br/>
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-DatabaseNAME = my_db
-&lt;ServEr&gt;
-    hosT = 127.0.0.1
-&lt;/SERver&gt;
-</pre></div>
-by default it's okay:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    conf.add( "DatabaseName" );
-    conf.in( "Server" ).add_here( "Host" );
-    // ...
-    std::string db;
-    std::string host;
-    conf.get( "DatabaseName", db );
-    conf.from( "Server" ).get_from_here( "Host", host );
-    // ...
-}
-</pre>
-But if we set case sensitivity:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    conf.set_case_sensitivity_for_names();
-    // ...
-}
-</pre>
-exception will be thrown, because Configurator will differentiate between names "DatabaseName" and "DatabaseNAME".
-
-<a name="name_value_separator"><h3>How to set another name-value separator for options</h3></a>
-
-By default name-value separator is '=' sign, but you can set another:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    conf.set_name_value_separator( ':' );
-    // ...
-}
-</pre>
-In this case you must use this sign:
-<br/>
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-DatabaseName : my_db
-</pre></div>
-<br/>
-You can use space sign: 
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    conf.set_name_value_separator( ' ' );
-    // ...
-}
-</pre>
-and use it:
-<br/>
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-DatabaseName 	my_db
-</pre></div>
-
-<a name="canonical_one_line_comments"><h3>How to use "canonical" one-line comments</h3></a>
-By default Configurator use C++-style comments:
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-/*
- * My config.
- */
-DatabaseName : my_db // this is comment for db
-</pre></div>
-<br/>
-But you can use "canonical" one-line comment with sign '#':
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    conf.use_canonical_one_line_comments();
-    // ...
-}
-</pre>
-In this case "//" will be just two slashes.
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-/*
- * My config.
- */
-DatabaseName : my_db # this is comment for db
-Host = http://www.mysite.com # "//" after "http:" is NOT comments...
-</pre></div>
-
-<a name="singleton_configurator"><h3>Singleton-variant of boost::cf::configurator class</h3></a>
-If you have many objects that need access to configurator, you can use it Singleton-variant:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::single_configurator::inst().use_canonical_one_line_comments();
-    // ...
-}
-</pre>
-I use it. :-)
-<br/>
-<br/>
-<strong>IMPORTANT!</strong>
-<br/>
-If you use Singleton-variant, you must compile your program with flag WITH_SINGLETON, for example:
-<br/>
-<strong>g++ -DWITH_SINGLETON -o test main.cpp -lboost_filesystem -lboost_thread</strong> 
-<br/>
-Note that in this case you must link <strong>boost_thread</strong> libraries. You only pay for what you use.
-
-<a name="reparsing"><h3>Reparsing</h3></a>
-You can reparse configuration file during program execution:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    // 
-    boost::cf::single_configurator::inst().reparse();
-    // ...
-}
-</pre>
-In this case "old" configuration file will be reparsed.
-<br/>
-<br/>
-But you can use some "new" file:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    // 
-    boost::cf::single_configurator::inst().reparse( "/some/path/to/new/config" );
-    // ...
+    return 0;
 }
 </pre>
 
-  <hr>
-  <p>Revised 
-  <!--webbot bot="Timestamp" s-type="EDITED" s-format="%d %B, %Y" startspan -->30
-  November, 2010<!--webbot bot="Timestamp" endspan i-checksum="38514" --></p>
+Console output:
 
-  <p><i>Copyright &copy; 2010 Denis Shevchenko</i></p>
+<pre class="terminal">
+Value of host: 127.0.0.1
+</pre>
+	<br/>
+  	<h3><a name="features"></a>Features</h3>
 
-  <p><i>Distributed under the Boost Software License, Version 1.0. (See
-  accompanying file <a href="../../../LICENSE_1_0.txt">LICENSE_1_0.txt</a> or
-  copy at <a href=
-  "http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a>)</i></p>
-</body>
+  	<ul>
+  		<li>Header-only.</li>
+  		<li>Portable (there is only ISO C++ code and Boost C++ libraries).</li>
+  		<li>Type-based work with options, without string-identifiers.</li>
+  		<li>Option's necessity.</li>
+  		<li>Option's default value.</li>
+  		<li>Arbitrary nesting of sections.</li>
+  		<li>Checks of value's semantics, like correct path, valid IP, etc.</li>
+  		<li>Common checks of options and sections, like duplication, incorrection, etc.</li>
+  		<li>Single-line and multi-line comments (in C++ style).</li>
+  		<li>Options with multi-values.</li>
+  		<li>Singleton-variant of core class.</li>
+  		<li>Case (in)sensitivity for names of options and sections.</li>
+  		<li>Customizing configuration file format.</li>
+	</ul>
+ 
+	<br/>
+	<hr/>
+	Last revised 
+  	<!--webbot bot="Timestamp" s-type="EDITED" s-format="%d %B, %Y" startspan -->10
+  	December, 2010<!--webbot bot="Timestamp" endspan i-checksum="38514" -->
+	</body>
 </html>

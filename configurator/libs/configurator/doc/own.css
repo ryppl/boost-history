@@ -1,0 +1,128 @@
+
+body {
+	padding: 0px 20px;
+}
+
+div.table_of_contents {
+	border: 1px solid gray;
+	padding: 0px 10px;
+	margin-left: 50px;
+	margin-right: 50px;
+}
+
+pre.cpp {
+	border: 1px solid gray;
+	background: #FFFAFA;
+	padding: 8px;
+	margin-left: 30px;
+	margin-right: 30px;
+	font-family: Courier, monospace;
+	font-size: 120%;
+}
+
+pre.config {
+	border: 1px solid gray;
+	background: #E8E8E8;
+	padding: 8px;
+	margin-left: 30px;
+	margin-right: 30px;
+	font-family: monospace;
+	font-size: 110%;
+}
+
+pre.terminal {
+	border: 1px solid #4F4F4F;
+	background: #4F4F4F;
+	padding: 8px;
+	margin-left: 30px;
+	margin-right: 30px;
+	font-family: monospace;
+	font-size: 110%;
+	font-weight: bold;
+	color: white;
+}
+
+h1.first_title {
+	margin-left: 50px;
+}
+
+h1 {
+    font-size: 170%;
+    COLOR: #00008B;
+}
+
+h2 {
+    font-size: 150%;
+}
+
+h3 {
+    font-size: 125%;
+}
+
+h4 {
+    font-size: 108%;
+}
+ 
+
+/*
+H1
+{
+    FONT-SIZE: 200%;
+    COLOR: #00008B;
+}
+H2
+{
+    FONT-SIZE: 150%;
+}
+H3
+{
+    FONT-SIZE: 125%;
+}
+H4
+{
+    FONT-SIZE: 108%;
+}
+BODY
+{
+    FONT-SIZE: 100%;
+    BACKGROUND-COLOR: #ffffff;
+    COLOR: #000000;
+}
+PRE
+{
+    MARGIN-LEFT: 2em;
+    FONT-FAMILY: Courier,
+                 monospace;
+}
+CODE
+{
+    FONT-FAMILY: Courier,
+                 monospace;
+}
+CODE.as_pre
+{
+    white-space: pre;
+}
+.index
+{
+    TEXT-ALIGN: left;
+}
+.page-index
+{
+    TEXT-ALIGN: left;
+}
+.definition
+{
+    TEXT-ALIGN: left;
+}
+.footnote
+{
+    FONT-SIZE: 66%;
+    VERTICAL-ALIGN: super;
+    TEXT-DECORATION: none;
+}
+.function-semantics
+{
+    CLEAR: left;
+}
+*/

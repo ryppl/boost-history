@@ -89,18 +89,27 @@ private:
 #endif
 public:
     void operator()() {
-        #ifdef WITH_SEMANTIC_CHECK 
-        BOOST_FOREACH ( option& registered_option, registered_options ) {
-            if ( !registered_options.empty() 
-                 && registered_option.semantic_defined() ) {
-                const std::string& value = registered_option.value;
-                const std::string name = prepare_full_name_for_log( registered_option.location
-                                                                    , sections_separator );
-                semantic_checkers[ registered_option.semantic ]( value, name );
-            } else {}
-        }
+        #ifdef WITH_SEMANTIC_CHECK
+        std::for_each( registered_options.begin()
+                       , registered_options.end()
+                       , boost::bind( &semantics_checker::check, this, _1 ) ); 
         #endif
     }
+#ifdef WITH_SEMANTIC_CHECK
+private:
+    void check( const option& registered_option ) {
+        if ( semantics_check_needed( registered_option ) ) {
+            const std::string& value = registered_option.value;
+            const std::string location = prepare_full_name_for_log( registered_option.location
+                                                                    , sections_separator );
+            semantic_checkers[ registered_option.semantic ]( value, location );
+        } else {}
+    }
+
+    bool semantics_check_needed( const option& registered_option ) const {
+        return !registered_option.empty() && registered_option.semantic_defined();
+    }
+#endif
 };
 
 } // namespace detail
