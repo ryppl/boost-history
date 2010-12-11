@@ -175,14 +175,13 @@ private:
         using boost::spirit::qi::char_;
         using boost::spirit::qi::parse;
         using boost::spirit::qi::_1;
-        using boost::phoenix::ref;
         using boost::phoenix::push_back;
         using boost::spirit::qi::rule;
 
         std::string pure_name = typeid( Option ).name();
         std::string name;
         
-        rule< detail::string_it > name_extractor = +( char_[ push_back( ref(name), _1 ) ] );
+        rule< detail::string_it > name_extractor = +( char_[ push_back( boost::phoenix::ref(name), _1 ) ] );
         rule< detail::string_it > unnecessary_prefix;
         #ifdef WIN_32
             unnecessary_prefix = *( char_ - ' ' ) >> ' ';

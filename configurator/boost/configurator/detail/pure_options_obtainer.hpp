@@ -17,6 +17,7 @@
 #include <boost/assign.hpp>
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/phoenix_stl.hpp>
@@ -38,7 +39,6 @@ namespace detail {
 using boost::spirit::qi::char_;
 using boost::spirit::qi::string;
 using boost::spirit::qi::parse;
-using boost::phoenix::ref;
 
 class pure_options_obtainer {
     typedef boost::function< bool ( std::string& /* analized string */
@@ -108,7 +108,7 @@ private:
 
         simple_rule open_edge = !string( close_section_tag_begin_sign ) 
                                 >> string( open_section_tag_begin_sign );
-        simple_rule name_extractor = +( char_[ push_back( ref(name_of_opening_section), _1 ) ]
+        simple_rule name_extractor = +( char_[ push_back( boost::phoenix::ref(name_of_opening_section), _1 ) ]
                                         - string( open_section_tag_end_sign ) );
         simple_rule close_edge = string( open_section_tag_end_sign );
         simple_rule full = open_edge >> name_extractor >> close_edge;
@@ -158,7 +158,7 @@ private:
         std::string name_of_closing_section;
 
         simple_rule open_edge = string( close_section_tag_begin_sign ); 
-        simple_rule name_extractor = +( char_[ push_back( ref(name_of_closing_section), _1 ) ] 
+        simple_rule name_extractor = +( char_[ push_back( boost::phoenix::ref(name_of_closing_section), _1 ) ] 
                                         - string( close_section_tag_end_sign ) );
         simple_rule close_edge = string( close_section_tag_end_sign );
         simple_rule full = open_edge >> name_extractor >> close_edge;
@@ -204,7 +204,7 @@ private:
         std::string option_name;
         std::string option_value;
 
-        simple_rule name_extractor = +( char_[ push_back( ref(option_name), _1 ) ] 
+        simple_rule name_extractor = +( char_[ push_back( boost::phoenix::ref(option_name), _1 ) ] 
                                         - string( option_name_value_separator ) );
 
         simple_rule separator = string( option_name_value_separator );
@@ -212,7 +212,7 @@ private:
             separator = +( string( option_name_value_separator ) );
         } else {}
 
-        simple_rule value_extractor = +( char_[ push_back( ref(option_value), _1 ) ] );
+        simple_rule value_extractor = +( char_[ push_back( boost::phoenix::ref(option_value), _1 ) ] );
         simple_rule full = name_extractor >> separator >> value_extractor;
 
         bool parsing_success = parse( s.begin(), s.end(), full );
