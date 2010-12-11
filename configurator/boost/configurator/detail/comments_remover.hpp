@@ -11,8 +11,10 @@
 
 #include <boost/configurator/detail/misc.hpp>
 #include <boost/foreach.hpp>
-#include <boost/mem_fn.hpp>
-#include <boost/assign.hpp>
+#include <boost/bind.hpp>
+#include <boost/algorithm/string.hpp>
+
+#include <algorithm>
 
 namespace boost {
 
@@ -23,8 +25,6 @@ namespace cf {
 /// \namespace cf::detail
 /// \brief Details of realization.
 namespace detail {
-
-using namespace boost::assign;
 
 /// \class comments_remover
 /// \brief Comments remover.
@@ -56,7 +56,7 @@ private:
                        , obtained_strings.end()
                        , boost::bind( &comments_remover::remove_one_line_comment
                                       , this
-                                      , _1 ) );
+                                      , ::_1 ) );
         trim_all( obtained_strings );
     }
     

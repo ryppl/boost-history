@@ -9,7 +9,7 @@
 #ifndef BOOST_CONFIGURATOR_NECESSARY_OPTIONS_CHECKER_HPP
 #define BOOST_CONFIGURATOR_NECESSARY_OPTIONS_CHECKER_HPP
 
-#include <boost/configurator/detail/option.hpp>
+#include <boost/configurator/option.hpp>
 
 namespace boost {
 

@@ -9,13 +9,21 @@
 #ifndef BOOST_CONFIGURATOR_PURE_OPTIONS_OBTAINER_HPP
 #define BOOST_CONFIGURATOR_PURE_OPTIONS_OBTAINER_HPP
 
+#include <boost/configurator/detail/types.hpp>
 #include <boost/configurator/detail/misc.hpp>
 #include <boost/configurator/detail/pure_option.hpp>
+#include <boost/configurator/option.hpp>
+#include <boost/function.hpp>
+#include <boost/assign.hpp>
+#include <boost/foreach.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/phoenix_stl.hpp>
 
-#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
 
 namespace boost {
 
@@ -54,10 +62,10 @@ public:
             , close_section_tag_begin_sign( "</" )
             , close_section_tag_end_sign( ">" ) {
         using namespace boost::assign;
-        handlers +=   boost::bind( &pure_options_obtainer::handle_section_opening, this, _1, _2 )
-                    , boost::bind( &pure_options_obtainer::handle_section_closing, this, _1, _2 )
-                    , boost::bind( &pure_options_obtainer::handle_option,          this, _1, _2 )
-                    , boost::bind( &pure_options_obtainer::meaningless_string,     this, _1, _2 )
+        handlers +=   boost::bind( &pure_options_obtainer::handle_section_opening, this, ::_1, ::_2 )
+                    , boost::bind( &pure_options_obtainer::handle_section_closing, this, ::_1, ::_2 )
+                    , boost::bind( &pure_options_obtainer::handle_option,          this, ::_1, ::_2 )
+                    , boost::bind( &pure_options_obtainer::meaningless_string,     this, ::_1, ::_2 )
                     ;
     }
 private:

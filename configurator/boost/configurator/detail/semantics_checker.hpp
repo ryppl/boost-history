@@ -9,13 +9,18 @@
 #ifndef BOOST_CONFIGURATOR_SEMANTICS_CHECKER_HPP
 #define BOOST_CONFIGURATOR_SEMANTICS_CHECKER_HPP
 
-#include <boost/configurator/detail/option.hpp>
+#include <boost/configurator/option.hpp>
+
+#include <string>
+
 #ifdef WITH_SEMANTIC_CHECK
 #include <boost/configurator/detail/validators.hpp>
 #include <boost/function.hpp>
+#include <boost/assign.hpp>
 #include <boost/bind.hpp>
 
 #include <map>
+#include <algorithm>
 #endif
 
 namespace boost {
@@ -57,6 +62,7 @@ public:
             #endif
     {
         #ifdef WITH_SEMANTIC_CHECK
+        using namespace boost::assign;
         insert( semantic_checkers )( path,          check_path_existence )
                                    ( optional_path, check_optional_path_existence )
                                    ( ipv4,          check_ipv4_validity )
@@ -65,16 +71,16 @@ public:
                                    ( email,         check_email_validity )
                                    ( size,          boost::bind( &size_validator::check
                                                                  , &check_size_validity
-                                                                 , _1
-                                                                 , _2 ) )
+                                                                 , ::_1
+                                                                 , ::_2 ) )
                                    ( time_period,   boost::bind( &time_period_validator::check
                                                                  , &check_time_period_validity
-                                                                 , _1
-                                                                 , _2 ) )
+                                                                 , ::_1
+                                                                 , ::_2 ) )
                                    ( exp_record,    boost::bind( &exp_record_validator::check
                                                                  , &check_exp_record_validity
-                                                                 , _1
-                                                                 , _2 ) )
+                                                                 , ::_1
+                                                                 , ::_2 ) )
                                    ;
         #endif
     }
@@ -92,7 +98,7 @@ public:
         #ifdef WITH_SEMANTIC_CHECK
         std::for_each( registered_options.begin()
                        , registered_options.end()
-                       , boost::bind( &semantics_checker::check, this, _1 ) ); 
+                       , boost::bind( &semantics_checker::check, this, ::_1 ) ); 
         #endif
     }
 #ifdef WITH_SEMANTIC_CHECK

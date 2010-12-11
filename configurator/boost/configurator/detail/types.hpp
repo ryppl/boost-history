@@ -9,6 +9,7 @@
 #ifndef BOOST_CONFIGURATOR_TYPES_HPP
 #define BOOST_CONFIGURATOR_TYPES_HPP
 
+#include <string>
 #include <vector>
 #include <set>
 #include <sstream>

@@ -1,5 +1,5 @@
-// detail/option.hpp
-// ~~~~~~~~~~~~~~~~~
+// option.hpp
+// ~~~~~~~~~~
 // 
 // Copyright (C) 2010 Denis Shevchenko (for @ dshevchenko.biz)
 //
@@ -18,11 +18,7 @@ namespace boost {
 /// \brief Main namespace of library.
 namespace cf {
 
-/// \namespace cf::detail
-/// \brief Details of realization.
-namespace detail {
-
-
+///
 struct option {
     option() {}
     explicit option( const std::string& _type_id, const std::string& _type_name ) :
@@ -48,7 +44,7 @@ public:
 public:
     option& set_location( const std::string& _location ) {
         location.assign( _location.begin(), _location.end() );
-        string_it end_it = boost::find_last( location, "::" ).begin();
+        detail::string_it end_it = boost::find_last( location, "::" ).begin();
         section.assign( location.begin(), end_it );
         return *this;
     }
@@ -116,7 +112,7 @@ public:
 private:
     void check_semantic_correctness( const value_semantic& semantic ) const {
         if ( semantic < no_semantic || semantic > exp_record ) {
-            o_stream what_happened;
+            detail::o_stream what_happened;
             what_happened << "Invalid semantic value '" << semantic
                           << "' for option '" << type_name 
                           << "', use supported semantic only (see documentation)!"
@@ -136,49 +132,11 @@ public:
     bool empty() const                      { return value.empty(); }
 };
 
-/// \struct pure_option
-/// \brief 
-///
-/// Presents pure option obtained from configuration file.
-struct pure_option {
-    pure_option() {}
-    pure_option( const std::string& _location, const std::string& _value ) :
-            location( _location.begin(), _location.end() )
-            , value( _value.begin(), _value.end() ) {}
-public:
-    std::string location;
-    std::string value;
-public:
-    bool empty() const {
-        return value.empty();
-    }
-
-    bool operator==( const std::string& _location ) const {
-        return _location == location;
-    }
-
-    bool operator==( const pure_option& another ) const {
-        return another.location == location;
-    }
-};
-
-inline bool operator<( const pure_option& left, const pure_option& right ) {
-    return left.location < right.location;
-}
-
-} // namespace detail
-
-typedef detail::option              option;
-
 typedef boost::ptr_vector< option > options;
 typedef options::iterator           registered_option_it;
 typedef options::const_iterator     registered_option_const_it;
 typedef registered_option_it        option_it;
 typedef registered_option_const_it  option_const_it;
-
-typedef detail::pure_option         pure_option;
-typedef std::vector< pure_option >  pure_options;
-typedef pure_options::iterator      pure_option_it;
 
 } // namespace cf
 } // namespace boost

@@ -9,8 +9,10 @@
 #ifndef BOOST_CONFIGURATOR_HPP
 #define BOOST_CONFIGURATOR_HPP
 
-#include <boost/configurator/detail/macro.hpp>
+#include <boost/configurator/macro.hpp>
 #include <boost/configurator/detail/validators.hpp>
+#include <boost/configurator/detail/type_name.hpp>
+#include <boost/configurator/detail/pure_option.hpp>
 #include <boost/configurator/detail/comments_remover.hpp>
 #include <boost/configurator/detail/pure_strings_obtainer.hpp>
 #include <boost/configurator/detail/pure_options_obtainer.hpp>
@@ -206,7 +208,7 @@ public:
         detail::str_storage obtained_strings = obtain_pure_strings( path_to_configuration_file );
         check_actual_data_existence_in( obtained_strings );
         remove_comments_from( obtained_strings );
-        pure_options factual_obtained_options = options_obtainer( obtained_strings );
+        detail::pure_options factual_obtained_options = options_obtainer( obtained_strings );
         prepare_names_depending_on_case_sensitivity( factual_obtained_options );
         check_incorrect_options( factual_obtained_options );
         check_necessary_options( factual_obtained_options );
@@ -256,20 +258,20 @@ private:
         return registered_options.end() != it;
     }
     
-    void prepare_names_depending_on_case_sensitivity( pure_options& factual_obtained_options ) {
+    void prepare_names_depending_on_case_sensitivity( detail::pure_options& factual_obtained_options ) {
         if ( !settings_of_configurator.case_sensitivity ) {
             BOOST_FOREACH ( option& option, registered_options ) {
                 boost::to_lower( option.location );
             }
 
-            BOOST_FOREACH ( pure_option& option, factual_obtained_options ) {
+            BOOST_FOREACH ( detail::pure_option& option, factual_obtained_options ) {
                 boost::to_lower( option.location );
             }
         } else {}
     }
 
-    void store_obtained_values( const pure_options& factual_obtained_options ) {
-        BOOST_FOREACH ( const pure_option& option, factual_obtained_options ) {
+    void store_obtained_values( const detail::pure_options& factual_obtained_options ) {
+        BOOST_FOREACH ( const detail::pure_option& option, factual_obtained_options ) {
             option_it it = std::find( registered_options.begin()
                                       , registered_options.end()
                                       , option.location );

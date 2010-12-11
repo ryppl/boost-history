@@ -9,6 +9,8 @@
 #ifndef BOOST_CONFIGURATOR_TYPE_NAME_HPP
 #define BOOST_CONFIGURATOR_TYPE_NAME_HPP
 
+#include <boost/assign.hpp>
+
 #include <map>
 #include <string>
 

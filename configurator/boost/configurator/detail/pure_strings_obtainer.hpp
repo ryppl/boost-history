@@ -9,8 +9,10 @@
 #ifndef BOOST_CONFIGURATOR_PURE_STRINGS_OBTAINER_HPP
 #define BOOST_CONFIGURATOR_PURE_STRINGS_OBTAINER_HPP
 
-#include <boost/configurator/detail/misc.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/algorithm/string.hpp>
+
+#include <string>
 
 namespace boost {
 

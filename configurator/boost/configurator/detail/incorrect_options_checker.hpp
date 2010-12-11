@@ -9,7 +9,11 @@
 #ifndef BOOST_CONFIGURATOR_INCORRECT_OPTIONS_CHECKER_HPP
 #define BOOST_CONFIGURATOR_INCORRECT_OPTIONS_CHECKER_HPP
 
-#include <boost/configurator/detail/option.hpp>
+#include <boost/configurator/option.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/assign.hpp>
+
+#include <algorithm>
 
 namespace boost {
 
@@ -20,6 +24,8 @@ namespace cf {
 /// \namespace cf::detail
 /// \brief Details of realization.
 namespace detail {
+
+using namespace boost::assign;
 
 /// \class incorrect_options_checker
 /// \brief Incorrect options checker.

@@ -9,8 +9,10 @@
 #ifndef BOOST_CONFIGURATOR_OPTIONS_REPETITION_HANDLER_HPP
 #define BOOST_CONFIGURATOR_OPTIONS_REPETITION_HANDLER_HPP
 
-#include <boost/configurator/detail/misc.hpp>
+#include <boost/configurator/detail/types.hpp>
 #include <boost/filesystem/fstream.hpp>
+
+#include <algorithm>
 
 namespace boost {
 

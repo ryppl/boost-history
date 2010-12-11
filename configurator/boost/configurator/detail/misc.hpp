@@ -10,11 +10,14 @@
 #define BOOST_CONFIGURATOR_MISC_HPP
 
 #include <boost/configurator/detail/types.hpp>
-#include <boost/configurator/detail/type_name.hpp>
-#include <boost/lexical_cast.hpp>
+#include <boost/mem_fn.hpp>
+#include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/operations.hpp>
 
+#include <string>
+#include <algorithm>
+#include <stdexcept>
 #include <iostream>
 
 namespace boost {

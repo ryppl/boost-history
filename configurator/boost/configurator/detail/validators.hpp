@@ -9,8 +9,8 @@
 #ifndef BOOST_CONFIGURATOR_VALIDATORS_HPP
 #define BOOST_CONFIGURATOR_VALIDATORS_HPP
 
+#include <boost/configurator/option.hpp>
 #include <boost/configurator/detail/misc.hpp>
-#include <boost/configurator/detail/option.hpp>
 
 #ifdef WITH_SEMANTIC_CHECK
 #include <boost/asio/ip/address_v4.hpp>
@@ -229,16 +229,16 @@ public:
     {
         #ifdef WITH_SEMANTIC_CHECK
         typedef size_validator sv;
-        handlers = list_of( std::make_pair( boost::bind( &sv::size_in_bytes_pure, this, _1 )
-                                            , boost::bind( &sv::store_in_bytes_pure, this, _1, _2 ) ) )
-                          ( std::make_pair( boost::bind( &sv::size_in_bytes, this, _1 )
-                                            , boost::bind( &sv::store_in_bytes, this, _1, _2 ) ) )
-                          ( std::make_pair( boost::bind( &sv::size_in_kbytes, this, _1 )
-                                            , boost::bind( &sv::store_in_kbytes, this, _1, _2 ) ) )
-                          ( std::make_pair( boost::bind( &sv::size_in_mbytes, this, _1 )
-                                            , boost::bind( &sv::store_in_mbytes, this, _1, _2 ) ) )
-                          ( std::make_pair( boost::bind( &sv::size_in_gbytes, this, _1 )
-                                            , boost::bind( &sv::store_in_gbytes, this, _1, _2 ) ) )
+        handlers = list_of( std::make_pair( boost::bind( &sv::size_in_bytes_pure, this, ::_1 )
+                                            , boost::bind( &sv::store_in_bytes_pure, this, ::_1, ::_2 ) ) )
+                          ( std::make_pair( boost::bind( &sv::size_in_bytes, this, ::_1 )
+                                            , boost::bind( &sv::store_in_bytes, this, ::_1, ::_2 ) ) )
+                          ( std::make_pair( boost::bind( &sv::size_in_kbytes, this, ::_1 )
+                                            , boost::bind( &sv::store_in_kbytes, this, ::_1, ::_2 ) ) )
+                          ( std::make_pair( boost::bind( &sv::size_in_mbytes, this, ::_1 )
+                                            , boost::bind( &sv::store_in_mbytes, this, ::_1, ::_2 ) ) )
+                          ( std::make_pair( boost::bind( &sv::size_in_gbytes, this, ::_1 )
+                                            , boost::bind( &sv::store_in_gbytes, this, ::_1, ::_2 ) ) )
         ;
         #endif
     }
@@ -327,16 +327,16 @@ public:
     {
         #ifdef WITH_SEMANTIC_CHECK
         typedef time_period_validator tpv; 
-        handlers = list_of( std::make_pair( boost::bind( &tpv::period_in_seconds_pure, this, _1 )
-                                            , boost::bind( &tpv::store_in_seconds_pure, this, _1, _2 ) ) )
-                          ( std::make_pair( boost::bind( &tpv::period_in_seconds, this, _1 )
-                                            , boost::bind( &tpv::store_in_seconds, this, _1, _2 ) ) )
-                          ( std::make_pair( boost::bind( &tpv::period_in_minutes, this, _1 )
-                                            , boost::bind( &tpv::store_in_minutes, this, _1, _2 ) ) )
-                          ( std::make_pair( boost::bind( &tpv::period_in_hours, this, _1 )
-                                           , boost::bind( &tpv::store_in_hours, this, _1, _2 ) ) )
-                          ( std::make_pair( boost::bind( &tpv::period_in_days, this, _1 )
-                                            , boost::bind( &tpv::store_in_days, this, _1, _2 ) ) )
+        handlers = list_of( std::make_pair( boost::bind( &tpv::period_in_seconds_pure, this, ::_1 )
+                                            , boost::bind( &tpv::store_in_seconds_pure, this, ::_1, ::_2 ) ) )
+                          ( std::make_pair( boost::bind( &tpv::period_in_seconds, this, ::_1 )
+                                            , boost::bind( &tpv::store_in_seconds, this, ::_1, ::_2 ) ) )
+                          ( std::make_pair( boost::bind( &tpv::period_in_minutes, this, ::_1 )
+                                            , boost::bind( &tpv::store_in_minutes, this, ::_1, ::_2 ) ) )
+                          ( std::make_pair( boost::bind( &tpv::period_in_hours, this, ::_1 )
+                                           , boost::bind( &tpv::store_in_hours, this, ::_1, ::_2 ) ) )
+                          ( std::make_pair( boost::bind( &tpv::period_in_days, this, ::_1 )
+                                            , boost::bind( &tpv::store_in_days, this, ::_1, ::_2 ) ) )
                           ; 
         #endif
     }
