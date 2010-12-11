@@ -10,7 +10,7 @@
 #define BOOST_CONFIGURATOR_PURE_OPTIONS_OBTAINER_HPP
 
 #include <boost/configurator/detail/misc.hpp>
-#include <boost/configurator/detail/option.hpp>
+#include <boost/configurator/detail/pure_option.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/phoenix_stl.hpp>
