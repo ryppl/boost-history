@@ -9,6 +9,7 @@
 #ifndef BOOST_CONFIGURATOR_HPP
 #define BOOST_CONFIGURATOR_HPP
 
+#include <boost/configurator/configurator_settings.hpp>
 #include <boost/configurator/macro.hpp>
 #include <boost/configurator/detail/validators.hpp>
 #include <boost/configurator/detail/type_name.hpp>
@@ -20,6 +21,7 @@
 #include <boost/configurator/detail/necessary_options_checker.hpp>
 #include <boost/configurator/detail/semantics_checker.hpp>
 #include <boost/configurator/detail/options_repetition_handler.hpp>
+#include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/phoenix_stl.hpp>
@@ -33,44 +35,6 @@ namespace boost {
 /// \namespace cf
 /// \brief Main namespace of library.
 namespace cf {
-
-struct configurator_settings {
-    configurator_settings() :
-            option_name_value_separator( '=' )
-            , option_name_value_separator_str( "=" )
-            , one_line_comment_sign( "//" ) 
-            , case_sensitivity( false ) {}
-public:
-    char        option_name_value_separator;
-    std::string one_line_comment_sign;
-    bool        case_sensitivity;
-    std::string option_name_value_separator_str;
-    //
-public:
-    configurator_settings& set_case_sensitivity_for_names() {
-        case_sensitivity = true;
-        return *this;
-    }
-
-    configurator_settings& set_name_value_separator( char separator ) {
-        option_name_value_separator = separator;
-        check_separator_validity();
-        return *this;
-    }
-private:
-    void check_separator_validity() const {
-        const int ascii_code = option_name_value_separator;
-        if ( ascii_code < 0x20 ) {
-            detail::o_stream what_happened;
-            what_happened << "Symbol (ASCII-code is " << ascii_code
-                          << ") is not suitable for name-value separator!"
-                          ;
-            notify( what_happened.str() );
-        } else {}
-    }
-public:
-    //
-};
 
 /// \class configurator
 /// \brief Configurator.
@@ -92,7 +56,7 @@ public:
 private:
     const std::string sections_separator;
 private:
-    configurator_settings settings_of_configurator;
+    detail::configurator_settings settings_of_configurator;
 public:
     configurator_settings& settings() {
         return settings_of_configurator;
