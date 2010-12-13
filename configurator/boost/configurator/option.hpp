@@ -18,6 +18,29 @@ namespace boost {
 /// \brief Main namespace of library.
 namespace cf {
 
+struct common_semantic {
+    explicit common_semantic( const detail::value_semantic& _semantic ) :
+            semantic( _semantic ) {}
+public:
+    const detail::value_semantic semantic;
+};
+
+#define BOOST_CONFIGURATOR_SEMANTIC( type )                                  \
+    struct type : public boost::cf::common_semantic {                        \
+        type() : boost::cf::common_semantic( boost::cf::detail::type ) {}   \
+    };
+
+BOOST_CONFIGURATOR_SEMANTIC( no_semantic )
+BOOST_CONFIGURATOR_SEMANTIC( path )
+BOOST_CONFIGURATOR_SEMANTIC( optional_path )
+BOOST_CONFIGURATOR_SEMANTIC( ipv4 )
+BOOST_CONFIGURATOR_SEMANTIC( ipv6 )
+BOOST_CONFIGURATOR_SEMANTIC( ip )
+BOOST_CONFIGURATOR_SEMANTIC( email )
+BOOST_CONFIGURATOR_SEMANTIC( size )
+BOOST_CONFIGURATOR_SEMANTIC( time_period )
+BOOST_CONFIGURATOR_SEMANTIC( exp_record )
+
 ///
 struct option {
     option() {}
@@ -26,7 +49,7 @@ struct option {
             , type_name( _type_name.begin(), _type_name.end() )
             , location( _type_name.begin(), _type_name.end() )
             , value()
-            , semantic( no_semantic )
+            , semantic( detail::no_semantic )
             , necessary( false )
             , multi_values_allowed( false ) {}
     virtual ~option() {}
@@ -37,7 +60,7 @@ public:
     std::string         location;
     std::string         section;
     std::string         value;
-    value_semantic      semantic;
+    detail::value_semantic semantic;
     bool                necessary;
     bool                multi_values_allowed;
     std::string         default_value;
@@ -104,21 +127,11 @@ private:
         } else {}
     }
 public:
-    option& check_semantic( const value_semantic& _semantic ) {
-        check_semantic_correctness( _semantic );
-        semantic = _semantic;
+    template< typename Semantic >
+    option& check_semantic() {
+        Semantic sem;
+        semantic = sem.semantic;
         return *this;
-    }
-private:
-    void check_semantic_correctness( const value_semantic& semantic ) const {
-        if ( semantic < no_semantic || semantic > exp_record ) {
-            detail::o_stream what_happened;
-            what_happened << "Invalid semantic value '" << semantic
-                          << "' for option '" << type_name 
-                          << "', use supported semantic only (see documentation)!"
-                          ;
-            notify( what_happened.str() );
-        } else {}
     }
 public:
     option& allow_multi_values() {
@@ -126,7 +139,7 @@ public:
         return *this;
     }
 public:
-    bool semantic_defined() const           { return no_semantic != semantic; }
+    bool semantic_defined() const           { return detail::no_semantic != semantic; }
     bool already_has_default_value() const  { return !default_value.empty(); }
     bool is_necessary() const               { return necessary; }
     bool empty() const                      { return value.empty(); }
