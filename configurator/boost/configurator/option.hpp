@@ -10,6 +10,7 @@
 #define BOOST_CONFIGURATOR_OPTION_HPP
 
 #include <boost/configurator/detail/misc.hpp>
+#include <boost/configurator/detail/value_semantics.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 
 namespace boost {
@@ -17,29 +18,6 @@ namespace boost {
 /// \namespace cf
 /// \brief Main namespace of library.
 namespace cf {
-
-struct common_semantic {
-    explicit common_semantic( const detail::value_semantic& _semantic ) :
-            semantic( _semantic ) {}
-public:
-    const detail::value_semantic semantic;
-};
-
-#define BOOST_CONFIGURATOR_SEMANTIC( type )                                  \
-    struct type : public boost::cf::common_semantic {                        \
-        type() : boost::cf::common_semantic( boost::cf::detail::type ) {}   \
-    };
-
-BOOST_CONFIGURATOR_SEMANTIC( no_semantic )
-BOOST_CONFIGURATOR_SEMANTIC( path )
-BOOST_CONFIGURATOR_SEMANTIC( optional_path )
-BOOST_CONFIGURATOR_SEMANTIC( ipv4 )
-BOOST_CONFIGURATOR_SEMANTIC( ipv6 )
-BOOST_CONFIGURATOR_SEMANTIC( ip )
-BOOST_CONFIGURATOR_SEMANTIC( email )
-BOOST_CONFIGURATOR_SEMANTIC( size )
-BOOST_CONFIGURATOR_SEMANTIC( time_period )
-BOOST_CONFIGURATOR_SEMANTIC( exp_record )
 
 ///
 struct option {

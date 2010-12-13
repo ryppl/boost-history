@@ -125,8 +125,9 @@ Console output in our example:
 <pre class="terminal">
 Udp host: 12.34.56.78
 </pre>
+By default function <strong>get_value_of</strong> returns pure-string value. Other obtating ways see in <a href="advanced_usage.html#values_obtaining">Non-string values obtating</a>.
 
-		<br/>
+		<br/><br/>
 		<h3><a name="concepts_vs_location"></a>Concepts vs location</h3>
 		
 		As mentioned above, every option considered from two points of view: concept and location. And, strictly speaking, these points of view is not related to each other. So you specify (as you remember, this is not necessarily) location only in one place (during option adding), and in all other places of the program you will not think about it.
@@ -164,20 +165,22 @@ int main( int argc, char* argv[] ) {
 
     return 0;
 }
-
-// some_second_file.cpp
-	void logger() {
-		// ...
-   		std::string path_to_log = conf.get_value_of< ReserveLogForSystem >();
-		// ...
-	}
-
-// some_third_file.cpp
-	void size_checker() {
-		// ...
-   		std::string path_to_log = conf.get_value_of< ReserveLogForSystem >();
-		// ...
-	}
+</pre>
+In some second .cpp
+<pre class="cpp">
+void logger() {
+    // ...
+    std::string path_to_log = conf.get_value_of< ReserveLogForSystem >();
+    // ...
+}
+</pre>
+In some third .cpp
+<pre class="cpp">
+void size_checker() {
+    // ...
+    std::string path_to_log = conf.get_value_of< ReserveLogForSystem >();
+    // ...
+}
 </pre>
 But what if we want to change loaction of this option? It may be renaming or re-nesting, for example:
 <pre class="config">
@@ -190,7 +193,22 @@ But what if we want to change loaction of this option? It may be renaming or re-
 	// ...
 &lt;/ReserveServer&gt;
 </pre>
-		In this case we must rewrite path <strong>"ReserveServer::System::Log"</strong> only in one place, and other parts of the program will not even know about this change, because concept <strong>ReserveLogForSystem</strong> not changed.
+		In this case we must rewrite path <strong>"ReserveServer::System::Log"</strong> only in one place:
+<pre class="cpp">
+int main( int argc, char* argv[] ) {	
+    try {
+        // ...
+        conf.add< ReserveLogForSystem >().set_location( "ReserveServer::System::Log" );
+        // ...
+    } catch ( const std::exception& exc ) {
+        std::cerr << exc.what() << std::endl;
+    } 
+
+    return 0;
+}
+</pre>		
+		
+and other parts of the program will not even know about this change, because concept <strong>ReserveLogForSystem</strong> not changed.
 		<br/><br/>
 		In addition we use type instead string identifier, so any spelling error will be checked on compile-time, not on runtime.
 		

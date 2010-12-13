@@ -24,59 +24,95 @@
   
 		<h2>Advanced usage</h2>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h2><a name="topic2" id="topic2"></a>Advanced usage</h2>
-
-  <p>
-  <a name="options_necessity"><h3>How to set option's necessity</h3></a>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
+		<dl class="index">
+			<dt><a href="#default_values">Option's default value</a></dt>
+			<dt><a href="#necessity">Option's necessity</a></dt> 
+			<dt><a href="#semantic">Semantic of option's value</a></dt> 
+			<dt><a href="#multi_values">Multi values for option</a></dt> 
+			<dt><a href="#case_sensitivity">Case sensitivity for names</a></dt> 
+			<dt><a href="#values_obtaining">Non-string values obtating</a></dt> 
+  		</dl>
+		
+		 
+		<h3><a name="default_values"></a>Option's default value</h3>
+		
+		Very often useful to define some default value for option, especially for big configuration files. Let's do it:
+<pre class="cpp">
     // ...
-    conf.in( "Server" ).add_here( "Host" ).necessary();
+    conf.add< UdpHost >().set_default_value( "127.0.0.1" );
+    conf.add< UdpPort >().set_default_value( 100 );
     // ...
-}
 </pre>
-After this user must inputs "Host" option in configuration file. If not, exception will thrown:
-<br/>
-<strong>[Configurator] Option 'Server > Host' is defined as necessary, but it missed!</strong>
-<br/>
-<a name="options_default_value"><h3>How to set option's default value</h3></a>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
+In this case user can skip these options in configuration file. Now write:
+<pre class="cpp">
     // ...
-    conf.in( "Server" ).add_here( "Host" ).default_value( "127.0.0.1" );
+    std::cout << "Udp host: " << conf.get_value_of< UdpHost >() << std::endl;
+    std::cout << "Udp port: " << conf.get_value_of< UdpPort >() << std::endl;
     // ...
-}
 </pre>
-After this user can skip "Host" option in configuration file.  
-<br/>
-<a name="options_semantics_check"><h3>How to set option's semantics check</h3></a>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    // ...
-    conf.in( "Server" ).add_here( "Host" ).check_semantic( boost::cf::ip );
-    // ...
-}
+If we have such config:
+<pre class="config">
+UdpHost = 12.34.56.78 
+UdpPort = 103 
 </pre>
-After this value of "Host" option must be valid IP address (IPv4 or IPv6). If not, exception will be thrown:
-<br/>
-<strong>[Configurator] Semantic error: option 'Server > Host' has invalid value 'asdfasdfasd' (not IPv4, not IPv6)!</strong>
-<br/>
+console output:
+<pre class="terminal">
+Udp host: 12.34.56.78
+Udp port: 103
+</pre>
+But if we comment out:
+<pre class="config">
+// UdpHost = 12.34.56.78 
+// UdpPort = 103 
+</pre>
+console output changed:
+<pre class="terminal">
+Udp host: 127.0.0.1
+Udp port: 100
+</pre>
+
+		<br/>
+		<h3><a name="necessity"></a>Option's necessity</h3>
+		
+		No less frequently useful to define necessity of some options, because it can be mandatory for program. Let's do it:
+<pre class="cpp">
+    // ...
+    conf.add< UdpHost >().set_necessity();
+    // ...
+</pre>
+In this case user <strong><em>must</em></strong> inputs this option in configuration file. If not, he get error message like this:
+<pre class="terminal">
+[Configurator] Option 'UdpHost' is defined as necessary, but it missed!
+</pre>
+
+		<br/>
+		<h3><a name="semantic"></a>Semantic of option's value</h3>
+		
+		Many options must be set to appropriate some semantics. Considering the fact that some values is "internationally known and unchanging essence", such check added in library, so possible errors will be detected already at the stage of parsing.
+<br/><br/>
+		For example, we may want that value of <strong>UdpHost</strong> will be valid IPv4.
+<pre class="cpp">
+    // ...
+    conf.add< UdpHost >().check_semantic( boost::cf::ipv4 );
+    // ...
+</pre>
+So:
+<pre class="cpp">
+    // ...
+    std::cout << "Udp host: " << conf.get_value_of< UdpHost >() << std::endl;
+    // ...
+</pre>
+If value in configuration file is incorrect:
+<pre class="config">
+UdpHost = 1233.34.56.78
+</pre>
+user get error message like this:
+<pre class="terminal">
+[Configurator] Semantic error: option 'UdpHost' has invalid 'IPv4' value '1233.34.56.78'!
+</pre>
+Supported semantic:
+
+
 <br/>
 <strong>IMPORTANT!</strong>
 <br/>
@@ -84,7 +120,30 @@ If you use semantics check, you must compile your program with flag WITH_SEMANTI
 <br/>
 <strong>g++ -DWITH_SEMANTIC_CHECK -o test main.cpp -lboost_system -lboost_filesystem -lboost_regex</strong> 
 <br/>
-Note that in this case you must link <strong>boost_system</strong> and <strong>boost_regex</strong> libraries. You only pay for what you use.
+Note that only in this case you must link <strong>boost_system</strong> and <strong>boost_regex</strong> libraries. You only pay for what you use.
+
+
+
+
+
+		<br/><br/>
+		<h3><a name="multi_values"></a>Multi values for option</h3>
+		
+		
+		<br/><br/>
+		<h3><a name="case_sensitivity"></a>Case sensitivity for names</h3>
+		
+		
+		<br/><br/>
+		<h3><a name="values_obtaining"></a>Non-string values obtating</h3>
+
+
+
+
+
+
+ 
+
 
 <a name="combine_options_settings"><h3>Combine settings</h3></a>
 Of course, you can combine settings for option:
@@ -289,157 +348,11 @@ DatabaseNAME = my_db
 </pre></div>
 by default it's okay:
 <br/>
-<pre>
+ 
 int main( int argc, char* argv[] ) {
     boost::cf::configurator conf;
-    conf.add( "DatabaseName" );
-    conf.in( "Server" ).add_here( "Host" );
-    // ...
-    std::string db;
-    std::string host;
-    conf.get( "DatabaseName", db );
-    conf.from( "Server" ).get_from_here( "Host", host );
-    // ...
-}
-</pre>
-But if we set case sensitivity:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    conf.set_case_sensitivity_for_names();
-    // ...
-}
-</pre>
-exception will be thrown, because Configurator will differentiate between names "DatabaseName" and "DatabaseNAME".
-
-<a name="name_value_separator"><h3>How to set another name-value separator for options</h3></a>
-
-By default name-value separator is '=' sign, but you can set another:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    conf.set_name_value_separator( ':' );
-    // ...
-}
-</pre>
-In this case you must use this sign:
-<br/>
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-DatabaseName : my_db
-</pre></div>
-<br/>
-You can use space sign: 
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    conf.set_name_value_separator( ' ' );
-    // ...
-}
-</pre>
-and use it:
-<br/>
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-DatabaseName 	my_db
-</pre></div>
-
-<a name="canonical_one_line_comments"><h3>How to use "canonical" one-line comments</h3></a>
-By default Configurator use C++-style comments:
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-/*
- * My config.
- */
-DatabaseName : my_db // this is comment for db
-</pre></div>
-<br/>
-But you can use "canonical" one-line comment with sign '#':
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::configurator conf;
-    conf.use_canonical_one_line_comments();
-    // ...
-}
-</pre>
-In this case "//" will be just two slashes.
-<div style="margin-left: 6px; margin-right: 6px; padding-left: 6px; padding-right: 6px; background: #F5F5DC; border: 1px solid #DEB887; font-family: monospace; font-size: 13px">
-<pre>
-/*
- * My config.
- */
-DatabaseName : my_db # this is comment for db
-Host = http://www.mysite.com # "//" after "http:" is NOT comments...
-</pre></div>
-
-<a name="singleton_configurator"><h3>Singleton-variant of boost::cf::configurator class</h3></a>
-If you have many objects that need access to configurator, you can use it Singleton-variant:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    boost::cf::single_configurator::inst().use_canonical_one_line_comments();
-    // ...
-}
-</pre>
-I use it. :-)
-<br/>
-<br/>
-<strong>IMPORTANT!</strong>
-<br/>
-If you use Singleton-variant, you must compile your program with flag WITH_SINGLETON, for example:
-<br/>
-<strong>g++ -DWITH_SINGLETON -o test main.cpp -lboost_filesystem -lboost_thread</strong> 
-<br/>
-Note that in this case you must link <strong>boost_thread</strong> libraries. You only pay for what you use.
-
-<a name="reparsing"><h3>Reparsing</h3></a>
-You can reparse configuration file during program execution:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    // 
-    boost::cf::single_configurator::inst().reparse();
-    // ...
-}
-</pre>
-In this case "old" configuration file will be reparsed.
-<br/>
-<br/>
-But you can use some "new" file:
-<br/>
-<pre>
-int main( int argc, char* argv[] ) {
-    // 
-    boost::cf::single_configurator::inst().reparse( "/some/path/to/new/config" );
-    // ...
-}
-</pre>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		
+ 
+  
 	<br/><br/>
 	<hr/>
 	Last revised 

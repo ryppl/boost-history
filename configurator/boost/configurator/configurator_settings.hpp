@@ -1,5 +1,5 @@
-// detail/configurator_settings.hpp
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// configurator_settings.hpp
+// ~~~~~~~~~~~~~~~~~~~~~~~~~
 // 
 // Copyright (C) 2010 Denis Shevchenko (for @ dshevchenko.biz)
 //
@@ -19,10 +19,6 @@ namespace boost {
 /// \namespace cf
 /// \brief Main namespace of library.
 namespace cf {
-
-/// \namespace cf::detail
-/// \brief Details of realization.
-namespace detail {
 
 ///
 struct configurator_settings {
@@ -63,7 +59,6 @@ public:
     //
 };
 
-} // namespace detail
 } // namespace cf
 } // namespace boost
 

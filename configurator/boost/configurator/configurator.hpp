@@ -10,7 +10,7 @@
 #define BOOST_CONFIGURATOR_HPP
 
 #include <boost/configurator/macro.hpp>
-#include <boost/configurator/detail/configurator_settings.hpp>
+#include <boost/configurator/configurator_settings.hpp>
 #include <boost/configurator/detail/validators.hpp>
 #include <boost/configurator/detail/type_name.hpp>
 #include <boost/configurator/detail/pure_option.hpp>
@@ -56,9 +56,9 @@ public:
 private:
     const std::string sections_separator;
 private:
-    detail::configurator_settings settings_of_configurator;
+    configurator_settings settings_of_configurator;
 public:
-    detail::configurator_settings& settings() {
+    configurator_settings& settings() {
         return settings_of_configurator;
     }
 public:

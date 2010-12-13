@@ -39,21 +39,6 @@ inline void warning( const std::string& warning_message ) {
 /// \brief Details of realization.
 namespace detail {
 
-/// \enum value_semantic 
-/// \brief Value semantic types (for check).
-enum value_semantic {
-    no_semantic			/*!< Default value. */
-	, path				/*!< Path semantics check. */
-	, optional_path	    /*!< Optional path semantics check. */
-	, ipv4				/*!< IPv4 semantics check. */
-    , ipv6              /*!< IPv6 semantics check. */
-    , ip                /*!< IP semantics check. */
-    , email             /*!< E-mail semantics check. */
-    , size              /*!< Size semantics check. */
-    , time_period       /*!< Time period semantics check. */
-    , exp_record        /*!< Exponential record semantics check. */
-};
-
 inline std::string sections_separator_for_log() { return " > "; }
 
 template

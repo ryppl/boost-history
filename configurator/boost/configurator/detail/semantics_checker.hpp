@@ -15,6 +15,7 @@
 
 #ifdef WITH_SEMANTIC_CHECK
 #include <boost/configurator/detail/validators.hpp>
+#include <boost/configurator/detail/value_semantics.hpp>
 #include <boost/function.hpp>
 #include <boost/assign.hpp>
 #include <boost/bind.hpp>
