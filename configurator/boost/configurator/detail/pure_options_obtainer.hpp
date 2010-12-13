@@ -12,15 +12,12 @@
 #include <boost/configurator/detail/types.hpp>
 #include <boost/configurator/detail/misc.hpp>
 #include <boost/configurator/detail/pure_option.hpp>
+#include <boost/configurator/detail/grammars.hpp>
 #include <boost/configurator/option.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/function.hpp>
 #include <boost/assign.hpp>
 #include <boost/foreach.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/spirit/include/qi.hpp>
-#include <boost/spirit/include/phoenix_core.hpp>
-#include <boost/spirit/include/phoenix_operator.hpp>
-#include <boost/spirit/include/phoenix_stl.hpp>
 
 #include <string>
 #include <vector>
@@ -35,10 +32,6 @@ namespace cf {
 /// \namespace cf::detail
 /// \brief Details of realization.
 namespace detail {
-
-using boost::spirit::qi::char_;
-using boost::spirit::qi::string;
-using boost::spirit::qi::parse;
 
 class pure_options_obtainer {
     typedef boost::function< bool ( std::string& /* analized string */
@@ -101,6 +94,9 @@ private:
     }
 private:
     bool handle_section_opening( std::string& s, pure_options& /* factual_obtained_options */ ) {
+
+
+        /*
         using boost::spirit::qi::_1;
         using boost::phoenix::push_back;
 
@@ -119,6 +115,7 @@ private:
             final_handle_section_opening( name_of_opening_section );
         } else {}
         return parsing_success;
+        */
     }
     
     void final_handle_section_opening( std::string& name_of_opening_section ) {
@@ -152,6 +149,8 @@ private:
     }
 private:
     bool handle_section_closing( std::string& s, pure_options& /* factual_obtained_options */ ) {
+
+        /*
         using boost::spirit::qi::_1;
         using boost::phoenix::push_back;
 
@@ -169,6 +168,7 @@ private:
             final_handle_section_closing( name_of_closing_section );
         } else {}
         return parsing_success;
+        */
     }
     
     void final_handle_section_closing( std::string& name_of_closing_section ) {
@@ -198,6 +198,8 @@ private:
     }
 private:
     bool handle_option( std::string& s, pure_options& factual_obtained_options ) {
+
+        /*
         using boost::spirit::qi::_1;
         using boost::phoenix::push_back;
 
@@ -222,6 +224,7 @@ private:
             final_handle_option( option_name, option_value, factual_obtained_options );
         } else {}
         return parsing_success;
+        */
     }
 
     void final_handle_option( const std::string&    option_name
