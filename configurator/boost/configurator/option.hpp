@@ -86,8 +86,8 @@ public:
 private:
     void check_option_necessity() const {
         if ( necessary ) {
-            notify( "Option '" + type_name
-                    + "' registered as necessary, so it cannot have default_value!" );
+            detail::notify( "Option '" + type_name
+                            + "' registered as necessary, so it cannot have default_value!" );
         } else {}
     }
 public:
@@ -99,9 +99,9 @@ public:
 private:
     void check_default_value_existence() const {
         if ( !default_value.empty() ) {
-            notify( "Option '" + type_name
-                    + "' already have default value '" + default_value + "', "
-                    + "so it cannot be necessary!" );
+            detail::notify( "Option '" + type_name
+                            + "' already have default value '" + default_value + "', "
+                            + "so it cannot be necessary!" );
         } else {}
     }
 public:

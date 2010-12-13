@@ -52,7 +52,7 @@ private:
             what_happened << "Symbol (ASCII-code is " << ascii_code
                           << ") is not suitable for name-value separator!"
                           ;
-            notify( what_happened.str() );
+            detail::notify( what_happened.str() );
         } else {}
     }
 public:

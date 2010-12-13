@@ -26,6 +26,10 @@ namespace boost {
 /// \brief Main namespace of library.
 namespace cf {
 
+/// \namespace cf::detail
+/// \brief Details of realization.
+namespace detail {
+
 inline void notify( const std::string& notification ) {
     const std::string what_happened = "[Configurator] " + notification;
     throw std::runtime_error( what_happened );
@@ -34,10 +38,6 @@ inline void notify( const std::string& notification ) {
 inline void warning( const std::string& warning_message ) {
     std::cout << "[Configurator] " << warning_message << std::endl;
 }
-
-/// \namespace cf::detail
-/// \brief Details of realization.
-namespace detail {
 
 inline std::string sections_separator_for_log() { return " > "; }
 

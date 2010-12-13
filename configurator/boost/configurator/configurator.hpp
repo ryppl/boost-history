@@ -75,7 +75,7 @@ public:
                                                    , registered_options.end()
                                                    , typeid( Option ) );
         if ( registered_options.end() == it ) {
-            notify( "Option with type '" + name_of< Option >() + "' is not registered!" );
+            detail::notify( "Option with type '" + name_of< Option >() + "' is not registered!" );
         } else {}
         const std::string& value = it->value;
         check_factual_existence_of_value< Option >( value );
@@ -85,9 +85,9 @@ private:
     template< typename Option >
     void check_factual_existence_of_value( const std::string& value ) const {
         if ( value.empty() ) {
-            notify( "You have requested a value of option '"
-                    + name_of< Option >() + "' and such option was registered, "
-                    + "but it missed in configuration file and have not default value!" );
+            detail::notify( "You have requested a value of option '"
+                            + name_of< Option >() + "' and such option was registered, "
+                            + "but it missed in configuration file and have not default value!" );
         } else {}
     }
 public:
@@ -129,8 +129,8 @@ private:
     >
     void notify_about_incorrect_type_of_value( const std::string& value_as_string ) const {
         detail::type_name type;
-        notify( "Value '" + value_as_string + "' of option '" + name_of< Option >()
-                + "' cannot be cast to type " + type.name_of< Value >() + "!" );
+        detail::notify( "Value '" + value_as_string + "' of option '" + name_of< Option >()
+                        + "' cannot be cast to type " + type.name_of< Value >() + "!" );
     }
 
     template< typename Option >
@@ -187,7 +187,7 @@ private:
     
     void check_registered_options_existence() const {
         if ( registered_options.empty() ) {
-            notify( "Cannot continue, because no one option has not been registered!" );
+            detail::notify( "Cannot continue, because no one option has not been registered!" );
         } else {}
     }
 
@@ -196,7 +196,7 @@ private:
             detail::pure_check_path_existence( path_to_configuration_file );
             detail::check_is_it_file( path_to_configuration_file );
         } catch ( const std::exception& exc ) {
-            notify( std::string( "Invalid path to configuration file: " ) + exc.what() );
+            detail::notify( std::string( "Invalid path to configuration file: " ) + exc.what() );
         }
     } 
 private: 
@@ -210,7 +210,7 @@ private:
         }
 
         if ( obtained_strings.empty() ) {
-            notify( "No actual data in configuration file, is file empty?" );
+            detail::notify( "No actual data in configuration file, is file empty?" );
         } else {} 
     }
 
