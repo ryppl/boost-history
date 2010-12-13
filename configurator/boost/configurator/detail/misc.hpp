@@ -35,6 +35,10 @@ inline void warning( const std::string& warning_message ) {
     std::cout << "[Configurator] " << warning_message << std::endl;
 }
 
+/// \namespace cf::detail
+/// \brief Details of realization.
+namespace detail {
+
 /// \enum value_semantic 
 /// \brief Value semantic types (for check).
 enum value_semantic {
@@ -49,10 +53,6 @@ enum value_semantic {
     , time_period       /*!< Time period semantics check. */
     , exp_record        /*!< Exponential record semantics check. */
 };
-
-/// \namespace cf::detail
-/// \brief Details of realization.
-namespace detail {
 
 inline std::string sections_separator_for_log() { return " > "; }
 
