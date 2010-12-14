@@ -9,6 +9,7 @@
 #ifndef BOOST_CONFIGURATOR_GRAMMARS_HPP
 #define BOOST_CONFIGURATOR_GRAMMARS_HPP
 
+#include <boost/configurator/detail/types.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
@@ -53,11 +54,26 @@ namespace cf {
 namespace detail {
 
 template< typename Iterator >
-struct obtained_option_parser_space : boost::spirit::qi::grammar< Iterator
-                                                                  , obtained_option()
-                                                                  , boost::spirit::ascii::space_type > {
-    obtained_option_parser_space() :
-            obtained_option_parser_space::base_type( start ) {
+struct option_parser_space : boost::spirit::qi::grammar< Iterator
+                                                         , obtained_option()
+                                                         , boost::spirit::ascii::space_type > {
+    typedef typename boost::spirit::qi::rule
+            <
+                Iterator
+                , std::string()
+                , boost::spirit::ascii::space_type
+            >
+        string_rule;
+    typedef typename boost::spirit::qi::rule
+            < 
+                Iterator
+                , obtained_option()
+                , boost::spirit::ascii::space_type
+            >
+        base_rule;
+public:
+    option_parser_space() :
+            option_parser_space::base_type( start ) {
         using boost::spirit::qi::lexeme;
         using boost::spirit::qi::char_;
          
@@ -66,67 +82,72 @@ struct obtained_option_parser_space : boost::spirit::qi::grammar< Iterator
         start %= name_extractor >> value_extractor;
     }
 public: 
-    boost::spirit::qi::rule
-        < 
-            Iterator
-            , std::string()
-            , boost::spirit::ascii::space_type
-        >
-    name_extractor;
-    boost::spirit::qi::rule
-        < 
-            Iterator
-            , std::string()
-            , boost::spirit::ascii::space_type
-        >
-    value_extractor;
-    boost::spirit::qi::rule
-        < 
-            Iterator
-            , obtained_option()
-            , boost::spirit::ascii::space_type
-        >
-    start;
+    string_rule name_extractor;
+    string_rule value_extractor;
+    base_rule   start;
 };
 
 template< typename Iterator >
-struct obtained_option_parser : boost::spirit::qi::grammar< Iterator
-                                                            , obtained_option()
-                                                            , boost::spirit::ascii::space_type > {
-    obtained_option_parser( char separator ) :
-            obtained_option_parser::base_type( start ) {
+struct option_parser : boost::spirit::qi::grammar< Iterator
+                                                   , obtained_option()
+                                                   , boost::spirit::ascii::space_type > {
+    typedef typename boost::spirit::qi::rule
+            <
+                Iterator
+                , std::string()
+                , boost::spirit::ascii::space_type
+            >
+        string_rule;
+    typedef typename boost::spirit::qi::rule
+            < 
+                Iterator
+                , obtained_option()
+                , boost::spirit::ascii::space_type
+            >
+        base_rule;
+public:
+    option_parser( char separator ) :
+            option_parser::base_type( start ) {
         using boost::spirit::qi::lexeme;
         using boost::spirit::qi::char_;
-        using boost::spirit::qi::skip;
-        using boost::spirit::ascii::space;
          
-        name_extractor  %= skip( space )[ +( char_ - separator ) ];
-        value_extractor %= skip( space )[ +( char_ - separator ) ];
+        name_extractor  %= lexeme[ +( char_ - separator ) ];
+        value_extractor %= lexeme[ +( char_ - separator ) ];
         start %= name_extractor >> separator >> value_extractor;
     }
 public: 
-    boost::spirit::qi::rule
-        < 
-            Iterator
-            , std::string()
-            , boost::spirit::ascii::space_type
-        >
-    name_extractor;
-    boost::spirit::qi::rule
-        < 
-            Iterator
-            , std::string()
-            , boost::spirit::ascii::space_type
-        >
-    value_extractor;
-    boost::spirit::qi::rule
-        < 
-            Iterator
-            , obtained_option()
-            , boost::spirit::ascii::space_type
-        >
-    start;
+    string_rule name_extractor;
+    string_rule value_extractor;
+    base_rule   start;
 };
+
+typedef option_parser< string_it >              pure_option_parser;
+typedef option_parser< string_const_it >        pure_option_parser_const;
+
+typedef option_parser_space< string_it >        pure_option_parser_space;
+typedef option_parser_space< string_const_it >  pure_option_parser_space_const;
+
+inline bool parse_option( std::string& s, char separator, obtained_option& result ) {
+    pure_option_parser parser( separator );
+    string_it first = s.begin();
+    string_it last  = s.end();
+    bool parse_success = boost::spirit::qi::phrase_parse( first, last
+                                                          , parser
+                                                          , boost::spirit::ascii::space
+                                                          , result );
+    return parse_success && first == last;
+}
+
+inline bool parse_option_space( std::string& s, obtained_option& result ) {
+    pure_option_parser_space parser;
+    string_it first = s.begin();
+    string_it last  = s.end();
+    bool parse_success = boost::spirit::qi::phrase_parse( first, last
+                                                          , parser
+                                                          , boost::spirit::ascii::space
+                                                          , result );
+    return parse_success && first == last;
+}
 
 } // namespace detail
 } // namespace cf

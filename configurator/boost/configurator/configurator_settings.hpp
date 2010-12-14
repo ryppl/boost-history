@@ -13,6 +13,7 @@
 #include <boost/configurator/detail/misc.hpp>
 
 #include <string>
+#include <ostream>
 
 namespace boost {
 
@@ -24,14 +25,12 @@ namespace cf {
 struct configurator_settings {
     configurator_settings() :
             option_name_value_separator( '=' )
-            , option_name_value_separator_str( "=" )
             , one_line_comment_sign( "//" ) 
             , case_sensitivity( false ) {}
 public:
     char        option_name_value_separator;
     std::string one_line_comment_sign;
     bool        case_sensitivity;
-    std::string option_name_value_separator_str;
     //
 public:
     configurator_settings& set_case_sensitivity_for_names() {
@@ -56,7 +55,10 @@ private:
         } else {}
     }
 public:
-    //
+    configurator_settings& send_warnings_to( std::ostream& os ) {
+        //
+        return *this;
+    }
 };
 
 } // namespace cf

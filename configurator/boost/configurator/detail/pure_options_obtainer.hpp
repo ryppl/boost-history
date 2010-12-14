@@ -18,6 +18,10 @@
 #include <boost/function.hpp>
 #include <boost/assign.hpp>
 #include <boost/foreach.hpp>
+#include <boost/spirit/include/qi.hpp>
+#include <boost/spirit/include/phoenix_core.hpp>
+#include <boost/spirit/include/phoenix_operator.hpp>
+#include <boost/spirit/include/phoenix_stl.hpp>
 
 #include <string>
 #include <vector>
@@ -42,7 +46,7 @@ class pure_options_obtainer {
     typedef boost::spirit::qi::rule< string_it >
             simple_rule;
 public:
-    pure_options_obtainer( std::string&         _option_name_value_separator
+    pure_options_obtainer( const char&          _option_name_value_separator
                            , const std::string& _sections_separator
                            , const options&     _registered_options
                            , const bool&        _case_sensitivity_for_names ) :
@@ -62,7 +66,7 @@ public:
                     ;
     }
 private:
-    std::string&        option_name_value_separator;
+    const char&         option_name_value_separator;
     const std::string&  sections_separator;
     const options&      registered_options;
     const bool&         case_sensitivity_for_names;
@@ -94,11 +98,10 @@ private:
     }
 private:
     bool handle_section_opening( std::string& s, pure_options& /* factual_obtained_options */ ) {
-
-
-        /*
         using boost::spirit::qi::_1;
         using boost::phoenix::push_back;
+        using boost::spirit::qi::string;
+        using boost::spirit::qi::char_;
 
         std::string name_of_opening_section;
 
@@ -115,7 +118,6 @@ private:
             final_handle_section_opening( name_of_opening_section );
         } else {}
         return parsing_success;
-        */
     }
     
     void final_handle_section_opening( std::string& name_of_opening_section ) {
@@ -149,10 +151,10 @@ private:
     }
 private:
     bool handle_section_closing( std::string& s, pure_options& /* factual_obtained_options */ ) {
-
-        /*
         using boost::spirit::qi::_1;
         using boost::phoenix::push_back;
+        using boost::spirit::qi::string;
+        using boost::spirit::qi::char_;
 
         std::string name_of_closing_section;
 
@@ -168,7 +170,6 @@ private:
             final_handle_section_closing( name_of_closing_section );
         } else {}
         return parsing_success;
-        */
     }
     
     void final_handle_section_closing( std::string& name_of_closing_section ) {
@@ -198,33 +199,22 @@ private:
     }
 private:
     bool handle_option( std::string& s, pure_options& factual_obtained_options ) {
+        bool parsing_success = false;
 
-        /*
-        using boost::spirit::qi::_1;
-        using boost::phoenix::push_back;
+        obtained_option result;
+        if ( ' ' == option_name_value_separator ) {
+            parsing_success = parse_option_space( s, result );
+        } else {
+            parsing_success = parse_option( s, option_name_value_separator, result );
+        }
 
-        std::string option_name;
-        std::string option_value;
-
-        simple_rule name_extractor = +( char_[ push_back( boost::phoenix::ref(option_name), _1 ) ] 
-                                        - string( option_name_value_separator ) );
-
-        simple_rule separator = string( option_name_value_separator );
-        if ( ' ' == *option_name_value_separator.begin() ) {
-            separator = +( string( option_name_value_separator ) );
-        } else {}
-
-        simple_rule value_extractor = +( char_[ push_back( boost::phoenix::ref(option_value), _1 ) ] );
-        simple_rule full = name_extractor >> separator >> value_extractor;
-
-        bool parsing_success = parse( s.begin(), s.end(), full );
         if ( parsing_success ) {
-            boost::trim( option_name );
-            boost::trim( option_value );
-            final_handle_option( option_name, option_value, factual_obtained_options );
+            boost::trim( result.name );
+            boost::trim( result.value );
+            final_handle_option( result.name, result.value, factual_obtained_options );
         } else {}
-        return parsing_success;
-        */
+
+        return parsing_success; 
     }
 
     void final_handle_option( const std::string&    option_name
