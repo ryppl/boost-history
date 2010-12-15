@@ -1,4 +1,4 @@
-[article Version 1.xx.x
+[article Version 1.46.0
     [quickbook 1.5]
     [source-mode c++]
     [purpose New Libraries: Updated Libraries: ]
@@ -9,7 +9,7 @@
 [include ext.qbk]
 
 [/ TODO: Check download link on release.
-[download http://sourceforge.net/projects/boost/files/boost/1.xx.x/]
+[download http://sourceforge.net/projects/boost/files/boost/1.46.0/]
 ]
 
 [/
@@ -36,7 +36,9 @@
 
 [section New Libraries]
 
-* /TODO/
+* [phrase library..[@/libs/icl/index.html Icl]:]
+  Interval Container Library, interval sets and maps and aggregation 
+  of associated values, from Joachim Faulhaber.
 
 [endsect]
 
@@ -47,7 +49,7 @@
 [/ TODO: Check Spirit for changes.
 * [phrase library..[@/libs/spirit/index.html Spirit]:]
   * Spirit Vx.x, see the
-    '[@/doc/libs/1_xx_x/libs/spirit/doc/html/spirit/what_s_new/spirit_x_x.html What's New]'
+    '[@/doc/libs/1_46_0/libs/spirit/doc/html/spirit/what_s_new/spirit_x_x.html What's New]'
     section for details.
 ]
 
