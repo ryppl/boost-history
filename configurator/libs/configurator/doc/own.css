@@ -1,6 +1,6 @@
 
 body {
-	padding: 0px 20px;
+	padding: 0px 10px;
 }
 
 div.table_of_contents {
@@ -25,6 +25,14 @@ div.table_of_contents_main {
 
 div.table_of_contents_first {
 	padding-left: 60px;
+}
+
+div.navigation {
+	text-align: right;
+}
+
+div.navigation a img {
+	border: 0;
 }
 
 pre.cpp {
@@ -59,6 +67,39 @@ pre.terminal {
 	color: white;
 }
 
+div.last_revised {
+	font-size: 70%;
+	font-family: Arial;
+}
+
+table.reference_table {
+	margin-left: 40px;
+	border: 1px;
+    background: #E8E8E8;
+    font-family: Arial;
+}
+
+table.reference_table a {
+	 text-decoration: none;
+}
+
+table.reference_table a:hover {
+	text-decoration: underline;
+}
+
+table.reference_table td {
+	 padding: 5px;
+}
+
+table.reference_table tr {
+	 padding: 5px;
+}
+
+table.reference_table th {
+	 padding: 5px;
+	 background: #CFCFCF;
+}
+
 h1.first_title {
 	margin-left: 50px;
 }
@@ -78,68 +119,6 @@ h3 {
 
 h4 {
     font-size: 108%;
+    margin-left: 20px;
 }
- 
 
-/*
-H1
-{
-    FONT-SIZE: 200%;
-    COLOR: #00008B;
-}
-H2
-{
-    FONT-SIZE: 150%;
-}
-H3
-{
-    FONT-SIZE: 125%;
-}
-H4
-{
-    FONT-SIZE: 108%;
-}
-BODY
-{
-    FONT-SIZE: 100%;
-    BACKGROUND-COLOR: #ffffff;
-    COLOR: #000000;
-}
-PRE
-{
-    MARGIN-LEFT: 2em;
-    FONT-FAMILY: Courier,
-                 monospace;
-}
-CODE
-{
-    FONT-FAMILY: Courier,
-                 monospace;
-}
-CODE.as_pre
-{
-    white-space: pre;
-}
-.index
-{
-    TEXT-ALIGN: left;
-}
-.page-index
-{
-    TEXT-ALIGN: left;
-}
-.definition
-{
-    TEXT-ALIGN: left;
-}
-.footnote
-{
-    FONT-SIZE: 66%;
-    VERTICAL-ALIGN: super;
-    TEXT-DECORATION: none;
-}
-.function-semantics
-{
-    CLEAR: left;
-}
-*/

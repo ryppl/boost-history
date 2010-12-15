@@ -22,13 +22,177 @@
 		
 		<hr/>
   
+  		<div class="navigation">
+<a href="../index.html"><img src="src/images/prev.png" alt="Prev"></a>&nbsp;<a href="index.html"><img src="src/images/up.png" alt="Up"></a>&nbsp;<a href="index.html"><img src="src/images/home.png" alt="Home"></a>&nbsp;<a href="what_s_new.html"><img src="src/images/next.png" alt="Next"></a>
+</div>
+  
 		<h2>Reference</h2>
-
 		
-	<br/><br/>
-	<hr/>
-	Last revised 
+		<dl class="index">
+   			<dt><a href="#configurator">class <strong>configurator</strong></a></dt>
+    		<dt><a href="#single_configurator">class <strong>single_configurator</strong></a></dt>
+    		<dt><a href="#configurator_settings">class <strong>configurator_settings</strong></a></dt>
+    		<dt><a href="#option">class <strong>option</strong></a></dt>
+    		<dt><a href="#conceptual_macro">conceptual macro</a></dt>
+  		</dl>
+		
+		<h3><a name="configurator">class configurator</a></h3>
+		
+		This is core class of library.
+		<br/>
+		<h4>API functions<h4>
+		
+		<table class="reference_table">
+			<tr align="left">
+				<th width="280"><strong>Name</strong></th>
+				<th width="550"><strong>Description</strong></th>
+			</tr>
+			<tr>
+				<td><a href=""><strong>configurator<strong></a></td>
+				<td>Default constructor</td>
+			</tr>
+			<tr>
+				<td><a href=""><strong>add</strong></a></td>
+				<td>Add option</td>
+			</tr>
+			<tr>
+				<td><a href=""><strong>get_value_of</strong></a></td>
+				<td>Obtain value of option</td>
+			</tr>
+			<tr>
+				<td><a href=""><strong>load</strong></a></td>
+				<td>Load options from configuration file</td>
+			</tr>
+			<tr>
+				<td><a href=""><strong>reload</strong></a></td>
+				<td>Reload options from configuration file</td>
+			</tr>
+			<tr>
+				<td><a href=""><strong>settings</strong></a></td>
+				<td>Provides access to the <a href="#configurator_settings">configurator_settings</a> class</td>
+			</tr>
+		</table>
+		
+		<br/>
+		
+		<h3><a name="single_configurator">class single_configurator</a></h3>
+		
+		This is Singleton-variant of <a href="#configurator">configurator</a> class.
+		<br/>
+		<h4>API functions<h4>
+		
+		<table class="reference_table">
+			<tr align="left">
+				<th width="280"><strong>Name</strong></th>
+				<th width="550"><strong>Description</strong></th>
+			</tr>
+			<tr>
+				<td><a href=""><strong>inst<strong></a></td>
+				<td>Access to single instance of <a href="#configurator">configurator</a> class</td>
+			</tr>
+		</table>
+		
+		<br/> 
+		
+		<h3><a name="configurator_settings">class configurator_settings</a></h3>
+ 
+ 		This is class of Configurator settings.
+		<br/>
+		<h4>API functions<h4>
+
+		<table class="reference_table">
+			<tr align="left">
+				<th width="280"><strong>Name</strong></th>
+				<th width="550"><strong>Description</strong></th>
+			</tr>
+			<tr>
+				<td><a href=""><strong>set_case_sensitivity_for_names</strong></a></td>
+				<td>Set case sensitivity for names of sections and options</td>
+			</tr>
+			<tr>
+				<td><a href=""><strong>send_warnings_to</strong></a></td>
+				<td>Set std::ostream for sending possible warnings</td>
+			</tr>
+			<tr>
+				<td><a href=""><strong>set_name_value_separator</strong></a></td>
+				<td>Set custom name-value separator for options, instead default '='</td>
+			</tr>
+			<tr>
+				<td><a href=""><strong>set_one_line_comment_sign</strong></a></td>
+				<td>Set custom sign for one-line comments, instead default '//'</td>
+			</tr>
+			<tr>
+				<td><a href=""><strong>set_open_section_edging</strong></a></td>
+				<td>Set custom edging for section opening</td>
+			</tr>
+			<tr>
+				<td><a href=""><strong>set_close_section_edging</strong></a></td>
+				<td>Set custom edging for section closing</td>
+			</tr>
+		</table>
+	
+		<br/> 
+	
+		<h3><a name="option">class option</a></h3>
+	
+		This is class of one option. All factual options classes inherit from it.
+		<br/>
+		<h4>API functions<h4>
+	
+		<table class="reference_table">
+			<tr align="left">
+				<th width="280"><strong>Name</strong></th>
+				<th width="550"><strong>Description</strong></th>
+			</tr>
+			<tr>
+				<td><a href=""><strong>set_location</strong></a></td>
+				<td>Set location of this option in configuration file</td>
+			</tr>
+			<tr>
+				<td><a href=""><strong>set_default_value</strong></a></td>
+				<td>Set default value for option</td>
+			</tr>
+			<tr>
+				<td><a href=""><strong>set_necessity</strong></a></td>
+				<td>Set necessity of option</td>
+			</tr>
+			<tr>
+				<td><a href=""><strong>check_semantic</strong></a></td>
+				<td>Set checking of some semantic</td>
+			</tr>
+			<tr>
+				<td><a href=""><strong>allow_multi_values</strong></a></td>
+				<td>Allows existence of multi values for option</td>
+			</tr>
+		</table>
+	
+		<br/> 
+	
+		<h3><a name="conceptual_macro">conceptual macro</a></h3>
+		
+		This is macros for defining conceptual objects.
+		<br/><br/>
+		<table class="reference_table">
+			<tr align="left">
+				<th width="280"><strong>Name</strong></th>
+				<th width="550"><strong>Description</strong></th>
+			</tr>
+			<tr>
+				<td><a href=""><strong>BOOST_CONFIGURATOR_OPTION</strong></a></td>
+				<td>Define conceptual option</td>
+			</tr>
+		</table>
+		
+		<br/><br/>
+	
+	<div class="last_revised">Last revised 
   	<!--webbot bot="Timestamp" s-type="EDITED" s-format="%d %B, %Y" startspan -->10
-  	December, 2010<!--webbot bot="Timestamp" endspan i-checksum="38514" -->
+  	December, 2010<!--webbot bot="Timestamp" endspan i-checksum="38514" --></div>
+	
+	<hr/>
+	
+	<div class="navigation">
+<a href="../index.html"><img src="src/images/prev.png" alt="Prev"></a>&nbsp;<a href="index.html"><img src="src/images/up.png" alt="Up"></a>&nbsp;<a href="index.html"><img src="src/images/home.png" alt="Home"></a>&nbsp;<a href="what_s_new.html"><img src="src/images/next.png" alt="Next"></a>
+</div>
 	</body>
 </html>
