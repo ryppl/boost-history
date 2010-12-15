@@ -5,9 +5,26 @@ body {
 
 div.table_of_contents {
 	border: 1px solid gray;
-	padding: 0px 10px;
+	padding: 0px 0px 15px 10px;
 	margin-left: 50px;
 	margin-right: 50px;
+	font-family: Arial;
+}
+
+div.table_of_contents a {
+	text-decoration: none;
+}
+
+div.table_of_contents a:hover {
+	text-decoration: underline;
+}
+
+div.table_of_contents_main {
+	padding-left: 20px;
+}
+
+div.table_of_contents_first {
+	padding-left: 60px;
 }
 
 pre.cpp {
@@ -17,7 +34,7 @@ pre.cpp {
 	margin-left: 30px;
 	margin-right: 30px;
 	font-family: Courier, monospace;
-	font-size: 120%;
+	font-size: 100%;
 }
 
 pre.config {
