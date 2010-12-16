@@ -72,6 +72,12 @@ div.last_revised {
 	font-family: Arial;
 }
 
+div.index_copyright {
+	font-size: 90%;
+	font-family: Arial;
+	color: #4F4F4F;
+}
+
 table.reference_table {
 	margin-left: 40px;
 	border: 1px;
