@@ -125,7 +125,7 @@ namespace chrono {
       typedef duration::rep                        rep;
       typedef duration::period                     period;
       typedef chrono::time_point<system_clock>     time_point;
-      static const bool is_monotonic =             false;
+      BOOST_CHRONO_STATIC_CONSTEXPR bool is_monotonic =             false;
 
       static BOOST_CHRONO_INLINE time_point  now();                         // throws on error
       static BOOST_CHRONO_INLINE time_point  now(system::error_code & ec);  // never throws
@@ -149,7 +149,7 @@ namespace chrono {
       typedef duration::rep                        rep;
       typedef duration::period                     period;
       typedef chrono::time_point<monotonic_clock>  time_point;
-      static const bool is_monotonic =             true;
+      BOOST_CHRONO_STATIC_CONSTEXPR bool is_monotonic =             true;
 
       static BOOST_CHRONO_INLINE time_point  now();                         // throws on error
       static BOOST_CHRONO_INLINE time_point  now(system::error_code & ec);  // never throws

@@ -67,6 +67,10 @@ namespace chrono_detail
             times_.user = microseconds(tm.tms_utime + tm.tms_cutime);
             if ( chrono_detail::tick_factor() != -1 )
             {
+                if (!BOOST_CHRONO_IS_THROWS(ec)) 
+                {
+                  ec.clear();
+                }
                 times_.real *= chrono_detail::tick_factor();
                 times_.user *= chrono_detail::tick_factor();
                 times_.system *= chrono_detail::tick_factor();

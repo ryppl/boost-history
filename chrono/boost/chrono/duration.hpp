@@ -417,9 +417,11 @@ namespace chrono {
         rep rep_;
     public:
 
-        BOOST_CHRONO_CONSTEXPR duration() { } // = default;
+        BOOST_CHRONO_CONSTEXPR 
+        duration() { } ;
         template <class Rep2>
-        BOOST_CHRONO_CONSTEXPR explicit duration(const Rep2& r,
+        BOOST_CHRONO_CONSTEXPR 
+        explicit duration(const Rep2& r,
             typename boost::enable_if <
                     mpl::and_ <
                         boost::is_convertible<Rep2, rep>,
@@ -443,7 +445,8 @@ namespace chrono {
 
         // conversions
         template <class Rep2, class Period2>
-        BOOST_CHRONO_CONSTEXPR duration(const duration<Rep2, Period2>& d,
+        BOOST_CHRONO_CONSTEXPR 
+        duration(const duration<Rep2, Period2>& d,
             typename boost::enable_if <
                     mpl::or_ <
                         treat_as_floating_point<rep>,
@@ -466,11 +469,14 @@ namespace chrono {
 
         // observer
 
-        BOOST_CHRONO_CONSTEXPR rep count() const {return rep_;}
+        BOOST_CHRONO_CONSTEXPR 
+        rep count() const {return rep_;}
 
         // arithmetic
 
+        BOOST_CHRONO_CONSTEXPR 
         duration  operator+() const {return *this;}
+        BOOST_CHRONO_CONSTEXPR 
         duration  operator-() const {return duration(-rep_);}
         duration& operator++()      {++rep_; return *this;}
         duration  operator++(int)   {return duration(rep_++);}
@@ -690,7 +696,7 @@ namespace detail
     // Duration ==
 
     template <class Rep1, class Period1, class Rep2, class Period2>
-    inline
+    inline BOOST_CHRONO_CONSTEXPR 
     bool
     operator==(const duration<Rep1, Period1>& lhs, 
           const duration<Rep2, Period2>& rhs)
@@ -702,7 +708,7 @@ namespace detail
     // Duration !=
 
     template <class Rep1, class Period1, class Rep2, class Period2>
-    inline
+    inline BOOST_CHRONO_CONSTEXPR 
     bool
     operator!=(const duration<Rep1, Period1>& lhs, 
           const duration<Rep2, Period2>& rhs)
@@ -713,7 +719,7 @@ namespace detail
     // Duration <
 
     template <class Rep1, class Period1, class Rep2, class Period2>
-    inline
+    inline BOOST_CHRONO_CONSTEXPR 
     bool
     operator< (const duration<Rep1, Period1>& lhs, 
           const duration<Rep2, Period2>& rhs)
@@ -725,7 +731,7 @@ namespace detail
     // Duration >
 
     template <class Rep1, class Period1, class Rep2, class Period2>
-    inline
+    inline BOOST_CHRONO_CONSTEXPR 
     bool
     operator> (const duration<Rep1, Period1>& lhs,
           const duration<Rep2, Period2>& rhs)
@@ -736,7 +742,7 @@ namespace detail
     // Duration <=
 
     template <class Rep1, class Period1, class Rep2, class Period2>
-    inline
+    inline BOOST_CHRONO_CONSTEXPR 
     bool
     operator<=(const duration<Rep1, Period1>& lhs, 
           const duration<Rep2, Period2>& rhs)
@@ -761,7 +767,7 @@ namespace detail
 
     // Compile-time select the most efficient algorithm for the conversion...
     template <class ToDuration, class Rep, class Period>
-    inline
+    inline BOOST_CHRONO_CONSTEXPR 
     typename boost::enable_if <
       boost::chrono::detail::is_duration<ToDuration>, ToDuration>::type
     duration_cast(const duration<Rep, Period>& fd)

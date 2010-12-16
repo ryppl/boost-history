@@ -104,32 +104,39 @@ namespace chrono {
 
     // time_point comparisons
     template <class Clock, class Duration1, class Duration2>
+    inline BOOST_CHRONO_CONSTEXPR 
     bool operator==(
           const time_point<Clock, Duration1>& lhs, 
           const time_point<Clock, Duration2>& rhs);
     template <class Clock, class Duration1, class Duration2>
+    inline BOOST_CHRONO_CONSTEXPR 
     bool operator!=(
           const time_point<Clock, Duration1>& lhs, 
           const time_point<Clock, Duration2>& rhs);
     template <class Clock, class Duration1, class Duration2>
+    inline BOOST_CHRONO_CONSTEXPR 
     bool operator< (
           const time_point<Clock, Duration1>& lhs, 
           const time_point<Clock, Duration2>& rhs);
     template <class Clock, class Duration1, class Duration2>
+    inline BOOST_CHRONO_CONSTEXPR 
     bool operator<=(
           const time_point<Clock, Duration1>& lhs, 
           const time_point<Clock, Duration2>& rhs);
     template <class Clock, class Duration1, class Duration2>
+    inline BOOST_CHRONO_CONSTEXPR 
     bool operator> (
           const time_point<Clock, Duration1>& lhs, 
           const time_point<Clock, Duration2>& rhs);
     template <class Clock, class Duration1, class Duration2>
+    inline BOOST_CHRONO_CONSTEXPR 
     bool operator>=(
           const time_point<Clock, Duration1>& lhs, 
           const time_point<Clock, Duration2>& rhs);
 
     // time_point_cast
     template <class ToDuration, class Clock, class Duration>
+    inline BOOST_CHRONO_CONSTEXPR 
     time_point<Clock, ToDuration> time_point_cast(const time_point<Clock, Duration>& t);
 
 //----------------------------------------------------------------------------//
@@ -152,14 +159,16 @@ namespace chrono {
         duration d_;
 
     public:
+        BOOST_CHRONO_CONSTEXPR 
         time_point() : d_(duration::zero()) 
         {}
-        explicit time_point(const duration& d) 
+        BOOST_CHRONO_CONSTEXPR explicit time_point(const duration& d) 
               : d_(d) 
         {}
 
         // conversions
         template <class Duration2>
+        BOOST_CHRONO_CONSTEXPR 
         time_point(const time_point<clock, Duration2>& t,
                 typename boost::enable_if
                 <
@@ -171,6 +180,7 @@ namespace chrono {
 
         // observer
 
+        BOOST_CHRONO_CONSTEXPR 
         duration time_since_epoch() const 
         {
             return d_;
@@ -259,7 +269,7 @@ namespace chrono {
     // time_point ==
 
     template <class Clock, class Duration1, class Duration2>
-    inline
+    inline BOOST_CHRONO_CONSTEXPR 
     bool
     operator==(const time_point<Clock, Duration1>& lhs,
              const time_point<Clock, Duration2>& rhs)
@@ -270,7 +280,7 @@ namespace chrono {
     // time_point !=
 
     template <class Clock, class Duration1, class Duration2>
-    inline
+    inline BOOST_CHRONO_CONSTEXPR 
     bool
     operator!=(const time_point<Clock, Duration1>& lhs,
              const time_point<Clock, Duration2>& rhs)
@@ -281,7 +291,7 @@ namespace chrono {
     // time_point <
 
     template <class Clock, class Duration1, class Duration2>
-    inline
+    inline BOOST_CHRONO_CONSTEXPR 
     bool
     operator<(const time_point<Clock, Duration1>& lhs,
             const time_point<Clock, Duration2>& rhs)
@@ -292,7 +302,7 @@ namespace chrono {
     // time_point >
 
     template <class Clock, class Duration1, class Duration2>
-    inline
+    inline BOOST_CHRONO_CONSTEXPR 
     bool
     operator>(const time_point<Clock, Duration1>& lhs,
             const time_point<Clock, Duration2>& rhs)
@@ -303,7 +313,7 @@ namespace chrono {
     // time_point <=
 
     template <class Clock, class Duration1, class Duration2>
-    inline
+    inline BOOST_CHRONO_CONSTEXPR 
     bool
     operator<=(const time_point<Clock, Duration1>& lhs,
              const time_point<Clock, Duration2>& rhs)
@@ -314,7 +324,7 @@ namespace chrono {
     // time_point >=
 
     template <class Clock, class Duration1, class Duration2>
-    inline
+    inline BOOST_CHRONO_CONSTEXPR 
     bool
     operator>=(const time_point<Clock, Duration1>& lhs,
              const time_point<Clock, Duration2>& rhs)
@@ -327,7 +337,7 @@ namespace chrono {
 //----------------------------------------------------------------------------//
 
     template <class ToDuration, class Clock, class Duration>
-    inline
+    inline BOOST_CHRONO_CONSTEXPR 
     time_point<Clock, ToDuration>
     time_point_cast(const time_point<Clock, Duration>& t)
     {

@@ -13,6 +13,11 @@
 
 #include <boost/config.hpp>
 
+
+#if ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 6))
+#undef BOOST_NO_CONSTEXPR
+#endif
+
 //  BOOST_CHRONO_POSIX_API, BOOST_CHRONO_MAC_API, or BOOST_CHRONO_WINDOWS_API
 //  can be defined by the user to specify which API should be used
 
@@ -70,14 +75,17 @@
 
 //  define constexpr related macros  ------------------------------//
 
-//~ #include <boost/config.hpp>
 #if defined(BOOST_NO_CONSTEXPR)
 #define BOOST_CHRONO_CONSTEXPR
+#define BOOST_CHRONO_CONSTEXPR_OR_CONST const
 #define BOOST_CHRONO_CONST_REF const&
 #else
 #define BOOST_CHRONO_CONSTEXPR constexpr
+#define BOOST_CHRONO_CONSTEXPR_OR_CONST constexpr
 #define BOOST_CHRONO_CONST_REF
 #endif
+
+#define BOOST_CHRONO_STATIC_CONSTEXPR  static BOOST_CHRONO_CONSTEXPR_OR_CONST
 
 
 #ifdef BOOST_CHRONO_INLINED

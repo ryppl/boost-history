@@ -17,11 +17,6 @@
 #include <sys/time.h> //for gettimeofday and timeval
 # include <unistd.h>
 
-
-#else
-# error unknown API
-#endif
-
 namespace boost
 {
 namespace chrono
