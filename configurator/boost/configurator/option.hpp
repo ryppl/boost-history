@@ -21,7 +21,6 @@ namespace cf {
 
 ///
 struct option {
-    option() {}
     explicit option( const std::string& _type_id, const std::string& _type_name ) :
             type_id( _type_id.begin(), _type_id.end() )
             , type_name( _type_name.begin(), _type_name.end() )

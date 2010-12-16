@@ -33,6 +33,11 @@ public:
     bool        case_sensitivity;
     //
 public:
+    configurator_settings& set_one_line_comment_sign( const std::string& sign ) {
+        one_line_comment_sign = sign;
+        return *this;
+    }
+
     configurator_settings& set_case_sensitivity_for_names() {
         case_sensitivity = true;
         return *this;

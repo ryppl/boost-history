@@ -45,6 +45,7 @@ public:
     configurator() :
             sections_separator( "::" )
             , settings_of_configurator()
+            , remove_comments_from( settings_of_configurator.one_line_comment_sign )
             , options_obtainer( settings_of_configurator.option_name_value_separator
                                 , sections_separator
                                 , registered_options
