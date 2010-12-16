@@ -80,6 +80,8 @@ Database Name 		my_db
   		<br/> 
   		<h3><a name="comments"></a>Comments</h3>
   		
+  		<h4>One-line</h4>
+  		
   		You can set custom one-line comment sign. It may be useful for some cases, for example:
 <pre class="config">
 Host = http://some.address.com/
@@ -94,7 +96,7 @@ Let's change it:
 int main( int argc, char* argv[] ) {	
     try {
         boost::cf::configurator conf;
-        conf.settings().set_one_line_comment_sign( '#' );
+        conf.settings().set_one_line_comment_sign( "#" );
         // ...
     } catch ( const std::exception& exc ) {
         std::cerr << exc.what() << std::endl;
@@ -110,6 +112,36 @@ Host = http://some.address.com/
 #           |
 #           now it's just two slashes...
 </pre>
+Of course, one-line comments may not necessarily begin with a single character. You may be accustomed to Emacs comments? No problems:
+<pre class="cpp">
+        // ...
+        boost::cf::configurator conf;
+        conf.settings().set_one_line_comment_sign( ";;" );
+        // ...
+</pre>
+So:
+<pre class="config">
+;; Emacs-like config...
+Host = http://some.address.com/
+</pre>
+
+		<h4>Multi-line</h4>
+		
+		Also you can set custom multi-line comment signs. What if you want to use HTML-like comments? Let's do it:
+<pre class="cpp">
+        // ...
+        boost::cf::configurator conf;
+        conf.settings().set_multi_line_comment_signs( "&lt;!--", "--&gt;" );
+        // ...
+</pre>
+Now we can write:
+<pre class="config">
+Host = http://some.address.com/
+&lt;!--
+This is HTML-like multi-line comment...
+--&gt;
+</pre>
+
   		<br/>
   		<h3><a name="section_names_edging"></a>Section names edging</h3>
   		

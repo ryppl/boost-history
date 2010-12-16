@@ -25,17 +25,35 @@ namespace cf {
 struct configurator_settings {
     configurator_settings() :
             option_name_value_separator( '=' )
-            , one_line_comment_sign( "//" ) 
+            , one_line_comment_sign( "//" )
+            , multi_line_comment_begin_sign( "/*" )
+            , multi_line_comment_end_sign( "*/" )
             , case_sensitivity( false ) {}
 public:
     char        option_name_value_separator;
     std::string one_line_comment_sign;
+    std::string multi_line_comment_begin_sign;
+    std::string multi_line_comment_end_sign;
     bool        case_sensitivity;
-    //
 public:
     configurator_settings& set_one_line_comment_sign( const std::string& sign ) {
         one_line_comment_sign = sign;
         return *this;
+    }
+    
+    configurator_settings& set_multi_line_comment_signs( const std::string& begin
+                                                         , const std::string& end ) {
+        check_multi_line_comment_signs_validity( begin, end );
+        multi_line_comment_begin_sign = begin;
+        multi_line_comment_end_sign   = end;
+        return *this;
+    }
+
+    void check_multi_line_comment_signs_validity( const std::string& begin
+                                                  , const std::string& end ) const {
+        if ( begin == end ) {
+            detail::notify( "Incorrect multi-line comments signs, it cannot be equal!" );
+        } else {}
     }
 
     configurator_settings& set_case_sensitivity_for_names() {

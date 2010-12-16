@@ -40,14 +40,16 @@ namespace detail {
 class comments_remover {
     typedef boost::spirit::qi::rule< string_const_it > simple_rule;
 public:
-    explicit comments_remover( const std::string& _one_line_comment_sign ) :
+    comments_remover( const std::string&   _one_line_comment_sign
+                      , const std::string& _multi_line_comment_begin_sign
+                      , const std::string& _multi_line_comment_end_sign) :
             one_line_comment_sign( _one_line_comment_sign )
-            , multi_line_comment_begin_sign( "/*" )
-            , multi_line_comment_end_sign( "*/" ) {}
+            , multi_line_comment_begin_sign( _multi_line_comment_begin_sign )
+            , multi_line_comment_end_sign( _multi_line_comment_end_sign ) {}
 private:
-    const std::string&  one_line_comment_sign;
-    const std::string   multi_line_comment_begin_sign;
-    const std::string   multi_line_comment_end_sign;
+    const std::string& one_line_comment_sign;
+    const std::string& multi_line_comment_begin_sign;
+    const std::string& multi_line_comment_end_sign;
 public:
     void operator()( str_storage& obtained_strings ) const {
         std::string obtained = concatenate( obtained_strings );
