@@ -169,18 +169,11 @@ Now we can write:
 </pre>
 Changes may be more significant:
 <pre class="cpp">
-int main( int argc, char* argv[] ) {	
-    try {
+        // ...
         boost::cf::configurator conf;
         conf.settings().set_open_section_edging( "", "{" );
         conf.settings().set_close_section_edging( "}", "" );
         // ...
-    } catch ( const std::exception& exc ) {
-        std::cerr << exc.what() << std::endl;
-    } 
-
-    return 0;
-}
 </pre>
 In this case we can write:
 <pre class="config">

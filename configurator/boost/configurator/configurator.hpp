@@ -51,7 +51,11 @@ public:
             , options_obtainer( settings_of_configurator.option_name_value_separator
                                 , sections_separator
                                 , registered_options
-                                , settings_of_configurator.case_sensitivity )
+                                , settings_of_configurator.case_sensitivity
+                                , settings_of_configurator.open_section_edging_begin
+                                , settings_of_configurator.open_section_edging_end
+                                , settings_of_configurator.close_section_edging_begin
+                                , settings_of_configurator.close_section_edging_end )
             , check_incorrect_options( registered_options, sections_separator )
             , check_necessary_options( registered_options, sections_separator )
             , check_options_values_semantics( registered_options, sections_separator )

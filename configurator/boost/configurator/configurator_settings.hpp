@@ -28,13 +28,21 @@ struct configurator_settings {
             , one_line_comment_sign( "//" )
             , multi_line_comment_begin_sign( "/*" )
             , multi_line_comment_end_sign( "*/" )
-            , case_sensitivity( false ) {}
+            , case_sensitivity( false )
+            , open_section_edging_begin( "<" )
+            , open_section_edging_end( ">" )
+            , close_section_edging_begin( "</" ) 
+            , close_section_edging_end( ">" ) {}
 public:
     char        option_name_value_separator;
     std::string one_line_comment_sign;
     std::string multi_line_comment_begin_sign;
     std::string multi_line_comment_end_sign;
     bool        case_sensitivity;
+    std::string open_section_edging_begin;
+    std::string open_section_edging_end;
+    std::string close_section_edging_begin;
+    std::string close_section_edging_end;
 public:
     configurator_settings& set_one_line_comment_sign( const std::string& sign ) {
         one_line_comment_sign = sign;
@@ -48,19 +56,19 @@ public:
         multi_line_comment_end_sign   = end;
         return *this;
     }
-
+private:
     void check_multi_line_comment_signs_validity( const std::string& begin
                                                   , const std::string& end ) const {
         if ( begin == end ) {
             detail::notify( "Incorrect multi-line comments signs, it cannot be equal!" );
         } else {}
     }
-
+public:
     configurator_settings& set_case_sensitivity_for_names() {
         case_sensitivity = true;
         return *this;
     }
-
+public:
     configurator_settings& set_name_value_separator( char separator ) {
         option_name_value_separator = separator;
         check_separator_validity();
@@ -80,6 +88,20 @@ private:
 public:
     configurator_settings& send_warnings_to( std::ostream& os ) {
         //
+        return *this;
+    }
+public:
+    configurator_settings& set_open_section_edging( const std::string& begin
+                                                    , const std::string& end ) {
+        open_section_edging_begin = begin;
+        open_section_edging_end   = end;
+        return *this;
+    }
+
+    configurator_settings& set_close_section_edging( const std::string& begin
+                                                     , const std::string& end ) {
+        close_section_edging_begin = begin;
+        close_section_edging_end   = end;
         return *this;
     }
 };

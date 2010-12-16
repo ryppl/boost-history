@@ -49,15 +49,19 @@ public:
     pure_options_obtainer( const char&          _option_name_value_separator
                            , const std::string& _sections_separator
                            , const options&     _registered_options
-                           , const bool&        _case_sensitivity_for_names ) :
+                           , const bool&        _case_sensitivity_for_names
+                           , const std::string& _open_section_tag_begin_sign
+                           , const std::string& _open_section_tag_end_sign
+                           , const std::string& _close_section_tag_begin_sign
+                           , const std::string& _close_section_tag_end_sign) :
             option_name_value_separator( _option_name_value_separator )
             , sections_separator( _sections_separator )
             , registered_options( _registered_options )
             , case_sensitivity_for_names( _case_sensitivity_for_names ) 
-            , open_section_tag_begin_sign( "<" )
-            , open_section_tag_end_sign( ">" )
-            , close_section_tag_begin_sign( "</" )
-            , close_section_tag_end_sign( ">" ) {
+            , open_section_tag_begin_sign( _open_section_tag_begin_sign )
+            , open_section_tag_end_sign( _open_section_tag_end_sign )
+            , close_section_tag_begin_sign( _close_section_tag_begin_sign )
+            , close_section_tag_end_sign( _close_section_tag_end_sign ) {
         using namespace boost::assign;
         handlers +=   boost::bind( &pure_options_obtainer::handle_section_opening, this, ::_1, ::_2 )
                     , boost::bind( &pure_options_obtainer::handle_section_closing, this, ::_1, ::_2 )
@@ -71,10 +75,11 @@ private:
     const options&      registered_options;
     const bool&         case_sensitivity_for_names;
 private:
-    std::string open_section_tag_begin_sign;
-    std::string open_section_tag_end_sign;
-    std::string close_section_tag_begin_sign;
-    std::string close_section_tag_end_sign;
+    const std::string&  open_section_tag_begin_sign;
+    const std::string&  open_section_tag_end_sign;
+    const std::string&  close_section_tag_begin_sign;
+    const std::string&  close_section_tag_end_sign;
+private:
     std::string current_section_path;
 private:
     string_handlers handlers;
