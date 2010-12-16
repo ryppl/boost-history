@@ -34,7 +34,12 @@ project
       <include>.
       <include>$(boost-path)/libs/math/test
       <include>$(ntl-path)/include
-      <include>$(gmp_path) <include>$(gmp_path)/mpfr <include>$(gmp_path)/gmpfrxx
+      <include>$(gmp_path) 
+      <include>$(gmp_path)/win32/release
+      <include>$(gmp_path)/mpfr 
+      <include>$(gmp_path)/mpfr/win32/release
+      <include>$(gmp_path)/../mpfr/win32/release
+      <include>$(gmp_path)/gmpfrxx
     ;
 
 if $(ntl-path)
@@ -59,11 +64,14 @@ else
 
 explicit mpfr_class ;
 
-lib gmp : : <search>$(gmp_path)/lib <search>$(gmp_path)/bin ;
-lib mpfr : : <search>$(gmp_path)/mpfr/lib <search>$(gmp_path)/mpfr/bin ;
+lib gmp : : <search>$(gmp_path)/lib <search>$(gmp_path)/bin 
+   <variant>debug:<search>$(gmp_path)/win32/debug <variant>release:<search>$(gmp_path)/win32/release ;
+lib mpfr : : <search>$(gmp_path)/mpfr/lib <search>$(gmp_path)/mpfr/bin 
+   <variant>debug:<search>$(gmp_path)/mpfr/win32/debug <variant>release:<search>$(gmp_path)/mpfr/win32/release 
+   <variant>debug:<search>$(gmp_path)/../mpfr/win32/debug <variant>release:<search>$(gmp_path)/../mpfr/win32/release ;
 
 
 run test_constants.cpp $(boost-path)/libs/test/build//boost_test_exec_monitor $(boost-path)/libs/thread/build//boost_thread ;
 run test_print_info_on_type.cpp ;
-run test_constant_generate.cpp ntl/<link>static $(boost-path)/libs/regex/build//boost_regex : : : [ check-target-builds $(boost-path)/libs/math/config//has_ntl_rr : : <build>no ] : test_constant_generate_ntl ;
-run test_constant_generate.cpp mpfr_class/<link>static mpfr gmp $(boost-path)/libs/regex/build//boost_regex : : : [ check-target-builds $(boost-path)/libs/math/config//has_mpfr_class : : <build>no ] <define>USE_MPFR : test_constant_generate_mpfr ;
+run test_constant_generate.cpp ntl/<link>static $(boost-path)/libs/regex/build//boost_regex : : : [ check-target-builds ../config//has_ntl_rr : : <build>no ] : test_constant_generate_ntl ;
+run test_constant_generate.cpp mpfr_class/<link>static mpfr gmp $(boost-path)/libs/regex/build//boost_regex : : : [ check-target-builds ../config//has_mpfr_class : : <build>no ] <define>USE_MPFR : test_constant_generate_mpfr ;
