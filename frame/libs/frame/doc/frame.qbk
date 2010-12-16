@@ -1,0 +1,341 @@
+[/
+[/
+ / Copyright (c) 2010 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[article Toward Boost.Frame
+    [quickbook 1.5]
+    [version 0.1.0]
+    [authors [Botet Escriba, Vicente J.]]
+    [copyright 2010 Vicente J. Botet Escriba]
+    [id boost.frame]
+    [dirname frame]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+
+[warning Frame is not a part of the Boost libraries.]
+
+[/========================]
+[section Overview]
+[/========================]
+
+
+
+[/====================================]
+[heading How to Use This Documentation]
+[/====================================]
+
+
+This documentation makes use of the following naming and formatting conventions.
+
+* Code is in `fixed width font` and is syntax-highlighted.
+* Replaceable text that you will need to supply is in [~italics].
+* If a name refers to a free function, it is specified like this:
+  `free_function()`; that is, it is in code font and its name is followed by `()`   to indicate that it is a free function.
+* If a name refers to a class template, it is specified like this:   `class_template<>`; that is, it is in code font and its name is followed by `<>`   to indicate that it is a class template.
+* If a name refers to a function-like macro, it is specified like this: `MACRO()`;
+  that is, it is uppercase in code font and its name is followed by `()` to   indicate that it is a function-like macro. Object-like macros appear without the   trailing `()`.
+* Names that refer to /concepts/ in the generic programming sense are   specified in CamelCase.
+
+[note In addition, notes such as this one specify non-essential information that provides additional background or rationale.]
+
+Finally, you can mentally add the following to any code fragments in this document:
+
+    // Include all of the core Frame files
+    #include <boost/frame.hpp>
+
+    using namespace boost;
+
+[section Motivation]
+
+One of the most common things that a protocol does is manipulate messages. For example, they add headers to, and strip headers from, messages. Another common way in which protocols manipulate messages is to break a single message into multiple fragments, and later to join these multiple fragments back into a single message. This is necessary because most network links allow messages of only a certain size to be transmitted. Thus, a protocol that uses such a link to transmit a largemessage must first fragment themessage on the source node, and then reassemble the fragments back into the originalmessage on the destination node.
+
+Boost.Frame intends to help manipulating messages as it is a basic part of all protocols. Boost.Frame defines the concept of called frame that provides an interface for performing these common operations.
+
+[endsect]
+
+[/==================]
+[section Description]
+[/==================]
+
+
+[*Boost.Frame] provides:
+
+* .
+
+[endsect]
+[endsect]
+
+[/==============================]
+[section:users_guide Users' Guide]
+[/==============================]
+
+[/======================================]
+[section:getting_started Getting Started]
+[/======================================]
+
+[/======================================]
+[section:install Installing Boost.Frame]
+[/======================================]
+
+[/=================================]
+[heading Getting Boost.Frame]
+[/=================================]
+
+You can get the last stable release of [*Boost.Frame] by downloading [^frame.zip] from the
+[@http://www.boostpro.com/vault/index.php?action=downloadfile&filename=frame.zip&directory=Utilities& Boost Vault Utilities directory]
+
+You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/frame Boost Sandbox].
+
+[/=================================]
+[heading Building Boost.Frame]
+[/=================================]
+
+There is no need to compile [*Boost.Frame], since it's
+a header only library. Just include your Boost header directory in your
+compiler include path.
+
+[/=========================]
+[heading Requirements]
+[/=========================]
+
+[*Boost.Frame] depends on 
+
+* Boost. 
+
+(and all libraries they depends on).
+
+
+[/========================]
+[heading Exceptions safety]
+[/========================]
+
+All functions in the library are exception-neutral and provide strong guarantee of exception safety as long as the underlying parameters provide it.
+
+[/====================]
+[heading Thread safety]
+[/====================]
+
+All functions in the library are thread-unsafe except when noted explicitly.
+
+[/=======================]
+[heading Tested compilers]
+[/=======================]
+
+The implementation will eventually work with most C++03 conforming compilers.
+Current version has been tested on:
+
+Windows with
+
+* MSVC 10.0
+* MSVC 9.0 Express
+
+Cygwin 1.5 with
+
+* GCC 3.4.4
+
+Cygwin 1.7 with
+
+* GCC 4.3.4
+
+MinGW with
+
+* GCC 4.4.0
+* GCC 4.5.0
+* GCC 4.5.0 C++0x
+
+[note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
+
+[endsect]
+[/=============================]
+[section Hello World! ]
+[/=============================]
+
+
+
+
+
+[endsect]
+
+[endsect]
+
+[section Tutorial]
+
+[section Frames]
+
+This section presents Boost.Frame's frame abstraction. The frame abstraction can best be viewed as a byte string of some length. For the purpose of this discussion, we use the term "message” to refer to the abstract object and we use the term "data” to refer to the actual byte string contained in a message. For example, message m schematically depicted in Figure 6 contains the data "abcdefg”.
+
+    frame m(5, 0, "abcdefg");
+    
+    // After
+    // m -> |a|b|c|d|e|f|g|
+
+Frame object containing a byte string.
+
+In effect, the operations on the frame object can be viewed as string manipulations. For example, while processing an outgoing message, each of several protocols may add a header to the message (i.e., two strings are concatenated) and fragment the message into two or more packets (i.e., a string is divided into two substrings). Similarly, while processing an incoming message, each of several protocols may strip headers from the message (i.e., a string is removed from the front of another string) and reassemble message fragments (i.e., two strings are concatenated). In addition, each of several protocols may save references to portions of a message for future use, e.g., to retransmit in the event of an error in the network. Thus, any given byte may be attached to several different strings, removed from several different strings, and referenced by several different protocols.
+
+[section Adding and Stripping Headers]
+
+As outgoing messages move down the protocol graph, each protocol attaches (pushes) its header onto the front of the message. Similarly, as an incoming message moves up the protocol graph, each protocol strips (pops) its header from the front of the message. The message object supports the following two operations for writing and reading headers:
+
+    void* write_front(int length);
+    const void* read_front(int length)
+
+Both operations return a pointer to a buffer that contains the header. In the case of write_front, room for length bytes is attached to the front of the message, and a pointer to this memory location is returned. The protocol can then write the header to this location to effectively add the header to the message. In the case of read_front, length bytes are removed from the front of the message. The protocol can then read the header available at the returned memory location. The following diagrams illustrate the semantics of the two operations.
+
+write_front:
+
+    // Before 
+    // m -> |a|b|c|d|e|f|g|
+
+    void* hdr = m.write_front(3);
+    memcpy(hdr,"xyz", 3);
+    
+    // After 
+    // m -> |x|y|z|a|b|c|d|e|f|g|
+
+read_front:
+
+    // Before 
+    // m -> |a|b|c|d|e|f|g|
+
+    void* hdr = m.read_front(3);
+    memcpy(hdr,"xyz", 3);
+    
+    // After 
+    // m -> |d|e|f|g|
+    // hdr -> |a|b|c|
+    
+    
+[endsect]
+
+[section Fragmenting and Reassembling Messages]
+
+Fragmenting and reassembling messages is a common activity in network protocols. Boost.Frame supports the following two operations for manipulating message fragments:
+
+    void split(frame& original, frame& fragment, int length);
+    void join(frame& target, frame& fragment1, frame& fragment2, ...);
+
+The first operation creates a pair of messages by breaking length bytes off the front of the original message and placing them in fragment message. After the operation returns, original message contains the sequence of bytes that remain after length bytes are removed. 
+
+The second operation attaches fragment1 to the front of fragment2, producing new message. The arguments to join need not refer to distinct messages. One common use of join is to attach a fragment to the end of a larger message, in which case the first two arguments are the same (the larger message) and the third argument is the fragment. These two operations are illustrated as follows.
+
+
+[endsect]
+[endsect]
+[endsect]
+
+[section Examples]
+
+[endsect]
+
+
+
+[section:ext_references External Resources]
+
+[variablelist
+[
+    [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n2141.html [*N2141: Strong Typedefs in C++09(Revisited)]]]
+    [Alisdair Meredith]
+]
+
+]
+
+[endsect]
+
+[endsect]
+
+
+[section Reference]
+
+[/==========================================================================================]
+[section:opaque_hpp Header `<boost/frame.hpp>`]
+[/==========================================================================================]
+
+Include all the frame public header files.
+
+    #include <boost/frame.hpp>
+
+[endsect]
+
+
+
+
+
+
+[endsect]
+
+[/=================]
+[section Appendices]
+[/=================]
+
+[section:history Appendix A: History]
+
+
+[section [*Version 0.1.0, October 18, 2010] ]
+
+
+[*Features:]
+
+* a
+
+[endsect]
+[endsect]
+
+[section:rationale Appendix B: Design Rationale]
+
+[heading lala]
+
+
+[endsect]
+
+[section:implementation Appendix C: Implementation Notes]
+
+
+[heading lala]
+
+
+[endsect]
+[section:acknowledgements Appendix D: Acknowledgements]
+
+Thanks to .
+
+[endsect]
+[section  Appendix E: Tests]
+
+[section new_class]
+
+[table Contructors and Assignement
+    [[Name]                             [kind]      [Description]                                   [Result]]
+    [[regular_pass]    [run]       [check constructors and assignements]     [Pass]   ]
+]
+
+
+[endsect]
+
+
+[endsect]
+
+[/=====================================]
+[section:todo  Appendix F: Future plans]
+[/=====================================]
+
+[heading Tasks to do before review]
+
+* Complete the tests
+* Add hiding meta-mixins
+
+
+
+[endsect]
+[endsect]
+
+
