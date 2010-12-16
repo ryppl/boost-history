@@ -3,10 +3,24 @@
 //  See http://www.boost.org/LICENSE_1_0.txt
 
 #include <boost/chrono.hpp>
+#include <boost/chrono/typeof/boost/chrono/chrono.hpp>
+#include <boost/chrono/chrono_io.hpp>
+#include <iostream>
+
 #include <boost/detail/lightweight_test.hpp>
 
 int main()
 {
+    
+//    uint64_t const big = uint64_t(1)<<32;
+//    typedef boost::chrono::duration<uint64_t, boost::ratio<1, big-1> > D1;
+//    typedef boost::chrono::duration<uint64_t, boost::ratio<1, big-2> > D2;
+//    D1 d1(0);
+//    D2 d2(0);
+//    BOOST_AUTO(d,d1+d2);
+//    
+//    std::cout << d << std::endl;
+    
     // UNARY PLUS
     {
         const boost::chrono::minutes m(3);
@@ -33,7 +47,6 @@ int main()
         boost::chrono::hours h2 = h++;
         BOOST_TEST(h.count() == 4);
         BOOST_TEST(h2.count() == 3);
-        return boost::report_errors();
     }
     // PRE DECREMENT
     {
@@ -70,7 +83,6 @@ int main()
         boost::chrono::nanoseconds ns(3);
         ns *= 5;
         BOOST_TEST(ns.count() == 15);
-        return boost::report_errors();
     }
     // DIVIDE ASSIGN    
     {   
@@ -153,7 +165,6 @@ int main()
         BOOST_TEST(ns.count() == 15);
         ns = 6 * ns;
         BOOST_TEST(ns.count() == 90);
-        return boost::report_errors();
     }
     
     // DIVIDE duration  

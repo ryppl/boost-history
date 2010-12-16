@@ -33,6 +33,8 @@ time2_demo contained this comment:
 
 #include "clock_name.hpp"
 
+#if defined(BOOST_NO_CONSTEXPR)
+
 using namespace boost::chrono;
 
 template <typename Clock>
@@ -170,3 +172,11 @@ int main()
     return 0;
 }
 
+#else
+int main()
+{
+
+
+    return 0;
+}
+#endif

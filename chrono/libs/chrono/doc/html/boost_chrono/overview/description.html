@@ -4,10 +4,10 @@
 <title>Description</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
-<link rel="start" href="../../index.html" title="Boost.Chrono 0.7.0">
+<link rel="start" href="../../index.html" title="Boost.Chrono 0.7.1">
 <link rel="up" href="../overview.html" title="Overview">
 <link rel="prev" href="motivation.html" title="Motivation">
-<link rel="next" href="../users_guide.html" title=" Users'Guide">
+<link rel="next" href="../users_guide.html" title=" User's Guide">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -30,28 +30,27 @@
         The <span class="bold"><strong>Boost.Chrono</strong></span> library provides:
       </p>
 <a name="boost_chrono.overview.description.standard"></a><h4>
-<a name="id4987212"></a>
+<a name="id4949095"></a>
         <a href="description.html#boost_chrono.overview.description.standard">Standard</a>
       </h4>
 <div class="itemizedlist"><ul type="disc">
 <li>
             A means to represent time durations: managed by the generic <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> class . Examples of
-            time durations include <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
-          duration typedefs"><code class="computeroutput"><span class="identifier">days</span></code></a>, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> class . Examples of
+            time durations include days, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">minutes</span></code></a>, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">seconds</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">nanoseconds</span></code></a>, which can be represented
             with a fixed number of clock ticks per unit. All of these units of time
             duration are united with a generic interface by the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> facility.
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> facility.
           </li>
 <li>
             A type for representing points in time: <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>. A <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> represents an epoch
             plus or minus a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>. The library leaves
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>. The library leaves
             epochs unspecified. A <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> is associated with
             a <span class="emphasis"><em>clock</em></span>.
@@ -64,70 +63,72 @@
           Class high_resolution_clock"><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a>. A clock
             is a pairing of a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>, and a function which
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>, and a function which
             returns a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> representing <span class="emphasis"><em>now</em></span>.
           </li>
 </ul></div>
 <a name="boost_chrono.overview.description.other_clocks"></a><h4>
-<a name="id4987524"></a>
+<a name="id4949391"></a>
         <a href="description.html#boost_chrono.overview.description.other_clocks">Other clocks</a>
       </h4>
 <p>
         To make the timing facilities more generally useful, <span class="bold"><strong>Boost.Chrono</strong></span>
         provides a number of clocks that are thin wrappers around the operating system's
-        time APIs, thereby allowing the extraction of read (wall clock) time, user
-        CPU time, system CPU time,
+        time APIs, thereby allowing the extraction of wall clock time, user CPU time,
+        system CPU time spent by the process,
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
             <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
           Class process_real_cpu_clock"><code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code></a>, captures
-            real (wall clock) CPU times.
+            wall clock CPU time spent by the current process.
           </li>
 <li>
             <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock" title="
           Class process_user_cpu_clock"><code class="computeroutput"><span class="identifier">process_user_cpu_clock</span></code></a>, captures
-            user-CPU times.
+            user-CPU time spent by the current process.
           </li>
 <li>
             <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock" title="
           Class process_system_cpu_clock"><code class="computeroutput"><span class="identifier">process_system_cpu_clock</span></code></a>, captures
-            system-CPU times.
+            system-CPU time spent by the current process.
           </li>
 <li>
-            A tuple-like class __process_cpu<span class="underline">clock</span>_,
-            that captures real, user-CPU, and system-CPU times together.
+            A tuple-like class <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_cpu_clock" title="
+          Class process_cpu_clock"><code class="computeroutput"><span class="identifier">process_cpu_clock</span></code></a>, that captures
+            real, user-CPU, and system-CPU process times together.
           </li>
 <li>
             A <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
           Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a> thread monotonic
-            clock, when supported by a platform.
+            clock giving the time spent by the current threrad( when supported by
+            a platform).
           </li>
 </ul></div>
 <p>
         Lastly, <span class="bold"><strong>Boost.Chrono</strong></span> includes <a href="http://www.boost.org/libs/typeof" target="_top">typeof</a>
         registration for <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> to permit using emulated
         auto with C++03 compilers.
       </p>
 <a name="boost_chrono.overview.description.i_o"></a><h4>
-<a name="id4987716"></a>
+<a name="id4949598"></a>
         <a href="description.html#boost_chrono.overview.description.i_o">I/O</a>
       </h4>
 <p>
         It provides I/O for <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>. It builds on <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">ratio</span><span class="special">/</span><span class="identifier">ratio_io</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
         to provide readable and flexible formatting and parsing for types in <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>.
         The <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> unit names can be customized
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> unit names can be customized
         through a new facet: <a href="../reference/io.html#boost_chrono.reference.io.chrono_io_hpp.duration_punct" title="
-          Template class duration_punct&lt;&gt;"><code class="computeroutput"><span class="identifier">duration_punct</span></code></a>.
+          Template Class duration_punct&lt;&gt;"><code class="computeroutput"><span class="identifier">duration_punct</span></code></a>.
       </p>
 <a name="boost_chrono.overview.description.caveat_emptor"></a><h4>
-<a name="id4987888"></a>
+<a name="id4949768"></a>
         <a href="description.html#boost_chrono.overview.description.caveat_emptor">Caveat emptor</a>
       </h4>
 <p>

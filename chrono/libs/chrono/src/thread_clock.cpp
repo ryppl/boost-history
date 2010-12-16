@@ -16,37 +16,3 @@
 
 #include <boost/chrono/detail/inlined/thread_clock.hpp>
 
-#if 0
-
-
-#include <boost/chrono/config.hpp>
-#include <boost/version.hpp>
-#if defined(BOOST_CHRONO_HAS_THREAD_CLOCK)
-#include <boost/chrono/thread_clock.hpp>
-#include <boost/throw_exception.hpp>
-#include <boost/system/system_error.hpp>
-#include <cassert>
-
-//----------------------------------------------------------------------------//
-//                                Windows                                     //
-//----------------------------------------------------------------------------//
-#if defined(BOOST_CHRONO_WINDOWS_API)
-#include "win/thread_clock.cpp"
-
-//----------------------------------------------------------------------------//
-//                                 Mac                                        //
-//----------------------------------------------------------------------------//
-#elif defined(BOOST_CHRONO_MAC_API)
-#include "mac/thread_clock.cpp"
-
-//----------------------------------------------------------------------------//
-//                                POSIX                                     //
-//----------------------------------------------------------------------------//
-#elif defined(BOOST_CHRONO_POSIX_API)
-#include "posix/thread_clock.cpp"
-
-#endif  // POSIX
-
-
-#endif
-#endif

@@ -4,7 +4,7 @@
 <title> Appendix B: Rationale</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
-<link rel="start" href="../../index.html" title="Boost.Chrono 0.7.0">
+<link rel="start" href="../../index.html" title="Boost.Chrono 0.7.1">
 <link rel="up" href="../appendices.html" title="Appendices">
 <link rel="prev" href="history.html" title=" Appendix A: History">
 <link rel="next" href="implementation.html" title=" Appendix C:
@@ -28,15 +28,15 @@
 <a name="boost_chrono.appendices.rationale"></a><a href="rationale.html" title=" Appendix B: Rationale"> Appendix B: Rationale</a>
 </h3></div></div></div>
 <p>
-        See [http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm <span class="bold"><strong>N2661 - A Foundation to Sleep On</strong></span>] which is very informative
-        and provides motivation for key design decisions. The following sections
-        are an extract from this document.
+        See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm" target="_top"><span class="bold"><strong>N2661 - A Foundation to Sleep On</strong></span></a> which is
+        very informative and provides motivation for key design decisions. This section
+        contains some extracts from this document.
       </p>
-<a name="boost_chrono.appendices.rationale.is_it_possible_for_the_user_to_pass_a___link_linkend__boost_chrono_reference_cpp0x_duration_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__to_a_function_with_the_units_being_ambiguous_"></a><h4>
-<a name="id5069990"></a>
-        <a href="rationale.html#boost_chrono.appendices.rationale.is_it_possible_for_the_user_to_pass_a___link_linkend__boost_chrono_reference_cpp0x_duration_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__to_a_function_with_the_units_being_ambiguous_">Is
+<a name="boost_chrono.appendices.rationale.is_it_possible_for_the_user_to_pass_a__link_linkend__boost_chrono_reference_cpp0x_duration_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__to_a_function_with_the_units_being_ambiguous_"></a><h4>
+<a name="id5068093"></a>
+        <a href="rationale.html#boost_chrono.appendices.rationale.is_it_possible_for_the_user_to_pass_a__link_linkend__boost_chrono_reference_cpp0x_duration_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__to_a_function_with_the_units_being_ambiguous_">Is
         it possible for the user to pass a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> to a function with the
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> to a function with the
         units being ambiguous?</a>
       </h4>
 <p>
@@ -46,7 +46,7 @@
 <pre class="programlisting"><span class="identifier">f</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>  <span class="comment">// Will not compile, 3 is not implicitly convertible to any __duration__
 </span></pre>
 <a name="boost_chrono.appendices.rationale.why_duration_needs_operator_"></a><h4>
-<a name="id5070088"></a>
+<a name="id5068191"></a>
         <a href="rationale.html#boost_chrono.appendices.rationale.why_duration_needs_operator_">Why
         duration needs operator%</a>
       </h4>
@@ -73,63 +73,6 @@
           <span class="special">{}</span>
 <span class="special">};</span>
 </pre>
-<a name="boost_chrono.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form"></a><h4>
-<a name="id5070668"></a>
-        <a href="rationale.html#boost_chrono.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form">Why
-        ratio needs CopyConstruction and Assignment from ratios having the same normalized
-        form</a>
-      </h4>
-<p>
-        Current <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n3000.pdf" target="_top"><span class="bold"><strong>N3000</strong></span></a> doesn't allows to copy-construct or
-        assign <code class="computeroutput"><span class="identifier">ratio</span></code> instances of
-        <code class="computeroutput"><span class="identifier">ratio</span></code> classes having the
-        same normalized form.
-      </p>
-<p>
-        This simple example
-      </p>
-<pre class="programlisting"><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;</span> <span class="identifier">r1</span><span class="special">;</span>
-<code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">3</span><span class="special">,</span><span class="number">9</span><span class="special">&gt;</span> <span class="identifier">r2</span><span class="special">;</span>
-<span class="identifier">r1</span> <span class="special">=</span> <span class="identifier">r2</span><span class="special">;</span> <span class="comment">// (1)
-</span></pre>
-<p>
-        fails to compile in (1). Other example
-      </p>
-<pre class="programlisting"><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;</span> <span class="identifier">r1</span><span class="special">;</span>
-<span class="identifier">ratio_substract</span><span class="special">&lt;</span><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">2</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;,</span><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">r2</span><span class="special">=</span><span class="identifier">r1</span><span class="special">;</span>  <span class="comment">// (2)
-</span></pre>
-<p>
-        The type of <code class="computeroutput"><span class="identifier">ratio_substract</span><span class="special">&lt;</span><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">2</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;,</span><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;</span> <span class="special">&gt;</span></code>
-        could be <code class="computeroutput"><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">3</span><span class="special">,</span><span class="number">9</span><span class="special">&gt;</span></code> so the
-        compilation could fail in (2). It could also be <code class="computeroutput"><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;</span></code> and the
-        compilation succeeds.
-      </p>
-<a name="boost_chrono.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type"></a><h4>
-<a name="id5071170"></a>
-        <a href="rationale.html#boost_chrono.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type">Why
-        ratio needs the nested normalizer typedef type</a>
-      </h4>
-<p>
-        In <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n3000.pdf" target="_top"><span class="bold"><strong>N3000</strong></span></a> 20.4.2 and similar clauses
-      </p>
-<p>
-        <span class="emphasis"><em>3 The nested typedef type shall be a synonym for <code class="computeroutput"><span class="identifier">ratio</span></code>&lt;T1, T2&gt; where T1 has the value
-        R1::num * R2::den - R2::num * R1::den and T2 has the value R1::den * R2::den.</em></span>
-      </p>
-<p>
-        The meaning of synonym let think that the result should be a normalized ratio
-        equivalent to <code class="computeroutput"><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span> <span class="identifier">T2</span><span class="special">&gt;</span></code>,
-        but there is not an explicit definition of what synonym means in this context.
-      </p>
-<p>
-        If the CopyConstruction and Assignment ([<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#12811281" target="_top"><span class="bold"><strong>LWG 1281</strong></span></a>) is not added we need a typedef for
-        accessing the normalized ratio, and change 20.4.2 to return only this normalized
-        result. In this case the user will need to
-      </p>
-<pre class="programlisting"><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">r1</span><span class="special">;</span>
-<code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">3</span><span class="special">,</span><span class="number">9</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">r2</span><span class="special">;</span>
-<span class="identifier">r1</span> <span class="special">=</span> <span class="identifier">r2</span><span class="special">;</span> <span class="comment">// compiles as both types are the same.
-</span></pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

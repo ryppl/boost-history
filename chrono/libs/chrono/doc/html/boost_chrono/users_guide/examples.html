@@ -4,8 +4,8 @@
 <title>Examples</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
-<link rel="start" href="../../index.html" title="Boost.Chrono 0.7.0">
-<link rel="up" href="../users_guide.html" title=" Users'Guide">
+<link rel="start" href="../../index.html" title="Boost.Chrono 0.7.1">
+<link rel="up" href="../users_guide.html" title=" User's Guide">
 <link rel="prev" href="tutorial.html" title="Tutorial">
 <link rel="next" href="ext_references.html" title=" External Resources">
 </head>
@@ -27,15 +27,13 @@
 <a name="boost_chrono.users_guide.examples"></a><a href="examples.html" title="Examples">Examples</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.time_point">Time
-        point</a></span></dt>
-<dd><dl><dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.time_point.min_utility">min
-          utility</a></span></dt></dl></dd>
 <dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.duration">Duration</a></span></dt>
 <dd><dl>
 <dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.duration.how_you_override_the_duration_s_default_constructor">How
-          you override the duration's default constructor</a></span></dt>
+          you Override the Duration's Default Constructor</a></span></dt>
 <dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.duration.saturating">Saturating</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.duration.xtime_conversions">xtime
+          Conversions</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.clocks">Clocks</a></span></dt>
 <dd><dl>
@@ -43,75 +41,36 @@
           count</a></span></dt>
 <dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.clocks.xtime_clock">xtime_clock</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.conversions">Conversions</a></span></dt>
-<dd><dl><dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.conversions.xtime_conversions">xtime
-          conversions</a></span></dt></dl></dd>
-<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.reporting">Reporting</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.time_point">Time
+        Point</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.reporting.a_tiny_program_that_times_how_long_until_a_key_is_struck">A
-          tiny program that times how long until a key is struck</a></span></dt>
-<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.reporting.24_hours_display">24
-          hours display</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.time_point.min_utility">min
+          Utility</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.time_point.a_tiny_program_that_times_how_long_until_a_key_is_struck">A
+          Tiny Program that Times How Long Until a Key is Struck</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.time_point.24_hours_display">24
+          Hours Display</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.time_point.simulated_thread_interface_demonstration_program">Simulated
+          Thread Interface Demonstration Program</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.simulated_thread_interface_demonstration_program">Simulated
-        thread interface demonstration program</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.io">IO</a></span></dt>
 </dl></div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.users_guide.examples.time_point"></a><a href="examples.html#boost_chrono.users_guide.examples.time_point" title="Time
-        point">Time
-        point</a>
-</h4></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.time_point.min_utility">min
-          utility</a></span></dt></dl></div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h5 class="title">
-<a name="boost_chrono.users_guide.examples.time_point.min_utility"></a><a href="examples.html#boost_chrono.users_guide.examples.time_point.min_utility" title="min
-          utility">min
-          utility</a>
-</h5></div></div></div>
-<p>
-            The following function returns the earliest time_point.
-          </p>
-<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration2</span><span class="special">&gt;</span>
-<span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;,</span>
-                      <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span>
-<span class="identifier">min</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;</span> <span class="identifier">t1</span><span class="special">,</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
-          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;</span> <span class="identifier">t2</span><span class="special">)</span>
-<span class="special">{</span>
-    <span class="keyword">return</span> <span class="identifier">t2</span> <span class="special">&lt;</span> <span class="identifier">t1</span> <span class="special">?</span> <span class="identifier">t2</span> <span class="special">:</span> <span class="identifier">t1</span><span class="special">;</span>
-<span class="special">}</span>
-</pre>
-<p>
-            Being able to <span class="bold"><strong>easily</strong></span> write this function
-            is a major feature!
-          </p>
-<pre class="programlisting"><span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t1</span><span class="special">,</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">seconds</span><span class="special">(</span><span class="number">3</span><span class="special">));</span>
-<span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t2</span><span class="special">,</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">nanoseconds</span><span class="special">(</span><span class="number">3</span><span class="special">));</span>
-<span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t3</span><span class="special">,</span> <span class="identifier">min</span><span class="special">(</span><span class="identifier">t1</span><span class="special">,</span> <span class="identifier">t2</span><span class="special">));</span>
-</pre>
-<p>
-            <span class="emphasis"><em>See the source file <a href="../../../../example/min_time_point.cpp" target="_top">example/min_time_point.cpp</a></em></span>
-          </p>
-</div>
-</div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_chrono.users_guide.examples.duration"></a><a href="examples.html#boost_chrono.users_guide.examples.duration" title="Duration">Duration</a>
 </h4></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.duration.how_you_override_the_duration_s_default_constructor">How
-          you override the duration's default constructor</a></span></dt>
+          you Override the Duration's Default Constructor</a></span></dt>
 <dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.duration.saturating">Saturating</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.duration.xtime_conversions">xtime
+          Conversions</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_chrono.users_guide.examples.duration.how_you_override_the_duration_s_default_constructor"></a><a href="examples.html#boost_chrono.users_guide.examples.duration.how_you_override_the_duration_s_default_constructor" title="How
-          you override the duration's default constructor">How
-          you override the duration's default constructor</a>
+          you Override the Duration's Default Constructor">How
+          you Override the Duration's Default Constructor</a>
 </h5></div></div></div>
 <p>
             Next follows how you override the duration's default constructor to do
@@ -157,18 +116,18 @@
     <span class="keyword">friend</span> <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&gt;=(</span><span class="identifier">zero_default</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">zero_default</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">{</span><span class="keyword">return</span> <span class="special">!(</span><span class="identifier">x</span> <span class="special">&lt;</span> <span class="identifier">y</span><span class="special">);}</span>
 <span class="special">};</span>
 
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">zero_default</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">&gt;,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">nano</span>        <span class="special">&gt;</span> <span class="identifier">nanoseconds</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">zero_default</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">&gt;,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">micro</span>       <span class="special">&gt;</span> <span class="identifier">microseconds</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">zero_default</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">&gt;,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">milli</span>       <span class="special">&gt;</span> <span class="identifier">milliseconds</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">zero_default</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">&gt;</span>                      <span class="special">&gt;</span> <span class="identifier">seconds</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">zero_default</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">&gt;,</span> <span class="identifier">boost</span><span class="special">::</span><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">60</span><span class="special">&gt;</span>   <span class="special">&gt;</span> <span class="identifier">minutes</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">zero_default</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">&gt;,</span> <span class="identifier">boost</span><span class="special">::</span><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">3600</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">hours</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">zero_default</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">&gt;,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">nano</span>        <span class="special">&gt;</span> <span class="identifier">nanoseconds</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">zero_default</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">&gt;,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">micro</span>       <span class="special">&gt;</span> <span class="identifier">microseconds</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">zero_default</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">&gt;,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">milli</span>       <span class="special">&gt;</span> <span class="identifier">milliseconds</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">zero_default</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">&gt;</span>                      <span class="special">&gt;</span> <span class="identifier">seconds</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">zero_default</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">&gt;,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">60</span><span class="special">&gt;</span>   <span class="special">&gt;</span> <span class="identifier">minutes</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">zero_default</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">&gt;,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">3600</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">hours</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -191,12 +150,116 @@
             A "saturating" signed integral type is developed. This type
             has +/- infinity and a nan (like IEEE floating point) but otherwise obeys
             signed integral arithmetic. This class is subsequently used as the rep
-            in boost::chrono:: <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> to demonstrate a duration
+            in bchrono::<a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> to demonstrate a duration
             class that does not silently ignore overflow.
           </p>
 <p>
             <span class="emphasis"><em>See the source file <a href="../../../../example/saturating.cpp" target="_top">example/saturating.cpp</a></em></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.users_guide.examples.duration.xtime_conversions"></a><a href="examples.html#boost_chrono.users_guide.examples.duration.xtime_conversions" title="xtime
+          Conversions">xtime
+          Conversions</a>
+</h5></div></div></div>
+<p>
+            Example round_up utility: converts d to To, rounding up for inexact conversions
+            Being able to <span class="bold"><strong>easily</strong></span> write this function
+            is a major feature!
+          </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">bchrono</span><span class="special">=</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+<span class="identifier">To</span>
+<span class="identifier">round_up</span><span class="special">(</span><span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="identifier">To</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">result</span> <span class="special">&lt;</span> <span class="identifier">d</span><span class="special">)</span>
+        <span class="special">++</span><span class="identifier">result</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="identifier">result</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+            Demonstrate interaction with xtime-like facility:
+          </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">xtime</span>
+<span class="special">{</span>
+    <span class="keyword">long</span> <span class="identifier">sec</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="identifier">usec</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+<span class="identifier">xtime</span>
+<span class="identifier">to_xtime_truncate</span><span class="special">(</span><span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="identifier">xtime</span> <span class="identifier">xt</span><span class="special">;</span>
+    <span class="identifier">xt</span><span class="special">.</span><span class="identifier">sec</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;(</span><span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
+          Non-Member Function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          duration typedefs"><code class="computeroutput"><span class="identifier">seconds</span></code></a><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">).</span><span class="identifier">count</span><span class="special">());</span>
+    <span class="identifier">xt</span><span class="special">.</span><span class="identifier">usec</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;(</span><span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
+          Non-Member Function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a><span class="special">&gt;(</span><span class="identifier">d</span> <span class="special">-</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          duration typedefs"><code class="computeroutput"><span class="identifier">seconds</span></code></a><span class="special">(</span><span class="identifier">xt</span><span class="special">.</span><span class="identifier">sec</span><span class="special">)).</span><span class="identifier">count</span><span class="special">());</span>
+    <span class="keyword">return</span> <span class="identifier">xt</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+<span class="identifier">xtime</span>
+<span class="identifier">to_xtime_round_up</span><span class="special">(</span><span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="identifier">xtime</span> <span class="identifier">xt</span><span class="special">;</span>
+    <span class="identifier">xt</span><span class="special">.</span><span class="identifier">sec</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;(</span><span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
+          Non-Member Function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          duration typedefs"><code class="computeroutput"><span class="identifier">seconds</span></code></a><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">).</span><span class="identifier">count</span><span class="special">());</span>
+    <span class="identifier">xt</span><span class="special">.</span><span class="identifier">usec</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">long</span><span class="special">&gt;(</span><span class="identifier">round_up</span><span class="special">&lt;</span><span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a><span class="special">&gt;(</span><span class="identifier">d</span> <span class="special">-</span> <span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          duration typedefs"><code class="computeroutput"><span class="identifier">seconds</span></code></a><span class="special">(</span><span class="identifier">xt</span><span class="special">.</span><span class="identifier">sec</span><span class="special">)).</span><span class="identifier">count</span><span class="special">());</span>
+    <span class="keyword">return</span> <span class="identifier">xt</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="identifier">microseconds</span>
+<span class="identifier">from_xtime</span><span class="special">(</span><span class="identifier">xtime</span> <span class="identifier">xt</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          duration typedefs"><code class="computeroutput"><span class="identifier">seconds</span></code></a><span class="special">(</span><span class="identifier">xt</span><span class="special">.</span><span class="identifier">sec</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a><span class="special">(</span><span class="identifier">xt</span><span class="special">.</span><span class="identifier">usec</span><span class="special">);</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">print</span><span class="special">(</span><span class="identifier">xtime</span> <span class="identifier">xt</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="char">'{'</span> <span class="special">&lt;&lt;</span> <span class="identifier">xt</span><span class="special">.</span><span class="identifier">sec</span> <span class="special">&lt;&lt;</span> <span class="char">','</span> <span class="special">&lt;&lt;</span> <span class="identifier">xt</span><span class="special">.</span><span class="identifier">usec</span> <span class="special">&lt;&lt;</span> <span class="string">"}\n"</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+            Usage
+          </p>
+<pre class="programlisting"><span class="identifier">xtime</span> <span class="identifier">xt</span> <span class="special">=</span> <span class="identifier">to_xtime_truncate</span><span class="special">(</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          duration typedefs"><code class="computeroutput"><span class="identifier">milliseconds</span></code></a><span class="special">(</span><span class="number">251</span><span class="special">));</span>
+<span class="identifier">print</span><span class="special">(</span><span class="identifier">xt</span><span class="special">);</span>
+<span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">milliseconds</span> <span class="identifier">ms</span> <span class="special">=</span> <span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
+          Non-Member Function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          duration typedefs"><code class="computeroutput"><span class="identifier">milliseconds</span></code></a><span class="special">&gt;(</span><span class="identifier">from_xtime</span><span class="special">(</span><span class="identifier">xt</span><span class="special">));</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">ms</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" milliseconds\n"</span><span class="special">;</span>
+<span class="identifier">xt</span> <span class="special">=</span> <span class="identifier">to_xtime_round_up</span><span class="special">(</span><span class="identifier">ms</span><span class="special">);</span>
+<span class="identifier">print</span><span class="special">(</span><span class="identifier">xt</span><span class="special">);</span>
+<span class="identifier">xt</span> <span class="special">=</span> <span class="identifier">to_xtime_truncate</span><span class="special">(</span><span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          duration typedefs"><code class="computeroutput"><span class="identifier">nanoseconds</span></code></a><span class="special">(</span><span class="number">999</span><span class="special">));</span>
+<span class="identifier">print</span><span class="special">(</span><span class="identifier">xt</span><span class="special">);</span>
+<span class="identifier">xt</span> <span class="special">=</span> <span class="identifier">to_xtime_round_up</span><span class="special">(</span><span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          duration typedefs"><code class="computeroutput"><span class="identifier">nanoseconds</span></code></a><span class="special">(</span><span class="number">999</span><span class="special">));</span>
+<span class="identifier">print</span><span class="special">(</span><span class="identifier">xt</span><span class="special">);</span>
+</pre>
+<p>
+            <span class="emphasis"><em>See the source file <a href="../../../../example/xtime.cpp" target="_top">here</a></em></span>
           </p>
 </div>
 </div>
@@ -234,19 +297,19 @@
 
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
-<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+<span class="keyword">namespace</span> <span class="identifier">bchrono</span><span class="special">=</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
 
 
 <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span> <span class="identifier">speed</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">cycle_count</span>
 <span class="special">{</span>
-    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">__ratio_multiply__</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="identifier">speed</span><span class="special">&gt;,</span> <span class="identifier">boost</span><span class="special">::</span> <code class="computeroutput"><span class="identifier">mega</span></code><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">__ratio_multiply__</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="identifier">speed</span><span class="special">&gt;,</span> <span class="identifier">boost</span><span class="special">::</span><code class="computeroutput"><span class="identifier">mega</span></code><span class="special">&gt;::</span><span class="identifier">type</span>
         <span class="identifier">frequency</span><span class="special">;</span>  <span class="comment">// Mhz
 </span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">__ratio_divide__</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><code class="computeroutput"><span class="identifier">ratio</span></code><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;,</span> <span class="identifier">frequency</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">period</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> <span class="identifier">rep</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">rep</span><span class="special">,</span> <span class="identifier">period</span><span class="special">&gt;</span> <span class="identifier">duration</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+    <span class="keyword">typedef</span> <span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">rep</span><span class="special">,</span> <span class="identifier">period</span><span class="special">&gt;</span> <span class="identifier">duration</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">cycle_count</span><span class="special">&gt;</span> <span class="identifier">time_point</span><span class="special">;</span>
 
     <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">()</span>
@@ -265,7 +328,7 @@
     <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span> <span class="identifier">rep</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span> <span class="identifier">period</span><span class="special">;</span>
     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">long</span> <span class="keyword">long</span> <span class="identifier">nanosec_per_sec</span> <span class="special">=</span> <span class="identifier">period</span><span class="special">::</span><span class="identifier">den</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+    <span class="keyword">typedef</span> <span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">approx_cycle_count</span><span class="special">&gt;</span> <span class="identifier">time_point</span><span class="special">;</span>
 
     <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">()</span>
@@ -287,7 +350,9 @@
 </h5></div></div></div>
 <p>
             This example demonstrates the use of a timeval-like struct to be used
-            as the representation type for both duraiton and time_point.
+            as the representation type for both <span class="underline">_duraiton</span>_
+            and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>.
           </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">xtime</span> <span class="special">{</span>
 <span class="keyword">private</span><span class="special">:</span>
@@ -378,8 +443,8 @@
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">typedef</span> <span class="identifier">xtime</span>                                  <span class="identifier">rep</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">micro</span>                           <span class="identifier">period</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">rep</span><span class="special">,</span> <span class="identifier">period</span><span class="special">&gt;</span>   <span class="identifier">duration</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">xtime_clock</span><span class="special">&gt;</span> <span class="identifier">time_point</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">rep</span><span class="special">,</span> <span class="identifier">period</span><span class="special">&gt;</span>   <span class="identifier">duration</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">xtime_clock</span><span class="special">&gt;</span> <span class="identifier">time_point</span><span class="special">;</span>
 
     <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">()</span>
     <span class="special">{</span>
@@ -410,16 +475,15 @@
 <p>
             Usage of xtime_clock
           </p>
-<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"sizeof xtime_clock::time_point = "</span> <span class="special">&lt;&lt;</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">xtime_clock</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"sizeof xtime_clock::time_point = "</span> <span class="special">&lt;&lt;</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">xtime_clock</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"sizeof xtime_clock::duration = "</span> <span class="special">&lt;&lt;</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">xtime_clock</span><span class="special">::</span><span class="identifier">duration</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"sizeof xtime_clock::rep = "</span> <span class="special">&lt;&lt;</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">xtime_clock</span><span class="special">::</span><span class="identifier">rep</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
-<span class="identifier">xtime_clock</span><span class="special">::</span><span class="identifier">duration</span> <span class="identifier">delay</span><span class="special">(</span><span class="identifier">milliseconds</span><span class="special">(</span><span class="number">5</span><span class="special">));</span>
+<span class="identifier">xtime_clock</span><span class="special">::</span><span class="identifier">duration</span> <span class="identifier">delay</span><span class="special">(</span><span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span><span class="number">5</span><span class="special">));</span>
 <span class="identifier">xtime_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">start</span> <span class="special">=</span> <span class="identifier">xtime_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
 <span class="keyword">while</span> <span class="special">(</span><span class="identifier">xtime_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">-</span> <span class="identifier">start</span> <span class="special">&lt;=</span> <span class="identifier">delay</span><span class="special">)</span> <span class="special">{}</span>
 <span class="identifier">xtime_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">stop</span> <span class="special">=</span> <span class="identifier">xtime_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
 <span class="identifier">xtime_clock</span><span class="special">::</span><span class="identifier">duration</span> <span class="identifier">elapsed</span> <span class="special">=</span> <span class="identifier">stop</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">;</span>
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"paused "</span> <span class="special">&lt;&lt;</span> <span class="identifier">nanoseconds</span><span class="special">(</span><span class="identifier">elapsed</span><span class="special">).</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" nanoseconds\n"</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"paused "</span> <span class="special">&lt;&lt;</span> <span class="identifier">bchrono</span><span class="special">::::</span><span class="identifier">nanoseconds</span><span class="special">(</span><span class="identifier">elapsed</span><span class="special">).</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" nanoseconds\n"</span><span class="special">;</span>
 </pre>
 <p>
             <span class="emphasis"><em>See the source file <a href="../../../../example/timeval_demo.cpp" target="_top">example/timeval_demo.cpp</a></em></span>
@@ -428,130 +492,59 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.users_guide.examples.conversions"></a><a href="examples.html#boost_chrono.users_guide.examples.conversions" title="Conversions">Conversions</a>
-</h4></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.conversions.xtime_conversions">xtime
-          conversions</a></span></dt></dl></div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h5 class="title">
-<a name="boost_chrono.users_guide.examples.conversions.xtime_conversions"></a><a href="examples.html#boost_chrono.users_guide.examples.conversions.xtime_conversions" title="xtime
-          conversions">xtime
-          conversions</a>
-</h5></div></div></div>
-<p>
-            Example round_up utility: converts d to To, rounding up for inexact conversions
-            Being able to <span class="bold"><strong>easily</strong></span> write this function
-            is a major feature!
-          </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
-
-<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
-
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
-<span class="identifier">To</span>
-<span class="identifier">round_up</span><span class="special">(</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">)</span>
-<span class="special">{</span>
-    <span class="identifier">To</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
-    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">result</span> <span class="special">&lt;</span> <span class="identifier">d</span><span class="special">)</span>
-        <span class="special">++</span><span class="identifier">result</span><span class="special">;</span>
-    <span class="keyword">return</span> <span class="identifier">result</span><span class="special">;</span>
-<span class="special">}</span>
-</pre>
-<p>
-            Demonstrate interaction with xtime-like facility:
-          </p>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">xtime</span>
-<span class="special">{</span>
-    <span class="keyword">long</span> <span class="identifier">sec</span><span class="special">;</span>
-    <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="identifier">usec</span><span class="special">;</span>
-<span class="special">};</span>
-
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
-<span class="identifier">xtime</span>
-<span class="identifier">to_xtime_truncate</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">)</span>
-<span class="special">{</span>
-    <span class="identifier">xtime</span> <span class="identifier">xt</span><span class="special">;</span>
-    <span class="identifier">xt</span><span class="special">.</span><span class="identifier">sec</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;(</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
-          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
-          duration typedefs"><code class="computeroutput"><span class="identifier">seconds</span></code></a><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">).</span><span class="identifier">count</span><span class="special">());</span>
-    <span class="identifier">xt</span><span class="special">.</span><span class="identifier">usec</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;(</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
-          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
-          duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a><span class="special">&gt;(</span><span class="identifier">d</span> <span class="special">-</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
-          duration typedefs"><code class="computeroutput"><span class="identifier">seconds</span></code></a><span class="special">(</span><span class="identifier">xt</span><span class="special">.</span><span class="identifier">sec</span><span class="special">)).</span><span class="identifier">count</span><span class="special">());</span>
-    <span class="keyword">return</span> <span class="identifier">xt</span><span class="special">;</span>
-<span class="special">}</span>
-
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
-<span class="identifier">xtime</span>
-<span class="identifier">to_xtime_round_up</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">)</span>
-<span class="special">{</span>
-    <span class="identifier">xtime</span> <span class="identifier">xt</span><span class="special">;</span>
-    <span class="identifier">xt</span><span class="special">.</span><span class="identifier">sec</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;(</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
-          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
-          duration typedefs"><code class="computeroutput"><span class="identifier">seconds</span></code></a><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">).</span><span class="identifier">count</span><span class="special">());</span>
-    <span class="identifier">xt</span><span class="special">.</span><span class="identifier">usec</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">long</span><span class="special">&gt;(</span><span class="identifier">round_up</span><span class="special">&lt;</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
-          duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a><span class="special">&gt;(</span><span class="identifier">d</span> <span class="special">-</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
-          duration typedefs"><code class="computeroutput"><span class="identifier">seconds</span></code></a><span class="special">(</span><span class="identifier">xt</span><span class="special">.</span><span class="identifier">sec</span><span class="special">)).</span><span class="identifier">count</span><span class="special">());</span>
-    <span class="keyword">return</span> <span class="identifier">xt</span><span class="special">;</span>
-<span class="special">}</span>
-
-<span class="identifier">microseconds</span>
-<span class="identifier">from_xtime</span><span class="special">(</span><span class="identifier">xtime</span> <span class="identifier">xt</span><span class="special">)</span>
-<span class="special">{</span>
-    <span class="keyword">return</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
-          duration typedefs"><code class="computeroutput"><span class="identifier">seconds</span></code></a><span class="special">(</span><span class="identifier">xt</span><span class="special">.</span><span class="identifier">sec</span><span class="special">)</span> <span class="special">+</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
-          duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a><span class="special">(</span><span class="identifier">xt</span><span class="special">.</span><span class="identifier">usec</span><span class="special">);</span>
-<span class="special">}</span>
-
-<span class="keyword">void</span> <span class="identifier">print</span><span class="special">(</span><span class="identifier">xtime</span> <span class="identifier">xt</span><span class="special">)</span>
-<span class="special">{</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="char">'{'</span> <span class="special">&lt;&lt;</span> <span class="identifier">xt</span><span class="special">.</span><span class="identifier">sec</span> <span class="special">&lt;&lt;</span> <span class="char">','</span> <span class="special">&lt;&lt;</span> <span class="identifier">xt</span><span class="special">.</span><span class="identifier">usec</span> <span class="special">&lt;&lt;</span> <span class="string">"}\n"</span><span class="special">;</span>
-<span class="special">}</span>
-</pre>
-<p>
-            Usage
-          </p>
-<pre class="programlisting"><span class="identifier">xtime</span> <span class="identifier">xt</span> <span class="special">=</span> <span class="identifier">to_xtime_truncate</span><span class="special">(</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
-          duration typedefs"><code class="computeroutput"><span class="identifier">milliseconds</span></code></a><span class="special">(</span><span class="number">251</span><span class="special">));</span>
-<span class="identifier">print</span><span class="special">(</span><span class="identifier">xt</span><span class="special">);</span>
-<span class="identifier">milliseconds</span> <span class="identifier">ms</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
-          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
-          duration typedefs"><code class="computeroutput"><span class="identifier">milliseconds</span></code></a><span class="special">&gt;(</span><span class="identifier">from_xtime</span><span class="special">(</span><span class="identifier">xt</span><span class="special">));</span>
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">ms</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" milliseconds\n"</span><span class="special">;</span>
-<span class="identifier">xt</span> <span class="special">=</span> <span class="identifier">to_xtime_round_up</span><span class="special">(</span><span class="identifier">ms</span><span class="special">);</span>
-<span class="identifier">print</span><span class="special">(</span><span class="identifier">xt</span><span class="special">);</span>
-<span class="identifier">xt</span> <span class="special">=</span> <span class="identifier">to_xtime_truncate</span><span class="special">(</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
-          duration typedefs"><code class="computeroutput"><span class="identifier">nanoseconds</span></code></a><span class="special">(</span><span class="number">999</span><span class="special">));</span>
-<span class="identifier">print</span><span class="special">(</span><span class="identifier">xt</span><span class="special">);</span>
-<span class="identifier">xt</span> <span class="special">=</span> <span class="identifier">to_xtime_round_up</span><span class="special">(</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">+</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
-          duration typedefs"><code class="computeroutput"><span class="identifier">nanoseconds</span></code></a><span class="special">(</span><span class="number">999</span><span class="special">));</span>
-<span class="identifier">print</span><span class="special">(</span><span class="identifier">xt</span><span class="special">);</span>
-</pre>
-<p>
-            <span class="emphasis"><em>See the source file <a href="../../../../example/xtime.cpp" target="_top">here</a></em></span>
-          </p>
-</div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.users_guide.examples.reporting"></a><a href="examples.html#boost_chrono.users_guide.examples.reporting" title="Reporting">Reporting</a>
+<a name="boost_chrono.users_guide.examples.time_point"></a><a href="examples.html#boost_chrono.users_guide.examples.time_point" title="Time
+        Point">Time
+        Point</a>
 </h4></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.reporting.a_tiny_program_that_times_how_long_until_a_key_is_struck">A
-          tiny program that times how long until a key is struck</a></span></dt>
-<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.reporting.24_hours_display">24
-          hours display</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.time_point.min_utility">min
+          Utility</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.time_point.a_tiny_program_that_times_how_long_until_a_key_is_struck">A
+          Tiny Program that Times How Long Until a Key is Struck</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.time_point.24_hours_display">24
+          Hours Display</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_chrono.users_guide.examples.time_point.simulated_thread_interface_demonstration_program">Simulated
+          Thread Interface Demonstration Program</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="boost_chrono.users_guide.examples.reporting.a_tiny_program_that_times_how_long_until_a_key_is_struck"></a><a href="examples.html#boost_chrono.users_guide.examples.reporting.a_tiny_program_that_times_how_long_until_a_key_is_struck" title="A
-          tiny program that times how long until a key is struck">A
-          tiny program that times how long until a key is struck</a>
+<a name="boost_chrono.users_guide.examples.time_point.min_utility"></a><a href="examples.html#boost_chrono.users_guide.examples.time_point.min_utility" title="min
+          Utility">min
+          Utility</a>
+</h5></div></div></div>
+<p>
+            The user can define a function returning the earliest <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> as follows:
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration2</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;,</span>
+                     <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="identifier">min</span><span class="special">(</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration1</span><span class="special">&gt;</span> <span class="identifier">t1</span><span class="special">,</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration2</span><span class="special">&gt;</span> <span class="identifier">t2</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">t2</span> <span class="special">&lt;</span> <span class="identifier">t1</span> <span class="special">?</span> <span class="identifier">t2</span> <span class="special">:</span> <span class="identifier">t1</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+            Being able to <span class="bold"><strong>easily</strong></span> write this function
+            is a major feature!
+          </p>
+<pre class="programlisting"><span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t1</span><span class="special">,</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">seconds</span><span class="special">(</span><span class="number">3</span><span class="special">));</span>
+<span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t2</span><span class="special">,</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">nanoseconds</span><span class="special">(</span><span class="number">3</span><span class="special">));</span>
+<span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">t3</span><span class="special">,</span> <span class="identifier">min</span><span class="special">(</span><span class="identifier">t1</span><span class="special">,</span> <span class="identifier">t2</span><span class="special">));</span>
+</pre>
+<p>
+            <span class="emphasis"><em>See the source file <a href="../../../../example/min_time_point.cpp" target="_top">example/min_time_point.cpp</a></em></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.users_guide.examples.time_point.a_tiny_program_that_times_how_long_until_a_key_is_struck"></a><a href="examples.html#boost_chrono.users_guide.examples.time_point.a_tiny_program_that_times_how_long_until_a_key_is_struck" title="A
+          Tiny Program that Times How Long Until a Key is Struck">A
+          Tiny Program that Times How Long Until a Key is Struck</a>
 </h5></div></div></div>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
@@ -564,14 +557,11 @@
 <span class="special">{</span>
   <span class="keyword">typename</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">start</span><span class="special">;</span>
 <span class="keyword">public</span><span class="special">:</span>
-
   <span class="identifier">timer</span><span class="special">()</span> <span class="special">:</span> <span class="identifier">start</span><span class="special">(</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">)</span> <span class="special">{}</span>
-
   <span class="keyword">typename</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">duration</span> <span class="identifier">elapsed</span><span class="special">()</span> <span class="keyword">const</span>
   <span class="special">{</span>
     <span class="keyword">return</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">;</span>
   <span class="special">}</span>
-
   <span class="keyword">double</span> <span class="identifier">seconds</span><span class="special">()</span> <span class="keyword">const</span>
   <span class="special">{</span>
     <span class="keyword">return</span> <span class="identifier">elapsed</span><span class="special">().</span><span class="identifier">count</span><span class="special">()</span> <span class="special">*</span> <span class="special">((</span><span class="keyword">double</span><span class="special">)</span><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">num</span><span class="special">/</span><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">den</span><span class="special">);</span>
@@ -580,14 +570,14 @@
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
-  <span class="identifier">timer</span><span class="special">&lt;</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+  <span class="identifier">timer</span><span class="special">&lt;</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
           Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">&gt;</span> <span class="identifier">t1</span><span class="special">;</span>
-  <span class="identifier">timer</span><span class="special">&lt;</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
+  <span class="identifier">timer</span><span class="special">&lt;</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
           Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a><span class="special">&gt;</span> <span class="identifier">t2</span><span class="special">;</span>
-  <span class="identifier">timer</span><span class="special">&lt;</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.high_resolution_clock" title="
+  <span class="identifier">timer</span><span class="special">&lt;</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.high_resolution_clock" title="
           Class high_resolution_clock"><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a><span class="special">&gt;</span> <span class="identifier">t3</span><span class="special">;</span>
 
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Strike any key: "</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Type the Enter key: "</span><span class="special">;</span>
   <span class="identifier">std</span><span class="special">::</span><span class="identifier">cin</span><span class="special">.</span><span class="identifier">get</span><span class="special">();</span>
 
   <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">fixed</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">setprecision</span><span class="special">(</span><span class="number">9</span><span class="special">);</span>
@@ -598,35 +588,35 @@
   <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"high_resolution_clock--: "</span>
             <span class="special">&lt;&lt;</span> <span class="identifier">t3</span><span class="special">.</span><span class="identifier">seconds</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" seconds\n"</span><span class="special">;</span>
 
-   <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
-          Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d4</span> <span class="special">=</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+          Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d4</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
           Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
-   <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
-          Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d5</span> <span class="special">=</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+          Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d5</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
           Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
 
   <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nsystem_clock latency-----------: "</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">d5</span> <span class="special">-</span> <span class="identifier">d4</span><span class="special">).</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 
-   <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
-          Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d6</span> <span class="special">=</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
+  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
+          Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d6</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
           Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
-   <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
-          Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d7</span> <span class="special">=</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
+  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
+          Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d7</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock" title="
           Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
 
   <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"monotonic_clock latency--------: "</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">d7</span> <span class="special">-</span> <span class="identifier">d6</span><span class="special">).</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 
-   <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.high_resolution_clock" title="
-          Class high_resolution_clock"><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d8</span> <span class="special">=</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.high_resolution_clock" title="
+  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.high_resolution_clock" title="
+          Class high_resolution_clock"><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d8</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.high_resolution_clock" title="
           Class high_resolution_clock"><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
-   <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.high_resolution_clock" title="
-          Class high_resolution_clock"><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d9</span> <span class="special">=</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.high_resolution_clock" title="
+  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.high_resolution_clock" title="
+          Class high_resolution_clock"><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">d9</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.high_resolution_clock" title="
           Class high_resolution_clock"><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
 
   <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"high_resolution_clock latency--: "</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">d9</span> <span class="special">-</span> <span class="identifier">d8</span><span class="special">).</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">time_t</span> <span class="identifier">now</span> <span class="special">=</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
-          Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">to_time_t</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">time_t</span> <span class="identifier">now</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+          Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">to_time_t</span><span class="special">(</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
           Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">());</span>
 
   <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nsystem_clock::now() reports UTC is "</span>
@@ -644,26 +634,28 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="boost_chrono.users_guide.examples.reporting.24_hours_display"></a><a href="examples.html#boost_chrono.users_guide.examples.reporting.24_hours_display" title="24
-          hours display">24
-          hours display</a>
+<a name="boost_chrono.users_guide.examples.time_point.24_hours_display"></a><a href="examples.html#boost_chrono.users_guide.examples.time_point.24_hours_display" title="24
+          Hours Display">24
+          Hours Display</a>
 </h5></div></div></div>
 <p>
-            In the example above we take advantage of the fact that <code class="computeroutput"><span class="identifier">time_point</span></code>s convert as long as they
-            have the same clock, and as long as their internal <code class="computeroutput"><span class="identifier">duration</span></code>s
-            convert. We also take advantage of the fact that a <code class="computeroutput"><span class="identifier">duration</span></code>
-            with a floating point representation will convert from anything. Finally
-            the I/O system discovers the more readable "hours" unit for
-            our <code class="computeroutput"><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">3600</span><span class="special">&gt;&gt;</span></code>.
+            In the example above we take advantage of the fact that <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>'s convert as long
+            as they have the same clock, and as long as their internal <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>'s convert. We also
+            take advantage of the fact that a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> with a floating point
+            representation will convert from anything. Finally the I/O system discovers
+            the more readable "hours" unit for our <code class="computeroutput"><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">3600</span><span class="special">&gt;&gt;</span></code>.
           </p>
 <p>
-            There are many other ways to format <code class="computeroutput"><span class="identifier">duration</span></code>s
-            and <code class="computeroutput"><span class="identifier">time_point</span></code>s. For
-            example see <a href="http://en.wikipedia.org/wiki/ISO_8601#Durations" target="_top">ISO
-            8601</a>. Instead of coding every possibility into <code class="computeroutput"><span class="keyword">operator</span><span class="special">&lt;&lt;</span></code>,
-            which would lead to significant code bloat for even the most trivial
-            uses, this document seeks to inform the reader how to write custom I/O
-            when desired.
+            There are many other ways to format <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>s and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+          Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>s. For example see
+            <a href="http://en.wikipedia.org/wiki/ISO_8601#Durations" target="_top">ISO 8601</a>.
+            Instead of coding every possibility into <code class="computeroutput"><span class="keyword">operator</span><span class="special">&lt;&lt;</span></code>, which would lead to significant
+            code bloat for even the most trivial uses, this document seeks to inform
+            the reader how to write custom I/O when desired.
           </p>
 <p>
             As an example, the function below streams arbitrary durations to arbitrary
@@ -691,56 +683,67 @@
 <li>
                 <code class="computeroutput"><span class="identifier">ss</span><span class="special">.</span><span class="identifier">cc</span></code> is the number of <code class="computeroutput"><span class="identifier">seconds</span></code> rounded to the nearest
                 hundreth of a second
-                <div class="orderedlist"><ol type="1"><li>
-                      include &lt;boost/chrono<span class="emphasis"><em>chrono_io.hpp&gt; #include
-                      &lt;ostream&gt; #include &lt;iostream&gt; /</em></span> format
-                      duration as <span class="strikethrough"></span>d/hh::mm::ss.cc
-                      template &lt;class CharT, class Traits, class Rep, class Period&gt;
-                      std::basic_ostream&lt;CharT, Traits&gt;&amp; display(std::basic_ostream&lt;CharT,
-                      Traits&gt;&amp; os, boost::chrono::duration&lt;Rep, Period&gt;
-                      d) { using namespace std; using namespace boost; using namespace
-                      boost::chrono;
-                    </li></ol></div>
+                <div class="orderedlist"><ol type="1">
+<li>
+                      include &lt;boost/chrono/chrono_io.hpp&gt;
+                    </li>
+<li>
+                      include &lt;ostream&gt;
+                    </li>
+<li>
+                      include &lt;iostream&gt;
+                    </li>
+</ol></div>
               </li>
 </ul></div>
-<pre class="programlisting">    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">,</span> <span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">86400</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">days</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">,</span> <span class="identifier">centi</span><span class="special">&gt;</span> <span class="identifier">centiseconds</span><span class="special">;</span>
+<pre class="programlisting"><span class="comment">// format duration as [-]d/hh::mm::ss.cc
+</span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span><span class="special">&gt;&amp;</span>
+<span class="identifier">display</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span><span class="special">&gt;&amp;</span> <span class="identifier">os</span><span class="special">,</span>
+        <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">std</span><span class="special">;</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+    <span class="keyword">namespace</span> <span class="identifier">bchrono</span><span class="special">=</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ratio</span><span class="special">&lt;</span><span class="number">86400</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">days</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">:</span><span class="identifier">centi</span><span class="special">&gt;</span> <span class="identifier">centiseconds</span><span class="special">;</span>
 
     <span class="comment">// if negative, print negative sign and negate
-</span>    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">d</span> <span class="special">&lt;</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;(</span><span class="number">0</span><span class="special">))</span>
+</span>    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">d</span> <span class="special">&lt;</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;(</span><span class="number">0</span><span class="special">))</span>
     <span class="special">{</span>
         <span class="identifier">d</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">d</span><span class="special">;</span>
         <span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="char">'-'</span><span class="special">;</span>
     <span class="special">}</span>
     <span class="comment">// round d to nearest centiseconds, to even on tie
-</span>    <span class="identifier">centiseconds</span> <span class="identifier">cs</span> <span class="special">=</span> <span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">centiseconds</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
-    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">d</span> <span class="special">-</span> <span class="identifier">cs</span> <span class="special">&gt;</span> <span class="identifier">milliseconds</span><span class="special">(</span><span class="number">5</span><span class="special">)</span>
-        <span class="special">||</span> <span class="special">(</span><span class="identifier">d</span> <span class="special">-</span> <span class="identifier">cs</span> <span class="special">==</span> <span class="identifier">milliseconds</span><span class="special">(</span><span class="number">5</span><span class="special">)</span> <span class="special">&amp;&amp;</span> <span class="identifier">cs</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&amp;</span> <span class="number">1</span><span class="special">))</span>
+</span>    <span class="identifier">centiseconds</span> <span class="identifier">cs</span> <span class="special">=</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">centiseconds</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">d</span> <span class="special">-</span> <span class="identifier">cs</span> <span class="special">&gt;</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span><span class="number">5</span><span class="special">)</span>
+        <span class="special">||</span> <span class="special">(</span><span class="identifier">d</span> <span class="special">-</span> <span class="identifier">cs</span> <span class="special">==</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span><span class="number">5</span><span class="special">)</span> <span class="special">&amp;&amp;</span> <span class="identifier">cs</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&amp;</span> <span class="number">1</span><span class="special">))</span>
         <span class="special">++</span><span class="identifier">cs</span><span class="special">;</span>
     <span class="comment">// separate seconds from centiseconds
-</span>    <span class="identifier">seconds</span> <span class="identifier">s</span> <span class="special">=</span> <span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">seconds</span><span class="special">&gt;(</span><span class="identifier">cs</span><span class="special">);</span>
+</span>    <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">seconds</span> <span class="identifier">s</span> <span class="special">=</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">&gt;(</span><span class="identifier">cs</span><span class="special">);</span>
     <span class="identifier">cs</span> <span class="special">-=</span> <span class="identifier">s</span><span class="special">;</span>
     <span class="comment">// separate minutes from seconds
-</span>    <span class="identifier">minutes</span> <span class="identifier">m</span> <span class="special">=</span> <span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">minutes</span><span class="special">&gt;(</span><span class="identifier">s</span><span class="special">);</span>
+</span>    <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">minutes</span> <span class="identifier">m</span> <span class="special">=</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">minutes</span><span class="special">&gt;(</span><span class="identifier">s</span><span class="special">);</span>
     <span class="identifier">s</span> <span class="special">-=</span> <span class="identifier">m</span><span class="special">;</span>
     <span class="comment">// separate hours from minutes
-</span>    <span class="identifier">hours</span> <span class="identifier">h</span> <span class="special">=</span> <span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">hours</span><span class="special">&gt;(</span><span class="identifier">m</span><span class="special">);</span>
+</span>    <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">hours</span> <span class="identifier">h</span> <span class="special">=</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">hours</span><span class="special">&gt;(</span><span class="identifier">m</span><span class="special">);</span>
     <span class="identifier">m</span> <span class="special">-=</span> <span class="identifier">h</span><span class="special">;</span>
     <span class="comment">// separate days from hours
-</span>    <span class="identifier">days</span> <span class="identifier">dy</span> <span class="special">=</span> <span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">days</span><span class="special">&gt;(</span><span class="identifier">h</span><span class="special">);</span>
+</span>    <span class="identifier">days</span> <span class="identifier">dy</span> <span class="special">=</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">days</span><span class="special">&gt;(</span><span class="identifier">h</span><span class="special">);</span>
     <span class="identifier">h</span> <span class="special">-=</span> <span class="identifier">dy</span><span class="special">;</span>
     <span class="comment">// print d/hh:mm:ss.cc
 </span>    <span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="identifier">dy</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'/'</span><span class="special">;</span>
-    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">h</span> <span class="special">&lt;</span> <span class="identifier">hours</span><span class="special">(</span><span class="number">10</span><span class="special">))</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">h</span> <span class="special">&lt;</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">hours</span><span class="special">(</span><span class="number">10</span><span class="special">))</span>
         <span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="char">'0'</span><span class="special">;</span>
     <span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">':'</span><span class="special">;</span>
-    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">m</span> <span class="special">&lt;</span> <span class="identifier">minutes</span><span class="special">(</span><span class="number">10</span><span class="special">))</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">m</span> <span class="special">&lt;</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">minutes</span><span class="special">(</span><span class="number">10</span><span class="special">))</span>
         <span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="char">'0'</span><span class="special">;</span>
     <span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="identifier">m</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">':'</span><span class="special">;</span>
-    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">s</span> <span class="special">&lt;</span> <span class="identifier">seconds</span><span class="special">(</span><span class="number">10</span><span class="special">))</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">s</span> <span class="special">&lt;</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">10</span><span class="special">))</span>
         <span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="char">'0'</span><span class="special">;</span>
     <span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="identifier">s</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="char">'.'</span><span class="special">;</span>
-    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">cs</span> <span class="special">&lt;</span> <span class="identifier">centiseconds</span><span class="special">(</span><span class="number">10</span><span class="special">))</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">cs</span> <span class="special">&lt;</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">centiseconds</span><span class="special">(</span><span class="number">10</span><span class="special">))</span>
         <span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="char">'0'</span><span class="special">;</span>
     <span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="identifier">cs</span><span class="special">.</span><span class="identifier">count</span><span class="special">();</span>
     <span class="keyword">return</span> <span class="identifier">os</span><span class="special">;</span>
@@ -750,13 +753,13 @@
 <span class="special">{</span>
     <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">std</span><span class="special">;</span>
     <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
-    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
+    <span class="keyword">namespace</span> <span class="identifier">bchrono</span><span class="special">=</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
 
-    <span class="identifier">display</span><span class="special">(</span><span class="identifier">cout</span><span class="special">,</span> <span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">().</span><span class="identifier">time_since_epoch</span><span class="special">()</span>
-                  <span class="special">+</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">,</span> <span class="identifier">mega</span><span class="special">&gt;(</span><span class="number">1</span><span class="special">))</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
-    <span class="identifier">display</span><span class="special">(</span><span class="identifier">cout</span><span class="special">,</span> <span class="special">-</span><span class="identifier">milliseconds</span><span class="special">(</span><span class="number">6</span><span class="special">))</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
-    <span class="identifier">display</span><span class="special">(</span><span class="identifier">cout</span><span class="special">,</span> <span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">,</span> <span class="identifier">mega</span><span class="special">&gt;(</span><span class="number">1</span><span class="special">))</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
-    <span class="identifier">display</span><span class="special">(</span><span class="identifier">cout</span><span class="special">,</span> <span class="special">-</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">,</span> <span class="identifier">mega</span><span class="special">&gt;(</span><span class="number">1</span><span class="special">))</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="identifier">display</span><span class="special">(</span><span class="identifier">cout</span><span class="special">,</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">().</span><span class="identifier">time_since_epoch</span><span class="special">()</span>
+                  <span class="special">+</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mega</span><span class="special">&gt;(</span><span class="number">1</span><span class="special">))</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="identifier">display</span><span class="special">(</span><span class="identifier">cout</span><span class="special">,</span> <span class="special">-</span><span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span><span class="number">6</span><span class="special">))</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="identifier">display</span><span class="special">(</span><span class="identifier">cout</span><span class="special">,</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mega</span><span class="special">&gt;(</span><span class="number">1</span><span class="special">))</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="identifier">display</span><span class="special">(</span><span class="identifier">cout</span><span class="special">,</span> <span class="special">-</span><span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mega</span><span class="special">&gt;(</span><span class="number">1</span><span class="special">))</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -768,59 +771,58 @@
 <span class="special">-</span><span class="number">11</span><span class="special">/</span><span class="number">13</span><span class="special">:</span><span class="number">46</span><span class="special">:</span><span class="number">40.00</span>
 </pre>
 </div>
-</div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.users_guide.examples.simulated_thread_interface_demonstration_program"></a><a href="examples.html#boost_chrono.users_guide.examples.simulated_thread_interface_demonstration_program" title="Simulated
-        thread interface demonstration program">Simulated
-        thread interface demonstration program</a>
-</h4></div></div></div>
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.users_guide.examples.time_point.simulated_thread_interface_demonstration_program"></a><a href="examples.html#boost_chrono.users_guide.examples.time_point.simulated_thread_interface_demonstration_program" title="Simulated
+          Thread Interface Demonstration Program">Simulated
+          Thread Interface Demonstration Program</a>
+</h5></div></div></div>
 <p>
-          The C++0x standard library's multi-threading library requires the ability
-          to deal with the representation of time in a manner consistent with modern
-          C++ practices. Next follows a simaulation of this interface.
-        </p>
+            The C++0x standard library's multi-threading library requires the ability
+            to deal with the representation of time in a manner consistent with modern
+            C++ practices. Next follows a simulation of this interface.
+          </p>
 <p>
-          The non-member sleep functions can be emulated as follows:
-        </p>
+            The non-member sleep functions can be emulated as follows:
+          </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">this_thread</span> <span class="special">{</span>
 
 <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">sleep_for</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">{</span>
-    <span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+<span class="keyword">void</span> <span class="identifier">sleep_for</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a> <span class="identifier">t</span> <span class="special">=</span> <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
-          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          Non-Member Function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
     <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span> <span class="special">&lt;</span> <span class="identifier">d</span><span class="special">)</span>
         <span class="special">++</span><span class="identifier">t</span><span class="special">;</span>
-    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span> <span class="special">&gt;</span> <span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span> <span class="special">&gt;</span> <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a><span class="special">(</span><span class="number">0</span><span class="special">))</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"sleep_for "</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" microseconds\n"</span><span class="special">;</span>
 <span class="special">}</span>
 
 <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">sleep_until</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+<span class="keyword">void</span> <span class="identifier">sleep_until</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
     <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span><span class="special">;</span>
-    <span class="keyword">typedef</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+    <span class="keyword">typedef</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="identifier">Time</span><span class="special">;</span>
-    <span class="keyword">typedef</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+    <span class="keyword">typedef</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
           Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">SysTime</span><span class="special">;</span>
     <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span> <span class="special">&gt;</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">())</span> <span class="special">{</span>
         <span class="keyword">typedef</span> <span class="keyword">typename</span> <code class="computeroutput"><span class="identifier">common_type</span></code><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Time</span><span class="special">::</span><span class="identifier">duration</span><span class="special">,</span>
                                      <span class="keyword">typename</span> <span class="identifier">SysTime</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">D</span><span class="special">;</span>
         <span class="comment">/* auto */</span> <span class="identifier">D</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">t</span> <span class="special">-</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
         <span class="identifier">microseconds</span> <span class="identifier">us</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
-          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          Non-Member Function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
         <span class="keyword">if</span> <span class="special">(</span><span class="identifier">us</span> <span class="special">&lt;</span> <span class="identifier">d</span><span class="special">)</span>
             <span class="special">++</span><span class="identifier">us</span><span class="special">;</span>
-        <span class="identifier">SysTime</span> <span class="identifier">st</span> <span class="special">=</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+        <span class="identifier">SysTime</span> <span class="identifier">st</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
           Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">us</span><span class="special">;</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"sleep_until    "</span><span class="special">;</span>
         <span class="identifier">detail</span><span class="special">::</span><span class="identifier">print_time</span><span class="special">(</span><span class="identifier">st</span><span class="special">);</span>
-        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">" which is "</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">st</span> <span class="special">-</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">" which is "</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">st</span> <span class="special">-</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
           Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">()).</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" microseconds away\n"</span><span class="special">;</span>
     <span class="special">}</span>
 <span class="special">}</span>
@@ -828,21 +830,21 @@
 <span class="special">}}</span>
 </pre>
 <p>
-          Next follows the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">timed_mutex</span></code>
-          modified fuctions
-        </p>
+            Next follows the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">timed_mutex</span></code>
+            modified fuctions
+          </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
 <span class="keyword">struct</span> <span class="identifier">timed_mutex</span> <span class="special">{</span>
     <span class="comment">// ...
 </span>
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
-    <span class="keyword">bool</span> <span class="identifier">try_lock_for</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">{</span>
-        <span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+    <span class="keyword">bool</span> <span class="identifier">try_lock_for</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a> <span class="identifier">t</span> <span class="special">=</span> <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
-          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          Non-Member Function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
-        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span> <span class="special">&lt;=</span> <span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span> <span class="special">&lt;=</span> <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a><span class="special">(</span><span class="number">0</span><span class="special">))</span>
             <span class="keyword">return</span> <span class="identifier">try_lock</span><span class="special">();</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"try_lock_for "</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" microseconds\n"</span><span class="special">;</span>
@@ -850,13 +852,13 @@
     <span class="special">}</span>
 
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
-    <span class="keyword">bool</span> <span class="identifier">try_lock_until</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+    <span class="keyword">bool</span> <span class="identifier">try_lock_until</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">t</span><span class="special">)</span>
     <span class="special">{</span>
         <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span><span class="special">;</span>
-        <span class="keyword">typedef</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+        <span class="keyword">typedef</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="identifier">Time</span><span class="special">;</span>
-        <span class="keyword">typedef</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+        <span class="keyword">typedef</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
           Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">SysTime</span><span class="special">;</span>
         <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span> <span class="special">&lt;=</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">())</span>
             <span class="keyword">return</span> <span class="identifier">try_lock</span><span class="special">();</span>
@@ -864,13 +866,13 @@
           <span class="keyword">typename</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">D</span><span class="special">;</span>
         <span class="comment">/* auto */</span> <span class="identifier">D</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">t</span> <span class="special">-</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
         <span class="identifier">microseconds</span> <span class="identifier">us</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
-          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          Non-Member Function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
-        <span class="identifier">SysTime</span> <span class="identifier">st</span> <span class="special">=</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+        <span class="identifier">SysTime</span> <span class="identifier">st</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
           Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">us</span><span class="special">;</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"try_lock_until "</span><span class="special">;</span>
         <span class="identifier">detail</span><span class="special">::</span><span class="identifier">print_time</span><span class="special">(</span><span class="identifier">st</span><span class="special">);</span>
-        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">" which is "</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">st</span> <span class="special">-</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">" which is "</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">st</span> <span class="special">-</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
           Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">()).</span><span class="identifier">count</span><span class="special">()</span>
           <span class="special">&lt;&lt;</span> <span class="string">" microseconds away\n"</span><span class="special">;</span>
         <span class="keyword">return</span> <span class="keyword">true</span><span class="special">;</span>
@@ -879,30 +881,30 @@
 <span class="special">}</span>
 </pre>
 <p>
-          <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">condition_variable</span></code> time related function
-          are modified as follows:
-        </p>
+            <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">condition_variable</span></code> time related function
+            are modified as follows:
+          </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
 <span class="keyword">struct</span> <span class="identifier">condition_variable</span>
 <span class="special">{</span>
     <span class="comment">// ...
 </span>
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
-    <span class="keyword">bool</span> <span class="identifier">wait_for</span><span class="special">(</span><span class="identifier">mutex</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">bool</span> <span class="identifier">wait_for</span><span class="special">(</span><span class="identifier">mutex</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">{</span>
         <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">microseconds</span> <span class="identifier">t</span> <span class="special">=</span> <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
-          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
+          Non-Member Function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"wait_for "</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" microseconds\n"</span><span class="special">;</span>
         <span class="keyword">return</span> <span class="keyword">true</span><span class="special">;</span>
     <span class="special">}</span>
 
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
-    <span class="keyword">bool</span> <span class="identifier">wait_until</span><span class="special">(</span><span class="identifier">mutex</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+    <span class="keyword">bool</span> <span class="identifier">wait_until</span><span class="special">(</span><span class="identifier">mutex</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
         <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
-        <span class="keyword">typedef</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
+        <span class="keyword">typedef</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.time_point_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="identifier">Time</span><span class="special">;</span>
-        <span class="keyword">typedef</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+        <span class="keyword">typedef</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
           Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">SysTime</span><span class="special">;</span>
         <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span> <span class="special">&lt;=</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">())</span>
             <span class="keyword">return</span> <span class="keyword">false</span><span class="special">;</span>
@@ -910,13 +912,13 @@
           <span class="keyword">typename</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">D</span><span class="special">;</span>
         <span class="comment">/* auto */</span> <span class="identifier">D</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">t</span> <span class="special">-</span> <span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
         <span class="identifier">microseconds</span> <span class="identifier">us</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_cast" title="
-          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+          Non-Member Function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a><span class="special">&lt;</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">microseconds</span></code></a><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
-        <span class="identifier">SysTime</span> <span class="identifier">st</span> <span class="special">=</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+        <span class="identifier">SysTime</span> <span class="identifier">st</span> <span class="special">=</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
           Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">us</span><span class="special">;</span>
          <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"wait_until     "</span><span class="special">;</span>
         <span class="identifier">detail</span><span class="special">::</span><span class="identifier">print_time</span><span class="special">(</span><span class="identifier">st</span><span class="special">);</span>
-        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">" which is "</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">st</span> <span class="special">-</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">" which is "</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">st</span> <span class="special">-</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
           Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">()).</span><span class="identifier">count</span><span class="special">()</span>
           <span class="special">&lt;&lt;</span> <span class="string">" microseconds away\n"</span><span class="special">;</span>
         <span class="keyword">return</span> <span class="keyword">true</span><span class="special">;</span>
@@ -925,43 +927,47 @@
 <span class="special">}</span>
 </pre>
 <p>
-          Next follows how how sumple is the usage of this functions:
-        </p>
+            Next follows how simple is the usage of this functions:
+          </p>
 <pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span> <span class="identifier">m</span><span class="special">;</span>
 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">timed_mutex</span> <span class="identifier">mut</span><span class="special">;</span>
 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable</span> <span class="identifier">cv</span><span class="special">;</span>
 
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
-<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">;</span>
 
-<span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep_for</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+<span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep_for</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">seconds</span></code></a><span class="special">(</span><span class="number">3</span><span class="special">));</span>
-<span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep_for</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+<span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep_for</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">nanoseconds</span></code></a><span class="special">(</span><span class="number">300</span><span class="special">));</span>
-<span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">time_limit</span> <span class="special">=</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
-          Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">__seconds_</span><span class="special">(</span><span class="number">4</span><span class="special">)</span> <span class="special">+</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+<span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+          Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">time_limit</span> <span class="special">=</span> <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+          Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">__seconds_</span><span class="special">(</span><span class="number">4</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">milliseconds</span></code></a><span class="special">(</span><span class="number">500</span><span class="special">);</span>
 <span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep_until</span><span class="special">(</span><span class="identifier">time_limit</span><span class="special">);</span>
 
-<span class="identifier">mut</span><span class="special">.</span><span class="identifier">try_lock_for</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+<span class="identifier">mut</span><span class="special">.</span><span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">milliseconds</span></code></a><span class="special">(</span><span class="number">30</span><span class="special">));</span>
 <span class="identifier">mut</span><span class="special">.</span><span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">time_limit</span><span class="special">);</span>
 
-<span class="identifier">cv</span><span class="special">.</span><span class="identifier">wait_for</span><span class="special">(</span><span class="identifier">m</span><span class="special">,</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
+<span class="identifier">cv</span><span class="special">.</span><span class="identifier">wait_for</span><span class="special">(</span><span class="identifier">m</span><span class="special">,</span> <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs" title="
           duration typedefs"><code class="computeroutput"><span class="identifier">minutes</span></code></a><span class="special">(</span><span class="number">1</span><span class="special">));</span>    <span class="comment">// real code would put this in a loop
 </span><span class="identifier">cv</span><span class="special">.</span><span class="identifier">wait_until</span><span class="special">(</span><span class="identifier">m</span><span class="special">,</span> <span class="identifier">time_limit</span><span class="special">);</span>  <span class="comment">// real code would put this in a loop
 </span>
 <span class="comment">// For those who prefer floating point
-</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep_for</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;(</span><span class="number">0.25</span><span class="special">));</span>
-<span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep_until</span><span class="special">(</span> <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
-          Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span>  <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;(</span><span class="number">1.5</span><span class="special">));</span>
+</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep_for</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;(</span><span class="number">0.25</span><span class="special">));</span>
+<span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep_until</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock" title="
+          Class system_clock"><code class="computeroutput"><span class="identifier">system_clock</span></code></a><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">chrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;(</span><span class="number">1.5</span><span class="special">));</span>
 </pre>
 <p>
-          <span class="emphasis"><em>See the source file <a href="../../../../example/simulated_thread_interface_demo.cpp" target="_top">example/simulated_thread_interface_demo.cpp</a></em></span>
-        </p>
+            <span class="emphasis"><em>See the source file <a href="../../../../example/simulated_thread_interface_demo.cpp" target="_top">example/simulated_thread_interface_demo.cpp</a></em></span>
+          </p>
 </div>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.users_guide.examples.io"></a><a href="examples.html#boost_chrono.users_guide.examples.io" title="IO">IO</a>
+</h4></div></div></div></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

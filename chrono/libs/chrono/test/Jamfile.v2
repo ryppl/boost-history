@@ -1,6 +1,7 @@
 # Boost Chrono Library test Jamfile
 
-# Copyright Beman Dawes 2003, 2006, 2008
+# Copyright Beman Dawes 2008
+# Copyright Vicente J. Botet Escriba 2009-2010
 
 # Distributed under the Boost Software License, Version 1.0.
 # See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt
@@ -145,26 +146,6 @@ rule chrono-compile2 ( sources : name )
     ;
 }
 
-
-
-   #test-suite "minmax"
-   #     :
-   #     [ chrono-compile test_minmax.cpp ]
-   #     ;
-
-    #test-suite "chrono"
-    #    :
-    #    [ chrono-run chrono_unit_test.cpp  ]
-    #    [ chrono-run explore_limits.cpp  ]
-    #    [ chrono-run test_duration.cpp ]
-    #    [ chrono-run test_clock.cpp ]
-    #    [ chrono-run miscellaneous.cpp ]
-    #    [ chrono-run test_special_values.cpp ]
-    #    [ chrono-run manipulate_clock_object.cpp ]
-    #    [ chrono-run chrono_accuracy_test.cpp ]
-    #    ;
-
-
     test-suite "examples"
         :
         [ chrono-run ../example/cycle_count.cpp  ]
@@ -186,17 +167,12 @@ rule chrono-compile2 ( sources : name )
         [ chrono-run ../example/test_thread_clock.cpp  ]
         ;
 
-    test-suite "timer"
-        :
-        [ chrono-run ../example/run_timer_example.cpp ]
-        [ chrono-run ../example/run_timer_example2.cpp ]
-        [ chrono-run run_timer_test.cpp  ]
-        ;
-
-    #test-suite "other_clocks"
-    #    :
-    #    [ chrono-run test_thread_clock.cpp  ]
-    #    ;
+#    test-suite "timer"
+#        :
+#        [ chrono-run ../example/run_timer_example.cpp ]
+#        [ chrono-run ../example/run_timer_example2.cpp ]
+#        [ chrono-run run_timer_test.cpp  ]
+#        ;
 
     test-suite "traits"
         :
@@ -253,7 +229,6 @@ rule chrono-compile2 ( sources : name )
         [ chrono-run2 clock/clock_pass.cpp  : clock_clock_pass_ ]
         ;
 
-
     test-suite "io"
         :
         [ chrono-run ../example/io_ex1.cpp  ]
@@ -267,3 +242,9 @@ rule chrono-compile2 ( sources : name )
         :
         [ chrono-run win32_test.cpp  ]
         ;
+
+#    test-suite "static_string"
+#        :
+#        [ chrono-run io/match_pass.cpp  ]
+#        ;
+        

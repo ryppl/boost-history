@@ -1,13 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title> Other clocks</title>
+<title> Other Clocks</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
-<link rel="start" href="../../index.html" title="Boost.Chrono 0.7.0">
+<link rel="start" href="../../index.html" title="Boost.Chrono 0.7.1">
 <link rel="up" href="../reference.html" title=" Reference ">
 <link rel="prev" href="io.html" title=" Chrono I/O">
-<link rel="next" href="deprecated.html" title=" Deprecated Headers">
+<link rel="next" href="../appendices.html" title="Appendices">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,11 +20,11 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="io.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="deprecated.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="io.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../appendices.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_chrono.reference.other_clocks"></a><a href="other_clocks.html" title=" Other clocks"> Other clocks</a>
+<a name="boost_chrono.reference.other_clocks"></a><a href="other_clocks.html" title=" Other Clocks"> Other Clocks</a>
 </h3></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp">
@@ -41,12 +41,12 @@
 <dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times">
           Class <code class="computeroutput"><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span></code></a></span></dt>
 <dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_io">
-          <code class="computeroutput"><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span></code> input/output</a></span></dt>
+          <code class="computeroutput"><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span></code> Input/Output</a></span></dt>
 <dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_duration_values">
-          <code class="computeroutput"><span class="identifier">duration_values</span></code> specialization
+          <code class="computeroutput"><span class="identifier">duration_values</span></code> Specialization
           for <code class="computeroutput"><span class="identifier">times</span></code></a></span></dt>
 <dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_numeric_limits">
-          <code class="computeroutput"><span class="identifier">numeric_limits</span></code> specialization
+          <code class="computeroutput"><span class="identifier">numeric_limits</span></code> Specialization
           for <code class="computeroutput"><span class="identifier">times</span></code></a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp">
@@ -78,12 +78,12 @@
 <dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times">
           Class <code class="computeroutput"><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span></code></a></span></dt>
 <dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_io">
-          <code class="computeroutput"><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span></code> input/output</a></span></dt>
+          <code class="computeroutput"><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span></code> Input/Output</a></span></dt>
 <dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_duration_values">
-          <code class="computeroutput"><span class="identifier">duration_values</span></code> specialization
+          <code class="computeroutput"><span class="identifier">duration_values</span></code> Specialization
           for <code class="computeroutput"><span class="identifier">times</span></code></a></span></dt>
 <dt><span class="section"><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_numeric_limits">
-          <code class="computeroutput"><span class="identifier">numeric_limits</span></code> specialization
+          <code class="computeroutput"><span class="identifier">numeric_limits</span></code> Specialization
           for <code class="computeroutput"><span class="identifier">times</span></code></a></span></dt>
 </dl></div>
 <p>
@@ -91,6 +91,9 @@
           production environments. It is also helpful if such timing information
           is broken down into real (wall clock) time, CPU time spent by the user,
           and CPU time spent by the operating system servicing user requests.
+        </p>
+<p>
+          Process clocks don't include the time spent by the child process.
         </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
 
@@ -127,7 +130,7 @@
 <p>
             <a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
           Class process_real_cpu_clock"><code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code></a> satisfy
-            the <a href="cpp0x.html#boost_chrono.reference.cpp0x.clock" title=" Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code> requirements</a>.
+            the <a href="cpp0x.html#boost_chrono.reference.cpp0x.clock" title=" Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a> requirements.
           </p>
 <p>
             <a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
@@ -142,7 +145,7 @@
     <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span>                        <span class="identifier">rep</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span>                     <span class="identifier">period</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">process_real_cpu_clock</span><span class="special">&gt;</span>    <span class="identifier">time_point</span><span class="special">;</span>
-    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="keyword">true</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="identifier">constexpr</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="keyword">true</span><span class="special">;</span>
 
     <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
 <span class="special">};</span>
@@ -157,7 +160,7 @@
 <p>
             <a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock" title="
           Class process_user_cpu_clock"><code class="computeroutput"><span class="identifier">process_user_cpu_clock</span></code></a> satisfy
-            the <a href="cpp0x.html#boost_chrono.reference.cpp0x.clock" title=" Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code> requirements</a>.
+            the <a href="cpp0x.html#boost_chrono.reference.cpp0x.clock" title=" Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a> requirements.
           </p>
 <p>
             <a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock" title="
@@ -171,7 +174,7 @@
     <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span>                        <span class="identifier">rep</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span>                     <span class="identifier">period</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">process_user_cpu_clock</span><span class="special">&gt;</span>    <span class="identifier">time_point</span><span class="special">;</span>
-    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="keyword">true</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="identifier">constexpr</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="keyword">true</span><span class="special">;</span>
 
     <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
 <span class="special">};</span>
@@ -186,7 +189,7 @@
 <p>
             <a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock" title="
           Class process_system_cpu_clock"><code class="computeroutput"><span class="identifier">process_system_cpu_clock</span></code></a> satisfy
-            the <a href="cpp0x.html#boost_chrono.reference.cpp0x.clock" title=" Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code> requirements</a>.
+            the <a href="cpp0x.html#boost_chrono.reference.cpp0x.clock" title=" Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a> requirements.
           </p>
 <p>
             <a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock" title="
@@ -201,7 +204,7 @@
     <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span>                        <span class="identifier">rep</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span>                     <span class="identifier">period</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">process_system_cpu_clock</span><span class="special">&gt;</span>    <span class="identifier">time_point</span><span class="special">;</span>
-    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="keyword">true</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="identifier">constexpr</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="keyword">true</span><span class="special">;</span>
 
     <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
 <span class="special">};</span>
@@ -236,7 +239,7 @@
     <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span>                           <span class="identifier">rep</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span>                        <span class="identifier">period</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">process_cpu_clock</span><span class="special">&gt;</span>   <span class="identifier">time_point</span><span class="special">;</span>
-    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>                <span class="keyword">true</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="identifier">constexpr</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>                <span class="keyword">true</span><span class="special">;</span>
 
     <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
 <span class="special">};</span>
@@ -279,8 +282,8 @@
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_io"></a><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_io" title="
-          process_cpu_clock::times input/output">
-          <code class="computeroutput"><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span></code> input/output</a>
+          process_cpu_clock::times Input/Output">
+          <code class="computeroutput"><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span></code> Input/Output</a>
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Traits</span><span class="special">&gt;</span>
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span><span class="special">&gt;&amp;</span>
@@ -307,14 +310,14 @@
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_duration_values"></a><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_duration_values" title="
-          duration_values specialization
+          duration_values Specialization
           for times">
-          <code class="computeroutput"><span class="identifier">duration_values</span></code> specialization
+          <code class="computeroutput"><span class="identifier">duration_values</span></code> Specialization
           for <code class="computeroutput"><span class="identifier">times</span></code></a>
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;&gt;</span>
 <span class="keyword">struct</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.traits.duration_values" title="
-            Class template duration_values"><code class="computeroutput"><span class="identifier">duration_values</span></code></a><span class="special">&lt;</span><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span><span class="special">&gt;</span>
+            Class Template duration_values"><code class="computeroutput"><span class="identifier">duration_values</span></code></a><span class="special">&lt;</span><span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span><span class="special">&gt;</span>
 <span class="special">{</span>
     <span class="keyword">static</span> <span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span> <span class="identifier">zero</span><span class="special">();</span>
     <span class="keyword">static</span> <span class="identifier">process_cpu_clock</span><span class="special">::</span><span class="identifier">times</span> <span class="identifier">max</span><span class="special">();</span>
@@ -332,9 +335,9 @@
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_numeric_limits"></a><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.times_numeric_limits" title="
-          numeric_limits specialization
+          numeric_limits Specialization
           for times">
-          <code class="computeroutput"><span class="identifier">numeric_limits</span></code> specialization
+          <code class="computeroutput"><span class="identifier">numeric_limits</span></code> Specialization
           for <code class="computeroutput"><span class="identifier">times</span></code></a>
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">std</span> <span class="special">{</span>
@@ -440,8 +443,8 @@
 </h5></div></div></div>
 <p>
             <a href="other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
-          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a> satisfy the <a href="cpp0x.html#boost_chrono.reference.cpp0x.clock" title=" Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code>
-            requirements</a>.
+          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a> satisfy the <a href="cpp0x.html#boost_chrono.reference.cpp0x.clock" title=" Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a>
+            requirements.
           </p>
 <p>
             <a href="other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
@@ -456,7 +459,7 @@
     <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span>                        <span class="identifier">rep</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span>                     <span class="identifier">period</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">thread_clock</span><span class="special">&gt;</span>    <span class="identifier">time_point</span><span class="special">;</span>
-    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="identifier">BOOST_CHRONO_THREAD_CLOCK_IS_MONOTONIC</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="identifier">constexpr</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="identifier">BOOST_CHRONO_THREAD_CLOCK_IS_MONOTONIC</span><span class="special">;</span>
 
     <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
 <span class="special">};</span>
@@ -474,7 +477,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="io.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="deprecated.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="io.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../appendices.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -9,7 +9,7 @@
 
 [article Boost.Chrono
     [quickbook 1.5]
-    [version 0.7.0]
+    [version 0.7.1]
     [authors [Hinnant, Howard]]
     [authors [Dawes, Beman]]
     [authors [Botet Escriba, Vicente J.]]
@@ -25,6 +25,8 @@
 
 [/==================]
 [def __Boost_Chrono__ [*Boost.Chrono]]
+
+[def __see_bellow__ ['see bellow]]
 
 [/===============================================]
 [def __inherit [*Inherits:]]
@@ -44,54 +46,43 @@
 
 
 
+[/===============================================]
 [def __common_type__ `common_type`]
 
 
 [/===============================================]
 [def __ratio__ `ratio`]
 
-
-[template ratio_conf[link_text] [link_text]]
-
-[template ratio_pp[link_text] [link_text]]
-
-[def __BOOST_RATIO_USES_STATIC_ASSERT [ratio_conf `BOOST_RATIO_USES_STATIC_ASSERT`]]
-[def __BOOST_RATIO_USES_MPL_ASSERT [ratio_conf `BOOST_RATIO_USES_MPL_ASSERT`]]
-[def __BOOST_RATIO_USES_ARRAY_ASSERT [ratio_conf `BOOST_RATIO_USES_ARRAY_ASSERT`]]
-
-[template ratio_arithmetic[link_text] [link_text]]
-[def __ratio_add [ratio_arithmetic `ratio_add`]]
-[def __ratio_subtract [ratio_arithmetic `ratio_subtract`]]
-[def __ratio_multiply [ratio_arithmetic `ratio_multiply`]]
-[def __ratio_divide [ratio_arithmetic `ratio_divide`]]
+[def __ratio_add `ratio_add`]
+[def __ratio_subtract `ratio_subtract`]
+[def __ratio_multiply `ratio_multiply`]
+[def __ratio_divide `ratio_divide`]
 
 
-[template ratio_comparison[link_text] [link_text]]
-[def __ratio_equal [ratio_comparison `ratio_equal`]]
-[def __ratio_not_equal [ratio_comparison `ratio_not_equal`]]
-[def __ratio_less [ratio_comparison `ratio_less`]]
-[def __ratio_less_equal [ratio_comparison `ratio_less_equal`]]
-[def __ratio_greater [ratio_comparison `ratio_greater`]]
-[def __ratio_greater_equal [ratio_comparison `ratio_greater_equal`]]
+[def __ratio_equal `ratio_equal`]
+[def __ratio_not_equal `ratio_not_equal`]
+[def __ratio_less `ratio_less`]
+[def __ratio_less_equal `ratio_less_equal`]
+[def __ratio_greater `ratio_greater`]
+[def __ratio_greater_equal `ratio_greater_equal`]
 
 
-[template ratio_si_typedefs[link_text] [link_text]]
-[def __atto [ratio_si_typedefs `atto`]]
-[def __femto [ratio_si_typedefs `femto`]]
-[def __pico [ratio_si_typedefs `pico`]]
-[def __nano [ratio_si_typedefs `nano`]]
-[def __micro [ratio_si_typedefs `micro`]]
-[def __milli [ratio_si_typedefs `milli`]]
-[def __centi [ratio_si_typedefs `centi`]]
-[def __deci [ratio_si_typedefs `deci`]]
-[def __deca [ratio_si_typedefs `deca`]]
-[def __hecto [ratio_si_typedefs `hecto`]]
-[def __kilo [ratio_si_typedefs `kilo`]]
-[def __mega [ratio_si_typedefs `mega`]]
-[def __giga [ratio_si_typedefs `giga`]]
-[def __tera [ratio_si_typedefs `tera`]]
-[def __peta [ratio_si_typedefs `peta`]]
-[def __exa [ratio_si_typedefs `exa`]]
+[def __atto `atto`]
+[def __femto `femto`]
+[def __pico `pico`]
+[def __nano `nano`]
+[def __micro `micro`]
+[def __milli `milli`]
+[def __centi `centi`]
+[def __deci `deci`]
+[def __deca `deca`]
+[def __hecto `hecto`]
+[def __kilo `kilo`]
+[def __mega `mega`]
+[def __giga `giga`]
+[def __tera `tera`]
+[def __peta `peta`]
+[def __exa `exa`]
 
 
 [/==================]
@@ -110,46 +101,45 @@
 
 
 [template clock_concept_link[link_text] [link boost_chrono.reference.cpp0x.clock [link_text]]]
-[def __clock_concept__ [clock_concept_link `Clock` concept]]
+[def __clock_concept__ [clock_concept_link `Clock`] concept]
 [def __clock_concept_type__ [clock_concept_link `Clock`]]
-[def __clock_req__ [clock_concept_link `Clock` requirements]]
+[def __clock_req__ [clock_concept_link `Clock`] requirements]
 [def __Clock__ [clock_concept_link `Clock`]]
 [def __Clock_s__ [clock_concept_link `Clock`'s]]
                                       
-[template duration_link[link_text] [link boost_chrono.reference.cpp0x.duration_hpp.duration [link_text]]]
-[def __duration__ [duration_link `duration`]]
-[def __duration_s__ [duration_link `duration`'s]]
+[def __duration__ [link boost_chrono.reference.cpp0x.duration_hpp.duration `duration`]]
+[def __durations__ [link boost_chrono.reference.cpp0x.duration_hpp.duration `duration`]s]
+[def __duration_s__ [link boost_chrono.reference.cpp0x.duration_hpp.duration `duration`]'s]
 
 [/==================]
-[template time_point_link[link_text] [link boost_chrono.reference.cpp0x.time_point_hpp.time_point [link_text]]]
-[def __time_point__ [time_point_link `time_point`]]
-[def __time_point_s__ [time_point_link `time_point`'s]]
+[def __time_point__ [link boost_chrono.reference.cpp0x.time_point_hpp.time_point `time_point`]]
+[def __time_points__ [link boost_chrono.reference.cpp0x.time_point_hpp.time_point `time_point`]s]
+[def __time_point_s__ [link boost_chrono.reference.cpp0x.time_point_hpp.time_point `time_point`]'s]
 
 [/==================]
-[template system_clock_link[link_text] [link boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock [link_text]]]
-[def __system_clock__ [system_clock_link `system_clock`]]
+[def __system_clock__ [link boost_chrono.reference.cpp0x.system_clocks_hpp.system_clock `system_clock`]]
+[def __monotonic_clock__ [link boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock `monotonic_clock`]]
+[def __high_resolution_clock__ [link boost_chrono.reference.cpp0x.system_clocks_hpp.high_resolution_clock `high_resolution_clock`]]
 
 [/==================]
-[template monotonic_clock_link[link_text] [link boost_chrono.reference.cpp0x.system_clocks_hpp.monotonic_clock [link_text]]]
-[def __monotonic_clock__ [monotonic_clock_link `monotonic_clock`]]
+
+[def __process_real_cpu_clock__ [link boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock `process_real_cpu_clock`]]
+[def __process_system_cpu_clock__ [link boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock `process_system_cpu_clock`]]
+[def __process_user_cpu_clock__ [link boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock `process_user_cpu_clock`]]
+[def __process_cpu_clock__ [link boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_cpu_clock `process_cpu_clock`]]
+[def __thread_clock__ [link boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock `thread_clock`]]
 
 [/==================]
-[template high_resolution_clock_link[link_text] [link boost_chrono.reference.cpp0x.system_clocks_hpp.high_resolution_clock [link_text]]]
-[def __high_resolution_clock__ [high_resolution_clock_link `high_resolution_clock`]]
-
 [def __duration_cast__ [link boost_chrono.reference.cpp0x.duration_hpp.duration_cast `duration_cast`]]
-
 [def __time_point_cast__ [link boost_chrono.reference.cpp0x.time_point_hpp.time_point_cast `time_point_cast`]]
 
 
-[template duration_typedefs[link_text] [link boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs [link_text]]]
-[def __nanoseconds__ [duration_typedefs `nanoseconds`]]
-[def __microseconds__ [duration_typedefs `microseconds`]]
-[def __milliseconds__ [duration_typedefs `milliseconds`]]
-[def __seconds__ [duration_typedefs `seconds`]]
-[def __minutes__ [duration_typedefs `minutes`]]
-[def __hours__ [duration_typedefs `hours`]]
-[def __days__ [duration_typedefs `days`]]
+[def __nanoseconds__ [link boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs `nanoseconds`]]
+[def __microseconds__ [link boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs `microseconds`]]
+[def __milliseconds__ [link boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs `milliseconds`]]
+[def __seconds__ [link boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs `seconds`]]
+[def __minutes__ [link boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs `minutes`]]
+[def __hours__ [link boost_chrono.reference.cpp0x.duration_hpp.duration_typedefs `hours`]]
 
 [def __common_type_spe__ [link boost_chrono.reference.cpp0x.duration_hpp.common_type_spe `common_type`]]
 
@@ -161,26 +151,8 @@
 [def __min__ [link boost_chrono.reference.cpp0x.duration_hpp.traits.duration_values.min `min`]]
 
 
+
 [/==================]
-[template SuspendibleClock_concept_link[link_text] [link_text]]
-[def __SuspendibleClock_concept__ [SuspendibleClock_concept_link `SuspendibleClock` concept]]
-[def __SuspendibleClock_concept_type__ [SuspendibleClock_concept_link `SuspendibleClock`]]
-[def __SuspendibleClock_req__ [SuspendibleClock_concept_link `SuspendibleClock` requirements]]
-[def __SuspendibleClock__ [SuspendibleClock_concept_link `SuspendibleClock`]]
-
-
-[def __process_real_cpu_clock__ [link boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock `process_real_cpu_clock`]]
-
-[def __process_system_cpu_clock__ [link boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock `process_system_cpu_clock`]]
-
-[def __process_user_cpu_clock__ [link boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock `process_user_cpu_clock`]]
-
-[def __thread_clock__ [link boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock `thread_clock`]]
-[def __suspendible_clock__ [link boost_chrono.reference.other_clocks.suspendible_clock_hpp.suspendible_clock `suspendible_clock`]]
-
-
-[template thread_clock_link[link_text] [link boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock [link_text]]]
-[def __thread_clock__ [thread_clock_link `thread_clock`]]
 
 [def __duration_punct__ [link boost_chrono.reference.io.chrono_io_hpp.duration_punct `duration_punct`]]
 
@@ -215,7 +187,7 @@ Finally, you can mentally add the following to any code fragments in this docume
 
     // Include all of Chrono files
     #include <boost/chrono.hpp>
-    using namespace boost::chrono;
+    namespace bchrono=boost::chrono;
 
 [/=================]
 [section Motivation]
@@ -241,7 +213,7 @@ See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 
 
 [heading Wall clock versus system and user time]
 
-To make the timing facilities of Boost.Chrono more generally useful, the library provides a number of clocks that are thin wrappers around the operating system's process time API, thereby allowing the extraction of read (wall clock) time, user CPU time, and system CPU time.  (On POSIX-like systems, this relies on `times()`.  On Windows, it relies on `GetProcessTimes()`.)
+To make the timing facilities of Boost.Chrono more generally useful, the library provides a number of clocks that are thin wrappers around the operating system's process time API, thereby allowing the extraction of wall clock time, user CPU time, and system CPU time of the process.  Wall clock time is the sum of CPU time and system CPU time. (On POSIX-like systems, this relies on `times()`.  On Windows, it relies on `GetProcessTimes()`.)
 
 [/
 It is also helpful if such timing information is broken down into real (wall clock) time, CPU time spent by the user, and CPU time spent by the operating system servicing user requests.
@@ -275,19 +247,19 @@ The __Boost_Chrono__ library provides:
 
 [heading Standard]
 
-* A means to represent time durations: managed by the generic __duration__ class . Examples of time durations include __days__, __minutes__, __seconds__  and __nanoseconds__, which can be represented with a fixed number of clock ticks per unit. All of these units of time duration are united with a generic interface by the __duration__ facility.
+* A means to represent time durations: managed by the generic __duration__ class . Examples of time durations include days, __minutes__, __seconds__  and __nanoseconds__, which can be represented with a fixed number of clock ticks per unit. All of these units of time duration are united with a generic interface by the __duration__ facility.
 * A type for representing points in time: __time_point__. A __time_point__ represents an epoch plus or minus a __duration__. The library leaves epochs unspecified. A __time_point__ is associated with a /clock/.
 * Several clocks, some of which may not be available on a particular platform: __system_clock__, __monotonic_clock__ and __high_resolution_clock__. A clock is a pairing of a __time_point__ and __duration__, and a function which returns a __time_point__ representing ['now].
 
 [heading Other clocks]
 
-To make the timing facilities more generally useful, __Boost_Chrono__ provides a number of clocks that are thin wrappers around the operating system's time APIs, thereby allowing the extraction of read (wall clock) time, user CPU time, system CPU time,
+To make the timing facilities more generally useful, __Boost_Chrono__ provides a number of clocks that are thin wrappers around the operating system's time APIs, thereby allowing the extraction of wall clock time, user CPU time, system CPU time spent by the process,
 
-* __process_real_cpu_clock__, captures real (wall clock) CPU times.
-* __process_user_cpu_clock__, captures user-CPU times.
-* __process_system_cpu_clock__, captures system-CPU times.
-* A tuple-like class __process_cpu_clock__, that captures real, user-CPU, and system-CPU times together.
-* A __thread_clock__ thread monotonic clock, when supported by a platform.
+* __process_real_cpu_clock__, captures wall clock CPU time spent by the current process.
+* __process_user_cpu_clock__, captures user-CPU time spent by the current process.
+* __process_system_cpu_clock__, captures system-CPU time  spent by the current process.
+* A tuple-like class __process_cpu_clock__, that captures real, user-CPU, and system-CPU process times together.
+* A __thread_clock__ thread monotonic clock giving the time spent by the current threrad( when supported by a platform).
 
 
 [/It is also helpful if such timing information is broken down into real (wall clock) time, CPU time spent by the user, and CPU time spent by the operating system servicing user requests. process clocks provide a thin wrapper around the operating system's process timer API. For POSIX-like systems, that's the times() function, while for Windows, it's the GetProcessTimes() function.
@@ -311,7 +283,7 @@ The underlying clocks provided by operating systems are subject to many seemingl
 
 
 [/==============================]
-[section:users_guide Users'Guide]
+[section:users_guide User's Guide]
 [/==============================]
 
 [/======================================]
@@ -332,7 +304,7 @@ You can get the last stable release of __Boost_Chrono__ by downloading [^chrono.
 You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/chrono Boost Sandbox]. Just go to [@http://svn.boost.org/trac/boost/wiki/BoostSubversion here] and follow the instructions there for anonymous SVN access.
 
 [/==========================================]
-[heading Where to install __Boost_Chrono__? ]
+[heading Where to install Boost.Chrono? ]
 [/==========================================]
 
 The simple way is to decompress (or checkout from SVN) the file in your `BOOST_ROOT` directory.
@@ -342,7 +314,7 @@ The simple way is to decompress (or checkout from SVN) the file in your `BOOST_R
 Othesewise, if you decompress in a different directory, you will need to comment some lines, and uncomment and change others in the `build/Jamfile` and `test/Jamfile`. Sorry for this, but I have not reached yet to write a `Jamfile` that is able to work in both environements and use the `BOOST_ROOT` variable. Any help is welcome.
 
 [/=================================]
-[heading Building __Boost_Chrono__ ]
+[heading Building Boost.Chrono ]
 [/=================================]
 
 __Boost_Chrono__ can be configured as a header only library. When __BOOST_CHRONO_INLINED is defined the lib is header only library. Otherwise is not a header only library and you need to compile it before use.
@@ -374,7 +346,7 @@ In particular, __Boost_Chrono__ depends on:
     [[@http://www.boost.org/libs/operators [*Boost.Operators]]] [for operators, ...]
 ]
 [
-    [[@http://www.boost.org/libs/ratio [*Boost.Ratio]]] [for ratio, ...]
+    [[@http://www.boost.org/libs/ratio [*Boost.Ratio]]] [for ratio, milli, micro, ...]
 ]
 [
     [[@http://www.boost.org/libs/system [*Boost.System]]] [for error_code, ...]
@@ -389,7 +361,7 @@ In particular, __Boost_Chrono__ depends on:
 
 
 [/=========================================================]
-[heading Building an executable that uses __Boost_Chrono__ ]
+[heading Building an executable that uses Boost.Chrono ]
 [/=========================================================]
 
 In addition to link with the __Boost_Chrono__ library you need also to link with the [*Boost.System] library.
@@ -397,16 +369,20 @@ Once [*Boost.System] will be configurable to be a header only using __BOOST_SYST
 
 
 [/=========================]
-[heading Exceptions safety ]
+[heading Exception safety ]
 [/=========================]
 
 All functions in the library are exception-neutral and provide strong guarantee of exception safety as long as the underlying parameters provide it.
+
 
 [/=====================]
 [heading Thread safety ]
 [/=====================]
 
 All functions in the library are thread-unsafe except when noted explicitly.
+
+As Boost.Chrono doesn't use mutable global variables the thread safety analysis is limited to the access to each instance variable. It is not thread safe to use a function that modifies the access to a user variable if another can be reading or writing it.
+
 
 [/========================]
 [heading Tested compilers ]
@@ -418,15 +394,15 @@ Current version has been tested on:
 Windows with
 
 * MSVC 10.0
-* MSVC 9.0 Express (not lastly)
-* MSVC 8.0 (not lastly)
+[/* MSVC 9.0 Express (not recently)]
+[/* MSVC 8.0 (not recently)]
 
 [/* Intel 11.0]
 
-Scientific Linux with
+[/Scientific Linux with
 
-* GCC 4.1.2 (not lastly)
-
+* GCC 4.1.2 (not recently)
+]
 Cygwin 1.5 with
 
 * GCC 3.4.4
@@ -440,6 +416,7 @@ MinGW with
 * GCC 4.4.0
 * GCC 4.5.0
 * GCC 4.5.0 -std=c++0x
+* GCC 4.6.0 -std=c++0x #undef BOOST_NO_CONSTEXPR
 
 Initial version was tested on:
 
@@ -463,19 +440,19 @@ If all you want to do is to time a program's execution, here is a complete progr
 
     int main()
     {
-        system_clock::time_point start = system_clock::now();
+        bchrono::system_clock::time_point start = bchrono::system_clock::now();
 
         for ( long i = 0; i < 10000000; ++i )
         std::sqrt( 123.456L ); // burn some time
 
-        __duration__<double> sec = system_clock::now() - start;
-        cout << "tooks " << sec.count() << " seconds\n";
+        bchrono::__duration__<double> sec = bchrono::system_clock::now() - start;
+        cout << "took " << sec.count() << " seconds\n";
         return 0;
     }
 
 Output was:
 
-    tooks 0.832 seconds
+    took 0.832 seconds
 
 
 [endsect]
@@ -523,12 +500,12 @@ The representation is simply any arithmetic type, or an emulation of such a type
 
 __example
 
-    typedef __duration__<long, __ratio__<60> > minutes;
+    typedef bchrono::__duration__<long, boost::ratio<60> > minutes;
     minutes m1(3);                 // m1 stores 3
     minutes m2(2);                 // m2 stores 2
     minutes m3 = m1 + m2;          // m3 stores 5
 
-    typedef __duration__<long long, micro> microseconds;
+    typedef bchrono::__duration__<long long, boost::micro> microseconds;
     microseconds us1(3);           // us1 stores 3
     microseconds us2(2);           // us2 stores 2
     microseconds us3 = us1 + us2;  // us3 stores 5
@@ -545,101 +522,151 @@ These __duration_s__ have very simple, very predictable, and very observable beh
 
 [endsect]
 
-[section What happens if I assign `m3 + us3` to `minutes` instead of `microseconds`?]
+[section What Happens if I Assign `m3 + us3` to `minutes` Instead of `microseconds`?]
 
     minutes m4 = m3 + us3;
 
 It won't compile. The rationale is that implicit truncation error should not be allowed to happen. If this were to compile, then `m4` would hold `5`, the same value as `m3`. The value associated with `us3` has been effectively ignored. This is similar to the problem of assigning a double to an `int`: the fractional part gets silently discarded.
+[endsect]
 
-[heading But what if the truncation behavior is what I want to do?]
+[section But what if the truncation behavior is what I want to do?]
 
 There is a __duration_cast__ facility to explicitly ask for this behavior:
 
-    minutes m4 = __duration_cast__<minutes>(m3 + us3);  // m4.count() == 5
+    minutes m4 = bchrono::__duration_cast__<minutes>(m3 + us3);  // m4.count() == 5
 
 In general, one can perform __duration__ arithmetic at will. If __duration_cast__ isn't used, and it compiles, the arithmetic is exact. Any place one wants to override this exact arithmetic behavior, __duration_cast__ can be used to explicitly specify that desire. The __duration_cast__ has the same efficiency as the implicit conversion, and will even be exact as often as it can.
 
+You can use __duration_cast__`<>` to convert the __duration__ into whatever units you desire.  This facility will round down (truncate) if an exact conversion is not possible.  For example:
+
+    bchrono::__nanoseconds__ start;
+    bchrono::__nanoseconds__ end;
+    typedef bchrono::__milliseconds__ ms;
+    ms d = bchrono::__duration_cast__<ms>(end - start);
+
+    // d now holds the number of milliseconds from start to end.
+
+    std::cout << ms.count() << "ms\n";
+
+We can convert to __nanoseconds__, or some integral-based duration which __nanoseconds__ will always exactly convert to, then __duration_cast__`<>` is unnecessary:
+
+    typedef bchrono::__nanoseconds__ ns;
+    ns d = end - start;
+    std::cout << ns.count() << "ns\n";
+
+If you need seconds with a floating point representation you can also eliminate the __duration_cast__`<>`:
+
+    typedef bchrono::__duration__<double> sec;  // seconds, stored with a double
+    sec d = end - start;
+    std::cout << sec.count() << "s\n";
+
+If you're not sure if you need __duration_cast__`<>` or not, feel free to try it without.  If the conversion is exact, or if the destination has a floating point representation, it will compile: else it will not compile.
+
+
+If you need to use __duration_cast__`<>`, but want to round up, instead of down when the conversion is inexact, here is a handy little helper function to do so.  Writing it is actually a good starter project for understanding __Boost_Chrono__:
+
+    template <class ToDuration, class Rep, class Period>
+    ToDuration
+    round_up(bchrono::__duration__<Rep, Period> d)
+    {
+        // first round down
+        ToDuration result = bchrono::__duration_cast__<ToDuration>(d);
+        if (result < d)  // comparisons are *always* exact
+           ++result;     // increment by one tick period
+        return result;
+    }
+
+    typedef bchrono::__milliseconds__ ms;
+    ms d = round_up<ms>(end - start);
+    // d now holds the number of milliseconds from start to end, rounded up.
+    std::cout << ms.count() << "ms\n";
+
 [endsect]
 
-[section Trafficking in floating point durations]
+[section Trafficking in Floating Point Durations]
 
 I don't want to deal with writing `duration_cast` all over the place. I'm content with the precision of my floating point representation
 
 Not a problem. When the destination of a conversion has floating point representation, all conversions are allowed to happen implicitly.
 
-    typedef __duration__<double, __ratio__<60> > dminutes;
+    typedef bchrono::__duration__<double, __ratio__<60> > dminutes;
     dminutes dm4 = m3 + us3;  // dm4.count() == 5.000000083333333
 
 [endsect]
 
-[section How expensive is all of this?]
+[section How Expensive is All of this?]
 
 If you were writing these conversions by hand, you could not make it more efficient. The use of __ratio__ ensures that all conversion constants are simplified as much as possible at compile time. This usually results in the numerator or denominator of the conversion factor simplifying to `1`, and being subsequently ignored in converting the run time values of the tick counts.
 
 [endsect]
 
-[section  How complicated is it to build a function taking a `duration` parameter?]
+[section  How Complicated is it to Build a Function Taking a `duration` Parameter?]
 
 There are several options open to the user:
 
 * If the author of the function wants to accept any __duration__, and is willing to work in floating point __duration_s__, he can simply use any floating point __duration__ as the parameter:
 
-          void f(duration<double> d)  // accept floating point seconds
+          void f(bchrono::duration<double> d)  // accept floating point seconds
           {
-              // d.count() == 3.e-6 when passed microseconds(3)
+              // d.count() == 3.e-6 when passed bchrono::microseconds(3)
           }
 
-          f(microseconds(3));
+          f(bchrono::microseconds(3));
 
 * If the author of the function wants to traffic only in integral __duration_s__, and is content with handling nothing finer than say nanoseconds (just as an example), he can simply specify nanoseconds as the parameter:
 
-          void f(nanoseconds d)
+          void f(bchrono::nanoseconds d)
           {
-              // d.count() == 3000 when passed microseconds(3)
+              // d.count() == 3000 when passed bchrono::microseconds(3)
           }
 
-          f(microseconds(3));
+          f(bchrono::microseconds(3));
 
 In this design, if the client wants to pass in a floating point __duration__, or a __duration__ of finer precision than nanoseconds, then the client is responsible for choosing his own rounding mode in the conversion to nanoseconds.
 
-          __duration__<double> s(1./3);  // 1/3 of a second
-          f(duration_cast<nanoseconds>(s));  // round towards zero in conversion to nanoseconds
+          bchrono::__duration__<double> s(1./3);  // 1/3 of a second
+          f(bchrono::duration_cast<bchrono::nanoseconds>(s));  // round towards zero in conversion to nanoseconds
 
 In the example above, the client of f has chosen "round towards zero" as the desired rounding mode to nanoseconds. If the client has a __duration__ that won't exactly convert to nanoseconds, and fails to choose how the conversion will take place, the compiler will refuse the call:
 
-          f(s);  // does not compile
+        f(s);  // does not compile
 
 * If the author of the function wants to accept any __duration__, but wants to work with integral representations and wants to control the rounding mode internally, then he can template the function:
 
-          template <class Rep, class Period>
-          void f(__duration__<Rep, Period> d)
-          {
-              // convert d to nanoseconds, rounding up if it is not an exact conversion
-              nanoseconds ns = duration_cast<nanoseconds>(d);
-              if (ns < d)
-                  ++ns;
-              // ns.count() == 333333334 when passed 1/3 of a floating point second
-          }
+        template <class Rep, class Period>
+        void f(bchrono::__duration__<Rep, Period> d)
+        {
+            // convert d to nanoseconds, rounding up if it is not an exact conversion
+            bchrono::nanoseconds ns = bchrono::duration_cast<bchrono::nanoseconds>(d);
+            if (ns < d)
+                ++ns;
+            // ns.count() == 333333334 when passed 1/3 of a floating point second
+        }
 
-          f(__duration__<double>(1./3));
+          f(bchrono::__duration__<double>(1./3));
 
 *  If the author in the example does not want to accept floating point based __duration_s__, he can enforce that behavior like so:
 
-          template <class Period>
-          void f(__duration__<long long, Period> d)
-          {
-              // convert d to nanoseconds, rounding up if it is not an exact conversion
-              nanoseconds ns = duration_cast<nanoseconds>(d);
-              if (ns < d)
-                  ++ns;
-              // ns.count() == 333333334 when passed 333333333333 picoseconds
-          }
-
-          f(__duration__<long long, pico>(333333333333));  // About 1/3 of a second worth of picoseconds
+        template <class Period>
+        void f(bchrono::__duration__<long long, Period> d)
+        {
+            // convert d to nanoseconds, rounding up if it is not an exact conversion
+            bchrono::nanoseconds ns = bchrono::duration_cast<nanoseconds>(d);
+            if (ns < d)
+                ++ns;
+            // ns.count() == 333333334 when passed 333333333333 picoseconds
+        }
+        // About 1/3 of a second worth of picoseconds
+        f(bchrono::__duration__<long long, boost::pico>(333333333333));  
 
 Clients with floating point __duration_s__ who want to use f will now have to convert to an integral __duration__ themselves before passing the result to f.
 
 In summary, the author of f has quite a bit of flexibility and control in the interface he wants to provide his clients with, and easy options for manipulating that __duration__ internal to his function.
+[endsect]
+
+[section Can durations overflow?]
+
+This depend on the representation. The default typedefs uses a representation that don't handle overflows. The user can define his own representation that manage overflow as required by its application.
 
 [endsect]
 [endsect]
@@ -654,13 +681,20 @@ A clock is a concept which bundles 3 things:
 # A concrete __time_point__ type.
 # A function called now() which returns the concrete __time_point__.
 
-__Boost_Chrono__ provides the standard concrete clocks:
+The standard defines tree system-wide clocks that are associated to the computer time. 
 
-# __system_clock__
-# __monotonic_clock__
-# __high_precision_clock__
+* __system_clock__ represents system-wide realtime clock that can be synchronized with an external clock. 
 
-A given platform may not be able to supply all three of these clocks. The user is also able to easily create more clocks.
+* __monotonic_clock__ can not be changed explicitly and the time since the initial epoch increase in a monotonic way. 
+
+* __high_resolution_clock__ intend to use the system-wide clock provided by the platform with the higest resolution.
+
+__Boost_Chrono__ provides them when supported by the underlying platform. A given platform may not be able to supply all three of these clocks. 
+
+The library adds some clocks that are specific to a process or a thread, that is there is a clock per process or per thread.
+
+ 
+The user is also able to easily create more clocks.
 
 Given a clock named Clock, it will have:
 
@@ -668,9 +702,9 @@ Given a clock named Clock, it will have:
     public:
         typedef an arithmetic-like type            rep;
         typedef an instantiation of ratio          period;
-        typedef boost::chrono::__duration__<rep, period> __duration__;
-        typedef boost::chrono::__time_point__<Clock>     time_point;
-        static const bool is_monotonic =           true or false;
+        typedef bchrono::__duration__<rep, period> __duration__;
+        typedef bchrono::__time_point__<Clock>     time_point;
+        static constexpr bool is_monotonic =           true or false;
 
         static time_point now();
     };
@@ -681,13 +715,14 @@ One can get the current time from Clock with:
 
 And one can get the time __duration__ between two __time_point_s__ associated with Clock with:
 
-    Clock::duration d = t1 - Clock::now();
+    Clock::duration d = Clock::now() - t1;
 
 And one can specify a past or future __time_point__ with:
 
     Clock::time_point t2 = Clock::now() + d;
 
 Note how even if a particular clock becomes obsolete, the next clock in line will have the same API. There is no new learning curve to come up. The only source code changes will be simply changing the type of the clock. The same __duration__ and __time_point__ framework continues to work as new clocks are introduced. And multiple clocks are safely and easily handled within the same program.
+
 
 [endsect]
 
@@ -708,7 +743,7 @@ In __Boost_Chrono__, an epoch is a purely abstract and unspecified concept. Ther
 
 A __time_point__ has a clock and a __duration__.
 
-    template <class Clock, class Duration = typename Clock::duration> class time_point;
+    template <class Clock, class Duration = typename Clock::duration> class __time_point__;
 
 The __time_point__'s clock is not stored. It is simply embedded into the __time_point__'s type and serves two purposes:
 
@@ -721,10 +756,10 @@ A timer example:
 
     void f()
     {
-        monotonic_clock::time_point start = monotonic_clock::now();
+        bchrono::monotonic_clock::time_point start = bchrono::monotonic_clock::now();
         g();
         h();
-        __duration__<double> sec = monotonic_clock::now() - start;
+        __duration__<double> sec = bchrono::monotonic_clock::now() - start;
         cout << "f() took " << sec.count() << " seconds\n";
     }
 
@@ -733,8 +768,8 @@ Note that if one is using the __duration__ between two clock __time_point_s__ in
 A delay loop example:
 
     // delay for at least 500 nanoseconds:
-    auto go = monotonic_clock::now() + nanoseconds(500);
-    while (monotonic_clock::now() < go)
+    auto go = bchrono::monotonic_clock::now() + bchrono::nanoseconds(500);
+    while (bchrono::monotonic_clock::now() < go)
         ;
 
 The above code will delay as close as possible to half a microsecond, no matter what the precision of __monotonic_clock__ is. The more precise __monotonic_clock__ becomes, the more accurate will be the delay to 500 nanoseconds.
@@ -742,55 +777,10 @@ The above code will delay as close as possible to half a microsecond, no matter 
 
 [endsect]
 
-[section  How to get the actual CPU milliseconds (or other units?) used by the current thread between end and start?]
 
-You can use __duration_cast__`<>` to convert the __thread_clock__`::duration` into whatever units you desire.  This facility will round down (truncate) if an exact conversion is not possible.  Ex:
-
-    typedef boost::chrono::__milliseconds__ ms;
-    ms d = boost::chrono::__duration_cast__<ms>(end - start);
-
-    // d now holds the number of milliseconds from start to end.
-
-    std::cout << ms.count() << "ms\n";
-
-As `boost::chrono::__thread_clock__::duration` is __nanoseconds__, we can convert to __nanoseconds__, or some integral-based duration which __nanoseconds__ will always exactly convert to, then __duration_cast__`<>` is unnecessary:
-
-    typedef boost::chrono::__nanoseconds__ ns;
-    ns d = end - start;
-    std::cout << ns.count() << "ns\n";
-
-If you need seconds with a floating point representation you can also eliminate the __duration_cast__`<>`:
-
-    typedef boost::chrono::__duration__<double> sec;  // seconds, stored with a double
-    sec d = end - start;
-    std::cout << sec.count() << "s\n";
-
-If you're not sure if you need __duration_cast__`<>` or not, feel free to try it without.  If the conversion is exact, or if the destination has a floating point representation, it will compile.  Else it will not compile.
-
-If you would like to programmatically inspect `__thread_clock__::duration`, you can get the representation type with `__thread_clock__::rep`, and the tick period with `__thread_clock__::period` (which should be a type __ratio__ which has nested values `__ratio__::num` and `__ratio__::den`).  The tick period of __thread_clock__ is `__thread_clock__::period::num / __thread_clock__::period::den` seconds: 1/1000000000 in this case (`1` billionth of a second), stored in a `long long`.
-
-If you need to use __duration_cast__`<>`, but want to round up, instead of down when the conversion is inexact, here is a handy little helper function to do so.  Writing it is actually a good starter project for understanding chrono:
-
-    template <class ToDuration, Rep, Period>
-    ToDuration
-    round_up(boost::chrono::__duration__<Rep, Period> d)
-    {
-        // first round down
-        ToDuration result = boost::chrono::__duration_cast__<ToDuration>(d);
-        if (result < d)  // comparisons are *always* exact
-           ++result;     // increment by one tick period
-        return result;
-    }
-
-    typedef boost::chrono::__milliseconds__ ms;
-    ms d = round_up<ms>(end - start);
-    // d now holds the number of milliseconds from start to end, rounded up.
-    std::cout << ms.count() << "ms\n";
-
-[endsect]
 
 [/
-[section How to define a thread clock]
+[section How to Define a Thread Clock]
 
 On posix systems for which the macro _POSIX_THREAD_CPUTIME is defined we can get the time associated to a specific thread.
 
@@ -800,7 +790,7 @@ On posix systems for which the macro _POSIX_THREAD_CPUTIME is defined we can get
         typedef duration::rep                        rep;
         typedef duration::period                     period;
         typedef chrono::__time_point__<thread_clock>    time_point;
-        static const bool is_monotonic =             BOOST_CHRONO_THREAD_CLOCK_IS_MONOTONIC;
+        static constexpr bool is_monotonic =             BOOST_CHRONO_THREAD_CLOCK_IS_MONOTONIC;
 
         static time_point now( ) {
             // get the current thread
@@ -847,12 +837,67 @@ On posix systems for which the macro _POSIX_THREAD_CPUTIME is defined we can get
 
 [endsect]
 
+[section Specific Clocks]
+[section system_clock]
+
+__system_clock is useful when you need to correlate the time with a known epoch so you can convert it to a calendar time. Note the specific functions in the __system_clock__ class.
+
+
+[endsect]
+[section monotonic_clock]
+
+__monotonic_clock__ is useful when you need to wait for a specific amount of time. __monotonic_clock__ time can not be reset. As other monotonic clocks, it is based on the processor tick.
+
+Next is presented a polling solution, which will however be too inefficient:
+
+    bchrono::__monotonic_clock__::time_point start= chrono::__monotonic_clock__::now();
+    bchrono::__monotonic_clock__::duration delay= chrono::seconds(5);
+    while (bchrono::__monotonic_clock__::now() - start <= delay) {}
+
+[endsect]
+
+[section high_resolution_clock]
+
+When available, __high_resolution_clock__ is usualy more expensive than the other system-wide clocks, so they are used only when the provided resolution is required to the application.
+
+[endsect]
+
+[section process_cpu_clock]
+
+Process and thread clocks are used usualy to measure the time spent by code blocks, as a basic time-spent profiling of different blocks of code (Boost.Stopwatch is clear example of this use).
+
+
+
+[endsect]
+
+[section thread_clock]
+
+You can use __thread_clock__ whenever you want to measure the time spent by the current thread. For example:
+
+    bchrono::__thread_clock__::time_point start=bchrono::__thread_clock__::now();
+    //do something
+
+    typedef bchrono::__milliseconds__ ms;
+    ms d = bchrono::__thread_clock__::now() - start;
+    // d now holds the number of milliseconds from start to end.
+    std::cout << ms.count() << "ms\n";
+
+If you need seconds with a floating point representation you can do:
+
+    typedef bchrono::__duration__<double> sec;  // seconds, stored with a double
+    sec d = end - start;
+    std::cout << sec.count() << "s\n";
+
+If you would like to programmatically inspect `__thread_clock__::duration`, you can get the representation type with `__thread_clock__::rep`, and the tick period with `__thread_clock__::period` (which should be a type __ratio__ which has nested values `__ratio__::num` and `__ratio__::den`).  The tick period of __thread_clock__ is `__thread_clock__::period::num / __thread_clock__::period::den` seconds: 1/1000000000 in this case (`1` billionth of a second), stored in a `long long`.
+
+[endsect]
+[endsect]
 
 [section I/O]
 
 Any __duration__ can be streamed out to a `basic_ostream`. The run time value of the __duration__ is formatted according to the rules and current format settings for __duration__`::rep`. This is followed by a single space and then the compile time unit name of the __duration__. This unit name is built on the string returned from `ratio_string<>` and the data used to construct the __duration_punct__ which was inserted into the stream's locale. If a __duration_punct__ has not been inserted into the stream's locale, a default constructed __duration_punct__ will be added to the stream's locale.
 
-__duration__ unit names come in two varieties: long and short. The default constructed __duration_punct__ provides names in the long format. These names are English descriptions. Other languages are supported by constructing a __duration_punct__ with the proper spellings for hours, "minutes" and "seconds", and their abbreviations (for the short format). The short or long format can be easily chosen by streaming a `duration_short` or `duration_long` manipulator respectively.
+__duration__ unit names come in two varieties: long and short. The default constructed __duration_punct__ provides names in the long format. These names are English descriptions. Other languages are supported by constructing a __duration_punct__ with the proper spellings for "hours", "minutes" and "seconds", and their abbreviations (for the short format). The short or long format can be easily chosen by streaming a `duration_short()` or `duration_long()` manipulator respectively.
 
 A __time_point__ is formatted by outputting its internal __duration__ followed by a string that describes the __time_point__`::clock` epoch. This string will vary for each distinct clock, and for each implementation of the supplied clocks.
 
@@ -865,36 +910,38 @@ __example
     {
         using namespace std;
         using namespace boost;
-        using namespace boost::chrono;
+        namespace bchrono=boost::chrono;
 
         cout << "milliseconds(3) + microseconds(10) = "
-             <<  milliseconds(3) + microseconds(10) << '\n';
+             <<  bchrono::milliseconds(3) + bchrono::microseconds(10) << '\n';
 
         cout << "hours(3) + minutes(10) = "
-             <<  hours(3) + minutes(10) << '\n';
+             <<  bchrono::hours(3) + bchrono::minutes(10) << '\n';
 
-        typedef duration<long long, ratio<1, 2500000000> > ClockTick;
-        cout << "ClockTick(3) + nanoseconds(10) = "
-             <<  ClockTick(3) + nanoseconds(10) << '\n';
+        typedef bchrono::duration<long long, boost::ratio<1, 2500000000> > ClockTick;
+        cout << "ClockTick(3) + bchrono::nanoseconds(10) = "
+             <<  ClockTick(3) + bchrono::nanoseconds(10) << '\n';
 
         cout << "\nSet cout to use short names:\n";
-        cout << duration_short;
+        cout << bchrono::duration_short;
 
         cout << "milliseconds(3) + microseconds(10) = "
-             <<  milliseconds(3) + microseconds(10) << '\n';
+             <<  bchrono::milliseconds(3) + bchrono::microseconds(10) << '\n';
 
         cout << "hours(3) + minutes(10) = "
-             <<  hours(3) + minutes(10) << '\n';
+             <<  bchrono::hours(3) + bchrono::minutes(10) << '\n';
 
         cout << "ClockTick(3) + nanoseconds(10) = "
-             <<  ClockTick(3) + nanoseconds(10) << '\n';
+             <<  ClockTick(3) + bchrono::nanoseconds(10) << '\n';
 
-        cout << "\nsystem_clock::now() = " << system_clock::now() << '\n';
+        cout << "\nsystem_clock::now() = " << bchrono::system_clock::now() << '\n';
     #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        cout << "monotonic_clock::now() = " << monotonic_clock::now() << '\n';
+        cout << "monotonic_clock::now() = " << bchrono::monotonic_clock::now() << '\n';
     #endif
-        cout << "\nSet cout to use long names:\n" << duration_long
-             << "high_resolution_clock::now() = " << high_resolution_clock::now() << '\n';
+        cout << "\nSet cout to use long names:\n" 
+                << bchrono::duration_long
+                << "high_resolution_clock::now() = " 
+                << bchrono::high_resolution_clock::now() << '\n';
         return 0;
     }
 
@@ -915,7 +962,7 @@ The output could be
     Set cout to use long names:
     high_resolution_clock::now() = 18588963785548 nanoseconds since boot
 
-Parsing a `duration` follows rules analogous to the `duration` converting constructor. A value and a unit (short or long) are read from the `basic_istream`. If the `duration` has an integral representation, then the value parsed must be exactly representable in the target `duration` (after conversion to the target `duration` units), else `failbit` is set. `duration`s based on floating point representations can be parsed using any units that do not cause overflow.
+Parsing a __duration__ follows rules analogous to the __duration__ converting constructor. A value and a unit (short or long) are read from the `basic_istream`. If the __duration__ has an integral representation, then the value parsed must be exactly representable in the target __duration__ (after conversion to the target __duration__ units), else `failbit` is set. __duration_s__ based on floating point representations can be parsed using any units that do not cause overflow.
 
 For example a stream containing "5000 milliseconds" can be parsed into seconds, but if the stream contains "5001 milliseconds", parsing into `seconds` will cause `failbit` to be set.
 
@@ -928,10 +975,10 @@ __example
     int main()
     {
         using namespace std;
-        using namespace boost::chrono;
+        namespace bchrono=boost::chrono;
 
         istringstream in("5000 milliseconds 4000 ms 3001 ms");
-        seconds d(0);
+        bchrono::seconds d(0);
         in >> d;
         assert(in.good());
         assert(d == seconds(5));
@@ -946,9 +993,9 @@ __example
     }
 
 
-Note that a `duration` failure may occur late in the parsing process. This means that the characters making up the failed parse in the stream are usually consumed despite the failure to successfully parse.
+Note that a __duration__ failure may occur late in the parsing process. This means that the characters making up the failed parse in the stream are usually consumed despite the failure to successfully parse.
 
-Parsing a `time_point` involves first parsing a `duration` and then parsing the epoch string. If the epoch string does not match that associated with `time_point::clock` then failbit will be set.
+Parsing a __time_point__ involves first parsing a __duration__ and then parsing the epoch string. If the epoch string does not match that associated with `time_point::clock` then failbit will be set.
 
 __example
 
@@ -960,18 +1007,18 @@ __example
     int main()
     {
         using namespace std;
-        using namespace boost::chrono;
+        namespace bchrono=boost::chrono;
 
-        high_resolution_clock::time_point t0 = high_resolution_clock::now();
+        bchrono::high_resolution_clock::time_point t0 = bchrono::high_resolution_clock::now();
         stringstream io;
         io << t0;
-        high_resolution_clock::time_point t1;
+        bchrono::high_resolution_clock::time_point t1;
         io >> t1;
         assert(!io.fail());
         cout << io.str() << '\n';
         cout << t0 << '\n';
         cout << t1 << '\n';
-        high_resolution_clock::time_point t = high_resolution_clock::now();
+        bchrono::high_resolution_clock::time_point t = bchrono::high_resolution_clock::now();
         cout << t << '\n';
 
         cout << "That took " << t - t0 << '\n';
@@ -994,10 +1041,10 @@ Here's a simple example to find out how many hours the computer has been up (on 
     {
         using namespace std;
         using namespace boost;
-        using namespace boost::chrono;
+        namespace bchrono=boost::chrono;
 
-        typedef time_point<monotonic_clock, duration<double, ratio<3600> > > T;
-        T tp = monotonic_clock::now();
+        typedef bchrono::time_point<bchrono::monotonic_clock, bchrono::duration<double, boost::ratio<3600> > > T;
+        T tp = bchrono::monotonic_clock::now();
         std::cout << tp << '\n';
         return 0;
     }
@@ -1013,39 +1060,12 @@ The output could be:
 [section Examples]
 [/===============]
 
-[section Time point]
-
-[/==================]
-[section min utility]
-
-The following function returns the earliest time_point.
-
-    template <class Clock, class Duration1, class Duration2>
-    typename boost::__common_type__<__time_point__<Clock, Duration1>,
-                         __time_point__<Clock, Duration2> >::type
-    min(__time_point__<Clock, Duration1> t1, __time_point__<Clock, Duration2> t2)
-    {
-        return t2 < t1 ? t2 : t1;
-    }
-
-Being able to *easily* write this function is a major feature!
-
-    BOOST_AUTO(t1, system_clock::now() + seconds(3));
-    BOOST_AUTO(t2, system_clock::now() + nanoseconds(3));
-    BOOST_AUTO(t3, min(t1, t2));
-
-['See the source file [@../../example/min_time_point.cpp example/min_time_point.cpp]]
-
-
-[endsect]
-
-[endsect]
 
 
 [section Duration]
 
 [/===============]
-[section How you override the duration's default constructor]
+[section How you Override the Duration's Default Constructor]
 
 Next follows how you override the duration's default constructor to do anything you want (in this case set it to zero). All we need to do is to change the representation
 
@@ -1088,12 +1108,12 @@ Next follows how you override the duration's default constructor to do anything 
         friend bool operator>=(zero_default x, zero_default y) {return !(x < y);}
     };
 
-    typedef boost::chrono::__duration__<zero_default<long long>, boost::nano        > nanoseconds;
-    typedef boost::chrono::__duration__<zero_default<long long>, boost::micro       > microseconds;
-    typedef boost::chrono::__duration__<zero_default<long long>, boost::milli       > milliseconds;
-    typedef boost::chrono::__duration__<zero_default<long long>                      > seconds;
-    typedef boost::chrono::__duration__<zero_default<long long>, boost::__ratio__<60>   > minutes;
-    typedef boost::chrono::__duration__<zero_default<long long>, boost::__ratio__<3600> > hours;
+    typedef bchrono::__duration__<zero_default<long long>, boost::nano        > nanoseconds;
+    typedef bchrono::__duration__<zero_default<long long>, boost::micro       > microseconds;
+    typedef bchrono::__duration__<zero_default<long long>, boost::milli       > milliseconds;
+    typedef bchrono::__duration__<zero_default<long long>                      > seconds;
+    typedef bchrono::__duration__<zero_default<long long>, boost::ratio<60>   > minutes;
+    typedef bchrono::__duration__<zero_default<long long>, boost::ratio<3600> > hours;
     }
 
 Usage
@@ -1122,7 +1142,7 @@ This example shows how to handle duration with resolution not known until run ti
         static const double ticks_per_nanosecond;
 
     public:
-        typedef boost::chrono::duration<double, boost::nano> tonanosec;
+        typedef bchrono::duration<double, boost::nano> tonanosec;
 
         duration() {} // = default;
         explicit duration(const rep& r) : rep_(r) {}
@@ -1173,12 +1193,96 @@ This example shows how to handle duration with resolution not known until run ti
 [/================]
 [section Saturating]
 
-A "saturating" signed integral type  is developed.  This type has +/- infinity and a nan (like IEEE floating point) but otherwise obeys signed integral arithmetic. This class is subsequently used as the rep in boost::chrono::__duration__ to demonstrate a duration class that does not silently ignore overflow.
+A "saturating" signed integral type is developed.  This type has +/- infinity and a nan (like IEEE floating point) but otherwise obeys signed integral arithmetic. This class is subsequently used as the rep in bchrono::__duration__ to demonstrate a duration class that does not silently ignore overflow.
 
 ['See the source file [@../../example/saturating.cpp example/saturating.cpp]]
 
 
 [endsect]
+
+
+
+[/==================]
+[section xtime Conversions]
+
+Example round_up utility:  converts d to To, rounding up for inexact conversions
+Being able to *easily* write this function is a major feature!
+
+    #include <boost/chrono.hpp>
+    #include <boost/type_traits.hpp>
+
+    #include <iostream>
+
+    namespace bchrono=boost::chrono;
+
+    template <class To, class Rep, class Period>
+    To
+    round_up(bchrono::duration<Rep, Period> d)
+    {
+        To result = bchrono::duration_cast<To>(d);
+        if (result < d)
+            ++result;
+        return result;
+    }
+
+Demonstrate interaction with xtime-like facility:
+
+
+    struct xtime
+    {
+        long sec;
+        unsigned long usec;
+    };
+
+    template <class Rep, class Period>
+    xtime
+    to_xtime_truncate(bchrono::__duration__<Rep, Period> d)
+    {
+        xtime xt;
+        xt.sec = static_cast<long>(bchrono::__duration_cast__<__seconds__>(d).count());
+        xt.usec = static_cast<long>(bchrono::__duration_cast__<__microseconds__>(d - __seconds__(xt.sec)).count());
+        return xt;
+    }
+
+    template <class Rep, class Period>
+    xtime
+    to_xtime_round_up(bchrono::__duration__<Rep, Period> d)
+    {
+        xtime xt;
+        xt.sec = static_cast<long>(bchrono::__duration_cast__<__seconds__>(d).count());
+        xt.usec = static_cast<unsigned long>(round_up<bchrono::__microseconds__>(d - bchrono::__seconds__(xt.sec)).count());
+        return xt;
+    }
+
+    microseconds
+    from_xtime(xtime xt)
+    {
+        return bchrono::__seconds__(xt.sec) + bchrono::__microseconds__(xt.usec);
+    }
+
+    void print(xtime xt)
+    {
+        std::cout << '{' << xt.sec << ',' << xt.usec << "}\n";
+    }
+
+Usage
+
+        xtime xt = to_xtime_truncate(seconds(3) + bchrono::__milliseconds__(251));
+        print(xt);
+        bchrono::milliseconds ms = bchrono::__duration_cast__<bchrono::__milliseconds__>(from_xtime(xt));
+        std::cout << ms.count() << " milliseconds\n";
+        xt = to_xtime_round_up(ms);
+        print(xt);
+        xt = to_xtime_truncate(bchrono::seconds(3) + __nanoseconds__(999));
+        print(xt);
+        xt = to_xtime_round_up(bchrono::seconds(3) + __nanoseconds__(999));
+        print(xt);
+
+
+['See the source file [@../../example/xtime.cpp here]]
+
+[endsect]
+
 
 [endsect]
 [section Clocks]
@@ -1194,7 +1298,7 @@ Users can easily create their own clocks, with both points in time and time dura
 
     #include <iostream>
 
-    using namespace boost::chrono;
+    namespace bchrono=boost::chrono;
 
 
     template <long long speed>
@@ -1204,8 +1308,8 @@ Users can easily create their own clocks, with both points in time and time dura
             frequency;  // Mhz
         typedef typename boost::__ratio_divide__<boost::__ratio__<1>, frequency>::type period;
         typedef long long rep;
-        typedef boost::chrono::__duration__<rep, period> duration;
-        typedef boost::chrono::__time_point__<cycle_count> time_point;
+        typedef bchrono::__duration__<rep, period> duration;
+        typedef bchrono::__time_point__<cycle_count> time_point;
 
         static time_point now()
         {
@@ -1223,7 +1327,7 @@ Users can easily create their own clocks, with both points in time and time dura
         typedef duration::rep rep;
         typedef duration::period period;
         static const long long nanosec_per_sec = period::den;
-        typedef boost::chrono::__time_point__<approx_cycle_count> time_point;
+        typedef bchrono::__time_point__<approx_cycle_count> time_point;
 
         static time_point now()
         {
@@ -1241,8 +1345,7 @@ Users can easily create their own clocks, with both points in time and time dura
 [/==================]
 [section xtime_clock]
 
-This example demonstrates the use of a timeval-like struct to be used as the representation
-type for both duraiton and time_point.
+This example demonstrates the use of a timeval-like struct to be used as the representation type for both __duraiton__ and __time_point__.
 
     class xtime {
     private:
@@ -1332,8 +1435,8 @@ Clock based on timeval-like struct.
     public:
         typedef xtime                                  rep;
         typedef boost::micro                           period;
-        typedef boost::chrono::duration<rep, period>   duration;
-        typedef boost::chrono::time_point<xtime_clock> time_point;
+        typedef bchrono::duration<rep, period>   duration;
+        typedef bchrono::time_point<xtime_clock> time_point;
 
         static time_point now()
         {
@@ -1363,103 +1466,18 @@ Clock based on timeval-like struct.
 
 Usage of xtime_clock
 
-        using namespace boost::chrono;
         std::cout << "sizeof xtime_clock::time_point = " << sizeof(xtime_clock::time_point) << '\n';
         std::cout << "sizeof xtime_clock::duration = " << sizeof(xtime_clock::duration) << '\n';
         std::cout << "sizeof xtime_clock::rep = " << sizeof(xtime_clock::rep) << '\n';
-        xtime_clock::duration delay(milliseconds(5));
+        xtime_clock::duration delay(bchrono::milliseconds(5));
         xtime_clock::time_point start = xtime_clock::now();
         while (xtime_clock::now() - start <= delay) {}
         xtime_clock::time_point stop = xtime_clock::now();
         xtime_clock::duration elapsed = stop - start;
-        std::cout << "paused " << nanoseconds(elapsed).count() << " nanoseconds\n";
+        std::cout << "paused " << bchrono::::nanoseconds(elapsed).count() << " nanoseconds\n";
 
 
 ['See the source file [@../../example/timeval_demo.cpp example/timeval_demo.cpp]]
-
-[endsect]
-[endsect]
-
-[section Conversions]
-
-[/==================]
-[section xtime conversions]
-
-Example round_up utility:  converts d to To, rounding up for inexact conversions
-Being able to *easily* write this function is a major feature!
-
-    #include <boost/chrono.hpp>
-    #include <boost/type_traits.hpp>
-
-    #include <iostream>
-
-    using namespace boost::chrono;
-
-    template <class To, class Rep, class Period>
-    To
-    round_up(duration<Rep, Period> d)
-    {
-        To result = duration_cast<To>(d);
-        if (result < d)
-            ++result;
-        return result;
-    }
-
-Demonstrate interaction with xtime-like facility:
-
-
-    struct xtime
-    {
-        long sec;
-        unsigned long usec;
-    };
-
-    template <class Rep, class Period>
-    xtime
-    to_xtime_truncate(__duration__<Rep, Period> d)
-    {
-        xtime xt;
-        xt.sec = static_cast<long>(__duration_cast__<__seconds__>(d).count());
-        xt.usec = static_cast<long>(__duration_cast__<__microseconds__>(d - __seconds__(xt.sec)).count());
-        return xt;
-    }
-
-    template <class Rep, class Period>
-    xtime
-    to_xtime_round_up(__duration__<Rep, Period> d)
-    {
-        xtime xt;
-        xt.sec = static_cast<long>(__duration_cast__<__seconds__>(d).count());
-        xt.usec = static_cast<unsigned long>(round_up<__microseconds__>(d - __seconds__(xt.sec)).count());
-        return xt;
-    }
-
-    microseconds
-    from_xtime(xtime xt)
-    {
-        return __seconds__(xt.sec) + __microseconds__(xt.usec);
-    }
-
-    void print(xtime xt)
-    {
-        std::cout << '{' << xt.sec << ',' << xt.usec << "}\n";
-    }
-
-Usage
-
-        xtime xt = to_xtime_truncate(seconds(3) + __milliseconds__(251));
-        print(xt);
-        milliseconds ms = __duration_cast__<__milliseconds__>(from_xtime(xt));
-        std::cout << ms.count() << " milliseconds\n";
-        xt = to_xtime_round_up(ms);
-        print(xt);
-        xt = to_xtime_truncate(seconds(3) + __nanoseconds__(999));
-        print(xt);
-        xt = to_xtime_round_up(seconds(3) + __nanoseconds__(999));
-        print(xt);
-
-
-['See the source file [@../../example/xtime.cpp here]]
 
 [endsect]
 [endsect]
@@ -1474,11 +1492,35 @@ Usage
 
 [endsect]
 ]
+[section Time Point]
 
-[section Reporting]
+[/==================]
+[section min Utility]
+
+The user can define a function returning the earliest __time_point__ as follows:
+
+    template <class Clock, class Duration1, class Duration2>
+    typename boost::__common_type__<__time_point__<Clock, Duration1>,
+                         __time_point__<Clock, Duration2> >::type
+    min(__time_point__<Clock, Duration1> t1, __time_point__<Clock, Duration2> t2)
+    {
+        return t2 < t1 ? t2 : t1;
+    }
+
+Being able to *easily* write this function is a major feature!
+
+    BOOST_AUTO(t1, system_clock::now() + seconds(3));
+    BOOST_AUTO(t2, system_clock::now() + nanoseconds(3));
+    BOOST_AUTO(t3, min(t1, t2));
+
+['See the source file [@../../example/min_time_point.cpp example/min_time_point.cpp]]
+
+
+[endsect]
+
 
 [/===============================================================]
-[section A tiny program that times how long until a key is struck]
+[section A Tiny Program that Times How Long Until a Key is Struck]
 
     #include <boost/chrono.hpp>
     #include <iostream>
@@ -1491,14 +1533,11 @@ Usage
     {
       typename Clock::time_point start;
     public:
-
       timer() : start( Clock::now() ) {}
-
       typename Clock::duration elapsed() const
       {
         return Clock::now() - start;
       }
-
       double seconds() const
       {
         return elapsed().count() * ((double)Clock::period::num/Clock::period::den);
@@ -1511,7 +1550,7 @@ Usage
       timer<__monotonic_clock__> t2;
       timer<__high_resolution_clock__> t3;
 
-      std::cout << "Strike any key: ";
+      std::cout << "Type the Enter key: ";
       std::cin.get();
 
       std::cout << std::fixed << std::setprecision(9);
@@ -1554,7 +1593,7 @@ The output of this program run looks like this:
 
 [/
 [/===============================================================]
-[section time command]
+[section Time Command]
 
     #include <boost/chrono/stopclock.hpp>
     #include <cstdlib>
@@ -1590,7 +1629,7 @@ The output of this program run looks like this:
       if ( verbose )
         { std::cout << "command: \"" << s.c_str() << "\"\n"; }
 
-      boost::chrono::__stopclock__<> t;
+      bchrono::__stopclock__<> t;
 
       return std::system( s.c_str() );
     }
@@ -1600,11 +1639,11 @@ The output of this program run looks like this:
 [endsect]
 ]
 
-[section 24 hours display]
+[section 24 Hours Display]
 
-In the example above we take advantage of the fact that `time_point`s convert as long as they have the same clock, and as long as their internal `duration`s convert. We also take advantage of the fact that a `duration` with a floating point representation will convert from anything. Finally the I/O system discovers the more readable "hours" unit for our `duration<double, ratio<3600>>`.
+In the example above we take advantage of the fact that __time_point_s__ convert as long as they have the same clock, and as long as their internal __duration_s__ convert. We also take advantage of the fact that a __duration__ with a floating point representation will convert from anything. Finally the I/O system discovers the more readable "hours" unit for our `duration<double, ratio<3600>>`.
 
-There are many other ways to format `duration`s and `time_point`s. For example see [@http://en.wikipedia.org/wiki/ISO_8601#Durations ISO 8601]. Instead of coding every possibility into `operator<<`, which would lead to significant code bloat for even the most trivial uses, this document seeks to inform the reader how to write custom I/O when desired.
+There are many other ways to format __durations__ and __time_points__. For example see [@http://en.wikipedia.org/wiki/ISO_8601#Durations ISO 8601]. Instead of coding every possibility into `operator<<`, which would lead to significant code bloat for even the most trivial uses, this document seeks to inform the reader how to write custom I/O when desired.
 
 As an example, the function below streams arbitrary durations to arbitrary `basic_ostreams` using the format:
 
@@ -1620,54 +1659,55 @@ Where:
     #include <boost/chrono/chrono_io.hpp>
     #include <ostream>
     #include <iostream>
+    
     // format duration as [-]d/hh::mm::ss.cc
     template <class CharT, class Traits, class Rep, class Period>
     std::basic_ostream<CharT, Traits>&
     display(std::basic_ostream<CharT, Traits>& os,
-            boost::chrono::duration<Rep, Period> d)
+            bchrono::duration<Rep, Period> d)
     {
         using namespace std;
         using namespace boost;
-        using namespace boost::chrono;
+        namespace bchrono=boost::chrono;
 
-        typedef duration<long long, ratio<86400> > days;
-        typedef duration<long long, centi> centiseconds;
+        typedef bchrono::duration<long long, boost::ratio<86400> > days;
+        typedef bchrono::duration<long long, boost:centi> centiseconds;
 
         // if negative, print negative sign and negate
-        if (d < duration<Rep, Period>(0))
+        if (d < bchrono::duration<Rep, Period>(0))
         {
             d = -d;
             os << '-';
         }
         // round d to nearest centiseconds, to even on tie
-        centiseconds cs = duration_cast<centiseconds>(d);
-        if (d - cs > milliseconds(5)
-            || (d - cs == milliseconds(5) && cs.count() & 1))
+        centiseconds cs = bchrono::duration_cast<centiseconds>(d);
+        if (d - cs > bchrono::milliseconds(5)
+            || (d - cs == bchrono::milliseconds(5) && cs.count() & 1))
             ++cs;
         // separate seconds from centiseconds
-        seconds s = duration_cast<seconds>(cs);
+        bchrono::seconds s = bchrono::duration_cast<bchrono::seconds>(cs);
         cs -= s;
         // separate minutes from seconds
-        minutes m = duration_cast<minutes>(s);
+        bchrono::minutes m = bchrono::duration_cast<bchrono::minutes>(s);
         s -= m;
         // separate hours from minutes
-        hours h = duration_cast<hours>(m);
+        bchrono::hours h = bchrono::duration_cast<bchrono::hours>(m);
         m -= h;
         // separate days from hours
-        days dy = duration_cast<days>(h);
+        days dy = bchrono::duration_cast<days>(h);
         h -= dy;
         // print d/hh:mm:ss.cc
         os << dy.count() << '/';
-        if (h < hours(10))
+        if (h < bchrono::hours(10))
             os << '0';
         os << h.count() << ':';
-        if (m < minutes(10))
+        if (m < bchrono::minutes(10))
             os << '0';
         os << m.count() << ':';
-        if (s < seconds(10))
+        if (s < bchrono::seconds(10))
             os << '0';
         os << s.count() << '.';
-        if (cs < centiseconds(10))
+        if (cs < bchrono::centiseconds(10))
             os << '0';
         os << cs.count();
         return os;
@@ -1677,13 +1717,13 @@ Where:
     {
         using namespace std;
         using namespace boost;
-        using namespace boost::chrono;
+        namespace bchrono=boost::chrono;
 
-        display(cout, monotonic_clock::now().time_since_epoch()
-                      + duration<long, mega>(1)) << '\n';
-        display(cout, -milliseconds(6)) << '\n';
-        display(cout, duration<long, mega>(1)) << '\n';
-        display(cout, -duration<long, mega>(1)) << '\n';
+        display(cout, bchrono::monotonic_clock::now().time_since_epoch()
+                      + bchrono::duration<long, boost::mega>(1)) << '\n';
+        display(cout, -bchrono::milliseconds(6)) << '\n';
+        display(cout, bchrono::duration<long, boost::mega>(1)) << '\n';
+        display(cout, -bchrono::duration<long, boost::mega>(1)) << '\n';
     }
 
 The output could be:
@@ -1695,12 +1735,11 @@ The output could be:
 
 [endsect]
 
-[endsect]
 
 [/=======================================================]
-[section Simulated thread interface demonstration program]
+[section Simulated Thread Interface Demonstration Program]
 
-The C++0x standard library's multi-threading library requires the ability to deal with the representation of time in a manner consistent with modern C++ practices. Next follows a simaulation of this interface.
+The C++0x standard library's multi-threading library requires the ability to deal with the representation of time in a manner consistent with modern C++ practices. Next follows a simulation of this interface.
 
 The non-member sleep functions can be emulated as follows:
 
@@ -1809,34 +1848,36 @@ Next follows the `boost::thread::timed_mutex` modified fuctions
     };
     }
 
-Next follows how how sumple is the usage of this functions:
+Next follows how simple is the usage of this functions:
 
     boost::mutex m;
     boost::timed_mutex mut;
     boost::condition_variable cv;
 
     using namespace boost;
-    using namespace boost::chrono;
 
-    this_thread::sleep_for(__seconds__(3));
-    this_thread::sleep_for(__nanoseconds__(300));
-    system_clock::time_point time_limit = __system_clock__::now() + __seconds_(4) + __milliseconds__(500);
+    this_thread::sleep_for(chrono::__seconds__(3));
+    this_thread::sleep_for(chrono::__nanoseconds__(300));
+    chrono::__system_clock__::time_point time_limit = chrono::__system_clock__::now() + chrono::__seconds_(4) + chrono::__milliseconds__(500);
     this_thread::sleep_until(time_limit);
 
-    mut.try_lock_for(__milliseconds__(30));
+    mut.try_lock_for(chrono::__milliseconds__(30));
     mut.try_lock_until(time_limit);
 
-    cv.wait_for(m, __minutes__(1));    // real code would put this in a loop
+    cv.wait_for(m, chrono::__minutes__(1));    // real code would put this in a loop
     cv.wait_until(m, time_limit);  // real code would put this in a loop
 
     // For those who prefer floating point
-    this_thread::sleep_for(__duration__<double>(0.25));
-    this_thread::sleep_until(__system_clock__::now() + __duration__<double>(1.5));
+    this_thread::sleep_for(chrono::__duration__<double>(0.25));
+    this_thread::sleep_until(chrono::__system_clock__::now() + chrono::__duration__<double>(1.5));
 
 
 ['See the source file [@../../example/simulated_thread_interface_demo.cpp example/simulated_thread_interface_demo.cpp]]
 
+[endsect]
 
+[endsect]
+[section IO]
 [endsect]
 
 [endsect]
@@ -1873,7 +1914,9 @@ Next follows how how sumple is the usage of this functions:
 [section:reference Reference ]
 [/=================]
 
-[section:cpp0x Included on the C++0x recommendation]
+As `constexpr` will not be supported by some compilers, it is replaced in the code by BOOST_CHRONO_CONSTEXPR for constexpr functions and BOOST_CHRONO_CONSTEXPR_V for struct/class fields. THe documentation doesn't use these macros.
+
+[section:cpp0x Included on the C++0x Recommendation]
 
 
 [/=============================================]
@@ -1891,7 +1934,8 @@ Next follows how how sumple is the usage of this functions:
 
 Next follows limitation respect to the C++0x recomendations:
 
-* `constexpr` don't used for `min()`, `max()` and `zero()` __duration_values__ class as no compiler supports it today. `const` is used instead when appropiated.
+* constexpr not tested yet.
+* The recently steady_clock approved is not yet included.
 
 The current implementation provides in addition:
 
@@ -1901,9 +1945,9 @@ The current implementation provides in addition:
 
 [endsect]
 
-[section:conf Configuration macros]
+[section:conf Configuration Macros]
 
-[section:assert How Assert behaves?]
+[section:assert How Assert Behaves?]
 
 When `BOOST_NO_STATIC_ASSERT` is defined, the user can select the way static assertions are reported. Define
 
@@ -1911,28 +1955,28 @@ When `BOOST_NO_STATIC_ASSERT` is defined, the user can select the way static ass
 * `BOOST_CHRONO_USES_MPL_ASSERT`: define it if you want to use Boost.MPL static asertions
 * `BOOST_CHRONO_USES_ARRAY_ASSERT`: define it if you want to use internal static asertions
 
-The default vaule behavior is as `BOOST_CHRONO_USES_ARRAY_ASSERT` was defined.
+The default behavior is as `BOOST_CHRONO_USES_ARRAY_ASSERT` was defined.
 
 When `BOOST_CHRONO_USES_MPL_ASSERT` is not defined the following symbols are defined as
 
     #define BOOST_CHRONO_A_DURATION_REPRESENTATION_CAN_NOT_BE_A_DURATION \
         "A duration representation can not be a duration"
     #define BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_DURATION_MUST_BE_A_STD_RATIO \
-        "Second template parameter of duration must be a std::ratio"
+        "Second template parameter of duration must be a boost::ratio"
     #define BOOST_CHRONO_DURATION_PERIOD_MUST_BE_POSITIVE \
         "duration period must be positive"
     #define BOOST_CHRONO_SECOND_TEMPLATE_PARAMETER_OF_TIME_POINT_MUST_BE_A_BOOST_CHRONO_DURATION \
-        "Second template parameter of time_point must be a boost::chrono::duration"
+        "Second template parameter of time_point must be a bchrono::duration"
 
-Depending on the static assertion used system you will have an hint of the failing assertion either through the symbol or through the texte.
+Depending on the static assertion used system you will have an hint of the failing assertion either through the symbol or through the text.
 
 [endsect]
 
-[section:header_only How to build __Boost_Chrono__ as a header only library?]
+[section:header_only How to Build Boost.Chrono as a Header Only Library?]
 
 When `BOOST_CHRONO_INLINED` is defined the lib is header-only.
 
-If in addition `BOOST_USE_WINDOWS_H` is defined `<windows.h>` is included, otherwise files in `detail/win` are used to reduce the impact of including `<windows.h>`.
+If in addition `BOOST_USE_WINDOWS_H` is defined `<windows.h>` is included, otherwise files in `boost/detail/win` are used to reduce the impact of including `<windows.h>`.
 
 [endsect]
 
@@ -1947,7 +1991,7 @@ If in addition `BOOST_USE_WINDOWS_H` is defined `<windows.h>` is included, other
 [section:duration_hpp Header `<boost/chrono/duration.hpp>`]
 [/=============================================]
 
-This file contains duration specific classes and non-member function.
+This file contains duration specific classes and non-member functions.
 
     namespace boost {
       namespace chrono {
@@ -1956,8 +2000,8 @@ This file contains duration specific classes and non-member function.
 
       }
       template <class Rep1, class Period1, class Rep2, class Period2>
-      struct __common_type_spe__<__duration__<Rep1, Period1>,
-                         __duration__<Rep2, Period2> >;
+      struct __common_type_spe__<duration<Rep1, Period1>,
+                         duration<Rep2, Period2> >;
 
       namespace chrono {
 
@@ -1968,52 +2012,78 @@ This file contains duration specific classes and non-member function.
         // duration arithmetic
         template <class Rep1, class Period1, class Rep2, class Period2>
         typename common_type<duration<Rep1, Period1>, duration<Rep2, Period2> >::type
-        BOOST_CHRONO_CONSTEXPR operator+(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        operator+(
+            const duration<Rep1, Period1>& lhs, 
+            const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period1, class Rep2, class Period2>
         typename common_type<duration<Rep1, Period1>, duration<Rep2, Period2> >::type
-        BOOST_CHRONO_CONSTEXPR operator-(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        operator-(
+            const duration<Rep1, Period1>& lhs, 
+            const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period, class Rep2>
         duration<typename common_type<Rep1, Rep2>::type, Period>
-        BOOST_CHRONO_CONSTEXPR operator*(const duration<Rep1, Period>& d, const Rep2& s);
+        operator*(
+            const duration<Rep1, Period>& d, 
+            const Rep2& s);
 
         template <class Rep1, class Period, class Rep2>
         duration<typename common_type<Rep1, Rep2>::type, Period>
-        BOOST_CHRONO_CONSTEXPR operator*(const Rep1& s, const duration<Rep2, Period>& d);
+        operator*(
+            const Rep1& s, 
+            const duration<Rep2, Period>& d);
 
         template <class Rep1, class Period, class Rep2>
         duration<typename common_type<Rep1, Rep2>::type, Period>
-        BOOST_CHRONO_CONSTEXPR operator/(const duration<Rep1, Period>& d, const Rep2& s);
+        operator/(
+            const duration<Rep1, Period>& d, 
+            const Rep2& s);
 
         template <class Rep1, class Period1, class Rep2, class Period2>
         typename common_type<Rep1, Rep2>::type
-        BOOST_CHRONO_CONSTEXPR operator/(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        operator/(
+            const duration<Rep1, Period1>& lhs, 
+            const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Rep2, class Period>
-        BOOST_CHRONO_CONSTEXPR double operator/(const Rep1& s, const duration<Rep2, Period>& d);
+        double operator/(
+            const Rep1& s, 
+            const duration<Rep2, Period>& d);
 
         // duration comparisons
         template <class Rep1, class Period1, class Rep2, class Period2>
-        BOOST_CHRONO_CONSTEXPR bool operator==(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        constexpr bool operator==(
+            const duration<Rep1, Period1>& lhs, 
+            const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period1, class Rep2, class Period2>
-        BOOST_CHRONO_CONSTEXPR bool operator!=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        constexpr bool operator!=(
+            const duration<Rep1, Period1>& lhs, 
+            const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period1, class Rep2, class Period2>
-        BOOST_CHRONO_CONSTEXPR bool operator< (const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        constexpr bool operator<(
+            const duration<Rep1, Period1>& lhs, 
+            const duration<Rep2, Period2>& rhs);
         template <class Rep1, class Period1, class Rep2, class Period2>
-        BOOST_CHRONO_CONSTEXPR bool operator<=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        constexpr bool operator<=(
+            const duration<Rep1, Period1>& lhs, 
+            const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period1, class Rep2, class Period2>
-        BOOST_CHRONO_CONSTEXPR bool operator> (const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        constexpr bool operator> (
+            const duration<Rep1, Period1>& lhs, 
+            const duration<Rep2, Period2>& rhs);
         template <class Rep1, class Period1, class Rep2, class Period2>
-        BOOST_CHRONO_CONSTEXPR bool operator>=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
+        constexpr bool operator>=(
+            const duration<Rep1, Period1>& lhs, 
+            const duration<Rep2, Period2>& rhs);
 
         // duration_cast
 
         template <class ToDuration, class Rep, class Period>
-        ToDuration __duration_cast__(const __duration__<Rep, Period>& d);
+        ToDuration __duration_cast__(const duration<Rep, Period>& d);
 
         // convenience typedefs
         typedef duration<boost::int_least64_t, nano> __nanoseconds__;    // at least 64 bits needed
@@ -2028,7 +2098,8 @@ This file contains duration specific classes and non-member function.
 
 
 
-[section:traits Time-related traits]
+[section:traits Time-related Traits]
+
 [section:treat_as_floating_point Metafunction `treat_as_floating_point<>`]
 
     template <class Rep> struct treat_as_floating_point
@@ -2038,40 +2109,40 @@ The __duration__ template uses the __treat_as_floating_point__ trait to help det
 
 
 [endsect]
-[section:duration_values Class template `duration_values`]
+[section:duration_values Class Template `duration_values`]
 
     template <class Rep>
     struct duration_values
     {
     public:
-        static BOOST_CHRONO_CONSTEXPR  Rep __zero__();
-        static BOOST_CHRONO_CONSTEXPR  Rep __max__();
-        static BOOST_CHRONO_CONSTEXPR  Rep __min__();
+        static constexpr Rep __zero__();
+        static constexpr Rep __max__();
+        static constexpr Rep __min__();
     };
 
 The __duration__ template uses the __duration_values__ trait to construct special values of the __duration_s__ representation (`Rep`). This is done because the representation might be a class type with behavior which requires some other implementation to return these special values. In that case, the author of that class type should specialize __duration_values__ to return the indicated values.
 
-[section:zero Static member Function `zero()`]
+[section:zero Static Member Function `zero()`]
 
-    static BOOST_CHRONO_CONSTEXPR Rep zero();
+    static constexpr Rep zero();
 
 __returns `Rep(0)`. [*Note:] `Rep(0)` is specified instead of `Rep()` since `Rep()` may have some other meaning, such as an uninitialized value.
 
 __remarks The value returned corresponds to the additive identity.
 
 [endsect]
-[section:max Static member function `max()`]
+[section:max Static Member Function `max()`]
 
-    static BOOST_CHRONO_CONSTEXPR Rep max();
+    static constexpr Rep max();
 
 __returns `numeric_limits<Rep>::max()`.
 
 __remarks The value returned compares greater than zero().
 
 [endsect]
-[section:min Static member function `min()`]
+[section:min Static Member Function `min()`]
 
-    static BOOST_CHRONO_CONSTEXPR Rep min();
+    static constexpr Rep min();
 
 __returns `numeric_limits<Rep>::lowest()`.
 
@@ -2083,12 +2154,12 @@ __remarks The value returned compares less than or equal to `zero()`.
 
 [endsect]
 
-[section:common_type_spe `common_type` specialization]
+[section:common_type_spe `common_type` Specialization]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
     struct __common_type__<chrono::__duration__<Rep1, Period1>, chrono::__duration__<Rep2, Period2> >
     {
-        typedef chrono::__duration__<typename __common_type__<Rep1, Rep2>::type, see below> type;
+        typedef chrono::__duration__<typename __common_type__<Rep1, Rep2>::type, __see_bellow__> type;
     };
 
 The period of the __duration__ indicated by this specialization of __common_type__ is the greatest common divisor of `Period1` and `Period2`. This can be computed by forming a __ratio__ of the greatest common divisor of `Period1::num` and `Period2::num`, and the least common multiple of `Period1::den` and `Period2::den`.
@@ -2098,7 +2169,7 @@ The period of the __duration__ indicated by this specialization of __common_type
 [endsect]
 
 
-[section:duration Class template `duration<>`]
+[section:duration Class Template `duration<>`]
 
 A __duration__ measures time between two points in time (__time_point__). A __duration__ has a representation which holds a count of ticks, and a tick period. The tick period is the amount of time which occurs from one tick to another in units of a second. It is expressed as a rational constant using __ratio__.
 
@@ -2112,21 +2183,19 @@ A __duration__ measures time between two points in time (__time_point__). A __du
         private:
             rep rep_; // exposition only
         public:
-            BOOST_CHRONO_CONSTEXPR duration() {} // = default;
+            constexpr duration();
             template <class Rep2>
-            BOOST_CHRONO_CONSTEXPR explicit duration(const Rep2& r);
+            constexpr explicit duration(const Rep2& r);
 
             template <class Rep2, class Period2>
-            BOOST_CHRONO_CONSTEXPR duration(const duration<Rep2, Period2>& d);
+            constexpr duration(const duration<Rep2, Period2>& d);
 
-            //~duration() = default;
-            //duration(const duration&) = default;
-            //duration& operator=(const duration&) = default;
+            duration& operator=(const duration&) = default;
 
-            BOOST_CHRONO_CONSTEXPR rep count() const;
+            constexpr rep count() const;
 
-            BOOST_CHRONO_CONSTEXPR duration  operator+();
-            BOOST_CHRONO_CONSTEXPR duration  operator-();
+            constexpr duration  operator+();
+            constexpr duration  operator-();
             duration& operator++();
             duration  operator++(int);
             duration& operator--();
@@ -2140,9 +2209,9 @@ A __duration__ measures time between two points in time (__time_point__). A __du
             duration& operator%=(const rep& rhs);
             duration& operator%=(const duration& rhs);
 
-            static BOOST_CHRONO_CONSTEXPR duration zero();
-            static BOOST_CHRONO_CONSTEXPR duration min();
-            static BOOST_CHRONO_CONSTEXPR duration max();
+            static constexpr duration zero();
+            static constexpr duration min();
+            static constexpr duration max();
         };
 
     }}
@@ -2166,7 +2235,7 @@ The following members of __duration__ do not throw an exception unless the indic
 [section:duration_c_1 Constructor `duration(const Rep2&)`]
 
     template <class Rep2>
-    BOOST_CHRONO_CONSTEXPR explicit duration(const Rep2& r);
+    constexpr explicit duration(const Rep2& r);
 
 __remarks `Rep2` is implicitly convertible to `rep`, and
 
@@ -2188,7 +2257,7 @@ __post_conditions `count() == static_cast<rep>(r)`.
 [section:duration_c_2 Constructor `duration(const duration&)`]
 
     template <class Rep2, class Period2>
-    BOOST_CHRONO_CONSTEXPR __duration__(const __duration__<Rep2, Period2>& d);
+    constexpr __duration__(const __duration__<Rep2, Period2>& d);
 
 __remarks `treat_as_floating_point<rep>::value`, or `ratio_divide<Period2, period>::type::den == 1`, else this constructor will not participate in overload resolution. [*note] This requirement prevents implicit truncation error when converting between integral-based __duration_s__. Such a construction could easily lead to confusion about the value of the __duration__.
 
@@ -2201,28 +2270,28 @@ __example
 __effects  Constructs an object of type __duration__, constructing `rep_` from `duration_cast<__duration__>(d).count()`.
 
 [endsect]
-[section:count Member function `count() const`]
+[section:count Member Function `count() const`]
 
-    BOOST_CHRONO_CONSTEXPR rep count() const;
+    constexpr rep count() const;
 
-__returns `rep_v.
+__returns `rep_`.
 
 [endsect]
-[section:duration_operator_p Member function `operator+() const`]
+[section:duration_operator_p Member Function `operator+() const`]
 
-    BOOST_CHRONO_CONSTEXPR __duration__ operator+() const;
+    constexpr __duration__ operator+() const;
 
 __returns `*this`.
 
 [endsect]
-[section:duration_operator_m Member function `operator+() const`]
+[section:duration_operator_m Member Function `operator-() const`]
 
-    BOOST_CHRONO_CONSTEXPR __duration__ operator-() const;
+    constexpr __duration__ operator-() const;
 
 __returns `__duration__(-rep_)`.
 
 [endsect]
-[section:duration_operator_pp Member function `operator++()`]
+[section:duration_operator_pp Member Function `operator++()`]
 
     __duration__& operator++();
 
@@ -2231,14 +2300,14 @@ __effects  `++rep_`.
 __returns `*this`.
 
 [endsect]
-[section:duration_operator_pp2 Member function `operator++(int)`]
+[section:duration_operator_pp2 Member Function `operator++(int)`]
 
     __duration__ operator++(int);
 
-__returns `__duration__(rep_++)v.
+__returns `__duration__(rep_++)`.
 
 [endsect]
-[section:duration_operator_mm Member function `operator++()`]
+[section:duration_operator_mm Member Function `operator--()`]
 
     __duration__& operator--();
 
@@ -2247,14 +2316,14 @@ __effects  `--rep_`.
 __returns `*this`.
 
 [endsect]
-[section:duration_operator_mm2 Member function `operator++(int)`]
+[section:duration_operator_mm2 Member Function `operator--(int)`]
 
     __duration__ operator--(int);
 
 __returns `__duration__(rep_--)`.
 
 [endsect]
-[section:duration_operator_pa Member function `operator+=(const duration&)`]
+[section:duration_operator_pa Member Function `operator+=(const duration&)`]
 
     __duration__& operator+=(const __duration__& d);
 
@@ -2263,7 +2332,7 @@ __effects  `rep_ += d.count()`.
 __returns `*this`.
 
 [endsect]
-[section:duration_operator_ma Member function `operator-=(const duration&)`]
+[section:duration_operator_ma Member Function `operator-=(const duration&)`]
 
     __duration__& operator-=(const __duration__& d);
 
@@ -2272,7 +2341,7 @@ __effects  `rep_ -= d.count()`.
 __returns `*this`.
 
 [endsect]
-[section:duration_operator_moda Member function `operator%=(const duration&)`]
+[section:duration_operator_moda Member Function `operator%=(const duration&)`]
 
     __duration__& operator%=(const __duration__& d);
 
@@ -2281,7 +2350,7 @@ __effects  `rep_ %= d.count()`.
 __returns `*this`.
 
 [endsect]
-[section:duration_operator_proda Member function `operator*=(const rep&)`]
+[section:duration_operator_proda Member Function `operator*=(const rep&)`]
 
     __duration__& operator*=(const rep& rhs);
 
@@ -2290,7 +2359,7 @@ __effects  `rep_ *= rhs`.
 __returns `*this`.
 
 [endsect]
-[section:duration_operator_da Member function `operator/=(const rep&)`]
+[section:duration_operator_da Member Function `operator/=(const rep&)`]
 
     __duration__& operator/=(const rep& rhs);
 
@@ -2299,7 +2368,7 @@ __effects  `rep_ /= rhs`.
 __returns `*this`.
 
 [endsect]
-[section:duration_operator_moda_2 Member function `operator%=(const rep&)`]
+[section:duration_operator_moda_2 Member Function `operator%=(const rep&)`]
 
     __duration__& operator%=(const rep& rhs);
 
@@ -2310,21 +2379,21 @@ __returns `*this`.
 [endsect]
 
 
-[section:duration_zero Static Member function `zero()`]
+[section:duration_zero Static Member Function `zero()`]
 
-    static __duration__ zero();
+    static constexpr __duration__ zero();
 
 __returns `__duration__(__duration_values__<rep>::zero())`.
 
 [endsect]
-[section:duration_min Static Member function `min()`]
+[section:duration_min Static Member Function `min()`]
 
-    static __duration__ min();
+    static constexpr __duration__ min();
 
 __returns `__duration__(__duration_values__<rep>::min()).`
 
 [endsect]
-[section:duration_max Static Member function `max()`]
+[section:duration_max Static Member Function `max()`]
 
     static constexpr __duration__ max();
 
@@ -2335,9 +2404,9 @@ __returns `__duration__(__duration_values__<rep>::max())`.
 [endsect]
 
 
-[section `duration` non-member arithmetic]
+[section `duration` Non-Member Arithmetic]
 
-[section:duration_operator_p_1 Non-Member function `operator+(duration,duration)`]
+[section:duration_operator_p_1 Non-Member Function `operator+(duration,duration)`]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
     typename __common_type__<__duration__<Rep1, Period1>, __duration__<Rep2, Period2> >::type
@@ -2346,7 +2415,7 @@ __returns `__duration__(__duration_values__<rep>::max())`.
 __returns `CD(lhs) += rhs` where `CD` is the type of the return value.
 
 [endsect]
-[section:duration_operator_m_1 Non-Member function `operator-(duration,duration)`]
+[section:duration_operator_m_1 Non-Member Function `operator-(duration,duration)`]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
     typename __common_type__<__duration__<Rep1, Period1>, __duration__<Rep2, Period2> >::type
@@ -2363,7 +2432,7 @@ __requires Let `CR` represent the __common_type__ of `Rep1` and `Rep2`. This fun
 __returns `__duration__<CR, Period>(d) *= s`.
 
 [endsect]
-[section:duration_operator_prod_1 Non-Member function `operator*(Rep1,duration)`]
+[section:duration_operator_prod_1 Non-Member Function `operator*(Rep1,duration)`]
 
     template <class Rep1, class Period, class Rep2>
     __duration__<typename __common_type__<Rep1, Rep2>::type, Period>
@@ -2374,7 +2443,7 @@ __requires Let `CR` represent the __common_type__ of `Rep1` and `Rep2`. This fun
 __returns `d * s`.
 
 [endsect]
-[section:duration_operator_d_1 Non-Member function `operator/(duration,Rep2)`]
+[section:duration_operator_d_1 Non-Member Function `operator/(duration,Rep2)`]
 
     template <class Rep1, class Period, class Rep2>
     __duration__<typename __common_type__<Rep1, Rep2>::type, Period>
@@ -2385,7 +2454,7 @@ __requires Let `CR` represent the __common_type__ of `Rep1` and `Rep2`. This fun
 __returns `__duration__<CR, Period>(d) /= s`.
 
 [endsect]
-[section:duration_operator_d_2 Non-Member function `operator/(duration,duration)`]
+[section:duration_operator_d_2 Non-Member Function `operator/(duration,duration)`]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
     typename __common_type__<Rep1, Rep2>::type
@@ -2395,19 +2464,21 @@ __returns Let `CD` represent the __common_type__ of the two __duration__ argumen
 
 [endsect]
 
-[section:duration_operator_d_3 Non-Member function `operator/(Rep1,duration)`]
+[section:duration_operator_d_3 Non-Member Function `operator/(Rep1,duration)`]
+
+This overloading could be used to get the frequency of an event counted by `Rep1`.
 
     template <class Rep1, class Rep2, class Period>
     double operator/(const Rep1& s, const __duration__<Rep2, Period>& d);
 
 __remarks Let `CR` represent the __common_type__ of `Rep1` and `Rep2`. This function will not participate in overload resolution unless both `Rep1` and `Rep2` are implicitly convertible to `CR`, and `Rep1` is  not an instantiation of __duration__.
 
-__returns `CR(s)/__duration__<CR, Period>(d)`.
+__returns `CR(s)/__duration__<CR, Period>(d).count()`.
 
 [endsect]
 
 
-[section:duration_operator_mod_1 Non-Member function `operator%(duration,Rep2)`]
+[section:duration_operator_mod_1 Non-Member Function `operator%(duration,Rep2)`]
 
   template <class Rep1, class Period, class Rep2>
   __duration__<typename __common_type__<Rep1, Rep2>::type, Period>
@@ -2418,7 +2489,7 @@ __returns `CR(s)/__duration__<CR, Period>(d)`.
 __returns __duration__<CR(Rep1,Rep2), Period>(d) %= s.
 [endsect]
 
-[section:duration_operator_mod_2 Non-Member function `operator%(duration,duration)`]
+[section:duration_operator_mod_2 Non-Member Function `operator%(duration,duration)`]
 
   template <class Rep1, class Period1, class Rep2, class Period2>
   typename __common_type__<__duration__<Rep1, Period1>, __duration__<Rep2, Period2> >::type
@@ -2432,9 +2503,9 @@ __returns CD(lhs) %= CD(rhs)
 [endsect]
 [endsect]
 
-[section `duration` Non-Member comparaisons]
+[section `duration` Non-Member Comparaisons]
 
-[section:duration_operator_eq_1 Non-Member function `operator==(duration,duration)`]
+[section:duration_operator_eq_1 Non-Member Function `operator==(duration,duration)`]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
     bool operator==(const __duration__<Rep1, Period1>& lhs,
@@ -2443,7 +2514,7 @@ __returns CD(lhs) %= CD(rhs)
 __returns Let `CD` represent the __common_type__ of the two __duration__ arguments. Returns `CD(lhs).count() == CD(rhs).count()`
 
 [endsect]
-[section:duration_operator_neq_1 Non-Member function `operator!=(duration,duration)`]
+[section:duration_operator_neq_1 Non-Member Function `operator!=(duration,duration)`]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
     bool operator!=(const __duration__<Rep1, Period1>& lhs,
@@ -2452,7 +2523,7 @@ __returns Let `CD` represent the __common_type__ of the two __duration__ argumen
 __returns `!(lhs == rhs)`.
 
 [endsect]
-[section:duration_operator_lt_1 Non-Member function `operator<(duration,duration)`]
+[section:duration_operator_lt_1 Non-Member Function `operator<(duration,duration)`]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
     bool operator< (const __duration__<Rep1, Period1>& lhs,
@@ -2461,7 +2532,7 @@ __returns `!(lhs == rhs)`.
 __returns Let `CD` represent the __common_type__ of the two __duration__ arguments. Returns `CD(lhs).count() < CD(rhs).count()`
 
 [endsect]
-[section:duration_operator_leq_1 Non-Member function `operator<=(duration,duration)`]
+[section:duration_operator_leq_1 Non-Member Function `operator<=(duration,duration)`]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
     bool operator<=(const __duration__<Rep1, Period1>& lhs,
@@ -2470,7 +2541,7 @@ __returns Let `CD` represent the __common_type__ of the two __duration__ argumen
 __returns `!(rhs < lhs)`.
 
 [endsect]
-[section:duration_operator_gt_1 Non-Member function `operator>(duration,duration)`]
+[section:duration_operator_gt_1 Non-Member Function `operator>(duration,duration)`]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
     bool operator> (const __duration__<Rep1, Period1>& lhs,
@@ -2479,7 +2550,7 @@ __returns `!(rhs < lhs)`.
 __returns `rhs < lhs`.
 
 [endsect]
-[section:duration_operator_gteq_1 Non-Member function `operator>=(duration,duration)`]
+[section:duration_operator_gteq_1 Non-Member Function `operator>=(duration,duration)`]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
     bool operator>=(const __duration__<Rep1, Period1>& lhs,
@@ -2489,7 +2560,7 @@ __returns `!(lhs < rhs)`.
 
 [endsect]
 [endsect]
-[section:duration_cast Non-Member function `duration_cast(duration)`]
+[section:duration_cast Non-Member Function `duration_cast(duration)`]
 
     template <class ToDuration, class Rep, class Period>
     ToDuration duration_cast(const __duration__<Rep, Period>& d);
@@ -2543,7 +2614,7 @@ In this table `C1` and `C2` denote `clock` types. `t1` and `t2` are values retur
     [[`C1::period`]        [`ratio`]  [The tick period of the clock in seconds.]]
     [[`C1::duration`]        [`chrono::duration<C1::rep, C1::period>`]  [The  __duration__ type of the `clock`.]]
     [[`C1::time_point`]        [`chrono::time_point<C1> or chrono::time_point<C2, C1::duration>`]  [The  __time_point__ type of the `clock`. Different clocks are permitted to share a __time_point__ definition if it is valid to compare their time_points by comparing their respective __duration_s__. `C1` and `C2` must refer to the same epoch.]]
-    [[`C1::is_monotonic`]        [`const bool`]  [`true` if `t1 <= t2` is always `true`, else `false`. *Note*: A `clock` that can be adjusted backwards is not monotonic]]
+    [[`C1::is_monotonic`]        [`constexpr bool`]  [`true` if `t1 <= t2` is always `true`, else `false`. *Note*: A `clock` that can be adjusted backwards is not monotonic]]
     [[`C1::now()`]        [`C1::time_point`]  [Returns a __time_point__ representing the current point in time.]]
 ]
 
@@ -2564,7 +2635,7 @@ Models of Clock:
 [section:time_point_hpp Header `<boost/chrono/time_point.hpp>`]
 [/=============================================]
 
-This file contains time_point specific classes and non-member function.
+This file contains __time_point__ specific classes and non-member functions.
 
     namespace boost {
       namespace chrono {
@@ -2573,8 +2644,8 @@ This file contains time_point specific classes and non-member function.
 
       }
       template <class Clock, class Duration1, class Duration2>
-      struct __common_type_spe__<__time_point__<Clock, Duration1>,
-                         __time_point__<Clock, Duration2> >;
+      struct __common_type_spe__<time_point<Clock, Duration1>,
+                         time_point<Clock, Duration2> >;
 
       namespace chrono {
 
@@ -2598,27 +2669,27 @@ This file contains time_point specific classes and non-member function.
 
         // time_point comparisons
         template <class Clock, class Duration1, class Duration2>
-        bool operator==(const time_point<Clock, Duration1>& lhs,
+        constexpr bool operator==(const time_point<Clock, Duration1>& lhs,
                         const time_point<Clock, Duration2>& rhs);
         template <class Clock, class Duration1, class Duration2>
-        bool operator!=(const time_point<Clock, Duration1>& lhs,
+        constexpr bool operator!=(const time_point<Clock, Duration1>& lhs,
                         const time_point<Clock, Duration2>& rhs);
         template <class Clock, class Duration1, class Duration2>
-        bool operator< (const time_point<Clock, Duration1>& lhs,
+        constexpr bool operator< (const time_point<Clock, Duration1>& lhs,
                         const time_point<Clock, Duration2>& rhs);
         template <class Clock, class Duration1, class Duration2>
-        bool operator<=(const time_point<Clock, Duration1>& lhs,
+        constexpr bool operator<=(const time_point<Clock, Duration1>& lhs,
                         const time_point<Clock, Duration2>& rhs);
         template <class Clock, class Duration1, class Duration2>
-        bool operator> (const time_point<Clock, Duration1>& lhs,
+        constexpr bool operator> (const time_point<Clock, Duration1>& lhs,
                         const time_point<Clock, Duration2>& rhs);
         template <class Clock, class Duration1, class Duration2>
-        bool operator>=(const time_point<Clock, Duration1>& lhs,
+        constexpr bool operator>=(const time_point<Clock, Duration1>& lhs,
                         const time_point<Clock, Duration2>& rhs);
 
         // time_point_cast
         template <class ToDuration, class Clock, class Duration>
-        time_point<Clock, ToDuration> time_point_cast(const time_point<Clock, Duration>& t);
+        constexpr time_point<Clock, ToDuration> __time_point_cast__(const time_point<Clock, Duration>& t);
 
       }
     }
@@ -2650,8 +2721,8 @@ A __time_point__ represents a point in time with respect to a specific clock.
     private:
         duration d_; // exposition only
     public:
-        time_point();
-        explicit time_point(const duration& d);
+        constexpr time_point();
+        constexpr explicit time_point(const duration& d);
 
         // conversions
         template <class Duration2>
@@ -2659,7 +2730,7 @@ A __time_point__ represents a point in time with respect to a specific clock.
 
         // observer
 
-        duration time_since_epoch() const;
+        constexpr duration time_since_epoch() const;
 
         // arithmetic
 
@@ -2668,8 +2739,8 @@ A __time_point__ represents a point in time with respect to a specific clock.
 
         // special values
 
-        static BOOST_CHRONO_CONSTEXPR time_point min();
-        static BOOST_CHRONO_CONSTEXPR time_point max();
+        static constexpr time_point min();
+        static constexpr time_point max();
     };
 
 Clock must meet the __clock_req__.
@@ -2678,19 +2749,19 @@ Duration must be an instantiation of __duration__, compile diagnostic otherwise.
 
 [section:time_point_c_1 Constructor `time_point()`]
 
-    time_point();
+    constexpr time_point();
 
 __effects  Constructs an object of __time_point__, initializing `d_` with `duration::zero()`. This __time_point__ represents the epoch.
 
 [endsect]
 [section:time_point_c_2 Constructor `time_point(const duration&)`]
 
-    time_point(const duration& d);
+    constexpr time_point(const duration& d);
 
 __effects  Constructs an object of __time_point__, initializing `d_` with `d`. This __time_point__ represents the epoch `+ d`.
 
 [endsect]
-[section:time_point_c_3 Constructor `time_point(const duration&)`]
+[section:time_point_c_3 Copy Constructor `time_point(const time_point&)`]
 
     template <class Duration2> time_point(const __time_point__<clock, Duration2>& t);
 
@@ -2700,14 +2771,14 @@ __effects  Constructs an object of __time_point__, initializing `d_` with `t.tim
 
 [endsect]
 
-[section:time_since_epoch Member function `time_since_epoch() const`]
+[section:time_since_epoch Member Function `time_since_epoch() const`]
 
-    duration time_since_epoch() const;
+    constexpr duration time_since_epoch() const;
 
 __returns `d_`.
 
 [endsect]
-[section:time_point_operator_pe Member function `operator+=`]
+[section:time_point_operator_pe Member Function `operator+=`]
 
     time_point& operator+=(const duration& d);
 
@@ -2716,7 +2787,7 @@ __effects  `d_ += d`.
 __returns `*this`.
 
 [endsect]
-[section:time_point_operator_me Member function `operator-=`]
+[section:time_point_operator_me Member Function `operator-=`]
 
     time_point& operator-=(const duration& d);
 
@@ -2725,16 +2796,16 @@ __effects  `d_ -= d`
 __returns `*this`.
 
 [endsect]
-[section:time_point_min Static Member function `min`]
+[section:time_point_min Static Member Function `min`]
 
-    static BOOST_CHRONO_CONSTEXPR time_point min();
+    static constexpr time_point min();
 
 __returns `time_point(duration::min())`.
 
 [endsect]
-[section:time_point_max Static Member function `max`]
+[section:time_point_max Static Member Function `max`]
 
-    static BOOST_CHRONO_CONSTEXPR time_point max();
+    static constexpr time_point max();
 
 __returns `time_point(duration::max())`.
 
@@ -2745,7 +2816,7 @@ __returns `time_point(duration::max())`.
 [section `time_point` non-member arithmetic]
 
 
-[section:time_point_operator_p_1 Non-Member function `operator+(time_point,duration)`]
+[section:time_point_operator_p_1 Non-Member Function `operator+(time_point,duration)`]
 
     template <class Clock, class Duration1, class Rep2, class Period2>
     __time_point__<Clock, typename __common_type__<Duration1, duration<Rep2, Period2> >::type>
@@ -2755,7 +2826,7 @@ __returns `time_point(duration::max())`.
 __returns `CT(lhs) += rhs` where `CT` is the type of the return value.
 
 [endsect]
-[section:time_point_operator_p_2 Non-Member function `operator+(duration,time_point)`]
+[section:time_point_operator_p_2 Non-Member Function `operator+(duration,time_point)`]
 
     template <class Rep1, class Period1, class Clock, class Duration2>
     __time_point__<Clock, typename __common_type__<duration<Rep1, Period1>, Duration2>::type>
@@ -2765,7 +2836,7 @@ __returns `CT(lhs) += rhs` where `CT` is the type of the return value.
 __returns `rhs + lhs`.
 
 [endsect]
-[section:time_point_operator_m_1 Non-Member function `operator-(time_point,duration)`]
+[section:time_point_operator_m_1 Non-Member Function `operator-(time_point,duration)`]
 
     template <class Clock, class Duration1, class Rep2, class Period2>
     __time_point__<Clock, typename __common_type__<Duration1, duration<Rep2, Period2> >::type>
@@ -2775,7 +2846,7 @@ __returns `rhs + lhs`.
 __returns `lhs + (-rhs)`.
 
 [endsect]
-[section:time_point_operator_m_2 Non-Member function `operator-(duration,time_point)`]
+[section:time_point_operator_m_2 Non-Member Function `operator-(time_point,time_point)`]
 
     template <class Clock, class Duration1, class Duration2>
     typename __common_type__<Duration1, Duration2>::type
@@ -2788,7 +2859,7 @@ __returns `lhs.time_since_epoch() - rhs.time_since_epoch()`.
 [endsect]
 
 [section `time_point` non-member comparisons]
-[section:time_point_operator_eq Non-Member function `operator==(time_point,time_point)`]
+[section:time_point_operator_eq Non-Member Function `operator==(time_point,time_point)`]
 
     template <class Clock, class Duration1, class Duration2>
     bool operator==(const __time_point__<Clock, Duration1>& lhs,
@@ -2797,7 +2868,7 @@ __returns `lhs.time_since_epoch() - rhs.time_since_epoch()`.
 __returns `lhs.time_since_epoch() == rhs.time_since_epoch()`.
 
 [endsect]
-[section:time_point_operator_neq Non-Member function `operator!=(time_point,time_point)`]
+[section:time_point_operator_neq Non-Member Function `operator!=(time_point,time_point)`]
 
 template <class Clock, class Duration1, class Duration2>
    bool operator!=(const __time_point__<Clock, Duration1>& lhs,
@@ -2806,7 +2877,7 @@ template <class Clock, class Duration1, class Duration2>
 __returns `!(lhs == rhs)`.
 
 [endsect]
-[section:time_point_operator_lt Non-Member function `operator<(time_point,time_point)`]
+[section:time_point_operator_lt Non-Member Function `operator<(time_point,time_point)`]
 
     template <class Clock, class Duration1, class Duration2>
     bool operator< (const __time_point__<Clock, Duration1>& lhs,
@@ -2815,7 +2886,7 @@ __returns `!(lhs == rhs)`.
 __returns lhs.time_since_epoch() < rhs.time_since_epoch().
 
 [endsect]
-[section:time_point_operator_leq Non-Member function `operator<=(time_point,time_point)`]
+[section:time_point_operator_leq Non-Member Function `operator<=(time_point,time_point)`]
 
     template <class Clock, class Duration1, class Duration2>
     bool operator<=(const __time_point__<Clock, Duration1>& lhs,
@@ -2824,7 +2895,7 @@ __returns lhs.time_since_epoch() < rhs.time_since_epoch().
 __returns `!(rhs < lhs)`.
 
 [endsect]
-[section:time_point_operator_gt Non-Member function `operator>(time_point,time_point)`]
+[section:time_point_operator_gt Non-Member Function `operator>(time_point,time_point)`]
 
 template <class Clock, class Duration1, class Duration2>
    bool operator>(const __time_point__<Clock, Duration1>& lhs,
@@ -2833,7 +2904,7 @@ template <class Clock, class Duration1, class Duration2>
 __returns `rhs < lhs`.
 
 [endsect]
-[section:time_point_operator_geq Non-Member function `operator>=(time_point,time_point)`]
+[section:time_point_operator_geq Non-Member Function `operator>=(time_point,time_point)`]
 
     template <class Clock, class Duration1, class Duration2>
     bool operator>=(const __time_point__<Clock, Duration1>& lhs,
@@ -2845,14 +2916,14 @@ __returns `!(lhs < rhs)`.
 [endsect]
 
 
-[section:time_point_cast Non-Member function `time_point_cast(time_point)`]
+[section:time_point_cast Non-Member Function `time_point_cast(time_point)`]
 
     template <class ToDuration, class Clock, class Duration>
-    __time_point__<Clock, ToDuration> time_point_cast(const __time_point__<Clock, Duration>& t);
+    __time_point__<Clock, ToDuration> __time_point_cast__(const __time_point__<Clock, Duration>& t);
 
 __requires This function will not participate in overload resolution unless `ToDuration` is an instantiation of __duration__.
 
-__returns `__time_point__<Clock, ToDuration>(duration_cast<ToDuration>(t.time_since_epoch()))`.
+__returns `__time_point__<Clock, ToDuration>(__duration_cast__<ToDuration>(t.time_since_epoch()))`.
 
 [endsect]
 
@@ -2878,40 +2949,48 @@ This file contains the standard clock classes.
 
 [section:system_clock Class `system_clock`]
 
-The `system_clock` class provides a means of obtaining the current wall-clock time from the system-wide real-time clock. The current time can be obtained by calling `system_clock::now()`. Instances of `system_clock::time_point`  can be converted to and from time_t  with the `system_clock::to_time_t()`  and `system_clock::to_time_point()`  functions. If system clock is not monotonic, a subsequent call to `system_clock::now()`  may return an earlier time than a previous call (e.g. if the operating system clock is manually adjusted, or synchronized with an external clock).
+The __system_clock__ class provides a means of obtaining the current wall-clock time from the system-wide real-time clock. The current time can be obtained by calling `system_clock::now()`. Instances of `system_clock::time_point`  can be converted to and from time_t  with the `system_clock::to_time_t()`  and `system_clock::to_time_point()`  functions. If system clock is not monotonic, a subsequent call to `system_clock::now()`  may return an earlier time than a previous call (e.g. if the operating system clock is manually adjusted, or synchronized with an external clock).
+
+The current implementation of __system_clock__ is related an epoch (midnight UTC of January 1, 1970), but this is not in the contract. You need to use the static function static 
+
+    std::time_t to_time_t(const time_point& t);  
+    
+which returns a `time_t` type that is based on midnight UTC of January 1, 1970.
 
     class system_clock {
     public:
-        typedef BOOST_SYSTEM_CLOCK_DURATION          duration;
+        typedef __see_bellow__          duration;
         typedef duration::rep                        rep;
         typedef duration::period                     period;
         typedef chrono::time_point<system_clock>     time_point;
-        static const bool is_monotonic =             false;
+        static constexpr bool is_monotonic =             false;
 
         static time_point  now();                         // throws on error
         static time_point  now(system::error_code & ec);  // never throws
 
+        // Map to C API
         static std::time_t to_time_t(const time_point& t);
         static time_point  from_time_t(std::time_t t);
     };
 
-`system_clock` satisfy the __clock_req__:
+__system_clock__ satisfy the __clock_req__:
 
 * `system_clock::duration::min() < system_clock::duration::zero()` is `true`.
 
+* The nested duration typedef has a resolution that depends on the one provided by the platform.
 
-[section:to_time_t Static member function `to_time_t(time_point)`]
+[section:to_time_t Static Member Function `to_time_t(time_point)`]
 
 time_t to_time_t(const time_point& t);
 
 __returns A `time_t` such that the `time_t` and `t` represent the same point in time, truncated to the courser of the precisions among `time_t` and `t`.
 
 [endsect]
-[section:from_time_t Static member function `from_time_t(time_t)`]
+[section:from_time_t Static Member Function `from_time_t(time_t)`]
 
     time_point from_time_t(time_t t);
 
-__returns A __time_point__ such that the __time_point__ and `t` represent the same point in time, truncated to the courser of the precisions among __time_point__ and `t`.
+__returns A __time_point__ such that the __time_point__ and `t` represent the same point in time, truncated to the coarser of the precisions among __time_point__ and `t`.
 
 [endsect]
 [endsect]
@@ -2929,13 +3008,13 @@ __monotonic_clock__ satisfy the __clock_req__.
 __monotonic_clock__ class provides access to the system-wide monotonic clock. The current time can be obtained by calling `monotonic_clock::now()`. There is no fixed relationship between values returned by `monotonic_clock::now()` and wall-clock time.
 
     #ifdef BOOST_HAS_CLOCK_MONOTONIC
-        class BOOST_CHRONO_DECL monotonic_clock {
+        class monotonic_clock {
         public:
             typedef nanoseconds                          duration;
             typedef duration::rep                        rep;
             typedef duration::period                     period;
             typedef chrono::time_point<monotonic_clock>  time_point;
-            static const bool is_monotonic =             true;
+            static constexpr bool is_monotonic =             true;
 
             static time_point  now();                         // throws on error
             static time_point  now(system::error_code & ec);  // never throws
@@ -2948,12 +3027,12 @@ __monotonic_clock__ class provides access to the system-wide monotonic clock. Th
 
 [section:high_resolution_clock Class `high_resolution_clock`]
 
-`high_resolution_clock` satisfy the __clock_req__.
+__high_resolution_clock__ satisfy the __clock_req__.
 
     #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-      typedef monotonic_clock high_resolution_clock;  // as permitted by [time.clock.hires]
+      typedef __monotonic_clock__ high_resolution_clock;  // as permitted by [time.clock.hires]
     #else
-      typedef system_clock high_resolution_clock;  // as permitted by [time.clock.hires]
+      typedef __system_clock__ high_resolution_clock;  // as permitted by [time.clock.hires]
     #endif
 
 [endsect]
@@ -2964,7 +3043,7 @@ __monotonic_clock__ class provides access to the system-wide monotonic clock. Th
 [section:chrono_typeof_hpp Header `<boost/chrono/typeof/boost/chrono/chrono.hpp>`]
 [/=============================================]
 
-Register __duration__`<>` and __timepoint__`<>` class templates to Boost.Typeof.
+Register __duration__`<>` and __time_point__`<>` class templates to [*Boost.Typeof].
 
 [endsect]
 [endsect]
@@ -3016,9 +3095,9 @@ Register __duration__`<>` and __timepoint__`<>` class templates to Boost.Typeof.
     }
     }
 
-[section:duration_punct Template class `duration_punct<>`]
+[section:duration_punct Template Class `duration_punct<>`]
 
-The __duration__ unit names can be customized through the facet: __duration_punct__. __duration__ unit names come in two varieties: long and short. The default constructed __duration_punct__ provides names in the long format. These names are English descriptions. Other languages are supported by constructing a __duration_punct__ with the proper spellings for hours, "minutes" and "seconds", and their abbreviations (for the short format). 
+The __duration__ unit names can be customized through the facet: __duration_punct__. __duration__ unit names come in two varieties: long and short. The default constructed __duration_punct__ provides names in the long format. These names are English descriptions. Other languages are supported by constructing a __duration_punct__ with the proper spellings for "hours", "minutes" and "seconds", and their abbreviations (for the short format). 
 
         template <class CharT>
         class duration_punct
@@ -3049,7 +3128,7 @@ The __duration__ unit names can be customized through the facet: __duration_punc
 
 [endsect]
 
-[section:clock_string Template class `clock_string<>`]
+[section:clock_string Template Class `clock_string<>`]
 
     template <class Clock, class CharT>
     struct clock_string;
@@ -3065,7 +3144,7 @@ This template must be specialized for specific clocks. The specialization must d
 
 [endsect]
 
-[section:clock_string_system_clock `clock_string<system_clock>` specialization]
+[section:clock_string_system_clock `clock_string<system_clock>` Specialization]
 
     template <class CharT>
     struct clock_string<system_clock, CharT>
@@ -3080,7 +3159,7 @@ This template must be specialized for specific clocks. The specialization must d
 
 [endsect]
 
-[section:clock_string_monotonic_clock `clock_string<monotonic_clock>` specialization]
+[section:clock_string_monotonic_clock `clock_string<monotonic_clock>` Specialization]
 
     #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
 
@@ -3097,7 +3176,7 @@ This template must be specialized for specific clocks. The specialization must d
 
 [endsect]
 
-[section:clock_string_thread_clock `clock_string<thread_clock>` specialization]
+[section:clock_string_thread_clock `clock_string<thread_clock>` Specialization]
 
     #if defined(BOOST_CHRONO_HAS_THREAD_CLOCK)
     template <class CharT>
@@ -3114,7 +3193,7 @@ This template must be specialized for specific clocks. The specialization must d
 
 [endsect]
 
-[section:clock_string_process_real_cpu_clock `clock_string<process_real_cpu_clock>` specialization]
+[section:clock_string_process_real_cpu_clock `clock_string<process_real_cpu_clock>` Specialization]
 
     template <class CharT>
     struct clock_string<process_real_cpu_clock, CharT>
@@ -3128,7 +3207,7 @@ This template must be specialized for specific clocks. The specialization must d
 
 [endsect]
 
-[section:clock_string_process_user_cpu_clock `clock_string<process_user_cpu_clock>` specialization]
+[section:clock_string_process_user_cpu_clock `clock_string<process_user_cpu_clock>` Specialization]
 
     template <class CharT>
     struct clock_string<process_user_cpu_clock, CharT>
@@ -3143,7 +3222,7 @@ This template must be specialized for specific clocks. The specialization must d
 
 [endsect]
 
-[section:clock_string_process_system_cpu_clock `clock_string<process_system_cpu_clock>` specialization]
+[section:clock_string_process_system_cpu_clock `clock_string<process_system_cpu_clock>` Specialization]
 
     template <class CharT>
     struct clock_string<process_system_cpu_clock, CharT>
@@ -3158,7 +3237,7 @@ This template must be specialized for specific clocks. The specialization must d
 
 [endsect]
 
-[section:clock_string_process_cpu_clock `clock_string<process_cpu_clock>` specialization]
+[section:clock_string_process_cpu_clock `clock_string<process_cpu_clock>` Specialization]
 
     template <class CharT>
     struct clock_string<process_cpu_clock, CharT>
@@ -3181,7 +3260,7 @@ The short or long format can be easily chosen by streaming a `duration_short` or
             std::basic_ostream<CharT, Traits>&
             duration_short(std::basic_ostream<CharT, Traits>& os);
 
-__effects Set the __duration_punct__ facet to stream durations and time_points as abreviations.
+__effects Set the __duration_punct__ facet to stream __durations__ and __time_points__ as abreviations.
 
 __returns the output stream
 
@@ -3197,7 +3276,7 @@ __returns the output stream
 
 [endsect]
 
-[section:streams I/O Streams operations]
+[section:streams I/O Streams Operations]
 
 Any __duration__ can be streamed out to a `basic_ostream`. The run time value of the __duration__ is formatted according to the rules and current format settings for __duration__`::rep`. This is followed by a single space and then the compile time unit name of the __duration__. This unit name is built on the string returned from `ratio_string<>` and the data used to construct the __duration_punct__ which was inserted into the stream's locale. If a __duration_punct__ has not been inserted into the stream's locale, a default constructed __duration_punct__ will be added to the stream's locale.
 
@@ -3244,13 +3323,15 @@ __returns the input stream
 [endsect]
 [endsect]
 
-[section:other_clocks Other clocks]
+[section:other_clocks Other Clocks]
 
 [/==================================================================]
 [section:process_cpu_clocks_hpp Header `<boost/chrono/process_cpu_clocks.hpp>`]
 [/==================================================================]
 
 Knowing how long a program takes to execute is useful in both test and production environments. It is also helpful if such timing information is broken down into real (wall clock) time, CPU time spent by the user, and CPU time spent by the operating system servicing user requests.
+
+Process clocks don't include the time spent by the child process.
 
     namespace boost { namespace chrono {
 
@@ -3290,7 +3371,7 @@ __process_real_cpu_clock__ class provides access to the real process wall-clock 
             typedef duration::rep                        rep;
             typedef duration::period                     period;
             typedef chrono::time_point<process_real_cpu_clock>    time_point;
-            static const bool is_monotonic =             true;
+            static constexpr bool is_monotonic =             true;
 
             static time_point now( system::error_code & ec = system::throws );
         };
@@ -3309,7 +3390,7 @@ __process_user_cpu_clock__ class provides access to the user CPU-time monotonic 
             typedef duration::rep                        rep;
             typedef duration::period                     period;
             typedef chrono::time_point<process_user_cpu_clock>    time_point;
-            static const bool is_monotonic =             true;
+            static constexpr bool is_monotonic =             true;
 
             static time_point now( system::error_code & ec = system::throws );
         };
@@ -3329,7 +3410,7 @@ __process_system_cpu_clock__ class provides access to the system CPU-time monoto
             typedef duration::rep                        rep;
             typedef duration::period                     period;
             typedef chrono::time_point<process_system_cpu_clock>    time_point;
-            static const bool is_monotonic =             true;
+            static constexpr bool is_monotonic =             true;
 
             static time_point now( system::error_code & ec = system::throws );
         };
@@ -3354,7 +3435,7 @@ The process relative real, user and system current time can be obtained at once 
         typedef duration::rep                           rep;
         typedef duration::period                        period;
         typedef chrono::time_point<process_cpu_clock>   time_point;
-        static const bool is_monotonic =                true;
+        static constexpr bool is_monotonic =                true;
 
         static time_point now( system::error_code & ec = system::throws );
     };
@@ -3390,7 +3471,7 @@ This class is the representation of the `process_cpu_clock::duration` class. As 
 
 [endsect]
 
-[section:times_io `process_cpu_clock::times` input/output]
+[section:times_io `process_cpu_clock::times` Input/Output]
 
     template <class CharT, class Traits>
     std::basic_ostream<CharT, Traits>&
@@ -3411,7 +3492,7 @@ This class is the representation of the `process_cpu_clock::duration` class. As 
 
 [endsect]
 
-[section:times_duration_values `duration_values` specialization for `times`]
+[section:times_duration_values `duration_values` Specialization for `times`]
 
     template <>
     struct __duration_values__<process_cpu_clock::times>
@@ -3425,7 +3506,7 @@ The `times` specific functions `zero()`, `max()` and `min()` uses the relative f
 
 [endsect]
 
-[section:times_numeric_limits `numeric_limits` specialization for `times`]
+[section:times_numeric_limits `numeric_limits` Specialization for `times`]
 
     namespace std {
         template <>
@@ -3498,7 +3579,7 @@ __thread_clock__ class provides access to the real thread wall-clock, i.e. the r
             typedef duration::rep                        rep;
             typedef duration::period                     period;
             typedef chrono::time_point<thread_clock>    time_point;
-            static const bool is_monotonic =             BOOST_CHRONO_THREAD_CLOCK_IS_MONOTONIC;
+            static constexpr bool is_monotonic =             BOOST_CHRONO_THREAD_CLOCK_IS_MONOTONIC;
 
             static time_point now( system::error_code & ec = system::throws );
         };
@@ -3512,10 +3593,10 @@ __thread_clock__ class provides access to the real thread wall-clock, i.e. the r
 
 [endsect]
 
-
+[/
 [section:deprecated Deprecated Headers]
 
-See Boost.Stopwatches for similar fonctionality.
+See Boost.Stopwatches for similar functionality.
 
 [/==================================================]
 [section:timer_hpp Deprecated Header `<boost/chrono/timer.hpp>`]
@@ -3612,7 +3693,7 @@ The process relative real, user and system current time can be obtained at once 
             typedef duration::rep                        rep;
             typedef duration::period                     period;
             typedef chrono::__time_point__<process_clock>    time_point;
-            static const bool is_monotonic =             true;
+            static constexpr bool is_monotonic =             true;
 
             struct process_times;
             static void now( process_times & times,
@@ -3660,7 +3741,7 @@ Knowing how long a program takes to execute is useful in both test and productio
 [endsect]
 [section:run_timer Class `run_timer`]
 
-class `run_timer` provides a complete run time reporting package that can be invoked in a single line of code. The reporting is controled by two parameters:
+class `run_timer` provides a complete run time reporting package that can be invoked in a single line of code. The reporting is controlled by two parameters:
 
 * format : The output format
 * places(precision): the number of decimal placess used.
@@ -3720,6 +3801,7 @@ All the units are given using the suffix "s" following the System International 
 [endsect]
 
 [endsect]
+]
 
 [endsect]
 
@@ -3732,7 +3814,13 @@ All the units are given using the suffix "s" following the System International 
 [section:history Appendix A: History]
 [/==================================]
 
+[/
+[section [*Version 1.0.0, December 31, 2010] ]
 
+First version released on Boost.
+
+[endsect]
+]
 [/
 [section [*Version 0.7.0, October 30, 2010] ]
 
@@ -3994,7 +4082,7 @@ More updated documentation.
 * Added nested __ratio__ typedef type ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]])
 * Added __BOOST_CHRONO_HAS_CLOCK_MONOTONIC__ macro to state if __monotonic_clock__ is provided on this platform.
 * Added __duration__ `operator%` ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934 [*LGW 934. duration is missing operator%]])
-* Added BOOST_CHRONO_CONSTEXPR when constexpr should be used.
+* Added constexpr when constexpr should be used.
 * Complete __duration__ `operator*` and `operator/`.
 
 
@@ -4030,7 +4118,7 @@ More updated documentation.
     * Class template __duration__
     * Class template __time_point__
     * Clocks:
-        * `system_clock`
+        * __system_clock__
         * __monotonic_clock__
         * `high_resolution_clock`
 
@@ -4052,7 +4140,7 @@ More updated documentation.
 [/======================================]
 [section:rationale Appendix B: Rationale]
 
-See [http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] which is very informative and provides motivation for key design decisions. The following sections are an extract from this document.
+See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] which is very informative and provides motivation for key design decisions. This section contains some extracts from this document.
 
 [heading Is it possible for the user to pass a __duration__ to a function with the units being ambiguous?]
 
@@ -4082,53 +4170,45 @@ This operator is convenient for computing where in a time frame a given duration
               {}
     };
 
-[heading Why ratio needs CopyConstruction and Assignment from ratios having the same normalized form]
-
-Current [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n3000.pdf [*N3000]] doesn't allows to copy-construct or assign `ratio` instances of `ratio` classes having the same normalized form.
-
-This simple example
-
-    __ratio__<1,3> r1;
-    __ratio__<3,9> r2;
-    r1 = r2; // (1)
-
-fails to compile in (1). Other example
-
-    __ratio__<1,3> r1;
-    ratio_substract<__ratio__<2,3>,__ratio__<1,3> > r2=r1;  // (2)
-
-The type of `ratio_substract<__ratio__<2,3>,__ratio__<1,3> >` could be `__ratio__<3,9>` so the compilation could fail in (2). It could also be `__ratio__<1,3>` and the compilation succeeds.
-
-[heading Why ratio needs the nested normalizer typedef type]
-
-In [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n3000.pdf [*N3000]] 20.4.2 and similar clauses
-
-['3 The nested typedef type shall be a synonym for __ratio__<T1, T2> where T1 has the value R1::num * R2::den - R2::num * R1::den and T2 has the value R1::den * R2::den.]
-
-The meaning of synonym let think that the result should be a normalized ratio equivalent to `__ratio__<T1, T2>`, but there is not an explicit definition of what synonym means in this context.
-
-If the CopyConstruction and Assignment ([[@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#12811281 [*LWG 1281]]) is not added we need a typedef for accessing the normalized ratio, and change 20.4.2 to return only this normalized result. In this case the user will need to
-
-    __ratio__<1,3>::type r1;
-    __ratio__<3,9>::type r2;
-    r1 = r2; // compiles as both types are the same.
-
 [endsect]
 
 
 [/======================================================]
 [section:implementation Appendix C: Implementation Notes]
 
+[heading Which APIs have been chosen to implement each clock on each platform?]
 
+The following table presents a resume of which API is uused for each clock on each platform
+[table Clock API correspondence
+    [[Clock]                                [Windows Platform]          [Posix Platform]                 [Mac Platform]  ]
+    [[__system_clock__]                     [GetSystemTimeAsFileTime]   [clock_gettime( CLOCK_REALTIME)] [gettimeofday]          ]
+    [[__monotonic_clock__]                  [QueryPerformanceCounter and QueryPerformanceFrequency]          
+                                        [clock_gettime( CLOCK_MONOTONIC)] [mach_timebase_info,mach_absolute_time]          ]
+    [[__process_real_cpu_clock__]           [GetProcessTimes]           [times]                         [times]  ]
+    [[__process_system_cpu_clock__]         [GetProcessTimes]           [times]                         [times]    ]
+    [[__process_user_cpu_clock__]           [GetProcessTimes]           [times]                         [times]  ]
+    [[__process_cpu_clock__]                [GetProcessTimes]           [times]                         [times]   ]
+    [[__thread_clock__]                     [GetThreadTimes]            [clock_gettime(pthread_getcpuclockid)]         [pthread_getcpuclockid]       ]
+]
 
 [endsect]
 
 [/======================================================]
 [section:faq Appendix D: FAQ]
 
-[heading Why does process_cpu_clock sometimes gives more cpu seconds than real seconds?]
+[heading Why does process_cpu_clock sometimes give more cpu seconds than real seconds?]
 
 Ask your operating system supplier. The results have been inspected with a debugger, and both for Windows and Linux, that's what the OS appears to be reporting at times.
+
+
+[heading Are integer overflows in the duration arithmetic detected and reported?]
+
+[*Boost.Ratio] avoids all kind of overflow that could result of arithmetic operation and that can be simplified. The typedefs durations don't detect overflow. You will need a representation that handles with.
+
+[heading What clock should be used to benchmarking?]
+
+Each clock has his own features. It depends on what do you need to benchmark. Most of the time, you could be interested in using a thread clock, but if you need to measure code subject to synchronization a process clock would be better. If you have a multi-process application, a system-wide clock will be needed.
+
 
 [endsect]
 
@@ -4143,9 +4223,9 @@ Much thanks to Andrei Alexandrescu, Walter Brown, Peter Dimov, Jeff Garland, Ter
 
 The file <boost/chrono_io.hpp> has been adapted from the experimental header `<chrono_io>` from Howard Hinnant. Thanks for all Howard.
 
-Thanks to Adrew Chinoff for his help polishing the documentation.
+Thanks to Ronald Bock, Adrew Chinoff, Paul A. Bristol and John Bytheway for his help polishing the documentation.
 
-Thanks to Tom Tan for reporting some compiler issues with MSVC V10 beta and MinGW-gcc-4.4.0 and for the many suggestion he did concerning the `process_cpu_clock` class.
+Thanks to Tom Tan for reporting some compiler issues with MSVC V10 beta and MinGW-gcc-4.4.0 and for the many pushing for an homogeneous `process_cpu_clock` clock.
 
 Thanks to Ronald Bock for reporting Valgind issues and for the many suggestion he did concerning the documentation.
 
@@ -4430,7 +4510,7 @@ boost::chrono::duration<boost::chrono::process_cpu_clock::times, boost::ratio<1l
 
 [heading For later releases]
 
-* Use of C++0x feature constexpr, when available.
+* Implement `steady_clock` if accepted by the standard.
 
 [endsect]
 [endsect]

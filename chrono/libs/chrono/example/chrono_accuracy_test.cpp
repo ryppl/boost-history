@@ -8,7 +8,7 @@
 
 //  See http://www.boost.org/libs/chrono for documentation.
 
-#include <boost/chrono/process_times.hpp>
+//#include <boost/chrono/process_cpu_clocks.hpp>
 #include <boost/chrono/timer.hpp>
 #include <cstdlib> // for atol()
 #include <iostream>
@@ -17,7 +17,7 @@
 #include <ctime>
 #include <cmath>  // for sqrt(), used to burn time
 
-using boost::chrono::run_timer;
+//using boost::chrono::run_timer;
 using boost::system::error_code;
 
 #include <boost/detail/lightweight_test.hpp>
@@ -41,7 +41,7 @@ namespace
     boost::chrono::monotonic_timer        mono;
 #endif
     boost::chrono::high_resolution_timer  hires;
-    boost::chrono::process_timer          process;
+    boost::chrono::timer<boost::chrono::process_cpu_clock>          process;
 
     std::clock_t now;
     do
@@ -54,8 +54,8 @@ namespace
     boost::chrono::monotonic_timer::duration mono_dur = mono.elapsed();
 #endif
     boost::chrono::high_resolution_timer::duration hires_dur = hires.elapsed();
-    boost::chrono::process_times times;
-    process.elapsed( times );
+    boost::chrono::process_cpu_clock::duration times;
+    times = process.elapsed();
 
     std::cout << std::endl;
 
@@ -85,10 +85,10 @@ namespace
     BOOST_TEST( hires_dur > timeout_in_nanoseconds - maximum_delta
       && hires_dur < timeout_in_nanoseconds + maximum_delta );
 
-    std::cout << times.real.count() << " times.real\n";
+    std::cout << times.count().real << " times.real\n";
 
-    BOOST_TEST( times.real > timeout_in_nanoseconds - maximum_delta
-      && times.real < timeout_in_nanoseconds + maximum_delta );
+//    BOOST_TEST( times.count().real > timeout_in_nanoseconds - maximum_delta
+//      && times.count().real < timeout_in_nanoseconds + maximum_delta );
   }
 
 }

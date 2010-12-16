@@ -4,9 +4,9 @@
 <title> Getting Started</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
-<link rel="start" href="../../index.html" title="Boost.Chrono 0.7.0">
-<link rel="up" href="../users_guide.html" title=" Users'Guide">
-<link rel="prev" href="../users_guide.html" title=" Users'Guide">
+<link rel="start" href="../../index.html" title="Boost.Chrono 0.7.1">
+<link rel="up" href="../users_guide.html" title=" User's Guide">
+<link rel="prev" href="../users_guide.html" title=" User's Guide">
 <link rel="next" href="tutorial.html" title="Tutorial">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -39,7 +39,7 @@
         Installing Chrono</a>
 </h4></div></div></div>
 <a name="boost_chrono.users_guide.getting_started.install.getting__emphasis_role__bold__boost_chrono__emphasis__"></a><h5>
-<a name="id4987965"></a>
+<a name="id4949845"></a>
           <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.getting__emphasis_role__bold__boost_chrono__emphasis__">Getting
           <span class="bold"><strong>Boost.Chrono</strong></span> </a>
         </h5>
@@ -53,10 +53,10 @@
           Sandbox</a>. Just go to <a href="http://svn.boost.org/trac/boost/wiki/BoostSubversion" target="_top">here</a>
           and follow the instructions there for anonymous SVN access.
         </p>
-<a name="boost_chrono.users_guide.getting_started.install.where_to_install__emphasis_role__bold__boost_chrono__emphasis___"></a><h5>
-<a name="id4988037"></a>
-          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.where_to_install__emphasis_role__bold__boost_chrono__emphasis___">Where
-          to install <span class="bold"><strong>Boost.Chrono</strong></span>? </a>
+<a name="boost_chrono.users_guide.getting_started.install.where_to_install_boost_chrono__"></a><h5>
+<a name="id4949915"></a>
+          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.where_to_install_boost_chrono__">Where
+          to install Boost.Chrono? </a>
         </h5>
 <p>
           The simple way is to decompress (or checkout from SVN) the file in your
@@ -78,23 +78,22 @@
           that is able to work in both environements and use the <code class="computeroutput"><span class="identifier">BOOST_ROOT</span></code>
           variable. Any help is welcome.
         </p>
-<a name="boost_chrono.users_guide.getting_started.install.building__emphasis_role__bold__boost_chrono__emphasis__"></a><h5>
-<a name="id4942292"></a>
-          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.building__emphasis_role__bold__boost_chrono__emphasis__">Building
-          <span class="bold"><strong>Boost.Chrono</strong></span> </a>
+<a name="boost_chrono.users_guide.getting_started.install.building_boost_chrono_"></a><h5>
+<a name="id4942202"></a>
+          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.building_boost_chrono_">Building
+          Boost.Chrono </a>
         </h5>
 <p>
           <span class="bold"><strong>Boost.Chrono</strong></span> can be configured as a header
           only library. When <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_hpp.conf.header_only" title="
-            How to build Boost.Chrono as a header
-            only library?"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_INLINED</span></code></a> is defined
+            How to Build Boost.Chrono as a Header Only Library?"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_INLINED</span></code></a> is defined
           the lib is header only library. Otherwise is not a header only library
           and you need to compile it before use.
         </p>
 <pre class="programlisting"><span class="identifier">bjam</span> <span class="identifier">libs</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">build</span>
 </pre>
 <a name="boost_chrono.users_guide.getting_started.install.requirements"></a><h5>
-<a name="id4942382"></a>
+<a name="id4942285"></a>
           <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.requirements">Requirements</a>
         </h5>
 <p>
@@ -133,7 +132,7 @@
               </p></dd>
 <dt><span class="term"><a href="http://www.boost.org/libs/ratio" target="_top"><span class="bold"><strong>Boost.Ratio</strong></span></a></span></dt>
 <dd><p>
-                for ratio, ...
+                for ratio, milli, micro, ...
               </p></dd>
 <dt><span class="term"><a href="http://www.boost.org/libs/system" target="_top"><span class="bold"><strong>Boost.System</strong></span></a></span></dt>
 <dd><p>
@@ -149,11 +148,10 @@
               </p></dd>
 </dl>
 </div>
-<a name="boost_chrono.users_guide.getting_started.install.building_an_executable_that_uses__emphasis_role__bold__boost_chrono__emphasis__"></a><h5>
-<a name="id4942633"></a>
-          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.building_an_executable_that_uses__emphasis_role__bold__boost_chrono__emphasis__">Building
-          an executable that uses <span class="bold"><strong>Boost.Chrono</strong></span>
-          </a>
+<a name="boost_chrono.users_guide.getting_started.install.building_an_executable_that_uses_boost_chrono_"></a><h5>
+<a name="id4942539"></a>
+          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.building_an_executable_that_uses_boost_chrono_">Building
+          an executable that uses Boost.Chrono </a>
         </h5>
 <p>
           In addition to link with the <span class="bold"><strong>Boost.Chrono</strong></span>
@@ -162,9 +160,9 @@
           to be a header only using __BOOST_SYSTEM_INLINED you will no need to link
           with.
         </p>
-<a name="boost_chrono.users_guide.getting_started.install.exceptions_safety_"></a><h5>
-<a name="id4942683"></a>
-          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.exceptions_safety_">Exceptions
+<a name="boost_chrono.users_guide.getting_started.install.exception_safety_"></a><h5>
+<a name="id4942585"></a>
+          <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.exception_safety_">Exception
           safety </a>
         </h5>
 <p>
@@ -172,15 +170,21 @@
           of exception safety as long as the underlying parameters provide it.
         </p>
 <a name="boost_chrono.users_guide.getting_started.install.thread_safety_"></a><h5>
-<a name="id4942710"></a>
+<a name="id4942612"></a>
           <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.thread_safety_">Thread
           safety </a>
         </h5>
 <p>
           All functions in the library are thread-unsafe except when noted explicitly.
         </p>
+<p>
+          As Boost.Chrono doesn't use mutable global variables the thread safety
+          analysis is limited to the access to each instance variable. It is not
+          thread safe to use a function that modifies the access to a user variable
+          if another can be reading or writing it.
+        </p>
 <a name="boost_chrono.users_guide.getting_started.install.tested_compilers_"></a><h5>
-<a name="id4942736"></a>
+<a name="id4942644"></a>
           <a href="getting_started.html#boost_chrono.users_guide.getting_started.install.tested_compilers_">Tested
           compilers </a>
         </h5>
@@ -191,22 +195,8 @@
 <p>
           Windows with
         </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-              MSVC 10.0
-            </li>
-<li>
-              MSVC 9.0 Express (not lastly)
-            </li>
-<li>
-              MSVC 8.0 (not lastly)
-            </li>
-</ul></div>
-<p>
-          Scientific Linux with
-        </p>
 <div class="itemizedlist"><ul type="disc"><li>
-              GCC 4.1.2 (not lastly)
+              MSVC 10.0
             </li></ul></div>
 <p>
           Cygwin 1.5 with
@@ -232,6 +222,9 @@
             </li>
 <li>
               GCC 4.5.0 -std=c++0x
+            </li>
+<li>
+              GCC 4.6.0 -std=c++0x #undef BOOST_NO_CONSTEXPR
             </li>
 </ul></div>
 <p>
@@ -278,21 +271,21 @@
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
-    <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">start</span> <span class="special">=</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
+    <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">start</span> <span class="special">=</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">();</span>
 
     <span class="keyword">for</span> <span class="special">(</span> <span class="keyword">long</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="number">10000000</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span> <span class="special">)</span>
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">sqrt</span><span class="special">(</span> <span class="number">123.456L</span> <span class="special">);</span> <span class="comment">// burn some time
 </span>
-     <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
-          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">sec</span> <span class="special">=</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">;</span>
-    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"tooks "</span> <span class="special">&lt;&lt;</span> <span class="identifier">sec</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" seconds\n"</span><span class="special">;</span>
+    <span class="identifier">bchrono</span><span class="special">::</span><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.duration_hpp.duration" title="
+          Class Template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">sec</span> <span class="special">=</span> <span class="identifier">bchrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">;</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"took "</span> <span class="special">&lt;&lt;</span> <span class="identifier">sec</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">" seconds\n"</span><span class="special">;</span>
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
           Output was:
         </p>
-<pre class="programlisting"><span class="identifier">tooks</span> <span class="number">0.832</span> <span class="identifier">seconds</span>
+<pre class="programlisting"><span class="identifier">took</span> <span class="number">0.832</span> <span class="identifier">seconds</span>
 </pre>
 </div>
 </div>

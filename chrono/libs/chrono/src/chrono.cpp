@@ -1,7 +1,7 @@
 //  chrono.cpp  --------------------------------------------------------------//
 
 //  Copyright Beman Dawes 2008
-//  Copyright Vicente J. Botet Escriba 2009
+//  Copyright Vicente J. Botet Escriba 2009-2010
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
@@ -12,35 +12,3 @@
 
 #include <boost/chrono/detail/inlined/chrono.hpp>
 
-#if 0
-#include <boost/version.hpp>
-#include <boost/chrono/chrono.hpp>
-#include <boost/system/system_error.hpp>
-#include <boost/throw_exception.hpp>
-
-//----------------------------------------------------------------------------//
-//                                                                            //
-//                     Platform-specific Implementations                      //
-//                                                                            //
-//----------------------------------------------------------------------------//
-
-//----------------------------------------------------------------------------//
-//                                Windows                                     //
-//----------------------------------------------------------------------------//
-#if defined(BOOST_CHRONO_WINDOWS_API)
-#include "win/chrono.cpp"
-
-//----------------------------------------------------------------------------//
-//                                 Mac                                        //
-//----------------------------------------------------------------------------//
-#elif defined(BOOST_CHRONO_MAC_API)
-#include "mac/chrono.cpp"
-
-//----------------------------------------------------------------------------//
-//                                POSIX                                     //
-//----------------------------------------------------------------------------//
-#elif defined(BOOST_CHRONO_POSIX_API)
-#include "posix/chrono.cpp"
-
-#endif  // POSIX
-#endif
