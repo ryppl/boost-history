@@ -89,7 +89,7 @@ public:
         for (operations_type::iterator it = ops_.begin(); it != ops_.end();
             ++it)
         {
-            for (Container::iterator it2 = handles.begin(); it2 !=
+            for (typename Container::iterator it2 = handles.begin(); it2 !=
                 handles.end(); ++it2)
             {
                 if (*it2 == it->first)

@@ -246,7 +246,7 @@ private:
                     BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
                         "GetExitCodeProcess() failed");
                 boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
-                for (std::vector<implementation_type>::iterator it =
+                for (typename std::vector<implementation_type>::iterator it =
                     impls_.begin(); it != impls_.end(); ++it)
                     (*it)->complete(handle, exit_code);
                 std::vector<HANDLE>::iterator it = handles_.begin();
