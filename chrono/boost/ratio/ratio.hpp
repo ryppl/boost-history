@@ -75,11 +75,11 @@ class ratio
     BOOST_RATIO_STATIC_ASSERT(ABS_N >= 0, BOOST_RATIO_NUMERATOR_IS_OUT_OF_RANGE, ());
     BOOST_RATIO_STATIC_ASSERT(ABS_D > 0, BOOST_RATIO_DENOMINATOR_IS_OUT_OF_RANGE, ());
     BOOST_RATIO_STATIC_ASSERT(D != 0, BOOST_RATIO_DIVIDE_BY_0 , ());
-    static const boost::intmax_t SIGN = boost::integer::static_signed_sign<N>::value
+    static const boost::intmax_t SIGN_N = boost::integer::static_signed_sign<N>::value
       * boost::integer::static_signed_sign<D>::value;
     static const boost::intmax_t GCD = boost::integer::static_signed_gcd<ABS_N, ABS_D>::value;
 public:
-    static const boost::intmax_t num = SIGN * ABS_N / GCD;
+    static const boost::intmax_t num = SIGN_N * ABS_N / GCD;
     static const boost::intmax_t den = ABS_D / GCD;
 
 #ifdef BOOST_RATIO_EXTENSIONS    

@@ -38,8 +38,10 @@ struct ratio_string
 #include <string>
 #include <sstream>
 
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 #include <boost/ratio/ratio_static_string.hpp>
 #include <boost/static_string/static_string.hpp>
+#endif
 
 #if defined(BOOST_NO_UNICODE_LITERALS) || defined(BOOST_NO_CHAR16_T) || defined(BOOST_NO_CHAR32_T)
 //~ #define BOOST_RATIO_HAS_UNICODE_SUPPORT 
@@ -65,6 +67,7 @@ ratio_string<Ratio, CharT>::long_name()
                         << Ratio::den << CharT(']');
     return os.str();
 }
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 namespace ratio_detail {
 template <class Ratio, class CharT>
 struct ratio_string_static
@@ -83,8 +86,9 @@ struct ratio_string_static
     }
 };
 }
+#endif
 // atto
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<atto, CharT> : 
     ratio_detail::ratio_string_static<atto,CharT> 
@@ -128,7 +132,7 @@ struct ratio_string<atto, wchar_t>
 
 // femto
 
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<femto, CharT> : 
     ratio_detail::ratio_string_static<femto,CharT> 
@@ -172,7 +176,7 @@ struct ratio_string<femto, wchar_t>
 
 // pico
 
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<pico, CharT> : 
     ratio_detail::ratio_string_static<pico,CharT> 
@@ -216,7 +220,7 @@ struct ratio_string<pico, wchar_t>
 
 // nano
 
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<nano, CharT> : 
     ratio_detail::ratio_string_static<nano,CharT> 
@@ -260,7 +264,7 @@ struct ratio_string<nano, wchar_t>
 
 // micro
 
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<micro, CharT> : 
     ratio_detail::ratio_string_static<micro,CharT> 
@@ -304,7 +308,7 @@ struct ratio_string<micro, wchar_t>
 
 // milli
 
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<milli, CharT> : 
     ratio_detail::ratio_string_static<milli,CharT> 
@@ -348,7 +352,7 @@ struct ratio_string<milli, wchar_t>
 
 // centi
 
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<centi, CharT> : 
     ratio_detail::ratio_string_static<centi,CharT> 
@@ -391,7 +395,7 @@ struct ratio_string<centi, wchar_t>
 #endif
 
 // deci
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<deci, CharT> : 
     ratio_detail::ratio_string_static<deci,CharT> 
@@ -436,7 +440,7 @@ struct ratio_string<deci, wchar_t>
 
 // deca
 
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<deca, CharT> : 
     ratio_detail::ratio_string_static<deca,CharT> 
@@ -480,7 +484,7 @@ struct ratio_string<deca, wchar_t>
 
 // hecto
 
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<hecto, CharT> : 
     ratio_detail::ratio_string_static<hecto,CharT> 
@@ -524,7 +528,7 @@ struct ratio_string<hecto, wchar_t>
 
 // kilo
 
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<kilo, CharT> : 
     ratio_detail::ratio_string_static<kilo,CharT> 
@@ -568,7 +572,7 @@ struct ratio_string<kilo, wchar_t>
 
 // mega
 
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<mega, CharT> : 
     ratio_detail::ratio_string_static<mega,CharT> 
@@ -612,7 +616,7 @@ struct ratio_string<mega, wchar_t>
 #endif
 
 // giga
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<giga, CharT> : 
     ratio_detail::ratio_string_static<giga,CharT> 
@@ -656,7 +660,7 @@ struct ratio_string<giga, wchar_t>
 #endif
 
 // tera
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<tera, CharT> : 
     ratio_detail::ratio_string_static<tera,CharT> 
@@ -699,7 +703,7 @@ struct ratio_string<tera, wchar_t>
 #endif
 
 // peta
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<peta, CharT> : 
     ratio_detail::ratio_string_static<peta,CharT> 
@@ -742,7 +746,7 @@ struct ratio_string<peta, wchar_t>
 #endif
 
 // exa
-#if 1
+#ifdef BOOST_RATIO_HAS_STATIC_STRING
 template <typename CharT>
 struct ratio_string<exa, CharT> : 
     ratio_detail::ratio_string_static<exa,CharT> 
