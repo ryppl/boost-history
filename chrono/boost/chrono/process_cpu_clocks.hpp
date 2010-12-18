@@ -157,8 +157,8 @@ namespace boost { namespace chrono {
                 in_iterator e;
                 if (i == e || *i != '{')  // mandatory '{'
                 {
-                	is.setstate(is.failbit | is.eofbit);
-                	return;
+                    is.setstate(is.failbit | is.eofbit);
+                    return;
                 }
                 CharT x,y,z;
                 is >> real >> x >> user >> y >> system >> z;

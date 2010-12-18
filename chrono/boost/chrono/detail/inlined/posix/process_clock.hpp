@@ -40,7 +40,7 @@ namespace chrono_detail
   }
 }
 
-	void process_clock::now( process_times & times_, system::error_code & ec ) {
+    void process_clock::now( process_times & times_, system::error_code & ec ) {
 
         tms tm;
         clock_t c = ::times( &tm );

@@ -482,16 +482,16 @@ struct clock_string<system_clock, CharT>
     static std::basic_string<CharT> name()
     {
         static const CharT u[] = {'s', 'y', 's', 't', 'e', 'm', '_',
-        						'c', 'l','o', 'c', 'k'};
+                                'c', 'l','o', 'c', 'k'};
         static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
-    	return str;
+        return str;
     }
     static std::basic_string<CharT> since()
     {
         static const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 'J', 'a',
                               'n', ' ', '1', ',', ' ', '1', '9', '7', '0'};
         static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
-    	return str;
+        return str;
     }
 };
 #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
@@ -502,15 +502,15 @@ struct clock_string<monotonic_clock, CharT>
     static std::basic_string<CharT> name()
     {
         static const CharT u[] = {'m', 'o', 'n', 'o', 't', 'o', 'n', 'i', 'c', '_',
-        						'c', 'l','o', 'c', 'k'};
+                                'c', 'l','o', 'c', 'k'};
         static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
-    	return str;
+        return str;
     }
     static std::basic_string<CharT> since()
     {
         const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 'b', 'o', 'o', 't'};
         const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
-    	return str;
+        return str;
     }
 };
 
@@ -525,15 +525,15 @@ struct clock_string<thread_clock, CharT>
     static std::basic_string<CharT> name()
     {
         static const CharT u[] = {'t', 'h', 'r', 'e', 'd', '_',
-        						'c', 'l','o', 'c', 'k'};
+                                'c', 'l','o', 'c', 'k'};
         static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
-    	return str;
+        return str;
     }
     static std::basic_string<CharT> since()
     {
         const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 't', 'r', 'e', 'a', 'd', ' ', 's', 't', 'a', 'r', 't', '-', 'u', 'p'};
         const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
-    	return str;
+        return str;
     }
 };
 
@@ -545,15 +545,15 @@ struct clock_string<process_real_cpu_clock, CharT>
     static std::basic_string<CharT> name()
     {
         static const CharT u[] = {'p', 'r', 'o', 'c', 'e', 's', 's', '_', 'r', 'e', 'a', 'l','_',
-        						'c', 'l','o', 'c', 'k'};
+                                'c', 'l','o', 'c', 'k'};
         static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
-    	return str;
+        return str;
     }
     static std::basic_string<CharT> since()
     {
         const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 'p', 'r', 'o', 'c', 'e', 's', 's', ' ', 's', 't', 'a', 'r', 't', '-', 'u', 'p'};
         const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
-    	return str;
+        return str;
     }
 };
 
@@ -563,15 +563,15 @@ struct clock_string<process_user_cpu_clock, CharT>
     static std::basic_string<CharT> name()
     {
         static const CharT u[] = {'p', 'r', 'o', 'c', 'e', 's', 's', '_', 'u', 's', 'e', 'r','_',
-        						'c', 'l','o', 'c', 'k'};
+                                'c', 'l','o', 'c', 'k'};
         static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
-    	return str;
+        return str;
     }
     static std::basic_string<CharT> since()
     {
         const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 'p', 'r', 'o', 'c', 'e', 's', 's', ' ', 's', 't', 'a', 'r', 't', '-', 'u', 'p'};
         const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
-    	return str;
+        return str;
     }
 };
 
@@ -581,15 +581,15 @@ struct clock_string<process_system_cpu_clock, CharT>
     static std::basic_string<CharT> name()
     {
         static const CharT u[] = {'p', 'r', 'o', 'c', 'e', 's', 's', '_', 's', 'y', 's', 't', 't', 'e', 'm', '_',
-        						'c', 'l','o', 'c', 'k'};
+                                'c', 'l','o', 'c', 'k'};
         static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
-    	return str;
+        return str;
     }
     static std::basic_string<CharT> since()
     {
         const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 'p', 'r', 'o', 'c', 'e', 's', 's', ' ', 's', 't', 'a', 'r', 't', '-', 'u', 'p'};
         const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
-    	return str;
+        return str;
     }
 };
 
@@ -599,15 +599,15 @@ struct clock_string<process_cpu_clock, CharT>
     static std::basic_string<CharT> name()
     {
         static const CharT u[] = {'p', 'r', 'o', 'c', 'e', 's', 's', '_',
-        						'c', 'l','o', 'c', 'k'};
+                                'c', 'l','o', 'c', 'k'};
         static const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
-    	return str;
+        return str;
     }
     static std::basic_string<CharT> since()
     {
         const CharT u[] = {' ', 's', 'i', 'n', 'c', 'e', ' ', 'p', 'r', 'o', 'c', 'e', 's', 's', ' ', 's', 't', 'a', 'r', 't', '-', 'u', 'p'};
         const std::basic_string<CharT> str(u, u + sizeof(u)/sizeof(u[0]));
-    	return str;
+        return str;
     }
 };
 

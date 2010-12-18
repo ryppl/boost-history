@@ -19,8 +19,8 @@
 
 namespace boost { namespace chrono {
 
-	thread_clock::time_point thread_clock::now( ) 
-	{
+    thread_clock::time_point thread_clock::now( ) 
+    {
         // get the current thread
         pthread_t pth=pthread_self();
         // get the clock_id associated to the current thread
@@ -42,8 +42,8 @@ namespace boost { namespace chrono {
             static_cast<thread_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
 
     }
-	thread_clock::time_point thread_clock::now( system::error_code & ec ) 
-	{
+    thread_clock::time_point thread_clock::now( system::error_code & ec ) 
+    {
         // get the current thread
         pthread_t pth=pthread_self();
         // get the clock_id associated to the current thread

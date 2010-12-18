@@ -100,7 +100,7 @@ compute_monotonic_factor(kern_return_t& err)
     mach_timebase_info_data_t MachInfo;
     err = mach_timebase_info(&MachInfo);
     if( err != 0  ) {
-	    return 0;
+        return 0;
     }
     return static_cast<double>(MachInfo.numer) / MachInfo.denom;
 }
@@ -155,7 +155,7 @@ init_monotonic_clock(kern_return_t & err)
     mach_timebase_info_data_t MachInfo;
     err = mach_timebase_info(&MachInfo);
     if( err != 0  ) {
-	return 0;
+    return 0;
     }
 
     if (MachInfo.numer == MachInfo.denom)
@@ -170,7 +170,7 @@ init_monotonic_clock_ec(kern_return_t & err)
     mach_timebase_info_data_t MachInfo;
     err = mach_timebase_info(&MachInfo);
     if( err != 0  ) {
-	return 0;
+    return 0;
     }
 
     if (MachInfo.numer == MachInfo.denom)
@@ -183,7 +183,7 @@ monotonic_clock::now()
 {
     static kern_return_t err;
     static chrono_detail::FP_ec fp = chrono_detail::init_monotonic_clock(err);
-    if( err != 0  ) { 	
+    if( err != 0  ) {     
         boost::throw_exception(
                 system::system_error( 
                         err, 
