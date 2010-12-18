@@ -34,32 +34,37 @@ namespace boost
 namespace integer
 {
 
-	typedef boost::intmax_t  static_gcd_signed_type;
-	typedef boost::uintmax_t  static_gcd_unsigned_type;
+    typedef boost::intmax_t  static_gcd_signed_type;
+    typedef boost::uintmax_t  static_gcd_unsigned_type;
 
-	template <static_gcd_signed_type X, boost::intmax_t Y>
-	struct static_signed_gcd 
-		: integral_constant<static_gcd_signed_type, 
-			static_signed_gcd<Y, X % Y>::value>
-	{};
-	
-	template <static_gcd_signed_type X>
-	struct static_signed_gcd<X, 0> 
-		: integral_constant<static_gcd_signed_type, 
-			X> 
-	{};
+    template <static_gcd_signed_type X, boost::intmax_t Y>
+    struct static_signed_gcd 
+        : static_signed_gcd<Y, X % Y>
+    {};
+    
+    template <static_gcd_signed_type X>
+    struct static_signed_gcd<X, 0> 
+        : integral_constant<static_gcd_signed_type, 
+            X> 
+    {};
 
-	template <static_gcd_unsigned_type X, boost::intmax_t Y>
-	struct static_unsigned_gcd 
-		: integral_constant<static_gcd_unsigned_type, 
-			static_unsigned_gcd<Y, X % Y>::value>
-	{};
-	
-	template <static_gcd_unsigned_type X>
-	struct static_unsigned_gcd<X, 0> 
-		: integral_constant<static_gcd_signed_type, 
-			X> 
-	{};
+    template <static_gcd_signed_type X>
+    struct static_signed_gcd<0, X> 
+        : integral_constant<static_gcd_signed_type, 
+            X> 
+    {};
+
+    template <static_gcd_unsigned_type X, boost::intmax_t Y>
+    struct static_unsigned_gcd 
+        : integral_constant<static_gcd_unsigned_type, 
+            static_unsigned_gcd<Y, X % Y>::value>
+    {};
+    
+    template <static_gcd_unsigned_type X>
+    struct static_unsigned_gcd<X, 0> 
+        : integral_constant<static_gcd_signed_type, 
+            X> 
+    {};
 }
 }
 

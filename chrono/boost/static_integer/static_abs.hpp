@@ -33,20 +33,20 @@ namespace boost
 
 namespace integer
 {
-	typedef boost::intmax_t  static_abs_signed_type;
-	typedef boost::uintmax_t  static_abs_unsigned_type;
+    typedef boost::intmax_t  static_abs_signed_type;
+    typedef boost::uintmax_t  static_abs_unsigned_type;
 
-	template <static_abs_signed_type X>
-	struct static_signed_abs 
-		: integral_constant<static_abs_signed_type, 
-			X < 0 ? -X : X> 
-	{};
+    template <static_abs_signed_type X>
+    struct static_signed_abs 
+        : integral_constant<static_abs_signed_type, 
+            X < 0 ? -X : X> 
+    {};
 
-	template <static_abs_signed_type X>
-	struct static_unsigned_abs 
-		: integral_constant<static_abs_unsigned_type, 
-			X < 0 ? -X : X> 
-	{};
+    template <static_abs_signed_type X>
+    struct static_unsigned_abs 
+        : integral_constant<static_abs_unsigned_type, 
+            X < 0 ? -X : X> 
+    {};
 
 
 }  
