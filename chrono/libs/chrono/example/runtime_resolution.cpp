@@ -22,7 +22,7 @@ time2_demo contained this comment:
                    Peter Dimov,
                    Jeff Garland,
                    Terry Golubiewski,
-                   Daniel Krügler,
+                   Daniel Krugler,
                    Anthony Williams.
 */
 #define _CRT_SECURE_NO_WARNINGS  // disable VC++ foolishness

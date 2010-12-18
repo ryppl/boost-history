@@ -1,4 +1,4 @@
-//  chrono.hpp  --------------------------------------------------------------//
+//  errored_clock.hpp  --------------------------------------------------------------//
 
 //  Copyright 2010 Vicente J. Botet Escriba
 
@@ -27,17 +27,17 @@
       static int errno_;
 
       static void set_errno(int err) {
-    	  errno_=err;
+          errno_=err;
       }
 
       // throws on error
       static time_point  now() {
           boost::throw_exception(
-        		  boost::system::system_error(
-        				  errno_,
-        				  BOOST_CHRONO_SYSTEM_CATEGORY,
-        				  "errored_clock"
-        		  )
+                  boost::system::system_error(
+                          errno_,
+                          BOOST_CHRONO_SYSTEM_CATEGORY,
+                          "errored_clock"
+                  )
           );
           return time_point();
       }
@@ -53,8 +53,8 @@
                       )
               );
           }
-    	  ec.assign( errno_, BOOST_CHRONO_SYSTEM_CATEGORY );
-    	  return time_point();
+          ec.assign( errno_, BOOST_CHRONO_SYSTEM_CATEGORY );
+          return time_point();
       };
   };
   int errored_clock::errno_;

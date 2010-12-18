@@ -22,7 +22,7 @@ time2_demo contained this comment:
                    Peter Dimov,
                    Jeff Garland,
                    Terry Golubiewski,
-                   Daniel Krügler,
+                   Daniel Krugler,
                    Anthony Williams.
 */
 #define _CRT_SECURE_NO_WARNINGS  // disable VC++ foolishness
@@ -32,7 +32,7 @@ time2_demo contained this comment:
 
 #include <iostream>
 #if defined(BOOST_CHRONO_WINDOWS_API)
-#	include <windows.h>
+#    include <windows.h>
 #endif
 
 #if defined(BOOST_CHRONO_WINDOWS_API)
