@@ -23,7 +23,7 @@ time2_demo contained this comment:
                    Peter Dimov,
                    Jeff Garland,
                    Terry Golubiewski,
-                   Daniel Krügler,
+                   Daniel Krugler,
                    Anthony Williams.
 */
 
@@ -180,8 +180,8 @@ struct ratio_greater_equal
 template <class R1, class R2>
 struct ratio_gcd
 {
-	typedef ratio<boost::integer::static_signed_gcd<R1::num, R2::num>::value,
-    	boost::integer::static_signed_lcm<R1::den, R2::den>::value> type;
+    typedef ratio<boost::integer::static_signed_gcd<R1::num, R2::num>::value,
+        boost::integer::static_signed_lcm<R1::den, R2::den>::value> type;
 };
     
 }  // namespace boost

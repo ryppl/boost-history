@@ -23,7 +23,7 @@ time2_demo contained this comment:
                    Peter Dimov,
                    Jeff Garland,
                    Terry Golubiewski,
-                   Daniel Krügler,
+                   Daniel Krugler,
                    Anthony Williams.
 */
 
@@ -311,8 +311,8 @@ namespace ratio_detail
   {};
 
   template <class R1, class R2,
-  		  boost::intmax_t Q1 = R1::num / R1::den, boost::intmax_t M1 = R1::num % R1::den,
-  		  boost::intmax_t Q2 = R2::num / R2::den, boost::intmax_t M2 = R2::num % R2::den>
+            boost::intmax_t Q1 = R1::num / R1::den, boost::intmax_t M1 = R1::num % R1::den,
+            boost::intmax_t Q2 = R2::num / R2::den, boost::intmax_t M2 = R2::num % R2::den>
   struct ratio_less1
   {
     static const bool value = Q1 < Q2;
@@ -344,10 +344,10 @@ namespace ratio_detail
   };  
   
   template <
-  	class R1, 
-  	class R2, 
-  	boost::intmax_t S1 = boost::integer::static_signed_sign<R1::num>::value,
-	boost::intmax_t S2 = boost::integer::static_signed_sign<R2::num>::value
+      class R1, 
+      class R2, 
+      boost::intmax_t S1 = boost::integer::static_signed_sign<R1::num>::value,
+    boost::intmax_t S2 = boost::integer::static_signed_sign<R2::num>::value
 >
   struct ratio_less
   {
