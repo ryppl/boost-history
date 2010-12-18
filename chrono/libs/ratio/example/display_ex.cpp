@@ -11,8 +11,8 @@ This code was adapted by Vicente J. Botet Escriba from Hinnant's html documentat
 Many thanks to Howard for making his code available under the Boost license.
 */
 
-#include <boost/ratio/ratio_io.hpp>
 #include <iostream>
+#include <boost/ratio/ratio_io.hpp>
 
 int main()
 {

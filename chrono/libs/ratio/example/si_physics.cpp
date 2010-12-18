@@ -6,9 +6,9 @@
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
 
+#include <iostream>
 #include <boost/ratio.hpp>
 #include "duration.hpp"
-#include <iostream>
 
 namespace User1
 {
@@ -195,8 +195,12 @@ int main()
     std::cout << "*************\n";
     std::cout << "* testUser1 *\n";
     std::cout << "*************\n";
-    User1::Distance d( User1::mile(110) );
-    User1::Time t(( boost_ex::chrono::hours(2) ));
+    User1::Distance d(( User1::mile(110) ));
+    boost_ex::chrono::hours h((2));
+    User1::Time t(( h ));
+    //~ boost_ex::chrono::seconds sss=boost_ex::chrono::duration_cast<boost_ex::chrono::seconds>(h);
+    //~ User1::seconds sss((120));
+    //~ User1::Time t(( sss ));
     
     //typedef User1::quantity<boost::ratio_subtract<User1::Distance::time_dim, User1::Time::time_dim >::type, 
     //                        boost::ratio_subtract<User1::Distance::distance_dim, User1::Time::distance_dim >::type > R;

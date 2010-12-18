@@ -28,7 +28,7 @@
 // shall name T&&; otherwise, type shall name T. [ Note: This rule reflects
 // the semantics of reference collapsing. For example, when a type T names
 // a type T1&, the type add_rvalue_reference<T>::type is not an rvalue
-// reference. —end note ]
+// reference. -end note ]
 //----------------------------------------------------------------------------//
 
 namespace boost_ex {

@@ -29,7 +29,7 @@
 //~ decltype(static_cast<To>(declval<From>())) convert(From&&);
 
 //~ declares a function template convert which only participats in overloading if the type From can be
-//~ explicitly converted to type To. For another example see class template common_type (20.7.6.6). —end
+//~ explicitly converted to type To. For another example see class template common_type (20.7.6.6). -end
 //~ example ]
 //                                                                            //
 //----------------------------------------------------------------------------//

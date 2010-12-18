@@ -42,6 +42,8 @@
 [def __common_type__BOOST_COMMON_TYPE_DONT_USE_TYPEOF [common_type_pp `BOOST_COMMON_TYPE_DONT_USE_TYPEOF`]]
 
 [def __common_type_spe__ `common_type`]
+[def __time_point__ `time_point`]
+[def __hours__ `hours`]
 
 [/===============================================]
 [def __ratio__ [link boost_ratio.reference.ratio_hpp.ratio `ratio`]]

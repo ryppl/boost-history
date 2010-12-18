@@ -2,7 +2,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Boost.Ratio 1.0.0</title>
-<link rel="stylesheet" href="../../../../doc/html/boostbook.css" type="text/css">
+<link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
 <link rel="start" href="index.html" title="Boost.Ratio 1.0.0">
 </head>
@@ -37,7 +37,7 @@
 <div><p class="copyright">Copyright &#169; 2006 , 2008 Beman Dawes</p></div>
 <div><p class="copyright">Copyright &#169; 2009 -2010 Vicente J. Botet Escriba</p></div>
 <div><div class="legalnotice">
-<a name="id4946076"></a><p>
+<a name="id4987032"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -97,7 +97,7 @@
 <dt><span class="section"><a href="index.html#boost_ratio.overview.description">Description</a></span></dt>
 </dl></div>
 <a name="boost_ratio.overview.how_to_use_this_documentation"></a><h3>
-<a name="id4948627"></a>
+<a name="id4948656"></a>
       <a href="index.html#boost_ratio.overview.how_to_use_this_documentation">How to Use
       This Documentation</a>
     </h3>
@@ -209,7 +209,7 @@
         Ratio</a>
 </h4></div></div></div>
 <a name="boost_ratio.users_guide.getting_started.install.getting_boost_ratio_"></a><h5>
-<a name="id4987247"></a>
+<a name="id4949124"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.getting_boost_ratio_">Getting
           Boost.Ratio </a>
         </h5>
@@ -224,7 +224,7 @@
           and follow the instructions there for anonymous SVN access.
         </p>
 <a name="boost_ratio.users_guide.getting_started.install.where_to_install_boost_ratio__"></a><h5>
-<a name="id4987317"></a>
+<a name="id4949194"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.where_to_install_boost_ratio__">Where
           to install Boost.Ratio? </a>
         </h5>
@@ -240,7 +240,7 @@
           variable. Any help is welcome.
         </p>
 <a name="boost_ratio.users_guide.getting_started.install.building_boost_ratio_"></a><h5>
-<a name="id4987354"></a>
+<a name="id4949232"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.building_boost_ratio_">Building
           Boost.Ratio </a>
         </h5>
@@ -249,7 +249,7 @@
           so no need to compile anything.
         </p>
 <a name="boost_ratio.users_guide.getting_started.install.requirements"></a><h5>
-<a name="id4987385"></a>
+<a name="id4949262"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.requirements">Requirements</a>
         </h5>
 <p>
@@ -290,7 +290,7 @@
 </dl>
 </div>
 <a name="boost_ratio.users_guide.getting_started.install.building_an_executable_that_uses__emphasis_role__bold__boost_ratio__emphasis__"></a><h5>
-<a name="id4987563"></a>
+<a name="id4949441"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.building_an_executable_that_uses__emphasis_role__bold__boost_ratio__emphasis__">Building
           an executable that uses <span class="bold"><strong>Boost.Ratio</strong></span> </a>
         </h5>
@@ -298,7 +298,7 @@
           No link is needed.
         </p>
 <a name="boost_ratio.users_guide.getting_started.install.exception_safety_"></a><h5>
-<a name="id4987596"></a>
+<a name="id4949474"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.exception_safety_">Exception
           safety </a>
         </h5>
@@ -307,7 +307,7 @@
           exception safety guarantee.
         </p>
 <a name="boost_ratio.users_guide.getting_started.install.thread_safety_"></a><h5>
-<a name="id4987620"></a>
+<a name="id4949498"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.thread_safety_">Thread
           safety </a>
         </h5>
@@ -315,7 +315,7 @@
           All functions in the library are thread-unsafe except when noted explicitly.
         </p>
 <a name="boost_ratio.users_guide.getting_started.install.tested_compilers_"></a><h5>
-<a name="id4987646"></a>
+<a name="id4949523"></a>
           <a href="index.html#boost_ratio.users_guide.getting_started.install.tested_compilers_">Tested
           compilers </a>
         </h5>
@@ -400,7 +400,7 @@
 <a name="boost_ratio.users_guide.tutorial"></a><a href="index.html#boost_ratio.users_guide.tutorial" title="Tutorial">Tutorial</a>
 </h3></div></div></div>
 <a name="boost_ratio.users_guide.tutorial.ratio"></a><h4>
-<a name="id4987811"></a>
+<a name="id4949688"></a>
         <a href="index.html#boost_ratio.users_guide.tutorial.ratio">Ratio</a>
       </h4>
 <p>
@@ -410,11 +410,11 @@
         and safely compute rational values at compile time. The <a href="index.html#boost_ratio.reference.ratio_hpp.ratio" title=" Class Template
         ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> class catches all errors (such
         as divide by zero and overflow) at compile time. It is used in the duration
-        and __time<span class="underline">point</span>_ classes to efficiently
-        create units of time. It can also be used in other "quantity" libraries
-        or anywhere there is a rational constant which is known at compile time.
-        The use of this utility can greatly reduce the chances of run time overflow
-        because the <a href="index.html#boost_ratio.reference.ratio_hpp.ratio" title=" Class Template
+        and <code class="computeroutput"><span class="identifier">time_point</span></code> classes to
+        efficiently create units of time. It can also be used in other "quantity"
+        libraries or anywhere there is a rational constant which is known at compile
+        time. The use of this utility can greatly reduce the chances of run time
+        overflow because the <a href="index.html#boost_ratio.reference.ratio_hpp.ratio" title=" Class Template
         ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> (and any ratios resulting
         from <a href="index.html#boost_ratio.reference.ratio_hpp.ratio" title=" Class Template
         ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> arithmetic) are always reduced
@@ -468,7 +468,7 @@
 <span class="comment">// _5nano::num == 1, _5nano::den == 200000000
 </span></pre>
 <a name="boost_ratio.users_guide.tutorial.ratio_i_o"></a><h4>
-<a name="id4942502"></a>
+<a name="id4942425"></a>
         <a href="index.html#boost_ratio.users_guide.tutorial.ratio_i_o">Ratio I/O</a>
       </h4>
 <p>
@@ -811,7 +811,7 @@
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"* testUser1 *\n"</span><span class="special">;</span>
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"*************\n"</span><span class="special">;</span>
     <span class="identifier">User1</span><span class="special">::</span><span class="identifier">Distance</span> <span class="identifier">d</span><span class="special">(</span> <span class="identifier">User1</span><span class="special">::</span><span class="identifier">mile</span><span class="special">(</span><span class="number">110</span><span class="special">)</span> <span class="special">);</span>
-    <span class="identifier">User1</span><span class="special">::</span><span class="identifier">Time</span> <span class="identifier">t</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">__hours__</span><span class="special">(</span><span class="number">2</span><span class="special">)</span> <span class="special">);</span>
+    <span class="identifier">User1</span><span class="special">::</span><span class="identifier">Time</span> <span class="identifier">t</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><code class="computeroutput"><span class="identifier">hours</span></code><span class="special">(</span><span class="number">2</span><span class="special">)</span> <span class="special">);</span>
 
     <span class="identifier">RR</span> <span class="identifier">r</span><span class="special">=</span><span class="identifier">d</span> <span class="special">/</span> <span class="identifier">t</span><span class="special">;</span>
     <span class="comment">//r.set(d.get() / t.get());
@@ -1171,7 +1171,7 @@
           will be issued.
         </p>
 <a name="boost_ratio.reference.ratio_hpp.ratio_arithmetic._code__phrase_role__identifier__ratio_add__phrase__phrase_role__special___lt__gt___phrase___code_"></a><h5>
-<a name="id5007880"></a>
+<a name="id5007916"></a>
           <a href="index.html#boost_ratio.reference.ratio_hpp.ratio_arithmetic._code__phrase_role__identifier__ratio_add__phrase__phrase_role__special___lt__gt___phrase___code_"><code class="computeroutput"><span class="identifier">ratio_add</span><span class="special">&lt;&gt;</span></code></a>
         </h5>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ratio_add</span> <span class="special">{</span>
@@ -1184,7 +1184,7 @@
         ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span> <span class="special">+</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span><span class="special">,</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span><span class="special">&gt;::</span><span class="identifier">type</span></code>.
         </p>
 <a name="boost_ratio.reference.ratio_hpp.ratio_arithmetic._code__phrase_role__identifier__ratio_subtract__phrase__phrase_role__special___lt__gt___phrase___code_"></a><h5>
-<a name="id5008186"></a>
+<a name="id5008222"></a>
           <a href="index.html#boost_ratio.reference.ratio_hpp.ratio_arithmetic._code__phrase_role__identifier__ratio_subtract__phrase__phrase_role__special___lt__gt___phrase___code_"><code class="computeroutput"><span class="identifier">ratio_subtract</span><span class="special">&lt;&gt;</span></code></a>
         </h5>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ratio_subtract</span> <span class="special">{</span>
@@ -1197,7 +1197,7 @@
         ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span> <span class="special">-</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span><span class="special">,</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span><span class="special">&gt;::</span><span class="identifier">type</span></code>.
         </p>
 <a name="boost_ratio.reference.ratio_hpp.ratio_arithmetic._code__phrase_role__identifier__ratio_multiply__phrase__phrase_role__special___lt__gt___phrase___code_"></a><h5>
-<a name="id5008492"></a>
+<a name="id5008528"></a>
           <a href="index.html#boost_ratio.reference.ratio_hpp.ratio_arithmetic._code__phrase_role__identifier__ratio_multiply__phrase__phrase_role__special___lt__gt___phrase___code_"><code class="computeroutput"><span class="identifier">ratio_multiply</span><span class="special">&lt;&gt;</span></code></a>
         </h5>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ratio_multiply</span> <span class="special">{</span>
@@ -1210,7 +1210,7 @@
         ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">::</span><span class="identifier">num</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">num</span><span class="special">,</span> <span class="identifier">R1</span><span class="special">::</span><span class="identifier">den</span> <span class="special">*</span> <span class="identifier">R2</span><span class="special">::</span><span class="identifier">den</span><span class="special">&gt;::</span><span class="identifier">type</span></code>.
         </p>
 <a name="boost_ratio.reference.ratio_hpp.ratio_arithmetic._code__phrase_role__identifier__ratio_divide__phrase__phrase_role__special___lt__gt___phrase___code_"></a><h5>
-<a name="id5008759"></a>
+<a name="id5008795"></a>
           <a href="index.html#boost_ratio.reference.ratio_hpp.ratio_arithmetic._code__phrase_role__identifier__ratio_divide__phrase__phrase_role__special___lt__gt___phrase___code_"><code class="computeroutput"><span class="identifier">ratio_divide</span><span class="special">&lt;&gt;</span></code></a>
         </h5>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ratio_divide</span> <span class="special">{</span>
@@ -1230,7 +1230,7 @@
         <code class="computeroutput"><span class="identifier">ratio</span></code> Comparison</a>
 </h4></div></div></div>
 <a name="boost_ratio.reference.ratio_hpp.ratio_comparison._code__phrase_role__identifier__ratio_equal__phrase__phrase_role__special___lt__gt___phrase___code_"></a><h5>
-<a name="id5009054"></a>
+<a name="id5009090"></a>
           <a href="index.html#boost_ratio.reference.ratio_hpp.ratio_comparison._code__phrase_role__identifier__ratio_equal__phrase__phrase_role__special___lt__gt___phrase___code_"><code class="computeroutput"><span class="identifier">ratio_equal</span><span class="special">&lt;&gt;</span></code></a>
         </h5>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span>  <span class="keyword">struct</span> <span class="identifier">ratio_equal</span>
@@ -1241,14 +1241,14 @@
           derives from true_type, else derives from false_type.
         </p>
 <a name="boost_ratio.reference.ratio_hpp.ratio_comparison._code__phrase_role__identifier__ratio_not_equal__phrase__phrase_role__special___lt__gt___phrase___code_"></a><h5>
-<a name="id5009237"></a>
+<a name="id5009273"></a>
           <a href="index.html#boost_ratio.reference.ratio_hpp.ratio_comparison._code__phrase_role__identifier__ratio_not_equal__phrase__phrase_role__special___lt__gt___phrase___code_"><code class="computeroutput"><span class="identifier">ratio_not_equal</span><span class="special">&lt;&gt;</span></code></a>
         </h5>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span>  <span class="keyword">struct</span> <span class="identifier">ratio_not_equal</span>
     <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integral_constant</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span> <span class="special">!</span><span class="identifier">ratio_equal</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">,</span> <span class="identifier">R2</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">&gt;</span> <span class="special">{};</span>
 </pre>
 <a name="boost_ratio.reference.ratio_hpp.ratio_comparison._code__phrase_role__identifier__ratio_less__phrase__phrase_role__special___lt__gt___phrase___code_"></a><h5>
-<a name="id5009426"></a>
+<a name="id5009461"></a>
           <a href="index.html#boost_ratio.reference.ratio_hpp.ratio_comparison._code__phrase_role__identifier__ratio_less__phrase__phrase_role__special___lt__gt___phrase___code_"><code class="computeroutput"><span class="identifier">ratio_less</span><span class="special">&lt;&gt;</span></code></a>
         </h5>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span>
@@ -1260,21 +1260,21 @@
           else derives from false_type.
         </p>
 <a name="boost_ratio.reference.ratio_hpp.ratio_comparison._code__phrase_role__identifier__ratio_less_equal__phrase__phrase_role__special___lt__gt___phrase___code_"></a><h5>
-<a name="id5009605"></a>
+<a name="id5009641"></a>
           <a href="index.html#boost_ratio.reference.ratio_hpp.ratio_comparison._code__phrase_role__identifier__ratio_less_equal__phrase__phrase_role__special___lt__gt___phrase___code_"><code class="computeroutput"><span class="identifier">ratio_less_equal</span><span class="special">&lt;&gt;</span></code></a>
         </h5>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ratio_less_equal</span>
     <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integral_constant</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span> <span class="special">!</span><span class="identifier">ratio_less</span><span class="special">&lt;</span><span class="identifier">R2</span><span class="special">,</span> <span class="identifier">R1</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">&gt;</span> <span class="special">{};</span>
 </pre>
 <a name="boost_ratio.reference.ratio_hpp.ratio_comparison._code__phrase_role__identifier__ratio_greater__phrase__phrase_role__special___lt__gt___phrase___code_"></a><h5>
-<a name="id5009794"></a>
+<a name="id5009830"></a>
           <a href="index.html#boost_ratio.reference.ratio_hpp.ratio_comparison._code__phrase_role__identifier__ratio_greater__phrase__phrase_role__special___lt__gt___phrase___code_"><code class="computeroutput"><span class="identifier">ratio_greater</span><span class="special">&lt;&gt;</span></code></a>
         </h5>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ratio_greater</span>
     <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integral_constant</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span> <span class="identifier">ratio_less</span><span class="special">&lt;</span><span class="identifier">R2</span><span class="special">,</span> <span class="identifier">R1</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">&gt;</span> <span class="special">{};</span>
 </pre>
 <a name="boost_ratio.reference.ratio_hpp.ratio_comparison._code__phrase_role__identifier__ratio_greater_equal__phrase__phrase_role__special___lt__gt___phrase___code_"></a><h5>
-<a name="id5009980"></a>
+<a name="id5010016"></a>
           <a href="index.html#boost_ratio.reference.ratio_hpp.ratio_comparison._code__phrase_role__identifier__ratio_greater_equal__phrase__phrase_role__special___lt__gt___phrase___code_"><code class="computeroutput"><span class="identifier">ratio_greater_equal</span><span class="special">&lt;&gt;</span></code></a>
         </h5>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R2</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ratio_greater_equal</span>
@@ -1419,7 +1419,7 @@
 <a name="boost_ratio.appendices.rationale"></a><a href="index.html#boost_ratio.appendices.rationale" title=" Appendix B: Rationale"> Appendix B: Rationale</a>
 </h3></div></div></div>
 <a name="boost_ratio.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form"></a><h4>
-<a name="id5011704"></a>
+<a name="id5011739"></a>
         <a href="index.html#boost_ratio.appendices.rationale.why_ratio_needs_copyconstruction_and_assignment_from_ratios_having_the_same_normalized_form">Why
         ratio needs CopyConstruction and Assignment from ratios having the same normalized
         form</a>
@@ -1454,7 +1454,7 @@
         succeeds.
       </p>
 <a name="boost_ratio.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type"></a><h4>
-<a name="id5012108"></a>
+<a name="id5012144"></a>
         <a href="index.html#boost_ratio.appendices.rationale.why_ratio_needs_the_nested_normalizer_typedef_type">Why
         ratio needs the nested normalizer typedef type</a>
       </h4>
@@ -1503,7 +1503,7 @@
       Notes</a>
 </h3></div></div></div>
 <a name="boost_ratio.appendices.implementation.how_boost_ratio_manage_with_compile_time_rational_arithmetic_overflow_"></a><h4>
-<a name="id5012416"></a>
+<a name="id5012452"></a>
         <a href="index.html#boost_ratio.appendices.implementation.how_boost_ratio_manage_with_compile_time_rational_arithmetic_overflow_">How
         Boost.Ratio manage with compile-time rational arithmetic overflow?</a>
       </h4>
@@ -2008,7 +2008,7 @@
 <a name="boost_ratio.appendices.todo"></a><a href="index.html#boost_ratio.appendices.todo" title=" Appendix F: Future Plans"> Appendix F: Future Plans</a>
 </h3></div></div></div>
 <a name="boost_ratio.appendices.todo.for_later_releases"></a><h4>
-<a name="id5016748"></a>
+<a name="id5016784"></a>
         <a href="index.html#boost_ratio.appendices.todo.for_later_releases">For later
         releases</a>
       </h4>
@@ -2028,7 +2028,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: October 12, 2010 at 20:06:45 GMT</small></p></td>
+<td align="left"><p><small>Last revised: December 18, 2010 at 11:48:34 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
