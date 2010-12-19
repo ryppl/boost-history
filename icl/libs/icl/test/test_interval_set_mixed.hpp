@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __fastest_icl_interval_set_mixed_h_JOFA_090702__
-#define __fastest_icl_interval_set_mixed_h_JOFA_090702__
+#ifndef LIBS_ICL_TEST_TEST_INTERVAL_SET_MIXED_HPP_JOFA_090702
+#define LIBS_ICL_TEST_TEST_INTERVAL_SET_MIXED_HPP_JOFA_090702
 
 template <class T> 
 void interval_set_mixed_ctor_4_ordered_types()
@@ -14,7 +14,7 @@ void interval_set_mixed_ctor_4_ordered_types()
     typedef interval_set<T> IntervalSetT;
     typedef typename IntervalSetT::interval_type IntervalT;
 
-    T v0 = identity_element<T>::value();
+    T v0 = boost::icl::identity_element<T>::value();
     
     split_interval_set<T>    split_set(v0);
     separate_interval_set<T> sep_set(split_set);
@@ -30,7 +30,7 @@ void interval_set_mixed_equal_4_ordered_types()
     typedef interval_set<T> IntervalSetT;
     typedef typename IntervalSetT::interval_type IntervalT;
 
-    T v0 = identity_element<T>::value();
+    T v0 = boost::icl::identity_element<T>::value();
     
     split_interval_set<T>    split_empty, split_single(v0);
     separate_interval_set<T> sep_empty, sep_single(v0);
@@ -97,7 +97,7 @@ void interval_set_mixed_assign_4_ordered_types()
     typedef interval_set<T> IntervalSetT;
     typedef typename IntervalSetT::interval_type IntervalT;
 
-    T v0 = identity_element<T>::value();
+    T v0 = boost::icl::identity_element<T>::value();
     T v1 = unit_element<T>::value();
 
     split_interval_set<T>    split_set;
@@ -874,4 +874,4 @@ template <class T> void interval_set_mixed_infix_caret_overload_4_bicremental_ty
     BOOST_CHECK_EQUAL(sep_a   ^ join_a, join_a ^ sep_a  );
 }
 
-#endif // __fastest_icl_interval_set_mixed_h_JOFA_090702__
+#endif // LIBS_ICL_TEST_TEST_INTERVAL_SET_MIXED_HPP_JOFA_090702

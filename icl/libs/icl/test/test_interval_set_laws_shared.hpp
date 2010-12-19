@@ -1,24 +1,18 @@
 /*-----------------------------------------------------------------------------+    
-Copyright (c) 2008-2009: Joachim Faulhaber
+Copyright (c) 2008-2010: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef LIBS_ICL_TEST_TEST_ICL_interval_set_laws_shared_h_JOFA_090201__
-#define LIBS_ICL_TEST_TEST_ICL_interval_set_laws_shared_h_JOFA_090201__
+#ifndef LIBS_ICL_TEST_TEST_INTERVAL_SET_LAWS_SHARED_HPP_JOFA_090201
+#define LIBS_ICL_TEST_TEST_INTERVAL_SET_LAWS_SHARED_HPP_JOFA_090201
 
 
 //------------------------------------------------------------------------------
 // Monoid EAN
 //------------------------------------------------------------------------------
-template <class T,
-          template<class T,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalSet
-          >
+template <class T, ICL_IntervalSet_TEMPLATE(_T) IntervalSet>
 void interval_set_check_monoid_plus_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
@@ -36,13 +30,7 @@ void interval_set_check_monoid_plus_4_bicremental_types()
 }
 
 
-template <class T,
-          template<class T,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalSet
-          >
+template <class T, ICL_IntervalSet_TEMPLATE(_T) IntervalSet>
 void interval_set_check_monoid_et_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
@@ -63,13 +51,7 @@ void interval_set_check_monoid_et_4_bicremental_types()
 // Abelian monoid EANC
 //------------------------------------------------------------------------------
 
-template <class T,
-          template<class T,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalSet
-          >
+template <class T, ICL_IntervalSet_TEMPLATE(_T) IntervalSet>
 void interval_set_check_abelian_monoid_plus_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
@@ -87,13 +69,7 @@ void interval_set_check_abelian_monoid_plus_4_bicremental_types()
 }
 
 
-template <class T,
-          template<class T,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalSet
-          >
+template <class T, ICL_IntervalSet_TEMPLATE(_T) IntervalSet>
 void interval_set_check_abelian_monoid_et_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
@@ -114,13 +90,7 @@ void interval_set_check_abelian_monoid_et_4_bicremental_types()
 //------------------------------------------------------------------------------
 // Abelian partial invertive monoid 
 //------------------------------------------------------------------------------
-template <class T,
-          template<class T,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalSet
-          >
+template <class T, ICL_IntervalSet_TEMPLATE(_T) IntervalSet>
 void interval_set_check_partial_invertive_monoid_plus_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
@@ -138,15 +108,9 @@ void interval_set_check_partial_invertive_monoid_plus_4_bicremental_types()
 }
 
 //------------------------------------------------------------------------------
-// Abelian partial invertive monoid with protonic equality for inversion
+// Abelian partial invertive monoid with distinct equality for inversion
 //------------------------------------------------------------------------------
-template <class T,
-          template<class T,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalSet
-          >
+template <class T, ICL_IntervalSet_TEMPLATE(_T) IntervalSet>
 void interval_set_check_partial_invertive_monoid_plus_prot_inv_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
@@ -162,21 +126,17 @@ void interval_set_check_partial_invertive_monoid_plus_prot_inv_4_bicremental_typ
     CHECK_ABELIAN_MONOID_INSTANCE_WRT(plus)(set_a, set_b, set_c, segm, elem);
     CHECK_ABELIAN_MONOID_INSTANCE_WRT(pipe)(set_a, set_b, set_c, segm, elem);
 
+#if !defined(_MSC_VER) || (_MSC_VER >= 1400) // 1310==MSVC-7.1  1400 ==MSVC-8.0
     CHECK_PARTIAL_INVERTIVE_MONOID_INSTANCE_WRT_EQUAL(plus)(is_distinct_equal, set_a, set_b, set_c, segm, elem);
     CHECK_PARTIAL_INVERTIVE_MONOID_INSTANCE_WRT_EQUAL(pipe)(is_distinct_equal, set_a, set_b, set_c, segm, elem);
+#endif
 }
 
 
 //------------------------------------------------------------------------------
 // Abelian group EANIC
 //------------------------------------------------------------------------------
-template <class T,
-          template<class T,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalSet
-          >
+template <class T, ICL_IntervalSet_TEMPLATE(_T) IntervalSet>
 void interval_set_check_abelian_group_plus_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
@@ -194,15 +154,9 @@ void interval_set_check_abelian_group_plus_4_bicremental_types()
 }
 
 //------------------------------------------------------------------------------
-// (0 - x) + x =p= 0  |  
+// (0 - x) + x =d= 0  |  
 //------------------------------------------------------------------------------
-template <class T,
-          template<class T,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalSet
-          >
+template <class T, ICL_IntervalSet_TEMPLATE(_T) IntervalSet>
 void interval_set_check_abelian_group_plus_prot_inv_4_bicremental_types()
 {
     typedef IntervalSet<T> IntervalSetT;
@@ -218,9 +172,11 @@ void interval_set_check_abelian_group_plus_prot_inv_4_bicremental_types()
     CHECK_ABELIAN_MONOID_INSTANCE_WRT(plus) (set_a, set_b, set_c, segm, elem);
     CHECK_ABELIAN_MONOID_INSTANCE_WRT(pipe) (set_a, set_b, set_c, segm, elem);
 
+#if !defined(_MSC_VER) || (_MSC_VER >= 1400) // 1310==MSVC-7.1  1400 ==MSVC-8.0
     CHECK_ABELIAN_GROUP_INSTANCE_WRT_EQUAL(plus) (is_distinct_equal, set_a, set_b, set_c, segm, elem);
     CHECK_ABELIAN_GROUP_INSTANCE_WRT_EQUAL(pipe) (is_distinct_equal, set_a, set_b, set_c, segm, elem);
+#endif
 }
 
-#endif // LIBS_ICL_TEST_TEST_ICL_interval_set_laws_shared_h_JOFA_090201__
+#endif // LIBS_ICL_TEST_TEST_INTERVAL_SET_LAWS_SHARED_HPP_JOFA_090201
 

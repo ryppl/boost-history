@@ -5,17 +5,12 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef LIBS_ICL_TEST_TEST_ICL_interval_map_shared_h_JOFA_081005__
-#define LIBS_ICL_TEST_TEST_ICL_interval_map_shared_h_JOFA_081005__
+#ifndef LIBS_ICL_TEST_TEST_INTERVAL_MAP_SHARED_HPP_JOFA_081005
+#define LIBS_ICL_TEST_TEST_INTERVAL_MAP_SHARED_HPP_JOFA_081005
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+#include "portability.hpp"
+
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_fundamentals_4_ordered_types()
 {
@@ -29,8 +24,6 @@ void interval_map_fundamentals_4_ordered_types()
     // we are able to test operations only for the most basic values
     // boost::icl::identity_element (0, empty, T() ...) and unit_element.
 
-    //T v0 = boost::icl::identity_element<T>();
-    //T v1 = unit_element<T>();
     T v0 = boost::icl::identity_element<T>::value();
     T v1 = unit_element<T>::value();
     IntervalT I0_0I(v0);
@@ -162,14 +155,7 @@ void interval_map_fundamentals_4_ordered_types()
 
 }
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_ctor_4_bicremental_types()
 {
@@ -227,14 +213,7 @@ void interval_map_ctor_4_bicremental_types()
 }
 
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_add_sub_4_bicremental_types()
 {
@@ -281,14 +260,7 @@ void interval_map_add_sub_4_bicremental_types()
     BOOST_CHECK_EQUAL( map_A2, map_B2 );
 }
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_distinct_4_bicremental_types()
 {
@@ -316,14 +288,7 @@ void interval_map_distinct_4_bicremental_types()
     BOOST_CHECK_EQUAL( iterative_size(is_1_3_5),   3 );
 }
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_distinct_4_bicremental_continuous_types()
 {
@@ -370,14 +335,7 @@ void interval_map_distinct_4_bicremental_continuous_types()
 
 }
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_isolate_4_bicremental_continuous_types()
 {
@@ -426,14 +384,7 @@ void interval_map_isolate_4_bicremental_continuous_types()
 }
 
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_contains_4_bicremental_types()
 {
@@ -469,14 +420,7 @@ void interval_map_contains_4_bicremental_types()
     BOOST_CHECK_EQUAL( icl::contains(itv_map, itv_set2), true );    
 }
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_contains_key_objects_4_bicremental_types()
 {
@@ -511,14 +455,7 @@ void interval_map_contains_key_objects_4_bicremental_types()
 }
 
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_operators_4_bicremental_types()
 {
@@ -554,14 +491,7 @@ void interval_map_operators_4_bicremental_types()
 
 
 // Test for nontrivial intersection of interval maps with intervals and values
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_base_intersect_4_bicremental_types()
 {
@@ -661,14 +591,7 @@ void interval_map_base_intersect_4_bicremental_types()
 
 
 // Test for nontrivial erasure of interval maps with intervals and interval sets
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_base_erase_4_bicremental_types()
 {
@@ -779,14 +702,7 @@ void interval_map_base_erase_4_bicremental_types()
 
 
 // Test first_collision
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_base_is_disjoint_4_bicremental_types()
 {
@@ -864,14 +780,7 @@ void interval_map_base_is_disjoint_4_bicremental_types()
     BOOST_CHECK_EQUAL( intersects(map_B, set_A), true );
 }
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_flip_4_bicremental_types()
 {
@@ -892,14 +801,7 @@ void interval_map_flip_4_bicremental_types()
     BOOST_CHECK_EQUAL(set_a ^= IDv(1,3,1), IMap(IDv(0,1,1)) + IDv(2,3,1));
 }
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_infix_plus_overload_4_bicremental_types()
 {
@@ -920,14 +822,7 @@ void interval_map_infix_plus_overload_4_bicremental_types()
     BOOST_CHECK_EQUAL(map_b + map_pair, map_pair + map_b);
 }
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_infix_pipe_overload_4_bicremental_types()
 {
@@ -950,14 +845,7 @@ void interval_map_infix_pipe_overload_4_bicremental_types()
 
 
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_infix_minus_overload_4_bicremental_types()
 {
@@ -1003,14 +891,7 @@ void interval_map_infix_minus_overload_4_bicremental_types()
 }
 
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_infix_et_overload_4_bicremental_types()
 {
@@ -1053,14 +934,7 @@ void interval_map_infix_et_overload_4_bicremental_types()
 }
 
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_infix_caret_overload_4_bicremental_types()
 {
@@ -1093,14 +967,7 @@ void interval_map_infix_caret_overload_4_bicremental_types()
     BOOST_CHECK_EQUAL(map_b ^ map_pair,  map_pair ^ map_b);
 }
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_find_4_bicremental_types()
 {
@@ -1126,14 +993,7 @@ void interval_map_find_4_bicremental_types()
 }
 
 
-template <template<class T, class U,
-                   class Traits = partial_absorber,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap, 
+template <ICL_IntervalMap_TEMPLATE(_T,_U,Traits,partial_absorber) IntervalMap,
           class T, class U>
 void interval_map_set_4_bicremental_types()
 {
@@ -1154,15 +1014,7 @@ void interval_map_set_4_bicremental_types()
 
 
 template <class T, class U, class Trt,
-          template<class T, class U,
-                   class Traits = Trt,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap
-          >
+          ICL_IntervalMap_TEMPLATE(_T,_U,Traits,Trt) IntervalMap>
 void interval_map_inclusion_compare_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
@@ -1226,15 +1078,7 @@ void interval_map_inclusion_compare_4_bicremental_types()
 }
 
 template <class T, class U, class Trt,
-          template<class T, class U,
-                   class Traits = Trt,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap
-          >
+          ICL_IntervalMap_TEMPLATE(_T,_U,Traits,Trt) IntervalMap>
 void interval_map_std_copy_via_inserter_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT; //Nedded for the test value generator
@@ -1268,15 +1112,7 @@ void interval_map_std_copy_via_inserter_4_bicremental_types()
 
 
 template <class T, class U, class Trt,
-          template<class T, class U,
-                   class Traits = Trt,
-                   ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, U),
-                   ICL_COMBINE Combine = ICL_COMBINE_INSTANCE(icl::inplace_plus, U),
-                   ICL_SECTION Section = ICL_SECTION_INSTANCE(icl::inter_section, U),
-                   ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, T, Compare),
-                   ICL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap
-          >
+          ICL_IntervalMap_TEMPLATE(_T,_U,Traits,Trt) IntervalMap>
 void interval_map_element_iter_4_discrete_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT;
@@ -1312,5 +1148,5 @@ void interval_map_element_iter_4_discrete_types()
 
 }
 
-#endif // LIBS_ICL_TEST_TEST_ICL_interval_map_shared_h_JOFA_080920__
+#endif // LIBS_ICL_TEST_TEST_INTERVAL_MAP_SHARED_HPP_JOFA_081005
 
