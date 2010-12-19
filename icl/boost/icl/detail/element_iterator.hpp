@@ -11,6 +11,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/mpl/if.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/config/warning_disable.hpp>
+#include <boost/icl/type_traits/succ_pred.hpp>
 #include <boost/icl/detail/mapped_reference.hpp>
 
 namespace boost{namespace icl
@@ -293,7 +294,7 @@ private:
 
     void increment()
     { 
-        if(_reptator < pred(adapt::length(_saltator)))
+        if(_reptator < icl::pred(adapt::length(_saltator)))
             ++_reptator; 
         else
         {

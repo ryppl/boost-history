@@ -6,8 +6,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __interval_base_map_h_JOFA_990223__
-#define __interval_base_map_h_JOFA_990223__
+#ifndef BOOST_ICL_INTERVAL_BASE_MAP_HPP_JOFA_990223
+#define BOOST_ICL_INTERVAL_BASE_MAP_HPP_JOFA_990223
 
 #include <limits>
 #include <boost/type_traits/ice.hpp>
@@ -673,9 +673,14 @@ private:
     template<class Type>
     struct on_total_absorbable<Type, true, true>
     {
-        static void flip(Type& object, const typename Type::segment_type& operand)
+        static void flip(Type& object, const typename Type::segment_type&)
         { icl::clear(object); }
     };
+
+#ifdef BOOST_MSVC 
+#pragma warning(push)
+#pragma warning(disable:4127) // conditional expression is constant
+#endif                        
 
     template<class Type>
     struct on_total_absorbable<Type, true, false>
@@ -693,6 +698,10 @@ private:
                 icl::join(object);
         }
     };
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
 
     template<class Type, bool absorbs_identities>
     struct on_total_absorbable<Type, false, absorbs_identities>

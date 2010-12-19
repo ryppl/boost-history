@@ -11,6 +11,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <functional>
 #include <boost/concept/assert.hpp>
 #include <boost/icl/concept/interval.hpp>
+#include <boost/icl/type_traits/succ_pred.hpp>
 #include <boost/icl/type_traits/value_size.hpp>
 #include <boost/icl/type_traits/type_to_string.hpp>
 
@@ -41,7 +42,7 @@ public:
 
     /** Constructor for a singleton interval <tt>[val,val+1)</tt> */
     explicit right_open_interval(const DomainT& val)
-        : _lwb(val), _upb(succ(val))
+        : _lwb(val), _upb(icl::succ(val))
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
