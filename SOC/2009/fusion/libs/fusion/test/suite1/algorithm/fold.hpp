@@ -143,6 +143,7 @@ struct fold_test_n
 
         {
             mpl::range_c<int, 1, n+1> init_range;
+
             typename fusion::result_of::as_vector<
                 typename mpl::transform<
                     range

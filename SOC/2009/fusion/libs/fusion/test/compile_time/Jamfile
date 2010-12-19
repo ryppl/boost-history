@@ -122,7 +122,10 @@ IMPORT result-module
 
 #Plotter
 exe plotter
-  : plotter/main.cpp /boost/date_time//boost_date_time
+  : plotter/main.cpp
+    /boost/date_time//boost_date_time
+#fix warnings in Boost.DateTime
+  : <toolset>gcc:<cxxflags>-Wno-long-long
   ;
 JAM_SEMAPHORE on plotter = fusion-compile-time-test ;
 

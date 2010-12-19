@@ -75,7 +75,6 @@ namespace boost { namespace fusion
     }
 
     //TODO boost config macro for default arguments for function templates
-
     template<typename IsAssociative,typename Seq, typename F>
     inline typename
         result_of::transform<

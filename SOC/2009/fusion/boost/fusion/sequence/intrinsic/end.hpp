@@ -1,5 +1,6 @@
 /*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,6 +11,8 @@
 
 #include <boost/fusion/support/internal/base.hpp>
 #include <boost/fusion/support/tag_of.hpp>
+#include <boost/fusion/support/is_sequence.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost { namespace fusion
 {
@@ -32,7 +35,10 @@ namespace boost { namespace fusion
     }
 
     template<typename Seq>
-    inline typename result_of::end<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
+    inline typename lazy_enable_if<
+        traits::is_sequence<BOOST_FUSION_R_ELSE_CLREF(Seq)>
+      , result_of::end<BOOST_FUSION_R_ELSE_CLREF(Seq)>
+    >::type
     end(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
         return result_of::end<BOOST_FUSION_R_ELSE_CLREF(Seq)>::call(
@@ -41,7 +47,10 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_FUSION_NO_RVALUE_REFERENCES
     template<typename Seq>
-    inline typename result_of::end<Seq&>::type
+    inline typename lazy_enable_if<
+        traits::is_sequence<Seq&>
+      , result_of::end<Seq&>
+    >::type
     end(Seq& seq)
     {
         return result_of::end<Seq&>::call(seq);
