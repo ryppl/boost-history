@@ -34,37 +34,51 @@ namespace boost
 namespace integer
 {
 
+namespace integer_detail
+{
+    template <typename T, bool X_is_0, T X, bool Y_is_0, T Y>
+    struct static_gcd_aux 
+        : static_gcd_aux<T, Y==0, Y, (X % Y)==0, X % Y>
+    {};
+    
+    template <typename T, T X, T Y>
+    struct static_gcd_aux<T, false, X, true, Y> : integral_constant<T, X> 
+    {};
+
+    template <typename T, T X, T Y, bool C>
+    struct static_gcd_aux<T, true, X, C, Y> : integral_constant<T, Y> 
+    {};
+}    
+    template <typename T, T X, T Y>
+    struct static_gcd : integer_detail::static_gcd_aux<T, X==0, X, Y==0, Y>
+    {};
+
+    //~ template <typename T, T X, T Y>
+    //~ struct static_gcd 
+        //~ : static_gcd<T, Y, X % Y>
+    //~ {};
+    
+    //~ template <typename T, T X>
+    //~ struct static_gcd<T, X, T(0)> : integral_constant<T, X> 
+    //~ {};
+
+    //~ template <typename T, T X>
+    //~ struct static_gcd<T, T(0), X> : integral_constant<T, X> 
+    //~ {};
+        
     typedef boost::intmax_t  static_gcd_signed_type;
     typedef boost::uintmax_t  static_gcd_unsigned_type;
 
-    template <static_gcd_signed_type X, boost::intmax_t Y>
-    struct static_signed_gcd 
-        : static_signed_gcd<Y, X % Y>
+   
+    template <static_gcd_signed_type X, static_gcd_signed_type Y>
+    struct static_signed_gcd : static_gcd<static_gcd_signed_type, X, Y>
     {};
     
-    template <static_gcd_signed_type X>
-    struct static_signed_gcd<X, 0> 
-        : integral_constant<static_gcd_signed_type, 
-            X> 
-    {};
 
-    template <static_gcd_signed_type X>
-    struct static_signed_gcd<0, X> 
-        : integral_constant<static_gcd_signed_type, 
-            X> 
-    {};
-
-    template <static_gcd_unsigned_type X, boost::intmax_t Y>
-    struct static_unsigned_gcd 
-        : integral_constant<static_gcd_unsigned_type, 
-            static_unsigned_gcd<Y, X % Y>::value>
+    template <static_gcd_unsigned_type X, static_gcd_unsigned_type Y>
+    struct static_unsigned_gcd : static_gcd<static_gcd_unsigned_type, X, Y>
     {};
     
-    template <static_gcd_unsigned_type X>
-    struct static_unsigned_gcd<X, 0> 
-        : integral_constant<static_gcd_signed_type, 
-            X> 
-    {};
 }
 }
 

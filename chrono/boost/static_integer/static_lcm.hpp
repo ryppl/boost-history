@@ -34,22 +34,23 @@ namespace boost
 
 namespace integer
 {
+
+    template <typename T, T X, T Y>
+    struct static_lcm 
+        : integral_constant<T, 
+            X / static_gcd<T, X, Y>::value * Y>
+    {};
+    
     typedef boost::intmax_t  static_lcm_signed_type;
     typedef boost::uintmax_t  static_lcm_unsigned_type;
 
-      template <static_lcm_signed_type X, boost::intmax_t Y>
-      struct static_signed_lcm 
-          : integral_constant<static_lcm_signed_type, 
-              X / static_signed_gcd<X, Y>::value * Y>
-      {
-      };
+    template <static_lcm_signed_type X, static_lcm_signed_type Y>
+    struct static_signed_lcm : static_lcm<static_lcm_signed_type, X, Y>
+    {};
 
-      template <static_lcm_unsigned_type X, boost::intmax_t Y>
-      struct static_unsigned_lcm 
-           : integral_constant<static_lcm_unsigned_type, 
-                X / static_unsigned_gcd<X, Y>::value * Y>
-      {
-      };
+    template <static_lcm_unsigned_type X, static_lcm_unsigned_type Y>
+    struct static_unsigned_lcm : static_lcm<static_lcm_unsigned_type, X, Y>
+    {};
 
 }
 }
