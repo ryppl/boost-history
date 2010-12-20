@@ -109,6 +109,8 @@ protected:
             glColor3f(0.0f, 1.0f, 0.0f);
             glBegin(GL_LINES);
             for (it = edges.begin(); it != edges.end(); it++) {
+                //if (!it->is_primary())
+                //    continue;
                 std::vector<point_2d_type> temp_v =
                     voronoi_helper<coordinate_type>::get_intermediate_points(&(*it), brect_);
                 for (int i = 0; i < static_cast<int>(temp_v.size()) - 1; i++) {

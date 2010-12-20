@@ -721,6 +721,26 @@ namespace sweepline {
                     twin()->cell()->contains_segment());
         }
 
+        // Return false if edge goes through the endpoint of the segment.
+        // Return true else.
+        bool is_primary() const {
+            voronoi_cell_type *cell1 = cell_;
+            voronoi_cell_type *cell2 = twin_->cell();
+            if (cell1->contains_segment() &&
+                !cell2->contains_segment()) {
+                if (cell1->point0() == cell2->point0() ||
+                    cell1->point1() == cell2->point0())
+                    return false;
+            }
+            if (cell2->contains_segment() &&
+                !cell1->contains_segment()) {
+                if (cell2->point0() == cell1->point0() ||
+                    cell2->point1() == cell1->point0())
+                    return false;
+            }
+            return true;
+        }
+
     private:
         friend class voronoi_output<coordinate_type>;
 
