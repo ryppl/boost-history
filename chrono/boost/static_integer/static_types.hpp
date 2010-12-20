@@ -10,12 +10,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_STATIC_INTEGER_STATIC_SIGN_HPP
-#define BOOST_STATIC_INTEGER_STATIC_SIGN_HPP
+#ifndef BOOST_STATIC_INTEGER_STATIC_TYPES_HPP
+#define BOOST_STATIC_INTEGER_STATIC_TYPES_HPP
 
 #include <boost/cstdint.hpp>
-#include <boost/type_traits/integral_constant.hpp>
-#include <boost/static_integer/static_types.hpp>
 
 //
 // We simply cannot include this header on gcc without getting copious warnings of the kind:
@@ -31,29 +29,10 @@
 
 namespace boost
 {
-
 namespace integer
 {
-    template <typename T, T X>
-    struct static_sign
-        : integral_constant<T, X == 0 ? 0 : (X < 0 ? -1 : 1)>
-    {
-    };
-    
-    
-    template <static_signed_type X>
-    struct static_signed_sign : static_sign<static_signed_type, X>
-    {
-    };
-
-    template <static_unsigned_type X>
-    struct static_unsigned_sign
-        : integral_constant<static_unsigned_type, X == 0 ? 0 : 1>
-    {
-    };
-
+    typedef boost::intmax_t  static_signed_type;
+    typedef boost::uintmax_t  static_unsigned_type;
+}  
 }
-}
-
-
 #endif

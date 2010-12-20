@@ -15,6 +15,7 @@
 
 #include <boost/cstdint.hpp>
 #include <boost/static_integer/static_gcd.hpp>
+#include <boost/static_integer/static_types.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
 //
@@ -41,15 +42,12 @@ namespace integer
             X / static_gcd<T, X, Y>::value * Y>
     {};
     
-    typedef boost::intmax_t  static_lcm_signed_type;
-    typedef boost::uintmax_t  static_lcm_unsigned_type;
-
-    template <static_lcm_signed_type X, static_lcm_signed_type Y>
-    struct static_signed_lcm : static_lcm<static_lcm_signed_type, X, Y>
+    template <static_signed_type X, static_signed_type Y>
+    struct static_signed_lcm : static_lcm<static_signed_type, X, Y>
     {};
 
-    template <static_lcm_unsigned_type X, static_lcm_unsigned_type Y>
-    struct static_unsigned_lcm : static_lcm<static_lcm_unsigned_type, X, Y>
+    template <static_unsigned_type X, static_unsigned_type Y>
+    struct static_unsigned_lcm : static_lcm<static_unsigned_type, X, Y>
     {};
 
 }

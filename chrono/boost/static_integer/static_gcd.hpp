@@ -14,6 +14,7 @@
 #define BOOST_STATIC_INTEGER_STATIC_GCD_HPP
 
 #include <boost/type_traits/integral_constant.hpp>
+#include <boost/static_integer/static_types.hpp>
 #include <boost/cstdint.hpp>
 
 //
@@ -65,18 +66,14 @@ namespace integer_detail
     //~ template <typename T, T X>
     //~ struct static_gcd<T, T(0), X> : integral_constant<T, X> 
     //~ {};
-        
-    typedef boost::intmax_t  static_gcd_signed_type;
-    typedef boost::uintmax_t  static_gcd_unsigned_type;
-
-   
-    template <static_gcd_signed_type X, static_gcd_signed_type Y>
-    struct static_signed_gcd : static_gcd<static_gcd_signed_type, X, Y>
+          
+    template <static_signed_type X, static_signed_type Y>
+    struct static_signed_gcd : static_gcd<static_signed_type, X, Y>
     {};
     
 
-    template <static_gcd_unsigned_type X, static_gcd_unsigned_type Y>
-    struct static_unsigned_gcd : static_gcd<static_gcd_unsigned_type, X, Y>
+    template <static_unsigned_type X, static_unsigned_type Y>
+    struct static_unsigned_gcd : static_gcd<static_unsigned_type, X, Y>
     {};
     
 }
