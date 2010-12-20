@@ -32,6 +32,7 @@ time2_demo contained this comment:
 #ifndef BOOST_RATIO_RATIO_HPP
 #define BOOST_RATIO_RATIO_HPP
 
+#include <boost/config.hpp>
 #include <boost/static_integer/static_abs.hpp>
 #include <boost/static_integer/static_sign.hpp>
 #include <boost/static_integer/static_gcd.hpp>
@@ -79,8 +80,8 @@ class ratio
       * boost::integer::static_signed_sign<D>::value;
     static const boost::intmax_t GCD = boost::integer::static_signed_gcd<ABS_N, ABS_D>::value;
 public:
-    static const boost::intmax_t num = SIGN_N * ABS_N / GCD;
-    static const boost::intmax_t den = ABS_D / GCD;
+    BOOST_STATIC_CONSTEXPR boost::intmax_t num = SIGN_N * ABS_N / GCD;
+    BOOST_STATIC_CONSTEXPR boost::intmax_t den = ABS_D / GCD;
 
 #ifdef BOOST_RATIO_EXTENSIONS    
     ratio() 
