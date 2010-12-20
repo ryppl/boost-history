@@ -5,7 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-//  See http://www.boost.org for updates, documentation, and revision history.
+// See http://www.boost.org for updates, documentation, and revision history.
 
 #include <cmath>
 
@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test1, T, test_types) {
     detail::circle_events_queue<T> event_q;
     BOOST_CHECK_EQUAL(event_q.empty(), true);
 
-    event_q.reset();
+    event_q.clear();
     for (int i = 0; i < 10; i++) {
         T x = static_cast<T>(-i);
         T y = static_cast<T>(10-i);

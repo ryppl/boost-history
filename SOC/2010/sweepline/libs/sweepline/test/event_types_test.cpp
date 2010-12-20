@@ -5,7 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-//  See http://www.boost.org for updates, documentation, and revision history.
+// See http://www.boost.org for updates, documentation, and revision history.
 
 #include "test_type_list.hpp"
 #include "boost/sweepline/voronoi_sweepline.hpp"
@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(site_event_test1, T, test_types) {
 
     BOOST_CHECK_EQUAL(site1.x(), static_cast<T>(1));
     BOOST_CHECK_EQUAL(site1.y(), static_cast<T>(2));
-    BOOST_CHECK_EQUAL(site1.get_site_index(), 0);
+    BOOST_CHECK_EQUAL(site1.index(), 0);
 
     site2 = make_site_event<T>(static_cast<T>(0), static_cast<T>(2), 1);
     bool arr1[] = { false, true, false, true, false, true };
@@ -73,8 +73,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(site_event_test2, T, test_types) {
     point_2d<T> point5 = make_point_2d<T>(static_cast<T>(1), static_cast<T>(1));
     site_event<T> site1 = make_site_event<T>(point1, point2, 0);
 
-    BOOST_CHECK_EQUAL(point1 == site1.get_point1(), true);
-    BOOST_CHECK_EQUAL(point2 == site1.get_point0(), true);
+    BOOST_CHECK_EQUAL(point1 == site1.point1(), true);
+    BOOST_CHECK_EQUAL(point2 == site1.point0(), true);
     BOOST_CHECK_EQUAL(site1.is_segment(), true);
     BOOST_CHECK_EQUAL(site1.is_vertical(), true);
 
@@ -119,8 +119,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(site_event_test3, T, test_types) {
     point_2d<T> point4 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(10));
     site_event<T> site1 = make_site_event<T>(point1, point2, 0);
 
-    BOOST_CHECK_EQUAL(point1 == site1.get_point1(), true);
-    BOOST_CHECK_EQUAL(point2 == site1.get_point0(), true);
+    BOOST_CHECK_EQUAL(point1 == site1.point1(), true);
+    BOOST_CHECK_EQUAL(point2 == site1.point0(), true);
     BOOST_CHECK_EQUAL(site1.is_segment(), true);
     BOOST_CHECK_EQUAL(site1.is_vertical(), false);
 

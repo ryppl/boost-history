@@ -5,7 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-//  See http://www.boost.org for updates, documentation, and revision history.
+// See http://www.boost.org for updates, documentation, and revision history.
 
 #ifndef VORONOI_OUTPUT_VERIFICATION
 #define VORONOI_OUTPUT_VERIFICATION
@@ -13,32 +13,28 @@
 #include <map>
 #include <vector>
 
-enum kOrientation {
-    RIGHT_ORIENTATION = -1,
-    COLLINEAR = 0,
-    LEFT_ORIENTATION = 1,
-};
-
 template <typename Point2D>
-kOrientation get_orientation(const Point2D &point1, const Point2D &point2, const Point2D &point3) {
+detail::kOrientation get_orientation(const Point2D &point1,
+                                     const Point2D &point2,
+                                     const Point2D &point3) {
     typename Point2D::coordinate_type a = (point2.x() - point1.x()) * (point3.y() - point2.y());
     typename Point2D::coordinate_type b = (point2.y() - point1.y()) * (point3.x() - point2.x());
     if (a == b)
-        return COLLINEAR;
-    return (a < b) ? RIGHT_ORIENTATION : LEFT_ORIENTATION;
+        return detail::COLLINEAR;
+    return (a < b) ? detail::RIGHT_ORIENTATION : detail::LEFT_ORIENTATION;
 }
 
 template <typename Output>
 bool verify_half_edge_orientation(const Output &output) {
-    typedef typename Output::Point2D Point2D;
+    typedef typename Output::point_2d_type point_2d_type;
     typename Output::voronoi_edge_const_iterator_type edge_it;
     for (edge_it = output.edge_records().begin(); 
          edge_it != output.edge_records().end(); edge_it++) {
-        if (edge_it->vertex0() != NULL && edge_it->vertex1() != NULL) {
-            const Point2D &site_point = edge_it->cell()->get_point0();
-            const Point2D &start_point = edge_it->vertex0()->vertex();
-            const Point2D &end_point = edge_it->vertex1()->vertex();
-            if (get_orientation(start_point, end_point, site_point) != LEFT_ORIENTATION)
+        if (edge_it->is_bounded()) {
+            const point_2d_type &site_point = edge_it->cell()->point0();
+            const point_2d_type &start_point = edge_it->vertex0()->vertex();
+            const point_2d_type &end_point = edge_it->vertex1()->vertex();
+            if (get_orientation(start_point, end_point, site_point) != detail::LEFT_ORIENTATION)
                 return false;
         }
     }
@@ -47,7 +43,7 @@ bool verify_half_edge_orientation(const Output &output) {
 
 template <typename Output>
 bool verify_cell_convexity(const Output &output) {
-    typedef typename Output::Point2D Point2D;
+    typedef typename Output::point_2d_type point_2d_type;
     typename Output::voronoi_cell_const_iterator_type cell_it;
     for (cell_it = output.cell_records().begin();
          cell_it != output.cell_records().end(); cell_it++) {
@@ -62,10 +58,10 @@ bool verify_cell_convexity(const Output &output) {
                     edge->vertex1() != NULL &&
                     edge->vertex1() == edge->next()->vertex0() &&
                     edge->next()->vertex1() != NULL) {
-                        const Point2D &vertex1 = edge->vertex0()->vertex();
-                        const Point2D &vertex2 = edge->vertex1()->vertex();
-                        const Point2D &vertex3 = edge->next()->vertex1()->vertex();
-                        if (get_orientation(vertex1, vertex2, vertex3) != LEFT_ORIENTATION)
+                        const point_2d_type &vertex1 = edge->vertex0()->vertex();
+                        const point_2d_type &vertex2 = edge->vertex1()->vertex();
+                        const point_2d_type &vertex3 = edge->next()->vertex1()->vertex();
+                        if (get_orientation(vertex1, vertex2, vertex3) != detail::LEFT_ORIENTATION)
                             return false;
                 }
                 edge = edge->next();
@@ -76,7 +72,7 @@ bool verify_cell_convexity(const Output &output) {
 
 template <typename Output>
 bool verify_incident_edges_ccw_order(const Output &output) {
-    typedef typename Output::Point2D Point2D;
+    typedef typename Output::point_2d_type point_2d_type;
     typedef typename Output::voronoi_edge_type voronoi_edge_type;
     typename Output::voronoi_vertex_const_iterator_type vertex_it;
     for (vertex_it = output.vertex_records().begin();
@@ -87,11 +83,11 @@ bool verify_incident_edges_ccw_order(const Output &output) {
         do {
             const voronoi_edge_type *edge_next1 = edge->rot_next();
             const voronoi_edge_type *edge_next2 = edge_next1->rot_next();
-            const Point2D &site1 = edge->cell()->get_point0();
-            const Point2D &site2 = edge_next1->cell()->get_point0();
-            const Point2D &site3 = edge_next2->cell()->get_point0();
+            const point_2d_type &site1 = edge->cell()->point0();
+            const point_2d_type &site2 = edge_next1->cell()->point0();
+            const point_2d_type &site3 = edge_next2->cell()->point0();
 
-            if (get_orientation(site1, site2, site3) != LEFT_ORIENTATION)
+            if (get_orientation(site1, site2, site3) != detail::LEFT_ORIENTATION)
                 return false;
 
             edge = edge->rot_next();
@@ -101,22 +97,20 @@ bool verify_incident_edges_ccw_order(const Output &output) {
 }
 
 template <typename Output>
-bool verfiy_no_half_edge_intersections(const Output &output) {
+bool verfiy_no_line_edge_intersections(const Output &output) {
     // Create map from edges with first point less than the second one.
     // Key is the first point of the edge, value is a vector of second points
     // with the same first point.
-    typedef typename Output::Point2D Point2D;
-    std::map< Point2D, std::vector<Point2D> > edge_map;
-    typedef typename std::map< Point2D, std::vector<Point2D> >::const_iterator 
+    typedef typename Output::point_2d_type point_2d_type;
+    std::map< point_2d_type, std::vector<point_2d_type> > edge_map;
+    typedef typename std::map< point_2d_type, std::vector<point_2d_type> >::const_iterator
         edge_map_iterator;
     typename Output::voronoi_edge_const_iterator_type edge_it;
     for (edge_it = output.edge_records().begin();
          edge_it != output.edge_records().end(); edge_it++) {
-        if (edge_it->cell()->contains_segment() && edge_it->twin()->cell()->contains_segment())
-            continue;
-        if (edge_it->vertex0() != NULL && edge_it->vertex1() != NULL) {
-            const Point2D &vertex0 = edge_it->vertex0()->vertex();
-            const Point2D &vertex1 = edge_it->vertex1()->vertex();
+        if (edge_it->is_bounded()) {
+            const point_2d_type &vertex0 = edge_it->vertex0()->vertex();
+            const point_2d_type &vertex1 = edge_it->vertex1()->vertex();
             if (vertex0 < vertex1)
                 edge_map[vertex0].push_back(vertex1);
         }
@@ -127,13 +121,13 @@ bool verfiy_no_half_edge_intersections(const Output &output) {
     // left to right checking for intersections between all pairs of edges
     // that overlap in the x dimension.
     // Complexity. Approximately N*sqrt(N). Worst case N^2.
-    typedef typename std::vector<Point2D>::size_type size_type;
+    typedef typename std::vector<point_2d_type>::size_type size_type;
     edge_map_iterator edge_map_it1, edge_map_it2, edge_map_it_bound;
     for (edge_map_it1 = edge_map.begin();
          edge_map_it1 != edge_map.end(); edge_map_it1++) {
-        const Point2D &point1 = edge_map_it1->first;
+        const point_2d_type &point1 = edge_map_it1->first;
         for (size_type i = 0; i < edge_map_it1->second.size(); i++) {
-            const Point2D &point2 = edge_map_it1->second[i];
+            const point_2d_type &point2 = edge_map_it1->second[i];
             typename Output::coordinate_type min_y1 = std::min(point1.y(), point2.y());
             typename Output::coordinate_type max_y1 = std::max(point1.y(), point2.y());
 
@@ -143,9 +137,9 @@ bool verfiy_no_half_edge_intersections(const Output &output) {
             edge_map_it2 = edge_map_it1;
             edge_map_it2++;
             for (; edge_map_it2 != edge_map_it_bound; edge_map_it2++) {
-                const Point2D &point3 = edge_map_it2->first;
+                const point_2d_type &point3 = edge_map_it2->first;
                 for (size_type j = 0; j < edge_map_it2->second.size(); j++) {
-                    const Point2D &point4 = edge_map_it2->second[j];
+                    const point_2d_type &point4 = edge_map_it2->second[j];
                     typename Output::coordinate_type min_y2 = std::min(point3.y(), point4.y());
                     typename Output::coordinate_type max_y2 = std::max(point3.y(), point4.y());
                     
@@ -156,9 +150,9 @@ bool verfiy_no_half_edge_intersections(const Output &output) {
 
                     // Intersection check.
                     if (get_orientation(point1, point2, point3) *
-                        get_orientation(point1, point2, point4) == RIGHT_ORIENTATION &&
+                        get_orientation(point1, point2, point4) == detail::RIGHT_ORIENTATION &&
                         get_orientation(point3, point4, point1) *
-                        get_orientation(point3, point4, point2) == RIGHT_ORIENTATION)
+                        get_orientation(point3, point4, point2) == detail::RIGHT_ORIENTATION)
                         return false;
                 }
             }
@@ -167,36 +161,32 @@ bool verfiy_no_half_edge_intersections(const Output &output) {
     return true;
 }
 
-template<typename P>
-struct segm_comparison {
-    bool operator()(const std::pair<P, P>& segm1, const std::pair<P, P>& segm2) const {
-        return segm1.first.x() < segm2.first.x();
-    }
-};
-
-template<typename P>
-bool intersect(const std::pair<P, P> &segm1, const std::pair<P, P> &segm2) {
-    if ((std::max)(segm1.first.y(), segm1.second.y()) <
-        (std::min)(segm2.first.y(), segm2.second.y()) ||
-        (std::max)(segm2.first.y(), segm2.second.y()) <
-        (std::min)(segm1.first.y(), segm1.second.y()))
+template <typename P>
+bool do_intersect(const P &p1, const P &p2, const P &p3, const P &p4) {
+    if ((std::max)(p1.y(), p2.y()) < (std::min)(p3.y(), p4.y()) ||
+        (std::max)(p3.y(), p4.y()) < (std::min)(p1.y(), p2.y()))
         return false;
-    if (segm1.first == segm2.first)
-        return detail::orientation_test(segm1.first, segm1.second, segm2.second)
-               == detail::COLINEAR;
-    if (segm1.second == segm2.second)
-        return detail::orientation_test(segm1.first, segm1.second, segm2.first)
-               == detail::COLINEAR;
-    if ((get_orientation(segm1.first, segm1.second, segm2.first) *
-         get_orientation(segm1.first, segm1.second, segm2.second) != LEFT_ORIENTATION) &&
-        (get_orientation(segm2.first, segm2.second, segm1.first) *
-         get_orientation(segm2.first, segm2.second, segm1.second) != LEFT_ORIENTATION))
+    if (p1 == p3)
+        return detail::orientation_test(p1, p2, p4) == detail::COLLINEAR;
+    if (p2 == p4)
+        return detail::orientation_test(p1, p2, p3) == detail::COLLINEAR;
+    if (p2 == p3)
+        return false;
+    if ((get_orientation(p1, p2, p3) * get_orientation(p1, p2, p4) != detail::LEFT_ORIENTATION) &&
+        (get_orientation(p3, p4, p1) * get_orientation(p3, p4, p2) != detail::LEFT_ORIENTATION))
         return true;
     return false;
 }
 
-template<typename P>
-void remove_intersections(std::vector< std::pair<P, P> >& segm_vec) {
+template <typename P>
+struct segm_comparison {
+    bool operator()(const std::pair<P, P> &segm1, const std::pair<P, P> &segm2) const {
+        return segm1.first.x() < segm2.first.x();
+    }
+};
+
+template <typename P>
+void remove_intersections(std::vector< std::pair<P, P> > &segm_vec) {
     for (int i = 0; i < static_cast<int>(segm_vec.size()); i++) {
         if (segm_vec[i].first > segm_vec[i].second) {
             (std::swap(segm_vec[i].first, segm_vec[i].second));
@@ -210,7 +200,7 @@ void remove_intersections(std::vector< std::pair<P, P> >& segm_vec) {
         l_bound = upper_bound(segm_vec.begin(), segm_vec.end(), bound, segm_comparison<P>());
         bool add = true;
         for (b_it = it + 1; b_it != l_bound; b_it++) {
-            if (intersect(*it, *b_it)) {
+            if (do_intersect(it->first, it->second, b_it->first, b_it->second)) {
                 add = false;
                 break;
             }
@@ -241,7 +231,7 @@ bool verify_output(const Output &output, kVerification mask) {
     if (mask & INCIDENT_EDGES_CCW_ORDER)
         result &= verify_incident_edges_ccw_order(output);
     if (mask & NO_HALF_EDGE_INTERSECTIONS)
-        result &= verfiy_no_half_edge_intersections(output);
+        result &= verfiy_no_line_edge_intersections(output);
     return result;
 }
 

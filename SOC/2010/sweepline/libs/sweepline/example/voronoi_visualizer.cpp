@@ -25,15 +25,15 @@ public:
     }
 
     void build(QString file_path) {
-        std::vector<iPoint2D> point_sites;
-        std::vector<iSegment2D> segment_sites;
+        std::vector<ipoint_2d_type> point_sites;
+        std::vector<isegment_2d_type> segment_sites;
 
         // Open file.
         QFile data(file_path);
         if (!data.open(QFile::ReadOnly))
             QMessageBox::warning(this, tr("Voronoi Visualizer"),
                                  tr("Disable to open file ") + file_path);
-        
+
         // Read points from the file.
         QTextStream in_stream(&data);
         int num_point_sites = 0;
@@ -75,7 +75,7 @@ protected:
             glBegin(GL_POINTS);
             for (it = cells.begin(); it != cells.end(); it++) {
                 if (!it->contains_segment())
-                    glVertex2f(it->get_point0().x(), it->get_point0().y());
+                    glVertex2f(it->point0().x(), it->point0().y());
             }
             glEnd();
             glPointSize(6);
@@ -83,8 +83,8 @@ protected:
             glBegin(GL_LINES);
             for (it = cells.begin(); it != cells.end(); it++) {
                 if (it->contains_segment()) {
-                    glVertex2f(it->get_point0().x(), it->get_point0().y());
-                    glVertex2f(it->get_point1().x(), it->get_point1().y());
+                    glVertex2f(it->point0().x(), it->point0().y());
+                    glVertex2f(it->point1().x(), it->point1().y());
                 }
             }
             glEnd();
@@ -109,7 +109,7 @@ protected:
             glColor3f(0.0f, 1.0f, 0.0f);
             glBegin(GL_LINES);
             for (it = edges.begin(); it != edges.end(); it++) {
-                std::vector<Point2D> temp_v = 
+                std::vector<point_2d_type> temp_v =
                     voronoi_helper<coordinate_type>::get_intermediate_points(&(*it), brect_);
                 for (int i = 0; i < static_cast<int>(temp_v.size()) - 1; i++) {
                     glVertex2f(temp_v[i].x(), temp_v[i].y());
@@ -138,9 +138,9 @@ private:
     }
 
     typedef double coordinate_type;
-    typedef point_2d<coordinate_type> Point2D;
-    typedef point_2d<int> iPoint2D;
-    typedef std::pair<iPoint2D, iPoint2D> iSegment2D;
+    typedef point_2d<coordinate_type> point_2d_type;
+    typedef point_2d<int> ipoint_2d_type;
+    typedef std::pair<ipoint_2d_type, ipoint_2d_type> isegment_2d_type;
     typedef voronoi_output<coordinate_type>::voronoi_cells_type voronoi_cells_type;
     typedef voronoi_output<coordinate_type>::voronoi_vertices_type voronoi_vertices_type;
     typedef voronoi_output<coordinate_type>::voronoi_edges_type voronoi_edges_type;
@@ -161,12 +161,12 @@ public:
         glWidget_ = new GLWidget();
         file_dir_ = QDir(QDir::currentPath(), tr("*.txt"));
         file_name_ = tr("");
-        
+
         QHBoxLayout *centralLayout = new QHBoxLayout;
         centralLayout->addWidget(glWidget_);
         centralLayout->addLayout(create_file_layout());
         setLayout(centralLayout);
-        
+
         update_file_list();
         setWindowTitle(tr("Voronoi Visualizer"));
         layout()->setSizeConstraint( QLayout::SetFixedSize );
@@ -203,9 +203,9 @@ private slots:
 private:
     QGridLayout *create_file_layout() {
         QGridLayout *file_layout = new QGridLayout;
-        
+
         message_label_ = new QLabel("Double click item to build voronoi diagram:");
-        
+
         file_list_ = new QListWidget();
         file_list_->connect(file_list_, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
                             this, SLOT(build()));

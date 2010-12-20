@@ -1,11 +1,11 @@
-// Boost sweepline library predicates_test.cpp file 
+// Boost sweepline library predicates_test.cpp file
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-//  See http://www.boost.org for updates, documentation, and revision history.
+// See http://www.boost.org for updates, documentation, and revision history.
 
 #include "test_type_list.hpp"
 #include "boost/sweepline/voronoi_sweepline.hpp"
@@ -17,8 +17,8 @@ using namespace boost::sweepline;
 #define CHECK_ORIENTATION_EQUAL(p1, p2, p3, exp) \
         BOOST_CHECK_EQUAL(detail::orientation_test(p1, p2, p3) == exp, true)
 
-#define CHECK_FAST_LESS_PREDICATE_PP(lp, rp, np, exp) \
-        BOOST_CHECK_EQUAL(detail::fast_less_predicate(lp, rp, np) == exp, true)
+#define CHECK_EPS_LESS_PREDICATE_PP(lp, rp, np, exp) \
+        BOOST_CHECK_EQUAL(detail::eps_less_predicate(lp, rp, np) == exp, true)
 
 #define CHECK_LESS_PREDICATE_PP(lp, rp, np, exp) \
         BOOST_CHECK_EQUAL(detail::less_predicate(lp, rp, np) == exp, true)
@@ -47,12 +47,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(orientation_test1, T, test_types) {
     point_2d<T> point4 = make_point_2d<T>(min_int, max_int);
     point_2d<T> point5 = make_point_2d<T>(max_int - 1, max_int);
 
-    CHECK_ORIENTATION_EQUAL(point1, point2, point3, detail::COLINEAR);
-    CHECK_ORIENTATION_EQUAL(point1, point3, point2, detail::COLINEAR);
-    CHECK_ORIENTATION_EQUAL(point2, point3, point1, detail::COLINEAR);
-    CHECK_ORIENTATION_EQUAL(point2, point1, point3, detail::COLINEAR);
-    CHECK_ORIENTATION_EQUAL(point3, point1, point2, detail::COLINEAR);
-    CHECK_ORIENTATION_EQUAL(point3, point2, point1, detail::COLINEAR);
+    CHECK_ORIENTATION_EQUAL(point1, point2, point3, detail::COLLINEAR);
+    CHECK_ORIENTATION_EQUAL(point1, point3, point2, detail::COLLINEAR);
+    CHECK_ORIENTATION_EQUAL(point2, point3, point1, detail::COLLINEAR);
+    CHECK_ORIENTATION_EQUAL(point2, point1, point3, detail::COLLINEAR);
+    CHECK_ORIENTATION_EQUAL(point3, point1, point2, detail::COLLINEAR);
+    CHECK_ORIENTATION_EQUAL(point3, point2, point1, detail::COLLINEAR);
 
     CHECK_ORIENTATION_EQUAL(point1, point4, point3, detail::RIGHT_ORIENTATION);
     CHECK_ORIENTATION_EQUAL(point1, point3, point4, detail::LEFT_ORIENTATION);
@@ -76,16 +76,16 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(fast_less_predicate_point_point_test1, T, test_typ
     point_2d<T> point3 = make_point_2d<T>(static_cast<T>(-2), static_cast<T>(1));
 
     point_2d<T> site1 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(5));
-    CHECK_FAST_LESS_PREDICATE_PP(point1, point2, site1, detail::UNDEFINED);
-    CHECK_FAST_LESS_PREDICATE_PP(point3, point1, site1, detail::UNDEFINED);
+    CHECK_EPS_LESS_PREDICATE_PP(point1, point2, site1, detail::UNDEFINED);
+    CHECK_EPS_LESS_PREDICATE_PP(point3, point1, site1, detail::UNDEFINED);
 
     point_2d<T> site2 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(4));
-    CHECK_FAST_LESS_PREDICATE_PP(point1, point2, site2, detail::MORE);
-    CHECK_FAST_LESS_PREDICATE_PP(point3, point1, site2, detail::MORE);
+    CHECK_EPS_LESS_PREDICATE_PP(point1, point2, site2, detail::MORE);
+    CHECK_EPS_LESS_PREDICATE_PP(point3, point1, site2, detail::MORE);
 
     point_2d<T> site3 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(6));
-    CHECK_FAST_LESS_PREDICATE_PP(point1, point2, site3, detail::LESS);
-    CHECK_FAST_LESS_PREDICATE_PP(point3, point1, site3, detail::LESS);
+    CHECK_EPS_LESS_PREDICATE_PP(point1, point2, site3, detail::LESS);
+    CHECK_EPS_LESS_PREDICATE_PP(point3, point1, site3, detail::LESS);
 }
 
 // Test main point-point predicate.
@@ -128,13 +128,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(fast_less_predicate_point_segment_test2, T, test_t
     point_2d<T> segm_start = make_point_2d<T>(static_cast<T>(-5), static_cast<T>(5));
     point_2d<T> segm_end = make_point_2d<T>(static_cast<T>(2), static_cast<T>(-2));
     typename detail::site_event<T> segm_site(segm_start, segm_end, 0);
-    
+
     point_2d<T> site_p1 = make_point_2d<T>(static_cast<T>(-2), static_cast<T>(4));
     point_2d<T> new_p1 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(-1));
-    segm_site.set_inverse();
+    segm_site.inverse();
     CHECK_FAST_LESS_PREDICATE_PS(site_p1, segm_site, new_p1, false, detail::MORE);
     CHECK_FAST_LESS_PREDICATE_PS(site_p1, segm_site, new_p1, true, detail::MORE);
-    
+
     point_2d<T> new_p2 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(1));
     CHECK_FAST_LESS_PREDICATE_PS(site_p1, segm_site, new_p2, false, detail::MORE);
     CHECK_FAST_LESS_PREDICATE_PS(site_p1, segm_site, new_p2, true, detail::UNDEFINED);
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(fast_less_predicate_point_segment_test3, T, test_t
     point_2d<T> segm_start = make_point_2d<T>(static_cast<T>(-5), static_cast<T>(5));
     point_2d<T> segm_end = make_point_2d<T>(static_cast<T>(2), static_cast<T>(-2));
     typename detail::site_event<T> segm_site(segm_start, segm_end, 0);
-    
+
     point_2d<T> site_p1 = make_point_2d<T>(static_cast<T>(-2), static_cast<T>(-4));
     point_2d<T> site_p2 = make_point_2d<T>(static_cast<int>(-4), static_cast<int>(1));
 
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(fast_less_predicate_point_segment_test3, T, test_t
     CHECK_FAST_LESS_PREDICATE_PS(site_p1, segm_site, new_p1, true, detail::LESS);
     CHECK_FAST_LESS_PREDICATE_PS(site_p2, segm_site, new_p1, false, detail::LESS);
     CHECK_FAST_LESS_PREDICATE_PS(site_p2, segm_site, new_p1, true, detail::LESS);
-    
+
     point_2d<T> new_p2 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(-2));
     CHECK_FAST_LESS_PREDICATE_PS(site_p1, segm_site, new_p2, false, detail::UNDEFINED);
     CHECK_FAST_LESS_PREDICATE_PS(site_p1, segm_site, new_p2, true, detail::LESS);
@@ -188,8 +188,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(less_predicate_point_segment_test1, T, test_types)
     point_2d<T> segm_end = make_point_2d<T>(static_cast<T>(2), static_cast<T>(-2));
     typename detail::site_event<T> segm_site1(segm_start, segm_end, 0);
     typename detail::site_event<T> segm_site2(segm_start, segm_end, 0);
-    segm_site2.set_inverse();
-    
+    segm_site2.inverse();
+
     point_2d<T> site_p1 = make_point_2d<T>(static_cast<T>(-2), static_cast<T>(4));
     point_2d<T> site_p2 = make_point_2d<T>(static_cast<T>(-2), static_cast<T>(-4));
     point_2d<T> site_p3 = make_point_2d<T>(static_cast<int>(-4), static_cast<int>(1));
@@ -233,7 +233,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(less_predicate_segment_segment_test1, T, test_type
     point_2d<T> segm_end1 = make_point_2d<T>(static_cast<T>(2), static_cast<T>(7));
     typename detail::site_event<T> segm_site1_1(segm_start1, segm_end1, 0);
     typename detail::site_event<T> segm_site1_2(segm_start1, segm_end1, 0);
-    segm_site1_2.set_inverse();
+    segm_site1_2.inverse();
 
     // New sites.
     point_2d<T> new_site1 = make_point_2d<T>(static_cast<T>(2), static_cast<T>(7));
@@ -252,7 +252,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(less_predicate_segment_segment_test2, T, test_type
     point_2d<T> segm_end1 = make_point_2d<T>(static_cast<T>(2), static_cast<T>(-2));
     site_event_type segm_site1_1(segm_start1, segm_end1, 0);
     site_event_type segm_site1_2(segm_start1, segm_end1, 0);
-    segm_site1_2.set_inverse();
+    segm_site1_2.inverse();
 
     // New sites.
     point_2d<T> new_site1 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(2));
@@ -277,7 +277,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(less_predicate_segment_segment_test2, T, test_type
     CHECK_LESS_PREDICATE_SS(segm_site1_2, segm_site3, new_site2, true);
     CHECK_LESS_PREDICATE_SS(segm_site1_2, segm_site3, new_site3, true);
     CHECK_LESS_PREDICATE_SS(segm_site1_2, segm_site3, new_site4, true);
-    segm_site3.set_inverse();
+    segm_site3.inverse();
     CHECK_LESS_PREDICATE_SS(segm_site3, segm_site1_2, new_site1, false);
     CHECK_LESS_PREDICATE_SS(segm_site3, segm_site1_2, new_site2, false);
     CHECK_LESS_PREDICATE_SS(segm_site3, segm_site1_2, new_site3, false);
@@ -291,7 +291,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(less_predicate_segment_segment_test3, T, test_type
     point_2d<T> segm_start2 = make_point_2d<T>(static_cast<T>(-5), static_cast<T>(5));
     point_2d<T> segm_end = make_point_2d<T>(static_cast<T>(-2), static_cast<T>(2));
     site_event_type segm_site1(segm_start1, segm_end, 0);
-    segm_site1.set_inverse();
+    segm_site1.inverse();
     site_event_type segm_site2(segm_start2, segm_end, 1);
     point_2d<T> point(-4, 2);
     CHECK_LESS_PREDICATE_SS(segm_site1, segm_site2, point, false);

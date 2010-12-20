@@ -1,11 +1,11 @@
-// Boost sweepline library builder_test.cpp file 
+// Boost sweepline library builder_test.cpp file
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-//  See http://www.boost.org for updates, documentation, and revision history.
+// See http://www.boost.org for updates, documentation, and revision history.
 
 #include <stdlib.h>
 #include <time.h>
@@ -187,7 +187,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(triangle_test1, T, test_types) {
     points.push_back(point1);
     points.push_back(point2);
     points.push_back(point3);
-    
+
     voronoi_output<coordinate_type> test_output;
     build_voronoi(points, test_output);
     VERIFY_VORONOI_OUTPUT(test_output, COMPLETE_VERIFICATION);
@@ -208,18 +208,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(triangle_test1, T, test_types) {
 
     const voronoi_edge_type *edge1_1 = it->incident_edge();
     const voronoi_edge_type *edge1_2 = edge1_1->twin();
-    CHECK_EQUAL_POINTS(edge1_1->cell()->get_point0(), point3);
-    CHECK_EQUAL_POINTS(edge1_2->cell()->get_point0(), point1);
+    CHECK_EQUAL_POINTS(edge1_1->cell()->point0(), point3);
+    CHECK_EQUAL_POINTS(edge1_2->cell()->point0(), point1);
 
     const voronoi_edge_type *edge2_1 = edge1_1->rot_prev();
     const voronoi_edge_type *edge2_2 = edge2_1->twin();
-    CHECK_EQUAL_POINTS(edge2_1->cell()->get_point0(), point1);
-    CHECK_EQUAL_POINTS(edge2_2->cell()->get_point0(), point2);
+    CHECK_EQUAL_POINTS(edge2_1->cell()->point0(), point1);
+    CHECK_EQUAL_POINTS(edge2_2->cell()->point0(), point2);
 
     const voronoi_edge_type *edge3_1 = edge2_1->rot_prev();
     const voronoi_edge_type *edge3_2 = edge3_1->twin();
-    CHECK_EQUAL_POINTS(edge3_1->cell()->get_point0(), point2);
-    CHECK_EQUAL_POINTS(edge3_2->cell()->get_point0(), point3);
+    CHECK_EQUAL_POINTS(edge3_1->cell()->point0(), point2);
+    CHECK_EQUAL_POINTS(edge3_2->cell()->point0(), point3);
 
     BOOST_CHECK_EQUAL(edge1_2->twin() == edge1_1, true);
     BOOST_CHECK_EQUAL(edge2_2->twin() == edge2_1, true);
@@ -256,7 +256,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(triangle_test2, T, test_types) {
     points.push_back(point1);
     points.push_back(point2);
     points.push_back(point3);
-    
+
     voronoi_output<coordinate_type> test_output;
     build_voronoi(points, test_output);
     VERIFY_VORONOI_OUTPUT(test_output, COMPLETE_VERIFICATION);
@@ -271,18 +271,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(triangle_test2, T, test_types) {
 
     const voronoi_edge_type *edge1_1 = it->incident_edge();
     const voronoi_edge_type *edge1_2 = edge1_1->twin();
-    CHECK_EQUAL_POINTS(edge1_1->cell()->get_point0(), point2);
-    CHECK_EQUAL_POINTS(edge1_2->cell()->get_point0(), point1);
+    CHECK_EQUAL_POINTS(edge1_1->cell()->point0(), point2);
+    CHECK_EQUAL_POINTS(edge1_2->cell()->point0(), point1);
 
     const voronoi_edge_type *edge2_1 = edge1_1->rot_prev();
-    const voronoi_edge_type *edge2_2 = edge2_1->twin();    
-    CHECK_EQUAL_POINTS(edge2_1->cell()->get_point0(), point1);
-    CHECK_EQUAL_POINTS(edge2_2->cell()->get_point0(), point3);
+    const voronoi_edge_type *edge2_2 = edge2_1->twin();
+    CHECK_EQUAL_POINTS(edge2_1->cell()->point0(), point1);
+    CHECK_EQUAL_POINTS(edge2_2->cell()->point0(), point3);
 
     const voronoi_edge_type *edge3_1 = edge2_1->rot_prev();
     const voronoi_edge_type *edge3_2 = edge3_1->twin();
-    CHECK_EQUAL_POINTS(edge3_1->cell()->get_point0(), point3);
-    CHECK_EQUAL_POINTS(edge3_2->cell()->get_point0(), point2);
+    CHECK_EQUAL_POINTS(edge3_1->cell()->point0(), point3);
+    CHECK_EQUAL_POINTS(edge3_2->cell()->point0(), point2);
 
     BOOST_CHECK_EQUAL(edge1_2->twin() == edge1_1, true);
     BOOST_CHECK_EQUAL(edge2_2->twin() == edge2_1, true);
@@ -317,7 +317,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(square_test1, T, test_types) {
                                                     static_cast<coordinate_type>(0)));
     points.push_back(make_point_2d<coordinate_type>(static_cast<coordinate_type>(1),
                                                     static_cast<coordinate_type>(1)));
-    
+
     voronoi_output<coordinate_type> test_output;
     build_voronoi(points, test_output);
     VERIFY_VORONOI_OUTPUT(test_output, COMPLETE_VERIFICATION);
@@ -335,23 +335,23 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(square_test1, T, test_types) {
     // Check voronoi edges.
     const voronoi_edge_type *edge1_1 = it->incident_edge();
     const voronoi_edge_type *edge1_2 = edge1_1->twin();
-    CHECK_EQUAL_POINTS(edge1_1->cell()->get_point0(), points[1]);
-    CHECK_EQUAL_POINTS(edge1_2->cell()->get_point0(), points[3]);
+    CHECK_EQUAL_POINTS(edge1_1->cell()->point0(), points[1]);
+    CHECK_EQUAL_POINTS(edge1_2->cell()->point0(), points[3]);
 
     const voronoi_edge_type *edge2_1 = edge1_1->rot_prev();
-    const voronoi_edge_type *edge2_2 = edge2_1->twin();    
-    CHECK_EQUAL_POINTS(edge2_1->cell()->get_point0(), points[3]);
-    CHECK_EQUAL_POINTS(edge2_2->cell()->get_point0(), points[2]);
+    const voronoi_edge_type *edge2_2 = edge2_1->twin();
+    CHECK_EQUAL_POINTS(edge2_1->cell()->point0(), points[3]);
+    CHECK_EQUAL_POINTS(edge2_2->cell()->point0(), points[2]);
 
     const voronoi_edge_type *edge3_1 = edge2_1->rot_prev();
     const voronoi_edge_type *edge3_2 = edge3_1->twin();
-    CHECK_EQUAL_POINTS(edge3_1->cell()->get_point0(), points[2]);
-    CHECK_EQUAL_POINTS(edge3_2->cell()->get_point0(), points[0]);
+    CHECK_EQUAL_POINTS(edge3_1->cell()->point0(), points[2]);
+    CHECK_EQUAL_POINTS(edge3_2->cell()->point0(), points[0]);
 
     const voronoi_edge_type *edge4_1 = edge3_1->rot_prev();
     const voronoi_edge_type *edge4_2 = edge4_1->twin();
-    CHECK_EQUAL_POINTS(edge4_1->cell()->get_point0(), points[0]);
-    CHECK_EQUAL_POINTS(edge4_2->cell()->get_point0(), points[1]);
+    CHECK_EQUAL_POINTS(edge4_1->cell()->point0(), points[0]);
+    CHECK_EQUAL_POINTS(edge4_2->cell()->point0(), points[1]);
 
     BOOST_CHECK_EQUAL(edge1_2->twin() == edge1_1, true);
     BOOST_CHECK_EQUAL(edge2_2->twin() == edge2_1, true);
@@ -574,7 +574,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(segment_site_test7, T, test_types) {
     BOOST_CHECK_EQUAL(test_output.num_vertex_records(), 6);
     BOOST_CHECK_EQUAL(test_output.num_edge_records(), 12);
     VERIFY_VORONOI_OUTPUT(test_output, NO_HALF_EDGE_INTERSECTIONS);
-    
+
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(segment_site_test8, T, test_types) {
@@ -638,7 +638,40 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(segment_grid_test, T, test_types) {
 #endif
 
 #ifdef NDEBUG
-BOOST_AUTO_TEST_CASE_TEMPLATE(segment_random_test, T, test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(segment_random_test1, T, test_types) {
+    srand(static_cast<unsigned int>(time(NULL)));
+    voronoi_output<T> test_output;
+    std::vector< point_2d<T> > point_vec;
+    std::vector< std::pair< point_2d<T>, point_2d<T> > > segm_vec;
+    int num_runs = 100000;
+    int num_segments = 3;
+    point_vec.push_back(make_point_2d<T>(-100, -100));
+    point_vec.push_back(make_point_2d<T>(-100, 100));
+    point_vec.push_back(make_point_2d<T>(100, -100));
+    point_vec.push_back(make_point_2d<T>(100, 100));
+    for (int i = 0; i < num_runs; i++) {
+        for (int j = 0; j < num_segments; j++) {
+            T x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+            while (x1 == x2 && y1 == y2) {
+                x1 = (rand() % 100) - 50;
+                y1 = (rand() % 100) - 50;
+                x2 = (rand() % 100) - 50;
+                y2 = (rand() % 100) - 50;
+            }
+            point_2d<T> point1(x1, y1);
+            point_2d<T> point2(x2, y2);
+            segm_vec.push_back(std::make_pair(point1, point2));
+        }
+        remove_intersections(segm_vec);
+        build_voronoi(point_vec, segm_vec, test_output);
+        VERIFY_VORONOI_OUTPUT(test_output, NO_HALF_EDGE_INTERSECTIONS);
+        segm_vec.clear();
+    }
+}
+#endif
+
+#ifdef NDEBUG
+BOOST_AUTO_TEST_CASE_TEMPLATE(segment_random_test2, T, test_types) {
     srand(static_cast<unsigned int>(time(NULL)));
     voronoi_output<T> test_output_small, test_output_large;
     std::vector< std::pair< point_2d<T>, point_2d<T> > > segm_vec;
@@ -648,12 +681,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(segment_random_test, T, test_types) {
     int mod_koef2[] = {100, 200, 300, 400};
     int max_value[] = {100, 600, 5150, 50200};
     int array_length = sizeof(num_segments) / sizeof(int);
-    for (int k = 0; k < array_length; k++) {
+    for (int k = 3; k < array_length; k++) {
         int koef = std::numeric_limits<int>::max() / max_value[k];
         for (int i = 0; i < num_runs[k]; i++) {
             for (int j = 0; j < num_segments[k]; j++) {
-                T x1 = (rand() % mod_koef1[k]) - mod_koef1[k] / 2;
-                T y1 = (rand() % mod_koef1[k]) - mod_koef1[k] / 2;
+                T x1 = (rand() % (mod_koef1[k] / 100)) - mod_koef1[k] / 2;
+                T y1 = (rand() % (mod_koef1[k] / 100)) - mod_koef1[k] / 2;
                 T dx = 0, dy = 0;
                 while (dx == 0 && dy == 0) {
                     dx = (rand() % mod_koef2[k]) - mod_koef2[k] / 2;

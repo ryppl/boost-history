@@ -1,11 +1,11 @@
-// Boost sweepline/voronoi_sweepline.hpp header file 
+// Boost sweepline/voronoi_sweepline.hpp header file
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-//  See http://www.boost.org for updates, documentation, and revision history.
+// See http://www.boost.org for updates, documentation, and revision history.
 
 #ifndef BOOST_SWEEPLINE_VORONOI_SWEEPLINE
 #define BOOST_SWEEPLINE_VORONOI_SWEEPLINE
@@ -18,7 +18,7 @@
 #include <queue>
 #include <vector>
 
-#ifdef USE_MULTI_PRECISION_LIBRARY 
+#ifdef USE_MULTI_PRECISION_LIBRARY
     #pragma warning( disable : 4800 )
     #include "gmpxx.h"
 #endif
@@ -29,24 +29,37 @@
 namespace boost {
 namespace sweepline {
 
+    // Public methods to compute voronoi diagram.
+    // points - vector of input points.
+    // segments - vector of input segments.
+    // output - voronoi output data structure to hold voronoi diagram.
+    // The assumption is made that input doesn't contain segments that
+    // intersect or points lying on the segments. Also coordinates of
+    // the points and of the endpoints of the segments should be within
+    // signed integer range [-2^31, 2^31-1].
+    // Complexity - O(N*logN), memory usage - O(N), where N is the total
+    // number of points and segments.
+
     template <typename T>
-    static void build_voronoi(const std::vector< point_2d<T> > &points,
-                              voronoi_output<double> &output) {
+    static inline void build_voronoi(const std::vector< point_2d<T> > &points,
+                                     voronoi_output<double> &output) {
         std::vector< std::pair< point_2d<T>, point_2d<T> > > segments_empty;
         build_voronoi<T>(points, segments_empty, output);
     }
 
     template <typename T>
-    static void build_voronoi(const std::vector< std::pair< point_2d<T>, point_2d<T> > > &segments,
-                              voronoi_output<double> &output) {
+    static inline void build_voronoi(
+          const std::vector< std::pair< point_2d<T>, point_2d<T> > > &segments,
+          voronoi_output<double> &output) {
         std::vector< point_2d<T> > points_empty;
         build_voronoi<T>(points_empty, segments, output);
     }
 
     template <typename T>
-    static void build_voronoi(const std::vector< point_2d<T> > &points,
-                              const std::vector< std::pair< point_2d<T>, point_2d<T> > > &segments,
-                              voronoi_output<double> &output) {
+    static inline void build_voronoi(
+          const std::vector< point_2d<T> > &points,
+          const std::vector< std::pair< point_2d<T>, point_2d<T> > > &segments,
+          voronoi_output<double> &output) {
         detail::voronoi_builder<double> builder(output);
         builder.init(points, segments);
         builder.run_sweepline();

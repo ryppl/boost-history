@@ -1,11 +1,11 @@
-// Boost sweepline library clipping_test.cpp file 
+// Boost sweepline library clipping_test.cpp file
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-//  See http://www.boost.org for updates, documentation, and revision history.
+// See http://www.boost.org for updates, documentation, and revision history.
 
 #include <stdlib.h>
 #include <time.h>
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(segment_clipping_test2, T, test_types) {
             intersections.clear();
             point_2d<T> test_direction(static_cast<T>(i), static_cast<T>(j));
             voronoi_helper<T>::find_intersections(test_origin, test_direction,
-                                       voronoi_helper<T>::SEGMENT, test_rect, intersections);
+                voronoi_helper<T>::SEGMENT, test_rect, intersections);
             if (abs(i) >= 2 || abs(j) >= 2)
                 BOOST_CHECK_EQUAL(static_cast<int>(intersections.size()), 1);
             else
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(segment_clipping_test3, T, test_types) {
             T y = static_cast<T>(j) / static_cast<T>(26);
             point_2d<T> test_direction(x, y);
             voronoi_helper<T>::find_intersections(test_origin, test_direction,
-                                       voronoi_helper<T>::SEGMENT, test_rect, intersections);
+                voronoi_helper<T>::SEGMENT, test_rect, intersections);
             BOOST_CHECK_EQUAL(static_cast<int>(intersections.size()), 0);
         }
 }
@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ray_clipping_test1, T, test_types) {
 
     std::vector< point_2d<T> > intersections;
     voronoi_helper<T>::find_intersections(test_origin, test_direction1,
-                                   voronoi_helper<T>::RAY, test_rect, intersections);
+        voronoi_helper<T>::RAY, test_rect, intersections);
     BOOST_CHECK_EQUAL(static_cast<int>(intersections.size()), 2);
     BOOST_CHECK_EQUAL(intersections[0].x() == static_cast<T>(0) &&
                       intersections[0].y() == static_cast<T>(2), true);
@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ray_clipping_test1, T, test_types) {
 
     intersections.clear();
     voronoi_helper<T>::find_intersections(test_origin, test_direction2,
-                                   voronoi_helper<T>::RAY, test_rect, intersections);
+        voronoi_helper<T>::RAY, test_rect, intersections);
     BOOST_CHECK_EQUAL(static_cast<int>(intersections.size()), 2);
     BOOST_CHECK_EQUAL(intersections[0].x() == static_cast<T>(0) &&
                       intersections[0].y() == static_cast<T>(1), true);
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ray_clipping_test1, T, test_types) {
 
     intersections.clear();
     voronoi_helper<T>::find_intersections(test_origin, test_direction3,
-                                   voronoi_helper<T>::RAY, test_rect, intersections);
+        voronoi_helper<T>::RAY, test_rect, intersections);
     BOOST_CHECK_EQUAL(static_cast<int>(intersections.size()), 2);
     BOOST_CHECK_EQUAL(intersections[0].x() == static_cast<T>(1) &&
                       intersections[0].y() == static_cast<T>(2), true);
@@ -162,14 +162,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ray_clipping_test1, T, test_types) {
 
     intersections.clear();
     voronoi_helper<T>::find_intersections(test_origin, test_direction4,
-                                   voronoi_helper<T>::RAY, test_rect, intersections);
+        voronoi_helper<T>::RAY, test_rect, intersections);
     BOOST_CHECK_EQUAL(static_cast<int>(intersections.size()), 1);
     BOOST_CHECK_EQUAL(intersections[0].x() == static_cast<T>(0) &&
                       intersections[0].y() == static_cast<T>(-1), true);
 
     intersections.clear();
     voronoi_helper<T>::find_intersections(test_origin, test_direction5,
-                                   voronoi_helper<T>::RAY, test_rect, intersections);
+        voronoi_helper<T>::RAY, test_rect, intersections);
     BOOST_CHECK_EQUAL(static_cast<int>(intersections.size()), 1);
     BOOST_CHECK_EQUAL(intersections[0].x() == static_cast<T>(4) &&
                       intersections[0].y() == static_cast<T>(2), true);
@@ -189,7 +189,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ray_clipping_test2, T, test_types) {
             T y = static_cast<T>(j) / static_cast<T>(26);
             point_2d<T> test_direction(x, y);
             voronoi_helper<T>::find_intersections(test_origin, test_direction,
-									   voronoi_helper<T>::RAY, test_rect, intersections);
+                voronoi_helper<T>::RAY, test_rect, intersections);
             if (i && j)
                 BOOST_CHECK_EQUAL(static_cast<int>(intersections.size()), 1);
         }
@@ -208,7 +208,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(line_clipping_test1, T, test_types) {
 
     std::vector< point_2d<T> > intersections;
     voronoi_helper<T>::find_intersections(test_origin, test_direction1,
-                                   voronoi_helper<T>::LINE, test_rect, intersections);
+        voronoi_helper<T>::LINE, test_rect, intersections);
     BOOST_CHECK_EQUAL(static_cast<int>(intersections.size()), 2);
     BOOST_CHECK_EQUAL(intersections[0].x() == static_cast<T>(3) &&
                       intersections[0].y() == static_cast<T>(-1), true);
@@ -217,7 +217,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(line_clipping_test1, T, test_types) {
 
     intersections.clear();
     voronoi_helper<T>::find_intersections(test_origin, test_direction2,
-                                   voronoi_helper<T>::LINE, test_rect, intersections);
+        voronoi_helper<T>::LINE, test_rect, intersections);
     BOOST_CHECK_EQUAL(static_cast<int>(intersections.size()), 2);
     BOOST_CHECK_EQUAL(intersections[0].x() == static_cast<T>(1) &&
                       intersections[0].y() == static_cast<T>(-1), true);
@@ -226,7 +226,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(line_clipping_test1, T, test_types) {
 
     intersections.clear();
     voronoi_helper<T>::find_intersections(test_origin, test_direction3,
-                                   voronoi_helper<T>::LINE, test_rect, intersections);
+        voronoi_helper<T>::LINE, test_rect, intersections);
     BOOST_CHECK_EQUAL(static_cast<int>(intersections.size()), 2);
     BOOST_CHECK_EQUAL(intersections[0].x() == static_cast<T>(4) &&
                       intersections[0].y() == static_cast<T>(0.5), true);
@@ -235,14 +235,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(line_clipping_test1, T, test_types) {
 
     intersections.clear();
     voronoi_helper<T>::find_intersections(test_origin, test_direction4,
-                                   voronoi_helper<T>::LINE, test_rect, intersections);
+        voronoi_helper<T>::LINE, test_rect, intersections);
     BOOST_CHECK_EQUAL(static_cast<int>(intersections.size()), 1);
     BOOST_CHECK_EQUAL(intersections[0].x() == static_cast<T>(0) &&
                       intersections[0].y() == static_cast<T>(-1), true);
 
     intersections.clear();
     voronoi_helper<T>::find_intersections(test_origin, test_direction5,
-                                   voronoi_helper<T>::LINE, test_rect, intersections);
+        voronoi_helper<T>::LINE, test_rect, intersections);
     BOOST_CHECK_EQUAL(static_cast<int>(intersections.size()), 1);
     BOOST_CHECK_EQUAL(intersections[0].x() == static_cast<T>(4) &&
                       intersections[0].y() == static_cast<T>(2), true);
@@ -262,7 +262,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(line_clipping_test2, T, test_types) {
             T y = static_cast<T>(j) / static_cast<T>(26);
             point_2d<T> test_direction(x, y);
             voronoi_helper<T>::find_intersections(test_origin, test_direction,
-                                       voronoi_helper<T>::LINE, test_rect, intersections);
+                voronoi_helper<T>::LINE, test_rect, intersections);
             if (i && j)
                 BOOST_CHECK_EQUAL(static_cast<int>(intersections.size()), 2);
         }
