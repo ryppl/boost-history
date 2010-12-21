@@ -628,15 +628,6 @@ namespace detail {
     // For further information about relative errors and ULPs try this link:
     // http://docs.sun.com/source/806-3568/ncg_goldberg.html
 
-    // Used during epsilon robust computations. Avoids substraction.
-    static inline void avoid_cancellation(double value, double &left_expr,
-                                          double &right_expr) {
-        if (value >= 0)
-            left_expr += value;
-        else
-            right_expr -= value;
-    }
-
     // Convert value to 64-bit unsigned integer.
     // Return true if the value is positive, else false.
     template <typename T>
@@ -646,20 +637,6 @@ namespace detail {
             return true;
         } else {
             res = static_cast<unsigned long long>(-value);
-            return false;
-        }
-    }
-
-    template <typename T>
-    static inline bool compute_dif_65_bit(T value1, T value2,
-                                          unsigned long long &res) {
-        if (value1 >= value2) {
-            res = static_cast<unsigned long long>(value1) -
-                  static_cast<unsigned long long>(value2);
-            return true;
-        } else {
-            res = static_cast<unsigned long long>(value2) -
-                  static_cast<unsigned long long>(value1);
             return false;
         }
     }
@@ -867,7 +844,10 @@ namespace detail {
         }
 
         epsilon_robust_comparator<T> &operator+=(const T &val) {
-            avoid_cancellation(val, positive_sum_, negative_sum_);
+            if (val >= 0)
+                positive_sum_ += val;
+            else
+                negative_sum_ -= val;
             return *this;
         }
 
@@ -879,7 +859,10 @@ namespace detail {
         }
 
         epsilon_robust_comparator<T> &operator-=(const T &val) {
-            avoid_cancellation(val, negative_sum_, positive_sum_);
+            if (val >= 0)
+                negative_sum_ += val;
+            else
+                positive_sum_ -= val;
             return *this;
         }
 
@@ -1022,350 +1005,25 @@ namespace detail {
         erc_type denom;
     };
 
-    // Epsilon robust predicate.
-    // Let x0 be the sweepline coordinate, left site coordinates be (x1, y1),
-    // right site coordinates be (x2, y2). Equations of the arcs will be:
-    // x1(y) = ((y - y1)^2 + x1^2 - x0^2) / (2*(x1 - x0));
-    // x2(y) = ((y - y2)^2 + x2^2 - x0^2) / (2*(x2 - x0)).
-    // Horizontal line going throught site (x0, y0) intersects second arc
-    // at first if x2(y*) > x1(y*) or:
-    // (x0-x2)*(x0-x1)*(x1-x2) + (x0-x1)*(y0-y2)^2 < (x0-x2)*(y0-y1)^2.
-    // Works correctly for any input coordinate type that can be casted without
-    // lose of data to the integer type within a range [-2^31, 2^31-1].
+    // Find the x-coordinate (relative to the sweepline position) of the point
+    // of the intersection of the horizontal line going through the new site
+    // with the arc corresponding to the point site.
+    // The relative error is atmost 3EPS.
     template <typename T>
-    static kPredicateResult eps_less_predicate(const point_2d<T> &left_point,
-                                               const point_2d<T> &right_point,
+    static double find_distance_to_point_arc(const point_2d<T> &point_site,
+                                             const point_2d<T> &new_point) {
+        double dx = point_site.x() - new_point.x();
+        double dy = point_site.y() - new_point.y();
+        return (dx * dx + dy * dy) / (2 * dx);
+    }
+
+    // Find the x-coordinate (relative to the sweepline position) of the point
+    // of the intersection of the horizontal line going through the new site
+    // with the arc corresponding to the segment site.
+    // The relative error is atmost 7EPS.
+    template <typename T>
+    static double find_distance_to_segment_arc(const site_event<T> &segment,
                                                const point_2d<T> &new_point) {
-        // Compute x0 - x1.
-        double fast_a1 = new_point.x() - left_point.x();
-
-        // Compute x0 - x2.
-        double fast_a2 = new_point.x() - right_point.x();
-
-        // Compute y0 - y1.
-        double fast_b1 = new_point.y() - left_point.y();
-
-        // Compute y0 - y2.
-        double fast_b2 = new_point.y() - right_point.y();
-
-        // Compute x1 - x2.
-        double fast_c = left_point.x() - right_point.x();
-
-        // Compute (x0-x2)*(y0-y1)^2. This value is always positive(x0 > x2).
-        // Relative error is equal to 2*EPS.
-        double fast_left_expr = fast_a1 * fast_b2 * fast_b2;
-
-        // Compute (x0-x1)*(y0-y2)^2. This value is always positive(x0 > x1).
-        // Relative error is equal to 2*EPS.
-        double fast_right_expr = fast_a2 * fast_b1 * fast_b1;
-
-        // Avoid substraction while adding (x0-x2)*(x0-x1)*(x1-x2).
-        // In case its value is positive add it to the left expression,
-        // else add its module to the right expression.
-        // Relative error of the (x0-x2)*(x0-x1)*(x1-x2) is 2*EPS.
-        // Relative error of the addition to any of the expression is:
-        // max(2*EPS, 2*EPS) + EPS = 3*EPS.
-        avoid_cancellation(fast_a1 * fast_a2 * fast_c,
-                           fast_left_expr, fast_right_expr);
-
-        // If expression are outside undefined ULP range, return exact result.
-        // Relative error of one expression is 2*EPS and 3*EPS for another.
-        // 2*EPS + 3*EPS = 5*EPS <= 5*ULP. That's why predicate may produce
-        // exact result in case expressions are out of the 5*ULP range.
-        if (!almost_equal(fast_left_expr, fast_right_expr, 5))
-            return (fast_left_expr < fast_right_expr) ? LESS : MORE;
-
-        // Expressions are inside of the 5*ULP range. Result is undefined.
-        return UNDEFINED;
-    }
-
-    // Robust 65-bit predicate, avoids using high-precision libraries.
-    // Works correctly for any input coordinate type that can be casted without
-    // lose of data to the integer type within a range [-2^31, 2^31 - 1].
-    // (x0-x2)*(x0-x1)*(x1-x2) + (x0-x1)*(y0-y2)^2 < (x0-x2)*(y0-y1)^2 check
-    // is equal to: (x1-x2) + (y0-y2)^2/(x0-x2) < (y0-y1)^2 / (x0-x1).
-    template <typename T>
-    static bool robust_65bit_less_predicate(const point_2d<T> &left_point,
-                                            const point_2d<T> &right_point,
-                                            const point_2d<T> &new_point) {
-        typedef long long ll;
-        typedef unsigned long long ull;
-        ull a1, a2, b1, b2, b1_sqr, b2_sqr, l_expr, r_expr;
-        bool l_expr_plus, r_expr_plus;
-
-        // Compute a1 = (x0-x1), a2 = (x0-x2), a1 and a2 are positive.
-        a1 = static_cast<ull>(static_cast<ll>(new_point.x()) -
-                              static_cast<ll>(left_point.x()));
-        a2 = static_cast<ull>(static_cast<ll>(new_point.x()) -
-                              static_cast<ll>(right_point.x()));
-
-        // Compute b1_sqr = (y0-y1)^2 and b2_sqr = (y0-y2)^2. We don't need
-        // to know signs of b1 and b2, because we use their squared values.
-        l_expr_plus = compute_dif_65_bit(new_point.y(), left_point.y(), b1);
-        l_expr_plus = compute_dif_65_bit(new_point.y(), right_point.y(), b2);
-        b1_sqr = b1 * b1;
-        b2_sqr = b2 * b2;
-        ull b1_sqr_mod = b1_sqr % a1;
-        ull b2_sqr_mod = b2_sqr % a2;
-
-        // Compute l_expr = (x1 - x2).
-        l_expr_plus = compute_dif_65_bit(left_point.x(), right_point.x(), l_expr);
-
-        // In case (b2_sqr / a2) < (b1_sqr / a1), decrease left_expr by 1.
-        if (b2_sqr_mod * a1 < b1_sqr_mod * a2) {
-            if (!l_expr_plus)
-                l_expr++;
-            else if (l_expr != 0)
-                l_expr--;
-            else {
-                l_expr++;
-                l_expr_plus = false;
-            }
-        }
-
-        // Compute right expression.
-        r_expr_plus = compute_dif_65_bit(b1_sqr / a1, b2_sqr / a2, r_expr);
-
-        // Compare left and right expressions.
-        if (!l_expr_plus && r_expr_plus)
-            return true;
-        if (l_expr_plus && !r_expr_plus)
-            return false;
-        if (l_expr_plus && r_expr_plus)
-            return l_expr < r_expr;
-        return l_expr > r_expr;
-    }
-
-    // Robust predicate, avoids using high-precision libraries.
-    // Returns true if horizontal line going through the new point site
-    // intersects right arc at first, else returns false. If horizontal line
-    // goes through intersection point of the given two arcs returns false.
-    // Works correctly for any input coordinate type that can be casted without
-    // lose of data to the integer type within a range [-2^31, 2^31-1].
-    template <typename T>
-    static bool less_predicate(const point_2d<T> &left_point,
-                               const point_2d<T> &right_point,
-                               const point_2d<T> &new_point) {
-        // Any two point sites with different x-coordinates create two
-        // bisectors. Each bisector is defined by the order the sites
-        // appear in its representation. Predicates used in this function
-        // won't produce the correct result for the any arrangment of the
-        // input sites. That's why some preprocessing is required to handle
-        // such cases.
-        if (left_point.x() > right_point.x()) {
-            if (new_point.y() <= left_point.y())
-                return false;
-        } else if (left_point.x() < right_point.x()) {
-            if (new_point.y() >= right_point.y())
-                return true;
-        } else {
-            // If x-coordinates of the sites are equal, we may produce the
-            // result without any further computations.
-            return left_point.y() + right_point.y() < 2.0 * new_point.y();
-        }
-
-        // Try epsilon robust predicate at first.
-        kPredicateResult eps_res = eps_less_predicate(left_point, right_point, new_point);
-        if (eps_res != UNDEFINED)
-            return (eps_res == LESS);
-
-        // If the result of the epsilon robust predicate is undefined
-        // use 65-bit robust predicate that produces exact result.
-        return robust_65bit_less_predicate(left_point, right_point, new_point);
-    }
-
-    template <typename T>
-    static kPredicateResult fast_less_predicate(point_2d<T> site_point, site_event<T> segment_site,
-                                                point_2d<T> new_point, bool reverse_order) {
-        typedef long long ll;
-        typedef unsigned long long ull;
-        if (orientation_test(segment_site.point0(true), segment_site.point1(true),
-            new_point) != RIGHT_ORIENTATION) {
-            return (!segment_site.is_inverse()) ? LESS : MORE;
-        }
-
-        const point_2d<T> &segment_start = segment_site.point0();
-        const point_2d<T> &segment_end = segment_site.point1();
-        ll dif_x = static_cast<ll>(new_point.x()) - static_cast<ll>(site_point.x());
-        ll dif_y = static_cast<ll>(new_point.y()) - static_cast<ll>(site_point.y());
-        ll a = static_cast<ll>(segment_end.x()) - static_cast<ll>(segment_start.x());
-        ll b = static_cast<ll>(segment_end.y()) - static_cast<ll>(segment_start.y());
-
-        if (a == 0) {
-            if (new_point.y() < site_point.y() && !reverse_order)
-                return MORE;
-            else if (new_point.y() > site_point.y() && reverse_order)
-                return LESS;
-            return UNDEFINED;
-        } else {
-            kOrientation orientation = orientation_test(a, b, dif_x, dif_y);
-            if ((orientation == COLLINEAR) ||
-                (!segment_site.is_inverse() ^ (orientation == RIGHT_ORIENTATION))) {
-                if (!segment_site.is_inverse())
-                    return reverse_order ? LESS : UNDEFINED;
-                return reverse_order ? UNDEFINED : MORE;
-            }
-        }
-
-        double fast_left_expr = static_cast<double>(a) *
-                                static_cast<double>(dif_y + dif_x) *
-                                static_cast<double>(dif_y - dif_x);
-        double fast_right_expr = static_cast<double>(b<<1) *
-                                 static_cast<double>(dif_x) *
-                                 static_cast<double>(dif_y);
-        if (!(almost_equal(fast_left_expr, fast_right_expr, 4))) {
-            if (segment_site.is_inverse() ^ (fast_left_expr > fast_right_expr) ^ reverse_order)
-                return reverse_order ? LESS : MORE;
-            return UNDEFINED;
-        }
-
-        ull a_rob, a_sign, b_rob, b_sign, dif_x_rob, dif_x_sign, dif_y_rob, dif_y_sign;
-        a_sign = convert_to_65_bit(a, a_rob);
-        b_sign = convert_to_65_bit(b, b_rob);
-        dif_x_sign = convert_to_65_bit(dif_x, dif_x_rob);
-        dif_y_sign = convert_to_65_bit(dif_y, dif_y_rob);
-
-        ull dif_x_sqr = dif_x_rob * dif_x_rob;
-        ull dif_y_sqr = dif_y_rob * dif_y_rob;
-        ull left_expr_div = dif_y_sqr / dif_x_sqr + 1;
-        ull left_expr_mod = dif_y_sqr % dif_x_sqr;
-
-        ull right_expr_denom = a_rob * dif_x_rob;
-        ull right_expr = b_rob * dif_y_rob;
-        ull right_expr_div = right_expr / right_expr_denom;
-        ull right_expr_mod = right_expr % right_expr_denom;
-
-        bool comparison_result;
-        if ((b_sign != dif_y_sign) && right_expr_div)
-            comparison_result = true;
-        else {
-            if (b_sign != dif_y_sign && right_expr_mod)
-                right_expr_mod = right_expr_denom - right_expr_mod;
-            else
-                right_expr_div++;
-            bool left_expr_odd = (left_expr_div % 2 == 1);
-            left_expr_div >>= 1;
-            if (left_expr_div != right_expr_div) {
-                comparison_result = (left_expr_div > right_expr_div);
-            } else {
-                ull temp_right = right_expr_denom - right_expr_mod;
-                if (temp_right > right_expr_mod) {
-                    if (left_expr_odd)
-                        comparison_result = true;
-                    else
-                        right_expr_mod <<= 1;
-                } else {
-                    if (!left_expr_odd)
-                        comparison_result = false;
-                    else
-                        right_expr_mod = right_expr_mod - temp_right;
-                }
-                left_expr_div = left_expr_mod / dif_x_rob;
-                right_expr_div = right_expr_mod / a_rob;
-                if (left_expr_div != right_expr_div)
-                    comparison_result = (left_expr_div > right_expr_div);
-                else {
-                    left_expr_mod = left_expr_mod % dif_x_rob;
-                    right_expr_mod = right_expr_mod % a_rob;
-                    comparison_result = (left_expr_mod * a_rob > right_expr_mod * dif_x_rob);
-                }
-            }
-        }
-
-        if (segment_site.is_inverse() ^ comparison_result ^ reverse_order)
-            return reverse_order ? LESS : MORE;
-        return UNDEFINED;
-    }
-
-#ifdef USE_MULTI_PRECISION_LIBRARY
-    template<typename T>
-    static bool mpz_less_predicate(point_2d<T> segment_start, point_2d<T> segment_end,
-                                   point_2d<T> site_point, point_2d<T> new_point,
-                                   bool reverse_order) {
-        mpz_class segment_start_x, segment_start_y, segment_end_x, segment_end_y,
-                  site_point_x, site_point_y, new_point_x, new_point_y;
-        segment_start_x = static_cast<int>(segment_start.x());
-        segment_start_y = static_cast<int>(segment_start.y());
-        segment_end_x = static_cast<int>(segment_end.x());
-        segment_end_y = static_cast<int>(segment_end.y());
-        site_point_x = static_cast<int>(site_point.x());
-        site_point_y = static_cast<int>(site_point.y());
-        new_point_x = static_cast<int>(new_point.x());
-        new_point_y = static_cast<int>(new_point.y());
-
-        mpz_class dif_x, dif_y, a, b, mul1, mul2, temp, left_expr, right_expr;
-        dif_x = new_point_x - site_point_x;
-        dif_y = new_point_y - site_point_y;
-        a = segment_end_x - segment_start_x;
-        b = segment_end_y - segment_start_y;
-        mul1 = new_point_x - segment_end_x;
-        mul2 = new_point_y - segment_end_y;
-        temp = dif_x * dif_x + dif_y * dif_y;
-        left_expr = (a * a + b * b) * temp * temp;
-        right_expr = (2.0 * dif_x * (b * mul1 - a * mul2) - b * temp);
-        right_expr = right_expr * right_expr;
-
-        return (!reverse_order) ? (left_expr > right_expr) : (left_expr < right_expr);
-    }
-#endif
-
-    // Returns true if a horizontal line going through a new site intersects
-    // right arc at first, else returns false. If horizontal line goes
-    // through intersection point of the given two arcs returns false also.
-    // reverse_order flag defines arrangement of the sites. If it's false
-    // the order is (point, segment), else - (segment, point).
-    template <typename T>
-    static bool less_predicate(point_2d<T> site_point, site_event<T> segment_site,
-                               point_2d<T> new_point, bool reverse_order) {
-        kPredicateResult fast_res = fast_less_predicate(
-            site_point, segment_site, new_point, reverse_order);
-        if (fast_res != UNDEFINED) {
-            return (fast_res == LESS);
-        }
-
-        const point_2d<T> &segment_start = segment_site.point0();
-        const point_2d<T> &segment_end = segment_site.point1();
-        double dif_x = static_cast<double>(new_point.x()) -
-                       static_cast<double>(site_point.x());
-        double dif_y = static_cast<double>(new_point.y()) -
-                       static_cast<double>(site_point.y());
-        double a = static_cast<double>(segment_end.x()) -
-                   static_cast<double>(segment_start.x());
-        double b = static_cast<double>(segment_end.y()) -
-                   static_cast<double>(segment_start.y());
-
-        double mul1 = static_cast<double>(new_point.x()) - static_cast<double>(segment_end.x());
-        double mul2 = static_cast<double>(new_point.y()) - static_cast<double>(segment_end.y());
-        double temp = dif_x * dif_x + dif_y * dif_y;
-        double a_sqr = a * a;
-        double b_sqr = b * b;
-        double left_expr = (a_sqr * temp + (4.0 * dif_x * mul1) * b_sqr) * temp;
-        double right_expr = (4.0 * dif_x * dif_x) * ((mul1 * mul1) * b_sqr + (mul2 * mul2) * a_sqr);
-        double common_expr = (4.0 * dif_x * a) * (b * mul2);
-        avoid_cancellation(common_expr * temp, right_expr, left_expr);
-        avoid_cancellation(common_expr * (2.0 * dif_x * mul1), left_expr, right_expr);
-
-        if (!almost_equal(left_expr, right_expr, 18)) {
-            if (!reverse_order)
-                return left_expr > right_expr;
-            return left_expr < right_expr;
-        }
-
-#ifndef USE_MULTI_PRECISION_LIBRARY
-        return (!reverse_order) ? (left_expr > right_expr) : (left_expr < right_expr);
-#else
-        return mpz_less_predicate(segment_start, segment_end, site_point,
-                                  new_point, reverse_order);
-#endif
-    }
-
-    // Find the distance between the x-coordinate of the sweepline and the
-    // x-coordinate of the point of the intersection of the horizontal line
-    // going through the new site with the arc corresponding to the segment
-    // site. The relative error is atmost equal to 7EPS.
-    template <typename T>
-    static double find_distance(const site_event<T> &segment,
-                                const point_2d<T> &new_point) {
         if (segment.is_vertical()) {
             return (segment.point0().x() - new_point.x()) * 0.5;
         } else {
@@ -1397,6 +1055,203 @@ namespace detail {
         }
     }
 
+    // Robust 65-bit predicate, avoids using high-precision libraries.
+    // Works correctly for any input coordinate type that can be casted without
+    // lose of data to the integer type within a range [-2^31, 2^31 - 1].
+    template <typename T>
+    static bool robust_65bit_less_predicate(const point_2d<T> &left_point,
+                                            const point_2d<T> &right_point,
+                                            const point_2d<T> &new_point) {
+        typedef long long ll;
+        typedef unsigned long long ull;
+        ull a1, a2, b1, b2, b1_sqr, b2_sqr, l_expr, r_expr;
+        bool l_expr_plus, r_expr_plus;
+
+        // Compute a1 = (x0-x1), a2 = (x0-x2), b1 = (y0 - y1), b2 = (y0 - y2).
+        convert_to_65_bit(new_point.x() - left_point.x(), a1);
+        convert_to_65_bit(new_point.x() - right_point.x(), a2);
+        convert_to_65_bit(new_point.y() - left_point.y(), b1);
+        convert_to_65_bit(new_point.y() - right_point.y(), b2);
+
+        // Compute b1_sqr = (y0-y1)^2 and b2_sqr = (y0-y2)^2.
+        b1_sqr = b1 * b1;
+        b2_sqr = b2 * b2;
+        ull b1_sqr_mod = b1_sqr % a1;
+        ull b2_sqr_mod = b2_sqr % a2;
+
+        // Compute l_expr = (x1 - x2).
+        l_expr_plus = convert_to_65_bit(left_point.x() - right_point.x(), l_expr);
+
+        // In case (b2_sqr / a2) < (b1_sqr / a1), decrease left_expr by 1.
+        if (b2_sqr_mod * a1 < b1_sqr_mod * a2) {
+            if (!l_expr_plus)
+                l_expr++;
+            else if (l_expr != 0)
+                l_expr--;
+            else {
+                l_expr++;
+                l_expr_plus = false;
+            }
+        }
+
+        // Compute right expression.
+        ull value1 = b1_sqr / a1;
+        ull value2 = b2_sqr / a2;
+        if (value1 >= value2) {
+            r_expr = value1 - value2;
+            r_expr_plus = true;
+        } else {
+            r_expr = value2 - value1;
+            r_expr_plus = false;
+        }
+
+        // Compare left and right expressions.
+        if (!l_expr_plus && r_expr_plus)
+            return true;
+        if (l_expr_plus && !r_expr_plus)
+            return false;
+        if (l_expr_plus && r_expr_plus)
+            return l_expr < r_expr;
+        return l_expr > r_expr;
+    }
+
+    // Robust predicate, avoids using high-precision libraries.
+    // Returns true if a horizontal line going through the new point site
+    // intersects right arc at first, else returns false. If horizontal line
+    // goes through intersection point of the given two arcs returns false.
+    // Works correctly for any input coordinate type that can be casted without
+    // lose of data to the integer type within a range [-2^31, 2^31-1].
+    template <typename T>
+    static bool less_predicate(const point_2d<T> &left_point,
+                               const point_2d<T> &right_point,
+                               const point_2d<T> &new_point) {
+        // Any two point sites with different x-coordinates create two
+        // bisectors. Each bisector is defined by the order the sites
+        // appear in its representation. Predicates used in this function
+        // won't produce the correct result for the any arrangment of the
+        // input sites. That's why some preprocessing is required to handle
+        // such cases.
+        if (left_point.x() > right_point.x()) {
+            if (new_point.y() <= left_point.y())
+                return false;
+        } else if (left_point.x() < right_point.x()) {
+            if (new_point.y() >= right_point.y())
+                return true;
+        } else {
+            // If x-coordinates of the sites are equal, we may produce the
+            // result without any further computations.
+            return left_point.y() + right_point.y() < 2.0 * new_point.y();
+        }
+
+        double dist1 = find_distance_to_point_arc(left_point, new_point);
+        double dist2 = find_distance_to_point_arc(right_point, new_point);
+
+        if (!almost_equal(dist1, dist2, 6))
+            return dist1 < dist2;
+
+        // If the result of the epsilon robust predicate is undefined
+        // use 65-bit robust predicate that produces exact result.
+        return robust_65bit_less_predicate(left_point, right_point, new_point);
+    }
+
+    template <typename T>
+    static kPredicateResult fast_less_predicate(point_2d<T> site_point, site_event<T> segment_site,
+                                                point_2d<T> new_point, bool reverse_order) {
+        typedef long long ll;
+        typedef unsigned long long ull;
+        if (orientation_test(segment_site.point0(true), segment_site.point1(true),
+            new_point) != RIGHT_ORIENTATION) {
+            return (!segment_site.is_inverse()) ? LESS : MORE;
+        }
+
+        const point_2d<T> &segment_start = segment_site.point0(true);
+        const point_2d<T> &segment_end = segment_site.point1(true);
+        double dif_x = new_point.x() - site_point.x();
+        double dif_y = new_point.y() - site_point.y();
+        double a = segment_end.x() - segment_start.x();
+        double b = segment_end.y() - segment_start.y();
+
+        if (segment_site.is_vertical()) {
+            if (new_point.y() < site_point.y() && !reverse_order)
+                return MORE;
+            else if (new_point.y() > site_point.y() && reverse_order)
+                return LESS;
+            return UNDEFINED;
+        } else {
+            kOrientation orientation = orientation_test(a, b, dif_x, dif_y);
+            if (orientation == LEFT_ORIENTATION) {
+                if (!segment_site.is_inverse())
+                    return reverse_order ? LESS : UNDEFINED;
+                return reverse_order ? UNDEFINED : MORE;
+            }
+        }
+
+        double fast_left_expr = a * (dif_y + dif_x) * (dif_y - dif_x);
+        double fast_right_expr = (2.0 * b) * dif_x * dif_y;
+        if (!(almost_equal(fast_left_expr, fast_right_expr, 4))) {
+            if ((fast_left_expr > fast_right_expr) ^ reverse_order)
+                return reverse_order ? LESS : MORE;
+            return UNDEFINED;
+        }
+        return UNDEFINED;
+    }
+
+//#ifdef USE_MULTI_PRECISION_LIBRARY
+//    template<typename T>
+//    static bool mpz_less_predicate(point_2d<T> segment_start, point_2d<T> segment_end,
+//                                   point_2d<T> site_point, point_2d<T> new_point,
+//                                   bool reverse_order) {
+//        mpz_class segment_start_x, segment_start_y, segment_end_x, segment_end_y,
+//                  site_point_x, site_point_y, new_point_x, new_point_y;
+//        segment_start_x = static_cast<int>(segment_start.x());
+//        segment_start_y = static_cast<int>(segment_start.y());
+//        segment_end_x = static_cast<int>(segment_end.x());
+//        segment_end_y = static_cast<int>(segment_end.y());
+//        site_point_x = static_cast<int>(site_point.x());
+//        site_point_y = static_cast<int>(site_point.y());
+//        new_point_x = static_cast<int>(new_point.x());
+//        new_point_y = static_cast<int>(new_point.y());
+//
+//        mpz_class dif_x, dif_y, a, b, mul1, mul2, temp, left_expr, right_expr;
+//        dif_x = new_point_x - site_point_x;
+//        dif_y = new_point_y - site_point_y;
+//        a = segment_end_x - segment_start_x;
+//        b = segment_end_y - segment_start_y;
+//        mul1 = new_point_x - segment_end_x;
+//        mul2 = new_point_y - segment_end_y;
+//        temp = dif_x * dif_x + dif_y * dif_y;
+//        left_expr = (a * a + b * b) * temp * temp;
+//        right_expr = (2.0 * dif_x * (b * mul1 - a * mul2) - b * temp);
+//        right_expr = right_expr * right_expr;
+//
+//        return (!reverse_order) ? (left_expr > right_expr) : (left_expr < right_expr);
+//    }
+//#endif
+
+    // Returns true if a horizontal line going through a new site intersects
+    // right arc at first, else returns false. If horizontal line goes
+    // through intersection point of the given two arcs returns false also.
+    // reverse_order flag defines arrangement of the sites. If it's false
+    // the order is (point, segment), else - (segment, point).
+    template <typename T>
+    static bool less_predicate(point_2d<T> site_point, site_event<T> segment_site,
+                               point_2d<T> new_point, bool reverse_order) {
+        kPredicateResult fast_res = fast_less_predicate(
+            site_point, segment_site, new_point, reverse_order);
+        if (fast_res != UNDEFINED) {
+            return (fast_res == LESS);
+        }
+
+        double dist1 = find_distance_to_point_arc(site_point, new_point);
+        double dist2 = find_distance_to_segment_arc(segment_site, new_point);
+
+        if (!almost_equal(dist1, dist2, 10)) {
+            return reverse_order ^ (dist1 < dist2);
+        }
+
+        return reverse_order ^ (dist1 < dist2);
+    }
+
     // Returns true if a horizontal line going through a new site intersects
     // right arc at first, else returns false. If horizontal line goes
     // through intersection point of the given two arcs returns false also.
@@ -1415,8 +1270,8 @@ namespace detail {
         // the x-coordinates of the points of the intersections of the
         // horizontal line going through the new site with arcs corresponding
         // to the first and to the second segment sites respectively.
-        double dist1 = find_distance(left_segment, new_point);
-        double dist2 = find_distance(right_segment, new_point);
+        double dist1 = find_distance_to_segment_arc(left_segment, new_point);
+        double dist2 = find_distance_to_segment_arc(right_segment, new_point);
 
         // The undefined ulp range is equal to 7EPS + 7EPS <= 14ULP.
         if (!almost_equal(dist1, dist2, 14)) {

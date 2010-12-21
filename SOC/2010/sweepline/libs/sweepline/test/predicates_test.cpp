@@ -17,9 +17,6 @@ using namespace boost::sweepline;
 #define CHECK_ORIENTATION_EQUAL(p1, p2, p3, exp) \
         BOOST_CHECK_EQUAL(detail::orientation_test(p1, p2, p3) == exp, true)
 
-#define CHECK_EPS_LESS_PREDICATE_PP(lp, rp, np, exp) \
-        BOOST_CHECK_EQUAL(detail::eps_less_predicate(lp, rp, np) == exp, true)
-
 #define CHECK_LESS_PREDICATE_PP(lp, rp, np, exp) \
         BOOST_CHECK_EQUAL(detail::less_predicate(lp, rp, np) == exp, true)
 
@@ -67,25 +64,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(orientation_test1, T, test_types) {
     CHECK_ORIENTATION_EQUAL(point5, point3, point1, detail::RIGHT_ORIENTATION);
     CHECK_ORIENTATION_EQUAL(point3, point5, point1, detail::LEFT_ORIENTATION);
     CHECK_ORIENTATION_EQUAL(point3, point1, point5, detail::RIGHT_ORIENTATION);
-}
-
-// Test fast point-point predicate.
-BOOST_AUTO_TEST_CASE_TEMPLATE(fast_less_predicate_point_point_test1, T, test_types) {
-    point_2d<T> point1 = make_point_2d<T>(static_cast<T>(-5), static_cast<T>(0));
-    point_2d<T> point2 = make_point_2d<T>(static_cast<T>(-8), static_cast<T>(9));
-    point_2d<T> point3 = make_point_2d<T>(static_cast<T>(-2), static_cast<T>(1));
-
-    point_2d<T> site1 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(5));
-    CHECK_EPS_LESS_PREDICATE_PP(point1, point2, site1, detail::UNDEFINED);
-    CHECK_EPS_LESS_PREDICATE_PP(point3, point1, site1, detail::UNDEFINED);
-
-    point_2d<T> site2 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(4));
-    CHECK_EPS_LESS_PREDICATE_PP(point1, point2, site2, detail::MORE);
-    CHECK_EPS_LESS_PREDICATE_PP(point3, point1, site2, detail::MORE);
-
-    point_2d<T> site3 = make_point_2d<T>(static_cast<T>(0), static_cast<T>(6));
-    CHECK_EPS_LESS_PREDICATE_PP(point1, point2, site3, detail::LESS);
-    CHECK_EPS_LESS_PREDICATE_PP(point3, point1, site3, detail::LESS);
 }
 
 // Test main point-point predicate.
