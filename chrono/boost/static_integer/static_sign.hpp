@@ -13,9 +13,9 @@
 #ifndef BOOST_STATIC_INTEGER_STATIC_SIGN_HPP
 #define BOOST_STATIC_INTEGER_STATIC_SIGN_HPP
 
-#include <boost/cstdint.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/static_integer/static_types.hpp>
+#include <boost/mpl/sign.hpp>
 
 //
 // We simply cannot include this header on gcc without getting copious warnings of the kind:
@@ -35,11 +35,10 @@ namespace boost
 namespace integer
 {
     template <typename T, T X>
-    struct static_sign
-        : integral_constant<T, X == 0 ? 0 : (X < 0 ? -1 : 1)>
+    struct static_sign 
+        : mpl::sign< integral_constant<T,X> >
     {
     };
-    
     
     template <static_signed_type X>
     struct static_signed_sign : static_sign<static_signed_type, X>

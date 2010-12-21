@@ -15,7 +15,7 @@
 
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/static_integer/static_types.hpp>
-#include <boost/cstdint.hpp>
+#include <boost/mpl/gcd.hpp>
 
 //
 // We simply cannot include this header on gcc without getting copious warnings of the kind:
@@ -51,7 +51,9 @@ namespace integer_detail
     {};
 }    
     template <typename T, T X, T Y>
-    struct static_gcd : integer_detail::static_gcd_aux<T, X==0, X, Y==0, Y>
+    struct static_gcd 
+        //~ : integer_detail::static_gcd_aux<T, X==0, X, Y==0, Y>
+        : mpl::gcd<integral_constant<T, X>, integral_constant<T, Y> >
     {};
 
     //~ template <typename T, T X, T Y>
