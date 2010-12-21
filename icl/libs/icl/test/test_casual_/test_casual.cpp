@@ -60,9 +60,13 @@ void time_test()
 	interval<time_duration>::type rel_a_b 
         = interval<time_duration>::right_open(d_a, d_b);
 
+	time_duration sz_a_b_1 = d_b - d_a;
+	time_duration sz_a_b_2 = icl::size(rel_a_b);
+	cout << "b-a         = " << sz_a_b_1 << endl;
+	cout << "size([a,b)) = " << sz_a_b_2 << endl;
+	cout << "size([a,b)) = " << (icl::size(rel_a_b)) << endl;
 
-	icl::size(rel_a_b);
-	cout << rel_a_b << " " << d_m << (icl::size(rel_a_b)) << endl;
+	cout << rel_a_b << " " << (icl::size(rel_a_b)) << endl;
 }
 
 BOOST_AUTO_TEST_CASE(casual)
