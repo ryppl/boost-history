@@ -16,7 +16,9 @@ using namespace boost::sweepline;
 class GLWidget : public QGLWidget {
     Q_OBJECT
 public:
-    GLWidget(QMainWindow *parent = NULL) : QGLWidget(QGLFormat(QGL::SampleBuffers), parent) {
+    GLWidget(QMainWindow *parent = NULL) :
+            QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
+            primary_edges_only_(false) {
         startTimer(40);
     }
 
@@ -59,6 +61,10 @@ public:
 
         // Update view.
         update_view_port();
+    }
+
+    void show_primary_edges_only() {
+        primary_edges_only_ ^= true;
     }
 
 protected:
@@ -109,8 +115,8 @@ protected:
             glColor3f(0.0f, 1.0f, 0.0f);
             glBegin(GL_LINES);
             for (it = edges.begin(); it != edges.end(); it++) {
-                //if (!it->is_primary())
-                //    continue;
+                if (!it->is_primary() && primary_edges_only_)
+                    continue;
                 std::vector<point_2d_type> temp_v =
                     voronoi_helper<coordinate_type>::get_intermediate_points(&(*it), brect_);
                 for (int i = 0; i < static_cast<int>(temp_v.size()) - 1; i++) {
@@ -154,6 +160,7 @@ private:
         voronoi_edge_const_iterator_type;
     BRect<coordinate_type> brect_;
     voronoi_output<coordinate_type> voronoi_output_;
+    bool primary_edges_only_;
 };
 
 class MainWindow : public QWidget {
@@ -175,6 +182,10 @@ public:
     }
 
 private slots:
+    void primary_edges_only() {
+        glWidget_->show_primary_edges_only();
+    }
+
     void browse() {
         QString new_path = QFileDialog::getExistingDirectory(0, tr("Choose Directory"),
                                                              file_dir_.absolutePath());
@@ -184,15 +195,6 @@ private slots:
         update_file_list();
     }
 
-    void print_scr() {
-        if (!file_name_.isEmpty()) {
-            QImage screenshot = glWidget_->grabFrameBuffer(true);
-            QString output_file = file_dir_.absolutePath() + tr("/") +
-                file_name_.left(file_name_.indexOf('.')) + tr(".png");
-            screenshot.save(output_file, 0, -1);
-        }
-    }
-
     void build() {
         file_name_ = file_list_->currentItem()->text();
         QString file_path = file_dir_.filePath(file_name_);
@@ -200,6 +202,15 @@ private slots:
         glWidget_->build(file_path);
         message_label_->setText("Double click the item to build voronoi diagram:");
         setWindowTitle(tr("Voronoi Visualizer - ") + file_path);
+    }
+
+    void print_scr() {
+        if (!file_name_.isEmpty()) {
+            QImage screenshot = glWidget_->grabFrameBuffer(true);
+            QString output_file = file_dir_.absolutePath() + tr("/") +
+                file_name_.left(file_name_.indexOf('.')) + tr(".png");
+            screenshot.save(output_file, 0, -1);
+        }
     }
 
 private:
@@ -212,6 +223,9 @@ private:
         file_list_->connect(file_list_, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
                             this, SLOT(build()));
 
+        QCheckBox *primary_checkbox = new QCheckBox("Show primary edges only.");
+        connect(primary_checkbox, SIGNAL(clicked()), this, SLOT(primary_edges_only()));
+
         QPushButton *browse_button = new QPushButton(tr("Browse Input Directory"));
         connect(browse_button, SIGNAL(clicked()), this, SLOT(browse()));
         browse_button->setMinimumHeight(50);
@@ -222,8 +236,9 @@ private:
 
         file_layout->addWidget(message_label_, 0, 0);
         file_layout->addWidget(file_list_, 1, 0);
-        file_layout->addWidget(browse_button, 2, 0);
-        file_layout->addWidget(print_scr_button, 3, 0);
+        file_layout->addWidget(primary_checkbox, 2, 0);
+        file_layout->addWidget(browse_button, 3, 0);
+        file_layout->addWidget(print_scr_button, 4, 0);
 
         return file_layout;
     }
