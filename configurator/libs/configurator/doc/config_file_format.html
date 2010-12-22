@@ -24,7 +24,7 @@
 		<hr/>
   
   		<div class="navigation">
-<a href="../index.html"><img src="src/images/prev.png" alt="Prev"></a>&nbsp;<a href="index.html"><img src="src/images/up.png" alt="Up"></a>&nbsp;<a href="index.html"><img src="src/images/home.png" alt="Home"></a>&nbsp;<a href="what_s_new.html"><img src="src/images/next.png" alt="Next"></a>
+<a href="requirements.html"><img src="src/images/prev.png" alt="Prev"></a>&nbsp;<a href="requirements.html"><img src="src/images/up.png" alt="Up"></a>&nbsp;<a href="index.html"><img src="src/images/home.png" alt="Home"></a>&nbsp;<a href="common_usage.html"><img src="src/images/next.png" alt="Next"></a>
 </div>
   
 		<h2>Configuration file format</h2>
@@ -48,14 +48,16 @@ Name and value separated by a some separator, default is <strong>=</strong>. You
 		<br/><br/>
 		<h3><a name="section"></a>Section</h3>
 		
-		Set of options is often corresponds to some conceptual entity, so it often combined in the section. For example:
+		Set of options is often corresponds to some conceptual entity, so it useful to combine in the section. For example:
 <pre class="config">
 &lt;Server&gt;
 	Host = 127.0.0.1
 	Port = 80
 &lt;/Server&gt;
 </pre>
-Section <strong>Server</strong> corresponds to some server. Of course, you can use arbitrary nesting sections:
+Section <strong>Server</strong> corresponds to some server, and options <strong>Host</strong> and <strong>Port</strong> regarded not as an independent options, but as parts of conceptual entity "Server".
+<br/><br/>
+Of course, you can use arbitrary nesting sections:
 <pre class="config">
 &lt;Server&gt;
 	Host = 127.0.0.1
@@ -77,13 +79,15 @@ Section <strong>Server</strong> corresponds to some server. Of course, you can u
 	&lt;/Plugins&gt;
 &lt;/Server&gt;
 </pre>
-As you see, section's name enclosed in XML-like angle brackets (<strong>&lt;</strong>---<strong>&gt;</strong> for section opening, <strong>&lt;/</strong>---<strong>&gt;</strong> for section closing). You can change enclosing format (for details, see <a href="config_file_customizing.html">Configuration file customizing</a>).
+As you see, section's name enclosed in XML-like angle brackets (<strong>&lt;</strong>---<strong>&gt;</strong> for section opening, <strong>&lt;/</strong>---<strong>&gt;</strong> for section closing). This is default format, but you can set custom format (for details, see <a href="config_file_customizing.html">Configuration file customizing</a>).
 <br/><br/>
 The careful reader may notice that option's name (for example, <strong>Admin login</strong>) and option's value (for example, <strong>sync check browser</strong>) can contains spaces, except when space/tab using as separator (for details, see <a href="config_file_customizing.html">Configuration file customizing</a>).
 		<br/><br/>
 		<h3><a name="comments"></a>Comments</h3>
 		
-		Comments are very useful almost in any configuration file. You can use one-line or multi-line comments, in C++-style:
+		Comments are very useful almost in any configuration file. You can use one-line or multi-line comments.
+		<br/><br/>
+		By default, using comments in C++-style:
 <pre class="config">
 // 
 // Common info about this config
@@ -104,16 +108,16 @@ sometextsometextsomet*/gin	= admin
 	&lt;/Security&gt;
 &lt;/Server&gt;
 </pre>
-You can change sign for one-line comment (for details, see <a href="config_file_customizing.html">Configuration file customizing</a>).
+But you can change signs for one-line comments and for multi-line comments (for details, see <a href="config_file_customizing.html">Configuration file customizing</a>).
 	<br/><br/>
 	<div class="last_revised">Last revised 
-  	<!--webbot bot="Timestamp" s-type="EDITED" s-format="%d %B, %Y" startspan -->10
+  	<!--webbot bot="Timestamp" s-type="EDITED" s-format="%d %B, %Y" startspan -->22
   	December, 2010<!--webbot bot="Timestamp" endspan i-checksum="38514" --></div>
 	
 	<hr/>
 	
 	<div class="navigation">
-<a href="../index.html"><img src="src/images/prev.png" alt="Prev"></a>&nbsp;<a href="index.html"><img src="src/images/up.png" alt="Up"></a>&nbsp;<a href="index.html"><img src="src/images/home.png" alt="Home"></a>&nbsp;<a href="what_s_new.html"><img src="src/images/next.png" alt="Next"></a>
+<a href="requirements.html"><img src="src/images/prev.png" alt="Prev"></a>&nbsp;<a href="requirements.html"><img src="src/images/up.png" alt="Up"></a>&nbsp;<a href="index.html"><img src="src/images/home.png" alt="Home"></a>&nbsp;<a href="common_usage.html"><img src="src/images/next.png" alt="Next"></a>
 </div>
 	</body>
 </html>
