@@ -9,11 +9,11 @@
 #ifdef TEST_STD
 #  include <type_traits>
 #else
-#  include <boost/type_traits/has_operator_unary_minus.hpp>
+#  include <boost/type_traits/has_operator_postfix_increment.hpp>
 #endif
 
-#define BOOST_TT_TRAIT_NAME has_operator_unary_minus
-#define BOOST_TT_TRAIT_OP -
+#define BOOST_TT_TRAIT_NAME has_operator_postfix_increment
+#define BOOST_TT_TRAIT_OP ++
 #define BOOST_TT_TRAIT_BOOL_RESULT true
 
-#include "has_prefix_unary_operator_test.hpp"
+#include "has_postfix_unary_operator_test.hpp"

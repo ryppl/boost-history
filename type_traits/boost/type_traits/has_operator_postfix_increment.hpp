@@ -6,14 +6,14 @@
 //
 //  See http://www.boost.org/libs/type_traits for most recent version including documentation.
 
-#ifndef BOOST_TT_unary_minus_HPP_INCLUDED
-#define BOOST_TT_unary_minus_HPP_INCLUDED
+#ifndef BOOST_TT_postfix_increment_HPP_INCLUDED
+#define BOOST_TT_postfix_increment_HPP_INCLUDED
 
-#define BOOST_TT_TRAIT_NAME has_operator_unary_minus
-#define BOOST_TT_TRAIT_OP -
+#define BOOST_TT_TRAIT_NAME has_operator_postfix_increment
+#define BOOST_TT_TRAIT_OP ++
 #define BOOST_TT_DEFAULT_RET void
 
-#include <boost/type_traits/detail/has_prefix_unary_operator.hpp>
+#include <boost/type_traits/detail/has_postfix_unary_operator.hpp>
 
 #undef BOOST_TT_TRAIT_NAME
 #undef BOOST_TT_TRAIT_OP

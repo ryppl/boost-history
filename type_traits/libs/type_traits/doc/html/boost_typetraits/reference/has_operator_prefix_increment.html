@@ -34,12 +34,12 @@
       </p>
 <p>
         The default behaviour (<code class="computeroutput"><span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span></code>) is
-        to not check for the return value of <code class="computeroutput"><span class="keyword">operator</span><span class="special">++</span></code>. If <code class="computeroutput"><span class="identifier">RET</span></code>
+        to not check for the return value of prefix <code class="computeroutput"><span class="keyword">operator</span><span class="special">++</span></code>. If <code class="computeroutput"><span class="identifier">RET</span></code>
         is different from the default <code class="computeroutput"><span class="keyword">void</span></code>
         type, the return value is checked to be convertible to <code class="computeroutput"><span class="identifier">RET</span></code>.
       </p>
 <p>
-        This trait can not detect whether <code class="computeroutput"><span class="keyword">operator</span><span class="special">++</span></code> is public or not: if <code class="computeroutput"><span class="keyword">operator</span><span class="special">++</span></code> is defined as a private member of <code class="computeroutput"><span class="identifier">RHS</span></code> then instantiating <code class="computeroutput"><span class="identifier">has_operator_prefix_increment</span><span class="special">&lt;</span><span class="identifier">RHS</span><span class="special">&gt;</span></code> will produce a compiler error. For this
+        This trait can not detect whether prefix <code class="computeroutput"><span class="keyword">operator</span><span class="special">++</span></code> is public or not: if <code class="computeroutput"><span class="keyword">operator</span><span class="special">++</span></code> is defined as a private member of <code class="computeroutput"><span class="identifier">RHS</span></code> then instantiating <code class="computeroutput"><span class="identifier">has_operator_prefix_increment</span><span class="special">&lt;</span><span class="identifier">RHS</span><span class="special">&gt;</span></code> will produce a compiler error. For this
         reason <code class="computeroutput"><span class="identifier">has_operator_prefix_increment</span></code>
         can not be used to determine whether a type has a public <code class="computeroutput"><span class="keyword">operator</span><span class="special">++</span></code> or not.
       </p>

@@ -206,6 +206,8 @@ See __has_nothrow_constructor.
 [include has_operator_not_equal_to.qbk]
 [include has_operator_plus.qbk]
 [include has_operator_plus_equal.qbk]
+[include has_operator_postfix_decrement.qbk]
+[include has_operator_postfix_increment.qbk]
 [include has_operator_prefix_decrement.qbk]
 [include has_operator_prefix_increment.qbk]
 [include has_operator_right_shift.qbk]

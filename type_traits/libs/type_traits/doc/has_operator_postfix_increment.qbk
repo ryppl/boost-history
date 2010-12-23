@@ -1,0 +1,47 @@
+[/
+  Copyright 2010  Frédéric Bron.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:has_operator_postfix_increment has_operator_postfix_increment]
+   template <class LHS, class RET=void>
+   struct has_operator_postfix_increment : public __tof {};
+
+__inherit
+If (i) `lhs` of type `LHS` can be used in expression `lhs++`,
+and (ii) `RET=void` or the result of expression `lhs++` is convertible to `RET`
+then inherits from __true_type,
+otherwise inherits from __false_type.
+
+The default behaviour (`RET=void`) is to not check for the return value of postfix `operator++`.
+If `RET` is different from the default `void` type, the return value is checked to be convertible to `RET`.
+
+This trait can not detect whether postfix `operator++` is public or not: if `operator++` is defined
+as a private member of `LHS` then instantiating `has_operator_postfix_increment<LHS>` will produce a compiler error.
+For this reason `has_operator_postfix_increment` can not be used to determine whether a type has a public `operator++` or not.
+
+__header `#include <boost/type_traits/has_operator_postfix_increment.hpp>` or `#include <boost/type_traits.hpp>`
+
+__examples
+
+[:`has_operator_postfix_increment<LHS, RET>::value_type` is the type `bool`.]
+
+[:`has_operator_postfix_increment<int>` inherits from `__true_type`.]
+
+[:`has_operator_postfix_increment<int, int>` inherits from `__true_type`.]
+
+[:`has_operator_postfix_increment<int, long>` inherits from `__true_type`.]
+
+[:`has_operator_postfix_increment<double, double>` inherits from `__true_type`.]
+
+[:`has_operator_postfix_increment<double, int>` inherits from `__true_type`.]
+
+[:`has_operator_postfix_increment<int, std::string>` inherits from `__false_type`.]
+
+[:`has_operator_postfix_increment<long>::value` is a `bool` integral constant
+expression that evaluates to /true/.]
+
+[endsect]
+

@@ -15,11 +15,11 @@ and (ii) `RET=void` or the result of expression `--rhs` is convertible to `RET`
 then inherits from __true_type,
 otherwise inherits from __false_type.
 
-The default behaviour (`RET=void`) is to not check for the return value of `operator--`.
+The default behaviour (`RET=void`) is to not check for the return value of prefix `operator--`.
 If `RET` is different from the default `void` type, the return value is checked to be convertible to `RET`.
 
-This trait can not detect whether `operator--` is public or not: if `operator--` is defined as a private member of `RHS` then
-instantiating `has_operator_prefix_decrement<RHS>` will produce a compiler error.
+This trait can not detect whether prefix `operator--` is public or not: if `operator--` is defined
+as a private member of `RHS` then instantiating `has_operator_prefix_decrement<RHS>` will produce a compiler error.
 For this reason `has_operator_prefix_decrement` can not be used to determine whether a type has a public `operator--` or not.
 
 __header `#include <boost/type_traits/has_operator_prefix_decrement.hpp>` or `#include <boost/type_traits.hpp>`

@@ -14,5 +14,6 @@
 
 #define BOOST_TT_TRAIT_NAME has_operator_prefix_increment
 #define BOOST_TT_TRAIT_OP ++
+#define BOOST_TT_TRAIT_BOOL_RESULT true
 
-#include "has_unary_operator_test.hpp"
+#include "has_prefix_unary_operator_test.hpp"

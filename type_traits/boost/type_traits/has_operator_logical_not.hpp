@@ -13,7 +13,7 @@
 #define BOOST_TT_TRAIT_OP !
 #define BOOST_TT_DEFAULT_RET void
 
-#include <boost/type_traits/detail/has_unary_operator.hpp>
+#include <boost/type_traits/detail/has_prefix_unary_operator.hpp>
 
 #undef BOOST_TT_TRAIT_NAME
 #undef BOOST_TT_TRAIT_OP
