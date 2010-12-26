@@ -14,6 +14,8 @@
 
 #ifdef USE_MPFR
 #include <boost/math/bindings/mpfr.hpp>
+#elif defined(USE_MPREAL)
+#include <boost/math/bindings/mpreal.hpp>
 #else
 #include <boost/math/bindings/rr.hpp>
 #endif
@@ -22,6 +24,8 @@ namespace boost{ namespace math{ namespace constants{
 
 #ifdef USE_MPFR
 typedef mpfr_class generator_type;
+#elif defined(USE_MPREAL)
+typedef mpfr::mpreal generator_type;
 #else
 typedef ntl::RR generator_type;
 #endif
@@ -30,6 +34,8 @@ inline void print_constant(const char* name, generator_type(*f)(const mpl::int_<
 {
 #ifdef USE_MPFR
    mpfr_class::set_dprec(((200 + 1) * 1000L) / 301L);
+#elif defined(USE_MPREAL)
+   mpfr::mpreal::set_default_prec(((200 + 1) * 1000L) / 301L);
 #else
    ntl::RR::SetPrecision(((200 + 1) * 1000L) / 301L);
    ntl::RR::SetOutputPrecision(102);

@@ -40,6 +40,7 @@ project
       <include>$(gmp_path)/mpfr/win32/release
       <include>$(gmp_path)/../mpfr/win32/release
       <include>$(gmp_path)/gmpfrxx
+      <include>$(gmp_path)/../gmpfrxx
     ;
 
 if $(ntl-path)

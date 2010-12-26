@@ -17,6 +17,7 @@ obj has_mpfr_class : has_mpfr_class.cpp :
       <include>$(gmp_path)/mpfr/win32/release
       <include>$(gmp_path)/../mpfr/win32/release
       <include>$(gmp_path)/gmpfrxx
+      <include>$(gmp_path)/../gmpfrxx
       ;
 obj has_ntl_rr : has_ntl_rr.cpp : <include>$(ntl-path)/include ;
 obj has_gmpxx : has_gmpxx.cpp :
@@ -26,6 +27,7 @@ obj has_gmpxx : has_gmpxx.cpp :
       <include>$(gmp_path)/mpfr/win32/release
       <include>$(gmp_path)/../mpfr/win32/release
       <include>$(gmp_path)/gmpfrxx
+      <include>$(gmp_path)/../gmpfrxx
       ;
 obj has_gcc_visibility : has_gcc_visibility.cpp :
       <toolset>gcc:<cxxflags>-fvisibility=hidden <toolset>gcc:<cxxflags>-Werror ;
