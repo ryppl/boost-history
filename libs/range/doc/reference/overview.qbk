@@ -1,6 +1,11 @@
-[section Overview]
+[/
+    Copyright 2010 Neil Groves
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+[section:overview Overview]
 
-Four types of objects are currently supported by the library:
+Three types of objects are currently supported by the library:
 
 * standard-like containers
 * `std::pair<iterator,iterator>`
