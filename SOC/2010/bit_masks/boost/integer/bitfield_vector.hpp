@@ -17,6 +17,8 @@
 namespace boost {
 
 namespace detail {
+
+
 /** Iterators. */
 //@{
 template<typename T, std::size_t Width>
@@ -53,8 +55,9 @@ public:
 
     using _base::operator typename _base::bool_type;
 
-    _self operator=(_self const& rhs) {
+    _self const& operator=(_self const& rhs) {
         this->assign(static_cast<_base>(rhs));
+        return *this;
     }
 
     reference operator*() const {
@@ -172,8 +175,9 @@ public:
         return ret.const_deref();
     }
 
-    _self operator=(_self const& rhs) {
+    _self const& operator=(_self const& rhs) {
         this->assign(static_cast<_base>(rhs));
+        return *this;
     }
 
 
@@ -282,8 +286,9 @@ public:
         return ret.deref();
     }
 
-    _self operator=(_self const& rhs) {
+    _self const& operator=(_self const& rhs) {
         this->assign(static_cast<_base>(rhs));
+        return *this;
     }
 
     _self& operator++() {
@@ -391,8 +396,9 @@ public:
         return ret.const_deref();
     }
 
-    _self operator=(_self const& rhs) {
+    _self const& operator=(_self const& rhs) {
         this->assign(static_cast<_base>(rhs));
+        return *this;
     }
 
     _self& operator++() {
@@ -460,7 +466,7 @@ public:
 
 //@}
 
-
+/// TODO: Fix reverse iterator!!!!!!!
 template <  typename T,
             std::size_t Width,
             typename Allocator = std::allocator<unsigned char>
@@ -714,9 +720,23 @@ public:
 
 
 
+    /** Resize to a size given in elements. */
+    void resize(size_type sz, value_type c = value_type() ) {
+        size_type next_size_in_bits = Width * sz;
+        
+        // fewer elements than needed.
+        if(next_size_in_bits <= this->m_impl.m_bits_in_use ) {
+            this->m_impl.m_bits_in_use = next_size_in_bits;
+            return;
+        }
 
-    void resize(size_type sz, value_type c = value_type() );
-    reference operator[](size_type n);
+        // not enough space
+        if(next_size_in_bits > ((this->m_impl.m_end - this->m_impl.m_start) * Width)) {
+            // while(
+        }
+        
+    }
+    reference operator[](size_type n);    
     const_reference operator[](size_type n) const;
     reference at(size_type n);
     const_reference at(size_type n) const;
@@ -725,7 +745,16 @@ public:
     template <class InputIterator>
     void assign(InputIterator first, InputIterator last);
     void assign(size_type n, value_type const& u);
-    void push_back(value_type const& x);
+
+    /**
+     *
+     */
+    void push_back(value_type const& x) {
+        check_for_resizing();
+        iterator iter = end();
+        *iter = x;
+        this->m_impl.m_bits_in_use += Width;
+    }
     void pop_back();
     iterator insert(iterator position, value_type const& x);
     void insert(iterator position, size_type n, value_type const& x);
@@ -778,7 +807,7 @@ protected:
         size_type size_of_alloc = (this->m_impl.m_end - this->m_impl.m_start);
         difference_type remaing_bits = ((size_of_alloc*CHAR_BIT) -
             this->m_impl.m_bits_in_use);
-        if(remaing_bits < Width) {
+        if(size_type(remaing_bits) < Width) {
             std::size_t next_allocation_size =
                 detail::next_allocation_size<Width>()(
                     size_of_alloc, this->m_impl.m_bits_in_use);

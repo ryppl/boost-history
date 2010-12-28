@@ -280,6 +280,17 @@ struct test_for_bfv
         this->clear();
         BOOST_TEST( this->m_impl.m_bits_in_use == 0);
     }
+    
+    // resize
+    void test_resize() {
+        // BOOST_TEST( )
+        // test case size > the the resizing value.
+    }
+    
+    // push_back
+    void test_push_back(T val) {
+        BOOST_TEST(this->back() == val);
+    }
 };
 
 
@@ -408,6 +419,19 @@ void test_orchestrator() {
     {
         Tester t2(8, 2);
         t2.test_clear();
+    }
+    
+    // resize test
+    {
+        Tester t1(8,2);
+        t1.test_resize();
+    }
+
+    // push_back test
+    {
+        Tester t1(8,2);
+        t1.push_back(3);
+        t1.test_push_back(3);
     }
 }
 
