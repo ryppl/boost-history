@@ -22,6 +22,7 @@ template <typename T, std::size_t Width, typename Alloc, typename Bfv>
 struct test_for_bfv
     :Bfv
 {
+    typedef test_for_bfv<T,Width,Alloc,Bfv> self;
     typedef Bfv _base;
 
     /** Tests to make sure that I got all of the typedefs from within
@@ -281,15 +282,112 @@ struct test_for_bfv
         BOOST_TEST( this->m_impl.m_bits_in_use == 0);
     }
     
+
+
     // resize
     void test_resize() {
-        // BOOST_TEST( )
-        // test case size > the the resizing value.
+        typedef typename _base::iterator iterator;
+        this->clear();
+        for(std::size_t i=0; i < 3u; ++i) this->push_back(5);
+
+        // test case size < the the resizing value.
+        BOOST_TEST( this->size() == 3u);
+
+        this->resize(2);
+        BOOST_TEST( this->size() == 2u);
+        for(iterator i = this->begin() ;i != this->end(); ++i) {
+            BOOST_TEST( *i == 5);
+        }
+
+        // resize with the same value in the vector.
+        this->resize(2);
+        BOOST_TEST( this->size() == 2u);
+        for(iterator i = this->begin() ;i != this->end(); ++i) {
+            BOOST_TEST( *i == 5);
+        }
+
+        // resize to > than size
+        this->clear();
+        for(std::size_t i=0; i < 3u; ++i) this->push_back(4);
+        this->resize(10,6);
+        BOOST_TEST( this->size() == 10u);
+        iterator iter = this->begin();
+        iterator ending = iter + 3;
+        for(;iter != ending;++iter) {
+            BOOST_TEST(*iter == 4u);
+        }
+        
+        ending = this->end();
+        for(;iter != ending;++iter) {
+            BOOST_TEST(*iter == 6);
+        }
     }
     
     // push_back
     void test_push_back(T val) {
         BOOST_TEST(this->back() == val);
+    }
+    
+    // operator[]
+    void test_square_bracket_operator() {
+        this->clear();
+        for(std::size_t i=0; i < 3u; ++i) this->push_back(4u);
+        // this->operator[](0);
+        for(std::size_t i = 0; i<3u; ++i){
+            BOOST_TEST( ((*this)[i]) == 4u);
+        }
+        for(std::size_t i = 0; i<3u; ++i){
+            ((*this)[i]) = 5u;
+        }
+        for(std::size_t i = 0; i<3u; ++i){
+            BOOST_TEST( ((*this)[i]) == 5u);
+        }
+    }
+
+    // const operator[]
+    void test_const_square_bracket_operator() {
+        this->clear();
+        for(std::size_t i=0; i < 3u; ++i) this->push_back(4u);
+        // this->operator[](0);
+        for(std::size_t i = 0; i<3u; ++i){
+            BOOST_TEST( (const_cast<self const&>(*this)[i]) == 4u);
+        }
+    }
+
+    // at test
+    void test_at() {
+        this->clear();
+        for(std::size_t i=0; i < 3u; ++i) this->push_back(i);
+        for(std::size_t i=0; i < 3u; ++i) {
+            BOOST_TEST( this->at(i) == i);
+        }
+
+        try{
+            this->at(100);
+        }catch(std::out_of_range const&) {
+            return;
+        }catch(...) {
+            BOOST_TEST(!"Didn't catch correct exception from at.");
+        }
+        BOOST_TEST(!"Didn't catch Exception from at.");
+    }
+    
+    // const at
+    void test_const_at() {
+        this->clear();
+        for(std::size_t i=0; i < 3u; ++i) this->push_back(i);
+        for(std::size_t i=0; i < 3u; ++i) {
+            BOOST_TEST( const_cast<self const&>(*this)->at(i) == i);
+        }
+
+        try{
+            const_cast<self const&>(*this)->at(100);
+        }catch(std::out_of_range const&) {
+            return;
+        }catch(...) {
+            BOOST_TEST(!"Didn't catch correct exception from at.");
+        }
+        BOOST_TEST(!"Didn't catch Exception from at.");
     }
 };
 
@@ -423,7 +521,7 @@ void test_orchestrator() {
     
     // resize test
     {
-        Tester t1(8,2);
+        Tester t1;
         t1.test_resize();
     }
 
@@ -432,6 +530,28 @@ void test_orchestrator() {
         Tester t1(8,2);
         t1.push_back(3);
         t1.test_push_back(3);
+    }
+
+    // operator[]
+    {
+        Tester t1;
+        t1.test_square_bracket_operator();
+    }
+
+    // const operator[]
+    {
+        Tester t1;
+        t1.test_const_square_bracket_operator();
+    }
+
+    // at test
+    {
+        Tester t1;
+        t1.test_at();
+    }
+
+    // const at test
+    {
     }
 }
 

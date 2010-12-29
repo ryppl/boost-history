@@ -721,34 +721,54 @@ public:
 
 
     /** Resize to a size given in elements. */
-    void resize(size_type sz, value_type c = value_type() ) {
+    void resize(size_type sz, value_type val = value_type() ) {
+        if(sz == size()) return;
         size_type next_size_in_bits = Width * sz;
         
         // fewer elements than needed.
-        if(next_size_in_bits <= this->m_impl.m_bits_in_use ) {
+        if(next_size_in_bits < this->m_impl.m_bits_in_use ) {
             this->m_impl.m_bits_in_use = next_size_in_bits;
             return;
         }
 
-        // not enough space
-        if(next_size_in_bits > ((this->m_impl.m_end - this->m_impl.m_start) * Width)) {
-            // while(
+        // adding elements to the end of the bitfield_vector.
+        while(this->m_impl.m_bits_in_use < next_size_in_bits ) {
+            push_back(val);
         }
-        
     }
-    reference operator[](size_type n);    
-    const_reference operator[](size_type n) const;
-    reference at(size_type n);
-    const_reference at(size_type n) const;
+
+    /** Operator []. */ 
+    reference operator[](size_type n) {
+        return reference( *(begin() + n));
+    }
+
+    /** const operator[] */
+    const_reference operator[](size_type n) const {
+        return const_reference( *(begin() + n));
+    }
+
+    /** at throwing indexing. */
+    reference at(size_type n) {
+        if(n > size() ) {
+            throw std::out_of_range("Out of Range: invalid value for n.");
+        }
+        return (*this)[n];
+    }
+
+    /**  const at throwing indexing. */
+    const_reference at(size_type n) const {
+        if(n > size() ) {
+            throw std::out_of_range();
+        }
+        return (*this)[n];
+    }
 
 
     template <class InputIterator>
     void assign(InputIterator first, InputIterator last);
     void assign(size_type n, value_type const& u);
 
-    /**
-     *
-     */
+    /** Add an element to the end of the vector. */
     void push_back(value_type const& x) {
         check_for_resizing();
         iterator iter = end();
