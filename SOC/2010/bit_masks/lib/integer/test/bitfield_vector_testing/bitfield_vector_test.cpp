@@ -6,7 +6,7 @@
 
 #include <boost/integer/bitfield_vector.hpp>
 #include "test_utility.hpp"
-
+#include <vector>
 using namespace boost;
 
 /** This is done so that I can inherit from bitfield_vector and have access
@@ -377,11 +377,11 @@ struct test_for_bfv
         this->clear();
         for(std::size_t i=0; i < 3u; ++i) this->push_back(i);
         for(std::size_t i=0; i < 3u; ++i) {
-            BOOST_TEST( const_cast<self const&>(*this)->at(i) == i);
+            BOOST_TEST( const_cast<self const&>(*this).at(i) == i);
         }
 
         try{
-            const_cast<self const&>(*this)->at(100);
+            const_cast<self const&>(*this).at(100);
         }catch(std::out_of_range const&) {
             return;
         }catch(...) {
@@ -389,6 +389,45 @@ struct test_for_bfv
         }
         BOOST_TEST(!"Didn't catch Exception from at.");
     }
+
+    // pop back test.
+    void test_pop_back() {
+        this->clear();
+        this->push_back(1);
+        this->push_back(1);
+        BOOST_TEST(this->size() == 2);
+        this->pop_back();
+        BOOST_TEST(this->size() == 1);
+        this->pop_back();
+        BOOST_TEST(this->size() == 0);
+    }
+
+    // range assign
+    void test_range_assign() {
+        this->clear();
+        typedef std::vector<typename Bfv::value_type> temp_vector;
+        temp_vector temp;
+        for(std::size_t i=0; i<3;++i) {
+            temp.push_back(i);
+        }
+        
+        this->assign(temp.begin(), temp.end());
+        for(std::size_t i=0; i<3;++i) {
+            BOOST_TEST((*this)[i] == i);
+        }
+    }
+    
+    // fill assign
+    void test_fill_assign() {
+        this->clear();
+        this->assign(8,2);
+        BOOST_TEST(this->size() == 8);
+        for(std::size_t i=0; i < 8;++i) {
+            BOOST_TEST((*this)[i] == 2);
+        }
+    }
+
+    
 };
 
 
@@ -542,8 +581,8 @@ void test_orchestrator() {
     {
         Tester t1;
         t1.test_const_square_bracket_operator();
-    }
 
+    }
     // at test
     {
         Tester t1;
@@ -552,6 +591,20 @@ void test_orchestrator() {
 
     // const at test
     {
+        Tester t1;
+        t1.test_const_at();
+    }
+
+    // pop_back
+    {
+        Tester t1;
+        t1.test_pop_back();
+    }
+
+    // range assign
+    {
+        Tester t1;
+        t1.test_range_assign();
     }
 }
 

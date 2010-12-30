@@ -13,6 +13,7 @@
 #include <iterator>
 #include <limits>
 #include <stdexcept>
+#include <boost/assert.hpp>
 
 namespace boost {
 
@@ -758,15 +759,16 @@ public:
     /**  const at throwing indexing. */
     const_reference at(size_type n) const {
         if(n > size() ) {
-            throw std::out_of_range();
+            throw std::out_of_range("Out of Range: invalid value for n.");
         }
         return (*this)[n];
     }
 
-
-    template <class InputIterator>
-    void assign(InputIterator first, InputIterator last);
-    void assign(size_type n, value_type const& u);
+    /** Remove element from end of vector.*/
+    void pop_back() {
+        BOOST_ASSERT(( this->m_impl.m_bits_in_use != 0 ));
+        this->m_impl.m_bits_in_use -= Width;
+    }
 
     /** Add an element to the end of the vector. */
     void push_back(value_type const& x) {
@@ -775,7 +777,24 @@ public:
         *iter = x;
         this->m_impl.m_bits_in_use += Width;
     }
-    void pop_back();
+
+    template <class InputIterator>
+    void assign(InputIterator first, InputIterator last) {
+        clear();
+        // copy(first, last, std::back_inserter(*this) );
+        while(first != last) {
+            push_back(*first);
+            ++first;
+        }
+    }
+
+    void assign(size_type n, value_type const& u) {
+        clear();
+        for(size_type index=0; index<n;++index){
+            push_back(u);
+        }
+    }
+
     iterator insert(iterator position, value_type const& x);
     void insert(iterator position, size_type n, value_type const& x);
 
@@ -785,11 +804,7 @@ public:
     iterator erase(iterator position);
     iterator erase(iterator first, iterator last);
 
-
 protected:
-
-
-
 
     /** allocates a chunck of memory of the correct size and then
      *  correctly fills that memory with value for each of the
