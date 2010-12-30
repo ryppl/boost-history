@@ -7,6 +7,7 @@
 #include <boost/integer/bitfield_vector.hpp>
 #include "test_utility.hpp"
 #include <vector>
+
 using namespace boost;
 
 /** This is done so that I can inherit from bitfield_vector and have access

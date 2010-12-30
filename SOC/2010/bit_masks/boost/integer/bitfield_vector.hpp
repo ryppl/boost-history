@@ -468,6 +468,7 @@ public:
 //@}
 
 /// TODO: Fix reverse iterator!!!!!!!
+/// TODO: Add exception safty to operations which cause allocation.
 template <  typename T,
             std::size_t Width,
             typename Allocator = std::allocator<unsigned char>
@@ -795,7 +796,17 @@ public:
         }
     }
 
-    iterator insert(iterator position, value_type const& x);
+    iterator insert(iterator position, value_type const& x) {
+        /*
+        if(position == end()) {
+            push_back(x);
+        }
+        temp
+        value_type temp_value = *position;
+        while(
+        */
+    }
+
     void insert(iterator position, size_type n, value_type const& x);
 
     template <class InputIterator>
