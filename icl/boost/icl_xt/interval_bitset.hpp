@@ -325,9 +325,6 @@ interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::partition
         lo = base_rest == 0    ? base   : base+1, // begin of mid part 
         up = ceil_rest == mask ? ceil+1 : ceil  ; // end   of mid part
 
-        word_type dbg_all = all;
-        condensed_type dbg_up = up;
-
         if(base_rest > 0)    // Bitset of base interval has to be filled from base_rest to last
         {
             sub    = bitset_type(to_upper_from(base_rest));
