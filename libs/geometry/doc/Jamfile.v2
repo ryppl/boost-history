@@ -24,7 +24,8 @@ boostbook geometry
 	<xsl:param>toc.max.depth=2
 	<xsl:param>generate.section.toc.level=4
 	<xsl:param>boost.root=../../../..
-	  <xsl:param>callout.graphics.path=../../../../../doc/src/images/callouts/
+	<xsl:param>navig.graphics.path=../../../../doc/src/images/
+	<xsl:param>callout.graphics.path=../../../../doc/src/images/callouts/
 	;
 
 
