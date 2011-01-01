@@ -9,8 +9,8 @@
 // See http://www.boost.org/libs/mpl for documentation.
 //
 ////////////////////////////////////////////////////////////////////
-#ifndef BOOST_MPL_GCD_HPP_INCLUDED
-#define BOOST_MPL_GCD_HPP_INCLUDED
+#ifndef BOOST_MPL_LCM_HPP_INCLUDED
+#define BOOST_MPL_LCM_HPP_INCLUDED
 
 #include <boost/mpl/integral_c.hpp>
 #include <boost/mpl/abs.hpp>
@@ -24,9 +24,9 @@
 
 namespace boost { namespace mpl {
 
-template< typename Tag1, typename Tag2 > struct gcd_impl;
+template< typename Tag1, typename Tag2 > struct lcm_impl;
 
-template< typename T > struct gcd_tag
+template< typename T > struct lcm_tag
 {
     typedef typename T::tag type;
 };
@@ -35,51 +35,51 @@ template<
       typename BOOST_MPL_AUX_NA_PARAM(N1)
     , typename BOOST_MPL_AUX_NA_PARAM(N2)
     >
-struct gcd
-    : gcd_impl<
-          typename gcd_tag<N1>::type
-        , typename gcd_tag<N2>::type
+struct lcm
+    : lcm_impl<
+          typename lcm_tag<N1>::type
+        , typename lcm_tag<N2>::type
         >::template apply<N1, N2>::type
 {
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(2, gcd, (N1, N2))
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(2, lcm, (N1, N2))
 };
 
-BOOST_MPL_AUX_NA_SPEC(2, gcd)
+BOOST_MPL_AUX_NA_SPEC(2, lcm)
 
 template<
       typename T
     , T n1
     , T n2
     >
-struct gcd_c
-    : gcd<integral_c<T,n1>,integral_c<T,n2> >
+struct lcm_c
+    : lcm<integral_c<T,n1>,integral_c<T,n2> >
 {
 };
 
+
 namespace aux {
     template< typename T1, T1 n1, bool n1_is_0, typename T2, T2 n2, bool n2_is_0 > 
-    struct gcd_aux
+    struct lcm_aux
  
-        : gcd_aux<T2, n2, n2==0, 
-                    typename aux::largest_int<T1, T2>::type,
-                    //~ T1, 
-                    (n1 % n2), (n1 % n2)==0>
+        : abs<integral_c< typename aux::largest_int<T1, T2>::type,
+            ( n1 / gcd<integral_c<T1,n1>, integral_c<T2,n2> >::value * n2 )  
+        > >
     {};
     
     template <typename T1, T1 n1, typename T2, T2 n2>
-    struct gcd_aux<T1, n1, false, T2, n2, true> : integral_c<T1, n1> 
+    struct lcm_aux<T1, n1, false, T2, n2, true> : integral_c<T2, 0> 
     {};
 
     template <typename T1, T1 n1, typename T2, T2 n2, bool C>
-    struct gcd_aux<T1, n1, true, T2, n2, C> : integral_c<T2, n2> 
+    struct lcm_aux<T1, n1, true, T2, n2, C> : integral_c<T1, 0> 
     {};
 }
 
 template<>
-struct gcd_impl<integral_c_tag, integral_c_tag>
+struct lcm_impl<integral_c_tag, integral_c_tag>
 {
     template< typename N1, typename N2 > struct apply
-        : abs<aux::gcd_aux< typename N1::value_type, N1::value, N1::value==0, 
+        : abs<aux::lcm_aux< typename N1::value_type, N1::value, N1::value==0, 
                         typename N2::value_type, N2::value, N2::value==0  > >
     {
     };
@@ -87,4 +87,4 @@ struct gcd_impl<integral_c_tag, integral_c_tag>
 
 }}
 
-#endif // BOOST_MPL_GCD_HPP_INCLUDED
+#endif // BOOST_MPL_LCM_HPP_INCLUDED

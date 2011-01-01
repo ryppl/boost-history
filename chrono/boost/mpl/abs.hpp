@@ -13,7 +13,7 @@
 #define BOOST_MPL_ABS_HPP_INCLUDED
 
 #include <boost/mpl/integral_c.hpp>
-#include <boost/mpl/aux_/msvc_eti_base.hpp>
+//~ #include <boost/mpl/aux_/msvc_eti_base.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
 #include <boost/mpl/aux_/config/eti.hpp>
@@ -33,22 +33,23 @@ template<
       typename BOOST_MPL_AUX_NA_PARAM(N)
     >
 struct abs
-#if !defined(BOOST_MPL_CFG_MSVC_ETI_BUG)
     : abs_impl<
           typename abs_tag<N>::type
         >::template apply<N>::type
-#else
-    : aux::msvc_eti_base< typename apply_wrap1<
-          abs_impl< typename abs_tag<N>::type >
-        , N
-        >::type >::type
-#endif
 {
     BOOST_MPL_AUX_LAMBDA_SUPPORT(1, abs, (N))
 };
 
 BOOST_MPL_AUX_NA_SPEC(1, abs)
 
+template<
+      typename T
+    , T n1
+    >
+struct abs_c
+    : abs<integral_c<T,n1> >
+{
+};
 
 #if defined(BOOST_MPL_CFG_NO_NESTED_VALUE_ARITHMETIC_2)
 namespace aux {
