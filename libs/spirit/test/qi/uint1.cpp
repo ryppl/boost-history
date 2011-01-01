@@ -1,56 +1,13 @@
 /*=============================================================================
-    Copyright (c) 2001-2010 Joel de Guzman
-    Copyright (c) 2001-2010 Hartmut Kaiser
+    Copyright (c) 2001-2011 Joel de Guzman
+    Copyright (c) 2001-2011 Hartmut Kaiser
+    Copyright (c) 2011      Bryce Lelbach
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
-#include <climits>
-#include <boost/detail/lightweight_test.hpp>
-#include <boost/spirit/include/qi_numeric.hpp>
-#include <boost/spirit/include/qi_char.hpp>
-#include <boost/spirit/include/qi_action.hpp>
-#include <boost/spirit/include/support_argument.hpp>
-#include <boost/spirit/include/phoenix_core.hpp>
-#include <boost/spirit/include/phoenix_operator.hpp>
 
-#include "test.hpp"
-#include <cstring>
-
-///////////////////////////////////////////////////////////////////////////////
-//
-//  *** BEWARE PLATFORM DEPENDENT!!! ***
-//  *** The following assumes 32 bit integers and 64 bit long longs.
-//  *** Modify these constant strings when appropriate.
-//
-///////////////////////////////////////////////////////////////////////////////
-
-    char const* max_unsigned = "4294967295";
-    char const* unsigned_overflow = "4294967296";
-    char const* max_int = "2147483647";
-    char const* int_overflow = "2147483648";
-    char const* min_int = "-2147483648";
-    char const* int_underflow = "-2147483649";
-    char const* max_binary = "11111111111111111111111111111111";
-    char const* binary_overflow = "100000000000000000000000000000000";
-    char const* max_octal = "37777777777";
-    char const* octal_overflow = "100000000000";
-    char const* max_hex = "FFFFFFFF";
-    char const* hex_overflow = "100000000";
-
-///////////////////////////////////////////////////////////////////////////////
-// A custom int type
-struct custom_int
-{
-    int n;
-    custom_int() : n(0) {}
-    explicit custom_int(int n_) : n(n_) {}
-    custom_int& operator=(int n_) { n = n_; return *this; }
-    friend custom_int operator*(custom_int a, custom_int b)
-        { return custom_int(a.n * b.n); }
-    friend custom_int operator+(custom_int a, custom_int b)
-        { return custom_int(a.n + b.n); }
-};
+#include "uint.hpp"
 
 int
 main()
@@ -171,18 +128,6 @@ main()
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    //  uint_parser<unused_type> tests
-    ///////////////////////////////////////////////////////////////////////////
-    {
-        using boost::spirit::qi::uint_parser;
-        using boost::spirit::qi::unused_type;
-        uint_parser<unused_type> any_int;
-
-        BOOST_TEST(test("123456", any_int));
-        BOOST_TEST(test("1234567890123456789", any_int));
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
     //  action tests
     ///////////////////////////////////////////////////////////////////////////
     {
@@ -214,11 +159,10 @@ main()
     {
         using boost::spirit::qi::uint_;
         using boost::spirit::qi::uint_parser;
-        custom_int u;
+        custom_uint u;
 
         BOOST_TEST(test_attr("123456", uint_, u));
-
-        uint_parser<custom_int, 10, 1, 2> uint2;
+        uint_parser<custom_uint, 10, 1, 2> uint2;
         BOOST_TEST(test_attr("12", uint2, u));
     }
 
