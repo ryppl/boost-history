@@ -32,10 +32,14 @@ time2_demo contained this comment:
 #ifndef BOOST_RATIO_DETAIL_RATIO_OPERATIONS_HPP
 #define BOOST_RATIO_DETAIL_RATIO_OPERATIONS_HPP
 
-#include <boost/static_integer/static_abs.hpp>
-#include <boost/static_integer/static_sign.hpp>
-#include <boost/static_integer/static_lcm.hpp>
-#include <boost/static_integer/static_gcd.hpp>
+//~ #include <boost/static_integer/static_abs.hpp>
+//~ #include <boost/static_integer/static_sign.hpp>
+//~ #include <boost/static_integer/static_lcm.hpp>
+//~ #include <boost/static_integer/static_gcd.hpp>
+#include <boost/mpl/abs.hpp>
+#include <boost/mpl/sign.hpp>
+//~ #include <boost/mpl/gcd.hpp>
+//~ #include <boost/mpl/lcm.hpp>
 #include <cstdlib>
 #include <climits>
 #include <limits>
@@ -95,7 +99,7 @@ namespace boost
 namespace ratio_detail
 {
 
-  template <boost::intmax_t X, boost::intmax_t Y, boost::intmax_t = boost::integer::static_signed_sign<Y>::value>
+  template <boost::intmax_t X, boost::intmax_t Y, boost::intmax_t = mpl::sign_c<boost::intmax_t, Y>::value>
   class br_add;
 
   template <boost::intmax_t X, boost::intmax_t Y>
@@ -127,7 +131,7 @@ namespace ratio_detail
       static const boost::intmax_t value = X + Y;
   };
 
-  template <boost::intmax_t X, boost::intmax_t Y, boost::intmax_t = boost::integer::static_signed_sign<Y>::value>
+  template <boost::intmax_t X, boost::intmax_t Y, boost::intmax_t = mpl::sign_c<boost::intmax_t, Y>::value>
   class br_sub;
 
   template <boost::intmax_t X, boost::intmax_t Y>
@@ -167,8 +171,8 @@ namespace ratio_detail
       static const boost::intmax_t min = boost::integer_traits<boost::intmax_t>::const_min;
       static const boost::intmax_t max = boost::integer_traits<boost::intmax_t>::const_max;
 
-      static const boost::intmax_t a_x = boost::integer::static_signed_abs<X>::value;
-      static const boost::intmax_t a_y = boost::integer::static_signed_abs<Y>::value;
+      static const boost::intmax_t a_x = mpl::abs_c<boost::intmax_t, X>::value;
+      static const boost::intmax_t a_y = mpl::abs_c<boost::intmax_t, Y>::value;
 
       BOOST_RATIO_STATIC_ASSERT(X != nan, BOOST_RATIO_OVERFLOW_IN_MUL, ());
       BOOST_RATIO_STATIC_ASSERT(Y != nan, BOOST_RATIO_OVERFLOW_IN_MUL, ());
@@ -226,8 +230,8 @@ namespace ratio_detail
       //R2::den + R2::num * R1::den and T2 has the value R1::den * R2::den.
       // As the preceding doesn't works because of overflow on boost::intmax_t we need something more elaborated.
   private:
-      static const boost::intmax_t gcd_n1_n2 = boost::integer::static_signed_gcd<R1::num, R2::num>::value;
-      static const boost::intmax_t gcd_d1_d2 = boost::integer::static_signed_gcd<R1::den, R2::den>::value;
+      static const boost::intmax_t gcd_n1_n2 = mpl::gcd_c<boost::intmax_t, R1::num, R2::num>::value;
+      static const boost::intmax_t gcd_d1_d2 = mpl::gcd_c<boost::intmax_t, R1::den, R2::den>::value;
   public:
       // No need to normalize as ratio_multiply is already normalized
       typedef typename ratio_multiply
@@ -252,8 +256,8 @@ namespace ratio_detail
       // R1::num *R2::den - R2::num * R1::den and T2 has the value R1::den * R2::den.
       // As the preceding doesn't works because of overflow on boost::intmax_t we need something more elaborated.
   private:
-      static const boost::intmax_t gcd_n1_n2 = boost::integer::static_signed_gcd<R1::num, R2::num>::value;
-      static const boost::intmax_t gcd_d1_d2 = boost::integer::static_signed_gcd<R1::den, R2::den>::value;
+      static const boost::intmax_t gcd_n1_n2 = mpl::gcd_c<boost::intmax_t, R1::num, R2::num>::value;
+      static const boost::intmax_t gcd_d1_d2 = mpl::gcd_c<boost::intmax_t, R1::den, R2::den>::value;
   public:
       // No need to normalize as ratio_multiply is already normalized
       typedef typename ratio_multiply
@@ -277,8 +281,8 @@ namespace ratio_detail
       // The nested typedef type  shall be a synonym for ratio<R1::num * R2::den - R2::num * R1::den, R1::den * R2::den>::type.
       // As the preceding doesn't works because of overflow on boost::intmax_t we need something more elaborated.
   private:
-     static const boost::intmax_t gcd_n1_d2 = boost::integer::static_signed_gcd<R1::num, R2::den>::value;
-     static const boost::intmax_t gcd_d1_n2 = boost::integer::static_signed_gcd<R1::den, R2::num>::value;
+     static const boost::intmax_t gcd_n1_d2 = mpl::gcd_c<boost::intmax_t, R1::num, R2::den>::value;
+     static const boost::intmax_t gcd_d1_n2 = mpl::gcd_c<boost::intmax_t, R1::den, R2::num>::value;
   public:
       typedef typename ratio
          <
@@ -293,8 +297,8 @@ namespace ratio_detail
       // The nested typedef type  shall be a synonym for ratio<R1::num * R2::den, R2::num * R1::den>::type.
       // As the preceding doesn't works because of overflow on boost::intmax_t we need something more elaborated.
   private:
-      static const boost::intmax_t gcd_n1_n2 = boost::integer::static_signed_gcd<R1::num, R2::num>::value;
-      static const boost::intmax_t gcd_d1_d2 = boost::integer::static_signed_gcd<R1::den, R2::den>::value;
+      static const boost::intmax_t gcd_n1_n2 = mpl::gcd_c<boost::intmax_t, R1::num, R2::num>::value;
+      static const boost::intmax_t gcd_d1_d2 = mpl::gcd_c<boost::intmax_t, R1::den, R2::den>::value;
   public:
       typedef typename ratio
          <
@@ -346,8 +350,8 @@ namespace ratio_detail
   template <
       class R1, 
       class R2, 
-      boost::intmax_t S1 = boost::integer::static_signed_sign<R1::num>::value,
-    boost::intmax_t S2 = boost::integer::static_signed_sign<R2::num>::value
+      boost::intmax_t S1 = mpl::sign_c<boost::intmax_t, R1::num>::value,
+    boost::intmax_t S2 = mpl::sign_c<boost::intmax_t, R2::num>::value
 >
   struct ratio_less
   {

@@ -33,9 +33,13 @@ time2_demo contained this comment:
 #define BOOST_RATIO_RATIO_HPP
 
 #include <boost/config.hpp>
-#include <boost/static_integer/static_abs.hpp>
-#include <boost/static_integer/static_sign.hpp>
-#include <boost/static_integer/static_gcd.hpp>
+//~ #include <boost/static_integer/static_abs.hpp>
+//~ #include <boost/static_integer/static_sign.hpp>
+//~ #include <boost/static_integer/static_gcd.hpp>
+#include <boost/mpl/abs.hpp>
+#include <boost/mpl/sign.hpp>
+#include <boost/mpl/gcd.hpp>
+#include <boost/mpl/lcm.hpp>
 #include <cstdlib>
 #include <climits>
 #include <limits>
@@ -71,14 +75,14 @@ namespace boost
 template <boost::intmax_t N, boost::intmax_t D>
 class ratio
 {
-    static const boost::intmax_t ABS_N = boost::integer::static_signed_abs<N>::value;
-    static const boost::intmax_t ABS_D = boost::integer::static_signed_abs<D>::value;
+    static const boost::intmax_t ABS_N = mpl::abs_c<boost::intmax_t, N>::value;
+    static const boost::intmax_t ABS_D = mpl::abs_c<boost::intmax_t, D>::value;
     BOOST_RATIO_STATIC_ASSERT(ABS_N >= 0, BOOST_RATIO_NUMERATOR_IS_OUT_OF_RANGE, ());
     BOOST_RATIO_STATIC_ASSERT(ABS_D > 0, BOOST_RATIO_DENOMINATOR_IS_OUT_OF_RANGE, ());
     BOOST_RATIO_STATIC_ASSERT(D != 0, BOOST_RATIO_DIVIDE_BY_0 , ());
-    static const boost::intmax_t SIGN_N = boost::integer::static_signed_sign<N>::value
-      * boost::integer::static_signed_sign<D>::value;
-    static const boost::intmax_t GCD = boost::integer::static_signed_gcd<ABS_N, ABS_D>::value;
+    static const boost::intmax_t SIGN_N = mpl::sign_c<boost::intmax_t,N>::value
+      * mpl::sign_c<boost::intmax_t,D>::value;
+    static const boost::intmax_t GCD = mpl::gcd_c<boost::intmax_t, ABS_N, ABS_D>::value;
 public:
     BOOST_STATIC_CONSTEXPR boost::intmax_t num = SIGN_N * ABS_N / GCD;
     BOOST_STATIC_CONSTEXPR boost::intmax_t den = ABS_D / GCD;
@@ -181,11 +185,11 @@ struct ratio_greater_equal
 template <class R1, class R2>
 struct ratio_gcd
 {
-    typedef ratio<boost::integer::static_signed_gcd<R1::num, R2::num>::value,
-        boost::integer::static_signed_lcm<R1::den, R2::den>::value> type;
+    typedef ratio<mpl::gcd_c<boost::intmax_t, R1::num, R2::num>::value,
+        mpl::lcm_c<boost::intmax_t, R1::den, R2::den>::value> type;
 };
     
 }  // namespace boost
 
 
-#endif  // BOOST_RATIO_HPP
+#endif  // BOOST_RATIO_RATIO_HPP
