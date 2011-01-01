@@ -135,6 +135,11 @@ Models
 * |abs|
 * |sign|
 * |gcd|
+* |lcm|
+* |abs_c|
+* |sign_c|
+* |gcd_c|
+* |lcm_c|
 
 
 See also
