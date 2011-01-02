@@ -34,9 +34,9 @@ time2_demo contained this comment:
 
 #include <boost/cstdint.hpp>
 #ifdef INTMAX_C
-#define BOOST_INTMAX_C(a) INTMAX_C(a)
+#define BOOST_RATIO_INTMAX_C(a) INTMAX_C(a)
 #else
-#define BOOST_INTMAX_C(a) a##LL
+#define BOOST_RATIO_INTMAX_C(a) a##LL
 #endif
 
 namespace boost
@@ -66,22 +66,22 @@ template <class R1, class R2> struct ratio_greater;
 template <class R1, class R2> struct ratio_greater_equal;
 
 // convenience SI typedefs
-typedef ratio<BOOST_INTMAX_C(1), BOOST_INTMAX_C(1000000000000000000)> atto;
-typedef ratio<BOOST_INTMAX_C(1),    BOOST_INTMAX_C(1000000000000000)> femto;
-typedef ratio<BOOST_INTMAX_C(1),       BOOST_INTMAX_C(1000000000000)> pico;
-typedef ratio<BOOST_INTMAX_C(1),          BOOST_INTMAX_C(1000000000)> nano;
-typedef ratio<BOOST_INTMAX_C(1),             BOOST_INTMAX_C(1000000)> micro;
-typedef ratio<BOOST_INTMAX_C(1),                BOOST_INTMAX_C(1000)> milli;
-typedef ratio<BOOST_INTMAX_C(1),                 BOOST_INTMAX_C(100)> centi;
-typedef ratio<BOOST_INTMAX_C(1),                  BOOST_INTMAX_C(10)> deci;
-typedef ratio<                 BOOST_INTMAX_C(10), BOOST_INTMAX_C(1)> deca;
-typedef ratio<                BOOST_INTMAX_C(100), BOOST_INTMAX_C(1)> hecto;
-typedef ratio<               BOOST_INTMAX_C(1000), BOOST_INTMAX_C(1)> kilo;
-typedef ratio<            BOOST_INTMAX_C(1000000), BOOST_INTMAX_C(1)> mega;
-typedef ratio<         BOOST_INTMAX_C(1000000000), BOOST_INTMAX_C(1)> giga;
-typedef ratio<      BOOST_INTMAX_C(1000000000000), BOOST_INTMAX_C(1)> tera;
-typedef ratio<   BOOST_INTMAX_C(1000000000000000), BOOST_INTMAX_C(1)> peta;
-typedef ratio<BOOST_INTMAX_C(1000000000000000000), BOOST_INTMAX_C(1)> exa;
+typedef ratio<BOOST_RATIO_INTMAX_C(1), BOOST_RATIO_INTMAX_C(1000000000000000000)> atto;
+typedef ratio<BOOST_RATIO_INTMAX_C(1),    BOOST_RATIO_INTMAX_C(1000000000000000)> femto;
+typedef ratio<BOOST_RATIO_INTMAX_C(1),       BOOST_RATIO_INTMAX_C(1000000000000)> pico;
+typedef ratio<BOOST_RATIO_INTMAX_C(1),          BOOST_RATIO_INTMAX_C(1000000000)> nano;
+typedef ratio<BOOST_RATIO_INTMAX_C(1),             BOOST_RATIO_INTMAX_C(1000000)> micro;
+typedef ratio<BOOST_RATIO_INTMAX_C(1),                BOOST_RATIO_INTMAX_C(1000)> milli;
+typedef ratio<BOOST_RATIO_INTMAX_C(1),                 BOOST_RATIO_INTMAX_C(100)> centi;
+typedef ratio<BOOST_RATIO_INTMAX_C(1),                  BOOST_RATIO_INTMAX_C(10)> deci;
+typedef ratio<                 BOOST_RATIO_INTMAX_C(10), BOOST_RATIO_INTMAX_C(1)> deca;
+typedef ratio<                BOOST_RATIO_INTMAX_C(100), BOOST_RATIO_INTMAX_C(1)> hecto;
+typedef ratio<               BOOST_RATIO_INTMAX_C(1000), BOOST_RATIO_INTMAX_C(1)> kilo;
+typedef ratio<            BOOST_RATIO_INTMAX_C(1000000), BOOST_RATIO_INTMAX_C(1)> mega;
+typedef ratio<         BOOST_RATIO_INTMAX_C(1000000000), BOOST_RATIO_INTMAX_C(1)> giga;
+typedef ratio<      BOOST_RATIO_INTMAX_C(1000000000000), BOOST_RATIO_INTMAX_C(1)> tera;
+typedef ratio<   BOOST_RATIO_INTMAX_C(1000000000000000), BOOST_RATIO_INTMAX_C(1)> peta;
+typedef ratio<BOOST_RATIO_INTMAX_C(1000000000000000000), BOOST_RATIO_INTMAX_C(1)> exa;
     
 }  // namespace boost
 

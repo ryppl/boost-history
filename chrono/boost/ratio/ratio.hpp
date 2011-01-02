@@ -33,9 +33,6 @@ time2_demo contained this comment:
 #define BOOST_RATIO_RATIO_HPP
 
 #include <boost/config.hpp>
-//~ #include <boost/static_integer/static_abs.hpp>
-//~ #include <boost/static_integer/static_sign.hpp>
-//~ #include <boost/static_integer/static_gcd.hpp>
 #include <boost/mpl/abs.hpp>
 #include <boost/mpl/sign.hpp>
 #include <boost/mpl/gcd.hpp>
@@ -49,6 +46,10 @@ time2_demo contained this comment:
 #include <boost/integer_traits.hpp>
 #include <boost/ratio/ratio_fwd.hpp>
 #include <boost/ratio/detail/overflow_helpers.hpp>
+#ifdef BOOST_RATIO_EXTENSIONS    
+#include <boost/rational.hpp>
+#include <boost/ratio/mpl/rational_c_tag.hpp>
+#endif
 
 //
 // We simply cannot include this header on gcc without getting copious warnings of the kind:
@@ -71,7 +72,7 @@ namespace boost
 //                20.6.1 Class template ratio [ratio.ratio]                   //
 //                                                                            //
 //----------------------------------------------------------------------------//
-
+    
 template <boost::intmax_t N, boost::intmax_t D>
 class ratio
 {
@@ -88,9 +89,13 @@ public:
     BOOST_STATIC_CONSTEXPR boost::intmax_t den = ABS_D / GCD;
 
 #ifdef BOOST_RATIO_EXTENSIONS    
+    typedef mpl::rational_c_tag tag;
+    typedef boost::rational<boost::intmax_t> value_type;
+    typedef boost::intmax_t num_type;
+    typedef boost::intmax_t den_type;
     ratio() 
     {}
-    template <intmax_t _N2, boost::intmax_t _D2>
+    template <boost::intmax_t _N2, boost::intmax_t _D2>
     ratio(const ratio<_N2, _D2>&,
         typename enable_if_c
             <
@@ -99,7 +104,7 @@ public:
             >::type* = 0) 
     {}
 
-    template <intmax_t _N2, boost::intmax_t _D2>
+    template <boost::intmax_t _N2, boost::intmax_t _D2>
         typename enable_if_c
         <
             (ratio<_N2, _D2>::num == num &&
@@ -107,6 +112,9 @@ public:
             ratio&
         >::type
     operator=(const ratio<_N2, _D2>&) {return *this;}
+    
+    static value_type value() {return value_type(num,den);}
+    value_type operator()() const {return value();}
 #endif
     typedef ratio<num, den> type;
 };
@@ -183,12 +191,35 @@ struct ratio_greater_equal
 {};
 
 template <class R1, class R2>
-struct ratio_gcd
+struct ratio_gcd : 
+    ratio<mpl::gcd_c<boost::intmax_t, R1::num, R2::num>::value,
+        mpl::lcm_c<boost::intmax_t, R1::den, R2::den>::value>::type 
 {
-    typedef ratio<mpl::gcd_c<boost::intmax_t, R1::num, R2::num>::value,
-        mpl::lcm_c<boost::intmax_t, R1::den, R2::den>::value> type;
 };
     
+#ifdef BOOST_RATIO_EXTENSIONS    
+template <class R>
+struct ratio_negate 
+    : ratio<-R::num, R::den>::type
+{
+};
+template <class R>
+struct ratio_abs
+    : ratio<mpl::abs_c<boost::intmax_t, R::num>::value, R::den>::type
+{
+};
+template <class R>
+struct ratio_sign
+    : mpl::sign_c<boost::intmax_t, R::num>
+{
+};
+template <class R1, class R2>
+struct ratio_lcm : 
+    ratio<mpl::lcm_c<boost::intmax_t, R1::num, R2::num>::value,
+        mpl::gcd_c<boost::intmax_t, R1::den, R2::den>::value>::type 
+{
+};
+#endif    
 }  // namespace boost
 
 
