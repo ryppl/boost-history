@@ -1,51 +1,68 @@
-/*
-    Copyright 2005-2007 Adobe Systems Incorporated
-   
-    Use, modification and distribution are subject to the Boost Software License,
-    Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
-    http://www.boost.org/LICENSE_1_0.txt).
+////////////////////////////////////////////////////////////////////////////////
+///
+/// \file io_error.hpp
+/// ------------------
+///
+/// Copyright (c) Domagoj Saric 2010.
+///
+///  Use, modification and distribution is subject to the Boost Software License, Version 1.0.
+///  (See accompanying file LICENSE_1_0.txt or copy at
+///  http://www.boost.org/LICENSE_1_0.txt)
+///
+/// For more information, see http://www.boost.org
+///
+////////////////////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
+#pragma once
+#ifndef io_error_hpp__71ED3406_D77C_41FB_9981_A94A1D3BDC8A
+#define io_error_hpp__71ED3406_D77C_41FB_9981_A94A1D3BDC8A
+//------------------------------------------------------------------------------
+#include "platform_specifics.hpp"
 
-    See http://opensource.adobe.com/gil for most recent version including documentation.
-*/
-/*************************************************************************************************/
+#include "boost/throw_exception.hpp"
 
-#ifndef GIL_IO_ERROR_H
-#define GIL_IO_ERROR_H
+#include <exception>
+//------------------------------------------------------------------------------
+namespace boost
+{
+//------------------------------------------------------------------------------
+namespace gil
+{
+//------------------------------------------------------------------------------
+namespace detail
+{
+//------------------------------------------------------------------------------
 
-/// \file
-/// \brief  Handle input-output errors
-/// \author Lubomir Bourdev and Hailin Jin \n
-///         Adobe Systems Incorporated
-/// \date   2005-2007 \n  Last updated on May 30, 2006
-
-#include <ios>
-#include "../../gil_config.hpp"
-#include <boost/shared_ptr.hpp>
-
-namespace boost { namespace gil {
-
-inline void io_error(const char* descr) { throw std::ios_base::failure(descr); }
-inline void io_error_if(bool expr, const char* descr="") { if (expr) io_error(descr); }
-
-namespace detail {
-    class file_mgr {
-    protected:
-        shared_ptr<FILE> _fp;
-
-        struct null_deleter { void operator()(void const*) const {} };
-        file_mgr(FILE* file) : _fp(file, null_deleter()) {}
-
-        file_mgr(const char* filename, const char* flags) {
-            FILE* fp;
-            io_error_if((fp=fopen(filename,flags))==NULL, "file_mgr: failed to open file");
-            _fp=shared_ptr<FILE>(fp,fclose);
-        }
-
-    public:
-        FILE* get() { return _fp.get(); }
-    };
+inline BF_NOTHROWNOALIAS void io_error( char const * const description )
+{
+    #ifdef _MSC_VER
+        throw_exception( std::exception( description , 0 ) ); // Assumes the description string is static/non-temporary
+    #else
+        throw_exception( std::exception( description     ) );
+    #endif // _MSC_VER
 }
 
-} }  // namespace boost::gil
+inline void io_error_if( bool const expression, char const * const description = "" )
+{
+    if ( expression )
+        io_error( description );
+}
 
-#endif
+inline void io_error_if_not( bool const expression, char const * const description = "" )
+{
+    io_error_if( !expression, description );
+}
+
+inline void io_error_if_not( void const * const pointer, char const * const description = "" )
+{
+    io_error_if( !pointer, description );
+}
+
+//------------------------------------------------------------------------------
+} // namespace detail
+//------------------------------------------------------------------------------
+} // namespace gil
+//------------------------------------------------------------------------------
+} // namespace boost
+//------------------------------------------------------------------------------
+#endif // io_error_hpp
