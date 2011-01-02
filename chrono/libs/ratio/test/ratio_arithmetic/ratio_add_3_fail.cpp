@@ -11,8 +11,6 @@
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
 
-//#define BOOST_RATIO_EXTENSIONS
-
 #include <boost/ratio.hpp>
 
 template <typename T, typename R>
@@ -31,7 +29,7 @@ boost::intmax_t test() {
                 boost::ratio<1,2>,
                 boost::ratio<1,3> 
             >
-//            ::type 
+            //~ ::type 
             >() 
             );
 }

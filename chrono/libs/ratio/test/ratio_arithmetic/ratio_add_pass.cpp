@@ -64,10 +64,19 @@ void test()
     typedef boost::ratio_add<R1, R2> R;
     BOOST_RATIO_STATIC_ASSERT(R::num == 127970191639601LL && R::den == 5177331081415LL, NOTHING, ());
     }
+    {
+    typedef boost::mpl::integral_c<boost::intmax_t, 0x7FFFFFFFFFFFFFFF> T;
+    BOOST_RATIO_STATIC_ASSERT(T::value == 0x7FFFFFFFFFFFFFFF, NOTHING, ());
+
+    typedef boost::ratio<BOOST_RATIO_INTMAX_C(0x7FFFFFFFFFFFFFFF), 1> R1;
+    typedef boost::ratio<-1, 1> R2;
+    typedef boost::ratio_add<R1, R2>::type RT;
+    }
+
 }
 
 boost::intmax_t func(boost::ratio<5,6> s) {
-    return s.num;    
+    return s.num;
 }
 
 
@@ -75,9 +84,9 @@ boost::intmax_t test_conversion() {
     return func(
             boost::ratio_add<
                 boost::ratio<1,2>,
-                boost::ratio<1,3> 
+                boost::ratio<1,3>
             >
-            () 
+            ()
             );
 }
 
