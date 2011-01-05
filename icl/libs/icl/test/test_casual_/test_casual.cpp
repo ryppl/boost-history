@@ -19,8 +19,11 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 
 #include <boost/icl/gregorian.hpp>
 #include <boost/icl/ptime.hpp>
-//#include <boost/icl/interval_map.hpp>
+
+#include <boost/icl/interval_map.hpp>
 #include <boost/icl/interval.hpp>
+
+#include <boost/icl_xt/inter_bitset.hpp>
 
 
 using namespace std;
@@ -69,15 +72,24 @@ void time_test()
 	cout << rel_a_b << " " << (icl::size(rel_a_b)) << endl;
 }
 
+void test_inter_bitset()
+{
+	inter_bitset<int> inbis;
+
+	interval<int>::type itv = interval<int>::right_open(0,2);
+	inbis.add(itv);
+}
+
 BOOST_AUTO_TEST_CASE(casual)
 {
-    //typedef int T;
-    //typedef int U;
-    //typedef interval_map<T,U, total_absorber> IntervalMapT;
-    //typedef interval_set<T>                   IntervalSetT;
-    //typedef IntervalMapT::interval_type       IntervalT;
+    typedef int T;
+    typedef int U;
+    typedef interval_map<T,U, total_absorber> IntervalMapT;
+    typedef interval_set<T>                   IntervalSetT;
+    typedef IntervalMapT::interval_type       IntervalT;
 
-    time_test();
+    // time_test();
+	test_inter_bitset();
 
     BOOST_CHECK_EQUAL(true, true);
 }

@@ -43,7 +43,7 @@ template
     typename    DomainT = unsigned long, 
     typename    BitSetT = icl::bits<unsigned long>, 
     ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, DomainT),
-    ICL_INTERVAL(ICL_COMPARE) Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, DomainT, Compare), //JODO change to right_open_interval
+    ICL_INTERVAL(ICL_COMPARE) Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, DomainT, Compare),
     ICL_ALLOC   Alloc   = std::allocator
 > 
 class interval_bitset
@@ -73,8 +73,14 @@ class interval_bitset
 {
 public:
     typedef boost::icl::interval_map
-        <DomainT, BitSetT, boost::icl::partial_absorber, 
-         std::less, boost::icl::inplace_bit_add, boost::icl::inplace_bit_and> interval_bitmap_type;
+    <
+        DomainT, BitSetT, boost::icl::partial_absorber, 
+        std::less, boost::icl::inplace_bit_add, boost::icl::inplace_bit_and,
+        Interval, Alloc
+    > 
+    interval_bitmap_type;
+
+    typedef interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc> type;
 
     typedef DomainT                                       domain_type;
     typedef DomainT                                       codomain_type;
@@ -95,6 +101,9 @@ public:
     typedef typename interval_bitmap_type::domain_compare domain_compare;      
     typedef typename std::set<DomainT,domain_compare,Alloc<DomainT> > atomized_type;
 
+    typedef typename difference_type_of<domain_type>::type difference_type;
+
+
     typedef typename interval_bitmap_type::iterator               iterator;
     typedef typename interval_bitmap_type::const_iterator         const_iterator;
     typedef typename interval_bitmap_type::reverse_iterator       reverse_iterator;
@@ -114,6 +123,10 @@ public:
     typedef typename interval_bitmap_type::reference       reference;
     typedef typename interval_bitmap_type::const_reference const_reference;
 
+public:
+	interval_bitset(): _map() {}
+	explicit interval_bitset(const element_type& element)   : _map() { this->add(element); } 
+	explicit interval_bitset(const interval_type& inter_val): _map() { this->add(inter_val); } 
 
 public:
     bool operator ==(const interval_bitset& rhs)const{ return _map == rhs._map; }
@@ -125,11 +138,11 @@ public:
     interval_bitset& operator &=(const interval_bitset& rhs) {_map &= rhs._map; return *this;}
     interval_bitset& operator ^=(const interval_bitset& rhs) {_map ^= rhs._map; return *this;}
 
-    interval_bitset& operator +=(const element_type& rhs) {return add(interval_type(rhs, rhs));      }
-    interval_bitset& operator |=(const element_type& rhs) {return add(interval_type(rhs, rhs));      }
-    interval_bitset& operator -=(const element_type& rhs) {return subtract(interval_type(rhs, rhs)); }
-    interval_bitset& operator &=(const element_type& rhs) {return intersect(interval_type(rhs, rhs));}
-    interval_bitset& operator ^=(const element_type& rhs) {return flip(interval_type(rhs, rhs));     }
+    interval_bitset& operator +=(const element_type& rhs) {return add(interval_type(rhs));      }
+    interval_bitset& operator |=(const element_type& rhs) {return add(interval_type(rhs));      }
+    interval_bitset& operator -=(const element_type& rhs) {return subtract(interval_type(rhs)); }
+    interval_bitset& operator &=(const element_type& rhs) {return intersect(interval_type(rhs));}
+    interval_bitset& operator ^=(const element_type& rhs) {return flip(interval_type(rhs));     }
 
     interval_bitset& operator +=(const interval_type& rhs){return add(rhs);      }
     interval_bitset& operator |=(const interval_type& rhs){return add(rhs);      }
@@ -143,14 +156,20 @@ public:
     interval_bitset& subtract (const interval_type& rhs){return segment_apply(&interval_bitset::subtract_, rhs);}
     interval_bitset& intersect(const interval_type& rhs){return segment_apply(&interval_bitset::intersect_,rhs);}
     interval_bitset& flip     (const interval_type& rhs){return segment_apply(&interval_bitset::flip_,     rhs);}
+    interval_bitset& insert   (const interval_type& rhs){return add(rhs);}
+    interval_bitset& erase    (const interval_type& rhs){return subtract(rhs);}
 
     interval_bitset& add      (const element_type& rhs) {return segment_apply(&interval_bitset::add_,      interval_type(rhs));}
     interval_bitset& subtract (const element_type& rhs) {return segment_apply(&interval_bitset::subtract_, interval_type(rhs));}
     interval_bitset& intersect(const element_type& rhs) {return segment_apply(&interval_bitset::intersect_,interval_type(rhs));}
     interval_bitset& flip     (const element_type& rhs) {return segment_apply(&interval_bitset::flip_,     interval_type(rhs));}
+    interval_bitset& insert   (const element_type& rhs) {return add(rhs);}
+    interval_bitset& erase    (const element_type& rhs) {return subtract(rhs);}
 
     void clear()                    { icl::clear(_map); }
     bool empty()const               { return icl::is_empty(_map); }
+    void swap(interval_bitset& operand) { _map.swap(operand._map); }
+
     size_type cardinality()const;
     size_type size()const           { return cardinality(); }
     size_type interval_count()const { return interval_count(_map); }
@@ -158,6 +177,7 @@ public:
 
     bool contains(element_type element)const{ return _map(element>>shift).contains(element & mask); }
     bool contains(const segment_type& segment)const;
+	//CL bool contains(const element_type& element)const     { return contains(segment_type(element)); };
     bool contains(const interval_bitset& sub)const      { return icl::contains(_map, sub._map); }
     bool contained_in(const interval_bitset& super)const{ return icl::within(_map, super._map); }
 
@@ -256,11 +276,14 @@ private:
     static word_type to_upper_from(word_type bit){return bit==last ? top : ~((w1<<bit)-w1); }
 
     interval_bitset& segment_apply(segment_combiner combine, const interval_type& operand)
-    {                                                   // same as
-        condensed_type base = operand.first() >> shift, // operand.first()/ divisor
-                       ceil = operand.last()  >> shift; // operand.last() / divisor
-        word_type base_rest = operand.first() &  mask , // operand.first()% divisor
-                  ceil_rest = operand.last()  &  mask ; // operand.last() % divisor  
+    {
+        if(icl::is_empty(operand))
+            return *this;
+                                                            // same as
+        condensed_type base = icl::first(operand) >> shift, // first(operand) / divisor
+                       ceil = icl::last (operand) >> shift; // last (operand) / divisor
+        word_type base_rest = icl::first(operand) &  mask , // first(operand) % divisor
+                  ceil_rest = icl::last (operand) &  mask ; // last (operand) % divisor  
 
         if(base == ceil) // [first, last] are within one bitset (chunk)
             (this->*combine)(base, base+1, bitset_type(  to_upper_from(base_rest)
@@ -295,6 +318,26 @@ private:
 };
 
 
+
+// For a given interval like e.g. [5,27] we have to split up the intervals into
+// partitions
+//
+//    [0,1)->   [1,2)->   [2,3)->   [3,4)->   
+//    [00101100][11001011][11101001][11100000]
+// +       [111  11111111  11111111  1111]      [5,27] as bitset
+//          a                           b
+//          
+// => [0,1)->   [1,3)->   [3,4)->
+//    [00101111][11111111][11110000]
+//
+// in preparation to an operation like "+" above.
+//
+//    [0,1)->   [1,2)->   [2,3)->   [3,4)->   
+//    [00101100][11001011][11101001][11100000]
+//         [111  11111111  11111111  1111]      [5,27] as bitset
+//     00000111  11111111            11110000
+//         subs  ^ inters  ^         supers
+//               lo=1      up=2      
 template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
 typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::PartsT
 interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::partition
@@ -305,13 +348,13 @@ interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::partition
     const segment_type& segment
 )const
 {
-    if(segment.empty())
+	if(icl::is_empty(segment))
         return PartsT();
 
-    condensed_type base = segment.first() >> shift, // segment.first()/ divisor
-                   ceil = segment.last()  >> shift; // segment.last() / divisor
-    word_type base_rest = segment.first() &  mask , // segment.first()% divisor
-              ceil_rest = segment.last()  &  mask ; // segment.last() % divisor  
+    condensed_type base = icl::first(segment) >> shift, // segment.first()/ divisor
+                   ceil = icl::last (segment) >> shift; // segment.last() / divisor
+    word_type base_rest = icl::first(segment) &  mask , // segment.first()% divisor
+              ceil_rest = icl::last (segment) &  mask ; // segment.last() % divisor  
 
     if(base == ceil) // [first, last] are within one bitset
     {
@@ -349,7 +392,7 @@ interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::partition
 template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
 bool interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::contains(const segment_type& segment)const
 { 
-    if(segment.empty())
+	if(icl::is_empty(segment))
         return true; // Emptieness is contained in everything
 
     condensed_type                 lo,         up        ;
@@ -364,7 +407,7 @@ bool interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::contains(const seg
             return false;
         if(parts.contains(super_part) && !_map(up).contains(supers))
             return false;
-        if(parts.contains(inter_part) && !_map.contains(seg_type(interval_type::right_open(lo,up), inters)) ) 
+        if(parts.contains(inter_part) && !icl::contains(_map, seg_type(interval_type::right_open(lo,up), inters)) ) 
             return false;
 
         return true;
@@ -382,8 +425,38 @@ typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::size_type
     return cardinality; 
 }
 
+//JODO move ...
+template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
+typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::size_type 
+    cardinality(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
+{
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::type object_type;
+    typedef typename object_type::size_type size_type;
+    size_type cardinality = 0;
+    ICL_const_FORALL(typename object_type, it_, object)
+        cardinality += (it_->second.cardinality() * icl::cardinality(it_->first));//JODO icl::bits
+    return cardinality; 
+}
 
-template<class DomainT,    class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
+template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
+typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::size_type 
+    interval_count(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
+{
+    return object.iterative_size(); 
+}
+
+template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
+typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::interval_type 
+hull(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
+{
+	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::interval_type interval_type;
+    return 
+        icl::is_empty(object) 
+            ? identity_element<interval_type>::value()
+			: interval_type::closed(*object.elements_begin(), *object.elements_rbegin());
+}
+
+template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
 void interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::show_segments()const
 {
     for(typename interval_bitmap_type::const_iterator it_ = _map.begin();
@@ -472,7 +545,7 @@ bool is_empty(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& obj
 
 template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
 bool contains(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& super, 
-     const typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_type& sub  ) 
+           typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_type sub) 
 { 
     return super.contains(sub); 
 }
@@ -489,6 +562,27 @@ bool contains(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& sup
               const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& sub  ) 
 { 
     return super.contains(sub); 
+}
+
+template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
+bool within(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& sub, 
+            const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& super) 
+{ 
+    return super.contains(sub); 
+}
+
+template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
+bool intersects(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& x1, 
+                const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& x2  ) 
+{ 
+    return !(x1 & x2).empty(); //JODO
+}
+
+template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
+bool disjoint(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& x1, 
+              const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& x2  ) 
+{ 
+    return !intersects(x1, x2); //JODO
 }
 
 

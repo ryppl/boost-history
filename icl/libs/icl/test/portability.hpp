@@ -48,13 +48,25 @@ template<class tp_T, class tp_U, \
        ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, tp_T, Compare), \
        ICL_ALLOC   Alloc   = std::allocator>class
 
-    
-#define ICL_IntervalSet_TEMPLATE(tp_T) \
-template<class tp_T, \
-       ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, tp_T), \
-       ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, tp_T, Compare), \
-       ICL_ALLOC   Alloc   = std::allocator>class 
 
+#ifndef ICL_INTERVAL_BITSET_IMPL
+
+#   define ICL_IntervalSet_TEMPLATE(tp_T) \
+    template<class tp_T, \
+        ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, tp_T), \
+        ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, tp_T, Compare), \
+        ICL_ALLOC   Alloc   = std::allocator>class 
+
+#else
+
+#   define ICL_IntervalSet_TEMPLATE(tp_T) \
+    template<class tp_T, \
+        class BitSetT = icl::bits<unsigned long>, \
+        ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, tp_T), \
+        ICL_INTERVAL(ICL_COMPARE)  Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, tp_T, Compare), \
+        ICL_ALLOC   Alloc   = std::allocator>class 
+
+#endif //ICL_INTERVAL_BITSET_IMPL
 
 #endif // BOOST_ICL_TEST_PORTABILITY_HPP_JOFA_101111
 

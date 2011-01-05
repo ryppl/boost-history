@@ -82,10 +82,12 @@ typedef ::boost::mpl::list<
     ,short, int, long, long long
 > integral_types;
 
-typedef int           integral_type_1;
-typedef unsigned int  integral_type_2;
-typedef short         integral_type_3;
-typedef unsigned int  integral_type_4;
+typedef int                integral_type_1;
+typedef unsigned int       integral_type_2;
+typedef short              integral_type_3;
+typedef unsigned short     integral_type_4;
+typedef long long          integral_type_5;
+typedef unsigned long long integral_type_6;
 
 typedef ::boost::mpl::list<
     unsigned short, unsigned int

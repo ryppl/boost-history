@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_fastest_interval_bitset", "fastest_interval_bitset_\vc9_fastest_interval_bitset.vcproj", "{EE61B7EF-EC45-4165-8B49-FD5B7D3A905C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_fastest_interval_bitset_infix", "fastest_interval_bitset_infix_\vc9_fastest_interval_bitset_infix.vcproj", "{A731623C-94BC-4666-A419-35D1623E916E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EE61B7EF-EC45-4165-8B49-FD5B7D3A905C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D3A905C}.Debug|Win32.Build.0 = Debug|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D3A905C}.Release|Win32.ActiveCfg = Release|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D3A905C}.Release|Win32.Build.0 = Release|Win32
+		{A731623C-94BC-4666-A419-35D1623E916E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A731623C-94BC-4666-A419-35D1623E916E}.Debug|Win32.Build.0 = Debug|Win32
+		{A731623C-94BC-4666-A419-35D1623E916E}.Release|Win32.ActiveCfg = Release|Win32
+		{A731623C-94BC-4666-A419-35D1623E916E}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

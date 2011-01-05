@@ -118,6 +118,8 @@ void interval_set_fundamentals_4_ordered_types()
     BOOST_CHECK_EQUAL(hull(single_I0_1I).lower(), I0_1I.lower());
     BOOST_CHECK_EQUAL(hull(single_I0_1I).upper(), I0_1I.upper());
 
+    BOOST_CHECK_EQUAL(icl::is_empty(single_I0_0I), false);
+
     //contains predicate
     BOOST_CHECK_EQUAL(icl::contains(single_I0_0I, v0), true);
     BOOST_CHECK_EQUAL(icl::contains(single_I0_0I, I0_0I), true);
@@ -242,17 +244,34 @@ void interval_set_distinct_4_bicremental_types()
     T v3 = make<T>(3);
     T v5 = make<T>(5);
 
-    size_T s3 = make<size_T>(3);
-    
+    size_T s3 = make<size_T>(3);    
 
     IntervalSet<T> is_1_3_5;
     is_1_3_5.add(v1).add(v3).add(v5);
 
-    BOOST_CHECK_EQUAL( cardinality(is_1_3_5),       s3 );
-    BOOST_CHECK_EQUAL( is_1_3_5.size(),             s3 );
-    BOOST_CHECK_EQUAL( interval_count(is_1_3_5),   3 );
+    BOOST_CHECK_EQUAL( cardinality(is_1_3_5),     s3 );
+
+    BOOST_CHECK_EQUAL( is_1_3_5.size(),           s3 );
     BOOST_CHECK_EQUAL( iterative_size(is_1_3_5),   3 );
+
+#ifdef ICL_INTERVAL_BITSET_IMPL
+    BOOST_CHECK_EQUAL( is_1_3_5.iterative_size(),   1 );
+    BOOST_CHECK_EQUAL( interval_count(is_1_3_5),    1 );
+#else
     BOOST_CHECK_EQUAL( is_1_3_5.iterative_size(),   3 );
+    BOOST_CHECK_EQUAL( interval_count(is_1_3_5),    3 );
+#endif
+
+    IntervalSet<T> is_5_65_129;
+    is_5_65_129.add(MK_v(5)).add(MK_v(65)).add(MK_v(129));
+
+    BOOST_CHECK_EQUAL( cardinality(is_5_65_129),     s3 );
+
+    BOOST_CHECK_EQUAL( is_5_65_129.size(),           s3 );
+    BOOST_CHECK_EQUAL( iterative_size(is_5_65_129),   3 );
+
+    BOOST_CHECK_EQUAL( is_5_65_129.iterative_size(),   3 );
+    BOOST_CHECK_EQUAL( interval_count(is_5_65_129),    3 );
 }
 
 
