@@ -10,8 +10,6 @@
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/detail/yes_no_type.hpp>
-#include <boost/type_traits/is_void.hpp>
-#include <boost/typeof/typeof.hpp>
 
 // should be the last #include
 #include <boost/type_traits/detail/bool_trait_def.hpp>
