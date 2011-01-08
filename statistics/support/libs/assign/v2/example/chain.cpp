@@ -10,9 +10,9 @@
 #include <vector>
 #include <list>
 #include <boost/array.hpp>
+#include <boost/assign/v2/chain.hpp>
+#include <boost/assign/v2/put/deque.hpp>
 #include <libs/assign/v2/example/include.h>
-#include <libs/assign/v2/example/foo.h>
-#include <libs/assign/v2/example/constants.h>
 #include <libs/assign/v2/example/chain.h>
 
 namespace example_assign_v2{
@@ -20,37 +20,37 @@ namespace xxx_chain{
 
     void run(std::ostream& os)
     {
-    	using namespace boost::assign::v2;
         os << "* xxx_chain" << std::endl;
         {
-            os << "chain_read";
-            //[chain_read
-            typedef boost::array<T, 1> cont1_; cont1_ cont1; cont1[0] = x;
-            typedef std::list<T> cont3_; cont3_ cont3; cont3.push_back( z );
-            using namespace adaptor;
-            namespace ns = ref::assign_copy;
+            os << "chain_read ";
+            //[chain_r
+            boost::array<int, 2> ar; ar[0] = 0; ar[1] = 1;
+            std::list<int> list( 1, 2 );
+            std::vector<int> vec( 2 ); vec[0] = 3; vec[1] = 4;
             boost::for_each(
-                cont1 | _chain( ns::csv_anon( y ) ) | _chain( cont3 ),
-                printer( os )
+                ar | as2::_chain( list ) | as2::_chain( vec ),
+                os << bl::_1 << ' '
             );
-            // outputs (1,0)(NULL,0)(1,5)
-            //]
-            //[chain_write
-            T y1;
-            typedef std::vector<T> vec_; vec_ vec( 3, y );
-            boost::copy(
-                vec,
-                boost::begin(
-                    cont1 /* lvalue */ | _chain(
-                        ns::csv_anon( y1 /* lvalue */ ) /* rvalue */
-                    ) | _chain( cont3 /* lvalue */ )
-                )
-            );
-            BOOST_ASSERT( cont1[0] == y );
-            BOOST_ASSERT( y1 == y );
-            BOOST_ASSERT( cont3.front() == y1 );
+            // outputs 0, 1, 2, 3, 4
             //]
         }
+        {
+            //[chain_w
+            int const x = -1; int y; boost::array<int, 2> ar;
+            boost::copy(
+                std::vector<int>(3, x),
+                boost::begin(
+                    ar /* lvalue */ | as2::_chain(
+                        as2::ref::csv_array( y /* lvalue */ )
+                    ) /* rvalue */
+                )
+            );
+            assert( ar[0] == x );
+            assert( ar[1] == x );
+            assert( y == x );
+            //]
+        }
+        os << std::endl;
     }
 
 }// xxx_chain

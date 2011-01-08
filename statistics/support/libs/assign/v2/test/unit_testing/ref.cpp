@@ -13,13 +13,13 @@
 #include <iostream> // needed?
 
 #include <boost/test/test_tools.hpp>
-#define BOOST_ASSIGN_CHECK_EQUAL(a,b) BOOST_CHECK_EQUAL(a,b)
+#define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 #include <libs/assign/v2/test/ref/convert_traits.cpp>
 #include <libs/assign/v2/test/ref/wrapper.cpp>
 #include <libs/assign/v2/test/ref/fusion.cpp>
-#include <libs/assign/v2/test/ref/fusion_matrix.cpp>
-#include <libs/assign/v2/test/ref/csv_anon.cpp>
-#include <libs/assign/v2/test/ref/anon.cpp>
+#include <libs/assign/v2/test/ref/list_tuple.cpp>
+#include <libs/assign/v2/test/ref/array.cpp>
+#include <libs/assign/v2/test/ref/csv_array.cpp>
 
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
@@ -32,9 +32,9 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
 		test->add( BOOST_TEST_CASE( &xxx_convert_traits::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_wrapper::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_fusion::test ) );
-		test->add( BOOST_TEST_CASE( &xxx_fusion_matrix::test ) );
-		test->add( BOOST_TEST_CASE( &xxx_anon::test ) );
-		test->add( BOOST_TEST_CASE( &xxx_csv_anon::test ) );
+		test->add( BOOST_TEST_CASE( &xxx_list_tuple::test ) );
+		test->add( BOOST_TEST_CASE( &xxx_array::test ) );
+		test->add( BOOST_TEST_CASE( &xxx_csv_array::test ) );
     }
     return test;                             
 }                                            

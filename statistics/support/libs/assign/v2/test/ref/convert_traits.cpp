@@ -16,7 +16,8 @@ namespace xxx_convert_traits{
 
     void test()
     { 
-    	namespace ns = boost::assign::v2::ref::convert_traits::checking;
+    	namespace as2 = boost::assign::v2;
+    	namespace ns = as2::ref::convert_traits::checking;
         {
         	ns::twin_values::do_check<int>();
         }

@@ -20,20 +20,17 @@ namespace xxx_has_push{
 
     void test()
     {
-         namespace ns = boost::assign::v2::container_type_traits;
+		 namespace as2 = boost::assign::v2;
+         namespace ns = as2::container_type_traits;
          {
-             typedef std::queue<int> v_;
-             typedef ns::has_push<v_> has_push_;
-             
-             //typedef void (v_::*fp_)(int const&) ;
-             //fp_ fp = &v_::push; v_ v; ((v).*fp)( 1 );
-             //BOOST_ASSERT(v.front() == 1);
-             BOOST_STATIC_ASSERT( has_push_::value );
+			typedef std::queue<int> v_;
+            typedef ns::has_push<v_> has_push_;
+            BOOST_STATIC_ASSERT( has_push_::value );
          }
          {
-             typedef std::stack<int> v_;
-             typedef ns::has_push<v_> has_push_;
-             BOOST_STATIC_ASSERT( has_push_::value );
+			typedef std::stack<int> v_;
+            typedef ns::has_push<v_> has_push_;
+            BOOST_STATIC_ASSERT( has_push_::value );
          }
          {
              typedef std::vector<int> v_;

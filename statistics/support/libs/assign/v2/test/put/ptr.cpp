@@ -27,7 +27,7 @@ namespace xxx_ptr{
         using namespace boost::assign::v2;
         {    // Array
             {	
-                typedef boost::ptr_array<int,8> cont_;
+                typedef boost::ptr_array<int, 8> cont_;
                 cont_ cont;
                 {
                     using namespace checking::constants;
@@ -35,7 +35,7 @@ namespace xxx_ptr{
                     do_check(
                         csv_put( cont )
                             ( a , b , c , d , e , f , g , h ).unwrap()
-                        );
+                    );
                 }
             }
         }

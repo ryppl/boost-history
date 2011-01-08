@@ -8,6 +8,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <vector>
+#include <cstddef>
 #include <boost/static_assert.hpp>
 #include <boost/assign/v2/detail/type_traits/has_value_type.hpp>
 #include <libs/assign/v2/test/type_traits/has_value_type.h>
@@ -18,15 +19,15 @@ namespace xxx_has_value_type{
 
     void test(){
     	
-        using namespace boost::assign::v2;
+        namespace as2 = boost::assign::v2;
         {
             typedef std::vector<int> inp_;
-        	typedef type_traits::has_value_type<inp_>::type pred_;
+        	typedef as2::type_traits::has_value_type<inp_>::type pred_;
         	BOOST_STATIC_ASSERT(pred_::value);
     	}
         {
             typedef int inp_;
-        	typedef type_traits::has_value_type<inp_>::type pred_;
+        	typedef as2::type_traits::has_value_type<inp_>::type pred_;
         	BOOST_STATIC_ASSERT(!pred_::value);
     	}
     }

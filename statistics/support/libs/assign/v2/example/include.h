@@ -11,13 +11,28 @@
 #define BOOST_ASSIGN_V2_EXAMPLE_INCLUDE_ER_2010_H
 
 // Exlc. from markup bec. already included in section Getting started
-#include <boost/assign/v2.hpp> 
+//#include <boost/assign/v2.hpp>
 
 //[include_statements
 #include <iostream>
 #include <utility> // std::pair
 #include <boost/assert.hpp>
+#include <boost/lambda/lambda.hpp>
 #include <boost/range/algorithm.hpp>
+//]
+
+namespace boost{
+namespace assign{
+namespace v2 {
+
+}
+}
+}
+
+
+//[ns
+namespace as2 = boost::assign::v2;
+namespace bl = boost::lambda;
 //]
 
 #endif

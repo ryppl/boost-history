@@ -18,11 +18,8 @@ rule assign-test ( name )
 test-suite assign :
     [ assign-test type_traits ]
     [ assign-test detail ]
-    [ assign-test anon ]
     [ assign-test chain ]
     [ assign-test put ]
-    [ assign-test put_compose ]
-    [ assign-test put_range ]
     [ assign-test ref ]
 ;
 

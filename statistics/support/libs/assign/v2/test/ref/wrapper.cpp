@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/mpl/assert.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
-#include <boost/assign/v2/detail/checking/check_equal.hpp>
+#include <boost/assign/v2/detail/checking/check.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <libs/assign/v2/test/ref/wrapper.h>
 
@@ -25,27 +25,15 @@ namespace xxx_wrapper{
 			typedef ref::type_traits::copy_wrapper<val_>::type w_;
             w_ w;
             val_ a = 1, b = 2, c = 3;
-            w.rebind( a ); BOOST_ASSIGN_V2_CHECK_EQUAL( &w.unwrap(), &a );
-            w.assign( b ); BOOST_ASSIGN_V2_CHECK_EQUAL( a, b );
-            w = c; BOOST_ASSIGN_V2_CHECK_EQUAL( a, c );
+            w.rebind( a ); BOOST_ASSIGN_V2_CHECK( &w.unwrap() == &a );
+            w.assign( b ); BOOST_ASSIGN_V2_CHECK( a == b );
+            w = c; BOOST_ASSIGN_V2_CHECK( a == c );
         }
 		{
 			typedef ref::type_traits::copy_wrapper<val_ const>::type w_;
             w_ w;
             val_ a = 1;
-            w.rebind( a ); BOOST_ASSIGN_V2_CHECK_EQUAL( &w.unwrap(), &a );
-        }
-		{
-			typedef ref::type_traits::rebind_wrapper<val_>::type w_;
-            w_ w;
-            val_ a = 1;
-            w = a; BOOST_ASSIGN_V2_CHECK_EQUAL( &w.unwrap(), &a );
-        }
-		{
-			typedef ref::type_traits::rebind_wrapper<val_ const>::type w_;
-            w_ w;
-            val_ const a = 1;
-            w = a; BOOST_ASSIGN_V2_CHECK_EQUAL( &w.unwrap(), &a );
+            w.rebind( a ); BOOST_ASSIGN_V2_CHECK( &w.unwrap() == &a );
         }
         #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         {
@@ -56,12 +44,12 @@ namespace xxx_wrapper{
             {
                 val_&& a = 1;
                 w_ w( a );
-                BOOST_ASSIGN_V2_CHECK_EQUAL( &w.unwrap(), &a );
+                BOOST_ASSIGN_V2_CHECK( &w.unwrap() == &a );
             }
             {
                 cval_ a = 1;
                 w_ w = w_( 1 );
-                BOOST_ASSIGN_V2_CHECK_EQUAL( w.unwrap(), a );
+                BOOST_ASSIGN_V2_CHECK( w.unwrap() == a );
             }
         }
         #endif

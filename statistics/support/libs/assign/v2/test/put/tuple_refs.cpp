@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <deque>
 #include <boost/tuple/tuple.hpp>
+#include <boost/assign/v2/detail/checking/check.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/put.hpp>
 #include <libs/assign/v2/test/put/tuple_refs.h>
@@ -19,8 +20,8 @@ namespace xxx_tuple_refs{
 
     void test()
     {
-        using namespace boost::assign::v2;
-        using namespace checking::constants;
+        namespace as2 = boost::assign::v2;
+        using namespace as2::checking::constants;
         {
         	int a1, b1, c1, d1;//, e1, f1, g1, h1;
             {
@@ -31,15 +32,14 @@ namespace xxx_tuple_refs{
             	typedef boost::tuple<int&, const int&> tuple_;
                 typedef std::deque<tuple_> cont_;
                 cont_ cont;
-                put( cont )( a1 , b1 )( c1 , d1 );
-                BOOST_ASSIGN_V2_CHECK_EQUAL( &a1, &boost::get<0>( cont[0] ) );
-                BOOST_ASSIGN_V2_CHECK_EQUAL( &b1, &boost::get<1>( cont[0] ) );
-                BOOST_ASSIGN_V2_CHECK_EQUAL( &c1, &boost::get<0>( cont[1] ) );
-                BOOST_ASSIGN_V2_CHECK_EQUAL( &d1, &boost::get<1>( cont[1] ) );
+                as2::put( cont )( a1 , b1 )( c1 , d1 );
+                BOOST_ASSIGN_V2_CHECK( &a1 == &boost::get<0>( cont[0] ) );
+                BOOST_ASSIGN_V2_CHECK( &b1 == &boost::get<1>( cont[0] ) );
+                BOOST_ASSIGN_V2_CHECK( &c1 == &boost::get<0>( cont[1] ) );
+                BOOST_ASSIGN_V2_CHECK( &d1 == &boost::get<1>( cont[1] ) );
             }
         }
     }
-
 
 }// xxx_tuple_refs
 }// xxx_put

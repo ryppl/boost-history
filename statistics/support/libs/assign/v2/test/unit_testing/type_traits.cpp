@@ -13,7 +13,7 @@
 #include <iostream> // needed?
 
 #include <boost/test/test_tools.hpp>
-#define BOOST_ASSIGN_CHECK_EQUAL(a,b) BOOST_CHECK_EQUAL(a,b)
+#define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 #include <libs/assign/v2/test/type_traits/has_push.cpp>
 #include <libs/assign/v2/test/type_traits/has_value_type.cpp>
 #include <libs/assign/v2/test/type_traits/has_static_size.cpp>
