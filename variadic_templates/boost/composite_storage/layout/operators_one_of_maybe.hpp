@@ -16,6 +16,8 @@
 #include <boost/composite_storage/special_components.hpp>
 #include <boost/mpl/next.hpp>
 
+#include <memory>
+
 namespace boost
 {
 namespace composite_storage
@@ -80,19 +82,19 @@ struct operators< tags::one_of_maybe>
         {
         }
             static
-          special_components::nothing const*
+          special_components::nothing const&
         project(index_part index_arg, char const*buffer_composite)
         {
             return tail_type::_();
         }
             static
-          special_components::nothing*
+          special_components::nothing&
         project(index_part index_arg, char*buffer_composite)
         {
             return tail_type::_();
         }
             static
-          special_components::nothing*
+          special_components::nothing&
         project(index_part index_arg, buffers::rval_ref_buf buffer_composite)
         {
             return tail_type::_();
@@ -235,28 +237,28 @@ struct operators< tags::one_of_maybe>
             project
             ;
                 static
-              TailComponent const*
+              TailComponent const&
             project(index_part index_arg, char const*buffer_composite)
             {
                 void const*tail_buffer=buffer_composite;
                 TailComponent const*tail_ptr=static_cast<TailComponent const*>(tail_buffer);
-                return tail_ptr;
+                return *tail_ptr;
             }
                 static
-              TailComponent*
+              TailComponent&
             project(index_part index_arg, char*buffer_composite)
             {
                 void*tail_buffer=buffer_composite;
                 TailComponent*tail_ptr=static_cast<TailComponent*>(tail_buffer);
-                return tail_ptr;
+                return *tail_ptr;
             }
                 static
-              TailComponent*
+              TailComponent&
             project(index_part index_arg, buffers::rval_ref_buf buffer_composite)
             {
                 void*tail_buffer=buffer_composite.my_buf;
                 TailComponent*tail_ptr=static_cast<TailComponent*>(tail_buffer);
-                return tail_ptr;
+                return *tail_ptr;
             }
               using HeadLayout::
             destroyer

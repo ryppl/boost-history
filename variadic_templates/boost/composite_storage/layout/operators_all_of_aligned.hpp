@@ -17,6 +17,8 @@
 #include <boost/composite_storage/special_components.hpp>
 #include <boost/mpl/next.hpp>
 
+#include <memory>
+
 namespace boost
 {
 namespace composite_storage
