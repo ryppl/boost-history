@@ -13,7 +13,6 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/assign/v2/chain/traits/use_lvalue.hpp>
 #include <boost/assign/v2/chain/traits/range.hpp>
-#include <boost/assign/v2/chain/aux_/sub.hpp>
 
 namespace boost{
 namespace assign{

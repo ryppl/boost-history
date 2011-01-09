@@ -12,7 +12,6 @@
 
 #include <boost/assign/v2/ref/fusion/assign_array.hpp>
 #include <boost/assign/v2/ref/fusion/assign_copy.hpp>
-#include <boost/assign/v2/ref/fusion/assign_rebind.hpp>
 #include <boost/assign/v2/ref/fusion/container.hpp>
 #include <boost/assign/v2/ref/fusion/make.hpp>
 #include <boost/assign/v2/ref/fusion/most_const.hpp>

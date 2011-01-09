@@ -14,6 +14,5 @@
 #include <boost/assign/v2/put/pipe/functor/keyword.hpp>
 #include <boost/assign/v2/put/pipe/functor/forward.hpp>
 #include <boost/assign/v2/put/pipe/functor/operator.hpp>
-#include <boost/assign/v2/put/pipe/functor/sub.hpp>
 
 #endif // BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_ER_2010_HPP

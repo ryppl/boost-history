@@ -11,7 +11,6 @@
 #define BOOST_ASSIGN_V2_PUT_DEQUE_CSV_ER_2010_HPP
 #include <boost/type_traits/decay.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
-#include <boost/assign/v2/put/deque/make.hpp>
 #include <boost/assign/v2/put/deque/cont.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X

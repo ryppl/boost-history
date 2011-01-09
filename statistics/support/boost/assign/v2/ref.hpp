@@ -10,7 +10,6 @@
 #ifndef BOOST_ASSIGN_V2_REF_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ER_2010_HPP
 
-#include <boost/assign/v2/ref/anon.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
 
 // Basic usage

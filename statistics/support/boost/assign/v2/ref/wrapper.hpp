@@ -10,9 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_REF_WRAPPER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_WRAPPER_ER_2010_HPP
 
-#include <boost/assign/v2/ref/wrapper/deduce_assign_tag.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/ref/wrapper/rebind.hpp>
 #include <boost/assign/v2/ref/wrapper/cpp0x.hpp>
 
 #endif

@@ -16,7 +16,6 @@
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/assign/v2/ref/wrapper/framework.hpp>
-#include <boost/assign/v2/ref/wrapper/base.hpp>
 #include <boost/assign/v2/ref/wrapper/crtp.hpp>
 
 namespace boost{
