@@ -15,8 +15,4 @@
 #include <boost/assign/v2/put/pipe/range.hpp>
 #include <boost/assign/v2/put/pipe/convert.hpp>
 
-// Basic usage:
-//  using namespace boost::assign::v2;
-//  cont | _csv_put(x, y, z)
-
 #endif // BOOST_ASSIGN_V2_PUT_PIPE_ER_2010_HPP

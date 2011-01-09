@@ -15,6 +15,4 @@
 #include <boost/assign/v2/put/pipe.hpp>
 #include <boost/assign/v2/put/sub.hpp>
 
-
-
 #endif
