@@ -25,12 +25,12 @@ namespace xxx_range{
             std::vector<int> from( 3 );
             from[0] = -1; from[1] = 0; from[2] = 1;
             std::queue<int> to; // FIFO
-            BOOST_ASSERT(
+            assert(
                 (
                     to | as2::_put_range( from )
                 ).front() == -1
             );
-            BOOST_ASSERT( to.back() == 1 );
+            assert( to.back() == 1 );
             //]
         }
     }
