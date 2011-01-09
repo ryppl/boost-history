@@ -49,8 +49,7 @@ namespace xxx_array{
             boost::for_each(
                 as2::ref::array( -1 )( 0 )( 1 ),
                 os << bl::_1 << ' '
-            );
-            // outputs -1 0 1
+            ); // outputs -1 0 1
             //]
 		}
 

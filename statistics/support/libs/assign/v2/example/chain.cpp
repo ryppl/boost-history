@@ -30,8 +30,7 @@ namespace xxx_chain{
             boost::for_each(
                 ar | as2::_chain( list ) | as2::_chain( vec ),
                 os << bl::_1 << ' '
-            );
-            // outputs 0, 1, 2, 3, 4
+            ); // outputs 0, 1, 2, 3, 4
             //]
         }
         {

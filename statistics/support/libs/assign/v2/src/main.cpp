@@ -1,7 +1,6 @@
 #include <iostream>
 #include <boost/assert.hpp>
 
-/*
 #include <libs/assign/v2/test/chain.h>
 #include <libs/assign/v2/test/detail.h>
 #include <libs/assign/v2/test/type_traits.h>
@@ -10,13 +9,11 @@
 #include <libs/assign/v2/example/chain.h>
 #include <libs/assign/v2/example/ref.h>
 #include <libs/assign/v2/example/put.h>
-*/
 
 int main (int argc, char * const argv[])
 {
 
     // Warning : Do not put libs/assign/v2/test/unit_testing in this project
-/*
 	{
     	using namespace test_assign_v2;
 		xxx_type_traits::test();
@@ -31,7 +28,6 @@ int main (int argc, char * const argv[])
 		xxx_ref::run(std::cout);
 		xxx_put::run(std::cout);
     }
-*/
     return 0;
 
 }

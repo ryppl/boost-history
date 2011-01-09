@@ -32,8 +32,7 @@ namespace xxx_deque{
             os << std::endl;
             os << "deque" << ' ';
             {
-            	int x = 0;
-				assert( as2::deque<Foo>( x )().size() == 1 );
+				assert( as2::deque<Foo>().size() == 1 );
             }
             {
             	//[deque
