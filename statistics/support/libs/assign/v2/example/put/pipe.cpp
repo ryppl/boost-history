@@ -21,7 +21,6 @@
 #include <boost/assign/v2/put/pipe/functor.hpp>
 
 #include <libs/assign/v2/example/include.h>
-#include <libs/assign/v2/example/put/operator.h>
 
 namespace example_assign_v2{
 namespace xxx_put{

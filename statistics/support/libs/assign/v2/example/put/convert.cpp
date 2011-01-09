@@ -15,7 +15,6 @@
 #include <boost/assign/v2/put/pipe/convert.hpp>
 #include <libs/assign/v2/example/include.h>
 #include <libs/assign/v2/example/foo.h>
-#include <libs/assign/v2/example/constants.h>
 #include <libs/assign/v2/example/put/convert.h>
 
 namespace example_assign_v2{

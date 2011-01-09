@@ -16,12 +16,13 @@ namespace xxx_chain{
 
     void test()
     {
-        using namespace boost::assign::v2::checking::chain;
-        twin_values::do_check<int>();
-      	distinct_values::do_check<short>();
-      	distinct_values::do_check<int>();
-      	distinct_values::do_check<float>();
-      	distinct_values::do_check<double>();
+    	namespace as2 = boost::assign::v2;
+        namespace ns = as2::checking::chain;
+        ns::twin_values::do_check<int>();
+      	ns::distinct_values::do_check<short>();
+      	ns::distinct_values::do_check<int>();
+      	ns::distinct_values::do_check<float>();
+      	ns::distinct_values::do_check<double>();
     }
 
 }// xxx_chain

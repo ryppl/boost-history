@@ -12,7 +12,6 @@
 #include <boost/assign/v2/put/pipe/range.hpp>
 #include <libs/assign/v2/example/include.h>
 #include <libs/assign/v2/example/foo.h>
-#include <libs/assign/v2/example/constants.h>
 #include <libs/assign/v2/example/put/range.h>
 
 namespace example_assign_v2{
