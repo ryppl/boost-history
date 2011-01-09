@@ -1,0 +1,71 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Header &lt;boost/assign/v2/put/modifier/deduce.hpp&gt;</title>
+<link rel="stylesheet" href="../../../../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../../../../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../../../../../../boost_assign_v2/reference.html" title="Reference">
+<link rel="prev" href="../../detail/fwd/ptr_container_hpp.html" title="Header &lt;boost/assign/v2/detail/fwd/ptr_container.hpp&gt;">
+<link rel="next" href="../../../../../../boost/assign/v2/mpl/case_switch_tag_deduce__id35980857.html" title="Struct case_&lt;switch_tag::deduce_put, 0&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../detail/fwd/ptr_container_hpp.html"><img src="../../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../../../boost_assign_v2/reference.html"><img src="../../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../../../index.html"><img src="../../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../../../../../boost/assign/v2/mpl/case_switch_tag_deduce__id35980857.html"><img src="../../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" title="Header &lt;boost/assign/v2/put/modifier/deduce.hpp&gt;">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.assign.v2.put.modifier.deduce_hpp"></a>Header &lt;<a href="../../../../../../../../boost/assign/v2/put/modifier/deduce.hpp" target="_top">boost/assign/v2/put/modifier/deduce.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> assign {
+    <span class="bold"><strong>namespace</strong></span> v2 {
+      <span class="bold"><strong>namespace</strong></span> modifier_tag {
+      }
+      <span class="bold"><strong>namespace</strong></span> mpl {
+        <span class="bold"><strong>template</strong></span>&lt;&gt; <span class="bold"><strong>struct</strong></span> <a class="link" href="../../../../../../boost/assign/v2/mpl/case_switch_tag_deduce__id35980857.html" title="Struct case_&lt;switch_tag::deduce_put, 0&gt;">case_</a>&lt;switch_tag::deduce_put, 0&gt;;
+        <span class="bold"><strong>template</strong></span>&lt;&gt; <span class="bold"><strong>struct</strong></span> <a class="link" href="../../../../../../boost/assign/v2/mpl/case_switch_tag_deduce__id35980874.html" title="Struct case_&lt;switch_tag::deduce_put, 1&gt;">case_</a>&lt;switch_tag::deduce_put, 1&gt;;
+        <span class="bold"><strong>template</strong></span>&lt;&gt; <span class="bold"><strong>struct</strong></span> <a class="link" href="../../../../../../boost/assign/v2/mpl/case_switch_tag_deduce__id35980890.html" title="Struct case_&lt;switch_tag::deduce_put, 2&gt;">case_</a>&lt;switch_tag::deduce_put, 2&gt;;
+        <span class="bold"><strong>template</strong></span>&lt;&gt; <span class="bold"><strong>struct</strong></span> <a class="link" href="../../../../../../boost/assign/v2/mpl/case_switch_tag_deduce__id35980906.html" title="Struct case_&lt;switch_tag::deduce_put, 3&gt;">case_</a>&lt;switch_tag::deduce_put, 3&gt;;
+        <span class="bold"><strong>template</strong></span>&lt;&gt; <span class="bold"><strong>struct</strong></span> <a class="link" href="../../../../../../boost/assign/v2/mpl/case_switch_tag_put_ran_id35980922.html" title="Struct case_&lt;switch_tag::put_range, 0&gt;">case_</a>&lt;switch_tag::put_range, 0&gt;;
+        <span class="bold"><strong>template</strong></span>&lt;&gt; <span class="bold"><strong>struct</strong></span> <a class="link" href="../../../../../../boost/assign/v2/mpl/case_switch_tag_put_ran_id35980938.html" title="Struct case_&lt;switch_tag::put_range, 1&gt;">case_</a>&lt;switch_tag::put_range, 1&gt;;
+        <span class="bold"><strong>template</strong></span>&lt;&gt; <span class="bold"><strong>struct</strong></span> <a class="link" href="../../../../../../boost/assign/v2/mpl/case_switch_tag_put_ran_id35980954.html" title="Struct case_&lt;switch_tag::put_range, 2&gt;">case_</a>&lt;switch_tag::put_range, 2&gt;;
+      }
+      <span class="bold"><strong>namespace</strong></span> put_aux {
+        <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; <span class="bold"><strong>struct</strong></span> <a class="link" href="../../../../../../boost/assign/v2/put_aux/deduce_modifier.html" title="Struct template deduce_modifier">deduce_modifier</a>;
+        <span class="bold"><strong>struct</strong></span> <a class="link" href="../../../../../../boost/assign/v2/put_aux/kwd_deduce.html" title="Struct kwd_deduce">kwd_deduce</a>;
+        <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Option1, <span class="bold"><strong>typename</strong></span> Option2&gt; <span class="bold"><strong>struct</strong></span> <a class="link" href="../../../../../../boost/assign/v2/put_aux/deduce.html" title="Struct template deduce">deduce</a>;
+        <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+          <span class="type">T::result_of_modulo::deduce::type</span> 
+          <a name="boost.assign.v2.put_aux.operator%_id35981004"></a><span class="bold"><strong>operator</strong></span>%(T <span class="bold"><strong>const</strong></span> &amp; t, <a class="link" href="../../../../../../boost/assign/v2/put_aux/kwd_deduce.html" title="Struct kwd_deduce">kwd_deduce</a> <span class="bold"><strong>const</strong></span> &amp; kwd);
+      }
+      <span class="bold"><strong>namespace</strong></span> switch_tag {
+        <span class="bold"><strong>struct</strong></span> <a class="link" href="../../../../../../boost/assign/v2/switch_tag/deduce_put.html" title="Struct deduce_put">deduce_put</a>;
+        <span class="bold"><strong>struct</strong></span> <a class="link" href="../../../../../../boost/assign/v2/switch_tag/put_range.html" title="Struct put_range">put_range</a>;
+      }
+    }
+  }
+}</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../detail/fwd/ptr_container_hpp.html"><img src="../../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../../../boost_assign_v2/reference.html"><img src="../../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../../../index.html"><img src="../../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../../../../../boost/assign/v2/mpl/case_switch_tag_deduce__id35980857.html"><img src="../../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Anonymous container of references</title>
+<link rel="stylesheet" href="../..//usr/local/trunk/libs/assign/v2/doc/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../users_guide.html" title="User's guide">
+<link rel="prev" href="working_assumptions.html" title="Working assumptions">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="working_assumptions.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a>
+</div>
+<div class="section" title="Anonymous container of references">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.users_guide.anonymous_container_of_references"></a><a class="link" href="anonymous_container_of_references.html" title="Anonymous container of references">Anonymous
+      container of references</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="anonymous_container_of_references.html#boost_assign_v2.users_guide.anonymous_container_of_references.assign_copy">Assign
+        copy</a></span></dt>
+<dt><span class="section"><a href="anonymous_container_of_references.html#boost_assign_v2.users_guide.anonymous_container_of_references.assign_rebind">Assign
+        rebind</a></span></dt>
+<dt><span class="section"><a href="anonymous_container_of_references.html#boost_assign_v2.users_guide.anonymous_container_of_references.the_functor_interface">The
+        functor interface</a></span></dt>
+</dl></div>
+<div class="section" title="Assign copy">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.users_guide.anonymous_container_of_references.assign_copy"></a><a class="link" href="anonymous_container_of_references.html#boost_assign_v2.users_guide.anonymous_container_of_references.assign_copy" title="Assign copy">Assign
+        copy</a>
+</h4></div></div></div>
+<p>
+          To work with references, the relevant <code class="computeroutput"><span class="keyword">namespace</span></code>
+          is <code class="computeroutput"><span class="identifier">ref</span></code>, but we also need
+          a nested <code class="computeroutput"><span class="keyword">namespace</span></code> that specifies
+          an assignment policy. For example,
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">ns</span> <span class="special">=</span> <span class="identifier">ref</span><span class="special">::</span><span class="identifier">assign_copy</span><span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span> <span class="identifier">ns</span><span class="special">::</span><span class="identifier">csv_anon</span><span class="special">(</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">y</span><span class="special">,</span> <span class="identifier">z</span> <span class="special">),</span> <span class="identifier">printer</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span><span class="special">)</span> <span class="special">);</span>
+<span class="comment">//outputs (1,0)(NULL,0)(1,5)
+</span></pre>
+<p>
+          </p>
+<p>
+        </p>
+<p>
+          The result from <code class="computeroutput"><span class="identifier">ns</span><span class="special">::</span><span class="identifier">csv_anon</span><span class="special">()</span></code>
+          is more than just a range. It has much of the functionality of the static
+          array, <a href="http://www.boost.org/doc/libs/release/doc/html/array.html" target="_top"><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;&gt;</span></code></a>,
+          such as <code class="computeroutput"><span class="identifier">assign</span><span class="special">()</span></code>,
+          as we now illustrate,
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="identifier">T</span> <span class="identifier">x1</span><span class="special">,</span> <span class="identifier">y1</span><span class="special">,</span> <span class="identifier">z1</span><span class="special">;</span>
+<span class="identifier">ns</span><span class="special">::</span><span class="identifier">csv_anon</span><span class="special">(</span> <span class="identifier">x1</span><span class="special">,</span> <span class="identifier">y1</span><span class="special">,</span> <span class="identifier">z1</span> <span class="special">).</span><span class="identifier">assign</span><span class="special">(</span> <span class="identifier">T</span><span class="special">(</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">a</span> <span class="special">)</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSERT</span><span class="special">(</span> <span class="identifier">y1</span> <span class="special">==</span> <span class="identifier">T</span><span class="special">(</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">a</span> <span class="special">)</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+<p>
+        </p>
+<p>
+          Here's how to create an empty array of <code class="computeroutput"><span class="keyword">const</span>
+          T</code> references:
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="identifier">ns</span><span class="special">::</span><span class="identifier">csv_anon</span><span class="special">&lt;</span><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&gt;(</span> <span class="identifier">_nil</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+<p>
+        </p>
+</div>
+<div class="section" title="Assign rebind">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.users_guide.anonymous_container_of_references.assign_rebind"></a><a class="link" href="anonymous_container_of_references.html#boost_assign_v2.users_guide.anonymous_container_of_references.assign_rebind" title="Assign rebind">Assign
+        rebind</a>
+</h4></div></div></div>
+<p>
+          We now turn to the rebind assignment policy. Here, it will be necessary
+          to save the result:
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">ns</span> <span class="special">=</span> <span class="identifier">ref</span><span class="special">::</span><span class="identifier">assign_rebind</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">ns</span><span class="special">::</span><span class="identifier">nth_result_of</span><span class="special">::</span><span class="identifier">csv_anon</span><span class="special">&lt;</span><span class="number">3</span><span class="special">,</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">result_</span><span class="special">;</span>
+<span class="identifier">result_</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">ns</span><span class="special">::</span><span class="identifier">csv_anon</span><span class="special">(</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">y</span><span class="special">,</span> <span class="identifier">z</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSERT</span><span class="special">(</span> <span class="special">&amp;</span><span class="identifier">result</span><span class="special">[</span> <span class="number">1</span> <span class="special">]</span> <span class="special">==</span> <span class="special">&amp;</span><span class="identifier">y</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+<p>
+          Thus far, the side effect would be the same under the <code class="computeroutput"><span class="identifier">assign_copy</span></code>
+          policy. The effect of assigning a new object to each element of our result,
+          however, is different:
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="identifier">T</span> <span class="identifier">w</span> <span class="special">=</span> <span class="identifier">T</span><span class="special">(</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">a</span> <span class="special">);</span> <span class="identifier">result</span><span class="special">.</span><span class="identifier">assign</span><span class="special">(</span> <span class="identifier">w</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSERT</span><span class="special">(</span> <span class="special">&amp;</span><span class="identifier">result</span><span class="special">[</span> <span class="number">1</span> <span class="special">]</span> <span class="special">==</span> <span class="special">&amp;</span><span class="identifier">w</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+<p>
+        </p>
+</div>
+<div class="section" title="The functor interface">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.users_guide.anonymous_container_of_references.the_functor_interface"></a><a class="link" href="anonymous_container_of_references.html#boost_assign_v2.users_guide.anonymous_container_of_references.the_functor_interface" title="The functor interface">The
+        functor interface</a>
+</h4></div></div></div>
+<p>
+          The functor interface works as follows:
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">ns</span> <span class="special">=</span> <span class="identifier">ref</span><span class="special">::</span><span class="identifier">assign_rebind</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">ns</span><span class="special">::</span><span class="identifier">nth_result_of</span><span class="special">::</span><span class="identifier">anon</span><span class="special">&lt;</span><span class="number">2</span><span class="special">,</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">result1_</span><span class="special">;</span>
+<span class="identifier">result1_</span> <span class="identifier">result1</span> <span class="special">=</span> <span class="identifier">ns</span><span class="special">::</span><span class="identifier">anon</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">)(</span> <span class="identifier">y</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+<p>
+          and <code class="computeroutput"><span class="identifier">result1</span></code> has all the
+          functionality of that resulting from <code class="computeroutput"><span class="identifier">csv_anon</span><span class="special">(</span>x<span class="special">,</span> y<span class="special">)</span></code>.
+          Unlike the latter, it's possible to append an element:
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">ns</span><span class="special">::</span><span class="identifier">nth_result_of</span><span class="special">::</span><span class="identifier">anon</span><span class="special">&lt;</span><span class="number">3</span><span class="special">,</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">result2_</span><span class="special">;</span>
+<span class="identifier">result2_</span> <span class="identifier">result2</span> <span class="special">=</span> <span class="identifier">result1</span><span class="special">(</span> <span class="identifier">z</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+<p>
+          Internally, <code class="computeroutput"><span class="identifier">result2</span></code> keeps
+          a reference to <code class="computeroutput"><span class="identifier">result1</span></code>,
+          and not until the <a href="http://www.boost.org/doc/libs/release/doc/html/array.html" target="_top"><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;&gt;</span></code></a>
+          interface is called, as in
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span> <span class="identifier">result2</span><span class="special">,</span> <span class="identifier">printer</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span><span class="special">)</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+<p>
+          is a static array allocated, with reference wrappers, in this case, for
+          <code class="computeroutput">x</code>, <code class="computeroutput">y</code> and <code class="computeroutput">z</code>,
+        </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="working_assumptions.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Change log</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="prev" href="dependencies.html" title="Dependencies">
+<link rel="next" href="support.html" title="Support">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="dependencies.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="support.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" title="Change log">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_assign_v2.change_log"></a><a class="link" href="change_log.html" title="Change log">Change log</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="change_log.html#boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__">[Proposal
+      for] Upgrading from <a href="http://www.boost.org" target="_top">Boost</a> v1.4x :
+      Boost.Assign 2.0</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="change_log.html#boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.organization">Organization</a></span></dt>
+<dt><span class="section"><a href="change_log.html#boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.rationale">Rationale</a></span></dt>
+<dt><span class="section"><a href="change_log.html#boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.interface">Interface</a></span></dt>
+<dt><span class="section"><a href="change_log.html#boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.design">Design</a></span></dt>
+</dl></dd>
+</dl></div>
+<div class="section" title="[Proposal for] Upgrading from Boost v1.4x : Boost.Assign 2.0">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__"></a><a class="link" href="change_log.html#boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__" title="[Proposal for] Upgrading from Boost v1.4x : Boost.Assign 2.0">[Proposal
+      for] Upgrading from <a href="http://www.boost.org" target="_top">Boost</a> v1.4x :
+      Boost.Assign 2.0</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="change_log.html#boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.organization">Organization</a></span></dt>
+<dt><span class="section"><a href="change_log.html#boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.rationale">Rationale</a></span></dt>
+<dt><span class="section"><a href="change_log.html#boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.interface">Interface</a></span></dt>
+<dt><span class="section"><a href="change_log.html#boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.design">Design</a></span></dt>
+</dl></div>
+<div class="section" title="Organization">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.organization"></a><a class="link" href="change_log.html#boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.organization" title="Organization">Organization</a>
+</h4></div></div></div>
+<p>
+          The new library lives in boost/assign/v2 and its functionality is defined
+          in this namespace:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">assign</span><span class="special">::</span><span class="identifier">v2</span><span class="special">;</span>
+</pre>
+<p>
+        </p>
+<p>
+          The latest version prior to Boost.Assign 2.0 will continue to be supported
+          in <a href="http://www.boost.org" target="_top">Boost</a> to allow backward compatibility.
+        </p>
+</div>
+<div class="section" title="Rationale">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.rationale"></a><a class="link" href="change_log.html#boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.rationale" title="Rationale">Rationale</a>
+</h4></div></div></div>
+<p>
+          There are two parts to this upgrade:
+        </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            Entirely new features, notably <a class="link" href="../">anonymous
+            container of references</a>, and extended (RangeEx) methods for <a class="link" href="../">chaining ranges</a>, were
+            already the subject of a <a href="http://lists.boost.org/Archives/boost/2010/06/168028.php" target="_top">mini-review</a>.
+          </li>
+<li class="listitem">
+            A complete revision of the existing features.
+          </li>
+</ol></div>
+<p>
+          The initial motivation for the revision is that thanks to the <a href="http://lists.boost.org/Archives/boost/2010/06/168028.php" target="_top">mini-review</a>,
+          it was apparent that the new and old features lacked homogeneity in their
+          interface and that some newly introduced features, such as <code class="computeroutput"><span class="identifier">csv</span></code> functions (see below), had received
+          sufficient interest to warrant their generalization throughout the rest
+          of the library.
+        </p>
+<p>
+          Part of the overhaul is simply a repackaging of the pre-existing code with
+          an emphasis on code-reuse and decoupling, but a fairly different interface
+          has emerged as a result (see below). The other part comes about by exploiting
+          spillovers from some of the new features, <a class="link" href="../">anynomous
+          container of references</a>, to the ones we took on to revamp, resulting,
+          notably, in the <a class="link" href="../"><code class="computeroutput"><span class="identifier">_put</span></code> adaptor</a>. In this case, the
+          container of references serves as a cost-efficient buffer on the right
+          hand side of <code class="computeroutput"><span class="keyword">operator</span><span class="special">|</span></code>.
+        </p>
+</div>
+<div class="section" title="Interface">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.interface"></a><a class="link" href="change_log.html#boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.interface" title="Interface">Interface</a>
+</h4></div></div></div>
+<p>
+          We can break down the new structure into at least two components:
+        </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            Whereas users interact with Boost.Assign 1.0 through idiomatic operators
+            (say <code class="computeroutput"><span class="special">+=</span></code>), Boost.Assign 2.0
+            only uses two, <code class="computeroutput"><span class="keyword">operator</span><span class="special">|</span></code> and <code class="computeroutput"><span class="keyword">operator</span><span class="special">%</span></code>, in a way that is consistent across
+            different tools:
+            <div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<code class="computeroutput"><span class="keyword">operator</span><span class="special">|</span></code>
+                expresses composable adaptors, an idea originating with <a href="http://www.boost.org/doc/libs/1_44_0/libs/range/doc/html/range/reference/adaptors.html" target="_top">range
+                adaptors</a>. Here, the result is either a different type of
+                range or the container passed as an input, but in a new state. See,
+                for example, the synopsis of <a class="link" href="../">_put_range</a>
+</li>
+<li class="listitem">
+                Traits take care of making certain decisions about the implementation.
+                These choices, however, can be overriden by passing parameters with
+                <code class="computeroutput"><span class="keyword">operator</span><span class="special">%</span></code>.
+                See, for example, the synopsis of the <a class="link" href="../"><code class="computeroutput"><span class="identifier">_put</span></code> adaptor</a>
+</li>
+</ul></div>
+</li>
+<li class="listitem">
+            Many tools come in two flavors : a functor that forwards, say, to a constructor,
+            or as functions, identified by suffix <code class="computeroutput"><span class="identifier">csv</span></code>,
+            oveloaded on the number of arguments. This dichotomy should be quite
+            obvious from looking at the synopsis of, for example, of <a class="link" href="../">anonymous
+            container of values</a>
+</li>
+</ol></div>
+<p>
+          In case some users that have developed some habits with Boost.Assign 1.0
+          understandably regret the old interface, it's worth reminding that Boost.Assign
+          1.0 will continue to be supported. Moreoever, both Boost.Assign 1.0 and
+          Boost.Assign 2.0 can be used in the same project, allowing users to transition
+          smoothly from one interface to another, or simply keeping their habits
+          while using the new features, without the risk of ambiguity resolution,
+          precisely because the two interfaces don't overlap.
+        </p>
+<p>
+          An issue that was touched upon during the <a href="http://lists.boost.org/Archives/boost/2010/06/168028.php" target="_top">mini-review</a>
+          is that of creating an empty container. The custom in Boost.Assign 1.0
+          was to reserve the nullary <code class="computeroutput"><span class="keyword">operator</span><span class="special">()()</span></code> for default constructing a value, for
+          example, <code class="computeroutput"><span class="identifier">list_of</span><span class="special">&lt;</span>T<span class="special">&gt;(</span> x <span class="special">)()(</span> z
+          <span class="special">)</span></code>. Some felt, however, that <code class="computeroutput"><span class="identifier">list_of</span><span class="special">&lt;</span>T<span class="special">&gt;()</span></code> should return an empty container.
+          To resolve this dilemma, Boost.Assign 2.0 keeps the old convention, but
+          creates a new one for expressing the initialization of an empty container.
+          Since <code class="computeroutput"><span class="identifier">list_of</span><span class="special">()</span></code>
+          is now <code class="computeroutput"><span class="identifier">anon</span><span class="special">()</span></code>,
+          it is, 
+</p>
+<pre class="programlisting"><span class="identifier">anon</span><span class="special">&lt;</span>T<span class="special">&gt;(</span> <span class="identifier">_nil</span> <span class="special">);</span>
+</pre>
+<p>
+          The same applies to the <code class="computeroutput"><span class="identifier">csv</span></code>
+          form, and <a class="link" href="../">anonymous container
+          of references</a>.
+        </p>
+<p>
+          The function <code class="computeroutput"><span class="identifier">list_of</span><span class="special">()</span></code>
+          is renamed, under Boost.Assign 2.0, o <code class="computeroutput"><span class="identifier">anon</span><span class="special">()</span></code> for the following reasons. First, <code class="computeroutput"><span class="identifier">list_of</span></code> evokes a particular data-structure
+          (think forward traversal) that is different from the actual underlying
+          one, <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;&gt;</span></code>
+          (think random access). Second, in Boost.Assign 1.0's documentation, the
+          result of <code class="computeroutput"><span class="identifier">list_of</span><span class="special">()</span></code>
+          is referred to as an anon-ymous container. The new identifier is therefore
+          consistent with this established practice. Finally, it avoids ambiguity
+          resolution, in case both Boost.Assign 1.0 and Boost.Assign 2.0 are used
+          in the same project.
+        </p>
+</div>
+<div class="section" title="Design">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.design"></a><a class="link" href="change_log.html#boost_assign_v2.change_log.__proposal_for___upgrading_from___boost___v1_4x_____boost_assign_v2__.design" title="Design">Design</a>
+</h4></div></div></div>
+<p>
+          This section discusses the changes to the existing features, not the new
+          features.
+        </p>
+<p>
+          The code of Boost.Assign 1.0 is similar to that of Boost.Assign 2.0, if
+          one looks at low level, At the high level, such as relationships between
+          classes, retracing the evolution from one to the other would be arduous,
+          as it came about through much tinkering and trial and error. Instead we
+          will only touch on a few items.
+        </p>
+<p>
+          <span class="emphasis"><em>List inserters</em></span> in Boost.Assign 1.0, such as the free
+          functions <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code>,
+          and <code class="computeroutput"><span class="identifier">list_of</span><span class="special">()</span></code>
+          now have counterparts, the <a class="link" href="../"><code class="computeroutput"><span class="identifier">put</span></code> adaptor</a> and <code class="computeroutput"><span class="identifier">anon</span><span class="special">()</span></code>,
+          respectively, that now share a significant proportion of common code expressed
+          by a <a href="http://en.wikipedia.org/wiki/Curiously_recurring_template_pattern" target="_top">crtp</a>
+          class. As a result, <code class="computeroutput"><span class="identifier">anon</span><span class="special">()</span></code> now works with any <a class="link" href="../">modifier</a>,
+          whereas previously <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code> was the default and only implementation.
+        </p>
+<p>
+          Moreover, modifiers are now defined outside the <a href="http://en.wikipedia.org/wiki/Curiously_recurring_template_pattern" target="_top">crtp</a>
+          class, the latter only keeping a (compile time) tag specifying which modifier
+          to forward to. This makes it easy to develop new ones, besides the standard
+          ones (e.g. <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code>),
+          of course, as they are already defined. One example of a non-standard modifier
+          is the modifier <a class="link" href="../"><code class="computeroutput"><span class="identifier">_repeat</span></code></a>.
+        </p>
+<p>
+          The second dimension of the new framework is <a class="link" href="../">argument
+          forwarding</a>, which was already present, for example, as part of
+          <code class="computeroutput"><span class="identifier">list_of</span><span class="special">()</span></code>.
+          What is new, is that a traits mecanism takes care of deciding which modifier-functor
+          pair to use. As a result, passing a key and data as two arguments (as opposed
+          to pairing them first with <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;&gt;</span></code>) to a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;&gt;</span></code> works seamlessly, as illustrated
+          <a class="link" href="../">here</a>,
+          whereas, in Boost.Assign 1.0, a dedicated function is needed, <code class="computeroutput"><span class="identifier">map_list_of</span><span class="special">()</span></code>.
+        </p>
+<p>
+          Again, we can override the default choices by passing as many parameters
+          as necessary with <code class="computeroutput"><span class="keyword">operator</span><span class="special">%</span></code>. A complex example is given <a class="link" href="../">here</a>.
+        </p>
+<p>
+          Pointer containers required three seperated implementations, <code class="computeroutput"><span class="identifier">ptr_list_of</span><span class="special">()</span></code>,
+          <code class="computeroutput"><span class="identifier">ptr_map_insert</span><span class="special">()</span></code>,
+          and <code class="computeroutput"><span class="identifier">ptr_map_list_of</span><span class="special">()</span></code>
+          whereas now they are integrated in the new framewok, requiring few lines
+          of extra-code to accomodate them, and work seamlessly with the same interface.
+          TODO make sure the old functionality is covered by the new one.
+        </p>
+<p>
+          On the topic of <a class="link" href="../">conversion</a>,
+          the functionality that allowed to convert the result of <code class="computeroutput"><span class="identifier">list_of</span><span class="special">()</span></code> to an arbitrary container is now a free
+          function. Using it as a standalone is, in itself, an advantage, but also,
+          it is now integrated into several objects defined in this library.
+        </p>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="dependencies.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="support.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

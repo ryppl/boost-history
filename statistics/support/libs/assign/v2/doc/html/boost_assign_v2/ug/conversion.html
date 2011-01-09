@@ -1,0 +1,207 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Conversion</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../ug.html" title="User's guide">
+<link rel="prev" href="chain.html" title="Adaptor _chain">
+<link rel="next" href="arity.html" title="Configuring arity">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="chain.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../ug.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="arity.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" title="Conversion">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.ug.conversion"></a><a class="link" href="conversion.html" title="Conversion"> Conversion</a>
+</h3></div></div></div>
+<a name="boost_assign_v2.ug.conversion.synopsis"></a><h5>
+<a name="id36168596"></a>
+        <a class="link" href="conversion.html#boost_assign_v2.ug.conversion.synopsis">Synopsis</a>
+      </h5>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Result
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">from</span> <span class="special">|</span>
+                  <span class="identifier">convert</span><span class="special">&lt;</span>To<span class="special">&gt;()</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput">To</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">obj<span class="special">.</span><span class="identifier">convert</span><span class="special">&lt;</span>To<span class="special">&gt;()</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput">To</code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">to <span class="special">=</span> obj</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput">To<span class="special">&amp;</span></code>
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+        where <code class="computeroutput">obj</code> is either an anonymous container, of values or references,
+        or the result from the <code class="computeroutput"><span class="identifier">_chain</span></code>
+        adaptor.
+      </p>
+<a name="boost_assign_v2.ug.conversion.customization"></a><h5>
+<a name="id36168802"></a>
+        <a class="link" href="conversion.html#boost_assign_v2.ug.conversion.customization">Customization</a>
+      </h5>
+<p>
+        TODO
+      </p>
+<a name="boost_assign_v2.ug.conversion.anonymous_containers"></a><h5>
+<a name="id36168824"></a>
+        <a class="link" href="conversion.html#boost_assign_v2.ug.conversion.anonymous_containers">Anonymous
+        containers</a>
+      </h5>
+<p>
+        Anonymous containers can be converted to an arbitray containers. Such as
+        tool is particularly relevant when the destination container is an <a href="http://en.wikipedia.org/wiki/Standard_Template_Library" target="_top">adapter container</a>
+        as they cannot be constructed from a pair of iterators.
+      </p>
+<p>
+        It's possible to perform conversion in place, as is sometimes necessary for
+        copy-constructing a container:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">queue</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">to_</span><span class="special">;</span>
+<span class="identifier">to_</span> <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">ref</span><span class="special">::</span><span class="identifier">assign_copy</span><span class="special">::</span><span class="identifier">csv_anon</span><span class="special">(</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">y</span><span class="special">,</span> <span class="identifier">z</span> <span class="special">).</span><span class="identifier">convert</span><span class="special">&lt;</span><span class="identifier">to_</span><span class="special">&gt;();</span>
+<span class="identifier">to</span><span class="special">.</span><span class="identifier">pop</span><span class="special">();</span>
+<span class="identifier">BOOST_ASSERT</span><span class="special">(</span> <span class="identifier">to</span><span class="special">.</span><span class="identifier">front</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">y</span> <span class="special">);</span> <span class="comment">// because FIFO
+</span></pre>
+<p>
+        </p>
+<p>
+        While we can use the same member function, <code class="computeroutput"><span class="identifier">convert</span><span class="special">&lt;&gt;()</span></code>, to assign a container, implicit
+        conversion suffices:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">to_</span><span class="special">;</span>
+<span class="identifier">to_</span> <span class="identifier">to</span><span class="special">;</span> <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">ref</span><span class="special">::</span><span class="identifier">assign_copy</span><span class="special">::</span><span class="identifier">csv_anon</span><span class="special">(</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">y</span><span class="special">,</span> <span class="identifier">z</span> <span class="special">);</span>
+<span class="identifier">to</span><span class="special">.</span><span class="identifier">pop_back</span><span class="special">();</span> <span class="identifier">BOOST_ASSERT</span><span class="special">(</span> <span class="identifier">to</span><span class="special">.</span><span class="identifier">back</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">y</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+      </p>
+<a name="boost_assign_v2.ug.conversion.adaptor__code__phrase_role__identifier___chain__phrase___code_"></a><h5>
+<a name="id36169265"></a>
+        <a class="link" href="conversion.html#boost_assign_v2.ug.conversion.adaptor__code__phrase_role__identifier___chain__phrase___code_">Adaptor
+        <code class="computeroutput"><span class="identifier">_chain</span></code></a>
+      </h5>
+<p>
+        Here's a case where chaining takes places:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="number">2</span><span class="special">&gt;</span> <span class="identifier">from_</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">stack</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">to_</span><span class="special">;</span>
+<span class="identifier">from_</span> <span class="identifier">from</span><span class="special">;</span> <span class="identifier">from</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">;</span> <span class="identifier">from</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">y</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">adaptor</span><span class="special">;</span>
+<span class="keyword">namespace</span> <span class="identifier">ns</span> <span class="special">=</span> <span class="identifier">ref</span><span class="special">::</span><span class="identifier">assign_copy</span><span class="special">;</span>
+<span class="identifier">BOOST_ASSERT</span><span class="special">(</span>
+    <span class="special">(</span>
+        <span class="special">(</span>
+            <span class="identifier">from</span> <span class="special">|</span> <span class="identifier">_chain</span><span class="special">(</span> <span class="identifier">ns</span><span class="special">::</span><span class="identifier">csv_anon</span><span class="special">(</span> <span class="identifier">z</span> <span class="special">)</span> <span class="special">)</span>
+        <span class="special">).</span><span class="identifier">convert</span><span class="special">&lt;</span><span class="identifier">to_</span><span class="special">&gt;()</span>
+    <span class="special">).</span><span class="identifier">top</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">z</span> <span class="comment">// because LIFO
+</span><span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+      </p>
+<a name="boost_assign_v2.ug.conversion.inter_stl_categories"></a><h5>
+<a name="id36169657"></a>
+        <a class="link" href="conversion.html#boost_assign_v2.ug.conversion.inter_stl_categories">Inter-STL-categories</a>
+      </h5>
+<p>
+        The library also caters to inter STL categories conversion, with the help
+        of the <code class="computeroutput"><span class="identifier">_convert</span></code> adaptor.
+        Here's an example:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="number">3</span><span class="special">&gt;</span> <span class="identifier">from_</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">stack</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">to_</span><span class="special">;</span>
+<span class="identifier">from_</span> <span class="identifier">from</span><span class="special">;</span> <span class="identifier">from</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">;</span> <span class="identifier">from</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">y</span><span class="special">;</span> <span class="identifier">from</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">z</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">adaptor</span><span class="special">;</span>
+<span class="identifier">BOOST_ASSERT</span><span class="special">(</span>
+	<span class="special">(</span> <span class="identifier">from</span> <span class="special">|</span> <span class="identifier">convert</span><span class="special">&lt;</span><span class="identifier">to_</span><span class="special">&gt;()</span> <span class="special">).</span><span class="identifier">top</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">z</span> <span class="comment">// because LIFO
+</span><span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+      </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="chain.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../ug.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="arity.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

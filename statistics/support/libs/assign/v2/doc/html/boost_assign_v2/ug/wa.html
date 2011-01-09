@@ -1,0 +1,173 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Working assumptions</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../ug.html" title="User's guide">
+<link rel="prev" href="../ug.html" title="User's guide">
+<link rel="next" href="ref_anon.html" title="Anonymous container of references">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../ug.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../ug.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ref_anon.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" title="Working assumptions">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.ug.wa"></a><a class="link" href="wa.html" title="Working assumptions"> Working assumptions</a>
+</h3></div></div></div>
+<p>
+        Here we give some pieces of code that will be assumed throughout. The chosen
+        set up is such that, by appealing to deduction, a broad range of needs, including
+        the basic ones, are adressed. What we mean by a basic need, is filling a
+        container with <code class="computeroutput"><span class="keyword">int</span></code>s. What we
+        mean by a need that is at the complexity boundary of our set up, is working
+        with a collection of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tuple</span></code>s
+        of references.
+      </p>
+<p>
+        The first piece of code are include statements:
+      </p>
+<p>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">utility</span><span class="special">&gt;</span> <span class="comment">// std::pair
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assert</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">range</span><span class="special">/</span><span class="identifier">algorithm</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assign</span><span class="special">/</span><span class="identifier">v2</span><span class="special">/</span><span class="identifier">v2</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+        </p>
+<p>
+      </p>
+<p>
+        Next, we define a <code class="computeroutput"><span class="keyword">struct</span></code>, <code class="computeroutput"><span class="identifier">foo</span></code> :
+      </p>
+<p>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">foo</span>
+<span class="special">{</span>
+    <span class="identifier">foo</span><span class="special">():</span><span class="identifier">ptr_a</span><span class="special">(</span> <span class="number">0</span> <span class="special">),</span> <span class="identifier">b</span><span class="special">(</span> <span class="number">0</span> <span class="special">){}</span>
+    <span class="identifier">foo</span><span class="special">(</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">ptr_a</span><span class="special">(</span> <span class="special">&amp;</span><span class="identifier">a</span> <span class="special">),</span> <span class="identifier">b</span><span class="special">(</span> <span class="number">0</span> <span class="special">){}</span>
+    <span class="identifier">foo</span><span class="special">(</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">int</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">b_</span><span class="special">):</span> <span class="identifier">ptr_a</span><span class="special">(</span> <span class="special">&amp;</span><span class="identifier">a</span> <span class="special">),</span> <span class="identifier">b</span><span class="special">(</span> <span class="identifier">b_</span> <span class="special">){}</span>
+
+    <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">==(</span><span class="identifier">foo</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">other</span><span class="special">)</span><span class="keyword">const</span>
+    <span class="special">{</span>
+        <span class="keyword">return</span> <span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">ptr_a</span> <span class="special">==</span> <span class="identifier">other</span><span class="special">.</span><span class="identifier">ptr_a</span><span class="special">)</span> <span class="special">&amp;&amp;</span> <span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">b</span> <span class="special">==</span> <span class="identifier">other</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+    <span class="special">}</span>
+
+	<span class="identifier">foo</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">+=(</span><span class="keyword">int</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">delta</span><span class="special">){</span> <span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">b</span> <span class="special">+=</span> <span class="identifier">delta</span><span class="special">;</span> <span class="keyword">return</span> <span class="special">(*</span><span class="keyword">this</span><span class="special">);</span> <span class="special">}</span>
+
+    <span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">friend</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">&lt;&lt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span><span class="identifier">os</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">foo</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">);</span>	    
+    <span class="keyword">int</span><span class="special">*</span> <span class="identifier">ptr_a</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">b</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">make_foo</span>
+<span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">foo</span> <span class="identifier">result_type</span><span class="special">;</span>	
+    <span class="identifier">result_type</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">int</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span><span class="keyword">const</span>
+    <span class="special">{</span>
+    	<span class="keyword">return</span> <span class="identifier">result_type</span><span class="special">(</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span> <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">&lt;&lt;(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span> <span class="identifier">foo</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">t</span><span class="special">);</span>
+
+<span class="keyword">struct</span> <span class="identifier">printer</span>
+<span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="keyword">void</span> <span class="identifier">result_type</span><span class="special">;</span>
+    
+    <span class="identifier">printer</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">os_</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">os</span><span class="special">(</span> <span class="identifier">os_</span> <span class="special">){}</span>
+
+    <span class="identifier">result_type</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="identifier">foo</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">t</span><span class="special">)</span><span class="keyword">const</span>
+    <span class="special">{</span>
+        <span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">;</span>
+    <span class="special">}</span>
+    
+    <span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">mutable</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">os</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+        </p>
+<p>
+        The exact definition of <code class="computeroutput"><span class="keyword">operator</span><span class="special">&lt;&lt;</span></code> can be found in the file <a href="../../../../example/foo.cpp" target="_top">foo.cpp</a>
+        .
+      </p>
+<p>
+        Then come some dependent types,
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">S</span><span class="special">;</span> <span class="comment">// key
+</span><span class="keyword">typedef</span> <span class="identifier">foo</span> <span class="identifier">T</span><span class="special">;</span> <span class="comment">// data
+</span><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">S</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">U</span><span class="special">;</span> <span class="comment">//key-data pair
+</span></pre>
+<p>
+        </p>
+<p>
+        and finally a set of constants :
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span><span class="special">{</span>
+
+<span class="keyword">int</span> <span class="identifier">a</span> <span class="special">=</span> <span class="number">1</span><span class="special">,</span> <span class="identifier">b</span> <span class="special">=</span> <span class="number">5</span><span class="special">;</span>
+
+<span class="identifier">S</span> <span class="identifier">key_x</span> <span class="special">=</span>  <span class="string">"x"</span> <span class="special">;</span>
+<span class="identifier">S</span> <span class="identifier">key_y</span> <span class="special">=</span>  <span class="string">"y"</span> <span class="special">;</span>
+<span class="identifier">S</span> <span class="identifier">key_z</span> <span class="special">=</span>  <span class="string">"z"</span> <span class="special">;</span>
+
+<span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">x</span><span class="special">(</span> <span class="identifier">a</span> <span class="special">);</span> <span class="comment">// (1, 0) 
+</span><span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">y</span><span class="special">;</span> <span class="comment">// (NULL, 0)
+</span><span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">z</span><span class="special">(</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span> <span class="special">);</span> <span class="comment">//(1, 5)
+</span>
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+<p>
+      </p>
+<p>
+        In terms of our <a class="link" href="../ug.html#boost_assign_v2.ug.notation" title="Notation">notation</a>,
+        by seeing <code class="computeroutput">x</code>, <code class="computeroutput">y</code>, and <code class="computeroutput">z</code> as forming a
+        sequence, <code class="computeroutput">n <span class="special">=</span> <span class="number">3</span></code>,
+        <code class="computeroutput">k<span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1</span></code>,
+        <code class="computeroutput">k<span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">0</span></code>,
+        and <code class="computeroutput">k<span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">2</span></code>.
+      </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../ug.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../ug.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ref_anon.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

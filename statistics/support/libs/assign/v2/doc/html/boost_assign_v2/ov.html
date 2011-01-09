@@ -1,0 +1,95 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Overview</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="prev" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="next" href="ug.html" title="User's guide">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="ug.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_assign_v2.ov"></a><a class="link" href="ov.html" title="Overview">Overview</a>
+</h2></div></div></div>
+<p>
+      This library provides a small set of tools for carrying out operations that
+      can be characterized as a) putting a set of values in a container, or b) iterating
+      through a set of variables. In each case, it allows to code in one sweep, what
+      would ordinarily require repetitive statements and integrates nicely with
+      <a href="http://www.boost.org/doc/libs/1_44_0/libs/range/doc/html/range/reference/algorithms.html" target="_top">range
+      algorithms</a>.
+    </p>
+<p>
+      For a), a typical call is 
+</p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">copy</span><span class="special">(</span> 
+	cont <span class="special">|</span> <span class="identifier">as2</span><span class="special">::</span>_csv_put<span class="special">(</span>x<span class="special">,</span> y<span class="special">,</span> z<span class="special">),</span> 
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream_iterator</span><span class="special">&lt;</span>T<span class="special">&gt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span><span class="special">,</span><span class="string">" "</span><span class="special">)</span>
+<span class="special">);</span>
+</pre>
+<p>
+      It passes <code class="computeroutput">cont</code> to an output stream, after putting in it, <code class="computeroutput">x</code>,
+      <code class="computeroutput">y</code>, and <code class="computeroutput">z</code>. How, precisely? In the way the library
+      deems most natural, for example, by calling <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code> if <code class="computeroutput">cont</code> is of type <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;&gt;</span></code>. Alternatively, a paramater passing
+      mechanism allows the user to make explicit choices. For example, to request
+      that modifier <code class="computeroutput"><span class="identifier">push_front</span><span class="special">()</span></code>
+      be called, 
+</p>
+<pre class="programlisting">list <span class="special">|</span> <span class="special">(</span> <span class="identifier">as2</span><span class="special">::</span>_put <span class="special">%</span>  <span class="identifier">as2</span><span class="special">::</span>_push_front <span class="special">)(</span> a<span class="special">,</span> b <span class="special">)()(</span> z <span class="special">);</span>
+</pre>
+<p>
+      Here, each set of arguments is forwarded to the constructor of <code class="computeroutput">T</code>,
+      the value-type of <code class="computeroutput">list</code>. Notice that the second value is default
+      constructed. The forwarding mechanism itself, however, could also be overriden,
+      if desired, by passing another parameter. This library makes it easy, through
+      the use of macros, to define custom parameters.
+    </p>
+<p>
+      The functionality just described caters primarily to <a href="http://en.wikipedia.org/wiki/Standard_Template_Library" target="_top">STL</a>
+      containers, but also <a href="http://www.boost.org/doc/libs/release/doc/html/array.html" target="_top">boost::array&lt;&gt;</a>
+      and <a href="http://www.boost.org/doc/libs/release/libs/ptr_container/doc/ptr_container.html" target="_top">pointer
+      containers</a>. In addition, this library defines a constructible-in-place
+      container similar to <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;&gt;</span></code>
+      that shares the same interface as the one above.
+    </p>
+<p>
+      To serve the purpose labeled as b), this library generalizes the idea of a
+      reference wrapper to an array (more precisely, <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;&gt;</span></code>)
+      e.g. 
+</p>
+<pre class="programlisting"><span class="identifier">as2</span><span class="special">::</span><span class="identifier">ref</span><span class="special">::</span><span class="identifier">csv_array</span><span class="special">(</span>x<span class="special">,</span> y<span class="special">,</span> z<span class="special">).</span><span class="identifier">assign</span><span class="special">(</span> T<span class="special">(</span> a<span class="special">,</span> b <span class="special">)</span> <span class="special">);</span>
+</pre>
+<p>
+      A tool for forming the union of ranges that caters to the possibility that
+      at least of them is a reference-array is also provided.
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="ug.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
