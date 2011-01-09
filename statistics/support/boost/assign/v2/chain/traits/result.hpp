@@ -28,14 +28,11 @@ namespace chain_aux{
         	boost::mpl::identity< chain_traits::range_r<R1, R2, Tag> >
     	>::type caller_;
         
-        typedef typename caller_::type super_;
-        typedef chain_aux::sub<super_> type;
+        typedef typename caller_::type type;
         
         static type call(R1& r1, R2& r2)
         {
-            return type(
-                caller_::call( r1, r2 )
-            );
+            return caller_::call( r1, r2 );
         }
     };
 

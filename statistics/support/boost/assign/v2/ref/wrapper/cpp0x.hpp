@@ -14,6 +14,8 @@
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
+#include <boost/type_traits/add_const.hpp>
+
 namespace boost{
 namespace assign{
 namespace v2{
@@ -23,25 +25,18 @@ namespace ref{
     // as the parameter of a reference wrapper.
 
 	template<typename T>
-    struct wrapper_param
+    struct wrapper_param : boost::add_const<T>
     {
         // rvalue
-    	typedef T const type;
-
     };
+
+    // lvalue:
 
 	template<typename T>
     struct wrapper_param<T&>
     {
     	typedef T type;
     };
-
-	template<typename T>
-    struct wrapper_param<T const &>
-    {
-    	typedef T const type;
-    };
-
 
 }// ref
 }// v2

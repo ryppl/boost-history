@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CHECKING_LIFO_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHECKING_LIFO_ER_2010_HPP
-#include <boost/assign/v2/detail/checking/check_equal.hpp>
+#include <boost/assign/v2/detail/checking/check.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/type_traits/container/is_lifo.hpp>
 
@@ -23,15 +23,15 @@ namespace checking{
     {
     	using namespace checking::constants;  
         V v = v1;
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.top() , h ); v.pop();
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.top() , g ); v.pop();
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.top() , f ); v.pop();
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.top() , e ); v.pop();
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.top() , d ); v.pop();
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.top() , c ); v.pop();
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.top() , b ); v.pop();
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.top() , a ); v.pop();
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.empty() , true );
+    	BOOST_ASSIGN_V2_CHECK( v.top() == h ); v.pop();
+    	BOOST_ASSIGN_V2_CHECK( v.top() == g ); v.pop();
+    	BOOST_ASSIGN_V2_CHECK( v.top() == f ); v.pop();
+    	BOOST_ASSIGN_V2_CHECK( v.top() == e ); v.pop();
+    	BOOST_ASSIGN_V2_CHECK( v.top() == d ); v.pop();
+    	BOOST_ASSIGN_V2_CHECK( v.top() == c ); v.pop();
+    	BOOST_ASSIGN_V2_CHECK( v.top() == b ); v.pop();
+    	BOOST_ASSIGN_V2_CHECK( v.top() == a ); v.pop();
+    	BOOST_ASSIGN_V2_CHECK( v.empty() == true );
     }
 
 }// checking

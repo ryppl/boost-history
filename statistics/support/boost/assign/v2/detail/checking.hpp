@@ -11,8 +11,6 @@
 #define BOOST_ASSIGN_V2_DETAIL_CHECKING_ER_2010_HPP
 
 #include <boost/assign/v2/detail/checking/array.hpp>
-#include <boost/assign/v2/detail/checking/assert.hpp>
-#include <boost/assign/v2/detail/checking/check_equal.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/checking/deduce_check.hpp>
@@ -20,6 +18,6 @@
 #include <boost/assign/v2/detail/checking/lifo.hpp>
 #include <boost/assign/v2/detail/checking/map.hpp>
 #include <boost/assign/v2/detail/checking/range.hpp>
-#include <boost/assign/v2/detail/checking/relational_op.hpp>
+/*#include <boost/assign/v2/detail/checking/relational_op.hpp>*/
 
 #endif

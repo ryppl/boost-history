@@ -17,15 +17,15 @@
 
 namespace boost{
 	struct use_default;
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace ref{
 namespace fusion_aux{
 
     // ---- assign_array ---- //
-	
+
     template<
-    	std::size_t K,typename A, 
+    	std::size_t K,typename A,
         std::size_t N, typename L, typename Tag1, typename Tag2, typename T
     >
     void assign_array(
@@ -38,7 +38,7 @@ namespace fusion_aux{
     }
 
     template<
-    	std::size_t K,typename A, 
+    	std::size_t K,typename A,
         std::size_t N, typename L, typename Tag1, typename Tag2,typename T
     >
     void assign_array(
@@ -46,20 +46,20 @@ namespace fusion_aux{
     	A& a,
         const fusion_aux::container<N, L, Tag1, Tag2, T>& f
     )
-    {	
-        typedef boost::mpl::int_<K-1> index_; 
-        a[ K - 1 ].rebind( f.static_lookup( index_() ) ) ; 
-        typedef index_ next_size_; 
-        typedef boost::mpl::int_<0> zero_; 
-        typedef typename boost::mpl::equal_to<next_size_,zero_>::type exit_; 
-        assign_array<K-1>( exit_(), a, f ); 
+    {
+        typedef boost::mpl::int_<K-1> index_;
+        a[ K - 1 ].rebind( f.static_lookup( index_() ) ) ;
+        typedef index_ next_size_;
+        typedef boost::mpl::int_<0> zero_;
+        typedef typename boost::mpl::equal_to<next_size_,zero_>::type exit_;
+        assign_array<K-1>( exit_(), a, f );
     }
 
 	// A must be a static array of reference wrappers
     template<typename A,std::size_t N, typename L,
     	typename Tag1, typename Tag2, typename T>
     void assign_array(
-    	A& a, 
+    	A& a,
         fusion_aux::container<N, L, Tag1, Tag2, T> const & f
     )
     {
@@ -70,8 +70,11 @@ namespace fusion_aux{
         typedef typename boost::mpl::equal_to<size_, zero_>::type exit_;
         fusion_aux::assign_array<size_::value>( exit_(), a, f );
     }
-    
-}// fusion_aux                
+
+}// fusion_aux
+
+using fusion_aux::assign_array;
+
 }// ref
 }// v2
 }// assign

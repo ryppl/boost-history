@@ -10,7 +10,8 @@
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_EXT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_EXT_ER_2010_HPP
 
-#include <boost/assign/v2/put/modifier/ext/incr_lookup.hpp>
+#include <boost/assign/v2/put/modifier/ext/iterate.hpp>
+#include <boost/assign/v2/put/modifier/ext/lookup.hpp>
 #include <boost/assign/v2/put/modifier/ext/repeat.hpp>
 
 #endif

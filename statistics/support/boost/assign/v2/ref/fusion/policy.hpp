@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_REF_FUSION_POLICY_ER_2010_HPP
 #include <boost/mpl/empty_base.hpp>
 #include <boost/mpl/always.hpp>
-#include <boost/assign/v2/ref/static_array/alloc/lazy_alloc.hpp>
+#include <boost/assign/v2/ref/array/alloc/lazy.hpp>
 #include <boost/assign/v2/ref/fusion/fwd.hpp>
 #include <boost/assign/v2/ref/fusion/most_const.hpp>
 
@@ -45,7 +45,7 @@ namespace fusion_aux{
                 tag2_, 
                 T
             > derived_;
-        	typedef static_array_aux::lazy_alloc<
+        	typedef array_aux::lazy_alloc<
             	N::value,
                 Tag1, 
                 most_c_, 

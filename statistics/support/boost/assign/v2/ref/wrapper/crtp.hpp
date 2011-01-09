@@ -17,10 +17,7 @@
 #include <boost/call_traits.hpp>
 #include <boost/operators.hpp>
 
-// This design is an outgrowth of assign_detail::assign_reference<> by TO. The 
-// new feature is that the assignment operator and swap member function are 
-// customizable and there are two options, identified by MPG : the 
-// reference is assigned a new value (copy), or a new address (rebind). 
+// This design is an outgrowth of assign_detail::assign_reference<> by TO. 
 
 namespace boost{
 namespace assign{ 
@@ -107,40 +104,6 @@ namespace ref{
         l.swap( r );
     }
 
-namespace functional{
-
-	template<typename T>
-    struct assigner
-    {
-    	assigner(T& val):value( val ){}
-        
-		typedef typename boost::remove_const<T>::type lvalue_;
-		typedef typename boost::add_const<T>::type rvalue_;
-        
-        typedef void result_type;
-        
-        template<typename D> void operator()(wrapper_crtp<D, lvalue_>& w)const
-        {
-			this->impl<D, lvalue_>( w );
-		}        
-
-        template<typename D> void operator()(wrapper_crtp<D, rvalue_>& w)const
-        {
-			this->impl<D, rvalue_>( w );
-		}        
-
-        private:
-		template<typename D, typename U>        
-        void impl(wrapper_crtp<D, U>& w)const
-        {
-			w = this->value;
-		}        
-        
-        assigner();
-        mutable T& value;
-    };
-
-}// functional
 }// ref
 }// v2
 }// assign

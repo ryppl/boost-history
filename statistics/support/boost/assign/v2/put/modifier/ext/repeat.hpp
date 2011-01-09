@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_EXT_REPEAT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_EXT_REPEAT_ER_2010_HPP
+#include <boost/mpl/aux_/na.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
 #include <boost/assign/v2/put/modifier/def.hpp>
 #include <boost/assign/v2/put/generic/parameter.hpp>
@@ -18,23 +19,27 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace modifier_tag{
-	
+
     template<typename OldTag> struct repeat{};
-    
-}// put_aux
+
+}// modifier_tag
 namespace put_parameter{
 
-	template<typename OldFun,typename OldTag>
-    struct repeat : put_parameter::pair<
-    	OldFun,
-        modifier_tag::repeat<OldTag>
-    >{ };
+    template<typename Arg>
+    struct repeat{
+
+        template<typename OldFun, typename OldTag>
+        struct apply : put_parameter::pair<
+            OldFun,
+            modifier_tag::repeat<OldTag>
+        >{};
+    };
 
 }// put_parameter
 namespace put_aux{
 
 	template<typename Tag>
-    class modifier<modifier_tag::repeat<Tag> > 
+    class modifier<modifier_tag::repeat<Tag> >
     {
 		typedef modifier<Tag> inner_;
 
@@ -43,7 +48,7 @@ namespace put_aux{
         typedef std::size_t size_type;
 
 		modifier() : n( 0 ){}
-		explicit modifier( size_type const& n_ ) 
+		explicit modifier( size_type const& n_ )
         	: n( n_ )
         {
         }
@@ -77,28 +82,39 @@ namespace put_aux{
         size_type n;
     };
 
-	class repeat 
+    template<typename Arg = boost::mpl::na>
+	class repeat
     {
 
 		public:
 
         typedef std::size_t size_type;
 
-        repeat(){}
-        repeat( size_type const& n_) 
+        repeat( size_type const& n_)
         	: n( n_ )
         {}
-
-		repeat operator=( size_type const& n_)const
-        {
-        	typedef repeat result_;
-        	return result_( n_ );
-        }
 
         size_type const& get()const{ return this->n; }
 
         protected:
         size_type n;
+
+    };
+
+	class repeat_keyword
+    {
+
+		public:
+
+        typedef std::size_t size_type;
+
+        repeat_keyword(){}
+
+		repeat<> operator=( size_type const& n_)const
+        {
+        	typedef repeat<> result_;
+        	return result_( n_ );
+        }
 
     };
 

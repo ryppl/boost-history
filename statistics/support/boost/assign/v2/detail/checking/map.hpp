@@ -12,7 +12,6 @@
 #include <boost/range/begin.hpp>
 #include <boost/utility.hpp>
 
-#include <boost/assign/v2/detail/checking/check_equal.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/type_traits/container/is_map.hpp>
 

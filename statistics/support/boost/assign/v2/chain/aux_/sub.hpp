@@ -1,3 +1,5 @@
+// TODO remove file
+/*
 //////////////////////////////////////////////////////////////////////////////
 //  Boost.Assign v2                                                         //
 //                                                                          //
@@ -18,12 +20,8 @@ namespace assign{
 namespace v2{
 namespace chain_aux{
 
-    // Adds a conversion capability to a range
-    //
-    // TODO : for now relational_op is disabled as conflicts with
-    // iterator_range's implem.
     template<typename R>
-    struct sub : R //, relational_op_aux::crtp< sub<R> >
+    struct sub : R , relational_op_aux::crtp< sub<R> > 
     {
 
         typedef R super_t;
@@ -32,16 +30,16 @@ namespace chain_aux{
         sub(super_t const& s):super_t( s ){}
 
         // Relational op
-        //template<typename R1>
-        //bool equal_to(const R1& r)const{
-        // 	return ::boost::iterator_range_detail::equal(
-        //    	(*this), r );
-		//}
-		//template<typename R1>
-        //bool less_than(const R& r)const{
-        // 	return ::boost::iterator_range_detail::less_than(
-        //    	(*this), r );
-		//}
+        template<typename R1>
+        bool equal_to(const R1& r)const{
+         	return ::boost::iterator_range_detail::equal(
+            	(*this), r );
+		}
+		template<typename R1>
+        bool less_than(const R& r)const{
+         	return ::boost::iterator_range_detail::less_than(
+            	(*this), r );
+		}
 
     };
 
@@ -54,3 +52,4 @@ namespace chain_aux{
 }// boost
 
 #endif
+*/

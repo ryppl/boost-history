@@ -15,7 +15,7 @@
 #include <boost/assign/v2/detail/fwd.hpp>
 #include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/mpl.hpp>
-#include <boost/assign/v2/detail/relational_op.hpp>
+/*#include <boost/assign/v2/detail/relational_op.hpp>*/
 #include <boost/assign/v2/detail/type_traits.hpp>
 
 // Don't include

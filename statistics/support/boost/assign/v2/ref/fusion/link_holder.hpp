@@ -27,17 +27,20 @@ namespace fusion_aux{
 
         public:
 
-        link_holder(){}
-        link_holder( const L& l) : value( l ){}
+        //link_holder();
+        explicit link_holder( const L& l) : value( l ){}
 
     	wrapper_ pop()const
         {
         	// Warning : probably inefficient
-        	return value;
+        	return this->value;
         }
 
         typedef typename wrapper_::unwrap_type link_type;
-        link_type link()const{ return this->value.unwrap(); }
+        link_type link()const
+        {
+            return this->value.unwrap();
+        }
 
         protected:
         mutable wrapper_ value;

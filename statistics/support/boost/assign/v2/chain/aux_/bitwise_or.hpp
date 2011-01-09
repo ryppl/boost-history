@@ -14,7 +14,6 @@
 #include <boost/mpl/void.hpp>
 #include <boost/assign/v2/chain/traits/result.hpp>
 #include <boost/assign/v2/chain/aux_/adaptor.hpp>
-#include <boost/assign/v2/chain/aux_/sub.hpp>
 
 // Design:
 // - The original design is boost::chain in RangeEx
@@ -24,16 +23,13 @@
 // 	- Constness is determined by that of the elements in each range, not that
 //  of the range.
 // - Finally, MPG proposed a way to compose chains http://gist.github.com/287791
-// and a variant of it is used below.
 
 namespace boost{
 namespace assign{
 namespace v2{
-namespace adaptor{
 namespace{
 	const chain_aux::adaptor2<> _chain = chain_aux::adaptor2<>();
 }
-}// adaptor
 namespace result_of{
 
     template<typename R1, typename R2, typename Tag = use_default>
@@ -43,12 +39,12 @@ namespace result_of{
 namespace chain_aux{
 
 #define BOOST_ASSIGN_V2_FRAMEWORK_CHAIN(U1) \
-    template<typename R1,typename U2,typename Tag> \
+    template<typename R1, typename U2, typename Tag> \
     typename chain_aux::result<U1, U2, Tag>::type \
     operator|(U1 & r1, chain_aux::adaptor1<U2, Tag> const & h) \
     { \
         typedef chain_aux::result<U1, U2, Tag> caller_; \
-        return chain_aux::make_sub( caller_::call( r1, h.value ) ); \
+        return caller_::call( r1, h.value ); \
     } \
 \
 /**/

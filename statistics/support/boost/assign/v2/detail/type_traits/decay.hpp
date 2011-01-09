@@ -12,16 +12,14 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/decay.hpp>
-
-// TODO (maybe) remove file
+#include <boost/type_traits/add_const.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
 namespace type_traits{
 
-    // Add constness to array parameters
-    // to support string literals properly
+    // To support string literals properly
     template< class T >
     struct decay : boost::mpl::eval_if<
         ::boost::is_array<T>,

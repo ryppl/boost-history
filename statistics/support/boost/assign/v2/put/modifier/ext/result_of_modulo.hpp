@@ -46,41 +46,41 @@ namespace result_of_modulo{
 
 			typedef typename boost::mpl::eval_if<
             	is_same_fun,
-               	boost::mpl::apply1<
-                	v2::result_of_modulo::new_modifier<T>,
-                    tag
-                >,
-               	boost::mpl::apply2<
-                	v2::result_of_modulo::new_fun_modifier<T>,
-                    fun_,
-                    tag
-                >
+                    boost::mpl::apply1<
+                        v2::result_of_modulo::new_modifier<T>,
+                        tag
+                    >,
+                    boost::mpl::apply2<
+                        v2::result_of_modulo::new_fun_modifier<T>,
+                        fun_,
+                        tag
+                    >
             >::type type;
 
             typedef put_aux::modifier<tag> m_;
 
-			template<typename V, typename F>
-        	static type call(V& v, F const& f, m_ const& m)
-        	{
-            	return type( v, f, m );
-        	}
+            template<typename V, typename F>
+            static type call(V& v, F const& f, m_ const& m)
+            {
+                return type( v, f, m );
+            }
             static fun_ make_fun(const T& t, boost::mpl::false_)
-            { 
-                return fun_(); 
+            {
+                return fun_();
             }
             static fun_ make_fun(const T& t, boost::mpl::true_)
-            { 
-                return t.fun; 
+            {
+                return t.fun;
             }
-			template<typename P>
-        	static type call(const T& t, P const& p)
+            template<typename P>
+            static type call(const T& t, P const& p)
             {
                 typedef put_concept::Parameter<m_,P> concept_;
-				BOOST_CONCEPT_ASSERT(( concept_ ));
-            	return call(
-                	t.unwrap(), 
-                    make_fun( t, is_same_fun() ), 
-                    m_( p.get() ) 
+                BOOST_CONCEPT_ASSERT(( concept_ ));
+                return call(
+                    t.unwrap(),
+                    make_fun( t, is_same_fun() ),
+                    m_( p.get() )
                 );
             }
 

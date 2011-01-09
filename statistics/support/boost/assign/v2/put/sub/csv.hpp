@@ -12,7 +12,7 @@
 #include <boost/assign/v2/ref/wrapper/framework.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/assign/v2/detail/type_traits/container/value.hpp>
-#include <boost/assign/v2/put/sub/make.hpp>
+#include <boost/assign/v2/put/sub/functor.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
@@ -55,8 +55,6 @@ namespace csv_put_aux{
         void impl(R& r){}
 
         template<typename R,typename... Args>
-        //implicit conversion to value_type desired
-        // TODO make sure it is achieved.
         void impl(R& r, value_type const& t, Args&&...args)
         {
             r( t );

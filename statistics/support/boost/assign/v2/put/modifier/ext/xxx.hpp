@@ -20,36 +20,35 @@
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_EXT_XXX(Param)\
 namespace result_of_modulo{\
 \
-	template<typename T>\
+	template<typename T, typename Arg>\
 	struct Param\
     	: boost::mpl::apply1<\
-    		result_of_modulo::ext_generic<T>\
-        	, boost::mpl::quote2<\
-            	put_parameter::Param\
-            >\
+            result_of_modulo::ext_generic<T>\
+            , put_parameter::Param<Arg>\
         >\
     {};\
 \
 }\
 namespace put_aux{\
 \
-	template<typename T>\
+	template<typename T,typename Arg>\
     typename boost::lazy_enable_if<\
     	boost::is_base_of<put_aux::put_base, T>,\
-    	result_of_modulo::Param<T>\
+    	result_of_modulo::Param<T, Arg>\
     >::type\
 	operator%(\
     	T const& t,\
-        put_aux::Param const& p\
+        put_aux::Param<Arg> const& p\
     )\
     {\
-    	typedef result_of_modulo::Param<T> caller_;\
+    	typedef result_of_modulo::Param<T, Arg> caller_;\
         return caller_::call( t, p );\
     }\
 \
 }\
 namespace{\
-	put_aux::Param const BOOST_PP_CAT(_,Param) = put_aux::Param();\
+	put_aux::BOOST_PP_CAT(Param,_keyword) const BOOST_PP_CAT(_,Param)\
+        = put_aux::BOOST_PP_CAT(Param,_keyword)();\
 }\
 /**/
 

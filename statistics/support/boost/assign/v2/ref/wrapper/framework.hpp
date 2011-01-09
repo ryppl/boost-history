@@ -21,7 +21,7 @@ namespace ref{
     };
 
 namespace result_of{
-	template<typename Tag,typename T>
+	template<typename Tag, typename T>
     struct wrap{
         typedef ref::wrapper<Tag,T> type;
     };
@@ -51,9 +51,8 @@ wrap(T const & t)
 
 #include <boost/mpl/bool.hpp>
 #include <boost/ref.hpp>
-#include <boost/assign/v2/ref/wrapper.hpp>
 
-// These are specializations of classes in boost/ref.hpp.
+// The part below extends boost/ref.hpp.
 
 namespace boost{
 

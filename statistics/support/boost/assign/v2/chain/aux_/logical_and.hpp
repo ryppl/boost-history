@@ -27,7 +27,7 @@ typename chain_aux::result< \
 >::type \
 operator&&(U1& r1, U2 & r2) \
 { \
-    return r1 | adaptor::_chain( r2 ); \
+    return r1 | _chain( r2 ); \
 } \
 */
 /**/

@@ -69,17 +69,16 @@ namespace put_aux{
     // then models concept_sub::Post
     // 
     // Usually, f is passed to the crtp. U = V& or V const& depending on need.
-    // Traits are deprecated but a use may be find in the future.
-    template<typename V,typename F, typename Tag, typename D, typename Traits>
+    template<typename V,typename F, typename Tag, typename D>
     class crtp :
     	public put_base,
-    	public  put_aux::expose_fun<F> // protect + friend?
-    	, public  put_aux::expose_modifier<Tag> // protect + friend?
+    	public  put_aux::expose_fun<F> 
+    	, public  put_aux::expose_modifier<Tag>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 //do nothing
 #else
     	, public functor_aux::crtp_unary_and_up<
-    		crtp<V, F, Tag, D, Traits>,
+    		crtp<V, F, Tag, D>,
         	boost::mpl::always< D const& >
     	>
 #endif

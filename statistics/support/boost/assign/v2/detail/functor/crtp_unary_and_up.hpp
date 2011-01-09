@@ -119,7 +119,7 @@ BOOST_PP_REPEAT(
     template<BOOST_PP_ENUM_PARAMS(N, typename T)> \
     typename boost::mpl::apply1< \
         F, \
-        boost::mpl::vector<BOOST_PP_ENUM_PARAMS(N, T)> \
+        BOOST_PP_CAT(boost::mpl::vector,N)<BOOST_PP_ENUM_PARAMS(N, T)> \
     >::type \
     operator()( BOOST_PP_ENUM_BINARY_PARAMS(N, T, &_) )const{ \
         return this->derived().template impl< \

@@ -10,7 +10,6 @@
 #ifndef BOOST_ASSIGN_V2_CHECKING_ITERATOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHECKING_ITERATOR_ER_2010_HPP
 #include <boost/next_prior.hpp>
-#include <boost/assign/v2/detail/checking/check_equal.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
 
 namespace boost{                                                               

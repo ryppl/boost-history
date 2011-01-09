@@ -16,7 +16,6 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/assign/v2/ref/wrapper/deduce_assign_tag.hpp>
 #include <boost/assign/v2/ref/fusion/fwd.hpp>
 #include <boost/assign/v2/ref/fusion/root.hpp>
 #include <boost/assign/v2/ref/fusion/nil_arg.hpp>

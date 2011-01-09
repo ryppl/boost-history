@@ -10,8 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_SUB_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_SUB_ER_2010_HPP
 
-#include <boost/assign/v2/put/sub/make.hpp>
 #include <boost/assign/v2/put/sub/csv.hpp>
+#include <boost/assign/v2/put/sub/functor.hpp>
 
-#endif
-
+#endif // BOOST_ASSIGN_V2_PUT_PIPE_CSV_ER_2010_HPP

@@ -10,8 +10,9 @@
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_ER_2010_HPP
 #include <boost/mpl/eval_if.hpp>
-#include <boost/type_traits/is_same.hpp>
+#include <boost/mpl/assert.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 #include <boost/assign/v2/detail/mpl/switch.hpp>
 
@@ -27,7 +28,8 @@ namespace switch_tag{
 	struct deduce_put{};
 }// switch_tag
 namespace modifier_tag{
-	struct at_next;
+	//struct at_next;
+    struct iterate;
     struct insert;
     struct push;
     struct push_back;
@@ -44,7 +46,8 @@ namespace mpl{
     template<>
     struct case_<switch_tag::deduce_put,1> :
         v2::mpl::wrap<
-            v2::modifier_tag::at_next,
+//            v2::modifier_tag::at_next,
+			v2::modifier_tag::iterate,
             v2::container_type_traits::is_static_array
         >{};
 
@@ -87,6 +90,14 @@ namespace put_aux{
     	boost::mpl::identity<Option2>,
     	boost::mpl::identity<Option1>
 	>{};
+
+	// For testing purposes
+	template<typename C, typename X>
+	void check_deduce()
+    {
+        typedef typename put_aux::deduce_modifier<C>::type found_;
+        BOOST_MPL_ASSERT(( boost::is_same<found_, X> ));
+    }
 
 }// put_aux
 namespace{

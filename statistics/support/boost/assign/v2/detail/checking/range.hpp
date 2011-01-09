@@ -14,7 +14,7 @@
 #include <boost/range/end.hpp>
 #include <boost/assign/v2/detail/type_traits/container/is_range.hpp>
 #include <boost/assign/v2/detail/type_traits/container/is_sorted.hpp>
-#include <boost/assign/v2/detail/checking/check_equal.hpp>
+#include <boost/assign/v2/detail/checking/check.hpp>
 #include <boost/assign/v2/detail/checking/iterator.hpp>
 
 namespace boost{                                                               
@@ -27,9 +27,8 @@ namespace checking{
     {
     	namespace ns = checking::iterator;     
         ns::do_check( boost::begin( r ) );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( 
-            boost::next( boost::begin( r ), 8 ), 
-            boost::end( r ) 
+        BOOST_ASSIGN_V2_CHECK( 
+            boost::next( boost::begin( r ), 8 ) == boost::end( r ) 
         );
     }                                                                              
 
@@ -38,9 +37,8 @@ namespace checking{
     {                                                                              
     	namespace ns = checking::iterator::sorted;     
         ns::do_check( boost::begin( r ) );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( 
-            boost::next( boost::begin( r ), 8 ) , 
-            boost::end( r ) 
+        BOOST_ASSIGN_V2_CHECK( 
+            boost::next( boost::begin( r ), 8 ) == boost::end( r ) 
         );
     }                                                                              
 

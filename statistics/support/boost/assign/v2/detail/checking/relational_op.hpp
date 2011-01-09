@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_CHECKING_RELATIONAL_OP_ER_2010_HPP
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
-#include <boost/assign/v2/detail/checking/check_equal.hpp>
+#include <boost/assign/v2/detail/checking/check.hpp>
 
 namespace boost{                                                               
 namespace assign{ 
@@ -32,19 +32,19 @@ namespace relational_op{
             ar[3] = d; ar[4] = e; ar[5] = f;
             ar[6] = g; ar[7] = h; 
         }
-        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  ==  r), true );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  !=  r), false );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  <  r), false );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  >  r), false );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  <=  r), true );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  >=  r), true );
+        BOOST_ASSIGN_V2_CHECK( (ar == r) );
+        BOOST_ASSIGN_V2_CHECK( !(ar != r) );
+        BOOST_ASSIGN_V2_CHECK( !(ar < r) );
+        BOOST_ASSIGN_V2_CHECK( !(ar > r) );
+        BOOST_ASSIGN_V2_CHECK(  (ar <= r) );
+        BOOST_ASSIGN_V2_CHECK(  (ar >= r) );
         ++ar[2];
-        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  ==  r), false );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  !=  r), true );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  <  r), false );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  >  r), true );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  <=  r), false );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( (ar  >=  r), true );
+        BOOST_ASSIGN_V2_CHECK( !(ar == r) );
+        BOOST_ASSIGN_V2_CHECK(  (ar != r) );
+        BOOST_ASSIGN_V2_CHECK( !(ar < r) );
+        BOOST_ASSIGN_V2_CHECK(  (ar > r) );
+        BOOST_ASSIGN_V2_CHECK( !(ar <= r) );
+        BOOST_ASSIGN_V2_CHECK(  (ar >= r) );
 
     }
 

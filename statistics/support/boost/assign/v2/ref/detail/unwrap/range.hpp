@@ -9,7 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_WRAPPER_UNWRAP_RANGE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_WRAPPER_UNWRAP_RANGE_ER_2010_HPP
-#include <boost/type_traits/add_reference.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/iterator.hpp>
@@ -23,26 +22,19 @@ namespace ref{
 namespace unwrap_aux{
 
 	template<typename R>
-    struct is_range : is_unwrapped_iterator<
+    struct is_unwrapped_range : unwrap_aux::is_unwrapped_iterator<
         typename boost::range_iterator<R>::type
     >{};
 
-// TODO remove
-// I guess this is subsumed by range_reference
-//    template<typename R>
-//    struct reference_of_unwrapped_range
-//     : unwrap::reference_of_iterator<
-//         typename boost::range_iterator<R>::type
-//     >{};
-
-    template<typename R, bool = unwrap_aux::is_range<R>::value>
-    struct result_of_unwrap_range
+    template<typename R, bool = unwrap_aux::is_unwrapped_range<R>::value>
+    struct caller
     {
         typedef typename boost::range_iterator<R>::type base_it_;
         typedef typename result_of::unwrap_iterator<base_it_>::type it_;
         typedef boost::iterator_range<it_> type;
 
-        static type call( R& r){
+        static type call( R& r)
+        {
             return type(
                 ref::unwrap_iterator( boost::begin( r ) ),
                 ref::unwrap_iterator( boost::end( r ) )
@@ -52,7 +44,7 @@ namespace unwrap_aux{
 
     // No need to unwrap twice
     template<typename R>
-    struct result_of_unwrap_range<R,true>
+    struct caller<R, true>
     {
         typedef R type; // don't change this to R&
         static type call( R& r){ return r; }
@@ -61,12 +53,12 @@ namespace unwrap_aux{
 }// unwrap_aux
 
 	template<typename R>
-    struct is_unwrapped_range : unwrap_aux::is_range<R>{};
+    struct is_unwrapped_range : unwrap_aux::is_unwrapped_range<R>{};
 
 namespace result_of{
 
 	template<typename R>
-    struct unwrap_range : unwrap_aux::result_of_unwrap_range<R>{};
+    struct unwrap_range : unwrap_aux::caller<R>{};
 
 }// result_of
 

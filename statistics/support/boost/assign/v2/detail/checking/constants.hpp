@@ -13,7 +13,7 @@
 #include <boost/range.hpp>
 #include <boost/array.hpp>
 #include <boost/numeric/conversion/converter.hpp>
-#include <boost/assign/v2/detail/checking/check_equal.hpp>
+#include <boost/assign/v2/detail/checking/check.hpp>
 
 namespace boost{                                                               
 namespace assign{ 
@@ -55,14 +55,14 @@ namespace {
         const T& e1,const T& f1,const T& g1,const T& h1
     )
     {
-        BOOST_ASSIGN_V2_CHECK_EQUAL( a , a1 );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( b , b1 );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( c , c1 );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( d , d1 ); 
-        BOOST_ASSIGN_V2_CHECK_EQUAL( e , e1 );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( f , f1 ); 
-        BOOST_ASSIGN_V2_CHECK_EQUAL( g , g1 );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( h , h1 );                                          
+        BOOST_ASSIGN_V2_CHECK( a == a1 );
+        BOOST_ASSIGN_V2_CHECK( b == b1 );
+        BOOST_ASSIGN_V2_CHECK( c == c1 );
+        BOOST_ASSIGN_V2_CHECK( d == d1 ); 
+        BOOST_ASSIGN_V2_CHECK( e == e1 );
+        BOOST_ASSIGN_V2_CHECK( f == f1 ); 
+        BOOST_ASSIGN_V2_CHECK( g == g1 );
+        BOOST_ASSIGN_V2_CHECK( h == h1 );                                          
     }                                    
 
 namespace sorted{
@@ -74,14 +74,14 @@ namespace sorted{
     )
     {
         namespace ns = checking::constants;
-        BOOST_ASSIGN_V2_CHECK_EQUAL( a1, ns::g );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( b1, ns::a );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( c1, ns::e );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( d1, ns::c );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( e1, ns::d );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( f1, ns::b );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( g1, ns::h );
-        BOOST_ASSIGN_V2_CHECK_EQUAL( h1, ns::f );
+        BOOST_ASSIGN_V2_CHECK( a1 == ns::g );
+        BOOST_ASSIGN_V2_CHECK( b1 == ns::a );
+        BOOST_ASSIGN_V2_CHECK( c1 == ns::e );
+        BOOST_ASSIGN_V2_CHECK( d1 == ns::c );
+        BOOST_ASSIGN_V2_CHECK( e1 == ns::d );
+        BOOST_ASSIGN_V2_CHECK( f1 == ns::b );
+        BOOST_ASSIGN_V2_CHECK( g1 == ns::h );
+        BOOST_ASSIGN_V2_CHECK( h1 == ns::f );
     }                                                                  
 
 }// sorted

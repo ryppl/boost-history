@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_CHECKING_FIFO_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHECKING_FIFO_ER_2010_HPP
 #include <boost/assign/v2/detail/checking/constants.hpp>
-#include <boost/assign/v2/detail/checking/check_equal.hpp>
+#include <boost/assign/v2/detail/checking/check.hpp>
 #include <boost/assign/v2/detail/type_traits/container/is_fifo.hpp>
 
 namespace boost{                                                               
@@ -23,15 +23,15 @@ namespace checking{
     {
         V v = v1;
     	using namespace constants; 
-        BOOST_ASSIGN_V2_CHECK_EQUAL( v.front() , a ); v.pop(); 
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.front() , b ); v.pop(); 
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.front() , c ); v.pop(); 
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.front() , d ); v.pop(); 
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.front() , e ); v.pop(); 
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.front() , f ); v.pop(); 
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.front() , g ); v.pop(); 
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.front() , h ); v.pop();
-    	BOOST_ASSIGN_V2_CHECK_EQUAL( v.empty() , true); 
+        BOOST_ASSIGN_V2_CHECK( v.front() == a ); v.pop(); 
+    	BOOST_ASSIGN_V2_CHECK( v.front() == b ); v.pop(); 
+    	BOOST_ASSIGN_V2_CHECK( v.front() == c ); v.pop(); 
+    	BOOST_ASSIGN_V2_CHECK( v.front() == d ); v.pop(); 
+    	BOOST_ASSIGN_V2_CHECK( v.front() == e ); v.pop(); 
+    	BOOST_ASSIGN_V2_CHECK( v.front() == f ); v.pop(); 
+    	BOOST_ASSIGN_V2_CHECK( v.front() == g ); v.pop(); 
+    	BOOST_ASSIGN_V2_CHECK( v.front() == h ); v.pop();
+    	BOOST_ASSIGN_V2_CHECK( v.empty() == true); 
     }
 
 }// checking

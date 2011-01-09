@@ -50,11 +50,12 @@
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-//#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
 // for testing purposes only.
-//#include <iostream> // remove
+#include <iostream> // remove
 //#include <boost/tuple/detail/print_tuple.hpp>
-//#endif
+#include <boost/static_assert.hpp>
+#endif
 
 namespace boost{
 	struct use_default;
@@ -62,7 +63,6 @@ namespace assign{
 namespace v2{
 namespace ref{
 namespace fusion_matrix_aux{
-
 
     template<
     	std::size_t N, typename L, typename Tag1, typename Tag2,
@@ -204,11 +204,18 @@ namespace fusion_matrix_aux{
                 ~
             )
         > tuple_;
+
 #undef MACRO
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
         tuple_ tuple;
+
+        // TODO remove
+        public:
+        tuple_ const get_tuple()const{ return this->tuple; }
+        protected:
+        // <-
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 // TODO remove
@@ -236,8 +243,10 @@ namespace fusion_matrix_aux{
 #endif
         );
 
+    container(){
+        BOOST_STATIC_ASSERT( N==0 );
+    }
 
-		container(){}
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
     explicit container(
@@ -246,7 +255,8 @@ namespace fusion_matrix_aux{
         tuple(
             ref::wrap<assign_tag_>( args )...
         )
-    {}
+    {
+    }
 
 #else
 
@@ -424,7 +434,6 @@ BOOST_PP_REPEAT_FROM_TO(
         typename static_elem_result<n>::type
         static_elem( boost::mpl::int_<n> )const
         {
-
             return
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
                 std::

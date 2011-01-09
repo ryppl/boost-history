@@ -10,14 +10,11 @@
 #ifndef BOOST_ASSIGN_V2_PUT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_ER_2010_HPP
 
-#include <boost/assign/v2/put/compose.hpp>
 #include <boost/assign/v2/put/generic.hpp>
 #include <boost/assign/v2/put/modifier.hpp>
-#include <boost/assign/v2/put/range.hpp>
+#include <boost/assign/v2/put/pipe.hpp>
 #include <boost/assign/v2/put/sub.hpp>
 
-// Basic usage:
-//  using namespace boost::assign::v2;
-//  cont | adaptor::_csv_put(x, y, z)
+
 
 #endif

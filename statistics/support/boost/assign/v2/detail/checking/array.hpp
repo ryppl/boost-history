@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CHECKING_ARRAY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHECKING_ARRAY_ER_2010_HPP
-#include <boost/assign/v2/detail/checking/check_equal.hpp>
+#include <boost/assign/v2/detail/checking/check.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/type_traits/container/is_static_array.hpp>
 
@@ -19,14 +19,14 @@ namespace v2{
 namespace checking{ 
 
     template<typename V>
-    void do_check(container_tag::static_array,V const& ar1)
+    void do_check(container_tag::static_array, V const& ar1)
     {                                                                              
-        BOOST_ASSIGN_V2_CHECK_EQUAL( ar1.empty() , false );
+        BOOST_ASSIGN_V2_CHECK( !ar1.empty() );
         V ar = ar1;
         namespace ns = checking::constants;
         ns::do_check(
-           ar[0],ar[1],ar[2],ar[3],
-           ar[4],ar[5],ar[6],ar[7]
+           ar[0], ar[1], ar[2], ar[3],
+           ar[4], ar[5], ar[6], ar[7]
         );                           
     }                                           
 
