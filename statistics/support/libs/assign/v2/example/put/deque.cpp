@@ -27,36 +27,33 @@ namespace xxx_deque{
             boost::for_each(
                 as2::csv_deque<std::string>("x", "y", "z" ),
                 os << bl::_1 << ' '
-            );
-            // outputs x, y, z
+            ); // outputs x, y, z
             //]
             os << std::endl;
             os << "deque" << ' ';
             {
-            	// TODO put in /test
             	int x = 0;
 				assert( as2::deque<Foo>( x )().size() == 1 );
             }
             {
             	//[deque
-            	int x = 0, z = 1;
+            	int x = 0, a = 1;
             	boost::for_each(
-                	as2::deque<Foo>( x )()( z, -1 ),
+                	as2::deque<Foo>( x )()( a, -1 ),
                 	os << bl::_1 << ' '
             	);
             	// outputs (0,0)(NULL,0)(1,-1)
             	//]
             }
             {
-            	//[deque_push_front
-            	int x = 0, z = 1;
+            	//[deque_front
             	boost::for_each(
-                	(
-                    	as2::deque<Foo>( as2::_nil ) % as2::_push_front
-                	)( x )()( z, -1 ),
-                	os << bl::_1 << ' '
+                    (
+                        as2::deque<int>( as2::_nil ) % as2::_push_front
+                    )( -1 )( 0 )( 1 ),
+                    os << bl::_1 << ' '
             	);
-            	// outputs (1,-1)(NULL,0)(0,0)
+            	// outputs 1 0 -1
             	//]
             }
         }

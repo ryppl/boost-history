@@ -13,7 +13,6 @@
 
 namespace example_assign_v2{
 
-//[foo
 class Foo
 {
 	public:
@@ -30,16 +29,6 @@ class Foo
     int* ptr_a;
     int b;
 };
-//]
-
-
-struct make_foo // TODO remove
-{
-    typedef Foo result_type;
-    result_type operator()(int& a, int const& b)const;
-
-};
-
 
 }// example_assign_v2
 

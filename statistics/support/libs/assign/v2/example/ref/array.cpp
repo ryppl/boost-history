@@ -33,8 +33,7 @@ namespace xxx_array{
             boost::for_each(
                 as2::ref::csv_array( "x", "y", "z" ),
                 os << bl::_1 << ' '
-            );
-            //outputs x y z
+            ); //outputs x y z
             //]
             //[csv_array_w
             std::string x, y, z;

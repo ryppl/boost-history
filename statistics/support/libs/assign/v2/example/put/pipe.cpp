@@ -38,8 +38,7 @@ namespace xxx_pipe{
             boost::for_each(
                 cont | as2::_csv_put( -1, 0, 1 ),
                 os << bl::_1 << ' '
-            );
-            //outputs -1 0 1
+            ); //outputs -1 0 1
             //]
             os << std::endl;
         }
@@ -76,8 +75,7 @@ namespace xxx_pipe{
             boost::for_each(
                 cont | as2::_csv_put( -1, 0, 1 ),
                 os << bl::_1 << ' '
-            );
-            // outputs -1 0 1
+            ); // outputs -1 0 1
             //]
             os << std::endl;
         }
@@ -88,8 +86,7 @@ namespace xxx_pipe{
             boost::for_each(
                 cont | as2::_csv_put( -1, 0, 1 ),
                 os << bl::_1 << ' '
-            );
-            // output -1 0 1
+            ); // output -1 0 1
             //]
             os << std::endl;
         }
@@ -102,8 +99,7 @@ namespace xxx_pipe{
                     as2::_csv_put % as2::_push_front
                 )( -1, 0, 1 ),
                 os << bl::_1 << ' '
-            );
-            // output 1 0 -1
+            ); // outputs 1 0 -1
             //]
             os << std::endl;
         }
@@ -120,8 +116,7 @@ namespace xxx_pipe{
                     )
                 )( -1, 0, 1 ),
                 os << bl::_1 << ' '
-            );
-            // outputs -2 0 2
+            ); // outputs -2 0 2
             //]
         }
         os << "repeat" << ' ';
@@ -148,12 +143,9 @@ namespace xxx_pipe{
         }
         {
         	//[iterate
-            std::deque<int> cont( 3 );
-            cont[0] = -1;
+            boost::array<int, 3> cont; cont[0] = -1;
             boost::for_each(
-            	cont | (
-                	as2::_csv_put % ( as2::_iterate = 1  )
-            	)( 0, 1 ),
+                cont | ( as2::_csv_put % ( as2::_iterate = 1  ) )( 0, 1 ),
                 os << bl::_1 << ' '
             ); // outputs -1 0 1
             //]
