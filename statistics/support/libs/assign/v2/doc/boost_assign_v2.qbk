@@ -215,7 +215,7 @@
 [section:intro Introduction]
 
 This library provides a small set of tools for carrying out operations that can be characterized as either putting a set of values in a container, in simple
-or complex ways, or  iterating through a set of variables. These are refered to as the [link boost_assign_v2.put ['put]] and [link boost_assign_v2.ref ['ref]]
+or complex ways, or manipulating references through a [tpl_concept_range range-like] interface. These are refered to as the [link boost_assign_v2.put ['put]] and [link boost_assign_v2.ref ['ref]]
 frameworks, respectively. Each allows to code in one sweep, what would ordinarily require repetitive statements, and integrates nicely with [tpl_range_algorithm range algorithms]. 
 
 [endsect]
