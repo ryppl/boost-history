@@ -1,0 +1,136 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Ref</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="prev" href="put/modulo.html" title="operator%()">
+<link rel="next" href="ref/csv.html" title="csv_array">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="put/modulo.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="ref/csv.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_assign_v2.ref"></a><a class="link" href="ref.html" title="Ref">Ref</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="ref.html#boost_assign_v2.ref.if">Interface</a></span></dt>
+<dt><span class="section"><a href="ref/csv.html"><code class="computeroutput"><span class="identifier">csv_array</span></code></a></span></dt>
+<dt><span class="section"><a href="ref/array.html"><code class="computeroutput"><span class="identifier">array</span></code></a></span></dt>
+</dl></div>
+<a name="boost_assign_v2.ref.header"></a><h4>
+<a name="id36340649"></a>
+      <a class="link" href="ref.html#boost_assign_v2.ref.header">Header</a>
+    </h4>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="../../../../../../boost/assign/v2/ref.hpp" target="_top">boost/assign/v2/ref.hpp</a><span class="special">&gt;</span>
+</pre>
+<p>
+    </p>
+<a name="boost_assign_v2.ref.convention"></a><h4>
+<a name="id36340689"></a>
+      <a class="link" href="ref.html#boost_assign_v2.ref.convention">Convention</a>
+    </h4>
+<p>
+      In addition to our previous <a class="link" href="conv/syn.html" title="Synopsis">conventions</a>,
+      code describing a feature is assumed to be preceded by 
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">ref</span><span class="special">;</span>
+</pre>
+<p>
+    </p>
+<p>
+      Furthermore, in terms of our convened <a class="link" href="conv.html#boost_assign_v2.conv.symb" title="Symbols">symbols</a>,
+      template argument <code class="computeroutput"><span class="identifier">U</span></code> is either
+      of <code class="computeroutput">T</code> or <code class="computeroutput">T <span class="keyword">const</span></code>.
+      Finally, we denote <code class="computeroutput">ar</code> either of the objects returned by <code class="computeroutput"><span class="identifier">csv_array</span><span class="special">()</span></code>
+      or <code class="computeroutput"><span class="identifier">array</span><span class="special">()</span></code>.
+    </p>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.ref.if"></a><a class="link" href="ref.html#boost_assign_v2.ref.if" title="Interface">Interface</a>
+</h3></div></div></div>
+<a name="boost_assign_v2.ref.if.header"></a><h5>
+<a name="id36340805"></a>
+        <a class="link" href="ref.html#boost_assign_v2.ref.if.header">Header</a>
+      </h5>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="../../../../../../boost/assign/v2/ref/array/interface.hpp" target="_top">boost/assign/v2/ref/array/interface.hpp</a><span class="special">&gt;</span>
+</pre>
+<p>
+      </p>
+<a name="boost_assign_v2.ref.if.synopsis"></a><h5>
+<a name="id36340845"></a>
+        <a class="link" href="ref.html#boost_assign_v2.ref.if.synopsis">Synopsis</a>
+      </h5>
+<p>
+        The interface of <code class="computeroutput">ar</code>, is akin to <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;&gt;</span></code>, but it has, in addition, a <code class="computeroutput"><span class="identifier">rebind</span><span class="special">()</span></code>
+        member function.
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">ar<span class="special">.</span><span class="identifier">rebind</span><span class="special">(</span> i<span class="special">,</span> t <span class="special">)</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  Rebinds the <code class="computeroutput">i</code>th reference to <code class="computeroutput"><span class="special">&amp;</span>t</code>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="put/modulo.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="ref/csv.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
