@@ -1,4 +1,4 @@
-/* test_binomial.cpp
+/* test_negative_binomial.cpp
  *
  * Copyright Steven Watanabe 2010
  * Distributed under the Boost Software License, Version 1.0. (See
@@ -9,11 +9,11 @@
  *
  */
 
-#include <boost/random/binomial_distribution.hpp>
+#include <boost/random/negative_binomial_distribution.hpp>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/uniform_01.hpp>
 #include <boost/random/mersenne_twister.hpp>
-#include <boost/math/distributions/binomial.hpp>
+#include <boost/math/distributions/negative_binomial.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/exception/diagnostic_information.hpp>
 #include <vector>
@@ -23,21 +23,23 @@
 #include "chi_squared_test.hpp"
 
 bool do_test(int n, double p, long long max) {
-    std::cout << "running binomial(" << n << ", " << p << ")" << " " << max << " times: " << std::flush;
+    std::cout << "running negative_binomial(" << n << ", " << p << ")" << " " << max << " times: " << std::flush;
 
-    std::vector<double> expected(n+1);
+    int max_value = static_cast<int>(4*n*std::ceil((1-p)/p));
+    std::vector<double> expected(max_value+1);
     {
-        boost::math::binomial dist(n, p);
-        for(int i = 0; i <= n; ++i) {
+        boost::math::negative_binomial dist(n, p);
+        for(int i = 0; i <= max_value; ++i) {
             expected[i] = pdf(dist, i);
         }
+        expected.back() += 1-cdf(dist,max_value);
     }
     
-    boost::random::binomial_distribution<int, double> dist(n, p);
+    boost::random::negative_binomial_distribution<int, double> dist(n, p);
     boost::mt19937 gen;
-    std::vector<long long> results(n + 1);
+    std::vector<long long> results(max_value + 1);
     for(long long i = 0; i < max; ++i) {
-        ++results[dist(gen)];
+        ++results[std::min(dist(gen), max_value)];
     }
 
     long long sum = std::accumulate(results.begin(), results.end(), 0ll);
@@ -47,7 +49,7 @@ bool do_test(int n, double p, long long max) {
     }
     double chsqr = chi_squared_test(results, expected, max);
 
-    bool result = chsqr < 0.99;
+    bool result = chsqr < 0.995;
     const char* err = result? "" : "*";
     std::cout << std::setprecision(17) << chsqr << err << std::endl;
 
@@ -73,7 +75,7 @@ bool do_tests(int repeat, int max_n, long long trials) {
 }
 
 int usage() {
-    std::cerr << "Usage: test_binomial_distribution -r <repeat> -n <max n> -t <trials>" << std::endl;
+    std::cerr << "Usage: test_negative_binomial_distribution -r <repeat> -n <max n> -t <trials>" << std::endl;
     return 2;
 }
 
