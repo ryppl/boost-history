@@ -1,0 +1,26 @@
+
+[/ Copyright (C) 2009-2011 Lorenzo Caminiti ]
+[/ Use, modification, and distribution is subject to the ]
+[/ Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt). ]
+
+[section:Acknowledgments Acknowledgments]
+
+This section attempts to recognize the contributions of /all/ the different people that participated directly or indirectly to the design and development of this library.
+
+Thanks to Steven Watanabe and Vicente Botet for suggesting to use __Boost_ScopeExit__ binding to emulate local functions (in the context of constant-correct checking of block invariants).
+
+Thanks to Alexander Nasonov for clarifying how __Boost_ScopeExit__ binding could be used to implement local functions.
+
+Thanks to Pierre Morcello for suggesting to use `return;` to exit local blocks (in the context of a discussion about a possible [@http://lists.boost.org/Archives/boost/2009/09/156012.php Boost.Breakable] library).
+Thanks to Pierre also for sharing some code that already experimented with implementing local functions using __Boost_ScopeExit__ binding (even if this library was not developed using such a code).
+
+Thanks to John Bytheway for refining the authors' technique that allows this library to pass local functions as template parameters.
+
+Thanks to Jeffrey Lee Hellrung for suggesting the use of the "keyword" `bind` to bind variables in scope.
+
+Finally, many thanks to the entire __Boost__ community and [@http://lists.boost.org mailing list] for providing valuable comments about this library and great insights on the C++ programming language.
+
+[endsect]
+

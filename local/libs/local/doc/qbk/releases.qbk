@@ -1,0 +1,32 @@
+
+[section:Releases Releases]
+
+[section Version 0.1.1]
+
+# Uploaded library source into Boost SVN sandbox.
+# Fixed prev/next arrows and other minor layouts in documentation.
+# Added Release section to documentation.
+
+[endsect]
+
+[section Version 0.1.0]
+
+# Shared with Boost for first round of comments.
+
+[endsect]
+
+[section Version 0.0.1]
+
+# Completed development, examples, and documentation.
+
+[endsect]
+
+[section TODO]
+
+# Finish local function parenthesized syntax validation macros.
+# Add examples to Alternatives section for Local Classes, C++0x lambads, Boost.Lambda, and Boost.Phoenix (ask boosters).
+
+[endsect]
+
+[endsect]
+

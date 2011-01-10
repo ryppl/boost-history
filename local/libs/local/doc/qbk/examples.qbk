@@ -1,0 +1,64 @@
+
+[/ Copyright (C) 2009-2011 Lorenzo Caminiti ]
+[/ Use, modification, and distribution is subject to the ]
+[/ Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt). ]
+
+[section:Examples Appendix: Examples]
+
+This section lists the complete source code of some examples that can be compiled and executed using this library (see also the many examples listed within the text of this documentation).
+
+[table
+[
+    [ Adapted From ]
+    [ Name ]
+    [ Description ]
+    [ Source File(s) ]
+]
+[
+    [ __Boost_ScopeExit__ documentation ]
+    [ Local Exit ]
+    [ Local exits with user defined types registered using __Boost_Typeof__. ]
+    [ [@../../example/exit.cpp exit.cpp] ]
+]
+[
+    [ N/A ]
+    [ STL Transform ]
+    [ Bind a local function to another local function. ]
+    [ [@../../example/transform.cpp transform.cpp] ]
+]
+[
+    [ __N2550__ ]
+    [ STL Find ]
+    [ Pass a local function to `std::find_if`. ]
+    [ [@../../example/find_if.cpp find_if.cpp] ]
+]
+[
+    [ __N2529__ ]
+    [ Bind This ]
+    [ Bind object `this` to a local function. ]
+    [ [@../../example/this.cpp this.cpp] ]
+]
+[
+    [ N/A ]
+    [ Local Block ]
+    [ Local blocks with biding (constant, non-constant, and `this`) and `return`. ]
+    [ [@../../example/block.cpp block.cpp] ]
+]
+[
+    [ N/A ]
+    [ Parameters Permutations ]
+    [ Exhaustively shows all possible parameter permutations (with/without parameters, with/without binding constant and not, with/without `this` binding constant and not). ]
+    [ [@../../example/params.cpp params.cpp] ]
+]
+[
+    [ N/A ]
+    [ Same Line ]
+    [ Two local functions defined on the same line of code. ]
+    [ [@../../example/same_line.cpp same_line.cpp] ]
+]
+]
+
+[endsect]
+

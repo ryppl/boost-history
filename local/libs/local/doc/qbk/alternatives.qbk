@@ -1,0 +1,77 @@
+
+[/ Copyright (C) 2009-2011 Lorenzo Caminiti ]
+[/ Use, modification, and distribution is subject to the ]
+[/ Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt). ]
+
+[section:Alternatives Appendix: Alternatives]
+
+This section compares the features offered by this library with similar features offered by other libraries and by the new C++0x standard.
+
+[section Local Functions]
+
+The following table compares local function features.
+
+[table
+[
+    [ Local Function Feature ]
+    [ This Library ]
+    [ Local Classes ]
+    [ __CPP0x_lambda__ ]
+    [ __Boost_Lambda__ ]
+    [ __Boost_Phoenix__ ]
+]
+[
+    [ ['Program body using usual C++ syntax] ]
+    [ Yes. ]
+    [ Yes. ]
+    [ Yes. ]
+    [ No. ]
+    [ No. ]
+]
+[
+    [ ['Can be passed as template parameter (e.g., to STL algorithms)] ]
+    [ Yes. ]
+    [ No (see "local class" in __StroustrupGlossary__). ]
+    [ Yes. ]
+    [ Yes. ]
+    [ Yes. ]
+]
+[
+    [ ['Bind variables in scope] ]
+    [ Yes, bind by value, constant value, reference, and constant reference (also bind the object `this`). ]
+    [ No. ]
+    [ Yes, but no bind by constant (value or reference). ]
+    [ No. ]
+    [ No. ]
+]
+[
+    [ ['Can be defined within expressions] ]
+    [ No, defined only within declarations. ]
+    [ No, defined only within declarations. ]
+    [ Yes. ]
+    [ Yes. ]
+    [ Yes. ]
+]
+]
+
+[endsect]
+
+[section Local Blocks]
+
+The authors know of no other library or language feature that supports local blocks (i.e., with the ability to bind by constant value or reference).
+
+[endsect]
+
+[section Local Exits]
+
+This library local exits provide a functionality very similar to the one provided by __Boost_ScopeExit__ but with the following additional features:
+
+* Bind by constant (value or reference).
+* Bind the object `this`.
+
+[endsect]
+
+[endsect]
+

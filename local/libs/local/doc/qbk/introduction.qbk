@@ -1,0 +1,40 @@
+
+[/ Copyright (C) 2009-2011 Lorenzo Caminiti ]
+[/ Use, modification, and distribution is subject to the ]
+[/ Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt). ]
+
+[section:Introduction Introduction]
+
+/Local functions/ are a form of /information hiding/ and are useful for dividing procedural tasks into subtasks which are only meaningful locally, avoiding cluttering other parts of the program with functions, variables, etc unrelated to those parts.
+Local functions therefore complement other structuring possibilities such as namespaces and classes.
+Local functions are a feature of many programming languages, notably [@http://en.wikipedia.org/wiki/Nested_function#An_example Pascal] and [@http://en.wikipedia.org/wiki/Nesting_(computing)#In_programming Ada], yet lacking from C++ (see also __N2511__).
+
+This library supports the following features for local functions (see the __Alternatives__ section for a comparison between this library and features offered by C++ local class members, __CPP0x_lambda__ functions, __Boost_Lambda__, __Boost_Phoenix__, and __Boost_ScopeExit__):
+
+* Local functions can access, or better [@http://en.wikipedia.org/wiki/Name_binding /bind/], any of the variables from the enclosing scope.
+Furthermore, local functions defined within a member function can bind the enclosing object `this`.
+* The local function body is programmed using the usual C++ syntax.
+* Local functions can be passed as template parameters (so they can be conveniently passed to STL algorithms, etc).
+* However, local functions must be defined within a declarative context (e.g., at a point in the code where local variables can be declared) thus they cannot be defined within an expression.
+
+In addition to local functions, this library also supports the following features:
+
+* /Local blocks/ which define blocks of code that bind variables from the enclosing scope.
+Local blocks allow programmers to bind variables as constants (/constant binding/) so to prevent local chunks of code from modifying selected variables.
+* /Local exits/ which define blocks of code that are executed when the enclosing scope is exited (again with support for constant binding and binding of the object `this`).
+
+[h5 An Example]
+
+The following example illustrates a simple use of this library and it starts introducing the library API (see the __Tutorial__ section for more details on how to use this library):
+
+* A local function is passed to the STL `std::for_each` algorithm to add together the values of an array.
+Variables in scope are bound to the local function by both constant value and non-constant reference.
+* A local exit is used to automatically release the array's memory at scope exit.
+* A local block is used to assert the correct final value of the summation in a constant-correct context (therefore preventing the assertion from mistakenly changing any of the variables in scope).
+
+[add_cpp]
+
+[endsect]
+

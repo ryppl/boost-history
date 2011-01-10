@@ -1,0 +1,112 @@
+
+[/ Copyright (C) 2009-2011 Lorenzo Caminiti ]
+[/ Use, modification, and distribution is subject to the ]
+[/ Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt). ]
+
+[section:Grammar Appendix: Grammar]
+
+This section describes the complete grammar of the /parenthesized syntax/ used by this library to specify the local function signature with binding of variables in scope.
+
+This should be considered a reference section.
+See the __Tutorial__ and the __Advanced__ sections for explanations and examples on how to use the parenthesized syntax.
+
+[note
+The parsers of the parenthesized syntax are implemented using macros and the __Boost_Preprocessor__ library so *the parenthesized syntax is parsed by the preprocessor*.
+
+Using preprocessor metaprogramming allows the parsers to introduce new "keywords" at the same syntactic level as the usual C++ keywords but that are used to support new features specific to this library (for example the new "keyword" `bind` which is used to bind variables in scope).
+However, the use of the preprocessor also requires using a significant number of extra parenthesis `()` with respect to usual C++ syntax (from which the parenthesized syntax's name).
+
+In addition, there is only a limited amount of syntactic error checking that can be done using macros thus sometimes a parenthesized syntax error generates cryptic preprocessor errors.
+When the macros can catch syntactic errors, these errors are reported as compile-time errors (using static assertions) with names of the form `ERROR_`/description_text/.
+]
+
+Macros using the parenthesized syntax (see the __Reference__ section):
+
+    __BOOST_LOCAL_FUNCTION__( ``/parenthesized-signature/`` )
+    __BOOST_LOCAL_BLOCK__( ``/parenthesized-binding/`` )
+    __BOOST_LOCAL_EXIT__( ``/parenthesized-binding/`` )
+
+Additional "keywords":
+
+    bind                  ``used to bind variables in scope``
+    default               ``used to specify default parameters``
+
+Terminals:
+
+    ``*result-type*``           ``a function return type (can be ``void``)``
+    ``*function-name*``         ``a function name (cannot be an operator)``
+    
+    ``*parameter-type*``        ``a parameter type``
+    ``*parameter-name*``        ``a parameter name``
+    ``*parameter-default*``     ``a valid default value for the specified parameter``
+    
+    ``*variable-name*``         ``the name of a variable in scope (can be ``this``)``
+
+Lexical conventions:
+
+    ``/a | b/``                 ``symbol /a/ or symbol /b/``
+    ``/[a]/``                   ``the symbol /a/ is optional and it can be omitted``
+    ``/a+/``                    ``symbol /a/ repeated one or more times``
+
+Parenthesized syntax:
+
+    ``/parenthesized-signature:/``
+            ``/[/``(inline)``/]/`` (``*result-type*``) (``*function-name*``)( ``/parameter-list/`` )
+
+    ``/parenthesized-binding:/``
+              (void)                          // No bindings.
+            ``/| bindings/``                        // Bindings (constant and/or not).
+
+    ``/parameter-list:/``
+              (void)                          // No parameters and no bindings.
+            ``/| parameters/``                      // Only parameters.
+            ``/| bindings/``                        // Only bindings.
+            ``/| parameters bindings/``             // Both parameters and bindings (must appear in this order).
+
+Function parameters:
+
+    ``/parameters:/``
+              ``/parameter+/``                       // Only required parameters.
+            ``/| optional-parameter+/``              // Only optional parameters.
+            ``/| parameter+ optional-parameter+/``   // Both required and optional parameters (must appear in this order).
+
+    ``/parameter:/``
+            ``/[/``(auto) ``/|/`` (register)``/]/``              // Optional parameter classifier `auto` or `register`.
+            (``*parameter-type*``)(``*parameter-name*``)
+
+    ``/optional-parameter:/``
+            ``/parameter/``
+            (default)(``*parameter-default*``)       // Default value for this optional parameter.
+
+Binding variables in scope:
+[footnote
+*Rationale.*
+The alternative syntax `(bind)((const& x)...)` would have been preferred because `const` appears before the reference as usual in C++ and because a single `bind` sequence is used for both plain and constant binding (e.g., the single sequence `(bind)((a)(&b)(const a)(const& b))` would bind by value, by constant value, by reference, and by constant reference respectively).
+However, the parenthesized syntax parsers cannot process both `const& x` and `&x` because if they inspect the beginning of the token `&x` to search for the leading `const` they will find the non-alphanumeric symbol `&` which cannot be used for token concatenation thus generating preprocessor errors.
+The tokens `&x` and `x` can instead be processed by the parsing macros because they do not need to be inspected from the front (they are instead inspected from the back to check if a token matches `this` and that is fine because the non-alphanumeric symbol `&` never appears in the back).
+]
+[footnote
+*Rationale.*
+Binding is used within the function parameter list because this syntax seemed natural given that the bound variables are used by the function body as if they were function parameters (only their type is not explicitly specified by the function signature and the caller does not explicitly pass their values).
+However, the parenthesized syntax could be modified to accept `(const bind)(...)` and `(bind)(...)` outside the parameter list (e.g., at the very end or beginning of the function signature) if an alternative syntax was to be identified as more intuitive.
+]
+
+    ``/bindings:/``
+              ``/const-bindings/``                   // Only constant binding.
+            ``/| plain-bindings/``                   // Only plain binding.
+            ``/| const-bindings plain-bindings/``    // Both constant and plain bindings (must appear in this order).
+
+    ``/const-bindings:/``
+            (const bind)(``/bound-variable+/``)      // Force constant type for bound variable.
+
+    ``/plain-bindings/``:
+            (bind)(``/bound-variable+/``)            // Use bound variable's plain type (constant or not).
+
+    ``/bound-variable/``:
+              (``*variable-name*``)                  // Bind by value.
+            | (&``*variable-name*``)                 // Bind by reference.
+
+[endsect]
+

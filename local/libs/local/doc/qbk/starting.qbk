@@ -1,0 +1,102 @@
+
+[/ Copyright (C) 2009-2011 Lorenzo Caminiti ]
+[/ Use, modification, and distribution is subject to the ]
+[/ Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt). ]
+
+[section:Starting Starting]
+
+This section explains how to setup your system to use this library.
+
+[section This Documentation]
+
+Programmers should be ready to use this library, at least at a basic level, after reading the following sections of this documentation:
+
+* The __Introduction__ section provides an overview on the library and its features.
+* The __Starting__ section explains how to read this documentation, how to install the library to work with the supported compilers and platforms.
+* The __Tutorial__ section provides a good explanation of basic usages of the library with extensive examples.
+
+The following sections could be consulted at a later point to gain a more in-depth knowledge of the library features:
+
+* The __Advanced__ section explains advanced usages of the library.
+* The __Reference__ section is the reference manual of the library public API.
+* The __Grammar__ section formally describes the parenthesized syntax used by this library to specify the local function signatures.
+* The __Alternatives__ section describes alternatives to this library to implement local functions.
+* The __Examples__ section lists the source code of a few additional examples that use this library.
+
+The following sections are for reference only:
+
+* The __Releases__ section contains short release notes.
+* The __Bibliography__ section lists references that were consulted in the design and development of this library.
+* The __Acknowledgments__ section attempts to recognize all the people that contributes directly or indirectly to the design and development of this library.
+
+Furthermore, some footnotes are marked by the word "*Rationale*" because they explain reasons behind decisions made during the design and implementation of this library.
+
+[endsect]
+
+[section Compilers and Platforms]
+
+The implementation of this library uses preprocessor and template metaprogramming (as supported by __Boost_Preprocessor__ and __Boost_MPL__), templates with partial specializations and function pointers (to support an interface similar to the one of __Boost_Function__).
+As a consequence, this library is fairly demanding on compilers' compliance with the ISO C++ standard.
+At present, this library has been successfully compiled and tested on the following compilers and platforms:
+
+# GCC 4.2.4 on Ubuntu Linux.
+# GCC 3.4.4 on Cygwin.
+# Miscrosoft Visual Studio 8.0 on Windows XP.
+
+This library has not yet been tested on any other compiler or platform.
+
+[endsect]
+
+[section Installation]
+
+This library is composed of header files only.
+Therefore there is no pre-compiled object file which needs to be installed.
+Programmers can simply instruct the C++ compiler where to find the library header files (`-I` option for GCC, `/I` option for MSVC, etc) and they can start compiling the code from the __Examples__ section, the code cut-and-pasted from the examples in this documentation, and their own programs that use this library.
+
+This library implementation uses a number of __Boost__ libraries among which: __Boost_Preprocessor__, __Boost_ScopeExit__, __Boost_Typeof__, __Boost_TypeTraits__, and __Boost_MPL__.
+These __Boost__ libraries must be properly installed on your system in order for this library to work.
+
+[endsect]
+
+[section File Structure]
+
+The header files of this library are divided as follow:
+
+    ``[headerref boost/local/function.hpp]        /local functions/``
+    ``[headerref boost/local/block.hpp]           /local blocks/``
+    ``[headerref boost/local/exit.hpp]            /local exits/``
+    ``[headerref boost/local/function_ref.hpp]    /references to local functions/``
+
+[endsect]
+
+[section Symbols]
+
+The following symbols are part of the library private API, they are not documented, and they should not be directly used by programmers:
+[footnote
+*Rationale.*
+This library concatenates symbols specified by the programmers (e.g., the local function name) with other symbols (e.g., special prefixes or preprocessor line numbers) to make internal symbols with unique names to avoid name clashes.
+These symbols are separated by the letter "`X`" when they are concatenated so they can be read more easily while debugging the library.
+The underscore character "`_`" could not be used instead of the letter "`X`" because if the original symbols already contain a leading or trailing underscore the concatenation would result in a symbol with double underscores "`__`" which is reserved by the C++ standard.
+]
+
+* Any symbol defined by files within the `"boost/local/aux_/"` directory (these header files should not be directly included by programmers).
+* Any symbol prefixed by `BOOST_LOCAL_AUX`.
+* Any symbol within the `boost::local::aux` namespace.
+* Any symbol prefixed by `boost_local_aux` (regardless of its namespace).
+
+[endsect]
+
+[section Compile-Time Configuration]
+
+Some of the library behaviour can be changed at compile-time by defining special /configuration macros/.
+If a configuration macro is left undefined, the library will use an appropriate default value for it.
+
+All configuration macros have names prefixed by `BOOST_LOCAL_CONFIG` (see __Reference__ section).
+It is strongly recommended not to change this library configuration macros unless strictly necessary.
+
+[endsect]
+
+[endsect]
+

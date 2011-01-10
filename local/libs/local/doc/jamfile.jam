@@ -1,0 +1,52 @@
+
+# Copyright (C) 2009-2011 Lorenzo Caminiti
+# Use, modification, and distribution is subject to the
+# Boost Software License, Version 1.0
+# (see accompanying file LICENSE_1_0.txt or a copy at
+# http://www.boost.org/LICENSE_1_0.txt).
+
+import quickbook ;
+using boostbook ;
+
+doxygen reference
+    :
+        ../../../boost/local/function.hpp
+        ../../../boost/local/block.hpp
+        ../../../boost/local/exit.hpp
+        ../../../boost/local/function_ref.hpp
+        ../../../boost/local/config.hpp
+        ../../../boost/utility/identity.hpp
+    :
+        <doxygen:param>QUIET=YES
+        <doxygen:param>ALIASES=" Params=\"<b>Parameters:</b> <table border="0">\" Param{2}=\"<tr><td><b><tt>\\1</tt></b></td><td>\\2</td></tr>\" EndParams=\"</table>\" Returns=\"<b>Returns:</b>\" Note=\"<b>Note:</b>\" Warning=\"<b>Warning:</b>\" See=\"<b>See:</b>\" RefSect{1}=\"\\xmlonly<link linkend='boost_local.\\1'>\\1</link>\\endxmlonly\" RefClass{1}=\"\\xmlonly<computeroutput><classname alt='\\1'>\\1</classname></computeroutput>\\endxmlonly\" RefMacro{1}=\"\\xmlonly<computeroutput><macroname alt='\\1'>\\1</macroname></computeroutput>\\endxmlonly\" "
+        <reftitle>"Reference"
+    ;
+
+xml doc
+    :
+        qbk/local.qbk
+    :
+        <dependency>qbk/introduction.qbk
+        <dependency>qbk/starting.qbk
+        <dependency>qbk/tutorial.qbk
+        <dependency>qbk/advanced.qbk
+        <dependency>reference
+        <dependency>qbk/grammar.qbk
+        <dependency>qbk/alternatives.qbk
+        <dependency>qbk/examples.qbk
+        <dependency>qbk/releases.qbk
+        <dependency>qbk/bibliography.qbk
+        <dependency>qbk/acknowledgements.qbk
+    ;
+
+boostbook standalone
+    :
+        doc
+    :
+        <xsl:param>toc.section.depth=3
+        <xsl:param>toc.max.depth=1
+        <xsl:param>generate.section.toc.level=10
+        <xsl:param>boost.root=../../../..
+        <xsl:param>boost.defaults=Boost
+    ;
+
