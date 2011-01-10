@@ -32,7 +32,7 @@ using namespace boost::icl;
 
 This example is intended to show that we can work with
 interval<ptime>                               points in time
-interval<ptime>::difference_type = duration   time durations as intervall lenths
+interval<ptime>::difference_type = duration   time durations as interval lengths
 and
 interval<duration> intervals of durations, as time object with a 0-element
 that is not fixed.
@@ -78,7 +78,7 @@ void time_and_duration()
 	// Note, that identity_element<ptime> is added to boost posix_time by 
 	// adaptor code in <boost/icl/ptime.hpp>
 	
-	ptime origin = identity_element<ptime>::value();
+	posix_time::ptime origin = identity_element<ptime>::value();
 	ptime next   = origin; ++next;
 	cout << "Smallest next time   : " << next << endl;
 
@@ -89,7 +89,12 @@ void time_and_duration()
 
     time_duration decoration_time = stop_deco - start_deco;
 
+	//-----------------------------------------------------------------------------
+	cout << "sizeof(int) = " << sizeof(int) << endl;
+	cout << "sizeof(ptime) = " << sizeof(ptime) << endl;
+	cout << "sizeof(time_duration) = " << sizeof(time_duration) << endl;
 
+	//-----------------------------------------------------------------------------
 	//JODO Make it a nice example
 	ptime t_a = time_from_string("2010-12-24 19:30");
     ptime t_b = time_from_string("2010-12-24 20:30");
@@ -104,7 +109,7 @@ void time_and_duration()
 
 	icl::size(a_b);
 
-    time_duration half = a_2_b / 2;
+	posix_time::time_duration half = a_2_b / 2;
     ptime t_m = t_a + half;
 
     cout << a_b << (icl::contains(a_b, t_m) ? 
@@ -128,12 +133,23 @@ void time_and_duration()
 	cout << rel_a_b << " " << (icl::size(rel_a_b)) << endl;
 }
 
+void time_durations()
+{
+	time_duration start = hours(8) + minutes(30);
+	time_duration stop  = hours(17) + minutes(15);
+
+	icl::interval<time_duration>::type working_hours 
+		= icl::interval<time_duration>::right_open(start, stop);
+
+	cout << "working_hours: " << working_hours << endl;
+}
 
 int main()
 {
     cout << ">>Interval Container Library: Sample time_and_duration.cpp <<\n";
     cout << "-------------------------------------------------------------\n";
-    time_and_duration();
+    //time_and_duration();
+	time_durations();
     return 0;
 }
 
