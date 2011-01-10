@@ -1,0 +1,31 @@
+
+# Copyright (C) 2009-2011 Lorenzo Caminiti
+# Use, modification, and distribution is subject to the
+# Boost Software License, Version 1.0
+# (see accompanying file LICENSE_1_0.txt or a copy at
+# http://www.boost.org/LICENSE_1_0.txt).
+
+exe add : add.cpp ;
+exe add_block : add_block.cpp ;
+exe add_except : add_except.cpp ;
+exe add_exit : add_exit.cpp ;
+exe add_num : add_num.cpp ;
+exe add_num_factor_sum : add_num_factor_sum.cpp ;
+exe add_num_sum : add_num_sum.cpp ;
+exe add_optimizers : add_optimizers.cpp ;
+exe add_template : add_template.cpp ;
+exe add_this : add_this.cpp ;
+
+exe block : block.cpp ;
+exe doit : doit.cpp ;
+exe exit : exit.cpp ;
+exe factorial : factorial.cpp ;
+exe find_if : find_if.cpp ;
+exe params : params.cpp ;
+exe print_map : print_map.cpp ;
+exe renamed_exit : renamed_exit.cpp ;
+exe renamed_print : renamed_print.cpp ;
+exe this : this.cpp ;
+exe transform : transform.cpp ;
+exe same_line : same_line.cpp ;
+
