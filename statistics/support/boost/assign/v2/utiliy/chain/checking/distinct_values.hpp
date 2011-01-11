@@ -14,7 +14,7 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
-#include <boost/assign/v2/misc/chain/pipe.hpp>
+#include <boost/assign/v2/utility/chain/pipe.hpp>
 
 namespace boost{
 namespace assign{ 

@@ -18,10 +18,10 @@
 #include <vector>
 #include <boost/type.hpp>
 #include <boost/array.hpp>
-#include <boost/assign/v2/misc/convert/converter.hpp>
+#include <boost/assign/v2/utility/convert/converter.hpp>
 #include <boost/assign/v2/detail/checking/fwd.hpp>
 
-// Don't include this file in v2/misc/convert.hpp
+// Don't include this file in v2/utility/convert.hpp
 // To use it, precede by
 // #include <boost/assign/v2/detail/checking/container.hpp>
 

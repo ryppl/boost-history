@@ -12,8 +12,8 @@
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
-#include <boost/assign/v2/misc/convert/dispatch.hpp>
-#include <boost/assign/v2/misc/convert/deduce.hpp>
+#include <boost/assign/v2/utility/convert/dispatch.hpp>
+#include <boost/assign/v2/utility/convert/deduce.hpp>
 
 namespace boost{
 namespace assign{

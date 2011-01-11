@@ -7,12 +7,32 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_MISC_CHAIN_ER_2010_HPP
-#define BOOST_ASSIGN_V2_MISC_CHAIN_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_CONVERT_DISPATCH_ER_2010_HPP
+#define BOOST_ASSIGN_V2_CONVERT_DISPATCH_ER_2010_HPP
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
+#include <boost/assign/v2/put/pipe/range.hpp>
+#include <boost/assign/v2/utility/convert/tag.hpp>
 
-#include <boost/assign/v2/misc/chain/pipe.hpp>
+namespace boost{
+namespace assign{
+namespace v2{
 
-// While && is convenient it's safer not to include it by default
-// 	#include <boost/assign/v2/misc/chain/short.hpp>
+	template<typename T, typename U>
+    T convert(U const& u, convert_tag::put) 
+    {
+        T t; (t | v2::_put_range( u ) );
+        return t;
+    }
+
+	template<typename T, typename U>
+	T convert(U const& u, convert_tag::copy)
+    {
+    	return T( boost::begin( u ), boost::end( u ) );
+    }
+
+}// v2
+}// assign
+}// boost
 
 #endif

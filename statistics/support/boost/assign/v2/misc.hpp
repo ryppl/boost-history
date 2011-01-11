@@ -10,8 +10,8 @@
 #ifndef BOOST_ASSIGN_V2_MISC_ER_2010_HPP
 #define BOOST_ASSIGN_V2_MISC_ER_2010_HPP
 
-#include <boost/assign/v2/misc/chain.hpp>
-#include <boost/assign/v2/misc/sub_range.hpp>
-#include <boost/assign/v2/misc/convert.hpp>
+#include <boost/assign/v2/utility/chain.hpp>
+#include <boost/assign/v2/utility/sub_range.hpp>
+#include <boost/assign/v2/utility/convert.hpp>
 
 #endif

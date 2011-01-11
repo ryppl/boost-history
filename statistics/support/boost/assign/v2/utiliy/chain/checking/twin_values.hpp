@@ -18,8 +18,8 @@
 #include <boost/assign/v2/detail/checking/range.hpp>
 #include <boost/assign/v2/ref/detail/unwrap/range.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/misc/chain/use_lvalue.hpp>
-#include <boost/assign/v2/misc/chain/pipe.hpp>
+#include <boost/assign/v2/utility/chain/use_lvalue.hpp>
+#include <boost/assign/v2/utility/chain/pipe.hpp>
 
 namespace boost{
 namespace assign{

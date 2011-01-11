@@ -12,7 +12,7 @@
 #include <boost/concept/assert.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/iterator.hpp>
-#include <boost/assign/v2/misc/chain/iterator.hpp>
+#include <boost/assign/v2/utility/chain/iterator.hpp>
 
 namespace boost{
 namespace assign{

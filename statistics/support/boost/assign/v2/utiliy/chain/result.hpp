@@ -11,8 +11,8 @@
 #define BOOST_ASSIGN_V2_CHAIN_RESULT_ER_2010_HPP
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/assign/v2/misc/chain/use_lvalue.hpp>
-#include <boost/assign/v2/misc/chain/range.hpp>
+#include <boost/assign/v2/utility/chain/use_lvalue.hpp>
+#include <boost/assign/v2/utility/chain/range.hpp>
 
 namespace boost{
 namespace assign{

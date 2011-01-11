@@ -14,9 +14,9 @@
 #include <boost/mpl/pair.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/assign/v2/detail/traits/switch.hpp>
-#include <boost/assign/v2/misc/convert/tag.hpp>
-#include <boost/assign/v2/misc/convert/helper.hpp>
-#include <boost/assign/v2/misc/convert/predicate.hpp>
+#include <boost/assign/v2/utility/convert/tag.hpp>
+#include <boost/assign/v2/utility/convert/helper.hpp>
+#include <boost/assign/v2/utility/convert/predicate.hpp>
 
 namespace boost{
 	struct use_default;
