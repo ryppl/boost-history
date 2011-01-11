@@ -19,8 +19,6 @@ namespace v2{
 namespace checking{ 
 namespace relational_op{
 
-    // R must derive from relational_op_aux::crtp<> and r contain the checking
-    // constants.
     template<typename R>
     void do_check(R const& r)
     {
