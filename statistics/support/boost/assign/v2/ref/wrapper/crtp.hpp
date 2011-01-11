@@ -10,6 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_WRAPPER_CRTP_ER_MPG_2010_HPP
 #define BOOST_ASSIGN_V2_REF_WRAPPER_CRTP_ER_MPG_2010_HPP
+#include <iosfwd>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_const.hpp>
@@ -92,8 +93,16 @@ namespace ref{
             return this->derived().unwrap() > r;
         }
         
+    	template<class CharT, class Traits>
+    	friend std::basic_ostream<CharT,Traits>&
+    	operator<<(std::basic_ostream<CharT,Traits>& os,
+        	       const wrapper_crtp& w)
+    	{
+        	return (os << w.derived().unwrap() );
+    	}
 
     };
+
 
 	template<typename D,typename T>
 	void rebind( wrapper_crtp<D,T>& a, T& r ){ a.rebind( r ); }

@@ -75,12 +75,9 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
 
     };
     
-namespace type_traits{
-    
     template<typename T>
     struct copy_wrapper{ typedef ref::wrapper<assign_tag::copy,T> type; };
         
-}// type_traits
 }// ref
 }// v2
 }// assign

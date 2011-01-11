@@ -12,9 +12,4 @@
 
 #include <boost/assign/v2/ref/wrapper.hpp>
 
-// Basic usage
-// using namespace boost::assign:v2;
-// namespace ns = ref::assign_copy;
-// ns::csv_anon( x, y ,z ).assign( w );
-
 #endif

@@ -24,7 +24,7 @@ namespace convert_aux{
     class converter
     {
     
-     	typedef typename ref::type_traits::copy_wrapper<
+     	typedef typename ref::copy_wrapper<
         	U const
         >::type wrapper_;
         

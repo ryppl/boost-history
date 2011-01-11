@@ -19,16 +19,11 @@
 #include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/put/generic/result_of_modulo.hpp>
 #include <boost/assign/v2/put/generic/crtp.hpp>
-/*#include <boost/assign/v2/detail/relational_op.hpp>*/
+#include <boost/assign/v2/put/deque/fwd.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
-namespace put_deque_aux{
-
-    template<typename T,typename F,typename Tag> class cont;
-
-}// put_deque_aux
 namespace result_of_modulo{
 
     template<typename T,typename F,typename Tag>

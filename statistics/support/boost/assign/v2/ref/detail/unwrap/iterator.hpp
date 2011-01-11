@@ -23,6 +23,8 @@
 //  (*it);
 // Note this is necessary for chaining, at least.
 
+#include <boost/type_traits/decay.hpp>
+
 namespace boost{
 	struct use_default;
 namespace assign{ 
@@ -62,18 +64,13 @@ namespace unwrap_aux{
 		typename boost::add_reference<
         	typename boost::unwrap_reference<W>::type
         >::type,
-        W,
+        //W,
+		typename boost::decay<typename boost::unwrap_reference<W>::type>::type,
         false
     >
     {
     	typedef typename boost::unwrap_reference<W>::type inner_value_type;
-        // If inner_value_type == T[], and value_type were set to that type,
-        // compiler complains that iterator_facade's operator[] would copy T[]
-        // So, instead, value_type = W, such that the returned value acts a bit
-        // like operator_brackets_proxy<I>.
-		//    
-    	// In contrast, the solution adapted in Boost.Assign v1 in this kind
-        // of situation is to use boost::decay<inner_value_type>::type.
+        // Case inner_value_type == T[] calls for decay<>
     
     };
 
