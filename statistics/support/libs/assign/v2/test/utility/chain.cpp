@@ -7,9 +7,9 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <boost/assign/v2/misc/chain/checking/twin_values.hpp>
-#include <boost/assign/v2/misc/chain/checking/distinct_values.hpp>
-#include <libs/assign/v2/test/misc/chain.h>
+#include <boost/assign/v2/utility/chain/checking/twin_values.hpp>
+#include <boost/assign/v2/utility/chain/checking/distinct_values.hpp>
+#include <libs/assign/v2/test/utility/chain.h>
 
 namespace test_assign_v2{
 namespace xxx_misc{

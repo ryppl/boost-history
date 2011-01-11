@@ -7,9 +7,9 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <libs/assign/v2/test/misc/chain.h>
-#include <libs/assign/v2/test/misc/convert.h>
-#include <libs/assign/v2/test/misc.h>
+#include <libs/assign/v2/test/utility/chain.h>
+#include <libs/assign/v2/test/utility/convert.h>
+#include <libs/assign/v2/test/utility.h>
 
 namespace test_assign_v2{
 namespace xxx_misc{

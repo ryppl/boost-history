@@ -10,9 +10,9 @@
 #include <vector>
 #include <boost/assign/v2/put/deque.hpp>
 #include <boost/assign/v2/ref/array.hpp>
-#include <boost/assign/v2/misc/sub_range.hpp>
+#include <boost/assign/v2/utility/sub_range.hpp>
 #include <libs/assign/v2/example/include.h>
-#include <libs/assign/v2/example/misc/sub_range.h>
+#include <libs/assign/v2/example/utility/sub_range.h>
 
 namespace example_assign_v2{
 namespace xxx_misc{

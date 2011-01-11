@@ -10,10 +10,10 @@
 #include <vector>
 #include <list>
 #include <boost/array.hpp>
-#include <boost/assign/v2/misc/chain.hpp>
+#include <boost/assign/v2/utility/chain.hpp>
 #include <boost/assign/v2/put/deque.hpp>
 #include <libs/assign/v2/example/include.h>
-#include <libs/assign/v2/example/misc/chain.h>
+#include <libs/assign/v2/example/utility/chain.h>
 
 namespace example_assign_v2{
 namespace xxx_misc{

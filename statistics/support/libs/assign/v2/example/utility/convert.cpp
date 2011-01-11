@@ -10,10 +10,10 @@
 #include <vector>
 #include <stack>
 #include <boost/array.hpp>
-#include <boost/assign/v2/misc/convert.hpp>
+#include <boost/assign/v2/utility/convert.hpp>
 #include <libs/assign/v2/example/include.h>
 #include <libs/assign/v2/example/foo.h>
-#include <libs/assign/v2/example/misc/convert.h>
+#include <libs/assign/v2/example/utility/convert.h>
 
 namespace example_assign_v2{
 namespace xxx_misc{

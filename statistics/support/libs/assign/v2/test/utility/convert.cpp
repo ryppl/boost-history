@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <vector>
 #include <boost/assign/v2/detail/checking/container.hpp>
-#include <boost/assign/v2/misc/convert/check.hpp>
-#include <libs/assign/v2/test/misc/convert.h>
+#include <boost/assign/v2/utility/convert/check.hpp>
+#include <libs/assign/v2/test/utility/convert.h>
 
 namespace test_assign_v2{
 namespace xxx_misc{
