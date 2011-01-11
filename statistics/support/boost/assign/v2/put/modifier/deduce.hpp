@@ -14,11 +14,11 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include <boost/assign/v2/detail/mpl/switch.hpp>
+#include <boost/assign/v2/detail/traits/switch.hpp>
 
-#include <boost/assign/v2/detail/type_traits/container/is_static_array.hpp>
-#include <boost/assign/v2/detail/type_traits/container/has_push.hpp>
-#include <boost/assign/v2/detail/type_traits/container/is_associative.hpp>
+#include <boost/assign/v2/detail/traits/container/is_static_array.hpp>
+#include <boost/assign/v2/detail/traits/container/has_push.hpp>
+#include <boost/assign/v2/detail/traits/container/is_associative.hpp>
 
 namespace boost{
 	struct use_default;
@@ -28,48 +28,44 @@ namespace switch_tag{
 	struct deduce_put{};
 }// switch_tag
 namespace modifier_tag{
-	//struct at_next;
     struct iterate;
     struct insert;
     struct push;
     struct push_back;
 }// modifier_tag
-namespace mpl{
+namespace switch_aux{
 
     template<>
-    struct case_<switch_tag::deduce_put,0> :
-        v2::mpl::wrap<
+    struct case_<switch_tag::deduce_put, 0> :
+        switch_aux::helper<
             v2::modifier_tag::insert,
-            v2::container_type_traits::is_associative
+            v2::container_traits::is_associative
         >{};
 
     template<>
-    struct case_<switch_tag::deduce_put,1> :
-        v2::mpl::wrap<
-//            v2::modifier_tag::at_next,
+    struct case_<switch_tag::deduce_put, 1> :
+        switch_aux::helper<
 			v2::modifier_tag::iterate,
-            v2::container_type_traits::is_static_array
+            v2::container_traits::is_static_array
         >{};
 
     template<>
-    struct case_<switch_tag::deduce_put,2> :
-        v2::mpl::wrap<
+    struct case_<switch_tag::deduce_put, 2> :
+        switch_aux::helper<
         	v2::modifier_tag::push,
-            container_type_traits::has_push_deduced_value
+            container_traits::has_push_deduced_value
         >{};
 
     template<>
-    struct case_<switch_tag::deduce_put,3> : 
-        v2::mpl::wrap<v2::modifier_tag::push_back>{};
+    struct case_<switch_tag::deduce_put, 3> : 
+        switch_aux::helper<v2::modifier_tag::push_back>{};
 
-}// mpl
+}// switch_aux
 namespace put_aux{
 
     template<typename T>
-    struct deduce_modifier : v2::mpl::switch_<
-    	v2::switch_tag::deduce_put,
-    	T
-    >
+    struct deduce_modifier 
+    	: switch_aux::result< switch_tag::deduce_put, T>
     {};
 
 	struct kwd_deduce{}; 

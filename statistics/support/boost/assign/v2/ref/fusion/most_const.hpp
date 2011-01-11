@@ -12,7 +12,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/assign/v2/detail/type_traits/same_remove_cv.hpp>
+#include <boost/assign/v2/detail/traits/type/same_remove_cv.hpp>
 #include <boost/assign/v2/ref/fusion/fwd.hpp>
 #include <boost/assign/v2/ref/fusion/root.hpp>
 

@@ -16,6 +16,8 @@
 #include <boost/assign/v2/detail/checking/map.hpp>
 #include <boost/assign/v2/detail/checking/range.hpp>
 
+#include <boost/assign/v2/detail/checking/fwd.hpp> // consistencey check
+
 namespace boost{                                                               
 namespace assign{ 
 namespace v2{
@@ -25,17 +27,15 @@ namespace container{
     template<typename V>
     void do_check(V const & v)
     {  
-    	using namespace checking::constants; 
-        typedef typename checking::deduce_check<V>::type tag;
-        checking::do_check( tag(), v );
+        typedef typename v2::checking::deduce_check<V>::type tag;
+        v2::checking::do_check( tag(), v );
 	} 
 
     template<typename V>
     void do_check(V & v) // This is needed for operator[]
     {  
-    	using namespace checking::constants; 
-        typedef typename checking::deduce_check<V>::type tag;
-        checking::do_check( tag(), v );
+        typedef typename v2::checking::deduce_check<V>::type tag;
+        v2::checking::do_check( tag(), v );
 	} 
 
 }// container

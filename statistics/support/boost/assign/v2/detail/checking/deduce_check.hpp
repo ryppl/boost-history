@@ -9,13 +9,13 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CHECKING_DEDUCE_TAG_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHECKING_DEDUCE_TAG_ER_2010_HPP
-#include <boost/assign/v2/detail/type_traits/container/is_fifo.hpp>
-#include <boost/assign/v2/detail/type_traits/container/is_lifo.hpp>
-#include <boost/assign/v2/detail/type_traits/container/is_map.hpp>
-#include <boost/assign/v2/detail/type_traits/container/is_sorted.hpp>
-#include <boost/assign/v2/detail/type_traits/container/is_static_array.hpp>
-#include <boost/assign/v2/detail/type_traits/container/is_range.hpp>
-#include <boost/assign/v2/detail/mpl/switch.hpp>
+#include <boost/assign/v2/detail/traits/container/is_fifo.hpp>
+#include <boost/assign/v2/detail/traits/container/is_lifo.hpp>
+#include <boost/assign/v2/detail/traits/container/is_map.hpp>
+#include <boost/assign/v2/detail/traits/container/is_sorted.hpp>
+#include <boost/assign/v2/detail/traits/container/is_static_array.hpp>
+#include <boost/assign/v2/detail/traits/container/is_range.hpp>
+#include <boost/assign/v2/detail/traits/switch.hpp>
  
 namespace boost{
 namespace assign{
@@ -23,56 +23,54 @@ namespace v2{
 namespace switch_tag{
     struct deduce_check{};
 }// switch_tag
-namespace mpl{
+namespace switch_aux{
 
     template<>
-    struct case_<switch_tag::deduce_check,0> :
-        v2::mpl::wrap<
+    struct case_<switch_tag::deduce_check, 0> :
+        switch_aux::helper<
             v2::container_tag::fifo,
-            v2::container_type_traits::is_fifo
+            v2::container_traits::is_fifo
         >{};
 
     template<>
-    struct case_<switch_tag::deduce_check,1> :
-        v2::mpl::wrap<
+    struct case_<switch_tag::deduce_check, 1> :
+        switch_aux::helper<
             v2::container_tag::lifo,
-            v2::container_type_traits::is_lifo
+            v2::container_traits::is_lifo
         >{};
 
     template<>
-    struct case_<switch_tag::deduce_check,2> :
-        v2::mpl::wrap<
+    struct case_<switch_tag::deduce_check, 2> :
+        switch_aux::helper<
             v2::container_tag::map,
-            v2::container_type_traits::is_map
+            v2::container_traits::is_map
         >{};
 
     template<>
-    struct case_<switch_tag::deduce_check,3> :
-        v2::mpl::wrap<
+    struct case_<switch_tag::deduce_check, 3> :
+        switch_aux::helper<
             v2::container_tag::sorted,
-            v2::container_type_traits::is_sorted
+            v2::container_traits::is_sorted
         >{};
 
     template<>
-    struct case_<switch_tag::deduce_check,4> :
-        v2::mpl::wrap<
+    struct case_<switch_tag::deduce_check, 4> :
+        switch_aux::helper<
             v2::container_tag::static_array,
-            v2::container_type_traits::is_static_array
+            v2::container_traits::is_static_array
         >{};
 
-
     template<>
-    struct case_<switch_tag::deduce_check,5> :
-        v2::mpl::wrap<
+    struct case_<switch_tag::deduce_check, 5> :
+        switch_aux::helper<
         	container_tag::range
         >{};
-
-
-}// mpl
+        
+}// switch_aux
 namespace checking{
 
     template<typename T>
-    struct deduce_check : v2::mpl::switch_<
+    struct deduce_check : switch_aux::result<
     	v2::switch_tag::deduce_check,
     	T
     >

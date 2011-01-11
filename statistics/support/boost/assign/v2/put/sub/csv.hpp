@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_PUT_SUB_CSV_ER_2010_HPP
 #include <boost/assign/v2/ref/wrapper/framework.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/detail/type_traits/container/value.hpp>
+#include <boost/assign/v2/detail/traits/container/value.hpp>
 #include <boost/assign/v2/put/sub/functor.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -39,7 +39,7 @@ namespace csv_put_aux{
 		typedef ref::assign_tag::copy assign_tag_;
 		typedef ref::wrapper<assign_tag_,V> super1_t;
 
-		typedef typename v2::container_type_traits::value<
+		typedef typename v2::container_traits::value<
             V
         >::type value_type;
 

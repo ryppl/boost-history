@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CONSTRUCTOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CONSTRUCTOR_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#include <boost/assign/v2/detail/type_traits/container/value.hpp>
+#include <boost/assign/v2/detail/traits/container/value.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
@@ -83,7 +83,7 @@ BOOST_PP_REPEAT_FROM_TO(
     template<typename V>
     struct deduce_constructor
     {
-    	typedef typename container_type_traits::value<V>::type value_;
+    	typedef typename container_traits::value<V>::type value_;
         typedef functor_aux::constructor<value_> type;
         static type call(){ return functor_aux::constructor<value_>(); }
     };

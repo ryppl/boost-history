@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_CONCEPT_MODIFIER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_CONCEPT_MODIFIER_ER_2010_HPP
 #include <boost/concept_check.hpp>
-#include <boost/assign/v2/detail/type_traits/container/value.hpp>
+#include <boost/assign/v2/detail/traits/container/value.hpp>
 #include <boost/assign/v2/put/modifier/def.hpp>
 
 namespace boost{

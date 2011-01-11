@@ -15,7 +15,7 @@
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/range/reference.hpp>
 
-#include <boost/assign/v2/detail/type_traits/container/is_ptr_container.hpp>
+#include <boost/assign/v2/detail/traits/container/is_ptr_container.hpp>
 #include <boost/assign/v2/detail/functor.hpp>
 #include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
@@ -48,15 +48,15 @@ namespace assign{
 namespace v2{
 namespace put_aux{
 
-	// T = container_type_traits::value<V>::type
+	// T = container_traits::value<V>::type
 	template<typename V>
     struct crtp_traits
     {
-        typedef typename v2::container_type_traits::value<
+        typedef typename v2::container_traits::value<
             V
         >::type value_type;
         typedef typename boost::mpl::eval_if<
-        	container_type_traits::is_ptr_container<V>,
+        	container_traits::is_ptr_container<V>,
             functor_aux::deduce_new_<V>,
             functor_aux::deduce_constructor<V>
         >::type functor_type;

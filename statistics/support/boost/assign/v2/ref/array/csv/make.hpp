@@ -18,7 +18,7 @@
 #include <utility>
 #include <boost/config.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/assign/v2/detail/type_traits/or_const.hpp>
+#include <boost/assign/v2/detail/traits/type/or_const.hpp>
 #else
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>

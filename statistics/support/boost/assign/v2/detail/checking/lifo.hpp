@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_CHECKING_LIFO_ER_2010_HPP
 #include <boost/assign/v2/detail/checking/check.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
-#include <boost/assign/v2/detail/type_traits/container/is_lifo.hpp>
+#include <boost/assign/v2/detail/traits/container/is_lifo.hpp>
 
 namespace boost{                                                               
 namespace assign{ 

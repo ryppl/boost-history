@@ -14,7 +14,7 @@
 #include <boost/iterator/iterator_traits.hpp>
 #include <boost/assign/v2/temporary/chain_iterator.hpp>
 #include <boost/range/detail/demote_iterator_traversal_tag.hpp>
-#include <boost/assign/v2/detail/type_traits/meta_convert.hpp>
+#include <boost/assign/v2/detail/traits/type/meta_convert.hpp>
 
 namespace boost{
 namespace assign{

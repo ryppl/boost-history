@@ -13,7 +13,7 @@
 #include <boost/utility.hpp>
 
 #include <boost/assign/v2/detail/checking/constants.hpp>
-#include <boost/assign/v2/detail/type_traits/container/is_map.hpp>
+#include <boost/assign/v2/detail/traits/container/is_map.hpp>
 
 namespace boost{                                                               
 namespace assign{ 

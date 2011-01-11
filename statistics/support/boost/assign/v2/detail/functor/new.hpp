@@ -19,7 +19,7 @@
 #include <boost/mpl/always.hpp>
 #include <boost/range/reference.hpp>
 #include <boost/type_traits/remove_cv.hpp>
-#include <boost/assign/v2/detail/type_traits/container/value.hpp>
+#include <boost/assign/v2/detail/traits/container/value.hpp>
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
 #endif
@@ -85,7 +85,7 @@ BOOST_PP_REPEAT_FROM_TO(
     template<typename V>
     struct deduce_new_
     {
-    	typedef typename container_type_traits::value<V>::type value_;
+    	typedef typename container_traits::value<V>::type value_;
         typedef functor_aux::new_<value_> type;
         static type call(){ return functor_aux::new_<value_>(); }
     };

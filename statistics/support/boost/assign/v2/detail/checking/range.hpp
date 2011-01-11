@@ -12,8 +12,8 @@
 #include <boost/next_prior.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/assign/v2/detail/type_traits/container/is_range.hpp>
-#include <boost/assign/v2/detail/type_traits/container/is_sorted.hpp>
+#include <boost/assign/v2/detail/traits/container/is_range.hpp>
+#include <boost/assign/v2/detail/traits/container/is_sorted.hpp>
 #include <boost/assign/v2/detail/checking/check.hpp>
 #include <boost/assign/v2/detail/checking/iterator.hpp>
 
