@@ -7,9 +7,12 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_MISC_CONVERT_ER_2010_HPP
-#define BOOST_ASSIGN_V2_MISC_CONVERT_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_UTILITY_CHAIN_ER_2010_HPP
+#define BOOST_ASSIGN_V2_UTILITY_CHAIN_ER_2010_HPP
 
-#include <boost/assign/v2/utility/convert/converter.hpp>
+#include <boost/assign/v2/utility/chain/pipe.hpp>
+
+// While && is convenient it's safer not to include it by default
+// 	#include <boost/assign/v2/utility/chain/short.hpp>
 
 #endif
