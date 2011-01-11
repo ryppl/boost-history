@@ -2,7 +2,7 @@
     Boost.Wave: A Standard compliant C++ preprocessor library
     http://www.boost.org/
 
-    Copyright (c) 2001-2010 Hartmut Kaiser. Distributed under the Boost
+    Copyright (c) 2001-2011 Hartmut Kaiser. Distributed under the Boost
     Software License, Version 1.0. (See accompanying file
     LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
@@ -44,11 +44,8 @@ public:
     //  The parameter 'ctx' is a reference to the context object used for 
     //  instantiating the preprocessing iterators by the user.
     //
-    //  The parameter 'directive' is a reference to the token holding the 
-    //  preprocessing directive.
-    //
-    //  The parameter 'line' holds the entire source line containing the
-    //  unknown directive.
+    //  The parameter 'line' holds the tokens of the entire source line
+    //  containing the unknown directive.
     //
     //  The parameter 'pending' may be used to push tokens back into the input 
     //  stream, which are to be used as the replacement text for the whole 
