@@ -124,9 +124,9 @@ public:
     typedef typename interval_bitmap_type::const_reference const_reference;
 
 public:
-	interval_bitset(): _map() {}
-	explicit interval_bitset(const element_type& element)   : _map() { this->add(element); } 
-	explicit interval_bitset(const interval_type& inter_val): _map() { this->add(inter_val); } 
+    interval_bitset(): _map() {}
+    explicit interval_bitset(const element_type& element)   : _map() { this->add(element); } 
+    explicit interval_bitset(const interval_type& inter_val): _map() { this->add(inter_val); } 
 
 public:
     bool operator ==(const interval_bitset& rhs)const{ return _map == rhs._map; }
@@ -177,7 +177,7 @@ public:
 
     bool contains(element_type element)const{ return _map(element>>shift).contains(element & mask); }
     bool contains(const segment_type& segment)const;
-	//CL bool contains(const element_type& element)const     { return contains(segment_type(element)); };
+    //CL bool contains(const element_type& element)const     { return contains(segment_type(element)); };
     bool contains(const interval_bitset& sub)const      { return icl::contains(_map, sub._map); }
     bool contained_in(const interval_bitset& super)const{ return icl::within(_map, super._map); }
 
@@ -185,10 +185,10 @@ public:
     void show_matrix(const char off_on[2] = " 1")const;
     std::string as_string()const{ return _map.as_string(); }
 
-	//==========================================================================
-	//= Selection
-	//==========================================================================
-	const_iterator find(const domain_type& key)const{ return _find(key); }
+    //==========================================================================
+    //= Selection
+    //==========================================================================
+    const_iterator find(const domain_type& key)const{ return _find(key); }
 
     //==========================================================================
     //= Iterator related
@@ -318,16 +318,16 @@ private:
     void intersect_(DomainT lo, DomainT up, BitSetT bits){_map &= value_type(interval_type::right_open(lo,up), bits);}
     void      flip_(DomainT lo, DomainT up, BitSetT bits){_map ^= value_type(interval_type::right_open(lo,up), bits);}
 
-	const_iterator _find(const domain_type& key)const
-	{
-		// Search for the potential interval w.r.t the shifted condensed_type
-		const_iterator it_ = _map.find(interval_type(key >> shift));
-		                        // Check if the key bit is set:
-		if(it_ != _map.end() && ((it_->second).contains(key & mask)))
-			return it_;
-		else
-			return _map.end();
-	}
+    const_iterator _find(const domain_type& key)const
+    {
+        // Search for the potential interval w.r.t the shifted condensed_type
+        const_iterator it_ = _map.find(interval_type(key >> shift));
+                                // Check if the key bit is set:
+        if(it_ != _map.end() && ((it_->second).contains(key & mask)))
+            return it_;
+        else
+            return _map.end();
+    }
 
 private:
     interval_bitmap_type _map;
@@ -342,7 +342,7 @@ template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COM
 typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator
 elements_begin(interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
 {
-	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
     if(object.begin()==object.end())
         return element_iterator(object.begin(), element_iterator::beyond);
     else 
@@ -353,16 +353,16 @@ template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COM
 typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator
 elements_end(interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)  
 { 
-	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
-	return element_iterator(object.end(), element_iterator::beyond);   
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
+    return element_iterator(object.end(), element_iterator::beyond);   
 }
 
 template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
 typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_iterator 
 elements_begin(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
 {
-	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
-	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_iterator element_const_iterator;
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_iterator element_const_iterator;
     if(object.begin()==object.end())
         return element_const_iterator(object.begin(), element_iterator::beyond);
     else 
@@ -373,17 +373,17 @@ template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COM
 typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_iterator 
 elements_end(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
 { 
-	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
-	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_iterator element_const_iterator;
-	return element_const_iterator(object.end(), element_iterator::beyond);   
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_iterator element_const_iterator;
+    return element_const_iterator(object.end(), element_iterator::beyond);   
 }
 
 template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
 typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_reverse_iterator 
 elements_rbegin(interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
 {
-	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
-	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_reverse_iterator element_reverse_iterator;
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_reverse_iterator element_reverse_iterator;
     if(object.rbegin()==object.rend())
         return element_reverse_iterator(object.rbegin(), element_iterator::before);
     else 
@@ -394,17 +394,17 @@ template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COM
 typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_reverse_iterator 
 elements_rend(interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)  
 { 
-	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
-	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_reverse_iterator element_reverse_iterator;
-	return element_reverse_iterator(object.rend(), element_iterator::before); 
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_reverse_iterator element_reverse_iterator;
+    return element_reverse_iterator(object.rend(), element_iterator::before); 
 }
 
 template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
 typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_reverse_iterator 
 elements_rbegin(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
 {
-	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
-	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_reverse_iterator element_const_reverse_iterator;
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_reverse_iterator element_const_reverse_iterator;
     if(object.rbegin()==object.rend())
         return element_const_reverse_iterator(object.rbegin(), element_iterator::before);
     else 
@@ -415,9 +415,9 @@ template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COM
 typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_reverse_iterator 
 elements_rend(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
 { 
-	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
-	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_reverse_iterator element_const_reverse_iterator;
-	return element_const_reverse_iterator(object.rend(), element_iterator::before); 
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_iterator element_iterator;
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::element_const_reverse_iterator element_const_reverse_iterator;
+    return element_const_reverse_iterator(object.rend(), element_iterator::before); 
 }
 */
 
@@ -495,7 +495,7 @@ interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::partition
     const segment_type& segment
 )const
 {
-	if(icl::is_empty(segment))
+    if(icl::is_empty(segment))
         return PartsT();
 
     condensed_type base = icl::first(segment) >> shift, // segment.first()/ divisor
@@ -539,7 +539,7 @@ interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::partition
 template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
 bool interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::contains(const segment_type& segment)const
 { 
-	if(icl::is_empty(segment))
+    if(icl::is_empty(segment))
         return true; // Emptieness is contained in everything
 
     condensed_type                 lo,         up        ;
@@ -597,11 +597,11 @@ template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COM
 typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::interval_type 
 hull(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object)
 {
-	typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::interval_type interval_type;
+    typedef typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::interval_type interval_type;
     return 
         icl::is_empty(object) 
             ? identity_element<interval_type>::value()
-			: interval_type::closed(*object.elements_begin(), *object.elements_rbegin());
+            : interval_type::closed(*object.elements_begin(), *object.elements_rbegin());
 }
 
 template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
@@ -692,11 +692,11 @@ bool disjoint(const interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& x1,
 template<class DomainT, class BitSetT, ICL_COMPARE Compare, ICL_INTERVAL(ICL_COMPARE) Interval, ICL_ALLOC Alloc> 
 interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>&
 set_at(               interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>& object, 
-	   const typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::segment_type& segment) 
+       const typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::segment_type& segment) 
 { 
     object.erase(segment->first);
-	object.insert(segment);
-	return *this;
+    object.insert(segment);
+    return *this;
 }
 
 template<class CharType, class CharTraits, 

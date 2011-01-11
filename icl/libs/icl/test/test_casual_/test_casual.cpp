@@ -46,7 +46,7 @@ void time_test()
     cout << "Duration of " << a_b << " = " 
          << icl::size(a_b) << endl;
 
-	icl::size(a_b);
+    icl::size(a_b);
 
     time_duration half = a_2_b / 2;
     ptime t_m = t_a + half;
@@ -55,29 +55,29 @@ void time_test()
                     " contains " : "does not contain ") 
          << t_m << endl;
 
-	ptime day_begin = time_from_string("2010-12-24 00:00");
-	time_duration d_a = t_a - day_begin;
-	time_duration d_b = t_b - day_begin;
-	time_duration d_m = d_b - d_a;
+    ptime day_begin = time_from_string("2010-12-24 00:00");
+    time_duration d_a = t_a - day_begin;
+    time_duration d_b = t_b - day_begin;
+    time_duration d_m = d_b - d_a;
 
-	interval<time_duration>::type rel_a_b 
+    interval<time_duration>::type rel_a_b 
         = interval<time_duration>::right_open(d_a, d_b);
 
-	time_duration sz_a_b_1 = d_b - d_a;
-	time_duration sz_a_b_2 = icl::size(rel_a_b);
-	cout << "b-a         = " << sz_a_b_1 << endl;
-	cout << "size([a,b)) = " << sz_a_b_2 << endl;
-	cout << "size([a,b)) = " << (icl::size(rel_a_b)) << endl;
+    time_duration sz_a_b_1 = d_b - d_a;
+    time_duration sz_a_b_2 = icl::size(rel_a_b);
+    cout << "b-a         = " << sz_a_b_1 << endl;
+    cout << "size([a,b)) = " << sz_a_b_2 << endl;
+    cout << "size([a,b)) = " << (icl::size(rel_a_b)) << endl;
 
-	cout << rel_a_b << " " << (icl::size(rel_a_b)) << endl;
+    cout << rel_a_b << " " << (icl::size(rel_a_b)) << endl;
 }
 
 void test_inter_bitset()
 {
-	inter_bitset<int> inbis;
+    inter_bitset<int> inbis;
 
-	interval<int>::type itv = interval<int>::right_open(0,2);
-	inbis.add(itv);
+    interval<int>::type itv = interval<int>::right_open(0,2);
+    inbis.add(itv);
 }
 
 BOOST_AUTO_TEST_CASE(casual)
@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(casual)
     typedef IntervalMapT::interval_type       IntervalT;
 
     // time_test();
-	test_inter_bitset();
+    test_inter_bitset();
 
     BOOST_CHECK_EQUAL(true, true);
 }
