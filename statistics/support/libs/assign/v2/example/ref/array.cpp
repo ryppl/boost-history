@@ -26,7 +26,7 @@ namespace xxx_array{
 		namespace as2 = boost::assign::v2;
         namespace bl = boost::lambda;
         
-        os << "* xxx_ref_array " << std::endl;
+        os << "* xxx_array " << std::endl;
 
         {
             //[csv_array_r
@@ -35,6 +35,7 @@ namespace xxx_array{
                 os << bl::_1 << ' '
             ); //outputs x y z
             //]
+            os << std::endl;
             //[csv_array_w
             std::string x, y, z;
             as2::ref::csv_array( x, y, z ).assign( "w" );
@@ -51,9 +52,9 @@ namespace xxx_array{
                 os << bl::_1 << ' '
             ); // outputs -1 0 1
             //]
+            os << std::endl;
 		}
 
-        os << std::endl;
     }
 
 }// xxx_array

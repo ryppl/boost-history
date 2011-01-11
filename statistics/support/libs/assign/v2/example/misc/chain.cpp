@@ -10,7 +10,7 @@
 #include <vector>
 #include <list>
 #include <boost/array.hpp>
-#include <boost/assign/v2/chain.hpp>
+#include <boost/assign/v2/misc/chain.hpp>
 #include <boost/assign/v2/put/deque.hpp>
 #include <libs/assign/v2/example/include.h>
 #include <libs/assign/v2/example/misc/chain.h>
@@ -23,7 +23,6 @@ namespace xxx_chain{
     {
         os << "* xxx_chain" << std::endl;
         {
-            os << "chain_read ";
             //[chain_r
             boost::array<int, 2> ar; ar[0] = 0; ar[1] = 1;
             std::list<int> list( 1, 2 );
@@ -33,9 +32,10 @@ namespace xxx_chain{
                 os << bl::_1 << ' '
             ); // outputs 0, 1, 2, 3, 4
             //]
+	        os << std::endl;
         }
         {
-            //[chain_w
+        	//[chain_w
             int const x = -1; int y; boost::array<int, 2> ar;
             boost::copy(
                 std::vector<int>(3, x),
@@ -50,7 +50,6 @@ namespace xxx_chain{
             assert( y == x );
             //]
         }
-        os << std::endl;
     }
 
 }// xxx_chain

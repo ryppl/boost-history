@@ -28,11 +28,10 @@ namespace xxx_pipe{
 
     void run(std::ostream& os)
     {
-        os << "* xxx_put_operator " << std::endl;
+        os << "* xxx_pipe " << std::endl;
         namespace as2 = ::boost::assign::v2;
         namespace bl = ::boost::lambda;
         {
-            os << "vector" << ' ';
             //[vector
             std::vector<int> cont;
             boost::for_each(
@@ -69,7 +68,6 @@ namespace xxx_pipe{
             //]
         }
         {
-            os << "array" << ' ';
             //[array
             boost::array<int,3> cont;
             boost::for_each(
@@ -80,7 +78,6 @@ namespace xxx_pipe{
             os << std::endl;
         }
         {
-            os << "ptr_vector" << ' ';
             //[ptr_vector
             boost::ptr_vector<int> cont;
             boost::for_each(
@@ -91,7 +88,6 @@ namespace xxx_pipe{
             os << std::endl;
         }
         {
-            os << "list" << ' ';
             //[list
             std::list<int> cont;
             boost::for_each(
@@ -104,9 +100,6 @@ namespace xxx_pipe{
             os << std::endl;
         }
         {
-            os << std::endl;
-            os << "fun" << ' ';
-
             //[fun
             std::vector<int> cont;
             boost::for_each(
@@ -118,8 +111,8 @@ namespace xxx_pipe{
                 os << bl::_1 << ' '
             ); // outputs -2 0 2
             //]
+            os << std::endl;
         }
-        os << "repeat" << ' ';
         {
             //[repeat
             std::vector<int> cont;
@@ -130,6 +123,7 @@ namespace xxx_pipe{
                 os << bl::_1 << ' '
             ); // outputs -1 -1 0 0 1 1
             //]
+            os << std::endl;
         }
     	{
             //[lookup
@@ -149,9 +143,8 @@ namespace xxx_pipe{
                 os << bl::_1 << ' '
             ); // outputs -1 0 1
             //]
+            os << std::endl;
         }
-
-        os << std::endl;
     }
 
 }// xxx_pipe

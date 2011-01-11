@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/example/misc/chain.h>
 #include <libs/assign/v2/example/misc/convert.h>
+#include <libs/assign/v2/example/misc/sub_range.h>
 #include <libs/assign/v2/example/misc.h>
 
 namespace example_assign_v2{
@@ -16,8 +17,10 @@ namespace xxx_misc{
 
     void run(std::ostream& os)
     {
+    	os << "** xxx_misc" << std::endl;
     	xxx_chain::run( os );
     	xxx_convert::run( os );
+    	xxx_sub_range::run( os );
     }
 
 }// xxx_misc

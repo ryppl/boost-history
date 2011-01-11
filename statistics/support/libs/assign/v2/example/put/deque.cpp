@@ -22,7 +22,6 @@ namespace xxx_deque{
     {
         os << "* xxx_deque " << std::endl;
         {
-            os << "csv_deque" << ' ';
             //[csv_deque
             boost::for_each(
                 as2::csv_deque<std::string>("x", "y", "z" ),
@@ -30,7 +29,6 @@ namespace xxx_deque{
             ); // outputs x, y, z
             //]
             os << std::endl;
-            os << "deque" << ' ';
             {
 				assert( as2::deque<Foo>().size() == 1 );
             }
@@ -43,6 +41,7 @@ namespace xxx_deque{
             	);
             	// outputs (0,0)(NULL,0)(1,-1)
             	//]
+	            os << std::endl;
             }
             {
             	//[deque_front
@@ -54,9 +53,9 @@ namespace xxx_deque{
             	);
             	// outputs 1 0 -1
             	//]
+	            os << std::endl;
             }
         }
-        os << std::endl;
     }
 
 }// xxx_deque

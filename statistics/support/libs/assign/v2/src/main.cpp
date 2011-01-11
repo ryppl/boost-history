@@ -7,7 +7,6 @@
 #include <libs/assign/v2/example/ref.h>
 #include <libs/assign/v2/example/put.h>
 #include <libs/assign/v2/example/misc.h>
-#include <boost/assign/v2/put/pipe/range.hpp>
 
 int main (int argc, char * const argv[])
 {

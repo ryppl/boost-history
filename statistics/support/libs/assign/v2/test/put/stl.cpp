@@ -17,7 +17,10 @@
 #include <set>
 #include <stack>
 #include <vector>
-#include <boost/assign/v2.hpp>
+#include <boost/assign/v2/put.hpp>
+#include <boost/assign/v2/detail/checking/constants.hpp>
+#include <boost/assign/v2/detail/checking/container.hpp>
+
 
 #include <libs/assign/v2/test/put/stl.h>
 
@@ -26,19 +29,19 @@ namespace xxx_put{
 namespace xxx_stl{
 
     void test(){
-        using namespace boost::assign::v2;
+        namespace as2 = boost::assign::v2;
         {	// Array
         
             {	
                 typedef boost::array<int,8> cont_;
                 cont_ cont;
                 {
-                    using namespace checking::constants;
-                    put( cont )( a )( b )( c )( d )( e )( f )( g )( h );
+                    using namespace as2::checking::constants;
+                    as2::put( cont )( a )( b )( c )( d )( e )( f )( g )( h );
                 }
                 {
-                    using namespace checking::container;
-                    do_check( cont );   
+                    namespace ns = as2::checking::container;
+                    ns::do_check( cont );   
                 }
             }
         }
@@ -48,10 +51,10 @@ namespace xxx_stl{
                 typedef std::map<int,int> cont_;
                 cont_ cont;
                 {
-                    using namespace checking::container;
-                    using namespace checking::constants;
-                    do_check(
-                        put( cont )
+                    namespace ns = as2::checking::container;
+                    using namespace as2::checking::constants;
+                    ns::do_check(
+                        as2::put( cont )
                             ( a, a )( b, b )( c, c )
                             ( d, d )( e, e )( f, f )
                             ( g, g )( h, h ).unwrap()
@@ -62,10 +65,10 @@ namespace xxx_stl{
         		typedef std::set<int> cont_;
         		cont_ cont;
         		{
-        		    using namespace checking::container;
-        		    using namespace checking::constants;
-        		    do_check(
-                        put( cont )
+        		    namespace ns = as2::checking::container;
+        		    using namespace as2::checking::constants;
+        		    ns::do_check(
+                        as2::put( cont )
         		            ( a )( b )( c )
         		            ( d )( e )( f )
         		            ( g )( h ).unwrap()
@@ -79,10 +82,10 @@ namespace xxx_stl{
         		typedef std::deque<int> cont_;
         		cont_ cont;
         		{
-        		    using namespace checking::constants;
-        		    using namespace checking::container;
-        		    do_check(
-        		        put( cont )
+        		    using namespace as2::checking::constants;
+        		    namespace ns = as2::checking::container;
+        		    ns::do_check(
+        		        as2::put( cont )
         		            ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
         		    );
         		}
@@ -91,10 +94,10 @@ namespace xxx_stl{
         		typedef std::list<int> cont_;
         		cont_ cont;
         		{
-            		using namespace checking::constants;
-                	using namespace checking::container;
-                    do_check(
-                		put( cont )
+            		using namespace as2::checking::constants;
+                	namespace ns = as2::checking::container;
+                    ns::do_check(
+                		as2::put( cont )
                         	( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
         			);
                 }
@@ -103,10 +106,10 @@ namespace xxx_stl{
         		typedef std::vector<int> cont_;
                 cont_ cont;
                 {
-            		using namespace checking::constants;
-                	using namespace checking::container;
-                    do_check(
-                		put( cont )
+            		using namespace as2::checking::constants;
+                	namespace ns = as2::checking::container;
+                    ns::do_check(
+                		as2::put( cont )
                         	( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
                     );
                 }
@@ -118,10 +121,10 @@ namespace xxx_stl{
                 typedef std::queue<int> cont_;
                 cont_ cont;
                 {
-                    using namespace checking::constants;
-                    using namespace checking::container;
-                    do_check(
-                        put( cont )
+                    using namespace as2::checking::constants;
+                    namespace ns = as2::checking::container;
+                    ns::do_check(
+                        as2::put( cont )
                             ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
                     );
                 }
@@ -131,10 +134,10 @@ namespace xxx_stl{
                 typedef std::stack<int> cont_;
                 cont_ cont;
                 {
-                    using namespace checking::constants;
-                    using namespace checking::container;
-                    do_check(
-                        put( cont )
+                    using namespace as2::checking::constants;
+                    namespace ns = as2::checking::container;
+                    ns::do_check(
+                        as2::put( cont )
                             ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
                     );
                 }

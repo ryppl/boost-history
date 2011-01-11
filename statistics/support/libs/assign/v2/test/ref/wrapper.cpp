@@ -22,7 +22,7 @@ namespace xxx_wrapper{
     	using namespace boost::assign::v2;
         typedef int val_;
 		{
-			typedef ref::type_traits::copy_wrapper<val_>::type w_;
+			typedef ref::copy_wrapper<val_>::type w_;
             w_ w;
             val_ a = 1, b = 2, c = 3;
             w.rebind( a ); BOOST_ASSIGN_V2_CHECK( &w.unwrap() == &a );
@@ -30,7 +30,7 @@ namespace xxx_wrapper{
             w = c; BOOST_ASSIGN_V2_CHECK( a == c );
         }
 		{
-			typedef ref::type_traits::copy_wrapper<val_ const>::type w_;
+			typedef ref::copy_wrapper<val_ const>::type w_;
             w_ w;
             val_ a = 1;
             w.rebind( a ); BOOST_ASSIGN_V2_CHECK( &w.unwrap() == &a );
@@ -40,7 +40,7 @@ namespace xxx_wrapper{
             typedef val_ const cval_;
             typedef ref::wrapper_param<val_>::type param_;
             BOOST_MPL_ASSERT(( boost::is_same<param_, cval_> ));
-            typedef ref::type_traits::copy_wrapper<param_>::type w_;
+            typedef ref::copy_wrapper<param_>::type w_;
             {
                 val_&& a = 1;
                 w_ w( a );

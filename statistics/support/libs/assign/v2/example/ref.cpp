@@ -14,6 +14,7 @@ namespace example_assign_v2{
 namespace xxx_ref{
 
     void run(std::ostream& os){
+    	os << "** xxx_ref" << std::endl;
     	xxx_array::run( os );
     }
 

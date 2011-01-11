@@ -17,6 +17,7 @@ namespace example_assign_v2{
 namespace xxx_put{
 
     void run(std::ostream& os){
+    	os << "** xxx_put" << std::endl;
     	xxx_deque::run( os );
     	xxx_range::run( os );
     	xxx_pipe::run( os );
