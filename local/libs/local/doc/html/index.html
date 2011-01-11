@@ -1,0 +1,308 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Boost.Local 0.1.1</title>
+<link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="Boost.Local 0.1.1">
+<link rel="next" href="boost_local/Starting.html" title="Starting">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_local/Starting.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a></div>
+<div class="preface">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="boost_local"></a>Boost.Local 0.1.1 </h2></div>
+<div><div class="authorgroup"><div class="author"><h3 class="author">
+<span class="firstname">Lorenzo</span> <span class="surname">Caminiti</span>
+</h3></div></div></div>
+<div><p class="copyright">Copyright &#169; 2009 -2011 Lorenzo Caminiti</p></div>
+<div><div class="legalnotice">
+<a name="id807693"></a><p>
+        Use, modification, and distribution is subject to the Boost Software License,
+        Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>).
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#boost_local.Introduction">Introduction</a></span></dt>
+<dt><span class="section"><a href="boost_local/Starting.html">Starting</a></span></dt>
+<dt><span class="section"><a href="boost_local/Tutorial.html">Tutorial</a></span></dt>
+<dt><span class="section"><a href="boost_local/Advanced.html">Advanced</a></span></dt>
+<dt><span class="section"><a href="reference.html">Reference</a></span></dt>
+<dt><span class="section"><a href="boost_local/Grammar.html">Appendix: Grammar</a></span></dt>
+<dt><span class="section"><a href="boost_local/Alternatives.html">Appendix: Alternatives</a></span></dt>
+<dt><span class="section"><a href="boost_local/Examples.html">Appendix: Examples</a></span></dt>
+<dt><span class="section"><a href="boost_local/Releases.html">Releases</a></span></dt>
+<dt><span class="section"><a href="boost_local/Bibliography.html">Bibliography</a></span></dt>
+<dt><span class="section"><a href="boost_local/Acknowledgments.html">Acknowledgments</a></span></dt>
+</dl>
+</div>
+<p>
+    The Boost Local library implements local functions, local blocks, and local exits
+    for the C++ programming language.
+  </p>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_local.Introduction"></a><a class="link" href="index.html#boost_local.Introduction" title="Introduction">Introduction</a>
+</h2></div></div></div>
+<p>
+      <span class="emphasis"><em>Local functions</em></span> are a form of <span class="emphasis"><em>information hiding</em></span>
+      and are useful for dividing procedural tasks into subtasks which are only meaningful
+      locally, avoiding cluttering other parts of the program with functions, variables,
+      etc unrelated to those parts. Local functions therefore complement other structuring
+      possibilities such as namespaces and classes. Local functions are a feature
+      of many programming languages, notably <a href="http://en.wikipedia.org/wiki/Nested_function#An_example" target="_top">Pascal</a>
+      and <a href="http://en.wikipedia.org/wiki/Nesting_(computing)#In_programming" target="_top">Ada</a>,
+      yet lacking from C++ (see also <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2511.html" target="_top">[N2511]</a>).
+    </p>
+<p>
+      This library supports the following features for local functions (see the
+      <a class="link" href="boost_local/Alternatives.html" title="Appendix: Alternatives">Alternatives</a> section for a
+      comparison between this library and features offered by C++ local class members,
+      <a href="http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions" target="_top">C++0x
+      lambda</a> functions, <a href="http://www.boost.org/doc/libs/release/doc/html/lambda.html" target="_top">Boost.Lambda</a>,
+      <a href="http://www.boost.org/doc/libs/release/libs/spirit/phoenix/index.html" target="_top">Boost.Phoenix</a>,
+      and <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>):
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          Local functions can access, or better <a href="http://en.wikipedia.org/wiki/Name_binding" target="_top"><span class="emphasis"><em>bind</em></span></a>,
+          any of the variables from the enclosing scope. Furthermore, local functions
+          defined within a member function can bind the enclosing object <code class="computeroutput"><span class="keyword">this</span></code>.
+        </li>
+<li class="listitem">
+          The local function body is programmed using the usual C++ syntax.
+        </li>
+<li class="listitem">
+          Local functions can be passed as template parameters (so they can be conveniently
+          passed to STL algorithms, etc).
+        </li>
+<li class="listitem">
+          However, local functions must be defined within a declarative context (e.g.,
+          at a point in the code where local variables can be declared) thus they
+          cannot be defined within an expression.
+        </li>
+</ul></div>
+<p>
+      In addition to local functions, this library also supports the following features:
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          <span class="emphasis"><em>Local blocks</em></span> which define blocks of code that bind
+          variables from the enclosing scope. Local blocks allow programmers to bind
+          variables as constants (<span class="emphasis"><em>constant binding</em></span>) so to prevent
+          local chunks of code from modifying selected variables.
+        </li>
+<li class="listitem">
+          <span class="emphasis"><em>Local exits</em></span> which define blocks of code that are executed
+          when the enclosing scope is exited (again with support for constant binding
+          and binding of the object <code class="computeroutput"><span class="keyword">this</span></code>).
+        </li>
+</ul></div>
+<a name="boost_local.Introduction.an_example"></a><h6>
+<a name="id807257"></a>
+      <a class="link" href="index.html#boost_local.Introduction.an_example">An Example</a>
+    </h6>
+<p>
+      The following example illustrates a simple use of this library and it starts
+      introducing the library API (see the <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a>
+      section for more details on how to use this library):
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          A local function is passed to the STL <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span></code>
+          algorithm to add together the values of an array. Variables in scope are
+          bound to the local function by both constant value and non-constant reference.
+        </li>
+<li class="listitem">
+          A local exit is used to automatically release the array's memory at scope
+          exit.
+        </li>
+<li class="listitem">
+          A local block is used to assert the correct final value of the summation
+          in a constant-correct context (therefore preventing the assertion from
+          mistakenly changing any of the variables in scope).
+        </li>
+</ul></div>
+<p>
+      
+</p>
+<pre class="programlisting"><a class="co" name="boost_local0co" href="index.html#boost_local0"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">block</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">exit</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">algorithm</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cassert</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">double</span> <span class="identifier">sum</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">factor</span> <span class="special">=</span> <span class="number">10</span><span class="special">;</span>
+
+    <span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span> <a class="co" name="boost_local1co" href="index.html#boost_local1"><img src="../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a>
+    <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">add</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">double</span><span class="special">)(</span><span class="identifier">num</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">)((</span><span class="identifier">factor</span><span class="special">))</span> <a class="co" name="boost_local2co" href="index.html#boost_local2"><img src="../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> <span class="special">(</span><span class="identifier">bind</span><span class="special">)((&amp;</span><span class="identifier">sum</span><span class="special">))</span> <a class="co" name="boost_local3co" href="index.html#boost_local3"><img src="../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a> <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{</span> <a class="co" name="boost_local4co" href="index.html#boost_local4"><img src="../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a>
+        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">clog</span> <span class="special">&lt;&lt;</span> <span class="string">"Summed: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">add</span><span class="special">)</span> <a class="co" name="boost_local5co" href="index.html#boost_local5"><img src="../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a>
+    <span class="identifier">add</span><span class="special">(</span><span class="number">100.0</span><span class="special">);</span> <a class="co" name="boost_local6co" href="index.html#boost_local6"><img src="../../../../doc/src/images/callouts/7.png" alt="7" border="0"></a>
+
+    <span class="identifier">size_t</span> <span class="identifier">size</span> <span class="special">=</span> <span class="number">2</span><span class="special">;</span>
+    <span class="keyword">double</span><span class="special">*</span> <span class="identifier">nums</span> <span class="special">=</span> <span class="keyword">new</span> <span class="keyword">double</span><span class="special">[</span><span class="identifier">size</span><span class="special">];</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">)((&amp;</span><span class="identifier">size</span><span class="special">))</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">)((</span><span class="identifier">nums</span><span class="special">))</span> <span class="special">)</span> <span class="special">{</span> <a class="co" name="boost_local7co" href="index.html#boost_local7"><img src="../../../../doc/src/images/callouts/8.png" alt="8" border="0"></a>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">size</span> <span class="special">&amp;&amp;</span> <span class="identifier">nums</span><span class="special">)</span> <span class="keyword">delete</span><span class="special">[]</span> <span class="identifier">nums</span><span class="special">;</span> <a class="co" name="boost_local8co" href="index.html#boost_local8"><img src="../../../../doc/src/images/callouts/9.png" alt="9" border="0"></a>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">clog</span> <span class="special">&lt;&lt;</span> <span class="string">"Freed array: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">nums</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span> <a class="co" name="boost_local9co" href="index.html#boost_local9"><img src="../../../../doc/src/images/callouts/10.png" alt="10" border="0"></a>
+
+    <span class="identifier">nums</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">90.5</span><span class="special">;</span> <span class="identifier">nums</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">7.0</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">nums</span><span class="special">,</span> <span class="identifier">nums</span> <span class="special">+</span> <span class="identifier">size</span><span class="special">,</span> <span class="identifier">add</span><span class="special">);</span> <a class="co" name="boost_local10co" href="index.html#boost_local10"><img src="../../../../doc/src/images/callouts/11.png" alt="11" border="0"></a>
+
+    <span class="identifier">BOOST_LOCAL_BLOCK</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">)((&amp;</span><span class="identifier">sum</span><span class="special">))</span> <span class="special">)</span> <span class="special">{</span> <a class="co" name="boost_local11co" href="index.html#boost_local11"><img src="../../../../doc/src/images/callouts/12.png" alt="12" border="0"></a> 
+        <span class="comment">// So far: sum = 10 * 100.0 + 10 * 90.5 + 10 * 7.0 = 1975.0
+</span>        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">sum</span> <span class="special">==</span> <span class="number">1975.0</span><span class="special">);</span> <a class="co" name="boost_local12co" href="index.html#boost_local12"><img src="../../../../doc/src/images/callouts/13.png" alt="13" border="0"></a>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">clog</span> <span class="special">&lt;&lt;</span> <span class="string">"Asserted summation: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_BLOCK_END</span> <a class="co" name="boost_local13co" href="index.html#boost_local13"><img src="../../../../doc/src/images/callouts/14.png" alt="14" border="0"></a>
+    
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+    </p>
+<div class="calloutlist"><table border="0" summary="Callout list">
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_local0"></a><a href="#boost_local0co"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          Include the header files for this library local functions, local blocks,
+          and local exits.
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_local1"></a><a href="#boost_local1co"><img src="../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          The <span class="bold"><strong>local function</strong></span> declaration macro.
+          This macro takes one parameter specifying the local function signature
+          using the <span class="emphasis"><em>parenthesized syntax</em></span>. This syntax resembles
+          the usual C++ function declaration syntax but it wraps all tokens within
+          parenthesis (see the <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a>
+          section). The parenthesized syntax for local functions introduces the new
+          "keyword" <code class="computeroutput"><span class="identifier">bind</span></code>
+          which is used in place of a parameter type to indicate that the following
+          sequence of parameters bind to variables in scope.
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_local2"></a><a href="#boost_local2co"><img src="../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          The variable <code class="computeroutput"><span class="identifier">factor</span></code> is
+          bound by constant value so it cannot be mistakenly modified by the local
+          function body.
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_local3"></a><a href="#boost_local3co"><img src="../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          The variable <code class="computeroutput"><span class="identifier">sum</span></code> is instead
+          bound by non-constant reference because the local function needs to change
+          its value to report the summation result to the enclosing scope.
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_local4"></a><a href="#boost_local4co"><img src="../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          The local function body is programmed using the usual C++ syntax.
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_local5"></a><a href="#boost_local5co"><img src="../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          The macro ending the local function definition (note how the local function
+          name needs to be repeated here).
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_local6"></a><a href="#boost_local6co"><img src="../../../../doc/src/images/callouts/7.png" alt="7" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          The local function macros declare a functor object local to the enclosing
+          scope named <code class="computeroutput"><span class="identifier">add</span></code>. As indicated
+          by the local function parenthesized signature, the functor <code class="computeroutput"><span class="identifier">add</span></code> has <code class="computeroutput"><span class="keyword">void</span></code>
+          result type, it can be called by specifying one parameter of type <code class="computeroutput"><span class="keyword">double</span></code>, and it has access to the variables
+          in scope <code class="computeroutput"><span class="identifier">factor</span></code> and <code class="computeroutput"><span class="identifier">sum</span></code>.
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_local7"></a><a href="#boost_local7co"><img src="../../../../doc/src/images/callouts/8.png" alt="8" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          The <span class="bold"><strong>local exit</strong></span> declaration macro only
+          specifies the variables in scope to bind (eventually as constants).
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_local8"></a><a href="#boost_local8co"><img src="../../../../doc/src/images/callouts/9.png" alt="9" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          The local exit code will be automatically executed when the enclosing scope
+          is exited.
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_local9"></a><a href="#boost_local9co"><img src="../../../../doc/src/images/callouts/10.png" alt="10" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          A local exit is anonymous so its ending macro takes no argument.
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_local10"></a><a href="#boost_local10co"><img src="../../../../doc/src/images/callouts/11.png" alt="11" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          The local function <code class="computeroutput"><span class="identifier">add</span></code>
+          can also be passed as a template parameter to the STL <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span></code>
+          algorithm.
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_local11"></a><a href="#boost_local11co"><img src="../../../../doc/src/images/callouts/12.png" alt="12" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          The <span class="bold"><strong>local block</strong></span> declaration macro only
+          specifies the variables in scope to bind (eventually as constants).
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_local12"></a><a href="#boost_local12co"><img src="../../../../doc/src/images/callouts/13.png" alt="13" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          The local block code is executed "in place" where it is programmed
+          like a usual C++ block of code <code class="computeroutput"><span class="special">{</span>
+          <span class="special">...</span> <span class="special">}</span></code>.
+          In this example, the compiler will correctly generate an error if the assignment
+          operator <code class="computeroutput"><span class="special">=</span></code> is mistakenly used
+          instead of the equality operator <code class="computeroutput"><span class="special">==</span></code>
+          because the variable <code class="computeroutput"><span class="identifier">sum</span></code>
+          is bound by constant reference so it cannot be modified.
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_local13"></a><a href="#boost_local13co"><img src="../../../../doc/src/images/callouts/14.png" alt="14" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          A local block is anonymous so its ending macro takes no argument.
+        </p></td>
+</tr>
+</table></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: January 11, 2011 at 14:15:21 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_local/Starting.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a></div>
+</body>
+</html>

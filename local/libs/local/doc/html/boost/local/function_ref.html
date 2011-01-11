@@ -1,0 +1,102 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Struct template function_ref</title>
+<link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../../index.html" title="Boost.Local 0.1.1">
+<link rel="up" href="../../reference.html#header.boost.local.function_ref_hpp" title="Header &lt;boost/local/function_ref.hpp&gt;">
+<link rel="prev" href="../../BOOST_LOCAL_FUNCTION_END_RENAME.html" title="Macro BOOST_LOCAL_FUNCTION_END_RENAME">
+<link rel="next" href="../../BOOST_IDENTITY_TYPE.html" title="Macro BOOST_IDENTITY_TYPE">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../BOOST_LOCAL_FUNCTION_END_RENAME.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.local.function_ref_hpp"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../../BOOST_IDENTITY_TYPE.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="boost.local.function_ref"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Struct template function_ref</span></h2>
+<p>boost::local::function_ref &#8212; Template to hold a reference to a local function while supporting eventual default function parameters. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../reference.html#header.boost.local.function_ref_hpp" title="Header &lt;boost/local/function_ref.hpp&gt;">boost/local/function_ref.hpp</a>&gt;
+
+</span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> F<span class="special">,</span> <span class="identifier">size_t</span> defaults <span class="special">=</span> <span class="number">0</span><span class="special">&gt;</span> 
+<span class="keyword">struct</span> <a class="link" href="function_ref.html" title="Struct template function_ref">function_ref</a> <span class="special">{</span>
+<span class="special">}</span><span class="special">;</span></pre></div>
+<div class="refsect1">
+<a name="id890337"></a><h2>Description</h2>
+<p>This template defines several specializations to handle a generic number <code class="computeroutput">N</code> of function parameters some of which can have default values. The number of supported function parameters goes from <code class="computeroutput">0</code> (for a function with no parameter) to a maximum of  <code class="computeroutput"><a class="link" href="../../BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX.html" title="Macro BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX">BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX</a></code>.</p>
+<p>Each template specialization defines call operators <code class="computeroutput">operator()(...)</code> with a different set of parameters to handle the number of default parameters specified by <code class="computeroutput">defaults</code> (see  <a class="link" href="../../boost_local/Advanced.html" title="Advanced">Advanced</a> section): </p>
+<pre class="programlisting">  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Result</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Arg1</span><span class="special">,</span> <span class="special">...</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">ArgN</span><span class="special">,</span> <span class="identifier">size_t</span> <span class="identifier">defaults</span> <span class="special">=</span> <span class="number">0</span><span class="special">&gt;</span>
+  <span class="keyword">class</span> <span class="identifier">function_ref</span><span class="special">&lt;</span><span class="identifier">Result</span> <span class="special">(</span><span class="identifier">Arg1</span><span class="special">,</span> <span class="special">...</span><span class="special">,</span> <span class="identifier">ArgN</span><span class="special">)</span><span class="special">,</span> <span class="identifier">defaults</span><span class="special">&gt;</span> <span class="special">{</span>
+  <span class="keyword">public</span><span class="special">:</span>
+      <span class="identifier">Result</span> <span class="keyword">operator</span><span class="special">(</span><span class="special">)</span><span class="special">(</span><span class="identifier">Arg1</span><span class="special">,</span> <span class="special">...</span><span class="special">,</span> <span class="identifier">ArgN</span><span class="special">-</span><span class="number">2</span><span class="special">,</span> <span class="identifier">ArgN</span><span class="special">-</span><span class="number">1</span><span class="special">,</span> <span class="identifier">ArgN</span><span class="special">)</span><span class="special">;</span>
+      <span class="comment">// Call operators to handle default parameters:</span>
+      <span class="identifier">Result</span> <span class="keyword">operator</span><span class="special">(</span><span class="special">)</span><span class="special">(</span><span class="identifier">Arg1</span><span class="special">,</span> <span class="special">...</span><span class="special">,</span> <span class="identifier">ArgN</span><span class="special">-</span><span class="number">2</span><span class="special">,</span> <span class="identifier">ArgN</span><span class="special">-</span><span class="number">1</span><span class="special">)</span><span class="special">;</span>       <span class="comment">// iff defaults &gt;= 1</span>
+      <span class="identifier">Result</span> <span class="keyword">operator</span><span class="special">(</span><span class="special">)</span><span class="special">(</span><span class="identifier">Arg1</span><span class="special">,</span> <span class="special">...</span><span class="special">,</span> <span class="identifier">ArgN</span><span class="special">-</span><span class="number">2</span><span class="special">)</span><span class="special">;</span>               <span class="comment">// iff defaults &gt;= 2</span>
+      <span class="special">...</span>                                                 <span class="comment">// etc</span>
+
+      <span class="comment">// Copy constructor and assignment operator for local functions:</span>
+      <span class="identifier">function_ref</span><span class="special">(</span><span class="identifier">local_function</span><span class="special">&lt;</span><span class="identifier">F</span><span class="special">,</span> <span class="identifier">defaults</span><span class="special">&gt;</span><span class="special">&amp;</span> <span class="identifier">ref</span><span class="special">)</span><span class="special">;</span>
+      <span class="identifier">function_ref</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=</span><span class="special">(</span><span class="identifier">local_function</span><span class="special">&lt;</span><span class="identifier">F</span><span class="special">,</span> <span class="identifier">defaults</span><span class="special">&gt;</span><span class="special">&amp;</span> <span class="identifier">ref</span><span class="special">)</span><span class="special">;</span>
+  <span class="special">}</span><span class="special">;</span>
+</pre>
+<p> Where:</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem"><p><code class="computeroutput">Result</code> is the function result type. It can be <code class="computeroutput">void</code>.</p></li>
+<li class="listitem"><p><code class="computeroutput">ArgN</code> is the last function parameter type, <code class="computeroutput">ArgN-1</code> is the second last function parameter type, etc. These are all optional (none is specified for a function with no parameter, only <code class="computeroutput">Arg1</code> is specified for a function with only one parameter, etc).</p></li>
+<li class="listitem"><p>The operator <code class="computeroutput">Result operator()(Arg1, ..., ArgN-2, ArgN-1)</code> is defined if and only if there are one or more default parameters (<code class="computeroutput">defaults &gt;= 1</code>), the operator <code class="computeroutput">Result operator()(Arg1, ..., ArgN-2)</code> is defined if and only if there are two or more default parameters (<code class="computeroutput">defaults &gt;= 2</code>), etc.</p></li>
+<li class="listitem"><p><code class="computeroutput">local_function&lt;F, defaults&gt;</code> is an internal type for a local function with a signature matching <code class="computeroutput">F</code> and with a number of default parameters equal to <code class="computeroutput">defaults</code>.</p></li>
+<li class="listitem"><p>The copy constructor and assignment operator <code class="computeroutput">operator=</code> allow to assign this template to a reference to a local function with a signature matching <code class="computeroutput">F</code> and with a number of default parameters equal to <code class="computeroutput">defaults</code>.</p></li>
+</ul></div>
+<p>
+</p>
+<p><span class="bold"><strong>Warning:</strong></span> Programmers must make sure that the local function survives the scope of the function reference (otherwise the reference will be invalid and its use will generate a run-time error as usual with C++ references).</p>
+<p><span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">F</code></strong></span></td>
+<td>The function signature expressed using the Boost.Function's preferred syntax: <code class="computeroutput">F = Result (Arg1, ..., ArgN)</code>.  </td>
+</tr>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">defaults</code></strong></span></td>
+<td>The number of the function default parameters in <code class="computeroutput">[0,</code>  <code class="computeroutput"><a class="link" href="../../BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX.html" title="Macro BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX">BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX</a></code><code class="computeroutput">]</code>. As usual in C++, default parameters are counted starting from the last parameter: <code class="computeroutput">defaults = 0</code> means that no parameter is optional, <code class="computeroutput">defaults = 1</code> means that the last parameter is optional, <code class="computeroutput">defaults = 2</code> means that the last two parameters are optional, etc.  </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+</p>
+<p><span class="bold"><strong>Note:</strong></span> This template is similar to <code class="computeroutput">boost::function&lt;&gt;</code> but it also supports eventual default parameters.</p>
+<p><span class="bold"><strong>See:</strong></span>  <a class="link" href="../../boost_local/Advanced.html" title="Advanced">Advanced</a> section,  <code class="computeroutput"><a class="link" href="../../BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX.html" title="Macro BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX">BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX</a></code>,  <code class="computeroutput"><a class="link" href="../../BOOST_LOCAL_FUNCTION.html" title="Macro BOOST_LOCAL_FUNCTION">BOOST_LOCAL_FUNCTION</a></code>, <a href="http://www.boost.org/doc/libs/release/doc/html/function.html" target="_top">Boost.Function</a>. </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Lorenzo Caminiti<p>
+        Use, modification, and distribution is subject to the Boost Software License,
+        Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>).
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../BOOST_LOCAL_FUNCTION_END_RENAME.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.local.function_ref_hpp"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../../BOOST_IDENTITY_TYPE.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

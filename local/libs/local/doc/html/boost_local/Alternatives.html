@@ -1,0 +1,261 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Appendix: Alternatives</title>
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Boost.Local 0.1.1">
+<link rel="up" href="../index.html" title="Boost.Local 0.1.1">
+<link rel="prev" href="Grammar.html" title="Appendix: Grammar">
+<link rel="next" href="Examples.html" title="Appendix: Examples">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="Grammar.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="Examples.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_local.Alternatives"></a><a class="link" href="Alternatives.html" title="Appendix: Alternatives">Appendix: Alternatives</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="Alternatives.html#boost_local.Alternatives.local_functions">Local Functions</a></span></dt>
+<dt><span class="section"><a href="Alternatives.html#boost_local.Alternatives.local_blocks">Local Blocks</a></span></dt>
+<dt><span class="section"><a href="Alternatives.html#boost_local.Alternatives.local_exits">Local Exits</a></span></dt>
+</dl></div>
+<p>
+      This section compares the features offered by this library with similar features
+      offered by other libraries and by the new C++0x standard.
+    </p>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Alternatives.local_functions"></a><a class="link" href="Alternatives.html#boost_local.Alternatives.local_functions" title="Local Functions">Local Functions</a>
+</h3></div></div></div>
+<p>
+        The following table compares local function features.
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Local Function Feature
+                </p>
+              </th>
+<th>
+                <p>
+                  This Library
+                </p>
+              </th>
+<th>
+                <p>
+                  Local Classes
+                </p>
+              </th>
+<th>
+                <p>
+                  <a href="http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions" target="_top">C++0x
+                  lambda</a>
+                </p>
+              </th>
+<th>
+                <p>
+                  <a href="http://www.boost.org/doc/libs/release/doc/html/lambda.html" target="_top">Boost.Lambda</a>
+                </p>
+              </th>
+<th>
+                <p>
+                  <a href="http://www.boost.org/doc/libs/release/libs/spirit/phoenix/index.html" target="_top">Boost.Phoenix</a>
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Program body using usual C++ syntax</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+<td>
+                <p>
+                  No.
+                </p>
+              </td>
+<td>
+                <p>
+                  No.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Can be passed as template parameter (e.g., to STL algorithms)</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+<td>
+                <p>
+                  No (see "local class" in <a href="http://www2.research.att.com/~bs/glossary.html" target="_top">[StroustupGlossary]</a>).
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Bind variables in scope</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes, bind by value, constant value, reference, and constant reference
+                  (also bind the object <code class="computeroutput"><span class="keyword">this</span></code>).
+                </p>
+              </td>
+<td>
+                <p>
+                  No.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes, but no bind by constant (value or reference).
+                </p>
+              </td>
+<td>
+                <p>
+                  No.
+                </p>
+              </td>
+<td>
+                <p>
+                  No.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Can be defined within expressions</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  No, defined only within declarations.
+                </p>
+              </td>
+<td>
+                <p>
+                  No, defined only within declarations.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Alternatives.local_blocks"></a><a class="link" href="Alternatives.html#boost_local.Alternatives.local_blocks" title="Local Blocks">Local Blocks</a>
+</h3></div></div></div>
+<p>
+        The authors know of no other library or language feature that supports local
+        blocks (i.e., with the ability to bind by constant value or reference).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Alternatives.local_exits"></a><a class="link" href="Alternatives.html#boost_local.Alternatives.local_exits" title="Local Exits">Local Exits</a>
+</h3></div></div></div>
+<p>
+        This library local exits provide a functionality very similar to the one
+        provided by <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
+        but with the following additional features:
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            Bind by constant (value or reference).
+          </li>
+<li class="listitem">
+            Bind the object <code class="computeroutput"><span class="keyword">this</span></code>.
+          </li>
+</ul></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Lorenzo Caminiti<p>
+        Use, modification, and distribution is subject to the Boost Software License,
+        Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>).
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="Grammar.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="Examples.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

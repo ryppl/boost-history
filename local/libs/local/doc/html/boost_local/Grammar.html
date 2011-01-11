@@ -1,0 +1,200 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Appendix: Grammar</title>
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Boost.Local 0.1.1">
+<link rel="up" href="../index.html" title="Boost.Local 0.1.1">
+<link rel="prev" href="../BOOST_IDENTITY_VALUE.html" title="Macro BOOST_IDENTITY_VALUE">
+<link rel="next" href="Alternatives.html" title="Appendix: Alternatives">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../BOOST_IDENTITY_VALUE.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="Alternatives.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_local.Grammar"></a><a class="link" href="Grammar.html" title="Appendix: Grammar">Appendix: Grammar</a>
+</h2></div></div></div>
+<p>
+      This section describes the complete grammar of the <span class="emphasis"><em>parenthesized
+      syntax</em></span> used by this library to specify the local function signature
+      with binding of variables in scope.
+    </p>
+<p>
+      This should be considered a reference section. See the <a class="link" href="Tutorial.html" title="Tutorial">Tutorial</a>
+      and the <a class="link" href="Advanced.html" title="Advanced">Advanced</a> sections for explanations
+      and examples on how to use the parenthesized syntax.
+    </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top">
+<p>
+        The parsers of the parenthesized syntax are implemented using macros and
+        the <a href="http://www.boost.org/doc/libs/release/libs/preprocessor/doc/index.html" target="_top">Boost.Preprocessor</a>
+        library so <span class="bold"><strong>the parenthesized syntax is parsed by the
+        preprocessor</strong></span>.
+      </p>
+<p>
+        Using preprocessor metaprogramming allows the parsers to introduce new "keywords"
+        at the same syntactic level as the usual C++ keywords but that are used to
+        support new features specific to this library (for example the new "keyword"
+        <code class="computeroutput"><span class="identifier">bind</span></code> which is used to bind
+        variables in scope). However, the use of the preprocessor also requires using
+        a significant number of extra parenthesis <code class="computeroutput"><span class="special">()</span></code>
+        with respect to usual C++ syntax (from which the parenthesized syntax's name).
+      </p>
+<p>
+        In addition, there is only a limited amount of syntactic error checking that
+        can be done using macros thus sometimes a parenthesized syntax error generates
+        cryptic preprocessor errors. When the macros can catch syntactic errors,
+        these errors are reported as compile-time errors (using static assertions)
+        with names of the form <code class="computeroutput"><span class="identifier">ERROR_</span></code><span class="emphasis"><em>description_text</em></span>.
+      </p>
+</td></tr>
+</table></div>
+<p>
+      Macros using the parenthesized syntax (see the <a href="../reference.html" target="_top">Reference</a>
+      section):
+    </p>
+<pre class="programlisting"><code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION.html" title="Macro BOOST_LOCAL_FUNCTION">BOOST_LOCAL_FUNCTION</a></code><span class="special">(</span> <span class="emphasis"><em>parenthesized-signature</em></span> <span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../BOOST_LOCAL_BLOCK.html" title="Macro BOOST_LOCAL_BLOCK">BOOST_LOCAL_BLOCK</a></code><span class="special">(</span> <span class="emphasis"><em>parenthesized-binding</em></span> <span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../BOOST_LOCAL_EXIT.html" title="Macro BOOST_LOCAL_EXIT">BOOST_LOCAL_EXIT</a></code><span class="special">(</span> <span class="emphasis"><em>parenthesized-binding</em></span> <span class="special">)</span>
+</pre>
+<p>
+      Additional "keywords":
+    </p>
+<pre class="programlisting"><span class="identifier">bind</span>                  used to bind variables in scope
+<span class="keyword">default</span>               used to specify default parameters
+</pre>
+<p>
+      Terminals:
+    </p>
+<pre class="programlisting"><span class="bold"><strong>result-type</strong></span>           a function return type (can be <span class="keyword">void</span>)
+<span class="bold"><strong>function-name</strong></span>         a function name (cannot be an operator)
+
+<span class="bold"><strong>parameter-type</strong></span>        a parameter type
+<span class="bold"><strong>parameter-name</strong></span>        a parameter name
+<span class="bold"><strong>parameter-default</strong></span>     a valid default value for the specified parameter
+
+<span class="bold"><strong>variable-name</strong></span>         the name of a variable in scope (can be <span class="keyword">this</span>)
+</pre>
+<p>
+      Lexical conventions:
+    </p>
+<pre class="programlisting"><span class="emphasis"><em>a | b</em></span>                 symbol <span class="emphasis"><em>a</em></span> or symbol <span class="emphasis"><em>b</em></span>
+<span class="emphasis"><em>[a]</em></span>                   the symbol <span class="emphasis"><em>a</em></span> is optional and it can be omitted
+<span class="emphasis"><em>a+</em></span>                    symbol <span class="emphasis"><em>a</em></span> repeated one or more times
+</pre>
+<p>
+      Parenthesized syntax:
+    </p>
+<pre class="programlisting"><span class="emphasis"><em>parenthesized-signature:</em></span>
+        <span class="emphasis"><em>[</em></span><span class="special">(</span><span class="keyword">inline</span><span class="special">)</span><span class="emphasis"><em>]</em></span> <span class="special">(</span><span class="bold"><strong>result-type</strong></span><span class="special">)</span> <span class="special">(</span><span class="bold"><strong>function-name</strong></span><span class="special">)(</span> <span class="emphasis"><em>parameter-list</em></span> <span class="special">)</span>
+
+<span class="emphasis"><em>parenthesized-binding:</em></span>
+          <span class="special">(</span><span class="keyword">void</span><span class="special">)</span>                          <span class="comment">// No bindings.
+</span>        <span class="emphasis"><em>| bindings</em></span>                        <span class="comment">// Bindings (constant and/or not).
+</span>
+<span class="emphasis"><em>parameter-list:</em></span>
+          <span class="special">(</span><span class="keyword">void</span><span class="special">)</span>                          <span class="comment">// No parameters and no bindings.
+</span>        <span class="emphasis"><em>| parameters</em></span>                      <span class="comment">// Only parameters.
+</span>        <span class="emphasis"><em>| bindings</em></span>                        <span class="comment">// Only bindings.
+</span>        <span class="emphasis"><em>| parameters bindings</em></span>             <span class="comment">// Both parameters and bindings (must appear in this order).
+</span></pre>
+<p>
+      Function parameters:
+    </p>
+<pre class="programlisting"><span class="emphasis"><em>parameters:</em></span>
+          <span class="emphasis"><em>parameter+</em></span>                       <span class="comment">// Only required parameters.
+</span>        <span class="emphasis"><em>| optional-parameter+</em></span>              <span class="comment">// Only optional parameters.
+</span>        <span class="emphasis"><em>| parameter+ optional-parameter+</em></span>   <span class="comment">// Both required and optional parameters (must appear in this order).
+</span>
+<span class="emphasis"><em>parameter:</em></span>
+        <span class="emphasis"><em>[</em></span><span class="special">(</span><span class="keyword">auto</span><span class="special">)</span> <span class="emphasis"><em>|</em></span> <span class="special">(</span><span class="keyword">register</span><span class="special">)</span><span class="emphasis"><em>]</em></span>              <span class="comment">// Optional parameter classifier `auto` or `register`.
+</span>        <span class="special">(</span><span class="bold"><strong>parameter-type</strong></span><span class="special">)(</span><span class="bold"><strong>parameter-name</strong></span><span class="special">)</span>
+
+<span class="emphasis"><em>optional-parameter:</em></span>
+        <span class="emphasis"><em>parameter</em></span>
+        <span class="special">(</span><span class="keyword">default</span><span class="special">)(</span><span class="bold"><strong>parameter-default</strong></span><span class="special">)</span>       <span class="comment">// Default value for this optional parameter.
+</span></pre>
+<p>
+      Binding variables in scope: <sup>[<a name="id892428" href="#ftn.id892428" class="footnote">21</a>]</sup> <sup>[<a name="id892732" href="#ftn.id892732" class="footnote">22</a>]</sup>
+    </p>
+<pre class="programlisting"><span class="emphasis"><em>bindings:</em></span>
+          <span class="emphasis"><em>const-bindings</em></span>                   <span class="comment">// Only constant binding.
+</span>        <span class="emphasis"><em>| plain-bindings</em></span>                   <span class="comment">// Only plain binding.
+</span>        <span class="emphasis"><em>| const-bindings plain-bindings</em></span>    <span class="comment">// Both constant and plain bindings (must appear in this order).
+</span>
+<span class="emphasis"><em>const-bindings:</em></span>
+        <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">)(</span><span class="emphasis"><em>bound-variable+</em></span><span class="special">)</span>      <span class="comment">// Force constant type for bound variable.
+</span>
+<span class="emphasis"><em>plain-bindings</em></span><span class="special">:</span>
+        <span class="special">(</span><span class="identifier">bind</span><span class="special">)(</span><span class="emphasis"><em>bound-variable+</em></span><span class="special">)</span>            <span class="comment">// Use bound variable's plain type (constant or not).
+</span>
+<span class="emphasis"><em>bound-variable</em></span><span class="special">:</span>
+          <span class="special">(</span><span class="bold"><strong>variable-name</strong></span><span class="special">)</span>                  <span class="comment">// Bind by value.
+</span>        <span class="special">|</span> <span class="special">(&amp;</span><span class="bold"><strong>variable-name</strong></span><span class="special">)</span>                 <span class="comment">// Bind by reference.
+</span></pre>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a id="ftn.id892428" href="#id892428" class="para">21</a>] </sup>
+        <span class="bold"><strong>Rationale.</strong></span> The alternative syntax <code class="computeroutput"><span class="special">(</span><span class="identifier">bind</span><span class="special">)((</span><span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">)...)</span></code>
+        would have been preferred because <code class="computeroutput"><span class="keyword">const</span></code>
+        appears before the reference as usual in C++ and because a single <code class="computeroutput"><span class="identifier">bind</span></code> sequence is used for both plain and
+        constant binding (e.g., the single sequence <code class="computeroutput"><span class="special">(</span><span class="identifier">bind</span><span class="special">)((</span><span class="identifier">a</span><span class="special">)(&amp;</span><span class="identifier">b</span><span class="special">)(</span><span class="keyword">const</span>
+        <span class="identifier">a</span><span class="special">)(</span><span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">))</span></code> would
+        bind by value, by constant value, by reference, and by constant reference
+        respectively). However, the parenthesized syntax parsers cannot process both
+        <code class="computeroutput"><span class="keyword">const</span><span class="special">&amp;</span>
+        <span class="identifier">x</span></code> and <code class="computeroutput"><span class="special">&amp;</span><span class="identifier">x</span></code> because if they inspect the beginning
+        of the token <code class="computeroutput"><span class="special">&amp;</span><span class="identifier">x</span></code>
+        to search for the leading <code class="computeroutput"><span class="keyword">const</span></code>
+        they will find the non-alphanumeric symbol <code class="computeroutput"><span class="special">&amp;</span></code>
+        which cannot be used for token concatenation thus generating preprocessor
+        errors. The tokens <code class="computeroutput"><span class="special">&amp;</span><span class="identifier">x</span></code>
+        and <code class="computeroutput"><span class="identifier">x</span></code> can instead be processed
+        by the parsing macros because they do not need to be inspected from the front
+        (they are instead inspected from the back to check if a token matches <code class="computeroutput"><span class="keyword">this</span></code> and that is fine because the non-alphanumeric
+        symbol <code class="computeroutput"><span class="special">&amp;</span></code> never appears in
+        the back).
+      </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.id892732" href="#id892732" class="para">22</a>] </sup>
+        <span class="bold"><strong>Rationale.</strong></span> Binding is used within the function
+        parameter list because this syntax seemed natural given that the bound variables
+        are used by the function body as if they were function parameters (only their
+        type is not explicitly specified by the function signature and the caller
+        does not explicitly pass their values). However, the parenthesized syntax
+        could be modified to accept <code class="computeroutput"><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">)(...)</span></code> and <code class="computeroutput"><span class="special">(</span><span class="identifier">bind</span><span class="special">)(...)</span></code>
+        outside the parameter list (e.g., at the very end or beginning of the function
+        signature) if an alternative syntax was to be identified as more intuitive.
+      </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Lorenzo Caminiti<p>
+        Use, modification, and distribution is subject to the Boost Software License,
+        Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>).
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../BOOST_IDENTITY_VALUE.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="Alternatives.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
