@@ -18,7 +18,6 @@
 #include <libs/assign/v2/test/put/static.cpp>
 #include <libs/assign/v2/test/put/stl.cpp>
 #include <libs/assign/v2/test/put/tuple_refs.cpp>
-#include <libs/assign/v2/test/put/convert.cpp>
 #include <libs/assign/v2/test/put/deque.cpp>
 #include <libs/assign/v2/test/put/modulo.cpp>
 #include <libs/assign/v2/test/put/ptr.cpp>
@@ -28,6 +27,7 @@
 #include <libs/assign/v2/test/put/pipe/csv.cpp>
 #include <libs/assign/v2/test/put/pipe/ext.cpp>
 #include <libs/assign/v2/test/put/pipe/stl.cpp>
+#include <libs/assign/v2/test/put/pipe/range.cpp>
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
 test_suite* init_unit_test_suite( int argc, char* argv[] )
@@ -39,7 +39,6 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
 		test->add( BOOST_TEST_CASE( &ns::xxx_static::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_stl::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_tuple_refs::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_convert::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_deque::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_modulo::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_ptr::test ) );
@@ -49,6 +48,7 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_csv::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_ext::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_stl::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_range::test ) );
     }
     return test;                             
 }                                            

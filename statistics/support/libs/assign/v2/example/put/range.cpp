@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <queue>
 #include <vector>
+#include <boost/array.hpp>
 #include <boost/assign/v2/put/pipe/range.hpp>
 #include <libs/assign/v2/example/include.h>
 #include <libs/assign/v2/example/foo.h>
@@ -22,15 +23,19 @@ namespace xxx_range{
     {
         {
             //[put_range_queue
-            std::vector<int> from( 3 );
-            from[0] = -1; from[1] = 0; from[2] = 1;
-            std::queue<int> to; // FIFO
-            assert(
-                (
-                    to | as2::_put_range( from )
-                ).front() == -1
-            );
-            assert( to.back() == 1 );
+            std::vector<int> v( 3 ); v[0] = -1; v[1] = 0; v[2] = 1;
+            std::queue<int> fifo; 
+            assert( ( fifo | as2::_put_range( v ) ).front() == -1 );
+            assert( fifo.back() == 1 );
+            //]
+        }
+		{
+            //[put_range_array
+    		typedef boost::array<int, 2> cont_;
+    		std::vector<int> v(2); v[0] = 1; v[1] = -99; 
+    		assert(
+    			(boost::type<cont_>() | as2::_put_range( v ) )[1] == -99
+    		);
             //]
         }
     }

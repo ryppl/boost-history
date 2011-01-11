@@ -13,7 +13,6 @@
 #include <libs/assign/v2/test/put/stl.h>
 #include <libs/assign/v2/test/put/tuple_refs.h>
 #include <libs/assign/v2/test/put/pipe.h>
-#include <libs/assign/v2/test/put/convert.h>
 #include <libs/assign/v2/test/put/deque.h>
 #include <libs/assign/v2/test/put.h>
 
@@ -29,7 +28,6 @@ namespace xxx_put{
     	xxx_tuple_refs::test();
     	xxx_deque::test();
     	xxx_pipe::test();        
-    	xxx_convert::test();        
 
     }
     

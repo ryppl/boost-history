@@ -18,9 +18,9 @@ rule assign-test ( name )
 test-suite assign :
     [ assign-test type_traits ]
     [ assign-test detail ]
-    [ assign-test chain ]
     [ assign-test put ]
     [ assign-test ref ]
+    [ assign-test misc ]
 ;
 
 

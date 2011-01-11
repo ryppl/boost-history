@@ -20,7 +20,7 @@
 #include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
-#include <boost/assign/v2/detail/checking/relational_op.hpp>
+/*#include <boost/assign/v2/detail/checking/relational_op.hpp>*/
 
 #include <boost/assign/v2/put/deque.hpp>
 
@@ -40,6 +40,12 @@ namespace xxx_deque{
             do_check( csv_deque( a,  b, c, d, e, f, g, h ) );
         }
         {
+        	// Functor
+            using namespace checking::constants;
+            using namespace checking::container;
+            do_check( deque<int>( a )( b )( c )( d )( e )( f )( g )( h ) );
+        }
+        {
         	// Operator%
             BOOST_AUTO(tmp, ( deque<int>( _nil ) % ( _repeat = 3 ) ) );
             tmp( 1 );
@@ -51,46 +57,6 @@ namespace xxx_deque{
         	// string literals
         	typedef std::string str_;
             BOOST_ASSIGN_V2_CHECK( str_( csv_deque("x")[0] ) == "x");
-        }
-        {
-        	// Conversion
-        	typedef result_of::deque<int>::type deque_;
-            deque_ from;
-            {
-            	using namespace checking::constants;
-            	from = csv_deque( a, b, c, d, e, f, g, h );
-            }
-        	using namespace checking::container;
-#define MACRO do_check( from | put_convert<to_>() );
-        	{
-                typedef boost::array<int,8> to_;
-                MACRO
-        	}
-        	{
-                typedef std::deque<int> to_;
-                MACRO
-        	}
-        	{
-                typedef std::list<int> to_;
-                MACRO
-        	}
-        	{
-                typedef std::queue<int> to_;
-                MACRO
-        	}
-        	{
-                typedef std::set<int> to_;
-                MACRO
-        	}
-        	{
-                typedef std::stack<int> to_;
-                MACRO
-        	}
-	        {
-                typedef std::vector<int> to_;
-                MACRO
-        	}
-#undef MACRO
         }
 /*
         { 	// Relational

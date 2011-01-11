@@ -23,7 +23,7 @@
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
 #include <boost/assign/v2/detail/checking/array.hpp>
-#include <boost/assign/v2/detail/checking/relational_op.hpp>
+/*#include <boost/assign/v2/detail/checking/relational_op.hpp>*/
 #include <boost/assign/v2/put/pipe/convert.hpp>
 #include <boost/assign/v2/ref/array/functor.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
@@ -70,62 +70,12 @@ namespace xxx_array{
                 )
             );
             {
-                using namespace checking::container;
-                do_check( ref::array<int const>
+                namespace ns = checking::container;
+                ns::do_check( ref::array<int const>
             		( a1 )( b1 )( c1 )( d1 )( e1 )( f1 )( g1 )( h1 )
                 );
             }
 		}
-#define MACRO do_check( from | put_convert<to_>() );
-        {
-        	// Conversion
-			typedef ref::nth_result_of::array<
-            	8,int const>::type array_;
-
-            using namespace checking::constants;
-            array_ from = ref::array
-                ( a )( b )( c )( d )( e )( f )( g )( h );
-        	using namespace checking::container;
-        	{
-                typedef boost::array<int,8> to_;
-                MACRO
-        	}
-        	{
-                typedef std::deque<int> to_;
-                MACRO
-        	}
-        	{
-                typedef std::list<int> to_;
-                MACRO
-        	}
-        	{
-                typedef std::queue<int> to_;
-                MACRO
-        	}
-        	{
-                typedef std::set<int> to_;
-                MACRO
-        	}
-        	{
-        		typedef std::stack<int> to_;
-                MACRO
-        	}
-	        {
-    	    	typedef std::vector<int> to_;
-                MACRO
-        	}
-#undef MACRO
-        }
-/*
-        { 	// Relational
-            using namespace checking::constants;
-            using namespace checking::relational_op;
-            do_check(
-            	ref::array
-                	( a )( b )( c )( d )( e )( f )( g )( h )
-            );
-        }
-*/
     }
 
 }// xxx_array

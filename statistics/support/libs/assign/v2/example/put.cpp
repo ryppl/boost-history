@@ -18,7 +18,6 @@ namespace xxx_put{
 
     void run(std::ostream& os){
     	xxx_deque::run( os );
-    	xxx_convert::run( os );
     	xxx_range::run( os );
     	xxx_pipe::run( os );
     }
