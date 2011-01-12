@@ -11,13 +11,16 @@
 #include <functional>
 #include "boost/regex.hpp"
 #include "boost/lexical_cast.hpp"
+#include "boost/filesystem/operations.hpp"
+
+namespace fs = boost::filesystem;
 
 namespace
 {
   boost::regex apple_macro_regex(
     "("
     "^\\s*#\\s*undef\\s*" // # undef
-    "\\b(min|max)\\b"     // followed by min or max, whole word
+    "\\b(check|verify|require|check_error)\\b"     // followed by apple macro name, whole word
     ")"
     "|"                   // or (ignored)
     "("
@@ -29,7 +32,7 @@ namespace
     ")"
     "|"                   // or
     "("
-    "\\b(check|verify|require|check_error)\\b" // min or max, whole word
+    "\\b(check|verify|require|check_error)\\b" // apple macro name, whole word
     "\\s*\\("         // followed by 0 or more spaces and an opening paren
     ")"
     , boost::regex::normal);
@@ -59,7 +62,14 @@ namespace boost
     {
       if (contents.find( "boostinspect:" "naapple_macros" ) != string::npos) return;
 
+      // Only check files in the boost directory, as we can avoid including the
+      // apple test headers elsewhere.
+      path relative( relative_to( full_path, fs::initial_path() ) );
+      if ( relative.empty() || *relative.begin() != "boost") return;
+
       boost::sregex_iterator cur(contents.begin(), contents.end(), apple_macro_regex), end;
+
+      long errors = 0;
 
       for( ; cur != end; ++cur /*, ++m_files_with_errors*/ )
       {
@@ -79,11 +89,14 @@ namespace boost
               }
           }
 
-          ++m_files_with_errors;
-          error( library_name, full_path, string(name())
-              + " violation of Boost apple-macro guidelines on line "
-              + boost::lexical_cast<string>( line_number ) );
+          ++errors;
+          error( library_name, full_path, 
+            "Apple macro clash: " + std::string((*cur)[0].first, (*cur)[0].second-1),
+            line_number );
         }
+      }
+      if(errors > 0) {
+        ++m_files_with_errors;
       }
     }
   } // namespace inspect

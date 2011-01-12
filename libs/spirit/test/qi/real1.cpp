@@ -255,7 +255,6 @@ main()
         BOOST_TEST(!test("-1.2e", double_));
         BOOST_TEST(!test_attr("-1.2e", double_, d));
 
-// this appears to be broken on Apple Tiger x86 with gcc4.0.1
 #if defined(BOOST_SPIRIT_TEST_REAL_PRECISION)
         BOOST_TEST(test_attr("-5.7222349715140557e+307", double_, d));
         BOOST_TEST(d == -5.7222349715140557e+307); // exact!
@@ -412,6 +411,15 @@ main()
 
         //~ BOOST_TEST(test_attr("-123456e6", double_, n));
     //~ }
+
+    // this should pass, but currently doesn't because of the way the real 
+    // parser handles the fractional part of a number
+    {
+        using boost::spirit::qi::float_;
+
+        float f;
+        BOOST_TEST(test_attr("123233.4124", float_, f)  && f == 123233.4140625f);
+    }
 
     return boost::report_errors();
 }

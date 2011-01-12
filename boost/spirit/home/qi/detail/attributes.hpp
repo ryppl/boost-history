@@ -8,6 +8,7 @@
 #define SPIRIT_QI_DETAIL_ATTRIBUTES_APR_18_2010_0458PM
 
 #include <boost/spirit/home/qi/domain.hpp>
+#include <boost/spirit/home/support/attributes_fwd.hpp>
 #include <boost/spirit/home/support/attributes.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -75,18 +76,18 @@ namespace boost { namespace spirit { namespace qi
     {};
 
     template <typename Exposed, typename Transformed>
-    struct transform_attribute<boost::optional<Exposed>, Transformed
-      , typename disable_if<is_same<boost::optional<Exposed>, Transformed> >::type>
+    struct transform_attribute<optional<Exposed>, Transformed
+      , typename disable_if<is_same<optional<Exposed>, Transformed> >::type>
     {
         typedef Transformed& type;
-        static Transformed& pre(boost::optional<Exposed>& val)
+        static Transformed& pre(optional<Exposed>& val)
         {
             if (!val)
                 val = Transformed();
             return boost::get<Transformed>(val);
         }
-        static void post(boost::optional<Exposed>&, Transformed const&) {}
-        static void fail(boost::optional<Exposed>& val)
+        static void post(optional<Exposed>&, Transformed const&) {}
+        static void fail(optional<Exposed>& val)
         {
              val = none_t();    // leave optional uninitialized if rhs failed
         }
@@ -155,6 +156,20 @@ namespace boost { namespace spirit { namespace traits
     struct transform_attribute<Attribute&, Attribute, qi::domain>
       : qi::transform_attribute<Attribute&, Attribute>
     {};
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename Exposed, typename Transformed>
+    void post_transform(Exposed& dest, Transformed const& attr)
+    {
+        return transform_attribute<Exposed, Transformed, qi::domain>::post(dest, attr);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename Exposed, typename Transformed>
+    void fail_transform(Exposed& dest, Transformed const&)
+    {
+        return transform_attribute<Exposed, Transformed, qi::domain>::fail(dest);
+    }
 }}}
 
 #endif
