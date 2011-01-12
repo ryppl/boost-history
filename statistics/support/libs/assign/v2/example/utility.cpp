@@ -13,16 +13,16 @@
 #include <libs/assign/v2/example/utility.h>
 
 namespace example_assign_v2{
-namespace xxx_misc{
+namespace xxx_utility{
 
     void run(std::ostream& os)
     {
-    	os << "** xxx_misc" << std::endl;
+    	os << "** xxx_utility" << std::endl;
     	xxx_chain::run( os );
     	xxx_convert::run( os );
     	xxx_sub_range::run( os );
     }
 
-}// xxx_misc
+}// xxx_utility
 }// example_assign_v2
 

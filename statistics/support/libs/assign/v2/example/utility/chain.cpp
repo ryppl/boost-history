@@ -16,7 +16,7 @@
 #include <libs/assign/v2/example/utility/chain.h>
 
 namespace example_assign_v2{
-namespace xxx_misc{
+namespace xxx_utility{
 namespace xxx_chain{
 
     void run(std::ostream& os)
@@ -53,5 +53,5 @@ namespace xxx_chain{
     }
 
 }// xxx_chain
-}// xxx_misc
+}// xxx_utility
 }// example_assign_v2

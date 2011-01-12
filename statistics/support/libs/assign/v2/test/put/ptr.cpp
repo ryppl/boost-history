@@ -15,7 +15,7 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
-#include <boost/assign/v2.hpp>
+#include <boost/assign/v2/put/sub.hpp>
 
 #include <libs/assign/v2/test/put/ptr.h>
 
@@ -24,16 +24,16 @@ namespace xxx_put{
 namespace xxx_ptr{
 
 	void test(){
-        using namespace boost::assign::v2;
+        namespace as2 = boost::assign::v2;
         {    // Array
             {	
                 typedef boost::ptr_array<int, 8> cont_;
                 cont_ cont;
                 {
-                    using namespace checking::constants;
-                    using namespace checking::container;
-                    do_check(
-                        csv_put( cont )
+                    using namespace as2:: checking::constants;
+                    namespace ns = as2::checking::container;
+                    ns::do_check(
+                        as2::csv_put( cont )
                             ( a , b , c , d , e , f , g , h ).unwrap()
                     );
                 }
@@ -45,10 +45,10 @@ namespace xxx_ptr{
                 typedef boost::ptr_deque<int> cont_;
                 cont_ cont;
                 {
-                    using namespace checking::constants;
-                    using namespace checking::container;
-                    do_check(
-                        put( cont )
+                    using namespace as2:: checking::constants;
+                    namespace ns = as2::checking::container;
+                    ns::do_check(
+                        as2::put( cont )
                             ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
                     );
                 }
@@ -57,10 +57,10 @@ namespace xxx_ptr{
                 typedef boost::ptr_list<int> cont_;
                 cont_ cont;
                 {
-                    using namespace checking::constants;
-                    using namespace checking::container;
-                    do_check(
-                        put( cont )
+                    using namespace as2:: checking::constants;
+                    namespace ns = as2::checking::container;
+                    ns::do_check(
+                        as2::put( cont )
                             ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
                     );
                 }
@@ -69,10 +69,10 @@ namespace xxx_ptr{
                 typedef boost::ptr_vector<int> cont_;
                 cont_ cont;
                 {
-                    using namespace checking::constants;
-                    using namespace checking::container;
-                    do_check(
-                        put( cont )
+                    using namespace as2:: checking::constants;
+                    namespace ns = as2::checking::container;
+                    ns::do_check(
+                        as2::put( cont )
                             ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
                     );
                 }

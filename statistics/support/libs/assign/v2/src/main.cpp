@@ -16,7 +16,7 @@ int main (int argc, char * const argv[])
 	{
     	using namespace test_assign_v2;
 		xxx_detail::test();
-		xxx_misc::test();
+		xxx_utility::test();
 		xxx_put::test();
 		xxx_ref::test();
     }
@@ -24,7 +24,7 @@ int main (int argc, char * const argv[])
 		using namespace example_assign_v2;
 		xxx_ref::run(std::cout);
 		xxx_put::run(std::cout);
-		xxx_misc::run(std::cout);
+		xxx_utility::run(std::cout);
     }
     return 0;
 

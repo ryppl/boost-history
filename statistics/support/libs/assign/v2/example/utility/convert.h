@@ -12,13 +12,13 @@
 #include <ostream>
 
 namespace example_assign_v2{
-namespace xxx_misc{
+namespace xxx_utility{
 namespace xxx_convert{
 
     void run(std::ostream& os);
 
 }// xxx_convert
-}// xxx_misc
+}// xxx_utility
 }// example_assign_v2
 
 #endif

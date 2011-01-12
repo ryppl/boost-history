@@ -15,7 +15,7 @@
 #include <libs/assign/v2/example/utility/sub_range.h>
 
 namespace example_assign_v2{
-namespace xxx_misc{
+namespace xxx_utility{
 namespace xxx_sub_range{
 
     void run(std::ostream& os)
@@ -34,5 +34,5 @@ namespace xxx_sub_range{
     }
 
 }// xxx_sub_range
-}// xxx_misc
+}// xxx_utility
 }// example_assign_v2

@@ -43,7 +43,6 @@ namespace xxx_deque{
             	//]
 	            os << std::endl;
             }
-/*
             {
             	//[deque_front
             	boost::for_each(
@@ -51,12 +50,10 @@ namespace xxx_deque{
                         as2::deque<int>( as2::_nil ) % as2::_push_front
                     )( -1 )( 0 )( 1 ),
                     os << bl::_1 << ' '
-            	);
-            	// outputs 1 0 -1
+            	);// outputs 1 0 -1
             	//]
 	            os << std::endl;
             }
-*/
         }
     }
 
