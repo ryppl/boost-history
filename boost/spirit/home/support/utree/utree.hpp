@@ -23,7 +23,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/ref.hpp>
 
-#include <utree/detail/utree_detail1.hpp>
+#include <boost/spirit/home/support/utree/detail/utree_detail1.hpp>
 
 #if defined(BOOST_MSVC)
 # pragma warning(push)
@@ -32,7 +32,7 @@
 # pragma warning(disable: 4244)
 #endif
 
-namespace scheme
+namespace boost { namespace spirit 
 {
     ///////////////////////////////////////////////////////////////////////////
     // Our utree can store these types. This enum tells us what type
@@ -123,7 +123,7 @@ namespace scheme
     typedef basic_string<
         std::string,
         utree_type::string_type>
-    utf8_string;
+    utf8_string_type;
 
     ///////////////////////////////////////////////////////////////////////////
     // Our UTF-8 symbol (for identifiers)
@@ -434,31 +434,10 @@ namespace scheme
         scope const* parent;
         int depth;
     };
-}
+}}
 
 #if defined(BOOST_MSVC)
 # pragma warning(pop)
 #endif
-
-#include <utree/detail/utree_detail2.hpp>
-
-// $$$ move this in its own file $$$
-namespace scheme { namespace utree_functions
-{
-    ///////////////////////////////////////////////////////////////////////////
-    // Extra functions
-    ///////////////////////////////////////////////////////////////////////////
-    inline utree rest(utree& x)
-    {
-        utree::iterator i = x.begin(); ++i;
-        return utree(utree::range(i, x.end()), shallow);
-    }
-
-    inline utree rest(utree const& x)
-    {
-        utree::const_iterator i = x.begin(); ++i;
-        return utree(utree::const_range(i, x.end()), shallow);
-    }
-}}
 
 #endif

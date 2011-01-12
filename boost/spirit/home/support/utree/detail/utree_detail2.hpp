@@ -17,7 +17,7 @@
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/utility/enable_if.hpp>
 
-namespace scheme { namespace detail
+namespace boost { namespace spirit { namespace detail
 {
     inline char& fast_string::info()
     {
@@ -158,7 +158,7 @@ namespace scheme { namespace detail
     private:
 
         friend class boost::iterator_core_access;
-        friend class scheme::utree;
+        friend class boost::spirit::utree;
 
         void increment()
         {
@@ -222,7 +222,7 @@ namespace scheme { namespace detail
     private:
 
         friend class boost::iterator_core_access;
-        friend class scheme::utree;
+        friend class boost::spirit::utree;
 
         void increment()
         {
@@ -601,9 +601,9 @@ namespace scheme { namespace detail
             return node->val;
         }
     };
-}}
+}}}
 
-namespace scheme
+namespace boost { namespace spirit 
 {
     template <typename F>
     stored_function<F>::stored_function(F f)
@@ -1382,7 +1382,7 @@ namespace scheme
         BOOST_ASSERT(get_type() == type::function_type);
         return (*pf)(env);
     }
-}
+}}
 
 #if defined(BOOST_MSVC)
 # pragma warning(pop)
