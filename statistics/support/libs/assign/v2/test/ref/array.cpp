@@ -23,8 +23,6 @@
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
 #include <boost/assign/v2/detail/checking/array.hpp>
-/*#include <boost/assign/v2/detail/checking/relational_op.hpp>*/
-#include <boost/assign/v2/put/pipe/convert.hpp>
 #include <boost/assign/v2/ref/array/functor.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <libs/assign/v2/test/ref/array.h>

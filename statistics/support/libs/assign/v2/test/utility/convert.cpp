@@ -13,7 +13,7 @@
 #include <libs/assign/v2/test/utility/convert.h>
 
 namespace test_assign_v2{
-namespace xxx_misc{
+namespace xxx_utility{
 namespace xxx_convert{
 
     void test()
@@ -40,6 +40,6 @@ namespace xxx_convert{
     }
         
 }// xxx_convert
-}// xxx_misc
+}// xxx_utility
 }// xxx_test_assign
 

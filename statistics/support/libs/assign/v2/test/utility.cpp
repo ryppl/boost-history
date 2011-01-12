@@ -12,7 +12,7 @@
 #include <libs/assign/v2/test/utility.h>
 
 namespace test_assign_v2{
-namespace xxx_misc{
+namespace xxx_utility{
 
     void test(){
         xxx_chain::test();
