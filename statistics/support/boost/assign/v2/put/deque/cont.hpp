@@ -52,7 +52,6 @@ namespace put_deque_aux{
 
     template<typename T, typename F, typename Tag>
     class cont :
-/*    	public relational_op_aux::crtp< cont<T, F, Tag> >, */
         public put_aux::crtp<
         	typename put_deque_aux::impl<T>::type, F, Tag,
             cont<T, F, Tag>
@@ -144,21 +143,6 @@ namespace put_deque_aux{
         // accessible through the put interface.
 
        impl_& unwrap()const{ return this->impl; }
-
-        // Relational op
-
-        template<typename R>
-        bool equal_to(const R& r)const{
-            return ::boost::iterator_range_detail::equal(
-            (*this), r );
-        }
-
-        template<typename R>
-        bool less_than(const R& r)const{
-            return ::boost::iterator_range_detail::less_than(
-            (*this), r );
-        }
-
         protected:
         mutable impl_ impl;
 

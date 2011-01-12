@@ -56,7 +56,7 @@ namespace result_of{
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 	template<typename T, typename...Args>
-	typename result_of::deque<T>
+	typename result_of::deque<T>::type
 	deque(Args&&...args)
     {
     	return deque<T>(v2::_nil)( std::forward<Args>(args)... );
