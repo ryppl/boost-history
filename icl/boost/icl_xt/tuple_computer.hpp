@@ -191,7 +191,7 @@ namespace boost{namespace icl
         ///
         std::string as_string()const 
         {
-			std::stringstream str;
+            std::stringstream str;
             str << m_map;
             return str.str();
         }
