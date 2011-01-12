@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------+
 Interval Container Library (Boost.Icl)
 Author: Joachim Faulhaber
-Copyright (c) 2007-2010: Joachim Faulhaber
+Copyright (c) 2007-2011: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
@@ -9,7 +9,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 
-Interval Container Library (Boost.Icl) 4.0.0 Inclusion Version for boost 1.46 
+Interval Container Library (Boost.Icl) 4.0.1 Inclusion Version for boost 1.46 
+                                             (update 1) 
 =============================================================================
 PLUS 
 Icl_xt    Extended by generalized cross tables (cubes) AND
@@ -54,6 +55,39 @@ The extended parts icl_xt and validate are not Boost libraries.
 
 Release Notes:
 ==============
+
+* Boost.Icl 4.0.1 (Version for Boost 1.46.0 update 1)
+------------------------------------------------------------------------
++ Tested Compilers: gcc-3.4.4 thru gcc-4.5.0, 
+                    msvc-7.1, msvc-8.0, msvc-9.0, msvc-10.0,
+                    intel-10.1, 11.0, 11.1,
+                    darwin-4.0.1, 4.2.1, 4.4.0,
+                    (clang-2.9 *)
+  see:http://www.boost.org/development/tests/release/developer/icl.html
+  * For clang-2.9 compilation on most tests failed for features of the 
+    tests. The library itself will probably compile
+
+  The extended parts boost/icl_xt and boost/validate were tested with
+  gcc and msvc compilers only.
+   
++ Portability has been tested and improved by night tests of the boost
+  test system.
+  
++ Intervals and interval containers have been tested and improved to 
+  work with intervals of pointers and intervals of date and time
+  durations from Boost.DateTime.
+  
++ Some errors in the documentation that were overlooked after changes 
+  form version 3.2.1 to 4.0.0 have been fixed.
+  
++ The quickbook-documents are built with a new quickbook version.
+
++ Some bugs due to changes in the extended library specifically in the
+  interval_bitset class template have been fixed.
+  
++ Functions and tests have been added for interval_bitset which is now
+  compatible with other icl::sets w.r.t. the interface.
+
 
 * Boost.Icl 4.0.0 (Inclusion Version for Boost 1.46.0)
 ------------------------------------------------------------------------
