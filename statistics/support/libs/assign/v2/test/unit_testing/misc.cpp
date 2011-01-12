@@ -14,8 +14,8 @@
 
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
-#include <libs/assign/v2/test/misc/chain.cpp>
-#include <libs/assign/v2/test/misc/convert.cpp>
+#include <libs/assign/v2/test/utility/chain.cpp>
+#include <libs/assign/v2/test/utility/convert.cpp>
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
 test_suite* init_unit_test_suite( int argc, char* argv[] )

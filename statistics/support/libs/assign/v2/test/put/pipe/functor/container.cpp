@@ -15,7 +15,7 @@
 #include <boost/assign/v2/put/modifier/ext/repeat.hpp>
 #include <boost/assign/v2/put/pipe/functor.hpp>
 #include <libs/assign/v2/test/put/pipe/functor/container.h>
- 
+
 namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_pipe{
@@ -23,7 +23,7 @@ namespace xxx_functor{
 namespace xxx_container{
 
 	struct val_pred{
-    
+
     	val_pred(){}
 		template<typename T, typename U>
     	void operator()(T const& t, U const& u)const
@@ -33,7 +33,7 @@ namespace xxx_container{
     };
 
 	struct ref_pred{
-    
+
     	ref_pred(){}
 		template<typename T, typename U>
     	void operator()(T const& t, U const& u)const
@@ -45,11 +45,12 @@ namespace xxx_container{
 	template<int i, int j, typename T, typename P, typename U>
 	void local_assert(T& tmp, P const& pred, U const& u)
     {
-    
-        using namespace boost;
+
+        using namespace boost; // tuple<> (cpp03)
+        using namespace boost::assign::v2; // tuple (cpp0x)
     	pred(
-    		get<j>( 
-        		tmp.seq_args().get( boost::mpl::int_<i>() ) 
+    		get<j>(
+        		tmp.seq_args().get( boost::mpl::int_<i>() )
         	),
             u
         );
@@ -100,7 +101,7 @@ namespace xxx_container{
 			local_assert<0, 1>( tmp, ref_pred(), b1);
 			local_assert<1, 0>( tmp, ref_pred(), a1); local_assert<1, 1>( tmp, ref_pred(), b);
 			local_assert<2, 0>( tmp, ref_pred(), a1); local_assert<2, 1>( tmp, val_pred(), B);
-            
+
 			local_assert<3, 0>( tmp, ref_pred(), a ); local_assert<3, 1>( tmp, ref_pred(), b1);
 			local_assert<4, 0>( tmp, ref_pred(), a ); local_assert<4, 1>( tmp, ref_pred(), b);
 			local_assert<5, 0>( tmp, ref_pred(), a ); local_assert<5, 1>( tmp, val_pred(), B);
@@ -112,7 +113,7 @@ namespace xxx_container{
 			local_assert<9, 0>( tmp, ref_pred(), a1);
 			local_assert<10, 0>( tmp, ref_pred(), a);
 			local_assert<11, 0>( tmp, val_pred(), A);
-            
+
 #undef A
 #undef B
         }

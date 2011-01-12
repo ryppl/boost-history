@@ -10,7 +10,7 @@
 #include <libs/assign/v2/test/detail/traits/has_push.h>
 #include <libs/assign/v2/test/detail/traits/has_static_size.h>
 #include <libs/assign/v2/test/detail/traits/has_value_type.h>
-#include <libs/assign/v2/test/type_traits.h>
+#include <libs/assign/v2/test/detail/traits.h>
 
 namespace test_assign_v2{
 namespace xxx_detail{

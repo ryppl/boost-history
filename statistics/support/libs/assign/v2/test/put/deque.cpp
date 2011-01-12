@@ -20,7 +20,6 @@
 #include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
-/*#include <boost/assign/v2/detail/checking/relational_op.hpp>*/
 
 #include <boost/assign/v2/put/deque.hpp>
 
@@ -58,15 +57,6 @@ namespace xxx_deque{
         	typedef std::string str_;
             BOOST_ASSIGN_V2_CHECK( str_( csv_deque("x")[0] ) == "x");
         }
-/*
-        { 	// Relational
-            using namespace checking::constants;
-            using namespace checking::relational_op;
-            do_check(
-            	csv_deque( a, b, c, d, e, f, g, h )
-            );
-        }
-*/
     }
 
 }// xxx_deque

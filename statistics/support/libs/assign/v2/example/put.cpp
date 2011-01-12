@@ -8,7 +8,6 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/example/put/deque.h>
-#include <libs/assign/v2/example/put/convert.h>
 #include <libs/assign/v2/example/put/range.h>
 #include <libs/assign/v2/example/put/pipe.h>
 #include <libs/assign/v2/example/put.h>

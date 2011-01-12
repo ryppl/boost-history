@@ -12,7 +12,7 @@ int main (int argc, char * const argv[])
 {
 
     // Do not put libs/assign/v2/test/unit_testing in this project
-    
+
 	{
     	using namespace test_assign_v2;
 		xxx_detail::test();
