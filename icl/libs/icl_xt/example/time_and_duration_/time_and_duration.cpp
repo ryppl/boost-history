@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------+
 Interval Container Library
 Author: Joachim Faulhaber
-Copyright (c) 2007-2009: Joachim Faulhaber
+Copyright (c) 2007-2011: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
@@ -65,91 +65,96 @@ we could define
 interval<ptime> + interval<duration> -> interval<ptime>
 etc.
 */
+
+void limits_of_time()
+{
+    // boost::posix_times are points in time related to the
+    // Gregorian calendar. It has a time origin January-1-0, 00:00
+    // which is NOT in the scope of its representable values.
+
+    cout << "----- Testing some traits of date_time::posix_time ----------\n";
+    // The smallest representable point in time is
+    cout << "Technical time origin: " << ptime(min_date_time) << endl;
+    // which is also the identity element on ptime
+    cout << "Also Null value      : " << icl::identity_element<ptime>::value() << endl;
+    // Note, that identity_element<ptime> is added to boost posix_time by 
+    // adaptor code in <boost/icl/ptime.hpp>
+    
+    posix_time::ptime origin = identity_element<ptime>::value();
+    ptime next   = origin; ++next;
+    cout << "Smallest next time   : " << next << endl;
+
+    cout << "For most applications on time schedules, using resolutions\n"
+         << "of minutes or seconds, an integer (4 bytes) would be ok.\n"
+         << "boost::ptime being a 'univeral compromise' needs 8 bytes.\n";
+
+    cout << "sizeof(int)           = " << sizeof(int) << endl;
+    cout << "sizeof(ptime)         = " << sizeof(ptime) << endl;
+    cout << "sizeof(time_duration) = " << sizeof(time_duration) << endl;
+
+    cout << "-------------------------------------------------------------\n";
+}
+
 void time_and_duration()
 {
-	// boost::posix_times are points in time related to the
-	// Gregorian calendar. It has a time origin January-1-0, 00:00
-	// which is NOT in the scope of its representable values.
-
-	// The smallest representable point in time is
-	cout << "Technical time origin: " << ptime(min_date_time) << endl;
-	// which is also the identity element on ptime
-	cout << "Also Null value      : " << icl::identity_element<ptime>::value() << endl;
-	// Note, that identity_element<ptime> is added to boost posix_time by 
-	// adaptor code in <boost/icl/ptime.hpp>
-	
-	posix_time::ptime origin = identity_element<ptime>::value();
-	ptime next   = origin; ++next;
-	cout << "Smallest next time   : " << next << endl;
-
-	// Start decorating the Christmas tree
+    // Start decorating the Christmas tree
     ptime start_deco = time_from_string("2010-12-24 16:30");
-	// Ahh! Christmas tree is decorated
+    // Ahh! Christmas tree is decorated
     ptime stop_deco = time_from_string("2010-12-24 17:15");
 
     time_duration decoration_time = stop_deco - start_deco;
 
-	//-----------------------------------------------------------------------------
-	cout << "sizeof(int) = " << sizeof(int) << endl;
-	cout << "sizeof(ptime) = " << sizeof(ptime) << endl;
-	cout << "sizeof(time_duration) = " << sizeof(time_duration) << endl;
+    //-----------------------------------------------------------------------------
+    cout << "Duration of [" << start_deco << "," << stop_deco << ") = " 
+         << decoration_time << endl;  
 
-	//-----------------------------------------------------------------------------
-	//JODO Make it a nice example
-	ptime t_a = time_from_string("2010-12-24 19:30");
-    ptime t_b = time_from_string("2010-12-24 20:30");
-    time_duration a_2_b = t_b - t_a;
-    cout << "Duration of [" << t_a << "," << t_b << ") = " 
-         << a_2_b << endl;  
+    interval<ptime>::type deco_2010 
+        = interval<ptime>::right_open(start_deco, stop_deco);
+    cout << "Duration of " << deco_2010 << " = " << icl::size(deco_2010) << endl;
 
-    interval<ptime>::type a_b 
-        = interval<ptime>::right_open(t_a, t_b);
-    cout << "Duration of " << a_b << " = " 
-         << icl::size(a_b) << endl;
+    // To work with 'relative times' that do not have a fixed origin 
+    // we can work with time_durations.
 
-	icl::size(a_b);
+    ptime day_begin = time_from_string("2010-12-24 00:00");
+    // It's deco time on Christmas.
+    time_duration deco_start = start_deco - day_begin;
+    time_duration deco_stop  = stop_deco  - day_begin;
 
-	posix_time::time_duration half = a_2_b / 2;
-    ptime t_m = t_a + half;
+    time_duration deco_mid = decoration_time / 2;
 
-    cout << a_b << (icl::contains(a_b, t_m) ? 
-                    " contains " : "does not contain ") 
-         << t_m << endl;
+    ptime deco_mid_2010 = start_deco + deco_mid;
 
-	ptime day_begin = time_from_string("2010-12-24 00:00");
-	time_duration d_a = t_a - day_begin;
-	time_duration d_b = t_b - day_begin;
-	time_duration d_m = d_b - d_a;
+    cout << deco_2010 << (icl::contains(deco_2010, deco_mid_2010) ? 
+                         " contains " : "does not contain ") 
+         << deco_mid_2010 << endl;
 
-	interval<time_duration>::type rel_a_b 
-        = interval<time_duration>::right_open(d_a, d_b);
+    // We can work with intervals of time_durations
+    interval<time_duration>::type deco_interval
+        = interval<time_duration>::right_open(deco_start, deco_stop);
 
-	time_duration sz_a_b_1 = d_b - d_a;
-	time_duration sz_a_b_2 = icl::size(rel_a_b);
-	cout << "b-a         = " << sz_a_b_1 << endl;
-	cout << "size([a,b)) = " << sz_a_b_2 << endl;
-	cout << "size([a,b)) = " << (icl::size(rel_a_b)) << endl;
-
-	cout << rel_a_b << " " << (icl::size(rel_a_b)) << endl;
+    cout << "----- We can work with intervals of time_durations: ---------\n";
+    cout << "size(" << deco_interval << ") = " << icl::size(deco_interval) << endl;
+    cout << "-------------------------------------------------------------\n";
 }
 
-void time_durations()
+void time_and_durations2()
 {
-	time_duration start = hours(8) + minutes(30);
-	time_duration stop  = hours(17) + minutes(15);
+    // Some convenient notations for time_durations
+    time_duration start = hours(8) + minutes(30);
+    time_duration stop  = hours(17) + minutes(15);
 
-	icl::interval<time_duration>::type working_hours 
-		= icl::interval<time_duration>::right_open(start, stop);
+    icl::interval<time_duration>::type working_hours 
+        = icl::interval<time_duration>::right_open(start, stop);
 
-	cout << "working_hours: " << working_hours << endl;
+    cout << "working_hours: " << working_hours << endl;
 }
 
 int main()
 {
     cout << ">>Interval Container Library: Sample time_and_duration.cpp <<\n";
     cout << "-------------------------------------------------------------\n";
-    //time_and_duration();
-	time_durations();
+    limits_of_time();
+    time_and_duration();
     return 0;
 }
 
@@ -157,7 +162,22 @@ int main()
 /*-----------------------------------------------------------------------------
 >>Interval Container Library: Sample time_and_duration.cpp <<
 -------------------------------------------------------------
-TODO Show prgram output.
------------------------------------------------------------------------------*/
+----- Testing some traits of date_time::posix_time ----------
+Technical time origin: 1400-Jan-01 00:00:00
+Also Null value      : 1400-Jan-01 00:00:00
+Smallest next time   : 1400-Jan-01 00:00:00.000001
+For most applications on time schedules, using resolutions
+of minutes or seconds, an integer (4 bytes) would be ok.
+boost::ptime being a 'univeral compromise' needs 8 bytes.
+sizeof(int)           = 4
+sizeof(ptime)         = 8
+sizeof(time_duration) = 8
+-------------------------------------------------------------
+Duration of [2010-Dec-24 16:30:00,2010-Dec-24 17:15:00) = 00:45:00
+Duration of [2010-Dec-24 16:30:00,2010-Dec-24 17:15:00) = 00:45:00
+[2010-Dec-24 16:30:00,2010-Dec-24 17:15:00) contains 2010-Dec-24 16:52:30
+----- We can work with intervals of time_durations: ---------
+size([16:30:00,17:15:00)) = 00:45:00
+-------------------------------------------------------------------------------*/
 //]
 

@@ -1,0 +1,32 @@
+# (C) Copyright 2008-2011: Joachim Faulhaber
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+# Examples that do not use boost_date_time
+exe amount_cube
+    :
+        amount_cube_/amount_cube.cpp
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+exe history
+    :
+        history_/history.cpp
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+
+# Examples using boost_date_time
+exe time_and_duration
+    :
+        time_and_duration_/time_and_duration.cpp
+		/boost/date_time//boost_date_time
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+

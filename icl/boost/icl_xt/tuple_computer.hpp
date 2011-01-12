@@ -9,6 +9,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #ifndef __tuple_computer_JOFA_040614_H__
 #define __tuple_computer_JOFA_040614_H__
 
+#include <sstream>
 #include <boost/icl/map.hpp>
 #include <boost/icl_xt/set.hpp>
 #include <boost/icl_xt/var_tuple_order.hpp>
@@ -190,7 +191,7 @@ namespace boost{namespace icl
         ///
         std::string as_string()const 
         {
-            stringstream str;
+			std::stringstream str;
             str << m_map;
             return str.str();
         }

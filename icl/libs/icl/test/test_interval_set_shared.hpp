@@ -715,15 +715,15 @@ void interval_bitset_find_4_integral_types()
     found = set_a.find(MK_v(5));
     BOOST_CHECK( found == set_a.end() );
 
-	set_a.add(MK_v(64));
-	found = set_a.find(MK_v(64));
+    set_a.add(MK_v(64));
+    found = set_a.find(MK_v(64));
     BOOST_CHECK( (found->second).contains(0) );
 
-	set_a.add(MK_v(65));
-	found = set_a.find(MK_v(65));
+    set_a.add(MK_v(65));
+    found = set_a.find(MK_v(65));
     BOOST_CHECK( (found->second).contains(1) );
 
-	found = set_a.find(MK_v(66));
+    found = set_a.find(MK_v(66));
     BOOST_CHECK( found == set_a.end() );
 }
 
